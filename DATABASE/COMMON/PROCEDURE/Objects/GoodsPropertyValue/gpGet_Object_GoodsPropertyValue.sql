@@ -10,10 +10,11 @@ RETURNS TABLE (Id Integer, Name TVarChar, isErased Boolean,
                Amount TFloat, BoxCount TFloat, AmountDoc TFloat,
                BarCode TVarChar, Article TVarChar,
                BarCodeGLN TVarChar, ArticleGLN TVarChar, GroupName TVarChar,GoodsPropertyId Integer, GoodsPropertyName TVarChar,
-               GoodsId Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar) AS
+               GoodsId Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar
+              )
+AS
 $BODY$
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsPropertyValue());
 
@@ -113,8 +114,7 @@ BEGIN
 
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpGet_Object_GoodsPropertyValue(integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
@@ -127,4 +127,4 @@ ALTER FUNCTION gpGet_Object_GoodsPropertyValue(integer, TVarChar) OWNER TO postg
 */
 
 -- тест
--- select * from gpGet_Object_GoodsPropertyValue( 86896, inSession := '5');
+-- SELECT * FROM gpGet_Object_GoodsPropertyValue( 86896, inSession := '5');

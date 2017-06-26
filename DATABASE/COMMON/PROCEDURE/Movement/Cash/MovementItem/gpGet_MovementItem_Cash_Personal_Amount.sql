@@ -5,7 +5,8 @@ DROP FUNCTION IF EXISTS gpGet_MovementItem_Cash_Personal_Amount (Integer, TFloat
 CREATE OR REPLACE FUNCTION gpGet_MovementItem_Cash_Personal_Amount (
  INOUT ioId                  Integer   , --  люч объекта <Ёлемент документа>
  INOUT ioAmount              TFloat    , -- —умма
- INOUT ioSummRemains         TFloat    , -- ќстаток к выплате 
+ INOUT ioSummRemains         TFloat    , -- ќстаток к выплате
+   OUT outIsCalculated       Boolean   , -- 
     IN inSession             TVarChar    -- сесси€ пользовател€
 )
 RETURNS RECORD
@@ -19,6 +20,9 @@ BEGIN
      -- установили новые значени€
      ioAmount:= COALESCE (ioAmount, 0) + COALESCE (ioSummRemains, 0);
      ioSummRemains:= 0;
+     
+     -- расчет
+     outIsCalculated:= FALSE;
 
 END;
 $BODY$

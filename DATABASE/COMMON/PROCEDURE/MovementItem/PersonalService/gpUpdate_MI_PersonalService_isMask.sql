@@ -159,7 +159,7 @@ BEGIN
                                                         , inSummService        := SummService
                                                         , inSummCardRecalc     := SummCardRecalc
                                                         , inSummCardSecondRecalc:= SummCardSecondRecalc
-                                                        , inSummCardSecondCash := SummCardSecondCash
+                                                        , inSummCardSecondCash := 0 -- SummCardSecondCash
                                                         , inSummNalogRecalc    := SummNalogRecalc
                                                         , inSummMinus          := SummMinus
                                                         , inSummAdd            := SummAdd
@@ -186,7 +186,6 @@ then
 end if;
 
 
-
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -203,4 +202,4 @@ $BODY$
 */
 
 -- тест
---select * from gpUpdate_MI_PersonalService_isMask (inMovementId:= 393522 , inMovementMaskId :=393501 ,  inSession := '5');
+-- SELECT * FROM gpUpdate_MI_PersonalService_isMask (inMovementId:= 393522 , inMovementMaskId :=393501 ,  inSession := '5');

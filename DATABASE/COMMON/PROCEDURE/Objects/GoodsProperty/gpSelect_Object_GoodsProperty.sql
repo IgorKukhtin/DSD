@@ -78,13 +78,11 @@ $BODY$BEGIN
            , NULL :: TFloat AS TaxDoc
 
            , FALSE AS isErased
-     ;
-
+          ;
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Object_GoodsProperty(TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -98,5 +96,5 @@ ALTER FUNCTION gpSelect_Object_GoodsProperty(TVarChar) OWNER TO postgres;
  
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpSelect_Object_GoodsProperty('2')

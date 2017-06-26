@@ -173,7 +173,7 @@ BEGIN
      END IF;
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     WITH tmpMI_Child AS (SELECT MI.* FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Child() AND MI.isErased = FALSE)
+     WITH tmpMI_Child AS (SELECT MI.*, COALESCE (MIB.ValueData, FALSE) AS isCalculated FROM MovementItem AS MI LEFT JOIN MovementItemBoolean AS MIB ON MIB.MovementItemId = MI.Id AND MIB.DescId = zc_MIBoolean_Calculated() WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Child() AND MI.isErased = FALSE)
      INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm, OperSumm_Currency
                          , MovementItemId, ContainerId
                          , AccountGroupId, AccountDirectionId, AccountId
@@ -266,10 +266,12 @@ BEGIN
                     ELSE 0
                END AS PartionMovementId
 
-             , CASE WHEN MI_Child.Id > 0
-                         THEN zc_Enum_AnalyzerId_Cash_PersonalService() -- Выплата сотруднику - аванс
+             , CASE WHEN MI_Child.Id > 0 AND MI_Child.isCalculated = TRUE
+                         THEN zc_Enum_AnalyzerId_Cash_PersonalCardSecond() -- Выплата сотруднику - по ведомости Карта БН 2ф.
+                    WHEN MI_Child.Id > 0
+                         THEN zc_Enum_AnalyzerId_Cash_PersonalService() -- Выплата сотруднику - по ведомости
                     WHEN Object.DescId = zc_Object_Personal()
-                         THEN zc_Enum_AnalyzerId_Cash_PersonalAvance() -- Выплата сотруднику - по ведомости
+                         THEN zc_Enum_AnalyzerId_Cash_PersonalAvance() -- Выплата сотруднику - аванс
                     ELSE 0
                END AS AnalyzerId
 

@@ -184,7 +184,7 @@ BEGIN
                      -- "минус" <Карта БН - 2ф.>
                    - COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummCardSecond()), 0)
                      -- "минус" <Карта БН (касса) - 2ф.>
-                   - COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummCardSecondCash()), 0)
+                   - inSummCardSecondCash
                     ;
 
      -- определяется признак Создание/Корректировка

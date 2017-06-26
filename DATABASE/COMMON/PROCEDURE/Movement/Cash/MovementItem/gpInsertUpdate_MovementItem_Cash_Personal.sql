@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_Cash_Personal()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Cash_Personal (Integer, Integer, Integer, Integer, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Cash_Personal (Integer, Integer, Integer, Integer, TFloat, TVarChar, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Cash_Personal(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -13,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Cash_Personal(
     IN inInfoMoneyId         Integer   , -- Статьи назначения
     IN inUnitId              Integer   , -- Подразделение
     IN inPositionId          Integer   , -- Должность
+    IN inIsCalculated        Boolean   , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -33,6 +35,7 @@ BEGIN
                                                      , inInfoMoneyId        := inInfoMoneyId
                                                      , inUnitId             := inUnitId
                                                      , inPositionId         := inPositionId
+                                                     , inIsCalculated       := inIsCalculated
                                                      , inUserId             := vbUserId
                                                       );
      -- вернули <Остаток к выплате>

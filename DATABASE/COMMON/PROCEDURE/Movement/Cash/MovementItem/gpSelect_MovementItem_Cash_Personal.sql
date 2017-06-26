@@ -21,7 +21,8 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , SummSocialIn TFloat, SummSocialAdd TFloat, SummChild TFloat, SummMinusExt TFloat
              , SummTransport TFloat, SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat
              , Amount_current TFloat, Amount_avance TFloat, Amount_service TFloat
-             , SummRemains TFloat
+             , SummRemains TFloat, SummCardSecondRemains TFloat
+             , isCalculated Boolean
              , Comment TVarChar
              , isErased Boolean
               )
@@ -102,6 +103,7 @@ BEGIN
                                    , SUM (COALESCE (MIFloat_SummToPay.ValueData, 0) - COALESCE (tmpSummNalog.SummNalog, 0) + COALESCE (MIFloat_SummNalog.ValueData, 0)
                                         - COALESCE (MIFloat_SummCard.ValueData, 0)
                                         - COALESCE (MIFloat_SummCardSecond.ValueData, 0)
+                                        - COALESCE (MIFloat_SummCardSecondCash.ValueData, 0)
                                          ) AS SummToPay_cash
                                    , SUM (COALESCE (MIFloat_SummToPay.ValueData, 0)  - COALESCE (tmpSummNalog.SummNalog, 0) + COALESCE (MIFloat_SummNalog.ValueData, 0)
                                          ) AS SummToPay
@@ -337,7 +339,8 @@ BEGIN
                              )
           /*tmpCash*/
          , tmpMIContainer AS (SELECT SUM (CASE WHEN MIContainer.MovementId = inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() THEN MIContainer.Amount ELSE 0 END) AS Amount_current
-                                   , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Cash_PersonalAvance()  THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
+                                   , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance())  THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
+                                   , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalCardSecond())  THEN MIContainer.Amount ELSE 0 END) AS AmountCardSecond_avance
                                    , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Cash_PersonalService() THEN MIContainer.Amount ELSE 0 END) AS Amount_service
                                    -- , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Income() THEN MIContainer.Amount ELSE 0 END) AS Amount_income
                                    , tmpContainer.PersonalId
@@ -346,8 +349,8 @@ BEGIN
                                    , tmpContainer.InfoMoneyId
                               FROM tmpContainer
                                    INNER JOIN MovementItemContainer AS MIContainer
-                                                                    ON MIContainer.ContainerId = tmpContainer.ContainerId
-                                                                   AND MIContainer.DescId = zc_MIContainer_Summ()
+                                                                    ON MIContainer.ContainerId    = tmpContainer.ContainerId
+                                                                   AND MIContainer.DescId         = zc_MIContainer_Summ()
                                                                    AND MIContainer.MovementDescId = zc_Movement_Cash()
                               GROUP BY tmpContainer.PersonalId
                                      , tmpContainer.UnitId
@@ -380,6 +383,7 @@ BEGIN
                                    , tmpParent.SummPhone
                                    , tmpMIContainer.Amount_current
                                    , tmpMIContainer.Amount_avance
+                                   , tmpMIContainer.AmountCardSecond_avance
                                    , tmpMIContainer.Amount_service
                               FROM tmpParent
                                    LEFT JOIN tmpMIContainer ON tmpMIContainer.PersonalId  = tmpParent.PersonalId
@@ -410,6 +414,7 @@ BEGIN
                                    , tmpService.SummPhone
                                    , tmpService.Amount_current
                                    , tmpService.Amount_avance
+                                   , tmpService.AmountCardSecond_avance
                                    , tmpService.Amount_service
                                    , COALESCE (tmpMI.PersonalId, tmpService.PersonalId)   AS PersonalId
                                    , COALESCE (tmpMI.UnitId, tmpService.UnitId)           AS UnitId
@@ -468,19 +473,26 @@ BEGIN
             , tmpData.Amount_current :: TFloat AS Amount_current
             , tmpData.Amount_avance  :: TFloat AS Amount_avance
             , tmpData.Amount_service :: TFloat AS Amount_service
-            , (COALESCE (tmpData.SummToPay_cash, 0) - COALESCE (tmpData.Amount, 0) - COALESCE (tmpData.Amount_avance, 0) - COALESCE (tmpData.Amount_service, 0)) :: TFloat AS SummRemains
+            , (COALESCE (tmpData.SummToPay_cash, 0)       - CASE WHEN MIBoolean_Calculated.ValueData = TRUE THEN 0 ELSE COALESCE (tmpData.Amount, 0) END - COALESCE (tmpData.Amount_avance, 0) - COALESCE (tmpData.Amount_service, 0)) :: TFloat AS SummRemains
+            , (COALESCE (tmpData.SummCardSecond, 0) + COALESCE (tmpData.SummCardSecondCash, 0) - CASE WHEN MIBoolean_Calculated.ValueData = TRUE THEN COALESCE (tmpData.Amount, 0) ELSE 0 END - COALESCE (tmpData.AmountCardSecond_avance, 0)) :: TFloat AS SummCardSecondRemains
 
+            , COALESCE (MIBoolean_Calculated.ValueData, FALSE) AS isCalculated
             , MIString_Comment.ValueData       AS Comment
             , tmpData.isErased
          
        FROM tmpData
             LEFT JOIN MovementItemString AS MIString_Comment 
                                          ON MIString_Comment.MovementItemId = tmpData.MovementItemId
-                                        AND MIString_Comment.DescId = zc_MIString_Comment()
+                                        AND MIString_Comment.DescId         = zc_MIString_Comment()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
+                                          ON MIBoolean_Calculated.MovementItemId = tmpData.MovementItemId
+                                         AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
+
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmpData.PersonalId
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpData.UnitId
             LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpData.PositionId
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpData.InfoMoneyId
+
 
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Personal_Main
                                     ON ObjectBoolean_Personal_Main.ObjectId = tmpData.PersonalId
