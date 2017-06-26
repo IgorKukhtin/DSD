@@ -28,6 +28,7 @@ RETURNS TABLE (PaidKindId_First      Integer   -- Форма оплаты - БН
              , UserLogin             TVarChar  -- Логин
              , UserPassword          TVarChar  -- Пароль
              , WebService            TVarChar  -- Веб-сервис через который происходит коннект к основной БД
+             , WebService_two         TVarChar  -- Веб-сервис через который происходит коннект к основной БД
              -- , SyncDateIn         TDateTime -- Дата/время последней синхронизации - когда "успешно" загружалась входящая информация - актуальные справочники, цены, акции, долги, остатки и т.д
              -- , SyncDateOut        TDateTime -- Дата/время последней синхронизации - когда "успешно" выгружалась иходящая информация - заказы, возвраты и т.д
              , MobileVersion         TVarChar  -- Версия мобильного приложения. Пример: "1.0.3.625"
@@ -154,9 +155,11 @@ BEGIN
                         THEN REPLACE (LOWER (Object_ConnectParam.ValueData), '//integer-srv.alan.dp.ua','//integer-srv2.alan.dp.ua/projectmobile/index.php')
                    WHEN STRPOS (Object_ConnectParam.ValueData, 'integer-srv2.alan.dp.ua') > 0 AND inSession = '5' -- AND 1=0 -- AND inSession = '1000168' -- Молдован Е.А.
                         THEN REPLACE (LOWER (Object_ConnectParam.ValueData), '//integer-srv2.alan.dp.ua','//integer-srv2.alan.dp.ua/projectmobile/index.php')
-                   --ELSE REPLACE (REPLACE (LOWER (Object_ConnectParam.ValueData), '/project/', '/projectmobile/'), '//integer-srv.alan.dp.ua', '//project-vds.vds.colocall.com/projectmobile/index.php')
-                   ELSE 'http://integer-srv.alan.dp.ua/projectmobile/index.php'
+                   ELSE REPLACE (REPLACE (LOWER (Object_ConnectParam.ValueData), '/project/', '/projectmobile/'), '//integer-srv.alan.dp.ua', '//project-vds.vds.colocall.com/projectmobile/index.php')
+                   -- ELSE 'http://integer-srv.alan.dp.ua/projectmobile/index.php'
               END :: TVarChar AS WebService
+
+            , REPLACE (REPLACE (LOWER (Object_ConnectParam.ValueData), '/project/', '/projectmobile/'), '//integer-srv.alan.dp.ua', '//project-vds.vds.colocall.com/projectmobile/index.php') :: TVarChar AS WebService_two
 
             -- AS LastDateIn
             -- AS LastDateOut
