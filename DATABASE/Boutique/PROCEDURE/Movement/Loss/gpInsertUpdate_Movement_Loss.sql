@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Loss (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Loss (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Loss (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Loss(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
@@ -9,9 +10,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Loss(
     IN inOperDate             TDateTime , -- Дата документа
     IN inFromId               Integer   , -- От кого (в документе)
     IN inToId                 Integer   , -- Кому (в документе)
-    IN inCurrencyDocumentId   Integer   , -- Валюта (документа)
-   OUT outCurrencyValue       TFloat    , -- курс валюты
-   OUT outParValue            TFloat    , -- Номинал для перевода в валюту баланса
     IN inComment              TVarChar  , -- Примечание
     IN inSession              TVarChar    -- сессия пользователя
 )                              
@@ -29,27 +27,12 @@ BEGIN
          ioInvNumber:= CAST (NEXTVAL ('movement_loss_seq') AS TVarChar);  
      END IF;
 
-     -- данные из шапки
-     SELECT Movement.OperDate
-    INTO vbOperDate
-     FROM Movement 
-     WHERE Movement.Id = ioId;
-
-    IF inCurrencyDocumentId <> zc_Currency_Basis() THEN
-        SELECT COALESCE (tmp.Amount,1), COALESCE (tmp.ParValue,0)
-       INTO outCurrencyValue, outParValue
-        FROM lfSelect_Movement_Currency_byDate (inOperDate:= vbOperDate, inCurrencyFromId:= zc_Currency_Basis(), inCurrencyToId:= inCurrencyDocumentId ) AS tmp;
-    END IF;
-
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement_Loss (ioId                := ioId
                                          , inInvNumber         := ioInvNumber
                                          , inOperDate          := inOperDate
                                          , inFromId            := inFromId
                                          , inToId              := inToId
-                                         , inCurrencyDocumentId:= inCurrencyDocumentId
-                                         , inCurrencyValue     := outCurrencyValue
-                                         , inParValue          := outParValue
                                          , inComment           := inComment
                                          , inUserId            := vbUserId
                                            );
@@ -61,6 +44,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 26.06.17         *
  08.05.17         *
  25.04.17         *
  */

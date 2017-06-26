@@ -113,6 +113,11 @@ object SendJournalForm: TSendJournalForm
         item
           Format = ',0.####'
           Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummBalance
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -161,6 +166,11 @@ object SendJournalForm: TSendJournalForm
           Format = 'C'#1090#1088#1086#1082': ,0'
           Kind = skCount
           Column = FromName
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummBalance
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -238,19 +248,19 @@ object SendJournalForm: TSendJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object TotalSummPriceList: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
-        DataBinding.FieldName = 'TotalSummPriceList'
+      object TotalSummBalance: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1074#1093'. ('#1043#1056#1053')'
+        DataBinding.FieldName = 'TotalSummBalance'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 120
+        Width = 80
       end
-      object TotalSummBalance: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1074#1093'. ('#1043#1056#1053')'
-        DataBinding.FieldName = 'TotalSummBalance'
+      object TotalSummPriceList: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' ('#1087#1088#1072#1081#1089')'
+        DataBinding.FieldName = 'TotalSummPriceList'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'

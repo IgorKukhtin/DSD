@@ -148,7 +148,7 @@ BEGIN
         AND MovementItem.DescId     = zc_MI_Master()
         AND MovementItem.isErased = false;
 
-      IF vbMovementDescId IN (zc_Movement_Send(), zc_Movement_Sale(), zc_Movement_ReturnIn())
+      IF vbMovementDescId IN (zc_Movement_Send(), zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Loss())
          THEN
              -- Сохранили свойство <Итого сумма вх. в ГРН>
              PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummBalance(), inMovementId, vbTotalSummBalance);
