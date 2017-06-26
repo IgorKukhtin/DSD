@@ -48,8 +48,8 @@ type
     Code: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
-    Price: TcxGridDBColumn;
-    AmountSumm: TcxGridDBColumn;
+    OperPrice: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     actUpdateMasterDS: TdsdUpdateDataSet;
     spInsertUpdateMIMaster: TdsdStoredProc;
@@ -120,13 +120,6 @@ type
     ceStatus: TcxButtonEdit;
     InsertRecord: TInsertRecord;
     actGoodsChoiceForm: TOpenChoiceForm;
-    cxLabel14: TcxLabel;
-    edCurrencyDocument: TcxButtonEdit;
-    cxLabel12: TcxLabel;
-    edCurrencyValue: TcxCurrencyEdit;
-    cxLabel7: TcxLabel;
-    ceParValue: TcxCurrencyEdit;
-    CurrencyDocumentGuides: TdsdGuides;
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
   private

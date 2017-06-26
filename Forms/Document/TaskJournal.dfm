@@ -4,8 +4,9 @@ inherited TaskJournalForm: TTaskJournalForm
   ClientWidth = 958
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -282
   ExplicitWidth = 974
-  ExplicitHeight = 431
+  ExplicitHeight = 435
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -22,6 +23,8 @@ inherited TaskJournalForm: TTaskJournalForm
       inherited cxGrid: TcxGrid
         Width = 958
         Height = 339
+        ExplicitLeft = -40
+        ExplicitTop = -28
         ExplicitWidth = 958
         ExplicitHeight = 339
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -98,7 +101,7 @@ inherited TaskJournalForm: TTaskJournalForm
             item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = colPersonalTradeName
+              Column = PersonalTradeName
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -127,7 +130,7 @@ inherited TaskJournalForm: TTaskJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 70
           end
-          object colBranchName: TcxGridDBColumn
+          object BranchName: TcxGridDBColumn
             Caption = #1060#1080#1083#1080#1072#1083
             DataBinding.FieldName = 'BranchName'
             HeaderAlignmentHorz = taCenter
@@ -135,7 +138,7 @@ inherited TaskJournalForm: TTaskJournalForm
             Options.Editing = False
             Width = 114
           end
-          object colUnitName: TcxGridDBColumn
+          object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
@@ -143,7 +146,7 @@ inherited TaskJournalForm: TTaskJournalForm
             Options.Editing = False
             Width = 117
           end
-          object colPositionName: TcxGridDBColumn
+          object PositionName: TcxGridDBColumn
             Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
             DataBinding.FieldName = 'PositionName'
             HeaderAlignmentHorz = taCenter
@@ -151,14 +154,14 @@ inherited TaskJournalForm: TTaskJournalForm
             Options.Editing = False
             Width = 116
           end
-          object colPersonalTradeName: TcxGridDBColumn
+          object PersonalTradeName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090
             DataBinding.FieldName = 'PersonalTradeName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 180
           end
-          object clInsertName: TcxGridDBColumn
+          object InsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertName'
             HeaderAlignmentHorz = taCenter
@@ -166,7 +169,7 @@ inherited TaskJournalForm: TTaskJournalForm
             Options.Editing = False
             Width = 101
           end
-          object clInsertDate: TcxGridDBColumn
+          object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter
@@ -174,7 +177,7 @@ inherited TaskJournalForm: TTaskJournalForm
             Options.Editing = False
             Width = 78
           end
-          object colPartnerCode: TcxGridDBColumn
+          object PartnerCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088'.'
             DataBinding.FieldName = 'PartnerCode'
             HeaderAlignmentHorz = taCenter
@@ -183,7 +186,7 @@ inherited TaskJournalForm: TTaskJournalForm
             Options.Editing = False
             Width = 46
           end
-          object colPartnerName: TcxGridDBColumn
+          object PartnerName: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
             DataBinding.FieldName = 'PartnerName'
             HeaderAlignmentHorz = taCenter
@@ -191,7 +194,7 @@ inherited TaskJournalForm: TTaskJournalForm
             Options.Editing = False
             Width = 150
           end
-          object colDescription: TcxGridDBColumn
+          object Description: TcxGridDBColumn
             Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1079#1072#1076#1072#1085#1080#1103
             DataBinding.FieldName = 'Description'
             HeaderAlignmentHorz = taCenter
@@ -199,7 +202,7 @@ inherited TaskJournalForm: TTaskJournalForm
             Options.Editing = False
             Width = 299
           end
-          object clComment: TcxGridDBColumn
+          object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
@@ -207,7 +210,7 @@ inherited TaskJournalForm: TTaskJournalForm
             Options.Editing = False
             Width = 172
           end
-          object colisClose: TcxGridDBColumn
+          object isClose: TcxGridDBColumn
             Caption = #1042#1099#1087#1086#1083#1085#1077#1085#1086' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isClose'
             HeaderAlignmentHorz = taCenter
@@ -215,7 +218,7 @@ inherited TaskJournalForm: TTaskJournalForm
             Options.Editing = False
             Width = 80
           end
-          object colUpdateMobileDate: TcxGridDBColumn
+          object UpdateMobileDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1099#1087#1086#1083#1085#1077#1085#1086')'
             DataBinding.FieldName = 'UpdateMobileDate'
             HeaderAlignmentHorz = taCenter

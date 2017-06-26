@@ -28,22 +28,22 @@ uses
 
 type
   TProductionUnionJournalForm = class(TAncestorJournalForm)
-    colFromName: TcxGridDBColumn;
-    colToName: TcxGridDBColumn;
-    colTotalCount: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
+    ToName: TcxGridDBColumn;
+    TotalCount: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    colTotalCountChild: TcxGridDBColumn;
+    TotalCountChild: TcxGridDBColumn;
     spSelectPrint1: TdsdStoredProc;
     actPrintCeh: TdsdPrintAction;
     bbPrint1: TdxBarButton;
     isAuto: TcxGridDBColumn;
     InsertDate: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
-    colDocumentKindName: TcxGridDBColumn;
+    DocumentKindName: TcxGridDBColumn;
     spSelectPrintCeh: TdsdStoredProc;
     actPrint1: TdsdPrintAction;
     bbPrintCeh: TdxBarButton;
@@ -52,7 +52,7 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    InvNumber_ProductionFull: TcxGridDBColumn;
   private
     { Private declarations }
   public

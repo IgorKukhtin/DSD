@@ -10,10 +10,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Loss(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , TotalCount TFloat, TotalSumm TFloat, TotalSummPriceList TFloat
-             , CurrencyValue TFloat, ParValue TFloat
+             , TotalCount TFloat, TotalSummBalance TFloat, TotalSummPriceList TFloat
              , FromName TVarChar, ToName TVarChar
-             , CurrencyDocumentName TVarChar
              , Comment TVarChar
              )
 AS
@@ -39,15 +37,13 @@ BEGIN
            , Object_Status.ValueData                     AS StatusName
 
            , MovementFloat_TotalCount.ValueData          AS TotalCount
-           , MovementFloat_TotalSumm.ValueData           AS TotalSumm
+           , MovementFloat_TotalSummBalance.ValueData    AS TotalSummBalance
            , MovementFloat_TotalSummPriceList.ValueData  AS TotalSummPriceList
 
-           , CAST (COALESCE (MovementFloat_CurrencyValue.ValueData, 0) AS TFloat)  AS CurrencyValue
-           , MovementFloat_ParValue.ValueData   AS ParValue
         
            , Object_From.ValueData                       AS FromName
            , Object_To.ValueData                         AS ToName
-           , Object_CurrencyDocument.ValueData           AS CurrencyDocumentName
+
            , MovementString_Comment.ValueData            AS Comment
          
        FROM (SELECT Movement.id
@@ -67,19 +63,12 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId = Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId = Movement.Id
-                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummBalance
+                                    ON MovementFloat_TotalSummBalance.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummBalance.DescId = zc_MovementFloat_TotalSummBalance()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPriceList
                                     ON MovementFloat_TotalSummPriceList.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummPriceList.DescId = zc_MovementFloat_TotalSummPriceList()
-
-            LEFT JOIN MovementFloat AS MovementFloat_ParValue
-                                    ON MovementFloat_ParValue.MovementId = Movement.Id
-                                   AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParValue()
-            LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
-                                    ON MovementFloat_CurrencyValue.MovementId =  Movement.Id
-                                   AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -90,11 +79,6 @@ BEGIN
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
-                                         ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id
-                                        AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
-            LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = MovementLinkObject_CurrencyDocument.ObjectId
-
      ;
   
 END;
@@ -104,6 +88,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 26.06.17         *
  26.04.17         *
  25.04.17         *
 */

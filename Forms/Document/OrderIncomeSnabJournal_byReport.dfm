@@ -80,17 +80,17 @@ object OrderIncomeSnabJournal_byReportForm: TOrderIncomeSnabJournal_byReportForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colAmount
+          Column = Amount
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colAmountOrder
+          Column = AmountOrder
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colAmountIncome
+          Column = AmountIncome
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -101,17 +101,17 @@ object OrderIncomeSnabJournal_byReportForm: TOrderIncomeSnabJournal_byReportForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colAmountOrder
+          Column = AmountOrder
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colAmountIncome
+          Column = AmountIncome
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colAmount
+          Column = Amount
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -151,7 +151,7 @@ object OrderIncomeSnabJournal_byReportForm: TOrderIncomeSnabJournal_byReportForm
         Options.Editing = False
         Width = 100
       end
-      object colStatus: TcxGridDBColumn
+      object StatusCode: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089
         DataBinding.FieldName = 'StatusCode'
         PropertiesClassName = 'TcxImageComboBoxProperties'
@@ -176,7 +176,7 @@ object OrderIncomeSnabJournal_byReportForm: TOrderIncomeSnabJournal_byReportForm
         HeaderAlignmentVert = vaCenter
         Width = 53
       end
-      object colisClose: TcxGridDBColumn
+      object isClose: TcxGridDBColumn
         Caption = #1042#1099#1087#1086#1083#1085#1077#1085' '#1079#1072#1082#1072#1079
         DataBinding.FieldName = 'isClosed'
         HeaderAlignmentHorz = taCenter
@@ -184,21 +184,21 @@ object OrderIncomeSnabJournal_byReportForm: TOrderIncomeSnabJournal_byReportForm
         Options.Editing = False
         Width = 70
       end
-      object colInvNumber: TcxGridDBColumn
+      object InvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'.'
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 54
       end
-      object colOperDate: TcxGridDBColumn
+      object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 68
       end
-      object colAmount: TcxGridDBColumn
+      object Amount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'Amount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -209,7 +209,7 @@ object OrderIncomeSnabJournal_byReportForm: TOrderIncomeSnabJournal_byReportForm
         Options.Editing = False
         Width = 65
       end
-      object colAmountOrder: TcxGridDBColumn
+      object AmountOrder: TcxGridDBColumn
         Caption = #1047#1072#1082#1072#1079' '#1074' '#1087#1091#1090#1080
         DataBinding.FieldName = 'AmountOrder'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -220,7 +220,7 @@ object OrderIncomeSnabJournal_byReportForm: TOrderIncomeSnabJournal_byReportForm
         Options.Editing = False
         Width = 65
       end
-      object colAmountIncome: TcxGridDBColumn
+      object AmountIncome: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076
         DataBinding.FieldName = 'AmountIncome'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -231,7 +231,7 @@ object OrderIncomeSnabJournal_byReportForm: TOrderIncomeSnabJournal_byReportForm
         Options.Editing = False
         Width = 65
       end
-      object colInvNumberIncome: TcxGridDBColumn
+      object InvNumber_Income_Full: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'. '#1087#1088#1080#1093#1086#1076
         DataBinding.FieldName = 'InvNumber_Income_Full'
         HeaderAlignmentHorz = taCenter
@@ -255,7 +255,7 @@ object OrderIncomeSnabJournal_byReportForm: TOrderIncomeSnabJournal_byReportForm
         HeaderAlignmentVert = vaCenter
         Width = 154
       end
-      object colPaidKindName: TcxGridDBColumn
+      object PaidKindName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
         DataBinding.FieldName = 'PaidKindName'
         Visible = False
@@ -269,7 +269,7 @@ object OrderIncomeSnabJournal_byReportForm: TOrderIncomeSnabJournal_byReportForm
         VisibleForCustomization = False
         Width = 30
       end
-      object colContractCode: TcxGridDBColumn
+      object ContractCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1076#1086#1075'.'
         DataBinding.FieldName = 'ContractCode'
         Visible = False
@@ -277,7 +277,7 @@ object OrderIncomeSnabJournal_byReportForm: TOrderIncomeSnabJournal_byReportForm
         HeaderAlignmentVert = vaCenter
         Width = 68
       end
-      object colContractName: TcxGridDBColumn
+      object ContractName: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1075'.'
         DataBinding.FieldName = 'ContractName'
         Visible = False
@@ -285,7 +285,7 @@ object OrderIncomeSnabJournal_byReportForm: TOrderIncomeSnabJournal_byReportForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object colCurrencyDocumentName: TcxGridDBColumn
+      object CurrencyDocumentName: TcxGridDBColumn
         Caption = #1042#1072#1083#1102#1090#1072' ('#1076#1086#1082'.)'
         DataBinding.FieldName = 'CurrencyDocumentName'
         Visible = False
@@ -294,7 +294,7 @@ object OrderIncomeSnabJournal_byReportForm: TOrderIncomeSnabJournal_byReportForm
         Options.Editing = False
         Width = 55
       end
-      object colCurrencyValue: TcxGridDBColumn
+      object CurrencyValue: TcxGridDBColumn
         Caption = #1050#1091#1088#1089' '#1059#1055
         DataBinding.FieldName = 'CurrencyValue'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -307,7 +307,7 @@ object OrderIncomeSnabJournal_byReportForm: TOrderIncomeSnabJournal_byReportForm
         Options.Editing = False
         Width = 70
       end
-      object colParValue: TcxGridDBColumn
+      object ParValue: TcxGridDBColumn
         Caption = #1053#1086#1084#1080#1085#1072#1083' '#1059#1055
         DataBinding.FieldName = 'ParValue'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -320,7 +320,7 @@ object OrderIncomeSnabJournal_byReportForm: TOrderIncomeSnabJournal_byReportForm
         Options.Editing = False
         Width = 70
       end
-      object colInfoMoneyCode: TcxGridDBColumn
+      object InfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055
         DataBinding.FieldName = 'InfoMoneyCode'
         Visible = False
@@ -328,7 +328,7 @@ object OrderIncomeSnabJournal_byReportForm: TOrderIncomeSnabJournal_byReportForm
         HeaderAlignmentVert = vaCenter
         Width = 50
       end
-      object colInfoMoneyGroupName: TcxGridDBColumn
+      object InfoMoneyGroupName: TcxGridDBColumn
         Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyGroupName'
         Visible = False
@@ -336,7 +336,7 @@ object OrderIncomeSnabJournal_byReportForm: TOrderIncomeSnabJournal_byReportForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object colInfoMoneyDestinationName: TcxGridDBColumn
+      object InfoMoneyDestinationName: TcxGridDBColumn
         Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'InfoMoneyDestinationName'
         Visible = False
@@ -344,7 +344,7 @@ object OrderIncomeSnabJournal_byReportForm: TOrderIncomeSnabJournal_byReportForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object colInfoMoneyName: TcxGridDBColumn
+      object InfoMoneyName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyName'
         Visible = False
@@ -352,7 +352,7 @@ object OrderIncomeSnabJournal_byReportForm: TOrderIncomeSnabJournal_byReportForm
         HeaderAlignmentVert = vaCenter
         Width = 150
       end
-      object clUnitName: TcxGridDBColumn
+      object UnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'UnitName'
         HeaderAlignmentHorz = taCenter
@@ -360,14 +360,14 @@ object OrderIncomeSnabJournal_byReportForm: TOrderIncomeSnabJournal_byReportForm
         Options.Editing = False
         Width = 156
       end
-      object colInsertDate: TcxGridDBColumn
+      object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103
         DataBinding.FieldName = 'InsertDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 68
       end
-      object colInsertName: TcxGridDBColumn
+      object InsertName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076'.'
         DataBinding.FieldName = 'InsertName'
         HeaderAlignmentHorz = taCenter

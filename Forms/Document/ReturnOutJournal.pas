@@ -28,27 +28,27 @@ uses
 
 type
   TReturnOutJournalForm = class(TAncestorJournalForm)
-    colOperDatePartner: TcxGridDBColumn;
-    colFromName: TcxGridDBColumn;
-    colToName: TcxGridDBColumn;
-    colTotalCount: TcxGridDBColumn;
-    colTotalCountPartner: TcxGridDBColumn;
-    colTotalSumm: TcxGridDBColumn;
-    colChangePercent: TcxGridDBColumn;
-    colPriceWithVAT: TcxGridDBColumn;
-    colVATPercent: TcxGridDBColumn;
-    colTotalSummMVAT: TcxGridDBColumn;
-    colTotalSummPVAT: TcxGridDBColumn;
-    colPaidKindName: TcxGridDBColumn;
-    colContractName: TcxGridDBColumn;
+    OperDatePartner: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
+    ToName: TcxGridDBColumn;
+    TotalCount: TcxGridDBColumn;
+    TotalCountPartner: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
+    ChangePercent: TcxGridDBColumn;
+    PriceWithVAT: TcxGridDBColumn;
+    VATPercent: TcxGridDBColumn;
+    TotalSummMVAT: TcxGridDBColumn;
+    TotalSummPVAT: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
+    ContractName: TcxGridDBColumn;
     edIsPartnerDate: TcxCheckBox;
-    colInfoMoneyGroupName: TcxGridDBColumn;
-    colInfoMoneyDestinationName: TcxGridDBColumn;
-    colInfoMoneyCode: TcxGridDBColumn;
-    colInfoMoneyName: TcxGridDBColumn;
-    colCurrencyValue: TcxGridDBColumn;
-    colCurrencyDocumentName: TcxGridDBColumn;
-    colCurrencyPartnerName: TcxGridDBColumn;
+    InfoMoneyGroupName: TcxGridDBColumn;
+    InfoMoneyDestinationName: TcxGridDBColumn;
+    InfoMoneyCode: TcxGridDBColumn;
+    InfoMoneyName: TcxGridDBColumn;
+    CurrencyValue: TcxGridDBColumn;
+    CurrencyDocumentName: TcxGridDBColumn;
+    CurrencyPartnerName: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;

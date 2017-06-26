@@ -5,9 +5,9 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -300
+  ExplicitTop = -55
   ExplicitWidth = 1089
-  ExplicitHeight = 570
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -35,7 +35,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end
             item
               Format = ',0.####'
@@ -73,7 +73,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end
             item
               Format = ',0.####'
@@ -134,21 +134,21 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
-          object colFromName: TcxGridDBColumn
+          object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
-          object colToName: TcxGridDBColumn
+          object ToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
-          object colTotalCount: TcxGridDBColumn
+          object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'TotalCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -158,7 +158,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colTotalCountKg: TcxGridDBColumn
+          object TotalCountKg: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086', '#1082#1075
             DataBinding.FieldName = 'TotalCountKg'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -168,7 +168,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colTotalCountSh: TcxGridDBColumn
+          object TotalCountSh: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086', '#1096#1090
             DataBinding.FieldName = 'TotalCountSh'
             PropertiesClassName = 'TcxCurrencyEditProperties'

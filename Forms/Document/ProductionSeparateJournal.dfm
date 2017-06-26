@@ -4,8 +4,9 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
   ClientWidth = 1073
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitTop = -55
   ExplicitWidth = 1089
-  ExplicitHeight = 570
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -33,7 +34,7 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end
             item
               Format = ',0.####'
@@ -70,13 +71,13 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCountChild
+              Column = TotalCountChild
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end
             item
               Format = ',0.####'
@@ -113,7 +114,7 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCountChild
+              Column = TotalCountChild
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -142,21 +143,21 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 70
           end
-          object colFromName: TcxGridDBColumn
+          object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
-          object colToName: TcxGridDBColumn
+          object ToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
-          object colTotalCount: TcxGridDBColumn
+          object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'TotalCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -166,7 +167,7 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colTotalCountChild: TcxGridDBColumn
+          object TotalCountChild: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'TotalCountChild'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -176,7 +177,7 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colPartionGoods: TcxGridDBColumn
+          object PartionGoods: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103
             DataBinding.FieldName = 'PartionGoods'
             HeaderAlignmentHorz = taCenter

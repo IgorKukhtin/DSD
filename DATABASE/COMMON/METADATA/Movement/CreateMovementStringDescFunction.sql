@@ -130,6 +130,10 @@ CREATE OR REPLACE FUNCTION zc_MovementString_GUID() RETURNS Integer AS $BODY$BEG
 INSERT INTO MovementStringDesc (Code, ItemName)
   SELECT 'zc_MovementString_GUID', 'Глобальный уникальный идентификатор' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_GUID');
 
+CREATE OR REPLACE FUNCTION zc_MovementString_AddressByGPS() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_AddressByGPS'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementStringDesc (Code, ItemName)
+  SELECT 'zc_MovementString_AddressByGPS', 'Адрес, определенный по GPS' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_AddressByGPS');
+
 
   --!!!!!!!!!!!!!!!!!!!!!!!!!!Аптека
 CREATE OR REPLACE FUNCTION zc_MovementString_Bayer() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_Bayer'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;

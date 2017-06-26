@@ -33,7 +33,7 @@ type
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    colPersonalTradeName: TcxGridDBColumn;
+    PersonalTradeName: TcxGridDBColumn;
     actSPSavePrintState: TdsdExecStoredProc;
     mactPrint_Order: TMultiAction;
     actPrintSilent: TdsdPrintAction;
@@ -50,9 +50,9 @@ type
     cxLabel3: TcxLabel;
     edPersonalTrade: TcxButtonEdit;
     PersonalTradeGuides: TdsdGuides;
-    colPositionName: TcxGridDBColumn;
-    colUnitName: TcxGridDBColumn;
-    colBranchName: TcxGridDBColumn;
+    PositionName: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    BranchName: TcxGridDBColumn;
   private
     { Private declarations }
   public

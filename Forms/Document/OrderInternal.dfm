@@ -2,8 +2,10 @@ inherited OrderInternalForm: TOrderInternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1062#1077#1093')>'
   ClientHeight = 668
   ClientWidth = 1020
+  ExplicitLeft = -17
+  ExplicitTop = -188
   ExplicitWidth = 1036
-  ExplicitHeight = 703
+  ExplicitHeight = 707
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1030,7 +1032,7 @@ inherited OrderInternalForm: TOrderInternalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clChAmount
+          Column = ChAmount
         end
         item
           Format = ',0.####'
@@ -1043,23 +1045,23 @@ inherited OrderInternalForm: TOrderInternalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clChAmount_old
+          Column = Amount_old
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clChAmount_next
+          Column = Amount_next
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clChAmount_calc
+          Column = Amount_calc
         end>
       DataController.Summary.FooterSummaryItems = <
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clChAmount
+          Column = ChAmount
         end
         item
           Format = ',0.####'
@@ -1072,17 +1074,17 @@ inherited OrderInternalForm: TOrderInternalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clChAmount_old
+          Column = Amount_old
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clChAmount_next
+          Column = Amount_next
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clChAmount_calc
+          Column = Amount_calc
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -1102,7 +1104,7 @@ inherited OrderInternalForm: TOrderInternalForm
       Styles.Footer = dmMain.cxFooterStyle
       Styles.Header = dmMain.cxHeaderStyle
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clChGoodsCode: TcxGridDBColumn
+      object ChGoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'GoodsCode'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1113,7 +1115,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Options.Editing = False
         Width = 55
       end
-      object clChGoodsName: TcxGridDBColumn
+      object ChGoodsName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')'
         DataBinding.FieldName = 'GoodsName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -1128,7 +1130,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Options.Editing = False
         Width = 200
       end
-      object clChGoodsKindName: TcxGridDBColumn
+      object ChGoodsKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'GoodsKindName'
         HeaderAlignmentHorz = taCenter
@@ -1136,7 +1138,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Options.Editing = False
         Width = 100
       end
-      object clChGoodsKindName_Complete: TcxGridDBColumn
+      object GoodsKindName_Complete: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' '#1043#1055
         DataBinding.FieldName = 'GoodsKindName_Complete'
         HeaderAlignmentHorz = taCenter
@@ -1144,7 +1146,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Options.Editing = False
         Width = 100
       end
-      object clChMeasureName: TcxGridDBColumn
+      object ChMeasureName: TcxGridDBColumn
         Caption = #1045#1076'. '#1080#1079#1084'.'
         DataBinding.FieldName = 'MeasureName'
         HeaderAlignmentHorz = taCenter
@@ -1152,7 +1154,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Options.Editing = False
         Width = 45
       end
-      object clChAmount: TcxGridDBColumn
+      object ChAmount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1055#1060' ('#1080#1090#1086#1075#1086')'
         DataBinding.FieldName = 'Amount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1174,7 +1176,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Options.Editing = False
         Width = 50
       end
-      object clChAmount_calc: TcxGridDBColumn
+      object Amount_calc: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' ('#1080#1090#1086#1075#1086')'
         DataBinding.FieldName = 'Amount_calc'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1184,7 +1186,7 @@ inherited OrderInternalForm: TOrderInternalForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
       end
-      object clChAmount_old: TcxGridDBColumn
+      object Amount_old: TcxGridDBColumn
         Caption = #1055#1088#1086#1080#1079#1074'. '#1089#1077#1075#1086#1076#1085#1103
         DataBinding.FieldName = 'Amount_old'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1195,7 +1197,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Options.Editing = False
         Width = 70
       end
-      object clChAmount_next: TcxGridDBColumn
+      object Amount_next: TcxGridDBColumn
         Caption = #1055#1088#1086#1080#1079#1074'. '#1076#1072#1083#1077#1077
         DataBinding.FieldName = 'Amount_next'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1206,7 +1208,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Options.Editing = False
         Width = 70
       end
-      object clChPartionGoodsDate: TcxGridDBColumn
+      object PartionGoodsDate: TcxGridDBColumn
         Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072')'
         DataBinding.FieldName = 'PartionGoodsDate'
         HeaderAlignmentHorz = taCenter
@@ -1214,7 +1216,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Options.Editing = False
         Width = 80
       end
-      object clChContainerId: TcxGridDBColumn
+      object ContainerId: TcxGridDBColumn
         Caption = #1087#1072#1088#1090#1080#1103
         DataBinding.FieldName = 'ContainerId'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1226,7 +1228,7 @@ inherited OrderInternalForm: TOrderInternalForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object clChIsErased: TcxGridDBColumn
+      object IsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'IsErased'
         Visible = False
@@ -1284,6 +1286,7 @@ inherited OrderInternalForm: TOrderInternalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       ReportNameParam.Value = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
@@ -1313,12 +1316,14 @@ inherited OrderInternalForm: TOrderInternalForm
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1326,6 +1331,7 @@ inherited OrderInternalForm: TOrderInternalForm
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1489,6 +1495,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -1496,6 +1503,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -1503,6 +1511,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 152
     Top = 296
@@ -1754,6 +1763,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 5
       end>
     Left = 846
@@ -1775,12 +1785,14 @@ inherited OrderInternalForm: TOrderInternalForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
@@ -1788,20 +1800,24 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isPack'
         Value = False
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFromId'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inToId'
         Value = Null
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 280
     Top = 369
@@ -1824,6 +1840,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -1832,6 +1849,7 @@ inherited OrderInternalForm: TOrderInternalForm
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsPack'
@@ -1840,6 +1858,7 @@ inherited OrderInternalForm: TOrderInternalForm
         ComponentItem = 'isPack'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFromId'
@@ -1847,6 +1866,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = FormParams
         ComponentItem = 'inFromId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inToId'
@@ -1854,17 +1874,20 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = FormParams
         ComponentItem = 'inToId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusCode'
@@ -1872,6 +1895,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = StatusGuides
         ComponentItem = 'Key'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
@@ -1879,12 +1903,14 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromId'
         Value = ''
         Component = GuidesFrom
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromName'
@@ -1892,12 +1918,14 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToId'
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToName'
@@ -1905,36 +1933,42 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDatePartner'
         Value = 0d
         Component = edOperDatePartner
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDateStart'
         Value = 'False'
         Component = edOperDateStart
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDateEnd'
         Value = 0.000000000000000000
         Component = edOperDateEnd
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'DayCount'
         Value = 0.000000000000000000
         Component = edDayCount
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Comment'
         Value = Null
         Component = ceComment
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 208
     Top = 296
@@ -1948,6 +1982,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -1955,6 +1990,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -1962,12 +1998,14 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outOperDatePartner'
         Value = 0d
         Component = edOperDatePartner
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioOperDateStart'
@@ -1975,6 +2013,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = edOperDateStart
         DataType = ftDateTime
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioOperDateEnd'
@@ -1982,12 +2021,14 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = edOperDateEnd
         DataType = ftDateTime
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outDayCount'
         Value = ''
         Component = edDayCount
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFromId'
@@ -1995,6 +2036,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = GuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inToId'
@@ -2002,6 +2044,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = GuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -2009,6 +2052,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = ceComment
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 170
     Top = 336
@@ -2077,6 +2121,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -2084,6 +2129,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -2091,6 +2137,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCuterCount'
@@ -2099,6 +2146,7 @@ inherited OrderInternalForm: TOrderInternalForm
         ComponentItem = 'CuterCount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioAmount'
@@ -2107,6 +2155,7 @@ inherited OrderInternalForm: TOrderInternalForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCuterCountSecond'
@@ -2115,6 +2164,7 @@ inherited OrderInternalForm: TOrderInternalForm
         ComponentItem = 'CuterCountSecond'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioAmountSecond'
@@ -2123,6 +2173,7 @@ inherited OrderInternalForm: TOrderInternalForm
         ComponentItem = 'AmountSecond'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindId'
@@ -2130,6 +2181,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inReceiptId_basis'
@@ -2137,6 +2189,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = MasterCDS
         ComponentItem = 'ReceiptId_basis'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsPack'
@@ -2145,6 +2198,7 @@ inherited OrderInternalForm: TOrderInternalForm
         ComponentItem = 'isPack'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 168
     Top = 392
@@ -2159,6 +2213,7 @@ inherited OrderInternalForm: TOrderInternalForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
@@ -2202,6 +2257,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 319
@@ -2212,6 +2268,7 @@ inherited OrderInternalForm: TOrderInternalForm
     LookupControl = edFrom
     FormNameParam.Value = 'TUnitForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnitForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2221,6 +2278,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = GuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2229,6 +2287,7 @@ inherited OrderInternalForm: TOrderInternalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 336
     Top = 8
@@ -2238,6 +2297,7 @@ inherited OrderInternalForm: TOrderInternalForm
     LookupControl = edTo
     FormNameParam.Value = 'TUnitForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnitForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2247,6 +2307,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = GuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2255,6 +2316,7 @@ inherited OrderInternalForm: TOrderInternalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 624
     Top = 8
@@ -2270,6 +2332,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -2277,6 +2340,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFromId'
@@ -2284,6 +2348,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = GuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inToId'
@@ -2291,6 +2356,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = GuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 714
@@ -2307,6 +2373,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -2314,6 +2381,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFromId'
@@ -2321,6 +2389,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = GuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 784
@@ -2337,6 +2406,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStartDate'
@@ -2344,6 +2414,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = edOperDateStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -2351,6 +2422,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = edOperDateEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFromId'
@@ -2358,6 +2430,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = GuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 864

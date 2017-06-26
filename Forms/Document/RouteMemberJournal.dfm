@@ -4,6 +4,8 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
   ClientWidth = 953
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -226
+  ExplicitTop = -64
   ExplicitWidth = 969
   ExplicitHeight = 435
   PixelsPerInch = 96
@@ -123,7 +125,7 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 85
           end
-          object clInsertName: TcxGridDBColumn
+          object InsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertName'
             HeaderAlignmentHorz = taCenter
@@ -131,7 +133,7 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
             Options.Editing = False
             Width = 101
           end
-          object clMemberName: TcxGridDBColumn
+          object MemberName: TcxGridDBColumn
             Caption = #1060#1048#1054
             DataBinding.FieldName = 'MemberName'
             HeaderAlignmentHorz = taCenter
@@ -164,7 +166,7 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
             Options.Editing = False
             Width = 84
           end
-          object clInsertDate: TcxGridDBColumn
+          object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1080#1085#1093#1088'. '#1089' '#1084#1086#1073'.'#1091#1089#1090#1088')'
             DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter
@@ -172,7 +174,7 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
             Options.Editing = False
             Width = 78
           end
-          object clInsertMobileDate: TcxGridDBColumn
+          object InsertMobileDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1087#1088#1086#1074#1077#1076#1077#1085' '#1085#1072' '#1084#1086#1073'.'#1091#1089#1090#1088')'
             DataBinding.FieldName = 'InsertMobileDate'
             HeaderAlignmentHorz = taCenter
@@ -180,7 +182,7 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
             Options.Editing = False
             Width = 90
           end
-          object clGPSN: TcxGridDBColumn
+          object GPSN: TcxGridDBColumn
             Caption = 'GPS '#1082#1086#1086#1088#1076#1080#1085#1072#1090#1099' ('#1096#1080#1088#1086#1090#1072')'
             DataBinding.FieldName = 'GPSN'
             Visible = False
@@ -191,7 +193,7 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
             Options.Editing = False
             Width = 150
           end
-          object clGPSE: TcxGridDBColumn
+          object GPSE: TcxGridDBColumn
             Caption = 'GPS '#1082#1086#1086#1088#1076#1080#1085#1072#1090#1099' ('#1076#1086#1083#1075#1086#1090#1072')'
             DataBinding.FieldName = 'GPSE'
             Visible = False
@@ -201,7 +203,7 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
-          object clGUID: TcxGridDBColumn
+          object GUID: TcxGridDBColumn
             DataBinding.FieldName = 'GUID'
             Visible = False
             HeaderAlignmentHorz = taCenter

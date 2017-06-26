@@ -12,7 +12,18 @@ uses
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, Vcl.Controls, Vcl.ExtCtrls, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.DBActns, cxButtonEdit, dsdGuides;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.DBActns, cxButtonEdit, dsdGuides,
+  dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
+  dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue;
 
 type
   TSendDebtJournalForm = class(TParentForm)
@@ -32,9 +43,9 @@ type
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
-    colStatus: TcxGridDBColumn;
-    colInvNumber: TcxGridDBColumn;
-    colOperDate: TcxGridDBColumn;
+    StatusCode: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
     Panel1: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
@@ -49,7 +60,7 @@ type
     bbDelete: TdxBarButton;
     actSetErased: TdsdChangeMovementStatus;
     spMovementSetErased: TdsdStoredProc;
-    clAmount: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
     bbStatic: TdxBarStatic;
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
@@ -62,24 +73,24 @@ type
     spMovementReCompleteAll: TdsdStoredProc;
     bbReCompleteAll: TdxBarButton;
     spInsertUpdate: TdsdStoredProc;
-    clJuridicalFromCode: TcxGridDBColumn;
-    clJuridicalFromName: TcxGridDBColumn;
-    clFromOKPO: TcxGridDBColumn;
-    clPaidKindFromName: TcxGridDBColumn;
-    clContractFromName: TcxGridDBColumn;
-    clInfoMoneyFromCode: TcxGridDBColumn;
-    clInfoMoneyGroupFromName: TcxGridDBColumn;
-    clInfoMoneyDestinationFromName: TcxGridDBColumn;
-    clInfoMoneyFromName: TcxGridDBColumn;
-    clJuridicalToCode: TcxGridDBColumn;
-    clJuridicalToName: TcxGridDBColumn;
-    clToOKPO: TcxGridDBColumn;
-    clPaidKindToName: TcxGridDBColumn;
-    clContractToName: TcxGridDBColumn;
-    clInfoMoneyToCode: TcxGridDBColumn;
-    clInfoMoneyGroupToName: TcxGridDBColumn;
-    clInfoMoneyDestinationToName: TcxGridDBColumn;
-    clInfoMoneyToName: TcxGridDBColumn;
+    JuridicalFromCode: TcxGridDBColumn;
+    JuridicalFromName: TcxGridDBColumn;
+    FromOKPO: TcxGridDBColumn;
+    PaidKindFromName: TcxGridDBColumn;
+    ContractFromName: TcxGridDBColumn;
+    InfoMoneyFromCode: TcxGridDBColumn;
+    InfoMoneyGroupFromName: TcxGridDBColumn;
+    InfoMoneyDestinationFromName: TcxGridDBColumn;
+    InfoMoneyFromName: TcxGridDBColumn;
+    JuridicalToCode: TcxGridDBColumn;
+    JuridicalToName: TcxGridDBColumn;
+    ToOKPO: TcxGridDBColumn;
+    PaidKindToName: TcxGridDBColumn;
+    ContractToName: TcxGridDBColumn;
+    InfoMoneyToCode: TcxGridDBColumn;
+    InfoMoneyGroupToName: TcxGridDBColumn;
+    InfoMoneyDestinationToName: TcxGridDBColumn;
+    InfoMoneyToName: TcxGridDBColumn;
     actUpdateDataSet: TdsdUpdateDataSet;
     actMovementItemContainer: TdsdOpenForm;
     bbMovementItemContainer: TdxBarButton;
@@ -90,7 +101,7 @@ type
     bbMovementProtocol: TdxBarButton;
     spUpdate_isCopy: TdsdStoredProc;
     actIsCopy: TdsdExecStoredProc;
-    clisCopy: TcxGridDBColumn;
+    isCopy: TcxGridDBColumn;
     bbisCopy: TdxBarButton;
     actMasterPost: TDataSetPost;
     FormParams: TdsdFormParams;

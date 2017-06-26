@@ -4036,8 +4036,8 @@ begin
       try
         qrySavePhoto.Connection := DM.conMain;
 
-        qrySavePhoto.SQL.Text := 'Insert into MovementItem_Visit (MovementId, GUID, Photo, Comment, InsertDate, GPSN, GPSE, isErased, isSync) ' +
-          'Values (:MovementId, :GUID, :Photo, :Comment, :InsertDate, :GPSN, :GPSE, 0, 0)';
+        qrySavePhoto.SQL.Text := 'Insert into MovementItem_Visit (MovementId, GUID, Photo, Comment, InsertDate, GPSN, GPSE, AddressByGPS, isErased, isSync) ' +
+          'Values (:MovementId, :GUID, :Photo, :Comment, :InsertDate, :GPSN, :GPSE, :AddressByGPS, 0, 0)';
         qrySavePhoto.Params[0].Value := DM.qryPhotoGroupsId.AsInteger;
         CreateGUID(GlobalId);
         qrySavePhoto.Params[1].Value := GUIDToString(GlobalId);
@@ -4050,11 +4050,13 @@ begin
         begin
           qrySavePhoto.Params[5].Value := FCurCoordinates.Latitude;
           qrySavePhoto.Params[6].Value := FCurCoordinates.Longitude;
+          qrySavePhoto.Params[7].Value := GetAddress(FCurCoordinates.Latitude, FCurCoordinates.Longitude);
         end
         else
         begin
           qrySavePhoto.Params[5].Value := 0;
           qrySavePhoto.Params[6].Value := 0;
+          qrySavePhoto.Params[7].Value := '';
         end;
 
         qrySavePhoto.ExecSQL;
@@ -4295,6 +4297,7 @@ begin
         DM.tblMovement_RouteMemberGUID.AsString := GUIDToString(GlobalId);
         DM.tblMovement_RouteMemberGPSN.AsFloat := FCurCoordinates.Latitude;
         DM.tblMovement_RouteMemberGPSE.AsFloat := FCurCoordinates.Longitude;
+        DM.tblMovement_RouteMemberAddressByGPS.AsString := GetAddress(FCurCoordinates.Latitude, FCurCoordinates.Longitude);
         DM.tblMovement_RouteMemberInsertDate.AsDateTime := Now();
         DM.tblMovement_RouteMemberisSync.AsBoolean := false;
         DM.tblMovement_RouteMember.Post;

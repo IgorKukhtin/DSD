@@ -44,13 +44,13 @@ type
     edDateRegistered: TcxDateEdit;
     cxLabel10: TcxLabel;
     edIsChecked: TcxCheckBox;
-    colCode: TcxGridDBColumn;
-    colName: TcxGridDBColumn;
-    colGoodsKindName: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
-    colPrice: TcxGridDBColumn;
-    colCountForPrice: TcxGridDBColumn;
-    colAmountSumm: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    CountForPrice: TcxGridDBColumn;
+    AmountSumm: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
     cxLabel12: TcxLabel;
     edInvNumberPartner: TcxTextEdit;
@@ -88,8 +88,8 @@ type
     actPrint_TaxCorrective_Client: TdsdPrintAction;
     mactPrint_TaxCorrective_Client: TMultiAction;
     mactPrint_TaxCorrective_Us: TMultiAction;
-    clGoodsGroupNameFull: TcxGridDBColumn;
-    clMeasureName: TcxGridDBColumn;
+    GoodsGroupNameFull: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
     cbPartner: TcxCheckBox;
@@ -98,8 +98,8 @@ type
     bbChangeSignAmount: TdxBarButton;
     actOpenTax: TdsdOpenForm;
     bbOpenTax: TdxBarButton;
-    colisAuto: TcxGridDBColumn;
-    colLineNumTaxOld: TcxGridDBColumn;
+    isAuto: TcxGridDBColumn;
+    LineNumTaxOld: TcxGridDBColumn;
     actShowMessage: TShowMessageAction;
   private
     { Private declarations }

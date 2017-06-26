@@ -57,12 +57,12 @@ type
     HeaderCDS: TClientDataSet;
     RefreshDispatcher: TRefreshDispatcher;
     cxGridDBBandedTableView: TcxGridDBBandedTableView;
-    BandcolMemberlCode: TcxGridDBBandedColumn;
-    BandcolMemberName: TcxGridDBBandedColumn;
-    BandcolPositionName: TcxGridDBBandedColumn;
-    BandcolPositionLevelName: TcxGridDBBandedColumn;
-    BandcolPersonalGroupName: TcxGridDBBandedColumn;
-    TemplateColumn: TcxGridDBBandedColumn;
+    MemberCode: TcxGridDBBandedColumn;
+    MemberName: TcxGridDBBandedColumn;
+    PositionName: TcxGridDBBandedColumn;
+    PositionLevelName: TcxGridDBBandedColumn;
+    PersonalGroupName: TcxGridDBBandedColumn;
+    Value: TcxGridDBBandedColumn;
     OpenWorkTimeKindForm: TOpenChoiceForm;
     MultiAction: TMultiAction;
     actInsert: TdsdInsertUpdateAction;

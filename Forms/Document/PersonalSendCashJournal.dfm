@@ -81,7 +81,7 @@ object PersonalSendCashJournalForm: TPersonalSendCashJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSumm
+          Column = TotalSumm
         end
         item
           Format = ',0.00'
@@ -115,7 +115,7 @@ object PersonalSendCashJournalForm: TPersonalSendCashJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSumm
+          Column = TotalSumm
         end
         item
           Format = ',0.00'
@@ -152,7 +152,7 @@ object PersonalSendCashJournalForm: TPersonalSendCashJournalForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object colStatus: TcxGridDBColumn
+      object StatusCode: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089
         DataBinding.FieldName = 'StatusCode'
         PropertiesClassName = 'TcxImageComboBoxProperties'
@@ -176,32 +176,32 @@ object PersonalSendCashJournalForm: TPersonalSendCashJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 68
       end
-      object colInvNumber: TcxGridDBColumn
+      object InvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentVert = vaCenter
         Width = 50
       end
-      object colOperDate: TcxGridDBColumn
+      object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object colPersonalName: TcxGridDBColumn
+      object PersonalName: TcxGridDBColumn
         Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1054#1090' '#1082#1086#1075#1086')'
         DataBinding.FieldName = 'PersonalName'
         HeaderAlignmentVert = vaCenter
         Width = 150
       end
-      object colUnitForwardingName: TcxGridDBColumn
+      object UnitForwardingName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1052#1077#1089#1090#1086' '#1086#1090#1087#1088#1072#1074#1082#1080')'
         DataBinding.FieldName = 'UnitForwardingName'
         Visible = False
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object colTotalSumm: TcxGridDBColumn
+      object TotalSumm: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072
         DataBinding.FieldName = 'TotalSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'

@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdateMobile_MovementItem_Visit (TVarChar, TVarChar, TBlob, TVarChar, TVarChar, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdateMobile_MovementItem_Visit (TVarChar, TVarChar, TBlob, TVarChar, TVarChar, TDateTime, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdateMobile_MovementItem_Visit (TVarChar, TVarChar, TBlob, TVarChar, TVarChar, TFloat, TFloat, TDateTime, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdateMobile_MovementItem_Visit (TVarChar, TVarChar, TBlob, TVarChar, TVarChar, TFloat, TFloat, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdateMobile_MovementItem_Visit (TVarChar, TVarChar, TBlob, TVarChar, TVarChar, TFloat, TFloat, TVarChar, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdateMobile_MovementItem_Visit(
     IN inGUID         TVarChar  , -- Глобальный уникальный идентификатор для синхронизации с мобильными устройствами
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdateMobile_MovementItem_Visit(
     IN inComment      TVarChar  , -- Примечание к фото
     IN inGPSN         TFloat    , -- GPS координаты фото (широта)
     IN inGPSE         TFloat    , -- GPS координаты фото (долгота)
+    IN inAddressByGPS TVarChar  , -- Адрес, определенный по GPS
     IN inInsertDate   TDateTime , -- Дата/время создания элемента
     IN inIsErased     Boolean   , -- Удаленный ли элемент
     IN inSession      TVarChar    -- сессия пользователя
@@ -96,6 +98,9 @@ BEGIN
       -- сохранили свойство <GPS координаты фото (долгота)>
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_GPSE(), vbId, inGPSE);
 
+      -- сохранили свойство <Адрес, определенный по GPS>
+      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_AddressByGPS(), vbId, inAddressByGPS);
+
       -- сохранили свойство <Дата/время создания>
       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_InsertMobile(), vbId, inInsertDate);
 
@@ -117,8 +122,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Ярошенко Р.Ф.
+ 26.06.17                                                        * AddressByGPS
  04.04.17                                                        *
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdateMobile_MovementItem_Visit (inGUID:= '{29F0D6D3-006A-4D30-8B30-CECCD7D883C6}', inMovementGUID:= '{2F3BD890-0022-45F7-A1E2-9324BC312C76}', inPhoto:= NULL, inPhotoName:= 'NoPhoto', inComment:= 'simple test', inGPSN:= 56, inGPSE:= 57, inInsertDate:= CURRENT_TIMESTAMP, inIsErased:= false, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpInsertUpdateMobile_MovementItem_Visit (inGUID:= '{29F0D6D3-006A-4D30-8B30-CECCD7D883C6}', inMovementGUID:= '{2F3BD890-0022-45F7-A1E2-9324BC312C76}', inPhoto:= NULL, inPhotoName:= 'NoPhoto', inComment:= 'simple test', inGPSN:= 56, inGPSE:= 57, inAddressByGPS:= 'г. Лесной, ул. Дубовая, 15', inInsertDate:= CURRENT_TIMESTAMP, inIsErased:= false, inSession:= zfCalc_UserAdmin())

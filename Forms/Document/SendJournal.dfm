@@ -4,9 +4,10 @@ inherited SendJournalForm: TSendJournalForm
   ClientWidth = 761
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitTop = -96
+  ExplicitLeft = -102
+  ExplicitTop = -203
   ExplicitWidth = 777
-  ExplicitHeight = 570
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -34,7 +35,7 @@ inherited SendJournalForm: TSendJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end
             item
               Format = ',0.####'
@@ -72,7 +73,7 @@ inherited SendJournalForm: TSendJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end
             item
               Format = ',0.####'
@@ -134,7 +135,7 @@ inherited SendJournalForm: TSendJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
-          object colDocumentKindName: TcxGridDBColumn
+          object DocumentKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'DocumentKindName'
             HeaderAlignmentHorz = taCenter
@@ -149,7 +150,7 @@ inherited SendJournalForm: TSendJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colFromName: TcxGridDBColumn
+          object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
@@ -163,14 +164,14 @@ inherited SendJournalForm: TSendJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colToName: TcxGridDBColumn
+          object ToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object colTotalCount: TcxGridDBColumn
+          object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'TotalCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -180,7 +181,7 @@ inherited SendJournalForm: TSendJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colisAuto: TcxGridDBColumn
+          object isAuto: TcxGridDBColumn
             Caption = #1040#1074#1090#1086'.'
             DataBinding.FieldName = 'isAuto'
             HeaderAlignmentHorz = taCenter

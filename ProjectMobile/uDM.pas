@@ -740,6 +740,8 @@ type
     qJuridicalCollationItemsDopValue: TWideStringField;
     tblObject_ConstCriticalOverDays: TIntegerField;
     tblObject_ConstCriticalDebtSum: TFloatField;
+    tblMovement_RouteMemberAddressByGPS: TStringField;
+    tblMovementItem_VisitAddressByGPS: TStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
     procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);
@@ -1927,6 +1929,7 @@ begin
           UploadStoredProc.Params.AddParam('inInsertDate', ftDateTime, ptInput, FieldByName('INSERTDATE').AsDateTime);
           UploadStoredProc.Params.AddParam('inGPSN', ftFloat, ptInput, FieldByName('GPSN').AsFloat);
           UploadStoredProc.Params.AddParam('inGPSE', ftFloat, ptInput, FieldByName('GPSE').AsFloat);
+          UploadStoredProc.Params.AddParam('inAddressByGPS', ftString, ptInput, FieldByName('AddressByGPS').AsString);
 
           try
             UploadStoredProc.Execute(false, false, false);
@@ -2047,6 +2050,7 @@ begin
           UploadStoredProc.Params.AddParam('inComment', ftString, ptInput, FieldByName('COMMENT').AsString);
           UploadStoredProc.Params.AddParam('inGPSN', ftFloat, ptInput, FieldByName('GPSN').AsFloat);
           UploadStoredProc.Params.AddParam('inGPSE', ftFloat, ptInput, FieldByName('GPSE').AsFloat);
+          UploadStoredProc.Params.AddParam('inAddressByGPS', ftString, ptInput, FieldByName('AddressByGPS').AsString);
           UploadStoredProc.Params.AddParam('inInsertDate', ftDateTime, ptInput, FieldByName('INSERTDATE').AsDateTime);
           UploadStoredProc.Params.AddParam('inIsErased', ftBoolean, ptInput, FieldByName('ISERASED').AsBoolean);
 

@@ -13,7 +13,17 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxButtonEdit,
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxSplitter;
+  cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxSplitter, dxSkinBlack,
+  dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom,
+  dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TPromoForm = class(TAncestorDocumentForm)
@@ -48,26 +58,26 @@ type
     UnitGuides: TdsdGuides;
     edUnit: TcxButtonEdit;
     cxLabel17: TcxLabel;
-    colGoodsCode: TcxGridDBColumn;
-    colGoodsName: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
-    colPrice: TcxGridDBColumn;
-    colPriceWithOutVAT: TcxGridDBColumn;
-    colPriceWithVAT: TcxGridDBColumn;
-    colAmountReal: TcxGridDBColumn;
-    colAmountPlanMin: TcxGridDBColumn;
-    colAmountPlanMax: TcxGridDBColumn;
-    colGoodsKindName: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    PriceWithOutVAT: TcxGridDBColumn;
+    PriceWithVAT: TcxGridDBColumn;
+    AmountReal: TcxGridDBColumn;
+    AmountPlanMin: TcxGridDBColumn;
+    AmountPlanMax: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
     GoodsChoiceForm: TOpenChoiceForm;
     InsertRecord: TInsertRecord;
     GoodsKindChoiceForm: TOpenChoiceForm;
     dxBarButton1: TdxBarButton;
     cxGridPartner: TcxGrid;
     cxGridDBTableViewPartner: TcxGridDBTableView;
-    colp_isErased: TcxGridDBColumn;
-    colp_PartnerCode: TcxGridDBColumn;
-    colp_PartnerName: TcxGridDBColumn;
-    colp_PartnerDescName: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
+    PartnerCode: TcxGridDBColumn;
+    PartnerName: TcxGridDBColumn;
+    PartnerDescName: TcxGridDBColumn;
     cxGridLevelPartner: TcxGridLevel;
     spSelect_Movement_PromoPartner: TdsdStoredProc;
     PartnerCDS: TClientDataSet;
@@ -93,9 +103,9 @@ type
     tsConditionPromo: TcxTabSheet;
     cxGridConditionPromo: TcxGrid;
     grtvConditionPromo: TcxGridDBTableView;
-    colcp_isErased: TcxGridDBColumn;
-    colcp_ConditionPromoName: TcxGridDBColumn;
-    colcp_Amount: TcxGridDBColumn;
+    cp_isErased: TcxGridDBColumn;
+    ConditionPromoName: TcxGridDBColumn;
+    cp_Amount: TcxGridDBColumn;
     grlConditionPromo: TcxGridLevel;
     ConditionPromoDS: TDataSource;
     ConditionPromoCDS: TClientDataSet;
@@ -132,11 +142,11 @@ type
     MenuItem12: TMenuItem;
     PrintHead: TClientDataSet;
     spSelect_Movement_Promo_Print: TdsdStoredProc;
-    colJuridical_Name: TcxGridDBColumn;
-    colRetail_Name: TcxGridDBColumn;
-    colContractCode: TcxGridDBColumn;
-    colContractName: TcxGridDBColumn;
-    colContractTagName: TcxGridDBColumn;
+    Juridical_Name: TcxGridDBColumn;
+    Retail_Name: TcxGridDBColumn;
+    ContractCode: TcxGridDBColumn;
+    ContractName: TcxGridDBColumn;
+    ContractTagName: TcxGridDBColumn;
     ContractChoiceForm: TOpenChoiceForm;
     cxLabel18: TcxLabel;
     edCommentMain: TcxTextEdit;
@@ -162,31 +172,31 @@ type
     tsAdvertising: TcxTabSheet;
     grAdvertising: TcxGrid;
     grtvAdvertising: TcxGridDBTableView;
-    colAdvertisingCode: TcxGridDBColumn;
-    colAdvertisingName: TcxGridDBColumn;
-    colCommentAdvertising: TcxGridDBColumn;
+    AdvertisingCode: TcxGridDBColumn;
+    AdvertisingName: TcxGridDBColumn;
+    CommentAdvertising: TcxGridDBColumn;
     grlAdvertising: TcxGridLevel;
     cxSplitter3: TcxSplitter;
-    colcp_Comment: TcxGridDBColumn;
-    colIsErasedAdvertising: TcxGridDBColumn;
-    colp_Comment: TcxGridDBColumn;
+    cp_Comment: TcxGridDBColumn;
+    IsErasedAdvertising: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
     dxBarButton8: TdxBarButton;
     dxBarButton9: TdxBarButton;
     dxBarButton10: TdxBarButton;
-    colGoodComment: TcxGridDBColumn;
-    colPriceSale: TcxGridDBColumn;
-    colMeasureName: TcxGridDBColumn;
-    colTradeMark: TcxGridDBColumn;
-    colAmountRealWeight: TcxGridDBColumn;
-    colAmountPlanMinWeight: TcxGridDBColumn;
-    colAmountPlanMaxWeight: TcxGridDBColumn;
-    colAmountOrder: TcxGridDBColumn;
-    colAmountOrderWeight: TcxGridDBColumn;
-    colAmountOut: TcxGridDBColumn;
-    colAmountOutWeight: TcxGridDBColumn;
-    colAmountIn: TcxGridDBColumn;
-    colAmountInWeight: TcxGridDBColumn;
-    colp_Area: TcxGridDBColumn;
+    GoodComment: TcxGridDBColumn;
+    PriceSale: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
+    TradeMark: TcxGridDBColumn;
+    AmountRealWeight: TcxGridDBColumn;
+    AmountPlanMinWeight: TcxGridDBColumn;
+    AmountPlanMaxWeight: TcxGridDBColumn;
+    AmountOrder: TcxGridDBColumn;
+    AmountOrderWeight: TcxGridDBColumn;
+    AmountOut: TcxGridDBColumn;
+    AmountOutWeight: TcxGridDBColumn;
+    AmountIn: TcxGridDBColumn;
+    AmountInWeight: TcxGridDBColumn;
+    AreaName: TcxGridDBColumn;
     spUpdate_Movement_Promo_Data: TdsdStoredProc;
     actUpdate_Movement_Promo_Data: TdsdExecStoredProc;
     mactUpdate_Movement_Promo_Data: TMultiAction;
@@ -194,19 +204,19 @@ type
     tsPromoPartnerList: TcxTabSheet;
     grPartnerList: TcxGrid;
     grtvPartnerList: TcxGridDBTableView;
-    colPartnerListRetailName: TcxGridDBColumn;
-    colPartnerListJuridicalName: TcxGridDBColumn;
-    colPartnerListCode: TcxGridDBColumn;
-    colPartnerListName: TcxGridDBColumn;
-    colPartnerListAreaName: TcxGridDBColumn;
+    PartnerListRetailName: TcxGridDBColumn;
+    PartnerListJuridicalName: TcxGridDBColumn;
+    PartnerListCode: TcxGridDBColumn;
+    PartnerListName: TcxGridDBColumn;
+    PartnerListAreaName: TcxGridDBColumn;
     grlPartnerList: TcxGridLevel;
     PartnerListCDS: TClientDataSet;
     PartnerLisrDS: TDataSource;
     spSelect_MovementItem_PromoPartner: TdsdStoredProc;
-    colPartnerListContractCode: TcxGridDBColumn;
-    colPartnerListContractName: TcxGridDBColumn;
-    colPartnerListContractTagName: TcxGridDBColumn;
-    colPartnerListIsErased: TcxGridDBColumn;
+    PartnerListContractCode: TcxGridDBColumn;
+    PartnerListContractName: TcxGridDBColumn;
+    PartnerListContractTagName: TcxGridDBColumn;
+    PartnerListIsErased: TcxGridDBColumn;
     dsdDBViewAddOnPartnerList: TdsdDBViewAddOn;
     actPartnerListRefresh: TdsdDataSetRefresh;
     mactAddAllPartner: TMultiAction;

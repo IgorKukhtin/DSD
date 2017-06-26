@@ -4,8 +4,9 @@ inherited QualityDocJournalForm: TQualityDocJournalForm
   ClientWidth = 975
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitTop = -40
   ExplicitWidth = 991
-  ExplicitHeight = 575
+  ExplicitHeight = 576
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
