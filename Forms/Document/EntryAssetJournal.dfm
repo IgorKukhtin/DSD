@@ -75,7 +75,7 @@ object EntryAssetJournalForm: TEntryAssetJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSumm
+          Column = TotalSumm
         end
         item
           Format = ',0.####'
@@ -88,7 +88,7 @@ object EntryAssetJournalForm: TEntryAssetJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colAmount
+          Column = Amount
         end
         item
           Format = ',0.####'
@@ -101,7 +101,7 @@ object EntryAssetJournalForm: TEntryAssetJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalCount
+          Column = TotalCount
         end
         item
           Format = ',0.####'
@@ -119,12 +119,12 @@ object EntryAssetJournalForm: TEntryAssetJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalCount
+          Column = TotalCount
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSumm
+          Column = TotalSumm
         end
         item
           Format = ',0.####'
@@ -137,7 +137,7 @@ object EntryAssetJournalForm: TEntryAssetJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colAmount
+          Column = Amount
         end
         item
           Format = ',0.####'
@@ -172,7 +172,7 @@ object EntryAssetJournalForm: TEntryAssetJournalForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object colStatus: TcxGridDBColumn
+      object StatusCode: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089
         DataBinding.FieldName = 'StatusCode'
         PropertiesClassName = 'TcxImageComboBoxProperties'
@@ -197,21 +197,21 @@ object EntryAssetJournalForm: TEntryAssetJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object colInvNumber: TcxGridDBColumn
+      object InvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'.'
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 56
       end
-      object colOperDate: TcxGridDBColumn
+      object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object colAssetName: TcxGridDBColumn
+      object AssetName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1054#1057')'
         DataBinding.FieldName = 'AssetName'
         HeaderAlignmentHorz = taCenter
@@ -219,7 +219,7 @@ object EntryAssetJournalForm: TEntryAssetJournalForm
         Options.Editing = False
         Width = 123
       end
-      object colPartionGoods: TcxGridDBColumn
+      object PartionGoods: TcxGridDBColumn
         Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1085#1099#1081' '#1085#1086#1084#1077#1088
         DataBinding.FieldName = 'PartionGoods'
         HeaderAlignmentHorz = taCenter
@@ -227,7 +227,7 @@ object EntryAssetJournalForm: TEntryAssetJournalForm
         Options.Editing = False
         Width = 120
       end
-      object colTotalCount: TcxGridDBColumn
+      object TotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' ('#1080#1090#1086#1075')'
         DataBinding.FieldName = 'TotalCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -237,7 +237,7 @@ object EntryAssetJournalForm: TEntryAssetJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object colAmount: TcxGridDBColumn
+      object Amount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'Amount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -247,7 +247,7 @@ object EntryAssetJournalForm: TEntryAssetJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object colUnitCode: TcxGridDBColumn
+      object UnitCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1087#1086#1076#1088#1072#1079#1076'.'
         DataBinding.FieldName = 'UnitCode'
         Visible = False
@@ -256,35 +256,35 @@ object EntryAssetJournalForm: TEntryAssetJournalForm
         Options.Editing = False
         Width = 63
       end
-      object colUnitName: TcxGridDBColumn
+      object UnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1080#1103
         DataBinding.FieldName = 'UnitName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 106
       end
-      object colStorageName: TcxGridDBColumn
+      object StorageName: TcxGridDBColumn
         Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103
         DataBinding.FieldName = 'StorageName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 105
       end
-      object colCurrencyPartnerName: TcxGridDBColumn
+      object MemberName: TcxGridDBColumn
         Caption = #1060#1080#1079'. '#1083#1080#1094#1086
         DataBinding.FieldName = 'MemberName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 132
       end
-      object colComment: TcxGridDBColumn
+      object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 104
       end
-      object colTotalSumm: TcxGridDBColumn
+      object TotalSumm: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
         DataBinding.FieldName = 'TotalSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'

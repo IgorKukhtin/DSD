@@ -4,25 +4,27 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
   ClientWidth = 921
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -194
+  ExplicitTop = -195
   ExplicitWidth = 937
-  ExplicitHeight = 684
+  ExplicitHeight = 688
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 921
     Height = 592
     TabOrder = 3
-    ExplicitWidth = 913
+    ExplicitWidth = 921
     ExplicitHeight = 592
     ClientRectBottom = 592
     ClientRectRight = 921
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 913
+      ExplicitWidth = 921
       ExplicitHeight = 592
       inherited cxGrid: TcxGrid
         Width = 921
         Height = 592
-        ExplicitWidth = 913
+        ExplicitWidth = 921
         ExplicitHeight = 592
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -51,14 +53,14 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
             Options.Editing = False
             Width = 75
           end
-          object clPaidKindName: TcxGridDBColumn
+          object PaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
             Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1082#1091#1088#1089#1072
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -69,7 +71,7 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
             Options.Editing = False
             Width = 75
           end
-          object clCurrencyFromName: TcxGridDBColumn
+          object CurrencyFromName: TcxGridDBColumn
             Caption = #1042#1072#1083#1102#1090#1072' ('#1079#1085#1072#1095#1077#1085#1080#1077')'
             DataBinding.FieldName = 'CurrencyFromName'
             HeaderAlignmentHorz = taCenter
@@ -77,14 +79,14 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
             Options.Editing = False
             Width = 100
           end
-          object clParValue: TcxGridDBColumn
+          object ParValue: TcxGridDBColumn
             Caption = #1053#1086#1084#1080#1085#1072#1083' ('#1088#1077#1079#1091#1083#1100#1090#1072#1090')'
             DataBinding.FieldName = 'ParValue'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clCurrencyToName: TcxGridDBColumn
+          object CurrencyToName: TcxGridDBColumn
             Caption = #1042#1072#1083#1102#1090#1072' ('#1088#1077#1079#1091#1083#1100#1090#1072#1090')'
             DataBinding.FieldName = 'CurrencyToName'
             FooterAlignmentHorz = taCenter
@@ -93,7 +95,7 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
             Options.Editing = False
             Width = 100
           end
-          object clComment: TcxGridDBColumn
+          object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
@@ -106,7 +108,7 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
   end
   inherited Panel: TPanel
     Width = 921
-    ExplicitWidth = 913
+    ExplicitWidth = 921
     inherited deStart: TcxDateEdit
       EditValue = 42370d
     end

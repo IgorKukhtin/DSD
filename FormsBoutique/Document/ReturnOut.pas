@@ -58,7 +58,7 @@ type
     GoodsName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
     Price: TcxGridDBColumn;
-    AmountSumm: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     actUpdateMasterDS: TdsdUpdateDataSet;
     spInsertUpdateMIMaster: TdsdStoredProc;
@@ -102,10 +102,7 @@ type
     edCurrencyValue: TcxCurrencyEdit;
     cxLabel14: TcxLabel;
     edCurrencyDocument: TcxButtonEdit;
-    CurrencyDocumentGuides: TdsdGuides;
-    cxLabel15: TcxLabel;
-    edCurrencyPartner: TcxButtonEdit;
-    CurrencyPartnerGuides: TdsdGuides;
+    GuidesCurrencyDocument: TdsdGuides;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
     MovementItemProtocolOpenForm: TdsdOpenForm;
@@ -115,7 +112,6 @@ type
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     bbCalcAmountPartner: TdxBarControlContainerItem;
-    spInsertMaskMIMaster: TdsdStoredProc;
     actAddMask: TdsdExecStoredProc;
     bbAddMask: TdxBarButton;
     actGoodsChoiceForm: TOpenChoiceForm;
@@ -126,10 +122,6 @@ type
     bbactUnCompleteCost: TdxBarButton;
     bbactSetErasedCost: TdxBarButton;
     bbShowErasedCost: TdxBarButton;
-    cxLabel5: TcxLabel;
-    edCurrencyPartnerValue: TcxCurrencyEdit;
-    cxLabel6: TcxLabel;
-    ceParPartnerValue: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
     ceParValue: TcxCurrencyEdit;
     bbUpdateRecord1: TdxBarButton;
@@ -138,7 +130,7 @@ type
     macInsertAction: TMultiAction;
     actRefreshMI: TdsdDataSetRefresh;
     macUpdateAction: TMultiAction;
-    PartionId: TcxGridDBColumn;
+    TotalSummBalance: TcxGridDBColumn;
   private
   public
   end;

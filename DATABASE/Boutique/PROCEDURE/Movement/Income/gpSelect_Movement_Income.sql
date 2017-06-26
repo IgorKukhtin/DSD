@@ -38,65 +38,69 @@ BEGIN
            , Object_Status.ObjectCode                    AS StatusCode
            , Object_Status.ValueData                     AS StatusName
 
-           , MovementFloat_TotalCount.ValueData          AS TotalCount
-           , MovementFloat_TotalSumm.ValueData           AS TotalSumm
-           , (CAST (MovementFloat_TotalSumm.ValueData * MovementFloat_CurrencyValue.ValueData
-                  / CASE WHEN MovementFloat_ParValue.ValueData <> 0 THEN MovementFloat_ParValue.ValueData ELSE 1 END
-                    AS NUMERIC (16, 2))
-             ) :: TFloat AS TotalSummBalance
-           , MovementFloat_TotalSummPriceList.ValueData  AS TotalSummPriceList
+           , MF_TotalCount.ValueData          AS TotalCount
+           , MF_TotalSumm.ValueData           AS TotalSumm
 
-           , CAST (COALESCE (MovementFloat_CurrencyValue.ValueData, 0) AS TFloat)  AS CurrencyValue
-           , MovementFloat_ParValue.ValueData   AS ParValue
+           , CASE WHEN MLO_CurrencyDocument.ObjectId = zc_Currency_Basis()
+                       THEN MF_TotalSumm.ValueData
+                  ELSE CAST (CASE WHEN MF_ParValue.ValueData <> 0
+                                  THEN MF_TotalSumm.ValueData * MF_CurrencyValue.ValueData / MF_ParValue.ValueData
+                                  ELSE MF_TotalSumm.ValueData * MF_CurrencyValue.ValueData
+                             END AS NUMERIC (16, 2))
+             END :: TFloat AS TotalSummBalance
+           , MF_TotalSummPriceList.ValueData  AS TotalSummPriceList
+
+           , MF_CurrencyValue.ValueData       AS CurrencyValue
+           , MF_ParValue.ValueData            AS ParValue
 
            , Object_From.ValueData                       AS FromName
            , Object_To.ValueData                         AS ToName
            , Object_CurrencyDocument.ValueData           AS CurrencyDocumentName
-           , MovementString_Comment.ValueData            AS Comment
+           , MS_Comment.ValueData            AS Comment
          
-       FROM (SELECT Movement.id
+       FROM (SELECT Movement.Id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate 
-                               AND Movement.DescId = zc_Movement_Income()
+                               AND Movement.DescId   = zc_Movement_Income()
                                AND Movement.StatusId = tmpStatus.StatusId
              ) AS tmpMovement
 
-            LEFT JOIN Movement ON Movement.id = tmpMovement.id
+            LEFT JOIN Movement ON Movement.Id = tmpMovement.Id
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-            LEFT JOIN MovementString AS MovementString_Comment 
-                                     ON MovementString_Comment.MovementId = Movement.Id
-                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
-            LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                    ON MovementFloat_TotalCount.MovementId = Movement.Id
-                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId = Movement.Id
-                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPriceList
-                                    ON MovementFloat_TotalSummPriceList.MovementId = Movement.Id
-                                   AND MovementFloat_TotalSummPriceList.DescId = zc_MovementFloat_TotalSummPriceList()
+            LEFT JOIN MovementString AS MS_Comment 
+                                     ON MS_Comment.MovementId = Movement.Id
+                                    AND MS_Comment.DescId = zc_MovementString_Comment()
+            LEFT JOIN MovementFloat AS MF_TotalCount
+                                    ON MF_TotalCount.MovementId = Movement.Id
+                                   AND MF_TotalCount.DescId = zc_MovementFloat_TotalCount()
+            LEFT JOIN MovementFloat AS MF_TotalSumm
+                                    ON MF_TotalSumm.MovementId = Movement.Id
+                                   AND MF_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+            LEFT JOIN MovementFloat AS MF_TotalSummPriceList
+                                    ON MF_TotalSummPriceList.MovementId = Movement.Id
+                                   AND MF_TotalSummPriceList.DescId = zc_MovementFloat_TotalSummPriceList()
 
-            LEFT JOIN MovementFloat AS MovementFloat_ParValue
-                                    ON MovementFloat_ParValue.MovementId = Movement.Id
-                                   AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParValue()
-            LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
-                                    ON MovementFloat_CurrencyValue.MovementId =  Movement.Id
-                                   AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
+            LEFT JOIN MovementFloat AS MF_ParValue
+                                    ON MF_ParValue.MovementId = Movement.Id
+                                   AND MF_ParValue.DescId = zc_MovementFloat_ParValue()
+            LEFT JOIN MovementFloat AS MF_CurrencyValue
+                                    ON MF_CurrencyValue.MovementId =  Movement.Id
+                                   AND MF_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                         ON MovementLinkObject_From.MovementId = Movement.Id
-                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                         ON MovementLinkObject_To.MovementId = Movement.Id
-                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+            LEFT JOIN MovementLinkObject AS MLO_From
+                                         ON MLO_From.MovementId = Movement.Id
+                                        AND MLO_From.DescId = zc_MovementLinkObject_From()
+            LEFT JOIN Object AS Object_From ON Object_From.Id = MLO_From.ObjectId
+            LEFT JOIN MovementLinkObject AS MLO_To
+                                         ON MLO_To.MovementId = Movement.Id
+                                        AND MLO_To.DescId = zc_MovementLinkObject_To()
+            LEFT JOIN Object AS Object_To ON Object_To.Id = MLO_To.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
-                                         ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id
-                                        AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
-            LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = MovementLinkObject_CurrencyDocument.ObjectId
+            LEFT JOIN MovementLinkObject AS MLO_CurrencyDocument
+                                         ON MLO_CurrencyDocument.MovementId = Movement.Id
+                                        AND MLO_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
+            LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = MLO_CurrencyDocument.ObjectId
            ;
   
 END;

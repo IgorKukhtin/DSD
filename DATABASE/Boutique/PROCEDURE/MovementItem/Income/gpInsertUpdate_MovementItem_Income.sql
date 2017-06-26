@@ -8,21 +8,22 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income (Integer, TFloat, TVa
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income(
     IN inId                   Integer   , -- Ключ объекта <Элемент документа>
     IN inAmount               TFloat    , -- Количество
-   OUT outTotalSumm           TFloat    , -- Сумма расчетная
-   OUT outTotalSummPriceList  TFloat    , -- Сумма по прайсу
-   OUT outTotalSummBalance    TFloat    , -- Сумма вх. в грн
+   OUT outTotalSumm           TFloat    , -- Сумма вх.
+   OUT outTotalSummBalance    TFloat    , -- Сумма вх. (ГРН)
+   OUT outTotalSummPriceList  TFloat    , -- Сумма (прайс)
     IN inSession              TVarChar    -- сессия пользователя
 )                              
 RETURNS RECORD
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbMovementId Integer;
-   DECLARE vbCountForPrice TFloat;
-   DECLARE vbOperPrice TFloat;
-   DECLARE vbOperPriceList TFloat;
-   DECLARE vbCurrencyValue TFloat;
-   DECLARE vbParValue      TFloat;
+   DECLARE vbUserId         Integer;
+   DECLARE vbMovementId     Integer;
+   DECLARE vbCurrencyId_Doc Integer;
+   DECLARE vbCurrencyValue  TFloat;
+   DECLARE vbParValue       TFloat;
+   DECLARE vbCountForPrice  TFloat;
+   DECLARE vbOperPrice      TFloat;
+   DECLARE vbOperPriceList  TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Income());
@@ -38,20 +39,24 @@ BEGIN
                                         , inUserId     := vbUserId
                                          )
      FROM MovementItem
-     WHERE MovementItem.Id = inId  ;
+     WHERE MovementItem.Id = inId;
 
      -- данные для расчета сумм
-     SELECT MovementItem.MovementId
-          , MF_CurrencyValue.ValueData
-          , MF_ParValue.ValueData
+     SELECT MovementItem.MovementId                         AS MovementId
+          , MLO_CurrencyDocument.ObjecId                    AS CurrencyId_Doc
+          , MF_CurrencyValue.ValueData                      AS CurrencyValue
+          , MF_ParValue.ValueData                           AS ParValue
           , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice
           , COALESCE (MIFloat_OperPrice.ValueData, 0)       AS OperPrice
           , COALESCE (MIFloat_OperPriceList.ValueData, 0)   AS OperPriceList
-    INTO vbMovementId
-       , vbCurrencyValue, vbParValue
-       , vbCountForPrice, vbOperPrice, vbOperPriceList
+            INTO vbMovementId, vbCurrencyId_Doc
+               , vbCurrencyValue, vbParValue
+               , vbCountForPrice, vbOperPrice, vbOperPriceList
      FROM MovementItem
           -- из док.
+          LEFT JOIN MovementLinkObject AS MLO_CurrencyDocument
+                                       ON MLO_CurrencyDocument.MovementId = MovementItem.MovementId
+                                      AND MLO_CurrencyDocument.DescId     = zc_MovementLinkObject_CurrencyDocument()
           LEFT JOIN MovementFloat AS MF_CurrencyValue
                                   ON MF_CurrencyValue.MovementId = MovementItem.MovementId
                                  AND MF_CurrencyValue.DescId     = zc_MovementFloat_CurrencyValue()
@@ -71,16 +76,20 @@ BEGIN
 
      WHERE MovementItem.Id = inId;
 
-     -- расчитали сумму по элементу, для грида
+     -- расчитали <Сумма вх.> для грида
      outTotalSumm := CASE WHEN vbCountForPrice > 0
                                 THEN CAST (inAmount * vbOperPrice / vbCountForPrice AS NUMERIC (16, 2))
                            ELSE CAST (inAmount * vbOperPrice AS NUMERIC (16, 2))
                       END;
-     -- расчитали сумму по прайсу по элементу, для грида
+     -- расчитали <Сумма вх. (ГРН)> для грида
+     outTotalSummBalance := CASE WHEN vbCurrencyId_Doc = zc_Currency_Basis()
+                                      THEN outTotalSumm
+                                 ELSE CAST (CASE WHEN vbParValue > 0 THEN outTotalSumm * vbCurrencyValue / vbParValue ELSE outTotalSumm * vbCurrencyValue
+                                            END AS NUMERIC (16, 2))
+                            END;
+     -- расчитали <Сумма (прайс)> для грида
      outTotalSummPriceList := CAST (inAmount * vbOperPriceList AS NUMERIC (16, 2));
 
-     --  расчитали сумму по элементу в грн, для грида
-     outTotalSummBalance := (CAST (outTotalSumm * vbCurrencyValue / CASE WHEN vbParValue <> 0 THEN vbParValue ELSE 1 END AS NUMERIC (16, 2))) :: TFloat;
 
      -- Обновляем для Партии - Object_PartionGoods.Amount
      UPDATE Object_PartionGoods 
@@ -92,7 +101,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
 
      -- сохранили протокол
-     PERFORM lpInsert_MovementItemProtocol (inId, vbUserId, False);
+     PERFORM lpInsert_MovementItemProtocol (inId, vbUserId, FALSE);
 
 
 END;
@@ -108,4 +117,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpInsertUpdate_MovementItem_Income(inId := 154 , inAmount := 11 ,  inSession := '2');
+-- SELECT * FROM gpInsertUpdate_MovementItem_Income(inId := 154 , inAmount := 11 ,  inSession := '2');

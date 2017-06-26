@@ -110,7 +110,7 @@ object EntryAssetForm: TEntryAssetForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -129,7 +129,7 @@ object EntryAssetForm: TEntryAssetForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -167,7 +167,7 @@ object EntryAssetForm: TEntryAssetForm
             Options.Editing = False
             Width = 55
           end
-          object clAssetName: TcxGridDBColumn
+          object AssetName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1054#1057')'
             DataBinding.FieldName = 'AssetName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -182,7 +182,7 @@ object EntryAssetForm: TEntryAssetForm
             HeaderAlignmentVert = vaCenter
             Width = 167
           end
-          object colAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -229,7 +229,7 @@ object EntryAssetForm: TEntryAssetForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object clUnitCode: TcxGridDBColumn
+          object UnitCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087#1086#1076#1088#1072#1079#1076'.'
             DataBinding.FieldName = 'UnitCode'
             Visible = False
@@ -238,7 +238,7 @@ object EntryAssetForm: TEntryAssetForm
             Options.Editing = False
             Width = 45
           end
-          object clUnitName: TcxGridDBColumn
+          object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1080#1103
             DataBinding.FieldName = 'UnitName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -260,7 +260,7 @@ object EntryAssetForm: TEntryAssetForm
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
-          object colIsErased: TcxGridDBColumn
+          object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
             Visible = False

@@ -50,7 +50,7 @@ type
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     StorageName: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     actUpdateMasterDS: TdsdUpdateDataSet;
     spInsertUpdateMIMaster: TdsdStoredProc;
@@ -78,7 +78,7 @@ type
     cxLabel11: TcxLabel;
     spErasedMIMaster: TdsdStoredProc;
     spUnErasedMIMaster: TdsdStoredProc;
-    colIsErased: TcxGridDBColumn;
+    IsErased: TcxGridDBColumn;
     StatusGuides: TdsdGuides;
     spChangeStatus: TdsdStoredProc;
     UnCompleteMovement: TChangeGuidesStatus;

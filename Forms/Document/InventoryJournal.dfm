@@ -4,8 +4,10 @@ inherited InventoryJournalForm: TInventoryJournalForm
   ClientWidth = 847
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -120
+  ExplicitTop = -81
   ExplicitWidth = 863
-  ExplicitHeight = 573
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -33,7 +35,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end
             item
               Format = ',0.####'
@@ -70,13 +72,13 @@ inherited InventoryJournalForm: TInventoryJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSum
+              Column = TotalSum
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end
             item
               Format = ',0.####'
@@ -113,7 +115,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSum
+              Column = TotalSum
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -142,21 +144,21 @@ inherited InventoryJournalForm: TInventoryJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
-          object colFromName: TcxGridDBColumn
+          object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object colToName: TcxGridDBColumn
+          object ToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object colTotalCount: TcxGridDBColumn
+          object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'TotalCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -166,7 +168,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colTotalSum: TcxGridDBColumn
+          object TotalSum: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'

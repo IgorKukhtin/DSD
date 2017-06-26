@@ -66,7 +66,7 @@ BEGIN
      -- сохранили свойство <Курс для перевода в валюту баланса>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ParValue(), ioId, inParValue);
 
-     -- Комментарий
+     -- сохранили свойство <Примечание>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
      -- сохранили связь с <От кого (в документе)>

@@ -28,8 +28,8 @@ uses
 
 type
   TFounderServiceJournalForm = class(TAncestorJournalForm)
-    colComment: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
     bbTax: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
@@ -40,7 +40,7 @@ type
     bbPrintTax_Client: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
-    colFounderName: TcxGridDBColumn;
+    FounderName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     cxLabel27: TcxLabel;
     edJuridicalBasis: TcxButtonEdit;

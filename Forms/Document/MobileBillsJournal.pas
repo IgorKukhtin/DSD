@@ -29,7 +29,7 @@ uses
 
 type
   TMobileBillsJournalForm = class(TAncestorJournalForm)
-    colTotalSumm: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;

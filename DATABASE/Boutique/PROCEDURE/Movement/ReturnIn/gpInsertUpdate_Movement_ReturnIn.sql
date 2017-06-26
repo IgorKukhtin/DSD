@@ -19,8 +19,10 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ReturnIn());
 
+
+     -- определяется уникальный № док.
      IF COALESCE (ioId, 0) = 0 THEN
-         ioInvNumber:= CAST (NEXTVAL ('movement_ReturnIn_seq') AS TVarChar);  
+         ioInvNumber:= CAST (NEXTVAL ('Movement_ReturnIn_seq') AS TVarChar);  
      END IF;
      
      -- сохранили <Документ>

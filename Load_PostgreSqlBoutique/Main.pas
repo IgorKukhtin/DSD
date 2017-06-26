@@ -2847,9 +2847,9 @@ begin
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId  ');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId  ');
         Add('     left outer join  DBA.BillItemsIncome on BillItemsIncome.Id = BillItems.BillItemsIncomeID ');
-        Add(' where  Bill.BillKind = 4 ');
-        Add(' and BillItems.PriceListPrice <> 100000 '); // для Долги BillItems.PriceListPrice = 100000 - нет GoodsId
-        Add(' and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add(' where Bill.BillKind = 4 ');
+        Add('   and BillItems.PriceListPrice <> 100000 '); // для Долги BillItems.PriceListPrice = 100000 - нет GoodsId
+        Add('   and Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add(' order by Bill.Id ');
         Open;
 
@@ -2869,6 +2869,7 @@ begin
         toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPartionId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('ioOperPriceList',ftFloat,ptInput, 0);
         //
 
         while not EOF do
@@ -2882,6 +2883,7 @@ begin
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId').AsInteger;
              toStoredProc.Params.ParamByName('inPartionId').Value:=FieldByName('PartionId').AsInteger;
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
+             toStoredProc.Params.ParamByName('ioOperPriceList').Value:=FieldByName('OperPriceList').AsFloat;
 
              if not myExecToStoredProc then ;//exit;
              //
@@ -3771,25 +3773,14 @@ begin
         Add('     , Bill_To.UnitName as UnitNameTo ');
         Add('     , Bill_CurrencyDocument.Id_Postgres as CurrencyDocumentId ');
         Add('     , Bill_CurrencyDocument.ValutaName as  CurrencyDocumentName ');
-        Add('     , Bill_CurrencyPartner.Id_Postgres as CurrencyPartnerId ');
-        Add('     , Bill_CurrencyPartner.ValutaName as CurrencyPartnerName ');
-        //Add('     , ValutaDoc.NewKursIn as CurrencyValue ');
-        //Add('     , ValutaDoc.NominalFromValuta as ParValue ');
-        //Add('     , ValutaPar.NewKursOut as CurrencyPartnerValue ');
-        //Add('     , ValutaPar.NominalFromValuta as ParPartnerValue ');
         Add('     , 0 as CurrencyValue ');
         Add('     , 1 as ParValue ');
-        Add('     , 0 as CurrencyPartnerValue ');
-        Add('     , 1 as ParPartnerValue ');
         Add('     , '''' as Comments ');
         Add('     , Bill.Id_Postgres ');
         Add(' from DBA.Bill ');
+        Add('     left outer join DBA.Valuta as Bill_CurrencyDocument on Bill_CurrencyDocument.Id = Bill.ValutaIDIn   ');
         Add('     left outer join DBA.Unit as Bill_From on Bill_From.Id = Bill.FromID ');
         Add('     left outer join DBA.Unit as Bill_To on Bill_To.Id = Bill.ToID ');
-        Add('     left outer join DBA.Valuta as Bill_CurrencyDocument on Bill_CurrencyDocument.Id = Bill.ValutaIDIn   ');
-        Add('     left outer join DBA.Valuta as Bill_CurrencyPartner on Bill_CurrencyPartner.Id = Bill.ValutaID  ');
-        //Add('     left outer join (select * from  DBA.ValutaKursItems order by id desc ) as valutaDoc  on Bill.BillDate  between valutaDoc.startDate and valutaDoc.EndDate and valutaDoc.FromValutaID = Bill.ValutaIDIn  and valutaDoc.ToValutaID = Bill.ValutaIDpl ');
-        //Add('     left outer join (select * from  DBA.ValutaKursItems order by id desc ) as valutaPar  on Bill.BillDate  between valutaPar.startDate and valutaPar.EndDate and valutaPar.FromValutaID = Bill.ValutaIDIn  and valutaPar.ToValutaID = Bill.ValutaID ');
         Add(' where  Bill.BillKind = 4 and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add(' order by ObjectId ');
         Open;
@@ -3816,9 +3807,6 @@ begin
         toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inCurrencyDocumentId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inCurrencyPartnerId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inCurrencyPartnerValue',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inParPartnerValue',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
         //
 
@@ -3827,17 +3815,12 @@ begin
              //!!!
             if fStop then begin exit; end;
              //
-
-             //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber').AsString;
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
              toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId').AsInteger;
              toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId').AsInteger;
              toStoredProc.Params.ParamByName('inCurrencyDocumentId').Value:=FieldByName('CurrencyDocumentId').AsInteger;
-             toStoredProc.Params.ParamByName('inCurrencyPartnerId').Value:=FieldByName('CurrencyPartnerId').AsInteger;
-             toStoredProc.Params.ParamByName('inCurrencyPartnerValue').Value:=FieldByName('CurrencyPartnerValue').AsFloat;
-             toStoredProc.Params.ParamByName('inParPartnerValue').Value:=FieldByName('ParPartnerValue').AsFloat;
              toStoredProc.Params.ParamByName('inComment').Value:=FieldByName('Comments').AsString;
 
              if not myExecToStoredProc then ;//exit;

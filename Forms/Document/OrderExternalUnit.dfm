@@ -2,8 +2,9 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1085#1072' '#1075#1083'.'#1089#1082#1083#1072#1076')>'
   ClientHeight = 399
   ClientWidth = 1031
+  ExplicitLeft = -287
   ExplicitWidth = 1047
-  ExplicitHeight = 434
+  ExplicitHeight = 438
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -53,7 +54,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountPartner
+              Column = AmountPartner
             end
             item
               Format = ',0.####'
@@ -129,7 +130,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountPartner
+              Column = AmountPartner
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -210,7 +211,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             Options.Editing = False
             Width = 70
           end
-          object clAmountPartner: TcxGridDBColumn [7]
+          object AmountPartner: TcxGridDBColumn [7]
             Caption = #1047#1072#1082#1072#1079' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'AmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -408,6 +409,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 168
+      ExplicitHeight = 22
       Width = 168
     end
     object cxLabel5: TcxLabel

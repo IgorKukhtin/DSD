@@ -29,25 +29,27 @@ BEGIN
                0 AS Id
              , CAST (lfGet_InvNumber (0, zc_Movement_Income()) AS TVarChar) AS InvNumber
              , inOperDate            AS OperDate
-             , Object_Status.Code    AS StatusCode
-             , Object_Status.Name    AS StatusName
+             , lfGet.Code            AS StatusCode
+             , lfGet.Name            AS StatusName
 
-             , CAST (0 as TFloat)    AS CurrencyValue
-             , CAST (1 as TFloat)    AS ParValue
+             , CAST (0 AS TFloat)    AS CurrencyValue
+             , CAST (1 AS TFloat)    AS ParValue
 
              , 0                     AS FromId
-             , CAST ('' as TVarChar) AS FromName
+             , CAST ('' AS TVarChar) AS FromName
              , 0                     AS ToId
-             , CAST ('' as TVarChar) AS ToName
+             , CAST ('' AS TVarChar) AS ToName
 
 
              , 0                     AS CurrencyDocumentId
-             , CAST ('' as TVarChar) AS CurrencyDocumentName
+             , CAST ('' AS TVarChar) AS CurrencyDocumentName
 
-             , CAST ('' as TVarChar) AS Comment
+             , CAST ('' AS TVarChar) AS Comment
 
-          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
+          FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfGet
+         ;
      ELSE
+
        RETURN QUERY
          SELECT
                Movement.Id
@@ -98,7 +100,7 @@ BEGIN
                                         AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
             LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = MovementLinkObject_CurrencyDocument.ObjectId
 
-       WHERE Movement.Id = inMovementId
+       WHERE Movement.Id     = inMovementId
          AND Movement.DescId = zc_Movement_Income();
 
      END IF;

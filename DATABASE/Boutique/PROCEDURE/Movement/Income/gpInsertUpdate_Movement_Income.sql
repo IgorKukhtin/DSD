@@ -24,9 +24,10 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Income());
 
+
      -- определяется уникальный № док.
      IF COALESCE (ioId, 0) = 0 THEN
-         ioInvNumber:= CAST (NEXTVAL ('movement_income_seq') AS TVarChar);
+        ioInvNumber:= CAST (NEXTVAL ('Movement_Income_seq') AS TVarChar);
      END IF;
 
      IF inCurrencyDocumentId <> zc_Currency_Basis()

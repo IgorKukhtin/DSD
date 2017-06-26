@@ -4,8 +4,9 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
   ClientWidth = 1050
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -303
   ExplicitWidth = 1066
-  ExplicitHeight = 431
+  ExplicitHeight = 435
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -63,18 +64,18 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCountSecond
+              Column = TotalCountSecond
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end
             item
               Format = ',0.####'
@@ -109,12 +110,12 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCountSecond
+              Column = TotalCountSecond
             end
             item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = colFromName
+              Column = FromName
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -139,7 +140,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
-          object colInvNumberPartner: TcxGridDBColumn [2]
+          object InvNumberPartner: TcxGridDBColumn [2]
             Caption = #8470' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'InvNumberPartner'
             HeaderAlignmentHorz = taCenter
@@ -151,7 +152,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 70
           end
-          object colOperDatePartner: TcxGridDBColumn
+          object OperDatePartner: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080
             DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
@@ -165,7 +166,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colOperDateMark: TcxGridDBColumn
+          object OperDateMark: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1084#1072#1088#1082'.'
             DataBinding.FieldName = 'OperDateMark'
             Visible = False
@@ -173,7 +174,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colFromName: TcxGridDBColumn
+          object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
@@ -195,28 +196,28 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             Options.Editing = False
             Width = 100
           end
-          object colRouteName: TcxGridDBColumn
+          object RouteName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090
             DataBinding.FieldName = 'RouteName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colRouteSortingName: TcxGridDBColumn
+          object RouteSortingName: TcxGridDBColumn
             Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
             DataBinding.FieldName = 'RouteSortingName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object colPaidKindName: TcxGridDBColumn
+          object PaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object colContractCode: TcxGridDBColumn
+          object ContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractCode'
             Visible = False
@@ -224,14 +225,14 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object colContractName: TcxGridDBColumn
+          object ContractName: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object colContractTagName: TcxGridDBColumn
+          object ContractTagName: TcxGridDBColumn
             Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractTagName'
             HeaderAlignmentHorz = taCenter
@@ -253,7 +254,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object colTotalCount: TcxGridDBColumn
+          object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'TotalCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -263,7 +264,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colTotalCountSecond: TcxGridDBColumn
+          object TotalCountSecond: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1076#1086#1079#1072#1082#1072#1079')'
             DataBinding.FieldName = 'TotalCountSecond'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -395,7 +396,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colIsEDI: TcxGridDBColumn
+          object isEDI: TcxGridDBColumn
             Caption = 'EDI'
             DataBinding.FieldName = 'isEDI'
             HeaderAlignmentHorz = taCenter
@@ -439,7 +440,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             Options.Editing = False
             Width = 70
           end
-          object clInsertDate: TcxGridDBColumn
+          object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1080#1085#1093#1088'. '#1089' '#1084#1086#1073'.'#1091#1089#1090#1088')'
             DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter
@@ -447,7 +448,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             Options.Editing = False
             Width = 76
           end
-          object clInsertMobileDate: TcxGridDBColumn
+          object InsertMobileDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1087#1088#1086#1074#1077#1076#1077#1085' '#1085#1072' '#1084#1086#1073'.'#1091#1089#1090#1088')'
             DataBinding.FieldName = 'InsertMobileDate'
             HeaderAlignmentHorz = taCenter
@@ -455,7 +456,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             Options.Editing = False
             Width = 90
           end
-          object clInsertName: TcxGridDBColumn
+          object InsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertName'
             HeaderAlignmentHorz = taCenter
@@ -463,7 +464,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             Options.Editing = False
             Width = 101
           end
-          object clMemberName: TcxGridDBColumn
+          object MemberName: TcxGridDBColumn
             Caption = #1060#1048#1054
             DataBinding.FieldName = 'MemberName'
             HeaderAlignmentHorz = taCenter

@@ -5,7 +5,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1044
-  ExplicitHeight = 391
+  ExplicitHeight = 395
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -29,43 +29,43 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colDebet
+              Column = AmountIn
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colKredit
+              Column = AmountOut
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colAmountCurrency
+              Column = AmountCurrency
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colAmountSumm
+              Column = AmountSumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colDebet
+              Column = AmountIn
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colKredit
+              Column = AmountOut
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colAmountCurrency
+              Column = AmountCurrency
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colAmountSumm
+              Column = AmountSumm
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -86,7 +86,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 63
           end
-          object colInvNumber_Parent: TcxGridDBColumn [2]
+          object InvNumber_Parent: TcxGridDBColumn [2]
             Caption = #8470' '#1087#1083#1072#1090'. '#1074' '#1073'/'#1074
             DataBinding.FieldName = 'InvNumber_Parent'
             HeaderAlignmentHorz = taCenter
@@ -99,7 +99,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 48
           end
-          object colBankAccount: TcxGridDBColumn
+          object BankAccountName: TcxGridDBColumn
             Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
             DataBinding.FieldName = 'BankAccountName'
             HeaderAlignmentHorz = taCenter
@@ -107,7 +107,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 101
           end
-          object colBankName: TcxGridDBColumn
+          object BankName: TcxGridDBColumn
             Caption = #1041#1072#1085#1082
             DataBinding.FieldName = 'BankName'
             HeaderAlignmentHorz = taCenter
@@ -115,7 +115,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 86
           end
-          object colDebet: TcxGridDBColumn
+          object AmountIn: TcxGridDBColumn
             Caption = #1044#1077#1073#1077#1090
             DataBinding.FieldName = 'AmountIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -126,7 +126,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 55
           end
-          object colKredit: TcxGridDBColumn
+          object AmountOut: TcxGridDBColumn
             Caption = #1050#1088#1077#1076#1080#1090
             DataBinding.FieldName = 'AmountOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -137,7 +137,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 55
           end
-          object colAmountCurrency: TcxGridDBColumn
+          object AmountCurrency: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1074' '#1074#1072#1083#1102#1090#1077
             DataBinding.FieldName = 'AmountCurrency'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -148,7 +148,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 70
           end
-          object colAmountSumm: TcxGridDBColumn
+          object AmountSumm: TcxGridDBColumn
             Caption = 'C'#1091#1084#1084#1072' '#1075#1088#1085', '#1086#1073#1084#1077#1085
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -201,7 +201,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 60
           end
-          object clOKPO: TcxGridDBColumn
+          object OKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'OKPO'
             HeaderAlignmentHorz = taCenter
@@ -209,7 +209,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 42
           end
-          object clOKPO_Parent: TcxGridDBColumn
+          object OKPO_Parent: TcxGridDBColumn
             Caption = #1054#1050#1055#1054' '#1074' '#1073'/'#1074
             DataBinding.FieldName = 'OKPO_Parent'
             HeaderAlignmentHorz = taCenter
@@ -217,7 +217,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 41
           end
-          object colJuridical: TcxGridDBColumn
+          object Juridical: TcxGridDBColumn
             Caption = #1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091
             DataBinding.FieldName = 'MoneyPlaceName'
             HeaderAlignmentHorz = taCenter
@@ -225,7 +225,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 78
           end
-          object colContractCode: TcxGridDBColumn
+          object ContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractCode'
             Visible = False
@@ -234,7 +234,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 45
           end
-          object colContract: TcxGridDBColumn
+          object Contract: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractInvNumber'
             HeaderAlignmentHorz = taCenter
@@ -242,7 +242,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 52
           end
-          object colContractTagName: TcxGridDBColumn
+          object ContractTagName: TcxGridDBColumn
             Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractTagName'
             HeaderAlignmentHorz = taCenter
@@ -250,7 +250,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 55
           end
-          object clInfoMoneyCode: TcxGridDBColumn
+          object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -259,7 +259,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 33
           end
-          object clInfoMoneyGroupName: TcxGridDBColumn
+          object InfoMoneyGroupName: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -268,7 +268,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 70
           end
-          object clInfoMoneyDestinationName: TcxGridDBColumn
+          object InfoMoneyDestinationName: TcxGridDBColumn
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -277,7 +277,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 70
           end
-          object colInfoMoneyName: TcxGridDBColumn
+          object InfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             HeaderAlignmentHorz = taCenter
@@ -285,7 +285,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 83
           end
-          object colInfoMoneyName_all: TcxGridDBColumn
+          object InfoMoneyName_all: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
             DataBinding.FieldName = 'InfoMoneyName_all'
             Visible = False
@@ -294,7 +294,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 80
           end
-          object colUnitCode: TcxGridDBColumn
+          object UnitCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
             DataBinding.FieldName = 'UnitCode'
             Visible = False
@@ -303,7 +303,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 55
           end
-          object colUnitName: TcxGridDBColumn
+          object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
@@ -311,7 +311,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 101
           end
-          object colComment: TcxGridDBColumn
+          object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
@@ -319,7 +319,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 95
           end
-          object colPartnerBankName: TcxGridDBColumn
+          object PartnerBankName: TcxGridDBColumn
             Caption = #1041#1072#1085#1082' '#1087#1072#1088#1090#1085#1077#1088#1072
             DataBinding.FieldName = 'PartnerBankName'
             HeaderAlignmentHorz = taCenter
@@ -327,7 +327,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 70
           end
-          object colPartnerBankMFO: TcxGridDBColumn
+          object PartnerBankMFO: TcxGridDBColumn
             Caption = #1052#1060#1054' '#1073#1072#1085#1082#1072' '#1087#1072#1088#1090#1085#1077#1088#1072
             DataBinding.FieldName = 'PartnerBankMFO'
             HeaderAlignmentHorz = taCenter
@@ -335,7 +335,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 80
           end
-          object colPartnerBankAccount: TcxGridDBColumn
+          object PartnerBankAccountName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1087#1072#1088#1090#1085#1077#1088#1072
             DataBinding.FieldName = 'PartnerBankAccountName'
             Visible = False
@@ -344,7 +344,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 46
           end
-          object clItemName: TcxGridDBColumn
+          object ItemName: TcxGridDBColumn
             Caption = #1069#1083#1077#1084#1077#1085#1090
             DataBinding.FieldName = 'ItemName'
             Visible = False
@@ -353,7 +353,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 55
           end
-          object clJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1088'.'#1089#1095#1077#1090')'
             DataBinding.FieldName = 'JuridicalName'
             Visible = False
@@ -362,7 +362,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 100
           end
-          object clMFO: TcxGridDBColumn
+          object MFO: TcxGridDBColumn
             Caption = #1052#1060#1054' ('#1073#1072#1085#1082', '#1088'.'#1089#1095#1077#1090')'
             DataBinding.FieldName = 'MFO'
             Visible = False
@@ -380,7 +380,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 55
           end
-          object clBankSInvNumber_Parent: TcxGridDBColumn
+          object BankSInvNumber_Parent: TcxGridDBColumn
             Caption = #8470' '#1087#1083#1072#1090'.'
             DataBinding.FieldName = 'BankSInvNumber_Parent'
             Visible = False
@@ -389,7 +389,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 30
           end
-          object colInvNumber_Invoice: TcxGridDBColumn
+          object InvNumber_Invoice: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
             DataBinding.FieldName = 'InvNumber_Invoice'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -404,14 +404,14 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 120
           end
-          object colMovementId_Invoice: TcxGridDBColumn
+          object MovementId_Invoice: TcxGridDBColumn
             DataBinding.FieldName = 'MovementId_Invoice'
             Visible = False
             Options.Editing = False
             VisibleForCustomization = False
             Width = 60
           end
-          object colComment_Invoice: TcxGridDBColumn
+          object Comment_Invoice: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1076#1086#1082'.'#1057#1095#1077#1090')'
             DataBinding.FieldName = 'Comment_Invoice'
             HeaderAlignmentHorz = taCenter
@@ -419,7 +419,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 100
           end
-          object clisCopy: TcxGridDBColumn
+          object isCopy: TcxGridDBColumn
             Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074
             DataBinding.FieldName = 'isCopy'
             HeaderAlignmentHorz = taCenter

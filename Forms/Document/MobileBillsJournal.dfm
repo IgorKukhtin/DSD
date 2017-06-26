@@ -4,8 +4,10 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
   ClientWidth = 1073
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -346
+  ExplicitTop = -81
   ExplicitWidth = 1089
-  ExplicitHeight = 570
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -33,7 +35,7 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSumm
+              Column = TotalSumm
             end
             item
               Format = ',0.####'
@@ -71,7 +73,7 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSumm
+              Column = TotalSumm
             end
             item
               Format = ',0.####'
@@ -132,7 +134,7 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 152
           end
-          object colJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
@@ -140,7 +142,7 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
             Options.Editing = False
             Width = 235
           end
-          object colContractName: TcxGridDBColumn
+          object ContractName: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072
             DataBinding.FieldName = 'ContractName'
             HeaderAlignmentHorz = taCenter
@@ -148,7 +150,7 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
             Options.Editing = False
             Width = 122
           end
-          object colTotalSumm: TcxGridDBColumn
+          object TotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -158,7 +160,7 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 177
           end
-          object colContractCode: TcxGridDBColumn
+          object ContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractCode'
             Visible = False
@@ -166,7 +168,7 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object colJuridicalCode: TcxGridDBColumn
+          object JuridicalCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1070#1088'. '#1083#1080#1094'a'
             DataBinding.FieldName = 'JuridicalCode'
             Visible = False
