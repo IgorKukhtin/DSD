@@ -1170,6 +1170,9 @@ object DM: TDM
     object tblMovement_RouteMemberGPSE: TFloatField
       FieldName = 'GPSE'
     end
+    object tblMovement_RouteMemberAddressByGPS: TStringField
+      FieldName = 'AddressByGPS'
+    end
     object tblMovement_RouteMemberisSync: TBooleanField
       FieldName = 'isSync'
     end
@@ -1207,6 +1210,9 @@ object DM: TDM
     end
     object tblMovementItem_VisitGPSE: TFloatField
       FieldName = 'GPSE'
+    end
+    object tblMovementItem_VisitAddressByGPS: TStringField
+      FieldName = 'AddressByGPS'
     end
     object tblMovementItem_VisitisErased: TBooleanField
       FieldName = 'isErased'

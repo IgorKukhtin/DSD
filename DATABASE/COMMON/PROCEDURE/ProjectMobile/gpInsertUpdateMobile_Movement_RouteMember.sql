@@ -1,14 +1,16 @@
 -- Function: gpInsertUpdateMobile_Movement_RouteMember()
 
-DROP FUNCTION IF EXISTS gpInsertUpdateMobile_Movement_RouteMember (TVarChar, TVarChar, TDateTime, TFloat, TFloat, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdateMobile_Movement_RouteMember (TVarChar, TVarChar, TDateTime, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdateMobile_Movement_RouteMember (TVarChar, TVarChar, TDateTime, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdateMobile_Movement_RouteMember (
-    IN inGUID       TVarChar  , -- Глобальный уникальный идентификатор для синхронизации с мобильными устройствами
-    IN inInvNumber  TVarChar  , -- Номер документа
-    IN inInsertDate TDateTime , -- Дата/время создания
-    IN inGPSN       TFloat    , -- GPS координаты маршрута (широта)
-    IN inGPSE       TFloat    , -- GPS координаты маршрута (долгота)
-    IN inSession    TVarChar    -- сессия пользователя
+    IN inGUID         TVarChar  , -- Глобальный уникальный идентификатор для синхронизации с мобильными устройствами
+    IN inInvNumber    TVarChar  , -- Номер документа
+    IN inInsertDate   TDateTime , -- Дата/время создания
+    IN inGPSN         TFloat    , -- GPS координаты маршрута (широта)
+    IN inGPSE         TFloat    , -- GPS координаты маршрута (долгота)
+    IN inAddressByGPS TVarChar  , -- Адрес, определенный по GPS
+    IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS Integer 
 AS
@@ -55,6 +57,9 @@ BEGIN
       -- сохранили свойство <Глобальный уникальный идентификатор>
       PERFORM lpInsertUpdate_MovementString (zc_MovementString_GUID(), vbId, inGUID);
 
+      -- сохранили свойство <Адрес, определенный по GPS>
+      PERFORM lpInsertUpdate_MovementString (zc_MovementString_AddressByGPS(), vbId, inAddressByGPS);
+
       -- проводим маршрут торгового агента
       PERFORM gpComplete_Movement_RouteMember (inMovementId:= vbId, inSession:= inSession);
 
@@ -66,8 +71,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Ярошенко Р.Ф.
+ 26.06.17                                                        * AddressByGPS
  04.04.17                                                        *                                          
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdateMobile_Movement_RouteMember (inGUID:= '{94774140-0FF6-4DC3-910C-5805989B6FC4}', inInvNumber:= '-9', inInsertDate:= CURRENT_TIMESTAMP, inGPSN:= 56, inGPSE:= 56, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpInsertUpdateMobile_Movement_RouteMember (inGUID:= '{94774140-0FF6-4DC3-910C-5805989B6FC4}', inInvNumber:= '-9', inInsertDate:= CURRENT_TIMESTAMP, inGPSN:= 56, inGPSE:= 56, inAddressByGPS:= 'г. Кузнецк, ул. Сталелитейная, 7', inSession:= zfCalc_UserAdmin());
