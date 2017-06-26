@@ -149,6 +149,7 @@ type
     actReport_Goods_RemainsCurrent: TdsdOpenForm;
     N6: TMenuItem;
     N47: TMenuItem;
+    actReport_Goods: TdsdOpenForm;
   private
     { Private declarations }
   public
