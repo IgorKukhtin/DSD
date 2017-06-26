@@ -65,7 +65,7 @@ object LossForm: TLossForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountSumm
+              Column = TotalSumm
             end
             item
               Format = ',0.####'
@@ -90,12 +90,17 @@ object LossForm: TLossForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountPriceListSumm
+              Column = TotalSummPriceList
             end
             item
               Format = ',0.####'
               Kind = skSum
               Column = Remains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummBalance
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -118,7 +123,7 @@ object LossForm: TLossForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountSumm
+              Column = TotalSumm
             end
             item
               Format = ',0.####'
@@ -126,15 +131,7 @@ object LossForm: TLossForm
             end
             item
               Kind = skSum
-              Column = Price
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
+              Column = OperPrice
             end
             item
               Format = ',0.####'
@@ -147,7 +144,15 @@ object LossForm: TLossForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountPriceListSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummPriceList
             end
             item
               Format = 'C'#1090#1088#1086#1082': ,0'
@@ -158,6 +163,11 @@ object LossForm: TLossForm
               Format = ',0.####'
               Kind = skSum
               Column = Remains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummBalance
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -180,6 +190,14 @@ object LossForm: TLossForm
             Options.Editing = False
             Width = 120
           end
+          object LabelName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1074' '#1094#1077#1085#1085#1080#1082#1077
+            DataBinding.FieldName = 'LabelName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 104
+          end
           object Code: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
@@ -201,29 +219,11 @@ object LossForm: TLossForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 200
-          end
-          object MeasureName: TcxGridDBColumn
-            Caption = #1045#1076'. '#1080#1079#1084'.'
-            DataBinding.FieldName = 'MeasureName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 47
-          end
-          object CompositionGroupName: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' '#1076#1083#1103' '#1089#1086#1089#1090#1072#1074#1072' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'CompositionGroupName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 72
+            Width = 100
           end
           object CompositionName: TcxGridDBColumn
             Caption = #1057#1086#1089#1090#1072#1074
             DataBinding.FieldName = 'CompositionName'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -232,7 +232,6 @@ object LossForm: TLossForm
           object GoodsInfoName: TcxGridDBColumn
             Caption = #1054#1087#1080#1089#1072#1085#1080#1077
             DataBinding.FieldName = 'GoodsInfoName'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -241,19 +240,10 @@ object LossForm: TLossForm
           object LineFabricaName: TcxGridDBColumn
             Caption = #1051#1080#1085#1080#1103
             DataBinding.FieldName = 'LineFabricaName'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
-          end
-          object LabelName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1074' '#1094#1077#1085#1085#1080#1082#1077
-            DataBinding.FieldName = 'LabelName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 104
           end
           object GoodsSizeName: TcxGridDBColumn
             Caption = #1056#1072#1079#1084#1077#1088
@@ -261,10 +251,18 @@ object LossForm: TLossForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 62
+            Width = 55
+          end
+          object MeasureName: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 40
           end
           object Remains: TcxGridDBColumn
-            Caption = #1054#1089#1090#1072#1090#1086#1082
+            Caption = #1054#1089#1090'.'
             DataBinding.FieldName = 'Remains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -272,7 +270,7 @@ object LossForm: TLossForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 65
+            Width = 40
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -284,8 +282,8 @@ object LossForm: TLossForm
             HeaderAlignmentVert = vaCenter
             Width = 46
           end
-          object Price: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072
+          object OperPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1074#1093'.'
             DataBinding.FieldName = 'OperPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -293,7 +291,7 @@ object LossForm: TLossForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 75
+            Width = 55
           end
           object CountForPrice: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
@@ -307,9 +305,9 @@ object LossForm: TLossForm
             Options.Editing = False
             Width = 55
           end
-          object AmountSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072
-            DataBinding.FieldName = 'AmountSumm'
+          object CurrencyValue: TcxGridDBColumn
+            Caption = #1050#1091#1088#1089
+            DataBinding.FieldName = 'CurrencyValue'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -317,7 +315,43 @@ object LossForm: TLossForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 91
+            Width = 50
+          end
+          object ParValue: TcxGridDBColumn
+            Caption = #1053#1086#1084#1080#1085#1072#1083
+            DataBinding.FieldName = 'ParValue'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object TotalSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074#1093'.'
+            DataBinding.FieldName = 'TotalSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object TotalSummBalance: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074#1093'. ('#1043#1056#1053')'
+            DataBinding.FieldName = 'TotalSummBalance'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object OperPriceList: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' ('#1087#1088#1072#1081#1089')'
@@ -330,9 +364,9 @@ object LossForm: TLossForm
             Options.Editing = False
             Width = 80
           end
-          object AmountPriceListSumm: TcxGridDBColumn
+          object TotalSummPriceList: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' ('#1087#1088#1072#1081#1089')'
-            DataBinding.FieldName = 'AmountPriceListSumm'
+            DataBinding.FieldName = 'TotalSummPriceList'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -340,7 +374,7 @@ object LossForm: TLossForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 91
+            Width = 80
           end
           object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
@@ -355,6 +389,7 @@ object LossForm: TLossForm
             DataBinding.FieldName = 'PartionId'
             Visible = False
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 50
           end
         end
@@ -459,54 +494,6 @@ object LossForm: TLossForm
       TabOrder = 9
       Width = 160
     end
-    object cxLabel14: TcxLabel
-      Left = 450
-      Top = 46
-      Caption = #1042#1072#1083#1102#1090#1072' ('#1094#1077#1085#1072')'
-    end
-    object edCurrencyDocument: TcxButtonEdit
-      Left = 451
-      Top = 64
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 11
-      Width = 110
-    end
-    object cxLabel12: TcxLabel
-      Left = 563
-      Top = 46
-      Caption = #1050#1091#1088#1089
-    end
-    object edCurrencyValue: TcxCurrencyEdit
-      Left = 564
-      Top = 64
-      Properties.Alignment.Horz = taRightJustify
-      Properties.Alignment.Vert = taVCenter
-      Properties.DecimalPlaces = 4
-      Properties.DisplayFormat = ',0.####;-,0.####; ;'
-      Properties.ReadOnly = True
-      TabOrder = 13
-      Width = 65
-    end
-    object cxLabel7: TcxLabel
-      Left = 633
-      Top = 46
-      Caption = #1053#1086#1084#1080#1085#1072#1083
-    end
-    object ceParValue: TcxCurrencyEdit
-      Left = 633
-      Top = 64
-      EditValue = 1.000000000000000000
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0.'
-      Properties.ReadOnly = False
-      TabOrder = 15
-      Width = 85
-    end
     object cxLabel16: TcxLabel
       Left = 177
       Top = 46
@@ -515,8 +502,8 @@ object LossForm: TLossForm
     object ceComment: TcxTextEdit
       Left = 177
       Top = 64
-      TabOrder = 17
-      Width = 268
+      TabOrder = 11
+      Width = 541
     end
   end
   object FormParams: TdsdFormParams
@@ -551,6 +538,14 @@ object LossForm: TLossForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -610,6 +605,10 @@ object LossForm: TLossForm
         item
           Visible = True
           ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowAll'
         end
         item
           Visible = True
@@ -1214,14 +1213,6 @@ object LossForm: TLossForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'CompositionGroupName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'CompositionGroupName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'GoodsInfoName'
           Value = Null
           Component = MasterCDS
@@ -1392,26 +1383,51 @@ object LossForm: TLossForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outAmountSumm'
+        Name = 'outTotalSumm'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'AmountSumm'
+        ComponentItem = 'TotalSumm'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outOperPriceList'
+        Name = 'outTotalSummBalance'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalSummBalance'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioOperPriceList'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'OperPriceList'
         DataType = ftFloat
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outAmountPriceListSumm'
+        Name = 'outTotalSummPriceList'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'AmountPriceListSumm'
+        ComponentItem = 'TotalSummPriceList'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCurrencyValue'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CurrencyValue'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outParValue'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ParValue'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
@@ -1495,28 +1511,6 @@ object LossForm: TLossForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCurrencyDocumentId'
-        Value = Null
-        Component = CurrencyDocumentGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outCurrencyValue'
-        Value = Null
-        Component = edCurrencyValue
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outParValue'
-        Value = Null
-        Component = ceParValue
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inComment'
         Value = Null
         Component = ceComment
@@ -1539,16 +1533,13 @@ object LossForm: TLossForm
         Control = ceComment
       end
       item
-        Control = ceParValue
       end
       item
         Control = ceStatus
       end
       item
-        Control = edCurrencyDocument
       end
       item
-        Control = edCurrencyValue
       end
       item
         Control = edFrom
@@ -1665,35 +1656,6 @@ object LossForm: TLossForm
         Value = Null
         Component = ceComment
         DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CurrencyDocumentId'
-        Value = Null
-        Component = CurrencyDocumentGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CurrencyDocumentName'
-        Value = Null
-        Component = CurrencyDocumentGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CurrencyValue'
-        Value = Null
-        Component = edCurrencyValue
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ParValue'
-        Value = Null
-        Component = ceParValue
-        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -1966,44 +1928,16 @@ object LossForm: TLossForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outOperPriceList'
+        Name = 'ioOperPriceList'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'OperPriceList'
         DataType = ftFloat
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 158
     Top = 335
-  end
-  object CurrencyDocumentGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edCurrencyDocument
-    FormNameParam.Value = 'TCurrencyForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TCurrencyForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = CurrencyDocumentGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = CurrencyDocumentGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 480
-    Top = 64
   end
 end

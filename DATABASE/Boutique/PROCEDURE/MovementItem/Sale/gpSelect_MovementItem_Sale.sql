@@ -155,7 +155,7 @@ BEGIN
                       GROUP BY MovementItem.ParentId
                       )
    , tmpContainer AS (SELECT Container.PartionId
-                           , Container.ObjectId                                        AS GoodsId
+                           --, Container.ObjectId                                        AS GoodsId
                            , Container.Amount - SUM (COALESCE (MIContainer.Amount, 0)) AS Remains
                       FROM tmpMI_Master
                            INNER JOIN Container ON Container.ObjectId = tmpMI_Master.GoodsId
@@ -167,7 +167,7 @@ BEGIN
                                                           AND MIContainer.OperDate >= vbOperDate
                       GROUP BY Container.PartionId 
                              , Container.Amount 
-                             , Container.ObjectId
+                             --, Container.ObjectId
                       HAVING (Container.Amount - SUM (COALESCE (MIContainer.Amount, 0))) <> 0
                     )
 
@@ -247,8 +247,9 @@ BEGIN
                                   AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
 
            LEFT JOIN Object AS Object_DiscountSaleKind ON Object_DiscountSaleKind.Id = tmpMI.DiscountSaleKindId
-           LEFT JOIN tmpContainer ON tmpContainer.GoodsId = tmpMI.GoodsId
-                                 AND tmpContainer.PartionId = tmpMI.PartionId  
+           LEFT JOIN tmpContainer ON tmpContainer.PartionId = tmpMI.PartionId  
+                                 --AND tmpContainer.GoodsId = tmpMI.GoodsId
+
        ;
 
 END;

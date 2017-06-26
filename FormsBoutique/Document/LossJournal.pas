@@ -65,7 +65,7 @@ type
     actSetErased: TdsdChangeMovementStatus;
     spMovementSetErased: TdsdStoredProc;
     TotalCount: TcxGridDBColumn;
-    TotalSumm: TcxGridDBColumn;
+    TotalSummBalance: TcxGridDBColumn;
     TotalSummPriceList: TcxGridDBColumn;
     bbStatic: TdxBarStatic;
     dsdGridToExcel: TdsdGridToExcel;
