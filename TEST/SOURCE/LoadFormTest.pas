@@ -552,6 +552,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyValueForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPropertyValueEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyValueEditForm');
+//
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPropertyValueDocForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyValueDocForm');
 end;
 
 procedure TLoadFormTest.LoadQualityParamsFormTest;

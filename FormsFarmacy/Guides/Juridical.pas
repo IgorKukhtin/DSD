@@ -35,6 +35,7 @@ type
     OrderSumm: TcxGridDBColumn;
     OrderTime: TcxGridDBColumn;
     OKPO: TcxGridDBColumn;
+    isLoadBarcode: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -49,7 +49,7 @@ inherited MainForm: TMainForm
     object actReport_Goods: TdsdOpenForm [3]
       Category = #1054#1090#1095#1077#1090#1099
       MoveParams = <>
-      Caption = #1058#1077#1082#1091#1097#1080#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1090#1086#1074#1072#1088#1072
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091
       FormName = 'TReport_GoodsForm'
       FormNameParam.Value = 'TReport_GoodsForm'
       FormNameParam.DataType = ftString
@@ -750,6 +750,9 @@ inherited MainForm: TMainForm
       end
       object N47: TMenuItem
         Action = actReport_Goods_RemainsCurrent
+      end
+      object N48: TMenuItem
+        Action = actReport_Goods
       end
     end
     object N46: TMenuItem [4]

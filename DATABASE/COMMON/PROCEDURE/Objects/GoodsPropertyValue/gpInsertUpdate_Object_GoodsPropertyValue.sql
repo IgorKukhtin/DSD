@@ -2,13 +2,14 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsPropertyValue (Integer, TVarChar, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsPropertyValue (Integer, TVarChar, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsPropertyValue (Integer, TVarChar, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsPropertyValue(
  INOUT ioId                  Integer   ,    -- ключ объекта <Значения свойств товаров для классификатора>
     IN inName                TVarChar  ,    -- Название товара(покупателя)
     IN inAmount              TFloat    ,    -- Кол-во штук при сканировании
     IN inBoxCount            TFloat    ,    -- Кол-во единиц в ящике
-    IN inAmountDoc           TFloat    ,    -- Количество вложение
+    --IN inAmountDoc           TFloat    ,    -- Количество вложение
    OUT outBarCodeShort       TVarChar  ,    -- Штрих-код
     IN inBarCode             TVarChar  ,    -- Штрих-код
     IN inArticle             TVarChar  ,    -- Артикул
@@ -81,7 +82,7 @@ $BODY$
    -- сохранили 
    PERFORM lpInsertUpdate_ObjectFloat(zc_objectFloat_GoodsPropertyValue_BoxCount(), ioId, inBoxCount);
    -- сохранили 
-   PERFORM lpInsertUpdate_ObjectFloat(zc_objectFloat_GoodsPropertyValue_AmountDoc(), ioId, inAmountDoc);
+   --PERFORM lpInsertUpdate_ObjectFloat(zc_objectFloat_GoodsPropertyValue_AmountDoc(), ioId, inAmountDoc);
    -- сохранили 
    PERFORM lpInsertUpdate_ObjectString(zc_objectString_GoodsPropertyValue_BarCode(), ioId, inBarCode);
    -- сохранили 
@@ -120,6 +121,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 27.06.17         * del inAmountDoc
  22.06.17         * add inAmountDoc
  17.09.15         * add BoxCount
  12.02.15                                        *

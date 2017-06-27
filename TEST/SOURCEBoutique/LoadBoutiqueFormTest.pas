@@ -802,7 +802,12 @@ end;
 //
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  //Отчет пл списанию
+  //Отчет Остаток товара
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsDialogForm');
+  //Отчет Текущий остаток товара
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_RemainsCurrentForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_RemainsCurrentForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_RemainsCurrentDialogForm'));

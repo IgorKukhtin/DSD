@@ -164,6 +164,7 @@
     Top = 231
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
+    Properties.ReadOnly = True
     TabOrder = 22
     Width = 153
   end
@@ -272,14 +273,6 @@
         Name = 'inEndPosIdent'
         Value = Null
         Component = edEndPosIdent
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inTaxDoc'
-        Value = Null
-        Component = edTaxDoc
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
