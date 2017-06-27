@@ -610,11 +610,12 @@ inherited Report_GoodsForm: TReport_GoodsForm
         end
       end
       object cbSumm_branch: TcxCheckBox
-        Left = 69
-        Top = 3
+        Left = 301
+        Top = 99
         Caption = #1087#1077#1095#1072#1090#1100' '#1089'/'#1089' '#1092#1080#1083#1080#1072#1083
         Properties.ReadOnly = False
         TabOrder = 1
+        Visible = False
         Width = 125
       end
     end
@@ -1058,26 +1059,6 @@ inherited Report_GoodsForm: TReport_GoodsForm
         end
         item
           Visible = True
-          ItemName = 'bbOpenDocument'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSumm_branch'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1099,6 +1080,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
       Category = 0
       Hint = 'bbSumm_branch'
       Visible = ivAlways
+      Control = cbSumm_branch
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog

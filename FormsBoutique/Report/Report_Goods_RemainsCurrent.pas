@@ -44,6 +44,7 @@ type
     cbPartner: TcxCheckBox;
     actRefreshPartner: TdsdDataSetRefresh;
     actRefreshMovement: TdsdDataSetRefresh;
+    CountForPrice: TcxGridDBColumn;
   private
     { Private declarations }
   public
