@@ -44,7 +44,7 @@ type
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
-    colStatus: TcxGridDBColumn;
+    StatusCode: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
     OperDate: TcxGridDBColumn;
     CarName: TcxGridDBColumn;
@@ -69,7 +69,7 @@ type
     bbGridToExcel: TdxBarButton;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    PersonalDriver: TcxGridDBColumn;
+    PersonalDriverName: TcxGridDBColumn;
     StartRunPlan: TcxGridDBColumn;
     EndRunPlan: TcxGridDBColumn;
     StartRun: TcxGridDBColumn;
@@ -84,7 +84,7 @@ type
     cxLabel2: TcxLabel;
     CarModelName: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
-    clPersonalName: TcxGridDBColumn;
+    PersonalName: TcxGridDBColumn;
     BranchCode: TcxGridDBColumn;
     BranchName: TcxGridDBColumn;
     actMIContainer: TdsdOpenForm;

@@ -101,7 +101,7 @@ object TransportJournalChoiceForm: TTransportJournalChoiceForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object colStatus: TcxGridDBColumn
+      object StatusCode: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089
         DataBinding.FieldName = 'StatusCode'
         PropertiesClassName = 'TcxImageComboBoxProperties'
@@ -154,7 +154,7 @@ object TransportJournalChoiceForm: TTransportJournalChoiceForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object PersonalDriver: TcxGridDBColumn
+      object PersonalDriverName: TcxGridDBColumn
         Caption = #1042#1086#1076#1080#1090#1077#1083#1100
         DataBinding.FieldName = 'PersonalDriverName'
         HeaderAlignmentHorz = taCenter

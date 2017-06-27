@@ -3,8 +3,10 @@ inherited VisitForm: TVisitForm
   ClientHeight = 449
   ClientWidth = 1011
   AddOnFormData.RefreshAction = actRefreshEx
+  ExplicitLeft = -92
+  ExplicitTop = 5
   ExplicitWidth = 1027
-  ExplicitHeight = 484
+  ExplicitHeight = 488
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -124,7 +126,7 @@ inherited VisitForm: TVisitForm
             HeaderAlignmentVert = vaCenter
             Width = 259
           end
-          object colGUID: TcxGridDBColumn [3]
+          object GUID: TcxGridDBColumn [3]
             DataBinding.FieldName = 'GUID'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -132,7 +134,7 @@ inherited VisitForm: TVisitForm
             Options.Editing = False
             Width = 195
           end
-          object InsertMobile: TcxGridDBColumn [4]
+          object InsertMobileDate: TcxGridDBColumn [4]
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1086#1079#1076'. '#1092#1086#1090#1086
             DataBinding.FieldName = 'InsertMobileDate'
             HeaderAlignmentHorz = taCenter
@@ -141,7 +143,7 @@ inherited VisitForm: TVisitForm
             Options.Editing = False
             Width = 161
           end
-          object clGPSN: TcxGridDBColumn [5]
+          object GPSN: TcxGridDBColumn [5]
             Caption = 'GPS '#1082#1086#1086#1088#1076#1080#1085#1072#1090#1099' '#1092#1086#1090#1086' ('#1096#1080#1088#1086#1090#1072')'
             DataBinding.FieldName = 'GPSN'
             Visible = False
@@ -150,7 +152,7 @@ inherited VisitForm: TVisitForm
             Options.Editing = False
             Width = 88
           end
-          object clGPSE: TcxGridDBColumn [6]
+          object GPSE: TcxGridDBColumn [6]
             Caption = 'GPS '#1082#1086#1086#1088#1076#1080#1085#1072#1090#1099' '#1092#1086#1090#1086' ('#1076#1086#1083#1075#1086#1090#1072')'
             DataBinding.FieldName = 'GPSE'
             Visible = False
