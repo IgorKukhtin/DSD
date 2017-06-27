@@ -150,6 +150,7 @@ type
     N6: TMenuItem;
     N47: TMenuItem;
     actReport_Goods: TdsdOpenForm;
+    N48: TMenuItem;
   private
     { Private declarations }
   public

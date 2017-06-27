@@ -198,7 +198,7 @@ BEGIN
                               AND ObjectHistoryFloat_DiscountPeriodItem_Value.DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value()
 
                    WHERE ObjectLink_DiscountPeriodItem_Unit.DescId = zc_ObjectLink_DiscountPeriodItem_Unit()
-                     AND ObjectLink_DiscountPeriodItem_Unit.ChildObjectId = 783
+                     AND ObjectLink_DiscountPeriodItem_Unit.ChildObjectId = inUnitId --783
                      AND (ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData <> 0 OR ObjectHistory_DiscountPeriodItem.StartDate <> zc_DateStart())              
                    )
 

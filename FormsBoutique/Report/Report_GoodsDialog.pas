@@ -9,7 +9,17 @@ uses
   cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils, ChoicePeriod,
   dsdGuides, cxDropDownEdit, cxCalendar, cxTextEdit, cxMaskEdit, cxButtonEdit,
   cxPropertiesStore, dsdAddOn, dsdDB, cxLabel, dxSkinsCore,
-  dxSkinsDefaultPainters, cxCheckBox;
+  dxSkinsDefaultPainters, cxCheckBox, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
+  dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TReport_GoodsDialogForm = class(TParentForm)
@@ -22,20 +32,17 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     FormParams: TdsdFormParams;
     edGoods: TcxButtonEdit;
-    edGoodsGroup: TcxButtonEdit;
-    edLocation: TcxButtonEdit;
+    edGoodsSize: TcxButtonEdit;
     GuidesGoods: TdsdGuides;
-    GuidesGoodsGroup: TdsdGuides;
-    GuidesLocation: TdsdGuides;
-    edUnitGroup: TcxButtonEdit;
+    GuidesGoodsSize: TdsdGuides;
+    edUnit: TcxButtonEdit;
     cxLabel3: TcxLabel;
-    cxLabel4: TcxLabel;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
-    GuidesUnitGroup: TdsdGuides;
+    GuidesUnit: TdsdGuides;
     cxLabel6: TcxLabel;
     cxLabel7: TcxLabel;
-    cbPartner: TcxCheckBox;
+    cbGoodsSize: TcxCheckBox;
   private
     { Private declarations }
   public
