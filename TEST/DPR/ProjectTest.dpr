@@ -945,7 +945,8 @@ uses
   OrderIncomeSnabJournal_byReport in '..\..\Forms\Document\OrderIncomeSnabJournal_byReport.pas' {OrderIncomeSnabJournal_byReportForm: TParentForm},
   StorageLineEdit in '..\..\Forms\Guides\StorageLineEdit.pas' {StorageLineEditForm: TParentForm},
   StorageLine in '..\..\Forms\Guides\StorageLine.pas' {StorageLineForm: TParentForm},
-  PartnerContact in '..\..\Forms\Guides\PartnerContact.pas' {PartnerContactForm: TParentForm};
+  PartnerContact in '..\..\Forms\Guides\PartnerContact.pas' {PartnerContactForm: TParentForm},
+  GoodsPropertyValueDoc in '..\..\Forms\Guides\GoodsPropertyValueDoc.pas' {GoodsPropertyValueDocForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -869,6 +869,8 @@ type
     N73: TMenuItem;
     actPartnerContact: TdsdOpenForm;
     N74: TMenuItem;
+    actGoodsPropertyValueDoc: TdsdOpenForm;
+    N173: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

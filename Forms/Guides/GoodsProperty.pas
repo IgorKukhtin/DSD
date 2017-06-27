@@ -63,6 +63,8 @@ type
     clStartPosFrac: TcxGridDBColumn;
     StartPosIdent: TcxGridDBColumn;
     EndPosIdent: TcxGridDBColumn;
+    spInsertUpdate: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

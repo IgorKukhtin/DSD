@@ -1,4 +1,4 @@
-object GoodsPropertyValueForm: TGoodsPropertyValueForm
+object GoodsPropertyValueDocForm: TGoodsPropertyValueDocForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1047#1085#1072#1095#1077#1085#1080#1103' '#1076#1083#1103' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074'>'
@@ -54,6 +54,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 67
       end
       object clGoodsGroupNameFull: TcxGridDBColumn
@@ -94,6 +95,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 67
       end
       object clGoodsKindName: TcxGridDBColumn
@@ -109,6 +111,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 47
       end
       object colMeasureName: TcxGridDBColumn
@@ -124,6 +127,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 65
       end
       object clisOrder: TcxGridDBColumn
@@ -142,6 +146,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 52
       end
       object ceAmount: TcxGridDBColumn
@@ -152,6 +157,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 52
       end
       object ceAmountDoc: TcxGridDBColumn
@@ -163,7 +169,6 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1083'-'#1074#1086' '#1096#1090'. '#1074#1083#1086#1078#1077#1085#1080#1077
-        Options.Editing = False
         Width = 69
       end
       object BarCodeShort: TcxGridDBColumn
@@ -179,6 +184,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         DataBinding.FieldName = 'BarCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 50
       end
       object clArticle: TcxGridDBColumn
@@ -186,6 +192,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         DataBinding.FieldName = 'Article'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 49
       end
       object clBarCodeGLN: TcxGridDBColumn
@@ -193,6 +200,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         DataBinding.FieldName = 'BarCodeGLN'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 49
       end
       object clArticleGLN: TcxGridDBColumn
@@ -200,6 +208,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         DataBinding.FieldName = 'ArticleGLN'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 49
       end
       object GroupName: TcxGridDBColumn
@@ -207,6 +216,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         DataBinding.FieldName = 'GroupName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 49
       end
       object ceisErased: TcxGridDBColumn
@@ -308,23 +318,6 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       FloatClientHeight = 0
       ItemLinks = <
         item
-          Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
-        end
-        item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic1'
         end
@@ -793,126 +786,25 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     Top = 152
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_GoodsPropertyValue'
+    StoredProcName = 'gpUpdate_Object_GoodsPropertyValue_AmountDoc'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId'
+        Name = 'inId'
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inName'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Name'
-        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmount'
+        Name = 'inAmountDoc'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'Amount'
+        ComponentItem = 'AmountDoc'
         DataType = ftFloat
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inBoxCount'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'BoxCount'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outBarCodeShort'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'BarCodeShort'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inBarCode'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'BarCode'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inArticle'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Article'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inBarCodeGLN'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'BarCodeGLN'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inArticleGLN'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'ArticleGLN'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGroupName'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'GroupName'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsPropertyId'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'GoodsPropertyId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsId'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'GoodsId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsKindId'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'GoodsKindId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     PackSize = 1

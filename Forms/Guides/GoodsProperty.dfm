@@ -42,7 +42,6 @@ object GoodsPropertyForm: TGoodsPropertyForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
@@ -54,6 +53,7 @@ object GoodsPropertyForm: TGoodsPropertyForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 53
       end
       object clName: TcxGridDBColumn
@@ -61,6 +61,7 @@ object GoodsPropertyForm: TGoodsPropertyForm
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 225
       end
       object clStartPosInt: TcxGridDBColumn
@@ -138,7 +139,6 @@ object GoodsPropertyForm: TGoodsPropertyForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1076#1083#1103' '#1074#1083#1086#1078#1077#1085#1080#1103
-        Options.Editing = False
         Width = 70
       end
       object clErased: TcxGridDBColumn
@@ -147,6 +147,7 @@ object GoodsPropertyForm: TGoodsPropertyForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 60
       end
     end
@@ -457,6 +458,18 @@ object GoodsPropertyForm: TGoodsPropertyForm
         end>
       isShowModal = False
     end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_GoodsProperty'
@@ -501,5 +514,31 @@ object GoodsPropertyForm: TGoodsPropertyForm
     SummaryItemList = <>
     Left = 224
     Top = 232
+  end
+  object spInsertUpdate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_GoodsProperty_TaxDoc'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTaxDoc'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'TaxDoc'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 488
+    Top = 128
   end
 end
