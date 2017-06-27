@@ -1324,7 +1324,7 @@ end;
 procedure TSyncThread.UploadStoreReal;
 var
   UploadStoredProc : TdsdStoredProc;
-  ItemsCount: Integer;
+  ItemsCount, SendCount: Integer;
 begin
   UploadStoredProc := TdsdStoredProc.Create(nil);
   try
@@ -1381,13 +1381,16 @@ begin
             UploadStoredProc.Params.AddParam('outItemsCount', ftInteger, ptOutput, 0);
             UploadStoredProc.Execute(false, false, false);
 
-            if ItemsCount = UploadStoredProc.ParamByName('outItemsCount').Value then
+            SendCount := UploadStoredProc.ParamByName('outItemsCount').Value;
+            if ItemsCount = SendCount then
             begin
               Edit;
               FieldByName('IsSync').AsBoolean := true;
               Post;
             end else
-              raise Exception.Create('По факт. остатку №' + FieldByName('INVNUMBER').AsString + ' отправились не все позиции. Требуется повторная синхронизация');
+              raise Exception.CreateFmt(
+                'По факт. остатку №%s отправились %d позиций из %d. Требуется повторная синхронизация',
+                [FieldByName('INVNUMBER').AsString, SendCount, ItemsCount]);
           except
             on E : Exception do
             begin
