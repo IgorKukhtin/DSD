@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                PayOrder TFloat,
                OrderSumm TFloat, OrderSummComment TVarChar,
                OrderTime TVarChar,
+               isLoadBarcode Boolean,
                isErased boolean) AS
 $BODY$
 BEGIN 
@@ -38,6 +39,8 @@ BEGIN
            , CAST ('' as TVarChar)   AS OrderSummComment
            , CAST ('' as TVarChar)   AS OrderTime
 
+           , FALSE                   AS isLoadBarcode  
+
            , CAST (NULL AS Boolean) AS isErased;
    
    ELSE
@@ -57,6 +60,8 @@ BEGIN
            , COALESCE (ObjectFloat_OrderSumm.ValueData, 0)  ::TFloat   AS OrderSumm
            , COALESCE (ObjectString_OrderSumm.ValueData,'') ::TVarChar AS OrderSummComment
            , COALESCE (ObjectString_OrderTime.ValueData,'') ::TVarChar AS OrderTime
+
+           , COALESCE (ObjectBoolean_LoadBarcode.ValueData, FALSE) AS isLoadBarcode 
 
            , Object_Juridical.isErased           AS isErased
            
@@ -88,7 +93,9 @@ BEGIN
            LEFT JOIN ObjectString AS ObjectString_OrderTime
                                   ON ObjectString_OrderTime.ObjectId = Object_Juridical.Id
                                  AND ObjectString_OrderTime.DescId = zc_ObjectString_Juridical_OrderTime()
-
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_LoadBarcode 
+                                   ON ObjectBoolean_LoadBarcode.ObjectId = Object_Juridical.Id
+                                  AND ObjectBoolean_LoadBarcode.DescId = zc_ObjectBoolean_Juridical_LoadBarcode()
       WHERE Object_Juridical.Id = inId;
    END IF;
   
@@ -102,7 +109,8 @@ ALTER FUNCTION gpGet_Object_Juridical (integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.
+ 27.06.17                                                                       * isLoadBarcode
  14.01.17         * 
  02.12.15                                                         * PayOrder               
  01.07.14         *
@@ -110,4 +118,4 @@ ALTER FUNCTION gpGet_Object_Juridical (integer, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Juridical(0,'2')
+-- SELECT * FROM gpGet_Object_Juridical(0, '2')

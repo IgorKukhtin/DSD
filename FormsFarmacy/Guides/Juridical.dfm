@@ -3,7 +3,6 @@ inherited JuridicalForm: TJuridicalForm
   ClientWidth = 761
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 777
-  ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -89,6 +88,13 @@ inherited JuridicalForm: TJuridicalForm
             HeaderHint = #1052#1072#1082#1089#1080#1084#1072#1083#1100#1085#1086#1077' '#1074#1088#1077#1084#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' ('#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086')'
             Options.Editing = False
             Width = 107
+          end
+          object isLoadBarcode: TcxGridDBColumn
+            Caption = #1048#1084#1087#1086#1088#1090' '#1096#1090#1088#1080#1093'-'#1082#1086#1076#1086#1074
+            DataBinding.FieldName = 'isLoadBarcode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
