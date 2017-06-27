@@ -11,8 +11,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , StartPosInt TFloat, EndPosInt TFloat, StartPosFrac TFloat, EndPosFrac TFloat  
              , StartPosIdent TFloat, EndPosIdent TFloat 
              , TaxDoc TFloat
-             , isErased boolean) AS
-$BODY$BEGIN
+             , isErased Boolean)
+AS
+$BODY$
+BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsProperty());
@@ -90,10 +92,8 @@ $BODY$BEGIN
     
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpGet_Object_GoodsProperty(integer, TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -108,4 +108,4 @@ ALTER FUNCTION gpGet_Object_GoodsProperty(integer, TVarChar) OWNER TO postgres;
 */
 
 -- ТЕСТ
--- SELECT * FROM gpSelect_GoodsProperty('2')
+-- SELECT * FROM gpGet_Object_GoodsProperty (1, '2')

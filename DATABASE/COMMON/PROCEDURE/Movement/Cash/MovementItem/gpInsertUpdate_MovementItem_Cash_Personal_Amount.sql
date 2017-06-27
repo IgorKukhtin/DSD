@@ -16,6 +16,8 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash());
 
 
+     -- Ошибка
+     RAISE EXCEPTION 'Ошибка.Эта Proc отключена, работает та что по гриду.';
 
      -- сохранили
      PERFORM lpInsertUpdate_MovementItem_Cash_Personal (ioId                 := tmp.Id
@@ -26,6 +28,7 @@ BEGIN
                                                       , inInfoMoneyId        := tmp.InfoMoneyId
                                                       , inUnitId             := tmp.UnitId
                                                       , inPositionId         := tmp.PositionId
+                                                      , inIsCalculated       := FALSE
                                                       , inUserId             := vbUserId
                                                        )
      FROM gpSelect_MovementItem_Cash_Personal (inMovementId    := inMovementId

@@ -188,6 +188,7 @@ BEGIN
             , (COALESCE (MIFloat_SummToPay.ValueData, 0)
              - COALESCE (MIFloat_SummCard.ValueData, 0)
              - COALESCE (MIFloat_SummCardSecond.ValueData, 0)
+             - COALESCE (MIFloat_SummCardSecondCash.ValueData, 0)
               ) :: TFloat AS AmountCash
             , MIFloat_SummService.ValueData     AS SummService
             , MIFloat_SummCard.ValueData        AS SummCard
@@ -213,12 +214,12 @@ BEGIN
             , MIFloat_SummTransportTaxi.ValueData    AS SummTransportTaxi
             , MIFloat_SummPhone.ValueData            AS SummPhone
 
-            , COALESCE(tmpMIChild.Amount,0)                                 :: TFloat  AS TotalSummChild
-            , (COALESCE(tmpMIChild.Amount,0) - MIFloat_SummToPay.ValueData) :: TFloat  AS SummDiff
+            , COALESCE (tmpMIChild.Amount, 0)                                               :: TFloat AS TotalSummChild
+            , (COALESCE (tmpMIChild.Amount, 0) - COALESCE (MIFloat_SummToPay.ValueData, 0)) :: TFloat AS SummDiff
 
             , MIString_Comment.ValueData       AS Comment
             , tmpAll.isErased
-            , COALESCE(MIBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
+            , COALESCE (MIBoolean_isAuto.ValueData, FALSE) :: Boolean  AS isAuto
          
        FROM tmpAll 
             LEFT JOIN tmpMIContainer_all ON tmpMIContainer_all.MovementItemId = tmpAll.MovementItemId

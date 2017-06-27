@@ -49,7 +49,7 @@ type
     edPersonalTrade: TcxButtonEdit;
     PersonalTradeGuides: TdsdGuides;
     spGet_PersonalTrade: TdsdStoredProc;
-    clGPSE: TcxGridDBColumn;
+    GPSE: TcxGridDBColumn;
     bbRouteOnMap: TdxBarButton;
     dxBarStatic1: TdxBarStatic;
     actRouteOnMap: TdsdPartnerMapAction;

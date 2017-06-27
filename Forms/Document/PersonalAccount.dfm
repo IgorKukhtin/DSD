@@ -145,7 +145,7 @@ object PersonalAccountForm: TPersonalAccountForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount
+              Column = Amount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -158,7 +158,7 @@ object PersonalAccountForm: TPersonalAccountForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount
+              Column = Amount
             end
             item
               Format = ',0.###;-,0.###; ;'
@@ -182,7 +182,7 @@ object PersonalAccountForm: TPersonalAccountForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object clJuridicalCode: TcxGridDBColumn
+          object JuridicalCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'JuridicalCode'
             Visible = False
@@ -190,7 +190,7 @@ object PersonalAccountForm: TPersonalAccountForm
             Options.Editing = False
             Width = 30
           end
-          object clJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -204,28 +204,28 @@ object PersonalAccountForm: TPersonalAccountForm
             HeaderAlignmentVert = vaCenter
             Width = 101
           end
-          object clInfoMoneyCode: TcxGridDBColumn
+          object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 66
           end
-          object clInfoMoneyGroupName: TcxGridDBColumn
+          object InfoMoneyGroupName: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
             Options.Editing = False
             Width = 70
           end
-          object clInfoMoneyDestinationName: TcxGridDBColumn
+          object InfoMoneyDestinationName: TcxGridDBColumn
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
             Options.Editing = False
             Width = 70
           end
-          object clInfoMoneyName: TcxGridDBColumn
+          object InfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -240,7 +240,7 @@ object PersonalAccountForm: TPersonalAccountForm
             Options.Editing = False
             Width = 129
           end
-          object clContractName: TcxGridDBColumn
+          object ContractName: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -255,14 +255,14 @@ object PersonalAccountForm: TPersonalAccountForm
             Options.Editing = False
             Width = 82
           end
-          object clCarModelName: TcxGridDBColumn
+          object CarModelName: TcxGridDBColumn
             Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
             DataBinding.FieldName = 'CarModelName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 99
           end
-          object clCarName: TcxGridDBColumn
+          object CarName: TcxGridDBColumn
             Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
             DataBinding.FieldName = 'CarName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -276,7 +276,7 @@ object PersonalAccountForm: TPersonalAccountForm
             HeaderAlignmentVert = vaCenter
             Width = 84
           end
-          object clRouteName: TcxGridDBColumn
+          object RouteName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090
             DataBinding.FieldName = 'RouteName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -290,7 +290,7 @@ object PersonalAccountForm: TPersonalAccountForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object clAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -302,7 +302,7 @@ object PersonalAccountForm: TPersonalAccountForm
             HeaderAlignmentVert = vaCenter
             Width = 98
           end
-          object clIsErased: TcxGridDBColumn
+          object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
             Visible = False
@@ -324,11 +324,13 @@ object PersonalAccountForm: TPersonalAccountForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindId'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 240
     Top = 304
@@ -347,12 +349,14 @@ object PersonalAccountForm: TPersonalAccountForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -360,6 +364,7 @@ object PersonalAccountForm: TPersonalAccountForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 116
@@ -533,6 +538,7 @@ object PersonalAccountForm: TPersonalAccountForm
     object actInsertUpdateMovement: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateMovement
       StoredProcList = <
         item
@@ -566,6 +572,7 @@ object PersonalAccountForm: TPersonalAccountForm
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateMIMaster
       StoredProcList = <
         item
@@ -613,6 +620,7 @@ object PersonalAccountForm: TPersonalAccountForm
           Component = edInvNumber
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'From'
@@ -621,6 +629,7 @@ object PersonalAccountForm: TPersonalAccountForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'OperDate'
@@ -628,10 +637,12 @@ object PersonalAccountForm: TPersonalAccountForm
           Component = edOperDate
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -647,6 +658,7 @@ object PersonalAccountForm: TPersonalAccountForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       View = cxGridDBTableView
       Action = ContractChoiceForm
       Params = <>
@@ -691,15 +703,18 @@ object PersonalAccountForm: TPersonalAccountForm
     object InfoMoneyChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       FormName = 'TInfoMoneyForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -707,21 +722,25 @@ object PersonalAccountForm: TPersonalAccountForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
     object ContractChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       FormName = 'TContractChoiceForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -729,12 +748,14 @@ object PersonalAccountForm: TPersonalAccountForm
           Component = MasterCDS
           ComponentItem = 'ContractName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -742,12 +763,14 @@ object PersonalAccountForm: TPersonalAccountForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -755,27 +778,32 @@ object PersonalAccountForm: TPersonalAccountForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inPaidKindId'
           Value = '0'
           Component = FormParams
           ComponentItem = 'inPaidKindId'
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
     object CarChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       FormName = 'TCarForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'CarId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -783,6 +811,7 @@ object PersonalAccountForm: TPersonalAccountForm
           Component = MasterCDS
           ComponentItem = 'CarName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CarModelName'
@@ -790,21 +819,25 @@ object PersonalAccountForm: TPersonalAccountForm
           Component = MasterCDS
           ComponentItem = 'CarModelName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
     object RouteChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       FormName = 'TRouteForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -812,6 +845,7 @@ object PersonalAccountForm: TPersonalAccountForm
           Component = MasterCDS
           ComponentItem = 'RouteName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -872,6 +906,7 @@ object PersonalAccountForm: TPersonalAccountForm
       FormName = 'TMovementItemContainerForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -879,6 +914,7 @@ object PersonalAccountForm: TPersonalAccountForm
           Component = FormParams
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -899,6 +935,7 @@ object PersonalAccountForm: TPersonalAccountForm
     LookupControl = edPersonal
     FormNameParam.Value = 'TPersonal_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -909,6 +946,7 @@ object PersonalAccountForm: TPersonalAccountForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -917,6 +955,7 @@ object PersonalAccountForm: TPersonalAccountForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 440
     Top = 16
@@ -940,6 +979,7 @@ object PersonalAccountForm: TPersonalAccountForm
         Component = MasterCDS
         ComponentItem = 'id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -947,6 +987,7 @@ object PersonalAccountForm: TPersonalAccountForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
@@ -954,6 +995,7 @@ object PersonalAccountForm: TPersonalAccountForm
         Component = MasterCDS
         ComponentItem = 'JuridicalId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
@@ -962,6 +1004,7 @@ object PersonalAccountForm: TPersonalAccountForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractId'
@@ -969,6 +1012,7 @@ object PersonalAccountForm: TPersonalAccountForm
         Component = MasterCDS
         ComponentItem = 'ContractId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRouteId'
@@ -976,6 +1020,7 @@ object PersonalAccountForm: TPersonalAccountForm
         Component = MasterCDS
         ComponentItem = 'RouteId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCarId'
@@ -983,6 +1028,7 @@ object PersonalAccountForm: TPersonalAccountForm
         Component = MasterCDS
         ComponentItem = 'CarId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyId'
@@ -990,6 +1036,7 @@ object PersonalAccountForm: TPersonalAccountForm
         Component = MasterCDS
         ComponentItem = 'InfoMoneyId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 86
@@ -1026,6 +1073,7 @@ object PersonalAccountForm: TPersonalAccountForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -1033,6 +1081,7 @@ object PersonalAccountForm: TPersonalAccountForm
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -1040,6 +1089,7 @@ object PersonalAccountForm: TPersonalAccountForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalId'
@@ -1047,6 +1097,7 @@ object PersonalAccountForm: TPersonalAccountForm
         Component = GuidesPersonal
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 387
@@ -1056,6 +1107,7 @@ object PersonalAccountForm: TPersonalAccountForm
     IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
     StoredProc = spInsertUpdateMovement
     ControlList = <
       item
@@ -1082,30 +1134,35 @@ object PersonalAccountForm: TPersonalAccountForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Invnumber'
         Value = '0'
         Component = edInvNumber
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Operdate'
         Value = 0d
         Component = edOperDate
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusCode'
@@ -1113,6 +1170,7 @@ object PersonalAccountForm: TPersonalAccountForm
         Component = StatusGuides
         ComponentItem = 'Key'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
@@ -1120,12 +1178,14 @@ object PersonalAccountForm: TPersonalAccountForm
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalId'
         Value = ''
         Component = GuidesPersonal
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalName'
@@ -1133,6 +1193,7 @@ object PersonalAccountForm: TPersonalAccountForm
         Component = GuidesPersonal
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 608
@@ -1151,6 +1212,7 @@ object PersonalAccountForm: TPersonalAccountForm
     IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
     GuidesList = <
       item
         Guides = GuidesPersonal
@@ -1173,6 +1235,7 @@ object PersonalAccountForm: TPersonalAccountForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outIsErased'
@@ -1180,6 +1243,7 @@ object PersonalAccountForm: TPersonalAccountForm
         Component = MasterCDS
         ComponentItem = 'IsErased'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 574
@@ -1196,6 +1260,7 @@ object PersonalAccountForm: TPersonalAccountForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outIsErased'
@@ -1203,6 +1268,7 @@ object PersonalAccountForm: TPersonalAccountForm
         Component = MasterCDS
         ComponentItem = 'IsErased'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 630
@@ -1213,6 +1279,7 @@ object PersonalAccountForm: TPersonalAccountForm
     LookupControl = ceStatus
     FormNameParam.Value = ''
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     PositionDataSet = 'ClientDataSet'
     Params = <>
     Left = 60
@@ -1229,6 +1296,7 @@ object PersonalAccountForm: TPersonalAccountForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStatusCode'
@@ -1236,6 +1304,7 @@ object PersonalAccountForm: TPersonalAccountForm
         Component = StatusGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 92

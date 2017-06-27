@@ -77,6 +77,7 @@ BEGIN
            , (COALESCE (MovementFloat_TotalSummToPay.ValueData, 0)
             - COALESCE (MovementFloat_TotalSummCard.ValueData, 0)
             - COALESCE (MovementFloat_TotalSummCardSecond.ValueData, 0)
+            - COALESCE (MovementFloat_TotalSummCardSecondCash.ValueData, 0)
             - COALESCE (MovementFloat_TotalSummMinusExt.ValueData, 0)
              ) :: TFloat AS TotalSummCash
 
@@ -202,7 +203,7 @@ BEGIN
                                    WHERE MIContainer.MovementId = inMovementId
                                      AND MIContainer.DescId     = zc_MIContainer_Summ()
                                      AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_PersonalService_Nalog())
-	                                  )
+	                          )
           , tmpMIContainer AS (SELECT /*tmpMIContainer_all.UnitId
                                     , tmpMIContainer_all.PositionId
                                     ,*/ tmpMIContainer_all.MemberId

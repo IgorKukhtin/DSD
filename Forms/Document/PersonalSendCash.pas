@@ -51,10 +51,10 @@ type
     cxTabSheetMain: TcxTabSheet;
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    colPersonalCode: TcxGridDBColumn;
-    colPersonalName: TcxGridDBColumn;
-    colAmount_20401: TcxGridDBColumn;
-    colAmount_21201: TcxGridDBColumn;
+    PersonalCode: TcxGridDBColumn;
+    PersonalName: TcxGridDBColumn;
+    Amount_20401: TcxGridDBColumn;
+    Amount_21201: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     actUpdateMasterDS: TdsdUpdateDataSet;
     spInsertUpdateMIMaster: TdsdStoredProc;
@@ -72,8 +72,8 @@ type
     GuidesFiller: TGuidesFiller;
     actInsertUpdateMovement: TdsdExecStoredProc;
     bbInsertUpdateMovement: TdxBarButton;
-    colRouteName: TcxGridDBColumn;
-    colCarName: TcxGridDBColumn;
+    RouteName: TcxGridDBColumn;
+    CarName: TcxGridDBColumn;
     PersonalChoiceForm: TOpenChoiceForm;
     InsertRecord: TInsertRecord;
     SetErased: TdsdUpdateErased;
@@ -88,15 +88,15 @@ type
     cxLabel4: TcxLabel;
     spErasedMIMaster: TdsdStoredProc;
     spUnErasedMIMaster: TdsdStoredProc;
-    colIsErased: TcxGridDBColumn;
-    colCarModelName: TcxGridDBColumn;
+    IsErased: TcxGridDBColumn;
+    CarModelName: TcxGridDBColumn;
     ceStatus: TcxButtonEdit;
     StatusGuides: TdsdGuides;
     spChangeStatus: TdsdStoredProc;
     UnCompleteMovement: TChangeGuidesStatus;
     CompleteMovement: TChangeGuidesStatus;
     DeleteMovement: TChangeGuidesStatus;
-    colOperDate: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
   private

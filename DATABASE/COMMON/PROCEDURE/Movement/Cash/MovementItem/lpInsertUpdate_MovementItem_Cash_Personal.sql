@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_MovementItem_Cash_Personal()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Cash_Personal (Integer, Integer, Integer, TFloat, TVarChar, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Cash_Personal (Integer, Integer, Integer, TFloat, TVarChar, Integer, Integer, Integer, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Cash_Personal(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Cash_Personal(
     IN inInfoMoneyId         Integer   , -- Статьи назначения
     IN inUnitId              Integer   , -- Подразделение
     IN inPositionId          Integer   , -- Должность
+    IN inIsCalculated        Boolean   , -- 
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer AS
@@ -45,6 +47,9 @@ BEGIN
      -- сохранили <Элемент документа>
      ioId:= lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inPersonalId, inMovementId, inAmount, NULL);
 
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Calculated(), ioId, inIsCalculated);
+
      -- сохранили свойство <Примечание>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
 
@@ -54,6 +59,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Position(), ioId, inPositionId);
+
 
      -- в мастере всегда Итоговая сумма
      PERFORM lpUpdate_MovementItem_Cash_Personal_TotalSumm (inMovementId, inUserId);

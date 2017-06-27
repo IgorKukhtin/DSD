@@ -13,30 +13,41 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxLabel,
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
-  cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, dsdGuides, cxButtonEdit;
+  cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, dsdGuides, cxButtonEdit,
+  dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
+  dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue;
 
 type
   TPromoJournalForm = class(TAncestorJournalForm)
-    colPromoKindName: TcxGridDBColumn;
-    colPriceListName: TcxGridDBColumn;
-    colStartPromo: TcxGridDBColumn;
-    colEndPromo: TcxGridDBColumn;
-    colStartSale: TcxGridDBColumn;
-    colEndSale: TcxGridDBColumn;
-    colCostPromo: TcxGridDBColumn;
-    colUnitName: TcxGridDBColumn;
-    colComment: TcxGridDBColumn;
-    colPersonalTradeName: TcxGridDBColumn;
-    colPersonalName: TcxGridDBColumn;
+    PromoKindName: TcxGridDBColumn;
+    PriceListName: TcxGridDBColumn;
+    StartPromo: TcxGridDBColumn;
+    EndPromo: TcxGridDBColumn;
+    StartSale: TcxGridDBColumn;
+    EndSale: TcxGridDBColumn;
+    CostPromo: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
+    PersonalTradeName: TcxGridDBColumn;
+    PersonalName: TcxGridDBColumn;
     dxBarButton1: TdxBarButton;
     spSelect_Movement_Promo_Print: TdsdStoredProc;
     PrintHead: TClientDataSet;
     actPrint: TdsdPrintAction;
-    colPartnerName: TcxGridDBColumn;
-    colPartnerDescName: TcxGridDBColumn;
-    colContractName: TcxGridDBColumn;
-    colContractTagName: TcxGridDBColumn;
-    colCommentMain: TcxGridDBColumn;
+    PartnerName: TcxGridDBColumn;
+    PartnerDescName: TcxGridDBColumn;
+    ContractName: TcxGridDBColumn;
+    ContractTagName: TcxGridDBColumn;
+    CommentMain: TcxGridDBColumn;
     spUpdate_Movement_Promo_Data: TdsdStoredProc;
     mactUpdate_Movement_Promo_Data: TMultiAction;
     actUpdate_Movement_Promo_Data: TdsdExecStoredProc;
@@ -50,7 +61,7 @@ type
     spUpdate_Movement_Promo_Data_after: TdsdStoredProc;
     actUpdate_Promo_Data_after: TdsdExecStoredProc;
     mactUpdate_Movement_Promo_Data_all: TMultiAction;
-    colChangePercentName: TcxGridDBColumn;
+    ChangePercentName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     EndReturn: TcxGridDBColumn;
     cxLabel27: TcxLabel;

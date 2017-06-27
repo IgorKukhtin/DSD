@@ -14,7 +14,17 @@ uses
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, cxCheckBox, cxCurrencyEdit,
   cxButtonEdit, dsdGuides, frxClass, frxDBSet, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TPriceCorrectiveJournalForm = class(TAncestorJournalForm)
@@ -36,8 +46,8 @@ type
     spSelectPrintTaxCorrective_Client: TdsdStoredProc;
     bbPrintTaxCorrective_Client: TdxBarButton;
     bbPrintTaxCorrective_Us: TdxBarButton;
-    clInvNumberPartner: TcxGridDBColumn;
-    clInvNumberMark: TcxGridDBColumn;
+    InvNumberPartner: TcxGridDBColumn;
+    InvNumberMark: TcxGridDBColumn;
     actPrint_TaxCorrective_Us: TdsdPrintAction;
     actPrint_TaxCorrective_Client: TdsdPrintAction;
     mactPrint_TaxCorrective_Client: TMultiAction;
@@ -50,7 +60,7 @@ type
     actSPPrintProcNameReturnIn: TdsdExecStoredProc;
     spGetReportNameReturnIn: TdsdStoredProc;
     bbPrintReturnIn: TdxBarButton;
-    clBranchName: TcxGridDBColumn;
+    BranchName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     actShowMessage: TShowMessageAction;
     cxLabel27: TcxLabel;

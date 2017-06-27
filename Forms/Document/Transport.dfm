@@ -330,52 +330,52 @@
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colDistanceFuelChild
+              Column = DistanceFuelChild
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colWeight
+              Column = Weight
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colWeightTranspor
+              Column = WeightTranspor
             end
             item
               Kind = skSum
               Position = spFooter
-              Column = colWeightTranspor
+              Column = WeightTranspor
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colDistanceWeightTransport
+              Column = DistanceWeightTransport
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clRateSumma
+              Column = RateSumma
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clTaxi
+              Column = Taxi
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clRatePrice_Calc
+              Column = RatePrice_Calc
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clTaxiMore
+              Column = TaxiMore
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -387,12 +387,12 @@
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colWeight
+              Column = Weight
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Kind = skSum
@@ -400,37 +400,37 @@
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colDistanceFuelChild
+              Column = DistanceFuelChild
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colWeightTranspor
+              Column = WeightTranspor
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colDistanceWeightTransport
+              Column = DistanceWeightTransport
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clRateSumma
+              Column = RateSumma
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clTaxi
+              Column = Taxi
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clRatePrice_Calc
+              Column = RatePrice_Calc
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clTaxiMore
+              Column = TaxiMore
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsBehavior.GoToNextCellOnEnter = True
@@ -446,7 +446,7 @@
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object colRouteCode: TcxGridDBColumn
+          object RouteCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'RouteCode'
             HeaderAlignmentHorz = taCenter
@@ -454,7 +454,7 @@
             Options.Editing = False
             Width = 47
           end
-          object colRouteName: TcxGridDBColumn
+          object RouteName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090
             DataBinding.FieldName = 'RouteName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -469,7 +469,7 @@
             HeaderAlignmentVert = vaCenter
             Width = 102
           end
-          object colUnitName: TcxGridDBColumn
+          object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -484,7 +484,7 @@
             HeaderAlignmentVert = vaCenter
             Width = 74
           end
-          object colFreightName: TcxGridDBColumn
+          object FreightName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1079#1072
             DataBinding.FieldName = 'FreightName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -499,21 +499,21 @@
             HeaderAlignmentVert = vaCenter
             Width = 62
           end
-          object colAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
             Caption = #1055#1088#1086#1073#1077#1075', '#1082#1084' ('#1086#1089#1085#1086#1074#1085#1086#1081')'
             DataBinding.FieldName = 'Amount'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 54
           end
-          object colDistanceFuelChild: TcxGridDBColumn
+          object DistanceFuelChild: TcxGridDBColumn
             Caption = #1055#1088#1086#1073#1077#1075', '#1082#1084' ('#1076#1086#1087#1086#1083#1085#1080#1090'.)'
             DataBinding.FieldName = 'DistanceFuelChild'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 54
           end
-          object colDistanceWeightTransport: TcxGridDBColumn
+          object DistanceWeightTransport: TcxGridDBColumn
             Caption = #1055#1088#1086#1073#1077#1075', '#1082#1084' ('#1089' '#1075#1088#1091#1079#1086#1084', '#1087#1077#1088#1077#1074#1077#1079#1077#1085#1086')'
             DataBinding.FieldName = 'DistanceWeightTransport'
             Visible = False
@@ -521,28 +521,28 @@
             HeaderAlignmentVert = vaCenter
             Width = 86
           end
-          object colStartOdometre: TcxGridDBColumn
+          object StartOdometre: TcxGridDBColumn
             Caption = #1057#1087#1080#1076#1086#1084#1077#1090#1088' '#1085#1072#1095'. '#1087#1086#1082#1072#1079#1072#1085#1080#1077', '#1082#1084
             DataBinding.FieldName = 'StartOdometre'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 69
           end
-          object colEndOdometre: TcxGridDBColumn
+          object EndOdometre: TcxGridDBColumn
             Caption = #1057#1087#1080#1076#1086#1084#1077#1090#1088' '#1082#1086#1085#1077#1095'. '#1087#1086#1082#1072#1079#1072#1085#1080#1077', '#1082#1084
             DataBinding.FieldName = 'EndOdometre'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 74
           end
-          object colWeight: TcxGridDBColumn
+          object Weight: TcxGridDBColumn
             Caption = #1042#1077#1089' '#1075#1088#1091#1079#1072', '#1082#1075' ('#1088#1072#1079#1075#1088#1091#1079#1082#1072')'
             DataBinding.FieldName = 'Weight'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 57
           end
-          object colWeightTranspor: TcxGridDBColumn
+          object WeightTranspor: TcxGridDBColumn
             Caption = #1042#1077#1089' '#1075#1088#1091#1079#1072', '#1082#1075' ('#1087#1077#1088#1077#1074#1077#1079#1077#1085#1086')'
             DataBinding.FieldName = 'WeightTransport'
             Visible = False
@@ -550,7 +550,7 @@
             HeaderAlignmentVert = vaCenter
             Width = 84
           end
-          object colRouteKindName_Freight: TcxGridDBColumn
+          object RouteKindName_Freight: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1075#1088#1091#1079#1072
             DataBinding.FieldName = 'RouteKindName_Freight'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -565,7 +565,7 @@
             HeaderAlignmentVert = vaCenter
             Width = 44
           end
-          object colRouteKindName: TcxGridDBColumn
+          object RouteKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1084#1072#1088#1096#1088#1091#1090#1072
             DataBinding.FieldName = 'RouteKindName'
             HeaderAlignmentHorz = taCenter
@@ -573,7 +573,7 @@
             Options.Editing = False
             Width = 45
           end
-          object clTimePrice: TcxGridDBColumn
+          object TimePrice: TcxGridDBColumn
             Caption = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1095' '#1082#1086#1084#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1093
             DataBinding.FieldName = 'TimePrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -584,7 +584,7 @@
             HeaderHint = #1057#1091#1084#1084#1072' '#1082#1086#1084#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1093
             Width = 62
           end
-          object clRateSumma: TcxGridDBColumn
+          object RateSumma: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1077', '#1075#1088#1085'.'
             DataBinding.FieldName = 'RateSumma'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -595,7 +595,7 @@
             HeaderHint = #1057#1091#1084#1084#1072' '#1082#1086#1084#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1093
             Width = 56
           end
-          object clRatePrice: TcxGridDBColumn
+          object RatePrice: TcxGridDBColumn
             Caption = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1082#1084' ('#1076#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077')'
             DataBinding.FieldName = 'RatePrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -606,7 +606,7 @@
             HeaderHint = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1082#1084' ('#1076#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077')'
             Width = 65
           end
-          object clRatePrice_Calc: TcxGridDBColumn
+          object RatePrice_Calc: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1076#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077',  '#1075#1088#1085
             DataBinding.FieldName = 'RatePrice_Calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -618,7 +618,7 @@
             Options.Editing = False
             Width = 66
           end
-          object clTaxi: TcxGridDBColumn
+          object Taxi: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1085#1072' '#1090#1072#1082#1089#1080', '#1075#1088#1085'.'
             DataBinding.FieldName = 'Taxi'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -629,7 +629,7 @@
             HeaderHint = #1057#1091#1084#1084#1072' '#1085#1072' '#1090#1072#1082#1089#1080
             Width = 64
           end
-          object clTaxiMore: TcxGridDBColumn
+          object TaxiMore: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1085#1072' '#1090#1072#1082#1089#1080' ('#1074#1086#1076#1080#1090'. '#1076#1086#1087'.), '#1075#1088#1085'.'
             DataBinding.FieldName = 'TaxiMore'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -640,14 +640,14 @@
             HeaderHint = #1057#1091#1084#1084#1072' '#1085#1072' '#1090#1072#1082#1089#1080' ('#1074#1086#1076#1080#1090#1077#1083#1100', '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081'), '#1075#1088#1085'.'
             Width = 74
           end
-          object clComment: TcxGridDBColumn
+          object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 117
           end
-          object colIsErased: TcxGridDBColumn
+          object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
             Visible = False
@@ -701,32 +701,32 @@
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colсhAmount_calc
+              Column = Amount_calc
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colchAmount_Distance_calc
+              Column = Amount_Distance_calc
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colchAmount_ColdHour_calc
+              Column = Amount_ColdHour_calc
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colchAmount_ColdDistance_calc
+              Column = Amount_ColdDistance_calc
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colсhColdHour
+              Column = ColdHour
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colсhColdDistance
+              Column = ColdDistance
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -752,32 +752,32 @@
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colсhAmount_calc
+              Column = Amount_calc
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colchAmount_Distance_calc
+              Column = Amount_Distance_calc
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colchAmount_ColdHour_calc
+              Column = Amount_ColdHour_calc
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colchAmount_ColdDistance_calc
+              Column = Amount_ColdDistance_calc
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colсhColdHour
+              Column = ColdHour
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colсhColdDistance
+              Column = ColdDistance
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -793,7 +793,7 @@
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object colchNumber: TcxGridDBColumn
+          object Number: TcxGridDBColumn
             Caption = #8470' '#1087'/'#1087
             DataBinding.FieldName = 'Number'
             HeaderAlignmentHorz = taCenter
@@ -801,7 +801,7 @@
             Options.Editing = False
             Width = 36
           end
-          object colchIsMasterFuel: TcxGridDBColumn
+          object isMasterFuel: TcxGridDBColumn
             Caption = #1054#1089#1085#1086#1074#1085#1086#1081' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isMasterFuel'
             HeaderAlignmentHorz = taCenter
@@ -809,7 +809,7 @@
             Options.Editing = False
             Width = 80
           end
-          object colсhFuelCode: TcxGridDBColumn
+          object FuelCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'FuelCode'
             Visible = False
@@ -818,7 +818,7 @@
             Options.Editing = False
             Width = 50
           end
-          object colсhFuelName: TcxGridDBColumn
+          object FuelName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
             DataBinding.FieldName = 'FuelName'
             HeaderAlignmentHorz = taCenter
@@ -826,7 +826,7 @@
             Options.Editing = False
             Width = 120
           end
-          object colсhIsCalculated: TcxGridDBColumn
+          object IsCalculated: TcxGridDBColumn
             Caption = #1060#1072#1082#1090' '#1088#1072#1089#1095#1077#1090' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isCalculated'
             HeaderAlignmentHorz = taCenter
@@ -840,7 +840,7 @@
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colсhAmount_calc: TcxGridDBColumn
+          object Amount_calc: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1088#1072#1089#1095#1077#1090
             DataBinding.FieldName = 'Amount_calc'
             HeaderAlignmentHorz = taCenter
@@ -848,7 +848,7 @@
             Options.Editing = False
             Width = 60
           end
-          object colchAmount_Distance_calc: TcxGridDBColumn
+          object Amount_Distance_calc: TcxGridDBColumn
             Caption = #1056#1072#1089#1095#1077#1090' '#1085#1072' '#1087#1088#1086#1073#1077#1075
             DataBinding.FieldName = 'Amount_Distance_calc'
             HeaderAlignmentHorz = taCenter
@@ -856,7 +856,7 @@
             Options.Editing = False
             Width = 60
           end
-          object colchAmount_ColdHour_calc: TcxGridDBColumn
+          object Amount_ColdHour_calc: TcxGridDBColumn
             Caption = #1056#1072#1089#1095#1077#1090' '#1085#1072' '#1093#1086#1083#1086#1076' '#1095'.'
             DataBinding.FieldName = 'Amount_ColdHour_calc'
             HeaderAlignmentHorz = taCenter
@@ -864,7 +864,7 @@
             Options.Editing = False
             Width = 60
           end
-          object colchAmount_ColdDistance_calc: TcxGridDBColumn
+          object Amount_ColdDistance_calc: TcxGridDBColumn
             Caption = #1056#1072#1089#1095#1077#1090' '#1085#1072' '#1093#1086#1083#1086#1076' '#1082#1084'.'
             DataBinding.FieldName = 'Amount_ColdDistance_calc'
             HeaderAlignmentHorz = taCenter
@@ -872,21 +872,21 @@
             Options.Editing = False
             Width = 60
           end
-          object colсhColdHour: TcxGridDBColumn
+          object ColdHour: TcxGridDBColumn
             Caption = #1063#1072#1089#1086#1074' '#1092#1072#1082#1090', '#1093#1086#1083#1086#1076
             DataBinding.FieldName = 'ColdHour'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colсhColdDistance: TcxGridDBColumn
+          object ColdDistance: TcxGridDBColumn
             Caption = #1050#1084'. '#1092#1072#1082#1090', '#1093#1086#1083#1086#1076
             DataBinding.FieldName = 'ColdDistance'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colсhAmountFuel: TcxGridDBColumn
+          object AmountFuel: TcxGridDBColumn
             Caption = #1053#1086#1088#1084#1072' '#1085#1072' 100 '#1082#1084
             DataBinding.FieldName = 'AmountFuel'
             HeaderAlignmentHorz = taCenter
@@ -894,7 +894,7 @@
             Options.Editing = False
             Width = 60
           end
-          object colсhAmountColdHour: TcxGridDBColumn
+          object AmountColdHour: TcxGridDBColumn
             Caption = #1053#1086#1088#1084#1072' '#1085#1072' '#1093#1086#1083#1086#1076', '#1074' '#1095#1072#1089
             DataBinding.FieldName = 'AmountColdHour'
             HeaderAlignmentHorz = taCenter
@@ -902,7 +902,7 @@
             Options.Editing = False
             Width = 60
           end
-          object colсhAmountColdDistance: TcxGridDBColumn
+          object AmountColdDistance: TcxGridDBColumn
             Caption = #1053#1086#1088#1084#1072' '#1085#1072' '#1093#1086#1083#1086#1076', '#1079#1072' 100 '#1082#1084
             DataBinding.FieldName = 'AmountColdDistance'
             HeaderAlignmentHorz = taCenter
@@ -910,7 +910,7 @@
             Options.Editing = False
             Width = 75
           end
-          object colсhRateFuelKindName: TcxGridDBColumn
+          object RateFuelKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1085#1086#1088#1084#1099
             DataBinding.FieldName = 'RateFuelKindName'
             HeaderAlignmentHorz = taCenter
@@ -918,7 +918,7 @@
             Options.Editing = False
             Width = 70
           end
-          object colchRateFuelKindTax: TcxGridDBColumn
+          object RateFuelKindTax: TcxGridDBColumn
             Caption = '% '#1089#1077#1079#1086#1085', '#1090#1077#1084#1087'.'
             DataBinding.FieldName = 'RateFuelKindTax'
             HeaderAlignmentHorz = taCenter
@@ -926,7 +926,7 @@
             Options.Editing = False
             Width = 60
           end
-          object colchRatioFuel: TcxGridDBColumn
+          object RatioFuel: TcxGridDBColumn
             Caption = #1050#1086#1101#1092#1092'. '#1087#1077#1088#1077#1074#1086#1076#1072' '#1085#1086#1088#1084#1099
             DataBinding.FieldName = 'RatioFuel'
             HeaderAlignmentHorz = taCenter
@@ -943,7 +943,7 @@
             Options.Editing = False
             Width = 70
           end
-          object colchBranchName: TcxGridDBColumn
+          object BranchName: TcxGridDBColumn
             Caption = #1060#1080#1083#1080#1072#1083' ('#1079#1072#1090#1088#1072#1090#1099')'
             DataBinding.FieldName = 'BranchName'
             Visible = False
@@ -977,6 +977,9 @@
     object cxTabSheetIncome: TcxTabSheet
       Caption = #1047#1072#1087#1088#1072#1074#1082#1072
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridIncome: TcxGrid
         Left = 0
         Top = 0
@@ -1291,6 +1294,9 @@
     object cxTabSheetReport: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 3
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridReport: TcxGrid
         Left = 0
         Top = 0

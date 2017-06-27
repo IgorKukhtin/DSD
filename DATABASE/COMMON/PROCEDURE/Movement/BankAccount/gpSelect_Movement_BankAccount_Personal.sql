@@ -109,6 +109,7 @@ BEGIN
            , (COALESCE (MovementFloat_TotalSummToPay.ValueData, 0)
             - COALESCE (MovementFloat_TotalSummCard.ValueData, 0)
             - COALESCE (MovementFloat_TotalSummCardSecond.ValueData, 0)
+            - COALESCE (MovementFloat_TotalSummCardSecondCash.ValueData, 0)
              ) :: TFloat AS TotalSummToPay_Service
 
        FROM tmpMovement
@@ -148,6 +149,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummCardSecond
                                     ON MovementFloat_TotalSummCardSecond.MovementId =  Movement_PersonalService.Id
                                    AND MovementFloat_TotalSummCardSecond.DescId = zc_MovementFloat_TotalSummCardSecond()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummCardSecondCash
+                                    ON MovementFloat_TotalSummCardSecondCash.MovementId = Movement_PersonalService.Id
+                                   AND MovementFloat_TotalSummCardSecondCash.DescId = zc_MovementFloat_TotalSummCardSecondCash()
 
             LEFT JOIN MovementDate AS MovementDate_ServiceDate_Service
                                    ON MovementDate_ServiceDate_Service.MovementId = Movement_PersonalService.Id

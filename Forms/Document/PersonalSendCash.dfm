@@ -127,7 +127,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
             item
               Format = ',0.00;-,0.00;'
               Position = spFooter
-              Column = colAmount_21201
+              Column = Amount_21201
             end
             item
               Kind = skSum
@@ -136,7 +136,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount_20401
+              Column = Amount_20401
             end
             item
               Format = ',0.###;-,0.###; ;'
@@ -153,13 +153,13 @@ object PersonalSendCashForm: TPersonalSendCashForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount_21201
+              Column = Amount_21201
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount_21201
+              Column = Amount_21201
             end
             item
               Kind = skSum
@@ -171,7 +171,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount_20401
+              Column = Amount_20401
             end
             item
               Format = ',0.###;-,0.###; ;'
@@ -195,14 +195,14 @@ object PersonalSendCashForm: TPersonalSendCashForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object colCarModelName: TcxGridDBColumn
+          object CarModelName: TcxGridDBColumn
             Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
             DataBinding.FieldName = 'CarModelName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
-          object colCarName: TcxGridDBColumn
+          object CarName: TcxGridDBColumn
             Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
             DataBinding.FieldName = 'CarName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -217,7 +217,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
             Options.Editing = False
             Width = 60
           end
-          object colPersonalCode: TcxGridDBColumn
+          object PersonalCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'PersonalCode'
             Visible = False
@@ -225,7 +225,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
             Options.Editing = False
             Width = 30
           end
-          object colPersonalName: TcxGridDBColumn
+          object PersonalName: TcxGridDBColumn
             Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
             DataBinding.FieldName = 'PersonalName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -239,7 +239,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colRouteName: TcxGridDBColumn
+          object RouteName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090
             DataBinding.FieldName = 'RouteName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -253,13 +253,13 @@ object PersonalSendCashForm: TPersonalSendCashForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colOperDate: TcxGridDBColumn
+          object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1074#1099#1076#1072#1095#1080
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colAmount_20401: TcxGridDBColumn
+          object Amount_20401: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1085#1072' '#1043#1057#1052
             DataBinding.FieldName = 'Amount_20401'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -271,7 +271,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colAmount_21201: TcxGridDBColumn
+          object Amount_21201: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1085#1072' '#1050#1086#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1077
             DataBinding.FieldName = 'Amount_21201'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -282,7 +282,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object colIsErased: TcxGridDBColumn
+          object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
             Visible = False
@@ -304,6 +304,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 240
     Top = 304
@@ -322,12 +323,14 @@ object PersonalSendCashForm: TPersonalSendCashForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -335,6 +338,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 116
@@ -590,6 +594,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
           Component = edInvNumber
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'From'
@@ -598,6 +603,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'OperDate'
@@ -605,10 +611,12 @@ object PersonalSendCashForm: TPersonalSendCashForm
           Component = edOperDate
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -673,18 +681,21 @@ object PersonalSendCashForm: TPersonalSendCashForm
       FormName = 'TPersonal_ObjectForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PersonalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PersonalCode'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -692,6 +703,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
           Component = MasterCDS
           ComponentItem = 'PersonalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -702,12 +714,14 @@ object PersonalSendCashForm: TPersonalSendCashForm
       FormName = 'TCarForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'CarId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -715,6 +729,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
           Component = MasterCDS
           ComponentItem = 'CarName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CarModelName'
@@ -722,6 +737,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
           Component = MasterCDS
           ComponentItem = 'CarModelName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -732,12 +748,14 @@ object PersonalSendCashForm: TPersonalSendCashForm
       FormName = 'TRouteForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -745,6 +763,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
           Component = MasterCDS
           ComponentItem = 'RouteName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -805,6 +824,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
       FormName = 'TMovementItemContainerForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -812,6 +832,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
           Component = FormParams
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -832,6 +853,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
     LookupControl = edPersonal
     FormNameParam.Value = 'TPersonal_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -842,6 +864,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -850,6 +873,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 464
     Top = 56
@@ -873,6 +897,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
         Component = MasterCDS
         ComponentItem = 'MIId_20401'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioMIId_21201'
@@ -880,6 +905,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
         Component = MasterCDS
         ComponentItem = 'MIId_21201'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -887,6 +913,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalId'
@@ -894,6 +921,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
         Component = MasterCDS
         ComponentItem = 'PersonalId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount_20401'
@@ -902,6 +930,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
         ComponentItem = 'Amount_20401'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount_21201'
@@ -910,6 +939,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
         ComponentItem = 'Amount_21201'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioOperDate'
@@ -918,6 +948,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
         ComponentItem = 'OperDate'
         DataType = ftDateTime
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRouteId'
@@ -925,6 +956,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
         Component = MasterCDS
         ComponentItem = 'RouteId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCarId'
@@ -932,6 +964,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
         Component = MasterCDS
         ComponentItem = 'CarId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 86
@@ -968,6 +1001,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -975,6 +1009,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -982,6 +1017,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalId'
@@ -989,6 +1025,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
         Component = GuidesPersonal
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 387
@@ -998,6 +1035,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
     IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
     StoredProc = spInsertUpdateMovement
     ControlList = <
       item
@@ -1024,6 +1062,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -1032,28 +1071,33 @@ object PersonalSendCashForm: TPersonalSendCashForm
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalId'
         Value = ''
         Component = GuidesPersonal
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalName'
         Value = ''
         Component = GuidesPersonal
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusCode'
@@ -1061,6 +1105,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
         Component = StatusGuides
         ComponentItem = 'Key'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
@@ -1068,6 +1113,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 216
@@ -1086,6 +1132,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
     IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
     GuidesList = <
       item
         Guides = GuidesPersonal
@@ -1108,6 +1155,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalId'
@@ -1115,6 +1163,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
         Component = MasterCDS
         ComponentItem = 'PersonalId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outIsErased'
@@ -1122,6 +1171,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
         Component = MasterCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 574
@@ -1138,6 +1188,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalId'
@@ -1145,6 +1196,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
         Component = MasterCDS
         ComponentItem = 'PersonalId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outIsErased'
@@ -1152,6 +1204,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
         Component = MasterCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 630
@@ -1162,6 +1215,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
     LookupControl = ceStatus
     FormNameParam.Value = ''
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     PositionDataSet = 'ClientDataSet'
     Params = <>
     Left = 52
@@ -1178,6 +1232,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStatusCode'
@@ -1185,6 +1240,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
         Component = StatusGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 76

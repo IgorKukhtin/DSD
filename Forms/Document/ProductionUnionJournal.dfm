@@ -4,8 +4,9 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
   ClientWidth = 1073
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitTop = -55
   ExplicitWidth = 1089
-  ExplicitHeight = 573
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -33,7 +34,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end
             item
               Format = ',0.####'
@@ -70,13 +71,13 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCountChild
+              Column = TotalCountChild
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end
             item
               Format = ',0.####'
@@ -113,7 +114,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCountChild
+              Column = TotalCountChild
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -142,21 +143,21 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 80
           end
-          object colFromName: TcxGridDBColumn
+          object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
-          object colToName: TcxGridDBColumn
+          object ToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
-          object colDocumentKindName: TcxGridDBColumn
+          object DocumentKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'DocumentKindName'
             HeaderAlignmentHorz = taCenter
@@ -164,7 +165,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
             Options.Editing = False
             Width = 103
           end
-          object colTotalCount: TcxGridDBColumn
+          object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'TotalCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -174,7 +175,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colTotalCountChild: TcxGridDBColumn
+          object TotalCountChild: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'TotalCountChild'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -184,14 +185,14 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object cxGridDBTableViewColumn1: TcxGridDBColumn
+          object InvNumber_ProductionFull: TcxGridDBColumn
             Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1086#1089#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'InvNumber_ProductionFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
-          object colInvNumberOrder: TcxGridDBColumn
+          object InvNumber_Order_Full: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1079#1072#1103#1074#1082#1072
             DataBinding.FieldName = 'InvNumber_Order_Full'
             HeaderAlignmentHorz = taCenter

@@ -28,16 +28,16 @@ uses
 
 type
   TOrderInternalPackJournalForm = class(TAncestorJournalForm)
-    colFromName: TcxGridDBColumn;
-    colToName: TcxGridDBColumn;
-    colTotalCount: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
+    ToName: TcxGridDBColumn;
+    TotalCount: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    colTotalCountKg: TcxGridDBColumn;
-    colTotalCountSh: TcxGridDBColumn;
+    TotalCountKg: TcxGridDBColumn;
+    TotalCountSh: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     edJuridicalBasis: TcxButtonEdit;

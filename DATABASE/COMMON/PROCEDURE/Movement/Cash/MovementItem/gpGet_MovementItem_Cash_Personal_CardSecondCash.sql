@@ -6,6 +6,7 @@ CREATE OR REPLACE FUNCTION gpGet_MovementItem_Cash_Personal_CardSecondCash (
  INOUT ioId                  Integer   , --  люч объекта <Ёлемент документа>
  INOUT ioAmount              TFloat    , -- к выплате 
  INOUT ioSummCardSecondCash  TFloat    , -- —умма бн (касса) 2ф
+   OUT outIsCalculated       Boolean   , -- 
     IN inSession             TVarChar    -- сесси€ пользовател€
 )
 RETURNS RECORD
@@ -19,6 +20,10 @@ BEGIN
      -- установили новые значени€
      ioAmount:= COALESCE (ioAmount, 0) + COALESCE (ioSummCardSecondCash, 0);
      ioSummCardSecondCash:= 0;
+     
+     -- расчет
+     outIsCalculated:= CASE WHEN ioAmount > 0 THEN TRUE ELSE FALSE END;
+
 
 END;
 $BODY$
@@ -32,5 +37,3 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpGet_MovementItem_Cash_Personal_CardSecondCash (ioId:= 0, ioAmount:= 0, ioCardSecondCash:= 0, inSession:= '2')
-
--- select * from gpGet_MovementItem_Cash_Personal_CardSecondCash (ioId := 11967866, ioAmount := 8 , ioCardSecondCash:= := 450 ,  inSession := '5');

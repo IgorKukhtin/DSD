@@ -2,8 +2,10 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1088#1072#1089#1093#1086#1076')>'
   ClientHeight = 668
   ClientWidth = 1268
+  ExplicitLeft = -265
+  ExplicitTop = -188
   ExplicitWidth = 1284
-  ExplicitHeight = 703
+  ExplicitHeight = 707
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -28,36 +30,36 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSumm
+              Column = AmountSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colBoxCount
+              Column = BoxCount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSumm
+              Column = AmountSumm
             end
             item
               Kind = skSum
-              Column = colPrice
+              Column = Price
             end
             item
               Kind = skSum
-              Column = colBoxCount
+              Column = BoxCount
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -70,7 +72,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colCode: TcxGridDBColumn [0]
+          object GoodsCode: TcxGridDBColumn [0]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -78,7 +80,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
             Options.Editing = False
             Width = 45
           end
-          object colName: TcxGridDBColumn [1]
+          object GoodsName: TcxGridDBColumn [1]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -86,7 +88,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
             Options.Editing = False
             Width = 250
           end
-          object colGoodsKindName: TcxGridDBColumn [2]
+          object GoodsKindName: TcxGridDBColumn [2]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -101,7 +103,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
             HeaderAlignmentVert = vaCenter
             Width = 120
           end
-          object colMeasureName: TcxGridDBColumn [3]
+          object MeasureName: TcxGridDBColumn [3]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -109,7 +111,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
             Options.Editing = False
             Width = 45
           end
-          object colChangePercentAmount: TcxGridDBColumn [4]
+          object ChangePercentAmount: TcxGridDBColumn [4]
             Caption = '% '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089
             DataBinding.FieldName = 'ChangePercentAmount'
             Visible = False
@@ -117,7 +119,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
-          object colAmount: TcxGridDBColumn [5]
+          object Amount: TcxGridDBColumn [5]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -127,7 +129,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colPrice: TcxGridDBColumn [6]
+          object Price: TcxGridDBColumn [6]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -137,7 +139,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colCountForPrice: TcxGridDBColumn [7]
+          object CountForPrice: TcxGridDBColumn [7]
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             Visible = False
@@ -145,7 +147,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colAmountSumm: TcxGridDBColumn [8]
+          object AmountSumm: TcxGridDBColumn [8]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -155,7 +157,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
             Options.Editing = False
             Width = 80
           end
-          object colBoxCount: TcxGridDBColumn [9]
+          object BoxCount: TcxGridDBColumn [9]
             Caption = #1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074
             DataBinding.FieldName = 'BoxCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -165,7 +167,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
             HeaderAlignmentVert = vaCenter
             Width = 77
           end
-          object colBoxName: TcxGridDBColumn [10]
+          object BoxName: TcxGridDBColumn [10]
             Caption = #1042#1080#1076' '#1103#1097#1080#1082#1086#1074
             DataBinding.FieldName = 'BoxName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -186,6 +188,9 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1053#1072#1083#1086#1075#1086#1074#1099#1077
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0

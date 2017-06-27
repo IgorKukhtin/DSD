@@ -2,7 +2,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
   Left = 0
   Top = 0
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1079#1072#1080#1084#1086#1079#1072#1095#1077#1090' ('#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072')>'
-  ClientHeight = 395
+  ClientHeight = 389
   ClientWidth = 1219
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -55,10 +55,11 @@ object SendDebtJournalForm: TSendDebtJournalForm
     Left = 0
     Top = 57
     Width = 1219
-    Height = 338
+    Height = 332
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitHeight = 338
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -78,7 +79,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clAmount
+          Column = Amount
         end
         item
           Format = ',0.00'
@@ -112,7 +113,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clAmount
+          Column = Amount
         end
         item
           Format = ',0.00'
@@ -148,7 +149,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object colStatus: TcxGridDBColumn
+      object StatusCode: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089
         DataBinding.FieldName = 'StatusCode'
         PropertiesClassName = 'TcxImageComboBoxProperties'
@@ -173,21 +174,21 @@ object SendDebtJournalForm: TSendDebtJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object colInvNumber: TcxGridDBColumn
+      object InvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'.'
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object colOperDate: TcxGridDBColumn
+      object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object clAmount: TcxGridDBColumn
+      object Amount: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072
         DataBinding.FieldName = 'Amount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -197,7 +198,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object clJuridicalFromCode: TcxGridDBColumn
+      object JuridicalFromCode: TcxGridDBColumn
         Caption = #1050#1086#1076' ('#1044')'
         DataBinding.FieldName = 'JuridicalFromCode'
         Visible = False
@@ -205,14 +206,14 @@ object SendDebtJournalForm: TSendDebtJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 31
       end
-      object clJuridicalFromName: TcxGridDBColumn
+      object JuridicalFromName: TcxGridDBColumn
         Caption = #1054#1090' '#1050#1086#1075#1086' ('#1044')'
         DataBinding.FieldName = 'JuridicalFromName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 120
       end
-      object clFromOKPO: TcxGridDBColumn
+      object FromOKPO: TcxGridDBColumn
         Caption = #1054#1050#1055#1054' ('#1044')'
         DataBinding.FieldName = 'FromOKPO'
         Visible = False
@@ -220,21 +221,21 @@ object SendDebtJournalForm: TSendDebtJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 51
       end
-      object clPaidKindFromName: TcxGridDBColumn
+      object PaidKindFromName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1044')'
         DataBinding.FieldName = 'PaidKindFromName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object clContractFromName: TcxGridDBColumn
+      object ContractFromName: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1075'.('#1044')'
         DataBinding.FieldName = 'ContractFromName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object colContractTagFromName: TcxGridDBColumn
+      object ContractTagFromName: TcxGridDBColumn
         Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'. ('#1044')'
         DataBinding.FieldName = 'ContractTagFromName'
         HeaderAlignmentHorz = taCenter
@@ -249,7 +250,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object clInfoMoneyFromCode: TcxGridDBColumn
+      object InfoMoneyFromCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055' ('#1044')'
         DataBinding.FieldName = 'InfoMoneyFromCode'
         Visible = False
@@ -257,7 +258,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object clInfoMoneyGroupFromName: TcxGridDBColumn
+      object InfoMoneyGroupFromName: TcxGridDBColumn
         Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1044')'
         DataBinding.FieldName = 'InfoMoneyGroupFromName'
         Visible = False
@@ -265,7 +266,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object clInfoMoneyDestinationFromName: TcxGridDBColumn
+      object InfoMoneyDestinationFromName: TcxGridDBColumn
         Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077' ('#1044')'
         DataBinding.FieldName = 'InfoMoneyDestinationFromName'
         Visible = False
@@ -273,14 +274,14 @@ object SendDebtJournalForm: TSendDebtJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object clInfoMoneyFromName: TcxGridDBColumn
+      object InfoMoneyFromName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1044')'
         DataBinding.FieldName = 'InfoMoneyFromName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 140
       end
-      object clInfoMoneyFromName_all: TcxGridDBColumn
+      object InfoMoneyFromName_all: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' ('#1044')'
         DataBinding.FieldName = 'InfoMoneyFromName_all'
         Visible = False
@@ -288,7 +289,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 140
       end
-      object clJuridicalToCode: TcxGridDBColumn
+      object JuridicalToCode: TcxGridDBColumn
         Caption = #1050#1086#1076' ('#1050')'
         DataBinding.FieldName = 'JuridicalToCode'
         Visible = False
@@ -296,14 +297,14 @@ object SendDebtJournalForm: TSendDebtJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 43
       end
-      object clJuridicalToName: TcxGridDBColumn
+      object JuridicalToName: TcxGridDBColumn
         Caption = #1050#1086#1084#1091' ('#1050')'
         DataBinding.FieldName = 'JuridicalToName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 120
       end
-      object clToOKPO: TcxGridDBColumn
+      object ToOKPO: TcxGridDBColumn
         Caption = #1054#1050#1055#1054' ('#1050')'
         DataBinding.FieldName = 'ToOKPO'
         Visible = False
@@ -311,21 +312,21 @@ object SendDebtJournalForm: TSendDebtJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 37
       end
-      object clPaidKindToName: TcxGridDBColumn
+      object PaidKindToName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1050')'
         DataBinding.FieldName = 'PaidKindToName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object clContractToName: TcxGridDBColumn
+      object ContractToName: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1075'.('#1050')'
         DataBinding.FieldName = 'ContractToName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object colContractTagToName: TcxGridDBColumn
+      object ContractTagToName: TcxGridDBColumn
         Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'. ('#1050')'
         DataBinding.FieldName = 'ContractTagToName'
         HeaderAlignmentHorz = taCenter
@@ -340,7 +341,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object clInfoMoneyToCode: TcxGridDBColumn
+      object InfoMoneyToCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055' ('#1050')'
         DataBinding.FieldName = 'InfoMoneyToCode'
         Visible = False
@@ -348,7 +349,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object clInfoMoneyGroupToName: TcxGridDBColumn
+      object InfoMoneyGroupToName: TcxGridDBColumn
         Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1050')'
         DataBinding.FieldName = 'InfoMoneyGroupToName'
         Visible = False
@@ -356,7 +357,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object clInfoMoneyDestinationToName: TcxGridDBColumn
+      object InfoMoneyDestinationToName: TcxGridDBColumn
         Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077' ('#1050')'
         DataBinding.FieldName = 'InfoMoneyDestinationToName'
         Visible = False
@@ -364,14 +365,14 @@ object SendDebtJournalForm: TSendDebtJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object clInfoMoneyToName: TcxGridDBColumn
+      object InfoMoneyToName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1050')'
         DataBinding.FieldName = 'InfoMoneyToName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 140
       end
-      object clInfoMoneyToName_all: TcxGridDBColumn
+      object InfoMoneyToName_all: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' ('#1050')'
         DataBinding.FieldName = 'InfoMoneyToName_all'
         Visible = False
@@ -379,7 +380,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 140
       end
-      object clItemFromName: TcxGridDBColumn
+      object ItemFromName: TcxGridDBColumn
         Caption = #1069#1083#1077#1084#1077#1085#1090' ('#1044')'
         DataBinding.FieldName = 'ItemFromName'
         Visible = False
@@ -387,7 +388,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object clItemToName: TcxGridDBColumn
+      object ItemToName: TcxGridDBColumn
         Caption = #1069#1083#1077#1084#1077#1085#1090' ('#1050')'
         DataBinding.FieldName = 'ItemToName'
         Visible = False
@@ -395,7 +396,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object clisCopy: TcxGridDBColumn
+      object isCopy: TcxGridDBColumn
         Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074
         DataBinding.FieldName = 'isCopy'
         HeaderAlignmentHorz = taCenter

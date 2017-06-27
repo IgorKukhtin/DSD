@@ -78,6 +78,7 @@ BEGIN
            , (COALESCE (MovementFloat_TotalSummToPay.ValueData, 0)
             - COALESCE (MovementFloat_TotalSummCard.ValueData, 0)
             - COALESCE (MovementFloat_TotalSummCardSecond.ValueData, 0)
+            - COALESCE (MovementFloat_TotalSummCardSecondCash.ValueData, 0)
              ) :: TFloat AS TotalSummCash
            , MovementFloat_TotalSummService.ValueData    AS TotalSummService
            , MovementFloat_TotalSummCard.ValueData       AS TotalSummCard

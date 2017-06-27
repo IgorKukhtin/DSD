@@ -14,16 +14,26 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   cxCheckBox, cxImageComboBox, dxSkinsCore, dxSkinsDefaultPainters,
   dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.Menus, cxCurrencyEdit,
-  cxButtonEdit, cxBlobEdit, frxClass, dsdGuides;
+  cxButtonEdit, cxBlobEdit, frxClass, dsdGuides, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TTransportServiceJournalForm = class(TAncestorJournalForm)
-    clDistance: TcxGridDBColumn;
-    clPrice: TcxGridDBColumn;
-    clCountPoint: TcxGridDBColumn;
-    clTrevelTime: TcxGridDBColumn;
-    clRouteName: TcxGridDBColumn;
-    clContractConditionKindName: TcxGridDBColumn;
+    Distance: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    CountPoint: TcxGridDBColumn;
+    TrevelTime: TcxGridDBColumn;
+    RouteName: TcxGridDBColumn;
+    ContractConditionKindName: TcxGridDBColumn;
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     InfoMoneyChoiceForm: TOpenChoiceForm;
@@ -31,17 +41,17 @@ type
     RouteChoiceForm: TOpenChoiceForm;
     ContractConditionKindChoiceForm: TOpenChoiceForm;
     PaidKindChoiceForm: TOpenChoiceForm;
-    clContractName: TcxGridDBColumn;
+    ContractName: TcxGridDBColumn;
     ContractChoiceForm: TOpenChoiceForm;
-    clInfoMoneyCode: TcxGridDBColumn;
-    clJuridicalName: TcxGridDBColumn;
-    clInfoMoneyGroupName: TcxGridDBColumn;
-    clInfoMoneyDestinationName: TcxGridDBColumn;
-    clUnitForwardingName: TcxGridDBColumn;
+    InfoMoneyCode: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    InfoMoneyGroupName: TcxGridDBColumn;
+    InfoMoneyDestinationName: TcxGridDBColumn;
+    UnitForwardingName: TcxGridDBColumn;
     StartRun: TcxGridDBColumn;
     StartRunPlan: TcxGridDBColumn;
-    clWeightTransport: TcxGridDBColumn;
-    clContractCode: TcxGridDBColumn;
+    WeightTransport: TcxGridDBColumn;
+    ContractCode: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     SummTotal: TcxGridDBColumn;
     cxLabel27: TcxLabel;

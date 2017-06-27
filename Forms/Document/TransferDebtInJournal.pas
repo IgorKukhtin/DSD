@@ -14,7 +14,17 @@ uses
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, cxCheckBox, cxCurrencyEdit,
   cxButtonEdit, dsdGuides, frxClass, frxDBSet, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TTransferDebtInJournalForm = class(TAncestorJournalForm)
@@ -38,12 +48,12 @@ type
     spSelectPrintTaxCorrective_Client: TdsdStoredProc;
     bbPrintTaxCorrective_Client: TdxBarButton;
     bbPrintTaxCorrective_Us: TdxBarButton;
-    colInvNumberPartner: TcxGridDBColumn;
+    InvNumberPartner: TcxGridDBColumn;
     spChecked: TdsdStoredProc;
-    clChecked: TcxGridDBColumn;
+    Checked: TcxGridDBColumn;
     actChecked: TdsdExecStoredProc;
     bbspChecked: TdxBarButton;
-    colInvNumberMark: TcxGridDBColumn;
+    InvNumberMark: TcxGridDBColumn;
     actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction;
     bbPrint_Return_By_TaxCorrective: TdxBarButton;
     spGetReportNameTaxCorrective: TdsdStoredProc;
@@ -52,8 +62,8 @@ type
     actPrint_TaxCorrective_Client: TdsdPrintAction;
     mactPrint_TaxCorrective_Client: TMultiAction;
     mactPrint_TaxCorrective_Us: TMultiAction;
-    colContractFromCode: TcxGridDBColumn;
-    colContractToCode: TcxGridDBColumn;
+    ContractFromCode: TcxGridDBColumn;
+    ContractToCode: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
     actInsertMaskMulti: TMultiAction;
     ExecuteDialog: TExecuteDialog;

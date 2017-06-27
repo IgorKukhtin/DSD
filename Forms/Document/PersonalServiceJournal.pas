@@ -28,9 +28,9 @@ uses
 
 type
   TPersonalServiceJournalForm = class(TAncestorJournalForm)
-    colServiceDate: TcxGridDBColumn;
-    colComment: TcxGridDBColumn;
-    colTotalSumm: TcxGridDBColumn;
+    ServiceDate: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
     bbTax: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
@@ -40,18 +40,18 @@ type
     bbPrintTax_Us: TdxBarButton;
     bbPrintTax_Client: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
-    colTotalSummService: TcxGridDBColumn;
-    colTotalSummCard: TcxGridDBColumn;
-    colTotalSummMinus: TcxGridDBColumn;
-    colTotalSummAdd: TcxGridDBColumn;
-    colPersonalServiceListName: TcxGridDBColumn;
-    colTotalSummCash: TcxGridDBColumn;
-    colTotalSummCardRecalc: TcxGridDBColumn;
-    colTotalSummSocialIn: TcxGridDBColumn;
-    colTotalSummSocialAdd: TcxGridDBColumn;
-    colTotalSummChild: TcxGridDBColumn;
-    colTotalSummToPay: TcxGridDBColumn;
-    colJuridicalName: TcxGridDBColumn;
+    TotalSummService: TcxGridDBColumn;
+    TotalSummCard: TcxGridDBColumn;
+    TotalSummMinus: TcxGridDBColumn;
+    TotalSummAdd: TcxGridDBColumn;
+    PersonalServiceListName: TcxGridDBColumn;
+    TotalSummCash: TcxGridDBColumn;
+    TotalSummCardRecalc: TcxGridDBColumn;
+    TotalSummSocialIn: TcxGridDBColumn;
+    TotalSummSocialAdd: TcxGridDBColumn;
+    TotalSummChild: TcxGridDBColumn;
+    TotalSummToPay: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
     cbIsServiceDate: TcxCheckBox;
     actIsServiceDate: TdsdDataSetRefresh;
     TotalSummTransportAdd: TcxGridDBColumn;

@@ -16,7 +16,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, MeasureName TVarChar
              , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , isOrder Boolean
-             , isErased boolean) AS
+             , isErased Boolean)
+AS
 $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
@@ -303,7 +304,6 @@ BEGIN
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
 
-
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -324,5 +324,6 @@ from gpSelect_Object_GoodsPropertyValue(inGoodsPropertyId := 0 , inShowAll := 'F
 group by GoodsPropertyId, GoodsId, GoodsKindId
 having Count(*)  > 1
 */
+
 -- тест
 -- SELECT * FROM gpSelect_Object_GoodsPropertyValue (351299 , TRUE, '2')

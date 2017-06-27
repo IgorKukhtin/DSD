@@ -3,9 +3,8 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
   ClientHeight = 404
   ClientWidth = 927
   AddOnFormData.RefreshAction = actRefreshStart
-  ExplicitLeft = -137
   ExplicitWidth = 943
-  ExplicitHeight = 439
+  ExplicitHeight = 443
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -32,7 +31,7 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSumm
+              Column = TotalSumm
             end
             item
               Format = ',0.####'
@@ -43,7 +42,7 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSumm
+              Column = TotalSumm
             end
             item
               Format = #1057#1090#1088#1086#1082': ,0'
@@ -164,7 +163,7 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 120
           end
-          object colOKPO_To: TcxGridDBColumn
+          object OKPO_To: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'OKPO_To'
             Visible = False
@@ -172,7 +171,7 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
-          object colJuridicalName_To: TcxGridDBColumn
+          object JuridicalName_To: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName_To'
             HeaderAlignmentHorz = taCenter
@@ -189,7 +188,7 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colTotalSumm: TcxGridDBColumn
+          object TotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -207,14 +206,14 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colPaidKindName: TcxGridDBColumn
+          object PaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colContractCode: TcxGridDBColumn
+          object ContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractCode'
             Visible = False
@@ -222,14 +221,14 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object colContractName: TcxGridDBColumn
+          object ContractName: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colContractTagName: TcxGridDBColumn
+          object ContractTagName: TcxGridDBColumn
             Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractTagName'
             HeaderAlignmentHorz = taCenter

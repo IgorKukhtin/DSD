@@ -3,8 +3,10 @@ inherited PromoForm: TPromoForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 599
   ClientWidth = 1204
+  ExplicitLeft = -201
+  ExplicitTop = -119
   ExplicitWidth = 1220
-  ExplicitHeight = 637
+  ExplicitHeight = 638
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -30,70 +32,70 @@ inherited PromoForm: TPromoForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountRealWeight
+              Column = AmountRealWeight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountPlanMinWeight
+              Column = AmountPlanMinWeight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountPlanMaxWeight
+              Column = AmountPlanMaxWeight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountOrderWeight
+              Column = AmountOrderWeight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountOutWeight
+              Column = AmountOutWeight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountInWeight
+              Column = AmountInWeight
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountRealWeight
+              Column = AmountRealWeight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountPlanMinWeight
+              Column = AmountPlanMinWeight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountPlanMaxWeight
+              Column = AmountPlanMaxWeight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountOrderWeight
+              Column = AmountOrderWeight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountOutWeight
+              Column = AmountOutWeight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountInWeight
+              Column = AmountInWeight
             end>
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colTradeMark: TcxGridDBColumn [0]
+          object TradeMark: TcxGridDBColumn [0]
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
             DataBinding.FieldName = 'TradeMarkName'
             HeaderAlignmentHorz = taCenter
@@ -101,7 +103,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 80
           end
-          object colGoodsCode: TcxGridDBColumn [1]
+          object GoodsCode: TcxGridDBColumn [1]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -109,7 +111,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 47
           end
-          object colGoodsName: TcxGridDBColumn [2]
+          object GoodsName: TcxGridDBColumn [2]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -124,7 +126,7 @@ inherited PromoForm: TPromoForm
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
-          object colGoodsKindName: TcxGridDBColumn [3]
+          object GoodsKindName: TcxGridDBColumn [3]
             Caption = #1042#1080#1076
             DataBinding.FieldName = 'GoodsKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -139,7 +141,7 @@ inherited PromoForm: TPromoForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colMeasureName: TcxGridDBColumn [4]
+          object MeasureName: TcxGridDBColumn [4]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -147,35 +149,35 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 35
           end
-          object colGoodComment: TcxGridDBColumn [5]
+          object GoodComment: TcxGridDBColumn [5]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colAmount: TcxGridDBColumn [6]
+          object Amount: TcxGridDBColumn [6]
             Caption = '% '#1089#1082#1080#1076#1082#1080
             DataBinding.FieldName = 'Amount'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object colPriceSale: TcxGridDBColumn [7]
+          object PriceSale: TcxGridDBColumn [7]
             Caption = #1062#1077#1085#1072' '#1085#1072' '#1087#1086#1083#1082#1077
             DataBinding.FieldName = 'PriceSale'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colPrice: TcxGridDBColumn [8]
+          object Price: TcxGridDBColumn [8]
             Caption = #1073#1077#1079' '#1053#1044#1057' '#1074' '#1087#1088#1072#1081#1089#1077
             DataBinding.FieldName = 'Price'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colPriceWithOutVAT: TcxGridDBColumn [9]
+          object PriceWithOutVAT: TcxGridDBColumn [9]
             Caption = #1073#1077#1079' '#1053#1044#1057' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
             DataBinding.FieldName = 'PriceWithOutVAT'
             HeaderAlignmentHorz = taCenter
@@ -184,7 +186,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 70
           end
-          object colPriceWithVAT: TcxGridDBColumn [10]
+          object PriceWithVAT: TcxGridDBColumn [10]
             Caption = #1089' '#1053#1044#1057' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
             DataBinding.FieldName = 'PriceWithVAT'
             HeaderAlignmentHorz = taCenter
@@ -193,7 +195,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 70
           end
-          object colAmountReal: TcxGridDBColumn [11]
+          object AmountReal: TcxGridDBColumn [11]
             Caption = #1055#1088#1086#1076#1072#1085#1086' '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076
             DataBinding.FieldName = 'AmountReal'
             HeaderAlignmentHorz = taCenter
@@ -201,7 +203,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 80
           end
-          object colAmountRealWeight: TcxGridDBColumn [12]
+          object AmountRealWeight: TcxGridDBColumn [12]
             Caption = #1055#1088#1086#1076#1072#1085#1086' '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076' '#1042#1077#1089
             DataBinding.FieldName = 'AmountRealWeight'
             HeaderAlignmentHorz = taCenter
@@ -209,14 +211,14 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 80
           end
-          object colAmountPlanMin: TcxGridDBColumn [13]
+          object AmountPlanMin: TcxGridDBColumn [13]
             Caption = #1055#1083#1072#1085' '#1084#1080#1085'.'
             DataBinding.FieldName = 'AmountPlanMin'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colAmountPlanMinWeight: TcxGridDBColumn [14]
+          object AmountPlanMinWeight: TcxGridDBColumn [14]
             Caption = #1055#1083#1072#1085' '#1084#1080#1085'. '#1042#1077#1089
             DataBinding.FieldName = 'AmountPlanMinWeight'
             HeaderAlignmentHorz = taCenter
@@ -224,14 +226,14 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 70
           end
-          object colAmountPlanMax: TcxGridDBColumn [15]
+          object AmountPlanMax: TcxGridDBColumn [15]
             Caption = #1055#1083#1072#1085' '#1084#1072#1082#1089'.'
             DataBinding.FieldName = 'AmountPlanMax'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colAmountPlanMaxWeight: TcxGridDBColumn [16]
+          object AmountPlanMaxWeight: TcxGridDBColumn [16]
             Caption = #1055#1083#1072#1085' '#1084#1072#1082#1089'. '#1042#1077#1089
             DataBinding.FieldName = 'AmountPlanMaxWeight'
             HeaderAlignmentHorz = taCenter
@@ -239,7 +241,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 70
           end
-          object colAmountOrder: TcxGridDBColumn [17]
+          object AmountOrder: TcxGridDBColumn [17]
             Caption = #1047#1072#1103#1074#1082#1072' ('#1092#1072#1082#1090')'
             DataBinding.FieldName = 'AmountOrder'
             Visible = False
@@ -248,7 +250,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 80
           end
-          object colAmountOrderWeight: TcxGridDBColumn [18]
+          object AmountOrderWeight: TcxGridDBColumn [18]
             Caption = #1047#1072#1103#1074#1082#1072' ('#1092#1072#1082#1090') '#1042#1077#1089
             DataBinding.FieldName = 'AmountOrderWeight'
             HeaderAlignmentHorz = taCenter
@@ -256,7 +258,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 70
           end
-          object colAmountOut: TcxGridDBColumn [19]
+          object AmountOut: TcxGridDBColumn [19]
             Caption = #1055#1088#1086#1076#1072#1085#1086' ('#1092#1072#1082#1090')'
             DataBinding.FieldName = 'AmountOut'
             Visible = False
@@ -265,7 +267,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 80
           end
-          object colAmountOutWeight: TcxGridDBColumn [20]
+          object AmountOutWeight: TcxGridDBColumn [20]
             Caption = #1055#1088#1086#1076#1072#1085#1086' ('#1092#1072#1082#1090') '#1042#1077#1089
             DataBinding.FieldName = 'AmountOutWeight'
             HeaderAlignmentHorz = taCenter
@@ -273,7 +275,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 70
           end
-          object colAmountIn: TcxGridDBColumn [21]
+          object AmountIn: TcxGridDBColumn [21]
             Caption = #1042#1086#1079#1074#1088#1072#1090' ('#1092#1072#1082#1090')'
             DataBinding.FieldName = 'AmountIn'
             Visible = False
@@ -282,7 +284,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 80
           end
-          object colAmountInWeight: TcxGridDBColumn [22]
+          object AmountInWeight: TcxGridDBColumn [22]
             Caption = #1042#1086#1079#1074#1088#1072#1090' ('#1092#1072#1082#1090') '#1042#1077#1089
             DataBinding.FieldName = 'AmountInWeight'
             HeaderAlignmentHorz = taCenter
@@ -355,14 +357,14 @@ inherited PromoForm: TPromoForm
                 OptionsView.HeaderAutoHeight = True
                 OptionsView.Indicator = True
                 Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-                object colp_Area: TcxGridDBColumn
+                object AreaName: TcxGridDBColumn
                   Caption = #1056#1077#1075#1080#1086#1085
                   DataBinding.FieldName = 'AreaName'
                   HeaderAlignmentHorz = taCenter
                   HeaderAlignmentVert = vaCenter
                   Width = 70
                 end
-                object colp_PartnerCode: TcxGridDBColumn
+                object PartnerCode: TcxGridDBColumn
                   Caption = #1050#1086#1076
                   DataBinding.FieldName = 'PartnerCode'
                   PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -373,7 +375,7 @@ inherited PromoForm: TPromoForm
                   Options.Editing = False
                   Width = 28
                 end
-                object colp_PartnerName: TcxGridDBColumn
+                object PartnerName: TcxGridDBColumn
                   Caption = #1053#1072#1079#1074#1072#1085#1080#1077
                   DataBinding.FieldName = 'PartnerName'
                   PropertiesClassName = 'TcxButtonEditProperties'
@@ -388,7 +390,7 @@ inherited PromoForm: TPromoForm
                   HeaderAlignmentVert = vaCenter
                   Width = 104
                 end
-                object colp_PartnerDescName: TcxGridDBColumn
+                object PartnerDescName: TcxGridDBColumn
                   Caption = #1069#1083#1077#1084#1077#1085#1090
                   DataBinding.FieldName = 'PartnerDescName'
                   HeaderAlignmentHorz = taCenter
@@ -396,7 +398,7 @@ inherited PromoForm: TPromoForm
                   Options.Editing = False
                   Width = 58
                 end
-                object colJuridical_Name: TcxGridDBColumn
+                object Juridical_Name: TcxGridDBColumn
                   Caption = #1070#1088'. '#1083#1080#1094#1086
                   DataBinding.FieldName = 'Juridical_Name'
                   HeaderAlignmentHorz = taCenter
@@ -404,7 +406,7 @@ inherited PromoForm: TPromoForm
                   Options.Editing = False
                   Width = 80
                 end
-                object colRetail_Name: TcxGridDBColumn
+                object Retail_Name: TcxGridDBColumn
                   Caption = #1057#1077#1090#1100
                   DataBinding.FieldName = 'Retail_Name'
                   HeaderAlignmentHorz = taCenter
@@ -412,7 +414,7 @@ inherited PromoForm: TPromoForm
                   Options.Editing = False
                   Width = 80
                 end
-                object colContractCode: TcxGridDBColumn
+                object ContractCode: TcxGridDBColumn
                   Caption = #1050#1086#1076' '#1076#1086#1075'.'
                   DataBinding.FieldName = 'ContractCode'
                   PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -424,7 +426,7 @@ inherited PromoForm: TPromoForm
                   Options.Editing = False
                   Width = 70
                 end
-                object colContractName: TcxGridDBColumn
+                object ContractName: TcxGridDBColumn
                   Caption = #8470' '#1076#1086#1075'.'
                   DataBinding.FieldName = 'ContractName'
                   PropertiesClassName = 'TcxButtonEditProperties'
@@ -439,7 +441,7 @@ inherited PromoForm: TPromoForm
                   HeaderAlignmentVert = vaCenter
                   Width = 55
                 end
-                object colContractTagName: TcxGridDBColumn
+                object ContractTagName: TcxGridDBColumn
                   Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
                   DataBinding.FieldName = 'ContractTagName'
                   HeaderAlignmentHorz = taCenter
@@ -447,14 +449,14 @@ inherited PromoForm: TPromoForm
                   Options.Editing = False
                   Width = 70
                 end
-                object colp_Comment: TcxGridDBColumn
+                object Comment: TcxGridDBColumn
                   Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
                   DataBinding.FieldName = 'Comment'
                   HeaderAlignmentHorz = taCenter
                   HeaderAlignmentVert = vaCenter
                   Width = 91
                 end
-                object colp_isErased: TcxGridDBColumn
+                object isErased: TcxGridDBColumn
                   Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
                   DataBinding.FieldName = 'isErased'
                   Visible = False
@@ -498,21 +500,21 @@ inherited PromoForm: TPromoForm
                 OptionsView.HeaderAutoHeight = True
                 OptionsView.Indicator = True
                 Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-                object colPartnerListRetailName: TcxGridDBColumn
+                object PartnerListRetailName: TcxGridDBColumn
                   Caption = #1057#1077#1090#1100
                   DataBinding.FieldName = 'RetailName'
                   HeaderAlignmentHorz = taCenter
                   HeaderAlignmentVert = vaCenter
                   Width = 80
                 end
-                object colPartnerListJuridicalName: TcxGridDBColumn
+                object PartnerListJuridicalName: TcxGridDBColumn
                   Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
                   DataBinding.FieldName = 'JuridicalName'
                   HeaderAlignmentHorz = taCenter
                   HeaderAlignmentVert = vaCenter
                   Width = 100
                 end
-                object colPartnerListCode: TcxGridDBColumn
+                object PartnerListCode: TcxGridDBColumn
                   Caption = #1050#1086#1076
                   DataBinding.FieldName = 'Code'
                   HeaderAlignmentHorz = taCenter
@@ -520,7 +522,7 @@ inherited PromoForm: TPromoForm
                   Options.Editing = False
                   Width = 38
                 end
-                object colPartnerListName: TcxGridDBColumn
+                object PartnerListName: TcxGridDBColumn
                   Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
                   DataBinding.FieldName = 'Name'
                   HeaderAlignmentHorz = taCenter
@@ -528,14 +530,14 @@ inherited PromoForm: TPromoForm
                   Options.Editing = False
                   Width = 182
                 end
-                object colPartnerListAreaName: TcxGridDBColumn
+                object PartnerListAreaName: TcxGridDBColumn
                   Caption = #1056#1077#1075#1080#1086#1085
                   DataBinding.FieldName = 'AreaName'
                   HeaderAlignmentHorz = taCenter
                   HeaderAlignmentVert = vaCenter
                   Width = 98
                 end
-                object colPartnerListContractCode: TcxGridDBColumn
+                object PartnerListContractCode: TcxGridDBColumn
                   Caption = #1050#1086#1076' '#1076#1086#1075'.'
                   DataBinding.FieldName = 'ContractCode'
                   Visible = False
@@ -543,21 +545,21 @@ inherited PromoForm: TPromoForm
                   HeaderAlignmentVert = vaCenter
                   Width = 48
                 end
-                object colPartnerListContractName: TcxGridDBColumn
+                object PartnerListContractName: TcxGridDBColumn
                   Caption = #8470' '#1076#1086#1075'.'
                   DataBinding.FieldName = 'ContractName'
                   HeaderAlignmentHorz = taCenter
                   HeaderAlignmentVert = vaCenter
                   Width = 48
                 end
-                object colPartnerListContractTagName: TcxGridDBColumn
+                object PartnerListContractTagName: TcxGridDBColumn
                   Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
                   DataBinding.FieldName = 'ContractTagName'
                   HeaderAlignmentHorz = taCenter
                   HeaderAlignmentVert = vaCenter
                   Width = 80
                 end
-                object colPartnerListIsErased: TcxGridDBColumn
+                object PartnerListIsErased: TcxGridDBColumn
                   Caption = #1059#1076#1072#1083#1077#1085
                   DataBinding.FieldName = 'IsErased'
                   Visible = False
@@ -615,14 +617,14 @@ inherited PromoForm: TPromoForm
                 OptionsView.HeaderAutoHeight = True
                 OptionsView.Indicator = True
                 Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-                object colcp_Amount: TcxGridDBColumn
+                object cp_Amount: TcxGridDBColumn
                   Caption = '% '#1089#1082#1080#1076#1082#1080
                   DataBinding.FieldName = 'Amount'
                   HeaderAlignmentHorz = taCenter
                   HeaderAlignmentVert = vaCenter
                   Width = 50
                 end
-                object colcp_ConditionPromoName: TcxGridDBColumn
+                object ConditionPromoName: TcxGridDBColumn
                   Caption = #1053#1072#1079#1074#1072#1085#1080#1077
                   DataBinding.FieldName = 'ConditionPromoName'
                   PropertiesClassName = 'TcxButtonEditProperties'
@@ -637,14 +639,14 @@ inherited PromoForm: TPromoForm
                   HeaderAlignmentVert = vaCenter
                   Width = 115
                 end
-                object colcp_Comment: TcxGridDBColumn
+                object cp_Comment: TcxGridDBColumn
                   Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
                   DataBinding.FieldName = 'Comment'
                   HeaderAlignmentHorz = taCenter
                   HeaderAlignmentVert = vaCenter
                   Width = 80
                 end
-                object colcp_isErased: TcxGridDBColumn
+                object cp_isErased: TcxGridDBColumn
                   Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
                   DataBinding.FieldName = 'isErased'
                   Visible = False
@@ -703,7 +705,7 @@ inherited PromoForm: TPromoForm
                 OptionsView.HeaderAutoHeight = True
                 OptionsView.Indicator = True
                 Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-                object colAdvertisingCode: TcxGridDBColumn
+                object AdvertisingCode: TcxGridDBColumn
                   Caption = #1050#1086#1076
                   DataBinding.FieldName = 'AdvertisingCode'
                   PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -714,7 +716,7 @@ inherited PromoForm: TPromoForm
                   Options.Editing = False
                   Width = 34
                 end
-                object colAdvertisingName: TcxGridDBColumn
+                object AdvertisingName: TcxGridDBColumn
                   Caption = #1053#1072#1079#1074#1072#1085#1080#1077
                   DataBinding.FieldName = 'AdvertisingName'
                   PropertiesClassName = 'TcxButtonEditProperties'
@@ -729,14 +731,14 @@ inherited PromoForm: TPromoForm
                   HeaderAlignmentVert = vaCenter
                   Width = 130
                 end
-                object colCommentAdvertising: TcxGridDBColumn
+                object CommentAdvertising: TcxGridDBColumn
                   Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
                   DataBinding.FieldName = 'Comment'
                   HeaderAlignmentHorz = taCenter
                   HeaderAlignmentVert = vaCenter
                   Width = 80
                 end
-                object colIsErasedAdvertising: TcxGridDBColumn
+                object IsErasedAdvertising: TcxGridDBColumn
                   Caption = #1059#1076#1072#1083'.'
                   DataBinding.FieldName = 'IsErased'
                   Visible = False

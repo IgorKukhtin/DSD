@@ -2,8 +2,9 @@ inherited TransferDebtInForm: TTransferDebtInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1087#1088#1080#1093#1086#1076')>'
   ClientHeight = 532
   ClientWidth = 1140
+  ExplicitLeft = -137
   ExplicitWidth = 1156
-  ExplicitHeight = 567
+  ExplicitHeight = 571
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -864,23 +865,23 @@ inherited TransferDebtInForm: TTransferDebtInForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = childAmount
+          Column = Amount
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = childAmountPartner
+          Column = AmountPartner
         end>
       DataController.Summary.FooterSummaryItems = <
         item
           Format = ',0.####'
           Kind = skSum
-          Column = childAmount
+          Column = Amount
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = childAmountPartner
+          Column = AmountPartner
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -906,7 +907,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Options.Editing = False
         Width = 55
       end
-      object childGoodsCode: TcxGridDBColumn
+      object GoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'GoodsCode'
         Visible = False
@@ -915,7 +916,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Options.Editing = False
         Width = 45
       end
-      object childGoodsName: TcxGridDBColumn
+      object GoodsName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088
         DataBinding.FieldName = 'GoodsName'
         Visible = False
@@ -924,7 +925,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Options.Editing = False
         Width = 209
       end
-      object childGoodsKindName: TcxGridDBColumn
+      object GoodsKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'GoodsKindName'
         FooterAlignmentHorz = taCenter
@@ -934,7 +935,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Options.Editing = False
         Width = 120
       end
-      object childAmount: TcxGridDBColumn
+      object Amount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'. ('#1087#1088#1080#1074#1103#1079#1082#1072')'
         DataBinding.FieldName = 'Amount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -945,7 +946,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Options.Editing = False
         Width = 100
       end
-      object childAmountPartner: TcxGridDBColumn
+      object AmountPartner: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'. ('#1087#1088#1086#1076#1072#1078#1072')'
         DataBinding.FieldName = 'AmountPartner'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -956,7 +957,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Options.Editing = False
         Width = 100
       end
-      object childPrice: TcxGridDBColumn
+      object Price: TcxGridDBColumn
         Caption = #1062#1077#1085#1072
         DataBinding.FieldName = 'Price'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -967,7 +968,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Options.Editing = False
         Width = 55
       end
-      object childDescName_Sale: TcxGridDBColumn
+      object DescName_Sale: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1076#1086#1082'.'
         DataBinding.FieldName = 'DescName_Sale'
         Visible = False
@@ -976,7 +977,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Options.Editing = False
         Width = 55
       end
-      object childInvNumber: TcxGridDBColumn
+      object InvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'. ('#1087#1088#1086#1076#1072#1078#1072')'
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
@@ -984,7 +985,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Options.Editing = False
         Width = 80
       end
-      object childInvNumberPartner: TcxGridDBColumn
+      object InvNumberPartner: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'. ('#1087#1088#1086#1076#1072#1078#1072')'
         DataBinding.FieldName = 'InvNumberPartner'
         Visible = False
@@ -993,7 +994,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Options.Editing = False
         Width = 100
       end
-      object childInvNumber_Master: TcxGridDBColumn
+      object InvNumber_Master: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'. '#1085#1072#1083#1086#1075'.'
         DataBinding.FieldName = 'InvNumber_Master'
         Visible = False
@@ -1002,7 +1003,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Options.Editing = False
         Width = 55
       end
-      object childInvNumberPartner_Master: TcxGridDBColumn
+      object InvNumberPartner_Master: TcxGridDBColumn
         Caption = #8470' '#1085#1072#1083#1086#1075'.'
         DataBinding.FieldName = 'InvNumberPartner_Master'
         HeaderAlignmentHorz = taCenter
@@ -1010,7 +1011,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Options.Editing = False
         Width = 70
       end
-      object childOperDate: TcxGridDBColumn
+      object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
         DataBinding.FieldName = 'OperDate'
         Visible = False
@@ -1019,7 +1020,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Options.Editing = False
         Width = 80
       end
-      object childOperDatePartner: TcxGridDBColumn
+      object OperDatePartner: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
         DataBinding.FieldName = 'OperDatePartner'
         HeaderAlignmentHorz = taCenter
@@ -1027,7 +1028,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Options.Editing = False
         Width = 80
       end
-      object childOperDate_Master: TcxGridDBColumn
+      object OperDate_Master: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1085#1072#1083#1086#1075'.'
         DataBinding.FieldName = 'OperDate_Master'
         HeaderAlignmentHorz = taCenter
@@ -1035,7 +1036,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Options.Editing = False
         Width = 80
       end
-      object childContractCode_Sale: TcxGridDBColumn
+      object ContractCode_Sale: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1076#1086#1075'. ('#1087#1088#1086#1076#1072#1078#1072')'
         DataBinding.FieldName = 'ContractCode_Sale'
         Visible = False
@@ -1044,7 +1045,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Options.Editing = False
         Width = 71
       end
-      object childContractName_Sale: TcxGridDBColumn
+      object ContractName_Sale: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1075'. ('#1087#1088#1086#1076#1072#1078#1072')'
         DataBinding.FieldName = 'ContractName_Sale'
         HeaderAlignmentHorz = taCenter
@@ -1052,7 +1053,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Options.Editing = False
         Width = 67
       end
-      object childContractCode_Tax: TcxGridDBColumn
+      object ContractCode_Tax: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1076#1086#1075'. ('#1085#1072#1083#1086#1075'.)'
         DataBinding.FieldName = 'ContractCode_Tax'
         Visible = False
@@ -1061,7 +1062,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Options.Editing = False
         Width = 62
       end
-      object childContractName_Tax: TcxGridDBColumn
+      object ContractName_Tax: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1075'. ('#1085#1072#1083#1086#1075'.)'
         DataBinding.FieldName = 'ContractName_Tax'
         HeaderAlignmentHorz = taCenter
@@ -1069,7 +1070,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Options.Editing = False
         Width = 67
       end
-      object childDocumentTaxKindName: TcxGridDBColumn
+      object DocumentTaxKindName: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
         DataBinding.FieldName = 'DocumentTaxKindName'
         HeaderAlignmentHorz = taCenter
@@ -1141,7 +1142,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object childIsErased: TcxGridDBColumn
+      object IsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
         DataBinding.FieldName = 'isErased'
         Visible = False

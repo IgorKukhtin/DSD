@@ -2,9 +2,10 @@ inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')>'
   ClientHeight = 648
   ClientWidth = 1252
-  ExplicitLeft = -149
+  ExplicitLeft = -249
+  ExplicitTop = -168
   ExplicitWidth = 1268
-  ExplicitHeight = 686
+  ExplicitHeight = 687
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -29,17 +30,17 @@ inherited ReturnInForm: TReturnInForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountPartner
+              Column = AmountPartner
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSumm
+              Column = AmountSumm
             end
             item
               Format = ',0.####'
@@ -48,34 +49,34 @@ inherited ReturnInForm: TReturnInForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSummVat
+              Column = AmountSummVat
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountChild
+              Column = AmountChild
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountChildDiff
+              Column = AmountChildDiff
               Sorted = True
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountPartner
+              Column = AmountPartner
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSumm
+              Column = AmountSumm
             end
             item
               Format = ',0.####'
@@ -83,27 +84,27 @@ inherited ReturnInForm: TReturnInForm
             end
             item
               Kind = skSum
-              Column = colPrice
+              Column = Price
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSummVat
+              Column = AmountSummVat
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountChild
+              Column = AmountChild
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountChildDiff
+              Column = AmountChildDiff
             end
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = colName
+              Column = GoodsName
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -117,7 +118,7 @@ inherited ReturnInForm: TReturnInForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colLineNum: TcxGridDBColumn [0]
+          object LineNum: TcxGridDBColumn [0]
             Caption = #8470' '#1087'/'#1087
             DataBinding.FieldName = 'LineNum'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -128,7 +129,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 55
           end
-          object clGoodsGroupNameFull: TcxGridDBColumn [1]
+          object GoodsGroupNameFull: TcxGridDBColumn [1]
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
@@ -136,7 +137,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 120
           end
-          object colCode: TcxGridDBColumn [2]
+          object GoodsCode: TcxGridDBColumn [2]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -144,7 +145,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 58
           end
-          object colName: TcxGridDBColumn [3]
+          object GoodsName: TcxGridDBColumn [3]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -159,7 +160,7 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 200
           end
-          object colGoodsKindName: TcxGridDBColumn [4]
+          object GoodsKindName: TcxGridDBColumn [4]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -174,7 +175,7 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object colPartionGoods: TcxGridDBColumn [5]
+          object PartionGoods: TcxGridDBColumn [5]
             Caption = #1055#1072#1088#1090#1080#1103
             DataBinding.FieldName = 'PartionGoods'
             Visible = False
@@ -182,7 +183,7 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 120
           end
-          object colMeasureName: TcxGridDBColumn [6]
+          object MeasureName: TcxGridDBColumn [6]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -190,7 +191,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 45
           end
-          object colAmount: TcxGridDBColumn [7]
+          object Amount: TcxGridDBColumn [7]
             Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -200,7 +201,7 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colAmountPartner: TcxGridDBColumn [8]
+          object AmountPartner: TcxGridDBColumn [8]
             Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'AmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -210,7 +211,7 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colAmountChild: TcxGridDBColumn [9]
+          object AmountChild: TcxGridDBColumn [9]
             Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1074#1103#1079#1082#1072')'
             DataBinding.FieldName = 'AmountChild'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -221,7 +222,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 73
           end
-          object colAmountChildDiff: TcxGridDBColumn [10]
+          object AmountChildDiff: TcxGridDBColumn [10]
             Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1079#1085#1080#1094#1072')'
             DataBinding.FieldName = 'AmountChildDiff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -243,7 +244,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 70
           end
-          object colCountForPrice: TcxGridDBColumn [12]
+          object CountForPrice: TcxGridDBColumn [12]
             Caption = #1050#1086#1083' '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             Visible = False
@@ -251,7 +252,7 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colPrice: TcxGridDBColumn [13]
+          object Price: TcxGridDBColumn [13]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -302,7 +303,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 59
           end
-          object colAmountSumm: TcxGridDBColumn [18]
+          object AmountSumm: TcxGridDBColumn [18]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -312,7 +313,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 91
           end
-          object colAmountSummVat: TcxGridDBColumn [19]
+          object AmountSummVat: TcxGridDBColumn [19]
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'AmountSummVat'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -322,7 +323,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 91
           end
-          object clPartionMovementName: TcxGridDBColumn [20]
+          object PartionMovementName: TcxGridDBColumn [20]
             Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'PartionMovementName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -485,7 +486,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 80
           end
-          object childDescName_Sale: TcxGridDBColumn
+          object DescName_Sale: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1076#1086#1082'.'
             DataBinding.FieldName = 'DescName_Sale'
             Visible = False
@@ -494,7 +495,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 55
           end
-          object childInvNumber: TcxGridDBColumn
+          object InvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. ('#1087#1088#1086#1076#1072#1078#1072')'
             DataBinding.FieldName = 'InvNumber'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -509,7 +510,7 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object childInvNumberPartner: TcxGridDBColumn
+          object InvNumberPartner: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'. ('#1087#1088#1086#1076#1072#1078#1072')'
             DataBinding.FieldName = 'InvNumberPartner'
             Visible = False
@@ -518,7 +519,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 100
           end
-          object childInvNumber_Master: TcxGridDBColumn
+          object InvNumber_Master: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1085#1072#1083#1086#1075'.'
             DataBinding.FieldName = 'InvNumber_Master'
             Visible = False
@@ -527,7 +528,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 55
           end
-          object childInvNumberPartner_Master: TcxGridDBColumn
+          object InvNumberPartner_Master: TcxGridDBColumn
             Caption = #8470' '#1085#1072#1083#1086#1075'.'
             DataBinding.FieldName = 'InvNumberPartner_Master'
             HeaderAlignmentHorz = taCenter
@@ -535,7 +536,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 70
           end
-          object childOperDate: TcxGridDBColumn
+          object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'OperDate'
             Visible = False
@@ -544,7 +545,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 80
           end
-          object childOperDatePartner: TcxGridDBColumn
+          object OperDatePartner: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
@@ -552,7 +553,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 80
           end
-          object childOperDate_Master: TcxGridDBColumn
+          object OperDate_Master: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1085#1072#1083#1086#1075'.'
             DataBinding.FieldName = 'OperDate_Master'
             HeaderAlignmentHorz = taCenter
@@ -560,7 +561,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 80
           end
-          object childContractCode_Sale: TcxGridDBColumn
+          object ContractCode_Sale: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'. ('#1087#1088#1086#1076#1072#1078#1072')'
             DataBinding.FieldName = 'ContractCode_Sale'
             Visible = False
@@ -569,7 +570,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 71
           end
-          object childContractName_Sale: TcxGridDBColumn
+          object ContractName_Sale: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'. ('#1087#1088#1086#1076#1072#1078#1072')'
             DataBinding.FieldName = 'ContractName_Sale'
             HeaderAlignmentHorz = taCenter
@@ -577,7 +578,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 67
           end
-          object childContractCode_Tax: TcxGridDBColumn
+          object ContractCode_Tax: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'. ('#1085#1072#1083#1086#1075'.)'
             DataBinding.FieldName = 'ContractCode_Tax'
             Visible = False
@@ -586,7 +587,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 62
           end
-          object childContractName_Tax: TcxGridDBColumn
+          object ContractName_Tax: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'. ('#1085#1072#1083#1086#1075'.)'
             DataBinding.FieldName = 'ContractName_Tax'
             HeaderAlignmentHorz = taCenter
@@ -594,7 +595,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 67
           end
-          object childDocumentTaxKindName: TcxGridDBColumn
+          object DocumentTaxKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
             DataBinding.FieldName = 'DocumentTaxKindName'
             HeaderAlignmentHorz = taCenter
@@ -666,7 +667,7 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
-          object childIsErased: TcxGridDBColumn
+          object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
             Visible = False
@@ -693,6 +694,9 @@ inherited ReturnInForm: TReturnInForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object l: TcxGrid
         Left = 0
         Top = 0
@@ -3447,10 +3451,10 @@ inherited ReturnInForm: TReturnInForm
     OnlyEditingCellOnEnter = True
     ColumnEnterList = <
       item
-        Column = colName
+        Column = GoodsName
       end
       item
-        Column = colAmount
+        Column = Amount
       end>
     SummaryItemList = <
       item

@@ -101,6 +101,8 @@ type
     mactListCardSecondCash: TMultiAction;
     mactInsertUpdateMICardSecondCash_AllGrid: TMultiAction;
     bb: TdxBarButton;
+    isCalculated: TcxGridDBColumn;
+    SummCardSecondRemains: TcxGridDBColumn;
   private
     { Private declarations }
   public

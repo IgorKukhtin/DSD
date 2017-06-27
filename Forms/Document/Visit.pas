@@ -47,14 +47,14 @@ type
     ceComment: TcxTextEdit;
     cxLabel3: TcxLabel;
     edGUID: TcxTextEdit;
-    colGUID: TcxGridDBColumn;
-    InsertMobile: TcxGridDBColumn;
+    GUID: TcxGridDBColumn;
+    InsertMobileDate: TcxGridDBColumn;
     InsertRecord: TInsertRecord;
     bbInsertRecord: TdxBarButton;
     PhotoData: TcxGridDBColumn;
     actRefreshEx: TdsdDataSetRefreshEx;
-    clGPSN: TcxGridDBColumn;
-    clGPSE: TcxGridDBColumn;
+    GPSN: TcxGridDBColumn;
+    GPSE: TcxGridDBColumn;
     bbAllPhotoOnMap: TdxBarButton;
     dxBarStatic1: TdxBarStatic;
     actAllPhotoOnMap: TdsdPartnerMapAction;

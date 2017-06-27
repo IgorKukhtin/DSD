@@ -4,8 +4,9 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
   ClientWidth = 978
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -302
   ExplicitWidth = 994
-  ExplicitHeight = 431
+  ExplicitHeight = 435
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -130,7 +131,7 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 212
           end
-          object clComment: TcxGridDBColumn
+          object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
@@ -138,7 +139,7 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
             Options.Editing = False
             Width = 166
           end
-          object clGUID: TcxGridDBColumn
+          object GUID: TcxGridDBColumn
             DataBinding.FieldName = 'GUID'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -146,7 +147,7 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
             Options.Editing = False
             Width = 82
           end
-          object clInsertDate: TcxGridDBColumn
+          object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1080#1085#1093#1088'. '#1089' '#1084#1086#1073'.'#1091#1089#1090#1088')'
             DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter
@@ -154,7 +155,7 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
             Options.Editing = False
             Width = 78
           end
-          object clInsertMobileDate: TcxGridDBColumn
+          object InsertMobileDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1087#1088#1086#1074#1077#1076#1077#1085' '#1085#1072' '#1084#1086#1073'.'#1091#1089#1090#1088')'
             DataBinding.FieldName = 'InsertMobileDate'
             HeaderAlignmentHorz = taCenter
@@ -162,7 +163,7 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
             Options.Editing = False
             Width = 90
           end
-          object clInsertName: TcxGridDBColumn
+          object InsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertName'
             HeaderAlignmentHorz = taCenter
@@ -170,7 +171,7 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
             Options.Editing = False
             Width = 101
           end
-          object clMemberName: TcxGridDBColumn
+          object MemberName: TcxGridDBColumn
             Caption = #1060#1048#1054
             DataBinding.FieldName = 'MemberName'
             HeaderAlignmentHorz = taCenter
