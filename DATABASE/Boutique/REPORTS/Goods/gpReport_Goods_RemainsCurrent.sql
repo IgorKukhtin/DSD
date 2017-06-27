@@ -224,7 +224,7 @@ BEGIN
            , Object_CompositionGroup.ValueData   AS CompositionGroupName
            , Object_Composition.ValueData   AS CompositionName
            , Object_GoodsInfo.ValueData     AS GoodsInfoName
-           , Object_LineFabrica.ValueData   AS LineFabricaName
+           , Object_LineFabrica.ValueData   AS LineFabricaName 
            , Object_Label.ValueData         AS LabelName
            , Object_GoodsSize.ValueData     AS GoodsSizeName
            , Object_Currency.ValueData      AS CurrencyName

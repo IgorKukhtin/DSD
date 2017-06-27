@@ -30,10 +30,10 @@ type
     cxLabel3: TcxLabel;
     edGoods: TcxButtonEdit;
     GoodsGuides: TdsdGuides;
-    clLocationDescName: TcxGridDBColumn;
-    clLocationName: TcxGridDBColumn;
-    clGoodsCode: TcxGridDBColumn;
-    clGoodsName: TcxGridDBColumn;
+    LocationDescName: TcxGridDBColumn;
+    LocationName: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
     MovementDescName: TcxGridDBColumn;
     SummStart: TcxGridDBColumn;
     SummIn: TcxGridDBColumn;
