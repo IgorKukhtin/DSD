@@ -3,8 +3,10 @@ inherited Report_PersonalForm: TReport_PersonalForm
   ClientHeight = 555
   ClientWidth = 901
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -128
+  ExplicitTop = -133
   ExplicitWidth = 917
-  ExplicitHeight = 593
+  ExplicitHeight = 590
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -12,19 +14,19 @@ inherited Report_PersonalForm: TReport_PersonalForm
     Width = 901
     Height = 444
     TabOrder = 3
-    ExplicitTop = 83
-    ExplicitWidth = 1028
-    ExplicitHeight = 472
+    ExplicitTop = 111
+    ExplicitWidth = 901
+    ExplicitHeight = 444
     ClientRectBottom = 444
     ClientRectRight = 901
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1028
-      ExplicitHeight = 472
+      ExplicitWidth = 901
+      ExplicitHeight = 444
       inherited cxGrid: TcxGrid
         Width = 901
         Height = 444
-        ExplicitWidth = 1028
-        ExplicitHeight = 472
+        ExplicitWidth = 901
+        ExplicitHeight = 444
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -106,6 +108,21 @@ inherited Report_PersonalForm: TReport_PersonalForm
               Format = ',0.00##'
               Kind = skSum
               Column = SummNalog
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = MoneySummCard
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = MoneySummCardSecond
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = MoneySummCash
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -187,6 +204,21 @@ inherited Report_PersonalForm: TReport_PersonalForm
               Format = ',0.00##'
               Kind = skSum
               Column = SummNalog
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = MoneySummCard
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = MoneySummCardSecond
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = MoneySummCash
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -443,8 +475,41 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Width = 80
           end
           object colMoneySumm: TcxGridDBColumn
-            Caption = #1042#1099#1087#1083#1072#1095#1077#1085#1086
+            Caption = #1042#1099#1087#1083#1072#1095#1077#1085#1086' '#1048#1090#1086#1075#1086
             DataBinding.FieldName = 'MoneySumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object MoneySummCard: TcxGridDBColumn
+            Caption = #1042#1099#1087#1083'. '#1082#1072#1088#1090#1072' '#1041#1053' - 1'#1092'.'
+            DataBinding.FieldName = 'MoneySummCard'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object MoneySummCardSecond: TcxGridDBColumn
+            Caption = #1042#1099#1087#1083'. '#1082#1072#1088#1090#1072' '#1041#1053' - 2'#1092'.'
+            DataBinding.FieldName = 'MoneySummCardSecond'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object MoneySummCash: TcxGridDBColumn
+            Caption = #1042#1099#1087#1083'. '#1082#1072#1089#1089#1072
+            DataBinding.FieldName = 'MoneySummCash'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'

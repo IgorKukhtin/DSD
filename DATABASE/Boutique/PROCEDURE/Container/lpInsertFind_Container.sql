@@ -134,22 +134,27 @@ BEGIN
      END;
 
 
+     -- так определяется дополнительное поле (для оптимизации)
+     vbWhereObjectId:= (SELECT CASE WHEN inDescId_1 = zc_ContainerLinkObject_Unit() THEN inObjectId_1
+                                    WHEN inDescId_2 = zc_ContainerLinkObject_Unit() THEN inObjectId_2
+                                    WHEN inDescId_3 = zc_ContainerLinkObject_Unit() THEN inObjectId_3
+                                    WHEN inDescId_4 = zc_ContainerLinkObject_Unit() THEN inObjectId_4
+                                    WHEN inDescId_5 = zc_ContainerLinkObject_Unit() THEN inObjectId_5
+                                    WHEN inDescId_6 = zc_ContainerLinkObject_Unit() THEN inObjectId_6
+                                    WHEN inDescId_7 = zc_ContainerLinkObject_Unit() THEN inObjectId_7
+                                    WHEN inDescId_8 = zc_ContainerLinkObject_Unit() THEN inObjectId_8
+                                    WHEN inDescId_9 = zc_ContainerLinkObject_Unit() THEN inObjectId_9
+                                    WHEN inDescId_10 = zc_ContainerLinkObject_Unit() THEN inObjectId_10
+                               END);
+     -- Проверка
+     IF COALESCE (vbWhereObjectId, 0) = 0 AND inPartionId <> 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Аналитика для оптимизации WhereObjectId не может буцть пустой.';
+     END IF;
+
      -- Если не нашли, добавляем
      IF COALESCE (vbContainerId, 0) = 0
      THEN
-         -- так определяется дополнительное поле (для оптимизации)
-         vbWhereObjectId:= (SELECT CASE WHEN inDescId_1 = zc_ContainerLinkObject_Unit() THEN inObjectId_1
-                                        WHEN inDescId_2 = zc_ContainerLinkObject_Unit() THEN inObjectId_2
-                                        WHEN inDescId_3 = zc_ContainerLinkObject_Unit() THEN inObjectId_3
-                                        WHEN inDescId_4 = zc_ContainerLinkObject_Unit() THEN inObjectId_4
-                                        WHEN inDescId_5 = zc_ContainerLinkObject_Unit() THEN inObjectId_5
-                                        WHEN inDescId_6 = zc_ContainerLinkObject_Unit() THEN inObjectId_6
-                                        WHEN inDescId_7 = zc_ContainerLinkObject_Unit() THEN inObjectId_7
-                                        WHEN inDescId_8 = zc_ContainerLinkObject_Unit() THEN inObjectId_8
-                                        WHEN inDescId_9 = zc_ContainerLinkObject_Unit() THEN inObjectId_9
-                                        WHEN inDescId_10 = zc_ContainerLinkObject_Unit() THEN inObjectId_10
-                                   END);
-
          -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
          IF zc_IsLockTable() = TRUE
          THEN
@@ -237,6 +242,8 @@ BEGIN
 
          -- update !!!only!! Parent
          UPDATE Container SET ParentId = CASE WHEN COALESCE (inParentId, 0) = 0 THEN NULL ELSE inParentId END
+                              -- !!!Временно - пока ошибка!!!
+                            , WhereObjectId = vbWhereObjectId
          WHERE Id = vbContainerId AND COALESCE (ParentId, 0) <> COALESCE (inParentId, 0);
 
      END IF;
