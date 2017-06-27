@@ -4,24 +4,24 @@
   ClientHeight = 392
   ClientWidth = 890
   ExplicitWidth = 896
-  ExplicitHeight = 420
+  ExplicitHeight = 421
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 53
-    Top = 301
+    Top = 339
     Action = InsertUpdateGuides
     TabOrder = 3
     ExplicitLeft = 53
-    ExplicitTop = 301
+    ExplicitTop = 339
   end
   inherited bbCancel: TcxButton
     Left = 164
-    Top = 301
+    Top = 339
     Action = actFormClose
     TabOrder = 4
     ExplicitLeft = 164
-    ExplicitTop = 301
+    ExplicitTop = 339
   end
   object edName: TcxTextEdit [2]
     Left = 5
@@ -64,7 +64,6 @@
     BevelKind = bkTile
     BevelOuter = bvNone
     TabOrder = 7
-    ExplicitHeight = 360
     object PageControl: TcxPageControl
       Left = 0
       Top = 0
@@ -74,14 +73,12 @@
       TabOrder = 0
       Properties.ActivePage = JuridicalDetailTS
       Properties.CustomButtons.Buttons = <>
-      ExplicitHeight = 360
       ClientRectBottom = 392
       ClientRectRight = 592
       ClientRectTop = 24
       object JuridicalDetailTS: TcxTabSheet
         Caption = #1056#1077#1082#1074#1080#1079#1080#1090#1099
         ImageIndex = 0
-        ExplicitHeight = 336
         object edFullName: TcxDBTextEdit
           Left = 16
           Top = 19
@@ -215,7 +212,6 @@
           Height = 368
           Align = alRight
           TabOrder = 18
-          ExplicitHeight = 336
           object JuridicalDetailsGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = JuridicalDetailsDS
@@ -314,7 +310,6 @@
       object ContractTS: TcxTabSheet
         Caption = #1044#1086#1075#1086#1074#1086#1088#1072
         ImageIndex = 2
-        ExplicitHeight = 336
         object ContractDockControl: TdxBarDockControl
           Left = 0
           Top = 0
@@ -450,7 +445,7 @@
   object ceOrderSummComment: TcxTextEdit [17]
     Left = 111
     Top = 221
-    TabOrder = 19
+    TabOrder = 18
     Width = 167
   end
   object ceOrderTime: TcxTextEdit [18]
@@ -463,6 +458,13 @@
     Left = 8
     Top = 246
     Caption = #1052#1072#1082#1089#1080#1084#1072#1083#1100#1085#1086#1077' '#1074#1088#1077#1084#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' ('#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086')'
+  end
+  object chisLoadBarcode: TcxCheckBox [20]
+    Left = 8
+    Top = 298
+    Caption = #1088#1072#1079#1088#1077#1096#1080#1090#1100' '#1080#1084#1087#1086#1088#1090' '#1096#1090#1088#1080#1093'-'#1082#1086#1076#1086#1074
+    TabOrder = 24
+    Width = 270
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 467
@@ -772,6 +774,14 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisLoadBarcode'
+        Value = False
+        Component = chisLoadBarcode
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 240
@@ -857,6 +867,13 @@
         Value = Null
         Component = ceOrderTime
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isLoadBarcode'
+        Value = False
+        Component = chisLoadBarcode
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

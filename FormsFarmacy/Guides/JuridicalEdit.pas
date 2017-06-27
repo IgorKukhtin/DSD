@@ -102,6 +102,7 @@ type
     edDecisionDate: TcxDBTextEdit;
     cxLabel21: TcxLabel;
     edLicense: TcxDBTextEdit;
+    chisLoadBarcode: TcxCheckBox;
   private
     { Private declarations }
   public
