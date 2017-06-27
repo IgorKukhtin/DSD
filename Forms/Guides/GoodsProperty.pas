@@ -28,7 +28,7 @@ type
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
-    clName: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -42,8 +42,8 @@ type
     dsdStoredProc: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
-    clErased: TcxGridDBColumn;
-    clCode: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
     bbErased: TdxBarButton;
     bbUnErased: TdxBarButton;
     dsdSetErased: TdsdUpdateErased;
@@ -57,12 +57,14 @@ type
     dsdChoiceGuides: TdsdChoiceGuides;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
-    clEndPosFrac: TcxGridDBColumn;
-    clEndPosInt: TcxGridDBColumn;
-    clStartPosInt: TcxGridDBColumn;
-    clStartPosFrac: TcxGridDBColumn;
+    EndPosFrac: TcxGridDBColumn;
+    EndPosInt: TcxGridDBColumn;
+    StartPosInt: TcxGridDBColumn;
+    StartPosFrac: TcxGridDBColumn;
     StartPosIdent: TcxGridDBColumn;
     EndPosIdent: TcxGridDBColumn;
+    spInsertUpdate: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

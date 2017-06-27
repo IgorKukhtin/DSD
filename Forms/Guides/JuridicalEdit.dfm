@@ -2,8 +2,10 @@
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
   ClientHeight = 599
   ClientWidth = 1127
+  ExplicitLeft = -114
+  ExplicitTop = -109
   ExplicitWidth = 1133
-  ExplicitHeight = 627
+  ExplicitHeight = 628
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -184,7 +186,7 @@
             OptionsData.Inserting = False
             OptionsView.GroupByBox = False
             Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-            object colJDData: TcxGridDBColumn
+            object StartDate: TcxGridDBColumn
               Caption = #1044#1072#1090#1072
               DataBinding.FieldName = 'StartDate'
               PropertiesClassName = 'TcxDateEditProperties'
@@ -358,18 +360,18 @@
             OptionsView.ColumnAutoWidth = True
             OptionsView.GroupByBox = False
             Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-            object colPartnerCode: TcxGridDBColumn
+            object Code: TcxGridDBColumn
               Caption = #1050#1086#1076
               DataBinding.FieldName = 'Code'
               Options.Editing = False
             end
-            object colPartnerAddress: TcxGridDBColumn
+            object Address: TcxGridDBColumn
               Caption = #1040#1076#1088#1077#1089
               DataBinding.FieldName = 'Address'
               Options.Editing = False
               Width = 423
             end
-            object colPartnerisErased: TcxGridDBColumn
+            object isErased: TcxGridDBColumn
               Caption = #1059#1076#1072#1083#1077#1085
               DataBinding.FieldName = 'isErased'
               Visible = False
@@ -417,7 +419,7 @@
             OptionsView.HeaderAutoHeight = True
             OptionsView.Indicator = True
             Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-            object clContractStateKindCode: TcxGridDBColumn
+            object ContractStateKindCode: TcxGridDBColumn
               Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077
               DataBinding.FieldName = 'ContractStateKindCode'
               PropertiesClassName = 'TcxImageComboBoxProperties'
@@ -457,14 +459,14 @@
               HeaderAlignmentVert = vaCenter
               Width = 40
             end
-            object clInvNumberArchive: TcxGridDBColumn
+            object InvNumberArchive: TcxGridDBColumn
               Caption = #1055#1086#1088#1103#1076#1082'. '#8470
               DataBinding.FieldName = 'InvNumberArchive'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Width = 50
             end
-            object clInvNumber: TcxGridDBColumn
+            object InvNumber: TcxGridDBColumn
               Caption = #8470' '#1076#1086#1075'.'
               DataBinding.FieldName = 'InvNumber'
               HeaderAlignmentHorz = taCenter
@@ -472,7 +474,7 @@
               Options.Editing = False
               Width = 55
             end
-            object clContractTagName: TcxGridDBColumn
+            object ContractTagName: TcxGridDBColumn
               Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
               DataBinding.FieldName = 'ContractTagName'
               HeaderAlignmentVert = vaCenter
@@ -487,7 +489,7 @@
               Options.Editing = False
               Width = 60
             end
-            object clEndDate: TcxGridDBColumn
+            object EndDate: TcxGridDBColumn
               Caption = #1044#1077#1081#1089#1090#1074'. '#1076#1086
               DataBinding.FieldName = 'EndDate'
               HeaderAlignmentHorz = taCenter
@@ -495,7 +497,7 @@
               Options.Editing = False
               Width = 60
             end
-            object clContractKindName: TcxGridDBColumn
+            object ContractKindName: TcxGridDBColumn
               Caption = #1042#1080#1076' '#1076#1086#1075#1086#1074#1086#1088#1072
               DataBinding.FieldName = 'ContractKindName'
               Visible = False
@@ -504,7 +506,7 @@
               Options.Editing = False
               Width = 70
             end
-            object clPaidKindName: TcxGridDBColumn
+            object PaidKindName: TcxGridDBColumn
               Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
               DataBinding.FieldName = 'PaidKindName'
               Visible = False
@@ -513,7 +515,7 @@
               Options.Editing = False
               Width = 40
             end
-            object clInfoMoneyCode: TcxGridDBColumn
+            object InfoMoneyCode: TcxGridDBColumn
               Caption = #1050#1086#1076' '#1059#1055
               DataBinding.FieldName = 'InfoMoneyCode'
               Visible = False
@@ -522,7 +524,7 @@
               Options.Editing = False
               Width = 40
             end
-            object clInfoMoneyName: TcxGridDBColumn
+            object InfoMoneyName: TcxGridDBColumn
               Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
               DataBinding.FieldName = 'InfoMoneyName'
               HeaderAlignmentHorz = taCenter
@@ -530,7 +532,7 @@
               Options.Editing = False
               Width = 80
             end
-            object clPersonalName: TcxGridDBColumn
+            object PersonalName: TcxGridDBColumn
               Caption = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
               DataBinding.FieldName = 'PersonalName'
               Visible = False
@@ -538,7 +540,7 @@
               HeaderAlignmentVert = vaCenter
               Width = 60
             end
-            object clAreaName: TcxGridDBColumn
+            object AreaName: TcxGridDBColumn
               Caption = #1056#1077#1075#1080#1086#1085
               DataBinding.FieldName = 'AreaName'
               Visible = False
@@ -546,7 +548,7 @@
               HeaderAlignmentVert = vaCenter
               Width = 60
             end
-            object clContractArticleName: TcxGridDBColumn
+            object ContractArticleName: TcxGridDBColumn
               Caption = #1055#1088#1077#1076#1084#1077#1090
               DataBinding.FieldName = 'ContractArticleName'
               Visible = False
@@ -554,7 +556,7 @@
               HeaderAlignmentVert = vaCenter
               Width = 60
             end
-            object clIsStandart: TcxGridDBColumn
+            object IsStandart: TcxGridDBColumn
               Caption = #1058#1080#1087#1086#1074#1086#1081
               DataBinding.FieldName = 'isStandart'
               HeaderAlignmentHorz = taCenter
@@ -562,14 +564,14 @@
               Options.Editing = False
               Width = 40
             end
-            object clIsPersonal: TcxGridDBColumn
+            object IsPersonal: TcxGridDBColumn
               Caption = 'C'#1083#1091#1078'. '#1079#1072#1087'.'
               DataBinding.FieldName = 'isPersonal'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Width = 40
             end
-            object clIsDefault: TcxGridDBColumn
+            object IsDefault: TcxGridDBColumn
               Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
               DataBinding.FieldName = 'isDefault'
               Visible = False
@@ -578,7 +580,7 @@
               Options.Editing = False
               Width = 40
             end
-            object clIsUnique: TcxGridDBColumn
+            object IsUnique: TcxGridDBColumn
               Caption = #1056#1072#1089#1095#1077#1090' '#1076#1086#1083#1075#1072
               DataBinding.FieldName = 'isUnique'
               Visible = False
@@ -586,7 +588,7 @@
               HeaderAlignmentVert = vaCenter
               Width = 40
             end
-            object clComment: TcxGridDBColumn
+            object Comment: TcxGridDBColumn
               Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
               DataBinding.FieldName = 'Comment'
               HeaderAlignmentHorz = taCenter

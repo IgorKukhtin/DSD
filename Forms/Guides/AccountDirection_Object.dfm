@@ -37,7 +37,7 @@ object AccountDirection_ObjectForm: TAccountDirection_ObjectForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
+      OptionsBehavior.IncSearchItem = Name
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -65,21 +65,21 @@ object AccountDirection_ObjectForm: TAccountDirection_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 35
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
@@ -241,34 +241,44 @@ object AccountDirection_ObjectForm: TAccountDirection_ObjectForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupId'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'AccountGroupId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupName'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'AccountGroupName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
           Value = 0
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
           Value = ''
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -283,6 +293,7 @@ object AccountDirection_ObjectForm: TAccountDirection_ObjectForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 40
     Top = 208
   end

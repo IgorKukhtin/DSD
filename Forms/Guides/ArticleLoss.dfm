@@ -37,7 +37,7 @@ object ArticleLossForm: TArticleLossForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
+      OptionsBehavior.IncSearchItem = Name
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -49,21 +49,21 @@ object ArticleLossForm: TArticleLossForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 200
       end
-      object clInfoMoneyCode: TcxGridDBColumn
+      object InfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055
         DataBinding.FieldName = 'InfoMoneyCode'
         Visible = False
@@ -71,7 +71,7 @@ object ArticleLossForm: TArticleLossForm
         HeaderAlignmentVert = vaCenter
         Width = 40
       end
-      object clInfoMoneyGroupName: TcxGridDBColumn
+      object InfoMoneyGroupName: TcxGridDBColumn
         Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyGroupName'
         Visible = False
@@ -79,7 +79,7 @@ object ArticleLossForm: TArticleLossForm
         HeaderAlignmentVert = vaCenter
         Width = 75
       end
-      object clInfoMoneyDestinationName: TcxGridDBColumn
+      object InfoMoneyDestinationName: TcxGridDBColumn
         Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'InfoMoneyDestinationName'
         Visible = False
@@ -87,7 +87,7 @@ object ArticleLossForm: TArticleLossForm
         HeaderAlignmentVert = vaCenter
         Width = 77
       end
-      object clInfoMoneyName: TcxGridDBColumn
+      object InfoMoneyName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyName'
         Visible = False
@@ -95,7 +95,7 @@ object ArticleLossForm: TArticleLossForm
         HeaderAlignmentVert = vaCenter
         Width = 136
       end
-      object clProfitLossDirectionCode: TcxGridDBColumn
+      object ProfitLossDirectionCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1054#1055#1080#1059' '#1085#1072#1087#1088'.'
         DataBinding.FieldName = 'ProfitLossDirectionCode'
         Visible = False
@@ -103,7 +103,7 @@ object ArticleLossForm: TArticleLossForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object clProfitLossGroupName: TcxGridDBColumn
+      object ProfitLossGroupName: TcxGridDBColumn
         Caption = #1054#1055#1080#1059' '#1075#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'ProfitLossGroupName'
         Visible = False
@@ -111,7 +111,7 @@ object ArticleLossForm: TArticleLossForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object clProfitLossDirectionName: TcxGridDBColumn
+      object ProfitLossDirectionName: TcxGridDBColumn
         Caption = #1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'ProfitLossDirectionName'
         Visible = False
@@ -119,7 +119,7 @@ object ArticleLossForm: TArticleLossForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'

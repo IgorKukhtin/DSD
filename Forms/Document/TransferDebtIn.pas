@@ -14,7 +14,17 @@ uses
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet,
   dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, cxImageComboBox,
-  MeDOC, cxSplitter;
+  MeDOC, cxSplitter, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
+  dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue;
 
 type
   TTransferDebtInForm = class(TAncestorDocumentForm)
@@ -132,24 +142,24 @@ type
     cxSplitter1: TcxSplitter;
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
-    childGoodsCode: TcxGridDBColumn;
-    childGoodsName: TcxGridDBColumn;
-    childGoodsKindName: TcxGridDBColumn;
-    childAmount: TcxGridDBColumn;
-    childAmountPartner: TcxGridDBColumn;
-    childPrice: TcxGridDBColumn;
-    childInvNumber: TcxGridDBColumn;
-    childInvNumberPartner: TcxGridDBColumn;
-    childOperDate: TcxGridDBColumn;
-    childOperDatePartner: TcxGridDBColumn;
-    childDocumentTaxKindName: TcxGridDBColumn;
-    childInvNumber_Master: TcxGridDBColumn;
-    childInvNumberPartner_Master: TcxGridDBColumn;
-    childOperDate_Master: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    AmountPartner: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    InvNumberPartner: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
+    OperDatePartner: TcxGridDBColumn;
+    DocumentTaxKindName: TcxGridDBColumn;
+    InvNumber_Master: TcxGridDBColumn;
+    InvNumberPartner_Master: TcxGridDBColumn;
+    OperDate_Master: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     actOpenReportForm: TdsdOpenForm;
     bbOpenReportForm: TdxBarButton;
-    childDescName_Sale: TcxGridDBColumn;
+    DescName_Sale: TcxGridDBColumn;
     spUpdateAuto: TdsdStoredProc;
     actUpdateAuto: TdsdExecStoredProc;
     actOpenReportCheckAmountForm: TdsdOpenForm;

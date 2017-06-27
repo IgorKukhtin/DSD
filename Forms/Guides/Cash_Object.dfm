@@ -3,8 +3,8 @@ inherited Cash_ObjectForm: TCash_ObjectForm
   ClientHeight = 374
   ClientWidth = 773
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 781
-  ExplicitHeight = 408
+  ExplicitWidth = 789
+  ExplicitHeight = 413
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -23,11 +23,6 @@ inherited Cash_ObjectForm: TCash_ObjectForm
         ExplicitWidth = 773
         ExplicitHeight = 348
         inherited cxGridDBTableView: TcxGridDBTableView
-          OnDblClick = nil
-          OnKeyDown = nil
-          OnKeyPress = nil
-          OnCustomDrawCell = nil
-          DataController.Filter.OnChanged = nil
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -37,51 +32,49 @@ inherited Cash_ObjectForm: TCash_ObjectForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          OnColumnHeaderClick = nil
-          OnCustomDrawColumnHeader = nil
-          object clCode: TcxGridDBColumn
+          object Code: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
             HeaderAlignmentVert = vaCenter
             Width = 62
           end
-          object clName: TcxGridDBColumn
+          object Name: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             HeaderAlignmentVert = vaCenter
             Width = 172
           end
-          object clCurrency: TcxGridDBColumn
+          object CurrencyName: TcxGridDBColumn
             Caption = #1042#1072#1083#1102#1090#1072
             DataBinding.FieldName = 'CurrencyName'
             HeaderAlignmentVert = vaCenter
             Width = 76
           end
-          object clBranchName: TcxGridDBColumn
+          object BranchName: TcxGridDBColumn
             Caption = #1060#1080#1083#1080#1072#1083
             DataBinding.FieldName = 'BranchName'
             HeaderAlignmentVert = vaCenter
             Width = 98
           end
-          object clJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088'. '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentVert = vaCenter
             Width = 153
           end
-          object clBusinessName: TcxGridDBColumn
+          object BusinessName: TcxGridDBColumn
             Caption = #1041#1080#1079#1085#1077#1089#1089
             DataBinding.FieldName = 'BusinessName'
             HeaderAlignmentVert = vaCenter
             Width = 106
           end
-          object clPaidKindName: TcxGridDBColumn
+          object PaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object clErased: TcxGridDBColumn
+          object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             Visible = False
@@ -114,6 +107,7 @@ inherited Cash_ObjectForm: TCash_ObjectForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -121,12 +115,14 @@ inherited Cash_ObjectForm: TCash_ObjectForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'CurrencyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyName'
@@ -134,11 +130,9 @@ inherited Cash_ObjectForm: TCash_ObjectForm
           Component = MasterCDS
           ComponentItem = 'CurrencyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
     end
-  end
-  inherited MasterCDS: TClientDataSet
-    AfterInsert = nil
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Cash'

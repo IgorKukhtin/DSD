@@ -26,7 +26,6 @@ object GoodsTagForm: TGoodsTagForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 481
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -46,7 +45,7 @@ object GoodsTagForm: TGoodsTagForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taRightJustify
@@ -54,20 +53,20 @@ object GoodsTagForm: TGoodsTagForm
         Options.Editing = False
         Width = 57
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 229
       end
-      object clGoodsGroupAnalystName: TcxGridDBColumn
+      object GoodsGroupAnalystName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074'('#1072#1085#1072#1083#1080#1090#1080#1082#1072')'
         DataBinding.FieldName = 'GoodsGroupAnalystName'
         HeaderAlignmentVert = vaCenter
         Width = 181
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'

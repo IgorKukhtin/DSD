@@ -27,8 +27,8 @@ type
   TMember_TrasportForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -44,19 +44,19 @@ type
     dsdGridToExcel: TdsdGridToExcel;
     spSelect: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    clMember_INN: TcxGridDBColumn;
+    INN: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
-    clErased: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clDriverCertificate: TcxGridDBColumn;
-    clComment: TcxGridDBColumn;
+    DriverCertificate: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    clIsOfficial: TcxGridDBColumn;
-    clInfoMoneyName_all: TcxGridDBColumn;
-    clInfoMoneyCode: TcxGridDBColumn;
+    IsOfficial: TcxGridDBColumn;
+    InfoMoneyName_all: TcxGridDBColumn;
+    InfoMoneyCode: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     StartSummerDate: TcxGridDBColumn;

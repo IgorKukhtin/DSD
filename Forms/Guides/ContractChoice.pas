@@ -12,23 +12,33 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   Vcl.Menus, cxImageComboBox, cxContainer, cxTextEdit, cxMaskEdit, cxButtonEdit,
-  cxLabel, dsdGuides;
+  cxLabel, dsdGuides, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
+  dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue;
 
 type
   TContractChoiceForm = class(TAncestorEnumForm)
-    colInvNumber: TcxGridDBColumn;
-    colStartDate: TcxGridDBColumn;
-    colContractKindName: TcxGridDBColumn;
-    colJuridicalCode: TcxGridDBColumn;
-    colJuridicalName: TcxGridDBColumn;
-    colPaidKindName: TcxGridDBColumn;
-    colInfoMoneyName: TcxGridDBColumn;
-    colisErased: TcxGridDBColumn;
-    clOKPO: TcxGridDBColumn;
-    clEndDate: TcxGridDBColumn;
-    clInfoMoneyDestinationName: TcxGridDBColumn;
-    clInfoMoneyGroupName: TcxGridDBColumn;
-    clInfoMoneyCode: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    StartDate: TcxGridDBColumn;
+    ContractKindName: TcxGridDBColumn;
+    JuridicalCode: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
+    InfoMoneyName: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
+    OKPO: TcxGridDBColumn;
+    EndDate: TcxGridDBColumn;
+    InfoMoneyDestinationName: TcxGridDBColumn;
+    InfoMoneyGroupName: TcxGridDBColumn;
+    InfoMoneyCode: TcxGridDBColumn;
     FormParams: TdsdFormParams;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
@@ -38,8 +48,8 @@ type
     bbJuridical: TdxBarControlContainerItem;
     JuridicalGuides: TdsdGuides;
     RefreshDispatcher: TRefreshDispatcher;
-    colContractComment: TcxGridDBColumn;
-    clCode: TcxGridDBColumn;
+    ContractComment: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
   private
     { Private declarations }
   public

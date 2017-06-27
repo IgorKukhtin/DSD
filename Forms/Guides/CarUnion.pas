@@ -27,9 +27,9 @@ type
   TCarUnionForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
-    clRegistrationCertificate: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    RegistrationCertificate: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -54,21 +54,21 @@ type
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clCarModel: TcxGridDBColumn;
+    CarModelName: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
-    clErased: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
-    clUnit: TcxGridDBColumn;
-    clPersonalDriverName: TcxGridDBColumn;
-    clFuelMasterName: TcxGridDBColumn;
-    clFuelChildName: TcxGridDBColumn;
-    clJuridicalName: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    PersonalDriverName: TcxGridDBColumn;
+    FuelMasterName: TcxGridDBColumn;
+    FuelChildName: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     Comment: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbactShowAll: TdxBarButton;
-    clDescName: TcxGridDBColumn;
+    DescName: TcxGridDBColumn;
   private
     { Private declarations }
   public

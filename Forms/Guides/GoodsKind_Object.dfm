@@ -33,7 +33,7 @@ object GoodsKind_ObjectForm: TGoodsKind_ObjectForm
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
-      OptionsBehavior.IncSearchItem = clId
+      OptionsBehavior.IncSearchItem = Id
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
@@ -45,20 +45,20 @@ object GoodsKind_ObjectForm: TGoodsKind_ObjectForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Width = 252
       end
-      object clErased: TcxGridDBColumn
+      object Erased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         Visible = False
@@ -66,7 +66,7 @@ object GoodsKind_ObjectForm: TGoodsKind_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object clId: TcxGridDBColumn
+      object Id: TcxGridDBColumn
         DataBinding.FieldName = 'Id'
         Visible = False
         VisibleForCustomization = False

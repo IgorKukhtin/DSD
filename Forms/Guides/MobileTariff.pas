@@ -11,15 +11,25 @@ uses
   dsdAddOn, dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxSpinEdit,
-  Vcl.Menus, dxSkinsCore, dxSkinsDefaultPainters, cxCurrencyEdit;
+  Vcl.Menus, dxSkinsCore, dxSkinsDefaultPainters, cxCurrencyEdit, dxSkinBlack,
+  dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom,
+  dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TMobileTariffForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    colCostInet: TcxGridDBColumn;
-    colCostSMS: TcxGridDBColumn;
-    colMonthly: TcxGridDBColumn;
+    CostInet: TcxGridDBColumn;
+    CostSMS: TcxGridDBColumn;
+    Monthly: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -44,29 +54,29 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    colCostMinutes: TcxGridDBColumn;
-    colPocketInet: TcxGridDBColumn;
-    colPocketSMS: TcxGridDBColumn;
-    colPocketMinutes: TcxGridDBColumn;
+    CostMinutes: TcxGridDBColumn;
+    PocketInet: TcxGridDBColumn;
+    PocketSMS: TcxGridDBColumn;
+    PocketMinutes: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
-    colTariffName: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
     actUpdate: TdsdInsertUpdateAction;
-    colErased: TcxGridDBColumn;
-    colComment: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
     pmGrid: TPopupMenu;
     N1: TMenuItem;
     N2: TMenuItem;
     N3: TMenuItem;
     N4: TMenuItem;
     N5: TMenuItem;
-    colCode: TcxGridDBColumn;
-    colContractName: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    ContractName: TcxGridDBColumn;
     actInsert: TdsdInsertUpdateAction;
-    colContractCode: TcxGridDBColumn;
-    colJuridicalName: TcxGridDBColumn;
+    ContractCode: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
   private
     { Private declarations }
   public

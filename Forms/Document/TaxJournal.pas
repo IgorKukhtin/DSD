@@ -13,33 +13,43 @@ uses
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxPC,
   Vcl.Controls, MeDOC, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter, EDI;
+  dxSkinsdxBarPainter, EDI, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
+  dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TTaxJournalForm = class(TAncestorJournalForm)
-    colDateRegistered: TcxGridDBColumn;
-    colFromName: TcxGridDBColumn;
-    colToName: TcxGridDBColumn;
-    colTotalCount: TcxGridDBColumn;
-    colTotalSumm: TcxGridDBColumn;
-    colPriceWithVAT: TcxGridDBColumn;
-    colVATPercent: TcxGridDBColumn;
-    colTotalSummVAT: TcxGridDBColumn;
-    colTotalSummMVAT: TcxGridDBColumn;
-    colTotalSummPVAT: TcxGridDBColumn;
-    colTaxKindName: TcxGridDBColumn;
-    colContractName: TcxGridDBColumn;
-    colChecked: TcxGridDBColumn;
+    DateRegistered: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
+    ToName: TcxGridDBColumn;
+    TotalCount: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
+    PriceWithVAT: TcxGridDBColumn;
+    VATPercent: TcxGridDBColumn;
+    TotalSummVAT: TcxGridDBColumn;
+    TotalSummMVAT: TcxGridDBColumn;
+    TotalSummPVAT: TcxGridDBColumn;
+    TaxKindName: TcxGridDBColumn;
+    ContractName: TcxGridDBColumn;
+    Checked: TcxGridDBColumn;
     edIsRegisterDate: TcxCheckBox;
-    colInfoMoneyGroupName: TcxGridDBColumn;
-    colInfoMoneyDestinationName: TcxGridDBColumn;
-    colInfoMoneyCode: TcxGridDBColumn;
-    colInfoMoneyName: TcxGridDBColumn;
-    colInvNumberPartner: TcxGridDBColumn;
-    colUnitName: TcxGridDBColumn;
-    colPartnerCode: TcxGridDBColumn;
-    colPartnerName: TcxGridDBColumn;
-    colDocument: TcxGridDBColumn;
+    InfoMoneyGroupName: TcxGridDBColumn;
+    InfoMoneyDestinationName: TcxGridDBColumn;
+    InfoMoneyCode: TcxGridDBColumn;
+    InfoMoneyName: TcxGridDBColumn;
+    InvNumberPartner: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    PartnerCode: TcxGridDBColumn;
+    PartnerName: TcxGridDBColumn;
+    Document: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectTax_Client: TdsdStoredProc;
@@ -53,9 +63,9 @@ type
     bbPrintTax_Us: TdxBarButton;
     bbPrintTax_Client: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
-    colInvNumber_Master: TcxGridDBColumn;
-    colIsError: TcxGridDBColumn;
-    colInvNumberBranch: TcxGridDBColumn;
+    InvNumber_Master: TcxGridDBColumn;
+    IsError: TcxGridDBColumn;
+    InvNumberBranch: TcxGridDBColumn;
     cxLabel14: TcxLabel;
     edDocumentTaxKind: TcxButtonEdit;
     DocumentTaxKindGuides: TdsdGuides;
@@ -69,16 +79,16 @@ type
     spChecked: TdsdStoredProc;
     actChecked: TdsdExecStoredProc;
     bbChecked: TdxBarButton;
-    colIsEDI: TcxGridDBColumn;
-    colIsElectron: TcxGridDBColumn;
+    IsEDI: TcxGridDBColumn;
+    IsElectron: TcxGridDBColumn;
     actElectron: TdsdExecStoredProc;
     spElectron: TdsdStoredProc;
     bbElectron: TdxBarButton;
     spDocument: TdsdStoredProc;
     actDocument: TdsdExecStoredProc;
     bbDocument: TdxBarButton;
-    colContractCode: TcxGridDBColumn;
-    colBranchName: TcxGridDBColumn;
+    ContractCode: TcxGridDBColumn;
+    BranchName: TcxGridDBColumn;
     EDI: TEDI;
     spGetDirectoryName: TdsdStoredProc;
     mactMedocDECLAR: TMultiAction;
@@ -87,7 +97,7 @@ type
     mactMEDOCList: TMultiAction;
     EDIAction: TEDIAction;
     actSelectTax_Medoc_list: TdsdExecStoredProc;
-    colIsMedoc: TcxGridDBColumn;
+    IsMedoc: TcxGridDBColumn;
     spUpdateIsMedoc: TdsdStoredProc;
     MedocListAction: TMedocAction;
     actUpdateIsMedoc: TdsdExecStoredProc;
@@ -95,7 +105,7 @@ type
     actMedocFalse: TdsdExecStoredProc;
     spMedoc_False: TdsdStoredProc;
     bbMedocFalse: TdxBarButton;
-    colRegisteredNumber: TcxGridDBColumn;
+    RegisteredNumber: TcxGridDBColumn;
     cxTextEdit1: TcxTextEdit;
     edLoadData: TcxDateEdit;
     spGetInfo: TdsdStoredProc;
@@ -111,7 +121,7 @@ type
     mactCopyTaxCorrective: TMultiAction;
     bbCopyTaxCorrective: TdxBarButton;
     isCopy: TcxGridDBColumn;
-    colPersonalSigningName: TcxGridDBColumn;
+    PersonalSigningName: TcxGridDBColumn;
     ExecuteDialog1: TExecuteDialog;
     actShowMessage: TShowMessageAction;
     cxLabel27: TcxLabel;

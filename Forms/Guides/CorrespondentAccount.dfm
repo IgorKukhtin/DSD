@@ -19,9 +19,9 @@ object CorrespondentAccountForm: TCorrespondentAccountForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 28
+    Top = 26
     Width = 876
-    Height = 348
+    Height = 350
     Align = alClient
     TabOrder = 0
     object cxGridDBTableView: TcxGridDBTableView
@@ -70,7 +70,7 @@ object CorrespondentAccountForm: TCorrespondentAccountForm
         HeaderAlignmentVert = vaCenter
         Width = 96
       end
-      object Erased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         Visible = False
@@ -110,8 +110,8 @@ object CorrespondentAccountForm: TCorrespondentAccountForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -129,7 +129,7 @@ object CorrespondentAccountForm: TCorrespondentAccountForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -255,10 +255,12 @@ object CorrespondentAccountForm: TCorrespondentAccountForm
       FormName = 'TCorrespondentAccountEditForm'
       FormNameParam.Value = 'TCorrespondentAccountEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = DataSource
@@ -274,6 +276,7 @@ object CorrespondentAccountForm: TCorrespondentAccountForm
       FormName = 'TCorrespondentAccountEditForm'
       FormNameParam.Value = 'TCorrespondentAccountEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -281,6 +284,7 @@ object CorrespondentAccountForm: TCorrespondentAccountForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       ActionType = acUpdate
@@ -331,6 +335,7 @@ object CorrespondentAccountForm: TCorrespondentAccountForm
           ComponentItem = 'Id'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -339,12 +344,14 @@ object CorrespondentAccountForm: TCorrespondentAccountForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'CurrencyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyName'
@@ -352,6 +359,7 @@ object CorrespondentAccountForm: TCorrespondentAccountForm
           Component = MasterCDS
           ComponentItem = 'CurrencyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072

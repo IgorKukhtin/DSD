@@ -11,26 +11,36 @@ uses
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  cxImageComboBox, Vcl.Menus;
+  cxImageComboBox, Vcl.Menus, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
+  dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TMoneyPlace_ObjectForm = class(TAncestorEnumForm)
-    clItemName: TcxGridDBColumn;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
-    clInfoMoneyName: TcxGridDBColumn;
-    clContractNumber: TcxGridDBColumn;
-    clStartDate: TcxGridDBColumn;
-    clIsErased: TcxGridDBColumn;
-    clOKPO: TcxGridDBColumn;
-    clInfoMoneyCode: TcxGridDBColumn;
-    clInfoMoneyGroupName: TcxGridDBColumn;
-    clInfoMoneyDestinationName: TcxGridDBColumn;
-    clContractStateKindName: TcxGridDBColumn;
-    clEndDate: TcxGridDBColumn;
-    clContractKindName: TcxGridDBColumn;
-    clPaidKindName: TcxGridDBColumn;
-    clInfoMoneyName_all: TcxGridDBColumn;
+    ItemName: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    InfoMoneyName: TcxGridDBColumn;
+    ContractNumber: TcxGridDBColumn;
+    StartDate: TcxGridDBColumn;
+    IsErased: TcxGridDBColumn;
+    OKPO: TcxGridDBColumn;
+    InfoMoneyCode: TcxGridDBColumn;
+    InfoMoneyGroupName: TcxGridDBColumn;
+    InfoMoneyDestinationName: TcxGridDBColumn;
+    ContractStateKindName: TcxGridDBColumn;
+    EndDate: TcxGridDBColumn;
+    ContractKindName: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
+    InfoMoneyName_all: TcxGridDBColumn;
     ContractCode: TcxGridDBColumn;
   private
     { Private declarations }

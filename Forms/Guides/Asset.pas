@@ -26,8 +26,8 @@ type
   TAssetForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -51,19 +51,19 @@ type
     dsdGridToExcel: TdsdGridToExcel;
     spSelect: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    clInvNumber: TcxGridDBColumn;
-    clAssetGroup: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    AssetGroupName: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
-    clErased: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clSerialNumber: TcxGridDBColumn;
-    clPassportNumber: TcxGridDBColumn;
-    clRelease: TcxGridDBColumn;
-    clMakerName: TcxGridDBColumn;
+    SerialNumber: TcxGridDBColumn;
+    PassportNumber: TcxGridDBColumn;
+    Release: TcxGridDBColumn;
+    MakerName: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
-    clComment: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

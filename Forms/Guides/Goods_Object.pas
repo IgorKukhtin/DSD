@@ -26,13 +26,13 @@ type
   TGoods_ObjectForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
-    clWeight: TcxGridDBColumn;
-    clGoodsGroupName: TcxGridDBColumn;
-    clMeasureName: TcxGridDBColumn;
-    clTradeMarkName: TcxGridDBColumn;
-    clIsErased: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    Weight: TcxGridDBColumn;
+    GoodsGroupName: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
+    TradeMarkName: TcxGridDBColumn;
+    IsErased: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -50,11 +50,11 @@ type
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clFuelName: TcxGridDBColumn;
-    clBusinessName: TcxGridDBColumn;
+    FuelName: TcxGridDBColumn;
+    BusinessName: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    clGoodsGroupNameFull: TcxGridDBColumn;
+    GoodsGroupNameFull: TcxGridDBColumn;
   private
     { Private declarations }
   public

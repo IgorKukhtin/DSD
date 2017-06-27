@@ -46,7 +46,7 @@ object JuridicalForm: TJuridicalForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object ceCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
@@ -54,7 +54,7 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 40
       end
-      object ceName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
@@ -62,7 +62,7 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 150
       end
-      object clOKPO: TcxGridDBColumn
+      object OKPO: TcxGridDBColumn
         Caption = #1054#1050#1055#1054
         DataBinding.FieldName = 'OKPO'
         HeaderAlignmentHorz = taCenter
@@ -70,7 +70,7 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 70
       end
-      object clInvNumberBranch: TcxGridDBColumn
+      object InvNumberBranch: TcxGridDBColumn
         Caption = #8470' '#1092#1080#1083#1080#1072#1083#1072
         DataBinding.FieldName = 'InvNumberBranch'
         HeaderAlignmentHorz = taCenter
@@ -78,7 +78,7 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 70
       end
-      object clGLNCode: TcxGridDBColumn
+      object GLNCode: TcxGridDBColumn
         Caption = 'GLN - '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1100' '#1080'/'#1080#1083#1080' '#1055#1086#1083#1091#1095#1072#1090#1077#1083#1100' '
         DataBinding.FieldName = 'GLNCode'
         Visible = False
@@ -87,7 +87,7 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 100
       end
-      object clRetailName: TcxGridDBColumn
+      object RetailName: TcxGridDBColumn
         Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
         DataBinding.FieldName = 'RetailName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -102,7 +102,7 @@ object JuridicalForm: TJuridicalForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object clRetailReportName: TcxGridDBColumn
+      object RetailReportName: TcxGridDBColumn
         Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100' ('#1087#1088#1086#1089#1088#1086#1095#1082#1072')'
         DataBinding.FieldName = 'RetailReportName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -117,7 +117,7 @@ object JuridicalForm: TJuridicalForm
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
-      object clJuridicalGroupName: TcxGridDBColumn
+      object JuridicalGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'JuridicalGroupName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -133,7 +133,7 @@ object JuridicalForm: TJuridicalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object clInfoMoneyGroupCode: TcxGridDBColumn
+      object InfoMoneyGroupCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055' '#1075#1088#1091#1087#1087#1099
         DataBinding.FieldName = 'InfoMoneyGroupCode'
         Visible = False
@@ -142,7 +142,7 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 50
       end
-      object clInfoMoneyGroupName: TcxGridDBColumn
+      object InfoMoneyGroupName: TcxGridDBColumn
         Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyGroupName'
         Visible = False
@@ -151,7 +151,7 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 70
       end
-      object clInfoMoneyDestinationCode: TcxGridDBColumn
+      object InfoMoneyDestinationCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055' '#1085#1072#1079#1085#1072#1095'.'
         DataBinding.FieldName = 'InfoMoneyDestinationCode'
         Visible = False
@@ -160,7 +160,7 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 50
       end
-      object clInfoMoneyDestinationName: TcxGridDBColumn
+      object InfoMoneyDestinationName: TcxGridDBColumn
         Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'InfoMoneyDestinationName'
         Visible = False
@@ -169,7 +169,7 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 70
       end
-      object clInfoMoneyCode: TcxGridDBColumn
+      object InfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055
         DataBinding.FieldName = 'InfoMoneyCode'
         HeaderAlignmentHorz = taCenter
@@ -177,7 +177,7 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 40
       end
-      object clInfoMoneyName: TcxGridDBColumn
+      object InfoMoneyName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyName'
         HeaderAlignmentHorz = taCenter
@@ -194,7 +194,7 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 100
       end
-      object clIsCorporate: TcxGridDBColumn
+      object IsCorporate: TcxGridDBColumn
         Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'.'#1083'.'
         DataBinding.FieldName = 'isCorporate'
         Visible = False
@@ -203,7 +203,7 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 40
       end
-      object clisTaxSummary: TcxGridDBColumn
+      object isTaxSummary: TcxGridDBColumn
         Caption = #1057#1074#1086#1076#1085#1072#1103' '#1053#1053
         DataBinding.FieldName = 'isTaxSummary'
         Visible = False
@@ -220,7 +220,7 @@ object JuridicalForm: TJuridicalForm
         HeaderAlignmentVert = vaCenter
         Width = 85
       end
-      object clPriceListName: TcxGridDBColumn
+      object PriceListName: TcxGridDBColumn
         Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
         DataBinding.FieldName = 'PriceListName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -237,7 +237,7 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 80
       end
-      object clPriceListPromoName: TcxGridDBColumn
+      object PriceListPromoName: TcxGridDBColumn
         Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1072#1082#1094#1080#1086#1085#1085#1099#1081')'
         DataBinding.FieldName = 'PriceListPromoName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -254,7 +254,7 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 100
       end
-      object clStartPromo: TcxGridDBColumn
+      object StartPromo: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '#1072#1082#1094#1080#1080
         DataBinding.FieldName = 'StartPromo'
         Visible = False
@@ -263,7 +263,7 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 55
       end
-      object clEndPromo: TcxGridDBColumn
+      object EndPromo: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1079#1072#1074'. '#1072#1082#1094#1080#1080
         DataBinding.FieldName = 'EndPromo'
         Visible = False
@@ -323,7 +323,7 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 80
       end
-      object clGoodsPropertyName: TcxGridDBColumn
+      object GoodsPropertyName: TcxGridDBColumn
         Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'GoodsPropertyName'
         Visible = False
@@ -332,7 +332,7 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 80
       end
-      object clisDiscountPrice: TcxGridDBColumn
+      object isDiscountPrice: TcxGridDBColumn
         Caption = #1055#1077#1095'. '#1094#1077#1085#1091' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
         DataBinding.FieldName = 'isDiscountPrice'
         HeaderAlignmentHorz = taCenter
@@ -340,7 +340,7 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 73
       end
-      object colisPriceWithVAT: TcxGridDBColumn
+      object isPriceWithVAT: TcxGridDBColumn
         Caption = #1055#1077#1095'. '#1094#1077#1085#1091' '#1089' '#1053#1044#1057
         DataBinding.FieldName = 'isPriceWithVAT'
         HeaderAlignmentHorz = taCenter
@@ -374,7 +374,7 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 70
       end
-      object ceIsErased: TcxGridDBColumn
+      object IsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'

@@ -83,7 +83,7 @@ object JuridicalTreeForm: TJuridicalTreeForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object ceTreeState: TcxGridDBColumn
+      object isLeaf: TcxGridDBColumn
         DataBinding.FieldName = 'isLeaf'
         PropertiesClassName = 'TcxImageComboBoxProperties'
         Properties.Images = dmMain.TreeImageList
@@ -102,7 +102,7 @@ object JuridicalTreeForm: TJuridicalTreeForm
         Width = 24
         IsCaptionAssigned = True
       end
-      object ceCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taRightJustify
@@ -110,20 +110,20 @@ object JuridicalTreeForm: TJuridicalTreeForm
         Options.Editing = False
         Width = 50
       end
-      object ceJuridicalName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 100
       end
-      object clOKPO: TcxGridDBColumn
+      object OKPO: TcxGridDBColumn
         Caption = #1054#1050#1055#1054
         DataBinding.FieldName = 'OKPO'
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object ceisErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
@@ -325,16 +325,19 @@ object JuridicalTreeForm: TJuridicalTreeForm
       FormName = 'TJuridicalEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GroupId'
           Value = Null
           Component = TreeDataSet
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GroupName'
@@ -342,6 +345,7 @@ object JuridicalTreeForm: TJuridicalTreeForm
           Component = TreeDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = GridDS
@@ -357,6 +361,7 @@ object JuridicalTreeForm: TJuridicalTreeForm
       FormName = 'TJuridicalEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -364,6 +369,7 @@ object JuridicalTreeForm: TJuridicalTreeForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -412,6 +418,7 @@ object JuridicalTreeForm: TJuridicalTreeForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -419,6 +426,7 @@ object JuridicalTreeForm: TJuridicalTreeForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -504,6 +512,7 @@ object JuridicalTreeForm: TJuridicalTreeForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 392
@@ -520,6 +529,7 @@ object JuridicalTreeForm: TJuridicalTreeForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 288

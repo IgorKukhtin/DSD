@@ -14,27 +14,37 @@ uses
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, cxCheckBox, cxCurrencyEdit,
   cxButtonEdit, dsdGuides, frxClass, frxDBSet, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TTransferDebtOut_OrderJournalForm = class(TAncestorJournalForm)
-    colFromName: TcxGridDBColumn;
-    colToName: TcxGridDBColumn;
-    colTotalCount: TcxGridDBColumn;
-    colTotalSumm: TcxGridDBColumn;
-    colChangePercent: TcxGridDBColumn;
-    colPriceWithVAT: TcxGridDBColumn;
-    colVATPercent: TcxGridDBColumn;
-    colTotalSummMVAT: TcxGridDBColumn;
-    colTotalSummPVAT: TcxGridDBColumn;
-    colPaidKindFromName: TcxGridDBColumn;
-    colContractFromName: TcxGridDBColumn;
-    colInvNumberPartner_Master: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
+    ToName: TcxGridDBColumn;
+    TotalCount: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
+    ChangePercent: TcxGridDBColumn;
+    PriceWithVAT: TcxGridDBColumn;
+    VATPercent: TcxGridDBColumn;
+    TotalSummMVAT: TcxGridDBColumn;
+    TotalSummPVAT: TcxGridDBColumn;
+    PaidKindFromName: TcxGridDBColumn;
+    ContractFromName: TcxGridDBColumn;
+    InvNumberPartner_Master: TcxGridDBColumn;
     spTax: TdsdStoredProc;
     actTax: TdsdExecStoredProc;
     bbTax: TdxBarButton;
-    colTotalCountSh: TcxGridDBColumn;
-    colTotalCountKg: TcxGridDBColumn;
+    TotalCountSh: TcxGridDBColumn;
+    TotalCountKg: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
@@ -59,19 +69,19 @@ type
     mactPrint_Bill: TMultiAction;
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
-    colPaidKindToName: TcxGridDBColumn;
-    colContractToName: TcxGridDBColumn;
+    PaidKindToName: TcxGridDBColumn;
+    ContractToName: TcxGridDBColumn;
     cxLabel14: TcxLabel;
     edDocumentTaxKind: TcxButtonEdit;
     DocumentTaxKindGuides: TdsdGuides;
     actPrint_TransferDebtOut: TdsdPrintAction;
     bbPrint_DebtOut: TdxBarButton;
-    colInvNumberPartner: TcxGridDBColumn;
+    InvNumberPartner: TcxGridDBColumn;
     spChecked: TdsdStoredProc;
-    clChecked: TcxGridDBColumn;
+    Checked: TcxGridDBColumn;
     actChecked: TdsdExecStoredProc;
     bbspChecked: TdxBarButton;
-    colInvNumberOrder: TcxGridDBColumn;
+    InvNumberOrder: TcxGridDBColumn;
     InvNumber_TransportGoods: TcxGridDBColumn;
     OperDate_TransportGoods: TcxGridDBColumn;
     spGet_TTN: TdsdStoredProc;
@@ -81,8 +91,8 @@ type
     actGet_TTN: TdsdExecStoredProc;
     mactPrint_TTN: TMultiAction;
     bbPrint_TTN: TdxBarButton;
-    colContractFromCode: TcxGridDBColumn;
-    colContractToCode: TcxGridDBColumn;
+    ContractFromCode: TcxGridDBColumn;
+    ContractToCode: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     cxLabel27: TcxLabel;
     edJuridicalBasis: TcxButtonEdit;

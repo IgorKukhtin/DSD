@@ -32,28 +32,28 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clDebtSum
+          Column = DebtSum
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clOverSum
+          Column = OverSum
         end>
       DataController.Summary.FooterSummaryItems = <
         item
           Format = #1057#1090#1088#1086#1082': ,0'
           Kind = skCount
-          Column = ceName
+          Column = Name
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clDebtSum
+          Column = DebtSum
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clOverSum
+          Column = OverSum
         end>
       DataController.Summary.SummaryGroups = <>
       OptionsCustomize.ColumnHiding = True
@@ -67,7 +67,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
       OptionsView.HeaderHeight = 50
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clPersonalName: TcxGridDBColumn
+      object PersonalName: TcxGridDBColumn
         Caption = #1060#1048#1054' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082' '#1058#1040')'
         DataBinding.FieldName = 'PersonalName'
         HeaderAlignmentHorz = taCenter
@@ -75,7 +75,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         Options.Editing = False
         Width = 100
       end
-      object clPositionName: TcxGridDBColumn
+      object PositionName: TcxGridDBColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082' '#1058#1040')'
         DataBinding.FieldName = 'PositionName'
         Visible = False
@@ -101,7 +101,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         Options.Editing = False
         Width = 100
       end
-      object ceCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
@@ -109,7 +109,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         Options.Editing = False
         Width = 35
       end
-      object ceName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
@@ -117,7 +117,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         Options.Editing = False
         Width = 150
       end
-      object ceAddress: TcxGridDBColumn
+      object Address: TcxGridDBColumn
         Caption = #1040#1076#1088#1077#1089
         DataBinding.FieldName = 'Address'
         Visible = False
@@ -134,7 +134,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         Options.Editing = False
         Width = 55
       end
-      object clDebtSum: TcxGridDBColumn
+      object DebtSum: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1076#1086#1083#1075#1072' ('#1085#1072#1084')'
         DataBinding.FieldName = 'DebtSum'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -144,7 +144,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         Options.Editing = False
         Width = 80
       end
-      object clOverSum: TcxGridDBColumn
+      object OverSum: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1089#1088#1086#1095'. '#1076#1086#1083#1075#1072' ('#1085#1072#1084')'
         DataBinding.FieldName = 'OverSum'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -154,7 +154,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         Options.Editing = False
         Width = 80
       end
-      object clOverDays: TcxGridDBColumn
+      object OverDays: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1087#1088#1086#1089#1088#1086#1095#1082#1080' ('#1085#1072#1084')'
         DataBinding.FieldName = 'OverDays'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -164,7 +164,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         Options.Editing = False
         Width = 85
       end
-      object clPrepareDayCount: TcxGridDBColumn
+      object PrepareDayCount: TcxGridDBColumn
         Caption = #1047#1072' '#1089#1082#1086#1083#1100#1082#1086' '#1076#1085'. '#1087#1088#1080#1085#1080#1084#1072#1077#1090#1089#1103' '#1079#1072#1082#1072#1079
         DataBinding.FieldName = 'PrepareDayCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -182,7 +182,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         Options.Editing = False
         Width = 70
       end
-      object ceJuridicalName: TcxGridDBColumn
+      object JuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentHorz = taCenter
@@ -198,7 +198,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         Options.Editing = False
         Width = 100
       end
-      object clRouteName: TcxGridDBColumn
+      object RouteName: TcxGridDBColumn
         Caption = #1052#1072#1088#1096#1088#1091#1090
         DataBinding.FieldName = 'RouteName'
         Visible = False
@@ -223,7 +223,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         Options.Editing = False
         Width = 40
       end
-      object clContractName: TcxGridDBColumn
+      object ContractName: TcxGridDBColumn
         Caption = #1044#1086#1075#1086#1074#1086#1088
         DataBinding.FieldName = 'ContractName'
         HeaderAlignmentHorz = taCenter
@@ -272,7 +272,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         Options.Editing = False
         Width = 70
       end
-      object clPriceListName: TcxGridDBColumn
+      object PriceListName: TcxGridDBColumn
         Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
         DataBinding.FieldName = 'PriceListName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -288,7 +288,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         Options.Editing = False
         Width = 84
       end
-      object clPriceListName_ret: TcxGridDBColumn
+      object PriceListName_ret: TcxGridDBColumn
         Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' '#1042#1086#1079#1074#1088#1072#1090#1072
         DataBinding.FieldName = 'PriceListName_ret'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -304,7 +304,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         Options.Editing = False
         Width = 86
       end
-      object clisSync: TcxGridDBColumn
+      object isSync: TcxGridDBColumn
         Caption = #1057#1080#1085#1093#1088#1086#1085#1080#1079#1080#1088#1091#1077#1090#1089#1103
         DataBinding.FieldName = 'isSync'
         Visible = False
@@ -313,7 +313,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         Options.Editing = False
         Width = 80
       end
-      object clSchedule: TcxGridDBColumn
+      object Schedule: TcxGridDBColumn
         Caption = #1043#1088#1072#1092#1080#1082' '#1087#1086#1089#1077#1097#1077#1085#1080#1103
         DataBinding.FieldName = 'Schedule'
         HeaderAlignmentHorz = taCenter
@@ -321,56 +321,56 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         Options.Editing = False
         Width = 94
       end
-      object colValue1: TcxGridDBColumn
+      object Value1: TcxGridDBColumn
         Caption = #1055#1085
         DataBinding.FieldName = 'Value1'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 25
       end
-      object colValue2: TcxGridDBColumn
+      object Value2: TcxGridDBColumn
         Caption = #1042#1090
         DataBinding.FieldName = 'Value2'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 25
       end
-      object colValue3: TcxGridDBColumn
+      object Value3: TcxGridDBColumn
         Caption = #1057#1088
         DataBinding.FieldName = 'Value3'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 25
       end
-      object colValue4: TcxGridDBColumn
+      object Value4: TcxGridDBColumn
         Caption = #1063#1090
         DataBinding.FieldName = 'Value4'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 25
       end
-      object colValue5: TcxGridDBColumn
+      object Value5: TcxGridDBColumn
         Caption = #1055#1090
         DataBinding.FieldName = 'Value5'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 25
       end
-      object colValue6: TcxGridDBColumn
+      object Value6: TcxGridDBColumn
         Caption = #1057#1073
         DataBinding.FieldName = 'Value6'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 25
       end
-      object colValue7: TcxGridDBColumn
+      object Value7: TcxGridDBColumn
         Caption = #1042#1089
         DataBinding.FieldName = 'Value7'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 25
       end
-      object clDelivery: TcxGridDBColumn
+      object Delivery: TcxGridDBColumn
         Caption = #1043#1088#1072#1092#1080#1082' '#1079#1072#1074#1086#1079#1072
         DataBinding.FieldName = 'Delivery'
         HeaderAlignmentHorz = taCenter
@@ -378,7 +378,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         Options.Editing = False
         Width = 94
       end
-      object colDelivery1: TcxGridDBColumn
+      object Delivery1: TcxGridDBColumn
         Caption = #1055#1085' '#1079'-'#1079
         DataBinding.FieldName = 'Delivery1'
         HeaderAlignmentHorz = taCenter
@@ -386,7 +386,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         HeaderHint = #1055#1085' '#1079#1072#1074#1086#1079
         Width = 25
       end
-      object colDelivery2: TcxGridDBColumn
+      object Delivery2: TcxGridDBColumn
         Caption = #1042#1090' '#1079'-'#1079
         DataBinding.FieldName = 'Delivery2'
         HeaderAlignmentHorz = taCenter
@@ -394,7 +394,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         HeaderHint = #1042#1090' '#1079#1072#1074#1086#1079
         Width = 25
       end
-      object colDelivery3: TcxGridDBColumn
+      object Delivery3: TcxGridDBColumn
         Caption = #1057#1088' '#1079'-'#1079
         DataBinding.FieldName = 'Delivery3'
         HeaderAlignmentHorz = taCenter
@@ -402,7 +402,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         HeaderHint = #1057#1088' '#1079#1072#1074#1086#1079
         Width = 25
       end
-      object colDelivery4: TcxGridDBColumn
+      object Delivery4: TcxGridDBColumn
         Caption = #1063#1090' '#1079'-'#1079
         DataBinding.FieldName = 'Delivery4'
         HeaderAlignmentHorz = taCenter
@@ -410,7 +410,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         HeaderHint = #1063#1090' '#1079#1072#1074#1086#1079
         Width = 25
       end
-      object colDelivery5: TcxGridDBColumn
+      object Delivery5: TcxGridDBColumn
         Caption = #1055#1090' '#1079'-'#1079
         DataBinding.FieldName = 'Delivery5'
         HeaderAlignmentHorz = taCenter
@@ -418,7 +418,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         HeaderHint = #1055#1090' '#1079#1072#1074#1086#1079
         Width = 25
       end
-      object colDelivery6: TcxGridDBColumn
+      object Delivery6: TcxGridDBColumn
         Caption = #1057#1073' '#1079'-'#1079
         DataBinding.FieldName = 'Delivery6'
         HeaderAlignmentHorz = taCenter
@@ -426,7 +426,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         HeaderHint = #1057#1073' '#1079#1072#1074#1086#1079
         Width = 25
       end
-      object colDelivery7: TcxGridDBColumn
+      object Delivery7: TcxGridDBColumn
         Caption = #1042#1089' '#1079'-'#1079
         DataBinding.FieldName = 'Delivery7'
         HeaderAlignmentHorz = taCenter
@@ -434,7 +434,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         HeaderHint = #1042#1089' '#1079#1072#1074#1086#1079
         Width = 25
       end
-      object clGPSN: TcxGridDBColumn
+      object GPSN: TcxGridDBColumn
         Caption = 'GPS '#1058#1058' ('#1096#1080#1088#1086#1090#1072')'
         DataBinding.FieldName = 'GPSN'
         Visible = False
@@ -443,7 +443,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         Options.Editing = False
         Width = 70
       end
-      object clGPSE: TcxGridDBColumn
+      object GPSE: TcxGridDBColumn
         Caption = 'GPS '#1058#1058' ('#1076#1086#1083#1075#1086#1090#1072')'
         DataBinding.FieldName = 'GPSE'
         Visible = False
@@ -452,7 +452,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         Options.Editing = False
         Width = 70
       end
-      object ceisErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'

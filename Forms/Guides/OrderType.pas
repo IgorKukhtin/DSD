@@ -28,8 +28,8 @@ type
   TOrderTypeForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clValue1: TcxGridDBColumn;
-    clGoodsName: TcxGridDBColumn;
+    Koeff1: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -46,19 +46,19 @@ type
     spSelect: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clValue2: TcxGridDBColumn;
+    Koeff2: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
-    clErased: TcxGridDBColumn;
-    clValue3: TcxGridDBColumn;
-    clValue4: TcxGridDBColumn;
-    clValue5: TcxGridDBColumn;
-    clValue6: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
+    Koeff3: TcxGridDBColumn;
+    Koeff4: TcxGridDBColumn;
+    Koeff5: TcxGridDBColumn;
+    Koeff6: TcxGridDBColumn;
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
-    clValue7: TcxGridDBColumn;
-    clValue8: TcxGridDBColumn;
-    clValue9: TcxGridDBColumn;
-    clValue10: TcxGridDBColumn;
+    Koeff7: TcxGridDBColumn;
+    Koeff8: TcxGridDBColumn;
+    Koeff9: TcxGridDBColumn;
+    Koeff10: TcxGridDBColumn;
     GoodsChoiceForm: TOpenChoiceForm;
     actShowAll: TBooleanStoredProcAction;
     bbactShowAll: TdxBarButton;
@@ -68,30 +68,27 @@ type
     dsdUnitGuides: TdsdGuides;
     cxLabel6: TcxLabel;
     RefreshDispatcher: TRefreshDispatcher;
-    clGoodsGroupName: TcxGridDBColumn;
-    clUnitName: TcxGridDBColumn;
+    GoodsGroupName: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
     UnitChoiceForm: TOpenChoiceForm;
-    clGoodsCode: TcxGridDBColumn;
-    clUnitCode: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    UnitCode: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
-    clValue11: TcxGridDBColumn;
-    clValue12: TcxGridDBColumn;
-    clTermProduction: TcxGridDBColumn;
-    clNormInDays: TcxGridDBColumn;
-    clStartProductionInDays: TcxGridDBColumn;
-
-    clInfoMoneyCode: TcxGridDBColumn;
-    clInfoMoneyGroupName: TcxGridDBColumn;
-    clInfoMoneyDestinationName: TcxGridDBColumn;
-    clInfoMoneyName: TcxGridDBColumn;
-
-    clTradeMarkName: TcxGridDBColumn;
-    clGoodsGroupNameFull: TcxGridDBColumn;
-    clGoodsTagName: TcxGridDBColumn;
-    clGoodsGroupAnalystName: TcxGridDBColumn;
-
-    clMeasureName: TcxGridDBColumn;
+    Koeff11: TcxGridDBColumn;
+    Koeff12: TcxGridDBColumn;
+    TermProduction: TcxGridDBColumn;
+    NormInDays: TcxGridDBColumn;
+    StartProductionInDays: TcxGridDBColumn;
+    InfoMoneyCode: TcxGridDBColumn;
+    InfoMoneyGroupName: TcxGridDBColumn;
+    InfoMoneyDestinationName: TcxGridDBColumn;
+    InfoMoneyName: TcxGridDBColumn;
+    TradeMarkName: TcxGridDBColumn;
+    GoodsGroupNameFull: TcxGridDBColumn;
+    GoodsTagName: TcxGridDBColumn;
+    GoodsGroupAnalystName: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
 
   private
     { Private declarations }

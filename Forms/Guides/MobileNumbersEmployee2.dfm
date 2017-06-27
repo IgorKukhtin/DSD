@@ -36,14 +36,14 @@ object MobileNumbersEmployee2Form: TMobileNumbersEmployee2Form
       DataController.Summary.FooterSummaryItems = <
         item
           Kind = skCount
-          Column = colMobileTariffID
+          Column = MobileTariffID
         end
         item
-          Column = colErased
+          Column = Erased
         end
         item
           Kind = skCount
-          Column = colID
+          Column = ID
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -61,28 +61,28 @@ object MobileNumbersEmployee2Form: TMobileNumbersEmployee2Form
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object colID: TcxGridDBColumn
+      object ID: TcxGridDBColumn
         Caption = #1048#1044
         DataBinding.FieldName = 'ID'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 69
       end
-      object colEmployeeName: TcxGridDBColumn
+      object EmployeeName: TcxGridDBColumn
         Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
         DataBinding.FieldName = 'EmployeeName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 186
       end
-      object colMobileNum: TcxGridDBColumn
+      object MobileNum: TcxGridDBColumn
         Caption = #1053#1086#1084#1077#1088
         DataBinding.FieldName = 'MobileNum'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 110
       end
-      object colMobileTariffID: TcxGridDBColumn
+      object MobileTariffID: TcxGridDBColumn
         Caption = #1048#1044' '#1058#1072#1088#1080#1092#1072
         DataBinding.FieldName = 'MobileTariffID'
         Visible = False
@@ -91,7 +91,7 @@ object MobileNumbersEmployee2Form: TMobileNumbersEmployee2Form
         VisibleForCustomization = False
         Width = 183
       end
-      object colTariffName: TcxGridDBColumn
+      object TariffName: TcxGridDBColumn
         Caption = #1058#1072#1088#1080#1092
         DataBinding.FieldName = 'TariffName'
         PropertiesClassName = 'TcxSpinEditProperties'
@@ -100,28 +100,28 @@ object MobileNumbersEmployee2Form: TMobileNumbersEmployee2Form
         HeaderAlignmentVert = vaCenter
         Width = 85
       end
-      object colLimit: TcxGridDBColumn
+      object Lim: TcxGridDBColumn
         Caption = #1051#1080#1084#1080#1090
         DataBinding.FieldName = 'Lim'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 86
       end
-      object colLimitDuty: TcxGridDBColumn
+      object LimitDuty: TcxGridDBColumn
         Caption = #1051#1080#1084#1080#1090' '#1089#1083#1091#1078#1077#1073#1085#1099#1081
         DataBinding.FieldName = 'LimitDuty'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 83
       end
-      object colNavigator: TcxGridDBColumn
+      object Navigator: TcxGridDBColumn
         Caption = #1059#1089#1083#1091#1075#1072' '#1053#1072#1074#1080#1075#1072#1090#1086#1088
         DataBinding.FieldName = 'Navigator'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 94
       end
-      object colOverLimit: TcxGridDBColumn
+      object OverLimit: TcxGridDBColumn
         Caption = #1055#1077#1088#1077#1083#1080#1084#1080#1090
         DataBinding.FieldName = 'OverLimit'
         PropertiesClassName = 'TcxSpinEditProperties'
@@ -130,7 +130,7 @@ object MobileNumbersEmployee2Form: TMobileNumbersEmployee2Form
         HeaderAlignmentVert = vaCenter
         Width = 82
       end
-      object colEmployeeID: TcxGridDBColumn
+      object EmployeeID: TcxGridDBColumn
         Caption = #1048#1044' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
         DataBinding.FieldName = 'EmployeeID'
         PropertiesClassName = 'TcxSpinEditProperties'
@@ -141,14 +141,14 @@ object MobileNumbersEmployee2Form: TMobileNumbersEmployee2Form
         VisibleForCustomization = False
         Width = 68
       end
-      object colComms: TcxGridDBColumn
+      object Comms: TcxGridDBColumn
         Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
         DataBinding.FieldName = 'Comms'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 144
       end
-      object colErased: TcxGridDBColumn
+      object Erased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'Erased'
         PropertiesClassName = 'TcxCheckBoxProperties'

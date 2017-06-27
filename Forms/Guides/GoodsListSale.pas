@@ -11,11 +11,21 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   Vcl.Controls, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
   dxSkinsdxBarPainter, Vcl.Menus, cxButtonEdit, cxContainer, dsdGuides, cxLabel,
-  cxTextEdit, cxMaskEdit, Vcl.ExtCtrls, cxCurrencyEdit;
+  cxTextEdit, cxMaskEdit, Vcl.ExtCtrls, cxCurrencyEdit, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TGoodsListSaleForm = class(TAncestorGuidesForm)
-    clContractCode: TcxGridDBColumn;
+    ContractCode: TcxGridDBColumn;
     Panel: TPanel;
     edRetail: TcxButtonEdit;
     cxLabel3: TcxLabel;
@@ -26,8 +36,8 @@ type
     JuridicalGuides: TdsdGuides;
     ContractGuides: TdsdGuides;
     RetailGuides: TdsdGuides;
-    clPartnerName: TcxGridDBColumn;
-    clRetailName: TcxGridDBColumn;
+    PartnerName: TcxGridDBColumn;
+    RetailName: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     RefreshDispatcher: TRefreshDispatcher;
@@ -37,7 +47,7 @@ type
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     Amount: TcxGridDBColumn;
-    clGoodsKindName_List: TcxGridDBColumn;
+    GoodsKindName_List: TcxGridDBColumn;
     GoodsKindName: TcxGridDBColumn;
     GoodsKindCode: TcxGridDBColumn;
     GoodsKindId_List: TcxGridDBColumn;
