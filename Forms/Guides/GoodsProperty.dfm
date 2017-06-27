@@ -37,7 +37,7 @@ object GoodsPropertyForm: TGoodsPropertyForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
+      OptionsBehavior.IncSearchItem = Name
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -49,21 +49,21 @@ object GoodsPropertyForm: TGoodsPropertyForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 53
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 225
       end
-      object clStartPosInt: TcxGridDBColumn
+      object StartPosInt: TcxGridDBColumn
         Caption = #1085#1072#1095'. '#1087#1086#1079'. '#1074' '#1096'/'#1082' '#1082#1075' '
         DataBinding.FieldName = 'StartPosInt'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -74,7 +74,7 @@ object GoodsPropertyForm: TGoodsPropertyForm
         Options.Editing = False
         Width = 70
       end
-      object clEndPosInt: TcxGridDBColumn
+      object EndPosInt: TcxGridDBColumn
         Caption = #1082#1086#1085'. '#1087#1086#1079'. '#1074' '#1096'/'#1082' '#1082#1075
         DataBinding.FieldName = 'EndPosInt'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -85,7 +85,7 @@ object GoodsPropertyForm: TGoodsPropertyForm
         Options.Editing = False
         Width = 70
       end
-      object clStartPosFrac: TcxGridDBColumn
+      object StartPosFrac: TcxGridDBColumn
         Caption = #1085#1072#1095'. '#1087#1086#1079'. '#1074' '#1096'/'#1082' '#1075#1088'.'
         DataBinding.FieldName = 'StartPosFrac'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -96,7 +96,7 @@ object GoodsPropertyForm: TGoodsPropertyForm
         Options.Editing = False
         Width = 70
       end
-      object clEndPosFrac: TcxGridDBColumn
+      object EndPosFrac: TcxGridDBColumn
         Caption = #1082#1086#1085'. '#1087#1086#1079'. '#1074' '#1096'/'#1082' '#1075#1088'.'
         DataBinding.FieldName = 'EndPosFrac'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -141,7 +141,7 @@ object GoodsPropertyForm: TGoodsPropertyForm
         Options.Editing = False
         Width = 70
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         Visible = False

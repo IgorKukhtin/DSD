@@ -4,7 +4,7 @@ inherited ContactPersonForm: TContactPersonForm
   ClientWidth = 936
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 952
-  ExplicitHeight = 373
+  ExplicitHeight = 374
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -34,19 +34,19 @@ inherited ContactPersonForm: TContactPersonForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clCode: TcxGridDBColumn
+          object Code: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
             HeaderAlignmentVert = vaCenter
             Width = 53
           end
-          object clName: TcxGridDBColumn
+          object Name: TcxGridDBColumn
             Caption = #1060#1048#1054
             DataBinding.FieldName = 'Name'
             HeaderAlignmentVert = vaCenter
             Width = 208
           end
-          object clPhone: TcxGridDBColumn
+          object Phone: TcxGridDBColumn
             Caption = #1058#1077#1083#1077#1092#1086#1085
             DataBinding.FieldName = 'Phone'
             GroupSummaryAlignment = taCenter
@@ -54,7 +54,7 @@ inherited ContactPersonForm: TContactPersonForm
             HeaderGlyphAlignmentHorz = taCenter
             Width = 109
           end
-          object clMail: TcxGridDBColumn
+          object Mail: TcxGridDBColumn
             Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1095#1090#1072
             DataBinding.FieldName = 'Mail'
             GroupSummaryAlignment = taCenter
@@ -62,7 +62,7 @@ inherited ContactPersonForm: TContactPersonForm
             HeaderGlyphAlignmentHorz = taCenter
             Width = 114
           end
-          object clPartnerName: TcxGridDBColumn
+          object PartnerName: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
             DataBinding.FieldName = 'PartnerName'
             GroupSummaryAlignment = taCenter
@@ -70,46 +70,46 @@ inherited ContactPersonForm: TContactPersonForm
             HeaderGlyphAlignmentHorz = taCenter
             Width = 200
           end
-          object clJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 200
           end
-          object clContractName: TcxGridDBColumn
+          object ContractName: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088
             DataBinding.FieldName = 'ContractName'
             Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object clRetailName: TcxGridDBColumn
+          object RetailName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
             DataBinding.FieldName = 'RetailName'
             HeaderAlignmentVert = vaCenter
             Width = 133
           end
-          object clUnitName: TcxGridDBColumn
+          object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentVert = vaCenter
             Width = 128
           end
-          object clContactPersonKindName: TcxGridDBColumn
+          object ContactPersonKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1082#1086#1085#1090#1072#1082#1090#1072
             DataBinding.FieldName = 'ContactPersonKindName'
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object clEmailName: TcxGridDBColumn
+          object EmailName: TcxGridDBColumn
             Caption = #1055#1086#1095#1090#1086#1074#1099#1081' '#1103#1097#1080#1082
             DataBinding.FieldName = 'EmailName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
           end
-          object clEmailKindName: TcxGridDBColumn
+          object EmailKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1087#1086#1095#1090#1099
             DataBinding.FieldName = 'EmailKindName'
             HeaderAlignmentHorz = taCenter
@@ -117,7 +117,7 @@ inherited ContactPersonForm: TContactPersonForm
             Options.Editing = False
             Width = 70
           end
-          object clErased: TcxGridDBColumn
+          object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             PropertiesClassName = 'TcxCheckBoxProperties'

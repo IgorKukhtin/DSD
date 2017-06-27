@@ -55,7 +55,7 @@ object MobilePriceListItems_ObjectForm: TMobilePriceListItems_ObjectForm
         Options.Editing = False
         Width = 150
       end
-      object clGoodsGroupNameFull: TcxGridDBColumn
+      object GoodsGroupNameFull: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
         DataBinding.FieldName = 'GoodsGroupNameFull'
         HeaderAlignmentHorz = taCenter
@@ -63,7 +63,7 @@ object MobilePriceListItems_ObjectForm: TMobilePriceListItems_ObjectForm
         Options.Editing = False
         Width = 209
       end
-      object clGoodsGroupName: TcxGridDBColumn
+      object GoodsGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'GoodsGroupName'
         Visible = False
@@ -88,7 +88,7 @@ object MobilePriceListItems_ObjectForm: TMobilePriceListItems_ObjectForm
         Options.Editing = False
         Width = 186
       end
-      object clOrderStartDate: TcxGridDBColumn
+      object OrderStartDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1089' ('#1094#1077#1085#1072' '#1079#1072#1103#1074#1082#1080')'
         DataBinding.FieldName = 'OrderStartDate'
         HeaderAlignmentHorz = taCenter
@@ -96,7 +96,7 @@ object MobilePriceListItems_ObjectForm: TMobilePriceListItems_ObjectForm
         Options.Editing = False
         Width = 68
       end
-      object clOrderEndDate: TcxGridDBColumn
+      object OrderEndDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1087#1086' ('#1094#1077#1085#1072' '#1079#1072#1103#1074#1082#1080')'
         DataBinding.FieldName = 'OrderEndDate'
         HeaderAlignmentHorz = taCenter
@@ -104,7 +104,7 @@ object MobilePriceListItems_ObjectForm: TMobilePriceListItems_ObjectForm
         Options.Editing = False
         Width = 67
       end
-      object clOrderPrice: TcxGridDBColumn
+      object OrderPrice: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1079#1072#1103#1074#1082#1080
         DataBinding.FieldName = 'OrderPrice'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -113,7 +113,7 @@ object MobilePriceListItems_ObjectForm: TMobilePriceListItems_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object clSaleStartDate: TcxGridDBColumn
+      object SaleStartDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1089' ('#1094#1077#1085#1072' '#1086#1090#1075#1088#1091#1079#1082#1080')'
         DataBinding.FieldName = 'SaleStartDate'
         HeaderAlignmentHorz = taCenter
@@ -121,7 +121,7 @@ object MobilePriceListItems_ObjectForm: TMobilePriceListItems_ObjectForm
         Options.Editing = False
         Width = 72
       end
-      object clSaleEndDate: TcxGridDBColumn
+      object SaleEndDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1087#1086' ('#1094#1077#1085#1072' '#1086#1090#1075#1088#1091#1079#1082#1080')'
         DataBinding.FieldName = 'SaleEndDate'
         HeaderAlignmentHorz = taCenter
@@ -129,7 +129,7 @@ object MobilePriceListItems_ObjectForm: TMobilePriceListItems_ObjectForm
         Options.Editing = False
         Width = 72
       end
-      object clSalePrice: TcxGridDBColumn
+      object SalePrice: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1086#1090#1075#1088#1091#1079#1082#1080
         DataBinding.FieldName = 'SalePrice'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -146,7 +146,7 @@ object MobilePriceListItems_ObjectForm: TMobilePriceListItems_ObjectForm
         Options.Editing = False
         Width = 122
       end
-      object ceisErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'

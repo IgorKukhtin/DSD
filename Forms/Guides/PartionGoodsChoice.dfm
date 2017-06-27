@@ -5,7 +5,7 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.Params = FormParams
   ExplicitWidth = 869
-  ExplicitHeight = 437
+  ExplicitHeight = 438
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -14,17 +14,17 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
     Height = 342
     ExplicitTop = 57
     ExplicitWidth = 853
-    ExplicitHeight = 439
+    ExplicitHeight = 342
     ClientRectBottom = 342
     ClientRectRight = 853
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 853
-      ExplicitHeight = 439
+      ExplicitHeight = 342
       inherited cxGrid: TcxGrid
         Width = 853
         Height = 342
         ExplicitWidth = 853
-        ExplicitHeight = 439
+        ExplicitHeight = 342
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -35,7 +35,7 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -43,7 +43,7 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
             Options.Editing = False
             Width = 244
           end
-          object coInvNumber: TcxGridDBColumn
+          object InvNumber: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentHorz = taCenter
@@ -51,7 +51,7 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
             Options.Editing = False
             Width = 147
           end
-          object colOperDate: TcxGridDBColumn
+          object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentHorz = taCenter
@@ -59,7 +59,7 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
             Options.Editing = False
             Width = 63
           end
-          object colPrice: TcxGridDBColumn
+          object lPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             HeaderAlignmentHorz = taCenter
@@ -67,7 +67,7 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
             Options.Editing = False
             Width = 80
           end
-          object colAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             HeaderAlignmentHorz = taCenter
@@ -76,7 +76,7 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
             HeaderGlyphAlignmentVert = vaTop
             Width = 60
           end
-          object clStorageName: TcxGridDBColumn
+          object StorageName: TcxGridDBColumn
             Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103
             DataBinding.FieldName = 'StorageName'
             PropertiesClassName = 'TcxImageComboBoxProperties'
@@ -109,14 +109,14 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
             Options.Editing = False
             Width = 70
           end
-          object colUnitName: TcxGridDBColumn
+          object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 176
           end
-          object colisErased: TcxGridDBColumn
+          object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             Visible = False

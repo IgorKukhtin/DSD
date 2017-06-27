@@ -13,14 +13,24 @@ uses
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, Vcl.Controls, cxGrid, dxSkinsCore, dxSkinsDefaultPainters,
   dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter, Vcl.ExtCtrls,
-  cxCurrencyEdit;
+  cxCurrencyEdit, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
+  dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue;
 
 type
   TContractForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clInvNumber: TcxGridDBColumn;
-    clComment: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -46,30 +56,30 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clSigningDate: TcxGridDBColumn;
-    clStartDate: TcxGridDBColumn;
-    clEndDate: TcxGridDBColumn;
-    clContractKindName: TcxGridDBColumn;
-    clJuridicalName: TcxGridDBColumn;
+    SigningDate: TcxGridDBColumn;
+    StartDate: TcxGridDBColumn;
+    EndDate: TcxGridDBColumn;
+    ContractKindName: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
-    clJuridicalCode: TcxGridDBColumn;
-    clInvNumberArchive: TcxGridDBColumn;
-    clPersonalName: TcxGridDBColumn;
-    clInfoMoneyGroupCode: TcxGridDBColumn;
-    clInfoMoneyGroupName: TcxGridDBColumn;
-    clInfoMoneyDestinationCode: TcxGridDBColumn;
-    clInfoMoneyDestinationName: TcxGridDBColumn;
-    clInfoMoneyCode: TcxGridDBColumn;
-    clInfoMoneyName: TcxGridDBColumn;
-    clIsErased: TcxGridDBColumn;
-    clPaidKindName: TcxGridDBColumn;
-    clAreaContractName: TcxGridDBColumn;
-    clContractArticleName: TcxGridDBColumn;
-    clContractStateKindName: TcxGridDBColumn;
+    JuridicalCode: TcxGridDBColumn;
+    InvNumberArchive: TcxGridDBColumn;
+    PersonalName: TcxGridDBColumn;
+    InfoMoneyGroupCode: TcxGridDBColumn;
+    InfoMoneyGroupName: TcxGridDBColumn;
+    InfoMoneyDestinationCode: TcxGridDBColumn;
+    InfoMoneyDestinationName: TcxGridDBColumn;
+    InfoMoneyCode: TcxGridDBColumn;
+    InfoMoneyName: TcxGridDBColumn;
+    IsErased: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
+    AreaContractName: TcxGridDBColumn;
+    ContractArticleName: TcxGridDBColumn;
+    ContractStateKindName: TcxGridDBColumn;
     cxGridContractCondition: TcxGrid;
     cxGridDBTableViewContractCondition: TcxGridDBTableView;
-    cContractConditionKindName: TcxGridDBColumn;
-    clValue: TcxGridDBColumn;
+    ContractConditionKindName: TcxGridDBColumn;
+    Value: TcxGridDBColumn;
     clsfcisErased: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
     ContractConditionDS: TDataSource;
@@ -80,44 +90,44 @@ type
     InsertRecordCCK: TInsertRecord;
     bbInsertRecCCK: TdxBarButton;
     actContractCondition: TdsdUpdateDataSet;
-    clOKPO: TcxGridDBColumn;
+    OKPO: TcxGridDBColumn;
     spInsertUpdate: TdsdStoredProc;
     PaidKindChoiceForm: TOpenChoiceForm;
     actUpdateDataSet: TdsdUpdateDataSet;
     JuridicalChoiceForm: TOpenChoiceForm;
     ContractKindChoiceForm: TOpenChoiceForm;
     InfoMoneyChoiceForm: TOpenChoiceForm;
-    clJuridicalBasisName: TcxGridDBColumn;
+    JuridicalBasisName: TcxGridDBColumn;
     clCode: TcxGridDBColumn;
     ChildViewAddOn: TdsdDBViewAddOn;
-    clBonusKindName: TcxGridDBColumn;
+    BonusKindName: TcxGridDBColumn;
     BonusKindChoiceForm: TOpenChoiceForm;
     colComment: TcxGridDBColumn;
-    clBankAccountExternal: TcxGridDBColumn;
-    clBankName: TcxGridDBColumn;
-    clInsertName: TcxGridDBColumn;
-    clUpdateName: TcxGridDBColumn;
-    clInsertDate: TcxGridDBColumn;
-    clUpdateDate: TcxGridDBColumn;
-    clIsDefault: TcxGridDBColumn;
+    BankAccountExternal: TcxGridDBColumn;
+    BankName: TcxGridDBColumn;
+    InsertName: TcxGridDBColumn;
+    UpdateName: TcxGridDBColumn;
+    InsertDate: TcxGridDBColumn;
+    UpdateDate: TcxGridDBColumn;
+    IsDefault: TcxGridDBColumn;
     clccInfoMoneyName: TcxGridDBColumn;
     InfoMoneyChoiceForm_ContractCondition: TOpenChoiceForm;
-    clIsStandart: TcxGridDBColumn;
-    clPersonalTradeName: TcxGridDBColumn;
-    clPersonalCollationName: TcxGridDBColumn;
-    clBankAccountName: TcxGridDBColumn;
-    clContractTagName: TcxGridDBColumn;
+    IsStandart: TcxGridDBColumn;
+    PersonalTradeName: TcxGridDBColumn;
+    PersonalCollationName: TcxGridDBColumn;
+    BankAccountName: TcxGridDBColumn;
+    ContractTagName: TcxGridDBColumn;
     PersonalTradeChoiceForm: TOpenChoiceForm;
     PersonalCollationChoiceForm: TOpenChoiceForm;
     BankAccountChoiceForm: TOpenChoiceForm;
     ContractTagChoiceForm: TOpenChoiceForm;
-    clContractKeyId: TcxGridDBColumn;
-    clIsPersonal: TcxGridDBColumn;
-    clIsUnique: TcxGridDBColumn;
-    clDocumentCount: TcxGridDBColumn;
-    clDateDocument: TcxGridDBColumn;
+    ContractKeyId: TcxGridDBColumn;
+    IsPersonal: TcxGridDBColumn;
+    IsUnique: TcxGridDBColumn;
+    DocumentCount: TcxGridDBColumn;
+    DateDocument: TcxGridDBColumn;
     PersonalChoiceForm: TOpenChoiceForm;
-    clJuridicalGroupName: TcxGridDBColumn;
+    JuridicalGroupName: TcxGridDBColumn;
     deStart: TcxDateEdit;
     cxlEnd: TcxLabel;
     deEnd: TcxDateEdit;
@@ -130,13 +140,13 @@ type
     cbEndDate: TcxCheckBox;
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
-    colGLNCode: TcxGridDBColumn;
-    clContractTagGroupName: TcxGridDBColumn;
+    GLNCode: TcxGridDBColumn;
+    ContractTagGroupName: TcxGridDBColumn;
     JuridicalDocumentChoiceForm: TOpenChoiceForm;
-    clJuridicalDocumentName: TcxGridDBColumn;
+    JuridicalDocumentName: TcxGridDBColumn;
     cxGridPartner: TcxGrid;
     cxGridDBTableViewPartner: TcxGridDBTableView;
-    clPartnerName: TcxGridDBColumn;
+    PartnerName: TcxGridDBColumn;
     cxGridLevePartner: TcxGridLevel;
     CDSContractPartner: TClientDataSet;
     DataSourcePartner: TDataSource;
@@ -156,7 +166,7 @@ type
     cxGridGoods: TcxGrid;
     cxGridDBTableViewGoods: TcxGridDBTableView;
     Code: TcxGridDBColumn;
-    clGoodsName: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
     cxGridLevelGoods: TcxGridLevel;
     cxLeftSplitter: TcxSplitter;
     CDSContractGoods: TClientDataSet;
@@ -164,15 +174,15 @@ type
     dsdDBViewAddOnGoods: TdsdDBViewAddOn;
     spSelectContractGoods: TdsdStoredProc;
     spInsertUpdateContractGoods: TdsdStoredProc;
-    clGoodsKindName: TcxGridDBColumn;
-    clPrice: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
     InsertRecordGoods: TInsertRecord;
     GoodsChoiceForm: TOpenChoiceForm;
     bbRecordGoods: TdxBarButton;
     GoodsKindChoiceForm: TOpenChoiceForm;
     actUpdateDSGoods: TdsdUpdateDataSet;
-    clPartnerCode: TcxGridDBColumn;
-    clGoodsCode: TcxGridDBColumn;
+    PartnerCode: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
     spErasedUnErasedPartner: TdsdStoredProc;
     spErasedUnErasedGoods: TdsdStoredProc;
     dsdSetErasedPartner: TdsdUpdateErased;
@@ -191,22 +201,22 @@ type
     bbProtocolOpenFormCondition: TdxBarButton;
     bbProtocolOpenFormPartner: TdxBarButton;
     bbProtocolOpenFormGoods: TdxBarButton;
-    clPriceListName: TcxGridDBColumn;
+    PriceListName: TcxGridDBColumn;
     isConnected: TcxGridDBColumn;
-    clGoodsPropertyName: TcxGridDBColumn;
-    clRetailName: TcxGridDBColumn;
+    GoodsPropertyName: TcxGridDBColumn;
+    RetailName: TcxGridDBColumn;
     GoodsPropertyChoiceForm: TOpenChoiceForm;
-    clContractTermKindName: TcxGridDBColumn;
-    clTerm: TcxGridDBColumn;
-    clEndDate_Term: TcxGridDBColumn;
+    ContractTermKindName: TcxGridDBColumn;
+    Term: TcxGridDBColumn;
+    EndDate_Term: TcxGridDBColumn;
     Panel1: TPanel;
-    colContractSendName: TcxGridDBColumn;
+    ContractSendName: TcxGridDBColumn;
     ContractSendChoiceForm: TOpenChoiceForm;
     spUpdateVat: TdsdStoredProc;
     actUpdateVat: TdsdExecStoredProc;
     bbCustom: TdxBarButton;
-    clisVat: TcxGridDBColumn;
-    clCurrencyName: TcxGridDBColumn;
+    isVat: TcxGridDBColumn;
+    CurrencyName: TcxGridDBColumn;
 
   private
     { Private declarations }

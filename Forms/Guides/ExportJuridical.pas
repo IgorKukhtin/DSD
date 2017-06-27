@@ -27,8 +27,8 @@ type
   TExportJuridicalForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
     ExportKindName: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
@@ -56,7 +56,7 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     RetailName: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
-    clErased: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     ContactPersonName: TcxGridDBColumn;
     InfoMoneyName: TcxGridDBColumn;

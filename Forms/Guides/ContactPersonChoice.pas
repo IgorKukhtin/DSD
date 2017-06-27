@@ -27,8 +27,8 @@ type
   TContactPersonChoiceForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -53,15 +53,15 @@ type
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
-    clErased: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clPartnerName: TcxGridDBColumn;
-    clMail: TcxGridDBColumn;
-    clPhone: TcxGridDBColumn;
-    clJuridicalName: TcxGridDBColumn;
-    clContractName: TcxGridDBColumn;
-    clContactPersonKindName: TcxGridDBColumn;
+    PartnerName: TcxGridDBColumn;
+    Mail: TcxGridDBColumn;
+    Phone: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    ContractName: TcxGridDBColumn;
+    ContactPersonKindName: TcxGridDBColumn;
     cxLabel6: TcxLabel;
     edPartner: TcxButtonEdit;
     PartnerGuides: TdsdGuides;

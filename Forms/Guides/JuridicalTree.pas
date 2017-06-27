@@ -54,10 +54,10 @@ type
     cxSplitter: TcxSplitter;
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    ceTreeState: TcxGridDBColumn;
-    ceCode: TcxGridDBColumn;
-    ceJuridicalName: TcxGridDBColumn;
-    ceisErased: TcxGridDBColumn;
+    isLeaf: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     GridDS: TDataSource;
@@ -66,7 +66,7 @@ type
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     dsdDBTreeAddOn: TdsdDBTreeAddOn;
-    clOKPO: TcxGridDBColumn;
+    OKPO: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
   private

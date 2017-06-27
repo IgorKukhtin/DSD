@@ -46,7 +46,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clBranchName: TcxGridDBColumn
+      object BranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
         DataBinding.FieldName = 'BranchName'
         HeaderAlignmentHorz = taCenter
@@ -54,7 +54,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         Options.Editing = False
         Width = 60
       end
-      object ceCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
@@ -62,7 +62,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         Options.Editing = False
         Width = 40
       end
-      object ceName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
@@ -70,7 +70,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         Options.Editing = False
         Width = 150
       end
-      object clOKPO: TcxGridDBColumn
+      object OKPO: TcxGridDBColumn
         Caption = #1054#1050#1055#1054
         DataBinding.FieldName = 'OKPO'
         Visible = False
@@ -79,7 +79,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         Options.Editing = False
         Width = 50
       end
-      object clRetailName: TcxGridDBColumn
+      object RetailName: TcxGridDBColumn
         Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
         DataBinding.FieldName = 'RetailName'
         HeaderAlignmentHorz = taCenter
@@ -87,7 +87,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         Options.Editing = False
         Width = 100
       end
-      object clJuridicalGroupName: TcxGridDBColumn
+      object JuridicalGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'JuridicalGroupName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -255,7 +255,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object ceIsErased: TcxGridDBColumn
+      object IsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
@@ -473,10 +473,12 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
       FormName = 'TJuridicalEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = GridDS
@@ -492,6 +494,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
       FormName = 'TJuridicalEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -499,6 +502,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       ActionType = acUpdate
@@ -515,6 +519,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -522,6 +527,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -529,6 +535,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -571,12 +578,14 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
       FormName = 'TRetailForm'
       FormNameParam.Value = 'TRetailForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'RetailId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -584,6 +593,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
           Component = MasterCDS
           ComponentItem = 'RetailName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -595,12 +605,14 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
       FormName = 'TRetailReportForm'
       FormNameParam.Value = 'TRetailReportForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'RetailReportId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -608,6 +620,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
           Component = MasterCDS
           ComponentItem = 'RetailReportName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -619,12 +632,14 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
       FormName = 'TPriceListForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PriceListPromoId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -632,6 +647,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
           Component = MasterCDS
           ComponentItem = 'PriceListPromoName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -643,12 +659,14 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
       FormName = 'TPriceListForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PriceListId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -656,6 +674,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
           Component = MasterCDS
           ComponentItem = 'PriceListName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -669,6 +688,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
           Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -676,12 +696,14 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -689,6 +711,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -723,12 +746,14 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
       FormName = 'TJuridicalGroup_ObjectForm'
       FormNameParam.Value = 'TJuridicalGroup_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalGroupId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -736,6 +761,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
           Component = MasterCDS
           ComponentItem = 'JuridicalGroupName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -770,6 +796,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         Component = GuidesBranch
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 152
@@ -786,6 +813,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 152
@@ -830,6 +858,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBranchId'
@@ -837,6 +866,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         Component = GuidesBranch
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outBranchName'
@@ -844,6 +874,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         Component = MasterCDS
         ComponentItem = 'BranchName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
@@ -851,6 +882,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioisMovement'
@@ -859,6 +891,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         ComponentItem = 'isMovement'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioisAccount'
@@ -867,6 +900,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         ComponentItem = 'isAccount'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioisTransport'
@@ -875,6 +909,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         ComponentItem = 'isTransport'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioisQuality'
@@ -883,6 +918,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         ComponentItem = 'isQuality'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioisPack'
@@ -891,6 +927,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         ComponentItem = 'isPack'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioisSpec'
@@ -899,6 +936,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         ComponentItem = 'isSpec'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioisTax'
@@ -907,6 +945,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         ComponentItem = 'isTax'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioisTransportBill'
@@ -915,6 +954,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         ComponentItem = 'isTransportBill'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioCountMovement'
@@ -923,6 +963,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         ComponentItem = 'CountMovement'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioCountAccount'
@@ -931,6 +972,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         ComponentItem = 'CountAccount'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioCountTransport'
@@ -939,6 +981,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         ComponentItem = 'CountTransport'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioCountQuality'
@@ -947,6 +990,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         ComponentItem = 'CountQuality'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioCountPack'
@@ -955,6 +999,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         ComponentItem = 'CountPack'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioCountSpec'
@@ -963,6 +1008,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         ComponentItem = 'CountSpec'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioCountTax'
@@ -971,6 +1017,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         ComponentItem = 'CountTax'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioCountTransportBill'
@@ -979,6 +1026,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         ComponentItem = 'CountTransportBill'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 376
@@ -989,6 +1037,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
     LookupControl = edBranch
     FormNameParam.Value = 'TBranch_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBranch_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -998,6 +1047,7 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         Component = GuidesBranch
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1006,17 +1056,20 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_Object_Member'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 768
     Top = 120
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item

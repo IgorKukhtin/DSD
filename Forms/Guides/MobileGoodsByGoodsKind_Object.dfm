@@ -68,7 +68,7 @@ object MobileGoodsByGoodsKind_ObjectForm: TMobileGoodsByGoodsKind_ObjectForm
       OptionsView.HeaderHeight = 50
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clGoodsGroupNameFull: TcxGridDBColumn
+      object GoodsGroupNameFull: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
         DataBinding.FieldName = 'GoodsGroupNameFull'
         HeaderAlignmentHorz = taCenter
@@ -76,7 +76,7 @@ object MobileGoodsByGoodsKind_ObjectForm: TMobileGoodsByGoodsKind_ObjectForm
         Options.Editing = False
         Width = 209
       end
-      object clGoodsGroupName: TcxGridDBColumn
+      object GoodsGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'GoodsGroupName'
         Visible = False
@@ -146,7 +146,7 @@ object MobileGoodsByGoodsKind_ObjectForm: TMobileGoodsByGoodsKind_ObjectForm
         Options.Editing = False
         Width = 122
       end
-      object ceisErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'

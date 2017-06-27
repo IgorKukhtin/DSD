@@ -5,7 +5,7 @@ inherited GoodsExternalForm: TGoodsExternalForm
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.Params = FormParams
   ExplicitWidth = 869
-  ExplicitHeight = 534
+  ExplicitHeight = 535
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -41,7 +41,7 @@ inherited GoodsExternalForm: TGoodsExternalForm
             Options.Editing = False
             Width = 58
           end
-          object clName: TcxGridDBColumn
+          object Name: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             HeaderAlignmentHorz = taCenter
@@ -49,7 +49,7 @@ inherited GoodsExternalForm: TGoodsExternalForm
             Options.Editing = False
             Width = 282
           end
-          object clGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -64,7 +64,7 @@ inherited GoodsExternalForm: TGoodsExternalForm
             HeaderAlignmentVert = vaCenter
             Width = 330
           end
-          object colGoodskindName: TcxGridDBColumn
+          object GoodskindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodskindName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -79,7 +79,7 @@ inherited GoodsExternalForm: TGoodsExternalForm
             HeaderAlignmentVert = vaCenter
             Width = 95
           end
-          object colisErased: TcxGridDBColumn
+          object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             Visible = False
@@ -137,12 +137,14 @@ inherited GoodsExternalForm: TGoodsExternalForm
       FormName = 'TGoods_ObjectForm'
       FormNameParam.Value = 'TGoods_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -150,6 +152,7 @@ inherited GoodsExternalForm: TGoodsExternalForm
           Component = MasterCDS
           ComponentItem = 'GoodsName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -161,12 +164,14 @@ inherited GoodsExternalForm: TGoodsExternalForm
       FormName = 'TGoodsKind_ObjectForm'
       FormNameParam.Value = 'TGoodsKind_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -174,6 +179,7 @@ inherited GoodsExternalForm: TGoodsExternalForm
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -251,11 +257,13 @@ inherited GoodsExternalForm: TGoodsExternalForm
         Name = 'inUnitId'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 416
     Top = 152
@@ -271,6 +279,7 @@ inherited GoodsExternalForm: TGoodsExternalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -278,6 +287,7 @@ inherited GoodsExternalForm: TGoodsExternalForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindId'
@@ -285,6 +295,7 @@ inherited GoodsExternalForm: TGoodsExternalForm
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 523

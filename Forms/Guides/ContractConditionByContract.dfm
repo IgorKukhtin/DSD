@@ -25,7 +25,6 @@ object ContractConditionByContractForm: TContractConditionByContractForm
     Height = 354
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 644
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -34,7 +33,7 @@ object ContractConditionByContractForm: TContractConditionByContractForm
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clContractConditionKindName
+      OptionsBehavior.IncSearchItem = ContractConditionKindName
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
@@ -45,7 +44,7 @@ object ContractConditionByContractForm: TContractConditionByContractForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clBonusKindName: TcxGridDBColumn
+      object BonusKindName: TcxGridDBColumn
         Caption = #1042#1080#1076#1099' '#1073#1086#1085#1091#1089#1086#1074
         DataBinding.FieldName = 'BonusKindName'
         HeaderAlignmentHorz = taCenter
@@ -53,7 +52,7 @@ object ContractConditionByContractForm: TContractConditionByContractForm
         Options.Editing = False
         Width = 148
       end
-      object clContractConditionKindName: TcxGridDBColumn
+      object ContractConditionKindName: TcxGridDBColumn
         Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
         DataBinding.FieldName = 'ContractConditionKindName'
         HeaderAlignmentHorz = taCenter
@@ -61,7 +60,7 @@ object ContractConditionByContractForm: TContractConditionByContractForm
         Options.Editing = False
         Width = 152
       end
-      object clInfoMoneyName: TcxGridDBColumn
+      object InfoMoneyName: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'lInfoMoneyName'
         HeaderAlignmentHorz = taCenter
@@ -69,7 +68,7 @@ object ContractConditionByContractForm: TContractConditionByContractForm
         Options.Editing = False
         Width = 116
       end
-      object colContractSendName: TcxGridDBColumn
+      object ContractSendName: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1075'. '#1084#1072#1088#1082#1077#1090#1080#1085#1075
         DataBinding.FieldName = 'ContractSendName'
         HeaderAlignmentHorz = taCenter
@@ -78,21 +77,21 @@ object ContractConditionByContractForm: TContractConditionByContractForm
         Options.Editing = False
         Width = 82
       end
-      object clValue: TcxGridDBColumn
+      object Value: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'Value'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 72
       end
-      object clComment: TcxGridDBColumn
+      object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 79
       end
-      object colisErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         Visible = False
@@ -117,7 +116,7 @@ object ContractConditionByContractForm: TContractConditionByContractForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = clContractConditionKindName
+        Component = ContractConditionKindName
         Properties.Strings = (
           'Width')
       end>
@@ -229,6 +228,7 @@ object ContractConditionByContractForm: TContractConditionByContractForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'ContractConditionKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -236,12 +236,14 @@ object ContractConditionByContractForm: TContractConditionByContractForm
           Component = ClientDataSet
           ComponentItem = 'ContractConditionKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BonusKindId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'BonusKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BonusKindName'
@@ -249,6 +251,7 @@ object ContractConditionByContractForm: TContractConditionByContractForm
           Component = ClientDataSet
           ComponentItem = 'BonusKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Value'
@@ -256,6 +259,7 @@ object ContractConditionByContractForm: TContractConditionByContractForm
           Component = ClientDataSet
           ComponentItem = 'Value'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Comment'
@@ -263,6 +267,7 @@ object ContractConditionByContractForm: TContractConditionByContractForm
           Component = ClientDataSet
           ComponentItem = 'Comment'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -282,6 +287,7 @@ object ContractConditionByContractForm: TContractConditionByContractForm
         Component = FormParams
         ComponentItem = 'inContractId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 144
@@ -318,6 +324,7 @@ object ContractConditionByContractForm: TContractConditionByContractForm
         Name = 'inContractId'
         Value = Null
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 424
     Top = 152

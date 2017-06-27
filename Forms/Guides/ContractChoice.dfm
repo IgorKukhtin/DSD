@@ -4,7 +4,7 @@ inherited ContractChoiceForm: TContractChoiceForm
   ClientWidth = 853
   AddOnFormData.Params = FormParams
   ExplicitWidth = 869
-  ExplicitHeight = 534
+  ExplicitHeight = 535
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -32,7 +32,7 @@ inherited ContractChoiceForm: TContractChoiceForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clContractStateKindName: TcxGridDBColumn
+          object ContractStateKindName: TcxGridDBColumn
             Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractStateKindCode'
             PropertiesClassName = 'TcxImageComboBoxProperties'
@@ -65,42 +65,42 @@ inherited ContractChoiceForm: TContractChoiceForm
             Options.Editing = False
             Width = 76
           end
-          object clCode: TcxGridDBColumn
+          object Code: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'Code'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colInvNumber: TcxGridDBColumn
+          object InvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
           end
-          object clContractTagName: TcxGridDBColumn
+          object ContractTagName: TcxGridDBColumn
             Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractTagName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
           end
-          object colContractKindName: TcxGridDBColumn
+          object ContractKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1076#1086#1075#1086#1074#1086#1088#1072
             DataBinding.FieldName = 'ContractKindName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
-          object colStartDate: TcxGridDBColumn
+          object StartDate: TcxGridDBColumn
             Caption = #1044#1077#1081#1089#1090#1074'. '#1089
             DataBinding.FieldName = 'StartDate'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
-          object clEndDate: TcxGridDBColumn
+          object EndDate: TcxGridDBColumn
             Caption = #1044#1077#1081#1089#1090#1074'. '#1076#1086
             DataBinding.FieldName = 'EndDate'
             Visible = False
@@ -108,7 +108,7 @@ inherited ContractChoiceForm: TContractChoiceForm
             Options.Editing = False
             Width = 70
           end
-          object clCurrencyName: TcxGridDBColumn
+          object CurrencyName: TcxGridDBColumn
             Caption = #1042#1072#1083#1102#1090#1072
             DataBinding.FieldName = 'CurrencyName'
             HeaderAlignmentHorz = taCenter
@@ -116,7 +116,7 @@ inherited ContractChoiceForm: TContractChoiceForm
             Options.Editing = False
             Width = 60
           end
-          object colJuridicalCode: TcxGridDBColumn
+          object JuridicalCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1102#1088'. '#1083'.'
             DataBinding.FieldName = 'JuridicalCode'
             Visible = False
@@ -124,28 +124,28 @@ inherited ContractChoiceForm: TContractChoiceForm
             Options.Editing = False
             Width = 45
           end
-          object colJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 120
           end
-          object clOKPO: TcxGridDBColumn
+          object OKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'OKPO'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
           end
-          object clInfoMoneyCode: TcxGridDBColumn
+          object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 45
           end
-          object clInfoMoneyGroupName: TcxGridDBColumn
+          object InfoMoneyGroupName: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -153,7 +153,7 @@ inherited ContractChoiceForm: TContractChoiceForm
             Options.Editing = False
             Width = 90
           end
-          object clInfoMoneyDestinationName: TcxGridDBColumn
+          object InfoMoneyDestinationName: TcxGridDBColumn
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -161,14 +161,14 @@ inherited ContractChoiceForm: TContractChoiceForm
             Options.Editing = False
             Width = 70
           end
-          object colInfoMoneyName: TcxGridDBColumn
+          object InfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 90
           end
-          object colPaidKindName: TcxGridDBColumn
+          object PaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
             Visible = False
@@ -176,7 +176,7 @@ inherited ContractChoiceForm: TContractChoiceForm
             Options.Editing = False
             Width = 30
           end
-          object colChangePercent: TcxGridDBColumn
+          object ChangePercent: TcxGridDBColumn
             Caption = '(-)% '#1089#1082'. (+)% '#1085#1072#1094
             DataBinding.FieldName = 'ChangePercent'
             Visible = False
@@ -185,7 +185,7 @@ inherited ContractChoiceForm: TContractChoiceForm
             Options.Editing = False
             Width = 70
           end
-          object colContractComment: TcxGridDBColumn
+          object ContractComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractComment'
             Visible = False
@@ -193,7 +193,7 @@ inherited ContractChoiceForm: TContractChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colisErased: TcxGridDBColumn
+          object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             Visible = False

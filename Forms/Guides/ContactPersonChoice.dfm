@@ -37,7 +37,7 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
+      OptionsBehavior.IncSearchItem = Name
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -50,19 +50,19 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
         Width = 56
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1060#1048#1054
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Width = 220
       end
-      object clPhone: TcxGridDBColumn
+      object Phone: TcxGridDBColumn
         Caption = #1058#1077#1083#1077#1092#1086#1085
         DataBinding.FieldName = 'Phone'
         GroupSummaryAlignment = taCenter
@@ -70,7 +70,7 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 116
       end
-      object clMail: TcxGridDBColumn
+      object Mail: TcxGridDBColumn
         Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1095#1090#1072
         DataBinding.FieldName = 'Mail'
         GroupSummaryAlignment = taCenter
@@ -78,7 +78,7 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 120
       end
-      object clPartnerName: TcxGridDBColumn
+      object PartnerName: TcxGridDBColumn
         Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
         DataBinding.FieldName = 'PartnerName'
         GroupSummaryAlignment = taCenter
@@ -86,27 +86,27 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 112
       end
-      object clJuridicalName: TcxGridDBColumn
+      object JuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
         Visible = False
         HeaderAlignmentVert = vaCenter
         Width = 140
       end
-      object clContractName: TcxGridDBColumn
+      object ContractName: TcxGridDBColumn
         Caption = #1044#1086#1075#1086#1074#1086#1088
         DataBinding.FieldName = 'ContractName'
         Visible = False
         HeaderAlignmentVert = vaCenter
         Width = 88
       end
-      object clContactPersonKindName: TcxGridDBColumn
+      object ContactPersonKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1082#1086#1085#1090#1072#1082#1090#1072
         DataBinding.FieldName = 'ContactPersonKindName'
         HeaderAlignmentVert = vaCenter
         Width = 66
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
@@ -381,22 +381,26 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
       FormName = 'TContactPersonEditForm'
       FormNameParam.Value = 'TContactPersonEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerId'
           Value = ''
           Component = PartnerGuides
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContactPersonKindId'
           Value = ''
           Component = ContactPersonKindGuides
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = DataSource
@@ -412,6 +416,7 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
       FormName = 'TContactPersonEditForm'
       FormNameParam.Value = 'TContactPersonEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -419,6 +424,7 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       ActionType = acUpdate
@@ -467,12 +473,14 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Phone'
@@ -480,6 +488,7 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
           Component = ClientDataSet
           ComponentItem = 'Phone'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Mail'
@@ -487,6 +496,7 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
           Component = ClientDataSet
           ComponentItem = 'Mail'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -517,6 +527,7 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
         Component = PartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContactPersonKindId'
@@ -524,6 +535,7 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
         Component = ContactPersonKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 40
@@ -544,6 +556,7 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 360
@@ -582,6 +595,7 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
     LookupControl = edPartner
     FormNameParam.Value = 'TPartner_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPartner_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -591,6 +605,7 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
         Component = PartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -599,6 +614,7 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 568
     Top = 72
@@ -608,6 +624,7 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
     LookupControl = edContactPersonKind
     FormNameParam.Value = 'TContactPersonKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContactPersonKindForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -617,6 +634,7 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
         Component = ContactPersonKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -625,6 +643,7 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 640
     Top = 104
@@ -636,12 +655,14 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
         Value = ''
         Component = PartnerGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContactPersonKindId'
         Value = ''
         Component = ContactPersonKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerName'
@@ -649,6 +670,7 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
         Component = PartnerGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContactPersonKindName'
@@ -656,12 +678,14 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
         Component = ContactPersonKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 232
     Top = 240
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item

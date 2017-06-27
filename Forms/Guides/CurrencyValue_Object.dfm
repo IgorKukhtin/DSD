@@ -33,7 +33,7 @@ object CurrencyValue_ObjectForm: TCurrencyValue_ObjectForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
+      OptionsBehavior.IncSearchItem = Name
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -47,14 +47,14 @@ object CurrencyValue_ObjectForm: TCurrencyValue_ObjectForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1052#1077#1078#1076#1091#1085#1072#1088#1086#1076#1085#1099#1081' '#1082#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 116
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
@@ -75,14 +75,14 @@ object CurrencyValue_ObjectForm: TCurrencyValue_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object clInternalName: TcxGridDBColumn
+      object InternalName: TcxGridDBColumn
         Caption = #1052#1077#1078#1076#1091#1085#1072#1088#1086#1076#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'InternalName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 166
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         Visible = False
@@ -109,7 +109,7 @@ object CurrencyValue_ObjectForm: TCurrencyValue_ObjectForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = clName
+        Component = Name
         Properties.Strings = (
           'Width')
       end
@@ -273,6 +273,7 @@ object CurrencyValue_ObjectForm: TCurrencyValue_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -280,6 +281,7 @@ object CurrencyValue_ObjectForm: TCurrencyValue_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyValue'
@@ -287,6 +289,7 @@ object CurrencyValue_ObjectForm: TCurrencyValue_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'CurrencyValue'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ParValue'
@@ -294,6 +297,7 @@ object CurrencyValue_ObjectForm: TCurrencyValue_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'ParValue'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -318,11 +322,12 @@ object CurrencyValue_ObjectForm: TCurrencyValue_ObjectForm
     Params = <
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCurrencyFromId'
@@ -330,6 +335,7 @@ object CurrencyValue_ObjectForm: TCurrencyValue_ObjectForm
         Component = FormParams
         ComponentItem = 'inCurrencyFromId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 160
@@ -372,11 +378,13 @@ object CurrencyValue_ObjectForm: TCurrencyValue_ObjectForm
         Value = '0'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCurrencyFromId'
         Value = Null
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 416
     Top = 152

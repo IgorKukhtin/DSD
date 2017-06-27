@@ -45,7 +45,7 @@ type
     cxGridDBTableView: TcxGridDBTableView;
     GoodsCode: TcxGridDBColumn;
     PriceListName: TcxGridDBColumn;
-    ceisErased: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     GoodsName: TcxGridDBColumn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
