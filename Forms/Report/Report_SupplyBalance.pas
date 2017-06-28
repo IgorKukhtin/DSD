@@ -13,12 +13,23 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, cxCheckBox, cxSplitter;
+  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, cxCheckBox, cxSplitter,
+  dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
+  dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue;
 
 type
   TReport_SupplyBalanceForm = class(TAncestorReportForm)
-    clGoodsCode: TcxGridDBColumn;
-    clGoodsName: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
     Color_RemainsDays: TcxGridDBColumn;
     RemainsStart: TcxGridDBColumn;
     cxLabel4: TcxLabel;
@@ -28,10 +39,10 @@ type
     CountOut_oth: TcxGridDBColumn;
     CountIncome: TcxGridDBColumn;
     RemainsDays: TcxGridDBColumn;
-    clGoodsKindName: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
     CountOnDay: TcxGridDBColumn;
     RemainsEnd: TcxGridDBColumn;
-    clMeasureName: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     UnitGuides: TdsdGuides;
     edUnit: TcxButtonEdit;
@@ -58,9 +69,9 @@ type
     cxLabel5: TcxLabel;
     edJuridical: TcxButtonEdit;
     JuridicalGuides: TdsdGuides;
-    colComment: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
     OrderJournal: TdsdOpenForm;
-    colMovementId_List: TcxGridDBColumn;
+    MovementId_List: TcxGridDBColumn;
     ChildCDS: TClientDataSet;
     ChildDS: TDataSource;
     ChildViewAddOn: TdsdDBViewAddOn;

@@ -3,8 +3,10 @@ inherited Report_FoundersForm: TReport_FoundersForm
   ClientHeight = 555
   ClientWidth = 1103
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -466
+  ExplicitTop = -101
   ExplicitWidth = 1119
-  ExplicitHeight = 593
+  ExplicitHeight = 594
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -70,12 +72,12 @@ inherited Report_FoundersForm: TReport_FoundersForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colServiceSumm
+              Column = ServiceSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colMoneySumm
+              Column = MoneySumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -121,12 +123,12 @@ inherited Report_FoundersForm: TReport_FoundersForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colServiceSumm
+              Column = ServiceSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colMoneySumm
+              Column = MoneySumm
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -226,7 +228,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colServiceSumm: TcxGridDBColumn
+          object ServiceSumm: TcxGridDBColumn
             Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1086
             DataBinding.FieldName = 'ServiceSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -237,7 +239,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
             Options.Editing = False
             Width = 80
           end
-          object colMoneySumm: TcxGridDBColumn
+          object MoneySumm: TcxGridDBColumn
             Caption = #1042#1099#1087#1083#1072#1095#1077#1085#1086
             DataBinding.FieldName = 'MoneySumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -312,7 +314,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colInfoMoneyCode: TcxGridDBColumn
+          object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -321,7 +323,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
             Options.Editing = False
             Width = 45
           end
-          object colInfoMoneyGroupName: TcxGridDBColumn
+          object InfoMoneyGroupName: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -330,7 +332,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
             Options.Editing = False
             Width = 100
           end
-          object colInfoMoneyDestinationName: TcxGridDBColumn
+          object InfoMoneyDestinationName: TcxGridDBColumn
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -339,7 +341,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
             Options.Editing = False
             Width = 100
           end
-          object colInfoMoneyName: TcxGridDBColumn
+          object InfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
@@ -348,7 +350,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
             Options.Editing = False
             Width = 100
           end
-          object colAccountName: TcxGridDBColumn
+          object AccountName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090
             DataBinding.FieldName = 'AccountName'
             Visible = False

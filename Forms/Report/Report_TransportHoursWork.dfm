@@ -105,17 +105,17 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
         item
           Format = ',0.##'
           Kind = skSum
-          Column = clHoursWork
+          Column = HoursWork
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = clHoursAdd
+          Column = HoursAdd
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = clWeight
+          Column = Weight
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -145,7 +145,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
         item
           Format = ',0.##'
           Kind = skSum
-          Column = clHoursWork
+          Column = HoursWork
         end
         item
           Format = ',0.00'
@@ -154,7 +154,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
         item
           Format = ',0.##'
           Kind = skSum
-          Column = clHoursAdd
+          Column = HoursAdd
         end
         item
           Format = ',0.00'
@@ -189,7 +189,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
         item
           Format = ',0.##'
           Kind = skSum
-          Column = clWeight
+          Column = Weight
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -204,13 +204,13 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clBranchName: TcxGridDBColumn
+      object BranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
         DataBinding.FieldName = 'BranchName'
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object clPersonalDriverName: TcxGridDBColumn
+      object PersonalDriverName: TcxGridDBColumn
         Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
         DataBinding.FieldName = 'PersonalDriverName'
         HeaderAlignmentHorz = taCenter
@@ -219,7 +219,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
         Options.Editing = False
         Width = 140
       end
-      object clRouteName: TcxGridDBColumn
+      object RouteName: TcxGridDBColumn
         Caption = #1052#1072#1088#1096#1088#1091#1090
         DataBinding.FieldName = 'RouteName'
         HeaderAlignmentHorz = taCenter
@@ -228,7 +228,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
         Options.Editing = False
         Width = 120
       end
-      object clRouteKindName: TcxGridDBColumn
+      object RouteKindName: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1084#1072#1088#1096#1088#1091#1090#1072
         DataBinding.FieldName = 'RouteKindName'
         HeaderAlignmentHorz = taCenter
@@ -237,7 +237,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
         Options.Editing = False
         Width = 100
       end
-      object clRouteKindFreightName: TcxGridDBColumn
+      object RouteKindFreightName: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1075#1088#1091#1079#1072
         DataBinding.FieldName = 'RouteKindFreightName'
         HeaderAlignmentHorz = taCenter
@@ -246,7 +246,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
         Options.Editing = False
         Width = 100
       end
-      object clWeight: TcxGridDBColumn
+      object Weight: TcxGridDBColumn
         Caption = #1042#1077#1089' '#1075#1088#1091#1079#1072', '#1082#1075
         DataBinding.FieldName = 'Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -258,7 +258,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
         Options.Editing = False
         Width = 80
       end
-      object clHoursWork: TcxGridDBColumn
+      object HoursWork: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1095#1072#1089#1086#1074
         DataBinding.FieldName = 'HoursWork'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -270,7 +270,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
         Options.Editing = False
         Width = 91
       end
-      object clHoursAdd: TcxGridDBColumn
+      object HoursAdd: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1073#1072#1074#1083#1077#1085#1085#1099#1093' '#1095#1072#1089#1086#1074
         DataBinding.FieldName = 'HoursAdd'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -282,7 +282,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
         Options.Editing = False
         Width = 92
       end
-      object clInvNumber: TcxGridDBColumn
+      object InvNumber: TcxGridDBColumn
         Caption = #8470' '#1087#1091#1090#1077#1074#1086#1075#1086' '#1083#1080#1089#1090#1072
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
@@ -291,7 +291,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
         Options.Editing = False
         Width = 80
       end
-      object clOperDate: TcxGridDBColumn
+      object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1087#1091#1090#1077#1074#1086#1075#1086' '#1083#1080#1089#1090#1072
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentHorz = taCenter
@@ -541,6 +541,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
       FormName = 'TReport_TransportHoursWorkDialogForm'
       FormNameParam.Value = 'TReport_TransportHoursWorkDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -548,6 +549,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -555,6 +557,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PersonalDriverId'
@@ -563,6 +566,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
           ComponentItem = 'Key'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PersonalDriverName'
@@ -571,6 +575,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchId'
@@ -578,6 +583,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
           Component = BranchGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchName'
@@ -586,6 +592,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -606,6 +613,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -613,18 +621,21 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalDriverId'
         Value = ''
         Component = PersonalDriverGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBranchId'
         Value = ''
         Component = BranchGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 152
@@ -656,6 +667,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -675,6 +687,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
     LookupControl = edPersonalDriver
     FormNameParam.Value = 'TPersonal_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -684,6 +697,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
         Component = PersonalDriverGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -692,6 +706,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 496
     Top = 32
@@ -701,6 +716,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
     LookupControl = edBranch
     FormNameParam.Value = 'TBranchForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBranchForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -711,6 +727,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -719,6 +736,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 760
     Top = 27

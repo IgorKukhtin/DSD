@@ -847,7 +847,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         Options.Editing = False
         Width = 100
       end
-      object clUnitCode: TcxGridDBColumn
+      object UnitCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1087#1086#1076#1088#1072#1079#1076'.'
         DataBinding.FieldName = 'UnitCode'
         Visible = False
@@ -856,7 +856,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         Options.Editing = False
         Width = 45
       end
-      object clUnitName: TcxGridDBColumn
+      object UnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1080#1103
         DataBinding.FieldName = 'UnitName'
         HeaderAlignmentHorz = taCenter

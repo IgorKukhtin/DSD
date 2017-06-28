@@ -24,7 +24,6 @@ object Report_FuelForm: TReport_FuelForm
     Height = 341
     Align = alClient
     TabOrder = 0
-    ExplicitTop = 58
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -234,7 +233,7 @@ object Report_FuelForm: TReport_FuelForm
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object colBranchName: TcxGridDBColumn
+      object BranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
         DataBinding.FieldName = 'BranchName'
         HeaderAlignmentHorz = taCenter
@@ -626,32 +625,39 @@ object Report_FuelForm: TReport_FuelForm
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PeriodEnd'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'FuelBenzin'
           Value = '1'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'FuelDizel'
           Value = '2'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'FuelPropan'
           Value = '3'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'FuelMetan'
           Value = '4'
+          MultiSelectSeparator = ','
         end>
       ReportName = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1088#1072#1089#1093#1086#1076#1072' '#1090#1086#1087#1083#1080#1074#1072
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -662,6 +668,7 @@ object Report_FuelForm: TReport_FuelForm
       FormName = 'TReport_FuelDialogForm'
       FormNameParam.Value = 'TReport_FuelDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -669,6 +676,7 @@ object Report_FuelForm: TReport_FuelForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -676,6 +684,7 @@ object Report_FuelForm: TReport_FuelForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'FuelId'
@@ -684,6 +693,7 @@ object Report_FuelForm: TReport_FuelForm
           ComponentItem = 'Key'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'FuelName'
@@ -692,6 +702,7 @@ object Report_FuelForm: TReport_FuelForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CarId'
@@ -699,6 +710,7 @@ object Report_FuelForm: TReport_FuelForm
           Component = CarGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CarName'
@@ -707,6 +719,7 @@ object Report_FuelForm: TReport_FuelForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchId'
@@ -714,6 +727,7 @@ object Report_FuelForm: TReport_FuelForm
           Component = BranchGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchName'
@@ -722,6 +736,7 @@ object Report_FuelForm: TReport_FuelForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -742,6 +757,7 @@ object Report_FuelForm: TReport_FuelForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -749,6 +765,7 @@ object Report_FuelForm: TReport_FuelForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFuelId'
@@ -756,6 +773,7 @@ object Report_FuelForm: TReport_FuelForm
         Component = FuelGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCarId'
@@ -763,6 +781,7 @@ object Report_FuelForm: TReport_FuelForm
         Component = CarGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBranchId'
@@ -770,6 +789,7 @@ object Report_FuelForm: TReport_FuelForm
         Component = BranchGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 432
@@ -803,6 +823,7 @@ object Report_FuelForm: TReport_FuelForm
     LookupControl = edCar
     FormNameParam.Value = 'TCarForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCarForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -813,6 +834,7 @@ object Report_FuelForm: TReport_FuelForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -821,12 +843,14 @@ object Report_FuelForm: TReport_FuelForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 712
     Top = 27
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -849,6 +873,7 @@ object Report_FuelForm: TReport_FuelForm
     LookupControl = ceFuel
     FormNameParam.Value = 'TFuelForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TFuelForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -859,6 +884,7 @@ object Report_FuelForm: TReport_FuelForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -867,6 +893,7 @@ object Report_FuelForm: TReport_FuelForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 511
     Top = 23
@@ -876,6 +903,7 @@ object Report_FuelForm: TReport_FuelForm
     LookupControl = edBranch
     FormNameParam.Value = 'TBranchForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBranchForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -886,6 +914,7 @@ object Report_FuelForm: TReport_FuelForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -894,6 +923,7 @@ object Report_FuelForm: TReport_FuelForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 920
     Top = 27

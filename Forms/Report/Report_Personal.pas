@@ -14,16 +14,26 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   cxCurrencyEdit, DataModul, frxClass, frxDBSet, dsdGuides, cxButtonEdit,
   dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  cxImageComboBox, cxCheckBox;
+  cxImageComboBox, cxCheckBox, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
+  dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TReport_PersonalForm = class(TAncestorReportForm)
-    colAccountName: TcxGridDBColumn;
-    colInfoMoneyGroupName: TcxGridDBColumn;
-    colInfoMoneyDestinationName: TcxGridDBColumn;
-    colStartAmount: TcxGridDBColumn;
-    colEndAmount: TcxGridDBColumn;
-    colInfoMoneyName: TcxGridDBColumn;
+    AccountName: TcxGridDBColumn;
+    InfoMoneyGroupName: TcxGridDBColumn;
+    InfoMoneyDestinationName: TcxGridDBColumn;
+    StartAmount: TcxGridDBColumn;
+    EndAmount: TcxGridDBColumn;
+    InfoMoneyName: TcxGridDBColumn;
     dsdPrintAction: TdsdPrintAction;
     bbPrint: TdxBarButton;
     cxLabel3: TcxLabel;
@@ -38,9 +48,9 @@ type
     cxLabel6: TcxLabel;
     edAccount: TcxButtonEdit;
     GuidesAccount: TdsdGuides;
-    colInfoMoneyCode: TcxGridDBColumn;
-    colDebetSumm: TcxGridDBColumn;
-    colKreditSumm: TcxGridDBColumn;
+    InfoMoneyCode: TcxGridDBColumn;
+    DebetSumm: TcxGridDBColumn;
+    KreditSumm: TcxGridDBColumn;
     SaleJournal: TdsdOpenForm;
     ReturnInJournal: TdsdOpenForm;
     IncomeJournal: TdsdOpenForm;
@@ -63,13 +73,13 @@ type
     ServiceDate: TcxGridDBColumn;
     cbServiceDate: TcxCheckBox;
     deServiceDate: TcxDateEdit;
-    colStartAmountD: TcxGridDBColumn;
-    colStartAmountK: TcxGridDBColumn;
-    colEndAmountD: TcxGridDBColumn;
-    colEndAmountK: TcxGridDBColumn;
-    colMoneySumm: TcxGridDBColumn;
-    colServiceSumm: TcxGridDBColumn;
-    clInfoMoneyName_all: TcxGridDBColumn;
+    StartAmountD: TcxGridDBColumn;
+    StartAmountK: TcxGridDBColumn;
+    EndAmountD: TcxGridDBColumn;
+    EndAmountK: TcxGridDBColumn;
+    MoneySumm: TcxGridDBColumn;
+    ServiceSumm: TcxGridDBColumn;
+    InfoMoneyName_all: TcxGridDBColumn;
     PersonalCode: TcxGridDBColumn;
     UnitCode: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
@@ -79,7 +89,7 @@ type
     PersonalServiceListName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    colIncomeSumm: TcxGridDBColumn;
+    IncomeSumm: TcxGridDBColumn;
     SummTransportAdd: TcxGridDBColumn;
     SummTransportAddLong: TcxGridDBColumn;
     SummTransportTaxi: TcxGridDBColumn;

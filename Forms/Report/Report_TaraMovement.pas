@@ -13,7 +13,17 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxLabel,
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGrid, cxPC, cxCurrencyEdit;
+  cxGrid, cxPC, cxCurrencyEdit, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
+  dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TReport_TaraMovementForm = class(TAncestorReportForm)
@@ -24,21 +34,21 @@ type
     FormParams: TdsdFormParams;
     ObjectGuides: TdsdGuides;
     GoodsGuides: TdsdGuides;
-    colInvNumber: TcxGridDBColumn;
-    colOperDate: TcxGridDBColumn;
-    colMovementDescName: TcxGridDBColumn;
-    colLocationDescName: TcxGridDBColumn;
-    colLocationCode: TcxGridDBColumn;
-    colLocationName: TcxGridDBColumn;
-    colObjectByDescName: TcxGridDBColumn;
-    colObjectByCode: TcxGridDBColumn;
-    colObjectByName: TcxGridDBColumn;
-    colPaidKindName: TcxGridDBColumn;
-    colGoodsCode: TcxGridDBColumn;
-    colGoodsName: TcxGridDBColumn;
-    colAmountIn: TcxGridDBColumn;
-    colAmountOut: TcxGridDBColumn;
-    colPrice: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
+    MovementDescName: TcxGridDBColumn;
+    LocationDescName: TcxGridDBColumn;
+    LocationCode: TcxGridDBColumn;
+    LocationName: TcxGridDBColumn;
+    ObjectByDescName: TcxGridDBColumn;
+    ObjectByCode: TcxGridDBColumn;
+    ObjectByName: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    AmountIn: TcxGridDBColumn;
+    AmountOut: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
     mactOpenDocument: TMultiAction;
     actOpenForm: TdsdOpenForm;
     actMovementForm: TdsdExecStoredProc;
@@ -47,8 +57,8 @@ type
     cxLabel5: TcxLabel;
     ceAccountGroup: TcxButtonEdit;
     AccountGroupGuides: TdsdGuides;
-    colAccountGroupCode: TcxGridDBColumn;
-    colAccountGroupName: TcxGridDBColumn;
+    AccountGroupCode: TcxGridDBColumn;
+    AccountGroupName: TcxGridDBColumn;
   private
     { Private declarations }
   public

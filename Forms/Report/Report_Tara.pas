@@ -13,7 +13,17 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  dsdGuides, cxButtonEdit, cxCheckBox, cxCurrencyEdit;
+  dsdGuides, cxButtonEdit, cxCheckBox, cxCurrencyEdit, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TReport_TaraForm = class(TAncestorReportForm)
@@ -27,31 +37,31 @@ type
     edGoods: TcxButtonEdit;
     ObjectGuides: TdsdGuides;
     GoodsGuides: TdsdGuides;
-    colGoodsCode: TcxGridDBColumn;
-    colGoodsName: TcxGridDBColumn;
-    colGoodsGroupCode: TcxGridDBColumn;
-    colGoodsGroupName: TcxGridDBColumn;
-    colObjectCode: TcxGridDBColumn;
-    colObjectName: TcxGridDBColumn;
-    colObjectDescName: TcxGridDBColumn;
-    colObjectType: TcxGridDBColumn;
-    colBranchName: TcxGridDBColumn;
-    colJuridicalName: TcxGridDBColumn;
-    colRetailName: TcxGridDBColumn;
-    colRemainsInActive: TcxGridDBColumn;
-    colRemainsInPassive: TcxGridDBColumn;
-    colRemainsIn: TcxGridDBColumn;
-    colAmountIn: TcxGridDBColumn;
-    colAmountOut: TcxGridDBColumn;
-    colAmountInventory: TcxGridDBColumn;
-    colRemainsOutActive: TcxGridDBColumn;
-    colRemainsOutPassive: TcxGridDBColumn;
-    colRemainsOut: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    GoodsGroupCode: TcxGridDBColumn;
+    GoodsGroupName: TcxGridDBColumn;
+    ObjectCode: TcxGridDBColumn;
+    ObjectName: TcxGridDBColumn;
+    ObjectDescName: TcxGridDBColumn;
+    ObjectType: TcxGridDBColumn;
+    BranchName: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    RetailName: TcxGridDBColumn;
+    RemainsInActive: TcxGridDBColumn;
+    RemainsInPassive: TcxGridDBColumn;
+    RemainsIn: TcxGridDBColumn;
+    AmountIn: TcxGridDBColumn;
+    AmountOut: TcxGridDBColumn;
+    AmountInventory: TcxGridDBColumn;
+    RemainsOutActive: TcxGridDBColumn;
+    RemainsOutPassive: TcxGridDBColumn;
+    RemainsOut: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     dxBarButton1: TdxBarButton;
-    colAmountInBay: TcxGridDBColumn;
-    colAmountOutSale: TcxGridDBColumn;
-    colAmountLoss: TcxGridDBColumn;
+    AmountInBay: TcxGridDBColumn;
+    AmountOutSale: TcxGridDBColumn;
+    AmountLoss: TcxGridDBColumn;
     chkWithMember: TcxCheckBox;
     FormParams: TdsdFormParams;
     spGetTaraMovementDescSets: TdsdStoredProc;
@@ -64,9 +74,9 @@ type
     ceAccountGroup: TcxButtonEdit;
     cxLabel5: TcxLabel;
     AccountGroupGuides: TdsdGuides;
-    colAccountGroupName: TcxGridDBColumn;
-    colAccountGroupCode: TcxGridDBColumn;
-    colPaidKindName: TcxGridDBColumn;
+    AccountGroupName: TcxGridDBColumn;
+    AccountGroupCode: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;

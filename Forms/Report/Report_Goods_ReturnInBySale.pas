@@ -13,25 +13,36 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, cxImageComboBox;
+  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, cxImageComboBox,
+  dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
+  dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue;
 
 type
   TReport_Goods_ReturnInBySaleForm = class(TAncestorReportForm)
-    clGoodsCode: TcxGridDBColumn;
-    clGoodsName: TcxGridDBColumn;
-    clAmount: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
     FormParams: TdsdFormParams;
-    clGoodsKindName: TcxGridDBColumn;
-    clMeasureName: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
     cxLabel7: TcxLabel;
     cePartner: TcxButtonEdit;
     cxLabel5: TcxLabel;
     edPaidKind: TcxButtonEdit;
     GuidesPartner: TdsdGuides;
     PaidKindGuides: TdsdGuides;
-    clUnitName: TcxGridDBColumn;
-    clPartnerCode: TcxGridDBColumn;
-    clJuridicalCode: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    PartnerCode: TcxGridDBColumn;
+    JuridicalCode: TcxGridDBColumn;
     cxLabel8: TcxLabel;
     edGoods: TcxButtonEdit;
     GoodsGuides: TdsdGuides;
@@ -48,7 +59,7 @@ type
     SaleChoiceGuides: TdsdGuides;
     cxLabel9: TcxLabel;
     cePrice: TcxCurrencyEdit;
-    clStatusCode: TcxGridDBColumn;
+    StatusCode: TcxGridDBColumn;
     spMovementComplete: TdsdStoredProc;
     spMovementUnComplete: TdsdStoredProc;
     actComplete: TdsdChangeMovementStatus;

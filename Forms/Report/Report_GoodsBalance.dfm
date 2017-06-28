@@ -600,7 +600,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Options.Editing = False
         Width = 70
       end
-      object ceBarCode_Main: TcxGridDBColumn
+      object BarCode_Main: TcxGridDBColumn
         Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076
         DataBinding.FieldName = 'BarCode_Main'
         HeaderAlignmentHorz = taCenter

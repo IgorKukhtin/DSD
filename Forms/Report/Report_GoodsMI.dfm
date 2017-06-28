@@ -5,9 +5,10 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -230
+  ExplicitLeft = -371
+  ExplicitTop = -80
   ExplicitWidth = 1036
-  ExplicitHeight = 569
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -841,7 +842,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             Options.Editing = False
             Width = 100
           end
-          object clTradeMarkName: TcxGridDBColumn
+          object TradeMarkName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
             DataBinding.FieldName = 'TradeMarkName'
             Visible = False
@@ -849,14 +850,14 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object clGoodsGroupNameFull: TcxGridDBColumn
+          object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
-          object clGoodsGroupName: TcxGridDBColumn
+          object GoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'GoodsGroupName'
             Visible = False
@@ -864,7 +865,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object clGoodsCode: TcxGridDBColumn
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -874,14 +875,14 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             HeaderAlignmentVert = vaCenter
             Width = 35
           end
-          object clGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 151
           end
-          object clGoodsKindName: TcxGridDBColumn
+          object GoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             HeaderAlignmentHorz = taCenter
@@ -895,7 +896,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clMeasureName: TcxGridDBColumn
+          object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -1748,7 +1749,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object colInfoMoneyCode: TcxGridDBColumn
+          object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -1756,7 +1757,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
-          object colInfoMoneyGroupName: TcxGridDBColumn
+          object InfoMoneyGroupName: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -1764,7 +1765,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colInfoMoneyDestinationName: TcxGridDBColumn
+          object InfoMoneyDestinationName: TcxGridDBColumn
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -1772,14 +1773,14 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colInfoMoneyName: TcxGridDBColumn
+          object InfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 129
           end
-          object colInfoMoneyCode_goods: TcxGridDBColumn
+          object InfoMoneyCode_goods: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055' ('#1090#1086#1074'.)'
             DataBinding.FieldName = 'InfoMoneyCode_goods'
             Visible = False
@@ -1787,7 +1788,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
-          object colInfoMoneyGroupName_goods: TcxGridDBColumn
+          object InfoMoneyGroupName_goods: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1090#1086#1074'.)'
             DataBinding.FieldName = 'InfoMoneyGroupName_goods'
             Visible = False
@@ -1795,7 +1796,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colInfoMoneyDestinationName_goods: TcxGridDBColumn
+          object InfoMoneyDestinationName_goods: TcxGridDBColumn
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077' ('#1090#1086#1074'.)'
             DataBinding.FieldName = 'InfoMoneyDestinationName_goods'
             Visible = False
@@ -1803,7 +1804,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colInfoMoneyName_goods: TcxGridDBColumn
+          object InfoMoneyName_goods: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1090#1086#1074'.)'
             DataBinding.FieldName = 'InfoMoneyName_goods'
             HeaderAlignmentHorz = taCenter
@@ -2086,28 +2087,34 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           FromParam.Name = 'id'
           FromParam.Value = Null
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = '0'
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = 42005d
           FromParam.Component = deStart
           FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
           ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = 42005d
           FromParam.Component = deEnd
           FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
           ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProcList = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1076#1072#1085#1085#1099#1077' '#1089#1082#1083#1072#1076')'
@@ -2128,6 +2135,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -2135,6 +2143,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupName'
@@ -2143,6 +2152,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -2151,6 +2161,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isGoods'
@@ -2158,6 +2169,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Component = cbGoods
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isPartner'
@@ -2165,6 +2177,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Component = cbPartner
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isTradeMark'
@@ -2172,6 +2185,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Component = cbTradeMark
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isGoodsKind'
@@ -2179,6 +2193,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Component = cbGoodsKind
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
@@ -2186,6 +2201,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Component = cbPartionGoods
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescName'
@@ -2193,15 +2209,18 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Component = FormParams
           ComponentItem = 'InDescName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ReportType'
           Value = '1'
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1086#1076#1072#1078#1072' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1086#1076#1072#1078#1072' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084')'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint_Real: TdsdPrintAction
       Category = 'DSDLib'
@@ -2210,28 +2229,34 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           FromParam.Name = 'id'
           FromParam.Value = Null
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = '0'
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = 41640d
           FromParam.Component = deStart
           FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
           ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = 41640d
           FromParam.Component = deEnd
           FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
           ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProcList = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1076#1072#1085#1085#1099#1077' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')'
@@ -2253,6 +2278,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -2260,6 +2286,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupName'
@@ -2268,6 +2295,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -2276,6 +2304,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isGoods'
@@ -2283,6 +2312,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Component = cbGoods
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isPartner'
@@ -2290,6 +2320,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Component = cbPartner
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isTradeMark'
@@ -2297,6 +2328,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Component = cbTradeMark
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isGoodsKind'
@@ -2304,6 +2336,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Component = cbGoodsKind
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
@@ -2311,6 +2344,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Component = cbPartionGoods
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescName'
@@ -2318,15 +2352,18 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Component = FormParams
           ComponentItem = 'InDescName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ReportType'
           Value = '2'
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1086#1076#1072#1078#1072' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1086#1076#1072#1078#1072' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084')'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -2337,6 +2374,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
       FormName = 'TReport_GoodsMI_DialogForm'
       FormNameParam.Value = 'TReport_GoodsMI_DialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -2344,6 +2382,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -2351,6 +2390,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
@@ -2358,6 +2398,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Component = PaidKindGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -2366,6 +2407,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
@@ -2373,6 +2415,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Component = InfoMoneyGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -2381,6 +2424,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupId'
@@ -2388,6 +2432,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Component = GoodsGroupGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupName'
@@ -2396,6 +2441,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitId'
@@ -2403,6 +2449,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Component = UnitGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
@@ -2411,6 +2458,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
@@ -2418,6 +2466,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Component = JuridicalGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -2426,6 +2475,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitGroupId'
@@ -2433,6 +2483,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Component = GuidesUnitGroup
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitGroupName'
@@ -2441,6 +2492,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isGoods'
@@ -2448,6 +2500,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Component = cbGoods
           DataType = ftBoolean
           ParamType = ptInputOutput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isGoodsKind'
@@ -2455,6 +2508,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Component = cbGoodsKind
           DataType = ftBoolean
           ParamType = ptInputOutput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
@@ -2462,6 +2516,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Component = cbPartionGoods
           DataType = ftBoolean
           ParamType = ptInputOutput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isPartner'
@@ -2469,6 +2524,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Component = cbPartner
           DataType = ftBoolean
           ParamType = ptInputOutput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isTradeMark'
@@ -2476,6 +2532,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Component = cbTradeMark
           DataType = ftBoolean
           ParamType = ptInputOutput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -2499,6 +2556,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -2506,6 +2564,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescId'
@@ -2513,6 +2572,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         Component = FormParams
         ComponentItem = 'inDescId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
@@ -2520,6 +2580,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindId'
@@ -2527,6 +2588,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyId'
@@ -2534,6 +2596,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitGroupId'
@@ -2541,6 +2604,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         Component = GuidesUnitGroup
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -2548,6 +2612,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsGroupId'
@@ -2555,6 +2620,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         Component = GoodsGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsPartner'
@@ -2562,6 +2628,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         Component = cbPartner
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsTradeMark'
@@ -2569,6 +2636,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         Component = cbTradeMark
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsGoods'
@@ -2576,6 +2644,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         Component = cbGoods
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsGoodsKind'
@@ -2583,6 +2652,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         Component = cbGoodsKind
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsPartionGoods'
@@ -2590,6 +2660,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         Component = cbPartionGoods
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 192
@@ -2761,6 +2832,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
     LookupControl = edGoodsGroup
     FormNameParam.Value = 'TGoodsGroup_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsGroup_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2771,6 +2843,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2779,6 +2852,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 648
     Top = 65528
@@ -2789,6 +2863,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         Name = 'inDescId'
         Value = Null
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescName'
@@ -2796,6 +2871,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         Component = edInDescName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 328
     Top = 170
@@ -2805,6 +2881,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
     LookupControl = edUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -2815,6 +2892,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2823,6 +2901,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 384
     Top = 16
@@ -2832,6 +2911,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
     LookupControl = ceInfoMoney
     FormNameParam.Value = 'TInfoMoney_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2840,6 +2920,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2847,6 +2928,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 936
     Top = 29
@@ -2856,6 +2938,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
     LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPaidKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -2866,6 +2949,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2874,6 +2958,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 1040
   end
@@ -2882,6 +2967,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -2891,6 +2977,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2899,6 +2986,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 728
     Top = 8
@@ -2908,6 +2996,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
     LookupControl = edUnitGroup
     FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnitTreeForm'
     PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'TreeDataSet'
@@ -2919,6 +3008,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2927,6 +3017,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 336
     Top = 65528

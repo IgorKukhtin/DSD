@@ -5,8 +5,9 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -431
   ExplicitWidth = 1101
-  ExplicitHeight = 417
+  ExplicitHeight = 421
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -36,7 +37,7 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -49,12 +50,12 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountReturn
+              Column = AmountReturn
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountRem
+              Column = AmountRem
             end
             item
               Format = ',0.####'
@@ -100,7 +101,7 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -113,12 +114,12 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountReturn
+              Column = AmountReturn
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountRem
+              Column = AmountRem
             end
             item
               Format = ',0.####'
@@ -173,7 +174,7 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clUnitCode: TcxGridDBColumn
+          object UnitCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
             DataBinding.FieldName = 'UnitCode'
             Visible = False
@@ -181,14 +182,14 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object clUnitName: TcxGridDBColumn
+          object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 120
           end
-          object clJuridicalCode: TcxGridDBColumn
+          object JuridicalCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
             DataBinding.FieldName = 'JuridicalCode'
             Visible = False
@@ -196,7 +197,7 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object clJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088'.'#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             Visible = False
@@ -204,7 +205,7 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
-          object clPartnerCode: TcxGridDBColumn
+          object PartnerCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
             DataBinding.FieldName = 'PartnerCode'
             Visible = False
@@ -212,14 +213,14 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object clPartnerName: TcxGridDBColumn
+          object PartnerName: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
             DataBinding.FieldName = 'PartnerName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 200
           end
-          object clGoodsCode: TcxGridDBColumn
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             Visible = False
@@ -227,21 +228,21 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 35
           end
-          object clGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object clGoodsKindName: TcxGridDBColumn
+          object GoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object clMeasureName: TcxGridDBColumn
+          object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             Visible = False
@@ -249,7 +250,7 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object clPrice: TcxGridDBColumn
+          object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -259,7 +260,7 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object clAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'. ('#1087#1088#1086#1076#1072#1078#1072')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -269,7 +270,7 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clAmountReturn: TcxGridDBColumn
+          object AmountReturn: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'. ('#1074#1086#1079#1074#1088#1072#1090')'
             DataBinding.FieldName = 'AmountReturn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -279,7 +280,7 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clAmountRem: TcxGridDBColumn
+          object AmountRem: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1079#1085#1080#1094#1072
             DataBinding.FieldName = 'AmountRem'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -289,14 +290,14 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object clInvNumber: TcxGridDBColumn
+          object InvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object clInvNumberPartner: TcxGridDBColumn
+          object InvNumberPartner: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'InvNumberPartner'
             Visible = False
@@ -304,7 +305,7 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object clOperDate: TcxGridDBColumn
+          object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'OperDate'
             Visible = False
@@ -312,14 +313,14 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clOperDatePartner: TcxGridDBColumn
+          object OperDatePartner: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colDocumentTaxKindName: TcxGridDBColumn
+          object DocumentTaxKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
             DataBinding.FieldName = 'DocumentTaxKindName'
             HeaderAlignmentHorz = taCenter
@@ -327,7 +328,7 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
             Options.Editing = False
             Width = 80
           end
-          object clInvNumber_Master: TcxGridDBColumn
+          object InvNumber_Master: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1085#1072#1083#1086#1075'.'
             DataBinding.FieldName = 'InvNumber_Master'
             Visible = False
@@ -342,7 +343,7 @@ inherited Report_Goods_SalebyReturnInForm: TReport_Goods_SalebyReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clOperDate_Master: TcxGridDBColumn
+          object OperDate_Master: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1085#1072#1083#1086#1075'.'
             DataBinding.FieldName = 'OperDate_Master'
             HeaderAlignmentHorz = taCenter

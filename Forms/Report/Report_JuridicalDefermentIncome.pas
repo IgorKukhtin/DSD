@@ -13,23 +13,34 @@ uses
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   cxCurrencyEdit, dsdGuides, cxButtonEdit, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, frxClass, frxDBSet, cxImageComboBox;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, frxClass, frxDBSet, cxImageComboBox,
+  dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
+  dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue;
 
 type
   TReport_JuridicalDefermentIncomeForm = class(TAncestorReportForm)
-    clJuridicalName: TcxGridDBColumn;
-    colContractNumber: TcxGridDBColumn;
-    colKreditRemains: TcxGridDBColumn;
-    colDebetRemains: TcxGridDBColumn;
-    colSaleSumm: TcxGridDBColumn;
-    colDefermentPaymentRemains: TcxGridDBColumn;
-    colSaleSumm1: TcxGridDBColumn;
-    colSaleSumm2: TcxGridDBColumn;
-    colSaleSumm3: TcxGridDBColumn;
-    colSaleSumm4: TcxGridDBColumn;
-    colSaleSumm5: TcxGridDBColumn;
-    clAccountName: TcxGridDBColumn;
-    colCondition: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    ContractNumber: TcxGridDBColumn;
+    KreditRemains: TcxGridDBColumn;
+    DebetRemains: TcxGridDBColumn;
+    SaleSumm: TcxGridDBColumn;
+    DefermentPaymentRemains: TcxGridDBColumn;
+    SaleSumm1: TcxGridDBColumn;
+    SaleSumm2: TcxGridDBColumn;
+    SaleSumm3: TcxGridDBColumn;
+    SaleSumm4: TcxGridDBColumn;
+    SaleSumm5: TcxGridDBColumn;
+    AccountName: TcxGridDBColumn;
+    Condition: TcxGridDBColumn;
     edAccount: TcxButtonEdit;
     cxLabel3: TcxLabel;
     GuidesAccount: TdsdGuides;
@@ -47,35 +58,35 @@ type
     bbOther: TdxBarButton;
     actPrint: TdsdPrintAction;
     bbPribt: TdxBarButton;
-    clOKPO: TcxGridDBColumn;
-    colContractCode: TcxGridDBColumn;
-    clInfoMoneyCode: TcxGridDBColumn;
-    clInfoMoneyGroupName: TcxGridDBColumn;
-    clInfoMoneyDestinationName: TcxGridDBColumn;
-    clInfoMoneyName: TcxGridDBColumn;
-    clPaidKindName: TcxGridDBColumn;
-    clAreaName: TcxGridDBColumn;
-    clStartDate: TcxGridDBColumn;
-    clEndDate: TcxGridDBColumn;
+    OKPO: TcxGridDBColumn;
+    ContractCode: TcxGridDBColumn;
+    InfoMoneyCode: TcxGridDBColumn;
+    InfoMoneyGroupName: TcxGridDBColumn;
+    InfoMoneyDestinationName: TcxGridDBColumn;
+    InfoMoneyName: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
+    AreaName: TcxGridDBColumn;
+    StartDate: TcxGridDBColumn;
+    EndDate: TcxGridDBColumn;
     actPrintIncome: TdsdPrintAction;
     spReport_JuridicalSaleDocument: TdsdStoredProc;
     bbIncome: TdxBarButton;
     cxLabel6: TcxLabel;
     edPaidKind: TcxButtonEdit;
     GuidesPaidKind: TdsdGuides;
-    clStartContractDate: TcxGridDBColumn;
-    clRetailName: TcxGridDBColumn;
+    StartContractDate: TcxGridDBColumn;
+    RetailName: TcxGridDBColumn;
     cxLabel9: TcxLabel;
     edBranch: TcxButtonEdit;
     GuidesBranch: TdsdGuides;
-    colBranchCode: TcxGridDBColumn;
-    colBranchName: TcxGridDBColumn;
+    lBranchCode: TcxGridDBColumn;
+    BranchName: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edJuridicalGroup: TcxButtonEdit;
     GuidesJuridicalGroup: TdsdGuides;
-    clRetailName_main: TcxGridDBColumn;
-    clContractTagGroupName: TcxGridDBColumn;
-    clPersonalTradeName: TcxGridDBColumn;
+    RetailName_main: TcxGridDBColumn;
+    ContractTagGroupName: TcxGridDBColumn;
+    PersonalTradeName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
   private

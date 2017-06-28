@@ -3,8 +3,9 @@ inherited Report_GoodsForm: TReport_GoodsForm
   ClientHeight = 341
   ClientWidth = 1026
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -372
   ExplicitWidth = 1042
-  ExplicitHeight = 379
+  ExplicitHeight = 380
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -288,7 +289,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clMovementDescName: TcxGridDBColumn
+          object MovementDescName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1076#1086#1082'.'
             DataBinding.FieldName = 'MovementDescName'
             HeaderAlignmentHorz = taCenter
@@ -296,7 +297,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
             Options.Editing = False
             Width = 70
           end
-          object clInvNumber: TcxGridDBColumn
+          object InvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentHorz = taCenter
@@ -304,14 +305,14 @@ inherited Report_GoodsForm: TReport_GoodsForm
             Options.Editing = False
             Width = 70
           end
-          object clOperDate: TcxGridDBColumn
+          object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clOperDatePartner: TcxGridDBColumn
+          object OperDatePartner: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'OperDatePartner'
             Visible = False
@@ -328,7 +329,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
             Options.Editing = False
             Width = 45
           end
-          object clLocationDescName: TcxGridDBColumn
+          object LocationDescName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1084#1077#1089#1090#1072' '#1091#1095#1077#1090#1072
             DataBinding.FieldName = 'LocationDescName'
             Visible = False
@@ -337,7 +338,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
             Options.Editing = False
             Width = 70
           end
-          object clLocationCode: TcxGridDBColumn
+          object LocationCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1084#1077#1089#1090#1072' '#1091#1095'.'
             DataBinding.FieldName = 'LocationCode'
             Visible = False
@@ -346,7 +347,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
             Options.Editing = False
             Width = 45
           end
-          object clLocationName: TcxGridDBColumn
+          object LocationName: TcxGridDBColumn
             Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072
             DataBinding.FieldName = 'LocationName'
             Visible = False
@@ -355,7 +356,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
             Options.Editing = False
             Width = 100
           end
-          object clCarCode: TcxGridDBColumn
+          object CarCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1072#1074#1090#1086#1084'.'
             DataBinding.FieldName = 'CarCode'
             Visible = False
@@ -364,7 +365,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
             Options.Editing = False
             Width = 45
           end
-          object clCarName: TcxGridDBColumn
+          object CarName: TcxGridDBColumn
             Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
             DataBinding.FieldName = 'CarName'
             Visible = False
@@ -381,7 +382,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clObjectByCode: TcxGridDBColumn
+          object ObjectByCode: TcxGridDBColumn
             Caption = #1050#1086#1076' ('#1086#1090' '#1082#1086#1075#1086' / '#1050#1086#1084#1091')'
             DataBinding.FieldName = 'ObjectByCode'
             Visible = False
@@ -389,14 +390,14 @@ inherited Report_GoodsForm: TReport_GoodsForm
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
-          object clObjectByName: TcxGridDBColumn
+          object ObjectByName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086' / '#1050#1086#1084#1091
             DataBinding.FieldName = 'ObjectByName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 250
           end
-          object clPaidKindName: TcxGridDBColumn
+          object PaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
             HeaderAlignmentHorz = taCenter
@@ -404,7 +405,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
             Options.Editing = False
             Width = 55
           end
-          object clGoodsCode: TcxGridDBColumn
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074'.'
             DataBinding.FieldName = 'GoodsCode'
             Visible = False
@@ -413,7 +414,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
             Options.Editing = False
             Width = 40
           end
-          object clGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             Visible = False
@@ -422,7 +423,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
             Options.Editing = False
             Width = 70
           end
-          object clGoodsKindName: TcxGridDBColumn
+          object GoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             HeaderAlignmentHorz = taCenter
@@ -436,7 +437,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clPartionGoods: TcxGridDBColumn
+          object PartionGoods: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103
             DataBinding.FieldName = 'PartionGoods'
             HeaderAlignmentHorz = taCenter

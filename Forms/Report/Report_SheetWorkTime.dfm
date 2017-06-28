@@ -3,15 +3,15 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
   ClientHeight = 519
   ClientWidth = 828
   AddOnFormData.ExecuteDialogAction = actReport_SheetWorkTimeDialog
+  ExplicitTop = -65
   ExplicitWidth = 844
-  ExplicitHeight = 557
+  ExplicitHeight = 558
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 828
     Height = 462
     TabOrder = 3
-    ExplicitTop = 57
     ExplicitWidth = 828
     ExplicitHeight = 462
     ClientRectBottom = 462
@@ -49,7 +49,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
               Options.Moving = False
               Width = 57
             end>
-          object colUnitName: TcxGridDBBandedColumn
+          object UnitName: TcxGridDBBandedColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             Visible = False
@@ -62,7 +62,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
             Position.ColIndex = 0
             Position.RowIndex = 0
           end
-          object colMemberCode: TcxGridDBBandedColumn
+          object MemberCode: TcxGridDBBandedColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'MemberCode'
             HeaderAlignmentHorz = taCenter
@@ -73,7 +73,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
             Position.ColIndex = 1
             Position.RowIndex = 0
           end
-          object colMemberName: TcxGridDBBandedColumn
+          object MemberName: TcxGridDBBandedColumn
             Caption = #1060#1048#1054
             DataBinding.FieldName = 'MemberName'
             HeaderAlignmentHorz = taCenter
@@ -84,7 +84,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
             Position.ColIndex = 2
             Position.RowIndex = 0
           end
-          object colPositionName: TcxGridDBBandedColumn
+          object PositionName: TcxGridDBBandedColumn
             Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
             DataBinding.FieldName = 'PositionName'
             HeaderAlignmentHorz = taCenter
@@ -95,7 +95,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
             Position.ColIndex = 3
             Position.RowIndex = 0
           end
-          object colPositionLevelName: TcxGridDBBandedColumn
+          object PositionLevelName: TcxGridDBBandedColumn
             Caption = #1056#1072#1079#1088#1103#1076
             DataBinding.FieldName = 'PositionLevelName'
             HeaderAlignmentHorz = taCenter
@@ -106,7 +106,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
             Position.ColIndex = 4
             Position.RowIndex = 0
           end
-          object colPersonalGroupName: TcxGridDBBandedColumn
+          object PersonalGroupName: TcxGridDBBandedColumn
             Caption = #1041#1088#1080#1075#1072#1076#1072
             DataBinding.FieldName = 'PersonalGroupName'
             Visible = False
@@ -119,7 +119,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
             Position.ColIndex = 5
             Position.RowIndex = 0
           end
-          object TemplateColumn: TcxGridDBBandedColumn
+          object Value: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Value'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -169,20 +169,23 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
       FormName = 'TReport_SheetWorkTimeDialogForm'
       FormNameParam.Value = 'TReport_SheetWorkTimeDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
-          Value = Null
+          Value = 'NULL'
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
-          Value = Null
+          Value = 'NULL'
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitId'
@@ -190,6 +193,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
           Component = GuidesUnit
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
@@ -198,6 +202,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       OpenBeforeShow = True
@@ -229,6 +234,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -236,6 +242,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -243,6 +250,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
         Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 408
     Top = 176
@@ -307,6 +315,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
     LookupControl = edUnit
     FormNameParam.Value = 'TUnit_SheetWorkTimeForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_SheetWorkTimeForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -317,6 +326,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -325,12 +335,14 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 600
     Top = 32
   end
   object RefreshDispatcher1: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -354,7 +366,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
     SummaryItemList = <>
     HeaderDataSet = HeaderCDS
     HeaderColumnName = 'ValueField'
-    TemplateColumn = TemplateColumn
+    TemplateColumn = Value
     Left = 360
     Top = 272
   end

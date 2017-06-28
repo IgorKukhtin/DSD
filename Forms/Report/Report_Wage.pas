@@ -13,7 +13,17 @@ uses
   dsdAddOn, ChoicePeriod, Vcl.Menus, dxBarExtItems, dxBar, cxClasses, dsdDB,
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxLabel,
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel,
-  cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit;
+  cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TReport_WageForm = class(TAncestorReportForm)
@@ -33,28 +43,28 @@ type
     chkDetailModelService: TcxCheckBox;
     chkDetailModelServiceItemMaster: TcxCheckBox;
     chkDetailModelServiceItemChild: TcxCheckBox;
-    colUnitName: TcxGridDBColumn;
-    colPositionName: TcxGridDBColumn;
-    colPositionLevelName: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    PositionName: TcxGridDBColumn;
+    PositionLevelName: TcxGridDBColumn;
     Count_Member: TcxGridDBColumn;
-    colMemberName: TcxGridDBColumn;
-    colSheetWorkTime_Amount: TcxGridDBColumn;
-    colServiceModelName: TcxGridDBColumn;
-    colPrice: TcxGridDBColumn;
-    colFromName: TcxGridDBColumn;
-    colToName: TcxGridDBColumn;
-    colMovementDescName: TcxGridDBColumn;
-    colModelServiceItemChild_FromName: TcxGridDBColumn;
-    colModelServiceItemChild_ToName: TcxGridDBColumn;
-    colOperDate: TcxGridDBColumn;
+    MemberName: TcxGridDBColumn;
+    SheetWorkTime_Amount: TcxGridDBColumn;
+    ServiceModelName: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
+    ToName: TcxGridDBColumn;
+    MovementDescName: TcxGridDBColumn;
+    ModelServiceItemChild_FromName: TcxGridDBColumn;
+    ModelServiceItemChild_ToName: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
     Count_MemberInDay: TcxGridDBColumn;
     Gross: TcxGridDBColumn;
-    colGrossOnOneMember: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
-    colAmountOnOneMember: TcxGridDBColumn;
+    GrossOnOneMember: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    AmountOnOneMember: TcxGridDBColumn;
     actPrint1: TdsdPrintAction;
     dxBarButton1: TdxBarButton;
-    colPersonalServiceListName: TcxGridDBColumn;
+    PersonalServiceListName: TcxGridDBColumn;
     actPrint2: TdsdPrintAction;
     dxBarButton2: TdxBarButton;
     PersonalGroupName: TcxGridDBColumn;

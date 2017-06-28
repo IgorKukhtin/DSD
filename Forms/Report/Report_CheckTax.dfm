@@ -3,8 +3,9 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
   ClientHeight = 319
   ClientWidth = 990
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -336
   ExplicitWidth = 1006
-  ExplicitHeight = 357
+  ExplicitHeight = 358
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -28,53 +29,53 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount_Sale
+              Column = Amount_Sale
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount_Tax
+              Column = Amount_Tax
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSumm_Sale
+              Column = Summ_Sale
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSumm_Tax
+              Column = Summ_Tax
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSumm_Diff
+              Column = Summ_Diff
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount_Sale
+              Column = Amount_Sale
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount_Tax
+              Column = Amount_Tax
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSumm_Sale
+              Column = Summ_Sale
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSumm_Tax
+              Column = Summ_Tax
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSumm_Diff
+              Column = Summ_Diff
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -83,7 +84,7 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clInvNumber_Sale: TcxGridDBColumn
+          object InvNumber_Sale: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1087#1088#1086#1076'.'#1087#1086#1082'.'
             DataBinding.FieldName = 'InvNumber_Sale'
             HeaderAlignmentHorz = taCenter
@@ -92,7 +93,7 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
             Options.Editing = False
             Width = 55
           end
-          object clInvNumber_Tax: TcxGridDBColumn
+          object InvNumber_Tax: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1085#1072#1083#1086#1075'.'
             DataBinding.FieldName = 'InvNumber_Tax'
             HeaderAlignmentHorz = taCenter
@@ -101,7 +102,7 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
             Options.Editing = False
             Width = 55
           end
-          object clDocumentTaxKindName: TcxGridDBColumn
+          object DocumentTaxKindName: TcxGridDBColumn
             AlternateCaption = #1058#1080#1087' '#1085#1072#1083#1086#1075'.'#1076#1086#1082'.'
             Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'.'#1076#1086#1082'.'
             DataBinding.FieldName = 'DocumentTaxKindName'
@@ -109,14 +110,14 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object clContractName: TcxGridDBColumn
+          object ContractName: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
-          object clContractTagName: TcxGridDBColumn
+          object ContractTagName: TcxGridDBColumn
             Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractTagName'
             HeaderAlignmentHorz = taCenter
@@ -124,7 +125,7 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
             Options.Editing = False
             Width = 55
           end
-          object clFromCode: TcxGridDBColumn
+          object FromCode: TcxGridDBColumn
             Caption = #1050#1086#1076' ('#1086#1090' '#1082#1086#1075#1086')'
             DataBinding.FieldName = 'FromCode'
             Visible = False
@@ -134,7 +135,7 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
             Options.Editing = False
             Width = 40
           end
-          object clFromName: TcxGridDBColumn
+          object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
@@ -142,7 +143,7 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
             HeaderGlyphAlignmentHorz = taCenter
             Width = 70
           end
-          object clToCode: TcxGridDBColumn
+          object ToCode: TcxGridDBColumn
             Caption = #1050#1086#1076' ('#1082#1086#1084#1091')'
             DataBinding.FieldName = 'ToCode'
             Visible = False
@@ -151,7 +152,7 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
             HeaderGlyphAlignmentHorz = taCenter
             Width = 45
           end
-          object clToName: TcxGridDBColumn
+          object ToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
@@ -159,7 +160,7 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
             HeaderGlyphAlignmentHorz = taCenter
             Width = 70
           end
-          object clPartnerCode: TcxGridDBColumn
+          object PartnerCode: TcxGridDBColumn
             Caption = #1050#1086#1076' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'
             DataBinding.FieldName = 'PartnerCode'
             Visible = False
@@ -167,14 +168,14 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object clPartnerName: TcxGridDBColumn
+          object PartnerName: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
             DataBinding.FieldName = 'PartnerName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clGoodsCode: TcxGridDBColumn
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074'.'
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -183,7 +184,7 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
             Options.Editing = False
             Width = 36
           end
-          object clGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -192,7 +193,7 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
             Options.Editing = False
             Width = 70
           end
-          object clGoodsKindName: TcxGridDBColumn
+          object GoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             HeaderAlignmentHorz = taCenter
@@ -200,7 +201,7 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
             HeaderGlyphAlignmentHorz = taCenter
             Width = 42
           end
-          object clPrice: TcxGridDBColumn
+          object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             HeaderAlignmentHorz = taCenter
@@ -208,7 +209,7 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
             HeaderGlyphAlignmentHorz = taCenter
             Width = 45
           end
-          object clAmount_Sale: TcxGridDBColumn
+          object Amount_Sale: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1086#1076'.'#1087#1086#1082'.)'
             DataBinding.FieldName = 'Amount_Sale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -220,7 +221,7 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
             Options.Editing = False
             Width = 60
           end
-          object clAmount_Tax: TcxGridDBColumn
+          object Amount_Tax: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1085#1072#1083#1086#1075'.)'
             DataBinding.FieldName = 'Amount_Tax'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -232,7 +233,7 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
             Options.Editing = False
             Width = 50
           end
-          object clSumm_Sale: TcxGridDBColumn
+          object Summ_Sale: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' ('#1087#1088#1086#1076'.'#1087#1086#1082'.)'
             DataBinding.FieldName = 'Summ_Sale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -242,7 +243,7 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object clSumm_Tax: TcxGridDBColumn
+          object Summ_Tax: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' ('#1085#1072#1083#1086#1075'.)'
             DataBinding.FieldName = 'Summ_Tax'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -252,7 +253,7 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object clSumm_Diff: TcxGridDBColumn
+          object Summ_Diff: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' ('#1088#1072#1079#1085#1080#1094#1072')'
             DataBinding.FieldName = 'Summ_Diff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -262,7 +263,7 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object clDifference: TcxGridDBColumn
+          object Difference: TcxGridDBColumn
             Caption = #1056#1072#1079#1085#1080#1094#1072
             DataBinding.FieldName = 'Difference'
             Visible = False
@@ -271,7 +272,7 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
             Options.Editing = False
             Width = 38
           end
-          object clInfoMoneyCode: TcxGridDBColumn
+          object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -279,7 +280,7 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
             Options.Editing = False
             Width = 55
           end
-          object clInfoMoneyGroupName: TcxGridDBColumn
+          object InfoMoneyGroupName: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -287,7 +288,7 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
             Options.Editing = False
             Width = 70
           end
-          object clInfoMoneyDestinationName: TcxGridDBColumn
+          object InfoMoneyDestinationName: TcxGridDBColumn
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -295,7 +296,7 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
             Options.Editing = False
             Width = 70
           end
-          object clInfoMoneyName: TcxGridDBColumn
+          object InfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             HeaderAlignmentVert = vaCenter

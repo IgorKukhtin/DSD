@@ -13,7 +13,18 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  cxGridBandedTableView, cxGridDBBandedTableView, dsdGuides, cxButtonEdit;
+  cxGridBandedTableView, cxGridDBBandedTableView, dsdGuides, cxButtonEdit,
+  dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
+  dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue;
 
 type
   TReport_SheetWorkTimeForm = class(TAncestorReportForm)
@@ -23,14 +34,14 @@ type
     GuidesUnit: TdsdGuides;
     RefreshDispatcher1: TRefreshDispatcher;
     cxGridDBBandedTableView1: TcxGridDBBandedTableView;
-    colUnitName: TcxGridDBBandedColumn;
-    colMemberCode: TcxGridDBBandedColumn;
-    colMemberName: TcxGridDBBandedColumn;
-    colPositionName: TcxGridDBBandedColumn;
-    colPositionLevelName: TcxGridDBBandedColumn;
-    colPersonalGroupName: TcxGridDBBandedColumn;
+    UnitName: TcxGridDBBandedColumn;
+    MemberCode: TcxGridDBBandedColumn;
+    MemberName: TcxGridDBBandedColumn;
+    PositionName: TcxGridDBBandedColumn;
+    PositionLevelName: TcxGridDBBandedColumn;
+    PersonalGroupName: TcxGridDBBandedColumn;
     CrossDBViewAddOn: TCrossDBViewAddOn;
-    TemplateColumn: TcxGridDBBandedColumn;
+    Value: TcxGridDBBandedColumn;
     actReport_SheetWorkTimeDialog: TExecuteDialog;
     dxBarButton1: TdxBarButton;
   private

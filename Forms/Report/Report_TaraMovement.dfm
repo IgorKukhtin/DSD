@@ -3,8 +3,9 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
   ClientHeight = 540
   ClientWidth = 925
   AddOnFormData.Params = FormParams
+  ExplicitTop = -86
   ExplicitWidth = 941
-  ExplicitHeight = 578
+  ExplicitHeight = 579
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -30,12 +31,12 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
-              Column = colAmountIn
+              Column = AmountIn
             end
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
-              Column = colAmountOut
+              Column = AmountOut
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -45,91 +46,91 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colInvNumber: TcxGridDBColumn
+          object InvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object colOperDate: TcxGridDBColumn
+          object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 43
           end
-          object colMovementDescName: TcxGridDBColumn
+          object MovementDescName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1076#1086#1082'.'
             DataBinding.FieldName = 'MovementDescName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 46
           end
-          object colLocationDescName: TcxGridDBColumn
+          object LocationDescName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1084#1077#1089#1090#1072' '#1091#1095#1077#1090#1072
             DataBinding.FieldName = 'LocationDescName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 81
           end
-          object colLocationCode: TcxGridDBColumn
+          object LocationCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1084#1077#1089#1090#1072' '#1091#1095'.'
             DataBinding.FieldName = 'LocationCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 46
           end
-          object colLocationName: TcxGridDBColumn
+          object LocationName: TcxGridDBColumn
             Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072
             DataBinding.FieldName = 'LocationName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 107
           end
-          object colObjectByDescName: TcxGridDBColumn
+          object ObjectByDescName: TcxGridDBColumn
             Caption = #1069#1083#1077#1084#1077#1085#1090
             DataBinding.FieldName = 'ObjectByDescName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colObjectByCode: TcxGridDBColumn
+          object ObjectByCode: TcxGridDBColumn
             Caption = #1050#1086#1076' ('#1086#1090' '#1082#1086#1075#1086' / '#1050#1086#1084#1091')'
             DataBinding.FieldName = 'ObjectByCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colObjectByName: TcxGridDBColumn
+          object ObjectByName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086' / '#1050#1086#1084#1091
             DataBinding.FieldName = 'ObjectByName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 109
           end
-          object colPaidKindName: TcxGridDBColumn
+          object PaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 52
           end
-          object colGoodsCode: TcxGridDBColumn
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074'.'
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 42
           end
-          object colGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 106
           end
-          object colAmountIn: TcxGridDBColumn
+          object AmountIn: TcxGridDBColumn
             Caption = #1055#1088#1080#1093#1086#1076' '#1082#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'AmountIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -139,7 +140,7 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 56
           end
-          object colAmountOut: TcxGridDBColumn
+          object AmountOut: TcxGridDBColumn
             Caption = #1056#1072#1089#1093#1086#1076' '#1082#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'AmountOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -149,7 +150,7 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 49
           end
-          object colPrice: TcxGridDBColumn
+          object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -159,14 +160,14 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 46
           end
-          object colAccountGroupCode: TcxGridDBColumn
+          object AccountGroupCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1075#1088#1091#1087#1087#1099' '#1089#1095#1077#1090#1086#1074
             DataBinding.FieldName = 'AccountGroupCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colAccountGroupName: TcxGridDBColumn
+          object AccountGroupName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1075#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'AccountGroupName'
             HeaderAlignmentHorz = taCenter
@@ -275,29 +276,34 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
       FormNameParam.Component = FormParams
       FormNameParam.ComponentItem = 'FormName'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inOperDate'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Id'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MovementId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inMovementId_Value'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MovementId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inChangePercentAmount'
           Value = '0'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -328,6 +334,7 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -335,6 +342,7 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inWhereObjectId'
@@ -342,6 +350,7 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
         Component = ObjectGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -349,6 +358,7 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
         Component = GoodsGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescSet'
@@ -357,6 +367,7 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
         ComponentItem = 'DescSet'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMLODesc'
@@ -364,6 +375,7 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
         Component = FormParams
         ComponentItem = 'MLODesc'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAccountGroupId'
@@ -371,6 +383,7 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
         Component = AccountGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Top = 144
   end
@@ -433,6 +446,7 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
@@ -440,6 +454,7 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsId'
@@ -447,6 +462,7 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
         Component = GoodsGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsName'
@@ -455,6 +471,7 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ObjectId'
@@ -462,6 +479,7 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
         Component = ObjectGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ObjectName'
@@ -470,22 +488,26 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'DescSet'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MLODesc'
         Value = Null
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FormName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountGroupId'
@@ -493,6 +515,7 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
         Component = AccountGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountGroupName'
@@ -501,6 +524,7 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 232
     Top = 144
@@ -510,6 +534,7 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
     LookupControl = edObject
     FormNameParam.Value = 'TPartnerAndUnitForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPartnerAndUnitForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -519,6 +544,7 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
         Component = ObjectGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -527,6 +553,7 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 264
     Top = 32
@@ -536,6 +563,7 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
     LookupControl = edGoods
     FormNameParam.Value = 'TGoodsForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -545,6 +573,7 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
         Component = GoodsGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -553,6 +582,7 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 472
     Top = 24
@@ -568,6 +598,7 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
         Component = MasterCDS
         ComponentItem = 'MovementId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FormName'
@@ -575,6 +606,7 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
         Component = FormParams
         ComponentItem = 'FormName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 344
@@ -585,6 +617,7 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
     LookupControl = ceAccountGroup
     FormNameParam.Value = 'TAccountGroup_ObjectDescForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TAccountGroup_ObjectDescForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -594,6 +627,7 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
         Component = AccountGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -602,11 +636,13 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_Object_Goods'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 736
     Top = 21

@@ -5,8 +5,10 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -257
+  ExplicitTop = -88
   ExplicitWidth = 910
-  ExplicitHeight = 580
+  ExplicitHeight = 581
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -147,6 +149,9 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     object tsPivot: TcxTabSheet
       Caption = #1058#1091#1096#1077#1085#1082#1072
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -550,20 +555,12 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cdSaleAmount_11
+              Column = SaleAmount_11
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cdReturnAmount_11
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
+              Column = ReturnAmount_11
             end
             item
               Format = ',0.####'
@@ -576,283 +573,291 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cdOrderAmount_11
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cdMoreAmount_11
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cdUnderAmount_11
+              Column = OrderAmount_11
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cdDiffAmount_11
+              Column = MoreAmount_11
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cdOrderAmount_21
+              Column = UnderAmount_11
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cdMoreAmount_21
+              Column = DiffAmount_11
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cdUnderAmount_21
+              Column = OrderAmount_21
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cdDiffAmount_21
+              Column = MoreAmount_21
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = UnderAmount_21
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = DiffAmount_21
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdSaleAmount_11
+              Column = SaleAmount_11
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdReturnAmount_11
+              Column = ReturnAmount_11
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdSaleAmount_12
+              Column = SaleAmount_12
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdReturnAmount_12
+              Column = ReturnAmount_12
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdSaleAmount_13
+              Column = SaleAmount_13
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdReturnAmount_13
+              Column = ReturnAmount_13
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdSaleAmount_21
+              Column = SaleAmount_21
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdReturnAmount_21
+              Column = ReturnAmount_21
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdSaleAmount_1_Alan
+              Column = SaleAmount_1_Alan
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdReturnAmount_1_Alan
+              Column = ReturnAmount_1_Alan
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdSaleAmount_1_SpecCeh
+              Column = SaleAmount_1_SpecCeh
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdReturnAmount_1_SpecCeh
+              Column = ReturnAmount_1_SpecCeh
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdSaleAmount_1_Varto
+              Column = SaleAmount_1_Varto
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdReturnAmount_1_Varto
+              Column = ReturnAmount_1_Varto
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdSaleAmount_1_Nashi
+              Column = SaleAmount_1_Nashi
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdReturnAmount_1_Nashi
+              Column = ReturnAmount_1_Nashi
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdSaleAmount_1_Amstor
+              Column = SaleAmount_1_Amstor
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdReturnAmount_1_Amstor
+              Column = ReturnAmount_1_Amstor
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdSaleAmount_1_Fitness
+              Column = SaleAmount_1_Fitness
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdReturnAmount_1_Fitness
+              Column = ReturnAmount_1_Fitness
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdSaleAmount_1_PovnaChasha
+              Column = SaleAmount_1_PovnaChasha
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdReturnAmount_1_PovnaChasha
+              Column = ReturnAmount_1_PovnaChasha
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdSaleAmount_1_Premiya
+              Column = SaleAmount_1_Premiya
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdReturnAmount_1_Premiya
+              Column = ReturnAmount_1_Premiya
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdSaleAmount_1_Irna
+              Column = SaleAmount_1_Irna
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdReturnAmount_1_Irna
+              Column = ReturnAmount_1_Irna
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdSaleAmount_1_Ashan
+              Column = SaleAmount_1_Ashan
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdReturnAmount_1_Ashan
+              Column = ReturnAmount_1_Ashan
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdSaleAmount_1_Horeca
+              Column = SaleAmount_1_Horeca
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdReturnAmount_1_Horeca
+              Column = ReturnAmount_1_Horeca
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdSaleAmount_1_Aro
+              Column = SaleAmount_1_Aro
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdReturnAmount_1_Aro
+              Column = ReturnAmount_1_Aro
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdSaleAmount_1_Hit
+              Column = SaleAmount_1_Hit
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdReturnAmount_1_Hit
+              Column = ReturnAmount_1_Hit
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdSaleAmount_1_Num1
+              Column = SaleAmount_1_Num1
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdReturnAmount_1_Num1
+              Column = ReturnAmount_1_Num1
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdSaleAmount_2_Alan
+              Column = SaleAmount_2_Alan
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdReturnAmount_2_Alan
+              Column = ReturnAmount_2_Alan
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdSaleAmount_2_Nashi
+              Column = SaleAmount_2_Nashi
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = cdReturnAmount_2_Nashi
+              Column = ReturnAmount_2_Nashi
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cdOrderAmount_11
+              Column = OrderAmount_11
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cdMoreAmount_11
+              Column = MoreAmount_11
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cdUnderAmount_11
+              Column = UnderAmount_11
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cdDiffAmount_11
+              Column = DiffAmount_11
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cdOrderAmount_21
+              Column = OrderAmount_21
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cdMoreAmount_21
+              Column = MoreAmount_21
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cdUnderAmount_21
+              Column = UnderAmount_21
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cdDiffAmount_21
+              Column = DiffAmount_21
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -900,7 +905,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             VisibleForCustomization = False
             Width = 60
           end
-          object cdGroupName: TcxGridDBColumn
+          object GroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'GroupName'
             Visible = False
@@ -948,7 +953,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             VisibleForCustomization = False
             Width = 90
           end
-          object dSaleAmountSh: TcxGridDBColumn
+          object SaleAmountSh: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072', '#1077#1076'.'
             DataBinding.FieldName = 'SaleAmountSh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -961,7 +966,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             VisibleForCustomization = False
             Width = 100
           end
-          object dReturnAmountSh: TcxGridDBColumn
+          object ReturnAmountSh: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1077#1076
             DataBinding.FieldName = 'ReturnAmountSh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -974,35 +979,35 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             VisibleForCustomization = False
             Width = 90
           end
-          object cdDOW_StartDate: TcxGridDBColumn
+          object DOW_StartDate: TcxGridDBColumn
             Caption = #1044#1077#1085#1100' '#1085#1072#1095'.'
             DataBinding.FieldName = 'DOW_StartDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 40
           end
-          object cdStartDate: TcxGridDBColumn
+          object StartDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '
             DataBinding.FieldName = 'StartDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object cdDOW_EndDate: TcxGridDBColumn
+          object DOW_EndDate: TcxGridDBColumn
             Caption = #1044#1077#1085#1100' '#1082#1086#1085'.'
             DataBinding.FieldName = 'DOW_EndDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 40
           end
-          object cdEndDate: TcxGridDBColumn
+          object EndDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'  '#1082#1086#1085'.'
             DataBinding.FieldName = 'EndDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object cdSaleAmount_11: TcxGridDBColumn
+          object SaleAmount_11: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072' '#1048#1058#1054#1043#1054', '#1082#1075' ('#1082#1086#1083#1073#1072#1089#1072')'
             DataBinding.FieldName = 'SaleAmount_11'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1013,7 +1018,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdReturnAmount_11: TcxGridDBColumn
+          object ReturnAmount_11: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090' '#1048#1058#1054#1043#1054', '#1082#1075' ('#1082#1086#1083#1073#1072#1089#1072')'
             DataBinding.FieldName = 'ReturnAmount_11'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1024,7 +1029,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdOrderAmount_11: TcxGridDBColumn
+          object OrderAmount_11: TcxGridDBColumn
             Caption = #1047#1072#1103#1074#1082#1072' '#1048#1058#1054#1043#1054', '#1082#1075' ('#1082#1086#1083#1073#1072#1089#1072')'
             DataBinding.FieldName = 'OrderAmount_11'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1035,7 +1040,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdMoreAmount_11: TcxGridDBColumn
+          object MoreAmount_11: TcxGridDBColumn
             Caption = #1041#1086#1083#1100#1096#1077' '#1079#1072#1103#1074#1082#1080' '#1048#1058#1054#1043#1054', '#1082#1075' ('#1082#1086#1083#1073#1072#1089#1072')'
             DataBinding.FieldName = 'MoreAmount_11'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1046,7 +1051,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdUnderAmount_11: TcxGridDBColumn
+          object UnderAmount_11: TcxGridDBColumn
             Caption = #1052#1077#1085#1100#1096#1077' '#1079#1072#1103#1074#1082#1080' '#1048#1058#1054#1043#1054', '#1082#1075' ('#1082#1086#1083#1073#1072#1089#1072')'
             DataBinding.FieldName = 'UnderAmount_11'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1057,7 +1062,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdDiffAmount_11: TcxGridDBColumn
+          object DiffAmount_11: TcxGridDBColumn
             Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1087#1088#1086#1076#1072#1078#1080' '#1086#1090' '#1079#1072#1103#1074#1082#1080' '#1048#1058#1054#1043#1054', '#1082#1075' ('#1082#1086#1083#1073#1072#1089#1072')'
             DataBinding.FieldName = 'DiffAmount_11'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1068,7 +1073,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdSaleAmount_12: TcxGridDBColumn
+          object SaleAmount_12: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1075#1088'. '#1040#1083#1072#1085')'
             DataBinding.FieldName = 'SaleAmount_12'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1079,7 +1084,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object cdReturnAmount_12: TcxGridDBColumn
+          object ReturnAmount_12: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1075#1088'. '#1040#1083#1072#1085')'
             DataBinding.FieldName = 'ReturnAmount_12'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1091,7 +1096,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object cdSaleAmount_13: TcxGridDBColumn
+          object SaleAmount_13: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1075#1088'. '#1048#1088#1085#1072')'
             DataBinding.FieldName = 'SaleAmount_13'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1102,7 +1107,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object cdReturnAmount_13: TcxGridDBColumn
+          object ReturnAmount_13: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1075#1088'. '#1048#1088#1085#1072')'
             DataBinding.FieldName = 'ReturnAmount_13'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1114,7 +1119,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdSaleAmount_1_Alan: TcxGridDBColumn
+          object SaleAmount_1_Alan: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1040#1083#1072#1085')'
             DataBinding.FieldName = 'SaleAmount_1_Alan'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1125,7 +1130,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdReturnAmount_1_Alan: TcxGridDBColumn
+          object ReturnAmount_1_Alan: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1040#1083#1072#1085')'
             DataBinding.FieldName = 'ReturnAmount_1_Alan'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1137,7 +1142,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdSaleAmount_1_SpecCeh: TcxGridDBColumn
+          object SaleAmount_1_SpecCeh: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1057#1087#1077#1094' '#1062#1077#1093')'
             DataBinding.FieldName = 'SaleAmount_1_SpecCeh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1148,7 +1153,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdReturnAmount_1_SpecCeh: TcxGridDBColumn
+          object ReturnAmount_1_SpecCeh: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1057#1087#1077#1094' '#1062#1077#1093')'
             DataBinding.FieldName = 'ReturnAmount_1_SpecCeh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1160,7 +1165,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdSaleAmount_1_Varto: TcxGridDBColumn
+          object SaleAmount_1_Varto: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1042#1072#1088#1090#1086')'
             DataBinding.FieldName = 'SaleAmount_1_Varto'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1171,7 +1176,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdReturnAmount_1_Varto: TcxGridDBColumn
+          object ReturnAmount_1_Varto: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1042#1072#1088#1090#1086')'
             DataBinding.FieldName = 'ReturnAmount_1_Varto'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1183,7 +1188,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdSaleAmount_1_Nashi: TcxGridDBColumn
+          object SaleAmount_1_Nashi: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1053#1072#1096#1080' '#1050#1086#1074#1073#1072#1089#1080')'
             DataBinding.FieldName = 'SaleAmount_1_Nashi'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1194,7 +1199,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdReturnAmount_1_Nashi: TcxGridDBColumn
+          object ReturnAmount_1_Nashi: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1053#1072#1096#1080' '#1050#1086#1074#1073#1072#1089#1080')'
             DataBinding.FieldName = 'ReturnAmount_1_Nashi'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1206,7 +1211,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdSaleAmount_1_Amstor: TcxGridDBColumn
+          object SaleAmount_1_Amstor: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1040#1084#1089#1090#1086#1088')'
             DataBinding.FieldName = 'SaleAmount_1_Amstor'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1218,7 +1223,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdReturnAmount_1_Amstor: TcxGridDBColumn
+          object ReturnAmount_1_Amstor: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1040#1084#1089#1090#1086#1088')'
             DataBinding.FieldName = 'ReturnAmount_1_Amstor'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1230,7 +1235,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdSaleAmount_1_Fitness: TcxGridDBColumn
+          object SaleAmount_1_Fitness: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1060#1080#1090#1085#1077#1089' '#1060#1086#1088#1084#1072#1090')'
             DataBinding.FieldName = 'SaleAmount_1_Fitness'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1241,7 +1246,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdReturnAmount_1_Fitness: TcxGridDBColumn
+          object ReturnAmount_1_Fitness: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1060#1080#1090#1085#1077#1089' '#1060#1086#1088#1084#1072#1090')'
             DataBinding.FieldName = 'ReturnAmount_1_Fitness'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1253,7 +1258,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdSaleAmount_1_PovnaChasha: TcxGridDBColumn
+          object SaleAmount_1_PovnaChasha: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1055#1086#1074#1085#1072' '#1063#1072#1096#1072')'
             DataBinding.FieldName = 'SaleAmount_1_PovnaChasha'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1264,7 +1269,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdReturnAmount_1_PovnaChasha: TcxGridDBColumn
+          object ReturnAmount_1_PovnaChasha: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1055#1086#1074#1085#1072' '#1063#1072#1096#1072')'
             DataBinding.FieldName = 'ReturnAmount_1_PovnaChasha'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1276,7 +1281,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdSaleAmount_1_Premiya: TcxGridDBColumn
+          object SaleAmount_1_Premiya: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1055#1088#1077#1084#1080#1103')'
             DataBinding.FieldName = 'SaleAmount_1_Premiya'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1287,7 +1292,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdReturnAmount_1_Premiya: TcxGridDBColumn
+          object ReturnAmount_1_Premiya: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1055#1088#1077#1084#1080#1103')'
             DataBinding.FieldName = 'ReturnAmount_1_Premiya'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1299,7 +1304,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdSaleAmount_1_Irna: TcxGridDBColumn
+          object SaleAmount_1_Irna: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1048#1088#1085#1072')'
             DataBinding.FieldName = 'SaleAmount_1_Irna'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1311,7 +1316,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdReturnAmount_1_Irna: TcxGridDBColumn
+          object ReturnAmount_1_Irna: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1048#1088#1085#1072')'
             DataBinding.FieldName = 'ReturnAmount_1_Irna'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1323,7 +1328,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdSaleAmount_1_Ashan: TcxGridDBColumn
+          object SaleAmount_1_Ashan: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1040#1096#1072#1085')'
             DataBinding.FieldName = 'SaleAmount_1_Ashan'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1334,7 +1339,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdReturnAmount_1_Ashan: TcxGridDBColumn
+          object ReturnAmount_1_Ashan: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1040#1096#1072#1085')'
             DataBinding.FieldName = 'ReturnAmount_1_Ashan'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1346,7 +1351,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdSaleAmount_1_Horeca: TcxGridDBColumn
+          object SaleAmount_1_Horeca: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' Horeca Select)'
             DataBinding.FieldName = 'SaleAmount_1_Horeca'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1358,7 +1363,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdReturnAmount_1_Horeca: TcxGridDBColumn
+          object ReturnAmount_1_Horeca: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' Horeca Select)'
             DataBinding.FieldName = 'ReturnAmount_1_Horeca'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1370,7 +1375,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdSaleAmount_1_Aro: TcxGridDBColumn
+          object SaleAmount_1_Aro: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' ARO)'
             DataBinding.FieldName = 'SaleAmount_1_Aro'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1382,7 +1387,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdReturnAmount_1_Aro: TcxGridDBColumn
+          object ReturnAmount_1_Aro: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' ARO)'
             DataBinding.FieldName = 'ReturnAmount_1_Aro'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1394,7 +1399,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdSaleAmount_1_Hit: TcxGridDBColumn
+          object SaleAmount_1_Hit: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1061#1080#1090' '#1055#1088#1086#1076#1091#1082#1090')'
             DataBinding.FieldName = 'SaleAmount_1_Hit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1405,7 +1410,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdReturnAmount_1_Hit: TcxGridDBColumn
+          object ReturnAmount_1_Hit: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1061#1080#1090' '#1055#1088#1086#1076#1091#1082#1090')'
             DataBinding.FieldName = 'ReturnAmount_1_Hit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1417,7 +1422,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdSaleAmount_1_Num1: TcxGridDBColumn
+          object SaleAmount_1_Num1: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#8470' 1)'
             DataBinding.FieldName = 'SaleAmount_1_Num1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1428,7 +1433,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdReturnAmount_1_Num1: TcxGridDBColumn
+          object ReturnAmount_1_Num1: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#8470' 1)'
             DataBinding.FieldName = 'ReturnAmount_1_Num1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1440,7 +1445,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdSaleAmount_21: TcxGridDBColumn
+          object SaleAmount_21: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072' '#1048#1058#1054#1043#1054', '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072')'
             DataBinding.FieldName = 'SaleAmount_21'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1451,7 +1456,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdReturnAmount_21: TcxGridDBColumn
+          object ReturnAmount_21: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090' '#1048#1058#1054#1043#1054', '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072')'
             DataBinding.FieldName = 'ReturnAmount_21'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1462,7 +1467,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object cdOrderAmount_21: TcxGridDBColumn
+          object OrderAmount_21: TcxGridDBColumn
             Caption = #1047#1072#1103#1074#1072' '#1048#1058#1054#1043#1054', '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072')'
             DataBinding.FieldName = 'OrderAmount_21'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1473,7 +1478,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdMoreAmount_21: TcxGridDBColumn
+          object MoreAmount_21: TcxGridDBColumn
             Caption = #1041#1086#1083#1100#1096#1077' '#1079#1072#1103#1074#1082#1080' '#1048#1058#1054#1043#1054', '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072')'
             DataBinding.FieldName = 'MoreAmount_21'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1484,7 +1489,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdUnderAmount_21: TcxGridDBColumn
+          object UnderAmount_21: TcxGridDBColumn
             Caption = #1052#1077#1085#1100#1096#1077' '#1079#1072#1103#1074#1082#1080' '#1048#1058#1054#1043#1054', '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072')'
             DataBinding.FieldName = 'UnderAmount_21'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1495,7 +1500,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdDiffAmount_21: TcxGridDBColumn
+          object DiffAmount_21: TcxGridDBColumn
             Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1087#1088#1086#1076#1072#1078#1080' '#1086#1090' '#1079#1072#1103#1074#1082#1080' '#1048#1058#1054#1043#1054', '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072')'
             DataBinding.FieldName = 'DiffAmount_21'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1506,7 +1511,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdSaleAmount_2_Alan: TcxGridDBColumn
+          object SaleAmount_2_Alan: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072', '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072', '#1090#1084' '#1040#1083#1072#1085')'
             DataBinding.FieldName = 'SaleAmount_2_Alan'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1518,7 +1523,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdReturnAmount_2_Alan: TcxGridDBColumn
+          object ReturnAmount_2_Alan: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072', '#1090#1084' '#1040#1083#1072#1085')'
             DataBinding.FieldName = 'ReturnAmount_2_Alan'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1530,7 +1535,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdSaleAmount_2_Nashi: TcxGridDBColumn
+          object SaleAmount_2_Nashi: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072', '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072', '#1090#1084' '#1053#1072#1096#1080' '#1050#1086#1074#1073#1072#1089#1080')'
             DataBinding.FieldName = 'SaleAmount_2_Nashi'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1542,7 +1547,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdReturnAmount_2_Nashi: TcxGridDBColumn
+          object ReturnAmount_2_Nashi: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072', '#1090#1084' '#1053#1072#1096#1080' '#1050#1086#1074#1073#1072#1089#1080')'
             DataBinding.FieldName = 'ReturnAmount_2_Nashi'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1684,8 +1689,6 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     Height = 206
     Align = alBottom
     TabOrder = 6
-    ExplicitLeft = 8
-    ExplicitTop = 334
     object grChartDBChartView1: TcxGridDBChartView
       DataController.DataSource = DSDetail
       DiagramArea.Values.LineWidth = 2

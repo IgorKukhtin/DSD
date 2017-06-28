@@ -14,7 +14,17 @@ uses
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, cxSplitter,
-  cxGridChartView, cxGridDBChartView, cxCheckBox;
+  cxGridChartView, cxGridDBChartView, cxCheckBox, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TReport_Goods_byMovementForm = class(TAncestorReportForm)
@@ -56,7 +66,7 @@ type
     actPrint: TdsdPrintAction;
     DetailCDS: TClientDataSet;
     DSDetail: TDataSource;
-    cdStartDate: TcxGridDBColumn;
+    StartDate: TcxGridDBColumn;
     DetaildsdDBViewAddOn: TdsdDBViewAddOn;
     GroupNum: TcxGridDBColumn;
     Num: TcxGridDBColumn;
@@ -70,9 +80,9 @@ type
     cxSplitter1: TcxSplitter;
     chWeek: TcxCheckBox;
     chMonth: TcxCheckBox;
-    cdEndDate: TcxGridDBColumn;
-    cdDOW_StartDate: TcxGridDBColumn;
-    cdDOW_EndDate: TcxGridDBColumn;
+    EndDate: TcxGridDBColumn;
+    DOW_StartDate: TcxGridDBColumn;
+    DOW_EndDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

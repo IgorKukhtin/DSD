@@ -13,27 +13,37 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus;
+  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TReport_GoodsTaxForm = class(TAncestorReportForm)
     cxLabel3: TcxLabel;
     edGoods: TcxButtonEdit;
     GoodsGuides: TdsdGuides;
-    clGoodsCode: TcxGridDBColumn;
-    clGoodsName: TcxGridDBColumn;
-    clMovementDescName: TcxGridDBColumn;
-    clInvNumber: TcxGridDBColumn;
-    clGoodsKindName: TcxGridDBColumn;
-    clOperDate: TcxGridDBColumn;
-    clPartnerName: TcxGridDBColumn;
-    clPartnerCode: TcxGridDBColumn;
-    clAmount: TcxGridDBColumn;
-    clOperPrice: TcxGridDBColumn;
-    clStatusName: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    MovementDescName: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
+    PartnerName: TcxGridDBColumn;
+    PartnerCode: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    OperPrice: TcxGridDBColumn;
+    StatusName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    clLineNumTax: TcxGridDBColumn;
+    LineNumTax: TcxGridDBColumn;
     AmountTax: TcxGridDBColumn;
     AmountCorrective: TcxGridDBColumn;
     InvNumber_Tax: TcxGridDBColumn;

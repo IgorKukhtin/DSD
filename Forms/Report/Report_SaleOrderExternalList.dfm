@@ -136,12 +136,12 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalCount
+          Column = TotalCount
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalCountSecond
+          Column = TotalCountSecond
         end
         item
           Format = ',0.####'
@@ -166,32 +166,32 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colSale_TotalCount
+          Column = Sale_TotalCount
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colSale_TotalCountPartner
+          Column = Sale_TotalCountPartner
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colSale_TotalCountSh
+          Column = Sale_TotalCountSh
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colSale_TotalCountKg
+          Column = Sale_TotalCountKg
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colSale_TotalSumm
+          Column = Sale_TotalSumm
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colSale_TotalSummPVAT
+          Column = Sale_TotalSummPVAT
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -283,17 +283,17 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colSale_TotalCountSh
+          Column = Sale_TotalCountSh
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalCount
+          Column = TotalCount
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalCountSecond
+          Column = TotalCountSecond
         end
         item
           Format = ',0.####'
@@ -318,27 +318,27 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colSale_TotalCount
+          Column = Sale_TotalCount
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colSale_TotalCountPartner
+          Column = Sale_TotalCountPartner
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colSale_TotalCountKg
+          Column = Sale_TotalCountKg
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colSale_TotalSumm
+          Column = Sale_TotalSumm
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colSale_TotalSummPVAT
+          Column = Sale_TotalSummPVAT
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -353,14 +353,14 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object colInvNumber: TcxGridDBColumn
+      object InvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'. ('#1079#1072#1103#1074#1082#1072')'
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object clOperDate: TcxGridDBColumn
+      object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1079#1072#1103#1074#1082#1072')'
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentHorz = taCenter
@@ -368,14 +368,14 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         Options.Editing = False
         Width = 60
       end
-      object colOperDatePartner: TcxGridDBColumn
+      object OperDatePartner: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1089#1082#1083#1072#1076' ('#1079#1072#1103#1074#1082#1072')'
         DataBinding.FieldName = 'OperDatePartner'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object colFromName: TcxGridDBColumn
+      object FromName: TcxGridDBColumn
         Caption = #1054#1090' '#1082#1086#1075#1086' ('#1079#1072#1103#1074#1082#1072')'
         DataBinding.FieldName = 'FromName'
         HeaderAlignmentHorz = taCenter
@@ -389,7 +389,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         HeaderAlignmentVert = vaCenter
         Width = 75
       end
-      object colTotalCount: TcxGridDBColumn
+      object TotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' ('#1079#1072#1103#1074#1082#1072')'
         DataBinding.FieldName = 'TotalCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -400,7 +400,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object colTotalCountSecond: TcxGridDBColumn
+      object TotalCountSecond: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' ('#1076#1086#1079#1072#1082#1072#1079')'
         DataBinding.FieldName = 'TotalCountSecond'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -453,7 +453,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object clSale_OperDate: TcxGridDBColumn
+      object Sale_OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1089#1082#1083#1072#1076' ('#1087#1088#1086#1076'.)'
         DataBinding.FieldName = 'Sale_OperDate'
         HeaderAlignmentHorz = taCenter
@@ -461,14 +461,14 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         Options.Editing = False
         Width = 60
       end
-      object colSale_OperDatePartner: TcxGridDBColumn
+      object Sale_OperDatePartner: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'. ('#1087#1088#1086#1076'.)'
         DataBinding.FieldName = 'Sale_OperDatePartner'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object colSale_InvNumber: TcxGridDBColumn
+      object Sale_InvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'. ('#1087#1088#1086#1076'.)'
         DataBinding.FieldName = 'Sale_InvNumber'
         HeaderAlignmentHorz = taCenter
@@ -483,7 +483,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         Options.Editing = False
         Width = 60
       end
-      object colSale_FromName: TcxGridDBColumn
+      object Sale_FromName: TcxGridDBColumn
         Caption = #1054#1090' '#1082#1086#1075#1086' ('#1087#1088#1086#1076'.)'
         DataBinding.FieldName = 'Sale_FromName'
         Visible = False
@@ -491,14 +491,14 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         HeaderAlignmentVert = vaCenter
         Width = 90
       end
-      object colSale_ToName: TcxGridDBColumn
+      object Sale_ToName: TcxGridDBColumn
         Caption = #1050#1086#1084#1091' ('#1087#1088#1086#1076'.)'
         DataBinding.FieldName = 'Sale_ToName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 120
       end
-      object colSale_TotalCount: TcxGridDBColumn
+      object Sale_TotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1089#1082#1083#1072#1076' ('#1087#1088#1086#1076'.)'
         DataBinding.FieldName = 'Sale_TotalCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -509,7 +509,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object colSale_TotalCountPartner: TcxGridDBColumn
+      object Sale_TotalCountPartner: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' ('#1091' '#1087#1086#1082#1091#1087'.) ('#1087#1088#1086#1076'.)'
         DataBinding.FieldName = 'Sale_TotalCountPartner'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -520,7 +520,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object colSale_TotalCountSh: TcxGridDBColumn
+      object Sale_TotalCountSh: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090'. ('#1091' '#1087#1086#1082#1091#1087'.) ('#1087#1088#1086#1076'.)'
         DataBinding.FieldName = 'Sale_TotalCountSh'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -531,7 +531,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object colSale_TotalCountKg: TcxGridDBColumn
+      object Sale_TotalCountKg: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1074#1077#1089' ('#1091' '#1087#1086#1082#1091#1087'.) ('#1087#1088#1086#1076'.)'
         DataBinding.FieldName = 'Sale_TotalCountKg'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -541,7 +541,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object colSale_TotalSumm: TcxGridDBColumn
+      object Sale_TotalSumm: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075') ('#1087#1088#1086#1076'.)'
         DataBinding.FieldName = 'Sale_TotalSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -552,7 +552,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object colSale_TotalSummPVAT: TcxGridDBColumn
+      object Sale_TotalSummPVAT: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1087#1088#1086#1076'.)'
         DataBinding.FieldName = 'Sale_TotalSummPVAT'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -830,6 +830,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
       FormName = 'TReport_SaleOrderExternalListDialogForm'
       FormNameParam.Value = 'TReport_SaleOrderExternalListDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -837,6 +838,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -844,6 +846,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitId'
@@ -851,6 +854,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
           Component = UnitGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
@@ -859,6 +863,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isSale'
@@ -866,6 +871,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
           Component = cbSale
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isNoSale'
@@ -873,6 +879,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
           Component = cbNoSale
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -900,16 +907,19 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
           Value = 42217d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 42217d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
       ReportName = #1056#1077#1077#1089#1090#1088' '#1087#1091#1090#1077#1074#1099#1093' '#1080' '#1085#1072#1077#1084#1085#1086#1075#1086' '#1090#1088#1072#1085#1089#1087#1086#1088#1090#1072
       ReportNameParam.Value = #1056#1077#1077#1089#1090#1088' '#1087#1091#1090#1077#1074#1099#1093' '#1080' '#1085#1072#1077#1084#1085#1086#1075#1086' '#1090#1088#1072#1085#1089#1087#1086#1088#1090#1072
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrintSaleOrder: TdsdPrintAction
       Category = 'DSDLib'
@@ -918,9 +928,11 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
           FromParam.Name = 'id'
           FromParam.Value = Null
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrint_SaleOrder
       StoredProcList = <
@@ -946,11 +958,13 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
           Name = 'Id'
           Value = Null
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_Sale_Order'
       ReportNameParam.Value = 'PrintMovement_Sale_Order'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -967,6 +981,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -974,6 +989,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -981,6 +997,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisSale'
@@ -988,6 +1005,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         Component = cbSale
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisNoSale'
@@ -995,6 +1013,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         Component = cbNoSale
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 152
@@ -1026,6 +1045,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -1054,6 +1074,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
     LookupControl = edUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1064,6 +1085,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1072,6 +1094,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 592
     Top = 11
@@ -1106,17 +1129,20 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         Component = ClientDataSet
         ComponentItem = 'MovementId_Order'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId_Weighing'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsDiff'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 615
