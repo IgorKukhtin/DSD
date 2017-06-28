@@ -65,9 +65,6 @@ BEGIN
       -- сохранили свойство <√лобальный уникальный идентификатор>
       PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GUID(), vbId, inGUID);
 
-      -- проводим фактический остаток
-      PERFORM gpComplete_Movement_StoreReal (inMovementId:= vbMovementId, inSession:= inSession);
-
       RETURN vbId;
 END;
 $BODY$

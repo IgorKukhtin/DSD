@@ -139,9 +139,6 @@ BEGIN
            -- сохранили свойство <Дата создания> - при загрузке с моб устр., здесь дата загрузки
            PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_Insert(), vbId, CURRENT_TIMESTAMP);
            */
-
-           -- !!! ДЛЯ ТЕСТА. Удаляем документ
-           PERFORM lpSetErased_Movement (inMovementId:= vbId, inUserId:= vbUserId);
       END IF;
 
       RETURN vbId;

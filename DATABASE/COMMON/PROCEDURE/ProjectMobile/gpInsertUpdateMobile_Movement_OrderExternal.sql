@@ -29,7 +29,6 @@ $BODY$
    DECLARE vbRouteId Integer;
    DECLARE vbPersonalId Integer;
    DECLARE vbStatusId Integer;
-   DECLARE vbPrinted Boolean;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderExternal());
@@ -88,7 +87,7 @@ BEGIN
 
       IF (vbisInsert = FALSE) AND (vbStatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_Erased()))
       THEN -- если заявка проведена, то распроводим
-           SELECT outPrinted INTO vbPrinted FROM lpUnComplete_Movement_OrderExternal (inMovementId:= vbId, inUserId:= vbUserId);
+           PERFORM lpUnComplete_Movement_OrderExternal (inMovementId:= vbId, inUserId:= vbUserId);
       END IF;
 
       vbId:= lpInsertUpdate_Movement_OrderExternal (ioId              := vbId
@@ -127,11 +126,6 @@ BEGIN
 
       -- сохранили свойство <Дата/время создания заказа на мобильном устройстве>
       PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_InsertMobile(), vbId, inInsertDate);
-
-      -- !!!ВРЕМЕННО - НЕ проводим заявку!!!
-      -- SELECT outPrinted INTO vbPrinted FROM lpComplete_Movement_OrderExternal (inMovementId:= vbId, inUserId:= vbUserId);
-      -- !!!ВРЕМЕННО - УДАЛЯЕМ заявку!!!
-      PERFORM lpSetErased_Movement (inMovementId:= vbId, inUserId:= vbUserId);
 
       RETURN vbId;                                                                      
 END;                                                                                    
