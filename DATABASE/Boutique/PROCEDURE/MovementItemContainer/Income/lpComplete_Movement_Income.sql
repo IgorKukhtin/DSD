@@ -44,8 +44,8 @@ BEGIN
                , vbAccountDirectionId_To
      FROM (SELECT Movement.DescId
                 , Movement.OperDate
-                , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Partner()    THEN Object_From.Id ELSE 0 END, 0) AS PartnerId_From
-                , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN Object_To.Id ELSE 0 END, 0) AS UnitId
+                , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Partner() THEN Object_From.Id ELSE 0 END, 0) AS PartnerId_From
+                , COALESCE (CASE WHEN Object_To.DescId   = zc_Object_Unit()    THEN Object_To.Id   ELSE 0 END, 0) AS UnitId
 
                 , COALESCE (MovementLinkObject_CurrencyDocument.ObjectId, zc_Currency_Basis()) AS CurrencyDocumentId
                 , COALESCE (MovementFloat_CurrencyValue.ValueData, 0)                          AS CurrencyValue

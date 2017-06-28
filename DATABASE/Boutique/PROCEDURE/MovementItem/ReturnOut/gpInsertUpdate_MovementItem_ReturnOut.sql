@@ -1,8 +1,5 @@
 -- Function: gpInsertUpdate_MovementItem_ReturnOut()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnOut (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnOut (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnOut (Integer, Integer, Integer, Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnOut (Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnOut(
@@ -61,8 +58,8 @@ BEGIN
 
 
      -- данные из партии : OperPrice и CountForPrice
-     SELECT COALESCE (Object_PartionGoods.CountForPrice,1)
-          , COALESCE (Object_PartionGoods.OperPrice,0)
+     SELECT COALESCE (Object_PartionGoods.CountForPrice, 1) AS CountForPrice
+          , COALESCE (Object_PartionGoods.OperPrice, 0)     AS OperPrice
             INTO outCountForPrice, outOperPrice
      FROM Object_PartionGoods
      WHERE Object_PartionGoods.MovementItemId = inPartionId;

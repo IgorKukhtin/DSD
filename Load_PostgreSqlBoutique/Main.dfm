@@ -1,8 +1,8 @@
 ﻿object MainForm: TMainForm
   Left = 202
   Top = 180
-  Caption = 'MainForm'
-  ClientHeight = 571
+  Caption = 'LoadBoutique - MainForm'
+  ClientHeight = 560
   ClientWidth = 1172
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -16,9 +16,9 @@
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter
-    Left = 685
+    Left = 485
     Top = 0
-    Height = 507
+    Height = 496
     Align = alRight
     ExplicitLeft = 683
     ExplicitTop = 32
@@ -27,8 +27,8 @@
   object DBGrid: TDBGrid
     Left = 0
     Top = 0
-    Width = 685
-    Height = 507
+    Width = 485
+    Height = 496
     Align = alClient
     DataSource = DataSource
     TabOrder = 0
@@ -40,7 +40,7 @@
   end
   object ButtonPanel: TPanel
     Left = 0
-    Top = 507
+    Top = 496
     Width = 1172
     Height = 64
     Align = alBottom
@@ -88,7 +88,7 @@
       Top = 24
       Width = 262
       Height = 17
-      Caption = #1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1076#1077#1081#1089#1090#1074#1080#1077' ('#1090#1086#1083#1100#1082#1086' '#1087#1086#1082#1072#1079#1072#1090#1100' '#1076#1072#1085#1085#1099#1077')'
+      Caption = #1054#1090#1082#1083#1102#1095#1080#1090#1100' ('#1090#1086#1083#1100#1082#1086' '#1087#1088#1086#1089#1084#1086#1090#1088')'
       TabOrder = 3
     end
     object OKDocumentButton: TButton
@@ -109,12 +109,12 @@
       TabOrder = 5
       OnClick = OKCompleteDocumentButtonClick
     end
-    object cbOnlyOpenMI: TCheckBox
-      Left = 1014
+    object cbOnlyOpenMIMaster: TCheckBox
+      Left = 932
       Top = 25
-      Width = 137
+      Width = 117
       Height = 17
-      Caption = #1090#1086#1083#1100#1082#1086' '#1089#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
+      Caption = #1090#1086#1083#1100#1082#1086' MI - Master'
       TabOrder = 6
     end
     object сbNotVisibleCursor: TCheckBox
@@ -126,27 +126,31 @@
       TabOrder = 7
       OnClick = сbNotVisibleCursorClick
     end
+    object cbOnlyOpenMIChild: TCheckBox
+      Left = 932
+      Top = 42
+      Width = 117
+      Height = 17
+      Caption = #1090#1086#1083#1100#1082#1086' MI - Child'
+      TabOrder = 8
+    end
   end
   object PageControl1: TPageControl
-    Left = 688
+    Left = 488
     Top = 0
-    Width = 484
-    Height = 507
+    Width = 684
+    Height = 496
     ActivePage = TabSheet1
     Align = alRight
     TabOrder = 2
     object TabSheet1: TTabSheet
       Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080' - '#1044#1086#1082#1091#1084#1077#1085#1090#1099
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GuidePanel: TPanel
-        Left = -13
+        Left = 0
         Top = 0
-        Width = 265
-        Height = 479
-        Align = alRight
+        Width = 256
+        Height = 468
+        Align = alLeft
         BevelOuter = bvNone
         TabOrder = 0
         object cbAllGuide: TCheckBox
@@ -606,11 +610,11 @@
         end
       end
       object DocumentPanel: TPanel
-        Left = 252
+        Left = 256
         Top = 0
-        Width = 224
-        Height = 479
-        Align = alRight
+        Width = 214
+        Height = 468
+        Align = alLeft
         BevelOuter = bvNone
         TabOrder = 1
         object Label1: TLabel
@@ -621,7 +625,7 @@
           Caption = #1089
         end
         object Label2: TLabel
-          Left = 109
+          Left = 98
           Top = 22
           Width = 12
           Height = 13
@@ -647,13 +651,13 @@
           Left = 15
           Top = 18
           TabOrder = 1
-          Width = 90
+          Width = 80
         end
         object EndDateEdit: TcxDateEdit
-          Left = 122
+          Left = 111
           Top = 18
           TabOrder = 2
-          Width = 90
+          Width = 80
         end
         object cbIncome: TCheckBox
           Tag = 20
@@ -733,7 +737,7 @@
         object cbDiscountPeriodItem: TCheckBox
           Tag = 20
           Left = 6
-          Top = 150
+          Top = 321
           Width = 178
           Height = 17
           Caption = '1.7. '#1048#1089#1090#1086#1088#1080#1103' '#1089#1082#1080#1076#1086#1082
@@ -749,7 +753,7 @@
         object cbPriceListItem: TCheckBox
           Tag = 20
           Left = 6
-          Top = 134
+          Top = 305
           Width = 178
           Height = 17
           Caption = '1.6. '#1048#1089#1090#1086#1088#1080#1103' '#1094#1077#1085#1099
@@ -780,7 +784,7 @@
         object cbSale: TCheckBox
           Tag = 20
           Left = 6
-          Top = 166
+          Top = 143
           Width = 235
           Height = 17
           Caption = '1.8. '#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
@@ -795,7 +799,7 @@
         object cbReturnIn: TCheckBox
           Tag = 20
           Left = 6
-          Top = 184
+          Top = 205
           Width = 235
           Height = 17
           Caption = '1.9. '#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
@@ -810,10 +814,10 @@
         object cbSale_Child: TCheckBox
           Tag = 20
           Left = 6
-          Top = 203
+          Top = 160
           Width = 235
           Height = 17
-          Caption = '1.10. '#1054#1087#1083#1072#1090#1099' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+          Caption = '1.10. '#1054#1087#1083#1072#1090#1099' '#1074' '#1087#1088#1086#1076#1072#1078#1072#1093
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -828,7 +832,7 @@
           Top = 222
           Width = 235
           Height = 17
-          Caption = '1.11. '#1042#1086#1079#1074#1088#1072#1090' '#1086#1087#1083#1072#1090#1099' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
+          Caption = '1.11. '#1054#1087#1083#1072#1090#1099' '#1074' '#1074#1086#1079#1074#1088#1072#1090#1072#1093
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -839,7 +843,7 @@
         end
         object cbTest: TCheckBox
           Left = 19
-          Top = 433
+          Top = 429
           Width = 150
           Height = 17
           Caption = #1058#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1058#1077#1089#1090' Id :'
@@ -853,7 +857,7 @@
         end
         object TestEdit: TEdit
           Left = 19
-          Top = 456
+          Top = 444
           Width = 104
           Height = 21
           TabOrder = 16
@@ -861,9 +865,9 @@
         object cbGoodsAccount: TCheckBox
           Tag = 20
           Left = 6
-          Top = 237
+          Top = 177
           Width = 195
-          Height = 36
+          Height = 19
           Caption = '1.12. '#1056#1072#1089#1095#1077#1090#1099' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -875,19 +879,265 @@
           WordWrap = True
         end
       end
+      object CompleteDocumentPanel: TPanel
+        Left = 470
+        Top = 0
+        Width = 206
+        Height = 468
+        Align = alClient
+        BevelOuter = bvNone
+        TabOrder = 2
+        object Label5: TLabel
+          Left = 6
+          Top = 22
+          Width = 6
+          Height = 13
+          Caption = #1089
+        end
+        object Label6: TLabel
+          Left = 97
+          Top = 22
+          Width = 12
+          Height = 13
+          Caption = #1087#1086
+        end
+        object cbAllCompleteDocument: TCheckBox
+          Tag = 3
+          Left = 15
+          Top = 1
+          Width = 194
+          Height = 17
+          Caption = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 0
+          OnClick = cbAllCompleteDocumentClick
+        end
+        object cbCompleteIncome: TCheckBox
+          Tag = 30
+          Left = 15
+          Top = 86
+          Width = 194
+          Height = 17
+          Caption = '1.1. '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 1
+          OnClick = cbCompleteIncomeClick
+        end
+        object StartDateCompleteEdit: TcxDateEdit
+          Left = 14
+          Top = 18
+          TabOrder = 2
+          Width = 80
+        end
+        object EndDateCompleteEdit: TcxDateEdit
+          Left = 110
+          Top = 18
+          TabOrder = 3
+          Width = 80
+        end
+        object cbComplete: TCheckBox
+          Left = 15
+          Top = 41
+          Width = 76
+          Height = 17
+          Caption = #1055#1088#1086#1074#1077#1089#1090#1080
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 4
+        end
+        object cbUnComplete: TCheckBox
+          Left = 98
+          Top = 41
+          Width = 95
+          Height = 17
+          Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 5
+        end
+        object cbCompleteSend: TCheckBox
+          Tag = 30
+          Left = 15
+          Top = 137
+          Width = 194
+          Height = 17
+          Caption = '2. '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 6
+          OnClick = cbCompleteIncomeClick
+        end
+        object cbLastComplete: TCheckBox
+          Left = 15
+          Top = 61
+          Width = 191
+          Height = 17
+          Caption = '!!!'#1073#1077#1079' '#1087#1088#1086#1074#1086#1076#1086#1082' C/C!!!'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 7
+        end
+        object cbCompleteInventory: TCheckBox
+          Tag = 30
+          Left = 15
+          Top = 177
+          Width = 194
+          Height = 17
+          Caption = '4. '#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 8
+          OnClick = cbCompleteIncomeClick
+        end
+        object cbCompleteSale: TCheckBox
+          Tag = 30
+          Left = 15
+          Top = 222
+          Width = 200
+          Height = 17
+          Caption = '5. '#1055#1088#1086#1076'.'#1087#1086#1082'.'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 9
+          OnClick = cbCompleteIncomeClick
+        end
+        object cbCompleteReturnIn: TCheckBox
+          Tag = 30
+          Left = 15
+          Top = 244
+          Width = 200
+          Height = 17
+          Caption = '6. '#1042#1086#1079'.'#1086#1090' '#1087#1086#1082'.'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 10
+          OnClick = cbCompleteIncomeClick
+        end
+        object cbCompleteReturnOut: TCheckBox
+          Tag = 30
+          Left = 15
+          Top = 105
+          Width = 194
+          Height = 17
+          Caption = '1.2. '#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' '
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 11
+          OnClick = cbCompleteIncomeClick
+        end
+        object cbCompleteAccount: TCheckBox
+          Tag = 30
+          Left = 15
+          Top = 267
+          Width = 194
+          Height = 17
+          Caption = '7. '#1056#1072#1089#1095#1077#1090#1099' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 12
+          OnClick = cbCompleteIncomeClick
+        end
+        object cbCompleteLoss: TCheckBox
+          Tag = 30
+          Left = 15
+          Top = 157
+          Width = 106
+          Height = 17
+          Caption = '3. '#1057#1087#1080#1089#1072#1085#1080#1077
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 13
+          OnClick = cbCompleteIncomeClick
+        end
+        object cbComplete_List: TCheckBox
+          Left = 15
+          Top = 321
+          Width = 176
+          Height = 17
+          Caption = '!!! C'#1087#1080#1089#1086#1082' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' !!!'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clHighlight
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 14
+          OnClick = cbCompleteIncomeClick
+        end
+        object cb100MSec: TCheckBox
+          Left = 15
+          Top = 357
+          Width = 76
+          Height = 17
+          Caption = '100MSec'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 15
+        end
+      end
     end
     object TabSheet2: TTabSheet
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1080#1079' '#1092#1072#1081#1083#1086#1074
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel1: TPanel
         Left = 0
         Top = 0
-        Width = 476
-        Height = 479
+        Width = 676
+        Height = 468
         Align = alClient
         TabOrder = 0
         object Label3: TLabel

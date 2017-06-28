@@ -115,7 +115,7 @@ type
     btnResultGroupCSV: TButton;
     lResultGroupCSV: TLabel;
     cbCreateDocId_Postgres: TCheckBox;
-    cbOnlyOpenMI: TCheckBox;
+    cbOnlyOpenMIMaster: TCheckBox;
     сbNotVisibleCursor: TCheckBox;
     cbJuridical: TCheckBox;
     cbReturnOut: TCheckBox;
@@ -136,6 +136,26 @@ type
     cbTest: TCheckBox;
     TestEdit: TEdit;
     cbGoodsAccount: TCheckBox;
+    CompleteDocumentPanel: TPanel;
+    Label5: TLabel;
+    Label6: TLabel;
+    cbAllCompleteDocument: TCheckBox;
+    cbCompleteIncome: TCheckBox;
+    StartDateCompleteEdit: TcxDateEdit;
+    EndDateCompleteEdit: TcxDateEdit;
+    cbComplete: TCheckBox;
+    cbUnComplete: TCheckBox;
+    cbCompleteSend: TCheckBox;
+    cbLastComplete: TCheckBox;
+    cbCompleteInventory: TCheckBox;
+    cbCompleteSale: TCheckBox;
+    cbCompleteReturnIn: TCheckBox;
+    cbCompleteReturnOut: TCheckBox;
+    cbCompleteAccount: TCheckBox;
+    cbCompleteLoss: TCheckBox;
+    cbComplete_List: TCheckBox;
+    cb100MSec: TCheckBox;
+    cbOnlyOpenMIChild: TCheckBox;
 
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
@@ -145,10 +165,7 @@ type
     procedure cbAllDocumentClick(Sender: TObject);
     procedure OKDocumentButtonClick(Sender: TObject);
     procedure cbAllCompleteDocumentClick(Sender: TObject);
-    procedure cbCompleteClick(Sender: TObject);
-    procedure cbUnCompleteClick(Sender: TObject);
     procedure OKCompleteDocumentButtonClick(Sender: TObject);
-    procedure cbTaxIntClick(Sender: TObject);
     procedure btnCreateTableDatClick(Sender: TObject);
     procedure btnLoadDatClick(Sender: TObject);
     procedure btnInsertGoods2Click(Sender: TObject);
@@ -160,6 +177,7 @@ type
     procedure btnResultGroupCSVClick(Sender: TObject);
     procedure ButtonPanelDblClick(Sender: TObject);
     procedure сbNotVisibleCursorClick(Sender: TObject);
+    procedure cbCompleteIncomeClick(Sender: TObject);
   private
     fStop:Boolean;
     isGlobalLoad,zc_rvYes,zc_rvNo:Integer;
@@ -226,36 +244,56 @@ type
     procedure pLoadGuide_Member;
     procedure pLoadGuide_User;
 
-// Documents
+   // Documents
     function  pLoadDocument_Income:Integer;
     procedure pLoadDocumentItem_Income(SaveCount:Integer);
+
     function  pLoadDocument_ReturnOut:Integer;
     procedure pLoadDocumentItem_ReturnOut(SaveCount:Integer);
+
     function  pLoadDocument_Send:Integer;
     procedure pLoadDocumentItem_Send(SaveCount:Integer);
+
     function  pLoadDocument_Loss:Integer;
     procedure pLoadDocumentItem_Loss(SaveCount:Integer);
-    procedure pLoadDocuments_PriceListItem;
-    procedure pLoadDocuments_DiscountPeriodItem;
+
     function  pLoadDocument_Inventory:Integer;
     procedure pLoadDocumentItem_Inventory(SaveCount:Integer);
+
     function  pLoadDocument_Sale:Integer;
     procedure pLoadDocumentItem_Sale(SaveCount:Integer);
+
     function  pLoadDocument_ReturnIn:Integer;
     procedure pLoadDocumentItem_ReturnIn(SaveCount:Integer);
+
     function  pLoadDocument_Sale_Child:Integer;
     function  pLoadDocument_ReturnIn_Child:Integer;
+
     function  pLoadDocument_GoodsAccount:Integer;
     procedure pLoadDocumentItem_GoodsAccount(SaveCount:Integer);
     function  pLoadDocument_GoodsAccount_Child:Integer;
 
+    procedure pLoadDocuments_PriceListItem;
+    procedure pLoadDocuments_DiscountPeriodItem;
 
-// Load from files *.dat
+    // Complete
+    procedure pCompleteDocumentAll(StartDate,EndDate:TDateTime);
+    procedure pCompleteDocument_Income;
+    procedure pCompleteDocument_ReturnOut;
+    procedure pCompleteDocument_Send;
+    procedure pCompleteDocument_Loss;
+    procedure pCompleteDocument_Inventory;
+
+    procedure pCompleteDocument_Sale;
+    procedure pCompleteDocument_ReturnIn;
+    procedure pCompleteDocument_Account;
+
+    procedure CursorGridChange;
+
+    // Load from files *.dat
     procedure pLoad_Chado;
-
     procedure myEnabledCB (cb:TCheckBox);
     procedure myDisabledCB (cb:TCheckBox);
-    procedure CursorGridChange;
   public
   end;
 
@@ -1467,6 +1505,10 @@ end;
 procedure TMainForm.cbAllCompleteDocumentClick(Sender: TObject);
 var i:Integer;
 begin
+     for i:=0 to ComponentCount-1 do
+        if (Components[i] is TCheckBox) then
+          if Components[i].Tag=30
+          then TCheckBox(Components[i]).Checked:=cbAllCompleteDocument.Checked;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.cbAllDocumentClick(Sender: TObject);
@@ -1478,19 +1520,10 @@ begin
           then TCheckBox(Components[i]).Checked:=cbAllDocument.Checked;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.cbCompleteClick(Sender: TObject);
+procedure TMainForm.cbCompleteIncomeClick(Sender: TObject);
 begin
-      //cbUnComplete.Checked:=not cbComplete.Checked;
-end;
-//----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.cbUnCompleteClick(Sender: TObject);
-begin
-      //cbComplete.Checked:=not cbUnComplete.Checked;
-end;
-//----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.cbTaxIntClick(Sender: TObject);
-begin
-
+     if (not cbComplete.Checked)and(not cbUnComplete.Checked)
+     then begin cbComplete.Checked:=true;cbUnComplete.Checked:=true;end;
 end;
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1505,36 +1538,6 @@ begin
      zc_rvYes:=0;
      zc_rvNo:=1;
      //
-     if ParamStr(1)='alan_dp_ua' then
-     with toZConnection do begin
-        Connected:=false;
-        HostName:='integer-srv.alan.dp.ua';
-        User:='admin';
-        Password:='vas6ok';
-        try Connected:=true; except ShowMessage ('not Connected');end;
-        //
-        isGlobalLoad:=zc_rvYes;
-        if Connected
-        then Self.Caption:= Self.Caption + ' : ' + HostName + ' : TRUE'
-        else Self.Caption:= Self.Caption + ' : ' + HostName + ' : FALSE';
-        Connected:=false;
-     end
-     else
-     if ParamStr(1)='alan_dp_ua_test' then
-     with toZConnection do begin
-        Connected:=false;
-        HostName:='integer-srv-r.alan.dp.ua';
-        User:='admin';
-        Password:='vas6ok';
-        try Connected:=true; except ShowMessage ('not Connected');end;
-        //
-        isGlobalLoad:=zc_rvYes;
-        if Connected
-        then Self.Caption:= Self.Caption + ' : ' + HostName + ' : TRUE'
-        else Self.Caption:= Self.Caption + ' : ' + HostName + ' : FALSE';
-        Connected:=false;
-     end
-     else
      with toZConnection do begin
         Connected:=false;
         HostName:='localhost';
@@ -1558,17 +1561,14 @@ begin
      Present:= Now;
      DecodeDate(Present, Year, Month, Day);
      StartDateEdit.Text:=DateToStr(StrToDate('01.'+IntToStr(Month)+'.'+IntToStr(Year)));
-//     StartDateCompleteEdit.Text:=StartDateEdit.Text;
+     StartDateCompleteEdit.Text:=StartDateEdit.Text;
 
      if Month=12 then begin Month:=1;Year:=Year+1;end else Month:=Month+1;
      EndDateEdit.Text:=DateToStr(StrToDate('01.'+IntToStr(Month)+'.'+IntToStr(Year))-1);
-//     EndDateCompleteEdit.Text:=EndDateEdit.Text;
+     EndDateCompleteEdit.Text:=EndDateEdit.Text;
      //
      TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
      if not Assigned (gc_User) then ShowMessage ('not Assigned (gc_User)');
-     //
-
-     //
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.btnInsertGoods2Click(Sender: TObject);
@@ -1984,14 +1984,9 @@ begin
      //
      tmpDate1:=NOw;
 
-     //!!!FLOAT!!!
-//     DataSource.DataSet:=fromFlQuery;
 
-     if not fStop then DataSource.DataSet:=fromQuery;
+     DataSource.DataSet:=fromQuery;
      CursorGridChange;
-     //!!!end FLOAT!!!
-     //
-
 
      //!!!Integer!!!
      if not fStop then pLoadGuide_Measure;
@@ -2136,12 +2131,381 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.OKCompleteDocumentButtonClick(Sender: TObject);
-var tmpDate1,tmpDate2,tmpDate3:TDateTime;
-    Year, Month, saveMonth, Day, Hour, Min, Sec, MSec: Word;
-    Year2, Month2, Day2: Word;
+var tmpDate1,tmpDate2:TDateTime;
+    Hour, Min, Sec, MSec: Word;
     StrTime:String;
-    saveStartDate,saveEndDate:TDateTime;
-    calcStartDate,calcEndDate:TDateTime;
+begin
+     if (cbComplete.Checked)and(cbUnComplete.Checked)
+     then if MessageDlg('Действительно Распровести/Провести выбранные документы?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit else
+     else
+         if cbUnComplete.Checked
+         then if MessageDlg('Действительно только Распровести выбранные документы?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit else
+         else
+             if cbComplete.Checked then if MessageDlg('Действительно только Провести выбранные документы?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit else
+             else begin ShowMessage('Ошибка.Не выбрано Распровести или Провести или Сохранение.'); end;
+     //
+     DataSource.DataSet:=fromQuery;
+     CursorGridChange;
+     //
+     fStop:=false;
+     DBGrid.Enabled:=false;
+     OKGuideButton.Enabled:=false;
+     OKDocumentButton.Enabled:=false;
+     OKCompleteDocumentButton.Enabled:=false;
+     //
+     Gauge.Visible:=true;
+     //
+     tmpDate1:=NOw;
+     //
+     //
+     pCompleteDocumentAll(StrToDate(StartDateCompleteEdit.Text),StrToDate(EndDateCompleteEdit.Text));
+     //
+     //
+     DBGrid.Enabled:=true;
+     Gauge.Visible:=false;
+     OKGuideButton.Enabled:=true;
+     OKDocumentButton.Enabled:=true;
+     OKCompleteDocumentButton.Enabled:=true;
+     //
+     //
+     tmpDate2:=NOw;
+     if (tmpDate2-tmpDate1)>=1
+     then StrTime:=DateTimeToStr(tmpDate2-tmpDate1)
+     else begin
+               DecodeTime(tmpDate2-tmpDate1, Hour, Min, Sec, MSec);
+               StrTime:=IntToStr(Hour)+':'+IntToStr(Min)+':'+IntToStr(Sec);
+     end;
+     //
+     if fStop then ShowMessage('Документы НЕ Распроведены и(или) НЕ Проведены. Time=('+StrTime+').')
+     else ShowMessage('Документы Распроведены и(или) Проведены. Time=('+StrTime+').');
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pCompleteDocumentAll(StartDate,EndDate:TDateTime);
+begin
+     StartDateCompleteEdit.Text:=DateToStr(StartDate);
+     EndDateCompleteEdit.Text:=DateToStr(EndDate);
+
+     if not fStop then pCompleteDocument_Income;
+     if not fStop then pCompleteDocument_ReturnOut;
+
+     if not fStop then pCompleteDocument_Send;
+     if not fStop then pCompleteDocument_Loss;
+     if not fStop then pCompleteDocument_Inventory;
+
+     if not fStop then pCompleteDocument_Sale;
+     if not fStop then pCompleteDocument_ReturnIn;
+     if not fStop then pCompleteDocument_Account;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pCompleteDocument_Income;
+begin
+     if (not cbCompleteIncome.Checked)or(not cbCompleteIncome.Enabled) then exit;
+     //
+     myEnabledCB(cbCompleteIncome);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select Bill.Id as ObjectId');
+        Add('     , Bill.BillDate as OperDate');
+        Add('     , cast (Bill.BillNumber as integer) as InvNumber');
+        Add('     , UnitFrom.UnitName, UnitTo.UnitName');
+        Add('     , Bill.Id_Postgres as Id_Postgres');
+        Add('from dba.Bill');
+        Add('     left join dba.Unit as UnitFrom on UnitFrom.Id = Bill.FromID');
+        Add('     left join dba.Unit as UnitTo on UnitTo.Id = Bill.ToID');
+
+        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
+           +'  and Bill.BillKind=zc_bkIncomeFromClientToUnit()'
+           +'  and Id_Postgres >0'
+           );
+        Add('order by OperDate,ObjectId');
+        Open;
+
+        cbCompleteIncome.Caption:='1.1. ('+IntToStr(RecordCount)+') Приход от поставщика';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpUnComplete_Movement_Income';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        //
+        toStoredProc_two.StoredProcName:='gpComplete_Movement_Income';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             if cbUnComplete.Checked then
+             begin
+                  toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  if not myExecToStoredProc then ;//exit;
+             end;
+             if (cbComplete.Checked) then
+             begin
+                  toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  if not myExecToStoredProc_two then ;//exit;
+             end;
+
+             //
+             Next;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbCompleteIncome);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pCompleteDocument_ReturnOut;
+begin
+     if (not cbCompleteReturnOut.Checked)or(not cbCompleteReturnOut.Enabled) then exit;
+     //
+     myEnabledCB(cbCompleteReturnOut);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select Bill.Id as ObjectId');
+        Add('     , Bill.BillDate as OperDate');
+        Add('     , cast (Bill.BillNumber as integer) as InvNumber');
+        Add('     , UnitFrom.UnitName, UnitTo.UnitName');
+        Add('     , Bill.Id_Postgres as Id_Postgres');
+        Add('from dba.Bill');
+        Add('     left join dba.Unit as UnitFrom on UnitFrom.Id = Bill.FromID');
+        Add('     left join dba.Unit as UnitTo on UnitTo.Id = Bill.ToID');
+
+        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
+           +'  and Bill.BillKind = zc_bkReturnFromUnitToClient()'
+           +'  and Id_Postgres > 0'
+           );
+        Add('order by OperDate,ObjectId');
+        Open;
+
+        cbCompleteReturnOut.Caption:='1.2. ('+IntToStr(RecordCount)+') Возврат поставщику';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpUnComplete_Movement_ReturnOut';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        //
+        toStoredProc_two.StoredProcName:='gpComplete_Movement_ReturnOut';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             if cbUnComplete.Checked then
+             begin
+                  toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  if not myExecToStoredProc then ;//exit;
+             end;
+             if (cbComplete.Checked) then
+             begin
+                  toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  if not myExecToStoredProc_two then ;//exit;
+             end;
+
+             //
+             Next;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbCompleteReturnOut);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pCompleteDocument_Send;
+begin
+     if (not cbCompleteSend.Checked)or(not cbCompleteSend.Enabled) then exit;
+     //
+     myEnabledCB(cbCompleteSend);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select Bill.Id as ObjectId');
+        Add('     , Bill.BillDate as OperDate');
+        Add('     , cast (Bill.BillNumber as integer) as InvNumber');
+        Add('     , UnitFrom.UnitName, UnitTo.UnitName');
+        Add('     , Bill.Id_Postgres as Id_Postgres');
+        Add('from dba.Bill');
+        Add('     left join dba.Unit as UnitFrom on UnitFrom.Id = Bill.FromID');
+        Add('     left join dba.Unit as UnitTo on UnitTo.Id = Bill.ToID');
+
+        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
+           +'  and Bill.BillKind = zc_bkSendFromUnitToUnit()'
+           +'  and Id_Postgres > 0'
+           );
+        Add('order by OperDate,ObjectId');
+        Open;
+
+        cbCompleteSend.Caption:='1.3. ('+IntToStr(RecordCount)+') Перемещение';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpUnComplete_Movement_Send';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        //
+        toStoredProc_two.StoredProcName:='gpComplete_Movement_Send';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             if cbUnComplete.Checked then
+             begin
+                  toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  if not myExecToStoredProc then ;//exit;
+             end;
+             if (cbComplete.Checked) then
+             begin
+                  toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  if not myExecToStoredProc_two then ;//exit;
+             end;
+
+             //
+             Next;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbCompleteSend);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pCompleteDocument_Loss;
+begin
+     if (not cbCompleteLoss.Checked)or(not cbCompleteLoss.Enabled) then exit;
+     //
+     myEnabledCB(cbCompleteLoss);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select Bill.Id as ObjectId');
+        Add('     , Bill.BillDate as OperDate');
+        Add('     , cast (Bill.BillNumber as integer) as InvNumber');
+        Add('     , UnitFrom.UnitName, UnitTo.UnitName');
+        Add('     , Bill.Id_Postgres as Id_Postgres');
+        Add('from dba.Bill');
+        Add('     left join dba.Unit as UnitFrom on UnitFrom.Id = Bill.FromID');
+        Add('     left join dba.Unit as UnitTo on UnitTo.Id = Bill.ToID');
+
+        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
+           +'  and Bill.BillKind = zc_bkOutFromUnitToBrak()'
+           +'  and Id_Postgres > 0'
+           );
+        Add('order by OperDate,ObjectId');
+        Open;
+
+        cbCompleteLoss.Caption:='1.4. ('+IntToStr(RecordCount)+') Списание';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpUnComplete_Movement_Loss';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        //
+        toStoredProc_two.StoredProcName:='gpComplete_Movement_Loss';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             if cbUnComplete.Checked then
+             begin
+                  toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  if not myExecToStoredProc then ;//exit;
+             end;
+             if (cbComplete.Checked) then
+             begin
+                  toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  if not myExecToStoredProc_two then ;//exit;
+             end;
+
+             //
+             Next;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbCompleteLoss);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pCompleteDocument_Inventory;
+begin
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pCompleteDocument_Sale;
+begin
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pCompleteDocument_ReturnIn;
+begin
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pCompleteDocument_Account;
 begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2465,7 +2829,7 @@ begin
         Close;
         Clear;
         Add(' select BillItemsIncome.Id as ObjectId');
-        Add('     , BillItemsIncome.Id as SybaseId'); // !!!надо сохранить этот ключ
+        Add('     , BillItemsIncome.Id_Postgres as Id_Postgres');
         Add('     , Bill.Id_Postgres as MovementId_pg');
 
         // !!!последнюю группу не загружаем, но кроме АРХИВА
@@ -2492,7 +2856,7 @@ begin
         Add('     , BillItemsIncome.PriceListPrice as OperPriceList');
         Add('     , Firma.Id_Postgres as JuridicalId_pg');
         Add('     , Measure.Id_Postgres as MeasureId_pg');
-        Add('     , BillItemsIncome.Id_Postgres as Id_Postgres');
+        Add('     , BillItemsIncome.Id as SybaseId'); // !!!надо сохранить этот ключ
         Add(' from dba.Bill');
         Add('     join dba.BillItemsIncome on BillItemsIncome.BillID = Bill.Id');
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItemsIncome.GoodsPropertyId  ');
@@ -2601,6 +2965,7 @@ begin
         Clear;
         Add('select ');
         Add('      DiscountMovementItemInventory_byBarCode.Id as ObjectId   ');
+        Add('    , DiscountMovementItemInventory_byBarCode.Id_Postgres ');
         Add('    , DiscountMovementInventory.Id_Postgres as MovementId   ');
         Add('    , BillItemsIncome.GoodsId_Postgres as GoodsId  ');
         Add('    , BillItemsIncome.Id_Postgres as PartionId  ');
@@ -2609,12 +2974,11 @@ begin
 //        Add('    , DiscountMovementItemInventory_byBarCode.CalcOperCount as AmountRemains ');
 //        Add('    , DiscountMovementItemInventory_byBarCode.CalcOperCount_two as AmountSecondRemains ');
 //        Add('    , DiscountMovementItemInventory_byBarCode.DolgOperCount as AmountDolg ');
-        Add('    , DiscountMovementItemInventory_byBarCode.Id_Postgres ');
         Add('from dba.DiscountMovementItemInventory_byBarCode    ');
         Add('    join DiscountMovementInventory on DiscountMovementInventory.id = DiscountMovementItemInventory_byBarCode.DiscountMovementId ');
         Add('    left join BillItemsIncome on BillItemsIncome.id = DiscountMovementItemInventory_byBarCode.BillItemsIncomeId ');
         Add('where  DiscountMovementInventory.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
-        Add('order by ObjectId  ');
+        Add('order by OperDate, ObjectId  ');
         Open;
 
         cbInventory.Caption:='1.5. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Инвентаризация ';
@@ -2676,23 +3040,22 @@ begin
         Close;
         Clear;
         Add(' select BillItems.Id as ObjectId  ');
+        Add('     , BillItems.LossId_Postgres as Id_Postgres  ');
         Add('     , Bill.Id_Postgres as MovementId  ');
         Add('     , BillItemsIncome.GoodsId_Postgres as GoodsId  ');
-        Add('     , BillItems.Id as SybaseId  ');
-        Add('     , Goods.GoodsName as GoodsName ');
         Add('     , BillItemsIncome.Id_Postgres as PartionId ');
+        Add('     , Goods.GoodsName as GoodsName ');
         Add('     , abs(BillItems.OperCount) as Amount  ');
         Add('     , BillItems.OperPrice as OperPrice  ');
         Add('     , 1 as CountForPrice  ');
         Add('     , BillItems.PriceListPrice as OperPriceList  ');
-        Add('     , BillItems.LossId_Postgres as LossId_Postgres  ');
         Add(' from dba.BillItems   ');
         Add('     join dba.Bill on BillItems.BillID = Bill.Id ');
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId  ');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId  ');
-        Add('      left outer join  DBA.BillItemsIncome on BillItemsIncome.Id = BillItems.BillItemsIncomeID ');
-        Add(' where  Bill.BillKind = 1 and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
-        Add(' order by Bill.Id ');
+        Add('     left outer join  DBA.BillItemsIncome on BillItemsIncome.Id = BillItems.BillItemsIncomeID ');
+        Add(' where  Bill.BillKind = zc_bkOutFromUnitToBrak() and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add(' order by Bill.BillDate, Bill.Id ');
         Open;
 
         cbLoss.Caption:='1.4. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Списание';
@@ -2711,19 +3074,20 @@ begin
         toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPartionId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('ioOperPriceList',ftFloat,ptInput, 0);
         //
-
         while not EOF do
         begin
              //!!!
              if fStop then begin exit; end;
 
               //
-             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('LossId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId').AsInteger;
              toStoredProc.Params.ParamByName('inPartionId').Value:=FieldByName('PartionId').AsInteger;
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
+             toStoredProc.Params.ParamByName('ioOperPriceList').Value:=FieldByName('OperPriceList').AsFloat;
 
              if not myExecToStoredProc then ;//exit;
              //
@@ -2753,18 +3117,18 @@ begin
         Clear;
         Add('SELECT');
         Add('      DiscountMovementItemReturn_byBarCode.Id as ObjectId');
+        Add('    , DiscountMovementItemReturn_byBarCode.Id_Postgres');
         Add('    , DiscountMovement.ReturnInId_Postgres as MovementId');
         Add('    , BillItemsIncome.GoodsId_Postgres as GoodsId');
         Add('    , BillItemsIncome.Id_Postgres as PartionId');
         Add('    , DiscountMovementItem_byBarCode.Id_Postgres as SaleMI_Id');
         Add('    , DiscountMovementItemReturn_byBarCode.OperCount as Amount');
-        Add('    , DiscountMovementItemReturn_byBarCode.Id_Postgres');
         Add('FROM dba.DiscountMovementItemReturn_byBarCode');
         Add('    join DiscountMovement     on DiscountMovement.id = DiscountMovementItemReturn_byBarCode.DiscountMovementId');
         Add('    left join BillItemsIncome on BillItemsIncome.id  = DiscountMovementItemReturn_byBarCode.BillItemsIncomeId');
         Add('    left join DiscountMovementItem_byBarCode  on DiscountMovementItem_byBarCode.Id = DiscountMovementItemReturn_byBarCode.DiscountMovementItemId ');
         Add('WHERE DiscountMovement.descId = 2  AND DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
-        Add('ORDER BY ObjectId ');
+        Add('ORDER BY OperDate, ObjectId ');
         Open;
 
         cbReturnIn.Caption:='1.9. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Возврат от покупателя';
@@ -2832,25 +3196,24 @@ begin
         Close;
         Clear;
         Add(' select BillItems.Id as ObjectId  ');
+        Add('     , BillItems.ReturnOutId_Postgres as Id_Postgres  ');
         Add('     , Bill.Id_Postgres as MovementId  ');
         Add('     , BillItemsIncome.GoodsId_Postgres as GoodsId  ');
-        Add('     , BillItems.Id as SybaseId  ');
-        Add('     , Goods.GoodsName as GoodsName ');
         Add('     , BillItemsIncome.Id_Postgres as PartionId ');
+        Add('     , Goods.GoodsName as GoodsName ');
         Add('     , abs(BillItems.OperCount) as Amount  ');
         Add('     , BillItems.OperPrice as OperPrice  ');
         Add('     , 1 as CountForPrice  ');
         Add('     , BillItems.PriceListPrice as OperPriceList  ');
-        Add('     , BillItems.ReturnOutId_Postgres as ReturnOutId_Postgres  ');
         Add(' from dba.BillItems   ');
         Add('     join dba.Bill on BillItems.BillID = Bill.Id ');
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId  ');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId  ');
         Add('     left outer join  DBA.BillItemsIncome on BillItemsIncome.Id = BillItems.BillItemsIncomeID ');
-        Add(' where Bill.BillKind = 4 ');
+        Add(' where Bill.BillKind = zc_bkReturnFromUnitToClient() ');
         Add('   and BillItems.PriceListPrice <> 100000 '); // для Долги BillItems.PriceListPrice = 100000 - нет GoodsId
         Add('   and Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
-        Add(' order by Bill.Id ');
+        Add(' order by Bill.BillDate, Bill.Id, BillItems.Id ');
         Open;
 
         cbReturnOut.Caption:='1.2. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Возврат поставщику';
@@ -2878,7 +3241,7 @@ begin
              if fStop then begin exit; end;
 
               //
-             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('ReturnOutId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId').AsInteger;
              toStoredProc.Params.ParamByName('inPartionId').Value:=FieldByName('PartionId').AsInteger;
@@ -2904,7 +3267,6 @@ end;
 
 procedure TMainForm.pLoadDocumentItem_Sale(SaveCount: Integer);
 begin
-exit;
      if (not cbSale.Checked)or(not cbSale.Enabled) then exit;
      //
      myEnabledCB(cbSale);
@@ -2914,6 +3276,7 @@ exit;
         Clear;
         Add('SELECT');
         Add('      DiscountMovementItem_byBarCode.Id as ObjectId');
+        Add('    , DiscountMovementItem_byBarCode.Id_Postgres');
         Add('    , DiscountMovement.SaleId_Postgres as MovementId');
         Add('    , BillItemsIncome.GoodsId_Postgres as GoodsId');
         Add('    , BillItemsIncome.Id_Postgres as PartionId');
@@ -2921,12 +3284,11 @@ exit;
         Add('    , DiscountMovementItem_byBarCode.SummDiscountManual as SummChangePercent');
         Add('    , DiscountMovementItem_byBarCode.OperPrice as OperPriceList');
         Add('    , DiscountMovementItem_byBarCode.BarCode_byClient as BarCode');
-        Add('    , DiscountMovementItem_byBarCode.Id_Postgres');
         Add('FROM dba.DiscountMovementItem_byBarCode');
         Add('    join DiscountMovement     on DiscountMovement.id = DiscountMovementItem_byBarCode.DiscountMovementId');
         Add('    left join BillItemsIncome on BillItemsIncome.id  = DiscountMovementItem_byBarCode.BillItemsIncomeId');
         Add('WHERE DiscountMovement.descId = 1  AND DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
-        Add('ORDER BY ObjectId ');
+        Add('ORDER BY DiscountMovement.OperDate, ObjectId ');
         Open;
 
         cbSale.Caption:='1.8. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Продажа покупателю';
@@ -2997,22 +3359,21 @@ begin
         Close;
         Clear;
         Add(' select BillItems.Id as ObjectId  ');
+        Add('     , BillItems.SendId_Postgres as Id_Postgres  ');
         Add('     , Bill.Id_Postgres as MovementId  ');
         Add('     , BillItemsIncome.GoodsId_Postgres as GoodsId  ');
-        Add('     , BillItems.Id as SybaseId  ');
-        Add('     , Goods.GoodsName as GoodsName ');
         Add('     , BillItemsIncome.Id_Postgres as PartionId ');
+        Add('     , Goods.GoodsName as GoodsName ');
         Add('     , abs(BillItems.OperCount) as Amount  ');
         Add('     , BillItems.OperPrice as OperPrice  ');
         Add('     , BillItems.PriceListPrice as OperPriceList  ');
-        Add('     , BillItems.SendId_Postgres as SendId_Postgres  ');
         Add(' from dba.BillItems   ');
         Add('     join dba.Bill on BillItems.BillID = Bill.Id ');
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId  ');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId  ');
-        Add('     left outer join  DBA.BillItemsIncome on BillItemsIncome.Id = BillItems.BillItemsIncomeID ');
-        Add(' where  Bill.BillKind = 6 and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
-        Add(' order by Bill.Id ');
+        Add('     left outer join DBA.BillItemsIncome on BillItemsIncome.Id = BillItems.BillItemsIncomeID ');
+        Add(' where  Bill.BillKind = zc_bkSendFromUnitToUnit() and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add(' order by Bill.BillDate, Bill.Id, BillItems.Id ');
         Open;
         Open;
 
@@ -3032,8 +3393,8 @@ begin
         toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPartionId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('ioOperPriceList',ftFloat,ptInput, 0);
         //
-
         while not EOF do
         begin
              //!!!
@@ -3045,6 +3406,7 @@ begin
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId').AsInteger;
              toStoredProc.Params.ParamByName('inPartionId').Value:=FieldByName('PartionId').AsInteger;
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
+             toStoredProc.Params.ParamByName('ioOperPriceList').Value:=FieldByName('OperPriceList').AsFloat;
 
              if not myExecToStoredProc then ;//exit;
              //
@@ -3103,7 +3465,7 @@ begin
         //
         //
         //
-        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
+        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMIMaster.Checked)and(not  cbOnlyOpenMIChild.Checked);
 
         if cbOnlyOpen.Checked then exit;
         //
@@ -3216,7 +3578,7 @@ begin
         //
         //
         //
-        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
+        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMIMaster.Checked)and(not cbOnlyOpenMIChild.Checked);
 
         if cbOnlyOpen.Checked then exit;
         //
@@ -3286,6 +3648,7 @@ begin
         Close;
         Clear;
         Add(' select Bill.Id as ObjectId ');
+        Add('     , Bill.Id_Postgres ');
         Add('     , Bill.BillNumber as InvNumber ');
         Add('     , Bill.BillDate as OperDate ');
         Add('     , Bill_From.Id_Postgres as FromId  ');
@@ -3299,13 +3662,12 @@ begin
         Add('     , 0 as CurrencyPartnerValue ');
         Add('     , 1 as ParPartnerValue ');
         Add('     , '''' as Comments ');
-        Add('     , Bill.Id_Postgres ');
         Add(' from DBA.Bill ');
         Add('     left outer join DBA.Unit as Bill_From on Bill_From.Id = Bill.FromID ');
         Add('     left outer join DBA.Unit as Bill_To on Bill_To.Id = Bill.ToID ');
         Add('     left outer join DBA.Valuta as Bill_CurrencyDocument on Bill_CurrencyDocument.Id = Bill.ValutaIDIn   ');
         Add(' where Bill.BillKind = zc_bkIncomeFromClientToUnit() and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
-        Add(' order by ObjectId ');
+        Add(' order by Bill.BillDate, ObjectId ');
         Open;
 
         Result:=RecordCount;
@@ -3314,7 +3676,7 @@ begin
         //
         //
         //
-        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
+        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMIMaster.Checked)and(not cbOnlyOpenMIChild.Checked);
 
         if cbOnlyOpen.Checked then exit;
         //
@@ -3325,7 +3687,7 @@ begin
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
-        toStoredProc.Params.AddParam ('inInvNumber',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('ioInvNumber',ftString,ptInputOutput, '');
         toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
         toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
@@ -3341,7 +3703,7 @@ begin
 
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber').AsString;
+             toStoredProc.Params.ParamByName('ioInvNumber').Value:=FieldByName('InvNumber').AsString;
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
              toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId').AsInteger;
              toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId').AsInteger;
@@ -3382,18 +3744,18 @@ begin
         Clear;
         Add('select ');
         Add('      DiscountMovementInventory.Id as ObjectId ');
+        Add('    , DiscountMovementInventory.Id_Postgres ');
         Add('    , 0 as InvNumber ');
         Add('    , DiscountMovementInventory.OperDate as OperDate ');
         Add('    , DiscountMovementInventory_From.Id_Postgres as FromId  ');
         Add('    , DiscountMovementInventory_From.UnitName as UnitNameFrom ');
         Add('    , DiscountMovementInventory_To.Id_Postgres as ToId ');
         Add('    , DiscountMovementInventory_To.UnitName as UnitNameTo ');
-        Add('    , DiscountMovementInventory.Id_Postgres ');
         Add('from DBA.DiscountMovementInventory ');
         Add('    left outer join DBA.Unit as DiscountMovementInventory_From on DiscountMovementInventory_From.Id = DiscountMovementInventory.UnitID ');
         Add('    left outer join DBA.Unit as DiscountMovementInventory_To on DiscountMovementInventory_To.Id = DiscountMovementInventory.UnitID_two ');
         Add('where  DiscountMovementInventory.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
-        Add('order by ObjectId ');
+        Add('order by OperDate, ObjectId ');
         Open;
 
         Result:=RecordCount;
@@ -3402,7 +3764,7 @@ begin
         //
         //
         //
-        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
+        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMIMaster.Checked)and(not cbOnlyOpenMIChild.Checked);
 
         if cbOnlyOpen.Checked then exit;
         //
@@ -3463,31 +3825,21 @@ begin
         Close;
         Clear;
         Add(' select Bill.Id as ObjectId ');
+        Add('     , Bill.Id_Postgres ');
         Add('     , Bill.BillNumber as InvNumber ');
         Add('     , Bill.BillDate as OperDate ');
         Add('     , Bill_From.Id_Postgres as FromId  ');
         Add('     , Bill_From.UnitName as UnitNameFrom ');
         Add('     , Bill_To.Id_Postgres as ToId ');
         Add('     , Bill_To.UnitName as UnitNameTo ');
-        Add('     , Bill_CurrencyDocument.Id_Postgres as CurrencyDocumentId ');
-        Add('     , Bill_CurrencyDocument.ValutaName as  CurrencyDocumentName ');
-        Add('     , Bill_CurrencyPartner.Id_Postgres as CurrencyPartnerId ');
-        Add('     , Bill_CurrencyPartner.ValutaName as CurrencyPartnerName ');
-        //Add('     , ValutaDoc.NewKursIn as CurrencyValue ');
-        //Add('     , ValutaDoc.NominalFromValuta as ParValue ');
-        //Add('     , ValutaPar.NewKursOut as CurrencyPartnerValue ');
-        //Add('     , ValutaPar.NominalFromValuta as ParPartnerValue ');
         Add('     , '''' as Comments ');
-        Add('     , Bill.Id_Postgres ');
         Add(' from DBA.Bill ');
         Add('     left outer join DBA.Unit as Bill_From on Bill_From.Id = Bill.FromID ');
         Add('     left outer join DBA.Unit as Bill_To on Bill_To.Id = Bill.ToID ');
-        Add('     left outer join DBA.Valuta as Bill_CurrencyDocument on Bill_CurrencyDocument.Id = Bill.ValutaIDIn   ');
-        Add('     left outer join DBA.Valuta as Bill_CurrencyPartner on Bill_CurrencyPartner.Id = Bill.ValutaID  ');
         //Add('     left outer join (select * from  DBA.ValutaKursItems order by id desc ) as valutaDoc  on Bill.BillDate  between valutaDoc.startDate and valutaDoc.EndDate and valutaDoc.FromValutaID = Bill.ValutaIDIn  and valutaDoc.ToValutaID = Bill.ValutaIDpl ');
         //Add('     left outer join (select * from  DBA.ValutaKursItems order by id desc ) as valutaPar  on Bill.BillDate  between valutaPar.startDate and valutaPar.EndDate and valutaPar.FromValutaID = Bill.ValutaIDIn  and valutaPar.ToValutaID = Bill.ValutaID ');
-        Add(' where  Bill.BillKind = 1 and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
-        Add(' order by ObjectId ');
+        Add(' where  Bill.BillKind = zc_bkOutFromUnitToBrak() and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add(' order by Bill.BillDate, ObjectId ');
         Open;
 
         Result:=RecordCount;
@@ -3496,7 +3848,7 @@ begin
         //
         //
         //
-        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
+        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMIMaster.Checked)and(not cbOnlyOpenMIChild.Checked);
 
         if cbOnlyOpen.Checked then exit;
         //
@@ -3507,7 +3859,7 @@ begin
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
-        toStoredProc.Params.AddParam ('inInvNumber',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('ioInvNumber',ftString,ptInputOutput, '');
         toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
         toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
@@ -3525,7 +3877,7 @@ begin
 
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber').AsString;
+             toStoredProc.Params.ParamByName('ioInvNumber').Value:=FieldByName('InvNumber').AsString;
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
              toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId').AsInteger;
              toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId').AsInteger;
@@ -3563,19 +3915,19 @@ begin
         Clear;
         Add('select');
         Add('      DiscountMovement.Id as ObjectId');
+        Add('    , DiscountMovement.ReturnInId_Postgres as Id_Postgres');
         Add('    , 0 as InvNumber');
         Add('    , date(DiscountMovement.OperDate) as OperDate');   // Со времене ошибка неверный формат даты
         Add('    , DiscountMovement_From.Id_Postgres as FromId ');
         Add('    , DiscountMovement_From.UnitName as UnitNameFrom');
         Add('    , DiscountMovement_To.Id_Postgres as ToId');
         Add('    , DiscountMovement_To.UnitName as UnitNameTo');
-        Add('    , DiscountMovement.ReturnInId_Postgres');
         Add('from DBA.DiscountMovement');
         Add('    left join DBA.Unit as DiscountMovement_To on DiscountMovement_To.Id = DiscountMovement.UnitID');
         Add('    left join DBA.DiscountKlient as DiscountKlient on DiscountKlient.Id = DiscountMovement.DiscountKlientID');
         Add('    left join DBA.Unit as DiscountMovement_From on DiscountKlient.ClientId = DiscountMovement_From.id');
         Add('where DiscountMovement.descId = 2  and DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
-        Add('order by ObjectId');
+        Add('order by OperDate, ObjectId');
         Open;
 
         Result:=RecordCount;
@@ -3584,7 +3936,7 @@ begin
         //
         //
         //
-        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
+        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMIMaster.Checked)and(not cbOnlyOpenMIChild.Checked);
 
         if cbOnlyOpen.Checked then exit;
         //
@@ -3609,7 +3961,7 @@ begin
              //
 
              //
-             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('ReturnInId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('ioInvNumber').Value:=FieldByName('InvNumber').AsString;
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
              toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId').AsInteger;
@@ -3641,63 +3993,41 @@ begin
      //
      myEnabledCB(cbReturnIn_Child);
      //
-      try fExecSqFromQuery_noErr(' drop table dba._TableLoadReturnIn '); except end;   // Закомитить после первого использования. // нужно если была создана старая таблица перед этим
-      //создаем Таблицу, т.к. подзапрос не пашет
-      try fExecSqFromQuery_noErr(' create table dba._TableLoadReturnIn ( ObjectId integer, MovementId integer, ParentId integer, KassaID integer, ' + ' AmountGRN decimal, AmountEUR decimal, AmountUSD decimal, AmountCard decimal,  CurrencyValueUSD decimal, ParValueUSD decimal, CurrencyValueEUR decimal,  ParValueEUR decimal )');
-      except end;
-      fExecSqFromQuery(' delete from dba._TableLoadReturnIn');
-      fExecSqFromQuery(' insert into dba._TableLoadReturnIn (ObjectId, MovementId, ParentId, KassaID, AmountGRN, AmountEUR, AmountUSD, AmountCard, CurrencyValueUSD, ParValueUSD, CurrencyValueEUR,  ParValueEUR )'
-             + ' SELECT'
-             + '      DiscountKlientAccountMoney.Id as ObjectId'
-             + '    , DiscountMovement.ReturnInId_Postgres as MovementId'
-             + '    , DiscountMovementItemReturn_byBarCode.Id_Postgres as ParentId'
-             + '    , Kassa.ID as  KassaID'
-             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=1 then  Abs(DiscountKlientAccountMoney.Summa) else 0 endif as AmountGRN'
-             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=2 then  Abs(DiscountKlientAccountMoney.Summa) else 0 endif as AmountEUR'
-             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=5 then  Abs(DiscountKlientAccountMoney.Summa) else 0 endif as AmountUSD'
-             + '    , if  Kassa.ID in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  ) then  DiscountKlientAccountMoney.Summa else 0 endif as AmountCard'
-             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=5 then DiscountKlientAccountMoney.KursClient else 0 endif as CurrencyValueUSD'
-             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=5 then DiscountKlientAccountMoney.NominalKursClient else 0 endif as ParValueUSD'
-             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=2 then DiscountKlientAccountMoney.KursClient else 0 endif as CurrencyValueEUR'
-             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=2 then DiscountKlientAccountMoney.NominalKursClient else 0 endif as ParValueEUR'
-             + ' FROM dba.DiscountMovementItemReturn_byBarCode'
-             + '    join DiscountMovement     on DiscountMovement.id = DiscountMovementItemReturn_byBarCode.DiscountMovementId'
-             + '    left join BillItemsIncome on BillItemsIncome.id  = DiscountMovementItemReturn_byBarCode.BillItemsIncomeId'
-             + '    join DiscountKlientAccountMoney  on DiscountKlientAccountMoney.DiscountMovementItemReturnId = DiscountMovementItemReturn_byBarCode.Id '
-             + '                                and isCurrent = zc_rvYes() '
-             + '    join Kassa on Kassa.Id = DiscountKlientAccountMoney.KassaID'
-             + '    join KassaProperty  on KassaProperty.KassaID = Kassa.ID'
-             + ' WHERE DiscountMovement.descId = 2  AND DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
-             + ' ORDER BY ObjectId '
-);
      //
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('SELECT');
-        Add('  min(ObjectId) as ObjectId');
-        Add(', a.MovementId');
-        Add(', a.ParentId');
-        Add(', a.KassaID');
-        Add(', sum(AmountGRN) as AmountGRN');
-        Add(', sum(AmountEUR) as AmountEUR');
-        Add(', sum(AmountUSD) as AmountUSD');
-        Add(', sum(AmountCard) as AmountCard');
-        Add(', min(CurrencyValueUSD) as CurrencyValueUSD');
-        Add(', min(ParValueUSD) as ParValueUSD');
-        Add(', min(CurrencyValueEUR) as CurrencyValueEUR');
-        Add(', min(ParValueEUR) as ParValueEUR');
-        Add(' FROM  dba._TableLoadReturnIn AS a');
-        Add(' GROUP BY MovementId, ParentId, KassaID');
+        Add(   ' SELECT'
+             + '      DiscountMovement.OperDate'
+             + '    , DiscountMovement.ReturnInId_Postgres as MovementId'
+             + '    , DiscountMovementItemReturn_byBarCode.Id_Postgres as ParentId'
+             + '    , SUM (if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=1 then  Abs(DiscountKlientAccountMoney.Summa) else 0 endif ) as AmountGRN'
+             + '    , SUM (if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=2 then  Abs(DiscountKlientAccountMoney.Summa) else 0 endif ) as AmountEUR'
+             + '    , SUM (if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=5 then  Abs(DiscountKlientAccountMoney.Summa) else 0 endif ) as AmountUSD'
+             + '    , SUM (if  Kassa.ID in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  ) then  DiscountKlientAccountMoney.Summa else 0 endif ) as AmountCard'
+             + '    , MAX (if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=5 then DiscountKlientAccountMoney.KursClient else 0 endif ) as CurrencyValueUSD'
+             + '    , MAX (if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=5 then DiscountKlientAccountMoney.NominalKursClient else 0 endif ) as ParValueUSD'
+             + '    , MAX (if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=2 then DiscountKlientAccountMoney.KursClient else 0 endif ) as CurrencyValueEUR'
+             + '    , MAX (if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=2 then DiscountKlientAccountMoney.NominalKursClient else 0 endif ) as ParValueEUR'
+             + ' FROM dba.DiscountMovementItemReturn_byBarCode'
+             + '    join DiscountMovement     on DiscountMovement.id = DiscountMovementItemReturn_byBarCode.DiscountMovementId'
+             + '    left join BillItemsIncome on BillItemsIncome.id  = DiscountMovementItemReturn_byBarCode.BillItemsIncomeId'
+             + '    join DiscountKlientAccountMoney on DiscountKlientAccountMoney.DiscountMovementItemReturnId = DiscountMovementItemReturn_byBarCode.Id '
+             + '                                   and isCurrent = zc_rvYes() '
+             + '    join Kassa on Kassa.Id = DiscountKlientAccountMoney.KassaID'
+             + '    join KassaProperty  on KassaProperty.KassaID = Kassa.ID'
+             + ' WHERE DiscountMovement.descId = 2  AND DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
+             + ' GROUP BY DiscountMovement.OperDate, MovementId, ParentId'
+             + ' ORDER BY DiscountMovement.OperDate');
         Open;
 
-        Result:=RecordCount;
+        Result:= RecordCount;
         cbReturnIn_Child.Caption:='1.11. ('+IntToStr(RecordCount)+') Возврат оплаты покупателю';
         //
         //
         //
         //
-        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
+        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMIMaster.Checked)and(not cbOnlyOpenMIChild.Checked);
 
         if cbOnlyOpen.Checked then exit;
         //
@@ -3765,6 +4095,7 @@ begin
         Close;
         Clear;
         Add(' select Bill.Id as ObjectId ');
+        Add('     , Bill.Id_Postgres ');
         Add('     , Bill.BillNumber as InvNumber ');
         Add('     , Bill.BillDate as OperDate ');
         Add('     , Bill_From.Id_Postgres as FromId  ');
@@ -3776,13 +4107,12 @@ begin
         Add('     , 0 as CurrencyValue ');
         Add('     , 1 as ParValue ');
         Add('     , '''' as Comments ');
-        Add('     , Bill.Id_Postgres ');
         Add(' from DBA.Bill ');
         Add('     left outer join DBA.Valuta as Bill_CurrencyDocument on Bill_CurrencyDocument.Id = Bill.ValutaIDIn   ');
         Add('     left outer join DBA.Unit as Bill_From on Bill_From.Id = Bill.FromID ');
         Add('     left outer join DBA.Unit as Bill_To on Bill_To.Id = Bill.ToID ');
-        Add(' where  Bill.BillKind = 4 and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
-        Add(' order by ObjectId ');
+        Add(' where  Bill.BillKind = zc_bkReturnFromUnitToClient() and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add(' order by Bill.BillDate, ObjectId ');
         Open;
 
         Result:=RecordCount;
@@ -3791,7 +4121,7 @@ begin
         //
         //
         //
-        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
+        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMIMaster.Checked)and(not cbOnlyOpenMIChild.Checked);
 
         if cbOnlyOpen.Checked then exit;
         //
@@ -3802,7 +4132,7 @@ begin
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
-        toStoredProc.Params.AddParam ('inInvNumber',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('ioInvNumber',ftString,ptInputOutput, '');
         toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
         toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
@@ -3816,7 +4146,7 @@ begin
             if fStop then begin exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber').AsString;
+             toStoredProc.Params.ParamByName('ioInvNumber').Value:=FieldByName('InvNumber').AsString;
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
              toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId').AsInteger;
              toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId').AsInteger;
@@ -3854,19 +4184,19 @@ begin
         Clear;
         Add('select');
         Add('      DiscountMovement.Id as ObjectId');
+        Add('    , DiscountMovement.SaleId_Postgres as Id_Postgres');
         Add('    , 0 as InvNumber');
         Add('    , date(DiscountMovement.OperDate) as OperDate');   // Со времене ошибка неверный формат даты
         Add('    , DiscountMovement_From.Id_Postgres as FromId ');
         Add('    , DiscountMovement_From.UnitName as UnitNameFrom');
         Add('    , DiscountMovement_To.Id_Postgres as ToId');
         Add('    , DiscountMovement_To.UnitName as UnitNameTo');
-        Add('    , DiscountMovement.SaleId_Postgres');
         Add('from DBA.DiscountMovement');
         Add('    left join DBA.Unit as DiscountMovement_From on DiscountMovement_From.Id = DiscountMovement.UnitID');
         Add('    left join DBA.DiscountKlient as DiscountKlient on DiscountKlient.Id = DiscountMovement.DiscountKlientID');
         Add('    left join DBA.Unit as DiscountMovement_To on DiscountKlient.ClientId = DiscountMovement_To.id');
         Add('where DiscountMovement.descId = 1  and DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
-        Add('order by ObjectId');
+        Add('order by DiscountMovement.OperDate, ObjectId');
         Open;
 
         Result:=RecordCount;
@@ -3875,7 +4205,7 @@ begin
         //
         //
         //
-        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
+        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMIMaster.Checked)and(not cbOnlyOpenMIChild.Checked);
 
         if cbOnlyOpen.Checked then exit;
         //
@@ -3900,7 +4230,7 @@ begin
              //
 
              //
-             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('SaleId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('ioInvNumber').Value:=FieldByName('InvNumber').AsString;
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
              toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId').AsInteger;
@@ -3932,55 +4262,32 @@ begin
      //
      myEnabledCB(cbSale_Child);
      //
-      try fExecSqFromQuery_noErr(' drop table dba._TableLoadSale '); except end;  // Закомитить после первого использования. // нужно если была создана старая таблица перед этим
-      //создаем Таблицу, т.к. подзапрос не пашет
-      try fExecSqFromQuery_noErr(' create table dba._TableLoadSale ( ObjectId integer, MovementId integer, ParentId integer, KassaID integer, ' + ' AmountGRN decimal, AmountEUR decimal, AmountUSD decimal, AmountCard decimal, AmountDiscount decimal,  CurrencyValueUSD decimal, ParValueUSD decimal, CurrencyValueEUR decimal,  ParValueEUR decimal )');
-      except end;
-      fExecSqFromQuery(' insert into dba._TableLoadSale (ObjectId, MovementId, ParentId, KassaID, AmountGRN, AmountEUR, AmountUSD, AmountCard, AmountDiscount, CurrencyValueUSD, ParValueUSD, CurrencyValueEUR,  ParValueEUR )'
-             + ' SELECT'
-             + '      DiscountKlientAccountMoney.Id as ObjectId'
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add(   ' SELECT'
+             + '      DiscountMovement.OperDate'
              + '    , DiscountMovement.SaleId_Postgres as MovementId'
              + '    , DiscountMovementItem_byBarCode.Id_Postgres as ParentId'
-             + '    , Kassa.ID as KassaID'
-             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=1 then  DiscountKlientAccountMoney.Summa else 0 endif as AmountGRN'
-             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=2 then  DiscountKlientAccountMoney.Summa else 0 endif as AmountEUR'
-             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=5 then  DiscountKlientAccountMoney.Summa else 0 endif as AmountUSD'
-             + '    , if  Kassa.ID in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  ) then  DiscountKlientAccountMoney.Summa else 0 endif as AmountCard'
-             + '    , if  Kassa.ID in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  ) then  DiscountKlientAccountMoney.SummDiscountManual else 0 endif as  AmountDiscount'
-             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=5 then DiscountKlientAccountMoney.KursClient else 0 endif as CurrencyValueUSD'
-             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=5 then DiscountKlientAccountMoney.NominalKursClient else 0 endif as ParValueUSD'
-             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=2 then DiscountKlientAccountMoney.KursClient else 0 endif as CurrencyValueEUR'
-             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=2 then DiscountKlientAccountMoney.NominalKursClient else 0 endif as ParValueEUR'
+             + '    , SUM (if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=1 then  DiscountKlientAccountMoney.Summa else 0 endif ) as AmountGRN'
+             + '    , SUM (if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=2 then  DiscountKlientAccountMoney.Summa else 0 endif ) as AmountEUR'
+             + '    , SUM (if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=5 then  DiscountKlientAccountMoney.Summa else 0 endif ) as AmountUSD'
+             + '    , SUM (if  Kassa.ID in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  ) then  DiscountKlientAccountMoney.Summa else 0 endif ) as AmountCard'
+             + '    , SUM (if  Kassa.ID in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  ) then  DiscountKlientAccountMoney.SummDiscountManual else 0 endif ) as  AmountDiscount'
+             + '    , MAX (if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=5 then DiscountKlientAccountMoney.KursClient else 0 endif ) as CurrencyValueUSD'
+             + '    , MAX (if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=5 then DiscountKlientAccountMoney.NominalKursClient else 0 endif ) as ParValueUSD'
+             + '    , MAX (if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=2 then DiscountKlientAccountMoney.KursClient else 0 endif ) as CurrencyValueEUR'
+             + '    , MAX (if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=2 then DiscountKlientAccountMoney.NominalKursClient else 0 endif ) as ParValueEUR'
              + ' FROM dba.DiscountMovementItem_byBarCode'
              + '    join DiscountMovement     on DiscountMovement.id = DiscountMovementItem_byBarCode.DiscountMovementId'
-             + '    left join BillItemsIncome on BillItemsIncome.id  = DiscountMovementItem_byBarCode.BillItemsIncomeId'
              + '    join DiscountKlientAccountMoney  on DiscountKlientAccountMoney.DiscountMovementItemId = DiscountMovementItem_byBarCode.Id '
              + '                                and isCurrent = zc_rvYes() and discountMovementItemReturnId  is null'
              + '    join Kassa on Kassa.Id = DiscountKlientAccountMoney.KassaID'
              + '    join KassaProperty  on KassaProperty.KassaID = Kassa.ID'
              + ' WHERE DiscountMovement.descId = 1  AND DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
-             + ' ORDER BY ObjectId '
-);
-     //
-     with fromQuery,Sql do begin
-        Close;
-        Clear;
-        Add('SELECT');
-        Add('  min(ObjectId) as ObjectId');
-        Add(', a.MovementId');
-        Add(', a.ParentId');
-        Add(', a.KassaId');
-        Add(', sum(AmountGRN) as AmountGRN');
-        Add(', sum(AmountEUR) as AmountEUR');
-        Add(', sum(AmountUSD) as AmountUSD');
-        Add(', sum(AmountCard) as AmountCard');
-        Add(', sum(AmountDiscount) as AmountDiscount');
-        Add(', min(CurrencyValueUSD) as CurrencyValueUSD');
-        Add(', min(ParValueUSD) as ParValueUSD');
-        Add(', min(CurrencyValueEUR) as CurrencyValueEUR');
-        Add(', min(ParValueEUR) as ParValueEUR');
-        Add(' FROM  dba._TableLoadSale AS a');
-        Add(' GROUP BY MovementId, ParentId, KassaID');
+             + ' GROUP BY DiscountMovement.OperDate, MovementId, ParentId'
+             + ' ORDER BY DiscountMovement.OperDate');
         Open;
 
         Result:=RecordCount;
@@ -3989,7 +4296,7 @@ begin
         //
         //
         //
-        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
+        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMIMaster.Checked)and(not cbOnlyOpenMIChild.Checked);
 
         if cbOnlyOpen.Checked then exit;
         //
@@ -4059,6 +4366,7 @@ begin
         Close;
         Clear;
         Add(' select Bill.Id as ObjectId ');
+        Add('     , Bill.Id_Postgres ');
         Add('     , Bill.BillNumber as InvNumber ');
         Add('     , Bill.BillDate as OperDate ');
         Add('     , Bill_From.Id_Postgres as FromId  ');
@@ -4066,12 +4374,11 @@ begin
         Add('     , Bill_To.Id_Postgres as ToId ');
         Add('     , Bill_To.UnitName as UnitNameTo ');
         Add('     , '''' as Comments ');
-        Add('     , Bill.Id_Postgres ');
         Add(' from DBA.Bill ');
         Add('     left outer join DBA.Unit as Bill_From on Bill_From.Id = Bill.FromID ');
         Add('     left outer join DBA.Unit as Bill_To on Bill_To.Id = Bill.ToID ');
-        Add(' where  Bill.BillKind = 6 and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
-        Add(' order by ObjectId ');
+        Add(' where  Bill.BillKind = zc_bkSendFromUnitToUnit() and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add(' order by Bill.BillDate, ObjectId ');
         Open;
         Open;
 
@@ -4081,7 +4388,7 @@ begin
         //
         //
         //
-        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
+        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMIMaster.Checked)and(not cbOnlyOpenMIChild.Checked);
 
         if cbOnlyOpen.Checked then exit;
         //
@@ -4092,7 +4399,7 @@ begin
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
-        toStoredProc.Params.AddParam ('inInvNumber',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('ioInvNumber',ftString,ptInputOutput, '');
         toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
         toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
@@ -4107,7 +4414,7 @@ begin
 
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber').AsString;
+             toStoredProc.Params.ParamByName('ioInvNumber').Value:=FieldByName('InvNumber').AsString;
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
              toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId').AsInteger;
              toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId').AsInteger;

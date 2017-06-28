@@ -69,7 +69,7 @@ type
     dxBarButton6: TdxBarButton;
     Fix: TcxGridDBColumn;
     MCSIsCloseDateChange: TcxGridDBColumn;
-    colMCSNotRecalcDateChange: TcxGridDBColumn;
+    MCSNotRecalcDateChange: TcxGridDBColumn;
     FixDateChange: TcxGridDBColumn;
     actPriceHistoryOpen: TdsdOpenForm;
     dxBarButton7: TdxBarButton;

@@ -30,7 +30,7 @@ BEGIN
         ioInvNumber:= CAST (NEXTVAL ('Movement_ReturnOut_seq') AS TVarChar);  
      END IF;
 
-
+     -- Если НЕ Базовая Валюта
      IF inCurrencyDocumentId <> zc_Currency_Basis()
      THEN
          -- Определили курс на Дату документа

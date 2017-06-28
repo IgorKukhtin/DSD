@@ -1,8 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_Send()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
  INOUT ioId                   Integer   , -- Ключ объекта <Элемент документа>
@@ -49,6 +47,7 @@ BEGIN
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
  
+     -- Дата документа
      vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
 
      -- Цена (прайс)
@@ -69,14 +68,16 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Цена (прайс)>.';
      END IF;
 
-     -- данные из партии : OperPrice и CountForPrice
-     SELECT COALESCE (Object_PartionGoods.CountForPrice,1)
-          , COALESCE (Object_PartionGoods.OperPrice,0)
-          , COALESCE (Object_PartionGoods.CurrencyId, zc_Currency_Basis())
-    INTO outCountForPrice, outOperPrice, vbCurrencyId
+     -- данные из партии : OperPrice и CountForPrice и CurrencyId
+     SELECT COALESCE (Object_PartionGoods.CountForPrice, 1)                AS CountForPrice
+          , COALESCE (Object_PartionGoods.OperPrice, 0)                    AS OperPrice
+          , COALESCE (Object_PartionGoods.CurrencyId, zc_Currency_Basis()) AS CurrencyId
+            INTO outCountForPrice, outOperPrice, vbCurrencyId
      FROM Object_PartionGoods
      WHERE Object_PartionGoods.MovementItemId = inPartionId;
 
+
+     -- Если НЕ Базовая Валюта
      IF vbCurrencyId <> zc_Currency_Basis()
      THEN
          -- Определили курс на Дату документа
@@ -86,13 +87,20 @@ BEGIN
                                                , inCurrencyFromId:= zc_Currency_Basis()
                                                , inCurrencyToId  := vbCurrencyId
                                                 ) AS tmp;       
+
+         -- только для Sybase - !!!потом УБРАТЬ!!!
+         IF COALESCE (outCurrencyValue, 0) = 0
+         THEN
+             --
+             outParValue:= 1;
+             --
+             IF     inCurrencyDocumentId = zc_Currency_EUR() THEN outCurrencyValue:= 30;
+             ELSEIF inCurrencyDocumentId = zc_Currency_USD() THEN outCurrencyValue:= 27;
+             END IF;
+         END IF;
+
      END IF;
 
-     IF COALESCE (outCurrencyValue, 0) = 0
-        THEN
-             outParValue:= 0;
-             outCurrencyValue:= 1;
-     END IF;
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inPartionId, inMovementId, inAmount, NULL);
@@ -140,4 +148,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpInsertUpdate_MovementItem_Send(ioId := 31 , inMovementId := 13 , inGoodsId := 349 , inPartionId := 41 , inAmount := 10 ,  inSession := '2');
+-- SELECT * FROM gpInsertUpdate_MovementItem_Send(ioId := 31 , inMovementId := 13 , inGoodsId := 349 , inPartionId := 41 , inAmount := 10 ,  inSession := '2');

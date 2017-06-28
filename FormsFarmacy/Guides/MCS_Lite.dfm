@@ -5,90 +5,90 @@ inherited MCS_LiteForm: TMCS_LiteForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1077
-  ExplicitHeight = 457
+  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel
     Width = 1061
-    ExplicitWidth = 758
+    ExplicitWidth = 1061
   end
   inherited PageControl: TcxPageControl
     Width = 1061
-    Height = 361
+    Height = 336
     TabOrder = 2
-    ExplicitWidth = 758
-    ExplicitHeight = 361
-    ClientRectBottom = 361
+    ExplicitWidth = 1061
+    ExplicitHeight = 336
+    ClientRectBottom = 336
     ClientRectRight = 1061
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 758
-      ExplicitHeight = 361
+      ExplicitWidth = 1061
+      ExplicitHeight = 336
       inherited cxGrid: TcxGrid
         Width = 1061
-        Height = 361
-        ExplicitWidth = 758
-        ExplicitHeight = 361
+        Height = 336
+        ExplicitWidth = 1061
+        ExplicitHeight = 336
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          inherited clNDSKindName: TcxGridDBColumn
+          inherited NDSKindName: TcxGridDBColumn
             Options.Editing = False
           end
           inherited StartDate: TcxGridDBColumn [13]
             Visible = False
             VisibleForCustomization = False
           end
-          inherited clDateChange: TcxGridDBColumn [14]
+          inherited DateChange: TcxGridDBColumn [14]
             Visible = False
           end
-          inherited clPrice: TcxGridDBColumn [15]
+          inherited Price: TcxGridDBColumn [15]
             Visible = False
             Options.Editing = False
           end
-          inherited clMCSDateChange: TcxGridDBColumn [16]
+          inherited MCSDateChange: TcxGridDBColumn [16]
             Visible = False
           end
-          inherited clMCSValue: TcxGridDBColumn [17]
+          inherited MCSValue: TcxGridDBColumn [17]
           end
-          inherited clMCSPeriod: TcxGridDBColumn [18]
-            Visible = False
-            VisibleForCustomization = False
-          end
-          inherited clMCSDay: TcxGridDBColumn [19]
+          inherited MCSPeriod: TcxGridDBColumn [18]
             Visible = False
             VisibleForCustomization = False
           end
-          inherited clMCSIsClose: TcxGridDBColumn [20]
+          inherited MCSDay: TcxGridDBColumn [19]
+            Visible = False
+            VisibleForCustomization = False
           end
-          inherited colMCSIsCloseDateChange: TcxGridDBColumn [21]
+          inherited MCSIsClose: TcxGridDBColumn [20]
           end
-          inherited clMCSNotRecalc: TcxGridDBColumn [22]
+          inherited MCSIsCloseDateChange: TcxGridDBColumn [21]
           end
-          inherited colMCSNotRecalcDateChange: TcxGridDBColumn [23]
+          inherited MCSNotRecalc: TcxGridDBColumn [22]
           end
-          inherited colFix: TcxGridDBColumn [24]
+          inherited MCSNotRecalcDateChange: TcxGridDBColumn [23]
+          end
+          inherited Fix: TcxGridDBColumn [24]
             Options.Editing = False
           end
-          inherited colFixDateChange: TcxGridDBColumn [25]
+          inherited FixDateChange: TcxGridDBColumn [25]
           end
-          inherited clisErased: TcxGridDBColumn [26]
+          inherited isErased: TcxGridDBColumn [26]
           end
-          inherited clRemainsNotMCS: TcxGridDBColumn [27]
+          inherited RemainsNotMCS: TcxGridDBColumn [27]
             Visible = False
             VisibleForCustomization = False
           end
-          inherited clSummaNotMCS: TcxGridDBColumn [28]
+          inherited SummaNotMCS: TcxGridDBColumn [28]
             Visible = False
             VisibleForCustomization = False
           end
-          inherited colMinExpirationDate: TcxGridDBColumn [29]
+          inherited MinExpirationDate: TcxGridDBColumn [29]
             Visible = False
             VisibleForCustomization = False
           end
-          inherited colRemains: TcxGridDBColumn [30]
+          inherited Remains: TcxGridDBColumn [30]
             Visible = False
             VisibleForCustomization = False
           end
@@ -98,33 +98,33 @@ inherited MCS_LiteForm: TMCS_LiteForm
           end
           inherited Color_ExpirationDate: TcxGridDBColumn [32]
           end
-          inherited clisPromo: TcxGridDBColumn [33]
+          inherited isPromo: TcxGridDBColumn [33]
             Visible = False
             VisibleForCustomization = False
           end
-          inherited clisSecond: TcxGridDBColumn [34]
+          inherited isSecond: TcxGridDBColumn [34]
           end
           inherited PriceRetSP: TcxGridDBColumn [35]
           end
           inherited PriceOptSP: TcxGridDBColumn [36]
           end
-          inherited colPriceSP: TcxGridDBColumn [37]
+          inherited PriceSP: TcxGridDBColumn [37]
           end
           inherited PaymentSP: TcxGridDBColumn [38]
           end
-          inherited clisSp: TcxGridDBColumn [39]
+          inherited isSp: TcxGridDBColumn [39]
           end
-          inherited clConditionsKeepName: TcxGridDBColumn [40]
+          inherited ConditionsKeepName: TcxGridDBColumn [40]
           end
-          inherited clMCSValueOld: TcxGridDBColumn [41]
+          inherited MCSValueOld: TcxGridDBColumn [41]
           end
-          inherited colStartDateMCSAuto: TcxGridDBColumn [42]
+          inherited StartDateMCSAuto: TcxGridDBColumn [42]
           end
-          inherited colEndDateMCSAuto: TcxGridDBColumn [43]
+          inherited EndDateMCSAuto: TcxGridDBColumn [43]
           end
-          inherited clisMCSAuto: TcxGridDBColumn [44]
+          inherited isMCSAuto: TcxGridDBColumn [44]
           end
-          inherited clisMCSNotRecalcOld: TcxGridDBColumn [45]
+          inherited isMCSNotRecalcOld: TcxGridDBColumn [45]
           end
         end
       end

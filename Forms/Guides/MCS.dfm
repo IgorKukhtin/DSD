@@ -33,14 +33,14 @@ inherited MCSForm: TMCSForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          inherited clDateChange: TcxGridDBColumn
+          inherited DateChange: TcxGridDBColumn
             Visible = False
           end
-          inherited clPrice: TcxGridDBColumn
+          inherited Price: TcxGridDBColumn
             Visible = False
             Options.Editing = False
           end
-          inherited colFix: TcxGridDBColumn
+          inherited Fix: TcxGridDBColumn
             Options.Editing = False
           end
         end

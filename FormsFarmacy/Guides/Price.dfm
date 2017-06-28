@@ -1,23 +1,22 @@
 inherited PriceForm: TPriceForm
   Caption = #1055#1088#1072#1081#1089' - '#1083#1080#1089#1090' '#1090#1077#1082#1091#1097#1080#1081
   ClientHeight = 413
-  ClientWidth = 1059
+  ClientWidth = 766
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -315
-  ExplicitWidth = 1075
-  ExplicitHeight = 452
+  ExplicitWidth = 782
+  ExplicitHeight = 448
   PixelsPerInch = 96
   TextHeight = 13
   object Panel: TPanel [0]
     Left = 0
     Top = 0
-    Width = 1059
-    Height = 32
+    Width = 766
+    Height = 57
     Align = alTop
     TabOrder = 6
     object deOperDate: TcxDateEdit
-      Left = 998
-      Top = 19
+      Left = 662
+      Top = 32
       EditValue = 42460d
       Properties.DateOnError = deToday
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
@@ -35,8 +34,8 @@ inherited PriceForm: TPriceForm
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object cxLabel1: TcxLabel
-      Left = 958
-      Top = 20
+      Left = 622
+      Top = 33
       Caption = #1094#1077#1085#1072' '#1085#1072':'
       Visible = False
     end
@@ -46,46 +45,47 @@ inherited PriceForm: TPriceForm
       Caption = #1058#1086#1074#1072#1088':'
     end
     object cbisMCSAuto: TcxCheckBox
-      Left = 839
-      Top = 5
+      Left = 98
+      Top = 32
       Properties.ReadOnly = False
       TabOrder = 4
       Width = 22
     end
     object ceDays: TcxCurrencyEdit
-      Left = 982
-      Top = 5
+      Left = 240
+      Top = 32
+      EditValue = 7.000000000000000000
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####'
       TabOrder = 5
       Width = 64
     end
     object cxLabel8: TcxLabel
-      Left = 868
-      Top = 6
+      Left = 126
+      Top = 33
       Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1087#1077#1088#1080#1086#1076#1072
     end
     object cxLabel4: TcxLabel
-      Left = 751
-      Top = 6
+      Left = 1
+      Top = 33
       Caption = #1053#1058#1047' '#1076#1083#1103' '#1087#1077#1088#1080#1086#1076#1072
     end
   end
   inherited PageControl: TcxPageControl
-    Top = 58
-    Width = 1059
-    Height = 355
+    Top = 83
+    Width = 766
+    Height = 330
     ExplicitTop = 58
     ExplicitWidth = 1059
     ExplicitHeight = 355
-    ClientRectBottom = 355
-    ClientRectRight = 1059
+    ClientRectBottom = 330
+    ClientRectRight = 766
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1059
       ExplicitHeight = 355
       inherited cxGrid: TcxGrid
-        Width = 1059
-        Height = 355
+        Width = 766
+        Height = 330
         ExplicitWidth = 1059
         ExplicitHeight = 355
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -242,7 +242,7 @@ inherited PriceForm: TPriceForm
             HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080
             Width = 70
           end
-          object colPercentMarkupDateChange: TcxGridDBColumn
+          object PercentMarkupDateChange: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' % '#1085#1072#1094#1077#1085#1082#1080' ('#1072#1087#1090#1077#1082#1072')'
             DataBinding.FieldName = 'PercentMarkupDateChange'
             HeaderAlignmentHorz = taCenter
@@ -465,7 +465,7 @@ inherited PriceForm: TPriceForm
             HeaderHint = #1053#1077' '#1087#1077#1088#1077#1089#1095#1080#1090#1099#1074#1072#1090#1100' '#1053#1058#1047
             Width = 59
           end
-          object colMCSNotRecalcDateChange: TcxGridDBColumn
+          object MCSNotRecalcDateChange: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' "'#1057#1087#1077#1094#1082#1086#1085#1090#1088#1086#1083#1100' '#1082#1086#1076#1072'"'
             DataBinding.FieldName = 'MCSNotRecalcDateChange'
             HeaderAlignmentHorz = taCenter
@@ -1287,7 +1287,7 @@ inherited PriceForm: TPriceForm
         ColorValueList = <>
       end
       item
-        ColorColumn = colMCSNotRecalcDateChange
+        ColorColumn = MCSNotRecalcDateChange
         ValueColumn = Color_ExpirationDate
         ColorValueList = <>
       end
@@ -1297,7 +1297,7 @@ inherited PriceForm: TPriceForm
         ColorValueList = <>
       end
       item
-        ColorColumn = colPercentMarkupDateChange
+        ColorColumn = PercentMarkupDateChange
         ValueColumn = Color_ExpirationDate
         ColorValueList = <>
       end
