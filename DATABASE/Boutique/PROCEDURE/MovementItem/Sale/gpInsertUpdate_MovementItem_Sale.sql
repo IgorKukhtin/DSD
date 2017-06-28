@@ -140,12 +140,13 @@ BEGIN
                                                );
                                                
     -- ƒобавл€ем оплату в грн
-    IF inisPay THEN
-       -- находим кассу дл€ ћагазина или р.сч., в которую попадет оплата
+    IF inisPay = TRUE THEN
+       -- находим кассу дл€ ћагазина, в которую попадет оплата
        vbCashId := (SELECT Object_Cash.Id
                     FROM ObjectLink AS ObjectLink_Cash_Unit
                          INNER JOIN Object AS Object_Cash 
-                                           ON Object_Cash.Id       = ObjectLink_Cash_Unit.ObjectId
+                                           ON Object_Cash.Id     = ObjectLink_Cash_Unit.ObjectId
+                                          AND Object_Cash.DescId = zc_Object_Cash()
                                           AND Object_Cash.isErased = FALSE
                          INNER JOIN ObjectLink AS ObjectLink_Cash_Currency
                                                ON ObjectLink_Cash_Currency.ObjectId = Object_Cash.Id

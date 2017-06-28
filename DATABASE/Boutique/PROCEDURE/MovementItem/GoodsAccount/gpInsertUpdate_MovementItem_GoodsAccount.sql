@@ -65,7 +65,7 @@ BEGIN
                                                       , inUserId             := vbUserId
                                                      );
 
-    IF inisPay THEN
+    IF inisPay = TRUE THEN
         -- сохранили оплату
        /*     PERFORM lpInsertUpdate_MI_GoodsAccount_Child  (ioId             := COALESCE (_tmpMI.Id,0)
                                                      , inMovementId         := inMovementId

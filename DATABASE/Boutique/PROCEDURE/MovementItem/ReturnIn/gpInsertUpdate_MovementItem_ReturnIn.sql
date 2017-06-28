@@ -130,14 +130,14 @@ BEGIN
      
      outTotalSummPay := COALESCE(outAmountPriceListSumm,0) - COALESCE(outTotalChangePercent,0);
      outTotalSummPay := CASE WHEN outTotalSummPay > vbTotalPay_Sale THEN vbTotalPay_Sale ELSE outTotalSummPay END;
---outTotalSummPay := 589;
 
-    IF inisPay THEN
-       -- находим кассу для Магазина или р.сч., в которую попадет оплата
+    IF inisPay = TRUE THEN
+       -- находим кассу для Магазина, в которую попадет оплата
        vbCashId := (SELECT Object_Cash.Id
                     FROM ObjectLink AS ObjectLink_Cash_Unit
                          INNER JOIN Object AS Object_Cash 
-                                           ON Object_Cash.Id       = ObjectLink_Cash_Unit.ObjectId
+                                           ON Object_Cash.Id     = ObjectLink_Cash_Unit.ObjectId
+                                          AND Object_Cash.DescId = zc_Object_Cash()
                                           AND Object_Cash.isErased = FALSE
                          INNER JOIN ObjectLink AS ObjectLink_Cash_Currency
                                                ON ObjectLink_Cash_Currency.ObjectId = Object_Cash.Id
