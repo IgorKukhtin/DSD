@@ -27,7 +27,7 @@ type
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
-    clName: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -41,12 +41,12 @@ type
     dsdStoredProc: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
-    clErased: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
     bbSetErased: TdxBarButton;
     bbSetUnErased: TdxBarButton;
-    clCode: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
     dxBarStatic1: TdxBarStatic;
@@ -55,8 +55,8 @@ type
     spErasedUnErased: TdsdStoredProc;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clPriceWithVAT: TcxGridDBColumn;
-    clVATPercent: TcxGridDBColumn;
+    PriceWithVAT: TcxGridDBColumn;
+    VATPercent: TcxGridDBColumn;
     CurrencyName: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;

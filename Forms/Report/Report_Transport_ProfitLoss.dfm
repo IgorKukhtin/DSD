@@ -183,7 +183,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         Options.Editing = False
         Width = 90
       end
-      object clOperDate: TcxGridDBColumn
+      object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
         Visible = False
@@ -192,7 +192,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         Options.Editing = False
         Width = 46
       end
-      object clInvNumberTransport: TcxGridDBColumn
+      object InvNumber: TcxGridDBColumn
         Caption = #8470
         DataBinding.FieldName = 'InvNumber'
         Visible = False
@@ -201,7 +201,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         Options.Editing = False
         Width = 37
       end
-      object clFuelName: TcxGridDBColumn
+      object FuelName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
         DataBinding.FieldName = 'FuelName'
         HeaderAlignmentHorz = taCenter
@@ -331,7 +331,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object clRouteName: TcxGridDBColumn
+      object RouteName: TcxGridDBColumn
         Caption = #1052#1072#1088#1096#1088#1091#1090
         DataBinding.FieldName = 'RouteName'
         HeaderAlignmentHorz = taCenter
@@ -339,7 +339,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         Options.Editing = False
         Width = 91
       end
-      object colBranchName: TcxGridDBColumn
+      object BranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
         DataBinding.FieldName = 'BranchName'
         HeaderAlignmentHorz = taCenter
@@ -353,7 +353,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         HeaderAlignmentVert = vaCenter
         Width = 103
       end
-      object clCarModelName: TcxGridDBColumn
+      object CarModelName: TcxGridDBColumn
         Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
         DataBinding.FieldName = 'CarModelName'
         HeaderAlignmentHorz = taCenter
@@ -361,7 +361,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         Options.Editing = False
         Width = 121
       end
-      object clCarName: TcxGridDBColumn
+      object CarName: TcxGridDBColumn
         Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
         DataBinding.FieldName = 'CarName'
         HeaderAlignmentHorz = taCenter
@@ -377,7 +377,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         Options.Editing = False
         Width = 77
       end
-      object clProfitLossGroupName: TcxGridDBColumn
+      object ProfitLossGroupName: TcxGridDBColumn
         Caption = #1054#1055#1080#1059' '#1075#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'ProfitLossGroupName'
         Visible = False

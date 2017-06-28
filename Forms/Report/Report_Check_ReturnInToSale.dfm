@@ -4,10 +4,10 @@ inherited Report_Check_ReturnInToSaleForm: TReport_Check_ReturnInToSaleForm
   ClientWidth = 1077
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -288
-  ExplicitTop = -61
+  ExplicitLeft = -440
+  ExplicitTop = -29
   ExplicitWidth = 1093
-  ExplicitHeight = 518
+  ExplicitHeight = 522
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -151,7 +151,7 @@ inherited Report_Check_ReturnInToSaleForm: TReport_Check_ReturnInToSaleForm
             Options.Editing = False
             Width = 83
           end
-          object colInvNumberPartner_Tax: TcxGridDBColumn
+          object InvNumberPartner_Tax: TcxGridDBColumn
             Caption = #8470' '#1085#1072#1083#1086#1075'.'
             DataBinding.FieldName = 'InvNumberPartner_Tax'
             HeaderAlignmentHorz = taCenter
@@ -218,7 +218,7 @@ inherited Report_Check_ReturnInToSaleForm: TReport_Check_ReturnInToSaleForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clPrice: TcxGridDBColumn
+          object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' ('#1074#1086#1079#1074#1088#1072#1090')'
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -228,7 +228,7 @@ inherited Report_Check_ReturnInToSaleForm: TReport_Check_ReturnInToSaleForm
             HeaderAlignmentVert = vaCenter
             Width = 69
           end
-          object clPrice_Sale: TcxGridDBColumn
+          object Price_Sale: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' ('#1087#1088#1086#1076#1072#1078#1072')'
             DataBinding.FieldName = 'Price_Sale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -378,7 +378,7 @@ inherited Report_Check_ReturnInToSaleForm: TReport_Check_ReturnInToSaleForm
             Options.Editing = False
             Width = 67
           end
-          object colDocumentTaxKindName: TcxGridDBColumn
+          object DocumentTaxKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
             DataBinding.FieldName = 'DocumentTaxKindName'
             HeaderAlignmentHorz = taCenter

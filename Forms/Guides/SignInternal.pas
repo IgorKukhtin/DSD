@@ -12,7 +12,18 @@ uses
   cxCheckBox, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, Vcl.Controls, cxGrid, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter, cxCurrencyEdit;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter, cxCurrencyEdit,
+  dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
+  dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue;
 
 type
   TSignInternalForm = class(TParentForm)
@@ -43,8 +54,8 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
-    clName: TcxGridDBColumn;
-    clIsErased: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    IsErased: TcxGridDBColumn;
     cxGridReceiptChild: TcxGrid;
     cxGridDBTableViewReceiptChild: TcxGridDBTableView;
     cxGridLevel2: TcxGridLevel;
@@ -67,7 +78,7 @@ type
     bbIsPeriod: TdxBarControlContainerItem;
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
-    clCode: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
     cxBottomSplitter: TcxSplitter;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
@@ -88,12 +99,12 @@ type
     dsdSetUnErasedSignInternalItem: TdsdUpdateErased;
     bb: TdxBarButton;
     spErasedUnErasedSignInternal: TdsdStoredProc;
-    cxBranchName: TcxGridDBColumn;
+    BranchName: TcxGridDBColumn;
     cxUnitName: TcxGridDBColumn;
-    cxPositionName: TcxGridDBColumn;
+    PositionName: TcxGridDBColumn;
     MovementDescChoiceForm: TOpenChoiceForm;
     ObjectDescChoiceForm: TOpenChoiceForm;
-    cxUserId: TcxGridDBColumn;
+    UserId: TcxGridDBColumn;
   private
     { Private declarations }
   public

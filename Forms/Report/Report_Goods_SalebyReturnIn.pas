@@ -13,21 +13,31 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus;
+  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TReport_Goods_SalebyReturnInForm = class(TAncestorReportForm)
-    clGoodsCode: TcxGridDBColumn;
-    clGoodsName: TcxGridDBColumn;
-    clAmount: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edRetail: TcxButtonEdit;
     GuidesRetail: TdsdGuides;
     FormParams: TdsdFormParams;
-    clAmountReturn: TcxGridDBColumn;
-    clGoodsKindName: TcxGridDBColumn;
-    clAmountRem: TcxGridDBColumn;
-    clMeasureName: TcxGridDBColumn;
+    AmountReturn: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
+    AmountRem: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     edBranch: TcxButtonEdit;
     cxLabel6: TcxLabel;
@@ -39,10 +49,10 @@ type
     GuidesPartner: TdsdGuides;
     PaidKindGuides: TdsdGuides;
     JuridicalGuides: TdsdGuides;
-    clUnitName: TcxGridDBColumn;
-    clUnitCode: TcxGridDBColumn;
-    clPartnerCode: TcxGridDBColumn;
-    clJuridicalCode: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    UnitCode: TcxGridDBColumn;
+    PartnerCode: TcxGridDBColumn;
+    JuridicalCode: TcxGridDBColumn;
     cxLabel8: TcxLabel;
     edGoods: TcxButtonEdit;
     GoodsGuides: TdsdGuides;

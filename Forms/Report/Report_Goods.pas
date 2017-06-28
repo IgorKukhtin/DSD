@@ -13,34 +13,44 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, cxCheckBox;
+  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, cxCheckBox, dxSkinBlack,
+  dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom,
+  dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TReport_GoodsForm = class(TAncestorReportForm)
     cxLabel3: TcxLabel;
     edGoods: TcxButtonEdit;
     GoodsGuides: TdsdGuides;
-    clLocationDescName: TcxGridDBColumn;
-    clLocationName: TcxGridDBColumn;
-    clGoodsCode: TcxGridDBColumn;
-    clGoodsName: TcxGridDBColumn;
-    clMovementDescName: TcxGridDBColumn;
+    LocationDescName: TcxGridDBColumn;
+    LocationName: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    MovementDescName: TcxGridDBColumn;
     SummStart: TcxGridDBColumn;
     SummIn: TcxGridDBColumn;
     SummOut: TcxGridDBColumn;
     SummEnd: TcxGridDBColumn;
-    clInvNumber: TcxGridDBColumn;
-    clGoodsKindName: TcxGridDBColumn;
-    clOperDate: TcxGridDBColumn;
-    clObjectByName: TcxGridDBColumn;
-    clOperDatePartner: TcxGridDBColumn;
-    clObjectByCode: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
+    ObjectByName: TcxGridDBColumn;
+    OperDatePartner: TcxGridDBColumn;
+    ObjectByCode: TcxGridDBColumn;
     AmountStart: TcxGridDBColumn;
     Price: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edLocation: TcxButtonEdit;
     LocationGuides: TdsdGuides;
-    clPartionGoods: TcxGridDBColumn;
+    PartionGoods: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     isActive: TcxGridDBColumn;

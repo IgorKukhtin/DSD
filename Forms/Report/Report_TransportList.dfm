@@ -233,7 +233,7 @@ object Report_TransportListForm: TReport_TransportListForm
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clOperDate: TcxGridDBColumn
+      object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentHorz = taCenter
@@ -241,7 +241,7 @@ object Report_TransportListForm: TReport_TransportListForm
         Options.Editing = False
         Width = 46
       end
-      object clInvNumberTransport: TcxGridDBColumn
+      object InvNumberTransport: TcxGridDBColumn
         Caption = #8470
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
@@ -249,7 +249,7 @@ object Report_TransportListForm: TReport_TransportListForm
         Options.Editing = False
         Width = 37
       end
-      object clCarModelName: TcxGridDBColumn
+      object CarModelName: TcxGridDBColumn
         Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
         DataBinding.FieldName = 'CarModelName'
         HeaderAlignmentHorz = taCenter
@@ -257,7 +257,7 @@ object Report_TransportListForm: TReport_TransportListForm
         Options.Editing = False
         Width = 98
       end
-      object clCarName: TcxGridDBColumn
+      object CarName: TcxGridDBColumn
         Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
         DataBinding.FieldName = 'CarName'
         HeaderAlignmentHorz = taCenter
@@ -265,7 +265,7 @@ object Report_TransportListForm: TReport_TransportListForm
         Options.Editing = False
         Width = 87
       end
-      object colBranchName: TcxGridDBColumn
+      object BranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
         DataBinding.FieldName = 'BranchName'
         HeaderAlignmentVert = vaCenter
@@ -279,7 +279,7 @@ object Report_TransportListForm: TReport_TransportListForm
         Options.Editing = False
         Width = 91
       end
-      object clRouteName: TcxGridDBColumn
+      object RouteName: TcxGridDBColumn
         Caption = #1052#1072#1088#1096#1088#1091#1090
         DataBinding.FieldName = 'RouteName'
         HeaderAlignmentHorz = taCenter

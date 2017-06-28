@@ -13,20 +13,30 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, cxCheckBox;
+  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, cxCheckBox, dxSkinBlack,
+  dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom,
+  dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TReport_MotionGoodsWeekForm = class(TAncestorReportForm)
-    clGoodsCode: TcxGridDBColumn;
-    clGoodsName: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
     RemainsStart: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
     GoodsGroupGuides: TdsdGuides;
     FormParams: TdsdFormParams;
-    clGoodsKindName: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
     RemainsEnd: TcxGridDBColumn;
-    clMeasureName: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     UnitGuides: TdsdGuides;
     edUnit: TcxButtonEdit;
@@ -42,7 +52,7 @@ type
     bbPartionGoods: TdxBarControlContainerItem;
     actPrint: TdsdPrintAction;
     GoodsGroupName: TcxGridDBColumn;
-    clEndDate: TcxGridDBColumn;
+    EndDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

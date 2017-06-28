@@ -6,8 +6,10 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -254
+  ExplicitTop = -98
   ExplicitWidth = 903
-  ExplicitHeight = 590
+  ExplicitHeight = 591
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -53,7 +55,7 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colCount
+              Column = Count
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -84,7 +86,7 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colCount
+              Column = Count
             end>
           OptionsData.Deleting = False
           OptionsData.Editing = False
@@ -198,7 +200,7 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
             VisibleForCustomization = False
             Width = 60
           end
-          object colCount: TcxGridDBColumn
+          object Count: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1076#1077#1081#1089#1090#1074#1080#1081
             DataBinding.FieldName = 'Count'
             PropertiesClassName = 'TcxCurrencyEditProperties'

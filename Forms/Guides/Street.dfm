@@ -36,7 +36,7 @@ object StreetForm: TStreetForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
+      OptionsBehavior.IncSearchItem = Name
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -49,7 +49,7 @@ object StreetForm: TStreetForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clPostalCode: TcxGridDBColumn
+      object PostalCode: TcxGridDBColumn
         Caption = #1055#1086#1095#1090#1086#1074#1099#1081' '#1080#1085#1076#1077#1082#1089
         DataBinding.FieldName = 'PostalCode'
         GroupSummaryAlignment = taCenter
@@ -58,14 +58,14 @@ object StreetForm: TStreetForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 60
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 156
       end
-      object clStreetKindName: TcxGridDBColumn
+      object StreetKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' ('#1091#1083#1080#1094#1072','#1087#1088#1086#1089#1087#1077#1082#1090')'
         DataBinding.FieldName = 'StreetKindName'
         GroupSummaryAlignment = taCenter
@@ -74,28 +74,28 @@ object StreetForm: TStreetForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 100
       end
-      object clRegionName: TcxGridDBColumn
+      object RegionName: TcxGridDBColumn
         Caption = #1054#1073#1083#1072#1089#1090#1100
         DataBinding.FieldName = 'RegionName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 72
       end
-      object clProvinceName: TcxGridDBColumn
+      object ProvinceName: TcxGridDBColumn
         Caption = #1056#1072#1081#1086#1085
         DataBinding.FieldName = 'ProvinceName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 73
       end
-      object clCityKindName: TcxGridDBColumn
+      object CityKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1085'.'#1087'.'
         DataBinding.FieldName = 'CityKindName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 50
       end
-      object clCityName: TcxGridDBColumn
+      object CityName: TcxGridDBColumn
         Caption = #1053#1072#1089#1077#1083#1077#1085#1085#1099#1081' '#1087#1091#1085#1082#1090
         DataBinding.FieldName = 'CityName'
         GroupSummaryAlignment = taCenter
@@ -104,7 +104,7 @@ object StreetForm: TStreetForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 106
       end
-      object clProvinceCityName: TcxGridDBColumn
+      object ProvinceCityName: TcxGridDBColumn
         Caption = #1052#1080#1082#1088#1086#1088#1072#1081#1086#1085
         DataBinding.FieldName = 'ProvinceCityName'
         GroupSummaryAlignment = taCenter
@@ -113,7 +113,7 @@ object StreetForm: TStreetForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 133
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
@@ -156,8 +156,8 @@ object StreetForm: TStreetForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -314,10 +314,12 @@ object StreetForm: TStreetForm
       FormName = 'TStreetEditForm'
       FormNameParam.Value = 'TStreetEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = DataSource
@@ -333,6 +335,7 @@ object StreetForm: TStreetForm
       FormName = 'TStreetEditForm'
       FormNameParam.Value = 'TStreetEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -340,6 +343,7 @@ object StreetForm: TStreetForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       ActionType = acUpdate
@@ -388,12 +392,14 @@ object StreetForm: TStreetForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -418,6 +424,7 @@ object StreetForm: TStreetForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -425,6 +432,7 @@ object StreetForm: TStreetForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -433,6 +441,7 @@ object StreetForm: TStreetForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -464,6 +473,7 @@ object StreetForm: TStreetForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 360

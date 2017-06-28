@@ -14,15 +14,25 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   cxCurrencyEdit, DataModul, frxClass, frxDBSet, dsdGuides, cxButtonEdit,
   dxSkinsCore, cxImageComboBox, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter, cxCheckBox;
+  dxSkinsdxBarPainter, cxCheckBox, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
+  dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TReport_JuridicalCollationForm = class(TAncestorReportForm)
-    colItemName: TcxGridDBColumn;
-    coInvNumber: TcxGridDBColumn;
-    colDebet: TcxGridDBColumn;
-    colKredit: TcxGridDBColumn;
-    colOperDate: TcxGridDBColumn;
+    ItemName: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    Debet: TcxGridDBColumn;
+    Kredit: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
     actPrintOfficial: TdsdPrintAction;
     bbPrintOfficial: TdxBarButton;
     cxLabel6: TcxLabel;
@@ -34,14 +44,14 @@ type
     actGetForm: TdsdExecStoredProc;
     actOpenDocument: TMultiAction;
     bbOpenDocument: TdxBarButton;
-    colAccountName: TcxGridDBColumn;
-    colContractName: TcxGridDBColumn;
-    colInfoMoneyCode: TcxGridDBColumn;
-    colInfoMoneyName: TcxGridDBColumn;
-    colInfoMoneyGroupCode: TcxGridDBColumn;
-    colInfoMoneyGroupName: TcxGridDBColumn;
-    colInfoMoneyDestinationCode: TcxGridDBColumn;
-    colInfoMoneyDestinationName: TcxGridDBColumn;
+    AccountName: TcxGridDBColumn;
+    ContractName: TcxGridDBColumn;
+    InfoMoneyCode: TcxGridDBColumn;
+    InfoMoneyName: TcxGridDBColumn;
+    InfoMoneyGroupCode: TcxGridDBColumn;
+    InfoMoneyGroupName: TcxGridDBColumn;
+    InfoMoneyDestinationCode: TcxGridDBColumn;
+    InfoMoneyDestinationName: TcxGridDBColumn;
     spJuridicalBalance: TdsdStoredProc;
     cxLabel3: TcxLabel;
     edPartner: TcxButtonEdit;
@@ -54,11 +64,11 @@ type
     cxLabel8: TcxLabel;
     ceContract: TcxButtonEdit;
     ContractGuides: TdsdGuides;
-    colStartRemains: TcxGridDBColumn;
-    colEndRemains: TcxGridDBColumn;
-    colFromName: TcxGridDBColumn;
-    colPaidKindName: TcxGridDBColumn;
-    colToName: TcxGridDBColumn;
+    StartRemains: TcxGridDBColumn;
+    EndRemains: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
+    ToName: TcxGridDBColumn;
     cxLabel5: TcxLabel;
     edPaidKind: TcxButtonEdit;
     PaidKindGuides: TdsdGuides;
@@ -67,27 +77,26 @@ type
     InfoMoneyGuides: TdsdGuides;
     actPrintTurnover: TdsdPrintAction;
     bbPrintTurnover: TdxBarButton;
-    colSumm: TcxGridDBColumn;
-    colOperationSort: TcxGridDBColumn;
-    colInvNumberPartner: TcxGridDBColumn;
-    colContractComment: TcxGridDBColumn;
+    MovementSumm: TcxGridDBColumn;
+    OperationSort: TcxGridDBColumn;
+    InvNumberPartner: TcxGridDBColumn;
+    ContractComment: TcxGridDBColumn;
     cxLabel10: TcxLabel;
     edCurrency: TcxButtonEdit;
     CurrencyGuides: TdsdGuides;
-
-    colDebet_Currency: TcxGridDBColumn;
-    colKredit_Currency: TcxGridDBColumn;
-    colStartRemains_Currency: TcxGridDBColumn;
-    colEndRemains_Currency: TcxGridDBColumn;
-    colSumm_Currency: TcxGridDBColumn;
+    Debet_Currency: TcxGridDBColumn;
+    Kredit_Currency: TcxGridDBColumn;
+    StartRemains_Currency: TcxGridDBColumn;
+    EndRemains_Currency: TcxGridDBColumn;
+    MovementSumm_Currency: TcxGridDBColumn;
     CurrencyName: TcxGridDBColumn;
     actPrintCurrency: TdsdPrintAction;
     bbPrintCurrency: TdxBarButton;
     cxLabel9: TcxLabel;
     SaleChoiceGuides: TdsdGuides;
     edInvNumberSale: TcxButtonEdit;
-    colPartionMovementName: TcxGridDBColumn;
-    clPaymentDate: TcxGridDBColumn;
+    PartionMovementName: TcxGridDBColumn;
+    PaymentDate: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     MovementComment: TcxGridDBColumn;

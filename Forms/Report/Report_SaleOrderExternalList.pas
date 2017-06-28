@@ -49,7 +49,7 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
-    clOperDate: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
     cxLabel5: TcxLabel;

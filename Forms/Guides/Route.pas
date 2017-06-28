@@ -27,8 +27,8 @@ type
   TRouteForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -53,18 +53,18 @@ type
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
-    clErased: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clUnitName: TcxGridDBColumn;
-    clRouteKind: TcxGridDBColumn;
-    clFreight: TcxGridDBColumn;
-    clBranchName: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    RouteKindName: TcxGridDBColumn;
+    FreightName: TcxGridDBColumn;
+    BranchName: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
-    clRouteGroupName: TcxGridDBColumn;
-    clRateSumma: TcxGridDBColumn;
-    clRatePrice: TcxGridDBColumn;
+    RouteGroupName: TcxGridDBColumn;
+    RateSumma: TcxGridDBColumn;
+    RatePrice: TcxGridDBColumn;
 
   private
     { Private declarations }

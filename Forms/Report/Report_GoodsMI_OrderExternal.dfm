@@ -4,8 +4,10 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
   ClientWidth = 1187
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -550
+  ExplicitTop = -29
   ExplicitWidth = 1203
-  ExplicitHeight = 521
+  ExplicitHeight = 522
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -237,7 +239,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             Options.Editing = False
             Width = 55
           end
-          object colContractCode: TcxGridDBColumn
+          object ContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractCode'
             Visible = False
@@ -246,7 +248,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             Options.Editing = False
             Width = 45
           end
-          object colContractNumber: TcxGridDBColumn
+          object ContractNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractNumber'
             Visible = False
@@ -255,7 +257,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             Options.Editing = False
             Width = 55
           end
-          object clContractTagGroupName: TcxGridDBColumn
+          object ContractTagGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1087#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractTagGroupName'
             Visible = False
@@ -264,7 +266,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             Options.Editing = False
             Width = 100
           end
-          object clContractTagName: TcxGridDBColumn
+          object ContractTagName: TcxGridDBColumn
             Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractTagName'
             HeaderAlignmentHorz = taCenter
@@ -331,7 +333,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             Options.Editing = False
             Width = 80
           end
-          object clJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             Visible = False
@@ -379,7 +381,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object clTradeMarkName: TcxGridDBColumn
+          object TradeMarkName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
             DataBinding.FieldName = 'TradeMarkName'
             HeaderAlignmentHorz = taCenter
@@ -611,7 +613,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colInfoMoneyCode: TcxGridDBColumn
+          object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055' ('#1076#1086#1075'.)'
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -620,7 +622,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             Options.Editing = False
             Width = 45
           end
-          object colInfoMoneyName: TcxGridDBColumn
+          object InfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1076#1086#1075'.)'
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
@@ -638,7 +640,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             Options.Editing = False
             Width = 100
           end
-          object colInfoMoneyCode_goods: TcxGridDBColumn
+          object InfoMoneyCode_goods: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055' ('#1090#1086#1074'.)'
             DataBinding.FieldName = 'InfoMoneyCode_goods'
             Visible = False
@@ -647,7 +649,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             Options.Editing = False
             Width = 45
           end
-          object colInfoMoneyName_goods: TcxGridDBColumn
+          object InfoMoneyName_goods: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1090#1086#1074'.)'
             DataBinding.FieldName = 'InfoMoneyName_goods'
             Visible = False

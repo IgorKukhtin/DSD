@@ -4,7 +4,7 @@ inherited Report_ReceiptSaleAnalyzeForm: TReport_ReceiptSaleAnalyzeForm
   ClientWidth = 1130
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1146
-  ExplicitHeight = 465
+  ExplicitHeight = 469
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -218,7 +218,7 @@ inherited Report_ReceiptSaleAnalyzeForm: TReport_ReceiptSaleAnalyzeForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clCode: TcxGridDBColumn
+          object Code: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
             Visible = False

@@ -6,7 +6,7 @@ inherited QualityForm: TQualityForm
   AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 901
-  ExplicitHeight = 409
+  ExplicitHeight = 413
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -36,13 +36,13 @@ inherited QualityForm: TQualityForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clCode: TcxGridDBColumn
+          object Code: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
             HeaderAlignmentVert = vaCenter
             Width = 62
           end
-          object clName: TcxGridDBColumn
+          object Name: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             HeaderAlignmentHorz = taCenter
@@ -50,7 +50,7 @@ inherited QualityForm: TQualityForm
             Options.Editing = False
             Width = 161
           end
-          object clJuridicalCode: TcxGridDBColumn
+          object JuridicalCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
             DataBinding.FieldName = 'JuridicalCode'
             Visible = False
@@ -59,7 +59,7 @@ inherited QualityForm: TQualityForm
             Options.Editing = False
             Width = 45
           end
-          object clJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -74,7 +74,7 @@ inherited QualityForm: TQualityForm
             Options.Editing = False
             Width = 242
           end
-          object clComment: TcxGridDBColumn
+          object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
@@ -82,14 +82,14 @@ inherited QualityForm: TQualityForm
             Options.Editing = False
             Width = 119
           end
-          object clErased: TcxGridDBColumn
+          object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 92
           end
-          object clTradeMarkName: TcxGridDBColumn
+          object TradeMarkName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1052#1072#1088#1082#1072
             DataBinding.FieldName = 'TradeMarkName'
             HeaderAlignmentHorz = taCenter
@@ -97,7 +97,7 @@ inherited QualityForm: TQualityForm
             Options.Editing = False
             Width = 100
           end
-          object clRetailName: TcxGridDBColumn
+          object RetailName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
             DataBinding.FieldName = 'RetailName'
             Visible = False
@@ -106,7 +106,7 @@ inherited QualityForm: TQualityForm
             Options.Editing = False
             Width = 100
           end
-          object clNumberPrint: TcxGridDBColumn
+          object NumberPrint: TcxGridDBColumn
             Caption = #1053#1086#1084#1077#1088' '#1087#1077#1095#1072#1090#1080
             DataBinding.FieldName = 'NumberPrint'
             HeaderAlignmentHorz = taCenter
@@ -114,7 +114,7 @@ inherited QualityForm: TQualityForm
             Options.Editing = False
             Width = 64
           end
-          object clMemberMain: TcxGridDBColumn
+          object MemberMain: TcxGridDBColumn
             Caption = #1047#1072#1089#1090#1091#1087#1085#1080#1082' '#1076#1080#1088#1077#1082#1090#1086#1088#1072' '#1087#1110#1076#1087#1088#1080#1108#1084#1089#1090#1074#1072
             DataBinding.FieldName = 'MemberMain'
             HeaderAlignmentHorz = taCenter
@@ -122,7 +122,7 @@ inherited QualityForm: TQualityForm
             Options.Editing = False
             Width = 119
           end
-          object clMemberTech: TcxGridDBColumn
+          object MemberTech: TcxGridDBColumn
             Caption = #1058#1077#1093#1085#1086#1083#1086#1075' '#1074#1080#1088#1086#1073#1085#1080#1094#1090#1074#1072
             DataBinding.FieldName = 'MemberTech'
             HeaderAlignmentHorz = taCenter
@@ -156,18 +156,21 @@ inherited QualityForm: TQualityForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -175,12 +178,14 @@ inherited QualityForm: TQualityForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Code'
+          MultiSelectSeparator = ','
         end>
     end
   end

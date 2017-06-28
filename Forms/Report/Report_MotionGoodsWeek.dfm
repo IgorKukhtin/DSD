@@ -1,32 +1,33 @@
 inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1076#1074#1080#1078#1077#1085#1080#1102' '#1087#1086' '#1076#1085#1103#1084' '#1085#1077#1076#1077#1083#1080'>'
   ClientHeight = 534
-  ClientWidth = 1390
+  ClientWidth = 1366
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -287
-  ExplicitWidth = 1406
-  ExplicitHeight = 572
+  ExplicitLeft = -333
+  ExplicitTop = -54
+  ExplicitWidth = 1382
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
-    Width = 1390
+    Width = 1366
     Height = 475
     TabOrder = 3
     ExplicitTop = 59
-    ExplicitWidth = 1390
+    ExplicitWidth = 1366
     ExplicitHeight = 475
     ClientRectBottom = 475
-    ClientRectRight = 1390
+    ClientRectRight = 1366
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1390
+      ExplicitWidth = 1366
       ExplicitHeight = 475
       inherited cxGrid: TcxGrid
-        Width = 1390
+        Width = 1366
         Height = 475
-        ExplicitWidth = 1390
+        ExplicitWidth = 1366
         ExplicitHeight = 475
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -652,7 +653,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
             item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = clGoodsName
+              Column = GoodsName
             end
             item
               Format = ',0.####'
@@ -734,7 +735,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clGoodsGroupNameFull: TcxGridDBColumn
+          object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
@@ -749,7 +750,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clGoodsCode: TcxGridDBColumn
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -759,21 +760,21 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
             HeaderAlignmentVert = vaCenter
             Width = 35
           end
-          object clGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 151
           end
-          object clGoodsKindName: TcxGridDBColumn
+          object GoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object clMeasureName: TcxGridDBColumn
+          object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -940,7 +941,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object clEndDate: TcxGridDBColumn
+          object EndDate: TcxGridDBColumn
             DataBinding.FieldName = 'EndDate'
             Visible = False
             VisibleForCustomization = False
@@ -951,9 +952,9 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
     end
   end
   inherited Panel: TPanel
-    Width = 1390
+    Width = 1366
     Height = 33
-    ExplicitWidth = 1390
+    ExplicitWidth = 1366
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 118

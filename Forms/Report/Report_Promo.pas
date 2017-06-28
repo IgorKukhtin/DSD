@@ -13,55 +13,65 @@ uses
   ChoicePeriod, Vcl.Menus, dxBarExtItems, dxBar, cxClasses, dsdDB,
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxLabel,
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel,
-  cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit;
+  cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TReport_PromoForm = class(TAncestorReportForm)
     cxLabel17: TcxLabel;
     edUnit: TcxButtonEdit;
     UnitGuides: TdsdGuides;
-    colDateStartSale: TcxGridDBColumn;
-    colDeteFinalSale: TcxGridDBColumn;
-    colDateStartPromo: TcxGridDBColumn;
-    colDateFinalPromo: TcxGridDBColumn;
-    colRetailName: TcxGridDBColumn;
-    colAreaName: TcxGridDBColumn;
-    colGoodsName: TcxGridDBColumn;
-    colGoodsCode: TcxGridDBColumn;
-    colTradeMarkName: TcxGridDBColumn;
-    colAmountPlanMin: TcxGridDBColumn;
-    colAmountPlanMinWeight: TcxGridDBColumn;
-    colAmountPlanMax: TcxGridDBColumn;
-    colAmountPlanMaxWeight: TcxGridDBColumn;
-    colGoodsKindName: TcxGridDBColumn;
-    colGoodsWeight: TcxGridDBColumn;
-    colDiscount: TcxGridDBColumn;
-    colPriceWithOutVAT: TcxGridDBColumn;
-    colPriceWithVAT: TcxGridDBColumn;
-    colPrice: TcxGridDBColumn;
-    colCostPromo: TcxGridDBColumn;
-    colAdvertisingName: TcxGridDBColumn;
-    colOperDate: TcxGridDBColumn;
-    colPriceSale: TcxGridDBColumn;
+    DateStartSale: TcxGridDBColumn;
+    DeteFinalSale: TcxGridDBColumn;
+    DateStartPromo: TcxGridDBColumn;
+    DateFinalPromo: TcxGridDBColumn;
+    RetailName: TcxGridDBColumn;
+    AreaName: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    TradeMarkName: TcxGridDBColumn;
+    AmountPlanMin: TcxGridDBColumn;
+    AmountPlanMinWeight: TcxGridDBColumn;
+    AmountPlanMax: TcxGridDBColumn;
+    AmountPlanMaxWeight: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
+    GoodsWeight: TcxGridDBColumn;
+    Discount: TcxGridDBColumn;
+    PriceWithOutVAT: TcxGridDBColumn;
+    PriceWithVAT: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    CostPromo: TcxGridDBColumn;
+    AdvertisingName: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
+    PriceSale: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     dxBarButton1: TdxBarButton;
-    colShowAll: TcxGridDBColumn;
-    colMeasureName: TcxGridDBColumn;
+    ShowAll: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
     actReport_PromoDialog: TExecuteDialog;
     dxBarButton2: TdxBarButton;
-    colInvNumber: TcxGridDBColumn;
-    colUnitName: TcxGridDBColumn;
-    colPersonalTradeName: TcxGridDBColumn;
-    colPersonalName: TcxGridDBColumn;
-    colAmountReal: TcxGridDBColumn;
-    colAmountRealWeight: TcxGridDBColumn;
-    colAmountOrder: TcxGridDBColumn;
-    colAmountOrderWeight: TcxGridDBColumn;
-    colAmountOut: TcxGridDBColumn;
-    colAmountOutWeight: TcxGridDBColumn;
-    colAmountIn: TcxGridDBColumn;
-    colAmountInWeight: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    PersonalTradeName: TcxGridDBColumn;
+    PersonalName: TcxGridDBColumn;
+    AmountReal: TcxGridDBColumn;
+    AmountRealWeight: TcxGridDBColumn;
+    AmountOrder: TcxGridDBColumn;
+    AmountOrderWeight: TcxGridDBColumn;
+    AmountOut: TcxGridDBColumn;
+    AmountOutWeight: TcxGridDBColumn;
+    AmountIn: TcxGridDBColumn;
+    AmountInWeight: TcxGridDBColumn;
     actOpenPromo: TdsdOpenForm;
     dxBarButton3: TdxBarButton;
   private

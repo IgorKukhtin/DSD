@@ -96,52 +96,52 @@ object Report_TransportForm: TReport_TransportForm
         item
           Format = ',0.##'
           Kind = skSum
-          Column = clDistanceFuel
+          Column = DistanceFuel
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = clAmountFuel_In
+          Column = AmountFuel_In
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = clAmountFuel_Out
+          Column = AmountFuel_Out
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = clColdHour
+          Column = ColdHour
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = clColdDistance
+          Column = ColdDistance
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = clAmount_Distance_calc
+          Column = Amount_Distance_calc
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = clAmount_ColdHour_calc
+          Column = Amount_ColdHour_calc
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = clAmount_ColdDistance_calc
+          Column = Amount_ColdDistance_calc
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = clWeightTransport
+          Column = WeightTransport
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = clWeight
+          Column = Weight
         end
         item
           Format = ',0.##'
@@ -208,52 +208,52 @@ object Report_TransportForm: TReport_TransportForm
         item
           Format = ',0.##'
           Kind = skSum
-          Column = clDistanceFuel
+          Column = DistanceFuel
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = clAmountFuel_In
+          Column = AmountFuel_In
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = clAmountFuel_Out
+          Column = AmountFuel_Out
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = clColdHour
+          Column = ColdHour
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = clColdDistance
+          Column = ColdDistance
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = clAmount_Distance_calc
+          Column = Amount_Distance_calc
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = clAmount_ColdHour_calc
+          Column = Amount_ColdHour_calc
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = clAmount_ColdDistance_calc
+          Column = Amount_ColdDistance_calc
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = clWeightTransport
+          Column = WeightTransport
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = clWeight
+          Column = Weight
         end
         item
           Format = ',0.##'
@@ -283,7 +283,7 @@ object Report_TransportForm: TReport_TransportForm
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clOperDate: TcxGridDBColumn
+      object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentHorz = taCenter
@@ -291,7 +291,7 @@ object Report_TransportForm: TReport_TransportForm
         Options.Editing = False
         Width = 46
       end
-      object clInvNumberTransport: TcxGridDBColumn
+      object InvNumberTransport: TcxGridDBColumn
         Caption = #8470
         DataBinding.FieldName = 'InvNumberTransport'
         HeaderAlignmentHorz = taCenter
@@ -299,14 +299,14 @@ object Report_TransportForm: TReport_TransportForm
         Options.Editing = False
         Width = 37
       end
-      object clFuelName: TcxGridDBColumn
+      object FuelName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
         DataBinding.FieldName = 'FuelName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 58
       end
-      object clCarModelName: TcxGridDBColumn
+      object CarModelName: TcxGridDBColumn
         Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
         DataBinding.FieldName = 'CarModelName'
         HeaderAlignmentHorz = taCenter
@@ -314,7 +314,7 @@ object Report_TransportForm: TReport_TransportForm
         Options.Editing = False
         Width = 71
       end
-      object clCarName: TcxGridDBColumn
+      object CarName: TcxGridDBColumn
         Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
         DataBinding.FieldName = 'CarName'
         HeaderAlignmentHorz = taCenter
@@ -322,7 +322,7 @@ object Report_TransportForm: TReport_TransportForm
         Options.Editing = False
         Width = 70
       end
-      object colBranchName: TcxGridDBColumn
+      object BranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
         DataBinding.FieldName = 'BranchName'
         HeaderAlignmentVert = vaCenter
@@ -336,7 +336,7 @@ object Report_TransportForm: TReport_TransportForm
         Options.Editing = False
         Width = 58
       end
-      object clRouteName: TcxGridDBColumn
+      object RouteName: TcxGridDBColumn
         Caption = #1052#1072#1088#1096#1088#1091#1090
         DataBinding.FieldName = 'RouteName'
         HeaderAlignmentHorz = taCenter
@@ -344,7 +344,7 @@ object Report_TransportForm: TReport_TransportForm
         Options.Editing = False
         Width = 57
       end
-      object clRouteKindName: TcxGridDBColumn
+      object RouteKindName: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1084#1072#1088#1096#1088#1091#1090#1072
         DataBinding.FieldName = 'RouteKindName'
         HeaderAlignmentHorz = taCenter
@@ -352,7 +352,7 @@ object Report_TransportForm: TReport_TransportForm
         Options.Editing = False
         Width = 57
       end
-      object clWeight: TcxGridDBColumn
+      object Weight: TcxGridDBColumn
         Caption = #1042#1077#1089' '#1075#1088#1091#1079#1072', '#1082#1075' ('#1088#1072#1079#1075#1088#1091#1079#1082#1072')'
         DataBinding.FieldName = 'Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -362,7 +362,7 @@ object Report_TransportForm: TReport_TransportForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object clWeightTransport: TcxGridDBColumn
+      object WeightTransport: TcxGridDBColumn
         Caption = #1042#1077#1089' '#1075#1088#1091#1079#1072', '#1082#1075' ('#1087#1077#1088#1077#1074#1077#1079#1077#1085#1086')'
         DataBinding.FieldName = 'WeightTransport'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -402,7 +402,7 @@ object Report_TransportForm: TReport_TransportForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object clStartOdometre: TcxGridDBColumn
+      object StartOdometre: TcxGridDBColumn
         Caption = #1053#1072#1095'. '#1087#1086#1082#1072#1079'.'#1082#1084
         DataBinding.FieldName = 'StartOdometre'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -413,7 +413,7 @@ object Report_TransportForm: TReport_TransportForm
         Options.Editing = False
         Width = 58
       end
-      object clEndOdometre: TcxGridDBColumn
+      object EndOdometre: TcxGridDBColumn
         Caption = #1050#1086#1085#1077#1095'. '#1087#1086#1082#1072#1079'.'#1082#1084
         DataBinding.FieldName = 'EndOdometre'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -424,7 +424,7 @@ object Report_TransportForm: TReport_TransportForm
         Options.Editing = False
         Width = 57
       end
-      object clDistanceFuel: TcxGridDBColumn
+      object DistanceFuel: TcxGridDBColumn
         Caption = #1055#1088#1086#1073#1077#1075', '#1082#1084
         DataBinding.FieldName = 'DistanceFuel'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -435,7 +435,7 @@ object Report_TransportForm: TReport_TransportForm
         Options.Editing = False
         Width = 49
       end
-      object clAmountFuel_Start: TcxGridDBColumn
+      object AmountFuel_Start: TcxGridDBColumn
         Caption = #1053#1072#1095'. '#1086#1089#1090', '#1083'.'
         DataBinding.FieldName = 'AmountFuel_Start'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -446,7 +446,7 @@ object Report_TransportForm: TReport_TransportForm
         Options.Editing = False
         Width = 50
       end
-      object clAmountFuel_In: TcxGridDBColumn
+      object AmountFuel_In: TcxGridDBColumn
         Caption = #1047#1072#1087#1088#1072#1074#1082#1072', '#1083'.'
         DataBinding.FieldName = 'AmountFuel_In'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -457,7 +457,7 @@ object Report_TransportForm: TReport_TransportForm
         Options.Editing = False
         Width = 50
       end
-      object clAmountFuel_Out: TcxGridDBColumn
+      object AmountFuel_Out: TcxGridDBColumn
         Caption = #1056#1072#1089#1093#1086#1076', '#1083'.'
         DataBinding.FieldName = 'AmountFuel_Out'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -468,7 +468,7 @@ object Report_TransportForm: TReport_TransportForm
         Options.Editing = False
         Width = 50
       end
-      object clAmountFuel_End: TcxGridDBColumn
+      object AmountFuel_End: TcxGridDBColumn
         Caption = #1050#1086#1085#1077#1095'. '#1086#1089#1090'., '#1083'.'
         DataBinding.FieldName = 'AmountFuel_End'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -479,7 +479,7 @@ object Report_TransportForm: TReport_TransportForm
         Options.Editing = False
         Width = 46
       end
-      object clColdHour: TcxGridDBColumn
+      object ColdHour: TcxGridDBColumn
         Caption = #1063#1072#1089#1086#1074' '#1092#1072#1082#1090', '#1093#1086#1083#1086#1076
         DataBinding.FieldName = 'ColdHour'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -490,7 +490,7 @@ object Report_TransportForm: TReport_TransportForm
         Options.Editing = False
         Width = 58
       end
-      object clColdDistance: TcxGridDBColumn
+      object ColdDistance: TcxGridDBColumn
         Caption = #1050#1084'. '#1092#1072#1082#1090', '#1093#1086#1083#1086#1076
         DataBinding.FieldName = 'ColdDistance'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -501,7 +501,7 @@ object Report_TransportForm: TReport_TransportForm
         Options.Editing = False
         Width = 59
       end
-      object clRateFuelKindName: TcxGridDBColumn
+      object RateFuelKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1085#1086#1088#1084#1099
         DataBinding.FieldName = 'RateFuelKindName'
         Visible = False
@@ -510,7 +510,7 @@ object Report_TransportForm: TReport_TransportForm
         Options.Editing = False
         Width = 50
       end
-      object clRateFuelKindTax: TcxGridDBColumn
+      object RateFuelKindTax: TcxGridDBColumn
         Caption = '% '#1089#1077#1079#1086#1085', '#1090#1077#1084#1087'.'
         DataBinding.FieldName = 'RateFuelKindTax'
         Visible = False
@@ -519,7 +519,7 @@ object Report_TransportForm: TReport_TransportForm
         Options.Editing = False
         Width = 50
       end
-      object clAmountFuel: TcxGridDBColumn
+      object AmountFuel: TcxGridDBColumn
         Caption = #1053#1086#1088#1084#1072' '#1085#1072' 100 '#1082#1084
         DataBinding.FieldName = 'AmountFuel'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -530,7 +530,7 @@ object Report_TransportForm: TReport_TransportForm
         Options.Editing = False
         Width = 39
       end
-      object clAmountColdHour: TcxGridDBColumn
+      object AmountColdHour: TcxGridDBColumn
         Caption = #1053#1086#1088#1084#1072' '#1085#1072' '#1093#1086#1083#1086#1076', '#1074' '#1095#1072#1089
         DataBinding.FieldName = 'AmountColdHour'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -541,7 +541,7 @@ object Report_TransportForm: TReport_TransportForm
         Options.Editing = False
         Width = 60
       end
-      object clAmountColdDistance: TcxGridDBColumn
+      object AmountColdDistance: TcxGridDBColumn
         Caption = #1053#1086#1088#1084#1072' '#1085#1072' '#1093#1086#1083#1086#1076', '#1079#1072' 100 '#1082#1084
         DataBinding.FieldName = 'AmountColdDistance'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -552,7 +552,7 @@ object Report_TransportForm: TReport_TransportForm
         Options.Editing = False
         Width = 60
       end
-      object clAmount_Distance_calc: TcxGridDBColumn
+      object Amount_Distance_calc: TcxGridDBColumn
         Caption = #1056#1072#1089#1095#1077#1090' '#1085#1072' '#1087#1088#1086#1073#1077#1075
         DataBinding.FieldName = 'Amount_Distance_calc'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -563,7 +563,7 @@ object Report_TransportForm: TReport_TransportForm
         Options.Editing = False
         Width = 57
       end
-      object clAmount_ColdHour_calc: TcxGridDBColumn
+      object Amount_ColdHour_calc: TcxGridDBColumn
         Caption = #1056#1072#1089#1095#1077#1090' '#1085#1072' '#1093#1086#1083#1086#1076' '#1095'.'
         DataBinding.FieldName = 'Amount_ColdHour_calc'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -574,7 +574,7 @@ object Report_TransportForm: TReport_TransportForm
         Options.Editing = False
         Width = 57
       end
-      object clAmount_ColdDistance_calc: TcxGridDBColumn
+      object Amount_ColdDistance_calc: TcxGridDBColumn
         Caption = #1056#1072#1089#1095#1077#1090' '#1085#1072' '#1093#1086#1083#1086#1076' '#1082#1084'.'
         DataBinding.FieldName = 'Amount_ColdDistance_calc'
         PropertiesClassName = 'TcxCurrencyEditProperties'

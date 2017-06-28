@@ -13,31 +13,41 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus;
+  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TReport_CheckTaxCorrectiveForm = class(TAncestorReportForm)
-    clInvNumber_ReturnIn: TcxGridDBColumn;
-    clGoodsCode: TcxGridDBColumn;
-    clGoodsName: TcxGridDBColumn;
-    clAmount_ReturnIn: TcxGridDBColumn;
-    clAmount_TaxCorrective: TcxGridDBColumn;
-    clFromCode: TcxGridDBColumn;
-    clGoodsKindName: TcxGridDBColumn;
-    clFromName: TcxGridDBColumn;
-    clToCode: TcxGridDBColumn;
-    clToName: TcxGridDBColumn;
-    clPrice: TcxGridDBColumn;
-    clDifference: TcxGridDBColumn;
-    clInvNumber_TaxCorrective: TcxGridDBColumn;
-    clDocumentTaxKindName: TcxGridDBColumn;
+    InvNumber_ReturnIn: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    Amount_ReturnIn: TcxGridDBColumn;
+    Amount_TaxCorrective: TcxGridDBColumn;
+    FromCode: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
+    ToCode: TcxGridDBColumn;
+    ToName: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    Difference: TcxGridDBColumn;
+    InvNumber_TaxCorrective: TcxGridDBColumn;
+    DocumentTaxKindName: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     edDocumentTaxKind: TcxButtonEdit;
     DocumentTaxKindGuides: TdsdGuides;
-    clPartnerCode: TcxGridDBColumn;
-    clPartnerName: TcxGridDBColumn;
-    clInvNumberPartner_ReturnIn: TcxGridDBColumn;
-    clInvNumberPartner_TaxCorrective: TcxGridDBColumn;
+    PartnerCode: TcxGridDBColumn;
+    PartnerName: TcxGridDBColumn;
+    InvNumberPartner_ReturnIn: TcxGridDBColumn;
+    InvNumberPartner_TaxCorrective: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
   private

@@ -45,7 +45,7 @@ object SignInternalForm: TSignInternalForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         Visible = False
@@ -54,7 +54,7 @@ object SignInternalForm: TSignInternalForm
         Options.Editing = False
         Width = 39
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
@@ -62,7 +62,7 @@ object SignInternalForm: TSignInternalForm
         Options.Editing = False
         Width = 286
       end
-      object clMovementDescName: TcxGridDBColumn
+      object MovementDescName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
         DataBinding.FieldName = 'MovementDescName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -78,7 +78,7 @@ object SignInternalForm: TSignInternalForm
         Options.Editing = False
         Width = 248
       end
-      object clObjectDescName: TcxGridDBColumn
+      object ObjectDescName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
         DataBinding.FieldName = 'ObjectDescName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -94,7 +94,7 @@ object SignInternalForm: TSignInternalForm
         Options.Editing = False
         Width = 166
       end
-      object clUnitCode: TcxGridDBColumn
+      object UnitCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
         DataBinding.FieldName = 'UnitCode'
         Visible = False
@@ -103,7 +103,7 @@ object SignInternalForm: TSignInternalForm
         Options.Editing = False
         Width = 91
       end
-      object clUnitName: TcxGridDBColumn
+      object UnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'UnitName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -118,7 +118,7 @@ object SignInternalForm: TSignInternalForm
         HeaderAlignmentVert = vaCenter
         Width = 190
       end
-      object clComment: TcxGridDBColumn
+      object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
@@ -126,7 +126,7 @@ object SignInternalForm: TSignInternalForm
         Options.Editing = False
         Width = 157
       end
-      object clIsErased: TcxGridDBColumn
+      object IsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         Visible = False
@@ -189,7 +189,7 @@ object SignInternalForm: TSignInternalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object cxUserCode: TcxGridDBColumn
+      object UserCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1087#1086#1083#1100#1079'.'
         DataBinding.FieldName = 'UserCode'
         Visible = False
@@ -198,7 +198,7 @@ object SignInternalForm: TSignInternalForm
         Options.Editing = False
         Width = 56
       end
-      object cxUserName: TcxGridDBColumn
+      object UserName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
         DataBinding.FieldName = 'UserName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -213,7 +213,7 @@ object SignInternalForm: TSignInternalForm
         HeaderAlignmentVert = vaCenter
         Width = 239
       end
-      object cxMemberName: TcxGridDBColumn
+      object MemberName: TcxGridDBColumn
         Caption = #1060#1080#1079'. '#1083#1080#1094#1086
         DataBinding.FieldName = 'MemberName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -239,7 +239,7 @@ object SignInternalForm: TSignInternalForm
         Options.Editing = False
         Width = 70
       end
-      object cxPositionName: TcxGridDBColumn
+      object PositionName: TcxGridDBColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
         DataBinding.FieldName = 'PositionName'
         HeaderAlignmentHorz = taCenter
@@ -255,7 +255,7 @@ object SignInternalForm: TSignInternalForm
         Options.Editing = False
         Width = 151
       end
-      object cxBranchName: TcxGridDBColumn
+      object BranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
         DataBinding.FieldName = 'BranchName'
         HeaderAlignmentHorz = taCenter
@@ -263,7 +263,7 @@ object SignInternalForm: TSignInternalForm
         Options.Editing = False
         Width = 112
       end
-      object cxUserId: TcxGridDBColumn
+      object UserId: TcxGridDBColumn
         DataBinding.FieldName = 'UserId'
         Visible = False
         VisibleForCustomization = False
@@ -1263,7 +1263,7 @@ object SignInternalForm: TSignInternalForm
         ColorValueList = <>
       end
       item
-        ColorColumn = cxUserCode
+        ColorColumn = UserCode
         ColorValueList = <>
       end
       item
@@ -1273,7 +1273,7 @@ object SignInternalForm: TSignInternalForm
         ColorValueList = <>
       end
       item
-        ColorColumn = cxUserName
+        ColorColumn = UserName
         ColorValueList = <>
       end
       item

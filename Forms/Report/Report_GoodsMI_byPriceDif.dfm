@@ -5,8 +5,9 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -428
   ExplicitWidth = 1098
-  ExplicitHeight = 412
+  ExplicitHeight = 413
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -32,53 +33,53 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSummPartner_calc
+              Column = SummPartner_calc
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountPartner_Weight
+              Column = AmountPartner_Weight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountPartner_Sh
+              Column = AmountPartner_Sh
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSummPartner
+              Column = SummPartner
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSummDiff
+              Column = SummDiff
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSummPartner_calc
+              Column = SummPartner_calc
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountPartner_Weight
+              Column = AmountPartner_Weight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountPartner_Sh
+              Column = AmountPartner_Sh
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSummPartner
+              Column = SummPartner
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSummDiff
+              Column = SummDiff
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -90,14 +91,14 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clInvNumber: TcxGridDBColumn
+          object InvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object clOperDate: TcxGridDBColumn
+          object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'OperDate'
             Visible = False
@@ -105,7 +106,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clOperDatePartner: TcxGridDBColumn
+          object OperDatePartner: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'OperDatePartner'
             Visible = False
@@ -113,7 +114,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clJuridicalCode: TcxGridDBColumn
+          object JuridicalCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
             DataBinding.FieldName = 'JuridicalCode'
             Visible = False
@@ -121,7 +122,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object clJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088'.'#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             Visible = False
@@ -129,7 +130,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object clPartnerCode: TcxGridDBColumn
+          object PartnerCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
             DataBinding.FieldName = 'PartnerCode'
             Visible = False
@@ -137,14 +138,14 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object clPartnerName: TcxGridDBColumn
+          object PartnerName: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
             DataBinding.FieldName = 'PartnerName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object clUnitCode: TcxGridDBColumn
+          object UnitCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
             DataBinding.FieldName = 'UnitCode'
             Visible = False
@@ -152,14 +153,14 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object clUnitName: TcxGridDBColumn
+          object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clGoodsGroupNameFull: TcxGridDBColumn
+          object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
             Visible = False
@@ -167,7 +168,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object clGoodsGroupName: TcxGridDBColumn
+          object GoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'GoodsGroupName'
             Visible = False
@@ -175,35 +176,35 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object clGoodsCode: TcxGridDBColumn
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 35
           end
-          object clGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object clGoodsKindName: TcxGridDBColumn
+          object GoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object clMeasureName: TcxGridDBColumn
+          object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 35
           end
-          object clPrice: TcxGridDBColumn
+          object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -213,7 +214,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clPrice_calc: TcxGridDBColumn
+          object Price_calc: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
             DataBinding.FieldName = 'Price_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -223,7 +224,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clAmountPartner_Weight: TcxGridDBColumn
+          object AmountPartner_Weight: TcxGridDBColumn
             Caption = #1050#1086#1083'.'#1074#1077#1089'  ('#1091' '#1087#1086#1082#1091#1087'.)'
             DataBinding.FieldName = 'AmountPartner_Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -233,7 +234,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object clAmountPartner_Sh: TcxGridDBColumn
+          object AmountPartner_Sh: TcxGridDBColumn
             Caption = #1050#1086#1083'.'#1096#1090'.  ('#1091' '#1087#1086#1082#1091#1087'.)'
             DataBinding.FieldName = 'AmountPartner_Sh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -244,7 +245,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object clSummPartner: TcxGridDBColumn
+          object SummPartner: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072', '#1075#1088#1085' ('#1091' '#1087#1086#1082#1091#1087'.)'
             DataBinding.FieldName = 'SummPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -255,7 +256,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
             HeaderGlyphAlignmentHorz = taCenter
             Width = 80
           end
-          object clSummPartner_calc: TcxGridDBColumn
+          object SummPartner_calc: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072', '#1075#1088#1085' ('#1088#1072#1089#1095'. '#1091' '#1087#1086#1082#1091#1087'.)'
             DataBinding.FieldName = 'SummPartner_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -265,7 +266,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clSummDiff: TcxGridDBColumn
+          object SummDiff: TcxGridDBColumn
             Caption = #1056#1072#1079#1085#1080#1094#1072', '#1075#1088#1085
             DataBinding.FieldName = 'SummDiff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -275,7 +276,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clInfoMoneyCode: TcxGridDBColumn
+          object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -283,7 +284,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
-          object clInfoMoneyGroupName: TcxGridDBColumn
+          object InfoMoneyGroupName: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -291,7 +292,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clInfoMoneyDestinationName: TcxGridDBColumn
+          object InfoMoneyDestinationName: TcxGridDBColumn
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -299,7 +300,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clInfoMoneyName: TcxGridDBColumn
+          object InfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             HeaderAlignmentHorz = taCenter
@@ -514,6 +515,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
       FormName = 'TReport_GoodsMI_byPriceDifDialogForm'
       FormNameParam.Value = 'TReport_GoodsMI_byPriceDifDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -521,6 +523,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -528,6 +531,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
@@ -535,6 +539,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
           Component = PaidKindGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -543,6 +548,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
@@ -550,6 +556,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
           Component = InfoMoneyGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -558,6 +565,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupId'
@@ -565,6 +573,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
           Component = GoodsGroupGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupName'
@@ -573,6 +582,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitId'
@@ -580,6 +590,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
           Component = UnitGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
@@ -588,6 +599,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
@@ -595,6 +607,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
           Component = JuridicalGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -603,6 +616,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PriceListId'
@@ -610,6 +624,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
           Component = PriceListGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PriceListName'
@@ -618,6 +633,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -641,6 +657,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -648,6 +665,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescId'
@@ -655,6 +673,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
         Component = FormParams
         ComponentItem = 'inDescId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -662,6 +681,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
@@ -669,6 +689,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyId'
@@ -676,6 +697,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindId'
@@ -683,6 +705,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
         Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPriceListId'
@@ -690,6 +713,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
         Component = PriceListGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsGroupId'
@@ -697,6 +721,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
         Component = GoodsGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 192
@@ -784,6 +809,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
     LookupControl = edGoodsGroup
     FormNameParam.Value = 'TGoodsGroup_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsGroup_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -794,6 +820,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -802,6 +829,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 736
   end
@@ -811,6 +839,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
         Name = 'inDescId'
         Value = Null
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InDescName'
@@ -818,6 +847,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
         Component = edInDescName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 328
     Top = 170
@@ -827,6 +857,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
     LookupControl = edUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -837,6 +868,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -845,6 +877,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 360
   end
@@ -853,6 +886,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
     LookupControl = ceInfoMoney
     FormNameParam.Value = 'TInfoMoney_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -861,6 +895,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -868,6 +903,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 680
     Top = 29
@@ -877,6 +913,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
     LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPaidKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -887,6 +924,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -895,6 +933,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 952
     Top = 32
@@ -904,6 +943,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -913,6 +953,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -921,6 +962,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 416
     Top = 32
@@ -930,6 +972,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
     LookupControl = edPriceList
     FormNameParam.Value = 'TPriceList_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPriceList_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -940,6 +983,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -948,6 +992,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 996
     Top = 8

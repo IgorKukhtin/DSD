@@ -3,10 +3,9 @@ inherited Report_PersonalForm: TReport_PersonalForm
   ClientHeight = 555
   ClientWidth = 901
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -128
-  ExplicitTop = -133
+  ExplicitTop = -58
   ExplicitWidth = 917
-  ExplicitHeight = 590
+  ExplicitHeight = 594
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -32,57 +31,57 @@ inherited Report_PersonalForm: TReport_PersonalForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colStartAmount
+              Column = StartAmount
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colEndAmount
+              Column = EndAmount
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colDebetSumm
+              Column = DebetSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colKreditSumm
+              Column = KreditSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colStartAmountD
+              Column = StartAmountD
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colStartAmountK
+              Column = StartAmountK
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colServiceSumm
+              Column = ServiceSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colMoneySumm
+              Column = MoneySumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colEndAmountD
+              Column = EndAmountD
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colEndAmountK
+              Column = EndAmountK
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colIncomeSumm
+              Column = IncomeSumm
             end
             item
               Format = ',0.00##'
@@ -128,57 +127,57 @@ inherited Report_PersonalForm: TReport_PersonalForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colStartAmount
+              Column = StartAmount
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colEndAmount
+              Column = EndAmount
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colDebetSumm
+              Column = DebetSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colKreditSumm
+              Column = KreditSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colStartAmountD
+              Column = StartAmountD
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colStartAmountK
+              Column = StartAmountK
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colServiceSumm
+              Column = ServiceSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colMoneySumm
+              Column = MoneySumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colEndAmountD
+              Column = EndAmountD
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colEndAmountK
+              Column = EndAmountK
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colIncomeSumm
+              Column = IncomeSumm
             end
             item
               Format = ',0.00##'
@@ -316,7 +315,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Options.Editing = False
             Width = 97
           end
-          object colInfoMoneyCode: TcxGridDBColumn
+          object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -325,7 +324,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Options.Editing = False
             Width = 45
           end
-          object colInfoMoneyGroupName: TcxGridDBColumn
+          object InfoMoneyGroupName: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -334,7 +333,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Options.Editing = False
             Width = 70
           end
-          object colInfoMoneyDestinationName: TcxGridDBColumn
+          object InfoMoneyDestinationName: TcxGridDBColumn
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -343,7 +342,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Options.Editing = False
             Width = 70
           end
-          object colInfoMoneyName: TcxGridDBColumn
+          object InfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
@@ -352,7 +351,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Options.Editing = False
             Width = 70
           end
-          object clInfoMoneyName_all: TcxGridDBColumn
+          object InfoMoneyName_all: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
             DataBinding.FieldName = 'InfoMoneyName_all'
             Visible = False
@@ -361,7 +360,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Options.Editing = False
             Width = 70
           end
-          object colStartAmount: TcxGridDBColumn
+          object StartAmount: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1076#1086#1083#1075' '#1082' '#1074#1099#1087#1083'.'
             DataBinding.FieldName = 'StartAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -374,7 +373,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Options.Editing = False
             Width = 80
           end
-          object colStartAmountD: TcxGridDBColumn
+          object StartAmountD: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086' ('#1044#1077#1073#1077#1090')'
             DataBinding.FieldName = 'StartAmountD'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -386,7 +385,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Options.Editing = False
             Width = 80
           end
-          object colStartAmountK: TcxGridDBColumn
+          object StartAmountK: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086' ('#1050#1088#1077#1076#1080#1090')'
             DataBinding.FieldName = 'StartAmountK'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -398,7 +397,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Options.Editing = False
             Width = 80
           end
-          object colServiceSumm: TcxGridDBColumn
+          object ServiceSumm: TcxGridDBColumn
             Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1086
             DataBinding.FieldName = 'ServiceSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -409,7 +408,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Options.Editing = False
             Width = 80
           end
-          object colIncomeSumm: TcxGridDBColumn
+          object IncomeSumm: TcxGridDBColumn
             Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1043#1057#1052
             DataBinding.FieldName = 'IncomeSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -474,7 +473,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Options.Editing = False
             Width = 80
           end
-          object colMoneySumm: TcxGridDBColumn
+          object MoneySumm: TcxGridDBColumn
             Caption = #1042#1099#1087#1083#1072#1095#1077#1085#1086' '#1048#1090#1086#1075#1086
             DataBinding.FieldName = 'MoneySumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -518,7 +517,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Options.Editing = False
             Width = 80
           end
-          object colDebetSumm: TcxGridDBColumn
+          object DebetSumm: TcxGridDBColumn
             Caption = #1054#1073#1086#1088#1086#1090' '#1044#1077#1073#1077#1090
             DataBinding.FieldName = 'DebetSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -532,7 +531,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Options.Editing = False
             Width = 80
           end
-          object colKreditSumm: TcxGridDBColumn
+          object KreditSumm: TcxGridDBColumn
             Caption = #1054#1073#1086#1088#1086#1090' '#1050#1088#1077#1076#1080#1090
             DataBinding.FieldName = 'KreditSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -546,7 +545,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Options.Editing = False
             Width = 80
           end
-          object colEndAmount: TcxGridDBColumn
+          object EndAmount: TcxGridDBColumn
             Caption = #1050#1086#1085'. '#1076#1086#1083#1075' '#1082' '#1074#1099#1087#1083'.'
             DataBinding.FieldName = 'EndAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -559,7 +558,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Options.Editing = False
             Width = 80
           end
-          object colEndAmountD: TcxGridDBColumn
+          object EndAmountD: TcxGridDBColumn
             Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086' ('#1044#1077#1073#1077#1090')'
             DataBinding.FieldName = 'EndAmountD'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -571,7 +570,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Options.Editing = False
             Width = 80
           end
-          object colEndAmountK: TcxGridDBColumn
+          object EndAmountK: TcxGridDBColumn
             Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086' ('#1050#1088#1077#1076#1080#1090')'
             DataBinding.FieldName = 'EndAmountK'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -583,7 +582,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Options.Editing = False
             Width = 80
           end
-          object colAccountName: TcxGridDBColumn
+          object AccountName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090
             DataBinding.FieldName = 'AccountName'
             Visible = False
@@ -2591,13 +2590,13 @@ inherited Report_PersonalForm: TReport_PersonalForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColumnAddOnList = <
       item
-        Column = colDebetSumm
+        Column = DebetSumm
         Action = IncomeJournal
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False
       end
       item
-        Column = colKreditSumm
+        Column = KreditSumm
         Action = ReturnOutJournal
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False

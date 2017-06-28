@@ -4,9 +4,10 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
   ClientWidth = 1220
   Position = poDesigned
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -238
+  ExplicitLeft = -493
+  ExplicitTop = -30
   ExplicitWidth = 1236
-  ExplicitHeight = 519
+  ExplicitHeight = 523
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -32,23 +33,23 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colDebetSumm
+              Column = DebetSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colKreditSumm
+              Column = KreditSumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colDebetSumm
+              Column = DebetSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colKreditSumm
+              Column = KreditSumm
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -74,7 +75,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
           end
-          object colDescName: TcxGridDBColumn
+          object DescName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1076#1086#1082'.'
             DataBinding.FieldName = 'DescName'
             HeaderAlignmentHorz = taCenter
@@ -82,7 +83,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
             Options.Editing = False
             Width = 65
           end
-          object colDebetSumm: TcxGridDBColumn
+          object DebetSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1044#1077#1073#1077#1090
             DataBinding.FieldName = 'DebetSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -94,7 +95,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
             Options.Editing = False
             Width = 60
           end
-          object colKreditSumm: TcxGridDBColumn
+          object KreditSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1050#1088#1077#1076#1080#1090
             DataBinding.FieldName = 'KreditSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -106,7 +107,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
             Options.Editing = False
             Width = 77
           end
-          object colJuridicalCode: TcxGridDBColumn
+          object JuridicalCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
             DataBinding.FieldName = 'JuridicalCode'
             Visible = False
@@ -115,7 +116,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
             Options.Editing = False
             Width = 45
           end
-          object colJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
@@ -123,7 +124,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
             Options.Editing = False
             Width = 127
           end
-          object colOKPO: TcxGridDBColumn
+          object OKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'OKPO'
             Visible = False
@@ -132,7 +133,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
             Options.Editing = False
             Width = 55
           end
-          object clPartnerCode: TcxGridDBColumn
+          object PartnerCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
             DataBinding.FieldName = 'PartnerCode'
             Visible = False
@@ -141,7 +142,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
             Options.Editing = False
             Width = 40
           end
-          object clPartnerName: TcxGridDBColumn
+          object PartnerName: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
             DataBinding.FieldName = 'PartnerName'
             HeaderAlignmentHorz = taCenter
@@ -149,7 +150,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
             Options.Editing = False
             Width = 142
           end
-          object colBranchCode: TcxGridDBColumn
+          object BranchCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1092#1083'.'
             DataBinding.FieldName = 'BranchCode'
             Visible = False
@@ -157,14 +158,14 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 35
           end
-          object colBranchName: TcxGridDBColumn
+          object BranchName: TcxGridDBColumn
             Caption = #1060#1080#1083#1080#1072#1083
             DataBinding.FieldName = 'BranchName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 75
           end
-          object colPaidKindName: TcxGridDBColumn
+          object PaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
             HeaderAlignmentHorz = taCenter
@@ -172,7 +173,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
             Options.Editing = False
             Width = 67
           end
-          object clContractStateKindName: TcxGridDBColumn
+          object ContractStateKindName: TcxGridDBColumn
             Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractStateKindCode'
             PropertiesClassName = 'TcxImageComboBoxProperties'
@@ -206,7 +207,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
             Options.Editing = False
             Width = 55
           end
-          object colContractCode: TcxGridDBColumn
+          object ContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractCode'
             Visible = False
@@ -215,7 +216,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
             Options.Editing = False
             Width = 45
           end
-          object colContractNumber: TcxGridDBColumn
+          object ContractNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractNumber'
             HeaderAlignmentHorz = taCenter
@@ -223,7 +224,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
             Options.Editing = False
             Width = 55
           end
-          object clContractTagName: TcxGridDBColumn
+          object ContractTagName: TcxGridDBColumn
             Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractTagName'
             HeaderAlignmentHorz = taCenter
@@ -231,7 +232,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
             Options.Editing = False
             Width = 60
           end
-          object colInfoMoneyCode: TcxGridDBColumn
+          object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -240,7 +241,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
             Options.Editing = False
             Width = 45
           end
-          object colInfoMoneyGroupName: TcxGridDBColumn
+          object InfoMoneyGroupName: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -249,7 +250,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
             Options.Editing = False
             Width = 70
           end
-          object colInfoMoneyDestinationName: TcxGridDBColumn
+          object InfoMoneyDestinationName: TcxGridDBColumn
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -258,7 +259,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
             Options.Editing = False
             Width = 70
           end
-          object colInfoMoneyName: TcxGridDBColumn
+          object InfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             HeaderAlignmentHorz = taCenter
@@ -266,14 +267,14 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
             Options.Editing = False
             Width = 105
           end
-          object colComment: TcxGridDBColumn
+          object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 161
           end
-          object colAccountName: TcxGridDBColumn
+          object AccountName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090
             DataBinding.FieldName = 'AccountName'
             Visible = False
@@ -486,24 +487,28 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
       FormNameParam.Component = FormParams
       FormNameParam.ComponentItem = 'FormName'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inOperDate'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Id'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inMovementId_Value'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -535,6 +540,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -542,6 +548,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindId'
@@ -549,6 +556,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         Component = GoodsKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -556,6 +564,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         Component = GoodsPartionGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAccountGroupId'
@@ -563,6 +572,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         Component = AccountGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitGroupId'
@@ -570,6 +580,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         Component = UnitGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inLocationId'
@@ -577,6 +588,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         Component = LocationGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyId'
@@ -584,6 +596,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionGoodsId'
@@ -591,6 +604,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         Component = GoodsPartionGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescSet'
@@ -599,6 +613,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         ComponentItem = 'DescSet'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 528
     Top = 235
@@ -712,18 +727,21 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         Value = 41640d
         Component = deStart
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
         Value = 41640d
         Component = deEnd
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsKindId'
         Value = ''
         Component = GoodsKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsKindName'
@@ -731,12 +749,14 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         Component = GoodsKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsId'
         Value = ''
         Component = GoodsGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsName'
@@ -744,12 +764,14 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         Component = GoodsGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartionGoodsId'
         Value = ''
         Component = GoodsPartionGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartionGoodsName'
@@ -757,12 +779,14 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         Component = GoodsPartionGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'LocationId'
         Value = ''
         Component = LocationGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'LocationName'
@@ -770,12 +794,14 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         Component = LocationGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountGroupId'
         Value = Null
         Component = AccountGroupGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountGroupName'
@@ -783,12 +809,14 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         Component = AccountGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyId'
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName'
@@ -796,12 +824,14 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitGroupId'
         Value = ''
         Component = UnitGroupGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitGroupName'
@@ -809,11 +839,13 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         Component = UnitGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'DescSet'
         Value = ''
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
   end
   inherited spMovementReComplete: TdsdStoredProc
@@ -831,6 +863,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FormName'
@@ -838,6 +871,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         Component = FormParams
         ComponentItem = 'FormName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 480
@@ -848,6 +882,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
     LookupControl = edGoodsKind
     FormNameParam.Value = 'TGoodsKind_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsKind_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -857,6 +892,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         Component = GoodsKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -865,6 +901,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 1024
     Top = 24
@@ -874,6 +911,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
     LookupControl = edPartionGoods
     FormNameParam.Value = 'TPartionGoodsChoiceForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPartionGoodsChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -884,6 +922,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -892,6 +931,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 960
     Top = 56
@@ -901,6 +941,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
     LookupControl = edGoods
     FormNameParam.Value = 'TGoodsFuel_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsFuel_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -911,6 +952,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -919,6 +961,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 968
   end
@@ -927,6 +970,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
     LookupControl = edLocation
     FormNameParam.Value = 'TStoragePlace_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TStoragePlace_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -937,6 +981,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -945,6 +990,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 360
     Top = 24
@@ -954,6 +1000,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
     LookupControl = ceAccountGroup
     FormNameParam.Value = 'TAccountGroup_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TAccountGroup_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -963,6 +1010,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         Component = AccountGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -971,12 +1019,14 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountDirectionId'
         Value = ''
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountDirectionName'
@@ -984,12 +1034,14 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountId'
         Value = ''
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountName'
@@ -997,6 +1049,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 736
     Top = 5
@@ -1006,6 +1059,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
     LookupControl = edUnitGroup
     FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnitTreeForm'
     PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'TreeDataSet'
@@ -1017,6 +1071,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1025,6 +1080,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 416
   end
@@ -1033,6 +1089,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
     LookupControl = ceInfoMoney
     FormNameParam.Value = 'TInfoMoney_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1041,6 +1098,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1048,6 +1106,7 @@ inherited MovementGoodsJournalForm: TMovementGoodsJournalForm
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 440
     Top = 53

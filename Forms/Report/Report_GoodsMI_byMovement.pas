@@ -13,28 +13,38 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus;
+  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TReport_GoodsMI_byMovementForm = class(TAncestorReportForm)
-    clGoodsGroupName: TcxGridDBColumn;
-    clGoodsCode: TcxGridDBColumn;
-    clGoodsName: TcxGridDBColumn;
-    clSummPartner_calc: TcxGridDBColumn;
-    clAmount_Weight: TcxGridDBColumn;
+    GoodsGroupName: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    SummPartner_calc: TcxGridDBColumn;
+    Amount_Weight: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
     GoodsGroupGuides: TdsdGuides;
     FormParams: TdsdFormParams;
-    clAmount_Sh: TcxGridDBColumn;
+    Amount_Sh: TcxGridDBColumn;
     edInDescName: TcxTextEdit;
-    clAmountPartner_Weight: TcxGridDBColumn;
-    clAmountPartner_Sh: TcxGridDBColumn;
-    clGoodsKindName: TcxGridDBColumn;
-    clSummPartner: TcxGridDBColumn;
-    clAmountChangePercent_Sh: TcxGridDBColumn;
-    clAmountChangePercent_Weight: TcxGridDBColumn;
-    clMeasureName: TcxGridDBColumn;
+    AmountPartner_Weight: TcxGridDBColumn;
+    AmountPartner_Sh: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
+    SummPartner: TcxGridDBColumn;
+    AmountChangePercent_Sh: TcxGridDBColumn;
+    AmountChangePercent_Weight: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     UnitGuides: TdsdGuides;
     edUnit: TcxButtonEdit;
@@ -47,10 +57,10 @@ type
     InfoMoneyGuides: TdsdGuides;
     PaidKindGuides: TdsdGuides;
     JuridicalGuides: TdsdGuides;
-    clUnitName: TcxGridDBColumn;
-    clUnitCode: TcxGridDBColumn;
-    clPartnerCode: TcxGridDBColumn;
-    clJuridicalCode: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    UnitCode: TcxGridDBColumn;
+    PartnerCode: TcxGridDBColumn;
+    JuridicalCode: TcxGridDBColumn;
     cxLabel8: TcxLabel;
     edGoods: TcxButtonEdit;
     GoodsGuides: TdsdGuides;

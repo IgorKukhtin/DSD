@@ -165,7 +165,7 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
         HeaderHint = #1044#1072#1090#1072' ('#1089#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1102')'
         Width = 87
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'

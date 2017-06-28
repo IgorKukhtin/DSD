@@ -4,8 +4,9 @@
   ClientWidth = 1362
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -708
   ExplicitWidth = 1378
-  ExplicitHeight = 422
+  ExplicitHeight = 426
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -349,7 +350,7 @@
             Options.Editing = False
             Width = 100
           end
-          object clJuridicalGroupName: TcxGridDBColumn
+          object JuridicalGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1102#1088'.'#1083'.'
             DataBinding.FieldName = 'JuridicalGroupName'
             Visible = False
@@ -358,7 +359,7 @@
             Options.Editing = False
             Width = 70
           end
-          object clJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
@@ -409,7 +410,7 @@
             Options.Editing = False
             Width = 120
           end
-          object clTradeMarkName: TcxGridDBColumn
+          object TradeMarkName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
             DataBinding.FieldName = 'TradeMarkName'
             Visible = False
@@ -427,7 +428,7 @@
             Options.Editing = False
             Width = 100
           end
-          object clGoodsTagName: TcxGridDBColumn
+          object GoodsTagName: TcxGridDBColumn
             Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsTagName'
             Visible = False
@@ -436,7 +437,7 @@
             Options.Editing = False
             Width = 70
           end
-          object clGoodsGroupNameFull: TcxGridDBColumn
+          object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
             Visible = False
@@ -445,7 +446,7 @@
             Options.Editing = False
             Width = 100
           end
-          object clGoodsGroupName: TcxGridDBColumn
+          object GoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsGroupName'
             Visible = False
@@ -454,7 +455,7 @@
             Options.Editing = False
             Width = 70
           end
-          object clGoodsCode: TcxGridDBColumn
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -462,7 +463,7 @@
             Options.Editing = False
             Width = 44
           end
-          object clGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -470,7 +471,7 @@
             Options.Editing = False
             Width = 200
           end
-          object clGoodsKindName: TcxGridDBColumn
+          object GoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             Visible = False
@@ -479,7 +480,7 @@
             Options.Editing = False
             Width = 56
           end
-          object clMeasureName: TcxGridDBColumn
+          object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             Visible = False
@@ -819,7 +820,7 @@
             Options.Editing = False
             Width = 80
           end
-          object colInfoMoneyCode: TcxGridDBColumn
+          object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -828,7 +829,7 @@
             Options.Editing = False
             Width = 45
           end
-          object colInfoMoneyGroupName: TcxGridDBColumn
+          object InfoMoneyGroupName: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -837,7 +838,7 @@
             Options.Editing = False
             Width = 80
           end
-          object colInfoMoneyDestinationName: TcxGridDBColumn
+          object InfoMoneyDestinationName: TcxGridDBColumn
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -846,7 +847,7 @@
             Options.Editing = False
             Width = 80
           end
-          object colInfoMoneyName: TcxGridDBColumn
+          object InfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             HeaderAlignmentHorz = taCenter

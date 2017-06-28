@@ -13,13 +13,23 @@ uses
   cxGrid, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
   dxSkinsdxBarPainter, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxLabel,
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, ChoicePeriod, dsdGuides,
-  cxButtonEdit;
+  cxButtonEdit, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
+  dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue;
 
 type
   TPersonalPosition_ObjectForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clMemberCode: TcxGridDBColumn;
+    MemberCode: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -35,14 +45,14 @@ type
     dsdGridToExcel: TdsdGridToExcel;
     spSelect: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    clMemberName: TcxGridDBColumn;
-    clPositionName: TcxGridDBColumn;
-    clUnitName: TcxGridDBColumn;
+    MemberName: TcxGridDBColumn;
+    PositionName: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
-    clErased: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clPersonalGroupName: TcxGridDBColumn;
-    clPositionLevelName: TcxGridDBColumn;
+    PersonalGroupName: TcxGridDBColumn;
+    PositionLevelName: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
@@ -54,7 +64,7 @@ type
     FormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
-    clStorageLineName: TcxGridDBColumn;
+    StorageLineName: TcxGridDBColumn;
   private
     { Private declarations }
   public

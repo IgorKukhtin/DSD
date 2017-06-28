@@ -96,7 +96,7 @@ object ReceiptGoods_ObjectForm: TReceiptGoods_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 120
       end
-      object clIsErased: TcxGridDBColumn
+      object IsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
@@ -260,12 +260,14 @@ object ReceiptGoods_ObjectForm: TReceiptGoods_ObjectForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Code'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -273,12 +275,14 @@ object ReceiptGoods_ObjectForm: TReceiptGoods_ObjectForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsKindId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsKindName'
@@ -286,33 +290,40 @@ object ReceiptGoods_ObjectForm: TReceiptGoods_ObjectForm
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsKindCompleteId'
           Value = 0
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsKindCompleteName'
           Value = ''
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ReceiptId'
           Value = 0
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ReceiptCode'
           Value = 0
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ReceiptCode_user'
           Value = ''
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ReceiptName'
           Value = ''
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -360,6 +371,7 @@ object ReceiptGoods_ObjectForm: TReceiptGoods_ObjectForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 120

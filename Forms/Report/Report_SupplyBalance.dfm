@@ -5,9 +5,10 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -593
+  ExplicitLeft = -639
+  ExplicitTop = -80
   ExplicitWidth = 1382
-  ExplicitHeight = 569
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -660,7 +661,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = clGoodsName
+              Column = GoodsName
             end
             item
               Format = ',0.####'
@@ -751,7 +752,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colComment: TcxGridDBColumn
+          object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1044#1086#1082'.)'
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
@@ -759,7 +760,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             Options.Editing = False
             Width = 100
           end
-          object colComment_MI: TcxGridDBColumn
+          object Comment_MI: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1090#1086#1074#1072#1088')'
             DataBinding.FieldName = 'Comment_MI'
             HeaderAlignmentHorz = taCenter
@@ -784,7 +785,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             Options.Editing = False
             Width = 100
           end
-          object clGoodsGroupNameFull: TcxGridDBColumn
+          object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
             Visible = False
@@ -802,7 +803,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             Options.Editing = False
             Width = 80
           end
-          object clGoodsCode: TcxGridDBColumn
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -813,7 +814,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             Options.Editing = False
             Width = 35
           end
-          object clGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxTextEditProperties'
@@ -822,7 +823,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             HeaderAlignmentVert = vaCenter
             Width = 151
           end
-          object clGoodsKindName: TcxGridDBColumn
+          object GoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             Visible = False
@@ -831,7 +832,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             Options.Editing = False
             Width = 60
           end
-          object clMeasureName: TcxGridDBColumn
+          object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -1169,7 +1170,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             VisibleForCustomization = False
             Width = 70
           end
-          object colMovementId_List: TcxGridDBColumn
+          object MovementId_List: TcxGridDBColumn
             DataBinding.FieldName = 'MovementId_List'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -1286,312 +1287,312 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_1
+          Column = CountIncome_1
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_2
+          Column = CountIncome_2
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_3
+          Column = CountIncome_3
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_4
+          Column = CountIncome_4
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_5
+          Column = CountIncome_5
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_6
+          Column = CountIncome_6
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_7
+          Column = CountIncome_7
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_8
+          Column = CountIncome_8
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_9
+          Column = CountIncome_9
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_10
+          Column = CountIncome_10
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_11
+          Column = CountIncome_11
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_12
+          Column = CountIncome_12
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_13
+          Column = CountIncome_13
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_14
+          Column = CountIncome_14
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_15
+          Column = CountIncome_15
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_16
+          Column = CountIncome_16
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_17
+          Column = CountIncome_17
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_18
+          Column = CountIncome_18
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_19
+          Column = CountIncome_19
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_20
+          Column = CountIncome_20
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_21
+          Column = CountIncome_21
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_22
+          Column = CountIncome_22
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_23
+          Column = CountIncome_23
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_24
+          Column = CountIncome_24
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_25
+          Column = CountIncome_25
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_26
+          Column = CountIncome_26
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_27
+          Column = CountIncome_27
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_28
+          Column = CountIncome_28
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_29
+          Column = CountIncome_29
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_30
+          Column = CountIncome_30
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_31
+          Column = CountIncome_31
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_1
+          Column = CountProductionOut_1
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_2
+          Column = CountProductionOut_2
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_3
+          Column = CountProductionOut_3
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_4
+          Column = CountProductionOut_4
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_5
+          Column = CountProductionOut_5
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_6
+          Column = CountProductionOut_6
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_7
+          Column = CountProductionOut_7
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_8
+          Column = CountProductionOut_8
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_9
+          Column = CountProductionOut_9
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_10
+          Column = CountProductionOut_10
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_11
+          Column = CountProductionOut_11
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_12
+          Column = CountProductionOut_12
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_13
+          Column = CountProductionOut_13
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_14
+          Column = CountProductionOut_14
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_15
+          Column = CountProductionOut_15
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_16
+          Column = CountProductionOut_16
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_17
+          Column = CountProductionOut_17
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_18
+          Column = CountProductionOut_18
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_19
+          Column = CountProductionOut_19
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_20
+          Column = CountProductionOut_20
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_21
+          Column = CountProductionOut_21
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_22
+          Column = CountProductionOut_22
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_23
+          Column = CountProductionOut_23
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_24
+          Column = CountProductionOut_24
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_25
+          Column = CountProductionOut_25
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_26
+          Column = CountProductionOut_26
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_27
+          Column = CountProductionOut_27
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_28
+          Column = CountProductionOut_28
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_29
+          Column = CountProductionOut_29
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_30
+          Column = CountProductionOut_30
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_31
+          Column = CountProductionOut_31
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -1601,312 +1602,312 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_1
+          Column = CountIncome_1
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_2
+          Column = CountIncome_2
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_3
+          Column = CountIncome_3
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_4
+          Column = CountIncome_4
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_5
+          Column = CountIncome_5
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_6
+          Column = CountIncome_6
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_7
+          Column = CountIncome_7
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_8
+          Column = CountIncome_8
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_9
+          Column = CountIncome_9
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_10
+          Column = CountIncome_10
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_11
+          Column = CountIncome_11
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_12
+          Column = CountIncome_12
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_13
+          Column = CountIncome_13
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_14
+          Column = CountIncome_14
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_15
+          Column = CountIncome_15
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_16
+          Column = CountIncome_16
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_17
+          Column = CountIncome_17
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_18
+          Column = CountIncome_18
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_19
+          Column = CountIncome_19
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_20
+          Column = CountIncome_20
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_21
+          Column = CountIncome_21
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_22
+          Column = CountIncome_22
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_23
+          Column = CountIncome_23
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_24
+          Column = CountIncome_24
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_25
+          Column = CountIncome_25
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_26
+          Column = CountIncome_26
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_27
+          Column = CountIncome_27
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_28
+          Column = CountIncome_28
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_29
+          Column = CountIncome_29
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_30
+          Column = CountIncome_30
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountIncome_31
+          Column = CountIncome_31
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_1
+          Column = CountProductionOut_1
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_2
+          Column = CountProductionOut_2
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_3
+          Column = CountProductionOut_3
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_4
+          Column = CountProductionOut_4
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_5
+          Column = CountProductionOut_5
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_6
+          Column = CountProductionOut_6
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_7
+          Column = CountProductionOut_7
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_8
+          Column = CountProductionOut_8
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_9
+          Column = CountProductionOut_9
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_10
+          Column = CountProductionOut_10
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_11
+          Column = CountProductionOut_11
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_12
+          Column = CountProductionOut_12
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_13
+          Column = CountProductionOut_13
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_14
+          Column = CountProductionOut_14
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_15
+          Column = CountProductionOut_15
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_16
+          Column = CountProductionOut_16
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_17
+          Column = CountProductionOut_17
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_18
+          Column = CountProductionOut_18
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_19
+          Column = CountProductionOut_19
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_20
+          Column = CountProductionOut_20
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_21
+          Column = CountProductionOut_21
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_22
+          Column = CountProductionOut_22
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_23
+          Column = CountProductionOut_23
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_24
+          Column = CountProductionOut_24
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_25
+          Column = CountProductionOut_25
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_26
+          Column = CountProductionOut_26
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_27
+          Column = CountProductionOut_27
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_28
+          Column = CountProductionOut_28
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_29
+          Column = CountProductionOut_29
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_30
+          Column = CountProductionOut_30
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = cCountProductionOut_31
+          Column = CountProductionOut_31
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -1996,7 +1997,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         Options.Editing = False
         Width = 35
       end
-      object cCountIncome_1: TcxGridDBColumn
+      object CountIncome_1: TcxGridDBColumn
         Caption = '1 '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CountIncome_1'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2006,7 +2007,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountIncome_2: TcxGridDBColumn
+      object CountIncome_2: TcxGridDBColumn
         Caption = '2 '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CountIncome_2'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2016,7 +2017,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountIncome_3: TcxGridDBColumn
+      object CountIncome_3: TcxGridDBColumn
         Caption = '3 '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CountIncome_3'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2026,7 +2027,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountIncome_4: TcxGridDBColumn
+      object CountIncome_4: TcxGridDBColumn
         Caption = '4 '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CountIncome_4'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2036,7 +2037,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountIncome_5: TcxGridDBColumn
+      object CountIncome_5: TcxGridDBColumn
         Caption = '5 '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CountIncome_5'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2046,7 +2047,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountIncome_6: TcxGridDBColumn
+      object CountIncome_6: TcxGridDBColumn
         Caption = '6 '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CountIncome_6'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2056,7 +2057,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountIncome_7: TcxGridDBColumn
+      object CountIncome_7: TcxGridDBColumn
         Caption = '7 '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CountIncome_7'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2066,7 +2067,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountIncome_8: TcxGridDBColumn
+      object CountIncome_8: TcxGridDBColumn
         Caption = '8 '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CountIncome_8'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2076,7 +2077,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountIncome_9: TcxGridDBColumn
+      object CountIncome_9: TcxGridDBColumn
         Caption = '9 '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CountIncome_9'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2086,7 +2087,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountIncome_10: TcxGridDBColumn
+      object CountIncome_10: TcxGridDBColumn
         Caption = '10 '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CountIncome_10'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2096,7 +2097,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountIncome_11: TcxGridDBColumn
+      object CountIncome_11: TcxGridDBColumn
         Caption = '11 '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CountIncome_11'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2106,7 +2107,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountIncome_12: TcxGridDBColumn
+      object CountIncome_12: TcxGridDBColumn
         Caption = '12 '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CountIncome_12'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2116,7 +2117,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountIncome_13: TcxGridDBColumn
+      object CountIncome_13: TcxGridDBColumn
         Caption = '13 '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CountIncome_13'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2126,7 +2127,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountIncome_14: TcxGridDBColumn
+      object CountIncome_14: TcxGridDBColumn
         Caption = '14 '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CountIncome_14'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2136,7 +2137,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountIncome_15: TcxGridDBColumn
+      object CountIncome_15: TcxGridDBColumn
         Caption = '15 '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CountIncome_15'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2146,7 +2147,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountIncome_16: TcxGridDBColumn
+      object CountIncome_16: TcxGridDBColumn
         Caption = '16 '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CountIncome_16'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2156,7 +2157,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountIncome_17: TcxGridDBColumn
+      object CountIncome_17: TcxGridDBColumn
         Caption = '17 '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CountIncome_17'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2166,7 +2167,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountIncome_18: TcxGridDBColumn
+      object CountIncome_18: TcxGridDBColumn
         Caption = '18 '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CountIncome_18'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2176,7 +2177,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountIncome_19: TcxGridDBColumn
+      object CountIncome_19: TcxGridDBColumn
         Caption = '19 '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CountIncome_19'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2186,7 +2187,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountIncome_20: TcxGridDBColumn
+      object CountIncome_20: TcxGridDBColumn
         Caption = '20 '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CountIncome_20'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2196,7 +2197,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountIncome_21: TcxGridDBColumn
+      object CountIncome_21: TcxGridDBColumn
         Caption = '21 '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CountIncome_21'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2206,7 +2207,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountIncome_22: TcxGridDBColumn
+      object CountIncome_22: TcxGridDBColumn
         Caption = '22 '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CountIncome_22'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2216,7 +2217,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountIncome_23: TcxGridDBColumn
+      object CountIncome_23: TcxGridDBColumn
         Caption = '23 '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CountIncome_23'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2226,7 +2227,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountIncome_24: TcxGridDBColumn
+      object CountIncome_24: TcxGridDBColumn
         Caption = '24 '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CountIncome_24'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2236,7 +2237,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountIncome_25: TcxGridDBColumn
+      object CountIncome_25: TcxGridDBColumn
         Caption = '25 '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CountIncome_25'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2246,7 +2247,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountIncome_26: TcxGridDBColumn
+      object CountIncome_26: TcxGridDBColumn
         Caption = '26 '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CountIncome_26'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2256,7 +2257,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountIncome_27: TcxGridDBColumn
+      object CountIncome_27: TcxGridDBColumn
         Caption = '27 '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CountIncome_27'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2266,7 +2267,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountIncome_28: TcxGridDBColumn
+      object CountIncome_28: TcxGridDBColumn
         Caption = '28 '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CountIncome_28'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2276,7 +2277,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountIncome_29: TcxGridDBColumn
+      object CountIncome_29: TcxGridDBColumn
         Caption = '29 '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CountIncome_29'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2286,7 +2287,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountIncome_30: TcxGridDBColumn
+      object CountIncome_30: TcxGridDBColumn
         Caption = '30 '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CountIncome_30'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2296,7 +2297,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountIncome_31: TcxGridDBColumn
+      object CountIncome_31: TcxGridDBColumn
         Caption = '31 '#1087#1088#1080#1093'.'
         DataBinding.FieldName = 'CountIncome_31'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2306,7 +2307,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountProductionOut_1: TcxGridDBColumn
+      object CountProductionOut_1: TcxGridDBColumn
         Caption = '1 '#1088#1072#1089#1093'.'
         DataBinding.FieldName = 'CountProductionOut_1'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2316,7 +2317,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountProductionOut_2: TcxGridDBColumn
+      object CountProductionOut_2: TcxGridDBColumn
         Caption = '2 '#1088#1072#1089#1093'.'
         DataBinding.FieldName = 'CountProductionOut_2'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2326,7 +2327,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountProductionOut_3: TcxGridDBColumn
+      object CountProductionOut_3: TcxGridDBColumn
         Caption = '3 '#1088#1072#1089#1093'.'
         DataBinding.FieldName = 'CountProductionOut_3'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2336,7 +2337,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountProductionOut_4: TcxGridDBColumn
+      object CountProductionOut_4: TcxGridDBColumn
         Caption = '4 '#1088#1072#1089#1093'.'
         DataBinding.FieldName = 'CountProductionOut_4'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2346,7 +2347,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountProductionOut_5: TcxGridDBColumn
+      object CountProductionOut_5: TcxGridDBColumn
         Caption = '5 '#1088#1072#1089#1093'.'
         DataBinding.FieldName = 'CountProductionOut_5'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2356,7 +2357,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountProductionOut_6: TcxGridDBColumn
+      object CountProductionOut_6: TcxGridDBColumn
         Caption = '6 '#1088#1072#1089#1093'.'
         DataBinding.FieldName = 'CountProductionOut_6'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2366,7 +2367,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountProductionOut_7: TcxGridDBColumn
+      object CountProductionOut_7: TcxGridDBColumn
         Caption = '7 '#1088#1072#1089#1093'.'
         DataBinding.FieldName = 'CountProductionOut_7'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2376,7 +2377,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountProductionOut_8: TcxGridDBColumn
+      object CountProductionOut_8: TcxGridDBColumn
         Caption = '8 '#1088#1072#1089#1093'.'
         DataBinding.FieldName = 'CountProductionOut_8'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2386,7 +2387,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountProductionOut_9: TcxGridDBColumn
+      object CountProductionOut_9: TcxGridDBColumn
         Caption = '9 '#1088#1072#1089#1093'.'
         DataBinding.FieldName = 'CountProductionOut_9'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2396,7 +2397,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountProductionOut_10: TcxGridDBColumn
+      object CountProductionOut_10: TcxGridDBColumn
         Caption = '10 '#1088#1072#1089#1093'.'
         DataBinding.FieldName = 'CountProductionOut_10'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2406,7 +2407,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountProductionOut_11: TcxGridDBColumn
+      object CountProductionOut_11: TcxGridDBColumn
         Caption = '11 '#1088#1072#1089#1093'.'
         DataBinding.FieldName = 'CountProductionOut_11'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2416,7 +2417,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountProductionOut_12: TcxGridDBColumn
+      object CountProductionOut_12: TcxGridDBColumn
         Caption = '12 '#1088#1072#1089#1093'.'
         DataBinding.FieldName = 'CountProductionOut_12'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2426,7 +2427,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountProductionOut_13: TcxGridDBColumn
+      object CountProductionOut_13: TcxGridDBColumn
         Caption = '13 '#1088#1072#1089#1093'.'
         DataBinding.FieldName = 'CountProductionOut_13'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2436,7 +2437,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountProductionOut_14: TcxGridDBColumn
+      object CountProductionOut_14: TcxGridDBColumn
         Caption = '14 '#1088#1072#1089#1093'.'
         DataBinding.FieldName = 'CountProductionOut_14'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2446,7 +2447,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountProductionOut_15: TcxGridDBColumn
+      object CountProductionOut_15: TcxGridDBColumn
         Caption = '15 '#1088#1072#1089#1093'.'
         DataBinding.FieldName = 'CountProductionOut_15'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2456,7 +2457,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountProductionOut_16: TcxGridDBColumn
+      object CountProductionOut_16: TcxGridDBColumn
         Caption = '16 '#1088#1072#1089#1093'.'
         DataBinding.FieldName = 'CountProductionOut_16'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2466,7 +2467,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountProductionOut_17: TcxGridDBColumn
+      object CountProductionOut_17: TcxGridDBColumn
         Caption = '17 '#1088#1072#1089#1093'.'
         DataBinding.FieldName = 'CountProductionOut_17'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2476,7 +2477,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountProductionOut_18: TcxGridDBColumn
+      object CountProductionOut_18: TcxGridDBColumn
         Caption = '18 '#1088#1072#1089#1093'.'
         DataBinding.FieldName = 'CountProductionOut_18'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2486,7 +2487,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountProductionOut_19: TcxGridDBColumn
+      object CountProductionOut_19: TcxGridDBColumn
         Caption = '19 '#1088#1072#1089#1093'.'
         DataBinding.FieldName = 'CountProductionOut_19'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2496,7 +2497,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountProductionOut_20: TcxGridDBColumn
+      object CountProductionOut_20: TcxGridDBColumn
         Caption = '20 '#1088#1072#1089#1093'.'
         DataBinding.FieldName = 'CountProductionOut_20'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2506,7 +2507,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountProductionOut_21: TcxGridDBColumn
+      object CountProductionOut_21: TcxGridDBColumn
         Caption = '21 '#1088#1072#1089#1093'.'
         DataBinding.FieldName = 'CountProductionOut_21'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2516,7 +2517,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountProductionOut_22: TcxGridDBColumn
+      object CountProductionOut_22: TcxGridDBColumn
         Caption = '22 '#1088#1072#1089#1093'.'
         DataBinding.FieldName = 'CountProductionOut_22'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2526,7 +2527,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountProductionOut_23: TcxGridDBColumn
+      object CountProductionOut_23: TcxGridDBColumn
         Caption = '23 '#1088#1072#1089#1093'.'
         DataBinding.FieldName = 'CountProductionOut_23'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2536,7 +2537,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountProductionOut_24: TcxGridDBColumn
+      object CountProductionOut_24: TcxGridDBColumn
         Caption = '24 '#1088#1072#1089#1093'.'
         DataBinding.FieldName = 'CountProductionOut_24'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2546,7 +2547,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountProductionOut_25: TcxGridDBColumn
+      object CountProductionOut_25: TcxGridDBColumn
         Caption = '25 '#1088#1072#1089#1093'.'
         DataBinding.FieldName = 'CountProductionOut_25'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2556,7 +2557,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountProductionOut_26: TcxGridDBColumn
+      object CountProductionOut_26: TcxGridDBColumn
         Caption = '26 '#1088#1072#1089#1093'.'
         DataBinding.FieldName = 'CountProductionOut_26'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2566,7 +2567,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountProductionOut_27: TcxGridDBColumn
+      object CountProductionOut_27: TcxGridDBColumn
         Caption = '27 '#1088#1072#1089#1093'.'
         DataBinding.FieldName = 'CountProductionOut_27'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2576,7 +2577,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountProductionOut_28: TcxGridDBColumn
+      object CountProductionOut_28: TcxGridDBColumn
         Caption = '28 '#1088#1072#1089#1093'.'
         DataBinding.FieldName = 'CountProductionOut_28'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2586,7 +2587,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountProductionOut_29: TcxGridDBColumn
+      object CountProductionOut_29: TcxGridDBColumn
         Caption = '29 '#1088#1072#1089#1093'.'
         DataBinding.FieldName = 'CountProductionOut_29'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2596,7 +2597,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountProductionOut_30: TcxGridDBColumn
+      object CountProductionOut_30: TcxGridDBColumn
         Caption = '30 '#1088#1072#1089#1093'.'
         DataBinding.FieldName = 'CountProductionOut_30'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2606,7 +2607,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object cCountProductionOut_31: TcxGridDBColumn
+      object CountProductionOut_31: TcxGridDBColumn
         Caption = '31 '#1088#1072#1089#1093'.'
         DataBinding.FieldName = 'CountProductionOut_31'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -3274,7 +3275,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         ColorValueList = <>
       end
       item
-        ColorColumn = clGoodsName
+        ColorColumn = GoodsName
         ValueColumn = Color_RemainsDays
         ColorValueList = <>
       end
@@ -3294,7 +3295,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
       end>
     ColumnAddOnList = <
       item
-        Column = clGoodsName
+        Column = GoodsName
         Action = OrderJournal
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False

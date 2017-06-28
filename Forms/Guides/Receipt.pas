@@ -12,13 +12,24 @@ uses
   cxCheckBox, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, Vcl.Controls, cxGrid, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter, cxCurrencyEdit;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter, cxCurrencyEdit,
+  dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
+  dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue;
 
 type
   TReceiptForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clValue: TcxGridDBColumn;
+    Value: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     MasterDS: TDataSource;
     MasterCDS: TClientDataSet;
@@ -43,25 +54,25 @@ type
     spSelect: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clStartDate: TcxGridDBColumn;
-    clEndDate: TcxGridDBColumn;
-    clIsMain: TcxGridDBColumn;
-    clPartionCount: TcxGridDBColumn;
+    StartDate: TcxGridDBColumn;
+    EndDate: TcxGridDBColumn;
+    IsMain: TcxGridDBColumn;
+    PartionCount: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
-    clPartionValue: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
-    clGoodsCode: TcxGridDBColumn;
-    clGoodsName: TcxGridDBColumn;
-    clGoodsKindName: TcxGridDBColumn;
-    clGoodsKindCompleteName: TcxGridDBColumn;
-    clReceiptCostName: TcxGridDBColumn;
-    clReceiptKindName: TcxGridDBColumn;
-    clIsErased: TcxGridDBColumn;
+    PartionValue: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
+    GoodsKindCompleteName: TcxGridDBColumn;
+    ReceiptCostName: TcxGridDBColumn;
+    ReceiptKindName: TcxGridDBColumn;
+    IsErased: TcxGridDBColumn;
     cxGridReceiptChild: TcxGrid;
     cxGridDBTableViewReceiptChild: TcxGridDBTableView;
-    clGoodsKindNameclChild: TcxGridDBColumn;
-    clValueChild: TcxGridDBColumn;
-    clIsErasedChild: TcxGridDBColumn;
+    GoodsKindNameclChild: TcxGridDBColumn;
+    ValueChild: TcxGridDBColumn;
+    IsErasedChild: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
     ChildDS: TDataSource;
     ChildCDS: TClientDataSet;
@@ -73,13 +84,13 @@ type
     actReceiptChild: TdsdUpdateDataSet;
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
-    clReceiptCode: TcxGridDBColumn;
+    ReceiptCode: TcxGridDBColumn;
     ChildViewAddOn: TdsdDBViewAddOn;
-    clGoodsNameChild: TcxGridDBColumn;
+    GoodsNameChild: TcxGridDBColumn;
     Goods_ObjectChoiceForm: TOpenChoiceForm;
-    clCommentChild: TcxGridDBColumn;
-    clValueCost: TcxGridDBColumn;
-    clTaxExit: TcxGridDBColumn;
+    CommentChild: TcxGridDBColumn;
+    ValueCost: TcxGridDBColumn;
+    TaxExit: TcxGridDBColumn;
     bbStartDate: TdxBarControlContainerItem;
     bbEnd: TdxBarControlContainerItem;
     bbEndDate: TdxBarControlContainerItem;
@@ -87,17 +98,17 @@ type
     bbIsPeriod: TdxBarControlContainerItem;
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
-    clStartDateChild: TcxGridDBColumn;
-    clEndDateChild: TcxGridDBColumn;
-    clCode: TcxGridDBColumn;
+    StartDateChild: TcxGridDBColumn;
+    EndDateChild: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
     cxBottomSplitter: TcxSplitter;
-    clTotalWeightMain: TcxGridDBColumn;
-    clTotalWeight: TcxGridDBColumn;
-    clGoodsCodeChild: TcxGridDBColumn;
-    clWeightPackage: TcxGridDBColumn;
-    clMeasureNameChild: TcxGridDBColumn;
-    clMeasureName: TcxGridDBColumn;
-    clGroupNumberChild: TcxGridDBColumn;
+    TotalWeightMain: TcxGridDBColumn;
+    TotalWeight: TcxGridDBColumn;
+    GoodsCodeChild: TcxGridDBColumn;
+    WeightPackage: TcxGridDBColumn;
+    MeasureNameChild: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
+    GroupNumber: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     Code_Parent: TcxGridDBColumn;
@@ -122,18 +133,18 @@ type
     bbPrintDetail: TdxBarButton;
     spPrintReceiptChildDetail: TdsdStoredProc;
     PrintReceiptChildDetailCDS: TClientDataSet;
-    clInfoMoneyCode: TcxGridDBColumn;
-    clInfoMoneyGroupName: TcxGridDBColumn;
-    clInfoMoneyDestinationName: TcxGridDBColumn;
-    clInfoMoneyName: TcxGridDBColumn;
-    clInfoMoneyCodeChild: TcxGridDBColumn;
-    clInfoMoneyGroupNameChild: TcxGridDBColumn;
-    clInfoMoneyDestinationNameChild: TcxGridDBColumn;
-    clInfoMoneyNameChild: TcxGridDBColumn;
-    clValueWeight_calc: TcxGridDBColumn;
-    clTaxLoss: TcxGridDBColumn;
+    InfoMoneyCode: TcxGridDBColumn;
+    InfoMoneyGroupName: TcxGridDBColumn;
+    InfoMoneyDestinationName: TcxGridDBColumn;
+    InfoMoneyName: TcxGridDBColumn;
+    InfoMoneyCodeChild: TcxGridDBColumn;
+    InfoMoneyGroupNameChild: TcxGridDBColumn;
+    InfoMoneyDestinationNameChild: TcxGridDBColumn;
+    InfoMoneyNameChild: TcxGridDBColumn;
+    ValueWeight_calc: TcxGridDBColumn;
+    TaxLoss: TcxGridDBColumn;
     ValueWeight: TcxGridDBColumn;
-    clColor_calc: TcxGridDBColumn;
+    Color_calc: TcxGridDBColumn;
     PrintMasterCDS: TClientDataSet;
     spPrintReceipt: TdsdStoredProc;
     ProtocolOpenForm: TdsdOpenForm;

@@ -13,12 +13,22 @@ uses
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
   cxGrid, cxPC, cxCurrencyEdit, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdGuides, cxButtonEdit;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdGuides, cxButtonEdit, dxSkinBlack,
+  dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom,
+  dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TMovementGoodsJournalForm = class(TAncestorJournalForm)
-    colDescName: TcxGridDBColumn;
-    colJuridicalName: TcxGridDBColumn;
+    DescName: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
     actOpenDocument: TMultiAction;
     actOpenForm: TdsdOpenForm;
     actMovementForm: TdsdExecStoredProc;
@@ -30,9 +40,9 @@ type
     edGoods: TcxButtonEdit;
     GoodsKindGuides: TdsdGuides;
     GoodsPartionGuides: TdsdGuides;
-    colBranchCode: TcxGridDBColumn;
-    colBranchName: TcxGridDBColumn;
-    colComment: TcxGridDBColumn;
+    BranchCode: TcxGridDBColumn;
+    BranchName: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     edPartionGoods: TcxButtonEdit;
     GoodsGuides: TdsdGuides;

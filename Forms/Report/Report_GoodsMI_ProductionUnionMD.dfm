@@ -7,8 +7,10 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -383
+  ExplicitTop = -169
   ExplicitWidth = 1036
-  ExplicitHeight = 661
+  ExplicitHeight = 662
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -34,12 +36,12 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSumm
+              Column = Summ
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clHeadCount
+              Column = HeadCount
             end
             item
               Format = ',0.####'
@@ -48,7 +50,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -74,12 +76,12 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSumm
+              Column = Summ
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clHeadCount
+              Column = HeadCount
             end
             item
               Format = ',0.####'
@@ -88,7 +90,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -120,7 +122,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clInvNumber: TcxGridDBColumn
+          object InvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
             DataBinding.FieldName = 'InvNumber'
             Visible = False
@@ -128,7 +130,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
             HeaderAlignmentVert = vaCenter
             Width = 46
           end
-          object clOperDate: TcxGridDBColumn
+          object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
             DataBinding.FieldName = 'OperDate'
             Visible = False
@@ -136,7 +138,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
             HeaderAlignmentVert = vaCenter
             Width = 49
           end
-          object clPartionGoods: TcxGridDBColumn
+          object PartionGoods: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'PartionGoods'
             Visible = False
@@ -144,28 +146,28 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
             HeaderAlignmentVert = vaCenter
             Width = 54
           end
-          object clGoodsGroupName: TcxGridDBColumn
+          object GoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsGroupName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 130
           end
-          object clGoodsCode: TcxGridDBColumn
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 79
           end
-          object clGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 350
           end
-          object clHeadCount: TcxGridDBColumn
+          object HeadCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -175,7 +177,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
             HeaderAlignmentVert = vaCenter
             Width = 68
           end
-          object clAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -185,7 +187,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object clSumm: TcxGridDBColumn
+          object Summ: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072'  ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -580,6 +582,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -587,11 +590,13 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ReportType'
           Value = '0'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
@@ -599,6 +604,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'FromName'
@@ -606,6 +612,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
           Component = FromGroupGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ToName'
@@ -614,6 +621,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupName'
@@ -621,6 +629,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
           Component = GoodsGroupGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
@@ -628,10 +637,12 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
           Component = GoodsGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090'_'#1055#1088#1080#1093#1086#1076'_'#1056#1072#1089#1093#1086#1076'_'#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'_'#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'_'#1087#1086'_'#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'_1'
       ReportNameParam.Value = #1054#1090#1095#1077#1090'_'#1055#1088#1080#1093#1086#1076'_'#1056#1072#1089#1093#1086#1076'_'#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'_'#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'_'#1087#1086'_'#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'_1'
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -642,6 +653,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
       FormName = 'TReport_GoodsMI_ProductionSeparateUnionDialogForm'
       FormNameParam.Value = 'TReport_GoodsMI_ProductionSeparateUnionDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -649,6 +661,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -656,6 +669,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'FromGroupId'
@@ -663,6 +677,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
           Component = FromGroupGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'FromGroupName'
@@ -671,6 +686,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ToGroupId'
@@ -678,6 +694,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
           Component = ToGroupGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ToGroupName'
@@ -686,6 +703,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupId'
@@ -693,6 +711,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
           Component = ChildGoodsGroupGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupName'
@@ -701,6 +720,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ChildGoodsGroupId'
@@ -708,6 +728,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
           Component = GoodsGroupGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ChildGoodsGroupName'
@@ -716,6 +737,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsId'
@@ -723,6 +745,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
           Component = ChildGoodsGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
@@ -731,6 +754,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ChildGoodsId'
@@ -738,6 +762,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
           Component = GoodsGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ChildGoodsName'
@@ -746,6 +771,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isGroupMovement'
@@ -753,6 +779,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
           Component = cbGroupMovement
           DataType = ftBoolean
           ParamType = ptInputOutput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isGroupPartion'
@@ -760,6 +787,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
           Component = cbGroupPartion
           DataType = ftBoolean
           ParamType = ptInputOutput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isGroupInfoMoney'
@@ -767,6 +795,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
           Component = cbGroupInfoMoney
           DataType = ftBoolean
           ParamType = ptInputOutput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -799,6 +828,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -806,6 +836,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGroupMovement'
@@ -813,6 +844,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
         Component = cbGroupMovement
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGroupPartion'
@@ -820,6 +852,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
         Component = cbGroupPartion
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGroupInfoMoney'
@@ -827,6 +860,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
         Component = cbGroupInfoMoney
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsGroupId'
@@ -834,6 +868,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
         Component = GoodsGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -841,6 +876,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
         Component = GoodsGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inChildGoodsGroupId'
@@ -848,6 +884,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
         Component = ChildGoodsGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inChildGoodsId'
@@ -855,6 +892,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
         Component = ChildGoodsGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFromId'
@@ -862,6 +900,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
         Component = FromGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inToId'
@@ -869,6 +908,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
         Component = ToGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 256
     Top = 200
@@ -975,6 +1015,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
     LookupControl = edGoodsGroup
     FormNameParam.Value = 'TGoodsGroup_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsGroup_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -985,6 +1026,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -993,6 +1035,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 616
   end
@@ -1003,12 +1046,14 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
         Value = ''
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGroupMovement'
         Value = Null
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 328
     Top = 170
@@ -1018,6 +1063,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
     LookupControl = edFromGroup
     FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnitTreeForm'
     PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'TreeDataSet'
@@ -1029,6 +1075,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1037,6 +1084,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 408
   end
@@ -1045,6 +1093,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
     LookupControl = edGoods
     FormNameParam.Value = 'TGoodsFuel_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsFuel_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1055,6 +1104,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1063,6 +1113,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 848
     Top = 65531
@@ -1072,6 +1123,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
     LookupControl = edToGroup
     FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnitTreeForm'
     PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'TreeDataSet'
@@ -1083,6 +1135,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1091,6 +1144,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 464
     Top = 24
@@ -1100,6 +1154,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
     LookupControl = edChildGoodsGroup
     FormNameParam.Value = 'TGoodsGroup_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsGroup_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1109,6 +1164,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
         Component = ChildGoodsGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1117,6 +1173,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 680
     Top = 24
@@ -1126,6 +1183,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
     LookupControl = edChildGoods
     FormNameParam.Value = 'TGoodsFuel_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsFuel_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1135,6 +1193,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
         Component = ChildGoodsGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1143,6 +1202,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 904
     Top = 19

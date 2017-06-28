@@ -4,8 +4,10 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
   ClientWidth = 1077
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -440
+  ExplicitTop = -29
   ExplicitWidth = 1093
-  ExplicitHeight = 518
+  ExplicitHeight = 522
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -31,12 +33,12 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountSale
+              Column = AmountSale
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountReturn
+              Column = AmountReturn
             end
             item
               Format = ',0.####'
@@ -46,7 +48,7 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountInReturn
+              Column = AmountInReturn
             end
             item
               Format = ',0.####'
@@ -62,12 +64,12 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountSale
+              Column = AmountSale
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountReturn
+              Column = AmountReturn
             end
             item
               Format = ',0.####'
@@ -77,7 +79,7 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountInReturn
+              Column = AmountInReturn
             end
             item
               Format = ',0.####'
@@ -151,7 +153,7 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
             Options.Editing = False
             Width = 83
           end
-          object clInvNumberPartner: TcxGridDBColumn
+          object InvNumberPartner: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'InvNumberPartner'
             HeaderAlignmentHorz = taCenter
@@ -159,7 +161,7 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
             Options.Editing = False
             Width = 89
           end
-          object clOperDatePartner: TcxGridDBColumn
+          object OperDatePartner: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
@@ -203,7 +205,7 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clPrice: TcxGridDBColumn
+          object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -213,7 +215,7 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
             HeaderAlignmentVert = vaCenter
             Width = 69
           end
-          object clAmountSale: TcxGridDBColumn
+          object AmountSale: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1087#1088#1086#1076#1072#1078#1077
             DataBinding.FieldName = 'AmountSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -223,7 +225,7 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
             HeaderAlignmentVert = vaCenter
             Width = 69
           end
-          object clAmountReturn: TcxGridDBColumn
+          object AmountReturn: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090' '#1080#1090#1086#1075#1086
             DataBinding.FieldName = 'AmountReturn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -253,7 +255,7 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
             HeaderAlignmentVert = vaCenter
             Width = 69
           end
-          object clAmountInReturn: TcxGridDBColumn
+          object AmountInReturn: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090' '#1079#1072' '#1087#1077#1088#1080#1086#1076
             DataBinding.FieldName = 'AmountInReturn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -273,7 +275,7 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
             HeaderAlignmentVert = vaCenter
             Width = 69
           end
-          object clDocumentTaxKindName: TcxGridDBColumn
+          object DocumentTaxKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
             DataBinding.FieldName = 'DocumentTaxKindName'
             HeaderAlignmentHorz = taCenter
@@ -281,7 +283,7 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
             Options.Editing = False
             Width = 108
           end
-          object clInvNumber_Master: TcxGridDBColumn
+          object InvNumber_Master: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1085#1072#1083#1086#1075'.'
             DataBinding.FieldName = 'InvNumber_Master'
             HeaderAlignmentHorz = taCenter
@@ -289,7 +291,7 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
             Options.Editing = False
             Width = 84
           end
-          object clInvNumberPartner_Master: TcxGridDBColumn
+          object InvNumberPartner_Master: TcxGridDBColumn
             Caption = #8470' '#1085#1072#1083#1086#1075'.'
             DataBinding.FieldName = 'InvNumberPartner_Master'
             HeaderAlignmentHorz = taCenter
@@ -297,7 +299,7 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
             Options.Editing = False
             Width = 86
           end
-          object clOperDate_Master: TcxGridDBColumn
+          object OperDate_Master: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1085#1072#1083#1086#1075'.'
             DataBinding.FieldName = 'OperDate_Master'
             HeaderAlignmentHorz = taCenter

@@ -13,14 +13,24 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, cxCheckBox;
+  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, cxCheckBox, dxSkinBlack,
+  dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom,
+  dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TReport_GoodsMI_SendOnPriceForm = class(TAncestorReportForm)
-    clTradeMarkName: TcxGridDBColumn;
-    clGoodsGroupName: TcxGridDBColumn;
-    clGoodsCode: TcxGridDBColumn;
-    clGoodsName: TcxGridDBColumn;
+    TradeMarkName: TcxGridDBColumn;
+    GoodsGroupName: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
     OperCount_Partner: TcxGridDBColumn;
     OperCount_real: TcxGridDBColumn;
     cxLabel4: TcxLabel;
@@ -30,11 +40,11 @@ type
     OperCount_Change_110000_A: TcxGridDBColumn;
     OperCount_110000_P: TcxGridDBColumn;
     OperCount_Change_real: TcxGridDBColumn;
-    clGoodsKindName: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
     OperCount_Partner_110000_A: TcxGridDBColumn;
     OperCount_Change_110000_P: TcxGridDBColumn;
     OperCount_110000_A: TcxGridDBColumn;
-    clMeasureName: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     GuidesUnitTo: TdsdGuides;
     edUnitTo: TcxButtonEdit;

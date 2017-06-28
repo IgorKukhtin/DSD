@@ -4,8 +4,10 @@ inherited Report_Check_OrderInternalBySendForm: TReport_Check_OrderInternalBySen
   ClientWidth = 1077
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -440
+  ExplicitTop = -29
   ExplicitWidth = 1093
-  ExplicitHeight = 521
+  ExplicitHeight = 522
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -139,7 +141,7 @@ inherited Report_Check_OrderInternalBySendForm: TReport_Check_OrderInternalBySen
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clMeasureName: TcxGridDBColumn
+          object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -204,7 +206,6 @@ inherited Report_Check_OrderInternalBySendForm: TReport_Check_OrderInternalBySen
       Left = 118
       EditValue = 42826d
       Properties.SaveTime = False
-      Properties.OnChange = deStartPropertiesChange
       ExplicitLeft = 118
     end
     inherited deEnd: TcxDateEdit

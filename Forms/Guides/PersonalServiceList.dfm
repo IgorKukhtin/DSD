@@ -44,7 +44,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taRightJustify
@@ -52,21 +52,21 @@ object PersonalServiceListForm: TPersonalServiceListForm
         Options.Editing = False
         Width = 63
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 145
       end
-      object clJuridicalName: TcxGridDBColumn
+      object JuridicalName: TcxGridDBColumn
         Caption = #1070#1088'.'#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 101
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
@@ -76,7 +76,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         Options.Editing = False
         Width = 78
       end
-      object clBranchName: TcxGridDBColumn
+      object BranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
         DataBinding.FieldName = 'BranchName'
         HeaderAlignmentHorz = taCenter
@@ -84,7 +84,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         Options.Editing = False
         Width = 72
       end
-      object clBankName: TcxGridDBColumn
+      object BankName: TcxGridDBColumn
         Caption = #1041#1072#1085#1082
         DataBinding.FieldName = 'BankName'
         HeaderAlignmentHorz = taCenter
@@ -92,7 +92,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         Options.Editing = False
         Width = 88
       end
-      object clPaidKindName: TcxGridDBColumn
+      object PaidKindName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
         DataBinding.FieldName = 'PaidKindName'
         HeaderAlignmentHorz = taCenter

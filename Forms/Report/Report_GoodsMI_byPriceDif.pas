@@ -13,24 +13,34 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus;
+  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TReport_GoodsMI_byPriceDifForm = class(TAncestorReportForm)
-    clGoodsGroupName: TcxGridDBColumn;
-    clGoodsCode: TcxGridDBColumn;
-    clGoodsName: TcxGridDBColumn;
-    clSummPartner_calc: TcxGridDBColumn;
+    GoodsGroupName: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    SummPartner_calc: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
     GoodsGroupGuides: TdsdGuides;
     FormParams: TdsdFormParams;
     edInDescName: TcxTextEdit;
-    clAmountPartner_Weight: TcxGridDBColumn;
-    clAmountPartner_Sh: TcxGridDBColumn;
-    clGoodsKindName: TcxGridDBColumn;
-    clSummPartner: TcxGridDBColumn;
-    clMeasureName: TcxGridDBColumn;
+    AmountPartner_Weight: TcxGridDBColumn;
+    AmountPartner_Sh: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
+    SummPartner: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     UnitGuides: TdsdGuides;
     edUnit: TcxButtonEdit;
@@ -43,15 +53,15 @@ type
     InfoMoneyGuides: TdsdGuides;
     PaidKindGuides: TdsdGuides;
     JuridicalGuides: TdsdGuides;
-    clSummDiff: TcxGridDBColumn;
-    clUnitName: TcxGridDBColumn;
-    clUnitCode: TcxGridDBColumn;
-    clPartnerCode: TcxGridDBColumn;
-    clJuridicalCode: TcxGridDBColumn;
+    SummDiff: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    UnitCode: TcxGridDBColumn;
+    PartnerCode: TcxGridDBColumn;
+    JuridicalCode: TcxGridDBColumn;
     edPriceList: TcxButtonEdit;
     cxLabel8: TcxLabel;
     PriceListGuides: TdsdGuides;
-    clPrice_calc: TcxGridDBColumn;
+    Price_calc: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
   private

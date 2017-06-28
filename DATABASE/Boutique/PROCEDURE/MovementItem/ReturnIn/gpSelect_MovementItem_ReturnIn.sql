@@ -22,7 +22,9 @@ RETURNS TABLE (Id Integer, PartionId Integer
              --, BarCode TVarChar
              , Amount TFloat, Amount_Sale TFloat, Remains TFloat
              , OperPrice TFloat, CountForPrice TFloat, OperPriceList TFloat
-             , AmountSumm TFloat, AmountPriceListSumm TFloat
+             , TotalSumm TFloat
+             , TotalSummBalance TFloat             
+             , TotalSummPriceList TFloat
              , CurrencyValue TFloat, ParValue TFloat
              , TotalChangePercent TFloat
              , TotalSummPay TFloat, TotalSummPay_Sale TFloat
@@ -70,7 +72,7 @@ BEGIN
                                    AND MovementLinkObject_To.ObjectId = vbClientId
                         WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate 
                           AND Movement.DescId = zc_Movement_Sale()
-                          --AND Movement.StatusId = zc_Enum_Status_Complete()
+                          AND Movement.StatusId = zc_Enum_Status_Complete()
                         )
 
       ,  tmpMI_Sale AS (SELECT tmpSale.MovementId_Sale
@@ -86,27 +88,28 @@ BEGIN
                              , COALESCE (MIFloat_ParValue.ValueData, 0)      AS ParValue
                              , COALESCE (MIFloat_TotalPay.ValueData, 0)      AS TotalPay
                         FROM tmpSale
-                             LEFT JOIN MovementItem AS MI_Master ON MI_Master.MovementId = tmpSale.MovementId_Sale
-                                   AND MI_Master.DescId = zc_MI_Master()
-                                   AND MI_Master.isErased = False
+                             LEFT JOIN MovementItem AS MI_Master 
+                                                    ON MI_Master.MovementId = tmpSale.MovementId_Sale
+                                                   AND MI_Master.DescId = zc_MI_Master()
+                                                   AND MI_Master.isErased = False
                              LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                    ON MIFloat_CountForPrice.MovementItemId = MI_Master.Id
-                                   AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                                                         ON MIFloat_CountForPrice.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_CountForPrice.DescId         = zc_MIFloat_CountForPrice()
                              LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
-                                    ON MIFloat_OperPrice.MovementItemId = MI_Master.Id
-                                   AND MIFloat_OperPrice.DescId = zc_MIFloat_OperPrice()    
+                                                         ON MIFloat_OperPrice.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()    
                              LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
-                                    ON MIFloat_OperPriceList.MovementItemId = MI_Master.Id
-                                   AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
+                                                         ON MIFloat_OperPriceList.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
                              LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValue
-                                    ON MIFloat_CurrencyValue.MovementItemId = MI_Master.Id
-                                   AND MIFloat_CurrencyValue.DescId = zc_MIFloat_CurrencyValue()    
+                                                         ON MIFloat_CurrencyValue.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_CurrencyValue.DescId         = zc_MIFloat_CurrencyValue()    
                              LEFT JOIN MovementItemFloat AS MIFloat_ParValue
-                                    ON MIFloat_ParValue.MovementItemId = MI_Master.Id
-                                   AND MIFloat_ParValue.DescId = zc_MIFloat_ParValue() 
+                                                         ON MIFloat_ParValue.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue() 
                              LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
-                                    ON MIFloat_TotalPay.MovementItemId = MI_Master.Id
-                                   AND MIFloat_TotalPay.DescId = zc_MIFloat_TotalPay() 
+                                                         ON MIFloat_TotalPay.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay() 
                       ) 
  
    , tmpMI_Master AS (SELECT MovementItem.Id
@@ -160,9 +163,10 @@ BEGIN
                                                         AND MIString_BarCode.DescId         = zc_MIString_BarCode()
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionMI
                                                              ON MILinkObject_PartionMI.MovementItemId = MovementItem.Id
-                                                            AND MILinkObject_PartionMI.DescId = zc_MILinkObject_PartionMI()
+                                                            AND MILinkObject_PartionMI.DescId         = zc_MILinkObject_PartionMI()
                             LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = MILinkObject_PartionMI.ObjectId
                        )
+                       
           , tmpMI AS (SELECT COALESCE (tmpMI_Master.Id,0) AS Id
                            , COALESCE (tmpMI_Master.GoodsId, tmpMI_Sale.GoodsId)     AS GoodsId
                            , COALESCE (tmpMI_Master.PartionId, tmpMI_Sale.PartionId) AS PartionId
@@ -173,6 +177,13 @@ BEGIN
                            , COALESCE (tmpMI_Master.OperPrice, tmpMI_Sale.OperPrice) AS OperPrice
                            , COALESCE (tmpMI_Master.CountForPrice, tmpMI_Sale.CountForPrice) AS CountForPrice 
                            , COALESCE (tmpMI_Master.OperPriceList, tmpMI_Sale.OperPriceList) AS OperPriceList
+                           
+                           , CAST (CASE WHEN COALESCE (tmpMI_Master.CountForPrice, tmpMI_Sale.CountForPrice) <> 0
+                                           THEN CAST (COALESCE (tmpMI_Master.Amount, 0) * COALESCE (tmpMI_Master.OperPrice, tmpMI_Sale.OperPrice) / COALESCE (tmpMI_Master.CountForPrice, tmpMI_Sale.CountForPrice) AS NUMERIC (16, 2))
+                                        ELSE CAST ( COALESCE (tmpMI_Master.Amount, 0) * COALESCE (tmpMI_Master.OperPrice, tmpMI_Sale.OperPrice) AS NUMERIC (16, 2))
+                                   END AS TFloat) AS TotalSumm
+                           , CAST (COALESCE (tmpMI_Master.Amount, 0) * COALESCE (tmpMI_Master.OperPriceList, tmpMI_Sale.OperPriceList) AS NUMERIC (16, 2)) AS TotalSummPriceList
+                                   
                            , COALESCE (tmpMI_Master.CurrencyValue, tmpMI_Sale.CurrencyValue) AS CurrencyValue
                            , COALESCE (tmpMI_Master.ParValue, tmpMI_Sale.ParValue)           AS ParValue
                            , COALESCE (tmpMI_Master.TotalChangePercent, 0)    AS TotalChangePercent
@@ -207,23 +218,6 @@ BEGIN
                                                             AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
                       GROUP BY MovementItem.ParentId
                       )
-   , tmpContainer AS (SELECT Container.PartionId
-                           --, Container.ObjectId                                        AS GoodsId
-                           , Container.Amount - SUM (COALESCE (MIContainer.Amount, 0)) AS Remains
-                      FROM tmpMI AS tmpMI_Master
-                           INNER JOIN Container ON Container.ObjectId = tmpMI_Master.GoodsId
-                                               AND Container.PartionId = tmpMI_Master.PartionId
-                                               AND Container.DescId = zc_Container_count()
-                                               AND Container.WhereObjectId = vbUnitId
-                           LEFT JOIN MovementItemContainer AS MIContainer 
-                                                           ON MIContainer.ContainerId = Container.Id
-                                                          AND MIContainer.OperDate >= vbOperDate
-                      GROUP BY Container.PartionId 
-                             , Container.Amount 
-                             --, Container.ObjectId
-                      HAVING (Container.Amount - SUM (COALESCE (MIContainer.Amount, 0))) <> 0
-                    )
-
 
        -- результат
        SELECT
@@ -241,25 +235,18 @@ BEGIN
            , Object_LineFabrica.ValueData   AS LineFabricaName
            , Object_Label.ValueData         AS LabelName
            , Object_GoodsSize.ValueData     AS GoodsSizeName 
-           --, tmpMI.PartionId                AS BarCode
 
            , tmpMI.Amount         ::TFloat
            , tmpMI.Amount_Sale    ::TFloat
-           , tmpContainer.Remains ::TFloat
+           , Container.Amount     ::TFloat AS Remains
 
            , tmpMI.OperPrice      ::TFloat
            , tmpMI.CountForPrice  ::TFloat
            , tmpMI.OperPriceList  ::TFloat
 
-           , CAST (CASE WHEN tmpMI.CountForPrice <> 0
-                           THEN CAST (COALESCE (tmpMI.Amount, 0) * tmpMI.OperPrice / tmpMI.CountForPrice AS NUMERIC (16, 2))
-                        ELSE CAST ( COALESCE (tmpMI.Amount, 0) * tmpMI.OperPrice AS NUMERIC (16, 2))
-                   END AS TFloat) AS AmountSumm
-
-           , CAST (CASE WHEN tmpMI.CountForPrice <> 0
-                           THEN CAST (COALESCE (tmpMI.Amount, 0) * tmpMI.OperPriceList / tmpMI.CountForPrice AS NUMERIC (16, 2))
-                        ELSE CAST ( COALESCE (tmpMI.Amount, 0) * tmpMI.OperPriceList AS NUMERIC (16, 2))
-                   END AS TFloat) AS AmountPriceListSumm
+           , tmpMI.TotalSumm           ::TFloat
+           , (CAST (tmpMI.TotalSumm * tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END AS NUMERIC (16, 2))) :: TFloat AS TotalSummBalance 
+           , tmpMI.TotalSummPriceList  ::TFloat
 
            , tmpMI.CurrencyValue            ::TFloat
            , tmpMI.ParValue                 ::TFloat
@@ -280,13 +267,17 @@ BEGIN
            , tmpMI.TotalPayOth              ::TFloat
 
            , tmpMI.PartionMI_Id
-           , COALESCE (MI_Sale.Id, tmpMI.SaleMI_Id) AS SaleMI_Id
-           , Movement_Sale.Id               AS MovementId_Sale
-           , Movement_Sale.InvNumber        AS InvNumber_Sale_Full
+           , COALESCE (MI_Sale.Id, tmpMI.SaleMI_Id)  AS SaleMI_Id
+           , Movement_Sale.Id                        AS MovementId_Sale
+           , Movement_Sale.InvNumber                 AS InvNumber_Sale_Full
 
            , tmpMI.isErased
 
        FROM tmpMI
+            LEFT JOIN Container ON Container.PartionId     = tmpMI.PartionId
+                               AND Container.WhereObjectId = vbUnitId
+                               AND Container.DescId        = zc_Container_count()
+                               
             LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI.Id
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
             LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmpMI.PartionId                                 
@@ -307,9 +298,6 @@ BEGIN
            LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = tmpMI.PartionMI_Id
            LEFT JOIN MovementItem AS MI_Sale ON MI_Sale.Id = Object_PartionMI.ObjectCode
            LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MI_Sale.MovementId
-
-           LEFT JOIN tmpContainer ON tmpContainer.PartionId = tmpMI.PartionId  
-                                 --AND tmpContainer.GoodsId = tmpMI.GoodsId
        ;
      ELSE
      -- Результат такой
@@ -324,6 +312,11 @@ BEGIN
                            , COALESCE (MIFloat_OperPrice.ValueData, 0)             AS OperPrice
                            , COALESCE (MIFloat_CountForPrice.ValueData, 1)         AS CountForPrice 
                            , COALESCE (MIFloat_OperPriceList.ValueData, 0)         AS OperPriceList
+                           , CAST (CASE WHEN MIFloat_CountForPrice.ValueData <> 0
+                                             THEN MovementItem.Amount * COALESCE (MIFloat_OperPrice.ValueData, 0) / MIFloat_CountForPrice.ValueData
+                                         ELSE MovementItem.Amount * COALESCE (MIFloat_OperPrice.ValueData, 0)
+                                   END AS NUMERIC (16, 2)) AS TotalSumm
+                           , CAST (MovementItem.Amount * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 2)) AS TotalSummPriceList
                            , COALESCE (MIFloat_CurrencyValue.ValueData, 0)         AS CurrencyValue
                            , COALESCE (MIFloat_ParValue.ValueData, 0)              AS ParValue
                            , COALESCE (MIFloat_TotalChangePercent.ValueData, 0)    AS TotalChangePercent
@@ -390,23 +383,6 @@ BEGIN
                                                             AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
                       GROUP BY MovementItem.ParentId
                       )
-   , tmpContainer AS (SELECT Container.PartionId
-                           --, Container.ObjectId                                        AS GoodsId
-                           , Container.Amount - SUM (COALESCE (MIContainer.Amount, 0)) AS Remains
-                      FROM tmpMI_Master
-                           INNER JOIN Container ON Container.ObjectId = tmpMI_Master.GoodsId
-                                               AND Container.PartionId = tmpMI_Master.PartionId
-                                               AND Container.DescId = zc_Container_count()
-                                               AND Container.WhereObjectId = vbUnitId
-                           LEFT JOIN MovementItemContainer AS MIContainer 
-                                                           ON MIContainer.ContainerId = Container.Id
-                                                          AND MIContainer.OperDate >= vbOperDate
-                      GROUP BY Container.PartionId 
-                             , Container.Amount 
-                             --, Container.ObjectId
-                      HAVING (Container.Amount - SUM (COALESCE (MIContainer.Amount, 0))) <> 0
-                    )
-
 
        -- результат
        SELECT
@@ -424,25 +400,18 @@ BEGIN
            , Object_LineFabrica.ValueData   AS LineFabricaName
            , Object_Label.ValueData         AS LabelName
            , Object_GoodsSize.ValueData     AS GoodsSizeName 
-          -- , tmpMI.PartionId                AS BarCode
 
-           , tmpMI.Amount         ::TFloat
-           , MI_Sale.Amount       ::TFloat
-           , tmpContainer.Remains ::TFloat
+           , tmpMI.Amount                   ::TFloat
+           , MI_Sale.Amount                 ::TFloat
+           , Container.Amount               ::TFloat AS Remains
 
-           , tmpMI.OperPrice      ::TFloat
-           , tmpMI.CountForPrice  ::TFloat
-           , tmpMI.OperPriceList  ::TFloat
+           , tmpMI.OperPrice                ::TFloat
+           , tmpMI.CountForPrice            ::TFloat
+           , tmpMI.OperPriceList            ::TFloat
 
-           , CAST (CASE WHEN tmpMI.CountForPrice <> 0
-                           THEN CAST (COALESCE (tmpMI.Amount, 0) * tmpMI.OperPrice / tmpMI.CountForPrice AS NUMERIC (16, 2))
-                        ELSE CAST ( COALESCE (tmpMI.Amount, 0) * tmpMI.OperPrice AS NUMERIC (16, 2))
-                   END AS TFloat) AS AmountSumm
-
-           , CAST (CASE WHEN tmpMI.CountForPrice <> 0
-                           THEN CAST (COALESCE (tmpMI.Amount, 0) * tmpMI.OperPriceList / tmpMI.CountForPrice AS NUMERIC (16, 2))
-                        ELSE CAST ( COALESCE (tmpMI.Amount, 0) * tmpMI.OperPriceList AS NUMERIC (16, 2))
-                   END AS TFloat) AS AmountPriceListSumm
+           , tmpMI.TotalSumm                ::TFloat
+           , (CAST (tmpMI.TotalSumm * tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END AS NUMERIC (16, 2))) :: TFloat AS TotalSummBalance 
+           , tmpMI.TotalSummPriceList       ::TFloat
 
            , tmpMI.CurrencyValue            ::TFloat
            , tmpMI.ParValue                 ::TFloat
@@ -471,6 +440,10 @@ BEGIN
            , tmpMI.isErased
 
        FROM tmpMI_Master AS tmpMI
+            LEFT JOIN Container ON Container.PartionId     = tmpMI.PartionId
+                               AND Container.WhereObjectId = vbUnitId
+                               AND Container.DescId        = zc_Container_count()
+                               
             LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI.Id
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
             LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmpMI.PartionId                                 
@@ -497,9 +470,7 @@ BEGIN
 
             LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MI_Sale.MovementId
 
-            LEFT JOIN tmpContainer ON tmpContainer.PartionId = tmpMI.PartionId  
-                                  --AND tmpContainer.GoodsId = tmpMI.GoodsId
-       ;
+         ;
 
        END IF;
 

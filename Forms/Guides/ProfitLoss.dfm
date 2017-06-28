@@ -37,7 +37,7 @@ object ProfitLossForm: TProfitLossForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
+      OptionsBehavior.IncSearchItem = Name
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -49,63 +49,63 @@ object ProfitLossForm: TProfitLossForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 57
       end
-      object clProfitLossGroup: TcxGridDBColumn
+      object ProfitLossGroupName: TcxGridDBColumn
         Caption = #1054#1055#1080#1059' '#1075#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'ProfitLossGroupName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 155
       end
-      object clProfitLossDirection: TcxGridDBColumn
+      object ProfitLossDirectionName: TcxGridDBColumn
         Caption = #1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'ProfitLossDirectionName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 167
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1054#1055#1080#1059' '#1089#1090#1072#1090#1100#1103
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 119
       end
-      object clInfoMoneyGroupName: TcxGridDBColumn
+      object InfoMoneyGroupName: TcxGridDBColumn
         Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyGroupName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object clInfoMoneyDestination: TcxGridDBColumn
+      object InfoMoneyDestinationName: TcxGridDBColumn
         Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'InfoMoneyDestinationName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 97
       end
-      object clInfoMoney: TcxGridDBColumn
+      object InfoMoneyName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object clOnComplete: TcxGridDBColumn
+      object OnComplete: TcxGridDBColumn
         Caption = '***'
         DataBinding.FieldName = 'onComplete'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 25
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
@@ -265,6 +265,7 @@ object ProfitLossForm: TProfitLossForm
     Top = 160
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -278,43 +279,53 @@ object ProfitLossForm: TProfitLossForm
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TProfitLossEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TProfitLossEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spErasedUnErased
       StoredProcList = <
         item
@@ -329,6 +340,7 @@ object ProfitLossForm: TProfitLossForm
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spErasedUnErased
       StoredProcList = <
         item
@@ -344,17 +356,22 @@ object ProfitLossForm: TProfitLossForm
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
+      MoveParams = <>
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -362,6 +379,7 @@ object ProfitLossForm: TProfitLossForm
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -377,6 +395,7 @@ object ProfitLossForm: TProfitLossForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 40
     Top = 216
   end
@@ -391,10 +410,13 @@ object ProfitLossForm: TProfitLossForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
+    PackSize = 1
     Left = 288
     Top = 208
   end
@@ -421,6 +443,8 @@ object ProfitLossForm: TProfitLossForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 160
     Top = 224
   end

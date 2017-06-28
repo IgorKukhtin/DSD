@@ -26,7 +26,7 @@ type
   TStreetForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clName: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -51,16 +51,16 @@ type
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
-    clErased: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clPostalCode: TcxGridDBColumn;
-    clStreetKindName: TcxGridDBColumn;
-    clCityName: TcxGridDBColumn;
-    clProvinceCityName: TcxGridDBColumn;
-    clProvinceName: TcxGridDBColumn;
-    clRegionName: TcxGridDBColumn;
-    clCityKindName: TcxGridDBColumn;
+    PostalCode: TcxGridDBColumn;
+    StreetKindName: TcxGridDBColumn;
+    CityName: TcxGridDBColumn;
+    ProvinceCityName: TcxGridDBColumn;
+    ProvinceName: TcxGridDBColumn;
+    RegionName: TcxGridDBColumn;
+    CityKindName: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
   private

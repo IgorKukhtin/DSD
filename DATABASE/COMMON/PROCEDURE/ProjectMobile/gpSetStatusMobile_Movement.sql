@@ -1,6 +1,6 @@
 -- Function: gpSetStatusMobile_Movement
 
-DROP FUNCTION IF EXISTS gpSetStatusMobile_Movement ();
+DROP FUNCTION IF EXISTS gpSetStatusMobile_Movement (TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSetStatusMobile_Movement (
     IN inMovementGUID TVarChar , -- глобальный идентификатор документа
@@ -16,7 +16,6 @@ $BODY$
   DECLARE vbDescCode TVarChar;
   DECLARE vbDescName TVarChar;
   DECLARE vbStatusId Integer;
-  DECLARE vbPrinted Boolean;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...);
@@ -43,17 +42,54 @@ BEGIN
                 RAISE EXCEPTION 'Тип документа % (%) данной функцией не поддерживается', vbDescCode, vbDescName;
            END IF;
 
-           IF vbStatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_Erased())
+           IF COALESCE (inStatusId, 0) NOT IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+           THEN
+                RAISE EXCEPTION 'Задан неверный статус документа';
+           END IF;
+
+           IF vbStatusId <> inStatusId
            THEN 
-                IF vbDescId = zc_Movement_OrderExternal()
-                THEN -- если заявка проведена, то распроводим
-                     SELECT outPrinted INTO vbPrinted FROM lpUnComplete_Movement_OrderExternal (inMovementId:= vbId, inUserId:= vbUserId);
-                ELSIF vbDescId = zc_Movement_ReturnIn()
-                THEN -- Распроводим Документ
-                     PERFORM lpUnComplete_Movement (inMovementId:= vbId, inUserId:= vbUserId);
-                ELSIF vbDescId = zc_Movement_StoreReal()
-                THEN -- если фактический остаток проведен, то распроводим    
-                     PERFORM gpUnComplete_Movement_StoreReal (inMovementId:= vbId, inSession:= inSession);
+                IF vbStatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_Erased())
+                THEN 
+                     IF vbDescId = zc_Movement_OrderExternal()
+                     THEN -- если заявка проведена, то распроводим
+                          PERFORM lpUnComplete_Movement_OrderExternal (inMovementId:= vbId, inUserId:= vbUserId);
+                     ELSIF vbDescId = zc_Movement_ReturnIn()
+                     THEN -- Распроводим Документ
+                          PERFORM lpUnComplete_Movement (inMovementId:= vbId, inUserId:= vbUserId);
+                     ELSIF vbDescId = zc_Movement_StoreReal()
+                     THEN -- если фактический остаток проведен, то распроводим    
+                          PERFORM gpUnComplete_Movement_StoreReal (inMovementId:= vbId, inSession:= inSession);
+                     END IF;
+                END IF;
+
+                IF inStatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_Erased())
+                THEN 
+                     IF vbDescId = zc_Movement_OrderExternal()
+                     THEN  
+                          CASE inStatusId
+                              WHEN zc_Enum_Status_Complete() THEN
+                                 PERFORM lpComplete_Movement_OrderExternal (inMovementId:= vbId, inUserId:= vbUserId);
+                              WHEN zc_Enum_Status_Erased() THEN
+                                 PERFORM gpSetErased_Movement_OrderExternal (vbId, inSession);
+                          END CASE;
+                     ELSIF vbDescId = zc_Movement_ReturnIn()
+                     THEN 
+                          CASE inStatusId
+                              WHEN zc_Enum_Status_Complete() THEN
+                                 PERFORM gpComplete_Movement_ReturnIn (inMovementId:= vbId, inStartDateSale:= NULL, inIsLastComplete:= FALSE, inSession:= inSession);
+                              WHEN zc_Enum_Status_Erased() THEN
+                                 PERFORM gpSetErased_Movement_ReturnIn (inMovementId:= vbId, inSession:= inSession);
+                          END CASE;
+                     ELSIF vbDescId = zc_Movement_StoreReal()
+                     THEN 
+                          CASE inStatusId
+                              WHEN zc_Enum_Status_Complete() THEN
+                                 PERFORM gpComplete_Movement_StoreReal (inMovementId:= vbId, inSession:= inSession);
+                              WHEN zc_Enum_Status_Erased() THEN
+                                 PERFORM lpSetErased_Movement (inMovementId := vbId, inUserId:= vbUserId);
+                          END CASE;
+                     END IF;
                 END IF;
            END IF;
       END IF;

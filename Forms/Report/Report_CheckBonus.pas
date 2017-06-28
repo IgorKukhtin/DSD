@@ -14,33 +14,43 @@ uses
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, cxImageComboBox,
-  cxCheckBox;
+  cxCheckBox, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
+  dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue;
 
 type
   TReport_CheckBonusForm = class(TAncestorReportForm)
-    clInvNumber_master: TcxGridDBColumn;
-    clValue: TcxGridDBColumn;
-    clSum_CheckBonus: TcxGridDBColumn;
-    clPaidKindName: TcxGridDBColumn;
-    clConditionKindName: TcxGridDBColumn;
-    clJuridicalName: TcxGridDBColumn;
-    clSum_Bonus: TcxGridDBColumn;
-    clBonusKindName: TcxGridDBColumn;
-    clInfoMoneyName_master: TcxGridDBColumn;
+    InvNumber_master: TcxGridDBColumn;
+    Value: TcxGridDBColumn;
+    Sum_CheckBonus: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
+    ConditionKindName: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    Sum_Bonus: TcxGridDBColumn;
+    BonusKindName: TcxGridDBColumn;
+    InfoMoneyName_master: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edBonusKind: TcxButtonEdit;
     DocumentTaxKindGuides: TdsdGuides;
-    clSum_BonusFact: TcxGridDBColumn;
-    clInvNumber_child: TcxGridDBColumn;
-    clInvNumber_find: TcxGridDBColumn;
-    clInfoMoneyName_child: TcxGridDBColumn;
-    clInfoMoneyName_find: TcxGridDBColumn;
+    Sum_BonusFact: TcxGridDBColumn;
+    InvNumber_child: TcxGridDBColumn;
+    InvNumber_find: TcxGridDBColumn;
+    InfoMoneyName_child: TcxGridDBColumn;
+    InfoMoneyName_find: TcxGridDBColumn;
     dxBarButton1: TdxBarButton;
     actDocBonus: TdsdExecStoredProc;
     spInsertUpdate: TdsdStoredProc;
-    clSum_CheckBonusFact: TcxGridDBColumn;
-    clSum_SaleFact: TcxGridDBColumn;
-    clComment: TcxGridDBColumn;
+    Sum_CheckBonusFact: TcxGridDBColumn;
+    Sum_SaleFact: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     cxLabel3: TcxLabel;

@@ -41,7 +41,7 @@ object Report_MobileKSForm: TReport_MobileKSForm
         end
         item
           Kind = skCount
-          Column = cxGridDBTableViewDateList
+          Column = DateList
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -60,7 +60,7 @@ object Report_MobileKSForm: TReport_MobileKSForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object cxGridDBTableViewDateList: TcxGridDBColumn
+      object DateList: TcxGridDBColumn
         Caption = #1044#1072#1090#1099
         DataBinding.FieldName = 'DateList'
         PropertiesClassName = 'TcxDateEditProperties'
@@ -252,19 +252,19 @@ object Report_MobileKSForm: TReport_MobileKSForm
         end
         item
           Kind = skCount
-          Column = gridReportMobilePhone
+          Column = MobilePhone
         end
         item
           Kind = skSum
-          Column = gridReportTotalSum
+          Column = TotalSum
         end
         item
           Kind = skSum
-          Column = gridReportNavigator
+          Column = Navigator
         end
         item
           Kind = skSum
-          Column = gridReportLim
+          Column = Lim
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -279,14 +279,14 @@ object Report_MobileKSForm: TReport_MobileKSForm
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object gridReportMobilePhone: TcxGridDBColumn
+      object MobilePhone: TcxGridDBColumn
         Caption = #1053#1086#1084#1077#1088' '#1090#1077#1083#1077#1092#1086#1085#1072
         DataBinding.FieldName = 'MobilePhone'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 149
       end
-      object gridReportEmployeeName: TcxGridDBColumn
+      object EmployeeName: TcxGridDBColumn
         Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
         DataBinding.FieldName = 'EmployeeName'
         FooterAlignmentHorz = taCenter
@@ -294,7 +294,7 @@ object Report_MobileKSForm: TReport_MobileKSForm
         HeaderAlignmentVert = vaCenter
         Width = 221
       end
-      object gridReportRegion: TcxGridDBColumn
+      object Region: TcxGridDBColumn
         Caption = #1056#1077#1075#1080#1086#1085
         DataBinding.FieldName = 'Region'
         Visible = False
@@ -303,7 +303,7 @@ object Report_MobileKSForm: TReport_MobileKSForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object gridReportTotalSum: TcxGridDBColumn
+      object TotalSum: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1080#1090#1086#1075#1086
         DataBinding.FieldName = 'TotalSum'
         FooterAlignmentHorz = taCenter
@@ -311,7 +311,7 @@ object Report_MobileKSForm: TReport_MobileKSForm
         HeaderAlignmentVert = vaCenter
         Width = 120
       end
-      object gridReportTariffName: TcxGridDBColumn
+      object TariffName: TcxGridDBColumn
         Caption = #1058#1072#1088#1080#1092
         DataBinding.FieldName = 'TariffName'
         FooterAlignmentHorz = taCenter
@@ -319,7 +319,7 @@ object Report_MobileKSForm: TReport_MobileKSForm
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
-      object gridReportMonthly: TcxGridDBColumn
+      object Monthly: TcxGridDBColumn
         Caption = #1040#1073#1086#1085#1087#1083#1072#1090#1072
         DataBinding.FieldName = 'Monthly'
         Visible = False
@@ -328,7 +328,7 @@ object Report_MobileKSForm: TReport_MobileKSForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object gridReportNavigator: TcxGridDBColumn
+      object Navigator: TcxGridDBColumn
         Caption = #1059#1089#1083#1091#1075#1072' '#1053#1072#1074#1080#1075#1072#1090#1086#1088
         DataBinding.FieldName = 'Navigator'
         FooterAlignmentHorz = taCenter
@@ -336,7 +336,7 @@ object Report_MobileKSForm: TReport_MobileKSForm
         HeaderAlignmentVert = vaCenter
         Width = 138
       end
-      object gridReportLim: TcxGridDBColumn
+      object Lim: TcxGridDBColumn
         Caption = #1051#1080#1084#1080#1090
         DataBinding.FieldName = 'Lim'
         FooterAlignmentHorz = taCenter
@@ -344,7 +344,7 @@ object Report_MobileKSForm: TReport_MobileKSForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object gridReportLimOver: TcxGridDBColumn
+      object LimOver: TcxGridDBColumn
         Caption = #1051#1080#1084#1080#1090
         DataBinding.FieldName = 'LimOver'
         Visible = False
@@ -353,7 +353,7 @@ object Report_MobileKSForm: TReport_MobileKSForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object gridReportLimDuty: TcxGridDBColumn
+      object LimDuty: TcxGridDBColumn
         Caption = #1057#1083#1091#1078#1077#1073#1085#1099#1081' '#1083#1080#1084#1080#1090
         DataBinding.FieldName = 'LimDuty'
         Visible = False
@@ -362,7 +362,7 @@ object Report_MobileKSForm: TReport_MobileKSForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object gridReportBillDate: TcxGridDBColumn
+      object BillDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'BillDate'
       end

@@ -13,20 +13,30 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus;
+  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TReport_CheckContractInMovementForm = class(TAncestorReportForm)
-    cContract_InvNumber: TcxGridDBColumn;
-    clPaidKindName: TcxGridDBColumn;
-    clMovementDescName: TcxGridDBColumn;
-    clJuridicalName: TcxGridDBColumn;
-    clMovementInvNumber: TcxGridDBColumn;
-    clOKPO: TcxGridDBColumn;
-    clMovementDate: TcxGridDBColumn;
-    clContractStartDate: TcxGridDBColumn;
-    clContractEndDate: TcxGridDBColumn;
-    clContractCode: TcxGridDBColumn;
+    Contract_InvNumber: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
+    MovementDescName: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    MovementInvNumber: TcxGridDBColumn;
+    OKPO: TcxGridDBColumn;
+    MovementDate: TcxGridDBColumn;
+    ContractStartDate: TcxGridDBColumn;
+    ContractEndDate: TcxGridDBColumn;
+    ContractCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

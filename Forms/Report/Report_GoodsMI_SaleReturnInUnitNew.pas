@@ -27,10 +27,10 @@ uses
 
 type
   TReport_GoodsMI_SaleReturnInUnitNewForm = class(TAncestorReportForm)
-    clTradeMarkName: TcxGridDBColumn;
-    clGoodsGroupName: TcxGridDBColumn;
-    clGoodsCode: TcxGridDBColumn;
-    clGoodsName: TcxGridDBColumn;
+    TradeMarkName: TcxGridDBColumn;
+    GoodsGroupName: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
     Sale_Summ: TcxGridDBColumn;
     Sale_Amount_Weight: TcxGridDBColumn;
     cxLabel4: TcxLabel;
@@ -38,12 +38,12 @@ type
     GuidesGoodsGroup: TdsdGuides;
     FormParams: TdsdFormParams;
     Sale_Amount_Sh: TcxGridDBColumn;
-    clJuridicalName: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
     PartnerName: TcxGridDBColumn;
     Return_Amount_Sh: TcxGridDBColumn;
     Return_Amount_Weight: TcxGridDBColumn;
     Return_Summ: TcxGridDBColumn;
-    clGoodsKindName: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
     Sale_AmountPartner_Weight: TcxGridDBColumn;
     Sale_AmountPartner_Sh: TcxGridDBColumn;
     Return_AmountPartner_Weight: TcxGridDBColumn;
@@ -52,20 +52,20 @@ type
     edJuridical: TcxButtonEdit;
     GuidesJuridical: TdsdGuides;
     ReturnPercent: TcxGridDBColumn;
-    clGoodsGroupNameFull: TcxGridDBColumn;
+    GoodsGroupNameFull: TcxGridDBColumn;
     cxLabel5: TcxLabel;
     edPaidKind: TcxButtonEdit;
     cxLabel7: TcxLabel;
     edInfoMoney: TcxButtonEdit;
     GuidesInfoMoney: TdsdGuides;
     GuidesPaidKind: TdsdGuides;
-    clMeasureName: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     RetailName: TcxGridDBColumn;
     actPrint_byJuridical: TdsdPrintAction;
     bbPrint_byJuridical: TdxBarButton;
-    clJuridicalGroupName: TcxGridDBColumn;
+    JuridicalGroupName: TcxGridDBColumn;
     BranchName: TcxGridDBColumn;
     actPrint_byStatGroup: TdsdPrintAction;
     bbPrint_byStatGroup: TdxBarButton;

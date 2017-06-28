@@ -88,7 +88,7 @@ object UnitTreeForm: TUnitTreeForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object ceTreeState: TcxGridDBColumn
+      object isLeaf: TcxGridDBColumn
         Caption = '_'
         DataBinding.FieldName = 'isLeaf'
         PropertiesClassName = 'TcxImageComboBoxProperties'
@@ -106,14 +106,14 @@ object UnitTreeForm: TUnitTreeForm
         SortOrder = soAscending
         Width = 20
       end
-      object ceCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object ceName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
@@ -121,13 +121,13 @@ object UnitTreeForm: TUnitTreeForm
         SortOrder = soAscending
         Width = 160
       end
-      object ceBranchName: TcxGridDBColumn
+      object BranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
         DataBinding.FieldName = 'BranchName'
         HeaderAlignmentVert = vaCenter
         Width = 120
       end
-      object ceAddress: TcxGridDBColumn
+      object Address: TcxGridDBColumn
         Caption = #1040#1076#1088#1077#1089
         DataBinding.FieldName = 'Address'
         HeaderAlignmentHorz = taCenter
@@ -135,7 +135,7 @@ object UnitTreeForm: TUnitTreeForm
         Options.Editing = False
         Width = 80
       end
-      object ceisErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'

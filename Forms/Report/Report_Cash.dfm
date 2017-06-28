@@ -4,8 +4,10 @@ inherited Report_CashForm: TReport_CashForm
   ClientWidth = 1020
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -309
+  ExplicitTop = -101
   ExplicitWidth = 1036
-  ExplicitHeight = 593
+  ExplicitHeight = 594
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -91,12 +93,12 @@ inherited Report_CashForm: TReport_CashForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colDebetSumm_Currency
+              Column = DebetSumm_Currency
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colKreditSumm_Currency
+              Column = KreditSumm_Currency
             end
             item
               Format = ',0.00##'
@@ -177,12 +179,12 @@ inherited Report_CashForm: TReport_CashForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colDebetSumm_Currency
+              Column = DebetSumm_Currency
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colKreditSumm_Currency
+              Column = KreditSumm_Currency
             end
             item
               Format = ',0.00##'
@@ -262,7 +264,7 @@ inherited Report_CashForm: TReport_CashForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object lContractCode: TcxGridDBColumn
+          object ContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractCode'
             Visible = False
@@ -501,7 +503,7 @@ inherited Report_CashForm: TReport_CashForm
             Options.Editing = False
             Width = 80
           end
-          object colDebetSumm_Currency: TcxGridDBColumn
+          object DebetSumm_Currency: TcxGridDBColumn
             Caption = #1054#1073#1086#1088#1086#1090' '#1044#1077#1073#1077#1090' '#1074' '#1074#1072#1083'.'
             DataBinding.FieldName = 'DebetSumm_Currency'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -514,7 +516,7 @@ inherited Report_CashForm: TReport_CashForm
             Options.Editing = False
             Width = 90
           end
-          object colKreditSumm_Currency: TcxGridDBColumn
+          object KreditSumm_Currency: TcxGridDBColumn
             Caption = #1054#1073#1086#1088#1086#1090' '#1050#1088#1077#1076#1080#1090' '#1074' '#1074#1072#1083'.'
             DataBinding.FieldName = 'KreditSumm_Currency'
             PropertiesClassName = 'TcxCurrencyEditProperties'

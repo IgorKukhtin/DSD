@@ -4,15 +4,15 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
   ClientWidth = 1123
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -469
   ExplicitWidth = 1139
-  ExplicitHeight = 429
+  ExplicitHeight = 433
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1123
     Height = 337
     TabOrder = 3
-    ExplicitTop = 57
     ExplicitWidth = 1123
     ExplicitHeight = 337
     ClientRectBottom = 337
@@ -30,93 +30,93 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colSaleSumm
+              Column = SaleSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colKreditRemains
+              Column = KreditRemains
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colDebetRemains
+              Column = DebetRemains
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colDefermentPaymentRemains
+              Column = DefermentPaymentRemains
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colSaleSumm1
+              Column = SaleSumm1
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colSaleSumm2
+              Column = SaleSumm2
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colSaleSumm3
+              Column = SaleSumm3
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colSaleSumm4
+              Column = SaleSumm4
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colSaleSumm5
+              Column = SaleSumm5
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colSaleSumm
+              Column = SaleSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colKreditRemains
+              Column = KreditRemains
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colDebetRemains
+              Column = DebetRemains
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colDefermentPaymentRemains
+              Column = DefermentPaymentRemains
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colSaleSumm1
+              Column = SaleSumm1
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colSaleSumm2
+              Column = SaleSumm2
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colSaleSumm3
+              Column = SaleSumm3
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colSaleSumm4
+              Column = SaleSumm4
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colSaleSumm5
+              Column = SaleSumm5
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -127,7 +127,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clAccountName: TcxGridDBColumn
+          object AccountName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090
             DataBinding.FieldName = 'AccountName'
             Visible = False
@@ -136,7 +136,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 70
           end
-          object clAreaName: TcxGridDBColumn
+          object AreaName: TcxGridDBColumn
             Caption = #1056#1077#1075#1080#1086#1085' ('#1076#1086#1075#1086#1074#1086#1088')'
             DataBinding.FieldName = 'AreaName'
             Visible = False
@@ -145,7 +145,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 70
           end
-          object clAreaName_Partner: TcxGridDBColumn
+          object AreaName_Partner: TcxGridDBColumn
             Caption = #1056#1077#1075#1080#1086#1085' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090')'
             DataBinding.FieldName = 'AreaName_Partner'
             HeaderAlignmentHorz = taCenter
@@ -153,7 +153,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 100
           end
-          object clRetailName_main: TcxGridDBColumn
+          object RetailName_main: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
             DataBinding.FieldName = 'RetailName_main'
             Visible = False
@@ -162,7 +162,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 100
           end
-          object clRetailName: TcxGridDBColumn
+          object RetailName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100' ('#1087#1088#1086#1089#1088#1086#1095#1082#1072')'
             DataBinding.FieldName = 'RetailName'
             HeaderAlignmentHorz = taCenter
@@ -170,7 +170,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 100
           end
-          object colBranchCode: TcxGridDBColumn
+          object BranchCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1092#1083'.'
             DataBinding.FieldName = 'BranchCode'
             Visible = False
@@ -179,7 +179,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 35
           end
-          object colBranchName: TcxGridDBColumn
+          object BranchName: TcxGridDBColumn
             Caption = #1060#1080#1083#1080#1072#1083
             DataBinding.FieldName = 'BranchName'
             Visible = False
@@ -188,7 +188,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 70
           end
-          object clJuridicalGroupName: TcxGridDBColumn
+          object JuridicalGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'JuridicalGroupName'
             Visible = False
@@ -197,7 +197,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 70
           end
-          object clJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
@@ -205,7 +205,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 80
           end
-          object clOKPO: TcxGridDBColumn
+          object OKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'OKPO'
             Visible = False
@@ -214,7 +214,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 55
           end
-          object clPartnerCode: TcxGridDBColumn
+          object PartnerCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
             DataBinding.FieldName = 'PartnerCode'
             Visible = False
@@ -223,7 +223,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 40
           end
-          object clPartnerName: TcxGridDBColumn
+          object PartnerName: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
             DataBinding.FieldName = 'PartnerName'
             Visible = False
@@ -232,7 +232,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 70
           end
-          object clPaidKindName: TcxGridDBColumn
+          object PaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
             HeaderAlignmentHorz = taCenter
@@ -240,7 +240,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 50
           end
-          object clContractStateKindName: TcxGridDBColumn
+          object ContractStateKindCode: TcxGridDBColumn
             Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractStateKindCode'
             PropertiesClassName = 'TcxImageComboBoxProperties'
@@ -274,7 +274,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 55
           end
-          object colContractCode: TcxGridDBColumn
+          object ContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractCode'
             Visible = False
@@ -283,7 +283,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 45
           end
-          object colContractNumber: TcxGridDBColumn
+          object ContractNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractNumber'
             HeaderAlignmentHorz = taCenter
@@ -291,7 +291,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 60
           end
-          object clContractTagGroupName: TcxGridDBColumn
+          object ContractTagGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1087#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractTagGroupName'
             HeaderAlignmentHorz = taCenter
@@ -299,7 +299,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 70
           end
-          object clContractTagName: TcxGridDBColumn
+          object ContractTagName: TcxGridDBColumn
             Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractTagName'
             Visible = False
@@ -308,7 +308,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 60
           end
-          object clStartDate: TcxGridDBColumn
+          object StartDate: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088' '#1089
             DataBinding.FieldName = 'StartDate'
             Visible = False
@@ -317,7 +317,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 60
           end
-          object clEndDate: TcxGridDBColumn
+          object EndDate: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088' '#1076#1086
             DataBinding.FieldName = 'EndDate'
             Visible = False
@@ -326,7 +326,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 60
           end
-          object clPersonalName: TcxGridDBColumn
+          object PersonalName: TcxGridDBColumn
             Caption = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1079#1072' '#1076#1086#1075'. ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
             DataBinding.FieldName = 'PersonalName'
             HeaderAlignmentHorz = taCenter
@@ -334,7 +334,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 100
           end
-          object clPersonalTradeName: TcxGridDBColumn
+          object PersonalTradeName: TcxGridDBColumn
             Caption = #1058#1055' '#1079#1072' '#1076#1086#1075'. ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
             DataBinding.FieldName = 'PersonalTradeName'
             HeaderAlignmentHorz = taCenter
@@ -342,7 +342,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 80
           end
-          object clPersonalCollationName: TcxGridDBColumn
+          object PersonalCollationName: TcxGridDBColumn
             Caption = #1041#1091#1093#1075'.'#1089#1074#1077#1088#1082#1072' '#1087#1086' '#1076#1086#1075'.  ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
             DataBinding.FieldName = 'PersonalCollationName'
             Visible = False
@@ -351,7 +351,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 60
           end
-          object colPersonalTradeName_Partner: TcxGridDBColumn
+          object PersonalTradeName_Partner: TcxGridDBColumn
             Caption = #1058#1055' '#1091' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
             DataBinding.FieldName = 'PersonalTradeName_Partner'
             HeaderAlignmentHorz = taCenter
@@ -359,7 +359,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 80
           end
-          object clInfoMoneyCode: TcxGridDBColumn
+          object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -368,7 +368,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 55
           end
-          object clInfoMoneyGroupName: TcxGridDBColumn
+          object InfoMoneyGroupName: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -377,7 +377,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 70
           end
-          object clInfoMoneyDestinationName: TcxGridDBColumn
+          object InfoMoneyDestinationName: TcxGridDBColumn
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -386,7 +386,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 70
           end
-          object clInfoMoneyName: TcxGridDBColumn
+          object InfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             HeaderAlignmentHorz = taCenter
@@ -394,7 +394,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 80
           end
-          object clStartContractDate: TcxGridDBColumn
+          object StartContractDate: TcxGridDBColumn
             Caption = #1054#1090#1089#1088#1086#1095#1082#1072' '#1085#1072#1095'.'#1076#1072#1090#1072
             DataBinding.FieldName = 'StartContractDate'
             Visible = False
@@ -420,7 +420,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 100
           end
-          object colDebetRemains: TcxGridDBColumn
+          object DebetRemains: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1076#1086#1083#1075' ('#1044#1077#1073#1077#1090')'
             DataBinding.FieldName = 'DebetRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -432,7 +432,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 75
           end
-          object colKreditRemains: TcxGridDBColumn
+          object KreditRemains: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1076#1086#1083#1075' ('#1050#1088#1077#1076#1080#1090')'
             DataBinding.FieldName = 'KreditRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -444,7 +444,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 75
           end
-          object colSaleSumm: TcxGridDBColumn
+          object SaleSumm: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072
             DataBinding.FieldName = 'SaleSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -456,7 +456,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 75
           end
-          object colDefermentPaymentRemains: TcxGridDBColumn
+          object DefermentPaymentRemains: TcxGridDBColumn
             Caption = #1044#1086#1083#1075' '#1089' '#1086#1090#1089#1088#1086#1095#1082#1086#1081
             DataBinding.FieldName = 'DefermentPaymentRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -468,7 +468,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 75
           end
-          object colSaleSumm1: TcxGridDBColumn
+          object SaleSumm1: TcxGridDBColumn
             Caption = '7 '#1076#1085'.'
             DataBinding.FieldName = 'SaleSumm1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -480,7 +480,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 75
           end
-          object colSaleSumm2: TcxGridDBColumn
+          object SaleSumm2: TcxGridDBColumn
             Caption = '14 '#1076#1085'.'
             DataBinding.FieldName = 'SaleSumm2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -492,7 +492,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 75
           end
-          object colSaleSumm3: TcxGridDBColumn
+          object SaleSumm3: TcxGridDBColumn
             Caption = '21 '#1076#1085'.'
             DataBinding.FieldName = 'SaleSumm3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -504,7 +504,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 75
           end
-          object colSaleSumm4: TcxGridDBColumn
+          object SaleSumm4: TcxGridDBColumn
             Caption = '28 '#1076#1085'.'
             DataBinding.FieldName = 'SaleSumm4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -516,7 +516,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 75
           end
-          object colSaleSumm5: TcxGridDBColumn
+          object SaleSumm5: TcxGridDBColumn
             Caption = '>28 '#1076#1085'.'
             DataBinding.FieldName = 'SaleSumm5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -528,7 +528,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 75
           end
-          object colCondition: TcxGridDBColumn
+          object Condition: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1077
             DataBinding.FieldName = 'Condition'
             HeaderAlignmentHorz = taCenter
@@ -545,7 +545,6 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
     ExplicitWidth = 1123
     inherited deStart: TcxDateEdit
       Left = 59
-      EditValue = 42370d
       Properties.SaveTime = False
       ExplicitLeft = 59
     end
@@ -679,19 +678,23 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
       MoveParams = <
         item
           FromParam.Value = '1'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'PeriodNumber'
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'SaleSumm1'
           FromParam.DataType = ftFloat
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'SaleSumm'
           ToParam.DataType = ftFloat
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spReport
       StoredProcList = <
@@ -712,6 +715,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -719,6 +723,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'StartContractDate'
@@ -726,12 +731,14 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'StartContractDate'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PeriodNumber'
           Value = Null
           Component = FormParams
           ComponentItem = 'PeriodNumber'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Summ'
@@ -739,6 +746,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'SaleSumm1'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractNumber'
@@ -746,6 +754,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -753,6 +762,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -760,29 +770,35 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrintTwoWeek: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
         item
           FromParam.Value = '2'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'PeriodNumber'
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'SaleSumm2'
           FromParam.DataType = ftFloat
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'SaleSumm'
           ToParam.DataType = ftFloat
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spReport
       StoredProcList = <
@@ -803,6 +819,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -810,6 +827,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'StartContractDate'
@@ -817,12 +835,14 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'StartContractDate'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PeriodNumber'
           Value = Null
           Component = FormParams
           ComponentItem = 'PeriodNumber'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Summ'
@@ -830,6 +850,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'SaleSumm2'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractNumber'
@@ -837,6 +858,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -844,6 +866,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -851,29 +874,35 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrintThreeWeek: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
         item
           FromParam.Value = '3'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'PeriodNumber'
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'SaleSumm3'
           FromParam.DataType = ftFloat
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'SaleSumm'
           ToParam.DataType = ftFloat
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spReport
       StoredProcList = <
@@ -894,6 +923,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -901,6 +931,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'StartContractDate'
@@ -908,12 +939,14 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'StartContractDate'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PeriodNumber'
           Value = Null
           Component = FormParams
           ComponentItem = 'PeriodNumber'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Summ'
@@ -921,6 +954,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'SaleSumm3'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractNumber'
@@ -928,6 +962,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -935,6 +970,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -942,29 +978,35 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrintFourWeek: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
         item
           FromParam.Value = '4'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'PeriodNumber'
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'SaleSumm4'
           FromParam.DataType = ftFloat
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'SaleSumm'
           ToParam.DataType = ftFloat
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spReport
       StoredProcList = <
@@ -985,6 +1027,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -992,6 +1035,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'StartContractDate'
@@ -999,12 +1043,14 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'StartContractDate'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PeriodNumber'
           Value = Null
           Component = FormParams
           ComponentItem = 'PeriodNumber'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Summ'
@@ -1012,6 +1058,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'SaleSumm4'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractNumber'
@@ -1019,6 +1066,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -1026,6 +1074,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -1033,29 +1082,35 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrintOther: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
         item
           FromParam.Value = '5'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'PeriodNumber'
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'SaleSumm5'
           FromParam.DataType = ftFloat
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'SaleSumm'
           ToParam.DataType = ftFloat
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spReport
       StoredProcList = <
@@ -1076,6 +1131,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -1083,6 +1139,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'StartContractDate'
@@ -1090,12 +1147,14 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'StartContractDate'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PeriodNumber'
           Value = Null
           Component = FormParams
           ComponentItem = 'PeriodNumber'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Summ'
@@ -1103,6 +1162,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'SaleSumm5'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractNumber'
@@ -1110,6 +1170,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -1117,6 +1178,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -1124,10 +1186,12 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -1147,12 +1211,14 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
           Value = Null
           Component = GuidesAccount
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -1160,12 +1226,14 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = GuidesAccount
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
           Value = Null
           Component = GuidesPaidKind
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -1173,12 +1241,14 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = GuidesPaidKind
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchId'
           Value = Null
           Component = GuidesBranch
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchName'
@@ -1186,12 +1256,14 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = GuidesBranch
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalGroupId'
           Value = Null
           Component = GuidesJuridicalGroup
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalGroupName'
@@ -1199,15 +1271,18 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = GuidesJuridicalGroup
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescName'
           Value = 'zc_Movement_Sale'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081')'
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrintSale: TdsdPrintAction
       Category = 'DSDLib'
@@ -1232,6 +1307,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -1239,6 +1315,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'StartContractDate'
@@ -1246,12 +1323,14 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'StartContractDate'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PeriodNumber'
           Value = Null
           Component = FormParams
           ComponentItem = 'PeriodNumber'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Summ'
@@ -1259,6 +1338,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'SaleSumm1'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractNumber'
@@ -1266,6 +1346,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -1273,6 +1354,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -1280,10 +1362,12 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103')'
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint_byJuridical: TdsdPrintAction
       Category = 'DSDLib'
@@ -1304,12 +1388,14 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
           Value = Null
           Component = GuidesAccount
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -1317,12 +1403,14 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = GuidesAccount
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
           Value = Null
           Component = GuidesPaidKind
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -1330,12 +1418,14 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = GuidesPaidKind
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchId'
           Value = Null
           Component = GuidesBranch
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchName'
@@ -1343,12 +1433,14 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = GuidesBranch
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalGroupId'
           Value = Null
           Component = GuidesJuridicalGroup
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalGroupName'
@@ -1356,15 +1448,18 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = GuidesJuridicalGroup
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescName'
           Value = 'zc_Movement_Sale'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1089#1088#1086#1095#1082#1077
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1089#1088#1086#1095#1082#1077
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -1375,6 +1470,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
       FormName = 'TReport_JuridicalDefermentPaymentDialogForm'
       FormNameParam.Value = 'TReport_JuridicalDefermentPaymentDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -1382,6 +1478,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
@@ -1390,6 +1487,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           ComponentItem = 'Key'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -1398,6 +1496,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
@@ -1405,6 +1504,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = GuidesPaidKind
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -1413,6 +1513,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchId'
@@ -1420,6 +1521,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = GuidesBranch
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchName'
@@ -1428,6 +1530,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalGroupId'
@@ -1435,6 +1538,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           Component = GuidesJuridicalGroup
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalGroupName'
@@ -1443,6 +1547,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1466,6 +1571,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEmptyParam'
@@ -1473,6 +1579,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAccountId'
@@ -1480,6 +1587,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindId'
@@ -1487,6 +1595,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBranchId'
@@ -1494,6 +1603,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         Component = GuidesBranch
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalGroupId'
@@ -1501,6 +1611,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         Component = GuidesJuridicalGroup
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     AutoWidth = True
     Left = 112
@@ -1659,6 +1770,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
     LookupControl = edAccount
     FormNameParam.Value = 'TAccount_ObjectDescForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TAccount_ObjectDescForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1668,6 +1780,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValueAll'
@@ -1676,11 +1789,13 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_Object_Juridical'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 456
     Top = 8
@@ -1699,6 +1814,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractDate'
@@ -1707,6 +1823,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         ComponentItem = 'StartContractDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
@@ -1714,6 +1831,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         Component = MasterCDS
         ComponentItem = 'JuridicalId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAccountId'
@@ -1721,6 +1839,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         Component = MasterCDS
         ComponentItem = 'AccountId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractId'
@@ -1728,6 +1847,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         Component = MasterCDS
         ComponentItem = 'ContractId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindId'
@@ -1735,6 +1855,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         Component = MasterCDS
         ComponentItem = 'PaidKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBranchId'
@@ -1742,6 +1863,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         Component = MasterCDS
         ComponentItem = 'BranchId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPeriodCount'
@@ -1749,6 +1871,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         Component = FormParams
         ComponentItem = 'PeriodNumber'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inSaleSumm'
@@ -1757,6 +1880,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         ComponentItem = 'SaleSumm'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 192
@@ -1773,11 +1897,13 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
       item
         Name = 'PeriodNumber'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SaleSumm'
         Value = Null
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 344
     Top = 112
@@ -1797,6 +1923,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         ComponentItem = 'StartContractDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -1804,6 +1931,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
@@ -1811,6 +1939,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         Component = MasterCDS
         ComponentItem = 'JuridicalId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAccountId'
@@ -1818,6 +1947,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         Component = MasterCDS
         ComponentItem = 'AccountId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractId'
@@ -1825,6 +1955,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         Component = MasterCDS
         ComponentItem = 'ContractId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindId'
@@ -1832,6 +1963,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         Component = MasterCDS
         ComponentItem = 'PaidKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBranchId'
@@ -1839,6 +1971,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         Component = MasterCDS
         ComponentItem = 'BranchId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 200
@@ -1849,6 +1982,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
     LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPaidKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1859,6 +1993,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1867,6 +2002,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 664
     Top = 8
@@ -1876,6 +2012,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
     LookupControl = edBranch
     FormNameParam.Value = 'TBranch_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBranch_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1886,6 +2023,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1894,6 +2032,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 800
     Top = 8
@@ -1903,6 +2042,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
     LookupControl = edJuridicalGroup
     FormNameParam.Value = 'TJuridicalGroup_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridicalGroup_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1913,6 +2053,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1921,6 +2062,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 1000
     Top = 8

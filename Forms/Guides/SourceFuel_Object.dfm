@@ -38,7 +38,7 @@ object SourceFuel_ObjectForm: TSourceFuel_ObjectForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
+      OptionsBehavior.IncSearchItem = Name
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -51,28 +51,28 @@ object SourceFuel_ObjectForm: TSourceFuel_ObjectForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 120
       end
-      object clPaidKindName: TcxGridDBColumn
+      object PaidKindName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
         DataBinding.FieldName = 'PaidKindName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object clJuridicalCode: TcxGridDBColumn
+      object JuridicalCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
         DataBinding.FieldName = 'JuridicalCode'
         Visible = False
@@ -80,21 +80,21 @@ object SourceFuel_ObjectForm: TSourceFuel_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 40
       end
-      object clInvNumber: TcxGridDBColumn
+      object InvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1075'.'
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object clJuridicalName: TcxGridDBColumn
+      object JuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object clChangePercent: TcxGridDBColumn
+      object ChangePercent: TcxGridDBColumn
         Caption = '(-)% '#1057#1082'. (+)% '#1053#1072#1094'.'
         DataBinding.FieldName = 'ChangePercent'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -105,7 +105,7 @@ object SourceFuel_ObjectForm: TSourceFuel_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object clChangePrice: TcxGridDBColumn
+      object ChangePrice: TcxGridDBColumn
         Caption = #1057#1082#1080#1076#1082#1072' '#1074' '#1094#1077#1085#1077', '#1075#1088#1085' '#1079#1072' 1'#1083'.'
         DataBinding.FieldName = 'ChangePrice'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -115,7 +115,7 @@ object SourceFuel_ObjectForm: TSourceFuel_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object clGoodsCode: TcxGridDBColumn
+      object GoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1090#1086#1074'.'
         DataBinding.FieldName = 'GoodsCode'
         Visible = False
@@ -123,21 +123,21 @@ object SourceFuel_ObjectForm: TSourceFuel_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 40
       end
-      object clGoodsName: TcxGridDBColumn
+      object GoodsName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088
         DataBinding.FieldName = 'GoodsName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object clFuelName: TcxGridDBColumn
+      object FuelName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
         DataBinding.FieldName = 'FuelName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object colPersonalDriverName: TcxGridDBColumn
+      object PersonalDriverName: TcxGridDBColumn
         Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1074#1086#1076#1080#1090#1077#1083#1100')'
         DataBinding.FieldName = 'PersonalDriverName'
         HeaderAlignmentHorz = taCenter
@@ -145,21 +145,21 @@ object SourceFuel_ObjectForm: TSourceFuel_ObjectForm
         Options.Editing = False
         Width = 80
       end
-      object colPersonalDriverName_inf: TcxGridDBColumn
+      object PersonalDriverName_inf: TcxGridDBColumn
         DataBinding.FieldName = 'PersonalDriverName_inf'
         Visible = False
         Options.Editing = False
         VisibleForCustomization = False
         Width = 80
       end
-      object clItemName: TcxGridDBColumn
+      object ItemName: TcxGridDBColumn
         Caption = #1069#1083#1077#1084#1077#1085#1090
         DataBinding.FieldName = 'ItemName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
@@ -505,6 +505,7 @@ object SourceFuel_ObjectForm: TSourceFuel_ObjectForm
       end
       item
         Name = 'inToId'
+        Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

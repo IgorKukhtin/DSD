@@ -75,7 +75,7 @@ type
     cxLabel5: TcxLabel;
     edBranch: TcxButtonEdit;
     BranchGuides: TdsdGuides;
-    colBranchName: TcxGridDBColumn;
+    BranchName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
   private
   public

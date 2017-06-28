@@ -26,8 +26,8 @@ type
   TProvinceForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -52,10 +52,10 @@ type
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
-    clErased: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    colRegionName: TcxGridDBColumn;
+    RegionName: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
   private

@@ -13,30 +13,40 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus;
+  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TReport_CheckTaxForm = class(TAncestorReportForm)
-    clInvNumber_Sale: TcxGridDBColumn;
-    clInvNumber_Tax: TcxGridDBColumn;
-    clGoodsCode: TcxGridDBColumn;
-    clGoodsName: TcxGridDBColumn;
-    clAmount_Sale: TcxGridDBColumn;
-    clAmount_Tax: TcxGridDBColumn;
-    clFromCode: TcxGridDBColumn;
-    clGoodsKindName: TcxGridDBColumn;
-    clFromName: TcxGridDBColumn;
-    clToCode: TcxGridDBColumn;
-    clToName: TcxGridDBColumn;
-    clPrice: TcxGridDBColumn;
-    clDifference: TcxGridDBColumn;
-    clDocumentTaxKindName: TcxGridDBColumn;
+    InvNumber_Sale: TcxGridDBColumn;
+    InvNumber_Tax: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    Amount_Sale: TcxGridDBColumn;
+    Amount_Tax: TcxGridDBColumn;
+    FromCode: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
+    ToCode: TcxGridDBColumn;
+    ToName: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    Difference: TcxGridDBColumn;
+    DocumentTaxKindName: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edDocumentTaxKind: TcxButtonEdit;
     DocumentTaxKindGuides: TdsdGuides;
-    clSumm_Sale: TcxGridDBColumn;
-    clSumm_Tax: TcxGridDBColumn;
-    clSumm_Diff: TcxGridDBColumn;
+    Summ_Sale: TcxGridDBColumn;
+    Summ_Tax: TcxGridDBColumn;
+    Summ_Diff: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
   private
