@@ -13,7 +13,18 @@ uses
   cxTextEdit, dsdDB, dsdAction, System.Classes, Vcl.ActnList, cxPropertiesStore,
   dsdAddOn, Vcl.StdCtrls, cxButtons, cxInplaceContainer, cxVGrid, cxDBVGrid,
   Document, dxBarExtItems, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCheckBox, cxImageComboBox;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCheckBox, cxImageComboBox,
+  dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
+  dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue;
 
 type
   TContractEditForm = class(TAncestorEditDialogForm)
@@ -62,9 +73,9 @@ type
     Panel: TPanel;
     cxGridContractCondition: TcxGrid;
     cxGridDBTableViewContractCondition: TcxGridDBTableView;
-    cContractConditionKindName: TcxGridDBColumn;
-    clValue: TcxGridDBColumn;
-    colisErased: TcxGridDBColumn;
+    ContractConditionKindName: TcxGridDBColumn;
+    Value: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     cxGridContractConditionLevel: TcxGridLevel;
     dxBarDockControl1: TdxBarDockControl;
     BarManager: TdxBarManager;
@@ -111,15 +122,15 @@ type
     actGetStateKindClose: TdsdExecStoredProc;
     spGetStateKind_Partner: TdsdStoredProc;
     actGetStateKindPartner: TdsdExecStoredProc;
-    clBonusKindName: TcxGridDBColumn;
-    colComment: TcxGridDBColumn;
+    BonusKindName: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
     BonusKindChoiceForm: TOpenChoiceForm;
     cxLabel16: TcxLabel;
     edBankId: TcxButtonEdit;
     BankGuides: TdsdGuides;
     edBankAccountExternal: TcxTextEdit;
     cxLabel17: TcxLabel;
-    clccInfoMoneyName: TcxGridDBColumn;
+    InfoMoneyName: TcxGridDBColumn;
     InfoMoneyChoiceForm: TOpenChoiceForm;
     cbisDefault: TcxCheckBox;
     ceisStandart: TcxCheckBox;
@@ -163,7 +174,7 @@ type
     cxLabel31: TcxLabel;
     edPersonalSigning: TcxButtonEdit;
     PersonalSigningGuides: TdsdGuides;
-    colContractSendName: TcxGridDBColumn;
+    ContractSendName: TcxGridDBColumn;
     actContractSendChoiceForm: TOpenChoiceForm;
     cxLabel32: TcxLabel;
     ceCurrency: TcxButtonEdit;

@@ -12,7 +12,17 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, Datasnap.DBClient, dxBarExtItems, cxCalendar, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.ComCtrls,
-  dxCore, cxDateUtils, cxDropDownEdit, cxImageComboBox;
+  dxCore, cxDateUtils, cxDropDownEdit, cxImageComboBox, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TJuridicalEditForm = class(TAncestorDialogForm)
@@ -48,7 +58,7 @@ type
     JuridicalDetailsGrid: TcxGrid;
     JuridicalDetailsDS: TDataSource;
     JuridicalDetailsCDS: TClientDataSet;
-    colJDData: TcxGridDBColumn;
+    StartDate: TcxGridDBColumn;
     PartnerDS: TDataSource;
     PartnerCDS: TClientDataSet;
     ContractDS: TDataSource;
@@ -71,9 +81,9 @@ type
     bbPartnerRefresh: TdxBarButton;
     bbContractRefresh: TdxBarButton;
     ContractBar: TdxBar;
-    colPartnerCode: TcxGridDBColumn;
-    colPartnerAddress: TcxGridDBColumn;
-    colPartnerisErased: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Address: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     spJuridicalDetailsIU: TdsdStoredProc;
     edINN: TcxDBTextEdit;
     edAccounterName: TcxDBTextEdit;
@@ -98,10 +108,10 @@ type
     bbContractUpdate: TdxBarButton;
     actMultiContractInsert: TMultiAction;
     actMultiPartnerInsert: TMultiAction;
-    clEndDate: TcxGridDBColumn;
-    clPaidKindName: TcxGridDBColumn;
-    clInfoMoneyName: TcxGridDBColumn;
-    clInfoMoneyCode: TcxGridDBColumn;
+    EndDate: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
+    InfoMoneyName: TcxGridDBColumn;
+    InfoMoneyCode: TcxGridDBColumn;
     cxLabel14: TcxLabel;
     cePriceList: TcxButtonEdit;
     dsdPriceListGuides: TdsdGuides;
@@ -114,12 +124,12 @@ type
     edStartPromo: TcxDateEdit;
     spClearDefaluts: TdsdStoredProc;
     clCode: TcxGridDBColumn;
-    clInvNumberArchive: TcxGridDBColumn;
-    clPersonalName: TcxGridDBColumn;
-    clAreaName: TcxGridDBColumn;
-    clContractArticleName: TcxGridDBColumn;
-    clContractStateKindCode: TcxGridDBColumn;
-    clComment: TcxGridDBColumn;
+    InvNumberArchive: TcxGridDBColumn;
+    PersonalName: TcxGridDBColumn;
+    AreaName: TcxGridDBColumn;
+    ContractArticleName: TcxGridDBColumn;
+    ContractStateKindCode: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
     cxLabel18: TcxLabel;
     edPhone: TcxDBTextEdit;
     cxLabel19: TcxLabel;

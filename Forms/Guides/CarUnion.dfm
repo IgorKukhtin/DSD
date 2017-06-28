@@ -37,7 +37,7 @@ object CarUnionForm: TCarUnionForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
+      OptionsBehavior.IncSearchItem = Name
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -48,62 +48,62 @@ object CarUnionForm: TCarUnionForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clDescName: TcxGridDBColumn
+      object DescName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
         DataBinding.FieldName = 'DescName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 88
       end
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
         Width = 46
       end
-      object clCarModel: TcxGridDBColumn
+      object CarModelName: TcxGridDBColumn
         Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
         DataBinding.FieldName = 'CarModelName'
         HeaderAlignmentVert = vaCenter
         Width = 105
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1043#1086#1089'.'#1085#1086#1084#1077#1088
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object clFuelMasterName: TcxGridDBColumn
+      object FuelMasterName: TcxGridDBColumn
         Caption = #1054#1089#1085#1086#1074#1085#1086#1081' '#1074#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
         DataBinding.FieldName = 'FuelMasterName'
         HeaderAlignmentVert = vaCenter
         Width = 88
       end
-      object clFuelChildName: TcxGridDBColumn
+      object FuelChildName: TcxGridDBColumn
         Caption = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081' '#1074#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
         DataBinding.FieldName = 'FuelChildName'
         HeaderAlignmentVert = vaCenter
         Width = 104
       end
-      object clPersonalDriverName: TcxGridDBColumn
+      object PersonalDriverName: TcxGridDBColumn
         Caption = #1042#1086#1076#1080#1090#1077#1083#1100
         DataBinding.FieldName = 'PersonalDriverName'
         HeaderAlignmentVert = vaCenter
         Width = 77
       end
-      object clRegistrationCertificate: TcxGridDBColumn
+      object RegistrationCertificate: TcxGridDBColumn
         Caption = #1058#1077#1093#1087#1072#1089#1087#1086#1088#1090
         DataBinding.FieldName = 'RegistrationCertificate'
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object clUnit: TcxGridDBColumn
+      object UnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'UnitName'
         HeaderAlignmentVert = vaCenter
         Width = 85
       end
-      object clJuridicalName: TcxGridDBColumn
+      object JuridicalName: TcxGridDBColumn
         Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1089#1090#1086#1088#1086#1085#1085#1077#1077')'
         DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentHorz = taCenter
@@ -118,7 +118,7 @@ object CarUnionForm: TCarUnionForm
         Options.Editing = False
         Width = 104
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
@@ -315,10 +315,12 @@ object CarUnionForm: TCarUnionForm
       FormName = 'TCarEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = DataSource
@@ -334,6 +336,7 @@ object CarUnionForm: TCarUnionForm
       FormName = 'TCarEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -341,6 +344,7 @@ object CarUnionForm: TCarUnionForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       ActionType = acUpdate
@@ -389,6 +393,7 @@ object CarUnionForm: TCarUnionForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -396,18 +401,21 @@ object CarUnionForm: TCarUnionForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PersonalDriverId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'PersonalDriverId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PersonalDriverCode'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'PersonalDriverCode'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PersonalDriverName'
@@ -415,12 +423,14 @@ object CarUnionForm: TCarUnionForm
           Component = ClientDataSet
           ComponentItem = 'PersonalDriverName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CarModelId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'CarModelId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CarModelName'
@@ -428,6 +438,7 @@ object CarUnionForm: TCarUnionForm
           Component = ClientDataSet
           ComponentItem = 'CarModelName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'NameAll'
@@ -435,12 +446,14 @@ object CarUnionForm: TCarUnionForm
           Component = ClientDataSet
           ComponentItem = 'NameAll'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -448,6 +461,7 @@ object CarUnionForm: TCarUnionForm
           Component = ClientDataSet
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -472,6 +486,7 @@ object CarUnionForm: TCarUnionForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -479,6 +494,7 @@ object CarUnionForm: TCarUnionForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -487,6 +503,7 @@ object CarUnionForm: TCarUnionForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -524,6 +541,7 @@ object CarUnionForm: TCarUnionForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 48
@@ -572,6 +590,7 @@ object CarUnionForm: TCarUnionForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 288

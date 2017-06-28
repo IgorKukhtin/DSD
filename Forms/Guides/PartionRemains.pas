@@ -41,9 +41,9 @@ type
     bbChoiceGuides: TdxBarButton;
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clPartionGoodsName: TcxGridDBColumn;
-    clUnitName: TcxGridDBColumn;
-    clErased: TcxGridDBColumn;
+    PartionGoodsName: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     dsdDBViewAddOn: TdsdDBViewAddOn;
   private

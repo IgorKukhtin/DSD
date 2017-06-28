@@ -28,8 +28,8 @@ type
   TGoodsTree_ObjectForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -55,7 +55,7 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clGoodsGroup: TcxGridDBColumn;
+    GoodsGroupName: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
     cxDBTreeList: TcxDBTreeList;
     ceParentName: TcxDBTreeListColumn;
@@ -64,7 +64,7 @@ type
     TreeDataSet: TClientDataSet;
     dsdDBTreeAddOn: TdsdDBTreeAddOn;
     cxSplitter: TcxSplitter;
-    clDescName: TcxGridDBColumn;
+    DescName: TcxGridDBColumn;
   private
     { Private declarations }
   public

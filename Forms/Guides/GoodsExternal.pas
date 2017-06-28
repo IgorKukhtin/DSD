@@ -25,12 +25,12 @@ uses
 
 type
   TGoodsExternalForm = class(TAncestorEnumForm)
-    colisErased: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
     Code: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    colGoodskindName: TcxGridDBColumn;
+    GoodskindName: TcxGridDBColumn;
     FormParams: TdsdFormParams;
     spUpdate: TdsdStoredProc;
     actUpdate: TdsdUpdateDataSet;

@@ -151,7 +151,6 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_CardSecond
                                  ON ObjectString_CardSecond.ObjectId  = ObjectLink_Personal_Member.ChildObjectId
                                 AND ObjectString_CardSecond.DescId    = zc_ObjectString_Member_CardSecond()
-                                AND ObjectString_CardSecond.ValueData <> ''
     ;
 
 

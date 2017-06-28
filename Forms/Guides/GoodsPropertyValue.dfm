@@ -41,7 +41,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clGoodsPropertyName: TcxGridDBColumn
+      object GoodsPropertyName: TcxGridDBColumn
         Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088
         DataBinding.FieldName = 'GoodsPropertyName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -56,7 +56,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         HeaderAlignmentVert = vaCenter
         Width = 67
       end
-      object clGoodsGroupNameFull: TcxGridDBColumn
+      object GoodsGroupNameFull: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
         DataBinding.FieldName = 'GoodsGroupNameFull'
         HeaderAlignmentHorz = taCenter
@@ -64,7 +64,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Options.Editing = False
         Width = 123
       end
-      object clGoodsGroupName: TcxGridDBColumn
+      object GoodsGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'GoodsGroupName'
         Visible = False
@@ -73,7 +73,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Options.Editing = False
         Width = 172
       end
-      object colCode: TcxGridDBColumn
+      object GoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'GoodsCode'
         HeaderAlignmentHorz = taCenter
@@ -81,7 +81,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Options.Editing = False
         Width = 30
       end
-      object clGoodsName: TcxGridDBColumn
+      object GoodsName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088
         DataBinding.FieldName = 'GoodsName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -96,7 +96,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         HeaderAlignmentVert = vaCenter
         Width = 67
       end
-      object clGoodsKindName: TcxGridDBColumn
+      object GoodsKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'GoodsKindName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -111,7 +111,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         HeaderAlignmentVert = vaCenter
         Width = 47
       end
-      object colMeasureName: TcxGridDBColumn
+      object MeasureName: TcxGridDBColumn
         Caption = #1045#1076'. '#1080#1079#1084'.'
         DataBinding.FieldName = 'MeasureName'
         HeaderAlignmentHorz = taCenter
@@ -119,14 +119,14 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Options.Editing = False
         Width = 30
       end
-      object ceName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 65
       end
-      object clisOrder: TcxGridDBColumn
+      object isOrder: TcxGridDBColumn
         Caption = #1048#1089#1087#1086#1083#1100#1079#1091#1077#1090#1089#1103' '#1074' '#1079#1072#1103#1074#1082#1072#1093
         DataBinding.FieldName = 'isOrder'
         HeaderAlignmentHorz = taCenter
@@ -144,7 +144,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         HeaderAlignmentVert = vaCenter
         Width = 52
       end
-      object ceAmount: TcxGridDBColumn
+      object Amount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090'. '#1087#1088#1080' '#1089#1082#1072#1085'.'
         DataBinding.FieldName = 'Amount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -154,7 +154,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         HeaderAlignmentVert = vaCenter
         Width = 52
       end
-      object ceAmountDoc: TcxGridDBColumn
+      object AmountDoc: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090'. '#1074#1083#1086#1078'.'
         DataBinding.FieldName = 'AmountDoc'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -174,28 +174,28 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Options.Editing = False
         Width = 49
       end
-      object ceBarCode: TcxGridDBColumn
+      object BarCode: TcxGridDBColumn
         Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076
         DataBinding.FieldName = 'BarCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 50
       end
-      object clArticle: TcxGridDBColumn
+      object Article: TcxGridDBColumn
         Caption = #1040#1088#1090#1080#1082#1091#1083
         DataBinding.FieldName = 'Article'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 49
       end
-      object clBarCodeGLN: TcxGridDBColumn
+      object BarCodeGLN: TcxGridDBColumn
         Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076' GLN'
         DataBinding.FieldName = 'BarCodeGLN'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 49
       end
-      object clArticleGLN: TcxGridDBColumn
+      object ArticleGLN: TcxGridDBColumn
         Caption = #1040#1088#1090#1080#1082#1091#1083' GLN'
         DataBinding.FieldName = 'ArticleGLN'
         HeaderAlignmentHorz = taCenter
@@ -209,7 +209,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         HeaderAlignmentVert = vaCenter
         Width = 49
       end
-      object ceisErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'

@@ -27,7 +27,6 @@ object OrderTypeForm: TOrderTypeForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitHeight = 699
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -38,7 +37,7 @@ object OrderTypeForm: TOrderTypeForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clValue1
+      OptionsBehavior.IncSearchItem = Koeff1
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Appending = True
@@ -48,7 +47,7 @@ object OrderTypeForm: TOrderTypeForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clUnitCode: TcxGridDBColumn
+      object UnitCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
         DataBinding.FieldName = 'UnitCode'
         Visible = False
@@ -57,7 +56,7 @@ object OrderTypeForm: TOrderTypeForm
         Options.Editing = False
         Width = 48
       end
-      object clUnitName: TcxGridDBColumn
+      object UnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')'
         DataBinding.FieldName = 'UnitName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -72,7 +71,7 @@ object OrderTypeForm: TOrderTypeForm
         HeaderAlignmentVert = vaCenter
         Width = 120
       end
-      object clGoodsGroupAnalystName: TcxGridDBColumn
+      object GoodsGroupAnalystName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#1072#1085#1072#1083#1080#1090#1080#1082#1080
         DataBinding.FieldName = 'GoodsGroupAnalystName'
         HeaderAlignmentHorz = taCenter
@@ -80,7 +79,7 @@ object OrderTypeForm: TOrderTypeForm
         Options.Editing = False
         Width = 100
       end
-      object clGoodsTagName: TcxGridDBColumn
+      object GoodsTagName: TcxGridDBColumn
         Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'GoodsTagName'
         HeaderAlignmentHorz = taCenter
@@ -88,7 +87,7 @@ object OrderTypeForm: TOrderTypeForm
         Options.Editing = False
         Width = 70
       end
-      object clTradeMarkName: TcxGridDBColumn
+      object TradeMarkName: TcxGridDBColumn
         Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
         DataBinding.FieldName = 'TradeMarkName'
         HeaderAlignmentHorz = taCenter
@@ -96,7 +95,7 @@ object OrderTypeForm: TOrderTypeForm
         Options.Editing = False
         Width = 70
       end
-      object clGoodsGroupName: TcxGridDBColumn
+      object GoodsGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'GoodsGroupName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -112,7 +111,7 @@ object OrderTypeForm: TOrderTypeForm
         Options.Editing = False
         Width = 80
       end
-      object clGoodsGroupNameFull: TcxGridDBColumn
+      object GoodsGroupNameFull: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
         DataBinding.FieldName = 'GoodsGroupNameFull'
         Visible = False
@@ -121,7 +120,7 @@ object OrderTypeForm: TOrderTypeForm
         Options.Editing = False
         Width = 150
       end
-      object clGoodsCode: TcxGridDBColumn
+      object GoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1090#1086#1074'.'
         DataBinding.FieldName = 'GoodsCode'
         HeaderAlignmentHorz = taCenter
@@ -129,7 +128,7 @@ object OrderTypeForm: TOrderTypeForm
         Options.Editing = False
         Width = 56
       end
-      object clGoodsName: TcxGridDBColumn
+      object GoodsName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088
         DataBinding.FieldName = 'GoodsName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -145,7 +144,7 @@ object OrderTypeForm: TOrderTypeForm
         HeaderAlignmentVert = vaCenter
         Width = 150
       end
-      object clMeasureName: TcxGridDBColumn
+      object MeasureName: TcxGridDBColumn
         Caption = #1045#1076'. '#1080#1079#1084'.'
         DataBinding.FieldName = 'MeasureName'
         HeaderAlignmentHorz = taCenter
@@ -153,7 +152,7 @@ object OrderTypeForm: TOrderTypeForm
         Options.Editing = False
         Width = 45
       end
-      object clTermProduction: TcxGridDBColumn
+      object TermProduction: TcxGridDBColumn
         Caption = #1057#1088#1086#1082' '#1087#1088#1086#1080#1079#1074'. '#1074' '#1076#1085#1103#1093
         DataBinding.FieldName = 'TermProduction'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -163,7 +162,7 @@ object OrderTypeForm: TOrderTypeForm
         HeaderAlignmentVert = vaCenter
         Width = 90
       end
-      object clNormInDays: TcxGridDBColumn
+      object NormInDays: TcxGridDBColumn
         Caption = #1053#1086#1088#1084#1072' '#1079#1072#1087#1072#1089' '#1074' '#1076#1085#1103#1093
         DataBinding.FieldName = 'NormInDays'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -173,7 +172,7 @@ object OrderTypeForm: TOrderTypeForm
         HeaderAlignmentVert = vaCenter
         Width = 90
       end
-      object clStartProductionInDays: TcxGridDBColumn
+      object StartProductionInDays: TcxGridDBColumn
         Caption = #1063#1077#1088#1077#1079' '#1089#1082#1086#1083#1100#1082#1086' '#1076#1085#1077#1081' '#1085#1072#1095#1072#1083#1086' '#1087#1088#1086#1080#1079#1074'.'
         DataBinding.FieldName = 'StartProductionInDays'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -183,7 +182,7 @@ object OrderTypeForm: TOrderTypeForm
         HeaderAlignmentVert = vaCenter
         Width = 140
       end
-      object clValue1: TcxGridDBColumn
+      object Koeff1: TcxGridDBColumn
         Caption = #1071#1085#1074#1072#1088#1100
         DataBinding.FieldName = 'Koeff1'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -193,7 +192,7 @@ object OrderTypeForm: TOrderTypeForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object clValue2: TcxGridDBColumn
+      object Koeff2: TcxGridDBColumn
         Caption = #1060#1077#1074#1088#1072#1083#1100
         DataBinding.FieldName = 'Koeff2'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -203,7 +202,7 @@ object OrderTypeForm: TOrderTypeForm
         HeaderAlignmentVert = vaCenter
         Width = 65
       end
-      object clValue3: TcxGridDBColumn
+      object Koeff3: TcxGridDBColumn
         Caption = #1052#1072#1088#1090
         DataBinding.FieldName = 'Koeff3'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -213,7 +212,7 @@ object OrderTypeForm: TOrderTypeForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object clValue4: TcxGridDBColumn
+      object Koeff4: TcxGridDBColumn
         Caption = #1040#1087#1088#1077#1083#1100
         DataBinding.FieldName = 'Koeff4'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -223,7 +222,7 @@ object OrderTypeForm: TOrderTypeForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object clValue5: TcxGridDBColumn
+      object Koeff5: TcxGridDBColumn
         Caption = #1052#1072#1081' '
         DataBinding.FieldName = 'Koeff5'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -233,7 +232,7 @@ object OrderTypeForm: TOrderTypeForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object clValue6: TcxGridDBColumn
+      object Koeff6: TcxGridDBColumn
         Caption = #1048#1102#1085#1100
         DataBinding.FieldName = 'Koeff6'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -243,7 +242,7 @@ object OrderTypeForm: TOrderTypeForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object clValue7: TcxGridDBColumn
+      object Koeff7: TcxGridDBColumn
         Caption = #1048#1102#1083#1100
         DataBinding.FieldName = 'Koeff7'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -253,7 +252,7 @@ object OrderTypeForm: TOrderTypeForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object clValue8: TcxGridDBColumn
+      object Koeff8: TcxGridDBColumn
         Caption = #1040#1074#1075#1091#1089#1090
         DataBinding.FieldName = 'Koeff8'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -263,7 +262,7 @@ object OrderTypeForm: TOrderTypeForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object clValue9: TcxGridDBColumn
+      object Koeff9: TcxGridDBColumn
         Caption = #1057#1077#1085#1090#1103#1073#1088#1100
         DataBinding.FieldName = 'Koeff9'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -273,7 +272,7 @@ object OrderTypeForm: TOrderTypeForm
         HeaderAlignmentVert = vaCenter
         Width = 65
       end
-      object clValue10: TcxGridDBColumn
+      object Koeff10: TcxGridDBColumn
         Caption = #1054#1082#1090#1103#1073#1088#1100
         DataBinding.FieldName = 'Koeff10'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -283,7 +282,7 @@ object OrderTypeForm: TOrderTypeForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object clValue11: TcxGridDBColumn
+      object Koeff11: TcxGridDBColumn
         Caption = #1053#1086#1103#1073#1088#1100
         DataBinding.FieldName = 'Koeff11'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -293,7 +292,7 @@ object OrderTypeForm: TOrderTypeForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object clValue12: TcxGridDBColumn
+      object Koeff12: TcxGridDBColumn
         Caption = #1044#1077#1082#1072#1073#1088#1100
         DataBinding.FieldName = 'Koeff12'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -303,7 +302,7 @@ object OrderTypeForm: TOrderTypeForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object clInfoMoneyCode: TcxGridDBColumn
+      object InfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055
         DataBinding.FieldName = 'InfoMoneyCode'
         Visible = False
@@ -312,7 +311,7 @@ object OrderTypeForm: TOrderTypeForm
         Options.Editing = False
         Width = 70
       end
-      object clInfoMoneyGroupName: TcxGridDBColumn
+      object InfoMoneyGroupName: TcxGridDBColumn
         Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyGroupName'
         Visible = False
@@ -321,7 +320,7 @@ object OrderTypeForm: TOrderTypeForm
         Options.Editing = False
         Width = 80
       end
-      object clInfoMoneyDestinationName: TcxGridDBColumn
+      object InfoMoneyDestinationName: TcxGridDBColumn
         Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'InfoMoneyDestinationName'
         Visible = False
@@ -330,7 +329,7 @@ object OrderTypeForm: TOrderTypeForm
         Options.Editing = False
         Width = 70
       end
-      object clInfoMoneyName: TcxGridDBColumn
+      object InfoMoneyName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyName'
         Visible = False
@@ -339,7 +338,7 @@ object OrderTypeForm: TOrderTypeForm
         Options.Editing = False
         Width = 100
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
@@ -574,12 +573,14 @@ object OrderTypeForm: TOrderTypeForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -603,12 +604,14 @@ object OrderTypeForm: TOrderTypeForm
       FormName = 'TGoods_ObjectForm'
       FormNameParam.Value = 'TGoods_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -616,6 +619,7 @@ object OrderTypeForm: TOrderTypeForm
           Component = ClientDataSet
           ComponentItem = 'GoodsName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupName'
@@ -623,6 +627,7 @@ object OrderTypeForm: TOrderTypeForm
           Component = ClientDataSet
           ComponentItem = 'GoodsGroupName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -653,12 +658,14 @@ object OrderTypeForm: TOrderTypeForm
       FormName = 'TUnit_ObjectForm'
       FormNameParam.Value = 'TUnit_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -666,12 +673,14 @@ object OrderTypeForm: TOrderTypeForm
           Component = ClientDataSet
           ComponentItem = 'UnitName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'UnitCode'
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -684,6 +693,7 @@ object OrderTypeForm: TOrderTypeForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -691,6 +701,7 @@ object OrderTypeForm: TOrderTypeForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -699,6 +710,7 @@ object OrderTypeForm: TOrderTypeForm
           ComponentItem = 'GoodsName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -717,6 +729,7 @@ object OrderTypeForm: TOrderTypeForm
         Component = dsdUnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -724,6 +737,7 @@ object OrderTypeForm: TOrderTypeForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 48
@@ -772,17 +786,20 @@ object OrderTypeForm: TOrderTypeForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
         Value = ''
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inTermProduction'
@@ -791,6 +808,7 @@ object OrderTypeForm: TOrderTypeForm
         ComponentItem = 'TermProduction'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inNormInDays'
@@ -799,6 +817,7 @@ object OrderTypeForm: TOrderTypeForm
         ComponentItem = 'NormInDays'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStartProductionInDays'
@@ -807,6 +826,7 @@ object OrderTypeForm: TOrderTypeForm
         ComponentItem = 'StartProductionInDays'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inKoeff1'
@@ -815,6 +835,7 @@ object OrderTypeForm: TOrderTypeForm
         ComponentItem = 'Koeff1'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inKoeff2'
@@ -823,6 +844,7 @@ object OrderTypeForm: TOrderTypeForm
         ComponentItem = 'Koeff2'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inKoeff3'
@@ -831,6 +853,7 @@ object OrderTypeForm: TOrderTypeForm
         ComponentItem = 'Koeff3'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inKoeff4'
@@ -839,6 +862,7 @@ object OrderTypeForm: TOrderTypeForm
         ComponentItem = 'Koeff4'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inKoeff5'
@@ -847,6 +871,7 @@ object OrderTypeForm: TOrderTypeForm
         ComponentItem = 'Koeff5'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inKoeff6'
@@ -855,6 +880,7 @@ object OrderTypeForm: TOrderTypeForm
         ComponentItem = 'Koeff6'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inKoeff7'
@@ -863,6 +889,7 @@ object OrderTypeForm: TOrderTypeForm
         ComponentItem = 'Koeff7'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inKoeff8'
@@ -871,6 +898,7 @@ object OrderTypeForm: TOrderTypeForm
         ComponentItem = 'Koeff8'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inKoeff9'
@@ -879,6 +907,7 @@ object OrderTypeForm: TOrderTypeForm
         ComponentItem = 'Koeff9'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inKoeff10'
@@ -887,6 +916,7 @@ object OrderTypeForm: TOrderTypeForm
         ComponentItem = 'Koeff10'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inKoeff11'
@@ -895,6 +925,7 @@ object OrderTypeForm: TOrderTypeForm
         ComponentItem = 'Koeff11'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inKoeff12'
@@ -903,6 +934,7 @@ object OrderTypeForm: TOrderTypeForm
         ComponentItem = 'Koeff12'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -910,6 +942,7 @@ object OrderTypeForm: TOrderTypeForm
         Component = ClientDataSet
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -917,6 +950,7 @@ object OrderTypeForm: TOrderTypeForm
         Component = ClientDataSet
         ComponentItem = 'UnitId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 128
@@ -927,6 +961,7 @@ object OrderTypeForm: TOrderTypeForm
     LookupControl = ceUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -935,6 +970,7 @@ object OrderTypeForm: TOrderTypeForm
         Value = ''
         Component = dsdUnitGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -942,12 +978,14 @@ object OrderTypeForm: TOrderTypeForm
         Component = dsdUnitGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 600
     Top = 155
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item

@@ -44,13 +44,13 @@ object BankAccountContractForm: TBankAccountContractForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clBankAccountName: TcxGridDBColumn
+      object BankAccountName: TcxGridDBColumn
         Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
         DataBinding.FieldName = 'BankAccountName'
         HeaderAlignmentVert = vaCenter
         Width = 211
       end
-      object clInfoMoneyName: TcxGridDBColumn
+      object InfoMoneyName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyName'
         HeaderAlignmentVert = vaCenter
@@ -63,7 +63,7 @@ object BankAccountContractForm: TBankAccountContractForm
         Options.Editing = False
         Width = 129
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         Visible = False
@@ -253,10 +253,12 @@ object BankAccountContractForm: TBankAccountContractForm
       FormName = 'TBankAccountContractEditForm'
       FormNameParam.Value = 'TBankAccountContractEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = DataSource
@@ -272,6 +274,7 @@ object BankAccountContractForm: TBankAccountContractForm
       FormName = 'TBankAccountContractEditForm'
       FormNameParam.Value = 'TBankAccountContractEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -279,6 +282,7 @@ object BankAccountContractForm: TBankAccountContractForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       ActionType = acUpdate
@@ -335,6 +339,7 @@ object BankAccountContractForm: TBankAccountContractForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -342,6 +347,7 @@ object BankAccountContractForm: TBankAccountContractForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -350,6 +356,7 @@ object BankAccountContractForm: TBankAccountContractForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -364,6 +371,7 @@ object BankAccountContractForm: TBankAccountContractForm
           ComponentItem = 'Id'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -372,12 +380,14 @@ object BankAccountContractForm: TBankAccountContractForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'CurrencyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyName'
@@ -385,6 +395,7 @@ object BankAccountContractForm: TBankAccountContractForm
           Component = MasterCDS
           ComponentItem = 'CurrencyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -446,6 +457,7 @@ object BankAccountContractForm: TBankAccountContractForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 136

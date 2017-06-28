@@ -3,7 +3,7 @@ inherited EmailSettingsForm: TEmailSettingsForm
   ClientHeight = 316
   ClientWidth = 753
   ExplicitWidth = 769
-  ExplicitHeight = 351
+  ExplicitHeight = 355
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -32,7 +32,7 @@ inherited EmailSettingsForm: TEmailSettingsForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colCode: TcxGridDBColumn
+          object Code: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
             Visible = False
@@ -41,7 +41,7 @@ inherited EmailSettingsForm: TEmailSettingsForm
             Options.Editing = False
             Width = 67
           end
-          object colEmailKindName: TcxGridDBColumn
+          object EmailKindName: TcxGridDBColumn
             Caption = #1042#1080#1076
             DataBinding.FieldName = 'EmailKindName'
             HeaderAlignmentHorz = taCenter
@@ -50,7 +50,7 @@ inherited EmailSettingsForm: TEmailSettingsForm
             Options.Editing = False
             Width = 140
           end
-          object colEmailToolsName: TcxGridDBColumn
+          object EmailToolsName: TcxGridDBColumn
             Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1076#1083#1103' '#1087#1086#1095#1090#1099
             DataBinding.FieldName = 'EmailToolsName'
             HeaderAlignmentHorz = taCenter
@@ -59,7 +59,7 @@ inherited EmailSettingsForm: TEmailSettingsForm
             Options.Editing = False
             Width = 244
           end
-          object colValue: TcxGridDBColumn
+          object Value: TcxGridDBColumn
             Caption = #1047#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'Value'
             HeaderAlignmentHorz = taCenter
@@ -147,6 +147,7 @@ inherited EmailSettingsForm: TEmailSettingsForm
         Component = EmailKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Top = 80
   end
@@ -213,6 +214,7 @@ inherited EmailSettingsForm: TEmailSettingsForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
@@ -220,6 +222,7 @@ inherited EmailSettingsForm: TEmailSettingsForm
         Component = MasterCDS
         ComponentItem = 'Code'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inValue'
@@ -228,6 +231,7 @@ inherited EmailSettingsForm: TEmailSettingsForm
         ComponentItem = 'Value'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEmailKindId'
@@ -235,6 +239,7 @@ inherited EmailSettingsForm: TEmailSettingsForm
         Component = MasterCDS
         ComponentItem = 'EmailKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEmailToolsId'
@@ -242,6 +247,7 @@ inherited EmailSettingsForm: TEmailSettingsForm
         Component = MasterCDS
         ComponentItem = 'EmailToolsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 296
@@ -253,6 +259,7 @@ inherited EmailSettingsForm: TEmailSettingsForm
     Key = '0'
     FormNameParam.Value = 'TEmailKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TEmailKindForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -261,6 +268,7 @@ inherited EmailSettingsForm: TEmailSettingsForm
         Value = Null
         Component = EmailKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -268,12 +276,14 @@ inherited EmailSettingsForm: TEmailSettingsForm
         Component = EmailKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 464
     Top = 16
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item

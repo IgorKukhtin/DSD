@@ -27,7 +27,6 @@ object MemberPosition_ObjectForm: TMemberPosition_ObjectForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 626
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -38,7 +37,7 @@ object MemberPosition_ObjectForm: TMemberPosition_ObjectForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
+      OptionsBehavior.IncSearchItem = Name
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -49,14 +48,14 @@ object MemberPosition_ObjectForm: TMemberPosition_ObjectForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 54
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1060#1048#1054
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
@@ -64,7 +63,7 @@ object MemberPosition_ObjectForm: TMemberPosition_ObjectForm
         Options.Editing = False
         Width = 241
       end
-      object clPositionName: TcxGridDBColumn
+      object PositionName: TcxGridDBColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
         DataBinding.FieldName = 'PositionName'
         HeaderAlignmentHorz = taCenter
@@ -87,7 +86,7 @@ object MemberPosition_ObjectForm: TMemberPosition_ObjectForm
         Options.Editing = False
         Width = 190
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'

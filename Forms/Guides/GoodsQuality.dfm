@@ -37,7 +37,7 @@ object GoodsQualityForm: TGoodsQualityForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clValue1
+      OptionsBehavior.IncSearchItem = Value1
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Appending = True
@@ -47,7 +47,7 @@ object GoodsQualityForm: TGoodsQualityForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         Visible = False
@@ -56,7 +56,7 @@ object GoodsQualityForm: TGoodsQualityForm
         Options.Editing = False
         Width = 37
       end
-      object clQualityCode: TcxGridDBColumn
+      object QualityCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'QualityCode'
         HeaderAlignmentHorz = taCenter
@@ -64,7 +64,7 @@ object GoodsQualityForm: TGoodsQualityForm
         Options.Editing = False
         Width = 48
       end
-      object clQualityName: TcxGridDBColumn
+      object QualityName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1082#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1075#1086' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1103
         DataBinding.FieldName = 'QualityName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -79,7 +79,7 @@ object GoodsQualityForm: TGoodsQualityForm
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
-      object clGoodsGroupName: TcxGridDBColumn
+      object GoodsGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'GoodsGroupName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -95,7 +95,7 @@ object GoodsQualityForm: TGoodsQualityForm
         Options.Editing = False
         Width = 80
       end
-      object clGoodsCode: TcxGridDBColumn
+      object GoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1090#1086#1074'.'
         DataBinding.FieldName = 'GoodsCode'
         HeaderAlignmentHorz = taCenter
@@ -103,7 +103,7 @@ object GoodsQualityForm: TGoodsQualityForm
         Options.Editing = False
         Width = 50
       end
-      object clGoodsName: TcxGridDBColumn
+      object GoodsName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088
         DataBinding.FieldName = 'GoodsName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -119,56 +119,56 @@ object GoodsQualityForm: TGoodsQualityForm
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
-      object clValue1: TcxGridDBColumn
+      object Value1: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1086#1073#1086#1083#1086#1085#1082#1080', '#8470'4'
         DataBinding.FieldName = 'Value1'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object clValue2: TcxGridDBColumn
+      object Value2: TcxGridDBColumn
         Caption = #1058#1077#1088#1084#1110#1085' '#1079#1073#1077#1088#1110#1075#1072#1085#1085#1103', '#8470'6'
         DataBinding.FieldName = 'Value2'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object clValue3: TcxGridDBColumn
+      object Value3: TcxGridDBColumn
         Caption = #1058#1077#1088#1084#1110#1085' '#1079#1073#1077#1088#1110#1075'. '#1074' '#1075#1072#1079'.'#1089#1077#1088#1077#1076'.('#1092#1083#1086#1091#1087#1072#1082'), '#8470'7'
         DataBinding.FieldName = 'Value3'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
-      object clValue4: TcxGridDBColumn
+      object Value4: TcxGridDBColumn
         Caption = #1058#1077#1088#1084#1110#1085' '#1079#1073#1077#1088#1110#1075#1072#1085#1085#1103' '#1074' '#1075#1072#1079'.'#1089#1077#1088#1077#1076#1086#1074#1080#1097', '#8470'8'
         DataBinding.FieldName = 'Value4'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
-      object clValue5: TcxGridDBColumn
+      object Value5: TcxGridDBColumn
         Caption = #1042#1072#1082#1091#1091#1084#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1072' - '#1058#1077#1088#1084#1110#1085' '#1079#1073#1077#1088#1110#1075#1072#1085#1085#1103' '#1094#1110#1083#1080#1084' '#1074#1080#1088#1086#1073#1086#1084', '#8470'10'
         DataBinding.FieldName = 'Value5'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 120
       end
-      object clValue6: TcxGridDBColumn
+      object Value6: TcxGridDBColumn
         Caption = #1042#1072#1082#1091#1091#1084#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1072' - '#1058#1077#1088#1084#1110#1085' '#1079#1073#1077#1088#1110#1075#1072#1085#1085#1103' '#1087#1086#1088#1094#1110#1081#1085#1072' '#1085#1072#1088#1110#1079#1082#1072', '#8470'11'
         DataBinding.FieldName = 'Value6'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 120
       end
-      object clValue7: TcxGridDBColumn
+      object Value7: TcxGridDBColumn
         Caption = #1042#1072#1082#1091#1091#1084#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1072' - '#1058#1077#1088#1084#1110#1085' '#1079#1073#1077#1088#1110#1075#1072#1085#1085#1103' '#1089#1077#1088#1074#1077#1088#1091#1074#1072#1083#1100#1085#1072' '#1085#1072#1088#1110#1079#1082#1072', '#8470'12'
         DataBinding.FieldName = 'Value7'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 120
       end
-      object clValue8: TcxGridDBColumn
+      object Value8: TcxGridDBColumn
         Caption = 
           #1058#1077#1084#1087#1077#1088#1072#1090#1091#1088#1072' '#1079#1073#1077#1088#1110#1075#1072#1085#1085#1103' '#1074' '#1074#1072#1082#1091#1091#1084#1110' '#1090#1072' '#1084#1086#1076#1080#1092#1110#1082#1086#1074#1072#1085#1086#1084#1091' '#1075#1072#1079#1086#1074#1086#1084#1091' '#1089#1077#1088#1077 +
           #1076#1086#1074#1080#1097#1110', '#8470'14'
@@ -177,28 +177,28 @@ object GoodsQualityForm: TGoodsQualityForm
         HeaderAlignmentVert = vaCenter
         Width = 140
       end
-      object clValue9: TcxGridDBColumn
+      object Value9: TcxGridDBColumn
         Caption = #1058#1077#1084#1087#1077#1088#1072#1090#1091#1088#1072' '#1079#1073#1077#1088#1110#1075#1072#1085#1085#1103' '#1074' '#1075#1072#1079#1086#1074#1086#1084#1091' '#1089#1077#1088#1077#1076#1086#1074#1080#1097#1110', '#8470'15'
         DataBinding.FieldName = 'Value9'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 150
       end
-      object clValue10: TcxGridDBColumn
+      object Value10: TcxGridDBColumn
         Caption = #1059#1084#1086#1074#1080' '#1079#1073#1077#1088#1110#1075#1072#1085#1085#1103', '#8470'16'
         DataBinding.FieldName = 'Value10'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1043#1054#1057#1058', '#1044#1057#1058#1059','#1058#1059', '#8470'17'
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
@@ -265,8 +265,8 @@ object GoodsQualityForm: TGoodsQualityForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -414,6 +414,7 @@ object GoodsQualityForm: TGoodsQualityForm
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateObject
       StoredProcList = <
         item
@@ -432,12 +433,14 @@ object GoodsQualityForm: TGoodsQualityForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -456,16 +459,19 @@ object GoodsQualityForm: TGoodsQualityForm
     object GoodsChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'Goods_ObjectForm'
       FormName = 'TGoods_ObjectForm'
       FormNameParam.Value = 'TGoods_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -473,6 +479,7 @@ object GoodsQualityForm: TGoodsQualityForm
           Component = ClientDataSet
           ComponentItem = 'GoodsName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupName'
@@ -480,6 +487,7 @@ object GoodsQualityForm: TGoodsQualityForm
           Component = ClientDataSet
           ComponentItem = 'GoodsGroupName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -505,16 +513,19 @@ object GoodsQualityForm: TGoodsQualityForm
     object QualityChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'QualityForm'
       FormName = 'TQualityForm'
       FormNameParam.Value = 'TQualityForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'QualityId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -522,12 +533,14 @@ object GoodsQualityForm: TGoodsQualityForm
           Component = ClientDataSet
           ComponentItem = 'QualityName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'QualityCode'
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -540,6 +553,7 @@ object GoodsQualityForm: TGoodsQualityForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -547,6 +561,7 @@ object GoodsQualityForm: TGoodsQualityForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -555,6 +570,7 @@ object GoodsQualityForm: TGoodsQualityForm
           ComponentItem = 'QualityName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -572,6 +588,7 @@ object GoodsQualityForm: TGoodsQualityForm
         Value = Null
         Component = dsdQualityGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -579,6 +596,7 @@ object GoodsQualityForm: TGoodsQualityForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 48
@@ -627,6 +645,7 @@ object GoodsQualityForm: TGoodsQualityForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
@@ -634,6 +653,7 @@ object GoodsQualityForm: TGoodsQualityForm
         Component = ClientDataSet
         ComponentItem = 'code'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsQualityName'
@@ -642,6 +662,7 @@ object GoodsQualityForm: TGoodsQualityForm
         ComponentItem = 'Name'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inValue1'
@@ -650,6 +671,7 @@ object GoodsQualityForm: TGoodsQualityForm
         ComponentItem = 'Value1'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inValue2'
@@ -658,6 +680,7 @@ object GoodsQualityForm: TGoodsQualityForm
         ComponentItem = 'Value2'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inValue3'
@@ -666,6 +689,7 @@ object GoodsQualityForm: TGoodsQualityForm
         ComponentItem = 'Value3'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inValue4'
@@ -674,6 +698,7 @@ object GoodsQualityForm: TGoodsQualityForm
         ComponentItem = 'Value4'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inValue5'
@@ -682,6 +707,7 @@ object GoodsQualityForm: TGoodsQualityForm
         ComponentItem = 'Value5'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inValue6'
@@ -690,6 +716,7 @@ object GoodsQualityForm: TGoodsQualityForm
         ComponentItem = 'Value6'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inValue7'
@@ -698,6 +725,7 @@ object GoodsQualityForm: TGoodsQualityForm
         ComponentItem = 'Value7'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inValue8'
@@ -706,6 +734,7 @@ object GoodsQualityForm: TGoodsQualityForm
         ComponentItem = 'Value8'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inValue9'
@@ -714,6 +743,7 @@ object GoodsQualityForm: TGoodsQualityForm
         ComponentItem = 'Value9'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inValue10'
@@ -722,6 +752,7 @@ object GoodsQualityForm: TGoodsQualityForm
         ComponentItem = 'Value10'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -729,6 +760,7 @@ object GoodsQualityForm: TGoodsQualityForm
         Component = ClientDataSet
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inQualityId'
@@ -736,6 +768,7 @@ object GoodsQualityForm: TGoodsQualityForm
         Component = ClientDataSet
         ComponentItem = 'QualityId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 128
@@ -746,6 +779,7 @@ object GoodsQualityForm: TGoodsQualityForm
     LookupControl = ceQuality
     FormNameParam.Value = 'TQualityForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TQualityForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -754,6 +788,7 @@ object GoodsQualityForm: TGoodsQualityForm
         Value = ''
         Component = dsdQualityGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -761,11 +796,14 @@ object GoodsQualityForm: TGoodsQualityForm
         Component = dsdQualityGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 600
     Top = 155
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item

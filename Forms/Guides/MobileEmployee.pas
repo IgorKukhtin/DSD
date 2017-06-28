@@ -12,13 +12,24 @@ uses
   dsdAddOn, dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxSpinEdit,
-  dxSkinsCore, dxSkinsDefaultPainters, cxCurrencyEdit, cxButtonEdit;
+  dxSkinsCore, dxSkinsDefaultPainters, cxCurrencyEdit, cxButtonEdit,
+  dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
+  dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue;
 
 type
   TMobileEmployeeForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    colMobileTariffName: TcxGridDBColumn;
+    MobileTariffName: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -43,20 +54,20 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    colNavigator: TcxGridDBColumn;
-    colDutyLimit: TcxGridDBColumn;
-    colMobileLimit: TcxGridDBColumn;
+    Navigator: TcxGridDBColumn;
+    DutyLimit: TcxGridDBColumn;
+    MobileLimit: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     actInsert: TdsdInsertUpdateAction;
     actUpdate: TdsdInsertUpdateAction;
-    colisErased: TcxGridDBColumn;
-    colComment: TcxGridDBColumn;
-    colPersonalName: TcxGridDBColumn;
-    colMobileNum: TcxGridDBColumn;
-    colCode: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
+    PersonalName: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
     isDateOut: TcxGridDBColumn;
     BranchCode: TcxGridDBColumn;
     BranchName: TcxGridDBColumn;
@@ -65,7 +76,7 @@ type
     spInsertUpdate: TdsdStoredProc;
     OpenChoiceFormPersonalUnion: TOpenChoiceForm;
     OpenChoiceFormMobileTariff: TOpenChoiceForm;
-    colRegionName: TcxGridDBColumn;
+    RegionName: TcxGridDBColumn;
     OpenChoiceFormRegion: TOpenChoiceForm;
     isDiscard: TcxGridDBColumn;
   private

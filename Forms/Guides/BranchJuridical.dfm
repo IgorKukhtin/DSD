@@ -45,7 +45,7 @@ object BranchJuridicalForm: TBranchJuridicalForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clBranchCode: TcxGridDBColumn
+      object BranchCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1092#1080#1083#1080#1072#1083#1072
         DataBinding.FieldName = 'BranchCode'
         Visible = False
@@ -54,7 +54,7 @@ object BranchJuridicalForm: TBranchJuridicalForm
         Options.Editing = False
         Width = 60
       end
-      object cBranchName: TcxGridDBColumn
+      object BranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
         DataBinding.FieldName = 'BranchName'
         HeaderAlignmentHorz = taCenter
@@ -62,7 +62,7 @@ object BranchJuridicalForm: TBranchJuridicalForm
         Options.Editing = False
         Width = 147
       end
-      object clJuridicalGroupName: TcxGridDBColumn
+      object JuridicalGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#1102#1088'. '#1083'.'
         DataBinding.FieldName = 'JuridicalGroupName'
         HeaderAlignmentHorz = taCenter
@@ -70,7 +70,7 @@ object BranchJuridicalForm: TBranchJuridicalForm
         Options.Editing = False
         Width = 106
       end
-      object clJuridicalCode: TcxGridDBColumn
+      object JuridicalCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
         DataBinding.FieldName = 'JuridicalCode'
         Visible = False
@@ -79,7 +79,7 @@ object BranchJuridicalForm: TBranchJuridicalForm
         Options.Editing = False
         Width = 45
       end
-      object clJuridicalName: TcxGridDBColumn
+      object JuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -94,7 +94,7 @@ object BranchJuridicalForm: TBranchJuridicalForm
         Options.Editing = False
         Width = 199
       end
-      object clOKPO: TcxGridDBColumn
+      object OKPO: TcxGridDBColumn
         Caption = #1054#1050#1055#1054
         DataBinding.FieldName = 'OKPO'
         HeaderAlignmentHorz = taCenter
@@ -102,7 +102,7 @@ object BranchJuridicalForm: TBranchJuridicalForm
         Options.Editing = False
         Width = 90
       end
-      object colRetailName: TcxGridDBColumn
+      object RetailName: TcxGridDBColumn
         Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
         DataBinding.FieldName = 'RetailName'
         HeaderAlignmentHorz = taCenter
@@ -110,7 +110,7 @@ object BranchJuridicalForm: TBranchJuridicalForm
         Options.Editing = False
         Width = 196
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         Visible = False
@@ -297,10 +297,12 @@ object BranchJuridicalForm: TBranchJuridicalForm
       FormName = 'TBranchJuridicalEditForm'
       FormNameParam.Value = 'TBranchJuridicalEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = DataSource
@@ -331,6 +333,7 @@ object BranchJuridicalForm: TBranchJuridicalForm
       FormName = 'TBranchJuridicalEditForm'
       FormNameParam.Value = 'TBranchJuridicalEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -338,6 +341,7 @@ object BranchJuridicalForm: TBranchJuridicalForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -355,6 +359,7 @@ object BranchJuridicalForm: TBranchJuridicalForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -410,6 +415,7 @@ object BranchJuridicalForm: TBranchJuridicalForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -417,6 +423,7 @@ object BranchJuridicalForm: TBranchJuridicalForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Name'
@@ -424,6 +431,7 @@ object BranchJuridicalForm: TBranchJuridicalForm
           Component = ClientDataSet
           ComponentItem = 'BranchName'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -451,6 +459,7 @@ object BranchJuridicalForm: TBranchJuridicalForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 328

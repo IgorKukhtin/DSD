@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PersonalService(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
-             , INN TVarChar, Card TVarChar, isMain Boolean, isOfficial Boolean
+             , INN TVarChar, Card TVarChar, CardSecond TVarChar, isMain Boolean, isOfficial Boolean
              , PersonalCode_to Integer, PersonalName_to TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , PositionId Integer, PositionName TVarChar
@@ -161,6 +161,7 @@ BEGIN
             , Object_Personal.ValueData               AS PersonalName
             , ObjectString_Member_INN.ValueData       AS INN
             , ObjectString_Member_Card.ValueData      AS Card
+            , ObjectString_Member_CardSecond.ValueData      AS CardSecond
             , CASE WHEN tmpAll.MovementItemId > 0 THEN COALESCE (MIBoolean_Main.ValueData, FALSE) ELSE COALESCE (ObjectBoolean_Personal_Main.ValueData, FALSE) END :: Boolean   AS isMain
             , COALESCE (ObjectBoolean_Member_Official.ValueData, FALSE) :: Boolean AS isOfficial
 
@@ -334,6 +335,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Member_Card
                                    ON ObjectString_Member_Card.ObjectId = tmpAll.MemberId_Personal
                                   AND ObjectString_Member_Card.DescId = zc_ObjectString_Member_Card()
+            LEFT JOIN ObjectString AS ObjectString_Member_CardSecond
+                                   ON ObjectString_Member_CardSecond.ObjectId = tmpAll.MemberId_Personal
+                                  AND ObjectString_Member_CardSecond.DescId = zc_ObjectString_Member_CardSecond()
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Member_Official
                                     ON ObjectBoolean_Member_Official.ObjectId = tmpAll.MemberId_Personal
                                    AND ObjectBoolean_Member_Official.DescId = zc_ObjectBoolean_Member_Official()

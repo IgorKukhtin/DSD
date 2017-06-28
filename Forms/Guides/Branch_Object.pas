@@ -28,7 +28,7 @@ type
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
-    clName: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -38,8 +38,8 @@ type
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
     dsdStoredProc: TdsdStoredProc;
-    clErased: TcxGridDBColumn;
-    clCode: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
     dsdGridToExcel: TdsdGridToExcel;
     dxBarStatic: TdxBarStatic;
     bbGridToExcel: TdxBarButton;

@@ -29,9 +29,9 @@ type
     cxSplitter: TcxSplitter;
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    ceCode: TcxGridDBColumn;
-    ceName: TcxGridDBColumn;
-    ceIsErased: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    IsErased: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     cxPropertiesStore: TcxPropertiesStore;
     dxBarManager: TdxBarManager;
@@ -58,14 +58,14 @@ type
     GridStoredProc: TdsdStoredProc;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clOKPO: TcxGridDBColumn;
-    clJuridicalGroupName: TcxGridDBColumn;
+    OKPO: TcxGridDBColumn;
+    JuridicalGroupName: TcxGridDBColumn;
     actUpdateDataSet: TdsdUpdateDataSet;
     actChoicePriceListForm: TOpenChoiceForm;
     actChoicePriceListPromoForm: TOpenChoiceForm;
     actChoiceRetailReportForm: TOpenChoiceForm;
     actChoiceJuridicalGroup: TOpenChoiceForm;
-    clRetailName: TcxGridDBColumn;
+    RetailName: TcxGridDBColumn;
     actChoiceRetailForm: TOpenChoiceForm;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpen: TdxBarButton;
@@ -82,7 +82,7 @@ type
     bbBranchLabel: TdxBarControlContainerItem;
     bbBranch: TdxBarControlContainerItem;
     RefreshDispatcher: TRefreshDispatcher;
-    clBranchName: TcxGridDBColumn;
+    BranchName: TcxGridDBColumn;
   private
     { Private declarations }
   public

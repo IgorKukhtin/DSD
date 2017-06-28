@@ -123,6 +123,7 @@ type
     actUpdateCardSecondCash: TdsdExecStoredProc;
     bbUpdateCardSecondCash: TdxBarButton;
     macUpdateCardSecondCash: TMultiAction;
+    CardSecond: TcxGridDBColumn;
   private
     { Private declarations }
   public

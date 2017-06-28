@@ -27,7 +27,7 @@ type
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
-    clContractConditionKindName: TcxGridDBColumn;
+    ContractConditionKindName: TcxGridDBColumn;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -43,12 +43,12 @@ type
     bbChoiceGuides: TdxBarButton;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     FormParams: TdsdFormParams;
-    clBonusKindName: TcxGridDBColumn;
-    clValue: TcxGridDBColumn;
-    clComment: TcxGridDBColumn;
-    colisErased: TcxGridDBColumn;
-    clInfoMoneyName: TcxGridDBColumn;
-    colContractSendName: TcxGridDBColumn;
+    BonusKindName: TcxGridDBColumn;
+    Value: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
+    InfoMoneyName: TcxGridDBColumn;
+    ContractSendName: TcxGridDBColumn;
   private
     { Private declarations }
   public

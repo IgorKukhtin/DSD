@@ -37,7 +37,7 @@ object ExportJuridicalForm: TExportJuridicalForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
+      OptionsBehavior.IncSearchItem = Name
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -48,7 +48,7 @@ object ExportJuridicalForm: TExportJuridicalForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
@@ -56,7 +56,7 @@ object ExportJuridicalForm: TExportJuridicalForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 52
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
@@ -129,7 +129,7 @@ object ExportJuridicalForm: TExportJuridicalForm
         Options.Editing = False
         Width = 100
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
@@ -331,10 +331,12 @@ object ExportJuridicalForm: TExportJuridicalForm
       FormName = 'TExportJuridicalEditForm'
       FormNameParam.Value = 'TExportJuridicalEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = DataSource
@@ -350,6 +352,7 @@ object ExportJuridicalForm: TExportJuridicalForm
       FormName = 'TExportJuridicalEditForm'
       FormNameParam.Value = 'TExportJuridicalEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -357,6 +360,7 @@ object ExportJuridicalForm: TExportJuridicalForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       ActionType = acUpdate
@@ -405,6 +409,7 @@ object ExportJuridicalForm: TExportJuridicalForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -412,18 +417,21 @@ object ExportJuridicalForm: TExportJuridicalForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PersonalDriverId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'PersonalDriverId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PersonalDriverCode'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'PersonalDriverCode'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PersonalDriverName'
@@ -431,6 +439,7 @@ object ExportJuridicalForm: TExportJuridicalForm
           Component = ClientDataSet
           ComponentItem = 'PersonalDriverName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CarModelName'
@@ -438,6 +447,7 @@ object ExportJuridicalForm: TExportJuridicalForm
           Component = ClientDataSet
           ComponentItem = 'CarModelName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'NameAll'
@@ -445,6 +455,7 @@ object ExportJuridicalForm: TExportJuridicalForm
           Component = ClientDataSet
           ComponentItem = 'NameAll'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -452,6 +463,7 @@ object ExportJuridicalForm: TExportJuridicalForm
           Component = ClientDataSet
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -476,6 +488,7 @@ object ExportJuridicalForm: TExportJuridicalForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -483,6 +496,7 @@ object ExportJuridicalForm: TExportJuridicalForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -491,6 +505,7 @@ object ExportJuridicalForm: TExportJuridicalForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -550,6 +565,7 @@ object ExportJuridicalForm: TExportJuridicalForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 288

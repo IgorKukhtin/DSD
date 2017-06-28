@@ -35,7 +35,7 @@ object ContractConditionValueForm: TContractConditionValueForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clComment
+      OptionsBehavior.IncSearchItem = Comment
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -46,7 +46,7 @@ object ContractConditionValueForm: TContractConditionValueForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clContractStateKindName: TcxGridDBColumn
+      object ContractStateKindCode: TcxGridDBColumn
         Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'.'
         DataBinding.FieldName = 'ContractStateKindCode'
         PropertiesClassName = 'TcxImageComboBoxProperties'
@@ -79,7 +79,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 60
       end
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
@@ -87,7 +87,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 35
       end
-      object clInvNumberArchive: TcxGridDBColumn
+      object InvNumberArchive: TcxGridDBColumn
         Caption = #1055#1086#1088#1103#1076#1082'. '#8470
         DataBinding.FieldName = 'InvNumberArchive'
         Visible = False
@@ -96,7 +96,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 51
       end
-      object clInvNumber: TcxGridDBColumn
+      object InvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1075'.'
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
@@ -104,14 +104,14 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 51
       end
-      object clContractTagName: TcxGridDBColumn
+      object ContractTagName: TcxGridDBColumn
         Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
         DataBinding.FieldName = 'ContractTagName'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
       end
-      object clJuridicalCode: TcxGridDBColumn
+      object JuridicalCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
         DataBinding.FieldName = 'JuridicalCode'
         Visible = False
@@ -136,7 +136,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 120
       end
-      object clJuridicalName_find: TcxGridDBColumn
+      object JuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1087#1086#1080#1089#1082')'
         DataBinding.FieldName = 'JuridicalName'
         Visible = False
@@ -145,7 +145,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 100
       end
-      object clOKPO: TcxGridDBColumn
+      object OKPO: TcxGridDBColumn
         Caption = #1054#1050#1055#1054
         DataBinding.FieldName = 'OKPO'
         Visible = False
@@ -154,7 +154,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 55
       end
-      object clPaidKindName: TcxGridDBColumn
+      object PaidKindName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
         DataBinding.FieldName = 'PaidKindName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -171,7 +171,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 30
       end
-      object clCurrencyName: TcxGridDBColumn
+      object CurrencyName: TcxGridDBColumn
         Caption = #1042#1072#1083#1102#1090#1072
         DataBinding.FieldName = 'CurrencyName'
         HeaderAlignmentHorz = taCenter
@@ -179,7 +179,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 60
       end
-      object clContractKindName: TcxGridDBColumn
+      object ContractKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1076#1086#1075'.'
         DataBinding.FieldName = 'ContractKindName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -194,7 +194,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object clSigningDate: TcxGridDBColumn
+      object SigningDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1079#1072#1082#1083#1102#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'SigningDate'
         Visible = False
@@ -202,7 +202,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object clStartDate: TcxGridDBColumn
+      object StartDate: TcxGridDBColumn
         Caption = #1044#1077#1081#1089#1090#1074'. '#1089
         DataBinding.FieldName = 'StartDate'
         Visible = False
@@ -210,7 +210,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         HeaderAlignmentVert = vaCenter
         Width = 44
       end
-      object clEndDate: TcxGridDBColumn
+      object EndDate: TcxGridDBColumn
         Caption = #1044#1077#1081#1089#1090#1074'. '#1076#1086
         DataBinding.FieldName = 'EndDate'
         Visible = False
@@ -218,7 +218,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         HeaderAlignmentVert = vaCenter
         Width = 46
       end
-      object clInfoMoneyGroupCode: TcxGridDBColumn
+      object InfoMoneyGroupCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055' '#1075#1088#1091#1087#1087#1099
         DataBinding.FieldName = 'InfoMoneyGroupCode'
         Visible = False
@@ -227,7 +227,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 55
       end
-      object clInfoMoneyGroupName: TcxGridDBColumn
+      object InfoMoneyGroupName: TcxGridDBColumn
         Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyGroupName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -243,7 +243,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 113
       end
-      object clInfoMoneyDestinationCode: TcxGridDBColumn
+      object InfoMoneyDestinationCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055' '#1085#1072#1079#1085#1072#1095'.'
         DataBinding.FieldName = 'InfoMoneyDestinationCode'
         Visible = False
@@ -252,7 +252,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 55
       end
-      object clInfoMoneyDestinationName: TcxGridDBColumn
+      object InfoMoneyDestinationName: TcxGridDBColumn
         Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'InfoMoneyDestinationName'
         Visible = False
@@ -261,7 +261,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 80
       end
-      object clInfoMoneyCode: TcxGridDBColumn
+      object InfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055
         DataBinding.FieldName = 'InfoMoneyCode'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -277,7 +277,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 36
       end
-      object clInfoMoneyName: TcxGridDBColumn
+      object InfoMoneyName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -292,7 +292,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object clContractConditionKindName: TcxGridDBColumn
+      object ContractConditionKindName: TcxGridDBColumn
         Caption = #1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075'.'
         DataBinding.FieldName = 'ContractConditionKindName'
         HeaderAlignmentHorz = taCenter
@@ -300,7 +300,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 60
       end
-      object clBonusKindName: TcxGridDBColumn
+      object BonusKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1073#1086#1085#1091#1089#1072
         DataBinding.FieldName = 'BonusKindName'
         HeaderAlignmentHorz = taCenter
@@ -308,7 +308,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 45
       end
-      object clValue: TcxGridDBColumn
+      object Value: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'Value'
         HeaderAlignmentHorz = taCenter
@@ -316,7 +316,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 40
       end
-      object clContractConditionComment: TcxGridDBColumn
+      object ContractConditionComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075'.)'
         DataBinding.FieldName = 'ContractConditionComment'
         HeaderAlignmentHorz = taCenter
@@ -324,7 +324,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 70
       end
-      object clInfoMoneyGroupCode_ch: TcxGridDBColumn
+      object InfoMoneyGroupCode_ch: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055' '#1075#1088#1091#1087#1087#1099' ('#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075'.)'
         DataBinding.FieldName = 'InfoMoneyGroupCode_ch'
         Visible = False
@@ -333,7 +333,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 55
       end
-      object clInfoMoneyGroupName_ch: TcxGridDBColumn
+      object InfoMoneyGroupName_ch: TcxGridDBColumn
         Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075'.)'
         DataBinding.FieldName = 'InfoMoneyGroupName_ch'
         Visible = False
@@ -342,7 +342,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 113
       end
-      object clInfoMoneyDestinationCode_ch: TcxGridDBColumn
+      object InfoMoneyDestinationCode_ch: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055' '#1085#1072#1079#1085#1072#1095'. ('#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075'.)'
         DataBinding.FieldName = 'InfoMoneyDestinationCode_ch'
         Visible = False
@@ -351,7 +351,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 55
       end
-      object clInfoMoneyDestinationName_ch: TcxGridDBColumn
+      object InfoMoneyDestinationName_ch: TcxGridDBColumn
         Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077' ('#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075'.)'
         DataBinding.FieldName = 'InfoMoneyDestinationName_ch'
         Visible = False
@@ -360,7 +360,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 80
       end
-      object clInfoMoneyCode_ch: TcxGridDBColumn
+      object InfoMoneyCode_ch: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055' ('#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075'.)'
         DataBinding.FieldName = 'InfoMoneyCode_ch'
         Visible = False
@@ -369,14 +369,14 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 36
       end
-      object clInfoMoneyName_ch: TcxGridDBColumn
+      object InfoMoneyName_ch: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075'.)'
         DataBinding.FieldName = 'InfoMoneyName_ch'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 90
       end
-      object colContractSendName: TcxGridDBColumn
+      object ContractSendName: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1075'. '#1084#1072#1088#1082#1077#1090#1080#1085#1075
         DataBinding.FieldName = 'ContractSendName'
         HeaderAlignmentHorz = taCenter
@@ -384,7 +384,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 80
       end
-      object colContractStateKindCode_Send: TcxGridDBColumn
+      object ContractStateKindCode_Send: TcxGridDBColumn
         Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'. '#1084#1072#1088#1082#1077#1090'.'
         DataBinding.FieldName = 'ContractStateKindCode_Send'
         PropertiesClassName = 'TcxImageComboBoxProperties'
@@ -417,7 +417,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 67
       end
-      object colContractTagName_Send: TcxGridDBColumn
+      object ContractTagName_Send: TcxGridDBColumn
         Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'. '#1084#1072#1088#1082#1077#1090'.'
         DataBinding.FieldName = 'ContractTagName_Send'
         Visible = False
@@ -425,7 +425,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 120
       end
-      object colInfoMoneyCode_Send: TcxGridDBColumn
+      object InfoMoneyCode_Send: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055
         DataBinding.FieldName = 'InfoMoneyCode_Send'
         Visible = False
@@ -433,7 +433,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 120
       end
-      object colInfoMoneyName_Send: TcxGridDBColumn
+      object InfoMoneyName_Send: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyName_Send'
         Visible = False
@@ -441,7 +441,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 120
       end
-      object colJuridicalCode_Send: TcxGridDBColumn
+      object JuridicalCode_Send: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
         DataBinding.FieldName = 'JuridicalCode_Send'
         Visible = False
@@ -449,14 +449,14 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 120
       end
-      object colJuridicalName_Send: TcxGridDBColumn
+      object JuridicalName_Send: TcxGridDBColumn
         Caption = #1070#1088'. '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName_Send'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 120
       end
-      object clPersonalName: TcxGridDBColumn
+      object PersonalName: TcxGridDBColumn
         Caption = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
         DataBinding.FieldName = 'PersonalName'
         Visible = False
@@ -465,7 +465,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 55
       end
-      object clAreaName: TcxGridDBColumn
+      object AreaName: TcxGridDBColumn
         Caption = #1056#1077#1075#1080#1086#1085
         DataBinding.FieldName = 'AreaName'
         Visible = False
@@ -474,7 +474,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 55
       end
-      object clContractArticleName: TcxGridDBColumn
+      object ContractArticleName: TcxGridDBColumn
         Caption = #1055#1088#1077#1076#1084#1077#1090' '#1076#1086#1075'.'
         DataBinding.FieldName = 'ContractArticleName'
         Visible = False
@@ -483,7 +483,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 55
       end
-      object clJuridicalBasisName: TcxGridDBColumn
+      object JuridicalBasisName: TcxGridDBColumn
         Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalBasisName'
         Visible = False
@@ -492,7 +492,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 70
       end
-      object clBankAccountExternal: TcxGridDBColumn
+      object BankAccountExternal: TcxGridDBColumn
         Caption = #1056'.'#1089#1095#1077#1090' ('#1080#1089#1093'.'#1087#1083#1072#1090#1077#1078')'
         DataBinding.FieldName = 'BankAccountExternal'
         Visible = False
@@ -501,7 +501,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 46
       end
-      object clBankName: TcxGridDBColumn
+      object BankName: TcxGridDBColumn
         Caption = #1041#1072#1085#1082' ('#1080#1089#1093'.'#1087#1083#1072#1090#1077#1078')'
         DataBinding.FieldName = 'BankName'
         Visible = False
@@ -510,21 +510,21 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 56
       end
-      object clIsStandart: TcxGridDBColumn
+      object IsStandart: TcxGridDBColumn
         Caption = #1058#1080#1087#1086#1074#1086#1081
         DataBinding.FieldName = 'isStandart'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
       end
-      object clIsPersonal: TcxGridDBColumn
+      object IsPersonal: TcxGridDBColumn
         Caption = 'C'#1083#1091#1078'. '#1079#1072#1087'.'
         DataBinding.FieldName = 'isPersonal'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
       end
-      object clIsDefault: TcxGridDBColumn
+      object IsDefault: TcxGridDBColumn
         Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
         DataBinding.FieldName = 'isDefault'
         Visible = False
@@ -533,7 +533,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 40
       end
-      object clIsUnique: TcxGridDBColumn
+      object IsUnique: TcxGridDBColumn
         Caption = #1056#1072#1089#1095#1077#1090' '#1076#1086#1083#1075#1072
         DataBinding.FieldName = 'isUnique'
         Visible = False
@@ -541,7 +541,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         HeaderAlignmentVert = vaCenter
         Width = 40
       end
-      object clComment: TcxGridDBColumn
+      object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         Visible = False
@@ -550,7 +550,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 82
       end
-      object clIsErased: TcxGridDBColumn
+      object IsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         Visible = False
@@ -579,7 +579,7 @@ object ContractConditionValueForm: TContractConditionValueForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = clComment
+        Component = Comment
         Properties.Strings = (
           'Width')
       end

@@ -47,7 +47,7 @@ object JuridicalGLNForm: TJuridicalGLNForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object ceCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
@@ -55,7 +55,7 @@ object JuridicalGLNForm: TJuridicalGLNForm
         Options.Editing = False
         Width = 40
       end
-      object ceName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
@@ -63,7 +63,7 @@ object JuridicalGLNForm: TJuridicalGLNForm
         Options.Editing = False
         Width = 99
       end
-      object clOKPO: TcxGridDBColumn
+      object OKPO: TcxGridDBColumn
         Caption = #1054#1050#1055#1054
         DataBinding.FieldName = 'OKPO'
         Visible = False
@@ -72,14 +72,14 @@ object JuridicalGLNForm: TJuridicalGLNForm
         Options.Editing = False
         Width = 50
       end
-      object clGLNCode: TcxGridDBColumn
+      object GLNCode: TcxGridDBColumn
         Caption = 'GLN - '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1100' '#1080'/'#1080#1083#1080' '#1055#1086#1083#1091#1095#1072#1090#1077#1083#1100' '
         DataBinding.FieldName = 'GLNCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
-      object clGoodsPropertyName: TcxGridDBColumn
+      object GoodsPropertyName: TcxGridDBColumn
         Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'GoodsPropertyName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -94,7 +94,7 @@ object JuridicalGLNForm: TJuridicalGLNForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object clRetailName: TcxGridDBColumn
+      object RetailName: TcxGridDBColumn
         Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
         DataBinding.FieldName = 'RetailName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -110,7 +110,7 @@ object JuridicalGLNForm: TJuridicalGLNForm
         Options.Editing = False
         Width = 60
       end
-      object clJuridicalGroupName: TcxGridDBColumn
+      object JuridicalGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'JuridicalGroupName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -127,7 +127,7 @@ object JuridicalGLNForm: TJuridicalGLNForm
         Options.Editing = False
         Width = 70
       end
-      object clInfoMoneyGroupCode: TcxGridDBColumn
+      object InfoMoneyGroupCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055' '#1075#1088#1091#1087#1087#1099
         DataBinding.FieldName = 'InfoMoneyGroupCode'
         Visible = False
@@ -136,7 +136,7 @@ object JuridicalGLNForm: TJuridicalGLNForm
         Options.Editing = False
         Width = 50
       end
-      object clInfoMoneyGroupName: TcxGridDBColumn
+      object InfoMoneyGroupName: TcxGridDBColumn
         Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyGroupName'
         Visible = False
@@ -145,7 +145,7 @@ object JuridicalGLNForm: TJuridicalGLNForm
         Options.Editing = False
         Width = 70
       end
-      object clInfoMoneyDestinationCode: TcxGridDBColumn
+      object InfoMoneyDestinationCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055' '#1085#1072#1079#1085#1072#1095'.'
         DataBinding.FieldName = 'InfoMoneyDestinationCode'
         Visible = False
@@ -154,7 +154,7 @@ object JuridicalGLNForm: TJuridicalGLNForm
         Options.Editing = False
         Width = 50
       end
-      object clInfoMoneyDestinationName: TcxGridDBColumn
+      object InfoMoneyDestinationName: TcxGridDBColumn
         Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'InfoMoneyDestinationName'
         Visible = False
@@ -163,7 +163,7 @@ object JuridicalGLNForm: TJuridicalGLNForm
         Options.Editing = False
         Width = 70
       end
-      object clInfoMoneyCode: TcxGridDBColumn
+      object InfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055
         DataBinding.FieldName = 'InfoMoneyCode'
         Visible = False
@@ -172,7 +172,7 @@ object JuridicalGLNForm: TJuridicalGLNForm
         Options.Editing = False
         Width = 40
       end
-      object clInfoMoneyName: TcxGridDBColumn
+      object InfoMoneyName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyName'
         Visible = False
@@ -190,7 +190,7 @@ object JuridicalGLNForm: TJuridicalGLNForm
         Options.Editing = False
         Width = 100
       end
-      object clIsCorporate: TcxGridDBColumn
+      object IsCorporate: TcxGridDBColumn
         Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'.'#1083'.'
         DataBinding.FieldName = 'isCorporate'
         Visible = False
@@ -199,7 +199,7 @@ object JuridicalGLNForm: TJuridicalGLNForm
         Options.Editing = False
         Width = 40
       end
-      object clPriceListName: TcxGridDBColumn
+      object PriceListName: TcxGridDBColumn
         Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
         DataBinding.FieldName = 'PriceListName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -216,7 +216,7 @@ object JuridicalGLNForm: TJuridicalGLNForm
         Options.Editing = False
         Width = 60
       end
-      object clPriceListPromoName: TcxGridDBColumn
+      object PriceListPromoName: TcxGridDBColumn
         Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1072#1082#1094#1080#1086#1085#1085#1099#1081')'
         DataBinding.FieldName = 'PriceListPromoName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -233,7 +233,7 @@ object JuridicalGLNForm: TJuridicalGLNForm
         Options.Editing = False
         Width = 70
       end
-      object clStartPromo: TcxGridDBColumn
+      object StartPromo: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1072#1082#1094#1080#1080
         DataBinding.FieldName = 'StartPromo'
         Visible = False
@@ -242,7 +242,7 @@ object JuridicalGLNForm: TJuridicalGLNForm
         Options.Editing = False
         Width = 55
       end
-      object clEndPromo: TcxGridDBColumn
+      object EndPromo: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080
         DataBinding.FieldName = 'EndPromo'
         Visible = False
@@ -251,7 +251,7 @@ object JuridicalGLNForm: TJuridicalGLNForm
         Options.Editing = False
         Width = 65
       end
-      object ceIsErased: TcxGridDBColumn
+      object IsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
@@ -438,12 +438,14 @@ object JuridicalGLNForm: TJuridicalGLNForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -451,6 +453,7 @@ object JuridicalGLNForm: TJuridicalGLNForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -495,6 +498,7 @@ object JuridicalGLNForm: TJuridicalGLNForm
           Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -502,12 +506,14 @@ object JuridicalGLNForm: TJuridicalGLNForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -515,6 +521,7 @@ object JuridicalGLNForm: TJuridicalGLNForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -549,12 +556,14 @@ object JuridicalGLNForm: TJuridicalGLNForm
       FormName = 'TJuridicalGroup_ObjectForm'
       FormNameParam.Value = 'TJuridicalGroup_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalGroupId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -562,6 +571,7 @@ object JuridicalGLNForm: TJuridicalGLNForm
           Component = MasterCDS
           ComponentItem = 'JuridicalGroupName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -573,12 +583,14 @@ object JuridicalGLNForm: TJuridicalGLNForm
       FormName = 'TGoodsPropertyForm'
       FormNameParam.Value = 'TGoodsPropertyForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsPropertyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -586,6 +598,7 @@ object JuridicalGLNForm: TJuridicalGLNForm
           Component = MasterCDS
           ComponentItem = 'GoodsPropertyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -639,6 +652,7 @@ object JuridicalGLNForm: TJuridicalGLNForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 128
@@ -655,6 +669,7 @@ object JuridicalGLNForm: TJuridicalGLNForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 88
@@ -697,6 +712,7 @@ object JuridicalGLNForm: TJuridicalGLNForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGLNCode'
@@ -705,6 +721,7 @@ object JuridicalGLNForm: TJuridicalGLNForm
         ComponentItem = 'GLNCode'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsPropertyId'
@@ -712,6 +729,7 @@ object JuridicalGLNForm: TJuridicalGLNForm
         Component = MasterCDS
         ComponentItem = 'GoodsPropertyId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 120

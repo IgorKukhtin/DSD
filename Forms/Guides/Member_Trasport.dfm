@@ -37,7 +37,7 @@ object Member_TrasportForm: TMember_TrasportForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
+      OptionsBehavior.IncSearchItem = Name
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -47,14 +47,14 @@ object Member_TrasportForm: TMember_TrasportForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 32
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1060#1048#1054
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
@@ -62,7 +62,7 @@ object Member_TrasportForm: TMember_TrasportForm
         Options.Editing = False
         Width = 150
       end
-      object clMember_INN: TcxGridDBColumn
+      object INN: TcxGridDBColumn
         Caption = #1048#1053#1053
         DataBinding.FieldName = 'INN'
         Visible = False
@@ -71,7 +71,7 @@ object Member_TrasportForm: TMember_TrasportForm
         Options.Editing = False
         Width = 68
       end
-      object clDriverCertificate: TcxGridDBColumn
+      object DriverCertificate: TcxGridDBColumn
         Caption = #1042#1086#1076#1080#1090#1077#1083#1100#1089#1082#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
         DataBinding.FieldName = 'DriverCertificate'
         Visible = False
@@ -79,7 +79,7 @@ object Member_TrasportForm: TMember_TrasportForm
         Options.Editing = False
         Width = 96
       end
-      object clIsOfficial: TcxGridDBColumn
+      object IsOfficial: TcxGridDBColumn
         Caption = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
         DataBinding.FieldName = 'isOfficial'
         Visible = False
@@ -88,7 +88,7 @@ object Member_TrasportForm: TMember_TrasportForm
         Options.Editing = False
         Width = 70
       end
-      object clInfoMoneyCode: TcxGridDBColumn
+      object InfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055
         DataBinding.FieldName = 'InfoMoneyCode'
         Visible = False
@@ -96,7 +96,7 @@ object Member_TrasportForm: TMember_TrasportForm
         Options.Editing = False
         Width = 52
       end
-      object clInfoMoneyName_all: TcxGridDBColumn
+      object InfoMoneyName_all: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
         DataBinding.FieldName = 'InfoMoneyName_all'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -176,7 +176,7 @@ object Member_TrasportForm: TMember_TrasportForm
         HeaderAlignmentVert = vaCenter
         Width = 58
       end
-      object clComment: TcxGridDBColumn
+      object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentVert = vaCenter
@@ -199,7 +199,7 @@ object Member_TrasportForm: TMember_TrasportForm
         Options.Editing = False
         Width = 80
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
@@ -388,6 +388,7 @@ object Member_TrasportForm: TMember_TrasportForm
       FormNameParam.Name = 'TMember_TrasportDialogForm'
       FormNameParam.Value = 'TMember_TrasportDateDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartSummerDate'
@@ -396,6 +397,7 @@ object Member_TrasportForm: TMember_TrasportForm
           ComponentItem = 'StartSummerDate'
           DataType = ftDateTime
           ParamType = ptInputOutput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndSummerDate'
@@ -404,6 +406,7 @@ object Member_TrasportForm: TMember_TrasportForm
           ComponentItem = 'EndSummerDate'
           DataType = ftDateTime
           ParamType = ptInputOutput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       OpenBeforeShow = True
@@ -470,6 +473,7 @@ object Member_TrasportForm: TMember_TrasportForm
       FormNameParam.Name = 'TMember_TrasportDialogForm'
       FormNameParam.Value = 'TMember_TrasportDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'SummerFuel'
@@ -478,6 +482,7 @@ object Member_TrasportForm: TMember_TrasportForm
           ComponentItem = 'SummerFuel'
           DataType = ftFloat
           ParamType = ptInputOutput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'WinterFuel'
@@ -486,6 +491,7 @@ object Member_TrasportForm: TMember_TrasportForm
           ComponentItem = 'WinterFuel'
           DataType = ftFloat
           ParamType = ptInputOutput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Reparation'
@@ -494,6 +500,7 @@ object Member_TrasportForm: TMember_TrasportForm
           ComponentItem = 'Reparation'
           DataType = ftFloat
           ParamType = ptInputOutput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'LimitMoney'
@@ -502,6 +509,7 @@ object Member_TrasportForm: TMember_TrasportForm
           ComponentItem = 'LimitMoney'
           DataType = ftFloat
           ParamType = ptInputOutput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'LimitDistance'
@@ -510,6 +518,7 @@ object Member_TrasportForm: TMember_TrasportForm
           ComponentItem = 'LimitDistance'
           DataType = ftFloat
           ParamType = ptInputOutput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       OpenBeforeShow = True
@@ -546,6 +555,7 @@ object Member_TrasportForm: TMember_TrasportForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -553,6 +563,7 @@ object Member_TrasportForm: TMember_TrasportForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -561,6 +572,7 @@ object Member_TrasportForm: TMember_TrasportForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -574,6 +586,7 @@ object Member_TrasportForm: TMember_TrasportForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -581,12 +594,14 @@ object Member_TrasportForm: TMember_TrasportForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Code'
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -665,6 +680,7 @@ object Member_TrasportForm: TMember_TrasportForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 48
@@ -711,6 +727,7 @@ object Member_TrasportForm: TMember_TrasportForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDriverCertificate'
@@ -719,6 +736,7 @@ object Member_TrasportForm: TMember_TrasportForm
         ComponentItem = 'DriverCertificate'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStartSummerDate'
@@ -727,6 +745,7 @@ object Member_TrasportForm: TMember_TrasportForm
         ComponentItem = 'StartSummerDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndSummerDate'
@@ -735,6 +754,7 @@ object Member_TrasportForm: TMember_TrasportForm
         ComponentItem = 'EndSummerDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inSummerFuel'
@@ -743,6 +763,7 @@ object Member_TrasportForm: TMember_TrasportForm
         ComponentItem = 'SummerFuel'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inWinterFuel'
@@ -751,6 +772,7 @@ object Member_TrasportForm: TMember_TrasportForm
         ComponentItem = 'WinterFuel'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inReparation'
@@ -759,6 +781,7 @@ object Member_TrasportForm: TMember_TrasportForm
         ComponentItem = 'Reparation'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inLimit'
@@ -767,6 +790,7 @@ object Member_TrasportForm: TMember_TrasportForm
         ComponentItem = 'LimitMoney'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inLimitDistance'
@@ -775,6 +799,7 @@ object Member_TrasportForm: TMember_TrasportForm
         ComponentItem = 'LimitDistance'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 568
@@ -791,12 +816,14 @@ object Member_TrasportForm: TMember_TrasportForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisDate'
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStartSummerDate'
@@ -805,6 +832,7 @@ object Member_TrasportForm: TMember_TrasportForm
         ComponentItem = 'StartSummerDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndSummerDate'
@@ -813,6 +841,7 @@ object Member_TrasportForm: TMember_TrasportForm
         ComponentItem = 'EndSummerDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inSummerFuel'
@@ -821,6 +850,7 @@ object Member_TrasportForm: TMember_TrasportForm
         ComponentItem = 'SummerFuel'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inWinterFuel'
@@ -829,6 +859,7 @@ object Member_TrasportForm: TMember_TrasportForm
         ComponentItem = 'WinterFuel'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inReparation'
@@ -837,6 +868,7 @@ object Member_TrasportForm: TMember_TrasportForm
         ComponentItem = 'Reparation'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inLimit'
@@ -845,6 +877,7 @@ object Member_TrasportForm: TMember_TrasportForm
         ComponentItem = 'LimitMoney'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inLimitDistance'
@@ -853,6 +886,7 @@ object Member_TrasportForm: TMember_TrasportForm
         ComponentItem = 'LimitDistance'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 688
@@ -866,48 +900,56 @@ object Member_TrasportForm: TMember_TrasportForm
         Component = ClientDataSet
         ComponentItem = 'id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StartSummerDate'
         Value = 42370d
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndSummerDate'
         Value = 42370d
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SummerFuel'
         Value = '0'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'WinterFuel'
         Value = '0'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Reparation'
         Value = '0'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'LimitMoney'
         Value = '0'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'LimitDistance'
         Value = '0'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 128
     Top = 256
@@ -923,12 +965,14 @@ object Member_TrasportForm: TMember_TrasportForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisDate'
         Value = 'True'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStartSummerDate'
@@ -937,6 +981,7 @@ object Member_TrasportForm: TMember_TrasportForm
         ComponentItem = 'StartSummerDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndSummerDate'
@@ -945,6 +990,7 @@ object Member_TrasportForm: TMember_TrasportForm
         ComponentItem = 'EndSummerDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inSummerFuel'
@@ -953,6 +999,7 @@ object Member_TrasportForm: TMember_TrasportForm
         ComponentItem = 'SummerFuel'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inWinterFuel'
@@ -961,6 +1008,7 @@ object Member_TrasportForm: TMember_TrasportForm
         ComponentItem = 'WinterFuel'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inReparation'
@@ -969,6 +1017,7 @@ object Member_TrasportForm: TMember_TrasportForm
         ComponentItem = 'Reparation'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inLimit'
@@ -977,6 +1026,7 @@ object Member_TrasportForm: TMember_TrasportForm
         ComponentItem = 'LimitMoney'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inLimitFuel'
@@ -985,6 +1035,7 @@ object Member_TrasportForm: TMember_TrasportForm
         ComponentItem = 'LimitFuel'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 672

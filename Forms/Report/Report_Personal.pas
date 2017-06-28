@@ -91,6 +91,9 @@ type
     cxLabel9: TcxLabel;
     cePersonal: TcxButtonEdit;
     PersonalGuides: TdsdGuides;
+    MoneySummCard: TcxGridDBColumn;
+    MoneySummCardSecond: TcxGridDBColumn;
+    MoneySummCash: TcxGridDBColumn;
   private
     { Private declarations }
   public

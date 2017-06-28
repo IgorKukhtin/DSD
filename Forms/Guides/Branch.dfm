@@ -34,7 +34,7 @@ object BranchForm: TBranchForm
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
+      OptionsBehavior.IncSearchItem = Name
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Inserting = False
@@ -44,7 +44,7 @@ object BranchForm: TBranchForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
@@ -52,7 +52,7 @@ object BranchForm: TBranchForm
         Options.Editing = False
         Width = 37
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
@@ -60,7 +60,7 @@ object BranchForm: TBranchForm
         Options.Editing = False
         Width = 124
       end
-      object clInvNumber: TcxGridDBColumn
+      object InvNumber: TcxGridDBColumn
         Caption = #1053#1072#1083#1086#1075#1086#1074#1099#1081' '#1082#1086#1076
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
@@ -68,14 +68,14 @@ object BranchForm: TBranchForm
         Options.Editing = False
         Width = 46
       end
-      object clPlaceOf: TcxGridDBColumn
+      object PlaceOf: TcxGridDBColumn
         Caption = #1052#1077#1089#1090#1086' '#1089#1086#1089#1090#1072#1074#1083#1077#1085#1080#1103' '#1076#1086#1082'.'
         DataBinding.FieldName = 'PlaceOf'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object clPersonalName: TcxGridDBColumn
+      object PersonalName: TcxGridDBColumn
         Caption = #1060#1048#1054' '#1041#1091#1093#1075#1072#1083#1090#1077#1088' '#1088#1072#1089#1093'. '#1085#1072#1082#1083'.'
         DataBinding.FieldName = 'PersonalName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -90,7 +90,7 @@ object BranchForm: TBranchForm
         HeaderAlignmentVert = vaCenter
         Width = 75
       end
-      object clPersonalStoreName: TcxGridDBColumn
+      object PersonalStoreName: TcxGridDBColumn
         Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1050#1083#1072#1076#1086#1074#1097#1080#1082')'
         DataBinding.FieldName = 'PersonalStoreName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -105,7 +105,7 @@ object BranchForm: TBranchForm
         HeaderAlignmentVert = vaCenter
         Width = 76
       end
-      object clPersonalBookkeeperName: TcxGridDBColumn
+      object PersonalBookkeeperName: TcxGridDBColumn
         Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1041#1091#1093#1075#1072#1083#1090#1077#1088') '#1085#1072#1083#1086#1075'. '#1085#1072#1082#1083'.'
         DataBinding.FieldName = 'PersonalBookkeeperName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -120,7 +120,7 @@ object BranchForm: TBranchForm
         HeaderAlignmentVert = vaCenter
         Width = 75
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         Visible = False
@@ -128,7 +128,7 @@ object BranchForm: TBranchForm
         HeaderAlignmentVert = vaCenter
         Width = 57
       end
-      object clIsMedoc: TcxGridDBColumn
+      object IsMedoc: TcxGridDBColumn
         Caption = #1052#1077#1076#1086#1082
         DataBinding.FieldName = 'IsMedoc'
         HeaderAlignmentHorz = taCenter
@@ -136,7 +136,7 @@ object BranchForm: TBranchForm
         Options.Editing = False
         Width = 30
       end
-      object clisPartionDoc: TcxGridDBColumn
+      object isPartionDoc: TcxGridDBColumn
         Caption = #1055#1072#1088#1090#1080#1086#1085#1085#1099#1081' '#1091#1095#1077#1090' '#1076#1086#1083#1075#1086#1074
         DataBinding.FieldName = 'isPartionDoc'
         HeaderAlignmentHorz = taCenter
@@ -144,7 +144,7 @@ object BranchForm: TBranchForm
         Options.Editing = False
         Width = 110
       end
-      object clUnitName: TcxGridDBColumn
+      object UnitName: TcxGridDBColumn
         Caption = #1054#1089#1085#1086#1074#1085#1086#1081' '#1089#1082#1083#1072#1076
         DataBinding.FieldName = 'UnitName'
         HeaderAlignmentHorz = taCenter
@@ -152,7 +152,7 @@ object BranchForm: TBranchForm
         Options.Editing = False
         Width = 107
       end
-      object clUnitReturnName: TcxGridDBColumn
+      object UnitReturnName: TcxGridDBColumn
         Caption = #1057#1082#1083#1072#1076' '#1074#1086#1079#1074#1088#1072#1090#1086#1074
         DataBinding.FieldName = 'UnitReturnName'
         HeaderAlignmentHorz = taCenter
@@ -160,7 +160,7 @@ object BranchForm: TBranchForm
         Options.Editing = False
         Width = 107
       end
-      object clPersonalDriverName: TcxGridDBColumn
+      object PersonalDriverName: TcxGridDBColumn
         Caption = #1042#1086#1076#1080#1090#1077#1083#1100' ('#1058#1058#1053')'
         DataBinding.FieldName = 'PersonalDriverName'
         HeaderAlignmentHorz = taCenter
@@ -168,7 +168,7 @@ object BranchForm: TBranchForm
         Options.Editing = False
         Width = 76
       end
-      object clMember1Name: TcxGridDBColumn
+      object Member1Name: TcxGridDBColumn
         Caption = #1042#1086#1076#1080#1090#1077#1083#1100'/'#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088' ('#1058#1058#1053')'
         DataBinding.FieldName = 'Member1Name'
         HeaderAlignmentHorz = taCenter
@@ -176,7 +176,7 @@ object BranchForm: TBranchForm
         Options.Editing = False
         Width = 76
       end
-      object clMember2Name: TcxGridDBColumn
+      object Member2Name: TcxGridDBColumn
         Caption = #1041#1091#1093#1075#1072#1083#1090#1077#1088' ('#1058#1058#1053')'
         DataBinding.FieldName = 'Member2Name'
         HeaderAlignmentHorz = taCenter
@@ -184,7 +184,7 @@ object BranchForm: TBranchForm
         Options.Editing = False
         Width = 76
       end
-      object clMember3Name: TcxGridDBColumn
+      object Member3Name: TcxGridDBColumn
         Caption = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1086#1077' '#1083#1080#1094#1086'('#1074#1110#1076#1087#1091#1089#1082' '#1076#1086#1079#1074#1086#1083#1080#1074') ('#1058#1058#1053')'
         DataBinding.FieldName = 'Member3Name'
         HeaderAlignmentHorz = taCenter
@@ -192,7 +192,7 @@ object BranchForm: TBranchForm
         Options.Editing = False
         Width = 76
       end
-      object clMember4Name: TcxGridDBColumn
+      object Member4Name: TcxGridDBColumn
         Caption = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1086#1077' '#1083#1080#1094#1086'('#1079#1076#1072#1074') ('#1058#1058#1053')'
         DataBinding.FieldName = 'Member4Name'
         HeaderAlignmentHorz = taCenter
@@ -200,7 +200,7 @@ object BranchForm: TBranchForm
         Options.Editing = False
         Width = 76
       end
-      object clCarName: TcxGridDBColumn
+      object CarName: TcxGridDBColumn
         Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100' ('#1058#1058#1053')'
         DataBinding.FieldName = 'CarName'
         HeaderAlignmentHorz = taCenter
@@ -235,7 +235,7 @@ object BranchForm: TBranchForm
           'Width')
       end
       item
-        Component = clName
+        Component = Name
         Properties.Strings = (
           'Width')
       end>
@@ -420,10 +420,12 @@ object BranchForm: TBranchForm
       FormName = 'TBranchEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = DataSource
@@ -439,6 +441,7 @@ object BranchForm: TBranchForm
       FormName = 'TBranchEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -446,6 +449,7 @@ object BranchForm: TBranchForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       ActionType = acUpdate
@@ -502,12 +506,14 @@ object BranchForm: TBranchForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Code'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -515,6 +521,7 @@ object BranchForm: TBranchForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -529,6 +536,7 @@ object BranchForm: TBranchForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -536,6 +544,7 @@ object BranchForm: TBranchForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -544,6 +553,7 @@ object BranchForm: TBranchForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -567,12 +577,14 @@ object BranchForm: TBranchForm
       FormName = 'TPersonal_ObjectForm'
       FormNameParam.Value = 'TPersonal_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'PersonalBookkeeperId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -580,6 +592,7 @@ object BranchForm: TBranchForm
           Component = ClientDataSet
           ComponentItem = 'PersonalBookkeeperName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -591,12 +604,14 @@ object BranchForm: TBranchForm
       FormName = 'TPersonal_ObjectForm'
       FormNameParam.Value = 'TPersonal_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'PersonalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -604,6 +619,7 @@ object BranchForm: TBranchForm
           Component = ClientDataSet
           ComponentItem = 'PersonalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -615,12 +631,14 @@ object BranchForm: TBranchForm
       FormName = 'TPersonal_ObjectForm'
       FormNameParam.Value = 'TPersonal_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'PersonalStoreId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -628,6 +646,7 @@ object BranchForm: TBranchForm
           Component = ClientDataSet
           ComponentItem = 'PersonalStoreName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -642,12 +661,14 @@ object BranchForm: TBranchForm
       FormName = 'TBranch_TTNDialogForm'
       FormNameParam.Value = 'TBranch_TTNDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PersonalDriverId'
@@ -655,30 +676,35 @@ object BranchForm: TBranchForm
           Component = ClientDataSet
           ComponentItem = 'PersonalDriverId'
           ParamType = ptInputOutput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Member1Id'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Member1Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Member2Id'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Member2Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Member3Id'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Member3Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Member4Id'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Member4Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PersonalDriverName'
@@ -687,6 +713,7 @@ object BranchForm: TBranchForm
           ComponentItem = 'PersonalDriverName'
           DataType = ftString
           ParamType = ptInputOutput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Member1Name'
@@ -694,6 +721,7 @@ object BranchForm: TBranchForm
           Component = ClientDataSet
           ComponentItem = 'Member1Name'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Member2Name'
@@ -701,6 +729,7 @@ object BranchForm: TBranchForm
           Component = ClientDataSet
           ComponentItem = 'Member2Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Member3Name'
@@ -708,18 +737,21 @@ object BranchForm: TBranchForm
           Component = ClientDataSet
           ComponentItem = 'Member3Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Member4Name'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Member4Name'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CarId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'CarId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CarName'
@@ -727,6 +759,7 @@ object BranchForm: TBranchForm
           Component = ClientDataSet
           ComponentItem = 'CarName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -774,6 +807,7 @@ object BranchForm: TBranchForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 288
@@ -818,6 +852,7 @@ object BranchForm: TBranchForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalId'
@@ -825,6 +860,7 @@ object BranchForm: TBranchForm
         Component = ClientDataSet
         ComponentItem = 'PersonalId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalStoreId'
@@ -832,6 +868,7 @@ object BranchForm: TBranchForm
         Component = ClientDataSet
         ComponentItem = 'PersonalStoreId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalBookkeeperId'
@@ -839,6 +876,7 @@ object BranchForm: TBranchForm
         Component = ClientDataSet
         ComponentItem = 'PersonalBookkeeperId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPlaceOf'
@@ -847,6 +885,7 @@ object BranchForm: TBranchForm
         ComponentItem = 'PlaceOf'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 459

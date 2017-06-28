@@ -37,7 +37,7 @@ object Car_ObjectForm: TCar_ObjectForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
+      OptionsBehavior.IncSearchItem = Name
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -47,27 +47,27 @@ object Car_ObjectForm: TCar_ObjectForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
         Width = 52
       end
-      object clCarModel: TcxGridDBColumn
+      object CarModelName: TcxGridDBColumn
         Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
         DataBinding.FieldName = 'CarModelName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 120
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1043#1086#1089'.'#1085#1086#1084#1077#1088
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object clFuelMasterName: TcxGridDBColumn
+      object FuelMasterName: TcxGridDBColumn
         Caption = #1054#1089#1085#1086#1074#1085#1086#1081' '#1074#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
         DataBinding.FieldName = 'FuelMasterName'
         Visible = False
@@ -76,7 +76,7 @@ object Car_ObjectForm: TCar_ObjectForm
         VisibleForCustomization = False
         Width = 100
       end
-      object clFuelChildName: TcxGridDBColumn
+      object FuelChildName: TcxGridDBColumn
         Caption = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081' '#1074#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
         DataBinding.FieldName = 'FuelChildName'
         Visible = False
@@ -85,25 +85,25 @@ object Car_ObjectForm: TCar_ObjectForm
         VisibleForCustomization = False
         Width = 110
       end
-      object clPersonalDriverName: TcxGridDBColumn
+      object PersonalDriverName: TcxGridDBColumn
         Caption = #1042#1086#1076#1080#1090#1077#1083#1100
         DataBinding.FieldName = 'PersonalDriverName'
         HeaderAlignmentVert = vaCenter
         Width = 90
       end
-      object clRegistrationCertificate: TcxGridDBColumn
+      object RegistrationCertificate: TcxGridDBColumn
         Caption = #1058#1077#1093#1087#1072#1089#1087#1086#1088#1090
         DataBinding.FieldName = 'RegistrationCertificate'
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object clUnit: TcxGridDBColumn
+      object UnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'UnitName'
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
-      object clJuridicalName: TcxGridDBColumn
+      object JuridicalName: TcxGridDBColumn
         Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1089#1090#1086#1088#1086#1085#1085#1077#1077')'
         DataBinding.FieldName = 'JuridicalName'
         Visible = False
@@ -122,7 +122,7 @@ object Car_ObjectForm: TCar_ObjectForm
         VisibleForCustomization = False
         Width = 50
       end
-      object clAssetName: TcxGridDBColumn
+      object AssetName: TcxGridDBColumn
         Caption = #1054#1057
         DataBinding.FieldName = 'AssetName'
         Visible = False
@@ -132,7 +132,7 @@ object Car_ObjectForm: TCar_ObjectForm
         VisibleForCustomization = False
         Width = 60
       end
-      object clAssetInvNumber: TcxGridDBColumn
+      object AssetInvNumber: TcxGridDBColumn
         Caption = #1048#1085#1074'. '#1085#1086#1084#1077#1088' '#1054#1057
         DataBinding.FieldName = 'AssetInvNumber'
         Visible = False
@@ -150,7 +150,7 @@ object Car_ObjectForm: TCar_ObjectForm
         Options.Editing = False
         Width = 120
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'

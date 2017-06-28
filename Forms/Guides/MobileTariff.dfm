@@ -38,17 +38,17 @@ object MobileTariffForm: TMobileTariffForm
         item
           Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
           Kind = skCount
-          Column = colTariffName
+          Column = Name
         end
         item
           Kind = skCount
-          Column = colErased
+          Column = isErased
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.CellHints = True
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = colCostInet
+      OptionsBehavior.IncSearchItem = CostInet
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -61,7 +61,7 @@ object MobileTariffForm: TMobileTariffForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object colCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
@@ -69,7 +69,7 @@ object MobileTariffForm: TMobileTariffForm
         Options.Editing = False
         Width = 35
       end
-      object colTariffName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
@@ -77,7 +77,7 @@ object MobileTariffForm: TMobileTariffForm
         Options.Editing = False
         Width = 184
       end
-      object colContractCode: TcxGridDBColumn
+      object ContractCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1076#1086#1075#1086#1074#1086#1088#1072
         DataBinding.FieldName = 'ContractCode'
         HeaderAlignmentHorz = taCenter
@@ -85,7 +85,7 @@ object MobileTariffForm: TMobileTariffForm
         Options.Editing = False
         Width = 63
       end
-      object colContractName: TcxGridDBColumn
+      object ContractName: TcxGridDBColumn
         Caption = #1044#1086#1075#1086#1074#1086#1088
         DataBinding.FieldName = 'ContractName'
         HeaderAlignmentHorz = taCenter
@@ -93,14 +93,14 @@ object MobileTariffForm: TMobileTariffForm
         Options.Editing = False
         Width = 99
       end
-      object colJuridicalName: TcxGridDBColumn
+      object JuridicalName: TcxGridDBColumn
         Caption = #1070#1088'. '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 99
       end
-      object colMonthly: TcxGridDBColumn
+      object Monthly: TcxGridDBColumn
         Caption = #1040#1073#1086#1085#1087#1083#1072#1090#1072
         DataBinding.FieldName = 'Monthly'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -111,7 +111,7 @@ object MobileTariffForm: TMobileTariffForm
         Options.Editing = False
         Width = 72
       end
-      object colPocketMinutes: TcxGridDBColumn
+      object PocketMinutes: TcxGridDBColumn
         Caption = #1052#1080#1085'. '#1074' '#1087#1072#1082#1077#1090#1077
         DataBinding.FieldName = 'PocketMinutes'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -123,7 +123,7 @@ object MobileTariffForm: TMobileTariffForm
         Options.Editing = False
         Width = 72
       end
-      object colPocketSMS: TcxGridDBColumn
+      object PocketSMS: TcxGridDBColumn
         Caption = #1057#1052#1057' '#1074' '#1087#1072#1082#1077#1090#1077
         DataBinding.FieldName = 'PocketSMS'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -135,7 +135,7 @@ object MobileTariffForm: TMobileTariffForm
         Options.Editing = False
         Width = 58
       end
-      object colPocketInet: TcxGridDBColumn
+      object PocketInet: TcxGridDBColumn
         Caption = #1052#1041' '#1074' '#1087#1072#1082#1077#1090#1077
         DataBinding.FieldName = 'PocketInet'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -147,7 +147,7 @@ object MobileTariffForm: TMobileTariffForm
         Options.Editing = False
         Width = 70
       end
-      object colCostMinutes: TcxGridDBColumn
+      object CostMinutes: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1084#1080#1085'. '#1074#1085#1077' '#1087#1072#1082#1077#1090#1072
         DataBinding.FieldName = 'CostMinutes'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -159,7 +159,7 @@ object MobileTariffForm: TMobileTariffForm
         Options.Editing = False
         Width = 106
       end
-      object colCostSMS: TcxGridDBColumn
+      object CostSMS: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1057#1052#1057' '#1074#1085#1077' '#1087#1072#1082#1077#1090#1072
         DataBinding.FieldName = 'CostSMS'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -171,7 +171,7 @@ object MobileTariffForm: TMobileTariffForm
         Options.Editing = False
         Width = 68
       end
-      object colCostInet: TcxGridDBColumn
+      object CostInet: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1052#1041' '#1074#1085#1077' '#1087#1072#1082#1077#1090#1072
         DataBinding.FieldName = 'CostInet'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -183,7 +183,7 @@ object MobileTariffForm: TMobileTariffForm
         Options.Editing = False
         Width = 73
       end
-      object colComment: TcxGridDBColumn
+      object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
@@ -191,7 +191,7 @@ object MobileTariffForm: TMobileTariffForm
         Options.Editing = False
         Width = 93
       end
-      object colErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'

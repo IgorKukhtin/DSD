@@ -26,16 +26,16 @@ uses
 
 type
   TPartionGoodsChoiceForm = class(TAncestorEnumForm)
-    colOperDate: TcxGridDBColumn;
-    colPrice: TcxGridDBColumn;
-    colisErased: TcxGridDBColumn;
-    clGoodsName: TcxGridDBColumn;
-    coInvNumber: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
+    lPrice: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    colUnitName: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
     FormParams: TdsdFormParams;
-    colAmount: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
     Panel: TPanel;
     edGoods: TcxButtonEdit;
     cxLabel3: TcxLabel;

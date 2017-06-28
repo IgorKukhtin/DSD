@@ -27,7 +27,8 @@ RETURNS TABLE (PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              , ServiceDate TDateTime
              , StartAmount TFloat, StartAmountD TFloat, StartAmountK TFloat
              , DebetSumm TFloat, KreditSumm TFloat
-             , MoneySumm TFloat, ServiceSumm TFloat, IncomeSumm TFloat
+             , MoneySumm TFloat, MoneySummCard TFloat, MoneySummCardSecond TFloat, MoneySummCash TFloat
+             , ServiceSumm TFloat, IncomeSumm TFloat
              , SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat, SummNalog TFloat
              , EndAmount TFloat, EndAmountD TFloat, EndAmountK TFloat
              , ContainerId Integer
@@ -81,7 +82,12 @@ BEGIN
         CASE WHEN Operation.StartAmount < 0 THEN -1 * Operation.StartAmount ELSE 0 END :: TFloat    AS StartAmountK,
         Operation.DebetSumm :: TFloat                                                               AS DebetSumm,
         Operation.KreditSumm :: TFloat                                                              AS KreditSumm,
+
         Operation.MoneySumm :: TFloat                                                               AS MoneySumm,
+        Operation.MoneySummCard :: TFloat                                                           AS MoneySummCard,
+        Operation.MoneySummCardSecond :: TFloat                                                     AS MoneySummCardSecond,
+        Operation.MoneySummCash :: TFloat                                                           AS MoneySummCash,
+
         Operation.ServiceSumm :: TFloat                                                             AS ServiceSumm,
         Operation.IncomeSumm :: TFloat                                                              AS IncomeSumm,
         Operation.SummTransportAdd :: TFloat                                                        AS SummTransportAdd,
@@ -103,6 +109,9 @@ BEGIN
                , SUM (Operation_all.DebetSumm)   AS DebetSumm
                , SUM (Operation_all.KreditSumm)  AS KreditSumm
                , SUM (Operation_all.MoneySumm)   AS MoneySumm
+               , SUM (Operation_all.MoneySummCard)       AS MoneySummCard
+               , SUM (Operation_all.MoneySummCardSecond) AS MoneySummCardSecond
+               , SUM (Operation_all.MoneySummCash)       AS MoneySummCash
                , SUM (Operation_all.ServiceSumm) AS ServiceSumm
                , SUM (Operation_all.IncomeSumm)            AS IncomeSumm
                , SUM (Operation_all.SummTransportAdd)      AS SummTransportAdd
@@ -125,6 +134,11 @@ BEGIN
                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END ELSE 0 END)          AS DebetSumm
                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)     AS KreditSumm
                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_Cash(), zc_Movement_BankAccount()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS MoneySumm
+
+                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_BankAccount()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS MoneySummCard
+                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_Cash()) AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Cash_PersonalCardSecond() THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS MoneySummCardSecond
+                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_Cash()) AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalService(), zc_Enum_AnalyzerId_Cash_PersonalAvance()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS MoneySummCash
+                
                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_PersonalService_Nalog() THEN CASE WHEN Movement.DescId IN (zc_Movement_PersonalService()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ServiceSumm
                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND Movement.DescId        = zc_Movement_Income()                       THEN  1 * MIContainer.Amount ELSE 0 END) AS IncomeSumm
                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Add()         THEN -1 * MIContainer.Amount ELSE 0 END) AS SummTransportAdd
@@ -213,4 +227,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Personal (inStartDate:= '01.01.2016', inEndDate:= '01.01.2016', inServiceDate:= '01.01.2016', inIsServiceDate:= false, inAccountId:= 0, inBranchId:=0, inInfoMoneyId:= 0, inInfoMoneyGroupId:= 0, inInfoMoneyDestinationId:= 0, inSession:= '2');
+-- SELECT * FROM gpReport_Personal (inStartDate:= '01.07.2017', inEndDate:= '01.08.2017', inServiceDate:= '01.07.2017', inIsServiceDate:= false, inAccountId:= 0, inBranchId:=0, inInfoMoneyId:= 0, inInfoMoneyGroupId:= 0, inInfoMoneyDestinationId:= 0, inPersonalServiceListId:= 0, inPersonalId:= 0, inSession:= zfCalc_UserAdmin());

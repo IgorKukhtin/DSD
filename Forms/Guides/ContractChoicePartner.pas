@@ -25,25 +25,25 @@ uses
 
 type
   TContractChoicePartnerForm = class(TAncestorEnumForm)
-    colInvNumber: TcxGridDBColumn;
-    colStartDate: TcxGridDBColumn;
-    colJuridicalCode: TcxGridDBColumn;
-    colJuridicalName: TcxGridDBColumn;
-    colPaidKindName: TcxGridDBColumn;
-    colInfoMoneyName: TcxGridDBColumn;
-    colisErased: TcxGridDBColumn;
-    clOKPO: TcxGridDBColumn;
-    clEndDate: TcxGridDBColumn;
-    clInfoMoneyDestinationName: TcxGridDBColumn;
-    clInfoMoneyGroupName: TcxGridDBColumn;
-    clInfoMoneyCode: TcxGridDBColumn;
-    colPartnerCode: TcxGridDBColumn;
-    colPartnerName: TcxGridDBColumn;
-    colChangePercent: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    StartDate: TcxGridDBColumn;
+    JuridicalCode: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
+    InfoMoneyName: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
+    OKPO: TcxGridDBColumn;
+    EndDate: TcxGridDBColumn;
+    InfoMoneyDestinationName: TcxGridDBColumn;
+    InfoMoneyGroupName: TcxGridDBColumn;
+    InfoMoneyCode: TcxGridDBColumn;
+    PartnerCode: TcxGridDBColumn;
+    PartnerName: TcxGridDBColumn;
+    ChangePercent: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    colCode: TcxGridDBColumn;
-    colContractComment: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    ContractComment: TcxGridDBColumn;
     actChoiceRoute: TOpenChoiceForm;
     actChoiceRouteSorting: TOpenChoiceForm;
     actChoicePersonalTake: TOpenChoiceForm;
@@ -53,11 +53,11 @@ type
     BranchName: TcxGridDBColumn;
     AmountDebet: TcxGridDBColumn;
     AmountKredit: TcxGridDBColumn;
-    Id: TcxGridDBColumn;
+    ContainerId: TcxGridDBColumn;
     PrepareDayCount: TcxGridDBColumn;
     DocumentDayCount: TcxGridDBColumn;
     actChoiceRoute_30201: TOpenChoiceForm;
-    clRouteName: TcxGridDBColumn;
+    RouteName: TcxGridDBColumn;
     ChangePercentPartner: TcxGridDBColumn;
     actChoiceMemberTake1: TOpenChoiceForm;
     actChoiceMemberTake2: TOpenChoiceForm;

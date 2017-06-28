@@ -33,7 +33,7 @@ object MobileContract_ObjectForm: TMobileContract_ObjectForm
         item
           Format = #1057#1090#1088#1086#1082': ,0'
           Kind = skCount
-          Column = ceName
+          Column = Name
         end>
       DataController.Summary.SummaryGroups = <>
       OptionsCustomize.ColumnHiding = True
@@ -47,7 +47,7 @@ object MobileContract_ObjectForm: TMobileContract_ObjectForm
       OptionsView.HeaderHeight = 50
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object ceCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
@@ -55,7 +55,7 @@ object MobileContract_ObjectForm: TMobileContract_ObjectForm
         Options.Editing = False
         Width = 35
       end
-      object ceName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
@@ -63,7 +63,7 @@ object MobileContract_ObjectForm: TMobileContract_ObjectForm
         Options.Editing = False
         Width = 150
       end
-      object clJuridicalCode: TcxGridDBColumn
+      object JuridicalCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
         DataBinding.FieldName = 'JuridicalCode'
         Visible = False
@@ -72,7 +72,7 @@ object MobileContract_ObjectForm: TMobileContract_ObjectForm
         Options.Editing = False
         Width = 45
       end
-      object clContractTagName: TcxGridDBColumn
+      object ContractTagName: TcxGridDBColumn
         Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
         DataBinding.FieldName = 'ContractTagName'
         HeaderAlignmentHorz = taCenter
@@ -80,7 +80,7 @@ object MobileContract_ObjectForm: TMobileContract_ObjectForm
         Options.Editing = False
         Width = 79
       end
-      object clJuridicalName: TcxGridDBColumn
+      object JuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentHorz = taCenter
@@ -88,7 +88,7 @@ object MobileContract_ObjectForm: TMobileContract_ObjectForm
         Options.Editing = False
         Width = 132
       end
-      object clPaidKindName: TcxGridDBColumn
+      object PaidKindName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
         DataBinding.FieldName = 'PaidKindName'
         HeaderAlignmentHorz = taCenter
@@ -96,7 +96,7 @@ object MobileContract_ObjectForm: TMobileContract_ObjectForm
         Options.Editing = False
         Width = 68
       end
-      object clStartDate: TcxGridDBColumn
+      object StartDate: TcxGridDBColumn
         Caption = #1044#1077#1081#1089#1090#1074'. '#1089
         DataBinding.FieldName = 'StartDate'
         HeaderAlignmentHorz = taCenter
@@ -104,7 +104,7 @@ object MobileContract_ObjectForm: TMobileContract_ObjectForm
         Options.Editing = False
         Width = 60
       end
-      object clEndDate: TcxGridDBColumn
+      object EndDate: TcxGridDBColumn
         Caption = #1044#1077#1081#1089#1090#1074'. '#1076#1086
         DataBinding.FieldName = 'EndDate'
         HeaderAlignmentHorz = taCenter
@@ -112,7 +112,7 @@ object MobileContract_ObjectForm: TMobileContract_ObjectForm
         Options.Editing = False
         Width = 60
       end
-      object clInfoMoneyName: TcxGridDBColumn
+      object InfoMoneyName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyName'
         HeaderAlignmentHorz = taCenter
@@ -120,7 +120,7 @@ object MobileContract_ObjectForm: TMobileContract_ObjectForm
         Options.Editing = False
         Width = 102
       end
-      object ceisErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
@@ -159,7 +159,7 @@ object MobileContract_ObjectForm: TMobileContract_ObjectForm
         HeaderHint = #1054#1090#1089#1088#1086#1095#1082#1072' '#1074' '#1073#1072#1085#1082#1086#1074#1089#1082#1080#1093' '#1076#1085#1103#1093
         Width = 70
       end
-      object clComment: TcxGridDBColumn
+      object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
@@ -167,7 +167,7 @@ object MobileContract_ObjectForm: TMobileContract_ObjectForm
         Options.Editing = False
         Width = 88
       end
-      object clisSync: TcxGridDBColumn
+      object isSync: TcxGridDBColumn
         Caption = #1057#1080#1085#1093#1088#1086#1085#1080#1079#1080#1088#1091#1077#1090#1089#1103
         DataBinding.FieldName = 'isSync'
         HeaderAlignmentHorz = taCenter

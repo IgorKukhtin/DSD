@@ -3,7 +3,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
   ClientHeight = 420
   ClientWidth = 1030
   ExplicitWidth = 1046
-  ExplicitHeight = 458
+  ExplicitHeight = 459
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -32,7 +32,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clGoodsPlatformName: TcxGridDBColumn
+          object GoodsPlatformName: TcxGridDBColumn
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' '#1087#1083#1086#1097#1072#1076#1082#1072
             DataBinding.FieldName = 'GoodsPlatformName'
             Visible = False
@@ -41,7 +41,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Options.Editing = False
             Width = 100
           end
-          object clGoodsGroupAnalystName: TcxGridDBColumn
+          object GoodsGroupAnalystName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1072#1085#1072#1083#1080#1090#1080#1082#1080
             DataBinding.FieldName = 'GoodsGroupAnalystName'
             Visible = False
@@ -50,7 +50,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Options.Editing = False
             Width = 100
           end
-          object clGoodsTagName: TcxGridDBColumn
+          object GoodsTagName: TcxGridDBColumn
             Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsTagName'
             Visible = False
@@ -59,7 +59,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Options.Editing = False
             Width = 100
           end
-          object clTradeMarkName: TcxGridDBColumn
+          object TradeMarkName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
             DataBinding.FieldName = 'TradeMarkName'
             HeaderAlignmentHorz = taCenter
@@ -67,7 +67,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Options.Editing = False
             Width = 88
           end
-          object clGoodsGroupNameFull: TcxGridDBColumn
+          object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
@@ -75,7 +75,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Options.Editing = False
             Width = 132
           end
-          object clGoodsGroupName: TcxGridDBColumn
+          object GoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'GoodsGroupName'
             Visible = False
@@ -84,7 +84,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Options.Editing = False
             Width = 172
           end
-          object clCode: TcxGridDBColumn
+          object Code: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
             HeaderAlignmentHorz = taCenter
@@ -92,7 +92,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Options.Editing = False
             Width = 45
           end
-          object clGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -108,7 +108,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Options.Editing = False
             Width = 171
           end
-          object clGoodsKindName: TcxGridDBColumn
+          object GoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076
             DataBinding.FieldName = 'GoodsKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -123,7 +123,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clMeasureName: TcxGridDBColumn
+          object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -131,7 +131,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Options.Editing = False
             Width = 48
           end
-          object clWeight: TcxGridDBColumn
+          object Weight: TcxGridDBColumn
             Caption = #1042#1077#1089
             DataBinding.FieldName = 'Weight'
             Visible = False
@@ -140,7 +140,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Options.Editing = False
             Width = 45
           end
-          object clWeightPackage: TcxGridDBColumn
+          object WeightPackage: TcxGridDBColumn
             Caption = #1042#1077#1089' '#1087#1072#1082#1077#1090#1072
             DataBinding.FieldName = 'WeightPackage'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -150,7 +150,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             HeaderAlignmentVert = vaCenter
             Width = 54
           end
-          object clWeightTotal: TcxGridDBColumn
+          object WeightTotal: TcxGridDBColumn
             Caption = #1042#1077#1089' '#1074' '#1091#1087#1072#1082#1086#1074#1082#1077
             DataBinding.FieldName = 'WeightTotal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -160,7 +160,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             HeaderAlignmentVert = vaCenter
             Width = 61
           end
-          object clChangePercentAmount: TcxGridDBColumn
+          object ChangePercentAmount: TcxGridDBColumn
             Caption = '% '#1089#1082#1080#1076#1082#1080' '#1076#1083#1103' '#1082#1086#1083'-'#1074#1072
             DataBinding.FieldName = 'ChangePercentAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -178,7 +178,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Options.Editing = False
             Width = 55
           end
-          object clReceiptName: TcxGridDBColumn
+          object ReceiptName: TcxGridDBColumn
             Caption = #1056#1077#1094#1077#1087#1090#1091#1088#1072
             DataBinding.FieldName = 'ReceiptName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -193,7 +193,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object clGoodsSubCode: TcxGridDBColumn
+          object GoodsSubCode: TcxGridDBColumn
             Caption = #1050#1086#1076' ('#1090#1086#1074'.'#1087'/'#1088')'
             DataBinding.FieldName = 'GoodsSubCode'
             HeaderAlignmentHorz = taCenter
@@ -202,7 +202,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Options.Editing = False
             Width = 61
           end
-          object clGoodsSubName: TcxGridDBColumn
+          object GoodsSubName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088' ('#1087#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' - '#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsSubName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -217,7 +217,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             HeaderAlignmentVert = vaCenter
             Width = 155
           end
-          object clGoodsKindSubName: TcxGridDBColumn
+          object GoodsKindSubName: TcxGridDBColumn
             Caption = #1042#1080#1076' ('#1090#1086#1074'. '#1087'/'#1088')'
             DataBinding.FieldName = 'GoodsKindSubName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -233,7 +233,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             HeaderHint = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1087#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'-'#1088#1072#1089#1093#1086#1076')'
             Width = 70
           end
-          object clMeasureSubName: TcxGridDBColumn
+          object MeasureSubName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.  ('#1090#1086#1074'.'#1087'/'#1088')'
             DataBinding.FieldName = 'MeasureSubName'
             HeaderAlignmentHorz = taCenter
@@ -242,21 +242,21 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Options.Editing = False
             Width = 62
           end
-          object clisOrder: TcxGridDBColumn
+          object isOrder: TcxGridDBColumn
             Caption = #1048#1089#1087#1086#1083#1100#1079#1091#1077#1090#1089#1103' '#1074' '#1079#1072#1103#1074#1082#1072#1093
             DataBinding.FieldName = 'isOrder'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object clisScaleCeh: TcxGridDBColumn
+          object isScaleCeh: TcxGridDBColumn
             Caption = #1048#1089#1087#1086#1083#1100#1079#1091#1077#1090#1089#1103' '#1074' ScaleCeh'
             DataBinding.FieldName = 'isScaleCeh'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object clisNotMobile: TcxGridDBColumn
+          object isNotMobile: TcxGridDBColumn
             Caption = #1053#1045' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1074' '#1052#1086#1073#1080#1083#1100#1085#1086#1084' '#1072#1075#1077#1085#1090#1077
             DataBinding.FieldName = 'isNotMobile'
             HeaderAlignmentHorz = taCenter
@@ -264,7 +264,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Options.Editing = False
             Width = 110
           end
-          object clInfoMoneyCode: TcxGridDBColumn
+          object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -273,7 +273,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Options.Editing = False
             Width = 95
           end
-          object clInfoMoneyGroupName: TcxGridDBColumn
+          object InfoMoneyGroupName: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -282,7 +282,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Options.Editing = False
             Width = 80
           end
-          object clInfoMoneyDestinationName: TcxGridDBColumn
+          object InfoMoneyDestinationName: TcxGridDBColumn
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -291,7 +291,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Options.Editing = False
             Width = 70
           end
-          object clInfoMoneyName: TcxGridDBColumn
+          object InfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
@@ -300,7 +300,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Options.Editing = False
             Width = 138
           end
-          object ceIsErased: TcxGridDBColumn
+          object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             PropertiesClassName = 'TcxCheckBoxProperties'
@@ -310,7 +310,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Options.Editing = False
             Width = 40
           end
-          object colId: TcxGridDBColumn
+          object Id: TcxGridDBColumn
             Caption = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1082#1086#1076
             DataBinding.FieldName = 'Id'
             HeaderAlignmentHorz = taCenter

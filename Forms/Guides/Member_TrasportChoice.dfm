@@ -37,7 +37,7 @@ object Member_TrasportChoiceForm: TMember_TrasportChoiceForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
+      OptionsBehavior.IncSearchItem = Name
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -49,7 +49,7 @@ object Member_TrasportChoiceForm: TMember_TrasportChoiceForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clDescName: TcxGridDBColumn
+      object DescName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
         DataBinding.FieldName = 'DescName'
         HeaderAlignmentHorz = taCenter
@@ -57,14 +57,14 @@ object Member_TrasportChoiceForm: TMember_TrasportChoiceForm
         Options.Editing = False
         Width = 87
       end
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 32
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1060#1048#1054
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
@@ -72,7 +72,7 @@ object Member_TrasportChoiceForm: TMember_TrasportChoiceForm
         Options.Editing = False
         Width = 92
       end
-      object clMember_INN: TcxGridDBColumn
+      object INN: TcxGridDBColumn
         Caption = #1048#1053#1053
         DataBinding.FieldName = 'INN'
         HeaderAlignmentHorz = taCenter
@@ -80,14 +80,14 @@ object Member_TrasportChoiceForm: TMember_TrasportChoiceForm
         Options.Editing = False
         Width = 68
       end
-      object clDriverCertificate: TcxGridDBColumn
+      object DriverCertificate: TcxGridDBColumn
         Caption = #1042#1086#1076#1080#1090#1077#1083#1100#1089#1082#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
         DataBinding.FieldName = 'DriverCertificate'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 96
       end
-      object clIsOfficial: TcxGridDBColumn
+      object IsOfficial: TcxGridDBColumn
         Caption = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
         DataBinding.FieldName = 'isOfficial'
         HeaderAlignmentHorz = taCenter
@@ -168,7 +168,7 @@ object Member_TrasportChoiceForm: TMember_TrasportChoiceForm
         Options.Editing = False
         Width = 43
       end
-      object clInfoMoneyCode: TcxGridDBColumn
+      object InfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055
         DataBinding.FieldName = 'InfoMoneyCode'
         Visible = False
@@ -176,7 +176,7 @@ object Member_TrasportChoiceForm: TMember_TrasportChoiceForm
         Options.Editing = False
         Width = 52
       end
-      object clInfoMoneyName_all: TcxGridDBColumn
+      object InfoMoneyName_all: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
         DataBinding.FieldName = 'InfoMoneyName_all'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -191,14 +191,14 @@ object Member_TrasportChoiceForm: TMember_TrasportChoiceForm
         Options.Editing = False
         Width = 69
       end
-      object clComment: TcxGridDBColumn
+      object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 64
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
@@ -448,6 +448,7 @@ object Member_TrasportChoiceForm: TMember_TrasportChoiceForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -455,6 +456,7 @@ object Member_TrasportChoiceForm: TMember_TrasportChoiceForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -463,6 +465,7 @@ object Member_TrasportChoiceForm: TMember_TrasportChoiceForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -492,6 +495,7 @@ object Member_TrasportChoiceForm: TMember_TrasportChoiceForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -499,12 +503,14 @@ object Member_TrasportChoiceForm: TMember_TrasportChoiceForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Code'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AmountFuel'
@@ -512,6 +518,7 @@ object Member_TrasportChoiceForm: TMember_TrasportChoiceForm
           Component = ClientDataSet
           ComponentItem = 'AmountFuel'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Reparation'
@@ -519,6 +526,7 @@ object Member_TrasportChoiceForm: TMember_TrasportChoiceForm
           Component = ClientDataSet
           ComponentItem = 'Reparation'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end
         item
           Name = 'LimitMoney'
@@ -526,6 +534,7 @@ object Member_TrasportChoiceForm: TMember_TrasportChoiceForm
           Component = ClientDataSet
           ComponentItem = 'LimitMoney'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end
         item
           Name = 'LimitDistance'
@@ -533,6 +542,7 @@ object Member_TrasportChoiceForm: TMember_TrasportChoiceForm
           Component = ClientDataSet
           ComponentItem = 'LimitDistance'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -592,6 +602,7 @@ object Member_TrasportChoiceForm: TMember_TrasportChoiceForm
         Component = deOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsShowAll'
@@ -599,6 +610,7 @@ object Member_TrasportChoiceForm: TMember_TrasportChoiceForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 48
@@ -619,6 +631,7 @@ object Member_TrasportChoiceForm: TMember_TrasportChoiceForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 288
@@ -658,6 +671,7 @@ object Member_TrasportChoiceForm: TMember_TrasportChoiceForm
         Component = ClientDataSet
         ComponentItem = 'id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -665,6 +679,7 @@ object Member_TrasportChoiceForm: TMember_TrasportChoiceForm
         Component = deOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 128
     Top = 256

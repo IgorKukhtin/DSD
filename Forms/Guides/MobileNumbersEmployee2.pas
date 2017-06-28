@@ -12,14 +12,24 @@ uses
   dsdAddOn, dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxSpinEdit,
-  dxSkinsCore, dxSkinsDefaultPainters;
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
+  dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TMobileNumbersEmployee2Form = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    colEmployeeID: TcxGridDBColumn;
-    colTariffName: TcxGridDBColumn;
+    EmployeeID: TcxGridDBColumn;
+    TariffName: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -44,22 +54,22 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    colOverLimit: TcxGridDBColumn;
-    colID: TcxGridDBColumn;
-    colNavigator: TcxGridDBColumn;
-    colLimitDuty: TcxGridDBColumn;
-    colLimit: TcxGridDBColumn;
+    OverLimit: TcxGridDBColumn;
+    ID: TcxGridDBColumn;
+    Navigator: TcxGridDBColumn;
+    LimitDuty: TcxGridDBColumn;
+    Lim: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
-    colMobileTariffID: TcxGridDBColumn;
+    MobileTariffID: TcxGridDBColumn;
     actInsert: TdsdInsertUpdateAction;
     actUpdate: TdsdInsertUpdateAction;
-    colErased: TcxGridDBColumn;
-    colComms: TcxGridDBColumn;
-    colEmployeeName: TcxGridDBColumn;
-    colMobileNum: TcxGridDBColumn;
+    Erased: TcxGridDBColumn;
+    Comms: TcxGridDBColumn;
+    EmployeeName: TcxGridDBColumn;
+    MobileNum: TcxGridDBColumn;
   private
     { Private declarations }
   public
