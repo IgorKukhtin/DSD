@@ -1,30 +1,30 @@
 inherited Report_GoodsForm: TReport_GoodsForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
-  ClientHeight = 356
+  ClientHeight = 473
   ClientWidth = 1053
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1069
-  ExplicitHeight = 394
+  ExplicitHeight = 511
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
     Width = 1053
-    Height = 276
+    Height = 393
     TabOrder = 3
     ExplicitTop = 80
     ExplicitWidth = 1053
-    ExplicitHeight = 261
-    ClientRectBottom = 276
+    ExplicitHeight = 276
+    ClientRectBottom = 393
     ClientRectRight = 1053
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1053
-      ExplicitHeight = 261
+      ExplicitHeight = 276
       inherited cxGrid: TcxGrid
         Width = 1053
-        Height = 276
+        Height = 393
         ExplicitWidth = 1053
-        ExplicitHeight = 261
+        ExplicitHeight = 276
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -967,11 +967,10 @@ inherited Report_GoodsForm: TReport_GoodsForm
   end
   inherited MasterDS: TDataSource
     Left = 72
-    Top = 208
+    Top = 192
   end
   inherited MasterCDS: TClientDataSet
-    Left = 40
-    Top = 208
+    Top = 192
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpReport_Goods'
@@ -1124,10 +1123,10 @@ inherited Report_GoodsForm: TReport_GoodsForm
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
-    FormNameParam.Value = 'TGoodsForm'
+    FormNameParam.Value = 'TGoodsChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsForm'
+    FormName = 'TGoodsChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -1145,6 +1144,21 @@ inherited Report_GoodsForm: TReport_GoodsForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 296
