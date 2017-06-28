@@ -79,9 +79,6 @@ BEGIN
 
            -- сохранили свойство <Глобальный уникальный идентификатор>
            PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GUID(), vbId, inGUID);
-
-           -- !!! ДЛЯ ТЕСТА. Удаляем документ
-           PERFORM lpSetErased_Movement (inMovementId:= vbMovementId, inUserId:= vbUserId);
       END IF;
 
       RETURN vbId;

@@ -20,7 +20,6 @@ $BODY$
    DECLARE vbMovementId Integer;
    DECLARE vbCountForPrice TFloat;
    DECLARE vbStatusId Integer;
-   DECLARE vbPrinted Boolean;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderExternal());
@@ -44,7 +43,7 @@ BEGIN
 
       IF vbStatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_Erased())
       THEN -- если заявка проведена, то распроводим
-           SELECT outPrinted INTO vbPrinted FROM lpUnComplete_Movement_OrderExternal (inMovementId:= vbMovementId, inUserId:= vbUserId);
+           PERFORM lpUnComplete_Movement_OrderExternal (inMovementId:= vbMovementId, inUserId:= vbUserId);
       END IF;
 
       SELECT MovementItem.Id 
@@ -71,11 +70,6 @@ BEGIN
       -- сохранили свойство <Глобальный уникальный идентификатор>
       PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GUID(), vbId, inGUID);
       
-      -- !!!ВРЕМЕННО - НЕ проводим заявку!!!
-      -- SELECT outPrinted INTO vbPrinted FROM lpComplete_Movement_OrderExternal (inMovementId:= vbMovementId, inUserId:= vbUserId);
-      -- !!!ВРЕМЕННО - УДАЛЯЕМ заявку!!!
-      PERFORM lpSetErased_Movement (inMovementId:= vbMovementId, inUserId:= vbUserId);
-
       RETURN vbId;
 
 END;

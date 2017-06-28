@@ -27,30 +27,30 @@ uses
 
 type
   TPartner_PriceList_viewForm = class(TAncestorEnumForm)
-    colInvNumber: TcxGridDBColumn;
-    colStartDate: TcxGridDBColumn;
-    colJuridicalCode: TcxGridDBColumn;
-    colJuridicalName: TcxGridDBColumn;
-    colPaidKindName: TcxGridDBColumn;
-    colInfoMoneyName: TcxGridDBColumn;
-    colisErased: TcxGridDBColumn;
-    clOKPO: TcxGridDBColumn;
-    clEndDate: TcxGridDBColumn;
-    clInfoMoneyDestinationName: TcxGridDBColumn;
-    clInfoMoneyGroupName: TcxGridDBColumn;
-    clInfoMoneyCode: TcxGridDBColumn;
-    colPartnerCode: TcxGridDBColumn;
-    colPartnerName: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    StartDate: TcxGridDBColumn;
+    JuridicalCode: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
+    InfoMoneyName: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
+    OKPO: TcxGridDBColumn;
+    EndDate: TcxGridDBColumn;
+    InfoMoneyDestinationName: TcxGridDBColumn;
+    InfoMoneyGroupName: TcxGridDBColumn;
+    InfoMoneyCode: TcxGridDBColumn;
+    PartnerCode: TcxGridDBColumn;
+    PartnerName: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    colCode: TcxGridDBColumn;
-    colContractComment: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    ContractComment: TcxGridDBColumn;
     actChoiceRoute: TOpenChoiceForm;
     actChoiceRouteSorting: TOpenChoiceForm;
     actChoicePersonalTake: TOpenChoiceForm;
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
-    Id: TcxGridDBColumn;
+    ContainerId: TcxGridDBColumn;
     PersonalTradeCode: TcxGridDBColumn;
     PersonalTradeName: TcxGridDBColumn;
     PositionName_PersonalTrade: TcxGridDBColumn;

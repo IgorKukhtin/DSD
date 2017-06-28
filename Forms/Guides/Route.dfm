@@ -27,7 +27,6 @@ object RouteForm: TRouteForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = 24
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -38,7 +37,7 @@ object RouteForm: TRouteForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
+      OptionsBehavior.IncSearchItem = Name
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -50,51 +49,51 @@ object RouteForm: TRouteForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
         Width = 54
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Width = 176
       end
-      object clBranchName: TcxGridDBColumn
+      object BranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
         DataBinding.FieldName = 'BranchName'
         HeaderAlignmentVert = vaCenter
         Width = 125
       end
-      object clUnitName: TcxGridDBColumn
+      object UnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'UnitName'
         HeaderAlignmentVert = vaCenter
         Width = 142
       end
-      object clRouteKind: TcxGridDBColumn
+      object RouteKindName: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1084#1072#1088#1096#1088#1091#1090#1072
         DataBinding.FieldName = 'RouteKindName'
         HeaderAlignmentVert = vaCenter
         Width = 92
       end
-      object clFreight: TcxGridDBColumn
+      object FreightName: TcxGridDBColumn
         Caption = #1043#1088#1091#1079
         DataBinding.FieldName = 'FreightName'
         Visible = False
         HeaderAlignmentVert = vaCenter
         Width = 52
       end
-      object clRouteGroupName: TcxGridDBColumn
+      object RouteGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
         DataBinding.FieldName = 'RouteGroupName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 89
       end
-      object clRateSumma: TcxGridDBColumn
+      object RateSumma: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1084#1072#1085#1076'.'
         DataBinding.FieldName = 'RateSumma'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -106,7 +105,7 @@ object RouteForm: TRouteForm
         Options.Editing = False
         Width = 74
       end
-      object clTimePrice: TcxGridDBColumn
+      object TimePrice: TcxGridDBColumn
         Caption = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1095' ('#1082#1086#1084#1084#1072#1085#1076'.)'
         DataBinding.FieldName = 'TimePrice'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -118,7 +117,7 @@ object RouteForm: TRouteForm
         Options.Editing = False
         Width = 104
       end
-      object clRatePrice: TcxGridDBColumn
+      object RatePrice: TcxGridDBColumn
         Caption = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1082#1084' ('#1076#1072#1083#1100#1085#1086#1073'.)'
         DataBinding.FieldName = 'RatePrice'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -130,7 +129,7 @@ object RouteForm: TRouteForm
         Options.Editing = False
         Width = 95
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'

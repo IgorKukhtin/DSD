@@ -27,8 +27,8 @@ type
   TSourceFuel_ObjectForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -45,21 +45,21 @@ type
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
-    clErased: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clJuridicalCode: TcxGridDBColumn;
-    clJuridicalName: TcxGridDBColumn;
-    clGoodsCode: TcxGridDBColumn;
-    clGoodsName: TcxGridDBColumn;
-    clFuelName: TcxGridDBColumn;
-    clItemName: TcxGridDBColumn;
-    clPaidKindName: TcxGridDBColumn;
-    clInvNumber: TcxGridDBColumn;
-    clChangePercent: TcxGridDBColumn;
-    clChangePrice: TcxGridDBColumn;
+    JuridicalCode: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    FuelName: TcxGridDBColumn;
+    ItemName: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    ChangePercent: TcxGridDBColumn;
+    ChangePrice: TcxGridDBColumn;
     FormParams: TdsdFormParams;
-    colPersonalDriverName: TcxGridDBColumn;
-    colPersonalDriverName_inf: TcxGridDBColumn;
+    PersonalDriverName: TcxGridDBColumn;
+    PersonalDriverName_inf: TcxGridDBColumn;
 
   private
     { Private declarations }

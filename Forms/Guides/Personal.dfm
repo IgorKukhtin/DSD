@@ -46,7 +46,7 @@ object PersonalForm: TPersonalForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clMemberCode: TcxGridDBColumn
+      object MemberCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'MemberCode'
         HeaderAlignmentHorz = taCenter
@@ -54,7 +54,7 @@ object PersonalForm: TPersonalForm
         Options.Editing = False
         Width = 55
       end
-      object clMemberName: TcxGridDBColumn
+      object MemberName: TcxGridDBColumn
         Caption = #1060#1048#1054
         DataBinding.FieldName = 'MemberName'
         HeaderAlignmentHorz = taCenter
@@ -62,7 +62,7 @@ object PersonalForm: TPersonalForm
         Options.Editing = False
         Width = 155
       end
-      object clPositionName: TcxGridDBColumn
+      object PositionName: TcxGridDBColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
         DataBinding.FieldName = 'PositionName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -77,7 +77,7 @@ object PersonalForm: TPersonalForm
         HeaderAlignmentVert = vaCenter
         Width = 142
       end
-      object clPositionLevelName: TcxGridDBColumn
+      object PositionLevelName: TcxGridDBColumn
         Caption = #1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
         DataBinding.FieldName = 'PositionLevelName'
         Visible = False
@@ -86,7 +86,7 @@ object PersonalForm: TPersonalForm
         Options.Editing = False
         Width = 113
       end
-      object clPersonalGroupName: TcxGridDBColumn
+      object PersonalGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072
         DataBinding.FieldName = 'PersonalGroupName'
         Visible = False
@@ -95,7 +95,7 @@ object PersonalForm: TPersonalForm
         Options.Editing = False
         Width = 133
       end
-      object clCard: TcxGridDBColumn
+      object Card: TcxGridDBColumn
         Caption = #8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'1)'
         DataBinding.FieldName = 'Card'
         HeaderAlignmentHorz = taCenter
@@ -129,7 +129,7 @@ object PersonalForm: TPersonalForm
         Options.Editing = False
         Width = 80
       end
-      object clUnitName: TcxGridDBColumn
+      object UnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'UnitName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -161,7 +161,7 @@ object PersonalForm: TPersonalForm
         Options.Editing = False
         Width = 70
       end
-      object clDateIn: TcxGridDBColumn
+      object DateIn: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072
         DataBinding.FieldName = 'DateIn'
         HeaderAlignmentHorz = taCenter
@@ -169,7 +169,7 @@ object PersonalForm: TPersonalForm
         Options.Editing = False
         Width = 60
       end
-      object clDateOut: TcxGridDBColumn
+      object DateOut: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
         DataBinding.FieldName = 'DateOut'
         HeaderAlignmentHorz = taCenter
@@ -177,7 +177,7 @@ object PersonalForm: TPersonalForm
         Options.Editing = False
         Width = 70
       end
-      object clIsDateOut: TcxGridDBColumn
+      object IsDateOut: TcxGridDBColumn
         Caption = #1059#1074#1086#1083#1077#1085
         DataBinding.FieldName = 'isDateOut'
         HeaderAlignmentHorz = taCenter
@@ -185,7 +185,7 @@ object PersonalForm: TPersonalForm
         Options.Editing = False
         Width = 55
       end
-      object clIsMain: TcxGridDBColumn
+      object IsMain: TcxGridDBColumn
         Caption = #1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088'.'
         DataBinding.FieldName = 'isMain'
         HeaderAlignmentHorz = taCenter
@@ -193,7 +193,7 @@ object PersonalForm: TPersonalForm
         Options.Editing = False
         Width = 70
       end
-      object clIsOfficial: TcxGridDBColumn
+      object IsOfficial: TcxGridDBColumn
         Caption = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
         DataBinding.FieldName = 'isOfficial'
         HeaderAlignmentHorz = taCenter
@@ -201,7 +201,7 @@ object PersonalForm: TPersonalForm
         Options.Editing = False
         Width = 80
       end
-      object clPersonalServiceListName: TcxGridDBColumn
+      object PersonalServiceListName: TcxGridDBColumn
         Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'('#1075#1083#1072#1074#1085#1072#1103')'
         DataBinding.FieldName = 'PersonalServiceListName'
         HeaderAlignmentHorz = taCenter
@@ -233,7 +233,7 @@ object PersonalForm: TPersonalForm
         Options.Editing = False
         Width = 120
       end
-      object clStorageLineName: TcxGridDBColumn
+      object StorageLineName: TcxGridDBColumn
         Caption = #1051#1080#1085#1080#1103' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
         DataBinding.FieldName = 'StorageLineName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -248,7 +248,7 @@ object PersonalForm: TPersonalForm
         HeaderAlignmentVert = vaCenter
         Width = 90
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'

@@ -25,7 +25,6 @@ object ReceiptComponentsForm: TReceiptComponentsForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitHeight = 563
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -44,7 +43,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090' ('#1087#1086#1083#1100#1079'.)'
         DataBinding.FieldName = 'Code'
         Visible = False
@@ -53,7 +52,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Options.Editing = False
         Width = 39
       end
-      object clReceiptCode: TcxGridDBColumn
+      object ReceiptCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'.'
         DataBinding.FieldName = 'ReceiptCode'
         HeaderAlignmentHorz = taCenter
@@ -61,7 +60,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Options.Editing = False
         Width = 90
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
         DataBinding.FieldName = 'Name'
         Visible = False
@@ -106,7 +105,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Options.Editing = False
         Width = 70
       end
-      object clGoodsCode: TcxGridDBColumn
+      object GoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1090#1086#1074'. ('#1087#1088#1080#1093'.)'
         DataBinding.FieldName = 'GoodsCode'
         HeaderAlignmentHorz = taCenter
@@ -114,7 +113,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Options.Editing = False
         Width = 67
       end
-      object clGoodsName: TcxGridDBColumn
+      object GoodsName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1087#1088#1080#1093#1086#1076')'
         DataBinding.FieldName = 'GoodsName'
         HeaderAlignmentHorz = taCenter
@@ -122,7 +121,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Options.Editing = False
         Width = 150
       end
-      object clMeasureName: TcxGridDBColumn
+      object MeasureName: TcxGridDBColumn
         Caption = #1045#1076'. '#1080#1079#1084'. ('#1087#1088#1080#1093'.)'
         DataBinding.FieldName = 'MeasureName'
         HeaderAlignmentHorz = taCenter
@@ -130,7 +129,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Options.Editing = False
         Width = 60
       end
-      object clGoodsKindName: TcxGridDBColumn
+      object GoodsKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1087#1088#1080#1093'.)'
         DataBinding.FieldName = 'GoodsKindName'
         HeaderAlignmentHorz = taCenter
@@ -138,7 +137,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Options.Editing = False
         Width = 100
       end
-      object clGoodsKindCompleteName: TcxGridDBColumn
+      object GoodsKindCompleteName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' '#1043#1055' ('#1087#1088#1080#1093'.)'
         DataBinding.FieldName = 'GoodsKindCompleteName'
         HeaderAlignmentHorz = taCenter
@@ -146,7 +145,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Options.Editing = False
         Width = 100
       end
-      object clIsMain: TcxGridDBColumn
+      object IsMain: TcxGridDBColumn
         Caption = #1043#1083#1072#1074#1085'.'
         DataBinding.FieldName = 'isMain'
         HeaderAlignmentHorz = taCenter
@@ -154,7 +153,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Options.Editing = False
         Width = 50
       end
-      object clTaxExit: TcxGridDBColumn
+      object TaxExit: TcxGridDBColumn
         Caption = '% '#1074#1099#1093'.'
         DataBinding.FieldName = 'TaxExit'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -166,7 +165,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Options.Editing = False
         Width = 40
       end
-      object clTaxLoss: TcxGridDBColumn
+      object TaxLoss: TcxGridDBColumn
         Caption = '% '#1087#1086#1090#1077#1088#1100
         DataBinding.FieldName = 'TaxLoss'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -189,7 +188,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Options.Editing = False
         Width = 80
       end
-      object clValue: TcxGridDBColumn
+      object Value: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093'.)'
         DataBinding.FieldName = 'Value'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -200,7 +199,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Options.Editing = False
         Width = 62
       end
-      object clTotalWeightMain: TcxGridDBColumn
+      object TotalWeightMain: TcxGridDBColumn
         Caption = #1048#1090#1086#1075#1086' '#1074#1077#1089' '#1089#1099#1088#1100#1103' (100 '#1082#1075', '#1087#1088#1080#1093'.)'
         DataBinding.FieldName = 'TotalWeightMain'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -212,7 +211,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Options.Editing = False
         Width = 100
       end
-      object clTotalWeight: TcxGridDBColumn
+      object TotalWeight: TcxGridDBColumn
         Caption = #1048#1090#1086#1075#1086' '#1074#1077#1089' ('#1087#1088#1080#1093'.)'
         DataBinding.FieldName = 'TotalWeight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -224,7 +223,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Options.Editing = False
         Width = 70
       end
-      object clReceiptKindName: TcxGridDBColumn
+      object ReceiptKindName: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
         DataBinding.FieldName = 'ReceiptKindName'
         Visible = False
@@ -233,7 +232,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Options.Editing = False
         Width = 77
       end
-      object clIsErased: TcxGridDBColumn
+      object IsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085' ('#1087#1088#1080#1093'.)'
         DataBinding.FieldName = 'isErased'
         Visible = False
@@ -242,7 +241,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Options.Editing = False
         Width = 40
       end
-      object clxGroupNumberChild: TcxGridDBColumn
+      object GroupNumber_Child: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#8470' ('#1088#1072#1089#1093'.)'
         DataBinding.FieldName = 'GroupNumber_Child'
         HeaderAlignmentHorz = taCenter
@@ -250,7 +249,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Options.Editing = False
         Width = 55
       end
-      object clxGoodsCodeChild: TcxGridDBColumn
+      object GoodsCode_Child: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1090#1086#1074'. ('#1088#1072#1089#1093'.)'
         DataBinding.FieldName = 'GoodsCode_Child'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -261,7 +260,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Options.Editing = False
         Width = 70
       end
-      object clxGoodsNameChild: TcxGridDBColumn
+      object GoodsName_Child: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1088#1072#1089#1093#1086#1076')'
         DataBinding.FieldName = 'GoodsName_Child'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -276,7 +275,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         HeaderAlignmentVert = vaCenter
         Width = 155
       end
-      object clxMeasureNameChild: TcxGridDBColumn
+      object MeasureName_Child: TcxGridDBColumn
         Caption = #1045#1076'. '#1080#1079#1084'. ('#1088#1072#1089#1093'.)'
         DataBinding.FieldName = 'MeasureName_Child'
         HeaderAlignmentHorz = taCenter
@@ -284,7 +283,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Options.Editing = False
         Width = 40
       end
-      object clxGoodsKindNameclChild: TcxGridDBColumn
+      object GoodsKindName_Child: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1088#1072#1089#1093'.)'
         DataBinding.FieldName = 'GoodsKindName_Child'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -300,7 +299,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         HeaderAlignmentVert = vaCenter
         Width = 150
       end
-      object clxValueWeight_calc: TcxGridDBColumn
+      object ValueWeight_calc_Child: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' ('#1074#1077#1089', '#1088#1072#1089#1093'.)'
         DataBinding.FieldName = 'ValueWeight_calc_Child'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -311,7 +310,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Options.Editing = False
         Width = 80
       end
-      object clxValueChild: TcxGridDBColumn
+      object Value_Child: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093'.)'
         DataBinding.FieldName = 'Value_Child'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -321,7 +320,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object clxIsTaxExitChild: TcxGridDBColumn
+      object isTaxExit_Child: TcxGridDBColumn
         Caption = #1047#1072#1074#1080#1089#1080#1090' '#1086#1090' % '#1074#1099#1093'.'
         DataBinding.FieldName = 'isTaxExit_Child'
         HeaderAlignmentHorz = taCenter
@@ -329,7 +328,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Options.Editing = False
         Width = 80
       end
-      object clxIsWeightMainChild: TcxGridDBColumn
+      object isWeightMain_Child: TcxGridDBColumn
         Caption = #1042#1093#1086#1076#1080#1090' '#1074' '#1086#1089#1085'. '#1089#1099#1088#1100#1077' (100 '#1082#1075'.)'
         DataBinding.FieldName = 'isWeightMain_Child'
         HeaderAlignmentHorz = taCenter
@@ -337,7 +336,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Options.Editing = False
         Width = 100
       end
-      object clxInfoMoneyCodeChild: TcxGridDBColumn
+      object InfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055
         DataBinding.FieldName = 'InfoMoneyCode'
         Visible = False
@@ -346,7 +345,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Options.Editing = False
         Width = 55
       end
-      object clxInfoMoneyGroupNameChild: TcxGridDBColumn
+      object InfoMoneyGroupName: TcxGridDBColumn
         Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyGroupName'
         Visible = False
@@ -355,7 +354,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Options.Editing = False
         Width = 80
       end
-      object clxInfoMoneyDestinationNameChild: TcxGridDBColumn
+      object InfoMoneyDestinationName: TcxGridDBColumn
         Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'InfoMoneyDestinationName'
         Visible = False
@@ -364,7 +363,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Options.Editing = False
         Width = 70
       end
-      object clxInfoMoneyNameChild: TcxGridDBColumn
+      object InfoMoneyName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyName'
         Visible = False
@@ -373,7 +372,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Options.Editing = False
         Width = 138
       end
-      object clxInsertDate: TcxGridDBColumn
+      object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076', '#1088#1072#1089#1093'.)'
         DataBinding.FieldName = 'InsertDate'
         Visible = False
@@ -382,7 +381,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Options.Editing = False
         Width = 48
       end
-      object clxInsertName: TcxGridDBColumn
+      object InsertName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076', '#1088#1072#1089#1093'.)'
         DataBinding.FieldName = 'InsertName'
         Visible = False
@@ -391,7 +390,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Options.Editing = False
         Width = 70
       end
-      object clxUpdateDate: TcxGridDBColumn
+      object UpdateDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088', '#1088#1072#1089#1093'.)'
         DataBinding.FieldName = 'UpdateDate'
         HeaderAlignmentHorz = taCenter
@@ -399,7 +398,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Options.Editing = False
         Width = 88
       end
-      object clxUpdateName: TcxGridDBColumn
+      object UpdateName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088', '#1088#1072#1089#1093'.)'
         DataBinding.FieldName = 'UpdateName'
         HeaderAlignmentHorz = taCenter
@@ -407,20 +406,20 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Options.Editing = False
         Width = 113
       end
-      object clxCommentChild: TcxGridDBColumn
+      object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1088#1072#1089#1093'.)'
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 200
       end
-      object clxIsErasedChild: TcxGridDBColumn
+      object isErased_Child: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085' ('#1088#1072#1089#1093'.)'
         DataBinding.FieldName = 'isErased_Child'
         Visible = False
         Width = 60
       end
-      object clxColor_calc: TcxGridDBColumn
+      object Color_calc: TcxGridDBColumn
         DataBinding.FieldName = 'Color_calc'
         Visible = False
         VisibleForCustomization = False
@@ -437,7 +436,6 @@ object ReceiptComponentsForm: TReceiptComponentsForm
     Width = 1152
     Height = 5
     AlignSplitter = salBottom
-    ExplicitTop = 589
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -711,11 +709,13 @@ object ReceiptComponentsForm: TReceiptComponentsForm
       FormName = 'TReceiptEditForm'
       FormNameParam.Value = 'TReceiptEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = '0'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InMaskId'
@@ -723,6 +723,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = MasterDS
@@ -739,19 +740,23 @@ object ReceiptComponentsForm: TReceiptComponentsForm
       FormName = 'TReceiptEditForm'
       FormNameParam.Value = 'TReceiptEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inMaskId'
           Value = 0
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
           Value = ''
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = MasterDS
@@ -768,6 +773,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
       FormName = 'TReceiptEditForm'
       FormNameParam.Value = 'TReceiptEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -775,11 +781,13 @@ object ReceiptComponentsForm: TReceiptComponentsForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InMaskId'
           Value = '0'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       ActionType = acUpdate
@@ -827,6 +835,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -834,6 +843,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -856,12 +866,14 @@ object ReceiptComponentsForm: TReceiptComponentsForm
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = 'TGoodsKindForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindId_Child'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -869,6 +881,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
           Component = MasterCDS
           ComponentItem = 'GoodsKindName_Child'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -901,12 +914,14 @@ object ReceiptComponentsForm: TReceiptComponentsForm
       FormName = 'TGoods_ObjectForm'
       FormNameParam.Value = 'TGoods_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsId_Child'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -914,6 +929,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
           Component = MasterCDS
           ComponentItem = 'GoodsName_Child'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -948,17 +964,20 @@ object ReceiptComponentsForm: TReceiptComponentsForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -971,6 +990,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -978,6 +998,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -986,6 +1007,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1033,6 +1055,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
       ReportName = #1055#1077#1095#1072#1090#1100'_'#1088#1077#1094#1077#1087#1090#1086#1074
       ReportNameParam.Value = #1055#1077#1095#1072#1090#1100'_'#1088#1077#1094#1077#1087#1090#1086#1074
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrintDetail: TdsdPrintAction
       Category = 'Print'
@@ -1058,6 +1081,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
       ReportName = #1055#1077#1095#1072#1090#1100'_'#1088#1077#1094#1077#1087#1090#1086#1074
       ReportNameParam.Value = #1055#1077#1095#1072#1090#1100'_'#1088#1077#1094#1077#1087#1090#1086#1074
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actUpdateTaxExit: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1114,6 +1138,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Name = 'inReceiptId'
         Value = 0
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -1121,6 +1146,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 392
@@ -1153,52 +1179,52 @@ object ReceiptComponentsForm: TReceiptComponentsForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <
       item
-        ColorColumn = clxGroupNumberChild
+        ColorColumn = GroupNumber_Child
         ColorValueList = <>
       end
       item
-        ColorColumn = clxGoodsCodeChild
-        ValueColumn = clxColor_calc
+        ColorColumn = GoodsCode_Child
+        ValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = clxGoodsNameChild
-        ValueColumn = clxColor_calc
+        ColorColumn = GoodsName_Child
+        ValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = clxMeasureNameChild
-        ValueColumn = clxColor_calc
+        ColorColumn = MeasureName_Child
+        ValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = clxGoodsKindNameclChild
-        ValueColumn = clxColor_calc
+        ColorColumn = GoodsKindName_Child
+        ValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = clxValueWeight_calc
-        ValueColumn = clxColor_calc
+        ColorColumn = ValueWeight_calc_Child
+        ValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = clxValueChild
-        ValueColumn = clxColor_calc
+        ColorColumn = Value_Child
+        ValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = clxIsTaxExitChild
-        ValueColumn = clxColor_calc
+        ColorColumn = isTaxExit_Child
+        ValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = clxIsWeightMainChild
-        ValueColumn = clxColor_calc
+        ColorColumn = isWeightMain_Child
+        ValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = clxInfoMoneyNameChild
-        ValueColumn = clxColor_calc
+        ColorColumn = InfoMoneyName
+        ValueColumn = Color_calc
         ColorValueList = <>
       end>
     ColumnAddOnList = <
@@ -1222,6 +1248,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Component = MasterCDS
         ComponentItem = 'ReceiptChildId'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inValue'
@@ -1230,6 +1257,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         ComponentItem = 'Value_Child'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outValueWeight'
@@ -1237,6 +1265,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Component = MasterCDS
         ComponentItem = 'ValueWeight_Child'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsWeightMain'
@@ -1245,6 +1274,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         ComponentItem = 'isWeightMain_Child'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsTaxExit'
@@ -1253,6 +1283,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         ComponentItem = 'isTaxExit_Child'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStartDate'
@@ -1261,6 +1292,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         ComponentItem = 'StartDate_Child'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -1269,6 +1301,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         ComponentItem = 'EndDate_Child'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -1277,6 +1310,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inReceiptId'
@@ -1284,6 +1318,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -1291,6 +1326,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Component = MasterCDS
         ComponentItem = 'GoodsId_Child'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindId'
@@ -1298,6 +1334,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Component = MasterCDS
         ComponentItem = 'GoodsKindId_Child'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 728
@@ -1309,6 +1346,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -1329,6 +1367,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 1080
@@ -1352,6 +1391,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Name = 'inReceiptId'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -1359,6 +1399,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindId'
@@ -1366,12 +1407,14 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 1080
@@ -1392,6 +1435,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Component = MasterCDS
         ComponentItem = 'ReceiptChildId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioParam'
@@ -1400,12 +1444,14 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         ComponentItem = 'isTaxExit_Child'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDesc'
         Value = 'zc_ObjectBoolean_ReceiptChild_TaxExit'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 722
@@ -1426,6 +1472,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Component = MasterCDS
         ComponentItem = 'ReceiptChildId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioParam'
@@ -1434,12 +1481,14 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         ComponentItem = 'isWeightMain_Child'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDesc'
         Value = 'zc_ObjectBoolean_ReceiptChild_WeightMain'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 786
@@ -1456,6 +1505,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Component = MasterCDS
         ComponentItem = 'ReceiptChildId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 864
@@ -1472,6 +1522,7 @@ object ReceiptComponentsForm: TReceiptComponentsForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 112

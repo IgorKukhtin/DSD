@@ -29,7 +29,7 @@ type
     Code: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
     TradeMarkName: TcxGridDBColumn;
-    clIsErased: TcxGridDBColumn;
+    IsErased: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     MasterDS: TDataSource;
     MasterCDS: TClientDataSet;

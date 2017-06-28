@@ -53,20 +53,20 @@ type
     GridDS: TDataSource;
     ClientDataSet: TClientDataSet;
     spGrid: TdsdStoredProc;
-    ceCode: TcxGridDBColumn;
-    ceName: TcxGridDBColumn;
-    ceBranchName: TcxGridDBColumn;
-    ceisErased: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    BranchName: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     dsdDBTreeAddOn: TdsdDBTreeAddOn;
     bbChoice: TdxBarButton;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dxBarStatic: TdxBarStatic;
-    ceTreeState: TcxGridDBColumn;
+    isLeaf: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     bbUnitChoiceForm: TdxBarButton;
     dsdOpenUnitForm: TdsdOpenForm;
-    ceAddress: TcxGridDBColumn;
+    Address: TcxGridDBColumn;
   private
     { Private declarations }
   public

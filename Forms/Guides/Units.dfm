@@ -47,7 +47,7 @@ object UnitForm: TUnitForm
       OptionsView.HeaderHeight = 50
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object ceParentName: TcxGridDBColumn
+      object ParentName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'ParentName'
         Visible = False
@@ -55,14 +55,14 @@ object UnitForm: TUnitForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object ceCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 38
       end
-      object ceName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
@@ -71,21 +71,21 @@ object UnitForm: TUnitForm
         SortOrder = soAscending
         Width = 142
       end
-      object ceBranchName: TcxGridDBColumn
+      object BranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
         DataBinding.FieldName = 'BranchName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 95
       end
-      object ceBusinessName: TcxGridDBColumn
+      object BusinessName: TcxGridDBColumn
         Caption = #1041#1080#1079#1085#1077#1089
         DataBinding.FieldName = 'BusinessName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 76
       end
-      object ceJuridicalName: TcxGridDBColumn
+      object JuridicalName: TcxGridDBColumn
         Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
         Visible = False
@@ -93,7 +93,7 @@ object UnitForm: TUnitForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object ceAccountGroupCode: TcxGridDBColumn
+      object AccountGroupCode: TcxGridDBColumn
         Caption = #1050#1086#1076' c'#1095'. '#1075#1088'.'
         DataBinding.FieldName = 'AccountGroupCode'
         Visible = False
@@ -108,7 +108,7 @@ object UnitForm: TUnitForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object ceAccountGroupName: TcxGridDBColumn
+      object AccountGroupName: TcxGridDBColumn
         Caption = #1057#1095#1077#1090' '#1075#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'AccountGroupName'
         Visible = False
@@ -116,7 +116,7 @@ object UnitForm: TUnitForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object ceAccountDirectionCode: TcxGridDBColumn
+      object AccountDirectionCode: TcxGridDBColumn
         Caption = #1050#1086#1076' c'#1095'. '#1085#1072#1087#1088'.'
         DataBinding.FieldName = 'AccountDirectionCode'
         Visible = False
@@ -124,14 +124,14 @@ object UnitForm: TUnitForm
         HeaderAlignmentVert = vaCenter
         Width = 50
       end
-      object ceAccountDirectionName: TcxGridDBColumn
+      object AccountDirectionName: TcxGridDBColumn
         Caption = #1057#1095#1077#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'AccountDirectionName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 76
       end
-      object ceProfitLossGroupCode: TcxGridDBColumn
+      object ProfitLossGroupCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1054#1055#1080#1059' '#1075#1088'.'
         DataBinding.FieldName = 'ProfitLossGroupCode'
         Visible = False
@@ -139,7 +139,7 @@ object UnitForm: TUnitForm
         HeaderAlignmentVert = vaCenter
         Width = 50
       end
-      object ceProfitLossGroupName: TcxGridDBColumn
+      object ProfitLossGroupName: TcxGridDBColumn
         Caption = #1054#1055#1080#1059' '#1075#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'ProfitLossGroupName'
         Visible = False
@@ -147,7 +147,7 @@ object UnitForm: TUnitForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object ceProfitLossDirectionCode: TcxGridDBColumn
+      object ProfitLossDirectionCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1054#1055#1080#1059' '#1085#1072#1087#1088'.'
         DataBinding.FieldName = 'ProfitLossDirectionCode'
         Visible = False
@@ -155,14 +155,14 @@ object UnitForm: TUnitForm
         HeaderAlignmentVert = vaCenter
         Width = 50
       end
-      object ceProfitLossDirectionName: TcxGridDBColumn
+      object ProfitLossDirectionName: TcxGridDBColumn
         Caption = #1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'ProfitLossDirectionName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 76
       end
-      object clInvNumber: TcxGridDBColumn
+      object InvNumber: TcxGridDBColumn
         Caption = #1044#1086#1075#1086#1074#1086#1088' ('#1087#1077#1088#1077#1074#1099#1089#1090#1072#1074#1083#1077#1085#1080#1077' '#1079#1072#1090#1088#1072#1090')'
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
@@ -170,7 +170,7 @@ object UnitForm: TUnitForm
         Options.Editing = False
         Width = 114
       end
-      object clContract_JuridicalName: TcxGridDBColumn
+      object Contract_JuridicalName: TcxGridDBColumn
         Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1076#1086#1075#1086#1074#1086#1088')'
         DataBinding.FieldName = 'Contract_JuridicalName'
         HeaderAlignmentHorz = taCenter
@@ -178,7 +178,7 @@ object UnitForm: TUnitForm
         Options.Editing = False
         Width = 66
       end
-      object clContract_InfomoneyName: TcxGridDBColumn
+      object Contract_InfomoneyName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1076#1086#1075#1086#1074#1086#1088')'
         DataBinding.FieldName = 'Contract_InfomoneyName'
         HeaderAlignmentHorz = taCenter
@@ -265,7 +265,7 @@ object UnitForm: TUnitForm
         Options.Editing = False
         Width = 149
       end
-      object ceAddress: TcxGridDBColumn
+      object Address: TcxGridDBColumn
         Caption = #1040#1076#1088#1077#1089
         DataBinding.FieldName = 'Address'
         HeaderAlignmentHorz = taCenter
@@ -273,7 +273,7 @@ object UnitForm: TUnitForm
         Options.Editing = False
         Width = 100
       end
-      object ceIsErased: TcxGridDBColumn
+      object IsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
