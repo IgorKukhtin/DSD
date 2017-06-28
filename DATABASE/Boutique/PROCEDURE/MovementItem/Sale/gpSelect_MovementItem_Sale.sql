@@ -13,7 +13,6 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Sale(
 RETURNS TABLE (Id Integer, PartionId Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
-             , CompositionGroupName TVarChar
              , CompositionName TVarChar
              , GoodsInfoName TVarChar
              , LineFabricaName TVarChar
@@ -23,7 +22,9 @@ RETURNS TABLE (Id Integer, PartionId Integer
              , DiscountSaleKindId Integer, DiscountSaleKindName TVarChar
              , Amount TFloat, Remains TFloat
              , OperPrice TFloat, CountForPrice TFloat, OperPriceList TFloat
-             , AmountSumm TFloat, AmountPriceListSumm TFloat
+             , TotalSumm TFloat
+             , TotalSummBalance TFloat
+             , TotalSummPriceList TFloat
              , CurrencyValue TFloat, ParValue TFloat
              , ChangePercent TFloat, SummChangePercent TFloat
              , TotalChangePercent TFloat, TotalChangePercentPay TFloat
@@ -72,6 +73,12 @@ BEGIN
                            , COALESCE (MIFloat_CurrencyValue.ValueData, 0)         AS CurrencyValue
                            , COALESCE (MIFloat_ParValue.ValueData, 0)              AS ParValue
                            , COALESCE (MIFloat_ChangePercent.ValueData, 0)         AS ChangePercent
+                           , CAST (CASE WHEN MIFloat_CountForPrice.ValueData <> 0
+                                             THEN MovementItem.Amount * COALESCE (MIFloat_OperPrice.ValueData, 0) / MIFloat_CountForPrice.ValueData
+                                         ELSE MovementItem.Amount * COALESCE (MIFloat_OperPrice.ValueData, 0)
+                                   END AS NUMERIC (16, 2)) AS TotalSumm
+                           , CAST (MovementItem.Amount * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 2)) AS TotalSummPriceList
+                           
                            , COALESCE (MIFloat_SummChangePercent.ValueData, 0)     AS SummChangePercent
                            , COALESCE (MIFloat_TotalChangePercent.ValueData, 0)    AS TotalChangePercent
                            , COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0) AS TotalChangePercentPay
@@ -138,7 +145,6 @@ BEGIN
                        )
 
     , tmpMI_Child AS (SELECT MovementItem.ParentId
-                         --, MILinkObject_Currency.ObjectId                AS CurrencyId
                            , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_GRN() THEN MovementItem.Amount ELSE 0 END) AS Amount_GRN
                            , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_USD() THEN MovementItem.Amount ELSE 0 END) AS Amount_USD
                            , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN MovementItem.Amount ELSE 0 END) AS Amount_EUR
@@ -154,23 +160,6 @@ BEGIN
                                                             AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
                       GROUP BY MovementItem.ParentId
                       )
-   , tmpContainer AS (SELECT Container.PartionId
-                           --, Container.ObjectId                                        AS GoodsId
-                           , Container.Amount - SUM (COALESCE (MIContainer.Amount, 0)) AS Remains
-                      FROM tmpMI_Master
-                           INNER JOIN Container ON Container.ObjectId = tmpMI_Master.GoodsId
-                                               AND Container.PartionId = tmpMI_Master.PartionId
-                                               AND Container.DescId = zc_Container_count()
-                                               AND Container.WhereObjectId = vbUnitId
-                           LEFT JOIN MovementItemContainer AS MIContainer 
-                                                           ON MIContainer.ContainerId = Container.Id
-                                                          AND MIContainer.OperDate >= vbOperDate
-                      GROUP BY Container.PartionId 
-                             , Container.Amount 
-                             --, Container.ObjectId
-                      HAVING (Container.Amount - SUM (COALESCE (MIContainer.Amount, 0))) <> 0
-                    )
-
 
        -- результат
        SELECT
@@ -182,7 +171,6 @@ BEGIN
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData       AS MeasureName
 
-           , Object_CompositionGroup.ValueData   AS CompositionGroupName  
            , Object_Composition.ValueData   AS CompositionName
            , Object_GoodsInfo.ValueData     AS GoodsInfoName
            , Object_LineFabrica.ValueData   AS LineFabricaName
@@ -194,18 +182,15 @@ BEGIN
            , Object_DiscountSaleKind.ValueData AS DiscountSaleKindName
 
            , tmpMI.Amount         ::TFloat
-           , tmpContainer.Remains ::TFloat
+           , Container.Amount     ::TFloat AS Remains
 
            , tmpMI.OperPrice      ::TFloat
            , tmpMI.CountForPrice  ::TFloat
            , tmpMI.OperPriceList  ::TFloat
 
-           , CAST (CASE WHEN tmpMI.CountForPrice <> 0
-                           THEN CAST (COALESCE (tmpMI.Amount, 0) * tmpMI.OperPrice / tmpMI.CountForPrice AS NUMERIC (16, 2))
-                        ELSE CAST ( COALESCE (tmpMI.Amount, 0) * tmpMI.OperPrice AS NUMERIC (16, 2))
-                   END AS TFloat) AS AmountSumm
-
-           , CAST ( (COALESCE (tmpMI.Amount, 0) * tmpMI.OperPriceList) AS TFloat) AS AmountPriceListSumm
+           , tmpMI.TotalSumm           ::TFloat
+           , (CAST (tmpMI.TotalSumm * tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END AS NUMERIC (16, 2))) :: TFloat AS TotalSummBalance 
+           , tmpMI.TotalSummPriceList  ::TFloat
 
            , tmpMI.CurrencyValue            ::TFloat
            , tmpMI.ParValue                 ::TFloat
@@ -229,6 +214,10 @@ BEGIN
            , tmpMI.isErased
 
        FROM tmpMI_Master AS tmpMI
+            LEFT JOIN Container ON Container.PartionId     = tmpMI.PartionId
+                               AND Container.WhereObjectId = vbUnitId
+                               AND Container.DescId        = zc_Container_count()
+                               
             LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI.Id
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
             LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmpMI.PartionId                                 
@@ -247,8 +236,6 @@ BEGIN
                                   AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
 
            LEFT JOIN Object AS Object_DiscountSaleKind ON Object_DiscountSaleKind.Id = tmpMI.DiscountSaleKindId
-           LEFT JOIN tmpContainer ON tmpContainer.PartionId = tmpMI.PartionId  
-                                 --AND tmpContainer.GoodsId = tmpMI.GoodsId
 
        ;
 

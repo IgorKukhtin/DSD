@@ -56,9 +56,9 @@ type
     cxGridDBTableView: TcxGridDBTableView;
     Code: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
-    Price: TcxGridDBColumn;
-    AmountSumm: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    OperPrice: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     actUpdateMasterDS: TdsdUpdateDataSet;
     spInsertUpdateMIMaster: TdsdStoredProc;
@@ -146,7 +146,6 @@ type
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
     BarCode: TcxGridDBColumn;
-    Amount: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     cxSplitter1: TcxSplitter;
     spSelectBarCode: TdsdStoredProc;
