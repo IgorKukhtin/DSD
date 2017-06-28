@@ -34,7 +34,7 @@ object PartnerContactForm: TPartnerContactForm
         item
           Format = #1057#1090#1088#1086#1082': ,0'
           Kind = skCount
-          Column = ceName
+          Column = Name
         end>
       DataController.Summary.SummaryGroups = <>
       OptionsCustomize.ColumnHiding = True
@@ -88,7 +88,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 90
       end
-      object ceCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         Visible = False
@@ -97,7 +97,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 40
       end
-      object ceName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
@@ -105,7 +105,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 120
       end
-      object ceAddress: TcxGridDBColumn
+      object Address: TcxGridDBColumn
         Caption = #1040#1076#1088#1077#1089
         DataBinding.FieldName = 'Address'
         HeaderAlignmentHorz = taCenter
@@ -113,7 +113,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 200
       end
-      object colShortName: TcxGridDBColumn
+      object ShortName: TcxGridDBColumn
         Caption = #1059#1089#1083#1086#1074#1085#1086#1077' '#1086#1073#1086#1079#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'ShortName'
         HeaderAlignmentHorz = taCenter
@@ -130,7 +130,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 100
       end
-      object ceJuridicalName: TcxGridDBColumn
+      object JuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentHorz = taCenter
@@ -138,7 +138,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 120
       end
-      object clOKPO: TcxGridDBColumn
+      object OKPO: TcxGridDBColumn
         Caption = #1054#1050#1055#1054
         DataBinding.FieldName = 'OKPO'
         Visible = False
@@ -147,7 +147,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 55
       end
-      object colAreaName: TcxGridDBColumn
+      object AreaName: TcxGridDBColumn
         Caption = #1056#1077#1075#1080#1086#1085
         DataBinding.FieldName = 'AreaName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -171,7 +171,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 100
       end
-      object clRouteName: TcxGridDBColumn
+      object RouteName: TcxGridDBColumn
         Caption = #1052#1072#1088#1096#1088#1091#1090
         DataBinding.FieldName = 'RouteName'
         HeaderAlignmentHorz = taCenter
@@ -179,7 +179,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 100
       end
-      object colPartnerTagName: TcxGridDBColumn
+      object PartnerTagName: TcxGridDBColumn
         Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1088#1075#1086#1074#1086#1081' '#1090#1086#1095#1082#1080
         DataBinding.FieldName = 'PartnerTagName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -212,7 +212,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 100
       end
-      object colPersonalName: TcxGridDBColumn
+      object PersonalName: TcxGridDBColumn
         Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1089#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088')'
         DataBinding.FieldName = 'PersonalName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -245,7 +245,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 100
       end
-      object colPersonalTradeName: TcxGridDBColumn
+      object PersonalTradeName: TcxGridDBColumn
         Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1058#1055')'
         DataBinding.FieldName = 'PersonalTradeName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -270,7 +270,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 100
       end
-      object clPersonalMerchName: TcxGridDBColumn
+      object PersonalMerchName: TcxGridDBColumn
         Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1084#1077#1088#1095#1072#1085#1076#1072#1081#1079#1077#1088')'
         DataBinding.FieldName = 'PersonalMerchName'
         Visible = False
@@ -296,7 +296,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 100
       end
-      object colMemberTakeName: TcxGridDBColumn
+      object MemberTakeName: TcxGridDBColumn
         Caption = #1060#1048#1054' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
         DataBinding.FieldName = 'MemberTakeName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -313,7 +313,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 90
       end
-      object colRegionName: TcxGridDBColumn
+      object RegionName: TcxGridDBColumn
         Caption = #1054#1073#1083#1072#1089#1090#1100
         DataBinding.FieldName = 'RegionName'
         HeaderAlignmentHorz = taCenter
@@ -321,7 +321,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 100
       end
-      object colProvinceName: TcxGridDBColumn
+      object ProvinceName: TcxGridDBColumn
         Caption = #1056#1072#1081#1086#1085
         DataBinding.FieldName = 'ProvinceName'
         HeaderAlignmentHorz = taCenter
@@ -329,7 +329,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 80
       end
-      object colCityKindName: TcxGridDBColumn
+      object CityKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1085'.'#1087'.'
         DataBinding.FieldName = 'CityKindName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -345,7 +345,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 40
       end
-      object colCityName: TcxGridDBColumn
+      object CityName: TcxGridDBColumn
         Caption = #1053#1072#1089#1077#1083#1077#1085#1085#1099#1081' '#1087#1091#1085#1082#1090
         DataBinding.FieldName = 'CityName'
         HeaderAlignmentHorz = taCenter
@@ -353,7 +353,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 100
       end
-      object colProvinceCityName: TcxGridDBColumn
+      object ProvinceCityName: TcxGridDBColumn
         Caption = #1052#1080#1082#1088#1086#1088#1072#1081#1086#1085
         DataBinding.FieldName = 'ProvinceCityName'
         Visible = False
@@ -362,7 +362,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 80
       end
-      object colStreetKindName: TcxGridDBColumn
+      object StreetKindName: TcxGridDBColumn
         Caption = #1042#1080#1076
         DataBinding.FieldName = 'StreetKindName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -378,7 +378,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 40
       end
-      object colPostalCode: TcxGridDBColumn
+      object PostalCode: TcxGridDBColumn
         Caption = #1055#1086#1095#1090#1086#1074#1099#1081' '#1080#1085#1076#1077#1082#1089
         DataBinding.FieldName = 'PostalCode'
         Visible = False
@@ -387,7 +387,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 70
       end
-      object clStreetName: TcxGridDBColumn
+      object StreetName: TcxGridDBColumn
         Caption = #1059#1083#1080#1094#1072'/'#1087#1088#1086#1089#1087#1077#1082#1090
         DataBinding.FieldName = 'StreetName'
         HeaderAlignmentHorz = taCenter
@@ -395,7 +395,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 80
       end
-      object clHouseNumber: TcxGridDBColumn
+      object HouseNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1084#1072
         DataBinding.FieldName = 'HouseNumber'
         HeaderAlignmentHorz = taCenter
@@ -403,7 +403,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 45
       end
-      object clCaseNumber: TcxGridDBColumn
+      object CaseNumber: TcxGridDBColumn
         Caption = #8470' '#1082#1086#1088#1087'.'
         DataBinding.FieldName = 'CaseNumber'
         HeaderAlignmentHorz = taCenter
@@ -411,7 +411,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 45
       end
-      object clRoomNumber: TcxGridDBColumn
+      object RoomNumber: TcxGridDBColumn
         Caption = #8470' '#1082#1074'.'
         DataBinding.FieldName = 'RoomNumber'
         HeaderAlignmentHorz = taCenter
@@ -419,7 +419,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 45
       end
-      object colOrder_Name: TcxGridDBColumn
+      object Order_Name: TcxGridDBColumn
         Caption = #1047#1072#1082#1072#1079' '#1060#1048#1054
         DataBinding.FieldName = 'Order_Name'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -433,7 +433,7 @@ object PartnerContactForm: TPartnerContactForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object colOrder_Phone: TcxGridDBColumn
+      object Order_Phone: TcxGridDBColumn
         Caption = #1047#1072#1082#1072#1079' '#1090#1077#1083'.'
         DataBinding.FieldName = 'Order_Phone'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -447,7 +447,7 @@ object PartnerContactForm: TPartnerContactForm
         HeaderAlignmentVert = vaCenter
         Width = 75
       end
-      object colOrder_Mail: TcxGridDBColumn
+      object Order_Mail: TcxGridDBColumn
         Caption = #1047#1072#1082#1072#1079' Email'
         DataBinding.FieldName = 'Order_Mail'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -461,7 +461,7 @@ object PartnerContactForm: TPartnerContactForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object colDoc_Name: TcxGridDBColumn
+      object Doc_Name: TcxGridDBColumn
         Caption = #1055#1077#1088#1074#1080#1095#1082#1072' '#1060#1048#1054
         DataBinding.FieldName = 'Doc_Name'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -476,7 +476,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 80
       end
-      object colDoc_Phone: TcxGridDBColumn
+      object Doc_Phone: TcxGridDBColumn
         Caption = #1055#1077#1088#1074#1080#1095#1082#1072' '#1090#1077#1083'.'
         DataBinding.FieldName = 'Doc_Phone'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -491,7 +491,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 75
       end
-      object colDoc_Mail: TcxGridDBColumn
+      object Doc_Mail: TcxGridDBColumn
         Caption = #1055#1077#1088#1074#1080#1095#1082#1072' Email'
         DataBinding.FieldName = 'Doc_Mail'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -506,7 +506,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 80
       end
-      object colAct_Name: TcxGridDBColumn
+      object Act_Name: TcxGridDBColumn
         Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1060#1048#1054
         DataBinding.FieldName = 'Act_Name'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -521,7 +521,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 80
       end
-      object colAct_Phone: TcxGridDBColumn
+      object Act_Phone: TcxGridDBColumn
         Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1090#1077#1083'.'
         DataBinding.FieldName = 'Act_Phone'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -536,7 +536,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 75
       end
-      object colAct_Mail: TcxGridDBColumn
+      object Act_Mail: TcxGridDBColumn
         Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' Email'
         DataBinding.FieldName = 'Act_Mail'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -551,7 +551,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 80
       end
-      object clInfoMoneyCode: TcxGridDBColumn
+      object InfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055
         DataBinding.FieldName = 'InfoMoneyCode'
         HeaderAlignmentHorz = taCenter
@@ -559,7 +559,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 40
       end
-      object clInfoMoneyGroupName: TcxGridDBColumn
+      object InfoMoneyGroupName: TcxGridDBColumn
         Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyGroupName'
         Visible = False
@@ -568,7 +568,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 107
       end
-      object clInfoMoneyDestinationName: TcxGridDBColumn
+      object InfoMoneyDestinationName: TcxGridDBColumn
         Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'InfoMoneyDestinationName'
         Visible = False
@@ -577,7 +577,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 124
       end
-      object clInfoMoneyName: TcxGridDBColumn
+      object InfoMoneyName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyName'
         HeaderAlignmentHorz = taCenter
@@ -594,7 +594,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 100
       end
-      object clNameInteger: TcxGridDBColumn
+      object NameInteger: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' Integer'
         DataBinding.FieldName = 'NameInteger'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -611,7 +611,7 @@ object PartnerContactForm: TPartnerContactForm
         Options.Editing = False
         Width = 100
       end
-      object ceisErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'

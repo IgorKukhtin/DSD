@@ -48,9 +48,9 @@ type
     spErasedUnErased: TdsdStoredProc;
     bbChoice: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
-    clErased: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
@@ -63,10 +63,10 @@ type
     dsdSetErased: TdsdUpdateErased;
     N3: TMenuItem;
     N4: TMenuItem;
-    clCityName: TcxGridDBColumn;
-    clCityKindName: TcxGridDBColumn;
-    clProvinceName: TcxGridDBColumn;
-    clRegionName: TcxGridDBColumn;
+    CityName: TcxGridDBColumn;
+    CityKindName: TcxGridDBColumn;
+    ProvinceName: TcxGridDBColumn;
+    RegionName: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
   private

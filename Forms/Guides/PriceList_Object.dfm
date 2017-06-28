@@ -35,7 +35,7 @@ object PriceList_ObjectForm: TPriceList_ObjectForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
+      OptionsBehavior.IncSearchItem = Name
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -49,7 +49,7 @@ object PriceList_ObjectForm: TPriceList_ObjectForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         GroupSummaryAlignment = taCenter
@@ -57,7 +57,7 @@ object PriceList_ObjectForm: TPriceList_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 50
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         GroupSummaryAlignment = taCenter
@@ -72,7 +72,7 @@ object PriceList_ObjectForm: TPriceList_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object clPriceWithVAT: TcxGridDBColumn
+      object PriceWithVAT: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
         DataBinding.FieldName = 'PriceWithVAT'
         GroupSummaryAlignment = taCenter
@@ -80,7 +80,7 @@ object PriceList_ObjectForm: TPriceList_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object clVATPercent: TcxGridDBColumn
+      object VATPercent: TcxGridDBColumn
         Caption = '% '#1053#1044#1057
         DataBinding.FieldName = 'VATPercent'
         GroupSummaryAlignment = taCenter
@@ -88,7 +88,7 @@ object PriceList_ObjectForm: TPriceList_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 50
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         Visible = False
@@ -245,6 +245,7 @@ object PriceList_ObjectForm: TPriceList_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -252,6 +253,7 @@ object PriceList_ObjectForm: TPriceList_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PriceWithVAT'
@@ -259,6 +261,7 @@ object PriceList_ObjectForm: TPriceList_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'PriceWithVAT'
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'VATPercent'
@@ -266,18 +269,21 @@ object PriceList_ObjectForm: TPriceList_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'VATPercent'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'CurrencyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyName'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'CurrencyName'
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -305,6 +311,7 @@ object PriceList_ObjectForm: TPriceList_ObjectForm
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 248

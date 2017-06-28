@@ -37,7 +37,7 @@ object SheetWorkTime_ObjectForm: TSheetWorkTime_ObjectForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
+      OptionsBehavior.IncSearchItem = Name
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -49,27 +49,27 @@ object SheetWorkTime_ObjectForm: TSheetWorkTime_ObjectForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
         Width = 54
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 145
       end
-      object clDayKindName: TcxGridDBColumn
+      object DayKindName: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1088#1072#1073#1086#1095#1080#1093' '#1076#1085#1077#1081
         DataBinding.FieldName = 'DayKindName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 132
       end
-      object clStartTime: TcxGridDBColumn
+      object StartTime: TcxGridDBColumn
         Caption = #1042#1088#1077#1084#1103' '#1085#1072#1095#1072#1083#1072
         DataBinding.FieldName = 'StartTime'
         PropertiesClassName = 'TcxDateEditProperties'
@@ -79,7 +79,7 @@ object SheetWorkTime_ObjectForm: TSheetWorkTime_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 64
       end
-      object clWorkTime: TcxGridDBColumn
+      object WorkTime: TcxGridDBColumn
         Caption = #1050#1086#1083'. '#1088#1072#1073'. '#1095#1072#1089#1086#1074
         DataBinding.FieldName = 'WorkTime'
         PropertiesClassName = 'TcxDateEditProperties'
@@ -89,7 +89,7 @@ object SheetWorkTime_ObjectForm: TSheetWorkTime_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 62
       end
-      object clDayOffPeriodDate: TcxGridDBColumn
+      object DayOffPeriodDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '#1087#1077#1088#1080#1086#1076'.'
         DataBinding.FieldName = 'DayOffPeriodDate'
         PropertiesClassName = 'TcxDateEditProperties'
@@ -97,7 +97,7 @@ object SheetWorkTime_ObjectForm: TSheetWorkTime_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 81
       end
-      object clDayOffPeriod: TcxGridDBColumn
+      object DayOffPeriod: TcxGridDBColumn
         Caption = #1055#1086#1089#1084#1077#1085#1085#1086' ('#1088#1072#1073'./'#1074#1099#1093'. '#1076#1085')'
         DataBinding.FieldName = 'DayOffPeriod'
         HeaderAlignmentHorz = taCenter
@@ -105,21 +105,21 @@ object SheetWorkTime_ObjectForm: TSheetWorkTime_ObjectForm
         HeaderHint = #1055#1086#1089#1084#1077#1085#1085#1086' ('#1088#1072#1073'./'#1074#1099#1093'. '#1076#1085#1077#1081')'
         Width = 98
       end
-      object clDayOffWeek: TcxGridDBColumn
+      object DayOffWeek: TcxGridDBColumn
         Caption = #1044#1085#1080' '#1085#1077#1076#1077#1083#1080' ('#1074#1099#1093#1086#1076#1085#1099#1077')'
         DataBinding.FieldName = 'DayOffWeek'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 162
       end
-      object clComment: TcxGridDBColumn
+      object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 152
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'

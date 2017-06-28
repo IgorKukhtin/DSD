@@ -4,23 +4,23 @@ inherited PersonalUnitFounder_ObjectForm: TPersonalUnitFounder_ObjectForm
   ClientWidth = 723
   AddOnFormData.isAlwaysRefresh = True
   ExplicitWidth = 739
-  ExplicitHeight = 458
+  ExplicitHeight = 459
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 723
     Height = 394
-    ExplicitWidth = 699
+    ExplicitWidth = 723
     ExplicitHeight = 394
     ClientRectBottom = 394
     ClientRectRight = 723
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 699
+      ExplicitWidth = 723
       ExplicitHeight = 394
       inherited cxGrid: TcxGrid
         Width = 723
         Height = 394
-        ExplicitWidth = 699
+        ExplicitWidth = 723
         ExplicitHeight = 394
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -32,21 +32,21 @@ inherited PersonalUnitFounder_ObjectForm: TPersonalUnitFounder_ObjectForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object ceCode: TcxGridDBColumn
+          object Code: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 44
           end
-          object ceName: TcxGridDBColumn
+          object Name: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 142
           end
-          object ceBranchName: TcxGridDBColumn
+          object BranchName: TcxGridDBColumn
             Caption = #1060#1080#1083#1080#1072#1083
             DataBinding.FieldName = 'BranchName'
             HeaderAlignmentHorz = taCenter
@@ -61,7 +61,7 @@ inherited PersonalUnitFounder_ObjectForm: TPersonalUnitFounder_ObjectForm
             Options.Editing = False
             Width = 92
           end
-          object ceIsErased: TcxGridDBColumn
+          object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             PropertiesClassName = 'TcxCheckBoxProperties'

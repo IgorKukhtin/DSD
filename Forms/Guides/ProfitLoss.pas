@@ -26,12 +26,12 @@ type
   TProfitLossForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
-    clProfitLossGroup: TcxGridDBColumn;
-    clProfitLossDirection: TcxGridDBColumn;
-    clInfoMoneyDestination: TcxGridDBColumn;
-    clInfoMoney: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    ProfitLossGroupName: TcxGridDBColumn;
+    ProfitLossDirectionName: TcxGridDBColumn;
+    InfoMoneyDestinationName: TcxGridDBColumn;
+    InfoMoneyName: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -56,11 +56,11 @@ type
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
-    clErased: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clInfoMoneyGroupName: TcxGridDBColumn;
-    clOnComplete: TcxGridDBColumn;
+    InfoMoneyGroupName: TcxGridDBColumn;
+    OnComplete: TcxGridDBColumn;
   private
     { Private declarations }
   public

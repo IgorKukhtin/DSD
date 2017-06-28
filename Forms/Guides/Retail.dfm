@@ -119,7 +119,7 @@ object RetailForm: TRetailForm
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
-      object clOperDateOrder: TcxGridDBColumn
+      object OperDateOrder: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1087#1086' '#1076#1072#1090#1077' '#1079#1072#1103#1074#1082#1080
         DataBinding.FieldName = 'OperDateOrder'
         HeaderAlignmentHorz = taCenter
@@ -316,10 +316,12 @@ object RetailForm: TRetailForm
       FormName = 'TRetailEditForm'
       FormNameParam.Value = 'TRetailEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = DataSource
@@ -350,6 +352,7 @@ object RetailForm: TRetailForm
       FormName = 'TRetailEditForm'
       FormNameParam.Value = 'TRetailEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -357,6 +360,7 @@ object RetailForm: TRetailForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -373,6 +377,7 @@ object RetailForm: TRetailForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -380,15 +385,18 @@ object RetailForm: TRetailForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerId'
           Value = 0
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
           Value = ''
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -425,6 +433,7 @@ object RetailForm: TRetailForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -432,6 +441,7 @@ object RetailForm: TRetailForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -440,6 +450,7 @@ object RetailForm: TRetailForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -451,12 +462,14 @@ object RetailForm: TRetailForm
       FormName = 'TPersonal_ObjectForm'
       FormNameParam.Value = 'TPersonal_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'PersonalTradeId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -464,6 +477,7 @@ object RetailForm: TRetailForm
           Component = ClientDataSet
           ComponentItem = 'PersonalTradeName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -475,12 +489,14 @@ object RetailForm: TRetailForm
       FormName = 'TPersonal_ObjectForm'
       FormNameParam.Value = 'TPersonal_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'PersonalMarketingId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -488,6 +504,7 @@ object RetailForm: TRetailForm
           Component = ClientDataSet
           ComponentItem = 'PersonalMarketingName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -499,12 +516,14 @@ object RetailForm: TRetailForm
       FormName = 'TGoodsPropertyForm'
       FormNameParam.Value = 'TGoodsPropertyForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'GoodsPropertyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -512,6 +531,7 @@ object RetailForm: TRetailForm
           Component = ClientDataSet
           ComponentItem = 'GoodsPropertyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -539,6 +559,7 @@ object RetailForm: TRetailForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 296
@@ -587,6 +608,7 @@ object RetailForm: TRetailForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGLNCode'
@@ -595,6 +617,7 @@ object RetailForm: TRetailForm
         ComponentItem = 'GLNCode'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGLNCodeCorporate'
@@ -603,6 +626,7 @@ object RetailForm: TRetailForm
         ComponentItem = 'GLNCodeCorporate'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsPropertyId'
@@ -610,6 +634,7 @@ object RetailForm: TRetailForm
         Component = ClientDataSet
         ComponentItem = 'GoodsPropertyId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalMarketingId'
@@ -617,6 +642,7 @@ object RetailForm: TRetailForm
         Component = ClientDataSet
         ComponentItem = 'PersonalMarketingId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalTradeId'
@@ -624,6 +650,7 @@ object RetailForm: TRetailForm
         Component = ClientDataSet
         ComponentItem = 'PersonalTradeId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 464
