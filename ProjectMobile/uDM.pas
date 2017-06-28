@@ -108,6 +108,9 @@ type
     procedure SaveSyncDataIn(ADate: TDateTime);
     procedure GetDictionaries(AName : string);
 
+    function GetMovementCountItems(AMovementGUID: string): Integer;
+    procedure SetMovementStatus(AMovementGUID: string; AStatusId: Integer);
+
     procedure UploadStoreReal;
     procedure UploadOrderExternal;
     procedure UploadReturnIn;
@@ -937,6 +940,29 @@ begin
 end;
 
 { изменение текущей операции }
+procedure TSyncThread.SetMovementStatus(AMovementGUID: string;
+  AStatusId: Integer);
+var
+  StoredProc : TdsdStoredProc;
+begin
+  StoredProc := TdsdStoredProc.Create(nil);
+
+  with StoredProc, Params do
+  begin
+    OutputType := otResult;
+    Clear;
+    StoredProcName := 'gpSetStatusMobile_Movement';
+    AddParam('inMovementGUID', ftString, ptInput, AMovementGUID);
+    AddParam('inStatusId', ftInteger, ptInput, AStatusId);
+  end;
+
+  try
+    StoredProc.Execute(False, False, False);
+  finally
+    FreeAndNil(StoredProc);
+  end;
+end;
+
 procedure TSyncThread.SetNewProgressTask(AName : string);
 begin
   FName := AName;
@@ -1320,6 +1346,29 @@ begin
   end;
 end;
 
+function TSyncThread.GetMovementCountItems(AMovementGUID: string): Integer;
+var
+  StoredProc : TdsdStoredProc;
+begin
+  StoredProc := TdsdStoredProc.Create(nil);
+
+  with StoredProc, Params do
+  begin
+    OutputType := otResult;
+    Clear;
+    StoredProcName := 'gpGetMobile_Movement_CountItems';
+    AddParam('inMovementGUID', ftString, ptInput, AMovementGUID);
+    AddParam('outItemsCount', ftInteger, ptOutput, 0);
+  end;
+
+  try
+    StoredProc.Execute(False, False, False);
+    Result := StoredProc.ParamByName('outItemsCount').Value;
+  finally
+    FreeAndNil(StoredProc);
+  end;
+end;
+
 { Сохранение на сервер введенной информации по остаткам }
 procedure TSyncThread.UploadStoreReal;
 var
@@ -1375,22 +1424,20 @@ begin
               DM.tblMovementItem_StoreReal.Next;
             end;
 
-            UploadStoredProc.Params.Clear;
-            UploadStoredProc.StoredProcName := 'gpGetMobile_Movement_CountItems';
-            UploadStoredProc.Params.AddParam('inMovementGUID', ftString, ptInput, FieldByName('GUID').AsString);
-            UploadStoredProc.Params.AddParam('outItemsCount', ftInteger, ptOutput, 0);
-            UploadStoredProc.Execute(false, false, false);
-
-            SendCount := UploadStoredProc.ParamByName('outItemsCount').Value;
+            SendCount := GetMovementCountItems(FieldByName('GUID').AsString);
             if ItemsCount = SendCount then
             begin
+              SetMovementStatus(FieldByName('GUID').AsString, DM.tblObject_ConstStatusId_Complete.AsInteger);
               Edit;
               FieldByName('IsSync').AsBoolean := true;
               Post;
             end else
+            begin
+              SetMovementStatus(FieldByName('GUID').AsString, DM.tblObject_ConstStatusId_UnComplete.AsInteger);
               raise Exception.CreateFmt(
                 'По факт. остатку №%s отправились %d позиций из %d. Требуется повторная синхронизация',
                 [FieldByName('INVNUMBER').AsString, SendCount, ItemsCount]);
+            end;
           except
             on E : Exception do
             begin
@@ -1418,7 +1465,7 @@ end;
 procedure TSyncThread.UploadOrderExternal;
 var
   UploadStoredProc: TdsdStoredProc;
-  ItemsCount: Integer;
+  ItemsCount, SendCount: Integer;
 begin
   UploadStoredProc := TdsdStoredProc.Create(nil);
   try
@@ -1478,19 +1525,20 @@ begin
               DM.tblMovementItem_OrderExternal.Next;
             end;
 
-            UploadStoredProc.Params.Clear;
-            UploadStoredProc.StoredProcName := 'gpGetMobile_Movement_CountItems';
-            UploadStoredProc.Params.AddParam('inMovementGUID', ftString, ptInput, FieldByName('GUID').AsString);
-            UploadStoredProc.Params.AddParam('outItemsCount', ftInteger, ptOutput, 0);
-            UploadStoredProc.Execute(false, false, false);
-
-            if ItemsCount = UploadStoredProc.ParamByName('outItemsCount').Value then
+            SendCount := GetMovementCountItems(FieldByName('GUID').AsString);
+            if ItemsCount = SendCount then
             begin
+              SetMovementStatus(FieldByName('GUID').AsString, DM.tblObject_ConstStatusId_Erased.AsInteger);
               Edit;
               FieldByName('IsSync').AsBoolean := true;
               Post;
             end else
-              raise Exception.Create('По заявке №' + FieldByName('INVNUMBER').AsString + ' отправились не все позиции. Требуется повторная синхронизация');
+            begin
+              SetMovementStatus(FieldByName('GUID').AsString, DM.tblObject_ConstStatusId_UnComplete.AsInteger);
+              raise Exception.CreateFmt(
+                'По заявке №%s отправились %d позиций из %d. Требуется повторная синхронизация',
+                [FieldByName('INVNUMBER').AsString, SendCount, ItemsCount]);
+            end;
           except
             on E : Exception do
             begin
@@ -1517,7 +1565,7 @@ end;
 procedure TSyncThread.UploadReturnIn;
 var
   UploadStoredProc : TdsdStoredProc;
-  ItemsCount: Integer;
+  ItemsCount, SendCount: Integer;
 begin
   UploadStoredProc := TdsdStoredProc.Create(nil);
   try
@@ -1577,19 +1625,20 @@ begin
               DM.tblMovementItem_ReturnIn.Next;
             end;
 
-            UploadStoredProc.Params.Clear;
-            UploadStoredProc.StoredProcName := 'gpGetMobile_Movement_CountItems';
-            UploadStoredProc.Params.AddParam('inMovementGUID', ftString, ptInput, FieldByName('GUID').AsString);
-            UploadStoredProc.Params.AddParam('outItemsCount', ftInteger, ptOutput, 0);
-            UploadStoredProc.Execute(false, false, false);
-
-            if ItemsCount = UploadStoredProc.ParamByName('outItemsCount').Value then
+            SendCount := GetMovementCountItems(FieldByName('GUID').AsString);
+            if ItemsCount = SendCount then
             begin
+              SetMovementStatus(FieldByName('GUID').AsString, DM.tblObject_ConstStatusId_Erased.AsInteger);
               Edit;
               FieldByName('IsSync').AsBoolean := true;
               Post;
             end else
-              raise Exception.Create('По возврату №' + FieldByName('INVNUMBER').AsString + ' отправились не все позиции. Требуется повторная синхронизация');
+            begin
+              SetMovementStatus(FieldByName('GUID').AsString, DM.tblObject_ConstStatusId_UnComplete.AsInteger);
+              raise Exception.CreateFmt(
+                'По возврату №%s отправились %d позиций из %d. Требуется повторная синхронизация',
+                [FieldByName('INVNUMBER').AsString, SendCount, ItemsCount]);
+            end;
           except
             on E : Exception do
             begin
@@ -4725,7 +4774,7 @@ function TDM.SaveReturnIn(OperDate: TDate; PaidKindId: integer; Comment : string
 var
   GlobalId: TGUID;
   MovementId: integer;
-  NewInvNumber: string;
+  NewInvNumber, CurInvNumber: string;
   b: TBookmark;
   isHasItems: boolean;
 begin
@@ -4826,6 +4875,8 @@ begin
       end;
     end;
 
+    CurInvNumber := tblMovement_ReturnInInvNumber.AsString;
+
     tblMovementItem_ReturnIn.Open;
 
     with cdsReturnInItems do
@@ -4887,7 +4938,7 @@ begin
       cdsReturnInOperDate.AsDateTime := OperDate;
       cdsReturnInPaidKindId.AsInteger := PaidKindId;
       cdsReturnInComment.AsString := Comment;
-      cdsReturnInName.AsString := 'Возврат от ' + FormatDateTime('DD.MM.YYYY', OperDate);
+      cdsReturnInName.AsString := 'Возврат №' + CurInvNumber + ' от ' + FormatDateTime('DD.MM.YYYY', OperDate);
       cdsReturnInPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', ToralPrice);
       cdsReturnInWeight.AsString := 'Вес: ' + FormatFloat(',0.00', TotalWeight);
 
@@ -4980,6 +5031,7 @@ begin
     qryReturnIn.SQL.Text :=
        ' SELECT  '
      + '         ID '
+     + '       , InvNumber '
      + '       , OperDate '
      + '       , PaidKindId '
      + '       , TotalCountKg '
@@ -5001,7 +5053,7 @@ begin
       cdsReturnInId.AsInteger := qryReturnIn.FieldByName('ID').AsInteger;
       cdsReturnInOperDate.AsDateTime := qryReturnIn.FieldByName('OPERDATE').AsDateTime;
       cdsReturnInComment.AsString := qryReturnIn.FieldByName('COMMENT').AsString;
-      cdsReturnInName.AsString := 'Возврат от ' + FormatDateTime('DD.MM.YYYY', qryReturnIn.FieldByName('OPERDATE').AsDateTime);
+      cdsReturnInName.AsString := 'Возврат №' + qryReturnIn.FieldByName('INVNUMBER').AsString + ' от ' + FormatDateTime('DD.MM.YYYY', qryReturnIn.FieldByName('OPERDATE').AsDateTime);
       cdsReturnInPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', qryReturnIn.FieldByName('TOTALSUMMPVAT').AsFloat);
       cdsReturnInWeight.AsString := 'Вес: ' + FormatFloat(',0.00', qryReturnIn.FieldByName('TOTALCOUNTKG').AsFloat);
 
@@ -5072,6 +5124,7 @@ begin
     qryReturnIn.SQL.Text :=
        ' SELECT '
      + '         Movement_ReturnIn.ID '
+     + '       , Movement_ReturnIn.InvNumber '
      + '       , Movement_ReturnIn.OperDate '
      + '       , Movement_ReturnIn.PaidKindId '
      + '       , Movement_ReturnIn.Comment '
@@ -5112,7 +5165,7 @@ begin
       cdsReturnInId.AsInteger := qryReturnIn.FieldByName('ID').AsInteger;
       cdsReturnInOperDate.AsDateTime := qryReturnIn.FieldByName('OPERDATE').AsDateTime;
       cdsReturnInComment.AsString := qryReturnIn.FieldByName('COMMENT').AsString;
-      cdsReturnInName.AsString := 'Возврат от ' + FormatDateTime('DD.MM.YYYY', qryReturnIn.FieldByName('OPERDATE').AsDateTime);
+      cdsReturnInName.AsString := 'Возврат №' + qryReturnIn.FieldByName('INVNUMBER').AsString + ' от ' + FormatDateTime('DD.MM.YYYY', qryReturnIn.FieldByName('OPERDATE').AsDateTime);
       cdsReturnInPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', qryReturnIn.FieldByName('TOTALSUMMPVAT').AsFloat);
       cdsReturnInWeight.AsString := 'Вес: ' + FormatFloat(',0.00', qryReturnIn.FieldByName('TOTALCOUNTKG').AsFloat);
 

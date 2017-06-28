@@ -209,7 +209,6 @@ end;
 procedure TdsdStoredProc.DataSetRefresh;
 var B: TBookMark;
     FStringStream: TStringStream;
-    str : string;
 begin
   if (DataSets.Count > 0) and
       Assigned(DataSets[0]) and
