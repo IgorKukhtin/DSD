@@ -1476,6 +1476,9 @@ object SaleForm: TSaleForm
         end
         item
           StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelectMI
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = MasterDS

@@ -672,6 +672,7 @@ object ReturnInForm: TReturnInForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Properties.ReadOnly = False
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1345,6 +1346,9 @@ object ReturnInForm: TReturnInForm
         end
         item
           StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelectMI
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = MasterDS
@@ -1996,11 +2000,12 @@ object ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outOperPriceList'
+        Name = 'ioOperPriceList'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'OperPriceList'
         DataType = ftFloat
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -2729,11 +2734,12 @@ object ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outOperPriceList'
+        Name = 'ioOperPriceList'
         Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'OperPriceList'
         DataType = ftFloat
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item

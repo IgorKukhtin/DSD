@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, Integer, Integer, Boolean, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
@@ -16,7 +17,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn(
    OUT outOperPrice             TFloat    , -- Цена
    OUT outCountForPrice         TFloat    , -- Цена за количество
    OUT outAmountSumm            TFloat    , -- Сумма расчетная
-   OUT outOperPriceList         TFloat    , -- Цена по прайсу
+ INOUT ioOperPriceList          TFloat    , -- Цена по прайсу
    OUT outAmountPriceListSumm   TFloat    , -- Сумма по прайсу
    OUT outCurrencyValue         TFloat    , -- 
    OUT outParValue              TFloat    , -- 
@@ -37,6 +38,7 @@ $BODY$
    DECLARE vbUnitId Integer;
    DECLARE vbClientId Integer;
    DECLARE vbTotalPay_Sale TFloat;
+   DECLARE vbCashId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ReturnIn());
@@ -69,7 +71,7 @@ BEGIN
      WHERE Movement.Id = inMovementId;
 
      -- цена продажи из прайса 
-     outOperPriceList := COALESCE ((SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem(vbOperDate, zc_PriceList_Basis(), inGoodsId) AS tmp), 0);
+     --ioOperPriceList := COALESCE ((SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem(vbOperDate, zc_PriceList_Basis(), inGoodsId) AS tmp), 0);
 
      -- данные из партии : OperPrice и CountForPrice
      SELECT COALESCE (Object_PartionGoods.CountForPrice,1)
@@ -93,24 +95,21 @@ BEGIN
                            ELSE CAST (inAmount * outOperPrice AS NUMERIC (16, 2))
                       END;
      -- расчитали сумму по прайсу по элементу, для грида
-     outAmountPriceListSumm := CASE WHEN outCountForPrice > 0
-                                         THEN CAST (inAmount * outOperPriceList / outCountForPrice AS NUMERIC (16, 2))
-                                    ELSE CAST (inAmount * outOperPriceList AS NUMERIC (16, 2))
-                               END;
+     outAmountPriceListSumm := CAST (inAmount * ioOperPriceList AS NUMERIC (16, 2));
 
      --outTotalChangePercent := outAmountPriceListSumm / 100 * COALESCE(outChangePercent,0) + COALESCE(inSummChangePercent,0) ;
 
      -- сохранили
-     ioId:= lpInsertUpdate_MovementItem_ReturnIn(ioId                 := ioId
-                                               , inMovementId         := inMovementId
-                                               , inGoodsId            := inGoodsId
-                                               , inPartionId          := COALESCE(inPartionId,0)
-                                               , inPartionMI_Id       := COALESCE(inPartionMI_Id,0)
-                                               , inSaleMI_Id          := COALESCE(inSaleMI_Id,0)
-                                               , inAmount             := inAmount
-                                               , inOperPrice          := outOperPrice
-                                               , inCountForPrice      := outCountForPrice
-                                               , inOperPriceList      := outOperPriceList
+     ioId:= lpInsertUpdate_MovementItem_ReturnIn(ioId                    := ioId
+                                               , inMovementId            := inMovementId
+                                               , inGoodsId               := inGoodsId
+                                               , inPartionId             := COALESCE(inPartionId,0)
+                                               , inPartionMI_Id          := COALESCE(inPartionMI_Id,0)
+                                               , inSaleMI_Id             := COALESCE(inSaleMI_Id,0)
+                                               , inAmount                := inAmount
+                                               , inOperPrice             := outOperPrice
+                                               , inCountForPrice         := outCountForPrice
+                                               , inOperPriceList         := ioOperPriceList
                                                , inCurrencyValue         := outCurrencyValue 
                                                , inParValue              := outParValue 
                                                , inTotalChangePercent    := COALESCE(outTotalChangePercent,0)    ::TFloat     
@@ -131,9 +130,55 @@ BEGIN
      
      outTotalSummPay := COALESCE(outAmountPriceListSumm,0) - COALESCE(outTotalChangePercent,0);
      outTotalSummPay := CASE WHEN outTotalSummPay > vbTotalPay_Sale THEN vbTotalPay_Sale ELSE outTotalSummPay END;
+--outTotalSummPay := 589;
 
     IF inisPay THEN
-       
+       -- находим кассу для Магазина или р.сч., в которую попадет оплата
+       vbCashId := (SELECT Object_Cash.Id
+                    FROM ObjectLink AS ObjectLink_Cash_Unit
+                         INNER JOIN Object AS Object_Cash 
+                                           ON Object_Cash.Id       = ObjectLink_Cash_Unit.ObjectId
+                                          AND Object_Cash.isErased = FALSE
+                         INNER JOIN ObjectLink AS ObjectLink_Cash_Currency
+                                               ON ObjectLink_Cash_Currency.ObjectId = Object_Cash.Id
+                                              AND ObjectLink_Cash_Currency.DescId   = zc_ObjectLink_Cash_Currency()
+                                              AND ObjectLink_Cash_Currency.ChildObjectId = zc_Currency_GRN()
+                    WHERE ObjectLink_Cash_Unit.ChildObjectId = vbUnitId
+                      AND ObjectLink_Cash_Unit.DescId        = zc_ObjectLink_Cash_Unit()
+                    );
+                    
+      
+       -- существущие элементы
+       CREATE TEMP TABLE _tmpMI (Id Integer, CashId Integer) ON COMMIT DROP;
+       --
+       INSERT INTO _tmpMI (Id, CashId)
+          SELECT MovementItem.Id
+               , MovementItem.ObjectId AS CashId
+          FROM MovementItem
+          WHERE MovementItem.ParentId   = ioId
+            AND MovementItem.MovementId = inMovementId
+            AND MovementItem.ObjectId   = vbCashId
+            AND MovementItem.DescId     = zc_MI_Child()
+            AND MovementItem.isErased   = FALSE;
+
+       -- сохранили
+       PERFORM lpInsertUpdate_MI_ReturnIn_Child (ioId                 := COALESCE (_tmpMI.Id,0)
+                                               , inMovementId         := inMovementId
+                                               , inParentId           := ioId
+                                               , inCashId             := _tmpCash.CashId
+                                               , inCurrencyId         := zc_Currency_GRN()
+                                               , inCashId_Exc         := NULL
+                                               , inAmount             := outTotalSummPay :: TFloat
+                                               , inCurrencyValue      := 1               :: TFloat
+                                               , inParValue           := 1               :: TFloat
+                                               , inUserId             := vbUserId
+                                                )
+                                              
+       FROM (SELECT vbCashId AS CashId) AS _tmpCash
+            FULL JOIN _tmpMI ON _tmpMI.CashId = _tmpCash.CashId;
+            
+       -- в мастер записать итого сумма оплаты грн
+       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), ioId, outTotalSummPay);       
     END IF;
 
 
@@ -144,6 +189,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.06.17         *
  15.05.17         *
 */
 

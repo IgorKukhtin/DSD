@@ -46,6 +46,7 @@ $BODY$
    DECLARE vbCurrencyId Integer;
    DECLARE vbUnitId Integer;
    DECLARE vbClientId Integer;
+   DECLARE vbCashId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
@@ -137,9 +138,54 @@ BEGIN
                                               , inBarCode               := COALESCE(inBarCode,'')               ::TVarChar
                                               , inUserId                := vbUserId
                                                );
-
+                                               
+    -- Добавляем оплату в грн
     IF inisPay THEN
+       -- находим кассу для Магазина или р.сч., в которую попадет оплата
+       vbCashId := (SELECT Object_Cash.Id
+                    FROM ObjectLink AS ObjectLink_Cash_Unit
+                         INNER JOIN Object AS Object_Cash 
+                                           ON Object_Cash.Id       = ObjectLink_Cash_Unit.ObjectId
+                                          AND Object_Cash.isErased = FALSE
+                         INNER JOIN ObjectLink AS ObjectLink_Cash_Currency
+                                               ON ObjectLink_Cash_Currency.ObjectId = Object_Cash.Id
+                                              AND ObjectLink_Cash_Currency.DescId   = zc_ObjectLink_Cash_Currency()
+                                              AND ObjectLink_Cash_Currency.ChildObjectId = zc_Currency_GRN()
+                    WHERE ObjectLink_Cash_Unit.ChildObjectId = vbUnitId
+                      AND ObjectLink_Cash_Unit.DescId        = zc_ObjectLink_Cash_Unit()
+                    );
        
+       -- существущие элементы
+       CREATE TEMP TABLE _tmpMI (Id Integer, CashId Integer) ON COMMIT DROP;
+       --
+       INSERT INTO _tmpMI (Id, CashId)
+          SELECT MovementItem.Id
+               , MovementItem.ObjectId AS CashId
+          FROM MovementItem
+          WHERE MovementItem.ParentId   = ioId
+            AND MovementItem.MovementId = inMovementId
+            AND MovementItem.ObjectId   = vbCashId
+            AND MovementItem.DescId     = zc_MI_Child()
+            AND MovementItem.isErased   = FALSE;
+
+       -- сохранили
+       PERFORM lpInsertUpdate_MI_Sale_Child     (ioId                 := COALESCE (_tmpMI.Id,0)
+                                               , inMovementId         := inMovementId
+                                               , inParentId           := ioId
+                                               , inCashId             := _tmpCash.CashId
+                                               , inCurrencyId         := zc_Currency_GRN()
+                                               , inCashId_Exc         := NULL
+                                               , inAmount             := outTotalSummPay :: TFloat
+                                               , inCurrencyValue      := 1               :: TFloat
+                                               , inParValue           := 1               :: TFloat
+                                               , inUserId             := vbUserId
+                                                )
+       FROM (SELECT vbCashId AS CashId) AS _tmpCash
+            FULL JOIN _tmpMI ON _tmpMI.CashId = _tmpCash.CashId;
+            
+       -- в мастер записать итого сумма оплаты грн
+       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), ioId, outTotalSummPay);
+
     END IF;
 
 
@@ -150,6 +196,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.06.17         *
  13.16.17         *
  09.05.17         *
  10.04.17         *
