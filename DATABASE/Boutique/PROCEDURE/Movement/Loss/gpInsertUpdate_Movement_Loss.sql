@@ -17,25 +17,25 @@ RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbOperDate TDateTime;
-   DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Loss());
      
+
+     -- определяется уникальный № док.
      IF COALESCE (ioId, 0) = 0 THEN
-         ioInvNumber:= CAST (NEXTVAL ('movement_loss_seq') AS TVarChar);  
+        ioInvNumber:= CAST (NEXTVAL ('Movement_Loss_seq') AS TVarChar);  
      END IF;
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement_Loss (ioId                := ioId
-                                         , inInvNumber         := ioInvNumber
-                                         , inOperDate          := inOperDate
-                                         , inFromId            := inFromId
-                                         , inToId              := inToId
-                                         , inComment           := inComment
-                                         , inUserId            := vbUserId
-                                           );
+     ioId := lpInsertUpdate_Movement_Loss (ioId       := ioId
+                                         , inInvNumber:= ioInvNumber
+                                         , inOperDate := inOperDate
+                                         , inFromId   := inFromId
+                                         , inToId     := inToId
+                                         , inComment  := inComment
+                                         , inUserId   := vbUserId
+                                          );
 
 END;
 $BODY$
@@ -50,4 +50,4 @@ $BODY$
  */
 
 -- тест
--- select * from gpInsertUpdate_Movement_Loss(ioId := 17 , ioInvNumber := '4' , inOperDate := ('01.01.2017')::TDateTime , inFromId := 311 , inToId := 311 , inCurrencyDocumentId := 353 , inComment := 'rfff' ,  inSession := '2');
+-- SELECT * FROM gpInsertUpdate_Movement_Loss(ioId := 17 , ioInvNumber := '4' , inOperDate := ('01.01.2017')::TDateTime , inFromId := 311 , inToId := 311 , inCurrencyDocumentId := 353 , inComment := 'rfff' ,  inSession := '2');

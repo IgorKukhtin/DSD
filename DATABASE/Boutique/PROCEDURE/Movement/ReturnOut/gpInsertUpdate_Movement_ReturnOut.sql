@@ -65,7 +65,7 @@ BEGIN
                                               , inParValue          := outParValue
                                               , inComment           := inComment
                                               , inUserId            := vbUserId
-                                              );
+                                               );
 
 END;
 $BODY$

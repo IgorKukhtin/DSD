@@ -94,8 +94,8 @@ BEGIN
              --
              outParValue:= 1;
              --
-             IF     inCurrencyDocumentId = zc_Currency_EUR() THEN outCurrencyValue:= 30;
-             ELSEIF inCurrencyDocumentId = zc_Currency_USD() THEN outCurrencyValue:= 27;
+             IF     vbCurrencyId = zc_Currency_EUR() THEN outCurrencyValue:= 30;
+             ELSEIF vbCurrencyId = zc_Currency_USD() THEN outCurrencyValue:= 27;
              END IF;
          END IF;
 
