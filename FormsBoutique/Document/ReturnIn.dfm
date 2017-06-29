@@ -2000,6 +2000,14 @@ object ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'outTotalSummBalance'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalSummBalance'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'ioOperPriceList'
         Value = Null
         Component = MasterCDS
@@ -2730,6 +2738,14 @@ object ReturnInForm: TReturnInForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'TotalSumm'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotalSummBalance'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalSummBalance'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end

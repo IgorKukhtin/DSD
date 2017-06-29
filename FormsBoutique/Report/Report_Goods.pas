@@ -23,7 +23,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  cxSplitter;
 
 type
   TReport_GoodsForm = class(TAncestorReportForm)
@@ -65,6 +66,15 @@ type
     edGoodsSize: TcxButtonEdit;
     GuidesGoodsSize: TdsdGuides;
     cbSumm_branch: TcxCheckBox;
+    DataSource: TDataSource;
+    ClientDataSet: TClientDataSet;
+    dsdDBViewAddOn1: TdsdDBViewAddOn;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    cxGridLevel1: TcxGridLevel;
+    cxSplitter1: TcxSplitter;
+    PartionId: TcxGridDBColumn;
+    clPartionId: TcxGridDBColumn;
   private
     { Private declarations }
   public

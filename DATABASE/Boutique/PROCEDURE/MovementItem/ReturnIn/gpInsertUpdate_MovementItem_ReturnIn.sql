@@ -16,9 +16,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn(
     IN inAmount                 TFloat    , -- Количество
    OUT outOperPrice             TFloat    , -- Цена
    OUT outCountForPrice         TFloat    , -- Цена за количество
-   OUT outAmountSumm            TFloat    , -- Сумма расчетная
+   OUT outTotalSumm            TFloat    , -- Сумма расчетная
+   OUT outTotalSummBalance    TFloat    , -- Сумма вх. (ГРН)
  INOUT ioOperPriceList          TFloat    , -- Цена по прайсу
-   OUT outAmountPriceListSumm   TFloat    , -- Сумма по прайсу
+   OUT outTotalSummPriceList   TFloat    , -- Сумма по прайсу
    OUT outCurrencyValue         TFloat    , -- 
    OUT outParValue              TFloat    , -- 
    OUT outTotalChangePercent    TFloat    , -- 
@@ -70,9 +71,23 @@ BEGIN
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
      WHERE Movement.Id = inMovementId;
 
-     -- цена продажи из прайса 
-     --ioOperPriceList := COALESCE ((SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem(vbOperDate, zc_PriceList_Basis(), inGoodsId) AS tmp), 0);
+     -- Цена (прайс)
+     IF ioOperPriceList <> 0
+     THEN
+         -- !!!для SYBASE - потом убрать!!!
+         IF vbUserId <> zfCalc_UserAdmin() :: Integer THEN RAISE EXCEPTION 'Ошибка.Параметр только для загрузки из Sybase.'; END IF;
+     ELSE
+         -- из Истории
+         ioOperPriceList := COALESCE ((SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (vbOperDate
+                                                                                                   , zc_PriceList_Basis()
+                                                                                                   , inGoodsId
+                                                                                                    ) AS tmp), 0);
+     END IF;
 
+     -- проверка - свойство должно быть установлено
+     IF COALESCE (ioOperPriceList, 0) <= 0 THEN
+        RAISE EXCEPTION 'Ошибка.Не установлено значение <Цена (прайс)>.';
+     END IF;
      -- данные из партии : OperPrice и CountForPrice
      SELECT COALESCE (Object_PartionGoods.CountForPrice,1)
           , COALESCE (Object_PartionGoods.OperPrice,0)
@@ -90,14 +105,17 @@ BEGIN
     outParValue      := COALESCE(outParValue,0);
 
      -- расчитали сумму по элементу, для грида
-     outAmountSumm := CASE WHEN outCountForPrice > 0
-                                THEN CAST (inAmount * outOperPrice / outCountForPrice AS NUMERIC (16, 2))
-                           ELSE CAST (inAmount * outOperPrice AS NUMERIC (16, 2))
-                      END;
+     outTotalSumm := CASE WHEN outCountForPrice > 0
+                               THEN CAST (inAmount * outOperPrice / outCountForPrice AS NUMERIC (16, 2))
+                          ELSE CAST (inAmount * outOperPrice AS NUMERIC (16, 2))
+                     END;
+     -- расчитали сумму вх. в грн по элементу, для грида
+     outTotalSummBalance := (CAST (outTotalSumm * outCurrencyValue / CASE WHEN outParValue <> 0 THEN outParValue ELSE 1 END AS NUMERIC (16, 2))) ;
+                          
      -- расчитали сумму по прайсу по элементу, для грида
-     outAmountPriceListSumm := CAST (inAmount * ioOperPriceList AS NUMERIC (16, 2));
+     outTotalSummPriceList := CAST (inAmount * ioOperPriceList AS NUMERIC (16, 2));
 
-     --outTotalChangePercent := outAmountPriceListSumm / 100 * COALESCE(outChangePercent,0) + COALESCE(inSummChangePercent,0) ;
+     --outTotalChangePercent := outTotalSummPriceList / 100 * COALESCE(outChangePercent,0) + COALESCE(inSummChangePercent,0) ;
 
      -- сохранили
      ioId:= lpInsertUpdate_MovementItem_ReturnIn(ioId                    := ioId
@@ -128,7 +146,7 @@ BEGIN
                          WHERE MILinkObject_PartionMI.MovementItemId = ioId
                            AND MILinkObject_PartionMI.DescId = zc_MILinkObject_PartionMI());
      
-     outTotalSummPay := COALESCE(outAmountPriceListSumm,0) - COALESCE(outTotalChangePercent,0);
+     outTotalSummPay := COALESCE(outTotalSummPriceList,0) - COALESCE(outTotalChangePercent,0);
      outTotalSummPay := CASE WHEN outTotalSummPay > vbTotalPay_Sale THEN vbTotalPay_Sale ELSE outTotalSummPay END;
 
     IF inisPay = TRUE THEN

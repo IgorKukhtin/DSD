@@ -5,10 +5,9 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -639
-  ExplicitTop = -80
+  ExplicitLeft = -340
   ExplicitWidth = 1382
-  ExplicitHeight = 573
+  ExplicitHeight = 572
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1274,6 +1273,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitTop = 422
     object cxGridDBTableViewReceiptChild: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -3473,12 +3473,12 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
     PacketRecords = 0
     Params = <>
     Left = 713
-    Top = 365
+    Top = 317
   end
   object ChildDS: TDataSource
     DataSet = ChildCDS
-    Left = 662
-    Top = 365
+    Left = 646
+    Top = 317
   end
   object ChildViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -3531,7 +3531,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 766
-    Top = 366
+    Left = 782
+    Top = 318
   end
 end

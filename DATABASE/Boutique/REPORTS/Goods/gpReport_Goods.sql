@@ -44,6 +44,7 @@ RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Move
               , ParValue_End        TFloat
               , CurrencyValue       TFloat
               , ParValue            TFloat
+                ,PartionId  Integer
                )
 AS
 $BODY$
@@ -341,6 +342,7 @@ BEGIN
         , COALESCE (MF_ParValue.ValueData, MIFloat_ParValue.ValueData)           ::TFloat AS ParValue 
         --, CASE WHEN  Movement.DescId IN (zc_Movement_Income(), zc_Movement_ReturnOut()) THEN MF_CurrencyValue.ValueData ELSE MIFloat_CurrencyValue.ValueData END ::TFloat AS CurrencyValue
         --, CASE WHEN  Movement.DescId IN (zc_Movement_Income(), zc_Movement_ReturnOut()) THEN MF_ParValue.ValueData      ELSE MIFloat_ParValue.ValueData      END ::TFloat AS ParValue
+        , tmpMIContainer_group.PartionId
    FROM tmpMIContainer_group
         LEFT JOIN Movement ON Movement.Id = tmpMIContainer_group.MovementId
         LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
@@ -407,3 +409,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_Goods (inStartDate:= '01.01.2017', inEndDate:= '01.01.2017', inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 1826, inIsPartner:= FALSE, inSession:= zfCalc_UserAdmin());
+
