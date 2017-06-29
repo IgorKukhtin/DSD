@@ -2385,14 +2385,14 @@ begin
 
             if FieldByName('Debet').AsFloat <> 0 then
             begin
-              DM.cdsJuridicalCollationDebet.AsString := FormatFloat(',0.##', FieldByName('Debet').AsFloat);
+              DM.cdsJuridicalCollationDebet.AsString := FormatFloat(',0.00', FieldByName('Debet').AsFloat);
               DM.cdsJuridicalCollationFromToName.AsString := 'От кого: ' + DM.cdsJuridicalCollationFromName.AsString;
             end
             else
               DM.cdsJuridicalCollationDebet.AsString := '';
             if FieldByName('Kredit').AsFloat <> 0 then
             begin
-              DM.cdsJuridicalCollationKredit.AsString := FormatFloat(',0.##', FieldByName('Kredit').AsFloat);
+              DM.cdsJuridicalCollationKredit.AsString := FormatFloat(',0.00', FieldByName('Kredit').AsFloat);
               DM.cdsJuridicalCollationFromToName.AsString := 'Кому: ' + DM.cdsJuridicalCollationToName.AsString;
             end
             else
