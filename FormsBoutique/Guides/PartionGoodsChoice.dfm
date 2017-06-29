@@ -45,12 +45,24 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object MovementId: TcxGridDBColumn
+        DataBinding.FieldName = 'MovementId'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 30
+      end
       object InvNumber: TcxGridDBColumn
         Caption = #1053#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 81
+      end
+      object InvNumber_full: TcxGridDBColumn
+        Caption = #1044#1086#1082'. '#1087#1088#1080#1093#1086#1076#1072
+        DataBinding.FieldName = 'InvNumber_full'
+        Visible = False
+        Width = 70
       end
       object PartnerName: TcxGridDBColumn
         Caption = #1055#1086'c'#1090#1072#1074#1097#1080#1082
@@ -625,6 +637,13 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'GoodsSizeId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsSizeId'
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'GoodsSizeName'
           Value = Null
           Component = MasterCDS
@@ -662,6 +681,29 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
           Component = MasterCDS
           ComponentItem = 'Remains'
           DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_full'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber_full'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072

@@ -29,8 +29,8 @@ uses
 type
   TReport_GoodsForm = class(TAncestorReportForm)
     cxLabel3: TcxLabel;
-    edGoods: TcxButtonEdit;
-    GoodsGuides: TdsdGuides;
+    edPartionGoods: TcxButtonEdit;
+    PartionGoodsGuides: TdsdGuides;
     LocationDescName: TcxGridDBColumn;
     LocationName: TcxGridDBColumn;
     GoodsCode: TcxGridDBColumn;
@@ -43,7 +43,7 @@ type
     InvNumber: TcxGridDBColumn;
     OperDate: TcxGridDBColumn;
     AmountStart: TcxGridDBColumn;
-    Price: TcxGridDBColumn;
+    OperPrice: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     isActive: TcxGridDBColumn;
@@ -74,7 +74,12 @@ type
     cxGridLevel1: TcxGridLevel;
     cxSplitter1: TcxSplitter;
     PartionId: TcxGridDBColumn;
-    clPartionId: TcxGridDBColumn;
+    actRefreshGoodsSize: TdsdDataSetRefresh;
+    cbPartion: TcxCheckBox;
+    cxLabel5: TcxLabel;
+    edPartion: TcxButtonEdit;
+    PartionGuides: TdsdGuides;
+    actRefreshPartion: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

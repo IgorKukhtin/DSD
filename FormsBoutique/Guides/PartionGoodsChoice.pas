@@ -89,6 +89,8 @@ type
     FormParams: TdsdFormParams;
     RefreshDispatcher: TRefreshDispatcher;
     spUnErased: TdsdStoredProc;
+    InvNumber_full: TcxGridDBColumn;
+    MovementId: TcxGridDBColumn;
   private
     { Private declarations }
   public

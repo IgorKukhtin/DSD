@@ -3,8 +3,8 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1086' '#1090#1086#1074#1072#1088#1072#1084'>'
-  ClientHeight = 219
-  ClientWidth = 373
+  ClientHeight = 253
+  ClientWidth = 365
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,7 +19,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 64
-    Top = 175
+    Top = 218
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
   end
   object cxButton2: TcxButton
     Left = 238
-    Top = 175
+    Top = 218
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -39,7 +39,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
   object deEnd: TcxDateEdit
     Left = 121
     Top = 27
-    EditValue = 42005d
+    EditValue = 42887d
     Properties.ShowTime = False
     TabOrder = 2
     Width = 90
@@ -47,12 +47,12 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
   object deStart: TcxDateEdit
     Left = 11
     Top = 27
-    EditValue = 42005d
+    EditValue = 42887d
     Properties.ShowTime = False
     TabOrder = 3
     Width = 90
   end
-  object edGoods: TcxButtonEdit
+  object edPartionGoods: TcxButtonEdit
     Left = 11
     Top = 132
     Properties.Buttons = <
@@ -99,9 +99,9 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
     Caption = #1056#1072#1079#1084#1077#1088':'
   end
   object cxLabel2: TcxLabel
-    Left = 12
+    Left = 11
     Top = 109
-    Caption = #1058#1086#1074#1072#1088':'
+    Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072':'
   end
   object cxLabel6: TcxLabel
     Left = 11
@@ -115,17 +115,43 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
   end
   object cbGoodsSize: TcxCheckBox
     Left = 227
-    Top = 27
+    Top = 18
     Caption = #1055#1086' '#1088#1072#1079#1084#1077#1088#1072#1084
     Properties.ReadOnly = False
     TabOrder = 12
     Width = 120
   end
+  object cbPartion: TcxCheckBox
+    Left = 227
+    Top = 42
+    Caption = #1055#1086' '#1074#1089#1077#1084' '#1087#1072#1088#1090#1080#1103#1084
+    Properties.ReadOnly = False
+    TabOrder = 13
+    Width = 120
+  end
+  object cxLabel5: TcxLabel
+    Left = 11
+    Top = 163
+    Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1080':'
+  end
+  object edPartion: TcxButtonEdit
+    Left = 11
+    Top = 184
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 15
+    Width = 336
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
     Left = 216
-    Top = 168
+    Top = 198
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 256
@@ -165,7 +191,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
       item
         Name = 'GoodsId'
         Value = ''
-        Component = GuidesGoods
+        Component = PartionGuidesGoods
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -174,7 +200,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
       item
         Name = 'GoodsName'
         Value = ''
-        Component = GuidesGoods
+        Component = PartionGuidesGoods
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -221,23 +247,54 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPartion'
+        Value = Null
+        Component = cbPartion
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId'
+        Value = Null
+        Component = PartionGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Partion_InvNumber'
+        Value = Null
+        Component = PartionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 40
     Top = 128
   end
-  object GuidesGoods: TdsdGuides
+  object PartionGuidesGoods: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edGoods
-    FormNameParam.Value = 'TGoodsChoiceForm'
+    LookupControl = edPartionGoods
+    FormNameParam.Value = 'TPartionGoodsChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsChoiceForm'
+    FormName = 'TPartionGoodsChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesGoods
+        Component = PartionGuidesGoods
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -246,7 +303,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesGoods
+        Component = PartionGuidesGoods
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -265,6 +322,48 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
         Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PartionId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId'
+        Value = Null
+        Component = PartionGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_full'
+        Value = Null
+        Component = PartionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsSizeId'
+        Value = Null
+        Component = GuidesGoodsSize
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsSizeName'
+        Value = Null
+        Component = GuidesGoodsSize
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 115
@@ -308,7 +407,6 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
-    ParentDataSet = 'TreeDataSet'
     Params = <
       item
         Name = 'Key'
@@ -330,5 +428,34 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
       end>
     Left = 160
     Top = 72
+  end
+  object PartionGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartion
+    FormNameParam.Value = 'TIncomeJournalForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TIncomeJournalForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PartionGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PartionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 150
+    Top = 171
   end
 end

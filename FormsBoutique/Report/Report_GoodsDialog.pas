@@ -31,9 +31,9 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
     FormParams: TdsdFormParams;
-    edGoods: TcxButtonEdit;
+    edPartionGoods: TcxButtonEdit;
     edGoodsSize: TcxButtonEdit;
-    GuidesGoods: TdsdGuides;
+    PartionGuidesGoods: TdsdGuides;
     GuidesGoodsSize: TdsdGuides;
     edUnit: TcxButtonEdit;
     cxLabel3: TcxLabel;
@@ -43,6 +43,10 @@ type
     cxLabel6: TcxLabel;
     cxLabel7: TcxLabel;
     cbGoodsSize: TcxCheckBox;
+    cbPartion: TcxCheckBox;
+    cxLabel5: TcxLabel;
+    edPartion: TcxButtonEdit;
+    PartionGuides: TdsdGuides;
   private
     { Private declarations }
   public

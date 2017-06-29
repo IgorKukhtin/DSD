@@ -7,36 +7,39 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_PartionGoods_Choice(
     IN inIsShowAll   Boolean,       --  признак показать удаленные да/нет
     IN inSessiON     TVarChar       --  сессия пользователя
 )
-RETURNS TABLE (            
-             MovementItemId       Integer
-           , InvNumber            TVarChar  
-           --, SybaseId             Integer  
-           , PartnerName          TVarChar  
-           , UnitName             TVarChar  
-           , OperDate             TDateTime
-           , GoodsId              Integer
-           , GoodsName            TVarChar  
-           , GroupNameFull        TVarChar  
-           , CurrencyName         TVarChar  
-           , Amount               TFloat  
-           , Remains              TFloat
-           , OperPrice            TFloat
-           , PriceSale            TFloat
-           , PriceSale_Partion    TFloat  
-           , BrandName            TVarChar  
-           , PeriodName           TVarChar  
-           , PeriodYear           Integer  
-           , FabrikaName          TVarChar  
-           , GoodsGroupName       TVarChar  
-           , MeasureName          TVarChar  
-           , CompositionName      TVarChar  
-           , GoodsInfoName        TVarChar  
-           , LineFabricaName      TVarChar  
-           , LabelName            TVarChar  
-           , CompositionGroupName TVarChar  
-           , GoodsSizeName        TVarChar  
-           , isErased             Boolean  
-           , isArc                Boolean  
+RETURNS TABLE (Id                   Integer           
+             , MovementItemId       Integer
+             , MovementId           Integer
+             , InvNumber            TVarChar  
+             , InvNumber_Full       TVarChar
+             --, SybaseId             Integer  
+             , PartnerName          TVarChar  
+             , UnitName             TVarChar  
+             , OperDate             TDateTime
+             , GoodsId              Integer
+             , GoodsName            TVarChar  
+             , GroupNameFull        TVarChar  
+             , CurrencyName         TVarChar  
+             , Amount               TFloat  
+             , Remains              TFloat
+             , OperPrice            TFloat
+             , PriceSale            TFloat
+             , PriceSale_Partion    TFloat  
+             , BrandName            TVarChar  
+             , PeriodName           TVarChar  
+             , PeriodYear           Integer  
+             , FabrikaName          TVarChar  
+             , GoodsGroupName       TVarChar  
+             , MeasureName          TVarChar  
+             , CompositionName      TVarChar  
+             , GoodsInfoName        TVarChar  
+             , LineFabricaName      TVarChar  
+             , LabelName            TVarChar  
+             , CompositionGroupName TVarChar 
+             , GoodsSizeId          Integer   
+             , GoodsSizeName        TVarChar  
+             , isErased             Boolean  
+             , isArc                Boolean  
 
 ) 
 AS
@@ -54,19 +57,13 @@ BEGIN
      RETURN QUERY 
      WITH
      tmpContainer AS (SELECT Container.PartionId
-                           , Container.ObjectId                                        AS GoodsId
-                           , Container.Amount - SUM (COALESCE (MIContainer.Amount, 0)) AS Remains
+                           , SUM (Container.Amount)   AS Remains
                       FROM Container
-                           LEFT JOIN MovementItemContainer AS MIContainer 
-                                                           ON MIContainer.ContainerId = Container.Id
-                                                          AND MIContainer.OperDate >= CURRENT_DATE
                       WHERE Container.DescId = zc_Container_count()
                         AND Container.WhereObjectId = inUnitId      
                       GROUP BY Container.PartionId 
-                             , Container.Amount 
-                             , Container.ObjectId
-                      HAVING (Container.Amount - SUM (COALESCE (MIContainer.Amount, 0))) <> 0
-                    )
+                     )
+                    
       , tmpPrice AS (SELECT ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
                           , ObjectHistoryFloat_PriceListItem_Value.ValueData AS ValuePrice
                      FROM ObjectLink AS ObjectLink_PriceListItem_Goods
@@ -84,36 +81,39 @@ BEGIN
                      WHERE ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
                     )
 
-       SELECT 
-             Object_PartionGoods.MovementItemId  AS MovementItemId
-           , Movement.InvNumber                  AS InvNumber
-           --, Object_PartionGoods.SybaseId        AS SybaseId
-           , Object_Partner.ValueData            AS PartnerName
-           , Object_Unit.ValueData               AS UnitName
-           , Object_PartionGoods.OperDate        AS OperDate
-           , Object_PartionGoods.GoodsId         AS GoodsId
-           , Object_Goods.ValueData              AS GoodsName
-           , Object_GroupNameFull.ValueData      As GroupNameFull
-           , Object_Currency.ValueData           AS CurrencyName
-           , Object_PartionGoods.Amount          AS Amount
-           , tmpContainer.Remains       ::TFloat AS Remains            
-           , Object_PartionGoods.OperPrice       AS OperPrice
-           , tmpPrice.ValuePrice                 AS PriceSale
-           , Object_PartionGoods.PriceSale       AS PriceSale_Partion
-           , Object_Brand.ValueData              AS BrandName
-           , Object_Period.ValueData             AS PeriodName
-           , Object_PartionGoods.PeriodYear      AS PeriodYear
-           , Object_Fabrika.ValueData            AS FabrikaName
-           , Object_GoodsGroup.ValueData         AS GoodsGroupName
-           , Object_Measure.ValueData            AS MeasureName    
-           , Object_Composition.ValueData        AS CompositionName
-           , Object_GoodsInfo.ValueData          AS GoodsInfoName
-           , Object_LineFabrica.ValueData        AS LineFabricaName
-           , Object_Label.ValueData              AS LabelName
-           , Object_CompositionGroup.ValueData   AS CompositionGroupName
-           , Object_GoodsSize.ValueData          AS GoodsSizeName
-           , Object_PartionGoods.isErased        AS isErased
-           , Object_PartionGoods.isArc           AS isArc
+       SELECT Object_PartionGoods.MovementItemId  AS Id
+            , Object_PartionGoods.MovementItemId  AS MovementItemId
+            , Movement.Id                         AS MovementId
+            , Movement.InvNumber                  AS InvNumber
+            , ('№ ' || Movement.InvNumber ||' от '||TO_CHAR(Movement.OperDate , 'DD.MM.YYYY') ) :: TVarChar AS InvNumber_full         
+            --, Object_PartionGoods.SybaseId        AS SybaseId
+            , Object_Partner.ValueData            AS PartnerName
+            , Object_Unit.ValueData               AS UnitName
+            , Object_PartionGoods.OperDate        AS OperDate
+            , Object_PartionGoods.GoodsId         AS GoodsId
+            , Object_Goods.ValueData              AS GoodsName
+            , Object_GroupNameFull.ValueData      As GroupNameFull
+            , Object_Currency.ValueData           AS CurrencyName
+            , Object_PartionGoods.Amount          AS Amount
+            , tmpContainer.Remains       ::TFloat AS Remains            
+            , Object_PartionGoods.OperPrice       AS OperPrice
+            , tmpPrice.ValuePrice                 AS PriceSale
+            , Object_PartionGoods.PriceSale       AS PriceSale_Partion
+            , Object_Brand.ValueData              AS BrandName
+            , Object_Period.ValueData             AS PeriodName
+            , Object_PartionGoods.PeriodYear      AS PeriodYear
+            , Object_Fabrika.ValueData            AS FabrikaName
+            , Object_GoodsGroup.ValueData         AS GoodsGroupName
+            , Object_Measure.ValueData            AS MeasureName    
+            , Object_Composition.ValueData        AS CompositionName
+            , Object_GoodsInfo.ValueData          AS GoodsInfoName
+            , Object_LineFabrica.ValueData        AS LineFabricaName
+            , Object_Label.ValueData              AS LabelName
+            , Object_CompositionGroup.ValueData   AS CompositionGroupName
+            , Object_GoodsSize.Id                 AS GoodsSizeId           
+            , Object_GoodsSize.ValueData          AS GoodsSizeName
+            , Object_PartionGoods.isErased        AS isErased
+            , Object_PartionGoods.isArc           AS isArc
            
        FROM Object_PartionGoods
 
@@ -145,10 +145,10 @@ BEGIN
            LEFT JOIN tmpPrice ON tmpPrice.GoodsId = Object_PartionGoods.GoodsId
 
            LEFT JOIN tmpContainer ON tmpContainer.PartionId = Object_PartionGoods.MovementItemId  
-                                 AND tmpContainer.GoodsId = Object_PartionGoods.GoodsId
 
-     WHERE (Object_PartionGoods.isErased = FALSE OR inIsShowAll = TRUE)
-        AND (Object_PartionGoods.UnitId = inUnitId OR inUnitId = 0)
+     WHERE (Object_PartionGoods.isErased = FALSE)
+       AND (Object_PartionGoods.UnitId = inUnitId OR inUnitId = 0)
+       AND (COALESCE (tmpContainer.Remains,0) <> 0 OR inIsShowAll = TRUE)
 
     ;
 
@@ -160,6 +160,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыкин А.А.
+29.06.17          *
 21.06.17          *
 09.05.17          *
 25.04.17          * _Choice
@@ -167,4 +168,4 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpSelect_Object_PartionGoods_Choice (506,TRUE, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_PartionGoods_Choice (506,TRUE, zfCalc_UserAdmin())
