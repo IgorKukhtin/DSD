@@ -21,10 +21,27 @@ $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка
-     IF inOperDate <> DATE_TRUNC ('DAY', inOperDate)
-     THEN
+     IF inOperDate <> DATE_TRUNC ('DAY', inOperDate) THEN
          RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
      END IF;
+
+     -- проверка
+     IF COALESCE (inCurrencyDocumentId, 0) = 0 THEN
+        RAISE EXCEPTION 'Ошибка.Не установлено значение <Валюта>.';
+     END IF;
+
+     -- Если НЕ Базовая Валюта
+     IF inCurrencyDocumentId <> zc_Currency_Basis() THEN
+        -- проверка
+        IF COALESCE (inCurrencyValue, 0) = 0 THEN
+           RAISE EXCEPTION 'Ошибка.Не определено значение <Курс>.';
+        END IF;
+        -- проверка
+        IF COALESCE (inParValue, 0) = 0 THEN
+           RAISE EXCEPTION 'Ошибка.Не определено значение <Номинал>.';
+        END IF;
+     END IF;
+
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;

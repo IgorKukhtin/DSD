@@ -88,6 +88,19 @@ BEGIN
                                                , inCurrencyToId  := vbCurrencyId
                                                 ) AS tmp;       
 
+         -- проверка
+         IF COALESCE (vbCurrencyId, 0) = 0 THEN
+            RAISE EXCEPTION 'Ошибка.Не определено значение <Валюта>.';
+         END IF;
+         -- проверка
+         IF COALESCE (outCurrencyValue, 0) = 0 THEN
+            RAISE EXCEPTION 'Ошибка.Не определено значение <Курс>.';
+         END IF;
+         -- проверка
+         IF COALESCE (outParValue, 0) = 0 THEN
+            RAISE EXCEPTION 'Ошибка.Не определено значение <Номинал>.';
+         END IF;
+
      ELSE
          -- курс не нужен
          outCurrencyValue:= 0;
@@ -140,4 +153,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_Loss(ioId := 56 , inMovementId := 17 , inGoodsId := 446 , inPartionId := 50 , inAmount := 3 , ioCountForPrice := 1 , inOperPrice := 100 ,  inSession := '2');
+-- SELECT * FROM gpInsertUpdate_MovementItem_Loss (ioId := 56 , inMovementId := 17 , inGoodsId := 446 , inPartionId := 50 , inAmount := 3 , ioCountForPrice := 1 , inOperPrice := 100 ,  inSession := '2');

@@ -1,10 +1,5 @@
 -- Function: gpInsertUpdate_MovementItem_Sale()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
@@ -116,11 +111,25 @@ BEGIN
                                                , inCurrencyFromId:= zc_Currency_Basis()
                                                , inCurrencyToId  := vbCurrencyId
                                                 ) AS tmp;       
+         -- проверка
+         IF COALESCE (vbCurrencyId, 0) = 0 THEN
+            RAISE EXCEPTION 'Ошибка.Не определено значение <Валюта>.';
+         END IF;
+         -- проверка
+         IF COALESCE (outCurrencyValue, 0) = 0 THEN
+            RAISE EXCEPTION 'Ошибка.Не определено значение <Курс>.';
+         END IF;
+         -- проверка
+         IF COALESCE (outParValue, 0) = 0 THEN
+            RAISE EXCEPTION 'Ошибка.Не определено значение <Номинал>.';
+         END IF;
+
      ELSE
          -- курс не нужен
          outCurrencyValue:= 0;
          outParValue     := 0;
      END IF;
+
 
     -- определяем скидку
     SELECT tmp.ChangePercent, tmp.DiscountSaleKindId, tmp.DiscountSaleKindName
@@ -232,4 +241,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpInsertUpdate_MovementItem_Sale(ioId := 0 , inMovementId := 8 , inGoodsId := 446 , inPartionId := 50 , inisPay := False ,  inAmount := 4 ,inSummChangePercent:=0, ioOperPriceList := 1030 , inBarCode := '1' ::TVarChar,  inSession := '2');
+-- SELECT * FROM gpInsertUpdate_MovementItem_Sale (ioId := 0 , inMovementId := 8 , inGoodsId := 446 , inPartionId := 50 , inisPay := False ,  inAmount := 4 ,inSummChangePercent:=0, ioOperPriceList := 1030 , inBarCode := '1' ::TVarChar,  inSession := '2');
