@@ -248,7 +248,8 @@ uses
   Report_Goods_RemainsCurrent in '..\..\FormsBoutique\Report\Report_Goods_RemainsCurrent.pas' {Report_Goods_RemainsCurrentForm: TParentForm},
   Report_Goods_RemainsCurrentDialog in '..\..\FormsBoutique\Report\Report_Goods_RemainsCurrentDialog.pas' {Report_Goods_RemainsCurrentDialogForm: TParentForm},
   Report_Goods in '..\..\FormsBoutique\Report\Report_Goods.pas' {Report_GoodsForm: TParentForm},
-  Report_GoodsDialog in '..\..\FormsBoutique\Report\Report_GoodsDialog.pas' {Report_GoodsDialogForm: TParentForm};
+  Report_GoodsDialog in '..\..\FormsBoutique\Report\Report_GoodsDialog.pas' {Report_GoodsDialogForm: TParentForm},
+  GoodsChoice in '..\..\FormsBoutique\Guides\GoodsChoice.pas' {GoodsChoiceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

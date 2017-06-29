@@ -345,6 +345,9 @@ end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsChoiceForm');
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
