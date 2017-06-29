@@ -39,17 +39,10 @@ BEGIN
                                                , inCurrencyFromId:= zc_Currency_Basis()
                                                , inCurrencyToId  := inCurrencyDocumentId
                                                 ) AS tmp;
-
-         -- только дл€ Sybase - !!!потом ”Ѕ–ј“№!!!
-         IF COALESCE (outCurrencyValue, 0) = 0
-         THEN
-             --
-             outParValue:= 1;
-             --
-             IF     inCurrencyDocumentId = zc_Currency_EUR() THEN outCurrencyValue:= 30;
-             ELSEIF inCurrencyDocumentId = zc_Currency_USD() THEN outCurrencyValue:= 27;
-             END IF;
-         END IF;
+     ELSE
+         -- курс не нужен
+         outCurrencyValue:= 0;
+         outParValue     := 0;
          
      END IF;
 

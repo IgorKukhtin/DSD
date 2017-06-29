@@ -81,24 +81,16 @@ BEGIN
      IF vbCurrencyId <> zc_Currency_Basis()
      THEN
          -- Определили курс на Дату документа
-         SELECT COALESCE (tmp.Amount, 1), COALESCE (tmp.ParValue,0)
+         SELECT COALESCE (tmp.Amount, 1), COALESCE (tmp.ParValue, 0)
                 INTO outCurrencyValue, outParValue
          FROM lfSelect_Movement_Currency_byDate (inOperDate      := vbOperDate
                                                , inCurrencyFromId:= zc_Currency_Basis()
                                                , inCurrencyToId  := vbCurrencyId
                                                 ) AS tmp;       
-
-         -- только для Sybase - !!!потом УБРАТЬ!!!
-         IF COALESCE (outCurrencyValue, 0) = 0
-         THEN
-             --
-             outParValue:= 1;
-             --
-             IF     inCurrencyDocumentId = zc_Currency_EUR() THEN outCurrencyValue:= 30;
-             ELSEIF inCurrencyDocumentId = zc_Currency_USD() THEN outCurrencyValue:= 27;
-             END IF;
-         END IF;
-
+     ELSE
+         -- курс не нужен
+         outCurrencyValue:= 0;
+         outParValue     := 0;
      END IF;
 
 

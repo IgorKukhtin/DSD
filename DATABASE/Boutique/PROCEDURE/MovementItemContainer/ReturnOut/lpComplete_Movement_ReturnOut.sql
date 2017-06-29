@@ -1,3 +1,5 @@
+-- Function: lpComplete_Movement_ReturnOut (Integer, Integer)
+
 DROP FUNCTION IF EXISTS lpComplete_Movement_ReturnOut (Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpComplete_Movement_ReturnOut(
@@ -7,13 +9,13 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement_ReturnOut(
 RETURNS VOID
 AS
 $BODY$
-  DECLARE vbMovementDescId         Integer;
-  DECLARE vbOperDate               TDateTime;
-  DECLARE vbPartnerId_To         Integer;
-  DECLARE vbUnitId                 Integer;
+  DECLARE vbMovementDescId           Integer;
+  DECLARE vbOperDate                 TDateTime;
+  DECLARE vbPartnerId                Integer;
+  DECLARE vbUnitId                   Integer;
   DECLARE vbAccountDirectionId_From  Integer;
-  DECLARE vbJuridicalId_Basis_From   Integer; -- значение пока НЕ определяется
-  DECLARE vbBusinessId_From          Integer; -- значение пока НЕ определяется
+  DECLARE vbJuridicalId_Basis        Integer; -- значение пока НЕ определяется
+  DECLARE vbBusinessId               Integer; -- значение пока НЕ определяется
 
   DECLARE vbCurrencyDocumentId     Integer;
   DECLARE vbCurrencyValue          TFloat;
@@ -31,28 +33,28 @@ BEGIN
 
 
      -- Параметры из документа
-     SELECT _tmp.DescId, _tmp.OperDate, _tmp.PartnerId_From, _tmp.UnitId
+     SELECT _tmp.MovementDescId, _tmp.OperDate, _tmp.PartnerId, _tmp.UnitId
           , _tmp.CurrencyDocumentId, _tmp.CurrencyValue, _tmp.ParValue
           , _tmp.AccountDirectionId_From
             INTO vbMovementDescId
                , vbOperDate
-               , vbPartnerId_To
+               , vbPartnerId
                , vbUnitId
                , vbCurrencyDocumentId
                , vbCurrencyValue
                , vbParValue
                , vbAccountDirectionId_From
-     FROM (SELECT Movement.DescId
+     FROM (SELECT Movement.DescId AS MovementDescId
                 , Movement.OperDate
+                , COALESCE (CASE WHEN Object_To.DescId   = zc_Object_Partner() THEN Object_To.Id   ELSE 0 END, 0) AS PartnerId
                 , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit()    THEN Object_From.Id ELSE 0 END, 0) AS UnitId
-                , COALESCE (CASE WHEN Object_To.DescId   = zc_Object_Partner() THEN Object_To.Id   ELSE 0 END, 0) AS PartnerId_To
 
                 , COALESCE (MovementLinkObject_CurrencyDocument.ObjectId, zc_Currency_Basis()) AS CurrencyDocumentId
                 , COALESCE (MovementFloat_CurrencyValue.ValueData, 0)                          AS CurrencyValue
                 , COALESCE (MovementFloat_ParValue.ValueData, 0)                               AS ParValue
 
                   -- Аналитики счетов - направления - !!!ВРЕМЕННО - zc_Enum_AccountDirection_10100!!! Запасы + Магазины
-                , COALESCE (ObjectLink_UnitTo_AccountDirection.ChildObjectId, zc_Enum_AccountDirection_10100()) AS AccountDirectionId_From
+                , COALESCE (ObjectLink_UnitFrom_AccountDirection.ChildObjectId, zc_Enum_AccountDirection_10100()) AS AccountDirectionId_From
 
            FROM Movement
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_From
@@ -76,9 +78,9 @@ BEGIN
                                         ON MovementFloat_ParValue.MovementId = Movement.Id
                                        AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParValue()
 
-                LEFT JOIN ObjectLink AS ObjectLink_UnitTo_AccountDirection
-                                     ON ObjectLink_UnitTo_AccountDirection.ObjectId = MovementLinkObject_To.ObjectId
-                                    AND ObjectLink_UnitTo_AccountDirection.DescId   = zc_ObjectLink_Unit_AccountDirection()
+                LEFT JOIN ObjectLink AS ObjectLink_UnitFrom_AccountDirection
+                                     ON ObjectLink_UnitFrom_AccountDirection.ObjectId = MovementLinkObject_From.ObjectId
+                                    AND ObjectLink_UnitFrom_AccountDirection.DescId   = zc_ObjectLink_Unit_AccountDirection()
 
            WHERE Movement.Id       = inMovementId
              AND Movement.DescId   = zc_Movement_ReturnOut()
@@ -111,7 +113,7 @@ BEGIN
                -- сумма в Валюте по Контрагенту
              , _tmp.OperSumm_Currency
 
-             , 0 AS AccountId              -- Счет(справочника), сформируем позже
+             , 0 AS AccountId                 -- Счет(справочника), сформируем позже
 
                -- УП для ReturnOut = УП долг Контрагента
              , _tmp.InfoMoneyGroupId
@@ -120,7 +122,7 @@ BEGIN
 
         FROM (SELECT MovementItem.Id                  AS MovementItemId
                    , MovementItem.ObjectId            AS GoodsId
-                   , MovementItem.Id                  AS PartionId
+                   , MovementItem.PartionId           AS PartionId
                    , Object_PartionGoods.GoodsSizeId  AS GoodsSizeId
                    , MovementItem.Amount              AS OperCount
 
@@ -148,6 +150,8 @@ BEGIN
                    JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                     AND MovementItem.DescId     = zc_MI_Master()
                                     AND MovementItem.isErased   = FALSE
+                   LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = MovementItem.PartionId
+
                    LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
                                                ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
                                               AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()
@@ -158,8 +162,6 @@ BEGIN
                                         ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
                                        AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
                    LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = COALESCE (ObjectLink_Goods_InfoMoney.ChildObjectId, zc_Enum_InfoMoney_10101()) -- !!!ВРЕМЕННО!!! Доходы + Товары + Одежда
-                   LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = MovementItem.Id
-
 
               WHERE Movement.Id       = inMovementId
                 AND Movement.DescId   = zc_Movement_ReturnOut()
@@ -215,8 +217,8 @@ BEGIN
      UPDATE _tmpItem SET ContainerId_Summ = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
                                                                               , inUnitId                 := vbUnitId
                                                                               , inMemberId               := NULL
-                                                                              , inJuridicalId_basis      := vbJuridicalId_Basis_From
-                                                                              , inBusinessId             := vbBusinessId_From
+                                                                              , inJuridicalId_basis      := vbJuridicalId_Basis
+                                                                              , inBusinessId             := vbBusinessId
                                                                               , inAccountId              := _tmpItem.AccountId
                                                                               , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
                                                                               , inInfoMoneyId            := _tmpItem.InfoMoneyId
@@ -254,10 +256,10 @@ BEGIN
                                         , inParentId          := NULL
                                         , inObjectId          := tmp.AccountId
                                         , inPartionId         := NULL
-                                        , inJuridicalId_basis := vbJuridicalId_Basis_From
-                                        , inBusinessId        := vbBusinessId_From
+                                        , inJuridicalId_basis := vbJuridicalId_Basis
+                                        , inBusinessId        := vbBusinessId
                                         , inDescId_1          := zc_ContainerLinkObject_Partner()
-                                        , inObjectId_1        := vbPartnerId_To
+                                        , inObjectId_1        := vbPartnerId
                                         , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
                                         , inObjectId_2        := tmp.InfoMoneyId
                                          ) AS ContainerId
@@ -277,10 +279,10 @@ BEGIN
                                         , inParentId          := tmp.ContainerId
                                         , inObjectId          := tmp.AccountId
                                         , inPartionId         := NULL
-                                        , inJuridicalId_basis := vbJuridicalId_Basis_From
-                                        , inBusinessId        := vbBusinessId_From
+                                        , inJuridicalId_basis := vbJuridicalId_Basis
+                                        , inBusinessId        := vbBusinessId
                                         , inDescId_1          := zc_ContainerLinkObject_Partner()
-                                        , inObjectId_1        := vbPartnerId_To
+                                        , inObjectId_1        := vbPartnerId
                                         , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
                                         , inObjectId_2        := tmp.InfoMoneyId
                                         , inDescId_3          := zc_ContainerLinkObject_Currency()
@@ -323,7 +325,7 @@ BEGIN
             , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
             , _tmpItem_SummPartner.ContainerId        AS ContainerIntId_Analyzer-- Контейнер - Корреспондент - по долгам поставщика
             , _tmpItem.GoodsSizeId                    AS ObjectIntId_Analyzer   -- Аналитический справочник
-            , vbPartnerId_To                          AS ObjectExtId_Analyzer   -- Аналитический справочник - Контрагент
+            , vbPartnerId                             AS ObjectExtId_Analyzer   -- Аналитический справочник - Контрагент
             , -1 * _tmpItem.OperCount                 AS Amount
             , vbOperDate                              AS OperDate
             , FALSE                                   AS isActive
@@ -354,7 +356,7 @@ BEGIN
             , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
             , _tmpItem_SummPartner.ContainerId        AS ContainerIntId_Analyzer-- Контейнер - Корреспондент - по долгам поставщика
             , _tmpItem.GoodsSizeId                    AS ObjectIntId_Analyzer   -- Аналитический справочник
-            , vbPartnerId_To                          AS ObjectExtId_Analyzer   -- Аналитический справочник - Контрагент
+            , vbPartnerId                             AS ObjectExtId_Analyzer   -- Аналитический справочник - Контрагент
             , -1 * _tmpItem.OperSumm                  AS Amount
             , vbOperDate                              AS OperDate
             , FALSE                                   AS isActive
@@ -378,7 +380,7 @@ BEGIN
             , 0                               AS ParentId
             , _tmpItem_group.AccountId        AS AccountId               -- Счет
             , 0                               AS AnalyzerId              -- Типы аналитик (проводки)
-            , vbPartnerId_To                  AS ObjectId_Analyzer       -- Поставщик
+            , vbPartnerId                     AS ObjectId_Analyzer       -- Поставщик
             , 0                               AS PartionId               -- Партия
             , 0                               AS WhereObjectId_Analyzer  -- Место учета
             , 0                               AS AccountId_Analyzer      -- Счет - корреспондент
@@ -401,9 +403,9 @@ BEGIN
       ;
 
 
-
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable();
+
 
      -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId

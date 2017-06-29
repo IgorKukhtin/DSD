@@ -16,25 +16,25 @@ RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbAccessKeyId Integer;
-   DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Send());
      
+
+     -- определяется уникальный № док.
      IF COALESCE (ioId, 0) = 0 THEN
-         ioInvNumber:= CAST (NEXTVAL ('movement_send_seq') AS TVarChar);  
+        ioInvNumber:= CAST (NEXTVAL ('Movement_Send_seq') AS TVarChar);  
      END IF;
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement_Send (ioId                := ioId
-                                         , inInvNumber         := ioInvNumber
-                                         , inOperDate          := inOperDate
-                                         , inFromId            := inFromId
-                                         , inToId              := inToId
-                                         , inComment           := inComment
-                                         , inUserId            := vbUserId
-                                              );
+     ioId := lpInsertUpdate_Movement_Send (ioId       := ioId
+                                         , inInvNumber:= ioInvNumber
+                                         , inOperDate := inOperDate
+                                         , inFromId   := inFromId
+                                         , inToId     := inToId
+                                         , inComment  := inComment
+                                         , inUserId   := vbUserId
+                                          );
 
 END;
 $BODY$
@@ -47,4 +47,4 @@ $BODY$
  */
 
 -- тест
--- select * from gpInsertUpdate_Movement_Send(ioId := 14 , ioInvNumber := '1' , inOperDate := ('01.01.2017')::TDateTime , inFromId := 230 , inToId := 0 , inComment := 'c' ,  inSession := '2');
+-- SELECT * FROM gpInsertUpdate_Movement_Send(ioId := 14 , ioInvNumber := '1' , inOperDate := ('01.01.2017')::TDateTime , inFromId := 230 , inToId := 0 , inComment := 'c' ,  inSession := '2');

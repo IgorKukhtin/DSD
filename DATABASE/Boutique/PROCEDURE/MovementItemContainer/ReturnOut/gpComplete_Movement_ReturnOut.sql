@@ -29,8 +29,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
+ 28.06.17                                        *
  25.04.17         *
  */
  
 -- тест
--- SELECT * FROM gpComplete_Movement_Income (inMovementId:= 149639, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpComplete_Movement_ReturnOut (inMovementId:= 149639, inSession:= zfCalc_UserAdmin())

@@ -3,7 +3,7 @@
   Top = 180
   Caption = 'LoadBoutique - MainForm'
   ClientHeight = 560
-  ClientWidth = 1172
+  ClientWidth = 1025
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,7 +16,7 @@
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter
-    Left = 485
+    Left = 442
     Top = 0
     Height = 496
     Align = alRight
@@ -27,7 +27,7 @@
   object DBGrid: TDBGrid
     Left = 0
     Top = 0
-    Width = 485
+    Width = 442
     Height = 496
     Align = alClient
     DataSource = DataSource
@@ -41,23 +41,24 @@
   object ButtonPanel: TPanel
     Left = 0
     Top = 496
-    Width = 1172
+    Width = 1025
     Height = 64
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
     OnDblClick = ButtonPanelDblClick
+    ExplicitWidth = 1172
     object Gauge: TGauge
       Left = 0
       Top = 0
-      Width = 1172
+      Width = 1025
       Height = 19
       Align = alTop
       Progress = 50
       ExplicitWidth = 1307
     end
     object OKGuideButton: TButton
-      Left = 37
+      Left = 8
       Top = 25
       Width = 135
       Height = 25
@@ -66,7 +67,7 @@
       OnClick = OKGuideButtonClick
     end
     object StopButton: TButton
-      Left = 502
+      Left = 454
       Top = 25
       Width = 137
       Height = 25
@@ -75,7 +76,7 @@
       OnClick = StopButtonClick
     end
     object CloseButton: TButton
-      Left = 654
+      Left = 597
       Top = 25
       Width = 87
       Height = 25
@@ -84,15 +85,15 @@
       OnClick = CloseButtonClick
     end
     object cbOnlyOpen: TCheckBox
-      Left = 747
+      Left = 712
       Top = 24
-      Width = 262
+      Width = 173
       Height = 17
       Caption = #1054#1090#1082#1083#1102#1095#1080#1090#1100' ('#1090#1086#1083#1100#1082#1086' '#1087#1088#1086#1089#1084#1086#1090#1088')'
       TabOrder = 3
     end
     object OKDocumentButton: TButton
-      Left = 178
+      Left = 149
       Top = 25
       Width = 135
       Height = 25
@@ -101,7 +102,7 @@
       OnClick = OKDocumentButtonClick
     end
     object OKCompleteDocumentButton: TButton
-      Left = 326
+      Left = 297
       Top = 25
       Width = 151
       Height = 25
@@ -110,7 +111,7 @@
       OnClick = OKCompleteDocumentButtonClick
     end
     object cbOnlyOpenMIMaster: TCheckBox
-      Left = 932
+      Left = 891
       Top = 25
       Width = 117
       Height = 17
@@ -118,7 +119,7 @@
       TabOrder = 6
     end
     object сbNotVisibleCursor: TCheckBox
-      Left = 747
+      Left = 712
       Top = 41
       Width = 150
       Height = 17
@@ -127,7 +128,7 @@
       OnClick = сbNotVisibleCursorClick
     end
     object cbOnlyOpenMIChild: TCheckBox
-      Left = 932
+      Left = 891
       Top = 42
       Width = 117
       Height = 17
@@ -136,19 +137,20 @@
     end
   end
   object PageControl1: TPageControl
-    Left = 488
+    Left = 445
     Top = 0
-    Width = 684
+    Width = 580
     Height = 496
     ActivePage = TabSheet1
     Align = alRight
     TabOrder = 2
     object TabSheet1: TTabSheet
       Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080' - '#1044#1086#1082#1091#1084#1077#1085#1090#1099
+      ExplicitWidth = 582
       object GuidePanel: TPanel
         Left = 0
         Top = 0
-        Width = 256
+        Width = 188
         Height = 468
         Align = alLeft
         BevelOuter = bvNone
@@ -159,7 +161,7 @@
           Top = 1
           Width = 122
           Height = 17
-          Caption = #1042#1089#1077' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+          Caption = #1042#1089#1077' '#1089#1087#1088#1072#1074'.'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -201,11 +203,11 @@
         end
         object cbCreateId_Postgres: TCheckBox
           Tag = 1
-          Left = 142
+          Left = 99
           Top = 1
           Width = 114
           Height = 17
-          Caption = 'add Id_Postgres'
+          Caption = 'add Id_PG'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -216,11 +218,11 @@
         end
         object cbNullId_Postgres: TCheckBox
           Tag = 1
-          Left = 142
+          Left = 99
           Top = 17
           Width = 114
           Height = 17
-          Caption = 'NULL Id_Postgres'
+          Caption = 'NULL Id_PG'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -404,7 +406,7 @@
           Top = 225
           Width = 226
           Height = 17
-          Caption = '1.14. '#1053#1072#1079#1074#1072#1085#1080#1103' '#1085#1072#1082#1086#1087#1080#1090#1077#1083#1100#1085#1099#1093' '#1089#1082#1080#1076#1086#1082
+          Caption = '1.14. '#1053#1072#1079#1074#1072#1085#1080#1103' '#1085#1072#1082#1086#1087#1080#1090'. '#1089#1082#1080#1076#1086#1082
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -610,13 +612,14 @@
         end
       end
       object DocumentPanel: TPanel
-        Left = 256
+        Left = 188
         Top = 0
-        Width = 214
+        Width = 191
         Height = 468
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 1
+        ExplicitLeft = 195
         object Label1: TLabel
           Left = 6
           Top = 22
@@ -633,11 +636,11 @@
         end
         object cbAllDocument: TCheckBox
           Tag = 2
-          Left = 3
+          Left = 15
           Top = 1
-          Width = 235
+          Width = 72
           Height = 17
-          Caption = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+          Caption = #1042#1089#1077' '#1076#1086#1082'.'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -676,11 +679,11 @@
         end
         object cbCreateDocId_Postgres: TCheckBox
           Tag = 1
-          Left = 110
+          Left = 113
           Top = 1
-          Width = 114
+          Width = 78
           Height = 17
-          Caption = 'add Id_Postgres'
+          Caption = 'add Id_PG'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -843,8 +846,8 @@
         end
         object cbTest: TCheckBox
           Left = 19
-          Top = 429
-          Width = 150
+          Top = 423
+          Width = 142
           Height = 17
           Caption = #1058#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1058#1077#1089#1090' Id :'
           Font.Charset = DEFAULT_CHARSET
@@ -880,13 +883,15 @@
         end
       end
       object CompleteDocumentPanel: TPanel
-        Left = 470
+        Left = 379
         Top = 0
-        Width = 206
+        Width = 193
         Height = 468
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 2
+        ExplicitLeft = 470
+        ExplicitWidth = 206
         object Label5: TLabel
           Left = 6
           Top = 22
@@ -905,9 +910,9 @@
           Tag = 3
           Left = 15
           Top = 1
-          Width = 194
+          Width = 73
           Height = 17
-          Caption = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+          Caption = #1042#1089#1077' '#1076#1086#1082
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -1133,13 +1138,15 @@
     object TabSheet2: TTabSheet
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1080#1079' '#1092#1072#1081#1083#1086#1074
       ImageIndex = 1
+      ExplicitWidth = 676
       object Panel1: TPanel
         Left = 0
         Top = 0
-        Width = 676
+        Width = 572
         Height = 468
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 676
         object Label3: TLabel
           Left = 8
           Top = 280

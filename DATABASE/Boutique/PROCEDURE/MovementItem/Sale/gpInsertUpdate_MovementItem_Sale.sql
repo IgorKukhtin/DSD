@@ -96,25 +96,35 @@ BEGIN
      IF COALESCE (ioOperPriceList, 0) <= 0 THEN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Цена (прайс)>.';
      END IF;
-     -- данные из партии : OperPrice и CountForPrice
-     SELECT COALESCE (Object_PartionGoods.CountForPrice,1)
-          , COALESCE (Object_PartionGoods.OperPrice,0)
-          , COALESCE (Object_PartionGoods.CurrencyId, zc_Currency_Basis())
-    INTO outCountForPrice, outOperPrice, vbCurrencyId
+
+     -- данные из партии : OperPrice и CountForPrice и CurrencyId
+     SELECT COALESCE (Object_PartionGoods.CountForPrice, 1)                AS CountForPrice
+          , COALESCE (Object_PartionGoods.OperPrice, 0)                    AS OperPrice
+          , COALESCE (Object_PartionGoods.CurrencyId, zc_Currency_Basis()) AS CurrencyId
+            INTO outCountForPrice, outOperPrice, vbCurrencyId
      FROM Object_PartionGoods
      WHERE Object_PartionGoods.MovementItemId = inPartionId;
      
-    IF vbCurrencyId <> zc_Currency_Basis() THEN
-        SELECT COALESCE (tmp.Amount,1) , COALESCE (tmp.ParValue,0)
-       INTO outCurrencyValue, outParValue
-        FROM lfSelect_Movement_Currency_byDate (inOperDate:= vbOperDate, inCurrencyFromId:= zc_Currency_Basis(), inCurrencyToId:= vbCurrencyId ) AS tmp;
-    END IF;
-    outCurrencyValue := COALESCE(outCurrencyValue,1);
-    outParValue      := COALESCE(outParValue,0);
+
+     -- Если НЕ Базовая Валюта
+     IF vbCurrencyId <> zc_Currency_Basis()
+     THEN
+         -- Определили курс на Дату документа
+         SELECT COALESCE (tmp.Amount, 1), COALESCE (tmp.ParValue, 0)
+                INTO outCurrencyValue, outParValue
+         FROM lfSelect_Movement_Currency_byDate (inOperDate      := vbOperDate
+                                               , inCurrencyFromId:= zc_Currency_Basis()
+                                               , inCurrencyToId  := vbCurrencyId
+                                                ) AS tmp;       
+     ELSE
+         -- курс не нужен
+         outCurrencyValue:= 0;
+         outParValue     := 0;
+     END IF;
 
     -- определяем скидку
     SELECT tmp.ChangePercent, tmp.DiscountSaleKindId, tmp.DiscountSaleKindName
-   INTO outChangePercent, vbDiscountSaleKindId, outDiscountSaleKindName
+           INTO outChangePercent, vbDiscountSaleKindId, outDiscountSaleKindName
     FROM zfSelect_DiscountSaleKind (vbOperDate, vbUnitId, inGoodsId, vbClientId, vbUserId) AS tmp;
 
      -- расчитали сумму по элементу, для грида
