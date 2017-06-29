@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, 
 DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Goods (
     IN inStartDate    TDateTime ,
@@ -15,6 +16,7 @@ CREATE OR REPLACE FUNCTION gpReport_Goods (
     IN inGoodsSizeId  Integer   ,    
     IN inisGoodsSize  Boolean   ,
     IN inisPartion    Boolean   ,   
+    IN inisPeriod     Boolean   ,   
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -30,10 +32,16 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_Goods());
      vbUserId:= lpGetUserBySession (inSession);
      
-     -- проверка - товар должен быть выбран
-     IF COALESCE (inGoodsId, 0) = 0 THEN
+    -- проверка - товар должен быть выбран
+    IF COALESCE (inGoodsId, 0) = 0 THEN
         RAISE EXCEPTION 'Ошибка.Партия товара не выбрана.';
-     END IF;
+    END IF;
+  
+    -- если за весь период установин кон. дату  = текущей, для определения цены (прайс) для остатка
+    IF COALESCE (inisPeriod, False) = True THEN
+        inEndDate := CURRENT_DATE;
+    END IF;
+  
      
     OPEN Cursor1 FOR
     WITH
@@ -69,19 +77,20 @@ BEGIN
                           , tmpContainer_Count.PartionId
                           , tmpContainer_Count.GoodsSizeId
                           , tmpContainer_Count.Amount
-                          , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut(), zc_Movement_Sale(), zc_Movement_ReturnIn())
+                          , CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inisPeriod = TRUE) 
+                                   AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut(), zc_Movement_Sale(), zc_Movement_ReturnIn())
                                       THEN MIContainer.ContainerId_Analyzer
                                  ELSE 0
                             END AS ContainerId_Analyzer
-                          , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                          , CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inisPeriod = TRUE)
                                       THEN MIContainer.MovementId
                                  ELSE 0
                             END AS MovementId
-                          , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                          , CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inisPeriod = TRUE)
                                       THEN MIContainer.MovementItemId
                                  ELSE 0
                             END AS MovementItemId
-                          , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                          , SUM (CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inisPeriod = TRUE)
                                            THEN MIContainer.Amount
                                       ELSE 0
                                  END) AS Amount_Period
@@ -90,22 +99,23 @@ BEGIN
                           , MIContainer.isActive
                      FROM tmpContainer_Count
                           LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer_Count.ContainerId
-                                                                        AND MIContainer.OperDate >= inStartDate
+                                                                        AND (MIContainer.OperDate >= inStartDate OR inisPeriod = TRUE)
                      GROUP BY tmpContainer_Count.ContainerId
                             , tmpContainer_Count.LocationId
                             , tmpContainer_Count.GoodsId
                             , tmpContainer_Count.PartionId
                             , tmpContainer_Count.GoodsSizeId
                             , tmpContainer_Count.Amount
-                            , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut(), zc_Movement_Sale(), zc_Movement_ReturnIn())
+                            , CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inisPeriod = TRUE) 
+                                     AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut(), zc_Movement_Sale(), zc_Movement_ReturnIn())
                                         THEN MIContainer.ContainerId_Analyzer
                                    ELSE 0
                               END
-                            , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                            , CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inisPeriod = TRUE)
                                         THEN MIContainer.MovementId
                                    ELSE 0
                               END
-                            , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                            , CASE WHEN (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inisPeriod = TRUE)
                                         THEN MIContainer.MovementItemId
                                    ELSE 0
                               END

@@ -766,6 +766,15 @@ inherited Report_GoodsForm: TReport_GoodsForm
       TabOrder = 9
       Width = 110
     end
+    object cbPeriod: TcxCheckBox
+      Left = 838
+      Top = 29
+      Action = actRefreshPeriod
+      Properties.ReadOnly = False
+      State = cbsChecked
+      TabOrder = 10
+      Width = 110
+    end
   end
   object cxLabel4: TcxLabel [2]
     Left = 501
@@ -774,7 +783,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
   end
   object edGoodsSize: TcxButtonEdit [3]
     Left = 541
-    Top = 30
+    Top = 29
     Properties.Buttons = <
       item
         Default = True
@@ -850,7 +859,21 @@ inherited Report_GoodsForm: TReport_GoodsForm
       end>
   end
   inherited ActionList: TActionList
-    object actRefreshPartion: TdsdDataSetRefresh [0]
+    object actRefreshPeriod: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1047#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076
+      Hint = #1079#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actRefreshPartion: TdsdDataSetRefresh [1]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -864,7 +887,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actRefreshGoodsSize: TdsdDataSetRefresh [1]
+    object actRefreshGoodsSize: TdsdDataSetRefresh [2]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -1227,6 +1250,14 @@ inherited Report_GoodsForm: TReport_GoodsForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPeriod'
+        Value = Null
+        Component = cbPeriod
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 120
     Top = 328
@@ -1321,6 +1352,9 @@ inherited Report_GoodsForm: TReport_GoodsForm
       end
       item
         Component = deEnd
+      end
+      item
+        Component = GuidesGoodsSize
       end>
     Left = 264
     Top = 312
@@ -1612,7 +1646,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 872
-    Top = 11
+    Left = 904
+    Top = 65531
   end
 end

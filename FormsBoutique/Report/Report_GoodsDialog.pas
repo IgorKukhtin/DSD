@@ -47,6 +47,7 @@ type
     cxLabel5: TcxLabel;
     edPartion: TcxButtonEdit;
     PartionGuides: TdsdGuides;
+    cbPeriod: TcxCheckBox;
   private
     { Private declarations }
   public
