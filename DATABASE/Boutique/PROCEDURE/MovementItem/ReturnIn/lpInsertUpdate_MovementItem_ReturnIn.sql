@@ -87,4 +87,4 @@ $BODY$
 */
 
 -- тест
--- 
+-- SELECT * FROM lpInsertUpdate_MovementItem_ReturnIn (ioId := 0 , inMovementId := 8 , inGoodsId := 446 , inPartionId := 50 , inisPay := False ,  inAmount := 4 ,inSummChangePercent:=0, ioOperPriceList := 1030 , inBarCode := '1' ::TVarChar,  inSession := '2');

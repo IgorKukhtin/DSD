@@ -107,6 +107,19 @@ BEGIN
                                                , inCurrencyFromId:= zc_Currency_Basis()
                                                , inCurrencyToId  := vbCurrencyId
                                                 ) AS tmp;       
+         -- проверка
+         IF COALESCE (vbCurrencyId, 0) = 0 THEN
+            RAISE EXCEPTION 'Ошибка.Не определено значение <Валюта>.';
+         END IF;
+         -- проверка
+         IF COALESCE (outCurrencyValue, 0) = 0 THEN
+            RAISE EXCEPTION 'Ошибка.Не определено значение <Курс>.';
+         END IF;
+         -- проверка
+         IF COALESCE (outParValue, 0) = 0 THEN
+            RAISE EXCEPTION 'Ошибка.Не определено значение <Номинал>.';
+         END IF;
+
      ELSE
          -- курс не нужен
          outCurrencyValue:= 0;
