@@ -131,6 +131,8 @@ type
     actRefreshMI: TdsdDataSetRefresh;
     macUpdateAction: TMultiAction;
     TotalSummBalance: TcxGridDBColumn;
+    actOpenReportForm: TdsdOpenForm;
+    bbOpenReportForm: TdxBarButton;
   private
   public
   end;

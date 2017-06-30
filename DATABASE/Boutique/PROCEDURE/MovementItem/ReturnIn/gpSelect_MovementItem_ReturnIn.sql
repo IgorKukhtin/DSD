@@ -18,8 +18,7 @@ RETURNS TABLE (Id Integer, PartionId Integer
              , GoodsInfoName TVarChar
              , LineFabricaName TVarChar
              , LabelName TVarChar
-             , GoodsSizeName TVarChar
-             --, BarCode TVarChar
+             , GoodsSizeId Integer, GoodsSizeName TVarChar
              , Amount TFloat, Amount_Sale TFloat, Remains TFloat
              , OperPrice TFloat, CountForPrice TFloat, OperPriceList TFloat
              , TotalSumm TFloat
@@ -234,6 +233,7 @@ BEGIN
            , Object_GoodsInfo.ValueData     AS GoodsInfoName
            , Object_LineFabrica.ValueData   AS LineFabricaName
            , Object_Label.ValueData         AS LabelName
+           , Object_GoodsSize.Id            AS GoodsSizeId
            , Object_GoodsSize.ValueData     AS GoodsSizeName 
 
            , tmpMI.Amount         ::TFloat
@@ -399,6 +399,7 @@ BEGIN
            , Object_GoodsInfo.ValueData     AS GoodsInfoName
            , Object_LineFabrica.ValueData   AS LineFabricaName
            , Object_Label.ValueData         AS LabelName
+           , Object_GoodsSize.Id            AS GoodsSizeId
            , Object_GoodsSize.ValueData     AS GoodsSizeName 
 
            , tmpMI.Amount                   ::TFloat

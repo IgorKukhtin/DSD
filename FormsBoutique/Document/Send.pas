@@ -123,6 +123,10 @@ type
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
     TotalSummBalance: TcxGridDBColumn;
+    actOpenReportFrom: TdsdOpenForm;
+    bbOpenReportForm: TdxBarButton;
+    actOpenReportTo: TdsdOpenForm;
+    bbOpenReportTo: TdxBarButton;
   private
   public
   end;
