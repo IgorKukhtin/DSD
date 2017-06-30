@@ -19,6 +19,8 @@ CREATE TABLE Container(
 );
 
 -------------------------------------------------------------------------------
+-- CREATE INDEX idx_Container_WhereObjectId_ObjectId1   ON Container (WhereObjectId, DescId, Amount);
+-- CREATE INDEX idx_Container_WhereObjectId_ObjectId2   ON Container (WhereObjectId, DescId);
 
 -- Индексы
 CREATE INDEX idx_Container_KeyValue                 ON Container (KeyValue);
