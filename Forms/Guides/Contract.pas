@@ -217,6 +217,8 @@ type
     bbCustom: TdxBarButton;
     isVat: TcxGridDBColumn;
     CurrencyName: TcxGridDBColumn;
+    JuridicalInvoiceName: TcxGridDBColumn;
+    JuridicalInvoiceChoiceForm: TOpenChoiceForm;
 
   private
     { Private declarations }

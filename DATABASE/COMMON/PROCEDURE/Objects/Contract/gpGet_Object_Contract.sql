@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , JuridicalId Integer, JuridicalName TVarChar
              , JuridicalBasisId Integer, JuridicalBasisName TVarChar
              , JuridicalDocumentId Integer, JuridicalDocumentName TVarChar
+             , JuridicalInvoiceId Integer, JuridicalInvoiceName TVarChar
 
              , PaidKindId Integer, PaidKindName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
@@ -59,13 +60,13 @@ BEGIN
    THEN
        RETURN QUERY 
        SELECT
-             0 :: Integer    AS Id
+             0 :: Integer     AS Id
            , lfGet_ObjectCode(0, zc_Object_Contract()) AS Code
-           , '' :: TVarChar  AS InvNumber
-           , '' :: TVarChar  AS InvNumberArchive
-           , '' :: TVarChar  AS Comment
-           , '' :: TVarChar  AS BankAccountExternal
-           , '' :: TVarChar  AS GLNCode
+           , '' :: TVarChar   AS InvNumber
+           , '' :: TVarChar   AS InvNumberArchive
+           , '' :: TVarChar   AS Comment
+           , '' :: TVarChar   AS BankAccountExternal
+           , '' :: TVarChar   AS GLNCode
 
            , CAST (0 as Tfloat)        AS Term
            , CAST (0 as Tfloat)        AS DayTaxSummary 
@@ -74,26 +75,29 @@ BEGIN
            , CURRENT_DATE :: TDateTime AS StartDate
            , CURRENT_DATE :: TDateTime AS EndDate
 
-           , 0 :: Integer   AS ContractKindId
-           , '' :: TVarChar AS ContractKindName
-           , 0 :: Integer   AS JuridicalId
-           , '' :: TVarChar AS JuridicalName
+           , 0 :: Integer     AS ContractKindId
+           , '' :: TVarChar   AS ContractKindName
+           , 0 :: Integer     AS JuridicalId
+           , '' :: TVarChar   AS JuridicalName
            , Object_JuridicalBasis.Id        AS JuridicalBasisId
            , Object_JuridicalBasis.ValueData AS JuridicalBasisName
            
-           , 0 :: Integer   AS JuridicalDocumentId
-           , '' :: TVarChar AS JuridicalDocumentName
+           , 0 :: Integer     AS JuridicalDocumentId
+           , '' :: TVarChar   AS JuridicalDocumentName
+           
+           , 0 :: Integer     AS JuridicalInvoiceId
+           , '' :: TVarChar   AS JuridicalInvoiceName
 
            , Object_PaidKind.Id        AS PaidKindId
            , Object_PaidKind.ValueData AS PaidKindName
-           , 0 :: Integer   AS InfoMoneyId
-           , '' :: TVarChar AS InfoMoneyName
+           , 0 :: Integer     AS InfoMoneyId
+           , '' :: TVarChar   AS InfoMoneyName
 
-           , 0 :: Integer   AS GoodsPropertyId
-           , '' :: TVarChar AS GoodsPropertyName
+           , 0 :: Integer     AS GoodsPropertyId
+           , '' :: TVarChar   AS GoodsPropertyName
 
-           , 0 :: Integer   AS PersonalId
-           , '' :: TVarChar AS PersonalName
+           , 0 :: Integer     AS PersonalId
+           , '' :: TVarChar   AS PersonalName
            
            , 0 :: Integer     AS PersonalTradeId
            , '' :: TVarChar   AS PersonalTradeName
@@ -101,7 +105,7 @@ BEGIN
            , 0 :: Integer     AS PersonalCollationId
            , '' :: TVarChar   AS PersonalCollationName
 
-           , 0 :: Integer    AS PersonalSigningId
+           , 0 :: Integer     AS PersonalSigningId
            , '' :: TVarChar   AS PersonalSigningName
 
            , 0 :: Integer     AS BankAccountId
@@ -110,33 +114,33 @@ BEGIN
            , 0 :: Integer     AS ContractTagId
            , '' :: TVarChar   AS ContractTagName           
             
-           , 0 :: Integer   AS AreaContractId
-           , '' :: TVarChar AS AreaContractName
-           , 0 :: Integer   AS ContractArticleId
-           , '' :: TVarChar AS ContractArticleName
-           , 0 :: Integer   AS ContractStateKindId
-           , '' :: TVarChar AS ContractStateKindName 
-           , 0 :: Integer   AS ContractTermKindId
-           , '' :: TVarChar AS ContractTermKindName    
+           , 0 :: Integer     AS AreaContractId
+           , '' :: TVarChar   AS AreaContractName
+           , 0 :: Integer     AS ContractArticleId
+           , '' :: TVarChar   AS ContractArticleName
+           , 0 :: Integer     AS ContractStateKindId
+           , '' :: TVarChar   AS ContractStateKindName 
+           , 0 :: Integer     AS ContractTermKindId
+           , '' :: TVarChar   AS ContractTermKindName    
 
            , Object_CurrencyBasis.Id         AS CurrencyId 
            , Object_CurrencyBasis.ValueData  AS CurrencyName 
      
 
-           , 0 :: Integer   AS BankId
-           , '' :: TVarChar AS BankName
+           , 0 :: Integer     AS BankId
+           , '' :: TVarChar   AS BankName
            
-           , CAST (false as Boolean)  AS isDefault 
-           , CAST (false as Boolean)  AS isStandart
+           , CAST (false as Boolean)   AS isDefault 
+           , CAST (false as Boolean)   AS isStandart
 
-           , CAST (false as Boolean)  AS isPersonal 
-           , CAST (false as Boolean)  AS isUnique
+           , CAST (false as Boolean)   AS isPersonal 
+           , CAST (false as Boolean)   AS isUnique
 
-           , CAST (0 as Integer)    AS PriceListId 
-           , CAST ('' as TVarChar)  AS PriceListName 
+           , CAST (0 as Integer)       AS PriceListId 
+           , CAST ('' as TVarChar)     AS PriceListName 
 
-           , CAST (0 as Integer)    AS PriceListPromoId 
-           , CAST ('' as TVarChar)  AS PriceListPromoName 
+           , CAST (0 as Integer)       AS PriceListPromoId 
+           , CAST ('' as TVarChar)     AS PriceListPromoName 
        
            , CURRENT_DATE :: TDateTime AS StartPromo
            , CURRENT_DATE :: TDateTime AS EndPromo
@@ -163,9 +167,9 @@ BEGIN
            , ObjectFloat_Term.ValueData              AS Term
            , ObjectFloat_DayTaxSummary.ValueData     AS DayTaxSummary                      
 
-           , ObjectDate_Signing.ValueData AS SigningDate
-           , ObjectDate_Start.ValueData   AS StartDate -- Object_Contract_View.StartDate
-           , ObjectDate_End.ValueData     AS EndDate   -- Object_Contract_View.EndDate
+           , ObjectDate_Signing.ValueData  AS SigningDate
+           , ObjectDate_Start.ValueData    AS StartDate -- Object_Contract_View.StartDate
+           , ObjectDate_End.ValueData      AS EndDate   -- Object_Contract_View.EndDate
 
            , Object_ContractKind.Id        AS ContractKindId
            , Object_ContractKind.ValueData AS ContractKindName
@@ -174,8 +178,11 @@ BEGIN
            , Object_JuridicalBasis.Id           AS JuridicalBasisId
            , Object_JuridicalBasis.ValueData    AS JuridicalBasisName
            
-           , Object_JuridicalDocument.Id             AS JuridicalDocumentId
-           , Object_JuridicalDocument.ValueData      AS JuridicalDocumentName
+           , Object_JuridicalDocument.Id        AS JuridicalDocumentId
+           , Object_JuridicalDocument.ValueData AS JuridicalDocumentName
+           
+           , Object_JuridicalInvoice.Id         AS JuridicalInvoiceId
+           , Object_JuridicalInvoice.ValueData  AS JuridicalInvoiceName
            
            , Object_PaidKind.Id            AS PaidKindId
            , Object_PaidKind.ValueData     AS PaidKindName
@@ -338,6 +345,11 @@ BEGIN
                                 AND ObjectLink_Contract_JuridicalDocument.DescId = zc_ObjectLink_Contract_JuridicalDocument()
             LEFT JOIN Object AS Object_JuridicalDocument ON Object_JuridicalDocument.Id = ObjectLink_Contract_JuridicalDocument.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalInvoice
+                                 ON ObjectLink_Contract_JuridicalInvoice.ObjectId = Object_Contract_View.ContractId 
+                                AND ObjectLink_Contract_JuridicalInvoice.DescId = zc_ObjectLink_Contract_JuridicalInvoice()
+            LEFT JOIN Object AS Object_JuridicalInvoice ON Object_JuridicalInvoice.Id = ObjectLink_Contract_JuridicalInvoice.ChildObjectId
+            
             LEFT JOIN ObjectLink AS ObjectLink_Contract_GoodsProperty
                                  ON ObjectLink_Contract_GoodsProperty.ObjectId = Object_Contract_View.ContractId 
                                 AND ObjectLink_Contract_GoodsProperty.DescId = zc_ObjectLink_Contract_GoodsProperty()
@@ -389,6 +401,7 @@ ALTER FUNCTION gpGet_Object_Contract (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 30.06.17         * add JuridicalInvoice
  03.03.17         * DayTaxSummary
  20.01.16         *
  05.05.15         * add GoodsProperty

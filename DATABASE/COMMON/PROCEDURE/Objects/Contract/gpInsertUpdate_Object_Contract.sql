@@ -1,6 +1,13 @@
 -- Function: gpInsertUpdate_Object_Contract()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Tfloat, Tfloat, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Integer, Integer, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Tfloat, Tfloat, TDateTime, TDateTime, TDateTime
+                                                      , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                      , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                      , Boolean, Boolean, Boolean, Boolean, Integer, Integer, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Tfloat, Tfloat, TDateTime, TDateTime, TDateTime
+                                                      , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                      , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                      , Boolean, Boolean, Boolean, Boolean, Integer, Integer, TDateTime, TDateTime, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
@@ -21,6 +28,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
     IN inJuridicalId         Integer  ,     -- Юридическое лицо
     IN inJuridicalBasisId    Integer  ,     -- Главное юридическое лицо
     IN inJuridicalDocumentId Integer  ,     -- Юридическое лицо (печать док.)
+    IN inJuridicalInvoiceId  Integer  ,     -- Юридическое лицо (печать док. - реквизиты плательщика)
     
     IN inInfoMoneyId         Integer  ,     -- УП статья назначения
     IN inContractKindId      Integer  ,     -- Вид договора
@@ -293,7 +301,9 @@ BEGIN
    -- сохранили связь с <Главным юридическим лицом>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_JuridicalBasis(), ioId, inJuridicalBasisId);
    -- сохранили связь с <Юридическое лицо(печать док.)>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_JuridicalDocument(), ioId, inJuridicalDocumentId);   
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_JuridicalDocument(), ioId, inJuridicalDocumentId); 
+   -- сохранили связь с <Юридическое лицо(печать док.- реквизиты плательщика)>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_JuridicalInvoice(), ioId, inJuridicalInvoiceId);  
    -- сохранили связь с <Статьи назначения>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_InfoMoney(), ioId, inInfoMoneyId);
    -- сохранили связь с <Виды договоров>
@@ -368,6 +378,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 30.03.17         * inJuridicalInvoiceId
  03.03.17         * inDayTaxSummary
  13.04.16         *
  29.01.16         *

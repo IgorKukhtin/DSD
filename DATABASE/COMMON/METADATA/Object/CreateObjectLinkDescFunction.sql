@@ -859,6 +859,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Contract_GroupMemberSP() RETURNS Intege
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Contract_GroupMemberSP', 'Категория пациента(СП)', zc_Object_Contract(), zc_Object_GroupMemberSP() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Contract_GroupMemberSP');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Contract_JuridicalInvoice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Contract_JuridicalInvoice'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Contract_JuridicalInvoice', 'Юридические лица(печать док. - реквизиты плательщика)', zc_Object_Contract(), zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Contract_JuridicalInvoice');
 
 --!!! ContractPartner
 CREATE OR REPLACE FUNCTION zc_ObjectLink_ContractPartner_Contract() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContractPartner_Contract'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -1748,6 +1751,7 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 30.06.17         * zc_ObjectLink_Contract_JuridicalInvoice
  19.06.17         * zc_ObjectLink_Partner_PersonalMerch
  12.06.17         * zc_ObjectLink_DocumentKind_GoodsKind
                     zc_ObjectLink_DocumentKind_Goods

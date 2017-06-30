@@ -181,6 +181,9 @@ type
     CurrencyGuides: TdsdGuides;
     edDayTaxSummary: TcxCurrencyEdit;
     cxLabel33: TcxLabel;
+    cxLabel34: TcxLabel;
+    edJuridicalInvoice: TcxButtonEdit;
+    JuridicalInvoiceGuides: TdsdGuides;
   private
     { Private declarations }
   public
