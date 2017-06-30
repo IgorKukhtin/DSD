@@ -1,12 +1,11 @@
 inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
   Caption = #1054#1090#1095#1077#1090' '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-  ClientHeight = 425
+  ClientHeight = 488
   ClientWidth = 1065
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -275
   ExplicitWidth = 1081
-  ExplicitHeight = 460
+  ExplicitHeight = 526
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -79,19 +78,19 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
   inherited PageControl: TcxPageControl [1]
     Top = 75
     Width = 1065
-    Height = 350
+    Height = 413
     TabOrder = 3
     ExplicitTop = 75
     ExplicitWidth = 1065
     ExplicitHeight = 350
-    ClientRectBottom = 350
+    ClientRectBottom = 413
     ClientRectRight = 1065
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1065
       ExplicitHeight = 350
       inherited cxGrid: TcxGrid
         Width = 1065
-        Height = 350
+        Height = 413
         ExplicitWidth = 1065
         ExplicitHeight = 350
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -684,6 +683,77 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
+    object actOpenReportForm: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'>'
+      ImageIndex = 40
+      FormName = 'TReport_GoodsForm'
+      FormNameParam.Value = 'TReport_GoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'isPeriod'
+          Value = 'TRUE'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPartion'
+          Value = 'False'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LocationId'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LocationName'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsSizeName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsSizeName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 48
@@ -787,7 +857,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbOpenForm'
         end
         item
           Visible = True
@@ -796,6 +866,14 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenReportForm'
         end
         item
           Visible = True
@@ -821,10 +899,14 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       Action = ExecuteDialog
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbOpenForm: TdxBarButton
       Action = actOpenForm
       Category = 0
       ImageIndex = 28
+    end
+    object bbOpenReportForm: TdxBarButton
+      Action = actOpenReportForm
+      Category = 0
     end
   end
   inherited PeriodChoice: TPeriodChoice

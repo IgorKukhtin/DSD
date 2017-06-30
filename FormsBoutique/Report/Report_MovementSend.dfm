@@ -407,28 +407,6 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
             HeaderAlignmentVert = vaCenter
             Width = 102
           end
-          object DescName: TcxGridDBColumn
-            Caption = #1042#1086#1079#1074#1088'. '#1087#1086#1089#1090'.'
-            DataBinding.FieldName = 'DescName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object InvNumber: TcxGridDBColumn
-            Caption = #8470' ('#1074#1086#1079#1074#1088'. '#1087#1086#1089#1090'.)'
-            DataBinding.FieldName = 'InvNumber'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 73
-          end
-          object OperDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' ('#1074#1086#1079#1074#1088'. '#1087#1086#1089#1090'.)'
-            DataBinding.FieldName = 'OperDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
           object DescName_Partion: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103' '#1042#1080#1076
             DataBinding.FieldName = 'DescName_Partion'

@@ -33,9 +33,9 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
      
     -- проверка - товар должен быть выбран
-    IF COALESCE (inGoodsId, 0) = 0 THEN
+    /*IF COALESCE (inGoodsId, 0) = 0 THEN
         RAISE EXCEPTION 'ќшибка.ѕарти€ товара не выбрана.';
-    END IF;
+    END IF;*/
   
     -- если за весь период установин кон. дату  = текущей, дл€ определени€ цены (прайс) дл€ остатка
     IF COALESCE (inisPeriod, False) = True THEN

@@ -1,8 +1,9 @@
 inherited Report_GoodsForm: TReport_GoodsForm
-  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
+  Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'>'
   ClientHeight = 473
   ClientWidth = 1053
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 1069
   ExplicitHeight = 511
   PixelsPerInch = 96
@@ -1550,6 +1551,86 @@ inherited Report_GoodsForm: TReport_GoodsForm
       item
         Name = 'FormName'
         Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPeriod'
+        Value = Null
+        Component = cbPeriod
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPartion'
+        Value = Null
+        Component = cbPartion
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsId'
+        Value = Null
+        Component = PartionGoodsGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsName'
+        Value = Null
+        Component = PartionGoodsGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsSizeId'
+        Value = Null
+        Component = GuidesGoodsSize
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsSizeName'
+        Value = Null
+        Component = GuidesGoodsSize
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LocationId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LocationName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId'
+        Value = Null
+        Component = PartionGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber'
+        Value = Null
+        Component = PartionGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>

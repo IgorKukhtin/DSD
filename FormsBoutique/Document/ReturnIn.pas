@@ -164,6 +164,8 @@ type
     PartionMI_Id: TcxGridDBColumn;
     SaleMI_Id: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
+    actOpenReportForm: TdsdOpenForm;
+    bbOpenReportForm: TdxBarButton;
   private
   public
   end;

@@ -161,6 +161,8 @@ type
     MacInsertUpdateMIChildTotal: TMultiAction;
     bbInsertUpdateMIChildTotal: TdxBarButton;
     Remains: TcxGridDBColumn;
+    actOpenReportForm: TdsdOpenForm;
+    bbOpenReportForm: TdxBarButton;
   private
   public
   end;
