@@ -29,7 +29,7 @@ uses
 type
   TReport_MovementSendForm = class(TAncestorReportForm)
     cxLabel3: TcxLabel;
-    ceUnitFrom: TcxButtonEdit;
+    edUnitFrom: TcxButtonEdit;
     GuidesUnitFrom: TdsdGuides;
     dxBarButton1: TdxBarButton;
     actGet_UserUnit: TdsdExecStoredProc;
@@ -52,8 +52,12 @@ type
     actRefreshMovement: TdsdDataSetRefresh;
     cbMovement: TcxCheckBox;
     cxLabel6: TcxLabel;
-    ceUnitTo: TcxButtonEdit;
+    edUnitTo: TcxButtonEdit;
     GuidesUnitTo: TdsdGuides;
+    actOpenReportForm: TdsdOpenForm;
+    bbOpenReportForm: TdxBarButton;
+    actOpenReportTo: TdsdOpenForm;
+    bbOpenReportTo: TdxBarButton;
   private
     { Private declarations }
   public

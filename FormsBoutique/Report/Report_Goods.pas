@@ -30,7 +30,7 @@ type
   TReport_GoodsForm = class(TAncestorReportForm)
     cxLabel3: TcxLabel;
     edPartionGoods: TcxButtonEdit;
-    PartionGoodsGuides: TdsdGuides;
+    GuidesPartionGoods: TdsdGuides;
     LocationDescName: TcxGridDBColumn;
     LocationName: TcxGridDBColumn;
     GoodsCode: TcxGridDBColumn;
@@ -43,7 +43,7 @@ type
     InvNumber: TcxGridDBColumn;
     OperDate: TcxGridDBColumn;
     AmountStart: TcxGridDBColumn;
-    OperPrice: TcxGridDBColumn;
+    clOperPrice: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     isActive: TcxGridDBColumn;
@@ -78,10 +78,11 @@ type
     cbPartion: TcxCheckBox;
     cxLabel5: TcxLabel;
     edPartion: TcxButtonEdit;
-    PartionGuides: TdsdGuides;
+    GuidesPartion: TdsdGuides;
     actRefreshPartion: TdsdDataSetRefresh;
     actRefreshPeriod: TdsdDataSetRefresh;
     cbPeriod: TcxCheckBox;
+    InvNumber_full: TcxGridDBColumn;
   private
     { Private declarations }
   public

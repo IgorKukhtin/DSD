@@ -44,7 +44,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Top = 6
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' / '#1075#1088#1091#1087#1087#1072':'
     end
-    object ceUnit: TcxButtonEdit
+    object edUnit: TcxButtonEdit
       Left = 143
       Top = 5
       Properties.Buttons = <
@@ -711,7 +711,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceUnit
+    LookupControl = edUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','

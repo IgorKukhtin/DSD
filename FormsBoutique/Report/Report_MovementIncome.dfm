@@ -38,7 +38,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       Top = 5
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
-    object ceUnit: TcxButtonEdit
+    object edUnit: TcxButtonEdit
       Left = 325
       Top = 5
       Properties.Buttons = <
@@ -82,17 +82,17 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
     TabOrder = 3
     ExplicitTop = 75
     ExplicitWidth = 1065
-    ExplicitHeight = 350
+    ExplicitHeight = 413
     ClientRectBottom = 413
     ClientRectRight = 1065
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1065
-      ExplicitHeight = 350
+      ExplicitHeight = 413
       inherited cxGrid: TcxGrid
         Width = 1065
         Height = 413
         ExplicitWidth = 1065
-        ExplicitHeight = 350
+        ExplicitHeight = 413
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -696,20 +696,6 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'isPeriod'
-          Value = 'TRUE'
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isPartion'
-          Value = 'False'
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'LocationId'
           Value = ''
           Component = GuidesUnit
@@ -744,10 +730,55 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'GoodsSizeId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsSizeId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'GoodsSizeName'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsSizeName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionId'
+          Value = '0'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPeriod'
+          Value = 'TRUE'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPartion'
+          Value = 'False'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId'
+          Value = '0'
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -932,7 +963,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceUnit
+    LookupControl = edUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','

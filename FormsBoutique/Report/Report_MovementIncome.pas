@@ -29,7 +29,7 @@ uses
 type
   TReport_MovementIncomeForm = class(TAncestorReportForm)
     cxLabel3: TcxLabel;
-    ceUnit: TcxButtonEdit;
+    edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
     dxBarButton1: TdxBarButton;
     actGet_UserUnit: TdsdExecStoredProc;

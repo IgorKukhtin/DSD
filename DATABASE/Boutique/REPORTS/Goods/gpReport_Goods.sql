@@ -1,9 +1,4 @@
 -- Function: gpReport_Goods ()
-
-DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Goods (
@@ -50,11 +45,11 @@ BEGIN
                        , inGoodsId                     AS GoodsId
                   FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect )
                 
-   , tmpContainer_Count AS (SELECT Container.Id                   AS ContainerId
-                                 , CLO_Location.ObjectId          AS LocationId
-                                 , Container.ObjectId             AS GoodsId
-                                 , Container.PartionId            AS PartionId
-                                 , CASE WHEN inisGoodsSize = TRUE THEN Object_PartionGoods.GoodsSizeId ELSE 0 END  AS GoodsSizeId
+   , tmpContainer_Count AS (SELECT Container.Id                    AS ContainerId
+                                 , CLO_Location.ObjectId           AS LocationId
+                                 , Container.ObjectId              AS GoodsId
+                                 , Container.PartionId             AS PartionId
+                                 , Object_PartionGoods.GoodsSizeId AS GoodsSizeId
                                  , Container.Amount
                             FROM tmpWhere
                                  INNER JOIN Container ON Container.ObjectId = tmpWhere.GoodsId
@@ -62,12 +57,11 @@ BEGIN
                                  INNER JOIN ContainerLinkObject AS CLO_Location ON CLO_Location.ContainerId = Container.Id
                                                                                AND CLO_Location.DescId      = tmpWhere.DescId
                                                                                AND CLO_Location.ObjectId    = tmpWhere.LocationId
-
                                  LEFT JOIN ContainerLinkObject AS CLO_Account ON CLO_Account.ContainerId = Container.Id
                                                                              AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
                                  LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = Container.PartionId                                         
-                            WHERE (Container.PartionId = inPartionId OR (inisPartion = TRUE AND Object_PartionGoods.MovementId = inMovementId))
-                              AND ((Object_PartionGoods.GoodsSizeId = inGoodsSizeId OR inGoodsSizeId = 0) OR (inisPartion = TRUE))
+                            WHERE ((Object_PartionGoods.GoodsSizeId = inGoodsSizeId AND inisGoodsSize = False) OR (inisGoodsSize = True))
+                              AND ((Object_PartionGoods.MovementItemId = inPartionId AND inisPartion = False) OR (inisPartion = True))
                               AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
                            )
                                
@@ -98,7 +92,7 @@ BEGIN
                           , MIContainer.MovementDescId
                           , MIContainer.isActive
                      FROM tmpContainer_Count
-                          LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer_Count.ContainerId
+                          INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer_Count.ContainerId
                                                                         AND (MIContainer.OperDate >= inStartDate OR inisPeriod = TRUE)
                      GROUP BY tmpContainer_Count.ContainerId
                             , tmpContainer_Count.LocationId
@@ -153,7 +147,7 @@ BEGIN
                                    , tmpMIContainer_all.MovementItemId
                                    , tmpMIContainer_all.LocationId
                                    , tmpMIContainer_all.GoodsId
-                                   , CASE WHEN inisPartion = TRUE   THEN tmpMIContainer_all.PartionId ELSE 0 END AS PartionId
+                                   , CASE WHEN inisPartion = TRUE THEN tmpMIContainer_all.PartionId ELSE 0 END AS PartionId
                                    , tmpMIContainer_all.GoodsSizeId
                                    , Object_PartionGoods.CurrencyId
                                    , tmpMIContainer_all.ContainerId_Analyzer
@@ -228,7 +222,7 @@ BEGIN
                                      WHERE tmpMI_Count.Amount_Period <> 0
                                      ) AS tmpMIContainer_all
                                      LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmpMIContainer_all.PartionId
-                               WHERE (Object_PartionGoods.GoodsSizeId = inGoodsSizeId OR inGoodsSizeId = 0)
+
                                GROUP BY tmpMIContainer_all.MovementId
                                       , tmpMIContainer_all.MovementItemId
                                       , tmpMIContainer_all.LocationId
@@ -349,7 +343,9 @@ BEGIN
     -- Результат 2
 
      OPEN Cursor2 FOR 
-      SELECT Object_Goods.ObjectCode AS GoodsCode
+      SELECT DISTINCT
+             ('№ ' || Movement.InvNumber ||' от '||zfConvert_DateToString(Movement.OperDate) ) :: TVarChar AS InvNumber_full
+           , Object_Goods.ObjectCode AS GoodsCode
            , Object_Goods.ValueData  AS GoodsName
    
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
@@ -361,10 +357,10 @@ BEGIN
            , Object_GoodsInfo.ValueData          AS GoodsInfoName
            , Object_LineFabrica.ValueData        AS LineFabricaName
            , Object_Label.ValueData              AS LabelName
-          
+           , Object_GoodsSize.ValueData          AS GoodsSizeName
            , Object_Currency.ValueData           AS CurrencyName
    
-           , SUM (Object_PartionGoods.OperPrice)  / count(*) :: TFLoat AS OperPrice
+           , Object_PartionGoods.OperPrice :: TFLoat AS OperPrice
 
       FROM Object_PartionGoods
            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = Object_PartionGoods.GoodsId  
@@ -384,20 +380,11 @@ BEGIN
                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                  AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
                                  
-      WHERE (Object_PartionGoods.MovementItemId = inPartionId OR (inisPartion = True AND Object_PartionGoods.GoodsId = inGoodsId))
-        AND (Object_PartionGoods.GoodsSizeId = inGoodsSizeId OR inGoodsSizeId = 0) 
-      GROUP BY Object_Goods.ObjectCode 
-           , Object_Goods.ValueData    
-           , ObjectString_Goods_GoodsGroupFull.ValueData
-           , Object_GoodsGroup.ValueData       
-           , Object_Measure.ValueData           
-           , Object_Juridical.ValueData         
-           , Object_CompositionGroup.ValueData 
-           , Object_Composition.ValueData   
-           , Object_GoodsInfo.ValueData         
-           , Object_LineFabrica.ValueData       
-           , Object_Label.ValueData             
-           , Object_Currency.ValueData
+           LEFT JOIN Movement ON Movement.Id = Object_PartionGoods.MovementId    
+                             
+      WHERE Object_PartionGoods.GoodsId = inGoodsId
+        AND ((Object_PartionGoods.MovementItemId = inPartionId AND inisPartion = False) OR (inisPartion = True))
+        AND ((Object_PartionGoods.GoodsSizeId = inGoodsSizeId AND inisGoodsSize = False) OR (inisGoodsSize = True) )
      ;
                              
      RETURN NEXT Cursor2;

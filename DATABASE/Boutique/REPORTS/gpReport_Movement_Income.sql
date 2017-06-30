@@ -31,7 +31,7 @@ RETURNS TABLE (MovementId     Integer,
                GoodsInfoName TVarChar,
                LineFabricaName TVarChar,
                LabelName TVarChar,
-               GoodsSizeName TVarChar,
+               GoodsSizeId Integer, GoodsSizeName TVarChar,
                CurrencyName  TVarChar,
 
                OperPrice           TFloat,
@@ -210,6 +210,7 @@ BEGIN
            , Object_GoodsInfo.ValueData     AS GoodsInfoName
            , Object_LineFabrica.ValueData   AS LineFabricaName
            , Object_Label.ValueData         AS LabelName
+           , Object_GoodsSize.Id            AS GoodsSizeId
            , Object_GoodsSize.ValueData     AS GoodsSizeName
            , Object_Currency.ValueData      AS CurrencyName
            

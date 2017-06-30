@@ -38,7 +38,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
   end
   object deEnd: TcxDateEdit
     Left = 121
-    Top = 27
+    Top = 30
     EditValue = 42887d
     Properties.ShowTime = False
     TabOrder = 2
@@ -54,7 +54,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
   end
   object edPartionGoods: TcxButtonEdit
     Left = 11
-    Top = 165
+    Top = 163
     Properties.Buttons = <
       item
         Default = True
@@ -70,7 +70,6 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
     Properties.Buttons = <
       item
         Default = True
-        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
@@ -117,7 +116,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
   object cbGoodsSize: TcxCheckBox
     Left = 8
     Top = 63
-    Caption = #1055#1086' '#1088#1072#1079#1084#1077#1088#1072#1084
+    Caption = #1055#1086' '#1074#1089#1077#1084' '#1088#1072#1079#1084#1077#1088#1072#1084
     Properties.ReadOnly = False
     TabOrder = 12
     Width = 90
@@ -201,7 +200,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
       item
         Name = 'GoodsId'
         Value = ''
-        Component = PartionGuidesGoods
+        Component = GuidesPartionGoods
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -210,7 +209,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
       item
         Name = 'GoodsName'
         Value = ''
-        Component = PartionGuidesGoods
+        Component = GuidesPartionGoods
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -269,7 +268,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
       item
         Name = 'MovementId'
         Value = Null
-        Component = PartionGuides
+        Component = GuidesPartion
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -277,7 +276,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
       item
         Name = 'Partion_InvNumber'
         Value = Null
-        Component = PartionGuides
+        Component = GuidesPartion
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -300,7 +299,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
     Left = 40
     Top = 161
   end
-  object PartionGuidesGoods: TdsdGuides
+  object GuidesPartionGoods: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPartionGoods
     FormNameParam.Value = 'TPartionGoodsChoiceForm'
@@ -312,7 +311,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
       item
         Name = 'Key'
         Value = ''
-        Component = PartionGuidesGoods
+        Component = GuidesPartionGoods
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -321,7 +320,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PartionGuidesGoods
+        Component = GuidesPartionGoods
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -353,7 +352,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
       item
         Name = 'MovementId'
         Value = Null
-        Component = PartionGuides
+        Component = GuidesPartion
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -361,7 +360,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
       item
         Name = 'InvNumber_full'
         Value = Null
-        Component = PartionGuides
+        Component = GuidesPartion
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -390,11 +389,11 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
   object GuidesGoodsSize: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoodsSize
-    FormNameParam.Value = 'TGoodsSizeForm'
+    FormNameParam.Value = 'TGoodsSizeChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsSizeForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TGoodsSizeChoiceForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -412,6 +411,21 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterGoodsId'
+        Value = Null
+        Component = GuidesPartionGoods
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterGoodsName'
+        Value = Null
+        Component = GuidesPartionGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 290
@@ -447,7 +461,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
     Left = 160
     Top = 105
   end
-  object PartionGuides: TdsdGuides
+  object GuidesPartion: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPartion
     FormNameParam.Value = 'TIncomeJournalForm'
@@ -459,7 +473,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
       item
         Name = 'Key'
         Value = ''
-        Component = PartionGuides
+        Component = GuidesPartion
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -467,7 +481,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PartionGuides
+        Component = GuidesPartion
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

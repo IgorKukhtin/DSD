@@ -388,6 +388,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSizeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSizeEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSizeEditForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSizeChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsSizeChoiceForm');
 end;
 
 procedure TLoadFormTest.LoadJuridicalBasisFormTest;

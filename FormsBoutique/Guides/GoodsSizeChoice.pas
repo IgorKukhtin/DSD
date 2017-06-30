@@ -1,4 +1,4 @@
-unit GoodsChoice;
+unit GoodsSizeChoice;
 
 interface
 
@@ -22,11 +22,10 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxContainer, dsdGuides, cxTextEdit, cxMaskEdit, cxButtonEdit, cxLabel,
-  cxCurrencyEdit;
+  cxContainer, dsdGuides, cxTextEdit, cxMaskEdit, cxButtonEdit, cxLabel;
 
 type
-  TGoodsChoiceForm = class(TParentForm)
+  TGoodsSizeChoiceForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -42,19 +41,12 @@ type
     spSelect: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
-    bbSetErased: TdxBarButton;
-    bbSetUnErased: TdxBarButton;
     dsdGridToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
-    spErased: TdsdStoredProc;
     bbChoice: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
     Code: TcxGridDBColumn;
-    Name: TcxGridDBColumn;
-    Erased: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
@@ -62,22 +54,13 @@ type
     bbProtocolOpenForm: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    GoodsGroupName: TcxGridDBColumn;
-    MeasureName: TcxGridDBColumn;
-    CompositionName: TcxGridDBColumn;
-    GoodsInfoName: TcxGridDBColumn;
-    LineFabricaName: TcxGridDBColumn;
-    LabelName: TcxGridDBColumn;
-    GroupNameFull: TcxGridDBColumn;
-    spUnErased: TdsdStoredProc;
-    InfoMoneyName: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
     cxLabel6: TcxLabel;
-    edUnit: TcxButtonEdit;
-    GuidesUnit: TdsdGuides;
-    dxBarControlContainerItem1: TdxBarControlContainerItem;
-    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    edGoods: TcxButtonEdit;
+    GuidesGoods: TdsdGuides;
+    bbLabel6: TdxBarControlContainerItem;
+    bbGoods: TdxBarControlContainerItem;
     FormParams: TdsdFormParams;
-    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public
@@ -89,6 +72,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TGoodsChoiceForm);
+  RegisterClass(TGoodsSizeChoiceForm);
 
 end.

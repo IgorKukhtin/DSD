@@ -18,6 +18,7 @@ RETURNS TABLE (
                InvNumber      TVarChar,
                OperDate       TDateTime,
                DescName       TVarChar,
+               MovementId_Partion Integer,
                InvNumber_Partion  TVarChar,
                OperDate_Partion   TDateTime,
                DescName_Partion   TVarChar,
@@ -37,7 +38,7 @@ RETURNS TABLE (
                GoodsInfoName TVarChar,
                LineFabricaName TVarChar,
                LabelName TVarChar,
-               GoodsSizeName TVarChar,
+               GoodsSizeId Integer, GoodsSizeName TVarChar,
                CurrencyName  TVarChar,
 
                OperPrice           TFloat,
@@ -102,6 +103,7 @@ BEGIN
                           , tmpMovementReturnOut.OperDate
                           , tmpMovementReturnOut.DescName
                           , CASE WHEN inisPartion = TRUE THEN MovementDesc_Partion.ItemName ELSE CAST (NULL AS TVarChar)  END    AS DescName_Partion
+                          , CASE WHEN inisPartion = TRUE THEN Movement_Partion.Id           ELSE -1 END                          AS MovementId_Partion
                           , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE CAST (NULL AS TVarChar)  END    AS InvNumber_Partion
                           , CASE WHEN inisPartion = TRUE THEN Movement_Partion.OperDate     ELSE CAST (NULL AS TDateTime) END    AS OperDate_Partion
 
@@ -156,6 +158,7 @@ BEGIN
                             , tmpMovementReturnOut.OperDate
                             , tmpMovementReturnOut.DescName
                             , CASE WHEN inisPartion = TRUE THEN MovementDesc_Partion.ItemName ELSE CAST (NULL AS TVarChar)  END
+                            , CASE WHEN inisPartion = TRUE THEN Movement_Partion.Id           ELSE -1                       END  
                             , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE CAST (NULL AS TVarChar)  END
                             , CASE WHEN inisPartion = TRUE THEN Movement_Partion.OperDate     ELSE CAST (NULL AS TDateTime) END
                             , tmpMovementReturnOut.FromId
@@ -183,6 +186,7 @@ BEGIN
              tmpData.InvNumber
            , tmpData.OperDate
            , tmpData.DescName
+           , tmpData.MovementId_Partion
            , tmpData.InvNumber_Partion
            , tmpData.OperDate_Partion
            , tmpData.DescName_Partion
@@ -206,6 +210,7 @@ BEGIN
            , Object_GoodsInfo.ValueData     AS GoodsInfoName
            , Object_LineFabrica.ValueData   AS LineFabricaName
            , Object_Label.ValueData         AS LabelName
+           , Object_GoodsSize.Id            AS GoodsSizeId
            , Object_GoodsSize.ValueData     AS GoodsSizeName
            , Object_Currency.ValueData      AS CurrencyName
            

@@ -312,7 +312,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clOperPrice: TcxGridDBColumn
+          object OperPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1074#1093'.'
             DataBinding.FieldName = 'OperPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -563,8 +563,15 @@ inherited Report_GoodsForm: TReport_GoodsForm
           OptionsView.HeaderHeight = 40
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object InvNumber_full: TcxGridDBColumn
+            Caption = #1044#1086#1082'. '#1087#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'InvNumber_full'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 103
+          end
           object GoodsGroupNameFull: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
+            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -573,6 +580,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
           object GoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsGroupName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -637,6 +645,13 @@ inherited Report_GoodsForm: TReport_GoodsForm
             Options.Editing = False
             Width = 73
           end
+          object clGoodsSizeName: TcxGridDBColumn
+            Caption = #1056#1072#1079#1084#1077#1088' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsSizeName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 87
+          end
           object GoodsInfoName: TcxGridDBColumn
             Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsInfoName'
@@ -652,7 +667,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object OperPrice: TcxGridDBColumn
+          object clOperPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1074#1093'.'
             DataBinding.FieldName = 'OperPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -756,10 +771,10 @@ inherited Report_GoodsForm: TReport_GoodsForm
       Properties.ReadOnly = False
       State = cbsChecked
       TabOrder = 8
-      Width = 90
+      Width = 115
     end
     object cbPartion: TcxCheckBox
-      Left = 722
+      Left = 749
       Top = 29
       Action = actRefreshPartion
       Properties.ReadOnly = False
@@ -768,7 +783,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
       Width = 110
     end
     object cbPeriod: TcxCheckBox
-      Left = 838
+      Left = 865
       Top = 29
       Action = actRefreshPeriod
       Properties.ReadOnly = False
@@ -788,7 +803,6 @@ inherited Report_GoodsForm: TReport_GoodsForm
     Properties.Buttons = <
       item
         Default = True
-        Enabled = False
         Kind = bkEllipsis
       end>
     TabOrder = 7
@@ -835,7 +849,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
           'Date')
       end
       item
-        Component = PartionGoodsGuides
+        Component = GuidesPartionGoods
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -847,7 +861,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
           'TextValue')
       end
       item
-        Component = PartionGuides
+        Component = GuidesPartion
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -896,8 +910,8 @@ inherited Report_GoodsForm: TReport_GoodsForm
         item
           StoredProc = spSelect
         end>
-      Caption = #1055#1086' '#1088#1072#1079#1084#1077#1088#1072#1084
-      Hint = #1055#1086' '#1088#1072#1079#1084#1077#1088#1072#1084
+      Caption = #1055#1086' '#1074#1089#1077#1084' '#1088#1072#1079#1084#1077#1088#1072#1084
+      Hint = #1055#1086' '#1074#1089#1077#1084' '#1088#1072#1079#1084#1077#1088#1072#1084
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
@@ -959,7 +973,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         item
           Name = 'GoodsName'
           Value = ''
-          Component = PartionGoodsGuides
+          Component = GuidesPartionGoods
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -1005,7 +1019,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         item
           Name = 'GoodsId'
           Value = ''
-          Component = PartionGoodsGuides
+          Component = GuidesPartionGoods
           ComponentItem = 'Key'
           DataType = ftString
           ParamType = ptInput
@@ -1014,7 +1028,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         item
           Name = 'GoodsName'
           Value = ''
-          Component = PartionGoodsGuides
+          Component = GuidesPartionGoods
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1081,7 +1095,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         item
           Name = 'MovementId'
           Value = Null
-          Component = PartionGuides
+          Component = GuidesPartion
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1089,7 +1103,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         item
           Name = 'Partion_InvNumber'
           Value = Null
-          Component = PartionGuides
+          Component = GuidesPartion
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1207,7 +1221,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
       item
         Name = 'inGoodsId'
         Value = ''
-        Component = PartionGoodsGuides
+        Component = GuidesPartionGoods
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1223,7 +1237,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
       item
         Name = 'inMovementId'
         Value = Null
-        Component = PartionGuides
+        Component = GuidesPartion
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1340,15 +1354,6 @@ inherited Report_GoodsForm: TReport_GoodsForm
         Component = PeriodChoice
       end
       item
-        Component = GuidesUnit
-      end
-      item
-        Component = PartionGoodsGuides
-      end
-      item
-        Component = GuidesGoodsSize
-      end
-      item
         Component = deStart
       end
       item
@@ -1356,11 +1361,20 @@ inherited Report_GoodsForm: TReport_GoodsForm
       end
       item
         Component = GuidesGoodsSize
+      end
+      item
+        Component = GuidesPartionGoods
+      end
+      item
+        Component = GuidesGoodsSize
+      end
+      item
+        Component = GuidesUnit
       end>
-    Left = 264
-    Top = 312
+    Left = 352
+    Top = 352
   end
-  object PartionGoodsGuides: TdsdGuides
+  object GuidesPartionGoods: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPartionGoods
     FormNameParam.Value = 'TPartionGoodsChoiceForm'
@@ -1372,7 +1386,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
       item
         Name = 'Key'
         Value = ''
-        Component = PartionGoodsGuides
+        Component = GuidesPartionGoods
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1380,7 +1394,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PartionGoodsGuides
+        Component = GuidesPartionGoods
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1389,7 +1403,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
       item
         Name = 'MovementId'
         Value = Null
-        Component = PartionGuides
+        Component = GuidesPartion
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1397,7 +1411,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
       item
         Name = 'InvNumber_full'
         Value = Null
-        Component = PartionGuides
+        Component = GuidesPartion
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1500,52 +1514,6 @@ inherited Report_GoodsForm: TReport_GoodsForm
     Left = 624
     Top = 280
   end
-  object TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Form'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        ComponentItem = 'MovementId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'FormName'
-        Value = Null
-        ComponentItem = 'FormName'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 472
-    Top = 320
-  end
-  object TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Form'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        ComponentItem = 'MovementId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'FormName'
-        Value = Null
-        ComponentItem = 'FormName'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 400
-    Top = 304
-  end
   object FormParams: TdsdFormParams
     Params = <
       item
@@ -1572,14 +1540,14 @@ inherited Report_GoodsForm: TReport_GoodsForm
       item
         Name = 'GoodsId'
         Value = Null
-        Component = PartionGoodsGuides
+        Component = GuidesPartionGoods
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsName'
         Value = Null
-        Component = PartionGoodsGuides
+        Component = GuidesPartionGoods
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1622,14 +1590,14 @@ inherited Report_GoodsForm: TReport_GoodsForm
       item
         Name = 'MovementId'
         Value = Null
-        Component = PartionGuides
+        Component = GuidesPartion
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = Null
-        Component = PartionGuides
+        Component = GuidesPartion
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1640,10 +1608,10 @@ inherited Report_GoodsForm: TReport_GoodsForm
   object GuidesGoodsSize: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoodsSize
-    FormNameParam.Value = 'TGoodsSizeForm'
+    FormNameParam.Value = 'TGoodsSizeChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsSizeForm'
+    FormName = 'TGoodsSizeChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -1661,6 +1629,21 @@ inherited Report_GoodsForm: TReport_GoodsForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterGoodsId'
+        Value = Null
+        Component = GuidesPartionGoods
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterGoodsName'
+        Value = Null
+        Component = GuidesPartionGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 560
@@ -1701,7 +1684,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
     Left = 792
     Top = 96
   end
-  object PartionGuides: TdsdGuides
+  object GuidesPartion: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPartion
     FormNameParam.Value = 'TIncomeJournalForm'
@@ -1713,7 +1696,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
       item
         Name = 'Key'
         Value = ''
-        Component = PartionGuides
+        Component = GuidesPartion
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1721,7 +1704,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PartionGuides
+        Component = GuidesPartion
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
