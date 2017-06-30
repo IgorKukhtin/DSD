@@ -3,7 +3,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1086' '#1090#1086#1074#1072#1088#1072#1084'>'
-  ClientHeight = 253
+  ClientHeight = 286
   ClientWidth = 365
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 64
-    Top = 218
+    Top = 251
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
   end
   object cxButton2: TcxButton
     Left = 238
-    Top = 218
+    Top = 251
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -54,7 +54,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
   end
   object edPartionGoods: TcxButtonEdit
     Left = 11
-    Top = 132
+    Top = 165
     Properties.Buttons = <
       item
         Default = True
@@ -66,7 +66,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
   end
   object edGoodsSize: TcxButtonEdit
     Left = 245
-    Top = 130
+    Top = 163
     Properties.Buttons = <
       item
         Default = True
@@ -78,7 +78,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
   end
   object edUnit: TcxButtonEdit
     Left = 11
-    Top = 82
+    Top = 115
     Properties.Buttons = <
       item
         Default = True
@@ -90,17 +90,17 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
   end
   object cxLabel3: TcxLabel
     Left = 11
-    Top = 59
+    Top = 92
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' / '#1075#1088#1091#1087#1087#1072':'
   end
   object cxLabel1: TcxLabel
     Left = 245
-    Top = 109
+    Top = 142
     Caption = #1056#1072#1079#1084#1077#1088':'
   end
   object cxLabel2: TcxLabel
     Left = 11
-    Top = 109
+    Top = 142
     Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072':'
   end
   object cxLabel6: TcxLabel
@@ -114,29 +114,29 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
   object cbGoodsSize: TcxCheckBox
-    Left = 227
-    Top = 18
+    Left = 8
+    Top = 63
     Caption = #1055#1086' '#1088#1072#1079#1084#1077#1088#1072#1084
     Properties.ReadOnly = False
     TabOrder = 12
-    Width = 120
+    Width = 90
   end
   object cbPartion: TcxCheckBox
-    Left = 227
-    Top = 42
+    Left = 121
+    Top = 63
     Caption = #1055#1086' '#1074#1089#1077#1084' '#1087#1072#1088#1090#1080#1103#1084
     Properties.ReadOnly = False
     TabOrder = 13
-    Width = 120
+    Width = 109
   end
   object cxLabel5: TcxLabel
     Left = 11
-    Top = 163
+    Top = 196
     Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1080':'
   end
   object edPartion: TcxButtonEdit
     Left = 11
-    Top = 184
+    Top = 217
     Properties.Buttons = <
       item
         Default = True
@@ -147,15 +147,24 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
     TabOrder = 15
     Width = 336
   end
+  object cbPeriod: TcxCheckBox
+    Left = 245
+    Top = 63
+    Caption = #1047#1072' '#1074#1077#1089#1100' '#1087#1077#1088#1080#1086#1076
+    Properties.ReadOnly = False
+    State = cbsChecked
+    TabOrder = 16
+    Width = 102
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
     Left = 216
-    Top = 198
+    Top = 231
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 256
-    Top = 72
+    Top = 105
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -167,7 +176,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 336
+    Left = 288
     Top = 12
   end
   object FormParams: TdsdFormParams
@@ -278,9 +287,17 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
         Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPeriod'
+        Value = Null
+        Component = cbPeriod
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 40
-    Top = 128
+    Top = 161
   end
   object PartionGuidesGoods: TdsdGuides
     KeyField = 'Id'
@@ -367,7 +384,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
         MultiSelectSeparator = ','
       end>
     Left = 115
-    Top = 111
+    Top = 144
   end
   object GuidesGoodsSize: TdsdGuides
     KeyField = 'Id'
@@ -397,7 +414,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
         MultiSelectSeparator = ','
       end>
     Left = 290
-    Top = 110
+    Top = 143
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -427,7 +444,7 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
         MultiSelectSeparator = ','
       end>
     Left = 160
-    Top = 72
+    Top = 105
   end
   object PartionGuides: TdsdGuides
     KeyField = 'Id'
@@ -456,6 +473,6 @@ object Report_GoodsDialogForm: TReport_GoodsDialogForm
         MultiSelectSeparator = ','
       end>
     Left = 150
-    Top = 171
+    Top = 204
   end
 end

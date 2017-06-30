@@ -80,6 +80,8 @@ type
     edPartion: TcxButtonEdit;
     PartionGuides: TdsdGuides;
     actRefreshPartion: TdsdDataSetRefresh;
+    actRefreshPeriod: TdsdDataSetRefresh;
+    cbPeriod: TcxCheckBox;
   private
     { Private declarations }
   public
