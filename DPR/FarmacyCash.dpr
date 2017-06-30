@@ -98,7 +98,7 @@ begin
     //Если все хорошо создаем главную форму Application.CreateForm();
 
    //  Выбор формы для запуска
-     case 1 of   // 1 для MainCash;  2 для MainCash2
+     case 2 of   // 1 для MainCash;  2 для MainCash2
      1: begin
           AllowLocalConnect := False;  //от режима зависит создание файла 'users.local' и переход приложения в автономный режим при обрыве звязи
           MForm := True;
@@ -113,7 +113,7 @@ begin
     then begin
       AllowLocalConnect := True; //от режима зависит создание файла 'users.local' и переход приложения в автономный режим при обрыве звязи
       edUserName.Text := 'Админ';
-      edPassword.Text := 'Админ1111';
+      edPassword.Text := 'Админ1234';
       btnOkClick(btnOk);
 //    TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ1111', gc_User); // не работает вмести с AllowLocalConnect := True;
       //TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ1234', gc_User);

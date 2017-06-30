@@ -403,4 +403,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpReport_Goods(inStartDate := ('01.06.2017')::TDateTime , inEndDate := ('29.06.2017')::TDateTime , inUnitId := 506 , inGoodsId := 709 , inPartionId := 64 , inMovementId := 18 , inGoodsSizeId := 0 , inIsGoodsSize := 'True' , inisPartion := 'True' ,  inSession := '2');
+-- SELECT * FROM gpReport_Goods (inStartDate := ('01.06.2017')::TDateTime , inEndDate := ('29.06.2017')::TDateTime , inUnitId := 506 , inGoodsId := 709 , inPartionId := 64 , inMovementId := 18 , inGoodsSizeId := 0 , inIsGoodsSize := 'True' , inisPartion := 'True' ,  inSession := '2');

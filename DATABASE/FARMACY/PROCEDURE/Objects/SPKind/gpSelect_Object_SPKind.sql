@@ -20,7 +20,7 @@ $BODY$BEGIN
       , Object_SPKind.ObjectCode   AS Code
       , Object_SPKind.ValueData    AS Name
       , ObjectString.ValueData     AS EnumName
-      , ObjectFloat_Tax.ValueData  AS Tax 
+      , COALESCE (ObjectFloat_Tax.ValueData, 0) :: TFLoat AS Tax 
       
       , Object_SPKind.isErased     AS isErased
       

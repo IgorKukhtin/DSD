@@ -142,7 +142,7 @@ inherited SPDialogForm: TSPDialogForm
     Params = <
       item
         Name = 'SPTax'
-        Value = Null
+        Value = 0.000000000000000000
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
@@ -282,8 +282,6 @@ inherited SPDialogForm: TSPDialogForm
       item
         Name = 'Tax'
         Value = Null
-        Component = FormParams
-        ComponentItem = 'SPTax'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>

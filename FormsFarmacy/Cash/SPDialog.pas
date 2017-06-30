@@ -87,8 +87,9 @@ begin
     if Key = 0 then
     begin
           ActiveControl:=edSPKind;
-          ShowMessage ('Внимание.Значение <Вид соц.проекта:> не установлено.');
+          ShowMessage ('Внимание.Значение <Вид соц.проекта> не установлено.');
           ModalResult:=mrNone; // не надо закрывать
+          exit;
     end;
     //
     try Key:= PartnerMedicalGuides.Params.ParamByName('Key').Value; except Key:= 0;end;
@@ -121,6 +122,7 @@ Begin
       //
       SPKindGuides.Params.ParamByName('Key').Value      := ASPKindId;
       SPKindGuides.Params.ParamByName('TextValue').Value:= '';
+      SPKindGuides.Params.ParamByName('Tax').Value:= 0;
       FormParams.ParamByName('SPTax').Value:=ASPTax;
 
       if ASPKindId > 0 then
@@ -128,8 +130,10 @@ Begin
           edSPKind.Text:= ASPKindName;
           SPKindGuides.Params.ParamByName('TextValue').Value:= ASPKindName;
       end
-      else spGet_SPKind_def.Execute;
-
+      else begin
+                spGet_SPKind_def.Execute;
+                SPKindGuides.Params.ParamByName('Tax').Value:= 0
+           end;
       //
       Result := ShowModal = mrOK;
       //

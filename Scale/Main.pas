@@ -215,6 +215,9 @@ type
     bbReestrReturn: TSpeedButton;
     actReestrReturnStart: TdsdOpenForm;
     bbUpdatePartner: TSpeedButton;
+    TaxDoc: TcxGridDBColumn;
+    TaxDoc_calc: TcxGridDBColumn;
+    Color_calc: TcxGridDBColumn;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -1198,6 +1201,9 @@ begin
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('BoxNumber').Index].Visible           :=SettingMain.isGoodsComplete = TRUE;
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('BoxName').Index].Visible             :=SettingMain.isGoodsComplete = TRUE;
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('BoxCount').Index].Visible            :=SettingMain.isGoodsComplete = TRUE;
+  //
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('TaxDoc').Index].Visible              :=SettingMain.isGoodsComplete = TRUE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('TaxDoc_calc').Index].Visible         :=SettingMain.isGoodsComplete = TRUE;
   //local visible
   PanelPartionGoods.Visible:=SettingMain.isGoodsComplete = FALSE;
   HeadCountPanel.Visible:=PanelPartionGoods.Visible;

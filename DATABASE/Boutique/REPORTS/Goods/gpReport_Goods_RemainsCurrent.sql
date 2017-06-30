@@ -284,4 +284,4 @@ $BODY$
 */
 
 -- тест
---SELECT * from gpReport_Goods_RemainsCurrent(inUnitId :=0,inisPartion  := TRUE,inisSize:=  TRUE, inisPartner := TRUE, inSession := '2':: TVarChar )
+-- SELECT * from gpReport_Goods_RemainsCurrent (inUnitId :=0,inisPartion  := TRUE,inisSize:=  TRUE, inisPartner := TRUE, inSession := '2':: TVarChar )

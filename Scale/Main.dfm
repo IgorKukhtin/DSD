@@ -897,6 +897,26 @@ object MainForm: TMainForm
           HeaderAlignmentVert = vaCenter
           Width = 35
         end
+        object TaxDoc: TcxGridDBColumn
+          Caption = #1056#1072#1079#1088'. % '#1086#1090#1082#1083'.'
+          DataBinding.FieldName = 'TaxDoc'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 55
+        end
+        object TaxDoc_calc: TcxGridDBColumn
+          Caption = #1060#1072#1082#1090' % '#1086#1090#1082#1083'.'
+          DataBinding.FieldName = 'TaxDoc_calc'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 55
+        end
         object PartionGoods: TcxGridDBColumn
           Caption = #1055#1072#1088#1090#1080#1103' '#1057#1067#1056#1068#1071
           DataBinding.FieldName = 'PartionGoods'
@@ -1101,6 +1121,14 @@ object MainForm: TMainForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
+          Width = 55
+        end
+        object Color_calc: TcxGridDBColumn
+          DataBinding.FieldName = 'Color_calc'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          VisibleForCustomization = False
           Width = 55
         end
       end
@@ -2350,7 +2378,57 @@ object MainForm: TMainForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ColorColumn = GoodsCode
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = GoodsName
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = GoodsKindName
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = MeasureName
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountPartner
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = TaxDoc
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = TaxDoc_calc
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = isBarCode
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = PriceListName
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Price
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
