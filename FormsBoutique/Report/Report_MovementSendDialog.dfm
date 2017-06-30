@@ -100,7 +100,7 @@ object Report_MovementSendDialogForm: TReport_MovementSendDialogForm
     Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072':'
   end
   object edBrand: TcxButtonEdit
-    Left = 10
+    Left = 8
     Top = 213
     Properties.Buttons = <
       item

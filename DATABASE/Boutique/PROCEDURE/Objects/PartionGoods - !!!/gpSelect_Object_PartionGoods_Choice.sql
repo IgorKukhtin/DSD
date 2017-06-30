@@ -24,7 +24,6 @@ RETURNS TABLE (Id                   Integer
              , Remains              TFloat
              , OperPrice            TFloat
              , PriceSale            TFloat
-             , PriceSale_Partion    TFloat  
              , BrandName            TVarChar  
              , PeriodName           TVarChar  
              , PeriodYear           Integer  
@@ -55,38 +54,12 @@ BEGIN
 
      -- Результат
      RETURN QUERY 
-     WITH
-     tmpContainer AS (SELECT Container.PartionId
-                           , SUM (Container.Amount)   AS Remains
-                      FROM Container
-                      WHERE Container.DescId = zc_Container_count()
-                        AND Container.WhereObjectId = inUnitId      
-                      GROUP BY Container.PartionId 
-                     )
-                    
-      , tmpPrice AS (SELECT ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
-                          , ObjectHistoryFloat_PriceListItem_Value.ValueData AS ValuePrice
-                     FROM ObjectLink AS ObjectLink_PriceListItem_Goods
-                          INNER JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
-                                                ON ObjectLink_PriceListItem_PriceList.ObjectId = ObjectLink_PriceListItem_Goods.ObjectId
-                                               AND ObjectLink_PriceListItem_PriceList.ChildObjectId = zc_PriceList_Basis()
-                                               AND ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
-                          LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
-                                                  ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
-                                                 AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
-                                                 AND CURRENT_DATE >= ObjectHistory_PriceListItem.StartDate AND CURRENT_DATE < ObjectHistory_PriceListItem.EndDate
-                          LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
-                                                       ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
-                                                      AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
-                     WHERE ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
-                    )
-
+       
        SELECT Object_PartionGoods.MovementItemId  AS Id
             , Object_PartionGoods.MovementItemId  AS MovementItemId
             , Movement.Id                         AS MovementId
             , Movement.InvNumber                  AS InvNumber
-            , ('№ ' || Movement.InvNumber ||' от '||TO_CHAR(Movement.OperDate , 'DD.MM.YYYY') ) :: TVarChar AS InvNumber_full         
-            --, Object_PartionGoods.SybaseId        AS SybaseId
+            , ('№ ' || Movement.InvNumber ||' от '||zfConvert_DateToString(Movement.OperDate) ) :: TVarChar AS InvNumber_full         
             , Object_Partner.ValueData            AS PartnerName
             , Object_Unit.ValueData               AS UnitName
             , Object_PartionGoods.OperDate        AS OperDate
@@ -95,10 +68,10 @@ BEGIN
             , Object_GroupNameFull.ValueData      As GroupNameFull
             , Object_Currency.ValueData           AS CurrencyName
             , Object_PartionGoods.Amount          AS Amount
-            , tmpContainer.Remains       ::TFloat AS Remains            
+            , COALESCE (Container.Amount,0) ::TFloat AS Remains            
             , Object_PartionGoods.OperPrice       AS OperPrice
-            , tmpPrice.ValuePrice                 AS PriceSale
-            , Object_PartionGoods.PriceSale       AS PriceSale_Partion
+            --, tmpPrice.ValuePrice                 AS PriceSale
+            , Object_PartionGoods.PriceSale
             , Object_Brand.ValueData              AS BrandName
             , Object_Period.ValueData             AS PeriodName
             , Object_PartionGoods.PeriodYear      AS PeriodYear
@@ -115,7 +88,9 @@ BEGIN
             , Object_PartionGoods.isErased        AS isErased
             , Object_PartionGoods.isArc           AS isArc
            
-       FROM Object_PartionGoods
+       FROM Container
+           LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = Container.PartionId
+                                        AND (Object_PartionGoods.isErased = FALSE)
 
            LEFT JOIN  Object AS Object_Partner ON Object_Partner.Id = Object_PartionGoods.PartnerId
            LEFT JOIN  Object AS Object_Unit    ON Object_Unit.Id    = Object_PartionGoods.UnitId
@@ -140,16 +115,9 @@ BEGIN
 
            LEFT JOIN  Movement ON Movement.Id = Object_PartionGoods.MovementId
 
-           --LEFT JOIN  lpGet_ObjectHistory_PriceListItem(zc_DateEnd() - interval '1 day', zc_PriceList_Basis(), Object_PartionGoods.GoodsId) AS OH_PriceListItem
-           --       ON OH_PriceListItem.GoodsId = Object_PartionGoods.GoodsId
-           LEFT JOIN tmpPrice ON tmpPrice.GoodsId = Object_PartionGoods.GoodsId
-
-           LEFT JOIN tmpContainer ON tmpContainer.PartionId = Object_PartionGoods.MovementItemId  
-
-     WHERE (Object_PartionGoods.isErased = FALSE)
-       AND (Object_PartionGoods.UnitId = inUnitId OR inUnitId = 0)
-       AND (COALESCE (tmpContainer.Remains,0) <> 0 OR inIsShowAll = TRUE)
-
+     WHERE Container.DescId = zc_Container_count()
+       AND Container.WhereObjectId = inUnitId  
+       AND (COALESCE (Container.Amount,0) <> 0 OR inIsShowAll = TRUE)       
     ;
 
 END;

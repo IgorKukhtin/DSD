@@ -117,8 +117,8 @@ object Report_MovementReturnOutDialogForm: TReport_MovementReturnOutDialogForm
     Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
   end
   object edPartner: TcxButtonEdit
-    Left = 10
-    Top = 211
+    Left = 8
+    Top = 215
     Properties.Buttons = <
       item
         Default = True

@@ -33,7 +33,7 @@ type
     FormParams: TdsdFormParams;
     edPartionGoods: TcxButtonEdit;
     edGoodsSize: TcxButtonEdit;
-    PartionGuidesGoods: TdsdGuides;
+    GuidesPartionGoods: TdsdGuides;
     GuidesGoodsSize: TdsdGuides;
     edUnit: TcxButtonEdit;
     cxLabel3: TcxLabel;
@@ -46,7 +46,7 @@ type
     cbPartion: TcxCheckBox;
     cxLabel5: TcxLabel;
     edPartion: TcxButtonEdit;
-    PartionGuides: TdsdGuides;
+    GuidesPartion: TdsdGuides;
     cbPeriod: TcxCheckBox;
   private
     { Private declarations }

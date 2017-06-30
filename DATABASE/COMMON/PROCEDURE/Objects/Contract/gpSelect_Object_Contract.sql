@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar, RetailName TVarChar
              , JuridicalBasisId Integer, JuridicalBasisName TVarChar
              , JuridicalDocumentId Integer, JuridicalDocumentCode Integer, JuridicalDocumentName TVarChar
+             , JuridicalInvoiceId Integer, JuridicalInvoiceCode Integer, JuridicalInvoiceName TVarChar
              
              , PaidKindId Integer, PaidKindName TVarChar
              , InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
@@ -154,6 +155,10 @@ BEGIN
        , Object_JuridicalDocument.Id             AS JuridicalDocumentId
        , Object_JuridicalDocument.ObjectCode     AS JuridicalDocumentCode
        , Object_JuridicalDocument.ValueData      AS JuridicalDocumentName
+       
+       , Object_JuridicalInvoice.Id              AS JuridicalInvoiceId
+       , Object_JuridicalInvoice.ObjectCode      AS JuridicalInvoiceCode
+       , Object_JuridicalInvoice.ValueData       AS JuridicalInvoiceName       
 
        , Object_PaidKind.Id            AS PaidKindId
        , Object_PaidKind.ValueData     AS PaidKindName
@@ -376,6 +381,11 @@ BEGIN
                             AND ObjectLink_Contract_JuridicalDocument.DescId = zc_ObjectLink_Contract_JuridicalDocument()
         LEFT JOIN Object AS Object_JuridicalDocument ON Object_JuridicalDocument.Id = ObjectLink_Contract_JuridicalDocument.ChildObjectId
 
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalInvoice
+                             ON ObjectLink_Contract_JuridicalInvoice.ObjectId = Object_Contract_View.ContractId 
+                            AND ObjectLink_Contract_JuridicalInvoice.DescId = zc_ObjectLink_Contract_JuridicalInvoice()
+        LEFT JOIN Object AS Object_JuridicalInvoice ON Object_JuridicalInvoice.Id = ObjectLink_Contract_JuridicalInvoice.ChildObjectId
+        
         LEFT JOIN Object AS Object_ContractTermKind ON Object_ContractTermKind.Id = Object_Contract_View.ContractTermKindId
 
         /*LEFT JOIN ObjectDate AS ObjectDate_StartPromo
@@ -427,6 +437,7 @@ ALTER FUNCTION gpSelect_Object_Contract (TDateTime, TDateTime, Boolean, Boolean,
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 30.06.17         * add JuridicalInvoice
  03.03.17         * DayTaxSummary
  13.04.16         * Currency
  05.05.15         * add GoodsProperty

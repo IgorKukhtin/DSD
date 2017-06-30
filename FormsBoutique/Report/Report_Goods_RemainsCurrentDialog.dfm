@@ -171,7 +171,7 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 158
-    Top = 66
+    Left = 166
+    Top = 18
   end
 end

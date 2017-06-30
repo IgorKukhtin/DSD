@@ -42,8 +42,8 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
       Top = 5
       Caption = #1054#1090' '#1082#1086#1075#1086':'
     end
-    object ceUnitFrom: TcxButtonEdit
-      Left = 170
+    object edUnitFrom: TcxButtonEdit
+      Left = 171
       Top = 5
       Properties.Buttons = <
         item
@@ -382,7 +382,7 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
             Width = 102
           end
           object DescName: TcxGridDBColumn
-            Caption = #1042#1086#1079#1074#1088'. '#1087#1086#1089#1090'.'
+            Caption = #1042#1080#1076'. '#1076#1086#1082'.'
             DataBinding.FieldName = 'DescName'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -390,14 +390,14 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
             Width = 80
           end
           object InvNumber: TcxGridDBColumn
-            Caption = #8470' ('#1074#1086#1079#1074#1088'. '#1087#1086#1089#1090'.)'
+            Caption = #8470' '#1076#1086#1082'.'
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 73
           end
           object OperDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' ('#1074#1086#1079#1074#1088'. '#1087#1086#1089#1090'.)'
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -467,7 +467,7 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
     Top = 6
     Caption = #1050#1086#1084#1091':'
   end
-  object ceUnitTo: TcxButtonEdit [7]
+  object edUnitTo: TcxButtonEdit [7]
     Left = 435
     Top = 5
     Properties.Buttons = <
@@ -726,6 +726,108 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actOpenReportForm: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'>'
+      ImageIndex = 40
+      FormName = 'TReport_GoodsForm'
+      FormNameParam.Value = 'TReport_GoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'LocationId'
+          Value = ''
+          Component = GuidesUnitFrom
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LocationName'
+          Value = ''
+          Component = GuidesUnitFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsSizeId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsSizeId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsSizeName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsSizeName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionId'
+          Value = '0'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPeriod'
+          Value = 'TRUE'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPartion'
+          Value = 'False'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_Partion'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber_Partion'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 48
@@ -853,6 +955,14 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenReportForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -869,6 +979,10 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object bbOpenReportForm: TdxBarButton
+      Action = actOpenReportForm
       Category = 0
     end
   end
@@ -898,7 +1012,7 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
   end
   object GuidesUnitFrom: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceUnitFrom
+    LookupControl = edUnitFrom
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -988,7 +1102,7 @@ inherited Report_MovementLossForm: TReport_MovementLossForm
   end
   object GuidesUnitTo: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceUnitTo
+    LookupControl = edUnitTo
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','

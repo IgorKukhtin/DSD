@@ -235,6 +235,21 @@ object ContractForm: TContractForm
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
+      object JuridicalInvoiceName: TcxGridDBColumn
+        Caption = #1070#1088'. '#1083#1080#1094#1086' ('#1087#1077#1095#1072#1090#1100' '#1076#1086#1082'.  '#1087#1083#1072#1090#1077#1083#1100#1097#1080#1082')'
+        DataBinding.FieldName = 'JuridicalInvoiceName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = JuridicalInvoiceChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
       object OKPO: TcxGridDBColumn
         Caption = #1054#1050#1055#1054
         DataBinding.FieldName = 'OKPO'
@@ -2466,6 +2481,33 @@ object ContractForm: TContractForm
         end>
       isShowModal = False
     end
+    object JuridicalInvoiceChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'JuridicalDocumentChoiceForm'
+      FormName = 'TJuridical_ObjectForm'
+      FormNameParam.Value = 'TJuridical_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'JuridicalInvoiceId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'JuridicalInvoiceName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object JuridicalDocumentChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -2763,6 +2805,14 @@ object ContractForm: TContractForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'JuridicalDocumentId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalInvoiceId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'JuridicalInvoiceId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

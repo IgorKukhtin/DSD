@@ -105,6 +105,7 @@ BEGIN
                              , Object_PartionGoods.GoodsSizeId
                              , Object_PartionGoods.OperPrice
                              , Object_PartionGoods.CountForPrice
+                             , Object_PartionGoods.PriceSale
                              , Container.Amount AS Remains
                         FROM Object_PartionGoods
                              INNER JOIN Container ON Container.PartionId     = Object_PartionGoods.MovementItemId
@@ -114,7 +115,7 @@ BEGIN
                         WHERE Object_PartionGoods.PartnerId = vbPartnerId
                        )
          -- Последняя цена из Прайс-листа - zc_PriceList_Basis
-       , tmpPriceList AS (SELECT tmp.GoodsId
+       /*, tmpPriceList AS (SELECT tmp.GoodsId
                                , OHF_Value.ValueData AS OperPriceList
                           FROM (SELECT DISTINCT tmpPartion.GoodsId FROM tmpPartion) AS tmp
                                INNER JOIN ObjectLink AS OL_PriceListItem_Goods
@@ -133,6 +134,8 @@ BEGIN
                                                             ON OHF_Value.ObjectHistoryId = OH_PriceListItem.Id
                                                            AND OHF_Value.DescId          = zc_ObjectHistoryFloat_PriceListItem_Value()
                          )
+       */
+       
        -- результат
        SELECT
              0                                    AS Id
@@ -154,7 +157,8 @@ BEGIN
            , tmpPartion.Remains         :: TFloat AS Remains
            , tmpPartion.OperPrice       :: TFloat AS OperPrice
            , tmpPartion.CountForPrice   :: TFloat AS CountForPrice
-           , tmpPriceList.OperPriceList :: TFloat AS OperPriceList
+           --, tmpPriceList.OperPriceList :: TFloat AS OperPriceList
+           , tmpPartion.PriceSale       :: TFloat AS OperPriceList
            , 0                          :: TFloat AS TotalSumm
            , 0                          :: TFloat AS TotalSummBalance
            , 0                          :: TFloat AS TotalSummPriceList
@@ -163,7 +167,7 @@ BEGIN
 
        FROM tmpPartion
             LEFT JOIN tmpMI        ON tmpMI.PartionId      = tmpPartion.PartionId
-            LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpPartion.GoodsId
+            --LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpPartion.GoodsId
 
             LEFT JOIN Object AS Object_Goods       ON Object_Goods.Id       = tmpPartion.GoodsId
             LEFT JOIN Object AS Object_GoodsGroup  ON Object_GoodsGroup.Id  = tmpPartion.GoodsGroupId

@@ -27,7 +27,6 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitLeft = 96
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -253,13 +252,6 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
       object OperPrice: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072
         DataBinding.FieldName = 'OperPrice'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 65
-      end
-      object PriceSale_Partion: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
-        DataBinding.FieldName = 'PriceSale_Partion'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 65
