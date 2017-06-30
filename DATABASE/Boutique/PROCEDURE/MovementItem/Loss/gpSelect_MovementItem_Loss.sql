@@ -136,7 +136,7 @@ BEGIN
         */
    
           -- результат
-           SELECT 0
+           SELECT 0                        AS Id
                 , tmpPartion.PartionId
                 , Object_Goods.Id          AS GoodsId
                 , Object_Goods.ObjectCode  AS GoodsCode
@@ -199,6 +199,7 @@ BEGIN
                , Object_GoodsInfo.ValueData     AS GoodsInfoName
                , Object_LineFabrica.ValueData   AS LineFabricaName
                , Object_Label.ValueData         AS LabelName
+               , Object_GoodsSize.Id            AS GoodsSizeId
                , Object_GoodsSize.ValueData     AS GoodsSizeName 
     
                , tmpMI.Amount
