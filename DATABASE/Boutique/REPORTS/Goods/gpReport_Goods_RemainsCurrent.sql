@@ -35,11 +35,9 @@ RETURNS TABLE (InvNumber_Partion  TVarChar,
                OperPrice           TFloat,
                CountForPrice       TFloat,
                OperPriceList       TFloat,
-               --PriceSale           TFloat,
                Remains             TFloat,
                TotalSumm           TFloat,
                TotalSummPriceList  TFloat,
-               --TotalSummSale       TFloat,
                TotalSummBalance    TFloat,
                DiscountTax         TFloat
 
@@ -98,7 +96,7 @@ BEGIN
                              , tmp.GoodsId
                       )
 
-      , tmpPrice AS (SELECT ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
+      /*, tmpPrice AS (SELECT ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
                           , ObjectHistoryFloat_PriceListItem_Value.ValueData AS ValuePrice
                      FROM ObjectLink AS ObjectLink_PriceListItem_Goods
                           INNER JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
@@ -114,7 +112,7 @@ BEGIN
                                                       AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
                      WHERE ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
                     )
-
+      */
      , tmpData  AS  (SELECT tmpContainer.UnitId
                           , tmpContainer.GoodsId
                           , CASE WHEN inisPartion = TRUE THEN MovementDesc_Partion.ItemName ELSE CAST (NULL AS TVarChar)  END    AS DescName_Partion
@@ -143,7 +141,7 @@ BEGIN
                                       ELSE CAST ( COALESCE (tmpContainer.Remains, 0) * COALESCE (Object_PartionGoods.OperPrice, 0) AS NUMERIC (16, 2))
                                  END) AS TotalSummPrice
 
-                          , SUM (COALESCE (tmpContainer.Remains, 0) * COALESCE (tmpPrice.ValuePrice, 0))                AS TotalSummPriceList
+                          , SUM (COALESCE (tmpContainer.Remains, 0) * COALESCE (Object_PartionGoods.PriceSale, 0))                AS TotalSummPriceList
                           --, SUM (COALESCE (tmpContainer.Remains, 0) * COALESCE (Object_PartionGoods.PriceSale,0))       AS TotalSummSale
                      FROM tmpContainer
                           INNER JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmpContainer.PartionId
@@ -157,7 +155,7 @@ BEGIN
                                                ON ObjectLink_Partner_Period.ObjectId = Object_PartionGoods.PartnerId
                                               AND ObjectLink_Partner_Period.DescId = zc_ObjectLink_Partner_Period()
 
-                          LEFT JOIN tmpPrice ON tmpPrice.GoodsId = Object_PartionGoods.GoodsId
+                          --LEFT JOIN tmpPrice ON tmpPrice.GoodsId = Object_PartionGoods.GoodsId
 
                      GROUP BY tmpContainer.UnitId
                             , tmpContainer.GoodsId
@@ -234,12 +232,10 @@ BEGIN
            , CASE WHEN tmpData.Remains <> 0 THEN tmpData.TotalSummPrice / tmpData.Remains ELSE 0 END            ::TFloat AS OperPrice
            , tmpData.CountForPrice           ::TFloat
            , CASE WHEN tmpData.Remains <> 0 THEN tmpData.TotalSummPriceList / tmpData.Remains ELSE 0 END        ::TFloat AS OperPriceList
-           --, CASE WHEN tmpData.Remains <> 0 THEN tmpData.TotalSummSale  / tmpData.Remains ELSE 0 END            ::TFloat AS PriceSale
 
            , tmpData.Remains                 ::TFloat
            , tmpData.TotalSummPrice          ::TFloat  AS TotalSumm
            , tmpData.TotalSummPriceList      ::TFloat 
-           --, tmpData.TotalSummSale           ::TFloat 
            , (CAST (tmpData.TotalSummPrice * tmpCurrency.Amount / CASE WHEN tmpCurrency.ParValue <> 0 THEN tmpCurrency.ParValue ELSE 1 END AS NUMERIC (16, 2))) :: TFloat AS TotalSummBalance
 
            , COALESCE (tmpDiscount.ValuePrice,0) :: TFloat  AS DiscountTax

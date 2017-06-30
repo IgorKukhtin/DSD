@@ -24,7 +24,6 @@ RETURNS TABLE (Id                   Integer
              , Remains              TFloat
              , OperPrice            TFloat
              , PriceSale            TFloat
-             , PriceSale_Partion    TFloat  
              , BrandName            TVarChar  
              , PeriodName           TVarChar  
              , PeriodYear           Integer  
@@ -55,24 +54,7 @@ BEGIN
 
      -- Результат
      RETURN QUERY 
-     WITH
-     tmpPrice AS (SELECT ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
-                       , ObjectHistoryFloat_PriceListItem_Value.ValueData AS ValuePrice
-                  FROM ObjectLink AS ObjectLink_PriceListItem_Goods
-                       INNER JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
-                                             ON ObjectLink_PriceListItem_PriceList.ObjectId = ObjectLink_PriceListItem_Goods.ObjectId
-                                            AND ObjectLink_PriceListItem_PriceList.ChildObjectId = zc_PriceList_Basis()
-                                            AND ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
-                       LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
-                                               ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
-                                              AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
-                                              AND CURRENT_DATE >= ObjectHistory_PriceListItem.StartDate AND CURRENT_DATE < ObjectHistory_PriceListItem.EndDate
-                       LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
-                                                    ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
-                                                   AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
-                  WHERE ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
-                 )
-
+       
        SELECT Object_PartionGoods.MovementItemId  AS Id
             , Object_PartionGoods.MovementItemId  AS MovementItemId
             , Movement.Id                         AS MovementId
@@ -88,8 +70,8 @@ BEGIN
             , Object_PartionGoods.Amount          AS Amount
             , COALESCE (Container.Amount,0) ::TFloat AS Remains            
             , Object_PartionGoods.OperPrice       AS OperPrice
-            , tmpPrice.ValuePrice                 AS PriceSale
-            , Object_PartionGoods.PriceSale       AS PriceSale_Partion
+            --, tmpPrice.ValuePrice                 AS PriceSale
+            , Object_PartionGoods.PriceSale
             , Object_Brand.ValueData              AS BrandName
             , Object_Period.ValueData             AS PeriodName
             , Object_PartionGoods.PeriodYear      AS PeriodYear
@@ -132,8 +114,6 @@ BEGIN
            LEFT JOIN  Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = Object_PartionGoods.GoodsSizeId
 
            LEFT JOIN  Movement ON Movement.Id = Object_PartionGoods.MovementId
-
-           LEFT JOIN tmpPrice ON tmpPrice.GoodsId = Object_PartionGoods.GoodsId
 
      WHERE Container.DescId = zc_Container_count()
        AND Container.WhereObjectId = inUnitId  
