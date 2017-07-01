@@ -419,7 +419,18 @@ BEGIN
            , OH_JuridicalDetails_To.MFO                 AS BankMFO_To
            , OH_JuridicalDetails_To.Phone               AS Phone_To
 
+           , COALESCE (OH_JuridicalDetails_Invoice.JuridicalId,      OH_JuridicalDetails_To.JuridicalId)         AS JuridicalId_Invoice
            , COALESCE (OH_JuridicalDetails_Invoice.FullName, COALESCE (Object_ArticleLoss.ValueData, OH_JuridicalDetails_To.FullName)) AS JuridicalName_Invoice
+           , COALESCE (OH_JuridicalDetails_Invoice.JuridicalAddress, OH_JuridicalDetails_To.JuridicalAddress)    AS JuridicalAddress_Invoice
+           , COALESCE (OH_JuridicalDetails_Invoice.OKPO,             OH_JuridicalDetails_To.OKPO)                AS OKPO_Invoice
+           , COALESCE (OH_JuridicalDetails_Invoice.INN,              OH_JuridicalDetails_To.INN)                 AS INN_Invoice
+           , COALESCE (OH_JuridicalDetails_Invoice.NumberVAT,        OH_JuridicalDetails_To.NumberVAT)           AS NumberVAT_Invoice
+           , COALESCE (OH_JuridicalDetails_Invoice.AccounterName,    OH_JuridicalDetails_To.AccounterName)       AS AccounterName_Invoice
+           , COALESCE (OH_JuridicalDetails_Invoice.MainName,         OH_JuridicalDetails_To.MainName)            AS MainName_Invoice
+           , COALESCE (OH_JuridicalDetails_Invoice.BankAccount,      OH_JuridicalDetails_To.BankAccount)         AS BankAccount_Invoice
+           , COALESCE (OH_JuridicalDetails_Invoice.BankName,         OH_JuridicalDetails_To.BankName)            AS BankName_Invoice
+           , COALESCE (OH_JuridicalDetails_Invoice.MFO,              OH_JuridicalDetails_To.MFO)                 AS BankMFO_Invoice
+           , COALESCE (OH_JuridicalDetails_Invoice.Phone,            OH_JuridicalDetails_To.Phone)               AS Phone_Invoice
            
            , CASE WHEN COALESCE (Object_PersonalCollation.ValueData, '') = '' THEN '' ELSE zfConvert_FIO(Object_PersonalCollation.ValueData,2) END :: TVarChar        AS PersonalCollationName
            --, CASE WHEN ObjectLink_Juridical_Retail.ChildObjectId = 310855 /*Варус*/ THEN ObjectString_Partner_GLNCode.ValueData ELSE ObjectString_Juridical_GLNCode.ValueData END AS BuyerGLNCode

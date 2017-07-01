@@ -300,7 +300,21 @@ AS
        AND OH_JuridicalDetails.OKPO IN ('2902403938')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
-
+-- Новая форма (плательщик) окпо 123
+      SELECT
+             zc_Movement_Sale()
+           , CAST ('Sale' AS TVarChar)
+           , CAST ('01.06.2017' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , zc_Enum_PaidKind_FirstForm()
+           , CAST ('PrintMovement_Sale123' AS TVarChar)
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO IN ('123')
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+      UNION
+      
 --налоговая
       SELECT
              zc_Movement_Sale()

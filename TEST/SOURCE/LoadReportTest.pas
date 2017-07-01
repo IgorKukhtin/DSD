@@ -303,7 +303,8 @@ begin
 
   LoadReportFromFile('PrintObjectHistory_PriceListItem', ReportPath + '\Справочники\PrintObjectHistory_PriceListItem.fr3');
   }
-  TStrArrAdd(['35275230','30982361','30487219','37910513','32294926','01074874','32516492','35442481','36387249','32049199', '31929492', '22447463', '36003603', '39118745', '2902403938']);
+  TStrArrAdd(['35275230','30982361','30487219','37910513','32294926','01074874','32516492','35442481','36387249'
+             ,'32049199', '31929492', '22447463', '36003603', '39118745', '2902403938', '123']);
   for i := Low(OKPO) to High(OKPO) do
     LoadReportFromFile('PrintMovement_Sale' + OKPO[i], ReportPath + '\Товарный Учет\PrintMovement_Sale' + OKPO[i] + '.fr3');
   exit;
