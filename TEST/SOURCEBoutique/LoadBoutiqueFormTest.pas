@@ -325,6 +325,8 @@ procedure TLoadFormTest.LoadDiscountPeriodItemFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountPeriodItemForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountPeriodItemForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountPeriodItemDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDiscountPeriodItemDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountPeriodGoodsItemForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountPeriodGoodsItemForm');

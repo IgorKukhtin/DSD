@@ -3,7 +3,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
   Top = 0
   Caption = #1057#1077#1079#1086#1085#1085#1099#1077' '#1089#1082#1080#1076#1082#1080' - '#1055#1088#1086#1089#1084#1086#1090#1088' / '#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1086#1089#1083#1077#1076#1085#1080#1093' '#1089#1082#1080#1076#1086#1082
   ClientHeight = 398
-  ClientWidth = 834
+  ClientWidth = 848
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,17 +13,20 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.isSingle = False
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 67
-    Width = 834
-    Height = 331
+    Top = 91
+    Width = 848
+    Height = 307
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitTop = 72
+    ExplicitHeight = 326
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -300,8 +303,8 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
   object Panel: TPanel
     Left = 0
     Top = 26
-    Width = 834
-    Height = 41
+    Width = 848
+    Height = 65
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
@@ -322,7 +325,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       Width = 202
     end
     object edShowDate: TcxDateEdit
-      Left = 405
+      Left = 670
       Top = 9
       EditValue = 42856d
       Properties.SaveTime = False
@@ -331,13 +334,13 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       Width = 82
     end
     object cxLabel2: TcxLabel
-      Left = 297
+      Left = 560
       Top = 10
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1089#1082#1080#1076#1086#1082' '#1085#1072':'
     end
     object edPersent: TcxCurrencyEdit
-      Left = 794
-      Top = 9
+      Left = 815
+      Top = 36
       EditValue = '0'
       Properties.AssignedValues.MinValue = True
       Properties.DecimalPlaces = 0
@@ -346,15 +349,77 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       TabOrder = 4
       Width = 31
     end
+    object cxLabel5: TcxLabel
+      Left = 4
+      Top = 37
+      Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072':'
+    end
+    object edBrand: TcxButtonEdit
+      Left = 92
+      Top = 36
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 6
+      Width = 202
+    end
+    object cxLabel6: TcxLabel
+      Left = 297
+      Top = 10
+      Caption = #1057#1077#1079#1086#1085' :'
+    end
+    object edPeriod: TcxButtonEdit
+      Left = 339
+      Top = 9
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 8
+      Width = 173
+    end
+    object cxLabel7: TcxLabel
+      Left = 297
+      Top = 37
+      Caption = #1043#1086#1076' ('#1085#1072#1095'.):'
+    end
+    object edPeriodYearStart: TcxCurrencyEdit
+      Left = 357
+      Top = 36
+      EditValue = 0.000000000000000000
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = '0'
+      TabOrder = 10
+      Width = 40
+    end
+    object edPeriodYearEnd: TcxCurrencyEdit
+      Left = 472
+      Top = 36
+      EditValue = 2017.000000000000000000
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = '0'
+      TabOrder = 11
+      Width = 40
+    end
+    object cxLabel8: TcxLabel
+      Left = 405
+      Top = 37
+      Caption = #1043#1086#1076' ('#1086#1082#1086#1085'.):'
+    end
   end
   object cxLabel3: TcxLabel
-    Left = 539
-    Top = 36
+    Left = 560
+    Top = 63
     Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1089#1082#1080#1076#1082#1080' '#1089':'
   end
   object edOperDate: TcxDateEdit
-    Left = 649
-    Top = 35
+    Left = 670
+    Top = 62
     EditValue = 42856d
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -362,8 +427,8 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
     Width = 82
   end
   object cxLabel4: TcxLabel
-    Left = 737
-    Top = 36
+    Left = 758
+    Top = 63
     Caption = '% '#1089#1082#1080#1076#1082#1080':'
   end
   object DataSource: TDataSource
@@ -390,7 +455,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
           'Date')
       end
       item
-        Component = UnitGuides
+        Component = GuidesUnit
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -444,6 +509,14 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       FloatClientWidth = 51
       FloatClientHeight = 59
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
         item
           Visible = True
           ItemName = 'dxBarStatic'
@@ -539,6 +612,10 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       ImageIndex = 3
       UnclickAfterDoing = False
     end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -581,14 +658,14 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         item
           Name = 'UnitId'
           Value = '0'
-          Component = UnitGuides
+          Component = GuidesUnit
           ComponentItem = 'Key'
           MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
           Value = ''
-          Component = UnitGuides
+          Component = GuidesUnit
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -633,9 +710,9 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1090#1086#1074#1072#1088#1099
       ImageIndex = 63
       Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1087#1091#1089#1090#1099#1077' '#1094#1077#1085#1099
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1087#1091#1089#1090#1099#1077' '#1089#1082#1080#1076#1082#1080
       HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1090#1086#1074#1072#1088#1099
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1087#1091#1089#1090#1099#1077' '#1094#1077#1085#1099
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1087#1091#1089#1090#1099#1077' '#1089#1082#1080#1076#1082#1080
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1090#1086#1074#1072#1088#1099
       ImageIndexTrue = 62
       ImageIndexFalse = 63
@@ -662,7 +739,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         item
           Name = 'TextValue'
           Value = Null
-          Component = UnitGuides
+          Component = GuidesUnit
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -691,7 +768,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         item
           Name = 'PriceListUnitName'
           Value = Null
-          Component = UnitGuides
+          Component = GuidesUnit
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -749,6 +826,96 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1082#1080#1076#1082#1091
       ImageIndex = 74
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099
+      ImageIndex = 35
+      FormName = 'TDiscountPeriodItemDialogForm'
+      FormNameParam.Value = 'TDiscountPeriodItemDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'ShowDate'
+          Value = 42736d
+          Component = edShowDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BrandId'
+          Value = ''
+          Component = GuidesBrand
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BrandName'
+          Value = ''
+          Component = GuidesBrand
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodId'
+          Value = '0'
+          Component = GuidesPeriod
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodName'
+          Value = ''
+          Component = GuidesPeriod
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodYearStart'
+          Value = '0'
+          Component = edPeriodYearStart
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodYearEnd'
+          Value = ''
+          Component = edPeriodYearEnd
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_ObjectHistory_DiscountPeriodItem'
@@ -761,7 +928,23 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       item
         Name = 'inUnitId'
         Value = '0'
-        Component = UnitGuides
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBrandId'
+        Value = Null
+        Component = GuidesBrand
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPeriodId'
+        Value = Null
+        Component = GuidesPeriod
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -771,6 +954,22 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         Value = 41275d
         Component = edShowDate
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPeriodYearStart'
+        Value = Null
+        Component = edPeriodYearStart
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPeriodYearEnd'
+        Value = Null
+        Component = edPeriodYearEnd
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -816,7 +1015,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
     Left = 296
     Top = 200
   end
-  object UnitGuides: TdsdGuides
+  object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnit
     Key = '0'
@@ -829,7 +1028,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       item
         Name = 'Key'
         Value = '0'
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -837,7 +1036,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -862,7 +1061,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       item
         Name = 'inUnitId'
         Value = Null
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -925,7 +1124,22 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
     RefreshAction = actRefresh
     ComponentList = <
       item
-        Component = UnitGuides
+        Component = GuidesUnit
+      end
+      item
+        Component = GuidesBrand
+      end
+      item
+        Component = GuidesPeriod
+      end
+      item
+        Component = edPeriodYearEnd
+      end
+      item
+        Component = edPeriodYearStart
+      end
+      item
+        Component = edShowDate
       end>
     Left = 536
     Top = 168
@@ -941,7 +1155,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       item
         Name = 'inUnitId'
         Value = '0'
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -980,7 +1194,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       item
         Name = 'inUnitId'
         Value = '0'
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1035,5 +1249,67 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
     PackSize = 1
     Left = 368
     Top = 304
+  end
+  object GuidesBrand: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBrand
+    Key = '0'
+    FormNameParam.Value = 'TBrandForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBrandForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesBrand
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBrand
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 118
+    Top = 42
+  end
+  object GuidesPeriod: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPeriod
+    Key = '0'
+    FormNameParam.Value = 'TPeriodForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPeriodForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesPeriod
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPeriod
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 278
+    Top = 26
   end
 end

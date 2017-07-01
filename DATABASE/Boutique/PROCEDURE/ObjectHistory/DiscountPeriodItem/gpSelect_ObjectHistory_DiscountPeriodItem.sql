@@ -1,10 +1,15 @@
 -- Function: gpSelect_ObjectHistory_DiscountPeriodItem ()
 
 DROP FUNCTION IF EXISTS gpSelect_ObjectHistory_DiscountPeriodItem (Integer, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_ObjectHistory_DiscountPeriodItem (Integer, Integer, Integer, TDateTime, TFloat, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_DiscountPeriodItem(
-    IN inUnitId             Integer   , -- ключ 
+    IN inUnitId             Integer   , -- подразделение 
+    IN inBrandId            Integer   , -- торговая марка 
+    IN inPeriodId           Integer   , -- сезон
     IN inOperDate           TDateTime , -- Дата действия
+    IN inPeriodYearStart    TFloat    , -- год
+    IN inPeriodYearEnd      TFloat    , -- год    
     IN inShowAll            Boolean,   
     IN inSession            TVarChar    -- сессия пользователя
 )                              
@@ -108,6 +113,10 @@ BEGIN
                          LEFT JOIN Object AS Object_GoodsSize   ON Object_GoodsSize.Id   = Object_PartionGoods.GoodsSizeId
                     WHERE Object_PartionGoods.isErased = FALSE 
                       AND Object_PartionGoods.UnitId = inUnitId
+                      AND (Object_PartionGoods.BrandId = inBrandId OR inBrandId = 0)
+                      AND (Object_PartionGoods.PeriodId = inPeriodId OR inPeriodId = 0)   
+                      AND (Object_PartionGoods.PeriodYear >= inPeriodYearStart OR inPeriodYearStart = 0)
+                      AND (Object_PartionGoods.PeriodYear <= inPeriodYearEnd OR inPeriodYearEnd = 0)                   
                     ) 
                  
        SELECT
@@ -242,6 +251,10 @@ BEGIN
                          LEFT JOIN Object AS Object_GoodsSize   ON Object_GoodsSize.Id   = Object_PartionGoods.GoodsSizeId
                     WHERE Object_PartionGoods.isErased = FALSE 
                       AND Object_PartionGoods.UnitId = inUnitId
+                      AND (Object_PartionGoods.BrandId = inBrandId OR inBrandId = 0)
+                      AND (Object_PartionGoods.PeriodId = inPeriodId OR inPeriodId = 0)   
+                      AND (Object_PartionGoods.PeriodYear >= inPeriodYearStart OR inPeriodYearStart =0)
+                      AND (Object_PartionGoods.PeriodYear <= inPeriodYearEnd OR inPeriodYearEnd = 0) 
                     ) 
 
        SELECT
@@ -282,7 +295,7 @@ BEGIN
            , tmpPartionGoods.GoodsSizeName
 
        FROM tmpDiscount
-            FULL JOIN tmpPartionGoods ON tmpPartionGoods.GoodsId = tmpDiscount.GoodsId
+            INNER JOIN tmpPartionGoods ON tmpPartionGoods.GoodsId = tmpDiscount.GoodsId
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (tmpPartionGoods.GoodsId,tmpDiscount.GoodsId)
             LEFT JOIN ObjectString AS Object_GroupNameFull
                                    ON Object_GroupNameFull.ObjectId = Object_Goods.Id
@@ -317,10 +330,11 @@ LANGUAGE PLPGSQL VOLATILE;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.07.17         *
  28.04.17         * битики + св-ва товара
  20.08.15         * add inShowAll
  25.07.13                        *
 */
 
 -- тест
--- select * from gpSelect_ObjectHistory_DiscountPeriodItem(inUnitId := 311 , inOperDate := ('12.05.2017')::TDateTime , inShowAll := 'False' ,  inSession := '2');
+-- select * from gpSelect_ObjectHistory_DiscountPeriodItem(inUnitId := 506 , inBrandId := 0 , inPeriodId := 0 , inOperDate := ('01.07.2017')::TDateTime , inPeriodYearStart := 0 ::TFloat, inPeriodYearEnd := 2017 ::TFloat, inShowAll := 'False' ::Boolean,  inSession := '2');

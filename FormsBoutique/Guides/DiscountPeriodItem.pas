@@ -50,7 +50,7 @@ type
     Panel: TPanel;
     cxLabel1: TcxLabel;
     edUnit: TcxButtonEdit;
-    UnitGuides: TdsdGuides;
+    GuidesUnit: TdsdGuides;
     edShowDate: TcxDateEdit;
     cxLabel2: TcxLabel;
     cxLabel3: TcxLabel;
@@ -84,6 +84,18 @@ type
     spUpdatePersent: TdsdExecStoredProc;
     macUpdatePersent: TMultiAction;
     macUpdateAll: TMultiAction;
+    ExecuteDialog: TExecuteDialog;
+    cxLabel5: TcxLabel;
+    edBrand: TcxButtonEdit;
+    GuidesBrand: TdsdGuides;
+    cxLabel6: TcxLabel;
+    edPeriod: TcxButtonEdit;
+    cxLabel7: TcxLabel;
+    edPeriodYearStart: TcxCurrencyEdit;
+    edPeriodYearEnd: TcxCurrencyEdit;
+    cxLabel8: TcxLabel;
+    GuidesPeriod: TdsdGuides;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public
