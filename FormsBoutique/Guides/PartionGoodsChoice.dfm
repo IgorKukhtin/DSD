@@ -693,14 +693,6 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PriceSale_Partion'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PriceSale_Partion'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'Remains'
           Value = Null
           Component = MasterCDS
