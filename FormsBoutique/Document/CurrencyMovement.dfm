@@ -34,7 +34,7 @@
     Top = 11
     Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   end
-  object ceOperDate: TcxDateEdit [4]
+  object edOperDate: TcxDateEdit [4]
     Left = 152
     Top = 34
     Properties.SaveTime = False
@@ -55,7 +55,7 @@
     Top = 61
     Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1082#1091#1088#1089#1072
   end
-  object ceCurrencyTo: TcxButtonEdit [7]
+  object edCurrencyTo: TcxButtonEdit [7]
     Left = 152
     Top = 128
     Properties.Buttons = <
@@ -71,7 +71,7 @@
     Top = 109
     Caption = #1042#1072#1083#1102#1090#1072' ('#1088#1077#1079#1091#1083#1100#1090#1072#1090')'
   end
-  object ceCurrencyFrom: TcxButtonEdit [9]
+  object edCurrencyFrom: TcxButtonEdit [9]
     Left = 152
     Top = 80
     Properties.Buttons = <
@@ -92,7 +92,7 @@
     Top = 160
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
-  object ceComment: TcxTextEdit [12]
+  object edComment: TcxTextEdit [12]
     Left = 8
     Top = 179
     TabOrder = 6
@@ -108,7 +108,7 @@
   end
   object ceParValue: TcxCurrencyEdit [14]
     Left = 8
-    Top = 128
+    Top = 132
     EditValue = 1.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0.'
@@ -153,8 +153,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 144
-    Top = 114
+    Left = 168
+    Top = 130
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Currency'
@@ -178,7 +178,7 @@
       item
         Name = 'inoperdate'
         Value = 0d
-        Component = ceOperDate
+        Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -202,7 +202,7 @@
       item
         Name = 'incomment'
         Value = ''
-        Component = ceComment
+        Component = edComment
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -210,7 +210,7 @@
       item
         Name = 'inCurrencyFromid'
         Value = ''
-        Component = CurrencyFromGuides
+        Component = GuidesCurrencyFrom
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -218,7 +218,7 @@
       item
         Name = 'inCurrencyToid'
         Value = ''
-        Component = CurrencyToGuides
+        Component = GuidesCurrencyTo
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -270,7 +270,7 @@
       item
         Name = 'OperDate'
         Value = 0d
-        Component = ceOperDate
+        Component = edOperDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
@@ -291,21 +291,21 @@
       item
         Name = 'Comment'
         Value = ''
-        Component = ceComment
+        Component = edComment
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyFromId'
         Value = ''
-        Component = CurrencyFromGuides
+        Component = GuidesCurrencyFrom
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyFromName'
         Value = ''
-        Component = CurrencyFromGuides
+        Component = GuidesCurrencyFrom
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -313,14 +313,14 @@
       item
         Name = 'CurrencyToId'
         Value = ''
-        Component = CurrencyToGuides
+        Component = GuidesCurrencyTo
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyToName'
         Value = ''
-        Component = CurrencyToGuides
+        Component = GuidesCurrencyTo
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -328,9 +328,9 @@
     Left = 248
     Top = 112
   end
-  object CurrencyToGuides: TdsdGuides
+  object GuidesCurrencyTo: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceCurrencyTo
+    LookupControl = edCurrencyTo
     FormNameParam.Value = 'TCurrencyForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -340,14 +340,14 @@
       item
         Name = 'Key'
         Value = ''
-        Component = CurrencyToGuides
+        Component = GuidesCurrencyTo
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = CurrencyToGuides
+        Component = GuidesCurrencyTo
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -363,10 +363,10 @@
     IdParam.MultiSelectSeparator = ','
     GuidesList = <
       item
-        Guides = CurrencyFromGuides
+        Guides = GuidesCurrencyFrom
       end
       item
-        Guides = CurrencyToGuides
+        Guides = GuidesCurrencyTo
       end
       item
       end
@@ -376,9 +376,9 @@
     Left = 208
     Top = 8
   end
-  object CurrencyFromGuides: TdsdGuides
+  object GuidesCurrencyFrom: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceCurrencyFrom
+    LookupControl = edCurrencyFrom
     FormNameParam.Value = 'TCurrencyForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -388,14 +388,14 @@
       item
         Name = 'Key'
         Value = ''
-        Component = CurrencyFromGuides
+        Component = GuidesCurrencyFrom
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = CurrencyFromGuides
+        Component = GuidesCurrencyFrom
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
