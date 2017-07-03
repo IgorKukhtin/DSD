@@ -17,6 +17,7 @@ RETURNS TABLE (Id                   Integer
              , UnitName             TVarChar  
              , OperDate             TDateTime
              , GoodsId              Integer
+             , GoodsCode            Integer
              , GoodsName            TVarChar  
              , GroupNameFull        TVarChar  
              , CurrencyName         TVarChar  
@@ -64,6 +65,7 @@ BEGIN
             , Object_Unit.ValueData               AS UnitName
             , Object_PartionGoods.OperDate        AS OperDate
             , Object_PartionGoods.GoodsId         AS GoodsId
+            , Object_Goods.ObjectCode             AS GoodsCode
             , Object_Goods.ValueData              AS GoodsName
             , Object_GroupNameFull.ValueData      As GroupNameFull
             , Object_Currency.ValueData           AS CurrencyName

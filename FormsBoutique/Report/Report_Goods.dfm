@@ -566,6 +566,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
           object InvNumber_full: TcxGridDBColumn
             Caption = #1044#1086#1082'. '#1087#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'InvNumber_full'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 103
