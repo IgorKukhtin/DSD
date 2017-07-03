@@ -4,10 +4,8 @@ inherited GoodsAllRetailForm: TGoodsAllRetailForm
   ClientWidth = 1079
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitLeft = -411
-  ExplicitTop = -38
   ExplicitWidth = 1095
-  ExplicitHeight = 531
+  ExplicitHeight = 527
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -146,6 +144,64 @@ inherited GoodsAllRetailForm: TGoodsAllRetailForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object OrdMarion_1: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087' '#1052#1040#1056#1048#1054#1053
+            DataBinding.FieldName = 'OrdMarion'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object CodeBar_1: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1064'/'#1050' '#1087#1088#1086#1080#1079#1074'.'
+            DataBinding.FieldName = 'CodeBar'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object NameBar_1: TcxGridDBColumn
+            Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1064'/'#1050' '#1087#1088#1086#1080#1079#1074'.'
+            DataBinding.FieldName = 'NameBar'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object OrdBar_1: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087' '#1064'/'#1050' '#1087#1088#1086#1080#1079#1074'.'
+            DataBinding.FieldName = 'OrdBar'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object MeasureName_1: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -461,6 +517,64 @@ inherited GoodsAllRetailForm: TGoodsAllRetailForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object OrdMarion_2: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087' '#1052#1040#1056#1048#1054#1053
+            DataBinding.FieldName = 'OrdMarion'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object CodeBar_2: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1064'/'#1050' '#1087#1088#1086#1080#1079#1074'.'
+            DataBinding.FieldName = 'CodeBar'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object NameBar_2: TcxGridDBColumn
+            Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1064'/'#1050' '#1087#1088#1086#1080#1079#1074'.'
+            DataBinding.FieldName = 'NameBar'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object OrdBar_2: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087' '#1064'/'#1050' '#1087#1088#1086#1080#1079#1074'.'
+            DataBinding.FieldName = 'OrdBar'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object MeasureName_2: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -778,6 +892,64 @@ inherited GoodsAllRetailForm: TGoodsAllRetailForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object OrdMarion_3: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087' '#1052#1040#1056#1048#1054#1053
+            DataBinding.FieldName = 'OrdMarion'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object CodeBar_3: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1064'/'#1050' '#1087#1088#1086#1080#1079#1074'.'
+            DataBinding.FieldName = 'CodeBar'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object NameBar_3: TcxGridDBColumn
+            Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1064'/'#1050' '#1087#1088#1086#1080#1079#1074'.'
+            DataBinding.FieldName = 'NameBar'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object OrdBar_3: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087' '#1064'/'#1050' '#1087#1088#1086#1080#1079#1074'.'
+            DataBinding.FieldName = 'OrdBar'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object MeasureName_3: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'

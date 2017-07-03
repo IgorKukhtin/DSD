@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_GoodsAll_Juridical(TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsAll_Juridical(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, CodeStr TVarChar, Name TVarChar, isErased Boolean, 
+RETURNS TABLE (Id Integer, Code Integer, CodeStr TVarChar, Name TVarChar, isErased Boolean,
                LinkId Integer, GoodsMainId Integer,
                GoodsGroupId Integer, GoodsGroupName TVarChar,
                MeasureId Integer, MeasureName TVarChar,
@@ -18,9 +18,10 @@ RETURNS TABLE (Id Integer, Code Integer, CodeStr TVarChar, Name TVarChar, isEras
                ObjectDescName TVarChar, ObjectName TVarChar,
                MakerName TVarChar, MakerLinkName TVarChar,
                ConditionsKeepName TVarChar,
-               CodeMarion Integer, CodeMarionStr TVarChar, NameMarion TVarChar
+               CodeMarion Integer, CodeMarionStr TVarChar, NameMarion TVarChar, OrdMarion Integer,
+               CodeBar Integer, NameBar TVarChar, OrdBar Integer
               ) AS
-$BODY$ 
+$BODY$
   DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
@@ -29,7 +30,7 @@ BEGIN
 
 
    -- для остальных...
-   RETURN QUERY 
+   RETURN QUERY
     WITH tmpMarion AS (SELECT ObjectLink_Main.ChildObjectId AS GoodsMainId
                             , Object_Goods.ObjectCode       AS GoodsCode
                             , Object_Goods.ValueData        AS GoodsName
@@ -50,8 +51,25 @@ BEGIN
                          AND ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_Marion()
                          AND ObjectLink_Main.ChildObjectId > 0 -- !!!убрали безликие!!!
                       )
+      , tmpBarCode AS (SELECT ObjectLink_Main.ChildObjectId AS GoodsMainId
+                            , Object_Goods.ObjectCode       AS GoodsCode
+                            , Object_Goods.ValueData        AS GoodsName
+                              --  № п/п
+                            , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Main.ChildObjectId ORDER BY Object_Goods.ObjectCode DESC) AS Ord
+
+                       FROM ObjectLink AS ObjectLink_Goods_Object -- связь с Юридические лица или Торговая сеть или ...
+                            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_Object.ObjectId
+                            -- получается GoodsMainId
+                            LEFT JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = Object_Goods.Id
+                                                                     AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+                            LEFT JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                    AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                       WHERE ObjectLink_Goods_Object.DescId        = zc_ObjectLink_Goods_Object()
+                         AND ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_BarCode()
+                         AND ObjectLink_Main.ChildObjectId > 0 -- !!!убрали безликие!!!
+                      )
    -- Результат
-   SELECT 
+   SELECT
              Object_Goods.Id
            , Object_Goods.ObjectCode            AS Code
            , ObjectString_Goods_Code.ValueData  AS CodeStr
@@ -72,7 +90,7 @@ BEGIN
            , ObjectFloat_Goods_MinimumLot.ValueData AS MinimumLot
 
            , ObjectBoolean_Goods_Close.ValueData    AS isClose
-           , ObjectBoolean_Goods_TOP.ValueData      AS isTOP    
+           , ObjectBoolean_Goods_TOP.ValueData      AS isTOP
            , ObjectBoolean_Goods_IsPromo.ValueData  AS IsPromo
            , ObjectBoolean_First.ValueData          AS isFirst
            , ObjectBoolean_Second.ValueData         AS isSecond
@@ -82,7 +100,7 @@ BEGIN
            , ObjectBoolean_Goods_IsUploadTeva.ValueData   AS isUploadTeva
            , ObjectBoolean_Goods_SpecCondition.ValueData  AS IsSpecCondition
 
-           , ObjectFloat_Goods_PercentMarkup.ValueData AS PercentMarkup  
+           , ObjectFloat_Goods_PercentMarkup.ValueData AS PercentMarkup
            , ObjectFloat_Goods_Price.ValueData         AS Price
            , ObjectFloat_Goods_ReferCode.ValueData     AS ReferCode
            , ObjectFloat_Goods_ReferPrice.ValueData    AS ReferPrice
@@ -94,9 +112,14 @@ BEGIN
            , Object_Maker.ValueData             AS MakerLinkName
            , Object_ConditionsKeep.ValueData    AS ConditionsKeepName
 
-           , tmpMarion.GoodsCode
-           , tmpMarion.GoodsCodeStr
-           , tmpMarion.GoodsName
+           , tmpMarion.GoodsCode       AS CodeMarion
+           , tmpMarion.GoodsCodeStr    AS CodeMarionStr
+           , tmpMarion.GoodsName       AS NameMarion
+           , tmpMarion.Ord  :: Integer AS OrdMarion
+
+           , tmpBarCode.GoodsCode      AS CodeBar
+           , tmpBarCode.GoodsName      AS NameBar
+           , tmpBarCode.Ord :: Integer AS OrdBar
 
     FROM Object AS Object_Goods
 
@@ -106,7 +129,7 @@ BEGIN
                                AND ObjectString_Goods_Code.DescId = zc_ObjectString_Goods_Code()
          LEFT JOIN ObjectString AS ObjectString_Goods_Maker
                                 ON ObjectString_Goods_Maker.ObjectId = Object_Goods.Id
-                               AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()   
+                               AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()
 
          -- ObjectLink ...
          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
@@ -129,8 +152,8 @@ BEGIN
                             AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
         LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
         LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
-                              ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId 
-                             AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   
+                              ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId
+                             AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
 
 
         -- получается GoodsMainId
@@ -150,13 +173,13 @@ BEGIN
         -- Float ...
         LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PercentMarkup
                               ON ObjectFloat_Goods_PercentMarkup.ObjectId = Object_Goods.Id
-                             AND ObjectFloat_Goods_PercentMarkup.DescId = zc_ObjectFloat_Goods_PercentMarkup()   
+                             AND ObjectFloat_Goods_PercentMarkup.DescId = zc_ObjectFloat_Goods_PercentMarkup()
         LEFT JOIN ObjectFloat AS ObjectFloat_Goods_Price
                               ON ObjectFloat_Goods_Price.ObjectId = Object_Goods.Id
-                             AND ObjectFloat_Goods_Price.DescId = zc_ObjectFloat_Goods_Price()   
+                             AND ObjectFloat_Goods_Price.DescId = zc_ObjectFloat_Goods_Price()
         LEFT JOIN ObjectFloat AS ObjectFloat_Goods_MinimumLot
                               ON ObjectFloat_Goods_MinimumLot.ObjectId = Object_Goods.Id
-                             AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()   
+                             AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
 
         LEFT JOIN ObjectFloat AS ObjectFloat_Goods_ReferCode
                               ON ObjectFloat_Goods_ReferCode.ObjectId = Object_Goods.Id
@@ -180,7 +203,7 @@ BEGIN
                                AND ObjectBoolean_First.DescId = zc_ObjectBoolean_Goods_First()
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Second
                                 ON ObjectBoolean_Second.ObjectId = Object_Goods.Id
-                               AND ObjectBoolean_Second.DescId = zc_ObjectBoolean_Goods_Second() 
+                               AND ObjectBoolean_Second.DescId = zc_ObjectBoolean_Goods_Second()
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Published
                                 ON ObjectBoolean_Published.ObjectId = Object_Goods.Id
                                AND ObjectBoolean_Published.DescId = zc_ObjectBoolean_Goods_Published()
@@ -194,7 +217,7 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_IsUploadTeva
                                   ON ObjectBoolean_Goods_IsUploadTeva.ObjectId = Object_Goods.Id
                                  AND ObjectBoolean_Goods_IsUploadTeva.DescId = zc_ObjectBoolean_Goods_UploadTeva()
-                                 
+
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SpecCondition
                                   ON ObjectBoolean_Goods_SpecCondition.ObjectId = Object_Goods.Id
                                  AND ObjectBoolean_Goods_SpecCondition.DescId = zc_ObjectBoolean_Goods_SpecCondition()
@@ -203,13 +226,15 @@ BEGIN
                                   ON ObjectBoolean_Goods_isMain.ObjectId = Object_Goods.Id
                                  AND ObjectBoolean_Goods_isMain.DescId = zc_ObjectBoolean_Goods_isMain()
                                  AND ObjectBoolean_Goods_isMain.ValueData = TRUE
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep
                                ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods.Id
                               AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
           LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
 
           LEFT JOIN tmpMarion ON tmpMarion.GoodsMainId = ObjectLink_Main.ChildObjectId
                              -- AND tmpMarion.Ord         = 1
+          LEFT JOIN tmpBarCode ON tmpBarCode.GoodsMainId = ObjectLink_Main.ChildObjectId
+                             -- AND tmpBarCode.Ord         = 1
 
     WHERE Object_Goods.DescId = zc_Object_Goods()
       AND ObjectBoolean_Goods_isMain.ObjectId IS NULL
@@ -217,7 +242,7 @@ BEGIN
         OR ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_Marion()
           )
    ;
-  
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

@@ -1885,6 +1885,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptSaleAnalyzeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptSaleAnalyzeDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptSaleAnalyzeDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptSaleAnalyzeRealForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptSaleAnalyzeRealForm');
 end;
 
 procedure TLoadFormTest.LoadReportSheetWorkTimeFormTest;

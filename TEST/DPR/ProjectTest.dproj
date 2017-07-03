@@ -1893,8 +1893,8 @@
 				<Form>GoodsByGoodsKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_ReceiptSaleAnalyze.pas">
-				<Form>Report_ReceiptSaleAnalyzeForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_ReceiptSaleAnalyzeReal.pas">
+				<Form>Report_ReceiptSaleAnalyzeRealForm</Form>
 				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
@@ -3142,6 +3142,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\GoodsPropertyValueDoc.pas">
 				<Form>GoodsPropertyValueDocForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_ReceiptSaleAnalyze.pas">
+				<Form>Report_ReceiptSaleAnalyzeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

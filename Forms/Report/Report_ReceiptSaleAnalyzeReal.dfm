@@ -1,5 +1,5 @@
-inherited Report_ReceiptSaleAnalyzeForm: TReport_ReceiptSaleAnalyzeForm
-  Caption = #1054#1090#1095#1077#1090' <'#1040#1085#1072#1083#1080#1079' '#1088#1077#1094#1077#1087#1090#1091#1088' '#1080' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080'>'
+inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
+  Caption = #1054#1090#1095#1077#1090' <'#1040#1085#1072#1083#1080#1079' '#1088#1077#1094#1077#1087#1090#1091#1088' '#1080' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1060#1040#1050#1058'>'
   ClientHeight = 430
   ClientWidth = 1130
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
@@ -1265,14 +1265,14 @@ inherited Report_ReceiptSaleAnalyzeForm: TReport_ReceiptSaleAnalyzeForm
     inherited deStart: TcxDateEdit
       Left = 118
       Top = 7
-      EditValue = 42917d
+      EditValue = 42736d
       ExplicitLeft = 118
       ExplicitTop = 7
     end
     inherited deEnd: TcxDateEdit
       Left = 118
       Top = 32
-      EditValue = 42917d
+      EditValue = 42736d
       ExplicitLeft = 118
       ExplicitTop = 32
     end
@@ -2362,7 +2362,7 @@ inherited Report_ReceiptSaleAnalyzeForm: TReport_ReceiptSaleAnalyzeForm
     Top = 216
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_ReceiptSaleAnalyze'
+    StoredProcName = 'gpReport_ReceiptSaleAnalyzeReal'
     DataSets = <
       item
         DataSet = MasterCDS

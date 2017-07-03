@@ -5,7 +5,7 @@ inherited MainForm: TMainForm
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 260
+  ExplicitHeight = 257
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -5401,6 +5401,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_ReceiptSaleAnalyzeRealForm: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1087#1088'-'#1074#1086')'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1072#1085#1072#1083#1080#1079' '#1088#1077#1094#1077#1087#1090#1091#1088' '#1080' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1060#1040#1050#1058
+      FormName = 'TReport_ReceiptSaleAnalyzeRealForm'
+      FormNameParam.Value = 'TReport_ReceiptSaleAnalyzeRealForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Active = False
@@ -6105,6 +6117,9 @@ inherited MainForm: TMainForm
       end
       object miReport_ReceiptSaleAnalyze: TMenuItem
         Action = actReport_ReceiptSaleAnalyzeForm
+      end
+      object miReport_ReceiptSaleAnalyzeRealForm: TMenuItem
+        Action = actReport_ReceiptSaleAnalyzeRealForm
       end
       object miReport_ReceiptProductionOutAnalyze: TMenuItem
         Action = actReport_ReceiptProductionOutAnalyzeForm

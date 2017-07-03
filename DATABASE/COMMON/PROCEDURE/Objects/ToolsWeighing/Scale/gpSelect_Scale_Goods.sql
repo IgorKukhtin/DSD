@@ -499,7 +499,7 @@ BEGIN
                                                                                                    , zc_Enum_InfoMoney_10106() -- Ñûð
                                                                                                     )
                                                                      )
-                            WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '1 DAY' AND CURRENT_DATE + INTERVAL '1 DAY'
+                            WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '3 DAY' AND CURRENT_DATE + INTERVAL '1 DAY'
                               AND Movement.DescId = zc_Movement_OrderInternal()
                               AND Movement.StatusId = zc_Enum_Status_Complete()
                               AND inBranchCode                  = 301

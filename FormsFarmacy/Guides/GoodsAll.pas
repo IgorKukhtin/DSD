@@ -64,6 +64,7 @@ type
     CodeMarion_1: TcxGridDBColumn;
     CodeMarionStr_1: TcxGridDBColumn;
     NameMarion_1: TcxGridDBColumn;
+    OrdMarion_1: TcxGridDBColumn;
   private
     { Private declarations }
   public

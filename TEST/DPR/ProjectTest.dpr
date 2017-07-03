@@ -629,7 +629,7 @@ uses
   JuridicalGLN in '..\..\Forms\Guides\JuridicalGLN.pas' {JuridicalGLNForm: TParentForm},
   PartnerGLN in '..\..\Forms\Guides\PartnerGLN.pas' {PartnerGLNForm: TParentForm},
   GoodsByGoodsKind in '..\..\Forms\Guides\GoodsByGoodsKind.pas' {GoodsByGoodsKindForm: TParentForm},
-  Report_ReceiptSaleAnalyze in '..\..\Forms\Report\Report_ReceiptSaleAnalyze.pas' {Report_ReceiptSaleAnalyzeForm: TParentForm},
+  Report_ReceiptSaleAnalyzeReal in '..\..\Forms\Report\Report_ReceiptSaleAnalyzeReal.pas' {Report_ReceiptSaleAnalyzeRealForm: TParentForm},
   Report_GoodsMI_Defroster in '..\..\Forms\Report\Report_GoodsMI_Defroster.pas' {Report_GoodsMI_DefrosterForm: TParentForm},
   MeDocCOMTest in '..\SOURCE\Component\MeDocCOMTest.pas',
   StatusXML in '..\..\SOURCE\EDI\StatusXML.pas',
@@ -946,7 +946,8 @@ uses
   StorageLineEdit in '..\..\Forms\Guides\StorageLineEdit.pas' {StorageLineEditForm: TParentForm},
   StorageLine in '..\..\Forms\Guides\StorageLine.pas' {StorageLineForm: TParentForm},
   PartnerContact in '..\..\Forms\Guides\PartnerContact.pas' {PartnerContactForm: TParentForm},
-  GoodsPropertyValueDoc in '..\..\Forms\Guides\GoodsPropertyValueDoc.pas' {GoodsPropertyValueDocForm: TParentForm};
+  GoodsPropertyValueDoc in '..\..\Forms\Guides\GoodsPropertyValueDoc.pas' {GoodsPropertyValueDocForm: TParentForm},
+  Report_ReceiptSaleAnalyze in '..\..\Forms\Report\Report_ReceiptSaleAnalyze.pas' {Report_ReceiptSaleAnalyzeForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
