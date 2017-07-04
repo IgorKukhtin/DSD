@@ -496,9 +496,9 @@ BEGIN
              , CAST ( (CASE WHEN tmpData.Amount <>0 THEN tmpData.SummOriginal/tmpData.Amount ELSE 0 END)  AS NUMERIC (16,2) ) :: TFloat  AS PriceOriginal
              , CAST ( (CASE WHEN tmpData.Amount <>0 THEN (tmpData.SummOriginal/tmpData.Amount - tmpData.SummSale/tmpData.Amount) ELSE 0 END)  AS NUMERIC (16,2) ) :: TFloat  AS PriceComp
              
-             , tmpData.SummSale          :: TFloat  AS SummaSP
-             , tmpData.SummOriginal      :: TFloat
-             , (tmpData.SummOriginal - tmpData.SummSale) :: TFloat  AS SummaComp
+             , tmpData.SummSale                                                    :: TFloat  AS SummaSP
+             , CAST (tmpData.SummOriginal AS NUMERIC (16,2))                       :: TFloat  AS SummOriginal
+             , CAST ((tmpData.SummOriginal - tmpData.SummSale) AS NUMERIC (16,2))  :: TFloat  AS SummaComp
 
              , CAST (ROW_NUMBER() OVER (PARTITION BY Object_PartnerMedical.ValueData, Object_Contract.Id   ORDER BY tmpData.OperDate, Object_Goods.ValueData ) AS Integer) AS NumLine
              , CAST (tmpCountR.CountSP AS Integer) AS CountSP
