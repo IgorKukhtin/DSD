@@ -462,4 +462,4 @@ $BODY$
 */
 
 -- тест
---
+-- select * from gpReport_GoodsMI_Account(inStartDate := ('01.01.2017')::TDateTime , inEndDate := ('13.07.2017')::TDateTime , inUnitId := 506 ,  inSession := '2');
