@@ -47,7 +47,6 @@
     BevelOuter = bvNone
     TabOrder = 1
     OnDblClick = ButtonPanelDblClick
-    ExplicitWidth = 1172
     object Gauge: TGauge
       Left = 0
       Top = 0
@@ -146,7 +145,6 @@
     TabOrder = 2
     object TabSheet1: TTabSheet
       Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080' - '#1044#1086#1082#1091#1084#1077#1085#1090#1099
-      ExplicitWidth = 582
       object GuidePanel: TPanel
         Left = 0
         Top = 0
@@ -619,7 +617,6 @@
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitLeft = 195
         object Label1: TLabel
           Left = 6
           Top = 22
@@ -890,8 +887,6 @@
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 2
-        ExplicitLeft = 470
-        ExplicitWidth = 206
         object Label5: TLabel
           Left = 6
           Top = 22
@@ -1138,7 +1133,6 @@
     object TabSheet2: TTabSheet
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1080#1079' '#1092#1072#1081#1083#1086#1074
       ImageIndex = 1
-      ExplicitWidth = 676
       object Panel1: TPanel
         Left = 0
         Top = 0
@@ -1146,7 +1140,6 @@
         Height = 468
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 676
         object Label3: TLabel
           Left = 8
           Top = 280
@@ -1508,7 +1501,7 @@
     Left = 56
     Top = 368
   end
-  object Database1: TDatabase
+  object DatabaseSybase: TDatabase
     AliasName = 'tProfiManagerDS'
     DatabaseName = 'tProfiManagerDS'
     KeepConnection = False

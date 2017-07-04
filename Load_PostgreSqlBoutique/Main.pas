@@ -67,7 +67,7 @@ type
     cbPartner: TCheckBox;
     cbUnit: TCheckBox;
     cbLabel: TCheckBox;
-    Database1: TDatabase;
+    DatabaseSybase: TDatabase;
     fromQuery: TQuery;
     fromSqlQuery: TQuery;
     fromQuery_two: TQuery;
@@ -649,7 +649,6 @@ begin Result:='1005'; end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fOpenSqFromQuery(mySql:String):Boolean;
 begin
-     //fromADOConnection.Connected:=false;
      //
      with fromSqlQuery,Sql do begin
         Clear;
@@ -661,7 +660,6 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fExecSqFromQuery(mySql:String):Boolean;
 begin
-     //fromADOConnection.Connected:=false;
      //
      with fromSqlQuery,Sql do begin
         Clear;
@@ -674,7 +672,6 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fExecSqFromQuery_noErr(mySql:String):Boolean;
 begin
-     //fromADOConnection.Connected:=false;
      //
      with fromSqlQuery,Sql do begin
         Clear;
@@ -2020,9 +2017,7 @@ begin
      if not fStop then pLoadGuide_Member;
      if not fStop then pLoadGuide_User;
      if not fStop then pLoadGuide_Client;
-
-
-
+     //
      //
      Gauge.Visible:=false;
      DBGrid.Enabled:=true;
@@ -2031,7 +2026,7 @@ begin
      OKCompleteDocumentButton.Enabled:=true;
      //
      toZConnection.Connected:=false;
-     if not cbOnlyOpen.Checked then Database1.Connected:=False;;
+     if not cbOnlyOpen.Checked then DatabaseSybase.Connected:=False;;
      //
      tmpDate2:=NOw;
      if (tmpDate2-tmpDate1)>=1
@@ -2112,11 +2107,11 @@ begin
      OKDocumentButton.Enabled:=true;
      OKCompleteDocumentButton.Enabled:=true;
      //
-     toZConnection.Connected:=false;
-     if not cbOnlyOpen.Checked then Database1.Connected:=False;
      //
-
-
+     toZConnection.Connected:=false;
+     if not cbOnlyOpen.Checked then DatabaseSybase.Connected:=False;;
+     //
+     //
      tmpDate2:=NOw;
      if (tmpDate2-tmpDate1)>=1
      then StrTime:=DateTimeToStr(tmpDate2-tmpDate1)
@@ -2172,6 +2167,10 @@ begin
      OKCompleteDocumentButton.Enabled:=true;
      //
      //
+     toZConnection.Connected:=false;
+     if not cbOnlyOpen.Checked then DatabaseSybase.Connected:=false;
+     //
+     //
      tmpDate2:=NOw;
      if (tmpDate2-tmpDate1)>=1
      then StrTime:=DateTimeToStr(tmpDate2-tmpDate1)
@@ -2182,6 +2181,8 @@ begin
      //
      if fStop then ShowMessage('Документы НЕ Распроведены и(или) НЕ Проведены. Time=('+StrTime+').')
      else ShowMessage('Документы Распроведены и(или) Проведены. Time=('+StrTime+').');
+     //
+     fStop:=true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pCompleteDocumentAll(StartDate,EndDate:TDateTime);
