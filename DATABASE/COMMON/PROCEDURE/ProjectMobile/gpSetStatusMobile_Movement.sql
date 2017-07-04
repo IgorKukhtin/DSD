@@ -17,6 +17,12 @@ $BODY$
   DECLARE vbDescName TVarChar;
   DECLARE vbStatusId Integer;
 BEGIN
+
+      -- !!! ВРЕМЕННО !!!
+      RETURN;
+      -- !!! ВРЕМЕННО !!!
+
+      
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...);
       vbUserId:= lpGetUserBySession (inSession);

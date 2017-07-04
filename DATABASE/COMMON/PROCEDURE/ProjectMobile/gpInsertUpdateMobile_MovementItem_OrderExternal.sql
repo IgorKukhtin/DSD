@@ -27,8 +27,8 @@ BEGIN
 
       SELECT MovementString_GUID.MovementId
            , Movement_OrderExternal.StatusId
-      INTO vbMovementId
-         , vbStatusId
+            INTO vbMovementId
+               , vbStatusId
       FROM MovementString AS MovementString_GUID
            JOIN Movement AS Movement_OrderExternal
                          ON Movement_OrderExternal.Id = MovementString_GUID.MovementId
@@ -40,6 +40,38 @@ BEGIN
       THEN
            RAISE EXCEPTION 'Ошибка. Не заведена шапка документа.';
       END IF;
+
+
+
+      -- !!! ВРЕМЕННО - 04.07.17 !!!
+      IF vbStatusId = zc_Enum_Status_Complete() AND EXISTS (SELECT 1
+                                                            FROM MovementItem
+                                                                 INNER JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                                                   ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                                                  AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind() 
+                                                                                                  AND MILinkObject_GoodsKind.ObjectId       = inGoodsKindId
+                                                            WHERE MovementItem.DescId     = zc_MI_Master()
+                                                              AND MovementItem.MovementId = vbMovementId
+                                                              AND MovementItem.ObjectId   = inGoodsId
+                                                              AND MovementItem.isErased   = FALSE
+                                                           )
+      THEN
+           -- !!! ВРЕМЕННО !!!
+           RETURN (SELECT MovementItem.Id
+                   FROM MovementItem
+                        INNER JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                          ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                         AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind() 
+                                                         AND MILinkObject_GoodsKind.ObjectId       = inGoodsKindId
+                   WHERE MovementItem.DescId     = zc_MI_Master()
+                     AND MovementItem.MovementId = vbMovementId
+                     AND MovementItem.ObjectId   = inGoodsId
+                     AND MovementItem.isErased   = FALSE
+                   LIMIT 1);
+      END IF;
+      -- !!! ВРЕМЕННО - 04.07.17 !!!
+
+
 
       IF vbStatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_Erased())
       THEN -- если заявка проведена, то распроводим
@@ -72,6 +104,14 @@ BEGIN
 
       -- сохранили свойство <Дата/время сохранения с мобильного устройства>
       PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_UpdateMobile(), vbMovementId, CURRENT_TIMESTAMP);
+
+
+
+      -- !!! ВРЕМЕННО - 04.07.17 !!!
+      -- !!!ВРЕМЕННО - УДАЛЯЕМ документ!!!
+      PERFORM lpSetErased_Movement (inMovementId:= vbMovementId, inUserId:= vbUserId);
+      -- !!! ВРЕМЕННО - 04.07.17 !!!
+
 
       RETURN vbId;
 
