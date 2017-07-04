@@ -657,6 +657,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_SaleReturnIn: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' / '#1074#1086#1079#1074#1088#1072#1090#1072#1084
+      FormName = 'TReport_SaleReturnInForm'
+      FormNameParam.Value = 'TReport_SaleReturnInForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 152
@@ -764,6 +775,9 @@ inherited MainForm: TMainForm
       end
       object N48: TMenuItem
         Action = actReport_Goods
+      end
+      object N54: TMenuItem
+        Action = actReport_SaleReturnIn
       end
     end
     object N46: TMenuItem [4]

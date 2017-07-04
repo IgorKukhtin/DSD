@@ -1,8 +1,8 @@
--- Function:  gpReport_GoodsMI_SaleReturnIn()
+-- Function:  gpReport_SaleReturnIn()
 
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime,TDateTime,Integer,TVarChar);
+DROP FUNCTION IF EXISTS gpReport_SaleReturnIn (TDateTime,TDateTime,Integer,TVarChar);
 
-CREATE OR REPLACE FUNCTION  gpReport_GoodsMI_Account(
+CREATE OR REPLACE FUNCTION  gpReport_SaleReturnIn (
     IN inStartDate        TDateTime,  -- Дата начала
     IN inEndDate          TDateTime,  -- Дата окончания
     IN inUnitId           Integer  ,  -- Подразделение
@@ -75,10 +75,11 @@ BEGIN
                                                   ON MovementLinkObject_To.MovementId = Movement_Sale.Id
                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
 
-                     LEFT JOIN MovementItem AS MI_Master
-                                            ON MI_Master.MovementId = Movement_Sale.Id
-                                           AND MI_Master.DescId     = zc_MI_Master()
-                                           AND MI_Master.isErased   = FALSE   
+                     INNER JOIN MovementItem AS MI_Master
+                                             ON MI_Master.MovementId = Movement_Sale.Id
+                                            AND MI_Master.DescId     = zc_MI_Master()
+                                            AND MI_Master.isErased   = FALSE
+                                            AND MI_Master.Amount    <> 0
                      LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                  ON MIFloat_ChangePercent.MovementItemId = MI_Master.Id
                                                  AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent() 
@@ -125,11 +126,11 @@ BEGIN
                                                       ON MovementLinkObject_From.MovementId = Movement_ReturnIn.Id
                                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
     
-                         LEFT JOIN MovementItem AS MI_Master
-                                                ON MI_Master.MovementId = Movement_ReturnIn.Id
-                                               AND MI_Master.DescId     = zc_MI_Master()
-                                               AND MI_Master.isErased   = FALSE   
-
+                         INNER JOIN MovementItem AS MI_Master
+                                                 ON MI_Master.MovementId = Movement_ReturnIn.Id
+                                                AND MI_Master.DescId     = zc_MI_Master()
+                                                AND MI_Master.isErased   = FALSE  
+                                                AND MI_Master.Amount    <> 0
                          LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                      ON MIFloat_OperPriceList.MovementItemId = MI_Master.Id
                                                     AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList() 
@@ -274,4 +275,4 @@ $BODY$
 */
 
 -- тест
---
+-- select * from gpReport_SaleReturnIn (inStartDate := ('01.01.2017')::TDateTime , inEndDate := ('13.07.2017')::TDateTime , inUnitId := 506 ,  inSession := '2');

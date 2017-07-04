@@ -879,6 +879,14 @@
 				<Form>Report_GoodsMI_AccountForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_SaleReturnIn.pas">
+				<Form>Report_SaleReturnInForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_SaleReturnInDialog.pas">
+				<Form>Report_SaleReturnInDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

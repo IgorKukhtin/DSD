@@ -153,6 +153,8 @@ type
     N48: TMenuItem;
     N50: TMenuItem;
     actReport_GoodsMI_Account: TdsdOpenForm;
+    actReport_SaleReturnIn: TdsdOpenForm;
+    N54: TMenuItem;
   private
     { Private declarations }
   public

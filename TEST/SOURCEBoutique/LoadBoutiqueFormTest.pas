@@ -810,6 +810,11 @@ end;
 //
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  //Report_GoodsMI_SaleReturnInForm
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleReturnInForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SaleReturnInForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleReturnInDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SaleReturnInDialogForm');
   // Report_GoodsMI_Account
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_AccountForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_AccountForm');

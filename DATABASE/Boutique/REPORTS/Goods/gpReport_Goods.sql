@@ -61,7 +61,7 @@ BEGIN
                                                                              AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
                                  LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = Container.PartionId                                         
                             WHERE ((Object_PartionGoods.GoodsSizeId = inGoodsSizeId AND inisGoodsSize = False) OR (inisGoodsSize = True))
-                              AND ((Object_PartionGoods.MovementItemId = inPartionId AND inisPartion = False) OR (inisPartion = True AND Object_PartionGoods.MovementId = inMovementId))
+                              AND ((Object_PartionGoods.MovementItemId = inPartionId AND inisPartion = False) OR (inisPartion = True AND (Object_PartionGoods.MovementId = inMovementId OR inMovementId = 0 )))
                               AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
                            )
                                

@@ -487,4 +487,4 @@ $BODY$
 */
 
 -- тест
---select * from gpSelect_MovementItem_ReturnIn(inMovementId := 7 , inIsErased := 'False' ,  inSession := '2');
+-- select * from gpSelect_MovementItem_ReturnIn(inMovementId := 7 , inIsErased := 'False' ,  inSession := '2');
