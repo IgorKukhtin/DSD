@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdateMobile_MovementItem_OrderExternal(
     IN inPrice               TFloat    , -- Цена
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS Integer 
+RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -27,31 +27,31 @@ BEGIN
 
       SELECT MovementString_GUID.MovementId
            , Movement_OrderExternal.StatusId
-      INTO vbMovementId 
+      INTO vbMovementId
          , vbStatusId
       FROM MovementString AS MovementString_GUID
            JOIN Movement AS Movement_OrderExternal
                          ON Movement_OrderExternal.Id = MovementString_GUID.MovementId
                         AND Movement_OrderExternal.DescId = zc_Movement_OrderExternal()
-      WHERE MovementString_GUID.DescId = zc_MovementString_GUID() 
+      WHERE MovementString_GUID.DescId = zc_MovementString_GUID()
         AND MovementString_GUID.ValueData = inMovementGUID;
 
-      IF COALESCE (vbMovementId, 0) = 0 
+      IF COALESCE (vbMovementId, 0) = 0
       THEN
            RAISE EXCEPTION 'Ошибка. Не заведена шапка документа.';
-      END IF; 
+      END IF;
 
       IF vbStatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_Erased())
       THEN -- если заявка проведена, то распроводим
            PERFORM lpUnComplete_Movement_OrderExternal (inMovementId:= vbMovementId, inUserId:= vbUserId);
       END IF;
 
-      SELECT MovementItem.Id 
+      SELECT MovementItem.Id
       INTO vbId
       FROM MovementItem
-           JOIN MovementItemString 
+           JOIN MovementItemString
              ON MovementItemString.MovementItemId = MovementItem.Id
-            AND MovementItemString.DescId = zc_MIString_GUID() 
+            AND MovementItemString.DescId = zc_MIString_GUID()
             AND MovementItemString.ValueData = inGUID
       WHERE MovementItem.MovementId = vbMovementId;
 
@@ -69,7 +69,10 @@ BEGIN
 
       -- сохранили свойство <Глобальный уникальный идентификатор>
       PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GUID(), vbId, inGUID);
-      
+
+      -- сохранили свойство <Дата/время сохранения с мобильного устройства>
+      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_UpdateMobile(), vbMovementId, CURRENT_TIMESTAMP);
+
       RETURN vbId;
 
 END;

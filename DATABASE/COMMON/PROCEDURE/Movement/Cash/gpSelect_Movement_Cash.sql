@@ -277,10 +277,10 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
                                              ON MILinkObject_Currency.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
-            /*INNER JOIN MovementItemLinkObject AS MILinkObject_Currency
+            INNER JOIN MovementItemLinkObject AS MILinkObject_Currency
                                               ON MILinkObject_Currency.MovementItemId = MovementItem.Id
                                              AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
-                                             AND MILinkObject_Currency.ObjectId = inCurrencyId*/
+                                             AND MILinkObject_Currency.ObjectId = inCurrencyId
                                              
             LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MILinkObject_Currency.ObjectId
 

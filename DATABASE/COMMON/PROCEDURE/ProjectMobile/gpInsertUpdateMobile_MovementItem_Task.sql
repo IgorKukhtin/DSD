@@ -23,17 +23,17 @@ BEGIN
       SELECT MI_Task.Id
       INTO vbId
       FROM Movement AS Movement_Task
-           JOIN MovementItem AS MI_Task 
+           JOIN MovementItem AS MI_Task
                              ON MI_Task.MovementId = Movement_Task.Id
-                            AND MI_Task.DescId = zc_MI_Master() 
+                            AND MI_Task.DescId = zc_MI_Master()
                             AND MI_Task.Id = inId
       WHERE Movement_Task.DescId = zc_Movement_Task()
         AND Movement_Task.Id = inMovementId;
 
-      IF COALESCE (vbId, 0) = 0 
+      IF COALESCE (vbId, 0) = 0
       THEN
            RAISE EXCEPTION 'Ошибка. Задание не заведено.';
-      END IF; 
+      END IF;
 
       -- сохранили свойство <Выполнено (да/нет)>
       PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Close(), vbId, inClosed);
@@ -47,7 +47,9 @@ BEGIN
       -- сохранили свойство < Дата/время когда выполнилась загрузка с моб устр >
       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Update(), vbId, CURRENT_TIMESTAMP);
 
+
       RETURN vbId;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

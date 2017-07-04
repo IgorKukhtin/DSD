@@ -31,9 +31,9 @@ BEGIN
       vbUserId:= lpGetUserBySession (inSession);
 
       -- получаем Id документа по GUID
-      SELECT MovementString_GUID.MovementId 
-           , Movement_Visit.StatusId 
-      INTO vbMovementId 
+      SELECT MovementString_GUID.MovementId
+           , Movement_Visit.StatusId
+      INTO vbMovementId
          , vbStatusId
       FROM MovementString AS MovementString_GUID
            JOIN Movement AS Movement_Visit
@@ -42,38 +42,38 @@ BEGIN
       WHERE MovementString_GUID.DescId = zc_MovementString_GUID()
         AND MovementString_GUID.ValueData = inMovementGUID;
 
-      IF COALESCE (vbMovementId, 0) = 0 
+      IF COALESCE (vbMovementId, 0) = 0
       THEN
            RAISE EXCEPTION 'ќшибка. Ќе заведена шапка документа.';
-      END IF; 
+      END IF;
 
       -- получаем Id строки документа по GUID
-      SELECT MIString_GUID.MovementItemId 
-      INTO vbId 
+      SELECT MIString_GUID.MovementItemId
+      INTO vbId
       FROM MovementItemString AS MIString_GUID
            JOIN MovementItem AS MovementItem_Visit
                              ON MovementItem_Visit.Id = MIString_GUID.MovementItemId
                             AND MovementItem_Visit.DescId = zc_MI_Master()
                             AND MovementItem_Visit.MovementId = vbMovementId
-      WHERE MIString_GUID.DescId = zc_MIString_GUID() 
+      WHERE MIString_GUID.DescId = zc_MIString_GUID()
         AND MIString_GUID.ValueData = inGUID;
 
       IF COALESCE (vbId, 0) <> 0
       THEN
            -- Ќаходим существующий элемент PhotoMobile по ObjectCode
-           SELECT Object_PhotoMobile.Id 
+           SELECT Object_PhotoMobile.Id
            INTO vbPhotoMobileId
            FROM Object AS Object_PhotoMobile
            WHERE Object_PhotoMobile.DescId = zc_Object_PhotoMobile()
-             AND Object_PhotoMobile.ObjectCode = vbId; 
-      END IF; 
-    
+             AND Object_PhotoMobile.ObjectCode = vbId;
+      END IF;
+
       IF COALESCE (vbPhotoMobileId, 0) = 0
       THEN
            -- сохран€ем новый элемент PhotoMobile
            vbPhotoMobileId:= lpInsertUpdate_Object (0, zc_Object_PhotoMobile(), 0, TRIM (inPhotoName));
       END IF;
-	    
+
       IF vbStatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_Erased())
       THEN -- если визит проведен или удален, то распроводим
            PERFORM gpUnComplete_Movement_Visit (inMovementId:= vbMovementId, inSession:= inSession);
@@ -109,12 +109,16 @@ BEGIN
            PERFORM gpMovementItem_Visit_SetErased (vbId, inSession);
       ELSE
            PERFORM gpMovementItem_Visit_SetUnErased (vbId, inSession);
-      END IF; 
+      END IF;
 
       -- проводим визит
       PERFORM gpComplete_Movement_Visit (inMovementId:= vbMovementId, inSession:= inSession);
 
+      -- сохранили свойство <ƒата/врем€ сохранени€ с мобильного устройства>
+      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_UpdateMobile(), vbMovementId, CURRENT_TIMESTAMP);
+
       RETURN vbId;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

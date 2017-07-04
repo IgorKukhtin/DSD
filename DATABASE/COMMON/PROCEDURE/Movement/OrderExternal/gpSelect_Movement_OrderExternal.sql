@@ -33,6 +33,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , InsertName TVarChar
              , InsertDate TDateTime
              , InsertMobileDate TDateTime
+             , UpdateMobileDate TDateTime
+             , PeriodSecMobile Integer
              , MemberName TVarChar
              , UnitCode Integer
              , UnitName TVarChar
@@ -123,7 +125,7 @@ BEGIN
            , MovementFloat_TotalCountSh.ValueData           AS TotalCountSh
            , MovementFloat_TotalCount.ValueData             AS TotalCount
            , MovementFloat_TotalCountSecond.ValueData       AS TotalCountSecond
-          
+
            , COALESCE (MovementLinkMovement_Order.MovementId, 0) <> 0 AS isEDI
 
            , COALESCE (MovementBoolean_Promo.ValueData, FALSE) AS isPromo
@@ -134,6 +136,13 @@ BEGIN
            , Object_User.ValueData                  AS InsertName
            , MovementDate_Insert.ValueData          AS InsertDate
            , MovementDate_InsertMobile.ValueData    AS InsertMobileDate
+           , MovementDate_UpdateMobile.ValueData    AS UpdateMobileDate
+           , CASE WHEN MovementDate_UpdateMobile.ValueData IS NULL THEN NULL
+                  ELSE EXTRACT (SECOND FROM MovementDate_UpdateMobile.ValueData - MovementDate_Insert.ValueData)
+                     + 60 * EXTRACT (MINUTE FROM MovementDate_UpdateMobile.ValueData - MovementDate_Insert.ValueData)
+                     + 60 * 60 * EXTRACT (HOUR FROM MovementDate_UpdateMobile.ValueData - MovementDate_Insert.ValueData)
+             END :: Integer AS PeriodSecMobile
+
            , CASE WHEN MovementString_GUID.ValueData <> '' THEN Object_Member.ValueData ELSE '' END :: TVarChar AS MemberName
            , Object_Unit.ObjectCode                 AS UnitCode
            , Object_Unit.ValueData                  AS UnitName
@@ -163,6 +172,9 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_InsertMobile
                                    ON MovementDate_InsertMobile.MovementId = Movement.Id
                                   AND MovementDate_InsertMobile.DescId = zc_MovementDate_InsertMobile()
+            LEFT JOIN MovementDate AS MovementDate_UpdateMobile
+                                   ON MovementDate_UpdateMobile.MovementId = Movement.Id
+                                  AND MovementDate_UpdateMobile.DescId = zc_MovementDate_UpdateMobile()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
@@ -172,7 +184,7 @@ BEGIN
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
-            LEFT JOIN MovementString AS MovementString_Comment 
+            LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
@@ -261,11 +273,11 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-       
+
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
                                            ON MovementLinkMovement_Order.MovementId = Movement.Id
                                           AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
-         
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                          ON MovementLinkObject_Partner.MovementId = Movement.Id
                                         AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()

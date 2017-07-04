@@ -44,6 +44,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , InsertName TVarChar
              , InsertDate TDateTime
              , InsertMobileDate TDateTime
+             , UpdateMobileDate TDateTime
+             , PeriodSecMobile Integer
              , MemberInsertName TVarChar
              , UnitCode Integer
              , UnitName TVarChar
@@ -181,6 +183,12 @@ BEGIN
            , Object_User.ValueData                  AS InsertName
            , MovementDate_Insert.ValueData          AS InsertDate
            , MovementDate_InsertMobile.ValueData    AS InsertMobileDate
+           , MovementDate_UpdateMobile.ValueData    AS UpdateMobileDate
+           , CASE WHEN MovementDate_UpdateMobile.ValueData IS NULL THEN NULL
+                  ELSE EXTRACT (SECOND FROM MovementDate_UpdateMobile.ValueData - MovementDate_Insert.ValueData)
+                     + 60 * EXTRACT (MINUTE FROM MovementDate_UpdateMobile.ValueData - MovementDate_Insert.ValueData)
+                     + 60 * 60 * EXTRACT (HOUR FROM MovementDate_UpdateMobile.ValueData - MovementDate_Insert.ValueData)
+             END :: Integer AS PeriodSecMobile
            , Object_MemberInsert.ValueData          AS MemberInsertName
            , Object_Unit.ObjectCode                 AS UnitCode
            , Object_Unit.ValueData                  AS UnitName
@@ -243,6 +251,9 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_InsertMobile
                                    ON MovementDate_InsertMobile.MovementId = Movement.Id
                                   AND MovementDate_InsertMobile.DescId = zc_MovementDate_InsertMobile()
+            LEFT JOIN MovementDate AS MovementDate_UpdateMobile
+                                   ON MovementDate_UpdateMobile.MovementId = Movement.Id
+                                  AND MovementDate_UpdateMobile.DescId = zc_MovementDate_UpdateMobile()
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id

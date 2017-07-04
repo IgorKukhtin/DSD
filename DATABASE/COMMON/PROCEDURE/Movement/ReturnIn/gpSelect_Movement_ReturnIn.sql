@@ -44,6 +44,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , InsertName TVarChar
              , InsertDate TDateTime
              , InsertMobileDate TDateTime
+             , UpdateMobileDate TDateTime
+             , PeriodSecMobile Integer
              , MemberInsertName TVarChar
              , UnitCode Integer
              , UnitName TVarChar
@@ -153,6 +155,12 @@ BEGIN
            , Object_User.ValueData                  AS InsertName
            , MovementDate_Insert.ValueData          AS InsertDate
            , MovementDate_InsertMobile.ValueData    AS InsertMobileDate
+           , MovementDate_UpdateMobile.ValueData    AS UpdateMobileDate
+           , CASE WHEN MovementDate_UpdateMobile.ValueData IS NULL THEN NULL
+                  ELSE EXTRACT (SECOND FROM MovementDate_UpdateMobile.ValueData - MovementDate_Insert.ValueData)
+                     + 60 * EXTRACT (MINUTE FROM MovementDate_UpdateMobile.ValueData - MovementDate_Insert.ValueData)
+                     + 60 * 60 * EXTRACT (HOUR FROM MovementDate_UpdateMobile.ValueData - MovementDate_Insert.ValueData)
+             END :: Integer AS PeriodSecMobile
            , CASE WHEN MovementString_GUID.ValueData <> '' THEN Object_MemberInsert.ValueData ELSE '' END :: TVarChar AS MemberInsertName
            , Object_Unit.ObjectCode                 AS UnitCode
            , Object_Unit.ValueData                  AS UnitName
@@ -206,6 +214,9 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_InsertMobile
                                    ON MovementDate_InsertMobile.MovementId = Movement.Id
                                   AND MovementDate_InsertMobile.DescId = zc_MovementDate_InsertMobile()
+            LEFT JOIN MovementDate AS MovementDate_UpdateMobile
+                                   ON MovementDate_UpdateMobile.MovementId = Movement.Id
+                                  AND MovementDate_UpdateMobile.DescId = zc_MovementDate_UpdateMobile()
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -217,7 +228,7 @@ BEGIN
                                      ON MovementString_InvNumberMark.MovementId =  Movement.Id
                                     AND MovementString_InvNumberMark.DescId = zc_MovementString_InvNumberMark()
 
-            LEFT JOIN MovementString AS MovementString_Comment 
+            LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
@@ -320,7 +331,7 @@ BEGIN
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_MasterEDI
-                                           ON MovementLinkMovement_MasterEDI.MovementId = Movement.Id 
+                                           ON MovementLinkMovement_MasterEDI.MovementId = Movement.Id
                                           AND MovementLinkMovement_MasterEDI.DescId = zc_MovementLinkMovement_MasterEDI()
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Promo
@@ -398,7 +409,7 @@ BEGIN
  perform lpSetErased_Movement (a.Id, 5)
   from (
        SELECT Movement.InvNumber, Movement.OperDate, Min (Movement.Id) as Id
-       FROM Movement 
+       FROM Movement
             JOIN MovementLinkObject AS MovementLinkObject_To
                                     ON MovementLinkObject_To.MovementId = Movement.Id
                                    AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -430,7 +441,7 @@ END $$;
                    INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                  ON MovementLinkObject_Contract.MovementId = MovementDate_OperDatePartner.MovementId
                                                 AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-                                                AND MovementLinkObject_Contract.ObjectId = 882691 
+                                                AND MovementLinkObject_Contract.ObjectId = 882691
                    INNER JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
                                       AND Movement.StatusId = zc_Enum_Status_Complete()
                                       AND Movement.DescId   = zc_Movement_ReturnIn()
@@ -463,7 +474,7 @@ union all
                    INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                  ON MovementLinkObject_Contract.MovementId = MovementDate_OperDatePartner.MovementId
                                                 AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-                                                AND MovementLinkObject_Contract.ObjectId = 882691 
+                                                AND MovementLinkObject_Contract.ObjectId = 882691
                    INNER JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
                                       AND Movement.StatusId = zc_Enum_Status_Complete()
                                       AND Movement.DescId   = zc_Movement_ReturnIn()
@@ -488,8 +499,8 @@ union all
                                                  AND MovementItem.isErased = FALSE
                           INNER JOIN MovementItemFloat AS MIFloat_Price
                                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price() 
-                                                      AND MIFloat_Price.ValueData <> 0  
+                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                                      AND MIFloat_Price.ValueData <> 0
 
                           inner JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                       ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
