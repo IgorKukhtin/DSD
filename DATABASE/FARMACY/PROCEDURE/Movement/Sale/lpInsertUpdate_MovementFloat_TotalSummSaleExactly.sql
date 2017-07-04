@@ -47,17 +47,25 @@ BEGIN
               Where Id = inMovementId 
                 AND StatusCode = zc_Enum_StatusCode_Complete())
     THEN
-        SELECT 
-            SUM(COALESCE(-MovementItemContainer.Amount,0))
-        INTO 
-            vbTotalSummPrimeCostSale
-        FROM 
-            MovementItemContainer
-        WHERE 
-            MovementItemContainer.MovementId = inMovementId 
-            AND 
-            MovementItemContainer.DescId = zc_Container_Summ();
-        
+/*
+        SELECT SUM(COALESCE(-MovementItemContainer.Amount,0))
+      INTO vbTotalSummPrimeCostSale
+        FROM MovementItemContainer
+        WHERE MovementItemContainer.MovementId = inMovementId 
+          AND MovementItemContainer.DescId = zc_Container_Summ();
+ */
+
+        SELECT  SUM ( COALESCE(-MIC.Amount,0) * MI_Income.PriceWithVAT ) 
+       INTO  vbTotalSummPrimeCostSale
+        FROM MovementItemContainer AS MIC
+             LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
+                                                 ON CLI_MI.ContainerId = MIC.ContainerId
+                                                AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
+             LEFT OUTER JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+             LEFT OUTER JOIN MovementItem_Income_View AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+        WHERE MIC.MovementId = inMovementId
+            AND MIC.DescId = zc_Container_Count();
+
         -- Сохранили свойство <Итого Сумма>
         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPrimeCost(), inMovementId, vbTotalSummPrimeCostSale);
     END IF;
@@ -70,5 +78,6 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSummSaleExactly (Integer) OWNER
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+ 04.07.17         *
  13.10.15                                                         * 
 */
