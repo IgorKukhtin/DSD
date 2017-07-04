@@ -91,6 +91,7 @@ type
     spUnErased: TdsdStoredProc;
     InvNumber_full: TcxGridDBColumn;
     MovementId: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpReport_Goods (
     IN inUnitId       Integer   ,
     IN inGoodsId      Integer   ,
     IN inPartionId    Integer   ,    
-    IN inMovementId   Integer   ,
+    IN inMovementId   Integer   , 
     IN inGoodsSizeId  Integer   ,    
     IN inisGoodsSize  Boolean   ,
     IN inisPartion    Boolean   ,   
@@ -46,7 +46,7 @@ BEGIN
                   FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect )
                 
    , tmpContainer_Count AS (SELECT Container.Id                    AS ContainerId
-                                 , CLO_Location.ObjectId           AS LocationId
+                                 , CLO_Location.ObjectId           AS LocationId 
                                  , Container.ObjectId              AS GoodsId
                                  , Container.PartionId             AS PartionId
                                  , Object_PartionGoods.GoodsSizeId AS GoodsSizeId
@@ -61,7 +61,7 @@ BEGIN
                                                                              AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
                                  LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = Container.PartionId                                         
                             WHERE ((Object_PartionGoods.GoodsSizeId = inGoodsSizeId AND inisGoodsSize = False) OR (inisGoodsSize = True))
-                              AND ((Object_PartionGoods.MovementItemId = inPartionId AND inisPartion = False) OR (inisPartion = True))
+                              AND ((Object_PartionGoods.MovementItemId = inPartionId AND inisPartion = False) OR (inisPartion = True AND Object_PartionGoods.MovementId = inMovementId))
                               AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
                            )
                                
@@ -400,4 +400,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Goods (inStartDate := ('01.06.2017')::TDateTime , inEndDate := ('29.06.2017')::TDateTime , inUnitId := 506 , inGoodsId := 709 , inPartionId := 64 , inMovementId := 18 , inGoodsSizeId := 0 , inIsGoodsSize := 'True' , inisPartion := 'True' ,  inSession := '2');
+-- SELECT * FROM gpReport_Goods (inStartDate := ('01.06.2017')::TDateTime , inEndDate := ('29.06.2017')::TDateTime , inUnitId := 506 , inGoodsId := 709 , inPartionId := 64 , inMovementId := 18 , inGoodsSizeId := 0 , inIsGoodsSize := 'True' ::Boolean, inisPartion := 'True' ::Boolean,  inisPeriod:= 'True' ::Boolean, inSession := '2');
