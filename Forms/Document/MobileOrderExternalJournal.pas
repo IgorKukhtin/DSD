@@ -82,6 +82,8 @@ type
     edPersonalTrade: TcxButtonEdit;
     PersonalTradeGuides: TdsdGuides;
     spGet_PersonalTrade: TdsdStoredProc;
+    UpdateMobileDate: TcxGridDBColumn;
+    PeriodSecMobile: TcxGridDBColumn;
   private
     { Private declarations }
   public

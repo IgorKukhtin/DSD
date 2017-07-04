@@ -30,6 +30,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , InsertName TVarChar
              , InsertDate TDateTime
              , InsertMobileDate TDateTime
+             , UpdateMobileDate TDateTime
+             , PeriodSecMobile Integer
              , MemberName TVarChar
              , UnitCode Integer
              , UnitName TVarChar
@@ -169,6 +171,13 @@ BEGIN
            , Object_User.ValueData                  AS InsertName
            , MovementDate_Insert.ValueData          AS InsertDate
            , MovementDate_InsertMobile.ValueData    AS InsertMobileDate
+           , MovementDate_UpdateMobile.ValueData    AS UpdateMobileDate
+           , CASE WHEN MovementDate_UpdateMobile.ValueData IS NULL THEN NULL
+                  ELSE EXTRACT (SECOND FROM MovementDate_UpdateMobile.ValueData - MovementDate_Insert.ValueData)
+                     + 60 * EXTRACT (MINUTE FROM MovementDate_UpdateMobile.ValueData - MovementDate_Insert.ValueData)
+                     + 60 * 60 * EXTRACT (HOUR FROM MovementDate_UpdateMobile.ValueData - MovementDate_Insert.ValueData)
+             END :: Integer AS PeriodSecMobile
+
            , Object_Member.ValueData   AS MemberName
            , Object_Unit.ObjectCode    AS UnitCode
            , Object_Unit.ValueData     AS UnitName
@@ -202,6 +211,9 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_InsertMobile
                                    ON MovementDate_InsertMobile.MovementId = Movement.Id
                                   AND MovementDate_InsertMobile.DescId = zc_MovementDate_InsertMobile()
+            LEFT JOIN MovementDate AS MovementDate_UpdateMobile
+                                   ON MovementDate_UpdateMobile.MovementId = Movement.Id
+                                  AND MovementDate_UpdateMobile.DescId = zc_MovementDate_UpdateMobile()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
@@ -319,7 +331,7 @@ BEGIN
              LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
              LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
-       -- WHERE (tmpUser.UserId >0 
+       -- WHERE (tmpUser.UserId >0
        --     OR vbUserId_Mobile = 0)
       ;
 

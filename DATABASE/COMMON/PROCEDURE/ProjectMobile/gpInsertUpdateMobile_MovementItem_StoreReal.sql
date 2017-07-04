@@ -24,34 +24,34 @@ BEGIN
       -- получаем Id документа по GUID
       SELECT MovementString_GUID.MovementId
            , Movement_StoreReal.StatusId
-      INTO vbMovementId 
+      INTO vbMovementId
          , vbStatusId
       FROM MovementString AS MovementString_GUID
            JOIN Movement AS Movement_StoreReal
                          ON Movement_StoreReal.Id = MovementString_GUID.MovementId
                         AND Movement_StoreReal.DescId = zc_Movement_StoreReal()
-      WHERE MovementString_GUID.DescId = zc_MovementString_GUID() 
+      WHERE MovementString_GUID.DescId = zc_MovementString_GUID()
         AND MovementString_GUID.ValueData = inMovementGUID;
 
-      IF COALESCE (vbMovementId, 0) = 0 
+      IF COALESCE (vbMovementId, 0) = 0
       THEN
            RAISE EXCEPTION 'ќшибка. Ќе заведена шапка документа.';
-      END IF; 
+      END IF;
 
       IF vbStatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_Erased())
-      THEN -- если фактический остаток проведен, то распроводим    
+      THEN -- если фактический остаток проведен, то распроводим
            PERFORM gpUnComplete_Movement_StoreReal (inMovementId:= vbMovementId, inSession:= inSession);
       END IF;
 
       -- получаем Id строки документа по GUID
-      SELECT MIString_GUID.MovementItemId 
-      INTO vbId 
+      SELECT MIString_GUID.MovementItemId
+      INTO vbId
       FROM MovementItemString AS MIString_GUID
            JOIN MovementItem AS MovementItem_StoreReal
                              ON MovementItem_StoreReal.Id = MIString_GUID.MovementItemId
                             AND MovementItem_StoreReal.DescId = zc_MI_Master()
                             AND MovementItem_StoreReal.MovementId = vbMovementId
-      WHERE MIString_GUID.DescId = zc_MIString_GUID() 
+      WHERE MIString_GUID.DescId = zc_MIString_GUID()
         AND MIString_GUID.ValueData = inGUID;
 
       vbId := lpInsertUpdate_MovementItem_StoreReal (ioId:= vbId
@@ -65,7 +65,11 @@ BEGIN
       -- сохранили свойство <√лобальный уникальный идентификатор>
       PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GUID(), vbId, inGUID);
 
+      -- сохранили свойство <ƒата/врем€ сохранени€ с мобильного устройства>
+      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_UpdateMobile(), vbMovementId, CURRENT_TIMESTAMP);
+
       RETURN vbId;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

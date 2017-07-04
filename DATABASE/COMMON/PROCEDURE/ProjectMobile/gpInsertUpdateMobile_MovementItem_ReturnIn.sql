@@ -81,6 +81,9 @@ BEGIN
            PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GUID(), vbId, inGUID);
       END IF;
 
+      -- сохранили свойство <Дата/время сохранения с мобильного устройства>
+      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_UpdateMobile(), vbMovementId, CURRENT_TIMESTAMP);
+
       RETURN vbId;
 END;
 $BODY$

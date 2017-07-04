@@ -134,6 +134,8 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    UpdateMobileDate: TcxGridDBColumn;
+    PeriodSecMobile: TcxGridDBColumn;
   private
     { Private declarations }
   public
