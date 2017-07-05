@@ -51,6 +51,17 @@ BEGIN
       WHERE MIString_GUID.DescId = zc_MIString_GUID() 
         AND MIString_GUID.ValueData = inGUID;
 
+
+
+      -- !!! ВРЕМЕННО - 04.07.17 !!!
+      IF vbStatusId = zc_Enum_Status_Complete() AND vbId <> 0
+      THEN
+           -- !!! ВРЕМЕННО !!!
+           RETURN (vbId);
+      END IF;
+      -- !!! ВРЕМЕННО - 04.07.17 !!!
+
+
       IF vbStatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
       THEN
            IF vbStatusId = zc_Enum_Status_Erased()
@@ -84,7 +95,15 @@ BEGIN
       -- сохранили свойство <Дата/время сохранения с мобильного устройства>
       PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_UpdateMobile(), vbMovementId, CURRENT_TIMESTAMP);
 
+
+      -- !!! ВРЕМЕННО - 04.07.17 !!!
+      -- !!!ВРЕМЕННО - УДАЛЯЕМ документ!!!
+      PERFORM lpSetErased_Movement (inMovementId:= vbMovementId, inUserId:= vbUserId);
+      -- !!! ВРЕМЕННО - 04.07.17 !!!
+
+
       RETURN vbId;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

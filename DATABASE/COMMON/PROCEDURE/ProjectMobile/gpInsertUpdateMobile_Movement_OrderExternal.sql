@@ -85,6 +85,18 @@ BEGIN
                                                         WHEN 0 THEN zc_ObjectLink_Partner_MemberTake7()
                                                    END;
 
+
+
+      -- !!! ВРЕМЕННО - 04.07.17 !!!
+      IF vbStatusId = zc_Enum_Status_Complete()
+      THEN
+           -- !!! ВРЕМЕННО !!!
+           RETURN vbId;
+      END IF;
+      -- !!! ВРЕМЕННО - 04.07.17 !!!
+
+
+
       IF (vbisInsert = FALSE) AND (vbStatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_Erased()))
       THEN -- если заявка проведена, то распроводим
            PERFORM lpUnComplete_Movement_OrderExternal (inMovementId:= vbId, inUserId:= vbUserId);
@@ -115,14 +127,6 @@ BEGIN
       PERFORM lpInsertUpdate_MovementString (zc_MovementString_GUID(), vbId, inGUID);   
       -- Комментарий
       PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), vbId, inComment);
-
-      /*IF vbisInsert 
-      THEN
-           -- сохранили связь с <Пользователь>
-           PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), vbId, vbUserId);
-      END IF;
-      -- сохранили свойство <Дата создания> - при загрузке с моб устр., здесь дата загрузки
-      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), vbId, CURRENT_TIMESTAMP);*/
 
       -- сохранили свойство <Дата/время создания заказа на мобильном устройстве>
       PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_InsertMobile(), vbId, inInsertDate);

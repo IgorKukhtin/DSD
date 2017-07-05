@@ -380,6 +380,10 @@ var
     Result := (AttemptCount = (AMaxAtempt div 2));
   End;
 begin
+  //!!!Переопределили как то криво
+  if gc_User.LocalMaxAtempt > 0 then AMaxAtempt:= gc_User.LocalMaxAtempt;
+  //
+
   FCriticalSection.Enter;
   try
     if (gc_User.Local = true)  and  (AMaxAtempt = 10) then

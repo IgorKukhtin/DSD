@@ -895,6 +895,7 @@ object MainForm: TMainForm
           Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          Options.Editing = False
           Width = 35
         end
         object TaxDoc: TcxGridDBColumn
@@ -905,6 +906,7 @@ object MainForm: TMainForm
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          Options.Editing = False
           Width = 55
         end
         object TaxDoc_calc: TcxGridDBColumn
@@ -915,6 +917,7 @@ object MainForm: TMainForm
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          Options.Editing = False
           Width = 55
         end
         object PartionGoods: TcxGridDBColumn
@@ -1128,6 +1131,7 @@ object MainForm: TMainForm
           Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          Options.Editing = False
           VisibleForCustomization = False
           Width = 55
         end

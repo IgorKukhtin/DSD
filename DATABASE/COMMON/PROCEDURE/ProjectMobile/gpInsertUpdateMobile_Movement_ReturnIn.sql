@@ -86,13 +86,26 @@ BEGIN
       vbisList           := COALESCE (vbisList, false)::Boolean;
 
       SELECT ObjectLink_Contract_Currency.ChildObjectId
-      INTO vbCurrencyId
+             INTO vbCurrencyId
       FROM ObjectLink AS ObjectLink_Contract_Currency
       WHERE ObjectLink_Contract_Currency.ObjectId = inContractId
         AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency();
 
       vbCurrencyId:= COALESCE (vbCurrencyId, zc_Enum_Currency_Basis());
    
+
+
+      -- !!! бпелеммн - 04.07.17 !!!
+      IF vbStatusId = zc_Enum_Status_Complete()
+      THEN
+           -- !!! бпелеммн !!!
+           RETURN vbId;
+      END IF;
+      -- !!! бпелеммн - 04.07.17 !!!
+
+
+
+
       IF (vbIsInsert = true) OR (vbStatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased()))
       THEN 
            IF vbStatusId = zc_Enum_Status_Erased()

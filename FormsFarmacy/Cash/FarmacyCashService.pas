@@ -1452,7 +1452,7 @@ begin
             freeAndNil(dsdSave);
           end;
            //удаляем проведенный чек - если можно ... 04.02.2017
-          if Head.COMPL AND (fError_isComplete = FALSE)
+          if Head.COMPL {AND (fError_isComplete = FALSE)} // 04.07.17 - !!!временно убрал!!!
           then Begin
             WaitForSingleObject(MutexDBF, INFINITE);
             FLocalDataBaseHead.Active:=True;
@@ -1480,7 +1480,7 @@ begin
         end
         //если проводить не нужно и если можно ... 04.02.2017
         ELSE
-        if find and Head.SAVE and (fError_isComplete = FALSE)
+        if find and Head.SAVE {and (fError_isComplete = FALSE)} // 04.07.17 - !!!временно убрал!!!
         then BEGIN
           if (Head.MANAGER <> 0) or (Head.BAYER <> '') then
           Begin

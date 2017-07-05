@@ -34,8 +34,8 @@ BEGIN
 
      -- определяется
      vbGoodsPropertyId:= zfCalc_GoodsPropertyId ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
-                                               , (SELECT OL_Juridical.ChildObjectId FROM MovementLinkObject AS MLO LEFT JOIN ObjectLink AS OL_Juridical ON OL_Juridical.ObjectId = MLO.ObjectId AND OL_Juridical.DescId = zc_ObjectLink_Partner_Juridical() WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
-                                               , (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
+                                               , (SELECT OL_Juridical.ChildObjectId FROM MovementLinkObject AS MLO LEFT JOIN ObjectLink AS OL_Juridical ON OL_Juridical.ObjectId = MLO.ObjectId AND OL_Juridical.DescId = zc_ObjectLink_Partner_Juridical() WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
+                                               , (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
                                                 );
 
      RETURN QUERY 
@@ -156,7 +156,8 @@ BEGIN
                         AND MovementItem.DescId     = zc_MI_Master()
                      )
      -- Количество вложение
-   , tmpAmountDoc AS (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                             AS GoodsId
+   , tmpAmountDoc AS (SELECT DISTINCT
+                             ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                             AS GoodsId
                            , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0)           AS GoodsKindId
                            , ObjectFloat_AmountDoc.ValueData * (1 - ObjectFloat_AmountDoc.ValueData / 100) AS AmountStart
                            , ObjectFloat_AmountDoc.ValueData * (1 + ObjectFloat_AmountDoc.ValueData / 100) AS AmountEnd
@@ -178,7 +179,7 @@ BEGIN
                                                AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId   = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
                            INNER JOIN tmpMI ON tmpMI.GoodsId     = ObjectLink_GoodsPropertyValue_Goods.ChildObjectId
                                            AND tmpMI.GoodsKindId = ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId
-                                           AND tmpMI.isBarCode    = TRUE
+                                           AND tmpMI.isBarCode   = TRUE
                       WHERE ObjectFloat_AmountDoc.ValueData > 0
                      )
        -- Результат
@@ -226,7 +227,7 @@ BEGIN
            , COALESCE (tmpMI.isBarCode, FALSE) :: Boolean AS isBarCode
            , CASE WHEN tmpMI.MovementId_Promo > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPromo
 
-           , CASE WHEN 1=1 -- tmpAmountDoc.AmountStart > 0 AND tmpMI.isErased = FALSE AND NOT (tmpMI.Amount BETWEEN tmpAmountDoc.AmountStart AND tmpAmountDoc.AmountEnd)
+           , CASE WHEN tmpAmountDoc.AmountStart > 0 AND tmpMI.isErased = FALSE AND NOT (tmpMI.Amount BETWEEN tmpAmountDoc.AmountStart AND tmpAmountDoc.AmountEnd)
                        THEN 16711680 -- clBlue
                   ELSE 0 -- clBlack
              END :: Integer AS Color_calc
