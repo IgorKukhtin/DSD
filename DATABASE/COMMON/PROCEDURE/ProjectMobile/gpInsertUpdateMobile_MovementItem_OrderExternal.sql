@@ -25,6 +25,8 @@ BEGIN
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderExternal());
       vbUserId:= lpGetUserBySession (inSession);
 
+
+      -- поиск Id документа по GUID
       SELECT MovementString_GUID.MovementId
            , Movement_OrderExternal.StatusId
             INTO vbMovementId
@@ -35,57 +37,40 @@ BEGIN
                         AND Movement_OrderExternal.DescId = zc_Movement_OrderExternal()
       WHERE MovementString_GUID.DescId = zc_MovementString_GUID()
         AND MovementString_GUID.ValueData = inMovementGUID;
-
-      IF COALESCE (vbMovementId, 0) = 0
-      THEN
-           RAISE EXCEPTION 'Ошибка. Не заведена шапка документа.';
+      -- Проверка
+      IF COALESCE (vbMovementId, 0) = 0 THEN
+         RAISE EXCEPTION 'Ошибка. Не сохранена шапка документа.';
       END IF;
+
+      -- получаем Id строки документа по GUID
+      vbId:= (SELECT MovementItem.Id
+              FROM MovementItem
+                   JOIN MovementItemString
+                     ON MovementItemString.MovementItemId = MovementItem.Id
+                    AND MovementItemString.DescId         = zc_MIString_GUID()
+                    AND MovementItemString.ValueData      = inGUID
+              WHERE MovementItem.MovementId = vbMovementId
+                AND MovementItem.DescId     = zc_MI_Master()
+             );
 
 
 
       -- !!! ВРЕМЕННО - 04.07.17 !!!
-      IF vbStatusId = zc_Enum_Status_Complete() AND EXISTS (SELECT 1
-                                                            FROM MovementItem
-                                                                 INNER JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                                                                   ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                                                                  AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind() 
-                                                                                                  AND MILinkObject_GoodsKind.ObjectId       = inGoodsKindId
-                                                            WHERE MovementItem.DescId     = zc_MI_Master()
-                                                              AND MovementItem.MovementId = vbMovementId
-                                                              AND MovementItem.ObjectId   = inGoodsId
-                                                              AND MovementItem.isErased   = FALSE
-                                                           )
+      IF vbStatusId = zc_Enum_Status_Complete() AND vbId <> 0
       THEN
            -- !!! ВРЕМЕННО !!!
-           RETURN (SELECT MovementItem.Id
-                   FROM MovementItem
-                        INNER JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                          ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                         AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind() 
-                                                         AND MILinkObject_GoodsKind.ObjectId       = inGoodsKindId
-                   WHERE MovementItem.DescId     = zc_MI_Master()
-                     AND MovementItem.MovementId = vbMovementId
-                     AND MovementItem.ObjectId   = inGoodsId
-                     AND MovementItem.isErased   = FALSE
-                   LIMIT 1);
+           RETURN (vbId);
       END IF;
       -- !!! ВРЕМЕННО - 04.07.17 !!!
 
 
 
       IF vbStatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_Erased())
-      THEN -- если заявка проведена, то распроводим
+      THEN 
+           -- Распроводим Документ
            PERFORM lpUnComplete_Movement_OrderExternal (inMovementId:= vbMovementId, inUserId:= vbUserId);
       END IF;
 
-      SELECT MovementItem.Id
-      INTO vbId
-      FROM MovementItem
-           JOIN MovementItemString
-             ON MovementItemString.MovementItemId = MovementItem.Id
-            AND MovementItemString.DescId = zc_MIString_GUID()
-            AND MovementItemString.ValueData = inGUID
-      WHERE MovementItem.MovementId = vbMovementId;
 
       -- сохранили
       SELECT ioId INTO vbId FROM lpInsertUpdate_MovementItem_OrderExternal (ioId            := vbId

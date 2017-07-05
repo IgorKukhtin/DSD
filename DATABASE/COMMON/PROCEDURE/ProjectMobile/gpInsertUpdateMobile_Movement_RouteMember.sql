@@ -24,7 +24,8 @@ BEGIN
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
       vbUserId:= lpGetUserBySession (inSession);
 
-      -- получаем Id документа по GUID
+
+      -- поиск Id документа по GUID
       SELECT MovementString_GUID.MovementId 
            , Movement_RouteMember.StatusId
       INTO vbId 
@@ -36,13 +37,18 @@ BEGIN
       WHERE MovementString_GUID.DescId = zc_MovementString_GUID() 
         AND MovementString_GUID.ValueData = inGUID;
 
+
+      -- определ€ем признак —оздание/ орректировка
       vbisInsert:= (COALESCE (vbId, 0) = 0);
 
-      IF (vbisInsert = false) AND (vbStatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_Erased()))
-      THEN -- если маршрут торгового агента проведен, то распроводим
+      IF (vbisInsert = FALSE) AND (vbStatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_Erased()))
+      THEN 
+           -- если маршрут торгового агента проведен, то распроводим
            PERFORM gpUnComplete_Movement_RouteMember (inMovementId:= vbId, inSession:= inSession);
       END IF;
 
+
+      -- сохран€ем
       vbId:= lpInsertUpdate_Movement_RouteMember (ioId        := vbId
                                                 , inInvNumber := (zfConvert_StringToNumber (inInvNumber) + lfGet_User_BillNumberMobile (vbUserId)) :: TVarChar
                                                 , inOperDate  := DATE_TRUNC ('day', inInsertDate)
@@ -52,7 +58,7 @@ BEGIN
                                                  );
 
       -- сохранили свойство <ƒата/врем€ создани€ на мобильном устройстве>
-      PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_InsertMobile(), vbId, inInsertDate);
+      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_InsertMobile(), vbId, inInsertDate);
 
       -- сохранили свойство <√лобальный уникальный идентификатор>
       PERFORM lpInsertUpdate_MovementString (zc_MovementString_GUID(), vbId, inGUID);
@@ -62,6 +68,12 @@ BEGIN
 
       -- проводим маршрут торгового агента
       PERFORM gpComplete_Movement_RouteMember (inMovementId:= vbId, inSession:= inSession);
+
+      IF vbisInsert = FALSE
+      THEN
+          -- сохранили свойство < ƒата/врем€ когда выполнилась загрузка с моб устр >
+          PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Update(), vbId, CURRENT_TIMESTAMP);
+      END IF;
 
       RETURN vbId;
 END;
