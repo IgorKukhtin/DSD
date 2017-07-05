@@ -251,7 +251,11 @@ uses
   Report_GoodsDialog in '..\..\FormsBoutique\Report\Report_GoodsDialog.pas' {Report_GoodsDialogForm: TParentForm},
   GoodsChoice in '..\..\FormsBoutique\Guides\GoodsChoice.pas' {GoodsChoiceForm: TParentForm},
   GoodsSizeChoice in '..\..\FormsBoutique\Guides\GoodsSizeChoice.pas' {GoodsSizeChoiceForm: TParentForm},
-  DiscountPeriodItemDialog in '..\..\FormsBoutique\Guides\DiscountPeriodItemDialog.pas' {DiscountPeriodItemDialogForm: TParentForm};
+  DiscountPeriodItemDialog in '..\..\FormsBoutique\Guides\DiscountPeriodItemDialog.pas' {DiscountPeriodItemDialogForm: TParentForm},
+  Report_GoodsMI_AccountDialog in '..\..\FormsBoutique\Report\Report_GoodsMI_AccountDialog.pas' {Report_GoodsMI_AccountDialogForm: TParentForm},
+  Report_GoodsMI_Account in '..\..\FormsBoutique\Report\Report_GoodsMI_Account.pas' {Report_GoodsMI_AccountForm: TParentForm},
+  Report_SaleReturnIn in '..\..\FormsBoutique\Report\Report_SaleReturnIn.pas' {Report_SaleReturnInForm: TParentForm},
+  Report_SaleReturnInDialog in '..\..\FormsBoutique\Report\Report_SaleReturnInDialog.pas' {Report_SaleReturnInDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
