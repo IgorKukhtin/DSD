@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100'  '#1057#1090#1072#1090#1100#1102' '#1089#1087#1080#1089#1072#1085#1080#1103
-  ClientHeight = 256
+  ClientHeight = 309
   ClientWidth = 384
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 87
-    Top = 219
+    Top = 273
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 237
-    Top = 219
+    Top = 273
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -93,6 +93,17 @@
     TabOrder = 9
     Width = 296
   end
+  object cxLabel8: TcxLabel
+    Left = 40
+    Top = 216
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+  end
+  object ceComment: TcxTextEdit
+    Left = 40
+    Top = 233
+    TabOrder = 11
+    Width = 296
+  end
   object ActionList: TActionList
     Left = 272
     Top = 20
@@ -112,6 +123,7 @@
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -122,6 +134,7 @@
     object dsdFormClose: TdsdFormClose
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -135,12 +148,14 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -148,6 +163,15 @@
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyId'
@@ -155,6 +179,7 @@
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inProfitLossDirectionId'
@@ -162,7 +187,9 @@
         Component = ProfitLossDirectionGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
+    PackSize = 1
     Left = 344
     Top = 112
   end
@@ -172,6 +199,7 @@
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 272
     Top = 72
@@ -187,23 +215,27 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edName
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyId'
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName'
@@ -211,12 +243,14 @@
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ProfitLossDirectionId'
         Value = ''
         Component = ProfitLossDirectionGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ProfitLossDirectionName'
@@ -224,7 +258,16 @@
         Component = ProfitLossDirectionGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
+    PackSize = 1
     Left = 344
     Top = 16
   end
@@ -252,6 +295,7 @@
     LookupControl = ceInfoMoney
     FormNameParam.Value = 'TInfoMoneyForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoneyForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -261,6 +305,7 @@
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -269,6 +314,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 108
@@ -278,6 +324,7 @@
     LookupControl = ceProfitLossDirection
     FormNameParam.Value = 'TProfitLossDirection_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TProfitLossDirection_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'ClientDataSet'
@@ -288,6 +335,7 @@
         Component = ProfitLossDirectionGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -296,6 +344,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 192
     Top = 160

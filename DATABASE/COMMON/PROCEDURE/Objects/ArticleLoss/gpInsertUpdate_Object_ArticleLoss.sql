@@ -1,11 +1,13 @@
 -- Function: gpInsertUpdate_Object_ArticleLoss()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ArticleLoss (Integer, Integer, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ArticleLoss (Integer, Integer, TVarChar, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ArticleLoss(
  INOUT ioId                       Integer   ,     -- ключ объекта <Статьи списания>
     IN inCode                     Integer   ,     -- Код объекта
     IN inName                     TVarChar  ,     -- Название объекта
+    IN inComment                  TVarChar  ,     -- Примечание    
     IN inInfoMoneyId              Integer   ,     -- Статьи назначения
     IN inProfitLossDirectionId    Integer   ,     -- Аналитики статей отчета о прибылях и убытках - направление
     IN inSession                  TVarChar        -- сессия пользователя
@@ -37,21 +39,25 @@ BEGIN
 
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ArticleLoss_InfoMoney(), ioId, inInfoMoneyId);
-    -- сохранили связь с <>
+   -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ArticleLoss_ProfitLossDirection(), ioId, inProfitLossDirectionId);
+   
+   -- сохранили cсвойство с <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ArticleLoss_Comment(), ioId, inComment);
   
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_ArticleLoss (Integer, Integer, TVarChar, Integer, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpInsertUpdate_Object_ArticleLoss (Integer, Integer, TVarChar, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Манько Д.А.
+ 05.07.17         * add inComment
  01.09.14         *
 */
 
