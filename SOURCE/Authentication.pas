@@ -14,14 +14,18 @@ type
   TUser = class
   strict private
     class var FLocal: boolean;
+    class var FLocalMaxAtempt: Byte;
 
   private
     FSession: String;
     procedure SetLocal(const Value: Boolean);
     function GetLocal: Boolean;
+    procedure SetLocalMaxAtempt(const Value: Byte = 10);
+    function GetLocalMaxAtempt: Byte;
   public
     property Session: String read FSession;
     Property Local: Boolean read GetLocal Write SetLocal;
+    Property LocalMaxAtempt: Byte read GetLocalMaxAtempt Write SetLocalMaxAtempt;
     constructor Create(ASession: String; ALocal: Boolean = false);
   end;
 
@@ -101,6 +105,16 @@ begin
     Except
     end;
   End;
+end;
+
+function TUser.GetLocalMaxAtempt: Byte;
+begin
+  Result := TUser.FLocalMaxAtempt;
+end;
+
+procedure TUser.SetLocalMaxAtempt(const Value: Byte = 10);
+begin
+  TUser.FLocalMaxAtempt := Value;
 end;
 
 end.
