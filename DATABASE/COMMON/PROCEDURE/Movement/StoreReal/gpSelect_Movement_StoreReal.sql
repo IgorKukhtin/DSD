@@ -17,6 +17,8 @@ RETURNS TABLE (Id Integer
              , StatusCode Integer, StatusName TVarChar
              , InsertDate TDateTime
              , InsertMobileDate TDateTime
+             , UpdateMobileDate TDateTime
+             , PeriodSecMobile Integer
              , InsertName TVarChar
              , PartnerName TVarChar
              , GUID TVarChar
@@ -86,6 +88,12 @@ BEGIN
              , Object_Status.ValueData                AS StatusName
              , MovementDate_Insert.ValueData          AS InsertDate
              , MovementDate_InsertMobile.ValueData    AS InsertMobileDate
+             , MovementDate_UpdateMobile.ValueData    AS UpdateMobileDate
+             , CASE WHEN MovementDate_UpdateMobile.ValueData IS NULL THEN NULL
+                    ELSE EXTRACT (SECOND FROM MovementDate_UpdateMobile.ValueData - MovementDate_Insert.ValueData)
+                       + 60 * EXTRACT (MINUTE FROM MovementDate_UpdateMobile.ValueData - MovementDate_Insert.ValueData)
+                       + 60 * 60 * EXTRACT (HOUR FROM MovementDate_UpdateMobile.ValueData - MovementDate_Insert.ValueData)
+               END :: Integer AS PeriodSecMobile
              , Object_User.ValueData                  AS InsertName
              , Object_Partner.ValueData               AS PartnerName
              , MovementString_GUID.ValueData          AS GUID
@@ -113,7 +121,9 @@ BEGIN
              LEFT JOIN MovementDate AS MovementDate_InsertMobile
                                     ON MovementDate_InsertMobile.MovementId = Movement.Id
                                    AND MovementDate_InsertMobile.DescId = zc_MovementDate_InsertMobile()
-
+             LEFT JOIN MovementDate AS MovementDate_UpdateMobile
+                                    ON MovementDate_UpdateMobile.MovementId = Movement.Id
+                                   AND MovementDate_UpdateMobile.DescId = zc_MovementDate_UpdateMobile()
 
              LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                           ON MovementLinkObject_Partner.MovementId = Movement.Id

@@ -23,6 +23,9 @@ RETURNS TABLE (MovementItemId Integer, GoodsCode Integer, GoodsName TVarChar, Me
              , Color_calc  Integer
              , TaxDoc      TFloat
              , TaxDoc_calc TFloat
+             , AmountDoc   TFloat
+             , AmountStart TFloat
+             , AmountEnd   TFloat
              , isErased    Boolean
               )
 AS
@@ -157,12 +160,12 @@ BEGIN
                      )
      -- Количество вложение
    , tmpAmountDoc AS (SELECT DISTINCT
-                             ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                             AS GoodsId
-                           , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0)           AS GoodsKindId
-                           , ObjectFloat_AmountDoc.ValueData * (1 - ObjectFloat_AmountDoc.ValueData / 100) AS AmountStart
-                           , ObjectFloat_AmountDoc.ValueData * (1 + ObjectFloat_AmountDoc.ValueData / 100) AS AmountEnd
-                           , ObjectFloat_AmountDoc.ValueData                                               AS AmountDoc
-                           , tmpGoodsProperty.TaxDoc                                                       AS TaxDoc
+                             ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                     AS GoodsId
+                           , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0)   AS GoodsKindId
+                           , ObjectFloat_AmountDoc.ValueData * (1 - tmpGoodsProperty.TaxDoc / 100) AS AmountStart
+                           , ObjectFloat_AmountDoc.ValueData * (1 + tmpGoodsProperty.TaxDoc / 100) AS AmountEnd
+                           , ObjectFloat_AmountDoc.ValueData                                       AS AmountDoc
+                           , tmpGoodsProperty.TaxDoc                                               AS TaxDoc
                       FROM (SELECT OFl.ObjectId AS GoodsPropertyId, OFl.ValueData AS TaxDoc FROM ObjectFloat AS OFl WHERE OFl.ObjectId = vbGoodsPropertyId AND OFl.DescId = zc_ObjectFloat_GoodsProperty_TaxDoc() AND OFl.ValueData > 0
                            ) AS tmpGoodsProperty
                            INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
@@ -236,6 +239,9 @@ BEGIN
                        THEN 100 * tmpMI.AmountPartner / tmpAmountDoc.AmountDoc - 100
                   ELSE 0
              END :: TFloat AS TaxDoc_calc
+           , tmpAmountDoc.AmountDoc   :: TFloat AS AmountDoc
+           , tmpAmountDoc.AmountStart :: TFloat AS AmountStart
+           , tmpAmountDoc.AmountEnd   :: TFloat AS AmountEnd
 
            , tmpMI.isErased
 

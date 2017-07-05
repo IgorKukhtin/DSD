@@ -23,7 +23,8 @@ BEGIN
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
       vbUserId:= lpGetUserBySession (inSession);
 
-      -- получаем Id документа по GUID
+
+      -- поиск Id документа по GUID
       SELECT MovementString_GUID.MovementId 
            , Movement_ReturnIn.StatusId
       INTO vbMovementId
@@ -34,23 +35,21 @@ BEGIN
                         AND Movement_ReturnIn.DescId = zc_Movement_ReturnIn()
       WHERE MovementString_GUID.DescId = zc_MovementString_GUID() 
         AND MovementString_GUID.ValueData = inMovementGUID;
-
-      IF COALESCE (vbMovementId, 0) = 0 
-      THEN
-           RAISE EXCEPTION 'Ошибка. Не заведена шапка документа.';
+      -- Проверка
+      IF COALESCE (vbMovementId, 0) = 0 THEN
+         RAISE EXCEPTION 'Ошибка. Не сохранена шапка документа.';
       END IF; 
 
-      -- получаем Id строки документа по GUID
-      SELECT MIString_GUID.MovementItemId 
-      INTO vbId 
-      FROM MovementItemString AS MIString_GUID
-           JOIN MovementItem AS MovementItem_ReturnIn
-                             ON MovementItem_ReturnIn.Id = MIString_GUID.MovementItemId
-                            AND MovementItem_ReturnIn.DescId = zc_MI_Master()
-                            AND MovementItem_ReturnIn.MovementId = vbMovementId
-      WHERE MIString_GUID.DescId = zc_MIString_GUID() 
-        AND MIString_GUID.ValueData = inGUID;
-
+      -- поиск Id строки документа по GUID
+      vbId:= (SELECT MIString_GUID.MovementItemId 
+              FROM MovementItemString AS MIString_GUID
+                   JOIN MovementItem AS MovementItem_ReturnIn
+                                     ON MovementItem_ReturnIn.Id         = MIString_GUID.MovementItemId
+                                    AND MovementItem_ReturnIn.DescId     = zc_MI_Master()
+                                    AND MovementItem_ReturnIn.MovementId = vbMovementId
+              WHERE MIString_GUID.DescId    = zc_MIString_GUID() 
+                AND MIString_GUID.ValueData = inGUID
+             );
 
 
       -- !!! ВРЕМЕННО - 04.07.17 !!!
@@ -65,7 +64,8 @@ BEGIN
       IF vbStatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
       THEN
            IF vbStatusId = zc_Enum_Status_Erased()
-           THEN -- Распроводим Документ
+           THEN
+                -- Распроводим Документ
                 PERFORM lpUnComplete_Movement (inMovementId:= vbMovementId, inUserId:= vbUserId);
            END IF;
 
