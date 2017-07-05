@@ -810,6 +810,11 @@ end;
 //
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  //текущие долги
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PartnerDebtForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_PartnerDebtForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PartnerDebtDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_PartnerDebtDialogForm');
   //Report_GoodsMI_SaleReturnInForm
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleReturnInForm');

@@ -70,8 +70,6 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
       inherited cxGrid: TcxGrid
         Width = 1065
         Height = 366
-        ExplicitLeft = 142
-        ExplicitTop = -3
         ExplicitWidth = 1065
         ExplicitHeight = 366
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -110,6 +108,11 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalPay
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummChangePercent
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -146,6 +149,11 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalPay
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummChangePercent
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -367,6 +375,15 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 58
+          end
+          object SummChangePercent: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1076#1086#1087'. '#1089#1082#1080#1076#1082#1080' ('#1075#1088#1085')'
+            DataBinding.FieldName = 'SummChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 79
           end
           object ChangePercent: TcxGridDBColumn
             Caption = '% '#1089#1082#1080#1076#1082#1080

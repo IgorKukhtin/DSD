@@ -87,7 +87,7 @@ BEGIN
                                AND ObjectLink_BankAccount_Currency.DescId = zc_ObjectLink_BankAccount_Currency()
                                AND ObjectLink_BankAccount_Currency.ChildObjectId = zc_Currency_Basis()
                    WHERE ObjectLink_Unit_BankAccount.DescId = zc_ObjectLink_Unit_BankAccount()
-                     AND ObjectLink_Unit_BankAccount.ObjectId = vbUnitId 
+                     AND ObjectLink_Unit_BankAccount.ObjectId = vbUnitId
                      ;
 
              -- выбираем сохраненные чайлды

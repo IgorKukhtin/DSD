@@ -887,6 +887,14 @@
 				<Form>Report_SaleReturnInDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_PartnerDebt.pas">
+				<Form>Report_PartnerDebtForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_PartnerDebtDialog.pas">
+				<Form>Report_PartnerDebtDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

@@ -35,6 +35,7 @@ RETURNS TABLE (MovementId            Integer
              , PeriodYear       Integer
              , ChangePercent    TFloat
              , OperPriceList    TFloat
+             , SummChangePercent  TFloat
              , Amount           TFloat
              , TotalSummPriceList TFloat
              , TotalPay_Grn     TFloat
@@ -66,15 +67,16 @@ BEGIN
                      , MI_Master.ObjectId                  AS GoodsId
                      , MI_Master.PartionId
                      , MI_Master.Id                        AS MI_Id
-                     , COALESCE (MIFloat_ChangePercent.ValueData, 0)  AS ChangePercent
-                     , COALESCE (MIFloat_OperPriceList.ValueData, 0)  AS OperPriceList
-                     , SUM (MI_Master.Amount)                         AS Amount
+                     , COALESCE (MIFloat_ChangePercent.ValueData, 0)      AS ChangePercent
+                     , COALESCE (MIFloat_OperPriceList.ValueData, 0)      AS OperPriceList
+                     , COALESCE (MIFloat_SummChangePercent.ValueData, 0)  AS SummChangePercent
+                     , SUM (MI_Master.Amount)                             AS Amount
                      
                      , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_GRN() THEN MI_Child.Amount ELSE 0 END) AS TotalPay_Grn
                      , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_USD() THEN MI_Child.Amount ELSE 0 END) AS TotalPay_USD
                      , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN MI_Child.Amount ELSE 0 END) AS TotalPay_EUR
                      , SUM (CASE WHEN Object.DescId = zc_Object_BankAccount() THEN MI_Child.Amount ELSE 0 END) AS TotalPay_Card
-                     , COALESCE (MIFloat_TotalPay.ValueData, 0)       AS TotalPay
+                     , COALESCE (MIFloat_TotalPay.ValueData, 0)           AS TotalPay
                 FROM Movement AS Movement_Sale
                      INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                                    ON MovementLinkObject_From.MovementId = Movement_Sale.Id
@@ -105,6 +107,9 @@ BEGIN
                      LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
                                                  ON MIFloat_TotalPay.MovementItemId = MI_Master.Id
                                                 AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
+                     LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
+                                                 ON MIFloat_SummChangePercent.MovementItemId = MI_Master.Id
+                                                AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()                                                  
                 WHERE Movement_Sale.DescId = zc_Movement_Sale()
                   AND Movement_Sale.OperDate BETWEEN inStartDate AND inEndDate
                   AND Movement_Sale.StatusId = zc_Enum_Status_Complete() 
@@ -119,6 +124,7 @@ BEGIN
                        , COALESCE (MIFloat_ChangePercent.ValueData, 0)
                        , COALESCE (MIFloat_OperPriceList.ValueData, 0)
                        , COALESCE (MIFloat_TotalPay.ValueData, 0)
+                       , COALESCE (MIFloat_SummChangePercent.ValueData, 0)
               )     
   , tmpReturnIn AS (SELECT Movement_ReturnIn.Id                AS MovementId
                          , zc_Movement_ReturnIn()              AS MovementDescId
@@ -132,14 +138,16 @@ BEGIN
                          , MI_Master.ObjectId                  AS GoodsId
                          , MI_Master.PartionId
                          , MI_Master.Id                        AS MI_Id
-                         , COALESCE (MIFloat_ChangePercent.ValueData, 0)    AS ChangePercent
-                         , COALESCE (MIFloat_OperPriceList.ValueData, 0)    AS OperPriceList
-                         , SUM (MI_Master.Amount) * (-1)                    AS Amount
+                         , COALESCE (MIFloat_ChangePercent.ValueData, 0)      AS ChangePercent
+                         , COALESCE (MIFloat_OperPriceList.ValueData, 0)      AS OperPriceList
+                         , COALESCE (MIFloat_SummChangePercent.ValueData, 0)  AS SummChangePercent
+                         
+                         , SUM (MI_Master.Amount) * (-1)                      AS Amount
                          , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_GRN() THEN (-1) * MI_Child.Amount ELSE 0 END) AS TotalPay_Grn
                          , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_USD() THEN (-1) * MI_Child.Amount ELSE 0 END) AS TotalPay_USD
                          , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN (-1) * MI_Child.Amount ELSE 0 END) AS TotalPay_EUR
                          , SUM (CASE WHEN Object.DescId = zc_Object_BankAccount() THEN (-1) * MI_Child.Amount ELSE 0 END) AS TotalPay_Card
-                         , (COALESCE (MIFloat_TotalPay.ValueData, 0)) * (-1) AS TotalPay
+                         , (COALESCE (MIFloat_TotalPay.ValueData, 0)) * (-1)  AS TotalPay
                     FROM Movement AS Movement_ReturnIn
                          INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                        ON MovementLinkObject_To.MovementId = Movement_ReturnIn.Id
@@ -179,6 +187,9 @@ BEGIN
                          LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                      ON MIFloat_ChangePercent.MovementItemId = MI_Sale.Id
                                                     AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+                         LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
+                                                     ON MIFloat_SummChangePercent.MovementItemId = MI_Sale.Id
+                                                    AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent() 
                     WHERE Movement_ReturnIn.DescId = zc_Movement_ReturnIn()
                       AND Movement_ReturnIn.OperDate BETWEEN inStartDate AND inEndDate
                       AND Movement_ReturnIn.StatusId = zc_Enum_Status_Complete() 
@@ -196,6 +207,7 @@ BEGIN
                            , COALESCE (MIFloat_ChangePercent.ValueData, 0)
                            , COALESCE (MIFloat_OperPriceList.ValueData, 0)
                            , COALESCE (MIFloat_TotalPay.ValueData, 0)
+                           , COALESCE (MIFloat_SummChangePercent.ValueData, 0)
                   )
   , tmpGoodsAccount AS (SELECT Movement_GoodsAccount.Id            AS MovementId
                              , zc_Movement_GoodsAccount()          AS MovementDescId
@@ -209,14 +221,15 @@ BEGIN
                              , MI_Sale.ObjectId                    AS GoodsId
                              , MI_Sale.PartionId
                              , MI_Master.Id                        AS MI_Id
-                             , COALESCE (MIFloat_ChangePercent.ValueData, 0)  AS ChangePercent
-                             , COALESCE (MIFloat_OperPriceList.ValueData, 0)  AS OperPriceList
-                             , SUM (MI_Master.Amount)              AS Amount
+                             , COALESCE (MIFloat_ChangePercent.ValueData, 0)      AS ChangePercent
+                             , COALESCE (MIFloat_OperPriceList.ValueData, 0)      AS OperPriceList
+                             , COALESCE (MIFloat_SummChangePercent.ValueData, 0)  AS SummChangePercent
+                             , SUM (MI_Master.Amount)                             AS Amount
                              , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_GRN() THEN MI_Child.Amount ELSE 0 END) AS TotalPay_Grn
                              , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_USD() THEN MI_Child.Amount ELSE 0 END) AS TotalPay_USD
                              , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN MI_Child.Amount ELSE 0 END) AS TotalPay_EUR
                              , SUM (CASE WHEN Object.DescId = zc_Object_BankAccount() THEN MI_Child.Amount ELSE 0 END) AS TotalPay_Card
-                             , (COALESCE (MIFloat_TotalPay.ValueData, 0))     AS TotalPay
+                             , (COALESCE (MIFloat_TotalPay.ValueData, 0))         AS TotalPay
                         FROM Movement AS Movement_GoodsAccount
                              LEFT JOIN MovementItem AS MI_Master
                                                     ON MI_Master.MovementId = Movement_GoodsAccount.Id
@@ -245,7 +258,10 @@ BEGIN
                              LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                          ON MIFloat_ChangePercent.MovementItemId = MI_Sale.Id
                                                          AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
-                                                          
+                             LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
+                                                         ON MIFloat_SummChangePercent.MovementItemId = MI_Sale.Id
+                                                        AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()     
+                                                                                                              
                              LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
                                                          ON MIFloat_TotalPay.MovementItemId = MI_Master.Id
                                                         AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()    
@@ -277,6 +293,7 @@ BEGIN
                                , COALESCE (MIFloat_ChangePercent.ValueData, 0)
                                , COALESCE (MIFloat_OperPriceList.ValueData, 0)
                                , COALESCE (MIFloat_TotalPay.ValueData, 0)
+                               , COALESCE (MIFloat_SummChangePercent.ValueData, 0)
                       )
 
      , tmpData  AS  (SELECT tmp.MovementId
@@ -292,12 +309,13 @@ BEGIN
                           , tmp.PartionId
                           , tmp.ChangePercent
                           , tmp.OperPriceList
-                          , SUM (tmp.Amount)        AS Amount
-                          , SUM (tmp.TotalPay_Grn)  AS TotalPay_Grn
-                          , SUM (tmp.TotalPay_USD)  AS TotalPay_USD
-                          , SUM (tmp.TotalPay_EUR)  AS TotalPay_EUR
-                          , SUM (tmp.TotalPay_Card) AS TotalPay_Card
-                          , SUM (tmp.TotalPay)      AS TotalPay
+                          , SUM (tmp.SummChangePercent) AS SummChangePercent
+                          , SUM (tmp.Amount)            AS Amount
+                          , SUM (tmp.TotalPay_Grn)      AS TotalPay_Grn
+                          , SUM (tmp.TotalPay_USD)      AS TotalPay_USD
+                          , SUM (tmp.TotalPay_EUR)      AS TotalPay_EUR
+                          , SUM (tmp.TotalPay_Card)     AS TotalPay_Card
+                          , SUM (tmp.TotalPay)          AS TotalPay
                      FROM tmpSale AS tmp
                      GROUP BY tmp.MovementId
                             , tmp.MovementDescId
@@ -326,12 +344,13 @@ BEGIN
                           , tmp.PartionId
                           , tmp.ChangePercent
                           , tmp.OperPriceList
-                          , SUM (tmp.Amount)        AS Amount
-                          , SUM (tmp.TotalPay_Grn)  AS TotalPay_Grn
-                          , SUM (tmp.TotalPay_USD)  AS TotalPay_USD
-                          , SUM (tmp.TotalPay_EUR)  AS TotalPay_EUR
-                          , SUM (tmp.TotalPay_Card) AS TotalPay_Card
-                          , SUM (tmp.TotalPay)      AS TotalPay
+                          , SUM (tmp.SummChangePercent) AS SummChangePercent
+                          , SUM (tmp.Amount)            AS Amount
+                          , SUM (tmp.TotalPay_Grn)      AS TotalPay_Grn
+                          , SUM (tmp.TotalPay_USD)      AS TotalPay_USD
+                          , SUM (tmp.TotalPay_EUR)      AS TotalPay_EUR
+                          , SUM (tmp.TotalPay_Card)     AS TotalPay_Card
+                          , SUM (tmp.TotalPay)          AS TotalPay
                      FROM tmpReturnIn AS tmp
                      GROUP BY tmp.MovementId
                             , tmp.MovementDescId
@@ -360,12 +379,13 @@ BEGIN
                           , tmp.PartionId
                           , tmp.ChangePercent
                           , tmp.OperPriceList
-                          , SUM (tmp.Amount)        AS Amount
-                          , SUM (tmp.TotalPay_Grn)  AS TotalPay_Grn
-                          , SUM (tmp.TotalPay_USD)  AS TotalPay_USD
-                          , SUM (tmp.TotalPay_EUR)  AS TotalPay_EUR
-                          , SUM (tmp.TotalPay_Card) AS TotalPay_Card
-                          , SUM (tmp.TotalPay)      AS TotalPay
+                          , SUM (tmp.SummChangePercent) AS SummChangePercent
+                          , SUM (tmp.Amount)            AS Amount
+                          , SUM (tmp.TotalPay_Grn)      AS TotalPay_Grn
+                          , SUM (tmp.TotalPay_USD)      AS TotalPay_USD
+                          , SUM (tmp.TotalPay_EUR)      AS TotalPay_EUR
+                          , SUM (tmp.TotalPay_Card)     AS TotalPay_Card
+                          , SUM (tmp.TotalPay)          AS TotalPay
                      FROM tmpGoodsAccount AS tmp
                      GROUP BY tmp.MovementId
                             , tmp.MovementDescId
@@ -414,15 +434,16 @@ BEGIN
              , Object_Period.ValueData        AS PeriodName
              , Object_PartionGoods.PeriodYear ::Integer
                
-             , tmpData.ChangePercent  ::TFloat
-             , tmpData.OperPriceList  ::TFloat
-             , tmpData.Amount         ::TFloat
+             , tmpData.ChangePercent       ::TFloat
+             , tmpData.OperPriceList       ::TFloat
+             , tmpData.SummChangePercent   ::TFloat
+             , tmpData.Amount              ::TFloat
              , (tmpData.OperPriceList * tmpData.Amount) ::TFloat AS TotalSummPriceList
-             , tmpData.TotalPay_Grn   ::TFloat
-             , tmpData.TotalPay_USD   ::TFloat
-             , tmpData.TotalPay_EUR   ::TFloat
-             , tmpData.TotalPay_Card  ::TFloat
-             , tmpData.TotalPay       ::TFloat
+             , tmpData.TotalPay_Grn        ::TFloat
+             , tmpData.TotalPay_USD        ::TFloat
+             , tmpData.TotalPay_EUR        ::TFloat
+             , tmpData.TotalPay_Card       ::TFloat
+             , tmpData.TotalPay            ::TFloat
 
         FROM tmpData
             LEFT JOIN MovementDesc ON MovementDesc.Id = tmpData.MovementDescId

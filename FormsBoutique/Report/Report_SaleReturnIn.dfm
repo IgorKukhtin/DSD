@@ -171,6 +171,7 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
           object DescName_Sale: TcxGridDBColumn
             Caption = ' '#1042#1080#1076' '#1076#1086#1082'. ('#1087#1088#1086#1076#1072#1078#1072')'
             DataBinding.FieldName = 'DescName_Sale'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
