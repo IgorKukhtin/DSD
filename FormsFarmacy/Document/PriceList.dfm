@@ -2,10 +2,8 @@ inherited PriceListForm: TPriceListForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090'>'
   ClientHeight = 668
   ClientWidth = 820
-  ExplicitLeft = -152
-  ExplicitTop = -214
   ExplicitWidth = 836
-  ExplicitHeight = 707
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -215,11 +213,13 @@ inherited PriceListForm: TPriceListForm
       Top = 5
       Caption = '% '#1089#1082#1080#1076#1082#1080
     end
-    object edPercent: TcxTextEdit
+    object edPercent1: TcxCurrencyEdit
       Left = 689
       Top = 23
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = False
       TabOrder = 9
-      Text = '0'
       Width = 54
     end
   end
@@ -1138,7 +1138,7 @@ inherited PriceListForm: TPriceListForm
       item
         Name = 'inPercent'
         Value = '0'
-        Component = edPercent
+        Component = edPercent1
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

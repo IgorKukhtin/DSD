@@ -3,9 +3,8 @@ inherited PriceListJournalForm: TPriceListJournalForm
   ClientHeight = 535
   ClientWidth = 615
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitTop = -64
   ExplicitWidth = 631
-  ExplicitHeight = 574
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -488,8 +487,8 @@ inherited PriceListJournalForm: TPriceListJournalForm
     Top = 152
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 288
-    Top = 144
+    Left = 328
+    Top = 152
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
