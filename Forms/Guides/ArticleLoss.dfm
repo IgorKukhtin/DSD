@@ -2,7 +2,7 @@ object ArticleLossForm: TArticleLossForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1090#1072#1090#1100#1080' '#1089#1087#1080#1089#1072#1085#1080#1103'>'
-  ClientHeight = 282
+  ClientHeight = 277
   ClientWidth = 471
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,12 +21,13 @@ object ArticleLossForm: TArticleLossForm
     Left = 0
     Top = 26
     Width = 471
-    Height = 256
+    Height = 251
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitHeight = 256
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -42,7 +43,6 @@ object ArticleLossForm: TArticleLossForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
       OptionsView.GroupByBox = False
@@ -54,6 +54,7 @@ object ArticleLossForm: TArticleLossForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
       object Name: TcxGridDBColumn
@@ -61,6 +62,7 @@ object ArticleLossForm: TArticleLossForm
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 200
       end
       object InfoMoneyCode: TcxGridDBColumn
@@ -69,6 +71,7 @@ object ArticleLossForm: TArticleLossForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 40
       end
       object InfoMoneyGroupName: TcxGridDBColumn
@@ -77,6 +80,7 @@ object ArticleLossForm: TArticleLossForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 75
       end
       object InfoMoneyDestinationName: TcxGridDBColumn
@@ -85,6 +89,7 @@ object ArticleLossForm: TArticleLossForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 77
       end
       object InfoMoneyName: TcxGridDBColumn
@@ -93,6 +98,7 @@ object ArticleLossForm: TArticleLossForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 136
       end
       object ProfitLossDirectionCode: TcxGridDBColumn
@@ -101,6 +107,7 @@ object ArticleLossForm: TArticleLossForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 45
       end
       object ProfitLossGroupName: TcxGridDBColumn
@@ -109,6 +116,7 @@ object ArticleLossForm: TArticleLossForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
       object ProfitLossDirectionName: TcxGridDBColumn
@@ -117,7 +125,15 @@ object ArticleLossForm: TArticleLossForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
+      end
+      object Comment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'Comment'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 199
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -126,6 +142,7 @@ object ArticleLossForm: TArticleLossForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 31
       end
     end
@@ -218,6 +235,14 @@ object ArticleLossForm: TArticleLossForm
         end
         item
           Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -278,6 +303,10 @@ object ArticleLossForm: TArticleLossForm
     end
     object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
+      Category = 0
+    end
+    object bbShowAll: TdxBarButton
+      Action = actShowAll
       Category = 0
     end
   end
@@ -408,6 +437,37 @@ object ArticleLossForm: TArticleLossForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = dsdStoredProc
+      StoredProcList = <
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ArticleLoss'
@@ -416,7 +476,15 @@ object ArticleLossForm: TArticleLossForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 40
     Top = 208
@@ -469,5 +537,64 @@ object ArticleLossForm: TArticleLossForm
     SummaryItemList = <>
     Left = 168
     Top = 216
+  end
+  object spInsertUpdate: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_ArticleLoss'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCode'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Code'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inName'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Name'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyId '
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'InfoMoneyId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProfitLossDirectionId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'ProfitLossDirectionId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 408
+    Top = 104
   end
 end

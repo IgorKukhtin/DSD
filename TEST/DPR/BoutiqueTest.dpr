@@ -255,7 +255,9 @@ uses
   Report_GoodsMI_AccountDialog in '..\..\FormsBoutique\Report\Report_GoodsMI_AccountDialog.pas' {Report_GoodsMI_AccountDialogForm: TParentForm},
   Report_GoodsMI_Account in '..\..\FormsBoutique\Report\Report_GoodsMI_Account.pas' {Report_GoodsMI_AccountForm: TParentForm},
   Report_SaleReturnIn in '..\..\FormsBoutique\Report\Report_SaleReturnIn.pas' {Report_SaleReturnInForm: TParentForm},
-  Report_SaleReturnInDialog in '..\..\FormsBoutique\Report\Report_SaleReturnInDialog.pas' {Report_SaleReturnInDialogForm: TParentForm};
+  Report_SaleReturnInDialog in '..\..\FormsBoutique\Report\Report_SaleReturnInDialog.pas' {Report_SaleReturnInDialogForm: TParentForm},
+  Report_PartnerDebt in '..\..\FormsBoutique\Report\Report_PartnerDebt.pas' {Report_PartnerDebtForm: TParentForm},
+  Report_PartnerDebtDialog in '..\..\FormsBoutique\Report\Report_PartnerDebtDialog.pas' {Report_PartnerDebtDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

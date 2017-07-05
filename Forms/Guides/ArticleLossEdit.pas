@@ -11,7 +11,17 @@ uses
   cxDBLookupComboBox, cxPropertiesStore, dsdAddOn, dsdDB, dsdAction,
   Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit,
   cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar,
-  dxSkinsDefaultPainters;
+  dxSkinsDefaultPainters, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
+  dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TArticleLossEditForm = class(TParentForm)
@@ -36,6 +46,8 @@ type
     cxLabel7: TcxLabel;
     ceProfitLossDirection: TcxButtonEdit;
     ProfitLossDirectionGuides: TdsdGuides;
+    cxLabel8: TcxLabel;
+    ceComment: TcxTextEdit;
   private
     { Private declarations }
   public

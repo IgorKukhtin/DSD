@@ -501,6 +501,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_StorageLine_Comment() RETURNS Integer
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_StorageLine_Comment', zc_Object_StorageLine(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_StorageLine_Comment');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_ArticleLoss_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ArticleLoss_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_ArticleLoss_Comment', zc_Object_ArticleLoss(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ArticleLoss_Comment');
+
 
 ---!!! Аптека
 CREATE OR REPLACE FUNCTION zc_ObjectString_Goods_Code() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_Code'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -613,6 +617,7 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 05.07.17         * zc_ObjectString_ArticleLoss_Comment
  04.04.17         *
  30.03.17         * zc_ObjectString_GoodsListIncome_GoodsKind
  28.03.17         * zc_ObjectString_Partner_Delivery

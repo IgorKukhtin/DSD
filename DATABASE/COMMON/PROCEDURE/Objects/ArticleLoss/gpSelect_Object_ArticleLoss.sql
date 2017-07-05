@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_ArticleLoss()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ArticleLoss(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ArticleLoss(Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ArticleLoss(
+    IN inShowAll     Boolean, 
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
@@ -11,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
 
              , ProfitLossGroupId Integer, ProfitLossGroupCode Integer, ProfitLossGroupName TVarChar
              , ProfitLossDirectionId Integer, ProfitLossDirectionCode Integer, ProfitLossDirectionName TVarChar
+             , Comment TVarChar
 
              , isErased boolean) AS
 $BODY$BEGIN
@@ -40,7 +43,9 @@ $BODY$BEGIN
 
         , View_ProfitLossDirection.ProfitLossDirectionId
         , View_ProfitLossDirection.ProfitLossDirectionCode
-        , View_ProfitLossDirection.ProfitLossDirectionName       
+        , View_ProfitLossDirection.ProfitLossDirectionName
+        
+        , ObjectString_Comment.ValueData        AS Comment       
 
         , Object_ArticleLoss.isErased    AS isErased
    FROM Object AS Object_ArticleLoss
@@ -55,18 +60,23 @@ $BODY$BEGIN
                             AND ObjectLink_ArticleLoss_ProfitLossDirection.DescId = zc_ObjectLink_ArticleLoss_ProfitLossDirection()
         LEFT JOIN Object_ProfitLossDirection_View AS View_ProfitLossDirection ON View_ProfitLossDirection.ProfitLossDirectionId = ObjectLink_ArticleLoss_ProfitLossDirection.ChildObjectId
 
+        LEFT JOIN ObjectString AS ObjectString_Comment
+                               ON ObjectString_Comment.ObjectId = Object_ArticleLoss.Id
+                              AND ObjectString_Comment.DescId = zc_ObjectString_ArticleLoss_Comment() 
 
-   WHERE Object_ArticleLoss.DescId = zc_Object_ArticleLoss();
+   WHERE Object_ArticleLoss.DescId = zc_Object_ArticleLoss()
+     AND (Object_ArticleLoss.isErased = inShowAll OR inShowAll = TRUE);
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_ArticleLoss(TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_ArticleLoss(TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Манько Д.А.
+ 05.07.17         *
  01.09.14         * 
 */
 

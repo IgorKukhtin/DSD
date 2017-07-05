@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_ArticleLoss(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
              , ProfitLossDirectionId Integer, ProfitLossDirectionName TVarChar
+             , Comment TVarChar
              , isErased boolean) AS
 $BODY$
 BEGIN
@@ -27,8 +28,10 @@ BEGIN
            , CAST (0 as Integer)    AS InfoMoneyId
            , CAST ('' as TVarChar)  AS InfoMoneyName
 
-           , CAST (0 as Integer)   AS ProfitLossDirectionId
-           , CAST ('' as TVarChar) AS ProfitLossDirectionName
+           , CAST (0 as Integer)    AS ProfitLossDirectionId
+           , CAST ('' as TVarChar)  AS ProfitLossDirectionName
+           
+           , CAST ('' as TVarChar)  AS Comment
           
            , CAST (NULL AS Boolean) AS isErased;
    ELSE
@@ -42,7 +45,9 @@ BEGIN
            , Object_InfoMoney.ValueData   AS InfoMoneyName 
 
            , Object_ProfitLossDirection.Id        AS ProfitLossDirectionId
-           , Object_ProfitLossDirection.ValueData AS ProfitLossDirectionName    
+           , Object_ProfitLossDirection.ValueData AS ProfitLossDirectionName
+           
+           , ObjectString_Comment.ValueData        AS Comment
 
            , Object_ArticleLoss.isErased   AS isErased
 
@@ -58,7 +63,10 @@ BEGIN
                                 AND ObjectLink_ArticleLoss_ProfitLossDirection.DescId = zc_ObjectLink_ArticleLoss_ProfitLossDirection()
             LEFT JOIN Object AS Object_ProfitLossDirection ON Object_ProfitLossDirection.Id = ObjectLink_ArticleLoss_ProfitLossDirection.ChildObjectId
 
-
+            LEFT JOIN ObjectString AS ObjectString_Comment
+                                   ON ObjectString_Comment.ObjectId = Object_ArticleLoss.Id
+                                  AND ObjectString_Comment.DescId = zc_ObjectString_ArticleLoss_Comment() 
+                                  
        WHERE Object_ArticleLoss.Id = inId;
    END IF;
 

@@ -62,6 +62,10 @@ type
     ProfitLossDirectionName: TcxGridDBColumn;
     ProfitLossDirectionCode: TcxGridDBColumn;
     ProfitLossGroupName: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
+    spInsertUpdate: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

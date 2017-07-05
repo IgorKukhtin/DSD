@@ -162,7 +162,7 @@ BEGIN
                                                  , inCurrencyId         := _tmpCash.CurrencyId
                                                  , inCashId_Exc         := NULL
                                                  , inAmount             := COALESCE (_tmpCash.Amount, 0)
-                                                 , inCurrencyValue      := COALESCE (_tmpCash.CurrencyValue, 0)
+                                                 , inCurrencyValue      := COALESCE (_tmpCash.CurrencyValue, 1)
                                                  , inParValue           := COALESCE (_tmpCash.ParValue, 1)
                                                  , inUserId             := vbUserId
                                                   )

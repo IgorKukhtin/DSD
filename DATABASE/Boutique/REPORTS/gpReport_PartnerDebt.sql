@@ -37,7 +37,7 @@ RETURNS TABLE (MovementId            Integer
              , TotalCountReturn   TFloat
              , TotalReturn        TFloat
              , TotalPayReturn     TFloat
-             , Debt               TFloat
+             , SummDebt           TFloat
   )
 AS
 $BODY$
@@ -69,7 +69,11 @@ BEGIN
                      , COALESCE (MIFloat_TotalCountReturn.ValueData, 0)      AS TotalCountReturn
                      , COALESCE (MIFloat_TotalReturn.ValueData, 0)           AS TotalReturn
                      , COALESCE (MIFloat_TotalPayReturn.ValueData, 0)        AS TotalPayReturn
-                     , (MI_Master.Amount * COALESCE (MIFloat_OperPriceList.ValueData, 0)) - COALESCE (MIFloat_TotalPay.ValueData, 0) - COALESCE (MIFloat_TotalPayOth.ValueData, 0) - COALESCE (MIFloat_TotalPayReturn.ValueData, 0) AS Debt
+                     , (MI_Master.Amount * COALESCE (MIFloat_OperPriceList.ValueData, 0)) 
+                      - COALESCE (MIFloat_TotalPay.ValueData, 0) 
+                      - COALESCE (MIFloat_TotalPayOth.ValueData, 0) 
+                      - COALESCE (MIFloat_TotalPayReturn.ValueData, 0)
+                      - COALESCE (MIFloat_SummChangePercent.ValueData, 0)    AS Debt
                 FROM Movement AS Movement_Sale
                      INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                                    ON MovementLinkObject_From.MovementId = Movement_Sale.Id
@@ -158,7 +162,7 @@ BEGIN
              , tmpSale.TotalCountReturn         ::TFloat
              , tmpSale.TotalReturn              ::TFloat
              , tmpSale.TotalPayReturn           ::TFloat
-             , tmpSale.Debt                     ::TFloat
+             , tmpSale.Debt                     ::TFloat AS SummDebt
         FROM tmpSale
             LEFT JOIN MovementDesc ON MovementDesc.Id = tmpSale.MovementDescId
             
