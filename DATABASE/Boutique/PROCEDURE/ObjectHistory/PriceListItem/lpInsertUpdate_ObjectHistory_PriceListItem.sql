@@ -24,8 +24,11 @@ BEGIN
    -- Сохранили цену
    PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_PriceListItem_Value(), ioId, inValue);
 
-   -- !!!Кроме Sybase!!! - !!!не забыли - cохранили Последнюю Цену в ПАРТИИ!!!
-   -- PERFORM lpUpdate_Object_PartionGoods ...
+   -- не забыли - cохранили Последнюю Цену в ПАРТИЯХ
+   IF inPriceListId = zc_PriceList_Basis()
+   THEN
+       PERFORM lpUpdate_Object_PartionGoods_PriceSale (inGoodsId:= inGoodsId, inUserId:= vbUserId);
+   END IF;
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectHistoryProtocol (inObjectId:= ObjectHistory.ObjectId, inUserId:= inUserId, inStartDate:= StartDate, inEndDate:= EndDate, inPrice:= inValue, inIsUpdate:= TRUE, inIsErased:= FALSE)

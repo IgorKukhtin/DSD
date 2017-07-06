@@ -49,9 +49,9 @@ BEGIN
       IF vbPersonalId IS NOT NULL
       THEN
            RETURN QUERY
-             WITH tmpPartner AS (SELECT OP.Id AS PartnerId
-                                      , OP.JuridicalId 
-                                 FROM lfSelectMobile_Object_Partner (FALSE, inSession) AS OP
+             WITH tmpPartner AS (SELECT lfSelect.Id AS PartnerId
+                                      , lfSelect.JuridicalId 
+                                 FROM lfSelectMobile_Object_Partner (FALSE, inSession) AS lfSelect
                                 )
                 , tmpContract AS (SELECT tmpPartner.PartnerId
                                        , ObjectLink_Contract_Juridical.ObjectId      AS ContractId

@@ -31,10 +31,8 @@ BEGIN
       THEN
            RETURN QUERY
              WITH -- список доступных контрагентов для торгового агента
-                  tmpPartner AS (SELECT ObjectLink_Partner_PersonalTrade.ObjectId AS PartnerId
-                                 FROM ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                 WHERE ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
-                                   AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                  tmpPartner AS (SELECT lfSelect.Id AS PartnerId
+                                 FROM lfSelectMobile_Object_Partner (FALSE, inSession) AS lfSelect
                                 )
                   -- список - только разрешенные товары
                 , tmpGoodsByGoodsKind AS (SELECT gpSelect.GoodsId, gpSelect.GoodsKindId FROM gpSelectMobile_Object_GoodsByGoodsKind (inSyncDateIn, inSession) AS gpSelect)
@@ -51,7 +49,8 @@ BEGIN
                                                  JOIN tmpPartner ON tmpPartner.PartnerId = MovementLinkObject_Partner.ObjectId
                                             WHERE Movement_StoreReal.DescId = zc_Movement_StoreReal()
                                               AND Movement_StoreReal.StatusId = zc_Enum_Status_Complete()
-                                              AND Movement_StoreReal.OperDate < CURRENT_DATE
+                                              -- !!!обязательно ДО сегодняшнего дня!!!
+                                              AND Movement_StoreReal.OperDate BETWEEN CURRENT_DATE - INTERVAL '28 DAY' AND CURRENT_DATE - INTERVAL '1 DAY'
                                            ) AS SR
                                       WHERE SR.RowNum = 1
                                      )
@@ -62,8 +61,8 @@ BEGIN
                                        FROM tmpPartner
                                             LEFT JOIN tmpStoreRealDoc ON tmpStoreRealDoc.PartnerId = tmpPartner.PartnerId
                                       )
-                  -- развернутые виды товара  
-                , tmpGoodsListSaleKind AS (SELECT Object_GoodsListSale.Id 
+              -- развернутые виды товара  
+            , tmpGoodsListSaleKind_all AS (SELECT Object_GoodsListSale.Id 
                                                 , ObjectLink_GoodsListSale_Goods.ChildObjectId   AS GoodsId
                                                 , GoodsKindArr :: Integer                        AS GoodsKindId
                                                 , ObjectLink_GoodsListSale_Partner.ChildObjectId AS PartnerId
@@ -89,7 +88,52 @@ BEGIN
                                                                  AND ObjectString_GoodsListSale_GoodsKind.DescId = zc_ObjectString_GoodsListSale_GoodsKind() 
                                                 JOIN regexp_split_to_table(ObjectString_GoodsListSale_GoodsKind.ValueData, E'\,+') AS GoodsKindArr ON 1 = 1
                                           )
-                  -- предопределенный список товар+вид товара+контрагент доступный торговому агенту
+              -- остатки по ТТ - список товар + вид товара + контрагент доступный торговому агенту
+            , tmpGoodsListSale_add AS (SELECT DISTINCT 
+                                              MovementLinkObject_Partner.ObjectId               AS PartnerId
+                                            , MI_StoreReal.ObjectId                             AS GoodsId
+                                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)     AS GoodsKindId
+                                       FROM Movement AS Movement_StoreReal
+                                            JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                                                    ON MovementLinkObject_Partner.MovementId = Movement_StoreReal.Id
+                                                                   AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+                                            JOIN tmpPartner ON tmpPartner.PartnerId = MovementLinkObject_Partner.ObjectId
+                                            JOIN MovementItem AS MI_StoreReal
+                                                              ON MI_StoreReal.MovementId = Movement_StoreReal.Id
+                                                             AND MI_StoreReal.DescId     = zc_MI_Master()
+                                                             AND MI_StoreReal.isErased   = FALSE
+                                                             AND MI_StoreReal.Amount     > 0
+                                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                             ON MILinkObject_GoodsKind.MovementItemId = MI_StoreReal.Id
+                                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind() 
+                                       WHERE Movement_StoreReal.DescId   = zc_Movement_StoreReal()
+                                         AND Movement_StoreReal.StatusId = zc_Enum_Status_Complete()
+                                         AND Movement_StoreReal.OperDate BETWEEN CURRENT_DATE - INTERVAL '14 DAY' AND CURRENT_DATE
+                                      )
+                  -- развернутые виды товара - добавили tmpGoodsListSale_add
+                , tmpGoodsListSaleKind AS (SELECT tmpGoodsListSaleKind_all.Id 
+                                                , tmpGoodsListSaleKind_all.GoodsId
+                                                , tmpGoodsListSaleKind_all.GoodsKindId
+                                                , tmpGoodsListSaleKind_all.PartnerId
+                                                , tmpGoodsListSaleKind_all.isErased
+                                                  --  № п/п - !!!ВРЕМЕННО!!!
+                                                , tmpGoodsListSaleKind_all.Ord
+                                           FROM tmpGoodsListSaleKind_all
+                                          UNION
+                                           SELECT tmpGoodsListSale_add.GoodsId AS Id  -- !!!тоже криво!!!
+                                                , tmpGoodsListSale_add.GoodsId
+                                                , tmpGoodsListSale_add.GoodsKindId
+                                                , tmpGoodsListSale_add.PartnerId
+                                                , FALSE AS isErased
+                                                  --  № п/п - !!!ВРЕМЕННО!!!
+                                                , ROW_NUMBER() OVER (PARTITION BY tmpGoodsListSale_add.GoodsId, tmpGoodsListSale_add.PartnerId) AS Ord
+                                           FROM tmpGoodsListSale_add
+                                                LEFT JOIN tmpGoodsListSaleKind_all ON tmpGoodsListSaleKind_all.GoodsId     = tmpGoodsListSale_add.GoodsId
+                                                                                  AND tmpGoodsListSaleKind_all.GoodsKindId = tmpGoodsListSale_add.GoodsKindId
+                                                                                  AND tmpGoodsListSaleKind_all.PartnerId   = tmpGoodsListSale_add.PartnerId
+                                           WHERE tmpGoodsListSaleKind_all.GoodsId IS NULL
+                                          )
+                  -- шаблон - список товар + вид товара + контрагент доступный торговому агенту
                 , tmpGoodsListSale AS (SELECT MAX (tmpGoodsListSaleKind.Id)  AS Id
                                             , MIN (tmpGoodsListSaleKind.Ord) AS Ord
                                             , tmpGoodsListSaleKind.GoodsId

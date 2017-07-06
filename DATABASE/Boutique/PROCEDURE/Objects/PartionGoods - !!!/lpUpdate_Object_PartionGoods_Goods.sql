@@ -18,7 +18,7 @@ AS
 $BODY$
 BEGIN
 
-       -- изменили элемент - по значению <Ключ Товара>
+       -- изменили во Всех партиях Товара
        UPDATE Object_PartionGoods SET GoodsGroupId         = inGoodsGroupId
                                     , MeasureId            = inMeasureId
                                     , CompositionId        = zfConvert_IntToNull (inCompositionId)
