@@ -7,6 +7,11 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Sale (Integer, Integer, Inte
                                                         , TFloat, TFloat, TFloat, TFloat, TFloat
                                                         , TFloat, TFloat, TFloat, TFloat, TFloat
                                                         , TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, Integer
+                                                        , TFloat, TFloat, TFloat, TFloat, TFloat
+                                                        , TFloat, TFloat, TFloat, TFloat, TFloat
+                                                        , TFloat, TFloat, TFloat, TFloat, TFloat
+                                                        , TVarChar, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Sale(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -31,6 +36,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Sale(
     IN inTotalPayReturn        TFloat    , -- 
 
     IN inBarCode               TVarChar  , -- Штрих-код поставщика
+    IN inComment               TVarChar  , -- примечание
     IN inUserId                Integer     -- пользователь
 )
 RETURNS Integer
@@ -82,7 +88,9 @@ BEGIN
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_BarCode(), ioId, inBarCode);
-
+     -- сохранили свойство <примечание>
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
+     
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_DiscountSaleKind(), ioId, inDiscountSaleKindId);
 
@@ -100,6 +108,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.07.17         *
  10.05.17         *
 */
 

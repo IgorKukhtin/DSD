@@ -9,7 +9,11 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, 
                                                            , TFloat, TFloat, TFloat, TFloat, TFloat
                                                            , TFloat, TFloat, TFloat, TFloat
                                                            , Integer);
-
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, Integer, Integer, Integer
+                                                           , TFloat, TFloat, TFloat, TFloat, TFloat
+                                                           , TFloat, TFloat, TFloat, TFloat
+                                                           , TVarChar, Integer);
+                                                           
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ReturnIn(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId            Integer   , -- Ключ объекта <Документ>
@@ -26,6 +30,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ReturnIn(
     IN inTotalChangePercent    TFloat    , -- 
     IN inTotalPay              TFloat    , -- 
     IN inTotalPayOth           TFloat    , -- 
+    IN inComment               TVarChar  , -- примечание    
     IN inUserId                Integer     -- пользователь
 )
 RETURNS Integer
@@ -69,7 +74,9 @@ BEGIN
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionMI(), ioId, inPartionMI_Id);
 
-
+     -- сохранили свойство <примечание>
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
+     
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 

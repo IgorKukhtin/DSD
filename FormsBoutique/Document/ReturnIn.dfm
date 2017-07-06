@@ -26,7 +26,6 @@ object ReturnInForm: TReturnInForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 1054
     object edInvNumber: TcxTextEdit
       Left = 177
       Top = 23
@@ -230,14 +229,12 @@ object ReturnInForm: TReturnInForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 1054
     ClientRectBottom = 313
     ClientRectRight = 1075
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 1054
       object cxGrid: TcxGrid
         Left = 0
         Top = 83
@@ -245,7 +242,6 @@ object ReturnInForm: TReturnInForm
         Height = 206
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1054
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -716,6 +712,13 @@ object ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 70
           end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
           object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
@@ -754,7 +757,6 @@ object ReturnInForm: TReturnInForm
         Align = alTop
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 1054
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource
@@ -887,7 +889,6 @@ object ReturnInForm: TReturnInForm
         HotZone.Visible = False
         AlignSplitter = salTop
         Control = cxGrid1
-        ExplicitWidth = 1054
       end
     end
   end
@@ -2211,6 +2212,15 @@ object ReturnInForm: TReturnInForm
         Component = MasterCDS
         ComponentItem = 'TotalSummPay'
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1

@@ -167,6 +167,7 @@ type
     edInsertDate: TcxDateEdit;
     cxLabel18: TcxLabel;
     edInsertName: TcxButtonEdit;
+    Comment: TcxGridDBColumn;
   private
   public
   end;

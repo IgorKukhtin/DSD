@@ -1,15 +1,17 @@
 -- Function: gpInsertUpdate_MovementItem_Sale()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
  INOUT ioId                   Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId           Integer   , -- Ключ объекта <Документ>
     IN inGoodsId              Integer   , -- Товары
     IN inPartionId            Integer   , -- Партия
+ INOUT ioDiscountSaleKindId   Integer   , -- Вид скидки при продаже
     IN inisPay                Boolean   , -- добавить с оплатой
     IN inAmount               TFloat    , -- Количество
-   OUT outChangePercent       TFloat    , -- % Скидки
+ INOUT ioChangePercent        TFloat    , -- % Скидки
     IN inSummChangePercent    TFloat    , -- Сумма дополнительной Скидки (в ГРН)
    OUT outOperPrice           TFloat    , -- Цена
    OUT outCountForPrice       TFloat    , -- Цена за количество
@@ -30,6 +32,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
    OUT outTotalSummPay          TFloat    , -- 
    OUT outDiscountSaleKindName  TVarChar  , -- Вид скидки при продаже
     IN inBarCode                TVarChar  , -- Штрих-код поставщика
+    IN inComment                TVarChar  , -- примечание    
     IN inSession                TVarChar    -- сессия пользователя
 )                              
 RETURNS RECORD
@@ -43,6 +46,7 @@ $BODY$
    DECLARE vbUnitId Integer;
    DECLARE vbClientId Integer;
    DECLARE vbCashId Integer;
+   DECLARE vbChangePercent TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
@@ -130,11 +134,16 @@ BEGIN
          outParValue     := 1;
      END IF;
 
+     
+     -- определяем скидку
+     SELECT tmp.ChangePercent, tmp.DiscountSaleKindId--, tmp.DiscountSaleKindName
+            INTO vbChangePercent, vbDiscountSaleKindId--, outDiscountSaleKindName
+     FROM zfSelect_DiscountSaleKind (vbOperDate, vbUnitId, inGoodsId, vbClientId, vbUserId) AS tmp;
 
-    -- определяем скидку
-    SELECT tmp.ChangePercent, tmp.DiscountSaleKindId, tmp.DiscountSaleKindName
-           INTO outChangePercent, vbDiscountSaleKindId, outDiscountSaleKindName
-    FROM zfSelect_DiscountSaleKind (vbOperDate, vbUnitId, inGoodsId, vbClientId, vbUserId) AS tmp;
+     IF COALESCE(ioChangePercent,0) = 0      THEN ioChangePercent := COALESCE(vbChangePercent,0);           END IF;
+     IF COALESCE(ioDiscountSaleKindId,0) = 0 THEN ioDiscountSaleKindId := COALESCE(vbDiscountSaleKindId,0); END IF;
+     
+     outDiscountSaleKindName := COALESCE ((SELECT Object.ValueData FROM Object WHERE Object.Id = ioDiscountSaleKindId), '') ;
 
      -- расчитали сумму по элементу, для грида
      outTotalSumm := CASE WHEN outCountForPrice > 0
@@ -147,7 +156,7 @@ BEGIN
      -- расчитали сумму по прайсу по элементу, для грида
      outTotalSummPriceList := CAST (inAmount * ioOperPriceList AS NUMERIC (16, 2));
 
-     outTotalChangePercent := outTotalSummPriceList / 100 * COALESCE(outChangePercent,0) + COALESCE(inSummChangePercent,0) ;
+     outTotalChangePercent := outTotalSummPriceList / 100 * COALESCE(ioChangePercent,0) + COALESCE(inSummChangePercent,0) ;
 
      outTotalSummPay := COALESCE(outTotalSummPriceList,0) - COALESCE(outTotalChangePercent,0) ;
 
@@ -173,9 +182,9 @@ BEGIN
                                               , inMovementId         := inMovementId
                                               , inGoodsId            := inGoodsId
                                               , inPartionId          := COALESCE(inPartionId,0)
-                                              , inDiscountSaleKindId := vbDiscountSaleKindId
+                                              , inDiscountSaleKindId := ioDiscountSaleKindId
                                               , inAmount             := inAmount
-                                              , inChangePercent      := COALESCE(outChangePercent,0)        ::TFloat
+                                              , inChangePercent      := COALESCE(ioChangePercent,0)        ::TFloat
                                               , inSummChangePercent  := COALESCE(inSummChangePercent,0)    ::TFloat
                                               , inOperPrice          := outOperPrice
                                               , inCountForPrice      := outCountForPrice
@@ -190,6 +199,7 @@ BEGIN
                                               , inTotalReturn           := COALESCE(outTotalReturn,0)           ::TFloat   
                                               , inTotalPayReturn        := COALESCE(outTotalPayReturn,0)        ::TFloat
                                               , inBarCode               := COALESCE(inBarCode,'')               ::TVarChar
+                                              , inComment               := COALESCE(inComment,'')               ::TVarChar
                                               , inUserId                := vbUserId
                                                );
                                                
@@ -257,6 +267,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.07.17         *
  28.06.17         *
  13.16.17         *
  09.05.17         *

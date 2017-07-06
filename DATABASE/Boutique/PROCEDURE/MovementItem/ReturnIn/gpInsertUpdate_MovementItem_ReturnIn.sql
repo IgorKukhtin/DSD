@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, Integer, Integer, Boolean, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn(
  INOUT ioId                     Integer   , --  люч объекта <Ёлемент документа>
@@ -26,6 +27,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn(
    OUT outTotalPay              TFloat    , -- 
    OUT outTotalPayOth           TFloat    , -- 
    OUT outTotalSummPay          TFloat    , -- 
+    IN inComment                TVarChar  , -- примечание   
     IN inSession                TVarChar    -- сесси€ пользовател€
 )                              
 RETURNS RECORD
@@ -172,7 +174,8 @@ BEGIN
                                                , inParValue              := outParValue 
                                                , inTotalChangePercent    := COALESCE(outTotalChangePercent,0)    ::TFloat     
                                                , inTotalPay              := COALESCE(outTotalPay,0)              ::TFloat              
-                                               , inTotalPayOth           := COALESCE(outTotalPayOth,0)           ::TFloat           
+                                               , inTotalPayOth           := COALESCE(outTotalPayOth,0)           ::TFloat    
+                                               , inComment               := COALESCE(inComment,'')               ::TVarChar       
                                                , inUserId                := vbUserId
                                                );
 

@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_GoodsAccount (Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_GoodsAccount (Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_GoodsAccount (Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_GoodsAccount(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
@@ -14,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_GoodsAccount(
     IN inAmount                 TFloat    , -- Количество
     IN inSummChangePercent      TFloat    , -- Сумма дополнительной Скидки (в ГРН)
    OUT outTotalPay              TFloat    , -- 
+    IN inComment                TVarChar  , -- примечание
     IN inSession                TVarChar    -- сессия пользователя
 )                              
 RETURNS RECORD
@@ -61,7 +63,8 @@ BEGIN
                                                       , inPartionMI_Id       := COALESCE(inPartionMI_Id,0)
                                                       , inSaleMI_Id          := COALESCE(inSaleMI_Id,0)
                                                       , inAmount             := inAmount
-                                                      , inSummChangePercent  := inSummChangePercent  
+                                                      , inSummChangePercent  := inSummChangePercent 
+                                                      , inComment            := COALESCE(inComment,'') ::TVarChar 
                                                       , inUserId             := vbUserId
                                                      );
 
