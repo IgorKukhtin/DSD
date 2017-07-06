@@ -15,7 +15,7 @@ AS
 $BODY$
 BEGIN
 
-       -- изменили элемент - по значению <Ключ Документа>
+       -- изменили во Всех партиях Товара - ОДНОГО Документа
        UPDATE Object_PartionGoods SET PartnerId            = inPartnerId
                                     , UnitId               = inUnitId
                                     , OperDate             = inOperDate

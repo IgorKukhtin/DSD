@@ -64,7 +64,8 @@ BEGIN
                 , Amount               = inAmount
                 , OperPrice            = inOperPrice
                 , CountForPrice        = inCountForPrice
-                , PriceSale            = inPriceSale
+                -- , PriceSale            = inPriceSale
+                -- , DiscountPeriod       = vbDiscountPeriod
                 , BrandId              = inBrandId
                 , PeriodId             = inPeriodId
                 , PeriodYear           = inPeriodYear
@@ -85,12 +86,12 @@ BEGIN
        IF NOT FOUND THEN             
           -- добавили новый элемент
           INSERT INTO Object_PartionGoods (MovementItemId, MovementId, /*SybaseId,*/ PartnerId, UnitId, OperDate, GoodsId, GoodsItemId
-                                         , CurrencyId, Amount, OperPrice, CountForPrice, PriceSale, BrandId, PeriodId, PeriodYear
+                                         , CurrencyId, Amount, OperPrice, CountForPrice, PriceSale, /*DiscountPeriod,*/ BrandId, PeriodId, PeriodYear
                                          , FabrikaId, GoodsGroupId, MeasureId
                                          , CompositionId, GoodsInfoId, LineFabricaId
                                          , LabelId, CompositionGroupId, GoodsSizeId, JuridicalId)
                                    VALUES (inMovementItemId, inMovementId, /*inSybaseId, */ inPartnerId, inUnitId, inOperDate, inGoodsId, inGoodsItemId
-                                         , inCurrencyId, inAmount, inOperPrice, inCountForPrice, inPriceSale, inBrandId, inPeriodId, inPeriodYear
+                                         , inCurrencyId, inAmount, inOperPrice, inCountForPrice, inPriceSale, /*0,*/ inBrandId, inPeriodId, inPeriodYear
                                          , zfConvert_IntToNull (inFabrikaId), inGoodsGroupId, inMeasureId
                                          , zfConvert_IntToNull (inCompositionId), zfConvert_IntToNull (inGoodsInfoId), zfConvert_IntToNull (inLineFabricaId)
                                          , inLabelId, zfConvert_IntToNull (inCompositionGroupId), inGoodsSizeId, zfConvert_IntToNull (inJuridicalId));
@@ -113,15 +114,15 @@ BEGIN
                                     , JuridicalId            = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN zfConvert_IntToNull (inJuridicalId) ELSE Object_PartionGoods.JuridicalId   END
                                     -- , OperPrice              = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN inOperPrice                         ELSE Object_PartionGoods.OperPrice     END
                                     -- , CountForPrice          = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN inCountForPrice                     ELSE Object_PartionGoods.CountForPrice END
-                                    , PriceSale              = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN inPriceSale                         ELSE Object_PartionGoods.PriceSale     END
+                                    -- , PriceSale              = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN inPriceSale                         ELSE Object_PartionGoods.PriceSale     END
+                                    -- , DiscountPeriod         = ???
        WHERE Object_PartionGoods.MovementItemId <> inMovementItemId
          AND Object_PartionGoods.GoodsId        = inGoodsId;
                                      
                                      
 END;                                 
 $BODY$                               
-                                     
-LANGUAGE plpgsql VOLATILE;           
+  LANGUAGE plpgsql VOLATILE;           
                                      
 /*------------------------------     -------------------------------------------------*/
 /*

@@ -63,6 +63,20 @@ BEGIN
    -- вернули значения
    SELECT StartDate, EndDate INTO outStartDate, outEndDate FROM ObjectHistory WHERE Id = ioId;
 
+   -- Проверка
+   IF inIsLast = TRUE AND COALESCE (outEndDate, zc_Date_Start()) <> zc_Date_End()
+   THEN
+       RAISE EXCEPTION 'Ошимбка. inIsLast = TRUE AND outEndDate = <%>', outEndDate;
+   END IF;
+   
+
+   -- не забыли - cохранили Последнюю Цену в ПАРТИЯХ
+   IF inPriceListId = zc_PriceList_Basis()
+   THEN
+       PERFORM lpUpdate_Object_PartionGoods_PriceSale (inGoodsId:= inGoodsId, inUserId:= vbUserId);
+   END IF;
+
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectHistoryProtocol (inObjectId:= vbPriceListItemId, inUserId:= vbUserId, inStartDate:= outStartDate, inEndDate:= outEndDate, inPrice:= inValue, inIsUpdate:= TRUE, inIsErased:= FALSE);
 

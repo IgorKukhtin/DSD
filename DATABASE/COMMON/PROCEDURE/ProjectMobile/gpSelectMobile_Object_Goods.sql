@@ -34,15 +34,15 @@ BEGIN
            AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId AS GoodsId
                FROM Object AS Object_GoodsByGoodsKind
                     JOIN ObjectBoolean AS ObjectBoolean_GoodsByGoodsKind_Order
-                                       ON ObjectBoolean_GoodsByGoodsKind_Order.ObjectId = Object_GoodsByGoodsKind.Id
-                                      AND ObjectBoolean_GoodsByGoodsKind_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order() 
-                                      AND ObjectBoolean_GoodsByGoodsKind_Order.ValueData = true
+                                       ON ObjectBoolean_GoodsByGoodsKind_Order.ObjectId  = Object_GoodsByGoodsKind.Id
+                                      AND ObjectBoolean_GoodsByGoodsKind_Order.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_Order() 
+                                      AND ObjectBoolean_GoodsByGoodsKind_Order.ValueData = TRUE
                     JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
                                     ON ObjectLink_GoodsByGoodsKind_Goods.ObjectId = Object_GoodsByGoodsKind.Id
                                    AND ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
                                    AND ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId IS NOT NULL
                WHERE Object_GoodsByGoodsKind.DescId = zc_Object_GoodsByGoodsKind()
-               UNION
+              UNION
                SELECT ObjectLink_GoodsListSale_Goods.ChildObjectId AS GoodsId
                FROM Object AS Object_GoodsListSale
                     JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods 
