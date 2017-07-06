@@ -162,6 +162,40 @@ object GoodsAccountForm: TGoodsAccountForm
       TabOrder = 16
       Width = 127
     end
+    object cxLabel18: TcxLabel
+      Left = 566
+      Top = 85
+      Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
+    end
+    object edInsertDate: TcxDateEdit
+      Left = 566
+      Top = 103
+      EditValue = 42132d
+      Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+      Properties.EditFormat = 'dd.mm.yyyy hh:mm'
+      Properties.Kind = ckDateTime
+      Properties.ReadOnly = True
+      TabOrder = 18
+      Width = 113
+    end
+    object edInsertName: TcxButtonEdit
+      Left = 685
+      Top = 103
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 19
+      Width = 170
+    end
+    object cxLabel19: TcxLabel
+      Left = 685
+      Top = 85
+      Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
@@ -2238,6 +2272,20 @@ object GoodsAccountForm: TGoodsAccountForm
         Value = Null
         Component = cePhone
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InsertName'
+        Value = Null
+        Component = edInsertName
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InsertDate'
+        Value = 'NULL'
+        Component = edInsertDate
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     PackSize = 1

@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , TotalSummChange TFloat
              , FromName TVarChar
              , Comment TVarChar
+             , InsertName TVarChar, InsertDate TDateTime
              )
 AS
 $BODY$
@@ -42,7 +43,9 @@ BEGIN
        
            , Object_From.ValueData                       AS FromName
            , MovementString_Comment.ValueData            AS Comment
-         
+
+           , Object_Insert.ValueData                     AS InsertName
+           , MovementDate_Insert.ValueData               AS InsertDate
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate 
@@ -67,6 +70,15 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
+            LEFT JOIN MovementDate AS MovementDate_Insert
+                                   ON MovementDate_Insert.MovementId = Movement.Id
+                                  AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+    
+            LEFT JOIN MovementLinkObject AS MLO_Insert
+                                         ON MLO_Insert.MovementId = Movement.Id
+                                        AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
      ;
   
 END;

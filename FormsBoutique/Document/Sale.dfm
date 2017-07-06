@@ -22,7 +22,7 @@ object SaleForm: TSaleForm
     Left = 0
     Top = 0
     Width = 1054
-    Height = 130
+    Height = 129
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
@@ -136,7 +136,7 @@ object SaleForm: TSaleForm
       Left = 252
       Top = 103
       TabOrder = 13
-      Width = 622
+      Width = 305
     end
     object cxLabel6: TcxLabel
       Left = 782
@@ -176,29 +176,67 @@ object SaleForm: TSaleForm
       TabOrder = 18
       Width = 127
     end
+    object cxLabel15: TcxLabel
+      Left = 566
+      Top = 85
+      Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
+    end
+    object edInsertDate: TcxDateEdit
+      Left = 566
+      Top = 103
+      EditValue = 42132d
+      Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+      Properties.EditFormat = 'dd.mm.yyyy hh:mm'
+      Properties.Kind = ckDateTime
+      Properties.ReadOnly = True
+      TabOrder = 20
+      Width = 113
+    end
+    object cxLabel18: TcxLabel
+      Left = 691
+      Top = 85
+      Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+    end
+    object edInsertName: TcxButtonEdit
+      Left = 691
+      Top = 103
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 22
+      Width = 185
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 156
+    Top = 155
     Width = 1054
-    Height = 313
+    Height = 314
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 313
+    ExplicitTop = 156
+    ExplicitHeight = 313
+    ClientRectBottom = 314
     ClientRectRight = 1054
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 289
       object cxGrid: TcxGrid
         Left = 0
         Top = 83
         Width = 1054
-        Height = 206
+        Height = 207
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 206
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -2645,6 +2683,20 @@ object SaleForm: TSaleForm
         Value = Null
         Component = cePhone
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InsertName'
+        Value = Null
+        Component = edInsertName
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InsertDate'
+        Value = 'NULL'
+        Component = edInsertDate
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     PackSize = 1
