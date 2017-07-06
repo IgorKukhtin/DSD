@@ -126,8 +126,8 @@ BEGIN
 
      ELSE
          -- курс не нужен
-         outCurrencyValue:= 0;
-         outParValue     := 0;
+         outCurrencyValue:= 1;
+         outParValue     := 1;
      END IF;
 
 
@@ -151,6 +151,23 @@ BEGIN
 
      outTotalSummPay := COALESCE(outTotalSummPriceList,0) - COALESCE(outTotalChangePercent,0) ;
 
+     outTotalPay := (SELECT SUM (MovementItem.Amount * CASE WHEN MILinkObject_Currency.ObjectId = zc_Currency_GRN() THEN 1 ELSE COALESCE (MIFloat_CurrencyValue.ValueData,1) / MIFloat_ParValue.ValueData END )
+                     FROM (SELECT FALSE AS isErased) AS tmpIsErased
+                          JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                           AND MovementItem.DescId     = zc_MI_Child()
+                                           AND MovementItem.isErased   = FALSE
+                          LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
+                                                           ON MILinkObject_Currency.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
+                          LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValue
+                                                      ON MIFloat_CurrencyValue.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_CurrencyValue.DescId         = zc_MIFloat_CurrencyValue()
+                          LEFT JOIN MovementItemFloat AS MIFloat_ParValue
+                                                      ON MIFloat_ParValue.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
+                    WHERE MovementItem.ParentId = ioId
+                    );
      -- сохранили
      ioId:= lpInsertUpdate_MovementItem_Sale   (ioId                 := ioId
                                               , inMovementId         := inMovementId
@@ -223,10 +240,16 @@ BEGIN
             
        -- в мастер записать итого сумма оплаты грн
        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), ioId, outTotalSummPay);
-
     END IF;
-
-
+    
+    -- пересчитали
+    --Итого сумма скидки (в ГРН) - док расчет
+    --Итого сумма оплаты (в ГРН) - док расчет
+    --Итого количество возврата  - док возврат
+    --Итого сумма возврата со скидкой (в ГРН)  - док возврат
+    --Итого сумма возврата оплаты (в ГРН) - док возврат  
+    PERFORM lpUpdate_MI_Sale_Total(ioId);
+    
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

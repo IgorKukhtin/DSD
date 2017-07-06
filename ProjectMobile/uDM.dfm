@@ -1172,6 +1172,7 @@ object DM: TDM
     end
     object tblMovement_RouteMemberAddressByGPS: TStringField
       FieldName = 'AddressByGPS'
+      Size = 255
     end
     object tblMovement_RouteMemberisSync: TBooleanField
       FieldName = 'isSync'
@@ -1213,6 +1214,7 @@ object DM: TDM
     end
     object tblMovementItem_VisitAddressByGPS: TStringField
       FieldName = 'AddressByGPS'
+      Size = 255
     end
     object tblMovementItem_VisitisErased: TBooleanField
       FieldName = 'isErased'
