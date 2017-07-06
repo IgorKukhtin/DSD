@@ -126,8 +126,8 @@ BEGIN
 
      ELSE
          -- курс не нужен
-         outCurrencyValue:= 0;
-         outParValue     := 0;
+         outCurrencyValue:= 1;
+         outParValue     := 1;
      END IF;
 
 
@@ -223,10 +223,8 @@ BEGIN
             
        -- в мастер записать итого сумма оплаты грн
        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), ioId, outTotalSummPay);
-
     END IF;
-
-
+    
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

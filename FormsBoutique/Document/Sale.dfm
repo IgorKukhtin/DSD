@@ -787,7 +787,7 @@ object SaleForm: TSaleForm
             Width = 80
           end
           object TotalPayOth: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1074' '#1043#1056#1053')'
+            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099', '#1075#1088#1085' ('#1076#1086#1082'.'#1088#1072#1089#1095#1077#1090')'
             DataBinding.FieldName = 'TotalPayOth'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4

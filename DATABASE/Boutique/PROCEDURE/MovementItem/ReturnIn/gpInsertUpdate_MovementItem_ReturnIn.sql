@@ -122,8 +122,8 @@ BEGIN
 
      ELSE
          -- курс не нужен
-         outCurrencyValue:= 0;
-         outParValue     := 0;
+         outCurrencyValue:= 1;
+         outParValue     := 1;
      END IF;
 
      -- расчитали сумму по элементу, для грида

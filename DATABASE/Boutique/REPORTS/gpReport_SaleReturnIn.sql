@@ -36,8 +36,11 @@ RETURNS TABLE (MovementId            Integer
              , ChangePercent    TFloat
              , OperPriceList    TFloat
              , Amount           TFloat
-             , TotalSummPriceList TFloat
-             , TotalPay         TFloat
+             , TotalSummPriceList  TFloat
+             , TotalPay            TFloat
+             , SummChangePercent   TFloat
+             , TotalChangePercent  TFloat
+             , TotalPayOth         TFloat             
   )
 AS
 $BODY$
@@ -162,7 +165,10 @@ BEGIN
                          LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
                                                      ON MIFloat_TotalPay.MovementItemId = MI_Master.Id
                                                     AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
-                                                     
+                         LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth
+                                                     ON MIFloat_TotalPayOth.MovementItemId = MI_Master.Id
+                                                    AND MIFloat_TotalPayOth.DescId         = zc_MIFloat_TotalPayOth()
+                                                    
                          LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionMI
                                                           ON MILinkObject_PartionMI.MovementItemId = MI_Master.Id
                                                          AND MILinkObject_PartionMI.DescId         = zc_MILinkObject_PartionMI() 
@@ -172,6 +178,12 @@ BEGIN
                          LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                      ON MIFloat_ChangePercent.MovementItemId = MI_Sale.Id
                                                     AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+                         LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
+                                                     ON MIFloat_SummChangePercent.MovementItemId = MI_Sale.Id
+                                                    AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()         
+                         LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
+                                                     ON MIFloat_TotalChangePercent.MovementItemId = MI_Sale.Id
+                                                    AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent() 
                     WHERE Movement_ReturnIn.DescId = zc_Movement_ReturnIn()
                       AND Movement_ReturnIn.OperDate BETWEEN inStartDate AND inEndDate
                       --AND Movement_ReturnIn.StatusId = zc_Enum_Status_Complete() 
@@ -192,6 +204,9 @@ BEGIN
                           , tmp.OperPriceList
                           , tmp.Amount
                           , tmp.TotalPay
+                          , tmp.SummChangePercent
+                          , tmp.TotalChangePercent
+                          , tmp.TotalPayOth
                      FROM tmpSale AS tmp
                    UNION ALL
                      SELECT tmp.MovementId
@@ -209,6 +224,9 @@ BEGIN
                           , tmp.OperPriceList
                           , tmp.Amount
                           , tmp.TotalPay
+                          , tmp.SummChangePercent
+                          , tmp.TotalChangePercent
+                          , tmp.TotalPayOth
                      FROM tmpReturnIn AS tmp
                     )
             
@@ -244,11 +262,14 @@ BEGIN
              , Object_Period.ValueData        AS PeriodName
              , Object_PartionGoods.PeriodYear ::Integer
                
-             , tmpData.ChangePercent  ::TFloat
-             , tmpData.OperPriceList  ::TFloat
-             , tmpData.Amount         ::TFloat
+             , tmpData.ChangePercent       ::TFloat
+             , tmpData.OperPriceList       ::TFloat
+             , tmpData.Amount              ::TFloat
              , (tmpData.OperPriceList * tmpData.Amount) ::TFloat AS TotalSummPriceList
-             , tmpData.TotalPay       ::TFloat
+             , tmpData.TotalPay            ::TFloat
+             , tmpData.SummChangePercent   ::TFloat
+             , tmpData.TotalChangePercent  ::TFloat
+             , tmpData.TotalPayOth         ::TFloat
 
         FROM tmpData
             LEFT JOIN MovementDesc ON MovementDesc.Id = tmpData.MovementDescId

@@ -12,8 +12,8 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_Movement());
-     -- vbUserId:= lpGetUserBySession (inSession);
+     --vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_Movement());
+      vbUserId:= lpGetUserBySession (inSession);
 /*
      -- !!!Для Админа отключаем эти проверки, иначе из Sybase не загрузить!!!
      IF NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
