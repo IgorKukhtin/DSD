@@ -130,7 +130,7 @@ BEGIN
                                     ON MIFloat_TotalChangePercent.MovementItemId = MI_Master.Id
                                    AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()   
                         WHERE Movement.DescId = zc_Movement_Sale()
-                          --AND Movement.StatusId = zc_Enum_Status_Complete()
+                          AND Movement.StatusId = zc_Enum_Status_Complete()
                      UNION ALL
                         --- возврат от покупателя
                         SELECT Movement.Id          AS MovementId
@@ -204,7 +204,7 @@ BEGIN
                                     ON MIFloat_TotalChangePercent.MovementItemId = MI_Master.Id
                                    AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()   
                         WHERE Movement.DescId = zc_Movement_ReturnIn()
-                          --AND Movement.StatusId = zc_Enum_Status_Complete()
+                          AND Movement.StatusId = zc_Enum_Status_Complete()
 
                       ) 
  
