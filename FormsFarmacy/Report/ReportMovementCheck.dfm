@@ -3,9 +3,8 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
   ClientHeight = 480
   ClientWidth = 1251
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -583
   ExplicitWidth = 1267
-  ExplicitHeight = 519
+  ExplicitHeight = 518
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -457,6 +456,38 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             Options.Editing = False
             Width = 75
           end
+          object isClose: TcxGridDBColumn
+            Caption = #1047#1072#1082#1088#1099#1090' '#1082#1086#1076' '#1087#1086' '#1074#1089#1077#1081' '#1089#1077#1090#1080
+            DataBinding.FieldName = 'IsClose'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 67
+          end
+          object UpdateDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'. '#1090#1086#1074#1072#1088#1072')'
+            DataBinding.FieldName = 'UpdateDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object MCSIsClose: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085' '#1082#1086#1076
+            DataBinding.FieldName = 'MCSIsClose'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
+          object MCSIsCloseDateChange: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' "'#1091#1076#1072#1083#1077#1085' '#1082#1086#1076'"'
+            DataBinding.FieldName = 'MCSIsCloseDateChange'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 58
+          end
         end
       end
     end
@@ -839,7 +870,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     Left = 432
-    Top = 64
+    Top = 216
   end
   object rdUnit: TRefreshDispatcher
     IdParam.Value = Null
@@ -849,8 +880,8 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
       item
         Component = UnitGuides
       end>
-    Left = 280
-    Top = 64
+    Left = 208
+    Top = 240
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -878,8 +909,8 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 336
-    Top = 64
+    Left = 296
+    Top = 208
   end
   object spGet_UserUnit: TdsdStoredProc
     StoredProcName = 'gpGet_UserUnit'
@@ -902,7 +933,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 392
-    Top = 64
+    Left = 376
+    Top = 208
   end
 end

@@ -1,9 +1,8 @@
--- Function: gpInsertUpdate_Object_GoodsBarCode_Load
+-- Function: gpInsertUpdate_Object_GoodsBarCode_Load2
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsBarCode_Load (Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsBarCode_Load_Price (Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsBarCode_Load (
-    IN inCode             Integer,   -- Наш Код товара
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsBarCode_Load_Price (
     IN inCommonCode       Integer,   --  
     IN inName             TVarChar,  -- Название товара
     IN inProducerName     TVarChar,  -- Производитель
@@ -34,24 +33,31 @@ BEGIN
       vbUserId:= lpGetUserBySession (inSession);
       vbErrorText:= '';
 
-      IF COALESCE (inCode, 0) = 0
+      IF COALESCE (inCommonCode, 0) = 0
       THEN
-           vbErrorText:= vbErrorText || 'Нулевой код нашего товара;';
+           vbErrorText:= vbErrorText || 'Нулевой код Моріона;';
       END IF;
 
       -- определяется <Торговая сеть>
       vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
-      -- ищем ИД нашего товара по коду
-      SELECT Object_Goods.Id
-      INTO vbGoodsId
-      FROM Object AS Object_Goods
-           JOIN ObjectLink AS ObjectLink_Goods_Object
-                           ON ObjectLink_Goods_Object.ObjectId = Object_Goods.Id
-                          AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-                          AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
-      WHERE Object_Goods.DescId = zc_Object_Goods()
-        AND Object_Goods.ObjectCode = COALESCE (inCode, 0);
+      -- Ищем по общему коду 
+       SELECT ObjectLink_LinkGoods_GoodsMain.ChildObjectId AS GoodsId
+            INTO vbGoodsId
+       FROM Object AS Object_Goods
+            INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                  ON ObjectLink_Goods_Object.ObjectId      = Object_Goods.Id
+                                 AND ObjectLink_Goods_Object.DescId        = zc_ObjectLink_Goods_Object()
+                                 AND ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_Marion()
+            INNER JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                                  ON ObjectLink_LinkGoods_Goods.ChildObjectId = Object_Goods.Id
+                                 AND ObjectLink_LinkGoods_Goods.DescId        = zc_ObjectLink_LinkGoods_Goods()
+            INNER JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
+                                  ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
+              
+       WHERE Object_Goods.ObjectCode = COALESCE (inCommonCode, 0)
+         AND Object_Goods.DescId = zc_Object_Goods();
+    
 
       IF COALESCE (vbGoodsId, 0) = 0
       THEN
@@ -267,26 +273,18 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Ярошенко Р.Ф.
- 05.06.2017                                                      *
+ 07.07.17         *
+ 05.06.17                                                        *
 */
 
 /* 
-SELECT * FROM gpInsertUpdate_Object_GoodsBarCode_Load (inCode:= 5622,   -- Наш Код товара
-                                                       inName:= 'L-лізина есцинат р-н для ін"єкцій, 1 мг/мл 5 мл амп № 10',  -- Название товара
-                                                       inProducerName:= 'Галичфарм',  -- Производитель
-                                                       inGoodsCode:= '274',  -- Код товара поставщика
-                                                       inBarCode:= '4823000800724',  -- Штрих-код
+SELECT * FROM gpInsertUpdate_Object_GoodsBarCode_Load2 (inCommonCode:= 5622,   --код мариона
+                                                       inName:= 'L-Тироксин-125 табл. 125мкг N50 (25х2)',  -- Название товара
+                                                       inProducerName:= 'Берлін Хемі АГ, Німеччина',  -- Производитель
+                                                       inGoodsCode:= '072.0138',  -- Код товара поставщика
+                                                       inBarCode:= '4013054007822',  -- Штрих-код
                                                        inJuridicalName:= 'Фармлига',  -- Поставщик
                                                        inSession:= zfCalc_UserAdmin()   -- сессия пользователя
                                                       );
 */
-/*
-SELECT * FROM gpInsertUpdate_Object_GoodsBarCode_Load (inCode:= 9851,   -- Наш Код товара
-                                                       inName:= 'Халат мед.стер.р.L(50-52)117см(спанбонд)на завяз.д/пос.1220507"Славна"',  -- Название товара
-                                                       inProducerName:= 'Технокомплекс',  -- Производитель
-                                                       inGoodsCode:= '393.0189',  -- Код товара поставщика
-                                                       inBarCode:= '4820101882314',  -- Штрих-код
-                                                       inJuridicalName:= 'БаДМ',  -- Поставщик
-                                                       inSession:= zfCalc_UserAdmin()   -- сессия пользователя
-                                                      );
-*/
+

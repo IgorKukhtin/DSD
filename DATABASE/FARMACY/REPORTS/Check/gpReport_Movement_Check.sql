@@ -50,7 +50,11 @@ RETURNS TABLE (
   PartionPriceInvNumber TVarChar,
   PartionPriceOperDate  TDateTime,
   UnitName              TVarChar,
-  OurJuridicalName      TVarChar
+  OurJuridicalName      TVarChar,
+  
+  IsClose Boolean, UpdateDate TDateTime,
+  MCSIsClose Boolean, MCSIsCloseDateChange TDateTime
+  
 
 )
 AS
@@ -243,16 +247,30 @@ BEGIN
                                             ON ObjectHistoryFloat_Price.ObjectHistoryId = ObjectHistory_Price.Id
                                            AND ObjectHistoryFloat_Price.DescId = zc_ObjectHistoryFloat_Price_Value()
                     )
+     
+     , tmpPriceClose AS ( SELECT tmp.GoodsId
+                               , Object_Price.MCSIsClose
+                               , Object_Price.MCSIsCloseDateChange
+                          FROM (SELECT DISTINCT tmpPromoUnit.GoodsId 
+                                FROM tmpPromoUnit
+                                UNION
+                                SELECT DISTINCT tmpDataRez.GoodsId 
+                                FROM tmpDataRez
+                                ) AS tmp
+                               LEFT JOIN Object_Price_View AS Object_Price
+                                                           ON Object_Price.GoodsId  = tmp.GoodsId
+                                                          AND Object_Price.UnitId = inUnitId
+                          )
 
         -- результат
         SELECT
             Object_From_Income.ObjectCode                                      AS JuridicalCode
            ,Object_From_Income.ValueData                                       AS JuridicalName
 
-           ,Object_Goods_View.Id                                                AS GoodsId
-           ,Object_Goods_View.GoodsCodeInt  ::Integer                           AS GoodsCode
-           ,Object_Goods_View.GoodsName                                         AS GoodsName
-           ,Object_Goods_View.GoodsGroupName                                    AS GoodsGroupName
+           , Object_Goods.Id                                                   AS GoodsId
+           , Object_Goods.ObjectCode                                           AS GoodsCode
+           , Object_Goods.ValueData                                            AS GoodsName
+           , Object_GoodsGroup.ValueData                                       AS GoodsGroupName
            -- ,Object_Goods_View.NDSKindName                                       AS NDSKindName
            ,Object_NDSKind_Income.ValueData                                     AS NDSKindName
            , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar           AS ConditionsKeepName           
@@ -304,13 +322,20 @@ BEGIN
 
            , Object_To_Income.ValueData              AS UnitName
            , Object_OurJuridical_Income.ValueData    AS OurJuridicalName
+
+           , COALESCE(ObjectBoolean_Goods_Close.ValueData, False)            AS isClose
+           , COALESCE(ObjectDate_Update.ValueData, Null)        ::TDateTime  AS UpdateDate   
+           , COALESCE(tmpPriceClose.MCSIsClose, False)                       AS MCSIsClose
+           , COALESCE(tmpPriceClose.MCSIsCloseDateChange, Null) ::TDateTime  AS MCSIsCloseDateChange
+      
         FROM tmpDataRez AS tmpData
              LEFT JOIN Object AS Object_From_Income ON Object_From_Income.Id = tmpData.JuridicalId_Income
              LEFT JOIN Object AS Object_NDSKind_Income ON Object_NDSKind_Income.Id = tmpData.NDSKindId_Income
 
              FUll JOIN tmpPromoUnit ON tmpPromoUnit.GoodsId = tmpData.GoodsId
           
-             LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = COALESCE (tmpData.GoodsId,tmpPromoUnit.GoodsId)
+             --LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = COALESCE (tmpData.GoodsId,tmpPromoUnit.GoodsId)
+             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (tmpData.GoodsId,tmpPromoUnit.GoodsId)
 
              LEFT JOIN Object AS Object_To_Income ON Object_To_Income.Id = tmpData.ToId_Income
              LEFT JOIN Object AS Object_OurJuridical_Income ON Object_OurJuridical_Income.Id = tmpData.OurJuridicalId_Income
@@ -322,14 +347,30 @@ BEGIN
              LEFT JOIN MovementDesc AS MovementDesc_Price ON MovementDesc_Price.Id = Movement_Price.DescId
              -- условия хранения
              LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
-                                  ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.Id
+                                  ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
              LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
  
              LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpPromoUnit.GoodsId
         --     FUll JOIN tmpPromoUnit ON tmpPromoUnit.GoodsId = tmpData.GoodsId
-        ORDER BY
-            GoodsGroupName, GoodsName;
+
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+             
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Close
+                                     ON ObjectBoolean_Goods_Close.ObjectId = Object_Goods.Id
+                                    AND ObjectBoolean_Goods_Close.DescId = zc_ObjectBoolean_Goods_Close()  
+             LEFT JOIN ObjectDate AS ObjectDate_Update
+                                  ON ObjectDate_Update.ObjectId = Object_Goods.Id
+                                 AND ObjectDate_Update.DescId = zc_ObjectDate_Protocol_Update()  
+                                                                          
+             LEFT JOIN tmpPriceClose ON tmpPriceClose.GoodsId = Object_Goods.Id                                 
+                                                
+        ORDER BY Object_GoodsGroup.ValueData
+               , Object_Goods.ValueData
+;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -337,6 +378,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 07.07.17         *
  17.02.17         *
  12.01.17         *
  14.03.16                                        * ALL
