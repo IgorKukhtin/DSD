@@ -3270,8 +3270,16 @@ begin
 end;
 
 procedure TMainForm.pLoadDocumentItem_Sale(SaveCount: Integer);
+var zc_Enum_DiscountSaleKind_Period , zc_Enum_DiscountSaleKind_Client, zc_Enum_DiscountSaleKind_Outlet :Integer;
 begin
      if (not cbSale.Checked)or(not cbSale.Enabled) then exit;
+     //
+     fOpenSqToQuery ('select zc_Enum_DiscountSaleKind_Period() AS RetV ');
+     zc_Enum_DiscountSaleKind_Period:=toSqlQuery.FieldByName('RetV').AsInteger;
+     fOpenSqToQuery ('select zc_Enum_DiscountSaleKind_Client() AS RetV ');
+     zc_Enum_DiscountSaleKind_Client:=toSqlQuery.FieldByName('RetV').AsInteger;
+     fOpenSqToQuery ('select zc_Enum_DiscountSaleKind_Outlet() AS RetV ');
+     zc_Enum_DiscountSaleKind_Outlet:=toSqlQuery.FieldByName('RetV').AsInteger;
      //
      myEnabledCB(cbSale);
      //
@@ -3287,8 +3295,11 @@ begin
         Add('    , -1 * BillItems.OperCount as Amount');
         Add('    , 0 as SummChangePercent');
         Add('    , BillItems.OperPrice as OperPriceList');
+        Add('    , 0 as ChangePercent');
         Add('    , '''' as BarCode');
+        Add('    , '''' as Comment');
         Add('    , zc_rvYes() as isBill');
+        Add('    , zc_rvYes() as isClose');
         Add('from DBA.Bill');
         Add('    join BillItems  on BillItems.BillId = Bill.Id');
         Add('    left outer join BillItemsIncome on BillItemsIncome.id  = BillItems.BillItemsIncomeId');
@@ -3304,11 +3315,16 @@ begin
         Add('    , DiscountMovementItem_byBarCode.OperCount as Amount');
         Add('    , DiscountMovementItem_byBarCode.SummDiscountManual as SummChangePercent');
         Add('    , DiscountMovementItem_byBarCode.OperPrice as OperPriceList');
+        Add('    , DiscountMovementItem_byBarCode.DiscountTax AS ChangePercent');
         Add('    , DiscountMovementItem_byBarCode.BarCode_byClient as BarCode');
+        Add('    , DiscountMovementItem_byBarCode.CommentInfo as Comment');
         Add('    , zc_rvNo() as isBill');
+        Add('    , case when DiscountMovementItem_byBarCode_all.BillItemsId > 0 then zc_rvYes() else zc_rvNo() end  as isClose');
         Add('FROM dba.DiscountMovementItem_byBarCode');
         Add('    join DiscountMovement     on DiscountMovement.id = DiscountMovementItem_byBarCode.DiscountMovementId');
         Add('    left outer join BillItemsIncome on BillItemsIncome.id  = DiscountMovementItem_byBarCode.BillItemsIncomeId');
+        Add('    left outer join _data_all on _data_all.DatabaseId  = DiscountMovementItem_byBarCode.DatabaseId');
+        Add('                             and _data_all.ReplId      = DiscountMovementItem_byBarCode.ReplId');
         Add('WHERE DiscountMovement.descId = 1  AND DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add('ORDER BY DiscountMovement.OperDate, ObjectId ');
         Open;
@@ -3332,7 +3348,9 @@ begin
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inSummChangePercent',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('ioOperPriceList',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('ioChangePercent',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inBarCode',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
         //
         while not EOF do
         begin
@@ -3344,17 +3362,25 @@ begin
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId').AsInteger;
              toStoredProc.Params.ParamByName('inPartionId').Value:=FieldByName('PartionId').AsInteger;
+             if FieldByName('isBill').AsInteger = zc_rvYes
+             then toStoredProc.Params.ParamByName('inIsPay').Value:= TRUE
+             else toStoredProc.Params.ParamByName('inIsPay').Value:= FALSE;
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
              toStoredProc.Params.ParamByName('inSummChangePercent').Value:=FieldByName('SummChangePercent').AsFloat;
              toStoredProc.Params.ParamByName('ioOperPriceList').Value:=FieldByName('OperPriceList').AsFloat;
+             toStoredProc.Params.ParamByName('ioChangePercent').Value:=FieldByName('ChangePercent').AsFloat;
              toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode').AsString;
+             toStoredProc.Params.ParamByName('inComment').Value:=FieldByName('Comment').AsString;
+
 
              if not myExecToStoredProc then ;//exit;
              //
-             if FieldByName('Id_Postgres').AsInteger=0 then
-               fExecSqFromQuery('update dba.DiscountMovementItem_byBarCode set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             if (FieldByName('Id_Postgres').AsInteger=0) and(FieldByName('isBill').AsInteger=zc_rvNo) then
+                fExecSqFromQuery('update dba.BillItems set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString)
+             else
+                 if (FieldByName('Id_Postgres').AsInteger=0) and(FieldByName('isBill').AsInteger=zc_rvYes) then
+                   fExecSqFromQuery('update dba.DiscountMovementItem_byBarCode set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
-
              Next;
              Application.ProcessMessages;
              Gauge.Progress:=Gauge.Progress+1;
