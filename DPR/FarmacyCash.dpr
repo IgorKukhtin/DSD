@@ -81,7 +81,8 @@ uses
   DiscountDialog in '..\FormsFarmacy\Cash\DiscountDialog.pas' {DiscountDialogForm: TParentForm},
   MediCard.Intf in '..\FormsFarmacy\DiscountService\MediCard.Intf.pas',
   MediCard.Dsgn in '..\FormsFarmacy\DiscountService\MediCard.Dsgn.pas',
-  MediCard.Classes in '..\FormsFarmacy\DiscountService\MediCard.Classes.pas';
+  MediCard.Classes in '..\FormsFarmacy\DiscountService\MediCard.Classes.pas',
+  LocalStorage in '..\FormsFarmacy\Cash\LocalStorage.pas';
 
 {$R *.res}
 
@@ -135,7 +136,7 @@ begin
         gc_isSetDefault := True;
       //
       Application.CreateForm(TdmMain, dmMain);
-      if MForm then  // определяет главную форму
+  if MForm then  // определяет главную форму
         Application.CreateForm(TMainCashForm, MainCash.MainCashForm) // имя модуля обязательно
       else  // Форма работате в связке с FarmacyCashServise.exe
         Application.CreateForm(TMainCashForm2, MainCash2.MainCashForm); // имя модуля обязательно
