@@ -163,6 +163,11 @@ type
     Remains: TcxGridDBColumn;
     actOpenReportForm: TdsdOpenForm;
     bbOpenReportForm: TdxBarButton;
+    cxLabel15: TcxLabel;
+    edInsertDate: TcxDateEdit;
+    cxLabel18: TcxLabel;
+    edInsertName: TcxButtonEdit;
+    Comment: TcxGridDBColumn;
   private
   public
   end;

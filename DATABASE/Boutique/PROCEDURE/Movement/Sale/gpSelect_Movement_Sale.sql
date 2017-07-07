@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , TotalCountReturn TFloat, TotalSummReturn TFloat, TotalSummPayReturn TFloat
              , FromName TVarChar, ToName TVarChar
              , Comment TVarChar
+             , InsertName TVarChar, InsertDate TDateTime
              )
 AS
 $BODY$
@@ -53,6 +54,9 @@ BEGIN
            , Object_From.ValueData                       AS FromName
            , Object_To.ValueData                         AS ToName
            , MovementString_Comment.ValueData            AS Comment
+
+           , Object_Insert.ValueData                     AS InsertName
+           , MovementDate_Insert.ValueData               AS InsertDate
          
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -106,6 +110,15 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
+            LEFT JOIN MovementDate AS MovementDate_Insert
+                                   ON MovementDate_Insert.MovementId = Movement.Id
+                                  AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+    
+            LEFT JOIN MovementLinkObject AS MLO_Insert
+                                         ON MLO_Insert.MovementId = Movement.Id
+                                        AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
      ;
   
 END;

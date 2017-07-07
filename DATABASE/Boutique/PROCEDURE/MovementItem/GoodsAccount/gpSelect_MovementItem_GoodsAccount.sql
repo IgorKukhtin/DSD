@@ -29,6 +29,7 @@ RETURNS TABLE (Id Integer, PartionId Integer
              , TotalPay_Grn TFloat, TotalPay_USD TFloat, TotalPay_Eur TFloat, TotalPay_Card TFloat
              , TotalPay TFloat, SummChangePercent TFloat
              , PartionMI_Id Integer, SaleMI_Id Integer, MovementId_Sale Integer, InvNumber_Sale_Full TVarChar, OperDate_Sale TDatetime , DescName TVarChar
+             , Comment TVarChar
              , isErased Boolean
               )
 AS
@@ -95,40 +96,41 @@ BEGIN
                                     - COALESCE (MIFloat_TotalReturn.ValueData, 0)
                                AS TFloat) AS SummDebt
                         FROM Movement 
-                            INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                    ON MovementLinkObject_To.MovementId = Movement.Id
-                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                   AND MovementLinkObject_To.ObjectId = vbClientId
-                             LEFT JOIN MovementItem AS MI_Master ON MI_Master.MovementId = Movement.Id
-                                   AND MI_Master.DescId = zc_MI_Master()
-                                   AND MI_Master.isErased = False
+                             INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                           ON MovementLinkObject_To.MovementId = Movement.Id
+                                                          AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                          AND MovementLinkObject_To.ObjectId = vbClientId
+                             LEFT JOIN MovementItem AS MI_Master 
+                                                    ON MI_Master.MovementId = Movement.Id
+                                                   AND MI_Master.DescId = zc_MI_Master()
+                                                   AND MI_Master.isErased = False
                              LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                    ON MIFloat_CountForPrice.MovementItemId = MI_Master.Id
-                                   AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                                                         ON MIFloat_CountForPrice.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
                              LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
-                                    ON MIFloat_OperPrice.MovementItemId = MI_Master.Id
-                                   AND MIFloat_OperPrice.DescId = zc_MIFloat_OperPrice()    
+                                                         ON MIFloat_OperPrice.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_OperPrice.DescId = zc_MIFloat_OperPrice()    
                              LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
-                                    ON MIFloat_OperPriceList.MovementItemId = MI_Master.Id
-                                   AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
+                                                         ON MIFloat_OperPriceList.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
                              LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValue
-                                    ON MIFloat_CurrencyValue.MovementItemId = MI_Master.Id
-                                   AND MIFloat_CurrencyValue.DescId = zc_MIFloat_CurrencyValue()    
+                                                         ON MIFloat_CurrencyValue.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_CurrencyValue.DescId = zc_MIFloat_CurrencyValue()    
                              LEFT JOIN MovementItemFloat AS MIFloat_ParValue
-                                    ON MIFloat_ParValue.MovementItemId = MI_Master.Id
-                                   AND MIFloat_ParValue.DescId = zc_MIFloat_ParValue() 
+                                                         ON MIFloat_ParValue.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_ParValue.DescId = zc_MIFloat_ParValue() 
                              LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
-                                    ON MIFloat_TotalPay.MovementItemId = MI_Master.Id
-                                   AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()    
+                                                         ON MIFloat_TotalPay.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()    
                              LEFT JOIN MovementItemFloat AS MIFloat_TotalReturn
-                                    ON MIFloat_TotalReturn.MovementItemId = MI_Master.Id
-                                   AND MIFloat_TotalReturn.DescId         = zc_MIFloat_TotalReturn()    
+                                                         ON MIFloat_TotalReturn.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_TotalReturn.DescId         = zc_MIFloat_TotalReturn()    
                              LEFT JOIN MovementItemFloat AS MIFloat_TotalPayReturn
-                                    ON MIFloat_TotalPayReturn.MovementItemId = MI_Master.Id
-                                   AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn() 
+                                                         ON MIFloat_TotalPayReturn.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn() 
                              LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
-                                    ON MIFloat_TotalChangePercent.MovementItemId = MI_Master.Id
-                                   AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()   
+                                                         ON MIFloat_TotalChangePercent.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()   
                         WHERE Movement.DescId = zc_Movement_Sale()
                           AND Movement.StatusId = zc_Enum_Status_Complete()
                      UNION ALL
@@ -169,40 +171,40 @@ BEGIN
 
                              , CAST ((CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) <> 0
                                              THEN CAST (COALESCE (MI_Master.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) / COALESCE (MIFloat_CountForPrice.ValueData, 1) AS NUMERIC (16, 2))
-                                          ELSE CAST ( COALESCE (MI_Master.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 2))
-                                     END) * COALESCE (MIFloat_CurrencyValue.ValueData, 1)
+                                           ELSE CAST ( COALESCE (MI_Master.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 2))
+                                      END) * COALESCE (MIFloat_CurrencyValue.ValueData, 1)
                                     - COALESCE (MIFloat_TotalChangePercent.ValueData, 0)
                                     - COALESCE (MIFloat_TotalPay.ValueData, 0)
                                AS TFloat) AS SummDebt
                         FROM Movement 
                             INNER JOIN MovementLinkObject AS MovementLinkObject_From
-                                    ON MovementLinkObject_From.MovementId = Movement.Id
-                                   AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                   AND MovementLinkObject_From.ObjectId = vbClientId  -- 459
+                                                          ON MovementLinkObject_From.MovementId = Movement.Id
+                                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                         AND MovementLinkObject_From.ObjectId = vbClientId  -- 459
                              LEFT JOIN MovementItem AS MI_Master ON MI_Master.MovementId = Movement.Id
-                                   AND MI_Master.DescId = zc_MI_Master()
-                                   AND MI_Master.isErased = False
+                                                   AND MI_Master.DescId = zc_MI_Master()
+                                                   AND MI_Master.isErased = False
                              LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                    ON MIFloat_CountForPrice.MovementItemId = MI_Master.Id
-                                   AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                                                         ON MIFloat_CountForPrice.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
                              LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
-                                    ON MIFloat_OperPrice.MovementItemId = MI_Master.Id
-                                   AND MIFloat_OperPrice.DescId = zc_MIFloat_OperPrice()    
+                                                         ON MIFloat_OperPrice.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_OperPrice.DescId = zc_MIFloat_OperPrice()    
                              LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
-                                    ON MIFloat_OperPriceList.MovementItemId = MI_Master.Id
-                                   AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
+                                                         ON MIFloat_OperPriceList.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
                              LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValue
-                                    ON MIFloat_CurrencyValue.MovementItemId = MI_Master.Id
-                                   AND MIFloat_CurrencyValue.DescId = zc_MIFloat_CurrencyValue()    
+                                                         ON MIFloat_CurrencyValue.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_CurrencyValue.DescId = zc_MIFloat_CurrencyValue()    
                              LEFT JOIN MovementItemFloat AS MIFloat_ParValue
-                                    ON MIFloat_ParValue.MovementItemId = MI_Master.Id
-                                   AND MIFloat_ParValue.DescId = zc_MIFloat_ParValue() 
+                                                         ON MIFloat_ParValue.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_ParValue.DescId = zc_MIFloat_ParValue() 
                              LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
-                                    ON MIFloat_TotalPay.MovementItemId = MI_Master.Id
-                                   AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()    
+                                                         ON MIFloat_TotalPay.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()    
                              LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
-                                    ON MIFloat_TotalChangePercent.MovementItemId = MI_Master.Id
-                                   AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()   
+                                                         ON MIFloat_TotalChangePercent.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()   
                         WHERE Movement.DescId = zc_Movement_ReturnIn()
                           AND Movement.StatusId = zc_Enum_Status_Complete()
 
@@ -216,12 +218,19 @@ BEGIN
                            , MovementItem.Amount 
                            , COALESCE (MIFloat_SummChangePercent.ValueData, 0)     AS SummChangePercent
                            , COALESCE (MIFloat_TotalPay.ValueData, 0)              AS TotalPay
+                           
+                           , COALESCE (MIString_Comment.ValueData,'')              AS Comment
                           
                            , MovementItem.isErased
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                              AND MovementItem.DescId     = zc_MI_Master()
                                              AND MovementItem.isErased   = tmpIsErased.isErased
+                                             
+                            LEFT JOIN MovementItemString AS MIString_Comment
+                                                         ON MIString_Comment.MovementItemId = MovementItem.Id
+                                                        AND MIString_Comment.DescId = zc_MIString_Comment()
+                                                       
                             LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
                                                         ON MIFloat_SummChangePercent.MovementItemId = MovementItem.Id
                                                        AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
@@ -260,6 +269,7 @@ BEGIN
                            , COALESCE (tmpMI_Sale.TotalReturn, 0)             AS TotalReturn
                            , COALESCE (tmpMI_Sale.TotalPayReturn, 0)          AS TotalPay_Return
                            , COALESCE (tmpMI_Sale.SummDebt,0)                 AS SummDebt
+                           , COALESCE (tmpMI_Master.Comment, '')              AS Comment
                            , COALESCE (tmpMI_Master.isErased, False)          AS isErased
                 FROM tmpMI_Sale
                      FULL JOIN tmpMI_Master ON tmpMI_Master.GoodsId = tmpMI_Sale.GoodsId
@@ -333,6 +343,7 @@ BEGIN
            , COALESCE (Movement_Sale.OperDate, tmpMI.OperDate_Sale)    AS OperDate_Sale
            , MovementDesc.ItemName AS DescName 
 
+           , tmpMI.Comment                  ::TVarChar
            , tmpMI.isErased
 
        FROM tmpMI
@@ -369,12 +380,19 @@ BEGIN
                            , MovementItem.Amount 
                            , COALESCE (MIFloat_TotalPay.ValueData, 0)              AS TotalPay
                            , COALESCE (MIFloat_SummChangePercent.ValueData, 0)     AS SummChangePercent
+                           
+                           , COALESCE (MIString_Comment.ValueData,'')              AS Comment
                           
                            , MovementItem.isErased
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                              AND MovementItem.DescId     = zc_MI_Master()
                                              AND MovementItem.isErased   = tmpIsErased.isErased
+                                             
+                            LEFT JOIN MovementItemString AS MIString_Comment
+                                                         ON MIString_Comment.MovementItemId = MovementItem.Id
+                                                        AND MIString_Comment.DescId = zc_MIString_Comment()
+                                                        
                             LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
                                                         ON MIFloat_TotalPay.MovementItemId = MovementItem.Id
                                                        AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()    
@@ -473,12 +491,10 @@ BEGIN
            , Movement_Sale.OperDate         AS OperDate_Sale
            , MovementDesc.ItemName AS DescName 
 
+           , tmpMI.Comment                  ::TVarChar
+
            , tmpMI.isErased
 
-/*
-                             , COALESCE (MIFloat_TotalReturn.ValueData, 0)     AS TotalReturn
-                             , COALESCE (MIFloat_TotalPayReturn.ValueData, 0)  AS TotalPayReturn
-*/
        FROM tmpMI_Master AS tmpMI
             LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI.Id
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
@@ -541,6 +557,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 06.07.17         *
  18.05.17         *
 */
 

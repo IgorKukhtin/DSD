@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , ToId Integer, ToName TVarChar
              , HappyDate TDateTime, CityName TVarChar, Address TVarChar, PhoneMobile TVarChar, Phone TVarChar
              , Comment TVarChar 
+             , InsertName TVarChar, InsertDate TDateTime
                )
 AS
 $BODY$
@@ -56,7 +57,11 @@ BEGIN
              , CAST ('' as TVarChar)            AS Phone
              , CAST ('' as TVarChar)            AS Comment
 
-          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
+             , COALESCE(Object_Insert.ValueData,'')  ::TVarChar AS InsertName
+             , CURRENT_TIMESTAMP ::TDateTime    AS InsertDate
+             
+          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
+               LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId;
      ELSE
        RETURN QUERY 
          SELECT
@@ -87,7 +92,9 @@ BEGIN
              , ObjectString_Phone.ValueData           AS Phone
 
              , MovementString_Comment.ValueData       AS Comment
-         
+             
+             , Object_Insert.ValueData                AS InsertName
+             , COALESCE (MovementDate_Insert.ValueData, CURRENT_TIMESTAMP)  :: TDateTime AS InsertDate
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -104,7 +111,16 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
-         
+
+            LEFT JOIN MovementDate AS MovementDate_Insert
+                                   ON MovementDate_Insert.MovementId = Movement.Id
+                                  AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+    
+            LEFT JOIN MovementLinkObject AS MLO_Insert
+                                         ON MLO_Insert.MovementId = Movement.Id
+                                        AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
+            
             LEFT JOIN ObjectLink AS ObjectLink_Client_City
                                  ON ObjectLink_Client_City.ObjectId = Object_From.Id
                                 AND ObjectLink_Client_City.DescId = zc_ObjectLink_Client_City()

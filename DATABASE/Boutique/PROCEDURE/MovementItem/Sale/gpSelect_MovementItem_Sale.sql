@@ -34,6 +34,7 @@ RETURNS TABLE (Id Integer, PartionId Integer
              , TotalPayOth TFloat
              , TotalCountReturn TFloat, TotalReturn TFloat
              , TotalPayReturn TFloat
+             , Comment TVarChar
              , isErased Boolean
               )
 AS
@@ -87,11 +88,17 @@ BEGIN
                            , COALESCE (MIFloat_TotalCountReturn.ValueData, 0)      AS TotalCountReturn
                            , COALESCE (MIFloat_TotalReturn.ValueData, 0)           AS TotalReturn
                            , COALESCE (MIFloat_TotalPayReturn.ValueData, 0)        AS TotalPayReturn
+                           , COALESCE (MIString_Comment.ValueData,'')              AS Comment
                            , MovementItem.isErased
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                              AND MovementItem.DescId     = zc_MI_Master()
                                              AND MovementItem.isErased   = tmpIsErased.isErased
+
+                            LEFT JOIN MovementItemString AS MIString_Comment
+                                                         ON MIString_Comment.MovementItemId = MovementItem.Id
+                                                        AND MIString_Comment.DescId = zc_MIString_Comment()
+                                                        
                             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                        AND MIFloat_CountForPrice.DescId         = zc_MIFloat_CountForPrice()
@@ -211,7 +218,7 @@ BEGIN
            , tmpMI.TotalCountReturn         ::TFloat
            , tmpMI.TotalReturn              ::TFloat
            , tmpMI.TotalPayReturn           ::TFloat
-
+           , tmpMI.Comment                  ::TVarChar
            , tmpMI.isErased
 
        FROM tmpMI_Master AS tmpMI

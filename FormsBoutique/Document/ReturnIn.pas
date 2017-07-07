@@ -166,6 +166,10 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     actOpenReportForm: TdsdOpenForm;
     bbOpenReportForm: TdxBarButton;
+    cxLabel18: TcxLabel;
+    edInsertDate: TcxDateEdit;
+    edInsertName: TcxButtonEdit;
+    cxLabel19: TcxLabel;
   private
   public
   end;

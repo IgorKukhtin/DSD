@@ -30,6 +30,7 @@ RETURNS TABLE (Id Integer, PartionId Integer
              , TotalPay_Grn TFloat, TotalPay_USD TFloat, TotalPay_Eur TFloat, TotalPay_Card TFloat
              , TotalPay TFloat, TotalPayOth TFloat
              , PartionMI_Id Integer, SaleMI_Id Integer, MovementId_Sale Integer, InvNumber_Sale_Full TVarChar
+             , Comment TVarChar
              , isErased Boolean
               )
 AS
@@ -125,12 +126,17 @@ BEGIN
                            , COALESCE (MIFloat_TotalChangePercent.ValueData, 0)    AS TotalChangePercent
                            , COALESCE (MIFloat_TotalPay.ValueData, 0)              AS TotalPay
                            , COALESCE (MIFloat_TotalPayOth.ValueData, 0)           AS TotalPayOth
-                          
+                           , COALESCE (MIString_Comment.ValueData,'')              AS Comment
                            , MovementItem.isErased
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                              AND MovementItem.DescId     = zc_MI_Master()
                                              AND MovementItem.isErased   = tmpIsErased.isErased
+
+                            LEFT JOIN MovementItemString AS MIString_Comment
+                                                         ON MIString_Comment.MovementItemId = MovementItem.Id
+                                                        AND MIString_Comment.DescId = zc_MIString_Comment()
+                                                        
                             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                        AND MIFloat_CountForPrice.DescId         = zc_MIFloat_CountForPrice()
@@ -195,7 +201,8 @@ BEGIN
                                          THEN CAST (COALESCE (tmpMI_Master.Amount,0) * COALESCE (tmpMI_Master.OperPriceList, tmpMI_Sale.OperPriceList) / COALESCE (tmpMI_Master.CountForPrice, tmpMI_Sale.CountForPrice) AS NUMERIC (16, 2))
                                          ELSE CAST (COALESCE (tmpMI_Master.Amount,0) * COALESCE (tmpMI_Master.OperPriceList, tmpMI_Sale.OperPriceList) AS NUMERIC (16, 2))
                                     END) - COALESCE (tmpMI_Master.TotalChangePercent, 0)
-                             AS TFloat) AS TotalSummPay
+                             AS TFloat)                                       AS TotalSummPay
+                           , COALESCE (tmpMI_Master.Comment, '')              AS Comment
 
                 FROM tmpMI_Sale
                      FULL JOIN tmpMI_Master ON tmpMI_Master.GoodsId = tmpMI_Sale.GoodsId
@@ -270,7 +277,7 @@ BEGIN
            , COALESCE (MI_Sale.Id, tmpMI.SaleMI_Id)  AS SaleMI_Id
            , Movement_Sale.Id                        AS MovementId_Sale
            , Movement_Sale.InvNumber                 AS InvNumber_Sale_Full
-
+           , tmpMI.Comment                  ::TVarChar
            , tmpMI.isErased
 
        FROM tmpMI
@@ -329,11 +336,17 @@ BEGIN
                                     END) - COALESCE (MIFloat_TotalChangePercent.ValueData, 0)
                              AS TFloat) AS TotalSummPay
 
+                           , COALESCE (MIString_Comment.ValueData,'')              AS Comment
                            , MovementItem.isErased
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                              AND MovementItem.DescId     = zc_MI_Master()
                                              AND MovementItem.isErased   = tmpIsErased.isErased
+
+                            LEFT JOIN MovementItemString AS MIString_Comment
+                                                         ON MIString_Comment.MovementItemId = MovementItem.Id
+                                                        AND MIString_Comment.DescId = zc_MIString_Comment()
+
                             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                        AND MIFloat_CountForPrice.DescId         = zc_MIFloat_CountForPrice()
@@ -437,7 +450,7 @@ BEGIN
            , MI_Sale.Id                     AS SaleMI_Id
            , Movement_Sale.Id               AS MovementId_Sale
            , Movement_Sale.InvNumber        AS InvNumber_Sale_Full
-
+           , tmpMI.Comment                  ::TVarChar
            , tmpMI.isErased
 
        FROM tmpMI_Master AS tmpMI

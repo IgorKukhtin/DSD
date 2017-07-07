@@ -59,8 +59,8 @@ BEGIN
                                              AND MovementItem.DescId     = zc_MI_Master()
                                              AND MovementItem.isErased   = tmpIsErased.isErased
                             LEFT JOIN MovementItemString AS MIString_Comment
-                                                        ON MIString_Comment.MovementItemId = MovementItem.Id
-                                                       AND MIString_Comment.DescId = zc_MIString_Comment()
+                                                         ON MIString_Comment.MovementItemId = MovementItem.Id
+                                                        AND MIString_Comment.DescId = zc_MIString_Comment()
 
                             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id

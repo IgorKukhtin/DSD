@@ -162,6 +162,10 @@ type
     OperDate_Sale: TcxGridDBColumn;
     InvNumber_Sale_Full: TcxGridDBColumn;
     DescName: TcxGridDBColumn;
+    cxLabel18: TcxLabel;
+    edInsertDate: TcxDateEdit;
+    edInsertName: TcxButtonEdit;
+    cxLabel19: TcxLabel;
   private
   public
   end;

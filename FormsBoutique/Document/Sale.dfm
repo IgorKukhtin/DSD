@@ -3,7 +3,7 @@ object SaleForm: TSaleForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 469
-  ClientWidth = 1054
+  ClientWidth = 1066
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,8 +21,8 @@ object SaleForm: TSaleForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1054
-    Height = 130
+    Width = 1066
+    Height = 129
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
@@ -136,7 +136,7 @@ object SaleForm: TSaleForm
       Left = 252
       Top = 103
       TabOrder = 13
-      Width = 622
+      Width = 305
     end
     object cxLabel6: TcxLabel
       Left = 782
@@ -176,18 +176,52 @@ object SaleForm: TSaleForm
       TabOrder = 18
       Width = 127
     end
+    object cxLabel15: TcxLabel
+      Left = 566
+      Top = 85
+      Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
+    end
+    object edInsertDate: TcxDateEdit
+      Left = 566
+      Top = 103
+      EditValue = 42132d
+      Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+      Properties.EditFormat = 'dd.mm.yyyy hh:mm'
+      Properties.Kind = ckDateTime
+      Properties.ReadOnly = True
+      TabOrder = 20
+      Width = 113
+    end
+    object cxLabel18: TcxLabel
+      Left = 691
+      Top = 85
+      Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+    end
+    object edInsertName: TcxButtonEdit
+      Left = 691
+      Top = 103
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 22
+      Width = 185
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 156
-    Width = 1054
-    Height = 313
+    Top = 155
+    Width = 1066
+    Height = 314
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 313
-    ClientRectRight = 1054
+    ClientRectBottom = 314
+    ClientRectRight = 1066
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -195,8 +229,8 @@ object SaleForm: TSaleForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 83
-        Width = 1054
-        Height = 206
+        Width = 1066
+        Height = 207
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -846,6 +880,13 @@ object SaleForm: TSaleForm
             Options.Editing = False
             Width = 80
           end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
           object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
@@ -870,7 +911,7 @@ object SaleForm: TSaleForm
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
-        Width = 1054
+        Width = 1066
         Height = 75
         Align = alTop
         PopupMenu = PopupMenu
@@ -1010,7 +1051,7 @@ object SaleForm: TSaleForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 75
-        Width = 1054
+        Width = 1066
         Height = 8
         HotZoneClassName = 'TcxXPTaskBarStyle'
         HotZone.Visible = False
@@ -2176,6 +2217,14 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioDiscountSaleKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DiscountSaleKindId'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisPay'
         Value = Null
         Component = cbisPay
@@ -2193,11 +2242,12 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outChangePercent'
+        Name = 'ioChangePercent'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ChangePercent'
         DataType = ftFloat
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -2345,6 +2395,15 @@ object SaleForm: TSaleForm
         Component = MasterCDS
         ComponentItem = 'DiscountSaleKindName'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -2645,6 +2704,20 @@ object SaleForm: TSaleForm
         Value = Null
         Component = cePhone
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InsertName'
+        Value = Null
+        Component = edInsertName
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InsertDate'
+        Value = 'NULL'
+        Component = edInsertDate
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -2954,6 +3027,14 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioDiscountSaleKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DiscountSaleKindId'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisPay'
         Value = Null
         Component = cbisPay
@@ -2969,12 +3050,12 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outChangePercent'
+        Name = 'ioChangePercent'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ChangePercent'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -3040,6 +3121,15 @@ object SaleForm: TSaleForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'BarCode'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

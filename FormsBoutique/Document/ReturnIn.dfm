@@ -3,7 +3,7 @@ object ReturnInForm: TReturnInForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 469
-  ClientWidth = 1054
+  ClientWidth = 1075
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object ReturnInForm: TReturnInForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1054
+    Width = 1075
     Height = 130
     Align = alTop
     BevelOuter = bvNone
@@ -169,8 +169,8 @@ object ReturnInForm: TReturnInForm
       Caption = #1044#1077#1085#1100' '#1088#1086#1078#1076#1077#1085#1080#1103
     end
     object cbisPay: TcxCheckBox
-      Left = 918
-      Top = 103
+      Left = 923
+      Top = 63
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089' '#1086#1087#1083#1072#1090#1086#1081
       Properties.ReadOnly = False
       TabOrder = 18
@@ -185,18 +185,52 @@ object ReturnInForm: TReturnInForm
       TabOrder = 19
       Width = 82
     end
+    object cxLabel18: TcxLabel
+      Left = 761
+      Top = 85
+      Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
+    end
+    object edInsertDate: TcxDateEdit
+      Left = 761
+      Top = 103
+      EditValue = 42132d
+      Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+      Properties.EditFormat = 'dd.mm.yyyy hh:mm'
+      Properties.Kind = ckDateTime
+      Properties.ReadOnly = True
+      TabOrder = 21
+      Width = 113
+    end
+    object edInsertName: TcxButtonEdit
+      Left = 880
+      Top = 103
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 22
+      Width = 170
+    end
+    object cxLabel19: TcxLabel
+      Left = 880
+      Top = 85
+      Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 156
-    Width = 1054
+    Width = 1075
     Height = 313
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 313
-    ClientRectRight = 1054
+    ClientRectRight = 1075
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -204,7 +238,7 @@ object ReturnInForm: TReturnInForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 83
-        Width = 1054
+        Width = 1075
         Height = 206
         Align = alClient
         TabOrder = 0
@@ -678,6 +712,13 @@ object ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 70
           end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
           object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
@@ -711,7 +752,7 @@ object ReturnInForm: TReturnInForm
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
-        Width = 1054
+        Width = 1075
         Height = 75
         Align = alTop
         PopupMenu = PopupMenu
@@ -842,7 +883,7 @@ object ReturnInForm: TReturnInForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 75
-        Width = 1054
+        Width = 1075
         Height = 8
         HotZoneClassName = 'TcxXPTaskBarStyle'
         HotZone.Visible = False
@@ -903,7 +944,7 @@ object ReturnInForm: TReturnInForm
     Top = 63
     Properties.ReadOnly = True
     TabOrder = 10
-    Width = 484
+    Width = 308
   end
   object cxLabel13: TcxLabel
     Left = 8
@@ -2172,6 +2213,15 @@ object ReturnInForm: TReturnInForm
         ComponentItem = 'TotalSummPay'
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 158
@@ -2486,6 +2536,20 @@ object ReturnInForm: TReturnInForm
         Component = edEndDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InsertName'
+        Value = Null
+        Component = edInsertName
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InsertDate'
+        Value = 'NULL'
+        Component = edInsertDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 200
@@ -2580,7 +2644,7 @@ object ReturnInForm: TReturnInForm
     Top = 8
   end
   object spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_Sale'
+    StoredProcName = 'gpUpdate_Status_ReturnIn'
     DataSet = MasterCDS
     DataSets = <
       item
