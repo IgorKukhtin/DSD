@@ -1,14 +1,16 @@
 -- Function: gpInsertUpdate_Object_GoodsBarCode_Load2
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsBarCode_Load_Price (Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsBarCode_Load_Price (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsBarCode_Load_Price (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsBarCode_Load_Price (
+    IN inJuridicalId      Integer,   -- Поставщик
     IN inCommonCode       Integer,   --  
     IN inName             TVarChar,  -- Название товара
     IN inProducerName     TVarChar,  -- Производитель
     IN inGoodsCode        TVarChar,  -- Код товара поставщика
     IN inBarCode          TVarChar,  -- Штрих-код
-    IN inJuridicalName    TVarChar,  -- Поставщик
+    IN inJuridicalName    TVarChar,   -- Поставщик
     IN inSession          TVarChar   -- сессия пользователя
 )
 RETURNS VOID
@@ -20,6 +22,7 @@ $BODY$
   DECLARE vbErrorText TVarChar;
   DECLARE vbObjectId Integer;
   DECLARE vbGoodsId Integer;
+  DECLARE vbCode Integer;  
   DECLARE vbGoodsMainId Integer;
   DECLARE vbJuridicalId Integer;
   DECLARE vbisLoadBarCode Boolean;
@@ -33,6 +36,11 @@ BEGIN
       vbUserId:= lpGetUserBySession (inSession);
       vbErrorText:= '';
 
+      IF COALESCE (inJuridicalId, 0) = 0
+      THEN
+          RAISE EXCEPTION 'Ошибка. Не выбрано юр.лицо';
+      END IF;
+      
       IF COALESCE (inCommonCode, 0) = 0
       THEN
            vbErrorText:= vbErrorText || 'Нулевой код Моріона;';
@@ -42,22 +50,61 @@ BEGIN
       vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
       -- Ищем по общему коду 
-       SELECT ObjectLink_LinkGoods_GoodsMain.ChildObjectId AS GoodsId
-            INTO vbGoodsId
-       FROM Object AS Object_Goods
-            INNER JOIN ObjectLink AS ObjectLink_Goods_Object
-                                  ON ObjectLink_Goods_Object.ObjectId      = Object_Goods.Id
-                                 AND ObjectLink_Goods_Object.DescId        = zc_ObjectLink_Goods_Object()
-                                 AND ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_Marion()
-            INNER JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
-                                  ON ObjectLink_LinkGoods_Goods.ChildObjectId = Object_Goods.Id
-                                 AND ObjectLink_LinkGoods_Goods.DescId        = zc_ObjectLink_LinkGoods_Goods()
-            INNER JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
-                                  ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
-              
-       WHERE Object_Goods.ObjectCode = COALESCE (inCommonCode, 0)
-         AND Object_Goods.DescId = zc_Object_Goods();
-    
+      SELECT ObjectLink_LinkGoods_GoodsMain.ChildObjectId AS GoodsId
+           INTO vbGoodsId
+      FROM Object AS Object_Goods
+           INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                 ON ObjectLink_Goods_Object.ObjectId      = Object_Goods.Id
+                                AND ObjectLink_Goods_Object.DescId        = zc_ObjectLink_Goods_Object()
+                                AND ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_Marion()
+           INNER JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                                 ON ObjectLink_LinkGoods_Goods.ChildObjectId = Object_Goods.Id
+                                AND ObjectLink_LinkGoods_Goods.DescId        = zc_ObjectLink_LinkGoods_Goods()
+           INNER JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
+                                 ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
+             
+      WHERE Object_Goods.ObjectCode = COALESCE (inCommonCode, 0)
+        AND Object_Goods.DescId = zc_Object_Goods();
+      
+      -- Ищем по штрих-коду 
+      IF COALESCE (vbGoodsId, 0) = 0 AND inBarCode <> ''
+      THEN
+        SELECT ObjectLink_LinkGoods_GoodsMain.ChildObjectId AS GoodsId
+             INTO vbGoodsId
+        FROM Object AS Object_Goods
+             INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                   ON ObjectLink_Goods_Object.ObjectId      = Object_Goods.Id
+                                  AND ObjectLink_Goods_Object.DescId        = zc_ObjectLink_Goods_Object()
+                                  AND ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_BarCode()
+             INNER JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                                   ON ObjectLink_LinkGoods_Goods.ChildObjectId = Object_Goods.Id
+                                   AND ObjectLink_LinkGoods_Goods.DescId        = zc_ObjectLink_LinkGoods_Goods()
+             INNER JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
+                                   ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
+                                  AND ObjectLink_LinkGoods_GoodsMain.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+        WHERE Object_Goods.ValueData = inBarCode
+          AND Object_Goods.DescId = zc_Object_Goods();
+      END IF;
+  
+      -- Ищем по коду и inJuridicalId
+      IF (COALESCE(vbGoodsId, 0) = 0) THEN
+          SELECT ObjectLink_LinkGoods_GoodsMain.ChildObjectId AS GoodsId
+                 INTO vbGoodsId
+        FROM ObjectString
+             INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                   ON ObjectLink_Goods_Object.ObjectId      = ObjectString.ObjectId
+                                  AND ObjectLink_Goods_Object.DescId        = zc_ObjectLink_Goods_Object()
+                                  AND ObjectLink_Goods_Object.ChildObjectId = inJuridicalId
+             INNER JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                                   ON ObjectLink_LinkGoods_Goods.ChildObjectId = ObjectString.ObjectId
+                                  AND ObjectLink_LinkGoods_Goods.DescId        = zc_ObjectLink_LinkGoods_Goods()
+             INNER JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
+                                   ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
+                                  AND ObjectLink_LinkGoods_GoodsMain.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+        WHERE ObjectString.ValueData = inGoodsCode
+          AND ObjectString.DescId = zc_ObjectString_Goods_Code();
+      END IF;
+        
 
       IF COALESCE (vbGoodsId, 0) = 0
       THEN
@@ -78,21 +125,19 @@ BEGIN
            END IF; 
       END IF;
 
-      -- ищем ИД поставщика
-      SELECT Object_Juridical.Id
-           , COALESCE (ObjectBoolean_Juridical_LoadBarCode.ValueData, FALSE) AS isLoadBarCode
-      INTO vbJuridicalId
-         , vbisLoadBarCode
+      -- загружается ли штрихкод поставщика
+      SELECT COALESCE (ObjectBoolean_Juridical_LoadBarCode.ValueData, FALSE) AS isLoadBarCode
+      INTO vbisLoadBarCode
       FROM Object AS Object_Juridical
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Juridical_LoadBarCode
                                    ON ObjectBoolean_Juridical_LoadBarCode.ObjectId = Object_Juridical.Id
                                   AND ObjectBoolean_Juridical_LoadBarCode.DescId = zc_ObjectBoolean_Juridical_LoadBarCode()
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
-        AND Object_Juridical.ValueData = inJuridicalName;
+        AND Object_Juridical.Id = inJuridicalId;
 
       IF COALESCE (vbisLoadBarCode, FALSE) = TRUE
       THEN
-           IF COALESCE (vbJuridicalId, 0) = 0
+           IF COALESCE (inJuridicalId, 0) = 0
            THEN
                 vbErrorText:= vbErrorText || 'Не найден поставщик;';
            ELSE -- ищем ИД товара поставщика
@@ -102,7 +147,7 @@ BEGIN
                      JOIN ObjectLink AS ObjectLink_Goods_Object
                                      ON ObjectLink_Goods_Object.ObjectId = ObjectString_Goods_Code.ObjectId
                                     AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-                                    AND ObjectLink_Goods_Object.ChildObjectId = vbJuridicalId 
+                                    AND ObjectLink_Goods_Object.ChildObjectId = inJuridicalId 
                 WHERE ObjectString_Goods_Code.DescId = zc_ObjectString_Goods_Code()
                   AND ObjectString_Goods_Code.ValueData = inGoodsCode;
 
@@ -180,7 +225,9 @@ BEGIN
                 END IF;
            END IF;
 
-           SELECT Id INTO vbId FROM LoadGoodsBarCode WHERE RetailId = vbObjectId AND Code = COALESCE (inCode, 0);
+           vbCode:= (SELECT Object.ObjectCode FROM Object WHERE Object.Id = COALESCE (vbGoodsId, 0) );
+
+           SELECT Id INTO vbId FROM LoadGoodsBarCode WHERE RetailId = vbObjectId AND Code = COALESCE (vbCode, 0);
 
            IF COALESCE (vbId, 0) = 0
            THEN
@@ -203,8 +250,8 @@ BEGIN
                       , COALESCE (vbGoodsMainId, 0)::Integer
                       , COALESCE (vbGoodsBarCodeId, 0)::Integer
                       , COALESCE (vbGoodsJuridicalId, 0)::Integer
-                      , COALESCE (vbJuridicalId, 0)::Integer
-                      , inCode
+                      , COALESCE (inJuridicalId, 0)::Integer
+                      , vbCode
                       , inName
                       , inProducerName
                       , inGoodsCode
@@ -219,8 +266,8 @@ BEGIN
                   , GoodsMainId      = COALESCE (vbGoodsMainId, 0)::Integer     
                   , GoodsBarCodeId   = COALESCE (vbGoodsBarCodeId, 0)::Integer  
                   , GoodsJuridicalId = COALESCE (vbGoodsJuridicalId, 0)::Integer
-                  , JuridicalId      = COALESCE (vbJuridicalId, 0)::Integer     
-                  , Code             = inCode                                   
+                  , JuridicalId      = COALESCE (inJuridicalId, 0)::Integer     
+                  , Code             = vbCode                                   
                   , Name             = inName                                   
                   , ProducerName     = inProducerName                           
                   , GoodsCode        = inGoodsCode                              
@@ -230,9 +277,9 @@ BEGIN
                 WHERE Id = vbId; 
            END IF;
 
-           IF COALESCE (vbJuridicalId, 0) <> 0
+           IF COALESCE (inJuridicalId, 0) <> 0
            THEN
-                SELECT Id INTO vbItemId FROM LoadGoodsBarCodeItem WHERE LoadGoodsBarCodeId = vbId AND JuridicalId = vbJuridicalId;
+                SELECT Id INTO vbItemId FROM LoadGoodsBarCodeItem WHERE LoadGoodsBarCodeId = vbId AND JuridicalId = inJuridicalId;
 
                 IF COALESCE (vbItemId, 0) = 0
                 THEN
@@ -247,7 +294,7 @@ BEGIN
                                                       )
                      VALUES (vbId
                            , COALESCE (vbGoodsJuridicalId, 0)::Integer
-                           , vbJuridicalId
+                           , inJuridicalId
                            , vbUserId
                            , CURRENT_TIMESTAMP
                            , inGoodsCode
@@ -277,14 +324,14 @@ $BODY$
  05.06.17                                                        *
 */
 
-/* 
-SELECT * FROM gpInsertUpdate_Object_GoodsBarCode_Load2 (inCommonCode:= 5622,   --код мариона
-                                                       inName:= 'L-Тироксин-125 табл. 125мкг N50 (25х2)',  -- Название товара
-                                                       inProducerName:= 'Берлін Хемі АГ, Німеччина',  -- Производитель
-                                                       inGoodsCode:= '072.0138',  -- Код товара поставщика
-                                                       inBarCode:= '4013054007822',  -- Штрих-код
-                                                       inJuridicalName:= 'Фармлига',  -- Поставщик
-                                                       inSession:= zfCalc_UserAdmin()   -- сессия пользователя
-                                                      );
-*/
 
+/*
+select * from gpInsertUpdate_Object_GoodsBarCode_Load_Price(inJuridicalId := '59610' 
+                                                          , inCommonCode := 316485 
+                                                          , inName := 'Eucerin 69653 Шампунь ДермоКапиляр рН5 д/чув.кож.250мл д/ежедн.исп.' 
+                                                          , inProducerName := 'KRKA, Словения' 
+                                                          , inGoodsCode := '5179104' 
+                                                          , inBarCode := '3838989571962' 
+                                                          , inJuridicalName:= 'Бадм'  -- Поставщик
+                                                          , inSession := '3');
+*/

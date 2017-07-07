@@ -19,7 +19,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  cxContainer, dsdGuides, cxTextEdit, cxMaskEdit, cxButtonEdit, cxLabel;
 
 type
   TGoodsBarCodeForm = class(TParentForm)
@@ -62,10 +63,16 @@ type
     ErrorText: TcxGridDBColumn;
     dxBarStatic1: TdxBarStatic;
     spGetImportSettingId_Price: TdsdStoredProc;
-    actDoLoad2: TExecuteImportSettingsAction;
-    actGetImportSetting2: TdsdExecStoredProc;
-    actStartLoad2: TMultiAction;
     bbStartLoad2: TdxBarButton;
+    cxLabel3: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    GuidesJuridical: TdsdGuides;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    spInsertUpdateLoad_Price: TdsdStoredProc;
+    actDoLoad_Price: TExecuteImportSettingsAction;
+    actGetImportSetting_Price: TdsdExecStoredProc;
+    actStartLoad_Price: TMultiAction;
   private
     { Private declarations }
   public

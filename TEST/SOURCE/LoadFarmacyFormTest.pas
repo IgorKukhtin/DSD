@@ -463,6 +463,7 @@ end;
 procedure TLoadFormTest.LoadLoadFormTest;
 begin
 //exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListLoadForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListLoadForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItemsLoadForm'));
@@ -481,6 +482,7 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TColorForm'));
   TdsdFormStorageFactory.GetStorage.Load('TColorForm');
+  }
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsBarCodeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsBarCodeForm');

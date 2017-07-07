@@ -2361,7 +2361,7 @@ BEGIN
     PERFORM gpInsertUpdate_DefaultValue(ioId := COALESCE(vbId,0), inDefaultKeyId := vbDefaultKeyId, inUserKey := 0, inDefaultValue := zc_Enum_ImportSetting_BarCode()::TBlob, inSession := ''::TVarChar);
 END $$;
 
---Загрузчик Данные по штрих-кодам из прайс-листа
+---Загрузчик Данные по штрих-кодам из прайс-листа
 DO $$
   DECLARE vbImportTypeId Integer;
   DECLARE vbImportTypeCode Integer;
@@ -2379,11 +2379,11 @@ BEGIN
     -- Создаем Тип загрузки
     vbImportTypeId:= gpInsertUpdate_Object_ImportType (ioId            := COALESCE(vbImportTypeId, 0), 
                                                        inCode          := COALESCE(vbImportTypeCode, 0), 
-                                                       inName          := 'Загрузка данных по штрих-кодам', 
+                                                       inName          := 'Загрузка данных по штрих-кодам из прайс-листа', 
                                                        inProcedureName := 'gpInsertUpdate_Object_GoodsBarCode_Load_Price',
                                                        inSession       := vbUserId::TVarChar);
     --Создали Enum
-    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Enum(), vbImportTypeId, 'zc_Enum_ImportType_BarCode2');
+    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Enum(), vbImportTypeId, 'zc_Enum_ImportType_BarCode_Price');
 
     --Создаём настройку загрузки
     vbImportSettingId := gpInsertUpdate_Object_ImportSettings(ioId           := COALESCE(vbImportSettingId,0),
@@ -2395,7 +2395,7 @@ BEGIN
                                                               inImportTypeId := vbImportTypeId,
                                                               inEmailId      := (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectLink_ImportSettings_Email()),
                                                               inContactPersonId:= (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectLink_ImportSettings_ContactPerson()),
-                                                              inStartRow     := 2,
+                                                              inStartRow     := 5,
                                                               inHDR          := False,
                                                               inDirectory    := NULL::TVarChar,
                                                               inQuery        := NULL::TVarChar,
@@ -2413,14 +2413,14 @@ BEGIN
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId, 0), 
                                                                 inParamNumber   := 1, 
                                                                 inName          := 'inJuridicalId', 
-                                                                inParamType     := 'ftString', 
+                                                                inParamType     := 'ftInteger', 
                                                                 inUserParamName := 'Поставщик',
                                                                 inImportTypeId  := vbImportTypeId, 
                                                                 inSession       := vbUserId::TVarChar);
     vbImportSettingsItem := 0;
     Select id INTO vbImportSettingsItem FROM Object_ImportSettingsItems_View WHERE ImportSettingsId = vbImportSettingId AND ImportTypeItemsId = vbImportTypeItemId;
     PERFORM gpInsertUpdate_Object_ImportSettingsItems(ioId                := vbImportSettingsItem,
-                                                      inName              := 'G',
+                                                      inName              := '%EXTERNALPARAM%',
                                                       inImportSettingsId  := vbImportSettingId,
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarChar,
@@ -2515,16 +2515,34 @@ BEGIN
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarChar,
                                                       inSession           := vbUserId::TVarChar);
+                                                      
+    vbImportTypeItemId := 0;
+    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inJuridicalName';
+    vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId, 0), 
+                                                                inParamNumber   := 7, 
+                                                                inName          := 'inJuridicalName', 
+                                                                inParamType     := 'ftString', 
+                                                                inUserParamName := 'Юр.лицо',
+                                                                inImportTypeId  := vbImportTypeId, 
+                                                                inSession       := vbUserId::TVarChar);
+    vbImportSettingsItem := 0;
+    Select id INTO vbImportSettingsItem FROM Object_ImportSettingsItems_View WHERE ImportSettingsId = vbImportSettingId AND ImportTypeItemsId = vbImportTypeItemId;
+    PERFORM gpInsertUpdate_Object_ImportSettingsItems(ioId                := vbImportSettingsItem,
+                                                      inName              := '%EXTERNALPARAM%',
+                                                      inImportSettingsId  := vbImportSettingId,
+                                                      inImportTypeItemsId := vbImportTypeItemId,
+                                                      inDefaultValue      := NULL::TVarChar,
+                                                      inSession           := vbUserId::TVarChar);                                                      
 
 END $$;
 
 DO $$
     DECLARE vbKey TVarChar;
     DECLARE vbDefaultKeyId Integer;
-    DECLARE vbImportSetting_BarCode2 Integer;
+    DECLARE vbImportSetting_BarCode_Price Integer;
     DECLARE vbId Integer;
 BEGIN
-    vbKey := 'TGoodsBarCodeForm;zc_Object_ImportSetting_BarCode2';
+    vbKey := 'TGoodsBarCodeForm;zc_Object_ImportSetting_BarCode_Price';
 
     -- Добавляем ключ дефолта
     SELECT Id INTO vbDefaultKeyId FROM DefaultKeys WHERE Key = vbKey; 
@@ -2537,7 +2555,7 @@ BEGIN
     FROM DefaultValue 
     WHERE DefaultKeyId = vbDefaultKeyId AND UserKeyId is NULL;
     
-    PERFORM gpInsertUpdate_DefaultValue(ioId := COALESCE(vbId,0), inDefaultKeyId := vbDefaultKeyId, inUserKey := 0, inDefaultValue := zc_Enum_ImportSetting_BarCode2()::TBlob, inSession := ''::TVarChar);
+    PERFORM gpInsertUpdate_DefaultValue(ioId := COALESCE(vbId,0), inDefaultKeyId := vbDefaultKeyId, inUserKey := 0, inDefaultValue := zc_Enum_ImportSetting_BarCode_Price()::TBlob, inSession := ''::TVarChar);
 END $$;
 
 /*-------------------------------------------------------------------------------*/

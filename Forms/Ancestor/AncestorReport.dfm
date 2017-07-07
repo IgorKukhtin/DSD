@@ -86,6 +86,7 @@ inherited AncestorReportForm: TAncestorReportForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -93,6 +94,7 @@ inherited AncestorReportForm: TAncestorReportForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 88
     Top = 56
@@ -119,6 +121,7 @@ inherited AncestorReportForm: TAncestorReportForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item

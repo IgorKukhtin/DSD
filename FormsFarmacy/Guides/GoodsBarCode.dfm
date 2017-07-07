@@ -152,6 +152,26 @@ object GoodsBarCodeForm: TGoodsBarCodeForm
       GridView = cxGridDBTableView
     end
   end
+  object cxLabel3: TcxLabel
+    Left = 309
+    Top = 86
+    Caption = #1070#1088'.'#1083#1080#1094#1086':'
+  end
+  object edJuridical: TcxButtonEdit
+    Left = 367
+    Top = 85
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.Nullstring = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
+    Properties.ReadOnly = True
+    Properties.UseNullString = True
+    TabOrder = 6
+    Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1102#1088'.'#1083#1080#1094#1086'>'
+    Width = 234
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 88
@@ -239,6 +259,18 @@ object GoodsBarCodeForm: TGoodsBarCodeForm
         end
         item
           Visible = True
+          ItemName = 'dxBarControlContainerItem1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButtonGridToExcel'
         end>
       OneOnRow = True
@@ -266,8 +298,22 @@ object GoodsBarCodeForm: TGoodsBarCodeForm
       Category = 0
     end
     object bbStartLoad2: TdxBarButton
-      Action = actStartLoad2
+      Action = actStartLoad_Price
       Category = 0
+    end
+    object dxBarControlContainerItem1: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cxLabel3
+    end
+    object dxBarControlContainerItem2: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = edJuridical
     end
   end
   object ActionList: TActionList
@@ -292,31 +338,6 @@ object GoodsBarCodeForm: TGoodsBarCodeForm
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1072#1085#1085#1099#1077' '#1087#1086' '#1096#1090#1088#1080#1093'-'#1082#1086#1076#1072#1084
       ImageIndex = 41
     end
-    object actGetImportSetting: TdsdExecStoredProc
-      Category = #1047#1072#1075#1088#1091#1079#1082#1072
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGetImportSettingId
-      StoredProcList = <
-        item
-          StoredProc = spGetImportSettingId
-        end>
-      Caption = 'actGetImportSetting'
-    end
-    object actRefresh: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
     object actDoLoad: TExecuteImportSettingsAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
@@ -333,25 +354,7 @@ object GoodsBarCodeForm: TGoodsBarCodeForm
           MultiSelectSeparator = ','
         end>
     end
-    object actStartLoad2: TMultiAction
-      Category = #1047#1072#1075#1088#1091#1079#1082#1072
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actGetImportSetting2
-        end
-        item
-          Action = actDoLoad2
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1044#1072#1085#1085#1099#1093' '#1087#1086' '#1096#1090#1088#1080#1093'-'#1082#1086#1076#1072#1084'?'
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1072#1085#1085#1099#1077' '#1087#1086' '#1096#1090#1088#1080#1093'-'#1082#1086#1076#1072#1084' (2)'
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1072#1085#1085#1099#1077' '#1087#1086' '#1096#1090#1088#1080#1093'-'#1082#1086#1076#1072#1084' (2)'
-      ImageIndex = 74
-    end
-    object actGetImportSetting2: TdsdExecStoredProc
+    object actGetImportSetting: TdsdExecStoredProc
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -362,18 +365,71 @@ object GoodsBarCodeForm: TGoodsBarCodeForm
         end>
       Caption = 'actGetImportSetting'
     end
-    object actDoLoad2: TExecuteImportSettingsAction
+    object actStartLoad_Price: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_Price
+        end
+        item
+          Action = actDoLoad_Price
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1044#1072#1085#1085#1099#1093' '#1087#1086' '#1096#1090#1088#1080#1093'-'#1082#1086#1076#1072#1084' '#1080#1079' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072'?'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1072#1085#1085#1099#1077' '#1087#1086' '#1096#1090#1088#1080#1093'-'#1082#1086#1076#1072#1084' '#1080#1079' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1072#1085#1085#1099#1077' '#1087#1086' '#1096#1090#1088#1080#1093'-'#1082#1086#1076#1072#1084' '#1080#1079' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072
+      ImageIndex = 74
+    end
+    object actRefresh: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actGetImportSetting_Price: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId_Price
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId_Price
+        end>
+      Caption = 'actGetImportSetting_Price'
+    end
+    object actDoLoad_Price: TExecuteImportSettingsAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ImportSettingsId.Value = Null
       ImportSettingsId.Component = FormParams
-      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.ComponentItem = 'ImportSettingId_Price'
       ImportSettingsId.MultiSelectSeparator = ','
       ExternalParams = <
         item
-          Name = 'inObjectId'
+          Name = 'inJuridicalId'
           Value = '0'
-          ComponentItem = 'ObjectId'
+          Component = GuidesJuridical
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inJuridicalName'
+          Value = Null
+          Component = GuidesJuridical
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -578,7 +634,7 @@ object GoodsBarCodeForm: TGoodsBarCodeForm
     Params = <
       item
         Name = 'inDefaultKey'
-        Value = 'TGoodsBarCodeForm;zc_Object_ImportSetting_BarCode2'
+        Value = 'TGoodsBarCodeForm;zc_Object_ImportSetting_BarCode_Price'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -598,7 +654,97 @@ object GoodsBarCodeForm: TGoodsBarCodeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 608
-    Top = 196
+    Left = 632
+    Top = 172
+  end
+  object GuidesJuridical: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridical
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 528
+    Top = 80
+  end
+  object spInsertUpdateLoad_Price: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_GoodsBarCode_Load_Price'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCommonCode'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'CommonCode'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inName'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Name'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProducerName'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'ProducerName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsCode'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'GoodsCode'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBarCode'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BarCode'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 675
+    Top = 234
   end
 end
