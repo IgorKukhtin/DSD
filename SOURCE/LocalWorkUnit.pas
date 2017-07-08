@@ -1,32 +1,38 @@
 unit LocalWorkUnit;
 
 interface
+
 uses
   System.SysUtils, System.Classes, Vcl.Forms, Vcl.Dialogs, Authentication,
   VKDBFDataSet, DB, DataSnap.DBClient;
-  type
-    TSaveLocalMode = (slmRewrite, slmUpdate, slmAppend);
 
-  function CheckLocalConnect(ALogin, APassword: String; var pUser: TUser): Boolean;
-  function SaveLocalConnect(ALogin, APassword, ASession: String): Boolean;
+type
+  TSaveLocalMode = (slmRewrite, slmUpdate, slmAppend);
 
-  Procedure AddIntField(ADataBase: TVKSmartDBF; AName:String);
-  Procedure AddDateField(ADataBase: TVKSmartDBF;AName:String);
-  Procedure AddStrField(ADataBase: TVKSmartDBF;AName:String; ALen:Integer);
-  Procedure AddFloatField(ADataBase: TVKSmartDBF;AName:String);
-  Procedure AddBoolField(ADataBase: TVKSmartDBF;AName:String);
+function CheckLocalConnect(ALogin, APassword: String; var pUser: TUser): Boolean;
+function SaveLocalConnect(ALogin, APassword, ASession: String): Boolean;
 
+function AddIntField(ADBFFieldDefs: TVKDBFFieldDefs; AName: string): TVKDBFFieldDef; overload;
+function AddIntField(ADataBase: TVKSmartDBF; AName: string): TVKDBFFieldDef; overload;
+function AddDateField(ADBFFieldDefs: TVKDBFFieldDefs; AName: string): TVKDBFFieldDef; overload;
+function AddDateField(ADataBase: TVKSmartDBF; AName: string): TVKDBFFieldDef; overload;
+function AddStrField(ADBFFieldDefs: TVKDBFFieldDefs; AName: string; ALen: Integer): TVKDBFFieldDef; overload;
+function AddStrField(ADataBase: TVKSmartDBF; AName: string; ALen: Integer): TVKDBFFieldDef; overload;
+function AddFloatField(ADBFFieldDefs: TVKDBFFieldDefs; AName: string): TVKDBFFieldDef; overload;
+function AddFloatField(ADataBase: TVKSmartDBF; AName: string): TVKDBFFieldDef; overload;
+function AddBoolField(ADBFFieldDefs: TVKDBFFieldDefs; AName: string): TVKDBFFieldDef; overload;
+function AddBoolField(ADataBase: TVKSmartDBF; AName: string): TVKDBFFieldDef; overload;
 
-  function Users_lcl: String;
-  function Remains_lcl: String;
-  function Alternative_lcl: String;
-  function Member_lcl: String;
-  function Vip_lcl: String;
-  function VipList_lcl: String;
-  function VipDfm_lcl: String;
+function Users_lcl: String;
+function Remains_lcl: String;
+function Alternative_lcl: String;
+function Member_lcl: String;
+function Vip_lcl: String;
+function VipList_lcl: String;
+function VipDfm_lcl: String;
 
-  procedure SaveLocalData(ASrc: TClientDataSet; AFileName: String);
-  procedure LoadLocalData(ADst: TClientDataSet; AFileName: String);
+procedure SaveLocalData(ASrc: TClientDataSet; AFileName: String);
+procedure LoadLocalData(ADst: TClientDataSet; AFileName: String);
 
 implementation
 
@@ -65,9 +71,11 @@ Begin
   Result := ExtractFilePath(Application.ExeName) + 'VIP.dfm.local';
 End;
 
-Procedure AddIntField(ADataBase: TVKSmartDBF; AName:String);
-Begin
-  with ADataBase.DBFFieldDefs.Add as TVKDBFFieldDef do
+function AddIntField(ADBFFieldDefs: TVKDBFFieldDefs; AName: string): TVKDBFFieldDef;
+begin
+  Result := ADBFFieldDefs.Add as TVKDBFFieldDef;
+
+  with Result do
   begin
     Name := AName;
     field_type := 'N';
@@ -75,9 +83,16 @@ Begin
   end;
 end;
 
-Procedure AddDateField(ADataBase: TVKSmartDBF;AName:String);
-Begin
-  with ADataBase.DBFFieldDefs.Add as TVKDBFFieldDef do
+function AddIntField(ADataBase: TVKSmartDBF; AName: string): TVKDBFFieldDef;
+begin
+  Result := AddIntField(ADataBase.DBFFieldDefs, AName);
+end;
+
+function AddDateField(ADBFFieldDefs: TVKDBFFieldDefs; AName: string): TVKDBFFieldDef;
+begin
+  Result := ADBFFieldDefs.Add as TVKDBFFieldDef;
+
+  with Result do
   begin
     Name := AName;
     field_type := 'N';
@@ -86,9 +101,16 @@ Begin
   end;
 end;
 
-Procedure AddStrField(ADataBase: TVKSmartDBF;AName:String; ALen:Integer);
-Begin
-  with ADataBase.DBFFieldDefs.Add as TVKDBFFieldDef do
+function AddDateField(ADataBase: TVKSmartDBF; AName: string): TVKDBFFieldDef;
+begin
+  Result := AddDateField(ADataBase.DBFFieldDefs, AName);
+end;
+
+function AddStrField(ADBFFieldDefs: TVKDBFFieldDefs; AName: string; ALen: Integer): TVKDBFFieldDef;
+begin
+  Result := ADBFFieldDefs.Add as TVKDBFFieldDef;
+
+  with Result do
   begin
     Name := AName;
     field_type := 'C';
@@ -96,9 +118,16 @@ Begin
   end;
 end;
 
-Procedure AddFloatField(ADataBase: TVKSmartDBF;AName:String);
-Begin
-  with ADataBase.DBFFieldDefs.Add as TVKDBFFieldDef do
+function AddStrField(ADataBase: TVKSmartDBF; AName: string; ALen: Integer): TVKDBFFieldDef;
+begin
+  Result := AddStrField(ADataBase.DBFFieldDefs, AName, ALen);
+end;
+
+function AddFloatField(ADBFFieldDefs: TVKDBFFieldDefs; AName: string): TVKDBFFieldDef;
+begin
+  Result := ADBFFieldDefs.Add as TVKDBFFieldDef;
+
+  with Result do
   begin
     Name := AName;
     field_type := 'N';
@@ -107,13 +136,25 @@ Begin
   end;
 end;
 
-Procedure AddBoolField(ADataBase: TVKSmartDBF;AName:String);
-Begin
-  with ADataBase.DBFFieldDefs.Add as TVKDBFFieldDef do
+function AddFloatField(ADataBase: TVKSmartDBF; AName: string): TVKDBFFieldDef;
+begin
+  Result := AddFloatField(ADataBase.DBFFieldDefs, AName);
+end;
+
+function AddBoolField(ADBFFieldDefs: TVKDBFFieldDefs; AName: string): TVKDBFFieldDef;
+begin
+  Result := ADBFFieldDefs.Add as TVKDBFFieldDef;
+
+  with Result do
   begin
     Name := AName;
     field_type := 'L';
   end;
+end;
+
+function AddBoolField(ADataBase: TVKSmartDBF; AName: string): TVKDBFFieldDef;
+begin
+  Result := AddBoolField(ADataBase.DBFFieldDefs, AName);
 end;
 
 function CheckLocalConnect(ALogin, APassword: String; var pUser: TUser): Boolean;

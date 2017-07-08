@@ -676,7 +676,6 @@ var iFilesCount: Integer;
     saFound: TStrings;
     i: integer;
     fErr:Boolean;//09.06.2016
-    E: Exception;
     TextMessage:String;
 begin
   case ImportSettings.FileType of

@@ -1,0 +1,308 @@
+unit LocalStorage;
+
+interface
+
+uses
+  System.Classes, System.SysUtils, Vcl.Forms, Vcl.Dialogs,
+  IniUtils, VKDBFDataSet, LocalWorkUnit;
+
+function InitLocalDataBaseHead(Owner: TPersistent; LocalDataBaseHead: TVKSmartDBF): Boolean;
+function InitLocalDataBaseBody(Owner: TPersistent; LocalDataBaseBody: TVKSmartDBF): Boolean;
+function InitLocalDataBaseDiff(Owner: TPersistent; LocalDataBaseDiff: TVKSmartDBF): Boolean;
+
+implementation
+
+procedure InitLocalTable(DS: TVKSmartDBF; AFileName: string);
+begin
+  DS.DBFFileName := AnsiString(AFileName);
+  DS.OEM := False;
+  DS.AccessMode.OpenReadWrite := True;
+end;
+
+function InitLocalDataBaseHead(Owner: TPersistent; LocalDataBaseHead: TVKSmartDBF): Boolean;
+var
+  LFieldDefs: TVKDBFFieldDefs;
+begin
+  InitLocalTable(LocalDataBaseHead, iniLocalDataBaseHead);
+
+  try
+    if not FileExists(iniLocalDataBaseHead) then
+    begin
+      AddIntField(LocalDataBaseHead,  'ID');//id чека
+      AddStrField(LocalDataBaseHead,  'UID',50);//uid чека
+      AddDateField(LocalDataBaseHead, 'DATE'); //дата/Время чека
+      AddIntField(LocalDataBaseHead,  'PAIDTYPE'); //тип оплаты
+      AddStrField(LocalDataBaseHead,  'CASH',20); //серийник аппарата
+      AddIntField(LocalDataBaseHead,  'MANAGER'); //Id Менеджера (VIP)
+      AddStrField(LocalDataBaseHead,  'BAYER',254); //Покупатель (VIP)
+      AddBoolField(LocalDataBaseHead, 'SAVE'); //Покупатель (VIP)
+      AddBoolField(LocalDataBaseHead, 'COMPL'); //Покупатель (VIP)
+      AddBoolField(LocalDataBaseHead, 'NEEDCOMPL'); //нужно провести документ
+      AddBoolField(LocalDataBaseHead, 'NOTMCS'); //Не участвует в расчете НТЗ
+      AddStrField(LocalDataBaseHead,  'FISCID',50); //Номер фискального чека
+      //***20.07.16
+      AddIntField(LocalDataBaseHead,  'DISCOUNTID');    //Id Проекта дисконтных карт
+      AddStrField(LocalDataBaseHead,  'DISCOUNTN',254); //Название Проекта дисконтных карт
+      AddStrField(LocalDataBaseHead,  'DISCOUNT',50);   //№ Дисконтной карты
+      //***16.08.16
+      AddStrField(LocalDataBaseHead,  'BAYERPHONE',50); //Контактный телефон (Покупателя) - BayerPhone
+      AddStrField(LocalDataBaseHead,  'CONFIRMED',50);  //Статус заказа (Состояние VIP-чека) - ConfirmedKind
+      AddStrField(LocalDataBaseHead,  'NUMORDER',50);   //Номер заказа (с сайта) - InvNumberOrder
+      AddStrField(LocalDataBaseHead,  'CONFIRMEDC',50); //Статус заказа (Состояние VIP-чека) - ConfirmedKindClient
+      //***24.01.17
+      AddStrField(LocalDataBaseHead,  'USERSESION',50); //Для сервиса - реальная сесия при продаже
+      //***08.04.17
+      AddIntField(LocalDataBaseHead,  'PMEDICALID');    //Id Медицинское учреждение(Соц. проект)
+      AddStrField(LocalDataBaseHead,  'PMEDICALN',254); //Название Медицинское учреждение(Соц. проект)
+      AddStrField(LocalDataBaseHead,  'AMBULANCE',50);  //№ амбулатории (Соц. проект)
+      AddStrField(LocalDataBaseHead,  'MEDICSP',254);   //ФИО врача (Соц. проект)
+      AddStrField(LocalDataBaseHead,  'INVNUMSP',50);   //номер рецепта (Соц. проект)
+      AddDateField(LocalDataBaseHead, 'OPERDATESP');   //дата рецепта (Соц. проект)
+      //***15.06.17
+      AddIntField(LocalDataBaseHead,  'SPKINDID');     //Id Вид СП
+
+      LocalDataBaseHead.CreateTable;
+    end
+    // !!!добавляем НОВЫЕ поля
+    else
+      with LocalDataBaseHead do
+      begin
+        LFieldDefs := TVKDBFFieldDefs.Create(Owner);
+        Open;
+
+        if FindField('DISCOUNTID') = nil then
+          AddIntField(LFieldDefs, 'DISCOUNTID');
+        if FindField('DISCOUNTN') = nil then
+          AddStrField(LFieldDefs, 'DISCOUNTN', 254);
+        if FindField('DISCOUNT') = nil then
+          AddStrField(LFieldDefs, 'DISCOUNT', 50);
+        //***16.08.16
+        if FindField('BAYERPHONE') = nil then
+          AddStrField(LFieldDefs, 'BAYERPHONE', 50);
+        //***16.08.16
+        if FindField('CONFIRMED') = nil then
+          AddStrField(LFieldDefs, 'CONFIRMED', 50);
+        //***16.08.16
+        if FindField('NUMORDER') = nil then
+          AddStrField(LFieldDefs, 'NUMORDER', 50);
+        //***25.08.16
+        if FindField('CONFIRMEDC') = nil then
+          AddStrField(LFieldDefs, 'CONFIRMEDC', 50);
+        //***24.01.17
+        if FindField('USERSESION') = nil then
+          AddStrField(LFieldDefs, 'USERSESION', 50);
+        //***08.04.17
+        if FindField('PMEDICALID') = nil then
+          AddIntField(LFieldDefs, 'PMEDICALID');
+        if FindField('PMEDICALN') = nil then
+          AddStrField(LFieldDefs, 'PMEDICALN', 254);
+        if FindField('AMBULANCE') = nil then
+          AddStrField(LFieldDefs, 'AMBULANCE', 55);
+        if FindField('MEDICSP') = nil then
+          AddStrField(LFieldDefs, 'MEDICSP', 254);
+        if FindField('INVNUMSP') = nil then
+          AddStrField(LFieldDefs, 'INVNUMSP', 55);
+        if FindField('OPERDATESP') = nil then
+          AddDateField(LFieldDefs, 'OPERDATESP');
+        //***15.06.17
+        if FindField('SPKINDID') = nil then
+          AddIntField(LFieldDefs, 'SPKINDID');
+
+        if LFieldDefs.Count <> 0 then
+          AddFields(LFieldDefs, 1000);
+
+        Close;
+      end;// !!!добавляем НОВЫЕ поля
+
+    //проверка структуры
+    with LocalDataBaseHead do
+    begin
+      Open;
+
+      Result := not ((FindField('ID') = nil) or
+        (FindField('UID') = nil) or
+        (FindField('DATE') = nil) or
+        (FindField('PAIDTYPE') = nil) or
+        (FindField('CASH') = nil) or
+        (FindField('MANAGER') = nil) or
+        (FindField('BAYER') = nil) or
+        (FindField('COMPL') = nil) or
+        (FindField('SAVE') = nil) or
+        (FindField('NEEDCOMPL') = nil) or
+        (FindField('NOTMCS') = nil) or
+        (FindField('FISCID') = nil) or
+        //***20.07.16
+        (FindField('DISCOUNTID') = nil) or
+        (FindField('DISCOUNTN') = nil) or
+        (FindField('DISCOUNT') = nil) or
+        //***16.08.16
+        (FindField('BAYERPHONE') = nil) or
+        (FindField('CONFIRMED') = nil) or
+        (FindField('NUMORDER') = nil) or
+        (FindField('CONFIRMEDC') = nil) or
+        //***24.01.17
+        (FindField('USERSESION') = nil) or
+        //***08.04.17
+        (FindField('PMEDICALID') = nil) or
+        (FindField('PMEDICALN') = nil) or
+        (FindField('AMBULANCE') = nil) or
+        (FindField('MEDICSP') = nil) or
+        (FindField('INVNUMSP') = nil) or
+        (FindField('OPERDATESP') = nil) or
+        //***15.06.17
+        (FindField('SPKINDID') = nil));
+
+      Close;
+
+      if not Result then
+        MessageDlg('Неверная структура файла локального хранилища (' + DBFFileName + ')',
+          mtError, [mbOk], 0);
+    end;
+  except
+    on E: Exception do
+    begin
+      Result := False;
+      Application.OnException(Application.MainForm, E);
+    end;
+  end;
+end;
+
+function InitLocalDataBaseBody(Owner: TPersistent; LocalDataBaseBody: TVKSmartDBF): Boolean;
+var
+  LFieldDefs: TVKDBFFieldDefs;
+begin
+  InitLocalTable(LocalDataBaseBody, iniLocalDataBaseBody);
+
+  try
+    if (not FileExists(iniLocalDataBaseBody)) then
+    begin
+      AddIntField(LocalDataBaseBody,   'ID'); //id записи
+      AddStrField(LocalDataBaseBody,   'CH_UID', 50); //uid чека
+      AddIntField(LocalDataBaseBody,   'GOODSID'); //ид товара
+      AddIntField(LocalDataBaseBody,   'GOODSCODE'); //Код товара
+      AddStrField(LocalDataBaseBody,   'GOODSNAME', 254); //наименование товара
+      AddFloatField(LocalDataBaseBody, 'NDS'); //НДС товара
+      AddFloatField(LocalDataBaseBody, 'AMOUNT'); //Кол-во
+      AddFloatField(LocalDataBaseBody, 'PRICE'); //Цена, с 20.07.16 если есть скидка по Проекту дисконта, здесь будет цена с учетом скидки
+      //***20.07.16
+      AddFloatField(LocalDataBaseBody, 'PRICESALE'); //Цена без скидки
+      AddFloatField(LocalDataBaseBody, 'CHPERCENT'); //% Скидки
+      AddFloatField(LocalDataBaseBody, 'SUMMCH');    //Сумма Скидки
+      //***19.08.16
+      AddFloatField(LocalDataBaseBody, 'AMOUNTORD'); //Кол-во заявка
+      //***10.08.16
+      AddStrField(LocalDataBaseBody,   'LIST_UID', 50); //UID строки продажи
+
+      LocalDataBaseBody.CreateTable;
+    end
+    // !!!добавляем НОВЫЕ поля
+    else
+      with LocalDataBaseBody do
+      begin
+        LFieldDefs := TVKDBFFieldDefs.Create(Owner);
+        Open;
+
+        if FindField('PRICESALE') = nil then
+          AddFloatField(LFieldDefs, 'PRICESALE');
+        if FindField('CHPERCENT') = nil then
+          AddFloatField(LFieldDefs, 'CHPERCENT');
+        if FindField('SUMMCH') = nil then
+          AddFloatField(LFieldDefs, 'SUMMCH');
+        //***19.08.16
+        if FindField('AMOUNTORD') = nil then
+          AddFloatField(LFieldDefs, 'AMOUNTORD');
+        //***10.08.16
+        if FindField('LIST_UID') = nil then
+          AddStrField(LFieldDefs, 'LIST_UID', 50);
+
+        if LFieldDefs.Count <> 0 then
+          AddFields(LFieldDefs, 1000);
+
+        Close;
+      end; // !!!добавляем НОВЫЕ поля
+
+    with LocalDataBaseBody do
+    begin
+      Open;
+
+      Result := not ((FindField('ID') = nil) or
+        (FindField('CH_UID') = nil) or
+        (FindField('GOODSID') = nil) or
+        (FindField('GOODSCODE') = nil) or
+        (FindField('GOODSNAME') = nil) or
+        (FindField('NDS') = nil) or
+        (FindField('AMOUNT') = nil) or
+        (FindField('PRICE') = nil) or
+        //***20.07.16
+        (FindField('PRICESALE') = nil) or
+        (FindField('CHPERCENT') = nil) or
+        (FindField('SUMMCH') = nil) or
+        //***19.08.16
+        (FindField('AMOUNTORD') = nil) or
+        //***10.08.16
+        (FindField('LIST_UID') = nil));
+
+      Close;
+
+      if not Result then
+        MessageDlg('Неверная структура файла локального хранилища (' + DBFFileName + ')',
+          mtError, [mbOk], 0);
+    end;
+  except
+    on E: Exception do
+    begin
+      Result := False;
+      Application.OnException(Application.MainForm, E);
+    end;
+  end;
+end;
+
+function InitLocalDataBaseDiff(Owner: TPersistent; LocalDataBaseDiff: TVKSmartDBF): Boolean;
+begin
+  InitLocalTable(LocalDataBaseDiff, iniLocalDataBaseDiff);
+
+  try
+    if (not FileExists(iniLocalDataBaseDiff)) then
+    begin
+      AddIntField(LocalDataBaseDiff,   'ID'); //id записи
+      AddIntField(LocalDataBaseDiff,   'GOODSCODE'); //Код товара
+      AddStrField(LocalDataBaseDiff,   'GOODSNAME',254); //наименование товара
+      AddFloatField(LocalDataBaseDiff, 'PRICE'); //Цена
+      AddFloatField(LocalDataBaseDiff, 'REMAINS'); // Остатки
+      AddFloatField(LocalDataBaseDiff, 'MCSVALUE'); //
+      AddFloatField(LocalDataBaseDiff, 'RESERVED'); //
+      AddBoolField(LocalDataBaseDiff,  'NEWROW'); //
+
+      LocalDataBaseDiff.CreateTable;
+    end;
+
+    // Проверка структуры
+    with LocalDataBaseDiff do
+    begin
+      Open;
+
+      Result := not ((FindField('ID') = nil) or
+        (FindField('GOODSCODE') = nil) or
+        (FindField('GOODSNAME') = nil) or
+        (FindField('PRICE') = nil) or
+        (FindField('REMAINS') = nil) or
+        (FindField('MCSVALUE') = nil) or
+        (FindField('RESERVED') = nil) or
+        (FindField('NEWROW') = nil));
+
+      Close;
+
+      if not Result then
+        MessageDlg('Неверная структура файла локального хранилища (' + DBFFileName + ')',
+          mtError, [mbOk], 0);
+    end;
+  except
+    on E: Exception do
+    begin
+      Result := False;
+      Application.OnException(Application.MainForm, E);
+    end;
+  end;
+end;
+
+end.
