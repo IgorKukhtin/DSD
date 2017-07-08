@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Measure(
     IN inInternalName TVarChar,      -- Международное наименование
     IN inSession      TVarChar       -- сессия пользователя
 )
-RETURNS record
+RETURNS RECORD
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -21,20 +21,20 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
    -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
-   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) <> 0 THEN  ioCode := NEXTVAL ('Object_Measure_seq'); 
+   IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) <> 0 THEN ioCode := NEXTVAL ('Object_Measure_seq'); 
    END IF; 
 
    -- Нужен для загрузки из Sybase т.к. там код = 0 
-   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) = 0  THEN  ioCode := NEXTVAL ('Object_Measure_seq'); 
+   IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) = 0  THEN ioCode := NEXTVAL ('Object_Measure_seq'); 
    ELSEIF ioCode = 0
-         THEN ioCode := COALESCE((SELECT ObjectCode FROM Object WHERE Id = ioId),0);
+         THEN ioCode := COALESCE ((SELECT ObjectCode FROM Object WHERE Id = ioId), 0);
    END IF; 
 
    -- проверка уникальности для свойства <Наименование Единицы измерения>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Measure(), inName); 
+   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Measure(), inName); 
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_Measure(), ioCode, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Measure(), ioCode, inName);
    -- сохранили Международный код
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Measure_InternalCode(), ioId, inInternalCode);
    -- сохранили Международное наименование

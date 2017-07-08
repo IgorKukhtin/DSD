@@ -17,7 +17,10 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Sale());
 
        SELECT
-            CASE -- !!!захардкодил временно для Запорожье!!!
+            CASE -- !!!захардкодил для Contract - JuridicalInvoice!!!
+                 WHEN ObjectLink_Contract_JuridicalInvoice.ChildObjectId > 0
+                      THEN 'PrintMovement_SaleJuridicalInvoice'
+                 -- !!!захардкодил временно для Запорожье!!!
                  WHEN MovementLinkObject_From.ObjectId IN (301309) -- Склад ГП ф.Запорожье
                   AND MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm()
                       THEN PrintForms_View_Default.PrintFormName
@@ -34,23 +37,29 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                         AND MovementLinkObject_PaidKind.DescId IN (zc_MovementLinkObject_PaidKind(), zc_MovementLinkObject_PaidKindTo())
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                         ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                        AND MovementLinkObject_Contract.DescId     = zc_MovementLinkObject_Contract()
 
-       LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-              ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
-             AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalInvoice
+                                 ON ObjectLink_Contract_JuridicalInvoice.ObjectId = MovementLinkObject_Contract.ObjectId
+                                AND ObjectLink_Contract_JuridicalInvoice.DescId   = zc_ObjectLink_Contract_JuridicalInvoice()
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                 ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
 
-       LEFT JOIN PrintForms_View
-              ON Movement.OperDate BETWEEN PrintForms_View.StartDate AND PrintForms_View.EndDate
-             AND PrintForms_View.JuridicalId = CASE WHEN Movement.DescId = zc_Movement_TransferDebtOut() THEN MovementLinkObject_To.ObjectId ELSE ObjectLink_Partner_Juridical.ChildObjectId END
-             AND PrintForms_View.ReportType = 'Sale'
---             AND PrintForms_View.DescId = zc_Movement_Sale()
+            LEFT JOIN PrintForms_View
+                   ON Movement.OperDate BETWEEN PrintForms_View.StartDate AND PrintForms_View.EndDate
+                  AND PrintForms_View.JuridicalId = CASE WHEN Movement.DescId = zc_Movement_TransferDebtOut() THEN MovementLinkObject_To.ObjectId ELSE ObjectLink_Partner_Juridical.ChildObjectId END
+                  AND PrintForms_View.ReportType = 'Sale'
+     --             AND PrintForms_View.DescId = zc_Movement_Sale()
 
-       LEFT JOIN PrintForms_View AS PrintForms_View_Default
-              ON Movement.OperDate BETWEEN PrintForms_View_Default.StartDate AND PrintForms_View_Default.EndDate
-             AND PrintForms_View_Default.JuridicalId = 0
-             AND PrintForms_View_Default.ReportType = 'Sale'
-             AND PrintForms_View_Default.PaidKindId = COALESCE (MovementLinkObject_PaidKind.ObjectId, zc_Enum_PaidKind_SecondForm())
---             AND PrintForms_View_Default.DescId = zc_Movement_Sale()
+            LEFT JOIN PrintForms_View AS PrintForms_View_Default
+                   ON Movement.OperDate BETWEEN PrintForms_View_Default.StartDate AND PrintForms_View_Default.EndDate
+                  AND PrintForms_View_Default.JuridicalId = 0
+                  AND PrintForms_View_Default.ReportType = 'Sale'
+                  AND PrintForms_View_Default.PaidKindId = COALESCE (MovementLinkObject_PaidKind.ObjectId, zc_Enum_PaidKind_SecondForm())
+     --             AND PrintForms_View_Default.DescId = zc_Movement_Sale()
 
 
        WHERE Movement.Id =  inMovementId;

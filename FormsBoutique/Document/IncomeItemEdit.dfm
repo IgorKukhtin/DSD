@@ -53,12 +53,12 @@ object IncomeItemEditForm: TIncomeItemEditForm
   object cxLabel5: TcxLabel
     Left = 10
     Top = 97
-    Caption = #1057#1086#1089#1090#1072#1074' '#1090#1086#1074#1072#1088#1072
+    Caption = #1057#1086#1089#1090#1072#1074
   end
   object cxLabel6: TcxLabel
     Left = 10
     Top = 141
-    Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
+    Caption = #1054#1087#1080#1089#1072#1085#1080#1077
   end
   object cxLabel7: TcxLabel
     Left = 10
@@ -68,7 +68,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
   object cxLabel9: TcxLabel
     Left = 289
     Top = 97
-    Caption = #1056#1072#1079#1084#1077#1088' '#1090#1086#1074#1072#1088#1072
+    Caption = #1056#1072#1079#1084#1077#1088
   end
   object ceGoodsSize: TcxButtonEdit
     Left = 289

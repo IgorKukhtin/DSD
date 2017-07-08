@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Personal(
     IN inUnitId                   Integer   ,    -- ключ объекта <Подразделения> 
     IN inSession                  TVarChar       -- сессия пользователя
 )
-RETURNS record
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -21,18 +21,18 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
    -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
-   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) <> 0 THEN  ioCode := NEXTVAL ('Object_Personal_seq'); 
+   IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) <> 0 THEN ioCode := NEXTVAL ('Object_Personal_seq'); 
    END IF; 
 
    -- Нужен для загрузки из Sybase т.к. там код = 0 
-   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) = 0  THEN  ioCode := NEXTVAL ('Object_Personal_seq'); 
+   IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) = 0  THEN ioCode := NEXTVAL ('Object_Personal_seq'); 
    ELSEIF ioCode = 0
-         THEN ioCode := COALESCE((SELECT ObjectCode FROM Object WHERE Id = ioId),0);
+         THEN ioCode := COALESCE ((SELECT ObjectCode FROM Object WHERE Id = ioId), 0);
    END IF; 
 
    -- проверка прав уникальности для свойства <Наименование>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Personal(), inName);
-
+   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Personal(), inName);
+                                          
    -- проверка уникальности для свойства <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Personal(), ioCode);
 
@@ -40,11 +40,11 @@ BEGIN
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Personal(), ioCode, inName);
    
    -- сохранили связь с <Физические лица>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Personal_Member(), ioId, inMemberId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_Member(), ioId, inMemberId);
    -- сохранили связь с <Должности>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Personal_Position(), ioId, inPositionId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_Position(), ioId, inPositionId);
    -- сохранили связь с <Подразделения>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Personal_Unit(), ioId, inUnitId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_Unit(), ioId, inUnitId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

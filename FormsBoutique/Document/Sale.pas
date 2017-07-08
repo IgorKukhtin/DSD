@@ -56,7 +56,7 @@ type
     cxGridDBTableView: TcxGridDBTableView;
     Code: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
     OperPrice: TcxGridDBColumn;
     TotalSumm: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
@@ -109,9 +109,6 @@ type
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     bbCalcAmountPartner: TdxBarControlContainerItem;
-    spInsertMaskMIMaster: TdsdStoredProc;
-    actAddMask: TdsdExecStoredProc;
-    bbAddMask: TdxBarButton;
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
     bbInsertRecord: TdxBarButton;
@@ -146,7 +143,6 @@ type
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
     BarCode: TcxGridDBColumn;
-    Amount: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     cxSplitter1: TcxSplitter;
     spSelectBarCode: TdsdStoredProc;
@@ -168,6 +164,7 @@ type
     cxLabel18: TcxLabel;
     edInsertName: TcxButtonEdit;
     Comment: TcxGridDBColumn;
+    TotalSummDebt: TcxGridDBColumn;
   private
   public
   end;

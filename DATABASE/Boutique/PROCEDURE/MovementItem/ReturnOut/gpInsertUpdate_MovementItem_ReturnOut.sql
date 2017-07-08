@@ -39,10 +39,10 @@ BEGIN
 
 
      -- Цена (прайс)
-     IF ioOperPriceList <> 0
+     IF vbUserId = zc_User_Sybase()
      THEN
          -- !!!для SYBASE - потом убрать!!!
-         IF vbUserId <> zfCalc_UserAdmin() :: Integer THEN RAISE EXCEPTION 'Ошибка.Параметр только для загрузки из Sybase.'; END IF;
+         IF 1=0 THEN RAISE EXCEPTION 'Ошибка.Параметр только для загрузки из Sybase.'; END IF;
      ELSE
          -- из Истории
          ioOperPriceList := COALESCE ((SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)

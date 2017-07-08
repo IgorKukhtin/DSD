@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsGroup(
     IN inInfoMoneyId              Integer   ,    -- ключ объекта <Статьи назначения 	> 
     IN inSession                  TVarChar       -- сессия пользователя  
 )
-RETURNS record
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;   
@@ -21,17 +21,17 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
    -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
-   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) <> 0 THEN  ioCode := NEXTVAL ('Object_GoodsGroup_seq'); 
+   IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) <> 0 THEN ioCode := NEXTVAL ('Object_GoodsGroup_seq'); 
    END IF; 
 
    -- Нужен для загрузки из Sybase т.к. там код = 0 
-   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) = 0  THEN  ioCode := NEXTVAL ('Object_GoodsGroup_seq'); 
+   IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) = 0  THEN ioCode := NEXTVAL ('Object_GoodsGroup_seq'); 
    ELSEIF ioCode = 0
-         THEN ioCode := COALESCE((SELECT ObjectCode FROM Object WHERE Id = ioId),0);
+         THEN ioCode := COALESCE ((SELECT ObjectCode FROM Object WHERE Id = ioId), 0);
    END IF; 
    
    -- проверка прав уникальности для свойства <Наименование >
-   --PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_GoodsGroup(), inName);
+   --PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_GoodsGroup(), inName);
 /*
    -- проверка уникальность <Наименование> для !!!одноq!! <Группа для состава товара>
    IF TRIM (inName) <> '' AND COALESCE (inParentId, 0) <> 0 
@@ -57,14 +57,15 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_GoodsGroup(), ioCode, inName);
    -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsGroup_Parent(), ioId, inParentId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsGroup_Parent(), ioId, inParentId);
    -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsGroup_InfoMoney(), ioId, inInfoMoneyId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsGroup_InfoMoney(), ioId, inInfoMoneyId);
 
 
 
    -- изменили свойство <УП статью> у всех товаров этой группы
-   PERFORM CASE WHEN inInfoMoneyId <> 0 THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_InfoMoney(), ObjectLink.ObjectId, inInfoMoneyId)
+   PERFORM CASE WHEN inInfoMoneyId <> 0
+                THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_InfoMoney(), ObjectLink.ObjectId, inInfoMoneyId)
                 ELSE lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_InfoMoney(), ObjectLink.ObjectId, lfGet_Object_GoodsGroup_InfoMoneyId (ObjectLink.ChildObjectId)) 
            END
    FROM ObjectLink

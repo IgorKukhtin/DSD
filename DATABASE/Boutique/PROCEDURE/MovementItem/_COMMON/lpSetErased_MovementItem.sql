@@ -28,7 +28,7 @@ BEGIN
   vbStatusId := (SELECT StatusId FROM Movement WHERE Id = vbMovementId);
   -- проверка - проведенные/удаленные документы Изменять нельзя
   IF vbStatusId <> zc_Enum_Status_UnComplete()
-     -- AND inUserId <> 5 -- !!!временно для загрузки из Sybase!!!
+     -- AND inUserId <> zc_User_Sybase() -- !!!временно для загрузки из Sybase!!!
   THEN
       /*IF AND vbStatusId = zc_Enum_Status_Erased() 
       THEN

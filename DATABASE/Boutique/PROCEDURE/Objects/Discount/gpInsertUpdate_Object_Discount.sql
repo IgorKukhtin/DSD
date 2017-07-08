@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Discount(
     IN inDiscountKindId Integer,       -- Ключ объекта <Вид скидки>
     IN inSession        TVarChar       -- сессия пользователя                     
 )
-RETURNS record
+RETURNS RECORD
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -20,25 +20,25 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
    -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
-   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) <> 0 THEN  ioCode := NEXTVAL ('Object_Discount_seq'); 
+   IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) <> 0 THEN ioCode := NEXTVAL ('Object_Discount_seq'); 
    END IF; 
 
    -- Нужен для загрузки из Sybase т.к. там код = 0 
-   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) = 0  THEN  ioCode := NEXTVAL ('Object_Discount_seq'); 
+   IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) = 0  THEN ioCode := NEXTVAL ('Object_Discount_seq'); 
    ELSEIF ioCode = 0
-         THEN ioCode := COALESCE((SELECT ObjectCode FROM Object WHERE Id = ioId),0);
+         THEN ioCode := COALESCE ((SELECT ObjectCode FROM Object WHERE Id = ioId), 0);
    END IF; 
 
    -- проверка уникальности для свойства <Наименование>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Discount(), inName); 
+   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Discount(), inName); 
    -- проверка уникальности для свойства <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Discount(), ioCode);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_Discount(), ioCode, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Discount(), ioCode, inName);
   
    -- сохранили связь с <Вид скидки>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Discount_DiscountKind(), ioId, inDiscountKindId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Discount_DiscountKind(), ioId, inDiscountKindId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

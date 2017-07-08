@@ -1564,7 +1564,7 @@ begin
      EndDateEdit.Text:=DateToStr(StrToDate('01.'+IntToStr(Month)+'.'+IntToStr(Year))-1);
      EndDateCompleteEdit.Text:=EndDateEdit.Text;
      //
-     TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
+     TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Загрузка', 'Админ', gc_User);
      if not Assigned (gc_User) then ShowMessage ('not Assigned (gc_User)');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -3292,6 +3292,7 @@ begin
         Add('    , Bill.Id_Postgres as MovementId');
         Add('    , BillItemsIncome.GoodsId_Postgres as GoodsId');
         Add('    , BillItemsIncome.Id_Postgres as PartionId');
+        Add('    , 0 as DiscountSaleKindId');
         Add('    , -1 * BillItems.OperCount as Amount');
         Add('    , 0 as SummChangePercent');
         Add('    , BillItems.OperPrice as OperPriceList');
@@ -3312,12 +3313,13 @@ begin
         Add('    , DiscountMovement.SaleId_Postgres as MovementId');
         Add('    , BillItemsIncome.GoodsId_Postgres as GoodsId');
         Add('    , BillItemsIncome.Id_Postgres as PartionId');
+        Add('    , 0 as DiscountSaleKindId');
         Add('    , DiscountMovementItem_byBarCode.OperCount as Amount');
         Add('    , DiscountMovementItem_byBarCode.SummDiscountManual as SummChangePercent');
         Add('    , DiscountMovementItem_byBarCode.OperPrice as OperPriceList');
         Add('    , DiscountMovementItem_byBarCode.DiscountTax AS ChangePercent');
         Add('    , DiscountMovementItem_byBarCode.BarCode_byClient as BarCode');
-        Add('    , DiscountMovementItem_byBarCode.CommentInfo as Comment');
+        Add('    , trim (DiscountMovementItem_byBarCode.CommentInfo) as Comment');
         Add('    , zc_rvNo() as isBill');
         Add('    , case when DiscountMovementItem_byBarCode_all.BillItemsId > 0 then zc_rvYes() else zc_rvNo() end  as isClose');
         Add('FROM dba.DiscountMovementItem_byBarCode');
@@ -3344,11 +3346,12 @@ begin
         toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPartionId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('ioDiscountSaleKindId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inisPay',ftBoolean,ptInput, False);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('ioChangePercent',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inSummChangePercent',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('ioOperPriceList',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('ioChangePercent',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inBarCode',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
         //
@@ -3362,15 +3365,20 @@ begin
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId').AsInteger;
              toStoredProc.Params.ParamByName('inPartionId').Value:=FieldByName('PartionId').AsInteger;
+             toStoredProc.Params.ParamByName('ioDiscountSaleKindId').Value:=FieldByName('DiscountSaleKindId').AsInteger;
              if FieldByName('isBill').AsInteger = zc_rvYes
              then toStoredProc.Params.ParamByName('inIsPay').Value:= TRUE
              else toStoredProc.Params.ParamByName('inIsPay').Value:= FALSE;
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
+             toStoredProc.Params.ParamByName('ioChangePercent').Value:=FieldByName('ChangePercent').AsFloat;
              toStoredProc.Params.ParamByName('inSummChangePercent').Value:=FieldByName('SummChangePercent').AsFloat;
              toStoredProc.Params.ParamByName('ioOperPriceList').Value:=FieldByName('OperPriceList').AsFloat;
-             toStoredProc.Params.ParamByName('ioChangePercent').Value:=FieldByName('ChangePercent').AsFloat;
              toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode').AsString;
-             toStoredProc.Params.ParamByName('inComment').Value:=FieldByName('Comment').AsString;
+             // хардкод
+             if FieldByName('isClose').AsInteger = zc_rvYes
+             then toStoredProc.Params.ParamByName('inComment').Value:='*123*' + FieldByName('Comment').AsString
+             else toStoredProc.Params.ParamByName('inComment').Value:=FieldByName('Comment').AsString;
+
 
 
              if not myExecToStoredProc then ;//exit;

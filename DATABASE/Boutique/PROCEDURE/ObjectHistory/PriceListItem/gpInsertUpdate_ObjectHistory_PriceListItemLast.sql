@@ -34,10 +34,6 @@ BEGIN
    -- Сохранили цену
    PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_PriceListItem_Value(), ioId, inValue);
 
-   -- !!!Кроме Sybase!!! - !!!не забыли - cохранили Последнюю Цену в ПАРТИИ!!!
-   -- PERFORM lpUpdate_Object_PartionGoods ...
-
-
    --
    IF inIsLast = TRUE AND EXISTS (SELECT Id FROM ObjectHistory WHERE DescId = zc_ObjectHistory_PriceListItem() AND ObjectId = vbPriceListItemId AND StartDate > inOperDate)
    THEN
@@ -66,11 +62,11 @@ BEGIN
    -- Проверка
    IF inIsLast = TRUE AND COALESCE (outEndDate, zc_Date_Start()) <> zc_Date_End()
    THEN
-       RAISE EXCEPTION 'Ошимбка. inIsLast = TRUE AND outEndDate = <%>', outEndDate;
+       RAISE EXCEPTION 'Ошибка. inIsLast = TRUE AND outEndDate = <%>', outEndDate;
    END IF;
    
 
-   -- не забыли - cохранили Последнюю Цену в ПАРТИЯХ
+   -- !!!не забыли - cохранили Последнюю Цену в ПАРТИЯХ!!!
    IF inPriceListId = zc_PriceList_Basis()
    THEN
        PERFORM lpUpdate_Object_PartionGoods_PriceSale (inGoodsId:= inGoodsId, inUserId:= vbUserId);
