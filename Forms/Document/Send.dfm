@@ -2,10 +2,9 @@ inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 617
   ClientWidth = 861
-  ExplicitLeft = -202
-  ExplicitTop = -285
+  ExplicitTop = -70
   ExplicitWidth = 877
-  ExplicitHeight = 656
+  ExplicitHeight = 655
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -141,7 +140,7 @@ inherited SendForm: TSendForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actGoodsChoiceForm
+                Action = actAssetGoodsChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -655,13 +654,13 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actGoodsChoiceForm: TOpenChoiceForm
+    object actAssetGoodsChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'GoodsForm'
-      FormName = 'TGoods_ObjectForm'
-      FormNameParam.Value = 'TGoods_ObjectForm'
+      FormName = 'TAssetGoods_ObjectForm'
+      FormNameParam.Value = 'TAssetGoods_ObjectForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

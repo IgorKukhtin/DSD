@@ -168,7 +168,7 @@ type
     mactPrint_TTN: TMultiAction;
     actDialog_TTN: TdsdOpenForm;
     GoodsGroupNameFull: TcxGridDBColumn;
-    actGoodsChoiceForm: TOpenChoiceForm;
+    actAssetGoodsChoiceForm: TOpenChoiceForm;
     cxLabel22: TcxLabel;
     ceComment: TcxTextEdit;
     spSelectPrint_SaleOrder: TdsdStoredProc;
