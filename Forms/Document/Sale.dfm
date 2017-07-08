@@ -3,10 +3,10 @@
   ClientHeight = 645
   ClientWidth = 1298
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitLeft = -571
-  ExplicitTop = -313
+  ExplicitLeft = -272
+  ExplicitTop = -115
   ExplicitWidth = 1314
-  ExplicitHeight = 684
+  ExplicitHeight = 683
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -170,7 +170,7 @@
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actGoodsChoiceForm
+                Action = actAssetGoodsChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -1240,13 +1240,13 @@
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
-    object actGoodsChoiceForm: TOpenChoiceForm [11]
+    object actAssetGoodsChoiceForm: TOpenChoiceForm [11]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'GoodsForm'
-      FormName = 'TGoods_ObjectForm'
-      FormNameParam.Value = 'TGoods_ObjectForm'
+      FormName = 'TAssetGoods_ObjectForm'
+      FormNameParam.Value = 'TAssetGoods_ObjectForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -3702,8 +3702,8 @@
       end>
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Left = 388
-    Top = 172
+    Left = 420
+    Top = 268
   end
   object spSelectTax_Us: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Tax_Print'
@@ -3952,8 +3952,8 @@
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 476
-    Top = 193
+    Left = 484
+    Top = 257
   end
   object spGetReporNameTax: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Sale_ReportNameTax'
@@ -4140,7 +4140,7 @@
       end>
     PackSize = 1
     Left = 319
-    Top = 208
+    Top = 272
   end
   object GuidesRouteSorting: TdsdGuides
     KeyField = 'Id'
@@ -5017,8 +5017,8 @@
         Control = edInvNumberTransport
       end>
     GetStoredProc = spGet
-    Left = 280
-    Top = 177
+    Left = 256
+    Top = 273
   end
   object spSelectPrintReturnInDay: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ReturnIn_PrintDay'

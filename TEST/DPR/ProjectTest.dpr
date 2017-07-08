@@ -947,7 +947,8 @@ uses
   StorageLine in '..\..\Forms\Guides\StorageLine.pas' {StorageLineForm: TParentForm},
   PartnerContact in '..\..\Forms\Guides\PartnerContact.pas' {PartnerContactForm: TParentForm},
   GoodsPropertyValueDoc in '..\..\Forms\Guides\GoodsPropertyValueDoc.pas' {GoodsPropertyValueDocForm: TParentForm},
-  Report_ReceiptSaleAnalyze in '..\..\Forms\Report\Report_ReceiptSaleAnalyze.pas' {Report_ReceiptSaleAnalyzeForm: TParentForm};
+  Report_ReceiptSaleAnalyze in '..\..\Forms\Report\Report_ReceiptSaleAnalyze.pas' {Report_ReceiptSaleAnalyzeForm: TParentForm},
+  AssetGoods_Object in '..\..\Forms\Guides\AssetGoods_Object.pas' {AssetGoods_ObjectForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

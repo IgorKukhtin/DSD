@@ -1,3 +1,4 @@
+
 unit Send;
 
 interface
@@ -58,7 +59,7 @@ type
     PartionGoodsDate: TcxGridDBColumn;
     GoodsGroupNameFull: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
-    actGoodsChoiceForm: TOpenChoiceForm;
+    actAssetGoodsChoiceForm: TOpenChoiceForm;
     AmountRemains: TcxGridDBColumn;
     cxLabel6: TcxLabel;
     edDocumentKind: TcxButtonEdit;

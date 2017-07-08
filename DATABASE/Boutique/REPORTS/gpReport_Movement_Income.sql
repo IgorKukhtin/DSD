@@ -35,15 +35,16 @@ RETURNS TABLE (MovementId     Integer,
                CurrencyName  TVarChar,
 
                OperPrice           TFloat,
+               CountForPrice       TFloat,
                OperPriceBalance    TFloat,
                OperPriceList       TFloat,
                PriceSale           TFloat,
                Amount              TFloat,
   
-               AmountSumm           TFloat,
-               TotalSummBalance     TFloat,
-               AmountPriceListSumm  TFloat,
-               SaleSumm             TFloat
+               TotalSumm           TFloat,
+               TotalSummBalance    TFloat,
+               TotalSummPriceList  TFloat,
+               TotalSummSale       TFloat
   )
 AS
 $BODY$
@@ -104,7 +105,7 @@ BEGIN
                                      LEFT JOIN MovementDesc AS MovementDesc_Income ON MovementDesc_Income.Id = Movement_Income.DescId                                                          
                                 WHERE Movement_Income.DescId = zc_Movement_Income()
                                   AND Movement_Income.OperDate BETWEEN inStartDate AND inEndDate
-                                 -- AND Movement_Income.StatusId = zc_Enum_Status_Complete() 
+                                  AND Movement_Income.StatusId = zc_Enum_Status_Complete() 
                               )
 
      , tmpData  AS  (SELECT CASE WHEN inIsPartion = TRUE THEN tmpMovementIncome.MovementId ELSE -1 END  AS MovementId
@@ -137,9 +138,9 @@ BEGIN
                           , SUM (CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 1) <> 0
                                           THEN CAST (COALESCE (MI_Income.Amount, 0) * COALESCE (MIFloat_OperPrice.ValueData, 0) / COALESCE (MIFloat_CountForPrice.ValueData, 1) AS NUMERIC (16, 2))
                                       ELSE CAST ( COALESCE (MI_Income.Amount, 0) * COALESCE (MIFloat_OperPrice.ValueData, 0) AS NUMERIC (16, 2))
-                                 END) AS AmountSumm
+                                 END) AS TotalSumm
 
-                          , SUM (COALESCE (MI_Income.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) ) AS AmountPriceListSumm
+                          , SUM (COALESCE (MI_Income.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) ) AS TotalSummPriceList
                           , SUM (COALESCE (MI_Income.Amount, 0) * COALESCE (Object_PartionGoods.PriceSale,0) )    AS SaleSumm
 
                      FROM tmpMovementIncome
@@ -214,18 +215,18 @@ BEGIN
            , Object_GoodsSize.ValueData     AS GoodsSizeName
            , Object_Currency.ValueData      AS CurrencyName
            
-           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.AmountSumm  / tmpData.Amount ELSE 0 END          ::TFloat AS OperPrice
-     
-           , (CAST ( (CASE WHEN tmpData.Amount <> 0 THEN tmpData.AmountSumm / tmpData.Amount ELSE 0 END)
+           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSumm  / tmpData.Amount ELSE 0 END          ::TFloat AS OperPrice
+           , tmpData.CountForPrice           ::TFloat
+           , (CAST ( (CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSumm / tmpData.Amount ELSE 0 END)
                       * tmpData.CurrencyValue / CASE WHEN tmpData.ParValue <> 0 THEN tmpData.ParValue ELSE 1 END  AS NUMERIC (16, 2))) :: TFloat  AS OperPriceBalance
      
-           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.AmountPriceListSumm  / tmpData.Amount ELSE 0 END ::TFloat AS OperPriceList
-           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SaleSumm  / tmpData.Amount ELSE 0 END            ::TFloat AS PriceSale
+           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSummPriceList  / tmpData.Amount ELSE 0 END ::TFloat AS OperPriceList
+           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SaleSumm  / tmpData.Amount ELSE 0 END           ::TFloat AS PriceSale
            , tmpData.Amount                  ::TFloat
-           , tmpData.AmountSumm              ::TFloat
-           , (CAST (tmpData.AmountSumm * tmpData.CurrencyValue / CASE WHEN tmpData.ParValue <> 0 THEN tmpData.ParValue ELSE 1 END AS NUMERIC (16, 2))) :: TFloat AS TotalSummBalance
-           , tmpData.AmountPriceListSumm     ::TFloat 
-           , tmpData.SaleSumm                ::TFloat 
+           , tmpData.TotalSumm               ::TFloat
+           , (CAST (tmpData.TotalSumm * tmpData.CurrencyValue / CASE WHEN tmpData.ParValue <> 0 THEN tmpData.ParValue ELSE 1 END AS NUMERIC (16, 2))) :: TFloat AS TotalSummBalance
+           , tmpData.TotalSummPriceList      ::TFloat 
+           , tmpData.SaleSumm                ::TFloat  AS TotalSummSale
            
         FROM tmpData
             LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData.FromId

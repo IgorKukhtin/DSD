@@ -2140,6 +2140,9 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetToPlaceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetToPlaceForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetGoods_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAssetGoods_ObjectForm');
 end;
 
 procedure TLoadFormTest.LoadArticleLossFormTest;
