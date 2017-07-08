@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CompositionGroup(
     IN inName         TVarChar,      -- Название объекта <Группа для состава товара>
     IN inSession      TVarChar       -- сессия пользователя
 )
-RETURNS record 
+RETURNS RECORD 
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -18,11 +18,11 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
    -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
-   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) <> 0 THEN  ioCode := NEXTVAL ('Object_CompositionGroup_seq'); 
+   IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) <> 0 THEN ioCode := NEXTVAL ('Object_CompositionGroup_seq'); 
    END IF; 
 
    -- !!!ВРЕМЕННО!!! - пытаемся найти Id  для Загрузки из Sybase - !!!но если в Sybase нет уникальности - НАДО УБРАТЬ!!!
-   IF COALESCE (ioId, 0) = 0    AND COALESCE(ioCode,0) = 0 
+   IF COALESCE (ioId, 0) = 0    AND COALESCE (ioCode, 0) = 0 
    THEN ioId := (SELECT Id FROM Object WHERE ValueData = inName AND DescId = zc_Object_CompositionGroup());
         -- пытаемся найти код
         ioCode := (SELECT ObjectCode FROM Object WHERE Id = ioId);
@@ -30,9 +30,9 @@ BEGIN
    -- !!!ВРЕМЕННО!!! - для загрузки из Sybase т.к. там код = 0 
 
    -- Нужен для загрузки из Sybase т.к. там код = 0 
-   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) = 0  THEN  ioCode := NEXTVAL ('Object_CompositionGroup_seq'); 
+   IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) = 0  THEN ioCode := NEXTVAL ('Object_CompositionGroup_seq'); 
    ELSEIF ioCode = 0
-         THEN ioCode := COALESCE((SELECT ObjectCode FROM Object WHERE Id = ioId),0);
+         THEN ioCode := COALESCE ((SELECT ObjectCode FROM Object WHERE Id = ioId), 0);
    END IF; 
 
    -- проверка уникальности для <Код >
@@ -41,7 +41,7 @@ BEGIN
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_CompositionGroup(), inName);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_CompositionGroup(), ioCode, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_CompositionGroup(), ioCode, inName);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

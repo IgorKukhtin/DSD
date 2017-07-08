@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
     IN inJuridicalGroupId         Integer   ,    -- ключ объекта <Группы юридических лиц> 
     IN inSession                  TVarChar       -- сессия пользователя
 )
-RETURNS record
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;

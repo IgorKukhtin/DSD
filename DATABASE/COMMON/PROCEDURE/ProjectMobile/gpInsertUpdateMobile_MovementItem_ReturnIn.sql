@@ -69,27 +69,32 @@ BEGIN
                 PERFORM lpUnComplete_Movement (inMovementId:= vbMovementId, inUserId:= vbUserId);
            END IF;
 
-           -- сохраняем элемент возврата
-           SELECT ioId INTO vbId
-           FROM lpInsertUpdate_MovementItem_ReturnIn (ioId                 := vbId
-                                                    , inMovementId         := vbMovementId
-                                                    , inGoodsId            := inGoodsId
-                                                    , inAmount             := inAmount
-                                                    , inAmountPartner      := inAmount
-                                                    , inPrice              := inPrice
-                                                    , ioCountForPrice      := 0.0
-                                                    , inHeadCount          := 0.0
-                                                    , inMovementId_Partion := 0
-                                                    , inPartionGoods       := ''
-                                                    , inGoodsKindId        := inGoodsKindId
-                                                    , inAssetId            := 0
-                                                    , ioMovementId_Promo   := NULL
-                                                    , ioChangePercent      := NULL
-                                                    , inUserId             := vbUserId
-                                                     );
+           -- если есть кол-во
+           IF inAmount <> 0
+           THEN
+                -- сохранили элемент возврата
+                SELECT ioId INTO vbId
+                FROM lpInsertUpdate_MovementItem_ReturnIn (ioId                 := vbId
+                                                         , inMovementId         := vbMovementId
+                                                         , inGoodsId            := inGoodsId
+                                                         , inAmount             := inAmount
+                                                         , inAmountPartner      := inAmount
+                                                         , inPrice              := inPrice
+                                                         , ioCountForPrice      := 0.0
+                                                         , inHeadCount          := 0.0
+                                                         , inMovementId_Partion := 0
+                                                         , inPartionGoods       := ''
+                                                         , inGoodsKindId        := inGoodsKindId
+                                                         , inAssetId            := 0
+                                                         , ioMovementId_Promo   := NULL
+                                                         , ioChangePercent      := NULL
+                                                         , inUserId             := vbUserId
+                                                          );
+     
+                -- сохранили свойство <Глобальный уникальный идентификатор>
+                PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GUID(), vbId, inGUID);
+           END IF;
 
-           -- сохранили свойство <Глобальный уникальный идентификатор>
-           PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GUID(), vbId, inGUID);
       END IF;
 
       -- сохранили свойство <Дата/время сохранения с мобильного устройства>

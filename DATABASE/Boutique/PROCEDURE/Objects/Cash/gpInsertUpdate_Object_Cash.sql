@@ -22,26 +22,26 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
    -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
-   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) <> 0 THEN  ioCode := NEXTVAL ('Object_Cash_seq'); 
+   IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode,0) <> 0 THEN  ioCode := NEXTVAL ('Object_Cash_seq'); 
    END IF; 
 
    -- Нужен для загрузки из Sybase т.к. там код = 0 
-   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) = 0  THEN  ioCode := NEXTVAL ('Object_Cash_seq'); 
+   IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode,0) = 0  THEN  ioCode := NEXTVAL ('Object_Cash_seq'); 
    ELSEIF ioCode = 0
-         THEN ioCode := COALESCE((SELECT ObjectCode FROM Object WHERE Id = ioId),0);
+         THEN ioCode := COALESCE ((SELECT ObjectCode FROM Object WHERE Id = ioId),0);
    END IF; 
 
    -- проверка уникальности для свойства <Наименование Cash>
---   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Cash(), inName); 
+--   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Cash(), inName); 
    -- проверка уникальности для свойства <Код Cash>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Cash(), ioCode);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_Cash(), ioCode, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Cash(), ioCode, inName);
    -- сохранили связь с <Валюта>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Cash_Currency(), ioId, inCurrencyId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Cash_Currency(), ioId, inCurrencyId);
    -- сохранили связь с <Подразделение>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Cash_Unit(), ioId, inUnitId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Cash_Unit(), ioId, inUnitId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

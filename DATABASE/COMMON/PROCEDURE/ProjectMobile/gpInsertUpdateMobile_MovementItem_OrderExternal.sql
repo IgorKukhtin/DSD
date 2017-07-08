@@ -72,24 +72,28 @@ BEGIN
       END IF;
 
 
-      -- сохранили
-      SELECT ioId INTO vbId FROM lpInsertUpdate_MovementItem_OrderExternal (ioId            := vbId
-                                                                          , inMovementId    := vbMovementId
-                                                                          , inGoodsId       := inGoodsId
-                                                                          , inAmount        := inAmount
-                                                                          , inAmountSecond  := 0
-                                                                          , inGoodsKindId   := inGoodsKindId
-                                                                          , ioPrice         := inPrice
-                                                                          , ioCountForPrice := vbCountForPrice
-                                                                          , inUserId        := vbUserId
-                                                                           );
-
-      -- сохранили свойство <Глобальный уникальный идентификатор>
-      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GUID(), vbId, inGUID);
+      -- если есть кол-во
+      IF inAmount <> 0
+      THEN
+          -- сохранили элемент
+          SELECT ioId INTO vbId FROM lpInsertUpdate_MovementItem_OrderExternal (ioId            := vbId
+                                                                              , inMovementId    := vbMovementId
+                                                                              , inGoodsId       := inGoodsId
+                                                                              , inAmount        := inAmount
+                                                                              , inAmountSecond  := 0
+                                                                              , inGoodsKindId   := inGoodsKindId
+                                                                              , ioPrice         := inPrice
+                                                                              , ioCountForPrice := vbCountForPrice
+                                                                              , inUserId        := vbUserId
+                                                                               );
+    
+          -- сохранили свойство <Глобальный уникальный идентификатор>
+          PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GUID(), vbId, inGUID);
+    
+      END IF;
 
       -- сохранили свойство <Дата/время сохранения с мобильного устройства>
       PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_UpdateMobile(), vbMovementId, CURRENT_TIMESTAMP);
-
 
 
       -- !!! ВРЕМЕННО - 04.07.17 !!!

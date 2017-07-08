@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PriceList(
     IN inCurrencyId      Integer,       -- ключ объекта <Валюта> 
     IN inSession         TVarChar       -- сессия пользователя
 )
-RETURNS record
+RETURNS RECORD
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -20,23 +20,23 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
    -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
-   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) <> 0 THEN  ioCode := NEXTVAL ('Object_PriceList_seq'); 
+   IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) <> 0 THEN ioCode := NEXTVAL ('Object_PriceList_seq'); 
    END IF; 
 
    -- Нужен для загрузки из Sybase т.к. там код = 0 
-   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) = 0  THEN  ioCode := NEXTVAL ('Object_PriceList_seq'); 
+   IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) = 0  THEN ioCode := NEXTVAL ('Object_PriceList_seq'); 
    ELSEIF ioCode = 0
-         THEN ioCode := COALESCE((SELECT ObjectCode FROM Object WHERE Id = ioId),0);
+         THEN ioCode := COALESCE ((SELECT ObjectCode FROM Object WHERE Id = ioId), 0);
    END IF; 
 
    -- проверка уникальности для свойства <Наименование>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_PriceList(), inName); 
+   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_PriceList(), inName); 
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_PriceList(), ioCode, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_PriceList(), ioCode, inName);
 
    -- сохранили связь с <СВАлюта>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PriceList_Currency(), ioId, inCurrencyId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_PriceList_Currency(), ioId, inCurrencyId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

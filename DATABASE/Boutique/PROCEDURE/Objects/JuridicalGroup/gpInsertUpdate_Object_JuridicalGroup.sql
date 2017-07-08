@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_JuridicalGroup(
     IN inParentId                 Integer   ,    -- ключ объекта <Группы юридических лиц> 
     IN inSession                  TVarChar       -- сессия пользователя  
 )
-RETURNS record
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer; 
@@ -19,17 +19,17 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
    -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
-   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) <> 0 THEN  ioCode := NEXTVAL ('Object_JuridicalGroup_seq'); 
+   IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) <> 0 THEN ioCode := NEXTVAL ('Object_JuridicalGroup_seq'); 
    END IF; 
 
    -- Нужен для загрузки из Sybase т.к. там код = 0 
-   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) = 0  THEN  ioCode := NEXTVAL ('Object_JuridicalGroup_seq'); 
+   IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) = 0  THEN ioCode := NEXTVAL ('Object_JuridicalGroup_seq'); 
    ELSEIF ioCode = 0
-         THEN ioCode := COALESCE((SELECT ObjectCode FROM Object WHERE Id = ioId),0);
+         THEN ioCode := COALESCE ((SELECT ObjectCode FROM Object WHERE Id = ioId), 0);
    END IF; 
  
    -- проверка прав уникальности для свойства <Наименование >
-   --PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_JuridicalGroup(), inName);
+   --PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_JuridicalGroup(), inName);
 
    -- проверка уникальность <Наименование> для !!!одной!! <Группы юридических лиц>
    IF TRIM (inName) <> '' AND COALESCE (inParentId, 0) <> 0 
@@ -55,7 +55,7 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_JuridicalGroup(), ioCode, inName);
    -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_JuridicalGroup_Parent(), ioId, inParentId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_JuridicalGroup_Parent(), ioId, inParentId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

@@ -34,9 +34,9 @@ BEGIN
    END IF; 
 
    -- НЕ Нужен для загрузки из Sybase т.к. там код НЕ = 0 
-   -- IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) = 0  THEN  ioCode := NEXTVAL ('Object_Goods_seq'); 
+   -- IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) = 0  THEN ioCode := NEXTVAL ('Object_Goods_seq'); 
    -- ELSEIF ioCode = 0
-   --       THEN ioCode := COALESCE((SELECT ObjectCode FROM Object WHERE Id = ioId),0);
+   --       THEN ioCode := COALESCE ((SELECT ObjectCode FROM Object WHERE Id = ioId), 0);
    -- END IF; 
 
    -- проверка прав уникальности для свойства <Название>
@@ -75,17 +75,17 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_GroupNameFull(), ioId, vbGroupNameFull);
   
    -- сохранили связь с <Группы товаров>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_GoodsGroup(), ioId, inGoodsGroupId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroup(), ioId, inGoodsGroupId);
    -- сохранили связь с <Единицы измерения>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Measure(), ioId, inMeasureId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Measure(), ioId, inMeasureId);
    -- сохранили связь с <Состав товара>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Composition(), ioId, inCompositionId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Composition(), ioId, inCompositionId);
    -- сохранили связь с <Описание товара>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_GoodsInfo(), ioId, inGoodsInfoId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsInfo(), ioId, inGoodsInfoId);
    -- сохранили связь с <Линия коллекции>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_LineFabrica(), ioId, inLineFabricaId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_LineFabrica(), ioId, inLineFabricaId);
    -- сохранили связь с <Название для ценника>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Label(), ioId, inLabelId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Label(), ioId, inLabelId);
    -- сохранили связь с ***<УП статья назначения>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_InfoMoney(), ioId, vbInfoMoneyId);
 

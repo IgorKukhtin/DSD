@@ -8,27 +8,26 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Role(
     IN inName           TVarChar  ,     -- Название объекта <Действия>
     IN inSession        TVarChar        -- сессия пользователя
 )
-  RETURNS integer AS
+RETURNS Integer
+AS
 $BODY$
-   DECLARE UserId Integer;
+   DECLARE vbUserId Integer;
 BEGIN
-   
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Role());
-
-   UserId := inSession;
+   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Role());
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Role());
 
    -- Нужен для загрузки из Sybase т.к. там код = 0 
-   IF inCode = 0 THEN  inCode := NEXTVAL ('Object_Role_seq'); END IF; 
+   IF inCode = 0 THEN inCode := NEXTVAL ('Object_Role_seq'); END IF; 
    
    -- проверка уникальности для свойства <Наименование Действия>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Role(), inName);
+   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Role(), inName);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_Role(), inCode, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Role(), inCode, inName);
    
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;
 $BODY$

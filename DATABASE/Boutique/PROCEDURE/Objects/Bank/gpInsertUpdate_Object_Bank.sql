@@ -23,17 +23,17 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
    -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
-   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) <> 0 THEN  ioCode := NEXTVAL ('Object_Bank_seq'); 
+   IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode,0) <> 0 THEN ioCode := NEXTVAL ('Object_Bank_seq'); 
    END IF; 
 
    -- Нужен для загрузки из Sybase т.к. там код = 0 
-   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) = 0  THEN  ioCode := NEXTVAL ('Object_Bank_seq'); 
+   IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode,0) = 0  THEN ioCode := NEXTVAL ('Object_Bank_seq'); 
    ELSEIF ioCode = 0
-         THEN ioCode := COALESCE((SELECT ObjectCode FROM Object WHERE Id = ioId),0);
+         THEN ioCode := COALESCE ((SELECT ObjectCode FROM Object WHERE Id = ioId),0);
    END IF; 
    
    -- проверка прав уникальности для свойства <Наименование >
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Bank(), inName);
+   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Bank(), inName);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Bank(), ioCode, inName);
@@ -46,7 +46,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Bank_IBAN(), ioId, inIBAN);
 
    -- сохранили связь с <Юридические лица>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Bank_Juridical(), ioId, inJuridicalId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Bank_Juridical(), ioId, inJuridicalId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
