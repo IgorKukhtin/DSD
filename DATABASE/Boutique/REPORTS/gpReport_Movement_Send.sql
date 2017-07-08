@@ -42,13 +42,14 @@ RETURNS TABLE (
                CurrencyName  TVarChar,
 
                OperPrice           TFloat,
+               CountForPrice       TFloat,
                OperPriceList       TFloat,
                PriceSale           TFloat,
-               Amount          TFloat,
+               Amount              TFloat,
   
-               AmountSumm           TFloat,
-               AmountPriceListSumm  TFloat,
-               SaleSumm             TFloat
+               TotalSumm           TFloat,
+               TotalSummPriceList  TFloat,
+               TotalSummSale       TFloat
   )
 AS
 $BODY$
@@ -82,7 +83,7 @@ BEGIN
                                                          
                                 WHERE Movement_Send.DescId = zc_Movement_Send()
                                   AND Movement_Send.OperDate BETWEEN inStartDate AND inEndDate
-                                 -- AND Movement_Send.StatusId = zc_Enum_Status_Complete() 
+                                  AND Movement_Send.StatusId = zc_Enum_Status_Complete() 
                               )
 
      , tmpData  AS  (SELECT tmpMovementSend.InvNumber
@@ -116,10 +117,10 @@ BEGIN
                           , SUM (CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 1) <> 0
                                           THEN CAST (COALESCE (MI_Send.Amount, 0) * COALESCE (MIFloat_OperPrice.ValueData, 0) / COALESCE (MIFloat_CountForPrice.ValueData, 1) AS NUMERIC (16, 2))
                                       ELSE CAST ( COALESCE (MI_Send.Amount, 0) * COALESCE (MIFloat_OperPrice.ValueData, 0) AS NUMERIC (16, 2))
-                                 END) AS AmountSumm
+                                 END) AS TotalSumm
 
-                          , SUM (COALESCE (MI_Send.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) ) AS AmountPriceListSumm
-                          , SUM (COALESCE (MI_Send.Amount, 0) * COALESCE (Object_PartionGoods.PriceSale,0) )    AS SaleSumm
+                          , SUM (COALESCE (MI_Send.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) ) AS TotalSummPriceList
+                          , SUM (COALESCE (MI_Send.Amount, 0) * COALESCE (Object_PartionGoods.PriceSale,0) )    AS TotalSummSale
 
                      FROM tmpMovementSend
                           INNER JOIN MovementItem AS MI_Send 
@@ -209,13 +210,14 @@ BEGIN
            , Object_GoodsSize.ValueData     AS GoodsSizeName
            , Object_Currency.ValueData      AS CurrencyName
            
-           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.AmountSumm  / tmpData.Amount ELSE 0 END          ::TFloat AS OperPrice
-           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.AmountPriceListSumm  / tmpData.Amount ELSE 0 END ::TFloat AS OperPriceList
-           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SaleSumm  / tmpData.Amount ELSE 0 END            ::TFloat AS PriceSale
+           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSumm  / tmpData.Amount ELSE 0 END          ::TFloat AS OperPrice
+           , tmpData.CountForPrice           ::TFloat
+           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSummPriceList  / tmpData.Amount ELSE 0 END ::TFloat AS OperPriceList
+           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSummSale  / tmpData.Amount ELSE 0 END      ::TFloat AS PriceSale
            , tmpData.Amount                  ::TFloat
-           , tmpData.AmountSumm              ::TFloat
-           , tmpData.AmountPriceListSumm     ::TFloat 
-           , tmpData.SaleSumm                ::TFloat 
+           , tmpData.TotalSumm               ::TFloat
+           , tmpData.TotalSummPriceList      ::TFloat 
+           , tmpData.TotalSummSale           ::TFloat 
            
         FROM tmpData
             LEFT JOIN Object AS Object_From    ON Object_From.Id    = tmpData.FromId
