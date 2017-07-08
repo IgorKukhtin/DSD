@@ -28,6 +28,8 @@ BEGIN
      -- определяется уникальный № док.
      IF COALESCE (ioId, 0) = 0 THEN
         ioInvNumber:= CAST (NEXTVAL ('Movement_ReturnOut_seq') AS TVarChar);  
+     ELSEIF vbUserId = zc_User_Sybase() THEN
+        ioInvNumber:= (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = ioId);
      END IF;
 
      -- Если НЕ Базовая Валюта

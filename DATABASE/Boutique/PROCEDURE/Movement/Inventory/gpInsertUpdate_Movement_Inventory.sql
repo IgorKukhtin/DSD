@@ -23,6 +23,8 @@ BEGIN
      
      IF COALESCE (ioId, 0) = 0 THEN
          ioInvNumber:= CAST (NEXTVAL ('movement_inventory_seq') AS TVarChar);  
+     ELSEIF vbUserId = zc_User_Sybase() THEN
+        ioInvNumber:= (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = ioId);
      END IF;
 
      -- сохранили <Документ>

@@ -930,6 +930,15 @@ object SaleForm: TSaleForm
             Options.Editing = False
             Width = 80
           end
+          object isClose: TcxGridDBColumn
+            Caption = #1047#1072#1074#1077#1088#1096#1077#1085
+            DataBinding.FieldName = 'isClose'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'

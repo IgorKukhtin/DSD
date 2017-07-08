@@ -3290,6 +3290,7 @@ begin
         Add('      Bill.Id as ObjectId');
         Add('    , BillItems.Id_Postgres');
         Add('    , Bill.Id_Postgres as MovementId');
+        Add('    , Bill.BillDate AS OperDate');
         Add('    , BillItemsIncome.GoodsId_Postgres as GoodsId');
         Add('    , BillItemsIncome.Id_Postgres as PartionId');
         Add('    , 0 as DiscountSaleKindId');
@@ -3298,7 +3299,7 @@ begin
         Add('    , BillItems.OperPrice as OperPriceList');
         Add('    , 0 as ChangePercent');
         Add('    , '''' as BarCode');
-        Add('    , '''' as Comment');
+        Add('    , '''' as CommentInfo');
         Add('    , zc_rvYes() as isBill');
         Add('    , zc_rvYes() as isClose');
         Add('from DBA.Bill');
@@ -3311,24 +3312,30 @@ begin
         Add('      DiscountMovementItem_byBarCode.Id as ObjectId');
         Add('    , DiscountMovementItem_byBarCode.Id_Postgres');
         Add('    , DiscountMovement.SaleId_Postgres as MovementId');
+        Add('    , DiscountMovement.OperDate as OperDate');
         Add('    , BillItemsIncome.GoodsId_Postgres as GoodsId');
         Add('    , BillItemsIncome.Id_Postgres as PartionId');
-        Add('    , 0 as DiscountSaleKindId');
+        Add('    , case when DiscountMovement.UnitId in (978, 4647, 11425, 7360,  29018, 11772, 969) then '+ IntToStr(zc_Enum_DiscountSaleKind_Outlet));
+        Add('           when DiscountMovementItem_byBarCode.DiscountTax > DiscountKlient.DiscountTax then '+ IntToStr(zc_Enum_DiscountSaleKind_Period));
+        Add('           when DiscountMovementItem_byBarCode.DiscountTax > 0 then '+ IntToStr(zc_Enum_DiscountSaleKind_Client));
+        Add('           else 0');
+        Add('      end as DiscountSaleKindId');
         Add('    , DiscountMovementItem_byBarCode.OperCount as Amount');
         Add('    , DiscountMovementItem_byBarCode.SummDiscountManual as SummChangePercent');
         Add('    , DiscountMovementItem_byBarCode.OperPrice as OperPriceList');
         Add('    , DiscountMovementItem_byBarCode.DiscountTax AS ChangePercent');
         Add('    , DiscountMovementItem_byBarCode.BarCode_byClient as BarCode');
-        Add('    , trim (DiscountMovementItem_byBarCode.CommentInfo) as Comment');
+        Add('    , trim (DiscountMovementItem_byBarCode.CommentInfo) as CommentInfo');
         Add('    , zc_rvNo() as isBill');
-        Add('    , case when DiscountMovementItem_byBarCode_all.BillItemsId > 0 then zc_rvYes() else zc_rvNo() end  as isClose');
+        Add('    , case when _data_all.BillItemsId > 0 then zc_rvYes() else zc_rvNo() end  as isClose');
         Add('FROM dba.DiscountMovementItem_byBarCode');
         Add('    join DiscountMovement     on DiscountMovement.id = DiscountMovementItem_byBarCode.DiscountMovementId');
+        Add('    left outer join DiscountKlient on DiscountKlient.id  = DiscountMovement.DiscountKlientId');
         Add('    left outer join BillItemsIncome on BillItemsIncome.id  = DiscountMovementItem_byBarCode.BillItemsIncomeId');
         Add('    left outer join _data_all on _data_all.DatabaseId  = DiscountMovementItem_byBarCode.DatabaseId');
         Add('                             and _data_all.ReplId      = DiscountMovementItem_byBarCode.ReplId');
         Add('WHERE DiscountMovement.descId = 1  AND DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
-        Add('ORDER BY DiscountMovement.OperDate, ObjectId ');
+        Add('ORDER BY OperDate, MovementId, ObjectId ');
         Open;
 
         cbSale.Caption:='1.8. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Продажа покупателю';
@@ -3376,10 +3383,8 @@ begin
              toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode').AsString;
              // хардкод
              if FieldByName('isClose').AsInteger = zc_rvYes
-             then toStoredProc.Params.ParamByName('inComment').Value:='*123*' + FieldByName('Comment').AsString
-             else toStoredProc.Params.ParamByName('inComment').Value:=FieldByName('Comment').AsString;
-
-
+             then toStoredProc.Params.ParamByName('inComment').Value:='*123*' + FieldByName('CommentInfo').AsString
+             else toStoredProc.Params.ParamByName('inComment').Value:=FieldByName('CommentInfo').AsString;
 
              if not myExecToStoredProc then ;//exit;
              //

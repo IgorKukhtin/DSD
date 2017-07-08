@@ -165,6 +165,7 @@ type
     edInsertName: TcxButtonEdit;
     Comment: TcxGridDBColumn;
     TotalSummDebt: TcxGridDBColumn;
+    isClose: TcxGridDBColumn;
   private
   public
   end;

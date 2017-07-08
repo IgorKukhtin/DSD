@@ -13,27 +13,32 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Sale (Integer, Integer, Inte
                                                         , TFloat, TFloat, TFloat, TFloat, TFloat
                                                         , TVarChar, TVarChar, Integer);
 
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, Integer
+                                                        , TFloat, TFloat, TFloat, TFloat
+                                                        , TFloat, TFloat, TFloat, TFloat
+                                                        , TVarChar, TVarChar, Integer);
+
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Sale(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId            Integer   , -- Ключ объекта <Документ>
-    IN inGoodsId               Integer   , -- Товары
+    IN inGoodsId               Integer   , -- Товар
     IN inPartionId             Integer   , -- Партия
     IN inDiscountSaleKindId    Integer   , -- Вид скидки при продаже
     IN inAmount                TFloat    , -- Количество
     IN inChangePercent         TFloat    , -- % Скидки
-    IN inSummChangePercent     TFloat    , -- Сумма дополнительной Скидки (в ГРН)
-    IN inOperPrice             TFloat    , -- Цена
-    IN inCountForPrice         TFloat    , -- Цена за количество
+    -- IN inSummChangePercent     TFloat    , -- Дополнительная скидка в продаже ГРН
+    IN inOperPrice             TFloat    , -- Цена вх. в валюте
+    IN inCountForPrice         TFloat    , -- Цена вх.за количество
     IN inOperPriceList         TFloat    , -- Цена по прайсу
-    IN inCurrencyValue         TFloat    , -- 
-    IN inParValue              TFloat    , -- 
-    IN inTotalChangePercent    TFloat    , -- 
-    IN inTotalChangePercentPay TFloat    , -- 
-    IN inTotalPay              TFloat    , -- 
-    IN inTotalPayOth           TFloat    , -- 
-    IN inTotalCountReturn      TFloat    , -- 
-    IN inTotalReturn           TFloat    , -- 
-    IN inTotalPayReturn        TFloat    , -- 
+    IN inCurrencyValue         TFloat    , -- Курс для перевода из валюты партии в ГРН
+    IN inParValue              TFloat    , -- Номинал для перевода из валюты партии в ГРН
+    IN inTotalChangePercent    TFloat    , -- Итого скидка в продаже ГРН
+    -- IN inTotalChangePercentPay TFloat    , -- 
+    -- IN inTotalPay              TFloat    , -- Итого оплата в продаже ГРН
+    -- IN inTotalPayOth           TFloat    , -- 
+    -- IN inTotalCountReturn      TFloat    , -- 
+    -- IN inTotalReturn           TFloat    , -- 
+    -- IN inTotalPayReturn        TFloat    , -- 
 
     IN inBarCode               TVarChar  , -- Штрих-код поставщика
     IN inComment               TVarChar  , -- примечание
@@ -60,38 +65,25 @@ BEGIN
      IF COALESCE (inCountForPrice, 0) = 0 THEN inCountForPrice := 1; END IF;
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, inCountForPrice);
 
-     -- сохранили свойство <>
+     -- сохранили свойство <цена (прайс)>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList(), ioId, inOperPriceList);
-     -- сохранили свойство <>
+     -- сохранили свойство <Курс для перевода из валюты партии в ГРН>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CurrencyValue(), ioId, inCurrencyValue);
-     -- сохранили свойство <>
+     -- сохранили свойство <Номинал для перевода из валюты партии в ГРН>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ParValue(), ioId, inParValue);
-     -- сохранили свойство <>
+
+     -- сохранили свойство <Итого скидка в продаже ГРН>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalChangePercent(), ioId, inTotalChangePercent);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalChangePercentPay(), ioId, inTotalChangePercentPay);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), ioId, inTotalPay);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPayOth(), ioId, inTotalPayOth);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalCountReturn(), ioId, inTotalCountReturn);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalReturn(), ioId, inTotalReturn);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPayReturn(), ioId, inTotalPayReturn);
 
-     -- сохранили свойство <>
+     -- сохранили свойство <% Скидки>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), ioId, inChangePercent);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), ioId, inSummChangePercent);
 
-     -- сохранили свойство <>
+     -- сохранили свойство <Штрих-код поставщика>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_BarCode(), ioId, inBarCode);
      -- сохранили свойство <примечание>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
      
-     -- сохранили связь с <>
+     -- сохранили связь с <Вид скидки при продаже>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_DiscountSaleKind(), ioId, inDiscountSaleKindId);
 
 

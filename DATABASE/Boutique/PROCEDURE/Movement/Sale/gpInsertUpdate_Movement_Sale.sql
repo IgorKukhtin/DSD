@@ -20,7 +20,9 @@ BEGIN
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Sale());
 
      IF COALESCE (ioId, 0) = 0 THEN
-         ioInvNumber:= CAST (NEXTVAL ('movement_Sale_seq') AS TVarChar);  
+        ioInvNumber:= CAST (NEXTVAL ('Movement_Sale_seq') AS TVarChar);  
+     ELSEIF vbUserId = zc_User_Sybase() THEN
+        ioInvNumber:= (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = ioId);
      END IF;
      
      -- сохранили <Документ>

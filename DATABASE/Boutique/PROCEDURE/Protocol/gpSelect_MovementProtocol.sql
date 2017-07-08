@@ -41,20 +41,7 @@ BEGIN
   JOIN Object AS Object_User ON Object_User.Id = MovementProtocol.UserId
   JOIN Movement ON Movement.Id = MovementProtocol.MovementId AND Movement.Id = inMovementId
   JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
- UNION ALL
-  -- arc-1
-  SELECT 
-     MovementProtocol.OperDate,
-     MovementProtocol.ProtocolData::Text,
-     Object_User.ValueData,
-     Movement.InvNumber, 
-     Movement.OperDate, 
-     MovementDesc.ItemName AS MovementDescName,
-     MovementProtocol.isInsert
-  FROM MovementProtocol_arc AS MovementProtocol
-  JOIN Object AS Object_User ON Object_User.Id = MovementProtocol.UserId
-  JOIN Movement ON Movement.Id = MovementProtocol.MovementId AND Movement.Id = inMovementId
-  JOIN MovementDesc ON MovementDesc.Id = Movement.DescId;
+  ;
 
   ELSE
      RAISE EXCEPTION 'Ошибка.Просмотр протокола недоступен.';
