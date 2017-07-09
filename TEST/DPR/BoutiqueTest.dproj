@@ -727,10 +727,6 @@
 				<Form>GoodsAccountJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Report\Report_MovementIncomeDialog.pas">
-				<Form>Report_MovementIncomeDialogForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Report\Report_MovementReturnOutDialog.pas">
 				<Form>Report_MovementReturnOutDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -893,6 +889,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Report\Report_PartnerDebtDialog.pas">
 				<Form>Report_PartnerDebtDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_MovementIncomeDialog.pas">
+				<Form>Report_MovementIncomeDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

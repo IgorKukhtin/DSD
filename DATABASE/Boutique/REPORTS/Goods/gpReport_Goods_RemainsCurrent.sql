@@ -1,12 +1,18 @@
 -- Function:  gpReport_Goods_RemainsCurrent()
 
 DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent(Integer,Boolean, Boolean,Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent(Integer,Integer,Integer,Integer,Integer,Integer,Boolean, Boolean,Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION  gpReport_Goods_RemainsCurrent(
     IN inUnitId           Integer  ,  -- Подразделение / группа
+    IN inBrandId          Integer  ,  --
+    IN inPartnerId        Integer  ,  --
+    IN inPeriodId         Integer  ,  -- 
+    IN inPeriodYearStart  Integer  ,  --
+    IN inPeriodYearEnd    Integer  ,  --
     IN inisPartion        Boolean,    -- 
-    IN inisSize           Boolean,    --
     IN inisPartner        Boolean,    --
+    IN inisSize           Boolean,    --
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (InvNumber_Partion  TVarChar,
@@ -145,6 +151,7 @@ BEGIN
                           --, SUM (COALESCE (tmpContainer.Remains, 0) * COALESCE (Object_PartionGoods.PriceSale,0))       AS TotalSummSale
                      FROM tmpContainer
                           INNER JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmpContainer.PartionId
+
                           LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id = Object_PartionGoods.MovementId
                           LEFT JOIN MovementDesc AS MovementDesc_Partion ON MovementDesc_Partion.Id = Movement_Partion.DescId 
 
@@ -156,7 +163,11 @@ BEGIN
                                               AND ObjectLink_Partner_Period.DescId = zc_ObjectLink_Partner_Period()
 
                           --LEFT JOIN tmpPrice ON tmpPrice.GoodsId = Object_PartionGoods.GoodsId
-
+                     WHERE (ObjectLink_Partner_Period.ChildObjectId = inPeriodId OR inPeriodId = 0)
+                       AND (Object_PartionGoods.BrandId = inBrandId OR inBrandId = 0)
+                       AND (Object_PartionGoods.PartnerId = inPartnerId OR inPartnerId = 0)  
+                       AND (Object_PartionGoods.PeriodYear >= inPeriodYearStart OR inPeriodYearStart = 0)
+                       AND (Object_PartionGoods.PeriodYear <= inPeriodYearEnd OR inPeriodYearEnd = 0) 
                      GROUP BY tmpContainer.UnitId
                             , tmpContainer.GoodsId
                             , CASE WHEN inisPartion = TRUE THEN MovementDesc_Partion.ItemName ELSE CAST (NULL AS TVarChar)  END

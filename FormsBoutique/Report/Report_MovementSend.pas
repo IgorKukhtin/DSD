@@ -58,6 +58,13 @@ type
     bbOpenReportForm: TdxBarButton;
     actOpenReportTo: TdsdOpenForm;
     bbOpenReportTo: TdxBarButton;
+    cxLabel7: TcxLabel;
+    edPeriod: TcxButtonEdit;
+    cxLabel8: TcxLabel;
+    edPeriodYearStart: TcxCurrencyEdit;
+    cxLabel9: TcxLabel;
+    edPeriodYearEnd: TcxCurrencyEdit;
+    GuidesPeriod: TdsdGuides;
   private
     { Private declarations }
   public

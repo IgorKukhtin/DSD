@@ -1,6 +1,7 @@
 -- Function:  gpReport_Movement_Loss()
 
 DROP FUNCTION IF EXISTS gpReport_Movement_Loss (TDateTime,TDateTime,Integer,Integer,Integer,Integer,Boolean,Boolean,Boolean,Boolean,TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Movement_Loss (TDateTime,TDateTime,Integer,Integer,Integer,Integer,Integer,Integer,Integer,Boolean,Boolean,Boolean,Boolean,TVarChar);
 
 CREATE OR REPLACE FUNCTION  gpReport_Movement_Loss(
     IN inStartDate        TDateTime,  -- Дата начала
@@ -9,6 +10,11 @@ CREATE OR REPLACE FUNCTION  gpReport_Movement_Loss(
     IN inUnitId_To        Integer  ,  -- Подразделение
     IN inBrandId          Integer  ,  -- Бренд
     IN inPartnerId        Integer  ,  -- Поставщик
+    
+    IN inPeriodId         Integer  ,  -- 
+    IN inPeriodYearStart  Integer  ,  --
+    IN inPeriodYearEnd    Integer  ,  --
+        
     IN inisPartion        Boolean,    -- 
     IN inisSize           Boolean,    --
     IN inisPartner        Boolean,    --
@@ -80,7 +86,7 @@ BEGIN
                                                          
                                 WHERE Movement_Loss.DescId = zc_Movement_Loss()
                                   AND Movement_Loss.OperDate BETWEEN inStartDate AND inEndDate
-                                 -- AND Movement_Loss.StatusId = zc_Enum_Status_Complete() 
+                                  AND Movement_Loss.StatusId = zc_Enum_Status_Complete() 
                                   AND (MovementLinkObject_From.ObjectId = inUnitId_From OR inUnitId_From = 0)
                                   AND (MovementLinkObject_To.ObjectId = inUnitId_To OR inUnitId_To = 0)
                               )
@@ -146,7 +152,10 @@ BEGIN
                           LEFT JOIN ObjectLink AS ObjectLink_Partner_Period
                                                ON ObjectLink_Partner_Period.ObjectId = Object_PartionGoods.PartnerId
                                               AND ObjectLink_Partner_Period.DescId = zc_ObjectLink_Partner_Period()
-                                     
+                                              
+                     WHERE (Object_PartionGoods.PeriodYear >= inPeriodYearStart OR inPeriodYearStart = 0)
+                       AND (Object_PartionGoods.PeriodYear <= inPeriodYearEnd OR inPeriodYearEnd = 0) 
+                       AND (ObjectLink_Partner_Period.ChildObjectId = inPeriodId OR inPeriodId = 0)
                      GROUP BY tmpMovementLoss.InvNumber
                             , tmpMovementLoss.OperDate
                             , tmpMovementLoss.DescName

@@ -58,32 +58,77 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
       Width = 224
     end
     object cbPartion: TcxCheckBox
-      Left = 669
+      Left = 887
       Top = 5
       Action = actRefreshIsPartion
       TabOrder = 6
-      Width = 94
+      Width = 84
     end
     object cbSize: TcxCheckBox
-      Left = 669
+      Left = 887
       Top = 32
       Action = actRefreshSize
       TabOrder = 7
       Width = 90
     end
     object cbPartner: TcxCheckBox
-      Left = 769
+      Left = 978
       Top = 5
       Action = actRefreshPartner
       TabOrder = 8
-      Width = 108
+      Width = 111
     end
     object cbMovement: TcxCheckBox
-      Left = 769
+      Left = 978
       Top = 32
       Action = actRefreshMovement
       TabOrder = 9
       Width = 108
+    end
+    object cxLabel7: TcxLabel
+      Left = 668
+      Top = 6
+      Caption = #1057#1077#1079#1086#1085':'
+    end
+    object edPeriod: TcxButtonEdit
+      Left = 712
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 11
+      Width = 172
+    end
+    object cxLabel8: TcxLabel
+      Left = 669
+      Top = 33
+      Caption = #1043#1086#1076' ('#1085#1072#1095'.):'
+    end
+    object edPeriodYearStart: TcxCurrencyEdit
+      Left = 731
+      Top = 32
+      EditValue = 0.000000000000000000
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = '0'
+      TabOrder = 13
+      Width = 40
+    end
+    object cxLabel9: TcxLabel
+      Left = 777
+      Top = 33
+      Caption = #1043#1086#1076' ('#1086#1082#1086#1085'.):'
+    end
+    object edPeriodYearEnd: TcxCurrencyEdit
+      Left = 844
+      Top = 32
+      EditValue = 2017.000000000000000000
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = '0'
+      TabOrder = 15
+      Width = 40
     end
   end
   inherited PageControl: TcxPageControl [1]
@@ -567,6 +612,12 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
         Properties.Strings = (
           'Key'
           'TextValue')
+      end
+      item
+        Component = GuidesPeriod
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end>
   end
   inherited ActionList: TActionList
@@ -717,6 +768,37 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
           Value = Null
           Component = cbMovement
           DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodId'
+          Value = Null
+          Component = GuidesPeriod
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodName'
+          Value = Null
+          Component = GuidesPeriod
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodYearStart'
+          Value = Null
+          Component = edPeriodYearStart
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodYearEnd'
+          Value = Null
+          Component = edPeriodYearEnd
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -1041,6 +1123,28 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPeriodId'
+        Value = Null
+        Component = GuidesPeriod
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPeriodYearStart'
+        Value = Null
+        Component = edPeriodYearStart
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPeriodYearEnd'
+        Value = Null
+        Component = edPeriodYearEnd
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisPartion'
         Value = Null
         Component = cbPartion
@@ -1170,6 +1274,15 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
       end
       item
         Component = GuidesUnitTo
+      end
+      item
+        Component = GuidesPeriod
+      end
+      item
+        Component = edPeriodYearStart
+      end
+      item
+        Component = edPeriodYearEnd
       end>
     Left = 384
     Top = 176
@@ -1291,5 +1404,36 @@ inherited Report_MovementSendForm: TReport_MovementSendForm
         MultiSelectSeparator = ','
       end>
     Left = 520
+  end
+  object GuidesPeriod: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPeriod
+    Key = '0'
+    FormNameParam.Value = 'TPeriodForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPeriodForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesPeriod
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPeriod
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 766
+    Top = 18
   end
 end

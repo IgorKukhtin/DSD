@@ -1,6 +1,7 @@
 -- Function:  gpReport_Movement_ReturnOut()
 
 DROP FUNCTION IF EXISTS gpReport_Movement_ReturnOut (TDateTime,TDateTime,Integer,Integer,Integer,Boolean,Boolean,Boolean,Boolean,TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Movement_ReturnOut (TDateTime,TDateTime,Integer,Integer,Integer,Integer,Integer,Integer,Boolean,Boolean,Boolean,Boolean,TVarChar);
 
 CREATE OR REPLACE FUNCTION  gpReport_Movement_ReturnOut(
     IN inStartDate        TDateTime,  -- Дата начала
@@ -8,6 +9,11 @@ CREATE OR REPLACE FUNCTION  gpReport_Movement_ReturnOut(
     IN inUnitId           Integer  ,  -- Подразделение
     IN inBrandId          Integer  ,  -- Бренд
     IN inPartnerId        Integer  ,  -- Поставщик
+    
+    IN inPeriodId         Integer  ,  -- 
+    IN inPeriodYearStart  Integer  ,  --
+    IN inPeriodYearEnd    Integer  ,  --
+    
     IN inisPartion        Boolean,    -- 
     IN inisSize           Boolean,    --
     IN inisPartner        Boolean,    --
@@ -98,6 +104,7 @@ BEGIN
                                 WHERE Movement_ReturnOut.DescId = zc_Movement_ReturnOut()
                                   AND Movement_ReturnOut.OperDate BETWEEN inStartDate AND inEndDate
                                   AND Movement_ReturnOut.StatusId = zc_Enum_Status_Complete() 
+                                  AND (ObjectLink_Partner_Period.ChildObjectId = inPeriodId OR inPeriodId = 0) 
                               )
 
      , tmpData  AS  (SELECT tmpMovementReturnOut.InvNumber
@@ -155,6 +162,10 @@ BEGIN
                           LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                       ON MIFloat_OperPriceList.MovementItemId = MI_ReturnOut.Id
                                                      AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
+                                                     
+                     WHERE (Object_PartionGoods.PeriodYear >= inPeriodYearStart OR inPeriodYearStart = 0)
+                       AND (Object_PartionGoods.PeriodYear <= inPeriodYearEnd OR inPeriodYearEnd = 0) 
+                                                                           
                      GROUP BY tmpMovementReturnOut.InvNumber
                             , tmpMovementReturnOut.OperDate
                             , tmpMovementReturnOut.DescName

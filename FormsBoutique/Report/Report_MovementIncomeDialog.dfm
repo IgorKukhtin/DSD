@@ -3,7 +3,7 @@ object Report_MovementIncomeDialogForm: TReport_MovementIncomeDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
-  ClientHeight = 281
+  ClientHeight = 388
   ClientWidth = 342
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -17,8 +17,8 @@ object Report_MovementIncomeDialogForm: TReport_MovementIncomeDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 49
-    Top = 248
+    Left = 44
+    Top = 347
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -27,8 +27,8 @@ object Report_MovementIncomeDialogForm: TReport_MovementIncomeDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 223
-    Top = 248
+    Left = 218
+    Top = 347
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -112,7 +112,7 @@ object Report_MovementIncomeDialogForm: TReport_MovementIncomeDialogForm
     Width = 305
   end
   object cxLabel2: TcxLabel
-    Left = 8
+    Left = 10
     Top = 192
     Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
   end
@@ -135,6 +135,51 @@ object Report_MovementIncomeDialogForm: TReport_MovementIncomeDialogForm
     Caption = #1087#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
     TabOrder = 14
     Width = 109
+  end
+  object cxLabel4: TcxLabel
+    Left = 10
+    Top = 239
+    Caption = #1057#1077#1079#1086#1085' :'
+  end
+  object edPeriod: TcxButtonEdit
+    Left = 10
+    Top = 259
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 16
+    Width = 305
+  end
+  object cxLabel5: TcxLabel
+    Left = 10
+    Top = 289
+    Caption = #1043#1086#1076' ('#1085#1072#1095'.):'
+  end
+  object edPeriodYearStart: TcxCurrencyEdit
+    Left = 10
+    Top = 309
+    EditValue = 0.000000000000000000
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    TabOrder = 18
+    Width = 100
+  end
+  object edPeriodYearEnd: TcxCurrencyEdit
+    Left = 154
+    Top = 309
+    EditValue = 0.000000000000000000
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    TabOrder = 19
+    Width = 100
+  end
+  object cxLabel8: TcxLabel
+    Left = 154
+    Top = 289
+    Caption = #1043#1086#1076' ('#1086#1082#1086#1085'.):'
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -251,9 +296,40 @@ object Report_MovementIncomeDialogForm: TReport_MovementIncomeDialogForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PeriodId'
+        Value = Null
+        Component = GuidesPeriod
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PeriodName'
+        Value = Null
+        Component = GuidesPeriod
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PeriodYearStart'
+        Value = Null
+        Component = edPeriodYearStart
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PeriodYearEnd'
+        Value = Null
+        Component = edPeriodYearEnd
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 22
-    Top = 215
+    Left = 70
+    Top = 199
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -347,5 +423,36 @@ object Report_MovementIncomeDialogForm: TReport_MovementIncomeDialogForm
       end>
     Left = 166
     Top = 206
+  end
+  object GuidesPeriod: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPeriod
+    Key = '0'
+    FormNameParam.Value = 'TPeriodForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPeriodForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesPeriod
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPeriod
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 142
+    Top = 250
   end
 end

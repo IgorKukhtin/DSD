@@ -45,6 +45,19 @@ type
     actRefreshPartner: TdsdDataSetRefresh;
     actRefreshMovement: TdsdDataSetRefresh;
     CountForPrice: TcxGridDBColumn;
+    cxLabel5: TcxLabel;
+    edBrand: TcxButtonEdit;
+    GuidesBrand: TdsdGuides;
+    cxLabel6: TcxLabel;
+    edPeriod: TcxButtonEdit;
+    GuidesPeriod: TdsdGuides;
+    cxLabel7: TcxLabel;
+    edPeriodYearStart: TcxCurrencyEdit;
+    cxLabel8: TcxLabel;
+    edPeriodYearEnd: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
+    edPartner: TcxButtonEdit;
+    GuidesPartner: TdsdGuides;
   private
     { Private declarations }
   public

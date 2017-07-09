@@ -216,7 +216,6 @@ uses
   GoodsAccountItemEdit in '..\..\FormsBoutique\Document\GoodsAccountItemEdit.pas' {GoodsAccountItemEditForm: TParentForm},
   GoodsAccount in '..\..\FormsBoutique\Document\GoodsAccount.pas' {GoodsAccountForm: TParentForm},
   GoodsAccountJournal in '..\..\FormsBoutique\Document\GoodsAccountJournal.pas' {GoodsAccountJournalForm: TParentForm},
-  Report_MovementIncomeDialog in '..\..\FormsBoutique\Report\Report_MovementIncomeDialog.pas' {Report_MovementIncomeDialogForm: TParentForm},
   Report_MovementReturnOutDialog in '..\..\FormsBoutique\Report\Report_MovementReturnOutDialog.pas' {Report_MovementReturnOutDialogForm: TParentForm},
   Report_MovementReturnOut in '..\..\FormsBoutique\Report\Report_MovementReturnOut.pas' {Report_MovementReturnOutForm: TParentForm},
   Report_MovementSend in '..\..\FormsBoutique\Report\Report_MovementSend.pas' {Report_MovementSendForm: TParentForm},
@@ -257,7 +256,8 @@ uses
   Report_SaleReturnIn in '..\..\FormsBoutique\Report\Report_SaleReturnIn.pas' {Report_SaleReturnInForm: TParentForm},
   Report_SaleReturnInDialog in '..\..\FormsBoutique\Report\Report_SaleReturnInDialog.pas' {Report_SaleReturnInDialogForm: TParentForm},
   Report_PartnerDebt in '..\..\FormsBoutique\Report\Report_PartnerDebt.pas' {Report_PartnerDebtForm: TParentForm},
-  Report_PartnerDebtDialog in '..\..\FormsBoutique\Report\Report_PartnerDebtDialog.pas' {Report_PartnerDebtDialogForm: TParentForm};
+  Report_PartnerDebtDialog in '..\..\FormsBoutique\Report\Report_PartnerDebtDialog.pas' {Report_PartnerDebtDialogForm: TParentForm},
+  Report_MovementIncomeDialog in '..\..\FormsBoutique\Report\Report_MovementIncomeDialog.pas' {Report_MovementIncomeDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

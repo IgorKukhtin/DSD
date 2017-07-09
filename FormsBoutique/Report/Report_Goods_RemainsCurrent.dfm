@@ -4,22 +4,20 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   ClientWidth = 1065
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -278
-  ExplicitTop = 0
   ExplicitWidth = 1081
-  ExplicitHeight = 460
+  ExplicitHeight = 463
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
     Width = 1065
-    Height = 33
+    Height = 73
     ExplicitWidth = 1065
-    ExplicitHeight = 33
+    ExplicitHeight = 73
     inherited deStart: TcxDateEdit
-      Left = 925
+      Left = 997
       EditValue = 42736d
       Visible = False
-      ExplicitLeft = 925
+      ExplicitLeft = 997
     end
     inherited deEnd: TcxDateEdit
       Left = 1037
@@ -28,10 +26,10 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       ExplicitLeft = 1037
     end
     inherited cxLabel1: TcxLabel
-      Left = 904
+      Left = 994
       Caption = #1057':'
       Visible = False
-      ExplicitLeft = 904
+      ExplicitLeft = 994
       ExplicitWidth = 15
     end
     inherited cxLabel2: TcxLabel
@@ -59,48 +57,127 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Properties.UseNullString = True
       TabOrder = 5
       Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
-      Width = 224
+      Width = 212
     end
     object cbPartion: TcxCheckBox
-      Left = 378
+      Left = 626
       Top = 5
       Action = actRefreshIsPartion
       TabOrder = 6
       Width = 82
     end
     object cbSize: TcxCheckBox
-      Left = 466
+      Left = 714
       Top = 5
       Action = actRefreshSize
       TabOrder = 7
       Width = 90
     end
     object cbPartner: TcxCheckBox
-      Left = 556
+      Left = 804
       Top = 5
       Action = actRefreshPartner
       TabOrder = 8
       Width = 108
     end
+    object cxLabel5: TcxLabel
+      Left = 9
+      Top = 36
+      Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072':'
+    end
+    object edBrand: TcxButtonEdit
+      Left = 101
+      Top = 32
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 10
+      Width = 254
+    end
+    object cxLabel6: TcxLabel
+      Left = 360
+      Top = 36
+      Caption = #1057#1077#1079#1086#1085':'
+    end
+    object edPeriod: TcxButtonEdit
+      Left = 402
+      Top = 35
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 12
+      Width = 222
+    end
+    object cxLabel7: TcxLabel
+      Left = 626
+      Top = 36
+      Caption = #1043#1086#1076' ('#1085#1072#1095'.):'
+    end
+    object edPeriodYearStart: TcxCurrencyEdit
+      Left = 687
+      Top = 35
+      EditValue = 0.000000000000000000
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = '0'
+      TabOrder = 14
+      Width = 40
+    end
+    object cxLabel8: TcxLabel
+      Left = 735
+      Top = 36
+      Caption = #1043#1086#1076' ('#1086#1082#1086#1085'.):'
+    end
+    object edPeriodYearEnd: TcxCurrencyEdit
+      Left = 802
+      Top = 35
+      EditValue = 2017.000000000000000000
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = '0'
+      TabOrder = 16
+      Width = 40
+    end
+    object cxLabel4: TcxLabel
+      Left = 360
+      Top = 6
+      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
+    end
+    object edPartner: TcxButtonEdit
+      Left = 425
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 18
+      Width = 199
+    end
   end
   inherited PageControl: TcxPageControl [1]
-    Top = 59
+    Top = 99
     Width = 1065
-    Height = 366
+    Height = 326
     TabOrder = 3
-    ExplicitTop = 59
+    ExplicitTop = 99
     ExplicitWidth = 1065
-    ExplicitHeight = 366
-    ClientRectBottom = 366
+    ExplicitHeight = 326
+    ClientRectBottom = 326
     ClientRectRight = 1065
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1065
-      ExplicitHeight = 366
+      ExplicitHeight = 326
       inherited cxGrid: TcxGrid
         Width = 1065
-        Height = 366
+        Height = 326
         ExplicitWidth = 1065
-        ExplicitHeight = 366
+        ExplicitHeight = 326
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -446,6 +523,24 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         Properties.Strings = (
           'Key'
           'TextValue')
+      end
+      item
+        Component = GuidesBrand
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesPartner
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesPeriod
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end>
   end
   inherited ActionList: TActionList
@@ -539,6 +634,71 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerId'
+          Value = Null
+          Component = GuidesPartner
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerName'
+          Value = Null
+          Component = GuidesPartner
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodYearStart'
+          Value = Null
+          Component = edPeriodYearStart
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodYearEnd'
+          Value = Null
+          Component = edPeriodYearEnd
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BrandId'
+          Value = Null
+          Component = GuidesBrand
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BrandName'
+          Value = Null
+          Component = GuidesBrand
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodId'
+          Value = Null
+          Component = GuidesPeriod
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodName'
+          Value = Null
+          Component = GuidesPeriod
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -617,17 +777,47 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPartion'
+        Name = 'inBrandId'
         Value = Null
-        Component = cbPartion
-        DataType = ftBoolean
+        Component = GuidesBrand
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisSize'
+        Name = 'inPartnerId'
         Value = Null
-        Component = cbSize
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPeriodId'
+        Value = Null
+        Component = GuidesPeriod
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPeriodYearStart'
+        Value = Null
+        Component = edPeriodYearStart
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPeriodYearEnd'
+        Value = Null
+        Component = edPeriodYearEnd
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPartion'
+        Value = Null
+        Component = cbPartion
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -639,9 +829,17 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSize'
+        Value = Null
+        Component = cbSize
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 72
-    Top = 160
+    Left = 80
+    Top = 192
   end
   inherited BarManager: TdxBarManager
     Left = 120
@@ -704,13 +902,22 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         Component = PeriodChoice
       end
       item
-      end
-      item
         Component = GuidesUnit
       end
       item
+        Component = GuidesBrand
       end
       item
+        Component = GuidesPartner
+      end
+      item
+        Component = GuidesPeriod
+      end
+      item
+        Component = edPeriodYearStart
+      end
+      item
+        Component = edPeriodYearEnd
       end>
     Left = 384
     Top = 176
@@ -742,5 +949,98 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         MultiSelectSeparator = ','
       end>
     Left = 272
+  end
+  object GuidesBrand: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBrand
+    Key = '0'
+    FormNameParam.Value = 'TBrandForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBrandForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesBrand
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBrand
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 142
+    Top = 34
+  end
+  object GuidesPeriod: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPeriod
+    Key = '0'
+    FormNameParam.Value = 'TPeriodForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPeriodForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesPeriod
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPeriod
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 454
+    Top = 34
+  end
+  object GuidesPartner: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartner
+    Key = '0'
+    FormNameParam.Value = 'TPartnerForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPartnerForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 534
+    Top = 6
   end
 end
