@@ -291,4 +291,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * from gpReport_Goods_RemainsCurrent (inUnitId :=0,inisPartion  := TRUE,inisSize:=  TRUE, inisPartner := TRUE, inSession := '2':: TVarChar )
+-- select * from gpReport_Goods_RemainsCurrent(inUnitId := 0 , inBrandId := 0 , inPartnerId := 0 , inPeriodId := 0 , inPeriodYearStart := 0 , inPeriodYearEnd := 2017 , inisPartion := 'False' , inisPartner := 'False' , inisSize := 'False' ,  inSession := '2');

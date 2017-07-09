@@ -272,8 +272,4 @@ $BODY$
 */
 
 -- тест
---SELECT * from gpReport_Movement_Income(    inStartDate := '01.12.2016' :: TDateTime, inEndDate:= '01.12.2018' :: TDateTime, inUnitId :=311,inBrandId  := 0 ,inPartnerId  := 0 , inisPartion  := TRUE,inisSize:=  TRUE, inisPartner := TRUE, inSession := '2':: TVarChar )
---SELECT * from gpReport_Movement_Income(    inStartDate := '01.12.2016' :: TDateTime, inEndDate:= '01.12.2018' :: TDateTime, inUnitId :=230,inBrandId  := 0 ,inPartnerId  := 0 , inisPartion  :=False,inisSize:=  False, inisPartner := False, inSession := '2':: TVarChar )
-
---select * from gpGet_Movement_Income(inMovementId := 22 , inOperDate := ('04.02.2018')::TDateTime ,  inSession := '2');
---select * from gpGet_Movement_Income(inMovementId := 22 , inOperDate := ('04.02.2018')::TDateTime ,  inSession := '2');
+--select * from gpReport_Movement_Income(inStartDate := ('01.11.2016')::TDateTime , inEndDate := ('01.07.2018')::TDateTime , inUnitId := 506 , inBrandId := 0 , inPartnerId := 0 , inPeriodId := 0 , inPeriodYearStart := 0 , inPeriodYearEnd := 2017 , inisPartion := 'False' , inisSize := 'False' , inisPartner := 'False' ,  inSession := '2');

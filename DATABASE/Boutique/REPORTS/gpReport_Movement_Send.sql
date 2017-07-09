@@ -265,8 +265,4 @@ $BODY$
 */
 
 -- тест
---SELECT * from gpReport_Movement_Send(    inStartDate := '01.12.2016' :: TDateTime, inEndDate:= '01.12.2018' :: TDateTime, inUnitId :=311,inBrandId  := 0 ,inPartnerId  := 0 , inisPartion  := TRUE,inisSize:=  TRUE, inisPartner := TRUE, inSession := '2':: TVarChar )
---SELECT * from gpReport_Movement_Send(    inStartDate := '01.12.2016' :: TDateTime, inEndDate:= '01.12.2018' :: TDateTime, inUnitId :=230,inBrandId  := 0 ,inPartnerId  := 0 , inisPartion  :=False,inisSize:=  False, inisPartner := False, inSession := '2':: TVarChar )
-
---select * from gpGet_Movement_Send(inMovementId := 22 , inOperDate := ('04.02.2018')::TDateTime ,  inSession := '2');
---select * from gpGet_Movement_Send(inMovementId := 22 , inOperDate := ('04.02.2018')::TDateTime ,  inSession := '2');
+--select * from gpReport_Movement_Send(inStartDate := ('01.01.2017')::TDateTime , inEndDate := ('09.07.2017')::TDateTime , inUnitId_From := 506 , inUnitId_To := 520 , inBrandId := 0 , inPartnerId := 504 , inPeriodId := 0 , inPeriodYearStart := 0 , inPeriodYearEnd := 2017 , inisPartion := 'False' , inisSize := 'False' , inisPartner := 'False' , inisMovement := 'False' ,  inSession := '2');
