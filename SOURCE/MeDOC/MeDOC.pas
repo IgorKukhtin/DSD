@@ -13,6 +13,7 @@ type
     procedure CreateJ1201007XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
     procedure CreateJ1201008XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
     procedure CreateJ1201009XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
+    procedure CreateJ1201009XMLFile_IFIN(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
   public
     procedure CreateXMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
   end;
@@ -62,7 +63,7 @@ type
 
 implementation
 
-uses VCL.ActnList, StrUtils, SysUtils, Dialogs, DateUtils, MeDocXML;
+uses VCL.ActnList, StrUtils, SysUtils, Dialogs, DateUtils, MeDocXML, IFIN_J1201009;
 
 procedure Register;
 begin
@@ -79,7 +80,16 @@ begin
   result.Name  := Name;
   result.Value := trim(Value);
 end;
-
+{
+function CreateNodeROW_XML_IFIN(DOCUMENT: IXMLDECLARBODYType; Tab, Line, Name, Value: String): IXMLROWType;
+begin
+  result := DOCUMENT.AddChild(;
+  result.Tab   := Tab;
+  result.Line  := Line;
+  result.Name  := Name;
+  result.Value := trim(Value);
+end;
+}
 { TMedoc }
 
 procedure TMedoc.CreateJ1201005XMLFile(HeaderDataSet, ItemsDataSet: TDataSet;
@@ -462,6 +472,190 @@ begin
 
 end;
 
+procedure TMedoc.CreateJ1201009XMLFile_IFIN(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
+var
+  ZVIT: IXMLDECLARType;
+  i: integer;
+begin
+
+  ZVIT := NewDECLAR;
+
+  ZVIT.NoNamespaceSchemaLocation := 'J1201009.xsd';
+  ZVIT.xsi := 'http://www.w3.org/2001/XMLSchema-instance';
+
+  ZVIT.DECLARHEAD.TIN := HeaderDataSet.FieldByName('OKPO_From').AsString;
+  //J1201009
+  ZVIT.DECLARHEAD.C_DOC := Copy(HeaderDataSet.FieldByName('CHARCODE').AsString, 1, 3); // J12
+  ZVIT.DECLARHEAD.C_DOC_SUB := Copy(HeaderDataSet.FieldByName('CHARCODE').AsString, 4, 3); //010
+  ZVIT.DECLARHEAD.C_DOC_VER := Copy(HeaderDataSet.FieldByName('CHARCODE').AsString, 8, 1); // 9
+
+  //Номер нового отчётного (уточняющего) документа - Для первого поданного (отчётного) документа значение данного элемента равняется 0. Для каждого последующего нового отчётного (уточняющего) документа этого же типа для данного отчётного периода значение увеличивается на единицу
+  ZVIT.DECLARHEAD.C_DOC_TYPE := '00';
+  //Номер документа в периоде	- Значение данного элемента содержит порядковый номер каждого однотипного документа в данном периоде.
+  ZVIT.DECLARHEAD.C_DOC_CNT := HeaderDataSet.FieldByName('InvNumberPartner').AsString;
+
+  //Код области	- Код области, на территории которой расположена налоговая инспекция, в которую подаётся оригинал либо копия документа. Заполняется согласно справочнику SPR_STI.XML.
+  ZVIT.DECLARHEAD.C_REG := '04';
+  //Код области	- Код области, на территории которой расположена налоговая инспекция, в которую подаётся оригинал либо копия документа. Заполняется согласно справочнику SPR_STI.XML.
+  ZVIT.DECLARHEAD.C_RAJ := '65';
+
+  //Отчётный месяц	Отчётным месяцем считается последний месяц в отчётном периоде (для месяцев - порядковый номер месяца, для квартала - 3,6,9,12 месяц, полугодия - 6 и 12, для года - 12)я 9 місяців – 9, для року – 12)
+  ZVIT.DECLARHEAD.PERIOD_MONTH := IntToStr(StrToInt(Copy(FormatDateTime('ddmmyyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime), 3, 2)));
+  //Тип отчётного периода	1-месяц, 2-квартал, 3-полугодие, 4-девять мес., 5-год
+  ZVIT.DECLARHEAD.PERIOD_TYPE := '1';
+  //Отчётный год	Формат YYYY
+  ZVIT.DECLARHEAD.PERIOD_YEAR := IntToStr(StrToInt(Copy(FormatDateTime('ddmmyyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime), 5, 4)));
+
+  //Код инспекции, в которую подаётся оригинал документа	Код выбирается из справочника инспекций. вычисляется по формуле: C_REG*100+C_RAJ.
+  ZVIT.DECLARHEAD.C_STI_ORIG := '0465';
+  //Состояние документа	1-отчётный документ, 2-новый отчётный документ ,3-уточняющий документ
+  ZVIT.DECLARHEAD.C_DOC_STAN := '1';
+  //Перечень связанных документов. Элемент является узловым, в себе содержит элементы DOC	Для основного документа содержит ссылку на дополнение, для дополнения - ссылку на основной.
+  ZVIT.DECLARHEAD.LINKED_DOCS.Nil_ := true;
+  //Дата заполнения документа	Формат ddmmyyyy
+  ZVIT.DECLARHEAD.D_FILL := FormatDateTime('ddmmyyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime);
+  //Сигнатура программного обеспечения	Идентификатор ПО, с помощью которого сформирован отчёт
+  ZVIT.DECLARHEAD.SOFTWARE := 'iFin';
+
+
+
+  //
+  ZVIT.DECLARBODY.H03.Nil_ := true;
+  ZVIT.DECLARBODY.R03G10S.Nil_ := true;
+  ZVIT.DECLARBODY.HORIG1.Nil_ := true;
+  ZVIT.DECLARBODY.HTYPR.Nil_ := true;
+
+  ZVIT.DECLARBODY.HFILL :=FormatDateTime('ddmmyyyy', now);
+  ZVIT.DECLARBODY.HNUM := '1';
+  ZVIT.DECLARBODY.HNUM1.Nil_ := true;
+
+  ZVIT.DECLARBODY.HNAMESEL := HeaderDataSet.FieldByName('JuridicalName_From').AsString;
+  ZVIT.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName('JuridicalName_To').AsString;
+
+  ZVIT.DECLARBODY.HKSEL := HeaderDataSet.FieldByName('INN_From').AsString;
+  ZVIT.DECLARBODY.HNUM2.Nil_ := true;
+
+  ZVIT.DECLARBODY.HKBUY := HeaderDataSet.FieldByName('INN_To').AsString;
+  ZVIT.DECLARBODY.HFBUY.Nil_ := true;
+
+
+  ZVIT.DECLARBODY.R04G11  := ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummMVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
+  ZVIT.DECLARBODY.R03G11  := ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('SummVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
+  ZVIT.DECLARBODY.R03G7   := ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('SummVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
+  ZVIT.DECLARBODY.R03G109.Nil_ := true;
+
+  ZVIT.DECLARBODY.R01G7 := ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummPVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
+  ZVIT.DECLARBODY.R01G109.Nil_ := true;
+  ZVIT.DECLARBODY.R01G9.Nil_ := true;
+  ZVIT.DECLARBODY.R01G8.Nil_ := true;
+  ZVIT.DECLARBODY.R01G10.Nil_ := true;
+  ZVIT.DECLARBODY.R02G11.Nil_ := true;
+
+  with ItemsDataSet do begin
+     First;
+     i := 1;
+     while not EOF do begin
+         if (FieldByName('Amount').AsFloat <> 0) and (FieldByName('PriceNoVAT').AsFloat <> 0)
+         then begin
+
+          //Номенклатура поставки товарів
+          with ZVIT.DECLARBODY.RXXXXG3S.Add do
+          begin
+            ROWNUM := IntToStr(i);
+            //Nil_ := false;
+            NodeValue := FieldByName('GoodsName').AsString;
+          end;
+
+          with ZVIT.DECLARBODY.RXXXXG4.Add do
+          begin
+            ROWNUM := IntToStr(i);
+            Nil_ := true;
+          end;
+          with ZVIT.DECLARBODY.RXXXXG32.Add do
+          begin
+            ROWNUM := IntToStr(i);
+            Nil_ := true;
+          end;
+          with ZVIT.DECLARBODY.RXXXXG33.Add do
+          begin
+            ROWNUM := IntToStr(i);
+            Nil_ := true;
+          end;
+
+          //Одиниця виміру товару
+          with ZVIT.DECLARBODY.RXXXXG4S.Add do
+          begin
+            ROWNUM := IntToStr(i);
+            //Nil_ := false;
+            NodeValue := FieldByName('MeasureName').AsString;
+          end;
+
+          //???
+          {with ZVIT.DECLARBODY.RXXXXG105_2S.Add do
+          begin
+            ROWNUM := IntToStr(i);
+            //Nil_ := false;
+            NodeValue := '2009';
+          end;}
+
+          //Кількість
+          with ZVIT.DECLARBODY.RXXXXG5.Add do
+          begin
+            ROWNUM := IntToStr(i);
+            //Nil_ := false;
+            NodeValue := ReplaceStr(FormatFloat('0.####', FieldByName('Amount').AsFloat), FormatSettings.DecimalSeparator, '.');
+          end;
+          //Ціна постачання одиниці товару\послуги
+          with ZVIT.DECLARBODY.RXXXXG6.Add do
+          begin
+            ROWNUM := IntToStr(i);
+            //Nil_ := false;
+            NodeValue := ReplaceStr(FormatFloat('0.00', FieldByName('PriceNoVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
+          end;
+
+          //20
+          with ZVIT.DECLARBODY.RXXXXG008.Add do
+          begin
+            ROWNUM := IntToStr(i);
+            //Nil_ := false;
+            NodeValue := '20';
+          end;
+          with ZVIT.DECLARBODY.RXXXXG009.Add do
+          begin
+            ROWNUM := IntToStr(i);
+            Nil_ := true;
+          end;
+          //Обсяги постачання (база оподаткування) без урахування податку на додану вартість
+          with ZVIT.DECLARBODY.RXXXXG010.Add do
+          begin
+            ROWNUM := IntToStr(i);
+            //Nil_ := false;
+            NodeValue := ReplaceStr(FormatFloat('0.00', FieldByName('AmountSummNoVAT_12').AsFloat), FormatSettings.DecimalSeparator, '.');
+          end;
+          with ZVIT.DECLARBODY.RXXXXG011.Add do
+          begin
+            ROWNUM := IntToStr(i);
+            Nil_ := true;
+          end;
+
+          inc(i);
+
+         end;
+         Next;
+     end;
+     Close;
+  end;
+
+  ZVIT.DECLARBODY.HBOS := HeaderDataSet.FieldByName('N10').AsString;
+  ZVIT.DECLARBODY.HKBOS := HeaderDataSet.FieldByName('AccounterINN_From').AsString;
+  ZVIT.DECLARBODY.R003G10S.Nil_ := true;
+
+
+  ZVIT.OwnerDocument.Encoding :='WINDOWS-1251';
+  ZVIT.OwnerDocument.SaveToFile(FileName);
+
+end;
+
 procedure TMedoc.CreateJ1201009XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
 var
   ZVIT: IXMLZVITType;
@@ -755,7 +949,9 @@ begin
 
 
    if HeaderDataSet.FieldByName('OperDate_begin').asDateTime >= StrToDateTime( '01.03.2017', F) then
-      CreateJ1201009XMLFile(HeaderDataSet, ItemsDataSet, FileName)
+      if true = false
+      then CreateJ1201009XMLFile(HeaderDataSet, ItemsDataSet, FileName)
+      else CreateJ1201009XMLFile_IFIN(HeaderDataSet, ItemsDataSet, FileName)
    else
 
    if HeaderDataSet.FieldByName('OperDate_begin').asDateTime >= StrToDateTime( '01.04.2016', F) then
@@ -769,6 +965,7 @@ begin
         CreateJ1201006XMLFile(HeaderDataSet, ItemsDataSet, FileName)
      else
         CreateJ1201007XMLFile(HeaderDataSet, ItemsDataSet, FileName)
+
    end;
 end;
 
@@ -786,8 +983,32 @@ begin
   with TSaveDialog.Create(nil) do
   try
     DefaultExt := '*.xml';
-    FileName := FormatDateTime('dd_mm_yyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime) + '_' +
-                trim(HeaderDataSet.FieldByName('InvNumberPartner').AsString) + '-' + 'NALOG.xml';
+
+    if True = false then
+    // так для Медка
+    FileName := FormatDateTime('ddmmyyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime) + '_' +
+                trim(HeaderDataSet.FieldByName('InvNumberPartner').AsString) + '-' + 'NALOG.xml'
+    // так для Медка
+    else
+    FileName := '0000'
+
+                //Номер ЄДРПОУ, Дополняется слева нулями до 10 знаков.
+              + HeaderDataSet.FieldByName('OKPO_From_ifin').AsString
+
+              + HeaderDataSet.FieldByName('CHARCODE').AsString
+
+              + '1'  // Состояние документа.
+
+              + '00' //Номер нового отчёнтого (уточняющего) док-та в отчётном периоде. Дополняется слева нулями до 2 знаков
+
+                //Номер документа в периоде. Дополняется слева нулями до 7 знаков.
+              + HeaderDataSet.FieldByName('InvNumberPartner_ifin').AsString
+
+              + '1'  //Код отчётного периода (1-месяц, 2-квартал, 3-полугодие, 4-девять мес., 5-год).
+
+              + FormatDateTime('mmyyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime)
+              +'.xml';
+
     if Directory <> '' then begin
        if not DirectoryExists(Directory) then
           ForceDirectories(Directory);

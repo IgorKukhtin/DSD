@@ -3,10 +3,8 @@
   ClientHeight = 645
   ClientWidth = 1298
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitLeft = -272
-  ExplicitTop = -115
   ExplicitWidth = 1314
-  ExplicitHeight = 683
+  ExplicitHeight = 680
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -165,7 +163,7 @@
             Width = 45
           end
           object GoodsName: TcxGridDBColumn [3]
-            Caption = #1058#1086#1074#1072#1088
+            Caption = #1058#1086#1074#1072#1088' / '#1054#1057
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
