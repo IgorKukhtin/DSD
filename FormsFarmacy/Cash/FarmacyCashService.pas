@@ -358,6 +358,7 @@ begin   //yes
           SaveLocalData(AlternativeCDS,Alternative_lcl);
           //Получение ВИП чеков и сохранение в локальной базе
           SaveLocalVIP;
+          PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 3);
           // Вывод уведомления сервиса
           tiServise.BalloonHint:='Остатки обновлены.';
           tiServise.ShowBalloonHint;
@@ -448,7 +449,7 @@ end;
 // процедура обновляет параметры для введения нового чека
 procedure TMainCashForm2.N1Click(Sender: TObject);
 begin
-actRefreshAllExecute(nil);
+  actRefreshAllExecute(nil);
 end;
 
 procedure TMainCashForm2.N2Click(Sender: TObject);
@@ -586,17 +587,16 @@ end;
 
 procedure TMainCashForm2.Timer2Timer(Sender: TObject);
 begin
- Timer2.Enabled:=False;
- try
-  WaitForSingleObject(MutexRefresh, INFINITE);
-  actRefreshAllExecute(nil);
- finally
-  ReleaseMutex(MutexRefresh);
-  Timer2.Enabled:=True;
- end;
+  Timer2.Enabled := False;
+
+  try
+    WaitForSingleObject(MutexRefresh, INFINITE);
+    actRefreshAllExecute(nil);
+  finally
+    ReleaseMutex(MutexRefresh);
+    Timer2.Enabled := True;
+  end;
 end;
-
-
 
 procedure TMainCashForm2.RemainsCDSAfterScroll(DataSet: TDataSet);
 begin
