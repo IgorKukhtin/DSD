@@ -37,18 +37,7 @@ BEGIN
   FROM MovementItemProtocol
        JOIN Object AS Object_User ON Object_User.Id = MovementItemProtocol.UserId
   WHERE MovementItemProtocol.MovementItemId = inMovementItemId
-
- UNION ALL
-  -- arc-1
-  SELECT 
-     MovementItemProtocol.OperDate,
-     MovementItemProtocol.ProtocolData::Text,
-     Object_User.ValueData AS UserName,
-     MovementItemProtocol.MovementItemId
-  FROM MovementItemProtocol_arc AS MovementItemProtocol
-       JOIN Object AS Object_User ON Object_User.Id = MovementItemProtocol.UserId
-  WHERE MovementItemProtocol.MovementItemId = inMovementItemId;
-
+ ;
   ELSE
      RAISE EXCEPTION 'Ошибка.Просмотр протокола недоступен.';
   END IF;

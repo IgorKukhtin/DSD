@@ -142,8 +142,8 @@ BEGIN
 
            , ObjectString_Goods_GoodsGroupFull.ValueData                            AS GoodsGroupNameFull
            , Object_Goods.ObjectCode                                                AS GoodsCode
-           , (Object_Goods.ValueData || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
-           , Object_Goods.ValueData                                                 AS GoodsName_two
+           , (CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name ELSE Object_Goods.ValueData END || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
+           , CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name ELSE Object_Goods.ValueData END :: TVarChar AS GoodsName_two
            , COALESCE (tmpObject_GoodsPropertyValueGroup.Name, tmpObject_GoodsPropertyValue.Name) AS GoodsName_Juridical
            , Object_GoodsKind.ValueData                                             AS GoodsKindName
            , Object_Measure.ValueData                                               AS MeasureName

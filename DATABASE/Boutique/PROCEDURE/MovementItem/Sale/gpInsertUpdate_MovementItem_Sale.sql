@@ -86,11 +86,11 @@ BEGIN
                                                                                                    , zc_PriceList_Basis()
                                                                                                    , ioGoodsId
                                                                                                     ) AS tmp), 0);
-     END IF;
+         -- проверка - свойство должно быть установлено
+         IF COALESCE (ioOperPriceList, 0) <= 0 THEN
+            RAISE EXCEPTION 'Ошибка.Не установлено значение <Цена (прайс)>.';
+         END IF;
 
-     -- проверка - свойство должно быть установлено
-     IF COALESCE (ioOperPriceList, 0) <= 0 THEN
-        RAISE EXCEPTION 'Ошибка.Не установлено значение <Цена (прайс)>.';
      END IF;
 
      -- данные из партии : GoodsId и OperPrice и CountForPrice и CurrencyId
@@ -163,19 +163,19 @@ BEGIN
      outDiscountSaleKindName := (SELECT Object.ValueData FROM Object WHERE Object.Id = ioDiscountSaleKindId);
 
 
-     -- вернули Сумма вх. в валюте, для грида
+     -- вернули Сумма вх. в валюте, для грида - Округлили до 2-х Знаков
      outTotalSumm := CASE WHEN outCountForPrice > 0
                                 THEN CAST (inAmount * outOperPrice / outCountForPrice AS NUMERIC (16, 2))
                            ELSE CAST (inAmount * outOperPrice AS NUMERIC (16, 2))
                       END;
-     -- вернули Сумма вх. ГРН, для грида
+     -- вернули Сумма вх. ГРН, для грида - Округлили до 2-х Знаков
      outTotalSummBalance := CAST (outTotalSumm * outCurrencyValue / CASE WHEN outParValue <> 0 THEN outParValue ELSE 1 END AS NUMERIC (16, 2));
 
-     -- вернули Сумма по прайсу, для грида
-     outTotalSummPriceList := CAST (inAmount * ioOperPriceList AS NUMERIC (16, 2));
+     -- вернули Сумма по прайсу, для грида - !!!Округлили до НОЛЬ Знаков!!!
+     outTotalSummPriceList := CAST (inAmount * ioOperPriceList AS NUMERIC (16, 0));
 
-     -- вернули Итого скидка в продаже ГРН, для грида
-     outTotalChangePercent := outTotalSummPriceList * COALESCE (ioChangePercent, 0) / 100 + COALESCE (ioSummChangePercent, 0) ;
+     -- вернули Итого скидка в продаже ГРН, для грида - !!!Округлили до НОЛЬ Знаков - только %, ВСЕ - нельзя!!!
+     outTotalChangePercent := CAST (outTotalSummPriceList * COALESCE (ioChangePercent, 0) / 100 AS NUMERIC (16, 0)) + COALESCE (ioSummChangePercent, 0) ;
 
      -- вернули Итого оплата в продаже ГРН, для грида
      IF inIsPay = TRUE
@@ -256,17 +256,17 @@ BEGIN
 
 
        -- сохранили
-       PERFORM lpInsertUpdate_MI_Sale_Child     (ioId                 := tmp.Id
-                                               , inMovementId         := inMovementId
-                                               , inParentId           := ioId
-                                               , inCashId             := tmp.CashId
-                                               , inCurrencyId         := tmp.CurrencyId
-                                               , inCashId_Exc         := NULL
-                                               , inAmount             := tmp.Amount
-                                               , inCurrencyValue      := tmp.CurrencyValue
-                                               , inParValue           := tmp.ParValue
-                                               , inUserId             := vbUserId
-                                                )
+       PERFORM lpInsertUpdate_MI_Sale_Child (ioId                 := tmp.Id
+                                           , inMovementId         := inMovementId
+                                           , inParentId           := ioId
+                                           , inCashId             := tmp.CashId
+                                           , inCurrencyId         := tmp.CurrencyId
+                                           , inCashId_Exc         := NULL
+                                           , inAmount             := tmp.Amount
+                                           , inCurrencyValue      := tmp.CurrencyValue
+                                           , inParValue           := tmp.ParValue
+                                           , inUserId             := vbUserId
+                                            )
        FROM (WITH tmpMI AS (SELECT MovementItem.Id                 AS Id
                                  , MovementItem.ObjectId           AS CashId
                                  , MILinkObject_Currency.ObjectId  AS CurrencyId
@@ -299,12 +299,11 @@ BEGIN
             ) AS tmp
        ;
 
-       -- в мастер записать - Итого оплата в продаже ГРН
-       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), ioId, outTotalPay);
-
        -- в мастер записать - Дополнительная скидка в продаже ГРН - т.к. могли обнулить
        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), ioId, ioSummChangePercent);
 
+       -- в мастер записать - Итого оплата в продаже ГРН
+       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), ioId, outTotalPay);
 
     END IF;
 
