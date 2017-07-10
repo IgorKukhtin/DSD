@@ -1,6 +1,7 @@
 -- Function:  gpReport_Movement_Send()
 
 DROP FUNCTION IF EXISTS gpReport_Movement_Send (TDateTime,TDateTime,Integer,Integer,Integer,Integer,Boolean,Boolean,Boolean,Boolean,TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Movement_Send (TDateTime,TDateTime,Integer,Integer,Integer,Integer,Integer,Integer,Integer,Boolean,Boolean,Boolean,Boolean,TVarChar);
 
 CREATE OR REPLACE FUNCTION  gpReport_Movement_Send(
     IN inStartDate        TDateTime,  -- Дата начала
@@ -9,6 +10,11 @@ CREATE OR REPLACE FUNCTION  gpReport_Movement_Send(
     IN inUnitId_To        Integer  ,  -- Подразделение
     IN inBrandId          Integer  ,  -- Бренд
     IN inPartnerId        Integer  ,  -- Поставщик
+    
+    IN inPeriodId         Integer  ,  -- 
+    IN inPeriodYearStart  Integer  ,  --
+    IN inPeriodYearEnd    Integer  ,  --
+    
     IN inisPartion        Boolean,    -- 
     IN inisSize           Boolean,    --
     IN inisPartner        Boolean,    --
@@ -148,7 +154,11 @@ BEGIN
                           LEFT JOIN ObjectLink AS ObjectLink_Partner_Period
                                                ON ObjectLink_Partner_Period.ObjectId = Object_PartionGoods.PartnerId
                                               AND ObjectLink_Partner_Period.DescId = zc_ObjectLink_Partner_Period()
-                                     
+                                              
+                     WHERE (Object_PartionGoods.PeriodYear >= inPeriodYearStart OR inPeriodYearStart = 0)
+                       AND (Object_PartionGoods.PeriodYear <= inPeriodYearEnd OR inPeriodYearEnd = 0) 
+                       AND (ObjectLink_Partner_Period.ChildObjectId = inPeriodId OR inPeriodId = 0)
+                       
                      GROUP BY tmpMovementSend.InvNumber
                             , tmpMovementSend.OperDate
                             , tmpMovementSend.DescName
@@ -255,8 +265,4 @@ $BODY$
 */
 
 -- тест
---SELECT * from gpReport_Movement_Send(    inStartDate := '01.12.2016' :: TDateTime, inEndDate:= '01.12.2018' :: TDateTime, inUnitId :=311,inBrandId  := 0 ,inPartnerId  := 0 , inisPartion  := TRUE,inisSize:=  TRUE, inisPartner := TRUE, inSession := '2':: TVarChar )
---SELECT * from gpReport_Movement_Send(    inStartDate := '01.12.2016' :: TDateTime, inEndDate:= '01.12.2018' :: TDateTime, inUnitId :=230,inBrandId  := 0 ,inPartnerId  := 0 , inisPartion  :=False,inisSize:=  False, inisPartner := False, inSession := '2':: TVarChar )
-
---select * from gpGet_Movement_Send(inMovementId := 22 , inOperDate := ('04.02.2018')::TDateTime ,  inSession := '2');
---select * from gpGet_Movement_Send(inMovementId := 22 , inOperDate := ('04.02.2018')::TDateTime ,  inSession := '2');
+--select * from gpReport_Movement_Send(inStartDate := ('01.01.2017')::TDateTime , inEndDate := ('09.07.2017')::TDateTime , inUnitId_From := 506 , inUnitId_To := 520 , inBrandId := 0 , inPartnerId := 504 , inPeriodId := 0 , inPeriodYearStart := 0 , inPeriodYearEnd := 2017 , inisPartion := 'False' , inisSize := 'False' , inisPartner := 'False' , inisMovement := 'False' ,  inSession := '2');

@@ -1,6 +1,7 @@
 -- Function:  gpReport_Movement_Loss()
 
 DROP FUNCTION IF EXISTS gpReport_Movement_Loss (TDateTime,TDateTime,Integer,Integer,Integer,Integer,Boolean,Boolean,Boolean,Boolean,TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Movement_Loss (TDateTime,TDateTime,Integer,Integer,Integer,Integer,Integer,Integer,Integer,Boolean,Boolean,Boolean,Boolean,TVarChar);
 
 CREATE OR REPLACE FUNCTION  gpReport_Movement_Loss(
     IN inStartDate        TDateTime,  -- Дата начала
@@ -9,6 +10,11 @@ CREATE OR REPLACE FUNCTION  gpReport_Movement_Loss(
     IN inUnitId_To        Integer  ,  -- Подразделение
     IN inBrandId          Integer  ,  -- Бренд
     IN inPartnerId        Integer  ,  -- Поставщик
+    
+    IN inPeriodId         Integer  ,  -- 
+    IN inPeriodYearStart  Integer  ,  --
+    IN inPeriodYearEnd    Integer  ,  --
+        
     IN inisPartion        Boolean,    -- 
     IN inisSize           Boolean,    --
     IN inisPartner        Boolean,    --
@@ -80,7 +86,7 @@ BEGIN
                                                          
                                 WHERE Movement_Loss.DescId = zc_Movement_Loss()
                                   AND Movement_Loss.OperDate BETWEEN inStartDate AND inEndDate
-                                 -- AND Movement_Loss.StatusId = zc_Enum_Status_Complete() 
+                                  AND Movement_Loss.StatusId = zc_Enum_Status_Complete() 
                                   AND (MovementLinkObject_From.ObjectId = inUnitId_From OR inUnitId_From = 0)
                                   AND (MovementLinkObject_To.ObjectId = inUnitId_To OR inUnitId_To = 0)
                               )
@@ -146,7 +152,10 @@ BEGIN
                           LEFT JOIN ObjectLink AS ObjectLink_Partner_Period
                                                ON ObjectLink_Partner_Period.ObjectId = Object_PartionGoods.PartnerId
                                               AND ObjectLink_Partner_Period.DescId = zc_ObjectLink_Partner_Period()
-                                     
+                                              
+                     WHERE (Object_PartionGoods.PeriodYear >= inPeriodYearStart OR inPeriodYearStart = 0)
+                       AND (Object_PartionGoods.PeriodYear <= inPeriodYearEnd OR inPeriodYearEnd = 0) 
+                       AND (ObjectLink_Partner_Period.ChildObjectId = inPeriodId OR inPeriodId = 0)
                      GROUP BY tmpMovementLoss.InvNumber
                             , tmpMovementLoss.OperDate
                             , tmpMovementLoss.DescName
@@ -253,8 +262,4 @@ $BODY$
 */
 
 -- тест
---SELECT * from gpReport_Movement_Loss(    inStartDate := '01.12.2016' :: TDateTime, inEndDate:= '01.12.2018' :: TDateTime, inUnitId :=311,inBrandId  := 0 ,inPartnerId  := 0 , inisPartion  := TRUE,inisSize:=  TRUE, inisPartner := TRUE, inSession := '2':: TVarChar )
---SELECT * from gpReport_Movement_Loss(    inStartDate := '01.12.2016' :: TDateTime, inEndDate:= '01.12.2018' :: TDateTime, inUnitId :=230,inBrandId  := 0 ,inPartnerId  := 0 , inisPartion  :=False,inisSize:=  False, inisPartner := False, inSession := '2':: TVarChar )
-
---select * from gpGet_Movement_Loss(inMovementId := 22 , inOperDate := ('04.02.2018')::TDateTime ,  inSession := '2');
---select * from gpGet_Movement_Loss(inMovementId := 22 , inOperDate := ('04.02.2018')::TDateTime ,  inSession := '2');
+--select * from gpReport_Movement_Loss(inStartDate := ('01.07.2017')::TDateTime , inEndDate := ('09.07.2017')::TDateTime , inUnitId_From := 506 , inUnitId_To := 506 , inBrandId := 0 , inPartnerId := 0 , inPeriodId := 0 , inPeriodYearStart := 0 , inPeriodYearEnd := 2017 , inisPartion := 'False' , inisSize := 'False' , inisPartner := 'False' , inisMovement := 'False' ,  inSession := '2');

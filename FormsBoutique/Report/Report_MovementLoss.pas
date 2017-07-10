@@ -56,6 +56,13 @@ type
     GuidesUnitTo: TdsdGuides;
     actOpenReportForm: TdsdOpenForm;
     bbOpenReportForm: TdxBarButton;
+    cxLabel7: TcxLabel;
+    edPeriodYearStart: TcxCurrencyEdit;
+    cxLabel8: TcxLabel;
+    edPeriodYearEnd: TcxCurrencyEdit;
+    cxLabel9: TcxLabel;
+    edPeriod: TcxButtonEdit;
+    GuidesPeriod: TdsdGuides;
   private
     { Private declarations }
   public

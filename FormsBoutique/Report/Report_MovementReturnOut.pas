@@ -53,6 +53,13 @@ type
     cbMovement: TcxCheckBox;
     actOpenReportForm: TdsdOpenForm;
     bbOpenReportForm: TdxBarButton;
+    cxLabel6: TcxLabel;
+    edPeriod: TcxButtonEdit;
+    cxLabel7: TcxLabel;
+    edPeriodYearStart: TcxCurrencyEdit;
+    cxLabel8: TcxLabel;
+    edPeriodYearEnd: TcxCurrencyEdit;
+    GuidesPeriod: TdsdGuides;
   private
     { Private declarations }
   public

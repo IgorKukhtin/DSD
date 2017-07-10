@@ -19,7 +19,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  cxCurrencyEdit;
 
 type
   TReport_Goods_RemainsCurrentDialogForm = class(TParentForm)
@@ -35,6 +36,19 @@ type
     cbPartion: TcxCheckBox;
     cbSize: TcxCheckBox;
     cbPartner: TcxCheckBox;
+    cxLabel1: TcxLabel;
+    edBrand: TcxButtonEdit;
+    GuidesBrand: TdsdGuides;
+    cxLabel4: TcxLabel;
+    edPeriod: TcxButtonEdit;
+    GuidesPeriod: TdsdGuides;
+    cxLabel2: TcxLabel;
+    edPartner: TcxButtonEdit;
+    GuidesPartner: TdsdGuides;
+    cxLabel5: TcxLabel;
+    edPeriodYearStart: TcxCurrencyEdit;
+    cxLabel6: TcxLabel;
+    edPeriodYearEnd: TcxCurrencyEdit;
   private
     { Private declarations }
   public
