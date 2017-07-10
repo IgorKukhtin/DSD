@@ -1,19 +1,18 @@
 inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
   Caption = #1054#1090#1095#1077#1090' <'#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1080#1079#1083#1080#1096#1082#1086#1074' '#1085#1072' '#1072#1087#1090#1077#1082#1091'>'
-  ClientHeight = 566
+  ClientHeight = 559
   ClientWidth = 1066
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -398
-  ExplicitTop = -112
+  ExplicitTop = -52
   ExplicitWidth = 1082
-  ExplicitHeight = 605
+  ExplicitHeight = 597
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 81
     Width = 1066
-    Height = 485
+    Height = 478
     ParentShowHint = False
     ShowHint = True
     TabOrder = 3
@@ -21,8 +20,8 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
     Properties.Options = [pcoGradient, pcoGradientClientArea, pcoRedrawOnResize, pcoSort]
     ExplicitTop = 81
     ExplicitWidth = 1066
-    ExplicitHeight = 485
-    ClientRectBottom = 485
+    ExplicitHeight = 478
+    ClientRectBottom = 478
     ClientRectRight = 1066
     ClientRectTop = 24
     inherited tsMain: TcxTabSheet
@@ -30,12 +29,12 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       TabVisible = True
       ExplicitTop = 24
       ExplicitWidth = 1066
-      ExplicitHeight = 461
+      ExplicitHeight = 454
       inherited cxGrid: TcxGrid
         Width = 1066
-        Height = 224
+        Height = 217
         ExplicitWidth = 1066
-        ExplicitHeight = 224
+        ExplicitHeight = 217
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -641,12 +640,13 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 229
+        Top = 222
         Width = 1066
         Height = 232
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitTop = 223
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -1027,7 +1027,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       end
       object cxSplitterChild: TcxSplitter
         Left = 0
-        Top = 224
+        Top = 217
         Width = 1066
         Height = 5
         AlignSplitter = salBottom
@@ -1037,16 +1037,15 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
     object cxTabSheetTotal: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridTotal: TcxGrid
         Left = 0
         Top = 0
         Width = 1066
-        Height = 461
+        Height = 454
         Align = alClient
         TabOrder = 0
+        ExplicitTop = -9
+        ExplicitHeight = 202
         object cxGridTotalDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TotalDS
@@ -1990,7 +1989,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
         item
           Action = actSendOver
         end>
-      View = cxGridDBTableView
+      DataSource = DataSourceDocs
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>? '
       InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'> '#1089#1086#1079#1076#1072#1085#1099
       Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
@@ -1999,8 +1998,8 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 16
-    Top = 160
+    Left = 216
+    Top = 200
   end
   inherited MasterCDS: TClientDataSet
     MasterFields = 'GoodsId'
@@ -2206,8 +2205,6 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
     object bbSendOver: TdxBarButton
       Action = macSendOver
       Category = 0
-      Enabled = False
-      Visible = ivNever
     end
     object bbOpenUnitForm: TdxBarButton
       Action = actOpenUnitForm
@@ -2952,8 +2949,10 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
   end
   object spSendOver: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Send_Auto'
+    DataSet = DataSetDocs
     DataSets = <
       item
+        DataSet = DataSetDocs
       end>
     OutputType = otMultiExecute
     Params = <
@@ -2994,7 +2993,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
         Name = 'inPrice_from'
         Value = Null
         Component = DataSetDocs
-        ComponentItem = 'Price'
+        ComponentItem = 'PriceFrom'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

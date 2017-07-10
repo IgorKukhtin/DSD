@@ -264,7 +264,7 @@ BEGIN
                         ;
 
        -- MCS
-       IF (inisMCS = FALSE AND inisInMCS = FALSE) OR (inisMCS = TRUE AND inisInMCS = FALSE)
+       IF (inisMCS = FALSE AND inisInMCS = FALSE) OR (inisMCS = FALSE AND inisInMCS = TRUE)
           THEN 
               INSERT INTO tmpMCS (GoodsId, UnitId, MCSValue)
                    WITH 
@@ -279,7 +279,7 @@ BEGIN
                         , tmp.MCSValue
                    FROM tmpUnit_list
                         JOIN tmp ON tmp.UnitId = tmpUnit_list.UnitId;
-       ELSEIF inisMCS = FALSE AND inisInMCS = TRUE
+       ELSEIF inisMCS = TRUE AND inisInMCS = FALSE
           THEN 
               INSERT INTO tmpMCS (GoodsId, UnitId, MCSValue)
                    SELECT tmp.GoodsId
@@ -315,11 +315,11 @@ BEGIN
               UNION 
                SELECT tmpPrice.GoodsId, tmpPrice.UnitId, 0 AS PriceId, 0 :: TFloat AS MCSValue 
                FROM tmpPrice
-               WHERE tmpPrice.MCSValue <> 0 AND inisInMCS = TRUE
+               WHERE tmpPrice.MCSValue <> 0 AND inisMCS = TRUE
               UNION
                SELECT tmpMCS.GoodsId, tmpMCS.UnitId, 0 AS PriceId, 0 :: TFloat AS MCSValue 
                FROM tmpMCS
-               WHERE inisInMCS = FALSE
+               WHERE inisMCS = FALSE
         ;
 
 
@@ -340,8 +340,8 @@ BEGIN
 
          -- Goods_list - MCSValue
        UPDATE tmpGoods_list
-              SET MCSValue = CASE WHEN (inisMCS = TRUE AND tmpGoods_list.UnitId = inUnitId) THEN COALESCE (tmpPrice.MCSValue, 0)
-                                  WHEN (inisInMCS = TRUE AND tmpGoods_list.UnitId <> inUnitId) THEN COALESCE (tmpPrice.MCSValue, 0)
+              SET MCSValue = CASE WHEN (inisMCS = TRUE AND tmpGoods_list.UnitId <> inUnitId) THEN COALESCE (tmpPrice.MCSValue, 0)
+                                  WHEN (inisInMCS = TRUE AND tmpGoods_list.UnitId = inUnitId) THEN COALESCE (tmpPrice.MCSValue, 0)
                                   ELSE COALESCE (tmpMCS.MCSValue, 0)
                              END
        FROM tmpGoods_list AS tmp
@@ -667,12 +667,14 @@ BEGIN
                        GROUP BY tmpData.GoodsId
                       )
 
-          SELECT Object_Unit.Id         AS UnitId
-               , tmpData.Price          AS PriceFrom
-               , tmpChildTo.Price       AS PriceTo
+          SELECT tmpData.UnitId            AS UnitId
+               -- Object_Unit.Id         AS UnitId
+               --, Object_Unit.ValueDAta AS UnitName
+               , tmpData.Price             AS PriceFrom
+               , tmpChildTo.Price          AS PriceTo
 
-               , tmpData.MCSValue       AS MCSValueFrom
-               , tmpChildTo.MCSValue    AS MCSValueTo
+               , tmpData.MCSValue          AS MCSValueFrom
+               , tmpChildTo.MCSValue       AS MCSValueTo
                , (tmpData.MCSValue * tmpData.Price) :: TFloat AS SummaMCSValue
 
                , tmpData.RemainsStart      AS RemainsStartFrom
@@ -696,17 +698,19 @@ BEGIN
                , tmpData.AmountSend            :: TFloat  AS AmountSend
  
                , tmpData.GoodsId
-
+               --, Object_Goods.ObjectCode AS GoodsCode
+               --, Object_Goods.ValueData                       AS GoodsName
+               
                , tmpMIMaster.InvNumber                        AS InvNumber_Over
                , tmpMIMaster.MovementId                       AS MovementId_Over
                , tmpMIMaster.MIMaster_Id                      AS MIMaster_Id_Over
                , COALESCE (tmpMIMaster.Amount, 0) :: TFloat   AS Amount_Over
                , COALESCE (tmpMIMaster.Summa, 0)  :: TFloat   AS Summa_Over
      FROM tmpData
-                LEFT JOIN Object AS Object_Unit  ON Object_Unit.Id = tmpData.UnitId
+                --LEFT JOIN Object AS Object_Unit  ON Object_Unit.Id = tmpData.UnitId
                 LEFT JOIN tmpChild ON tmpChild.GoodsId = tmpData.GoodsId
                 LEFT JOIN tmpDataTo AS tmpChildTo ON tmpChildTo.GoodsId = tmpData.GoodsId AND tmpChildTo.UnitId = tmpData.UnitId
-
+                --LEFT JOIN Object AS Object_Goods  ON Object_Goods.Id = tmpData.GoodsId
                 --LEFT JOIN tmpData AS tmpDataTo ON tmpDataTo.GoodsId = tmpData.GoodsId AND tmpDataTo.UnitId = inUnitId
 
                 LEFT JOIN tmpMIMaster ON tmpMIMaster.GoodsId = tmpData.GoodsId
