@@ -1404,7 +1404,7 @@ begin
 
             // Загружаем товары остатков
             DM.tblMovementItem_StoreReal.Close;
-            DM.tblMovementItem_StoreReal.Filter := 'MovementId = ' + FieldByName('ID').AsString;
+            DM.tblMovementItem_StoreReal.Filter := 'Amount <> 0 and MovementId = ' + FieldByName('ID').AsString;
             DM.tblMovementItem_StoreReal.Filtered := true;
             DM.tblMovementItem_StoreReal.Open;
             DM.tblMovementItem_StoreReal.First;
@@ -1503,7 +1503,7 @@ begin
 
             // Загружаем товары заявок
             DM.tblMovementItem_OrderExternal.Close;
-            DM.tblMovementItem_OrderExternal.Filter := 'MovementId = ' + FieldByName('ID').AsString;
+            DM.tblMovementItem_OrderExternal.Filter := 'Amount <> 0 and MovementId = ' + FieldByName('ID').AsString;
             DM.tblMovementItem_OrderExternal.Filtered := true;
             DM.tblMovementItem_OrderExternal.Open;
             DM.tblMovementItem_OrderExternal.First;
@@ -1603,7 +1603,7 @@ begin
 
             // Загружаем возвращаемые товары
             DM.tblMovementItem_ReturnIn.Close;
-            DM.tblMovementItem_ReturnIn.Filter := 'MovementId = ' + FieldByName('ID').AsString;
+            DM.tblMovementItem_ReturnIn.Filter := 'Amount <> 0 and MovementId = ' + FieldByName('ID').AsString;
             DM.tblMovementItem_ReturnIn.Filtered := true;
             DM.tblMovementItem_ReturnIn.Open;
             DM.tblMovementItem_ReturnIn.First;
