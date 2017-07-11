@@ -5,7 +5,7 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 969
-  ExplicitHeight = 431
+  ExplicitHeight = 435
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -219,6 +219,13 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 150
+          end
+          object AddressByGPS: TcxGridDBColumn
+            Caption = #1040#1076#1088#1077#1089', '#1086#1087#1088#1077#1076#1077#1083#1077#1085#1085#1099#1081' '#1087#1086' GPS'
+            DataBinding.FieldName = 'AddressByGPS'
+            Visible = False
+            Options.Editing = False
             Width = 150
           end
           object GUID: TcxGridDBColumn
