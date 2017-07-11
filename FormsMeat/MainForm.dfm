@@ -5,7 +5,7 @@ inherited MainForm: TMainForm
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 257
+  ExplicitHeight = 260
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]

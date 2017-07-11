@@ -84,6 +84,7 @@ type
     spGet_PersonalTrade: TdsdStoredProc;
     UpdateMobileDate: TcxGridDBColumn;
     PeriodSecMobile: TcxGridDBColumn;
+    edIsMobileDate: TcxCheckBox;
   private
     { Private declarations }
   public
