@@ -16,6 +16,7 @@ RETURNS TABLE (Id                       Integer
              , Comment                  TVarChar
              , GPSN                     TFloat
              , GPSE                     TFloat
+             , AddressByGPS             TVarChar
              , InsertMobileDate         TDateTime
              , isErased                 Boolean
               )
@@ -28,15 +29,16 @@ BEGIN
       vbUserId:= lpGetUserBySession (inSession);
 
       RETURN QUERY
-        SELECT MovementItem.Id               AS Id
-             , Object_PhotoMobile.Id         AS PhotoMobileId
-             , Object_PhotoMobile.ValueData  AS PhotoMobileName
-             , ObjectBlob_Photo.ValueData    AS PhotoData
-             , MIString_GUID.ValueData       AS GUID
-             , MIString_Comment.ValueData    AS Comment
-             , MIFloat_GPSN.ValueData        AS GPSN
-             , MIFloat_GPSE.ValueData        AS GPSE
-             , MIDate_InsertMobile.ValueData AS InsertMobileDate
+        SELECT MovementItem.Id                 AS Id
+             , Object_PhotoMobile.Id           AS PhotoMobileId
+             , Object_PhotoMobile.ValueData    AS PhotoMobileName
+             , ObjectBlob_Photo.ValueData      AS PhotoData
+             , MIString_GUID.ValueData         AS GUID
+             , MIString_Comment.ValueData      AS Comment
+             , MIFloat_GPSN.ValueData          AS GPSN
+             , MIFloat_GPSE.ValueData          AS GPSE
+             , MIString_AddressByGPS.ValueData AS AddressByGPS
+             , MIDate_InsertMobile.ValueData   AS InsertMobileDate
              , MovementItem.isErased
         FROM (SELECT false AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased) AS tmpIsErased
             JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -63,6 +65,10 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_GPSE
                                         ON MIFloat_GPSE.MovementItemId = MovementItem.Id
                                        AND MIFloat_GPSE.DescId = zc_MIFloat_GPSE()
+
+            LEFT JOIN MovementItemString AS MIString_AddressByGPS
+                                         ON MIString_AddressByGPS.MovementItemId = MovementItem.Id
+                                        AND MIString_AddressByGPS.DescId = zc_MIString_AddressByGPS()
           
             LEFT JOIN MovementItemDate AS MIDate_InsertMobile
                                        ON MIDate_InsertMobile.MovementItemId = MovementItem.Id
@@ -78,6 +84,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ﬂÓ¯ÂÌÍÓ –.‘.
+ 11.07.17                                                        * AddressByGPS
  20.04.17                                                        *
  26.03.17         *
 */

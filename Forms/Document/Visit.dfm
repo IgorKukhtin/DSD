@@ -3,8 +3,6 @@ inherited VisitForm: TVisitForm
   ClientHeight = 449
   ClientWidth = 1011
   AddOnFormData.RefreshAction = actRefreshEx
-  ExplicitLeft = -92
-  ExplicitTop = 5
   ExplicitWidth = 1027
   ExplicitHeight = 488
   PixelsPerInch = 96
@@ -160,6 +158,13 @@ inherited VisitForm: TVisitForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 84
+          end
+          object AddressByGPS: TcxGridDBColumn [7]
+            Caption = #1040#1076#1088#1077#1089', '#1086#1087#1088#1077#1076#1077#1083#1077#1085#1085#1099#1081' '#1087#1086' GPS'
+            DataBinding.FieldName = 'AddressByGPS'
+            Visible = False
+            Options.Editing = False
+            Width = 150
           end
         end
       end

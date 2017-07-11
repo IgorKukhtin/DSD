@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer
              , GUID TVarChar
              , GPSN TFloat
              , GPSE TFloat
+             , AddressByGPS TVarChar
              , InsertDate TDateTime
              , InsertMobileDate TDateTime
              , UpdateMobileDate TDateTime
@@ -84,20 +85,21 @@ BEGIN
         SELECT Movement.Id
              , Movement.InvNumber
              , Movement.OperDate
-             , Object_Status.ObjectCode            AS StatusCode
-             , Object_Status.ValueData             AS StatusName
-             , MovementString_GUID.ValueData       AS GUID
-             , MovementFloat_GPSN.ValueData        AS GPSN
-             , MovementFloat_GPSE.ValueData        AS GPSE
-             , MovementDate_Insert.ValueData       AS InsertDate
-             , MovementDate_InsertMobile.ValueData AS InsertMobileDate
-             , MovementDate_UpdateMobile.ValueData AS UpdateMobileDate
+             , Object_Status.ObjectCode              AS StatusCode
+             , Object_Status.ValueData               AS StatusName
+             , MovementString_GUID.ValueData         AS GUID
+             , MovementFloat_GPSN.ValueData          AS GPSN
+             , MovementFloat_GPSE.ValueData          AS GPSE
+             , MovementString_AddressByGPS.ValueData AS AddressByGPS  
+             , MovementDate_Insert.ValueData         AS InsertDate
+             , MovementDate_InsertMobile.ValueData   AS InsertMobileDate
+             , MovementDate_UpdateMobile.ValueData   AS UpdateMobileDate
              , CASE WHEN MovementDate_UpdateMobile.ValueData IS NULL THEN NULL
                     ELSE EXTRACT (SECOND FROM MovementDate_UpdateMobile.ValueData - MovementDate_Insert.ValueData)
                        + 60 * EXTRACT (MINUTE FROM MovementDate_UpdateMobile.ValueData - MovementDate_Insert.ValueData)
                        + 60 * 60 * EXTRACT (HOUR FROM MovementDate_UpdateMobile.ValueData - MovementDate_Insert.ValueData)
                END :: Integer AS PeriodSecMobile
-             , Object_User.ValueData               AS InsertName
+             , Object_User.ValueData     AS InsertName
              , Object_Member.ValueData   AS MemberName
              , Object_Unit.ObjectCode    AS UnitCode
              , Object_Unit.ValueData     AS UnitName
@@ -133,6 +135,10 @@ BEGIN
                                      ON MovementFloat_GPSE.MovementId = Movement.Id
                                     AND MovementFloat_GPSE.DescId = zc_MovementFloat_GPSE()
 
+             LEFT JOIN MovementString AS MovementString_AddressByGPS
+                                      ON MovementString_AddressByGPS.MovementId = Movement.Id
+                                     AND MovementString_AddressByGPS.DescId = zc_MovementString_AddressByGPS()
+
              LEFT JOIN MovementString AS MovementString_GUID
                                       ON MovementString_GUID.MovementId = Movement.Id
                                      AND MovementString_GUID.DescId = zc_MovementString_GUID()
@@ -157,6 +163,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ﬂÓ¯ÂÌÍÓ –.‘.
+ 11.07.17                                                        * AddressByGPS
  22.04.17         *
  26.03.17         *
 */

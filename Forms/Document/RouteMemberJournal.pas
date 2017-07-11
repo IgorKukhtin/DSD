@@ -53,6 +53,7 @@ type
     bbRouteOnMap: TdxBarButton;
     dxBarStatic1: TdxBarStatic;
     actRouteOnMap: TdsdPartnerMapAction;
+    AddressByGPS: TcxGridDBColumn;
   private
     { Private declarations }
   public
