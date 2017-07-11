@@ -512,7 +512,8 @@ uses
   GoodsBarCode in '..\..\FormsFarmacy\Guides\GoodsBarCode.pas' {GoodsBarCodeForm: TParentForm},
   MemberIncomeCheck in '..\..\FormsFarmacy\Guides\MemberIncomeCheck.pas' {MemberIncomeCheckForm: TParentForm},
   MemberIncomeCheckEdit in '..\..\FormsFarmacy\Guides\MemberIncomeCheckEdit.pas' {MemberIncomeCheckEditForm: TParentForm},
-  IncomeCheckDialog in '..\..\FormsFarmacy\Document\IncomeCheckDialog.pas' {IncomeCheckDialogForm: TParentForm};
+  IncomeCheckDialog in '..\..\FormsFarmacy\Document\IncomeCheckDialog.pas' {IncomeCheckDialogForm: TParentForm},
+  Goods_BarCode in '..\..\FormsFarmacy\Guides\Goods_BarCode.pas' {Goods_BarCodeForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
