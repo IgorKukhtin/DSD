@@ -11,8 +11,15 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ReestrReturn(
 RETURNS Integer
 AS
 $BODY$
+   DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert Boolean;
 BEGIN
+
+     -- определяем ключ доступа !!!то что захардкоженно - временно!!!
+     vbAccessKeyId:= CASE WHEN 1 = 1
+                               THEN lpGetAccessKey (ABS (inUserId), zc_Enum_Process_InsertUpdate_Movement_ReturnIn())
+                          ELSE zc_Enum_Process_AccessKey_DocumentDnepr()
+                     END;
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;

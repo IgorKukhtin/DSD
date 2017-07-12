@@ -183,6 +183,13 @@ BEGIN
                             ELSE 'Рудик Н.В.' 
                        END 
              END                            :: TVarChar AS N10
+           , CASE WHEN Object_PersonalSigning.PersonalName <> '' 
+                  THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1)
+                  ELSE CASE WHEN Object_PersonalBookkeeper_View.PersonalName <> '' 
+                            THEN zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1)
+                            ELSE 'Рудик Н.В.' 
+                       END 
+             END                            :: TVarChar AS N10_ifin
            , 'оплата з поточного рахунка'::TVarChar     AS N9
 /*
            , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
@@ -191,6 +198,7 @@ BEGIN
              END                                        AS InvNumberPartner
 */
            ,  CAST (REPEAT (' ', 7 - LENGTH (MovementString_InvNumberPartner.ValueData)) || MovementString_InvNumberPartner.ValueData AS TVarChar) AS InvNumberPartner
+           ,  CAST (REPEAT ('0', 7 - LENGTH (MovementString_InvNumberPartner.ValueData)) || MovementString_InvNumberPartner.ValueData AS TVarChar) AS InvNumberPartner_ifin
 
            , vbPriceWithVAT                             AS PriceWithVAT
            , CASE WHEN COALESCE (ObjectBoolean_Vat.ValueData, False) = True THEN 902 WHEN (vbCurrencyPartnerId <> zc_Enum_Currency_Basis() AND COALESCE (ObjectBoolean_Vat.ValueData, False) = False) THEN 901 ElSE vbVATPercent END  AS VATPercent
@@ -255,6 +263,7 @@ BEGIN
            , OH_JuridicalDetails_From.FullName          AS JuridicalName_From
            , OH_JuridicalDetails_From.JuridicalAddress  AS JuridicalAddress_From
            , OH_JuridicalDetails_From.OKPO              AS OKPO_From
+           , (REPEAT ('0', 10 - LENGTH (OH_JuridicalDetails_From.OKPO)) ||  OH_JuridicalDetails_From.OKPO) :: TVarChar AS OKPO_From_ifin
            , OH_JuridicalDetails_From.INN               AS INN_From
            , OH_JuridicalDetails_From.NumberVAT         AS NumberVAT_From
            , CASE WHEN Object_PersonalSigning.PersonalName <> '' 

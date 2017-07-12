@@ -80,7 +80,8 @@ uses
   RunScript in '..\SOURCE\AutoMode\RunScript.pas',
   ScriptXML in '..\SOURCE\AutoMode\ScriptXML.pas',
   RecadvXML in '..\SOURCE\EDI\RecadvXML.pas',
-  LocalWorkUnit in '..\SOURCE\LocalWorkUnit.pas';
+  LocalWorkUnit in '..\SOURCE\LocalWorkUnit.pas',
+  IFIN_J1201009 in '..\SOURCE\MeDOC\IFIN_J1201009.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -100,18 +100,18 @@ BEGIN
                                           , CLO_Personal.ObjectId
                                   )
           , tmpParent_all AS (SELECT SUM (COALESCE (MIFloat_SummService.ValueData, 0))      AS SummService
-                                   , SUM (COALESCE (MIFloat_SummToPay.ValueData, 0) - COALESCE (tmpSummNalog.SummNalog, 0) + COALESCE (MIFloat_SummNalog.ValueData, 0)
+                                   , SUM (COALESCE (MIFloat_SummToPay.ValueData, 0) /*- COALESCE (tmpSummNalog.SummNalog, 0)*/ + COALESCE (MIFloat_SummNalog.ValueData, 0)
                                         - COALESCE (MIFloat_SummCard.ValueData, 0)
                                         - COALESCE (MIFloat_SummCardSecond.ValueData, 0)
                                         - COALESCE (MIFloat_SummCardSecondCash.ValueData, 0)
                                          ) AS SummToPay_cash
-                                   , SUM (COALESCE (MIFloat_SummToPay.ValueData, 0)  - COALESCE (tmpSummNalog.SummNalog, 0) + COALESCE (MIFloat_SummNalog.ValueData, 0)
+                                   , SUM (COALESCE (MIFloat_SummToPay.ValueData, 0)  /*- COALESCE (tmpSummNalog.SummNalog, 0)*/ + COALESCE (MIFloat_SummNalog.ValueData, 0)
                                          ) AS SummToPay
                                    , SUM (COALESCE (MIFloat_SummCard.ValueData, 0))         AS SummCard
                                    , SUM (COALESCE (MIFloat_SummCardSecond.ValueData, 0))   AS SummCardSecond
                                    , SUM (COALESCE (MIFloat_SummCardSecondCash.ValueData, 0)) AS SummCardSecondCash
 --                                 , SUM (COALESCE (MIFloat_SummNalog.ValueData, 0))        AS SummNalog
-                                   , SUM (COALESCE (tmpSummNalog.SummNalog, 0))             AS SummNalog
+--                                 , SUM (COALESCE (tmpSummNalog.SummNalog, 0))             AS SummNalog
                                    , SUM (COALESCE (MIFloat_SummMinus.ValueData, 0))        AS SummMinus
                                    , SUM (COALESCE (MIFloat_SummAdd.ValueData, 0))          AS SummAdd
                                    , SUM (COALESCE (MIFloat_SummHoliday.ValueData, 0))      AS SummHoliday
@@ -204,10 +204,6 @@ BEGIN
                                                                ON MIFloat_SummPhone.MovementItemId = MovementItem.Id
                                                               AND MIFloat_SummPhone.DescId = zc_MIFloat_SummPhone()
 
-                                   LEFT JOIN tmpSummNalog ON tmpSummNalog.PersonalId = MovementItem.ObjectId
-                                                         AND tmpSummNalog.UnitId     = MILinkObject_Unit.ObjectId
-                                                         AND tmpSummNalog.PositionId = MILinkObject_Position.ObjectId
-
                                    -- ограничение, если нужна только 1 запись
                                    LEFT JOIN (SELECT tmpMI.PersonalId, tmpMI.UnitId, tmpMI.PositionId, tmpMI.InfoMoneyId
                                               FROM tmpMI
@@ -229,12 +225,13 @@ BEGIN
                                      , MLO_PersonalServiceList.ObjectId
                              )
               , tmpParent AS (SELECT tmpParent_all.SummService
-                                   , tmpParent_all.SummToPay_cash
-                                   , tmpParent_all.SummToPay
+                                   , tmpParent_all.SummToPay_cash - COALESCE (tmpSummNalog.SummNalog, 0) AS SummToPay_cash
+                                   , tmpParent_all.SummToPay - COALESCE (tmpSummNalog.SummNalog, 0) AS SummToPay
                                    , tmpParent_all.SummCard
                                    , tmpParent_all.SummCardSecond
                                    , tmpParent_all.SummCardSecondCash
-                                   , tmpParent_all.SummNalog
+--                                 , tmpParent_all.SummNalog
+                                   , COALESCE (tmpSummNalog.SummNalog, 0) AS SummNalog
                                    , tmpParent_all.SummMinus
                                    , tmpParent_all.SummAdd
                                    , tmpParent_all.SummHoliday
@@ -253,6 +250,9 @@ BEGIN
                                    , tmpParent_all.InfoMoneyId
                                    , tmpParent_all.PersonalServiceListId
                               FROM tmpParent_all
+                                   LEFT JOIN tmpSummNalog ON tmpSummNalog.PersonalId = tmpParent_all.PersonalId
+                                                         AND tmpSummNalog.UnitId     = tmpParent_all.UnitId
+                                                         AND tmpSummNalog.PositionId = tmpParent_all.PositionId
                              UNION
                               SELECT DISTINCT
                                      0 AS SummService
