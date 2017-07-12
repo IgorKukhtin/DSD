@@ -2740,7 +2740,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
     Top = 216
   end
   object spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MI_Over_Master'
+    StoredProcName = 'gpInsertUpdate_MI_Over_Master_To'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2757,6 +2757,14 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
         Value = Null
         Component = ChildCDS
         ComponentItem = 'MovementId_Over'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2781,6 +2789,22 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
         Name = 'outSumma'
         Value = Null
         Component = ChildCDS
+        ComponentItem = 'Summa_Over'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountMaster'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount_Over'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummaMaster'
+        Value = Null
+        Component = MasterCDS
         ComponentItem = 'Summa_Over'
         DataType = ftFloat
         MultiSelectSeparator = ','
@@ -2822,9 +2846,17 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inMinExpirationDate'
         Value = 'NULL'
-        Component = ChildCDS
+        Component = MasterCDS
         ComponentItem = 'MinExpirationDate'
         DataType = ftDateTime
         ParamType = ptInput
