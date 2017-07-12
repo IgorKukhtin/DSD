@@ -517,7 +517,9 @@ uses
   MeDocCOM in '..\..\SOURCE\MeDOC\MeDocCOM.pas',
   IFIN_J1201009 in '..\..\SOURCE\MeDOC\IFIN_J1201009.pas',
   MEDOC_TLB in '..\..\SOURCE\MeDOC\MEDOC_TLB.pas',
-  ReportMovementCheckLight in '..\..\FormsFarmacy\Report\ReportMovementCheckLight.pas' {ReportMovementCheckLightForm: TParentForm};
+  ReportMovementCheckLight in '..\..\FormsFarmacy\Report\ReportMovementCheckLight.pas' {ReportMovementCheckLightForm: TParentForm},
+  Report_GoodsRemainsLight in '..\..\FormsFarmacy\Report\Report_GoodsRemainsLight.pas' {Report_GoodsRemainsLightForm: TParentForm},
+  Report_GoodsRemainsLightDialog in '..\..\FormsFarmacy\Report\Report_GoodsRemainsLightDialog.pas' {Report_GoodsRemainsLightDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

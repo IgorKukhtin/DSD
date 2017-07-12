@@ -557,8 +557,8 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
       Width = 109
     end
     object cxLabel19: TcxLabel
-      Left = 518
-      Top = 6
+      Left = 519
+      Top = 5
       Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100':'
     end
     object ceRetail: TcxButtonEdit
@@ -706,6 +706,23 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
           Value = Null
           Component = cbJuridical
           DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'RetailId'
+          Value = Null
+          Component = GuidesRetail
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'RetailName'
+          Value = Null
+          Component = GuidesRetail
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -899,7 +916,6 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
         Component = PeriodChoice
       end
       item
-        Component = GuidesRetail
       end
       item
         Component = GuidesUnit

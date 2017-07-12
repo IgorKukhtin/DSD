@@ -1,11 +1,8 @@
- -- Function: gpSelect_Movement_Income()
+ -- Function: gpReport_GoodsRemainsLight()
 
-DROP FUNCTION IF EXISTS gpSelect_GoodsOnUnitRemains (Integer, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_GoodsOnUnitRemains (Integer, TDateTime, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_GoodsOnUnitRemains (Integer, TDateTime, Boolean, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_GoodsOnUnitRemains (Integer, Integer, TDateTime, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsRemainsLight (Integer, Integer, TDateTime, Boolean, Boolean, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_GoodsOnUnitRemains(
+CREATE OR REPLACE FUNCTION gpReport_GoodsRemainsLight(
     IN inUnitId           Integer  ,  -- Подразделение
     IN inRetailId         Integer  ,  -- ссылка на торг.сеть
     IN inRemainsDate      TDateTime,  -- Дата остатка
@@ -18,19 +15,14 @@ RETURNS TABLE (ContainerId Integer
              , Id Integer, GoodsCode Integer, GoodsName TVarChar, GoodsGroupName TVarChar
              , NDSKindName TVarChar, isSP Boolean
              , ConditionsKeepName TVarChar
-             , Amount TFloat, Price TFloat, PriceWithVAT TFloat, PriceWithOutVAT TFloat, PriceSale  TFloat
+             , Amount TFloat, Price TFloat, PriceWithVAT TFloat, PriceWithOutVAT TFloat
              
-             , Summa TFloat, SummaWithVAT TFloat, SummaWithOutVAT TFloat, SummaSale TFloat
-             , MinExpirationDate TDateTime
+             , Summa TFloat, SummaWithVAT TFloat, SummaWithOutVAT TFloat
              , PartionDescName TVarChar, PartionInvNumber TVarChar, PartionOperDate TDateTime
              , PartionPriceDescName TVarChar, PartionPriceInvNumber TVarChar, PartionPriceOperDate TDateTime
 
              , UnitName TVarChar, OurJuridicalName TVarChar
              , JuridicalCode  Integer, JuridicalName  TVarChar
-             , MP_JuridicalName TVarChar
-             , MP_ContractName TVarChar
-             , MinPriceOnDate TFloat, MP_Summa TFloat
-             , MinPriceOnDateVAT TFloat, MP_SummaVAT TFloat
              )
 AS
 $BODY$
@@ -113,7 +105,7 @@ BEGIN
                               , CASE WHEN inIsPartion = TRUE THEN tmpData_all.MovementId_find   ELSE 0 END AS MovementId_find
                               --, MovementLinkObject_From_Income.ObjectId                                    AS JuridicalId_Income
                               , CASE WHEN inisJuridical = TRUE OR inIsPartion = TRUE THEN MovementLinkObject_From_Income.ObjectId ELSE 0 END  AS JuridicalId_Income
-                              , MovementLinkObject_NDSKind_Income.ObjectId                                 AS NDSKindId_Income
+                              , CASE WHEN inIsPartion = TRUE THEN MovementLinkObject_NDSKind_Income.ObjectId ELSE Null END                    AS NDSKindId_Income
                               , CASE WHEN inIsPartion = TRUE THEN tmpData_all.ContainerId ELSE 0 END       AS ContainerId
                               , tmpData_all.GoodsId
                               , SUM (tmpData_all.Amount)                                                   AS Amount
@@ -192,24 +184,6 @@ BEGIN
                             AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
                  )
 
-, SelectMinPrice_AllGoods AS (SELECT tmp.*
-                              FROM lpSelectMinPrice_AllGoods(inUnitId := inUnitId,
-                                                             inObjectId := vbObjectId, 
-                                                             inUserId := vbUserId) AS tmp -- limit 1
-                             )
-          
-, SelectMinPrice_AllGoods_onDate AS (SELECT tmp.*
-                                     FROM lpSelectMinPrice_AllGoods_onDate(inOperDate := inRemainsDate,
-                                                                           inUnitId   := inUnitId,
-                                                                           inObjectId := vbObjectId, 
-                                                                           inUserId   := vbUserId) AS tmp -- limit 1
-                                     )
-, Object_Price AS (SELECT Object_Price.Id       AS Id
-                        , Object_Price.GoodsId  AS GoodsId
-                   FROM Object_Price_View AS Object_Price
-                   WHERE Object_Price.UnitId = inUnitId 
-                   )
-
         -- Результат
         SELECT tmpData.ContainerId                           :: Integer   AS ContainerId
              , Object_Goods.Id                                            AS Id
@@ -224,14 +198,10 @@ BEGIN
              , CASE WHEN tmpData.Amount <> 0 THEN tmpData.Summa           / tmpData.Amount ELSE 0 END :: TFloat AS Price
              , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaWithVAT    / tmpData.Amount ELSE 0 END :: TFloat AS PriceWithVAT
              , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaWithOutVAT / tmpData.Amount ELSE 0 END :: TFloat AS PriceWithOutVAT
-             , COALESCE (ObjectHistoryFloat_Price.ValueData, 0)                 :: TFloat AS PriceSale
            
              , tmpData.Summa                                 :: TFloat    AS Summa
              , tmpData.SummaWithVAT                          :: TFloat    AS SummaWithVAT
              , tmpData.SummaWithOutVAT                       :: TFloat    AS SummaWithOutVAT
-             , (tmpData.Amount * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)) :: TFloat AS SummaSale
-
-             , SelectMinPrice_AllGoods.MinExpirationDate                  AS MinExpirationDate
 
              , MovementDesc_Income.ItemName                               AS PartionDescName
              , Movement_Income.InvNumber                                  AS PartionInvNumber
@@ -246,13 +216,6 @@ BEGIN
              , Object_From_Income.ObjectCode                              AS JuridicalCode
              , Object_From_Income.ValueData                               AS JuridicalName
 
-             , SelectMinPrice_AllGoods_onDate.JuridicalName               AS MP_JuridicalName
-             , Object_Contract.ValueData                                  AS MP_ContractName
-             , SelectMinPrice_AllGoods_onDate.Price                       AS MinPriceOnDate
-             , (SelectMinPrice_AllGoods_onDate.Price * tmpData.Amount) :: TFloat    AS MP_Summa
-             , (SelectMinPrice_AllGoods_onDate.Price * (1 + ObjectFloat_NDSKind_NDS.ValueData / 100)) :: TFloat                     AS MinPriceOnDateVAT
-             , (SelectMinPrice_AllGoods_onDate.Price * tmpData.Amount * (1 + ObjectFloat_NDSKind_NDS.ValueData / 100)) :: TFloat    AS MP_SummaVAT
-
         FROM tmpData
              LEFT JOIN tmpGoods ON tmpGoods.GoodsId = tmpData.GoodsId
              LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = tmpGoods.GoodsGroupId
@@ -261,11 +224,6 @@ BEGIN
                                         ON ObjectLink_Goods_NDSKind.ObjectId = tmpData.GoodsId
                                        AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
 
- /*           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                 ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpData.GoodsId
-                                AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
-*/
             LEFT JOIN Object AS Object_From_Income ON Object_From_Income.Id = tmpData.JuridicalId_Income
             LEFT JOIN Object AS Object_NDSKind_Income ON Object_NDSKind_Income.Id = COALESCE (tmpData.NDSKindId_Income, ObjectLink_Goods_NDSKind.ChildObjectId)
             LEFT JOIN Object AS Object_To_Income ON Object_To_Income.Id = tmpData.ToId_Income
@@ -282,28 +240,6 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
                                   ON ObjectFloat_NDSKind_NDS.ObjectId = COALESCE (tmpData.NDSKindId_Income, ObjectLink_Goods_NDSKind.ChildObjectId)
                                  AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS() 
-
-            LEFT OUTER JOIN Object_Price ON Object_Price.GoodsId = tmpData.GoodsId
-                                        
-            -- получаем значения цены и НТЗ из истории значений на дату на начало                                                          
-            LEFT JOIN ObjectHistory AS ObjectHistory_Price
-                                    ON ObjectHistory_Price.ObjectId = Object_Price.Id
-                                   AND ObjectHistory_Price.DescId = zc_ObjectHistory_Price()
-                                   AND inRemainsDate >= ObjectHistory_Price.StartDate AND inRemainsDate < ObjectHistory_Price.EndDate
-            LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Price
-                                         ON ObjectHistoryFloat_Price.ObjectHistoryId = ObjectHistory_Price.Id
-                                        AND ObjectHistoryFloat_Price.DescId = zc_ObjectHistoryFloat_Price_Value()
-                                                        
-            LEFT JOIN SelectMinPrice_AllGoods ON SelectMinPrice_AllGoods.GoodsId = tmpData.GoodsId
-            LEFT JOIN SelectMinPrice_AllGoods_onDate ON SelectMinPrice_AllGoods_onDate.GoodsId = tmpData.GoodsId
-            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = SelectMinPrice_AllGoods_onDate.ContractId
-            -- условия хранения
-            /*LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
-                                 ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods.Id
-                                AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
-            LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
-            */
-
          ;
 
 END;
@@ -314,15 +250,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 24.05.17         *
- 12.01.17         *
- 05.10.16         * add inisJuridical
- 04.05.16         *
- 27.03.16         *
- 28.01.16         *
- 02.06.15                        *
+ 12.05.17         *
 */
 
 -- тест
 --
--- SELECT * FROM gpSelect_GoodsOnUnitRemains (inUnitId := 377613 , inRemainsDate := ('10.05.2016')::TDateTime, inIsPartion:= FALSE, inisPartionPrice:= FALSE, inisJuridical:=True, inSession := '3'::tvarchar);
+-- SELECT * FROM gpReport_GoodsRemainsLight (inUnitId := 377613 , inRetailId:=0, inRemainsDate := ('10.05.2016')::TDateTime, inIsPartion:= FALSE, inisPartionPrice:= FALSE, inisJuridical:=True, inSession := '3'::tvarchar);

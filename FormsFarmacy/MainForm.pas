@@ -367,6 +367,8 @@ type
     N142: TMenuItem;
     actReportMovementCheckLight: TdsdOpenForm;
     N143: TMenuItem;
+    actReport_GoodsRemainsLight: TdsdOpenForm;
+    N144: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

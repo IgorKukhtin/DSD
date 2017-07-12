@@ -604,6 +604,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_CrossForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_CrossForm');
   }
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsLightForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRReport_GoodsRemainsLightForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsLightDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRReport_GoodsRemainsLightDialogForm');
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckLightForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckLightForm');
 
