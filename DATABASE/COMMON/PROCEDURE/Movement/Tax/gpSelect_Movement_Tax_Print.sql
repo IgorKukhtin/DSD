@@ -183,6 +183,13 @@ BEGIN
                             ELSE 'Рудик Н.В.' 
                        END 
              END                            :: TVarChar AS N10
+           , CASE WHEN Object_PersonalSigning.PersonalName <> '' 
+                  THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1)
+                  ELSE CASE WHEN Object_PersonalBookkeeper_View.PersonalName <> '' 
+                            THEN zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1)
+                            ELSE 'Рудик Н.В.' 
+                       END 
+             END                            :: TVarChar AS N10_ifin
            , 'оплата з поточного рахунка'::TVarChar     AS N9
 /*
            , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN

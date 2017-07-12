@@ -15,7 +15,7 @@ type
     procedure CreateJ1201009XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
     procedure CreateJ1201009XMLFile_IFIN(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
   public
-    procedure CreateXMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
+    procedure CreateXMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string; FIsMedoc : Boolean);
   end;
 
   TMedocCorrective = class
@@ -34,6 +34,7 @@ type
     FHeaderDataSet: TDataSet;
     FItemsDataSet: TDataSet;
     FDirectory: string;
+    FIsMedoc: boolean;
     FAskFilePath: boolean;
     procedure SetDirectory(const Value: string);
   protected
@@ -52,6 +53,7 @@ type
     property ItemsDataSet: TDataSet read FItemsDataSet write FItemsDataSet;
     property Directory: string read FDirectory write SetDirectory;
     property AskFilePath: boolean read FAskFilePath write FAskFilePath default true;
+    property IsMedoc: boolean read FIsMedoc write FIsMedoc default true;
   end;
 
   TMedocCorrectiveAction = class(TMedocAction)
@@ -477,10 +479,10 @@ var
   ZVIT: IXMLDECLARType;
   i: integer;
 begin
-
   ZVIT := NewDECLAR;
 
-  ZVIT.NoNamespaceSchemaLocation := 'J1201009.xsd';
+  //J1201009.xsd
+  ZVIT.NoNamespaceSchemaLocation := Copy(HeaderDataSet.FieldByName('CHARCODE').AsString, 1, 8) + '.xsd';
   ZVIT.xsi := 'http://www.w3.org/2001/XMLSchema-instance';
 
   ZVIT.DECLARHEAD.TIN := HeaderDataSet.FieldByName('OKPO_From').AsString;
@@ -539,12 +541,12 @@ begin
   ZVIT.DECLARBODY.HFBUY.Nil_ := true;
 
 
-  ZVIT.DECLARBODY.R04G11  := ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummMVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
+  ZVIT.DECLARBODY.R04G11  := ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummPVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
   ZVIT.DECLARBODY.R03G11  := ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('SummVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
   ZVIT.DECLARBODY.R03G7   := ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('SummVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
   ZVIT.DECLARBODY.R03G109.Nil_ := true;
 
-  ZVIT.DECLARBODY.R01G7 := ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummPVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
+  ZVIT.DECLARBODY.R01G7 := ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummMVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
   ZVIT.DECLARBODY.R01G109.Nil_ := true;
   ZVIT.DECLARBODY.R01G9.Nil_ := true;
   ZVIT.DECLARBODY.R01G8.Nil_ := true;
@@ -646,7 +648,7 @@ begin
      Close;
   end;
 
-  ZVIT.DECLARBODY.HBOS := HeaderDataSet.FieldByName('N10').AsString;
+  ZVIT.DECLARBODY.HBOS := HeaderDataSet.FieldByName('N10_ifin').AsString;
   ZVIT.DECLARBODY.HKBOS := HeaderDataSet.FieldByName('AccounterINN_From').AsString;
   ZVIT.DECLARBODY.R003G10S.Nil_ := true;
 
@@ -938,7 +940,7 @@ begin
   ZVIT.OwnerDocument.SaveToFile(FileName);
 end;
 
-procedure TMedoc.CreateXMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
+procedure TMedoc.CreateXMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string; FIsMedoc : Boolean);
 var
   F: TFormatSettings;
 begin
@@ -948,10 +950,16 @@ begin
    F.ShortTimeFormat := 'hh24:mi:ss';
 
 
-   if HeaderDataSet.FieldByName('OperDate_begin').asDateTime >= StrToDateTime( '01.03.2017', F) then
-      if true = false
-      then CreateJ1201009XMLFile(HeaderDataSet, ItemsDataSet, FileName)
-      else CreateJ1201009XMLFile_IFIN(HeaderDataSet, ItemsDataSet, FileName)
+   if FIsMedoc = FALSE
+   then
+       // так для IFin
+       CreateJ1201009XMLFile_IFIN(HeaderDataSet, ItemsDataSet, FileName)
+   else
+
+   // так для Медка
+   if HeaderDataSet.FieldByName('OperDate_begin').asDateTime >= StrToDateTime( '01.03.2017', F)
+   then
+       CreateJ1201009XMLFile(HeaderDataSet, ItemsDataSet, FileName)
    else
 
    if HeaderDataSet.FieldByName('OperDate_begin').asDateTime >= StrToDateTime( '01.04.2016', F) then
@@ -975,6 +983,7 @@ constructor TMedocAction.Create(AOwner: TComponent);
 begin
   inherited;
   AskFilePath := true;
+  isMedoc := true;
 end;
 
 function TMedocAction.LocalExecute: boolean;
@@ -984,30 +993,30 @@ begin
   try
     DefaultExt := '*.xml';
 
-    if True = false then
-    // так для Медка
-    FileName := FormatDateTime('ddmmyyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime) + '_' +
-                trim(HeaderDataSet.FieldByName('InvNumberPartner').AsString) + '-' + 'NALOG.xml'
-    // так для Медка
+    if isMedoc = True then
+      // так для Медка
+      FileName := FormatDateTime('ddmmyyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime) + '_' +
+                  trim(HeaderDataSet.FieldByName('InvNumberPartner').AsString) + '-' + 'NALOG.xml'
     else
-    FileName := '0000'
+      // так для IFin
+      FileName := '0000'
 
-                //Номер ЄДРПОУ, Дополняется слева нулями до 10 знаков.
-              + HeaderDataSet.FieldByName('OKPO_From_ifin').AsString
+                  //Номер ЄДРПОУ, Дополняется слева нулями до 10 знаков.
+                + HeaderDataSet.FieldByName('OKPO_From_ifin').AsString
 
-              + HeaderDataSet.FieldByName('CHARCODE').AsString
+                + HeaderDataSet.FieldByName('CHARCODE').AsString
 
-              + '1'  // Состояние документа.
+                + '1'  // Состояние документа.
 
-              + '00' //Номер нового отчёнтого (уточняющего) док-та в отчётном периоде. Дополняется слева нулями до 2 знаков
+                + '00' //Номер нового отчёнтого (уточняющего) док-та в отчётном периоде. Дополняется слева нулями до 2 знаков
 
-                //Номер документа в периоде. Дополняется слева нулями до 7 знаков.
-              + HeaderDataSet.FieldByName('InvNumberPartner_ifin').AsString
+                  //Номер документа в периоде. Дополняется слева нулями до 7 знаков.
+                + HeaderDataSet.FieldByName('InvNumberPartner_ifin').AsString
 
-              + '1'  //Код отчётного периода (1-месяц, 2-квартал, 3-полугодие, 4-девять мес., 5-год).
+                + '1'  //Код отчётного периода (1-месяц, 2-квартал, 3-полугодие, 4-девять мес., 5-год).
 
-              + FormatDateTime('mmyyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime)
-              +'.xml';
+                + FormatDateTime('mmyyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime)
+                +'.xml';
 
     if Directory <> '' then begin
        if not DirectoryExists(Directory) then
@@ -1018,7 +1027,7 @@ begin
     if (not AskFilePath) or Execute then begin
        with TMedoc.Create do
        try
-         CreateXMLFile(Self.HeaderDataSet, Self.ItemsDataSet, FileName);
+         CreateXMLFile(Self.HeaderDataSet, Self.ItemsDataSet, FileName, isMedoc);
        finally
          Free;
        end;

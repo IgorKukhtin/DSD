@@ -91,10 +91,10 @@ type
     BranchName: TcxGridDBColumn;
     EDI: TEDI;
     spGetDirectoryName: TdsdStoredProc;
-    mactMedocDECLAR: TMultiAction;
+    mactMedocALL: TMultiAction;
     bbSaveDeclarForMedoc: TdxBarButton;
     actGetDirectory: TdsdExecStoredProc;
-    mactMEDOCList: TMultiAction;
+    mactMEDOCGrid: TMultiAction;
     EDIAction: TEDIAction;
     actSelectTax_Medoc_list: TdsdExecStoredProc;
     IsMedoc: TcxGridDBColumn;
@@ -131,6 +131,13 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     ExecuteDialog2: TExecuteDialog;
     mactCopyTaxCorrectiveList: TMultiAction;
+    mactIFin: TMultiAction;
+    mactIFinALL: TMultiAction;
+    IFinAction: TMedocAction;
+    IFinListAction: TMedocAction;
+    mactIFinGrid: TMultiAction;
+    bbIFin: TdxBarButton;
+    bbIFinALL: TdxBarButton;
   private
     { Private declarations }
   public

@@ -193,4 +193,4 @@ ALTER FUNCTION gpSelect_Movement_SendDebt (TDateTime, TDateTime, Integer, TVarCh
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_SendDebt (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_SendDebt (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())
