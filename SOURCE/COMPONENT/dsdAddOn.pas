@@ -7,7 +7,8 @@ uses Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTableView,
      VCL.Graphics, cxGraphics, cxStyles, cxCalendar, Forms, Controls,
      SysUtils, dsdDB, Contnrs, cxGridCustomView, cxGridCustomTableView, dsdGuides,
      VCL.ActnList, cxDBPivotGrid, cxEdit, cxCustomData, Windows, Winapi.Messages,
-     GMClasses, GMMap, GMMapVCL, GMGeoCode, GMConstants, SHDocVw, ExtCtrls, Winapi.ShellAPI;
+     GMClasses, GMMap, GMMapVCL, GMGeoCode, GMConstants, SHDocVw, ExtCtrls, Winapi.ShellAPI,
+     System.StrUtils;
 
 const
   WM_SETFLAG = WM_USER + 2;
@@ -2510,11 +2511,11 @@ end;
 
 procedure TdsdGMMap.LoadDefaultWebBrowser;
 var
-  GPSNIndex, GPSEIndex: Integer;
+  GPSNIndex, GPSEIndex, AddressIndex: Integer;
   GPSNValue, GPSEValue: Double;
   Column: TcxGridDBColumn;
   OldDecimalSeparator: Char;
-  MapURL: string;
+  AddressValue, MapURL: string;
 begin
   if Assigned(GridView) then
   begin
@@ -2535,10 +2536,15 @@ begin
     if Assigned(Column) then
       GPSEIndex := Column.Index;
 
+    Column := FGridView.GetColumnByFieldName('AddressByGPS');
+    if Assigned(Column) then
+      AddressIndex := Column.Index;
+
     if (GPSNIndex > -1) and (GPSNIndex > -1) then
     begin
       GPSNValue := StrToFloatDef(VarToStrDef(GridView.DataController.Values[GridView.DataController.FocusedRecordIndex, GPSNIndex], '0'), 0);
       GPSEValue := StrToFloatDef(VarToStrDef(GridView.DataController.Values[GridView.DataController.FocusedRecordIndex, GPSEIndex], '0'), 0);
+      AddressValue := ReplaceStr(VarToStrDef(GridView.DataController.Values[GridView.DataController.FocusedRecordIndex, AddressIndex], ''), ' ', '+');
 
       if (GPSNValue <> 0) and (GPSEValue <> 0) then
       begin
@@ -2546,7 +2552,7 @@ begin
         if OldDecimalSeparator = ',' then
           FormatSettings.DecimalSeparator := '.';
 
-        MapURL := Format('https://www.google.com.ua/maps/@%g,%g,%uz?hl=uk', [GPSNValue, GPSEValue, 17]);
+        MapURL := Format('https://www.google.com.ua/maps/place/%s/@%g,%g,%uz?hl=uk', [AddressValue, GPSNValue, GPSEValue, 17]);
         FormatSettings.DecimalSeparator := OldDecimalSeparator;
         ShellExecute(0, 'open', PChar(MapURL), nil, nil, SW_SHOWNORMAL);
       end;
