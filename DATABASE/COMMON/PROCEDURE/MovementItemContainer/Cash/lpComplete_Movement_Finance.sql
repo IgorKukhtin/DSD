@@ -192,14 +192,23 @@ BEGIN
                                                                                                                                       , 76969 -- рассчетный счет AND 26007010192834 ПАТ "БАНК ВОСТОК"
                                                                                                                                        )
                                                THEN zc_Enum_Account_40302() -- рассчетный овердрафт
+
                                           WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40300() AND _tmpItem.CurrencyId <> zc_Enum_Currency_Basis()
                                                THEN zc_Enum_Account_40303() -- расчетный счет валютный
                                           WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40300() -- рассчетный счет
                                                THEN zc_Enum_Account_40301() -- рассчетный счет
+
+                                          WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40200() AND _tmpItem.CurrencyId <> zc_Enum_Currency_Basis()
+                                               THEN zc_Enum_Account_40202() -- касса филиалов + касса в валюте
                                           WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40200() -- касса филиалов
                                                THEN zc_Enum_Account_40201() -- касса филиалов + касса
+
+                                          WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40100() AND _tmpItem.CurrencyId <> zc_Enum_Currency_Basis()
+                                               THEN zc_Enum_Account_40102() -- касса + касса в валюте
                                           WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40100() -- касса
                                                THEN zc_Enum_Account_40101() -- касса + касса
+
+
                                           WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40500() -- касса БН
                                                THEN zc_Enum_Account_40501() -- касса БН + касса
                                           WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40600() -- касса Павильонов

@@ -194,4 +194,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Check_ReturnInToLink (inStartDate:= '2016-05-24' ::TDateTime , inEndDate:= '2016-05-24' ::TDateTime, inJuridicalId:= 0, inPartnerId:=0,  inPaidKindId:=0, inSession:= zfCalc_UserAdmin()) 
+-- SELECT * FROM gpReport_Check_ReturnInToLink (inStartDate:= '2016-05-24' ::TDateTime , inEndDate:= '2016-05-24' ::TDateTime, inJuridicalId:= 0, inPartnerId:=0,  inPaidKindId:=0, inisShowAll:= FALSE, inSession:= zfCalc_UserAdmin()) 

@@ -111,18 +111,31 @@ BEGIN
            , tmpMovement.OperDate
            , tmpMovement.StatusCode
            , tmpMovement.StatusName
-           , CASE WHEN MovementItem.Amount > 0
+
+           , CASE WHEN MILinkObject_Currency.ObjectId <> inCurrencyId AND inCurrencyId = zc_Enum_Currency_Basis()
+                   AND MovementItem.Amount < 0
+                       THEN MovementFloat_AmountSumm.ValueData
+                  WHEN MILinkObject_Currency.ObjectId <> inCurrencyId AND inCurrencyId = zc_Enum_Currency_Basis()
+                       THEN 0
+                  WHEN MovementItem.Amount > 0
                        THEN MovementItem.Amount
                   ELSE 0
              END::TFloat AS AmountIn
-           , CASE WHEN MovementItem.Amount < 0
+           , CASE WHEN MILinkObject_Currency.ObjectId <> inCurrencyId AND inCurrencyId = zc_Enum_Currency_Basis()
+                   AND MovementItem.Amount > 0
+                       THEN MovementFloat_AmountSumm.ValueData
+                  WHEN MILinkObject_Currency.ObjectId <> inCurrencyId AND inCurrencyId = zc_Enum_Currency_Basis()
+                       THEN 0
+                  WHEN MovementItem.Amount < 0
                        THEN -1 * MovementItem.Amount
                   ELSE 0
              END::TFloat AS AmountOut
+
            , MovementFloat_AmountCurrency.ValueData AS AmountCurrency
            , CASE WHEN MovementFloat_AmountSumm.ValueData <> 0 THEN MovementFloat_AmountSumm.ValueData * CASE WHEN MovementItem.Amount < 0 THEN 1 ELSE -1 END
                   WHEN ObjectDesc.Id = zc_Object_Cash() AND Object_Currency.Id <> zc_Enum_Currency_Basis() THEN -1 * MovementItem.Amount -- !!!с обратным знаком!!!
              END :: TFloat AS AmountSumm
+             
            , MIDate_ServiceDate.ValueData      AS ServiceDate
            , MIString_Comment.ValueData        AS Comment
            , Object_Cash.ValueData             AS CashName
@@ -277,8 +290,7 @@ BEGIN
             -- Ограничили - Только одной валютой
             INNER JOIN MovementItemLinkObject AS MILinkObject_Currency
                                               ON MILinkObject_Currency.MovementItemId = MovementItem.Id
-                                             AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
-                                             AND MILinkObject_Currency.ObjectId = inCurrencyId
+                                             AND MILinkObject_Currency.DescId         = zc_MILinkObject_Currency()
 
             LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MILinkObject_Currency.ObjectId
 
@@ -306,6 +318,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
                                     ON MovementFloat_ParPartnerValue.MovementId = tmpMovement.Id
                                    AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
+
+       WHERE MILinkObject_Currency.ObjectId = inCurrencyId
+             OR (inCurrencyId = zc_Enum_Currency_Basis() AND MovementFloat_AmountSumm.ValueData <> 0)
        ;
 
 END;
