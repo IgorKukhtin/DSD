@@ -7,7 +7,7 @@ uses Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTableView,
      VCL.Graphics, cxGraphics, cxStyles, cxCalendar, Forms, Controls,
      SysUtils, dsdDB, Contnrs, cxGridCustomView, cxGridCustomTableView, dsdGuides,
      VCL.ActnList, cxDBPivotGrid, cxEdit, cxCustomData, Windows, Winapi.Messages,
-     GMClasses, GMMap, GMMapVCL, GMGeoCode, GMConstants, SHDocVw, ExtCtrls;
+     GMClasses, GMMap, GMMapVCL, GMGeoCode, GMConstants, SHDocVw, ExtCtrls, Winapi.ShellAPI;
 
 const
   WM_SETFLAG = WM_USER + 2;
@@ -568,6 +568,7 @@ type
     FGPSEField: string;
     FAddressField: string;
 
+    procedure LoadDefaultWebBrowser;
     procedure DoAfterPageLoaded(Sender: TObject; First: Boolean);
   public
     constructor Create(AOwner: TComponent); override;
@@ -2491,11 +2492,65 @@ end;
 
 procedure TdsdGMMap.DoAfterPageLoaded(Sender: TObject; First: Boolean);
 begin
-  if First then
-  begin
-    DoMap;
+  try
+    if First then
+    begin
+      DoMap;
+      FMapLoad := True;
+    end;
+  except
+    FMapLoad := False;
 
-    FMapLoad := True;
+    LoadDefaultWebBrowser;
+
+    if Owner is TForm then
+      (Owner as TForm).Close;
+  end;
+end;
+
+procedure TdsdGMMap.LoadDefaultWebBrowser;
+var
+  GPSNIndex, GPSEIndex: Integer;
+  GPSNValue, GPSEValue: Double;
+  Column: TcxGridDBColumn;
+  OldDecimalSeparator: Char;
+  MapURL: string;
+begin
+  if Assigned(GridView) then
+  begin
+    if Trim(GPSNField) = '' then
+      GPSNField := 'GPSN';
+
+    if Trim(GPSEField) = '' then
+      GPSEField := 'GPSE';
+
+    GPSNIndex := -1;
+    GPSEIndex := -1;
+
+    Column := FGridView.GetColumnByFieldName(GPSNField);
+    if Assigned(Column) then
+      GPSNIndex := Column.Index;
+
+    Column := FGridView.GetColumnByFieldName(GPSEField);
+    if Assigned(Column) then
+      GPSEIndex := Column.Index;
+
+    if (GPSNIndex > -1) and (GPSNIndex > -1) then
+    begin
+      GPSNValue := StrToFloatDef(VarToStrDef(GridView.DataController.Values[GridView.DataController.FocusedRecordIndex, GPSNIndex], '0'), 0);
+      GPSEValue := StrToFloatDef(VarToStrDef(GridView.DataController.Values[GridView.DataController.FocusedRecordIndex, GPSEIndex], '0'), 0);
+
+      if (GPSNValue <> 0) and (GPSEValue <> 0) then
+      begin
+        OldDecimalSeparator := FormatSettings.DecimalSeparator;
+        if OldDecimalSeparator = ',' then
+          FormatSettings.DecimalSeparator := '.';
+
+        MapURL := Format('https://www.google.com.ua/maps/@%g,%g,%uz?hl=uk', [GPSNValue, GPSEValue, 17]);
+        FormatSettings.DecimalSeparator := OldDecimalSeparator;
+        ShellExecute(0, 'open', PChar(MapURL), nil, nil, SW_SHOWNORMAL);
+      end;
+    end;
   end;
 end;
 
