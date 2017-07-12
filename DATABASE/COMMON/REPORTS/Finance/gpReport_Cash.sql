@@ -38,6 +38,13 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
      vbUserId:= lpGetUserBySession (inSession);
 
+
+     -- Меняется значение параметра - криво
+     IF inCurrencyId = zc_Enum_Currency_Basis() THEN
+        inCurrencyId:= 0;
+     END IF;
+
+
      -- Блокируем ему просмотр
      IF vbUserId = 9457 -- Климентьев К.И.
      THEN
@@ -68,7 +75,7 @@ BEGIN
      END IF;
 
 
-     -- Результат
+  -- Результат
   RETURN QUERY
      WITH tmpUnit_byProfitLoss AS (SELECT * FROM lfSelect_Object_Unit_byProfitLossDirection ())
         , tmpContainer AS (SELECT Container.Id                            AS ContainerId
@@ -85,7 +92,7 @@ BEGIN
                            WHERE CLO_Cash.DescId = zc_ContainerLinkObject_Cash()
                              AND (Container.ObjectId = inAccountId OR inAccountId = 0)
                              AND (CLO_Cash.ObjectId = inCashId OR inCashId = 0)
-                             -- AND (CLO_Currency.ObjectId = inCurrencyId OR inCurrencyId = 0)
+                             AND (CLO_Currency.ObjectId = inCurrencyId OR inCurrencyId = 0)
                            )
          , tmpAccount AS (SELECT Object_Account.Id           AS AccountId
                                , Object_Account.ObjectCode   AS AccountCode

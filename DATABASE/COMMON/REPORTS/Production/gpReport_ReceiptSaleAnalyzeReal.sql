@@ -3,15 +3,15 @@
 DROP FUNCTION IF EXISTS gpReport_ReceiptSaleAnalyzeReal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_ReceiptSaleAnalyzeReal (
-    IN inStartDate        TDateTime ,  
+    IN inStartDate        TDateTime ,
     IN inEndDate          TDateTime ,
-    IN inUnitId_sale      Integer   , 
-    IN inUnitId_return    Integer   , 
+    IN inUnitId_sale      Integer   ,
+    IN inUnitId_return    Integer   ,
     IN inGoodsGroupId     Integer   ,
-    IN inPriceListId_1    Integer, 
-    IN inPriceListId_2    Integer, 
-    IN inPriceListId_3    Integer, 
-    IN inPriceListId_sale Integer, 
+    IN inPriceListId_1    Integer,
+    IN inPriceListId_2    Integer,
+    IN inPriceListId_3    Integer,
+    IN inPriceListId_sale Integer,
     IN inIsGoodsKind      Boolean,
     IN inSession          TVarChar    -- сессия пользователя
 )
@@ -30,7 +30,7 @@ BEGIN
 
 
      CREATE TEMP TABLE _tmpGoods (GoodsId Integer, InfoMoneyId Integer, TradeMarkId Integer, MeasureId Integer, Weight TFloat) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmpUnit (UnitId Integer, UnitId_by Integer, isActive Boolean) ON COMMIT DROP;
+     -- CREATE TEMP TABLE _tmpUnit (UnitId Integer, UnitId_by Integer, isActive Boolean) ON COMMIT DROP;
 
      CREATE TEMP TABLE tmpChildReceiptTable (ReceiptId_from Integer, ReceiptId Integer, GoodsId_in Integer, GoodsKindId_in Integer, Amount_in TFloat
                                            , ReceiptChildId integer, GoodsId_out Integer, GoodsKindId_out Integer, Amount_out TFloat, isStart Boolean, isCost Boolean
@@ -39,9 +39,9 @@ BEGIN
      -- Ограничения по товару
      WITH RECURSIVE tmpGroup (GoodsGroupId, GoodsGroupParentId)
        AS (SELECT Object.Id, NULL :: Integer
-           FROM Object 
+           FROM Object
            WHERE Object.Id = inGoodsGroupId
-          UNION 
+          UNION
            SELECT ObjectLink_GoodsGroup.ObjectId, tmpGroup.GoodsGroupId
            FROM tmpGroup
                 INNER JOIN ObjectLink AS ObjectLink_GoodsGroup
@@ -57,12 +57,12 @@ BEGIN
        ;
 
      -- группа подразделений или подразделение
-     INSERT INTO _tmpUnit (UnitId)
+     /*INSERT INTO _tmpUnit (UnitId)
         SELECT lfSelect.UnitId AS UnitId FROM lfSelect_Object_Unit_byGroup (inUnitId_sale) AS lfSelect WHERE inUnitId_sale <> 0
        UNION
         SELECT lfSelect.UnitId AS UnitId FROM lfSelect_Object_Unit_byGroup (inUnitId_return) AS lfSelect WHERE inUnitId_return <> 0
-       ;
-                               
+       ;*/
+
      -- ВСЕ рецептуры
      INSERT INTO tmpChildReceiptTable (ReceiptId_from, ReceiptId, GoodsId_in, GoodsKindId_in, Amount_in
                                      , ReceiptChildId, GoodsId_out, GoodsKindId_out, Amount_out, isStart, isCost
@@ -91,30 +91,34 @@ BEGIN
      WITH tmpAnalyzer AS (SELECT AnalyzerId, isSale, isCost, isSumm, FALSE AS isLoss
                           FROM Constant_ProfitLoss_AnalyzerId_View
                           WHERE DescId = zc_Object_AnalyzerId()
-                         ) 
-        , tmpAccount AS (SELECT Object_Account_View.AccountGroupId, Object_Account_View.AccountId
+                         )
+        /*, tmpAccount AS (SELECT Object_Account_View.AccountGroupId, Object_Account_View.AccountId
                          FROM Object_Account_View
                          WHERE Object_Account_View.AccountGroupId IN (zc_Enum_AccountGroup_60000()  -- Прибыль будущих периодов
                                                                     , zc_Enum_AccountGroup_110000() -- Транзит
-                                                                     )
+                                                                     )*/
                         /*UNION
                          SELECT 0 AS AccountGroupId, zc_Enum_AnalyzerId_SummIn_110101() AS AccountId -- Сумма, забалансовый счет, приход транзит, хотя поле пишется в AccountId, при этом ContainerId - стандартный и в нем другой AccountId
                         UNION
                          SELECT 0 AS AccountGroupId, zc_Enum_AnalyzerId_SummOut_110101() AS AccountId -- Сумма, забалансовый счет, расходтранзит, хотя поле пишется в AccountId, при этом ContainerId - стандартный и в нем другой AccountId
                         */
-                        ) 
-        , tmpMIContainer AS 
+                       /*)*/
+        , tmpMIContainer AS
            (SELECT tmpContainer.GoodsId
                  , tmpContainer.GoodsKindId
 
-                 , SUM (CASE WHEN tmpContainer.MovementDescId = zc_Movement_Sale() AND tmpAccount.AccountGroupId IS NULL
+                 , SUM (CASE WHEN tmpContainer.MovementDescId = zc_Movement_Sale()
+                                  THEN tmpContainer.OperCountPartner
+                             WHEN tmpContainer.MovementDescId = zc_Movement_Sale()
                                   THEN tmpContainer.OperCount
                                      - tmpContainer.OperCount_Change
                                      + tmpContainer.OperCount_40200  -- !!!знак!!!
                              ELSE 0
                         END) AS OperCount_sale
 
-                 , SUM (CASE WHEN tmpContainer.MovementDescId = zc_Movement_Sale() AND (tmpAccount.AccountGroupId IS NULL OR tmpAccount.AccountGroupId = zc_Enum_AccountGroup_60000())
+                 , SUM (CASE WHEN tmpContainer.MovementDescId = zc_Movement_Sale()
+                                  THEN tmpContainer.SummInPartner
+                             WHEN tmpContainer.MovementDescId = zc_Movement_Sale()
                                   THEN tmpContainer.SummIn
                                      - tmpContainer.SummIn_Change
                                      + tmpContainer.SummIn_40200  -- !!!знак!!!
@@ -122,25 +126,25 @@ BEGIN
                         END) AS SummIn_sale
 
                  , SUM (CASE WHEN tmpContainer.MovementDescId = zc_Movement_Sale() THEN tmpContainer.SummOut_PriceList ELSE 0 END
-                      + CASE WHEN tmpContainer.MovementDescId = zc_Movement_Sale() AND tmpContainer.AccountId = zc_Enum_AnalyzerId_SummIn_110101()  AND tmpContainer.isActive = TRUE THEN tmpContainer.SummOut_PriceList ELSE 0 END
-                      - CASE WHEN tmpContainer.MovementDescId = zc_Movement_Sale() AND tmpContainer.AccountId = zc_Enum_AnalyzerId_SummOut_110101() AND tmpContainer.isActive = TRUE THEN tmpContainer.SummOut_PriceList ELSE 0 END
                        ) AS SummOut_PriceList_sale
 
-                 , SUM (CASE WHEN tmpContainer.MovementDescId = zc_Movement_Sale() THEN tmpContainer.SummOut_Partner ELSE 0 END
-                      + CASE WHEN tmpContainer.MovementDescId = zc_Movement_Sale() AND tmpContainer.AccountId = zc_Enum_AnalyzerId_SummIn_110101()  AND tmpContainer.isActive = TRUE  THEN tmpContainer.SummOut_Partner *  1 ELSE 0 END   -- !!!знак!!!
-                      - CASE WHEN tmpContainer.MovementDescId = zc_Movement_Sale() AND tmpContainer.AccountId = zc_Enum_AnalyzerId_SummOut_110101() AND tmpContainer.isActive = FALSE THEN tmpContainer.SummOut_Partner * -1 ELSE 0 END   -- !!!знак!!!
+                 , SUM (CASE WHEN tmpContainer.MovementDescId <> zc_Movement_ReturnIn() THEN tmpContainer.SummOut_Partner ELSE 0 END
                        ) AS SummOut_sale
 
 
 
-                 , SUM (CASE WHEN tmpContainer.MovementDescId = zc_Movement_ReturnIn() AND tmpAccount.AccountGroupId IS NULL
+                 , SUM (CASE WHEN tmpContainer.MovementDescId = zc_Movement_ReturnIn()
+                                  THEN tmpContainer.OperCountPartner
+                             WHEN tmpContainer.MovementDescId = zc_Movement_ReturnIn()
                                   THEN tmpContainer.OperCount
                                      - tmpContainer.OperCount_Change
                                      - tmpContainer.OperCount_40200  -- !!!знак!!!
                              ELSE 0
                         END) AS OperCount_return
 
-                 , SUM (CASE WHEN tmpContainer.MovementDescId = zc_Movement_ReturnIn() AND (tmpAccount.AccountGroupId IS NULL OR tmpAccount.AccountGroupId = zc_Enum_AccountGroup_60000())
+                 , SUM (CASE WHEN tmpContainer.MovementDescId = zc_Movement_ReturnIn()
+                                  THEN tmpContainer.SummInPartner
+                             WHEN tmpContainer.MovementDescId = zc_Movement_ReturnIn()
                                   THEN tmpContainer.SummIn
                                      - tmpContainer.SummIn_Change
                                      - tmpContainer.SummIn_40200  -- !!!знак!!!
@@ -149,27 +153,27 @@ BEGIN
 
 
                  , SUM (CASE WHEN tmpContainer.MovementDescId = zc_Movement_ReturnIn() THEN tmpContainer.SummOut_PriceList ELSE 0 END
-                      + CASE WHEN tmpContainer.MovementDescId = zc_Movement_ReturnIn() AND tmpContainer.AccountId = zc_Enum_AnalyzerId_SummIn_110101()  AND tmpContainer.isActive = TRUE THEN tmpContainer.SummOut_PriceList ELSE 0 END
-                      - CASE WHEN tmpContainer.MovementDescId = zc_Movement_ReturnIn() AND tmpContainer.AccountId = zc_Enum_AnalyzerId_SummOut_110101() AND tmpContainer.isActive = TRUE THEN tmpContainer.SummOut_PriceList ELSE 0 END
                        ) AS SummOut_PriceList_return
 
                  , SUM (CASE WHEN tmpContainer.MovementDescId = zc_Movement_ReturnIn() THEN tmpContainer.SummOut_Partner ELSE 0 END
-                      + CASE WHEN tmpContainer.MovementDescId = zc_Movement_ReturnIn() AND tmpContainer.AccountId = zc_Enum_AnalyzerId_SummIn_110101()  AND tmpContainer.isActive = FALSE /* TRUE */ THEN tmpContainer.SummOut_Partner * -1 ELSE 0 END   -- !!!знак!!!
-                      - CASE WHEN tmpContainer.MovementDescId = zc_Movement_ReturnIn() AND tmpContainer.AccountId = zc_Enum_AnalyzerId_SummOut_110101() AND tmpContainer.isActive = TRUE  /* FALSE*/ THEN tmpContainer.SummOut_Partner *  1 ELSE 0 END   -- !!!знак!!!
                        ) AS SummOut_return
 
             FROM
            (SELECT MIContainer.ObjectId_Analyzer       AS GoodsId
                  , MIContainer.ObjectIntId_analyzer    AS GoodsKindId
-                 , MIContainer.isActive
+                 -- , MIContainer.isActive
                  , MIContainer.MovementDescId
-                 , COALESCE (MIContainer.AccountId, 0) AS AccountId
+                 -- , COALESCE (MIContainer.AccountId, 0) AS AccountId
 
                         -- 1.1. Кол-во, без AnalyzerId
                       , SUM (CASE WHEN tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = FALSE AND tmpAnalyzer.isLoss = FALSE THEN -1 * MIContainer.Amount
                                   WHEN tmpAnalyzer.isSale = FALSE AND tmpAnalyzer.isSumm = FALSE AND tmpAnalyzer.isLoss = FALSE THEN  1 * MIContainer.Amount
                                   ELSE 0
                              END) AS OperCount
+                      , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400()     THEN -1 * MIContainer.Amount
+                                  WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInCount_10800() THEN  1 * MIContainer.Amount
+                                  ELSE 0
+                             END) AS OperCountPartner
                         -- 1.2. Себестоимость, без AnalyzerId
                       , SUM (CASE WHEN tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = TRUE AND tmpAnalyzer.isLoss = FALSE
                                    -- AND COALESCE (tmpAnalyzer.AnalyzerId, 0) NOT IN (zc_Enum_AnalyzerId_SaleSumm_10500(), zc_Enum_AnalyzerId_SaleSumm_40200())
@@ -179,6 +183,12 @@ BEGIN
                                        THEN  1 * MIContainer.Amount
                                   ELSE 0
                              END) AS SummIn
+                      , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10400()
+                                       THEN -1 * MIContainer.Amount
+                                  WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10800()
+                                       THEN  1 * MIContainer.Amount
+                                  ELSE 0
+                             END) AS SummInPartner
 
                         -- 1.3. Сумма, без AnalyzerId (на самом деле для OperCount_Partner)
                       , SUM (CASE WHEN tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = FALSE AND tmpAnalyzer.isLoss = FALSE THEN  1 * MIContainer.Amount -- знак наоборот т.к. это проводка покупателя
@@ -216,17 +226,17 @@ BEGIN
                  INNER JOIN MovementItemContainer AS MIContainer
                                                   ON MIContainer.AnalyzerId = tmpAnalyzer.AnalyzerId
                                                  AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                 LEFT JOIN _tmpUnit ON _tmpUnit.UnitId = MIContainer.WhereObjectId_analyzer
+                 -- LEFT JOIN _tmpUnit ON _tmpUnit.UnitId = MIContainer.WhereObjectId_analyzer
                  LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
             WHERE (_tmpGoods.GoodsId > 0 OR COALESCE (inGoodsGroupId, 0) = 0)
-              AND (_tmpUnit.UnitId > 0 OR COALESCE (inUnitId_sale, 0) = 0 OR COALESCE (inUnitId_return, 0) = 0)
+              -- AND (_tmpUnit.UnitId > 0 OR COALESCE (inUnitId_sale, 0) = 0 OR COALESCE (inUnitId_return, 0) = 0)
             GROUP BY MIContainer.ObjectId_Analyzer
                    , MIContainer.ObjectIntId_analyzer
-                   , MIContainer.isActive
+                   -- , MIContainer.isActive
                    , MIContainer.MovementDescId
-                   , MIContainer.AccountId
+                   -- , MIContainer.AccountId
            ) AS tmpContainer
-           LEFT JOIN tmpAccount ON tmpAccount.AccountId = tmpContainer.AccountId
+           -- LEFT JOIN tmpAccount ON tmpAccount.AccountId = tmpContainer.AccountId
            GROUP BY tmpContainer.GoodsId
                   , tmpContainer.GoodsKindId
            )
@@ -250,7 +260,7 @@ BEGIN
                          WHERE COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0) = tmp.GoodsKindId
                          GROUP BY tmp.GoodsId, tmp.GoodsKindId
                         )
-        , tmpAll AS 
+        , tmpAll AS
            (SELECT COALESCE (tmpReceipt.ReceiptId, 0) AS ReceiptId
                  , tmpMIContainer.GoodsId
                  , tmpMIContainer.GoodsKindId
@@ -323,7 +333,7 @@ BEGIN
                    , tmpMI.GoodsKindId
            )
 
-        , tmpResult AS 
+        , tmpResult AS
            (SELECT CASE WHEN inIsGoodsKind = TRUE THEN tmpAll.ReceiptId ELSE tmpAll.GoodsId END AS ReceiptId
                  , tmpAll.GoodsId
                  , tmpAll.GoodsKindId
@@ -386,12 +396,12 @@ BEGIN
            ) AS tmpAll
             LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                   ON ObjectFloat_Value.ObjectId = tmpAll.ReceiptId
-                                 AND ObjectFloat_Value.DescId = zc_ObjectFloat_Receipt_Value()
+                                 AND ObjectFloat_Value.DescId   = zc_ObjectFloat_Receipt_Value()
             GROUP BY CASE WHEN inIsGoodsKind = TRUE THEN tmpAll.ReceiptId ELSE tmpAll.GoodsId END
                    , tmpAll.GoodsId
                    , tmpAll.GoodsKindId
            )
-        , tmpPrice_10100 AS 
+        , tmpPrice_10100 AS
            (SELECT COALESCE (PriceList1.Price, 0) AS Price1,  COALESCE (PriceList2.Price, 0) AS Price2, COALESCE(PriceList3.Price, 0) AS Price3
             FROM Object
                   LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList1 ON PriceList1.PriceListId = inPriceListId_1
@@ -406,7 +416,7 @@ BEGIN
             WHERE Object.Id = 2167 -- (94134) РАСХОДЫ ЦЕХА Мясо
             LIMIT 1
            )
-        , tmpPrice_20900 AS 
+        , tmpPrice_20900 AS
            (SELECT COALESCE (PriceList1.Price, 0) AS Price1,  COALESCE (PriceList2.Price, 0) AS Price2, COALESCE(PriceList3.Price, 0) AS Price3
             FROM Object
                   LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList1 ON PriceList1.PriceListId = inPriceListId_1
@@ -441,7 +451,7 @@ BEGIN
            , Object_Goods.ValueData                      AS GoodsName
            , Object_GoodsKind.ValueData                  AS GoodsKindName
            , Object_Measure.ValueData                    AS MeasureName
-           
+
            , Object_Receipt_Parent.ObjectCode      AS Code_Parent
            , ObjectString_Code_Parent.ValueData    AS ReceiptCode_Parent
            , ObjectBoolean_Main_Parent.ValueData   AS isMain_Parent
@@ -596,7 +606,7 @@ BEGIN
                        THEN 100 * (tmpResult.OperCount_sale * PriceListSale.Price * 1.2)
                                 / (tmpResult.OperCount_sale * CAST (tmpResult.Summ1 / tmpResult.Value_receipt AS NUMERIC (16, 3)))
                           - 100
-                       ELSE 0 
+                       ELSE 0
              END AS Tax_Summ_sale -- % рент. для план1 / сумма по прайсу расчетному
 
            , CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() AND tmpResult.OperCount_sale * PriceListSale.Price <> 0
@@ -611,12 +621,12 @@ BEGIN
                        THEN 100 * tmpResult.SummOut_sale
                                 / (tmpResult.OperCount_sale * CAST (tmpResult.Summ1 / tmpResult.Value_receipt AS NUMERIC (16, 3)))
                           - 100
-                       ELSE 0 
+                       ELSE 0
              END AS Tax_SummOut_sale -- % рент. для план1 / сумма реализ факт
 
            , CASE WHEN tmpResult.OperCount_sale <> 0
                        THEN 100 * tmpResult.OperCount_return / tmpResult.OperCount_sale
-                       ELSE 0 
+                       ELSE 0
              END AS Tax_return -- % возврата
 
            , tmpResult.OperCount_sale AS OperCount_sale
@@ -628,7 +638,7 @@ BEGIN
            , CAST (CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_PriceList_sale / tmpResult.OperCount_sale ELSE 0 END AS NUMERIC (16, 3)) AS Price_out_pl_sale
            , tmpResult.SummOut_sale AS SummOut_sale
            , CAST (CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END AS NUMERIC (16, 3)) AS Price_out_sale
-             
+
            , tmpResult.OperCount_return AS OperCount_return
            , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpResult.OperCount_return ELSE 0 END AS OperCount_sh_return
            , tmpResult.OperCount_return * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS OperCount_Weight_return
@@ -655,13 +665,13 @@ BEGIN
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpResult.GoodsKindId
 
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                  ON ObjectFloat_Weight.ObjectId = Object_Goods.Id 
+                                  ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
+                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
@@ -709,7 +719,7 @@ BEGIN
           LEFT JOIN Object AS Object_Goods_Parent ON Object_Goods_Parent.Id = ObjectLink_Receipt_Goods_Parent.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure_Parent
-                               ON ObjectLink_Goods_Measure_Parent.ObjectId = Object_Goods_Parent.Id 
+                               ON ObjectLink_Goods_Measure_Parent.ObjectId = Object_Goods_Parent.Id
                               AND ObjectLink_Goods_Measure_Parent.DescId = zc_ObjectLink_Goods_Measure()
           LEFT JOIN Object AS Object_Measure_Parent ON Object_Measure_Parent.Id = ObjectLink_Goods_Measure_Parent.ChildObjectId
 
@@ -726,7 +736,7 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Main_Parent
                                   ON ObjectBoolean_Main_Parent.ObjectId = Object_Receipt_Parent.Id
                                  AND ObjectBoolean_Main_Parent.DescId = zc_ObjectBoolean_Receipt_Main()
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
                                                             AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
           LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
@@ -831,10 +841,10 @@ BEGIN
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
+                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-     
+
             LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = tmpReceiptChild.ReceiptId_from
             LEFT JOIN ObjectString AS ObjectString_Code
                                    ON ObjectString_Code.ObjectId = tmpReceiptChild.ReceiptId_from
@@ -856,4 +866,4 @@ ALTER FUNCTION gpReport_ReceiptSaleAnalyzeReal (TDateTime, TDateTime, Integer, I
 */
 
 -- тест
--- SELECT * FROM gpReport_ReceiptSaleAnalyzeReal (inStartDate:= '01.02.2016', inEndDate:= '01.02.2016', inUnitId_sale:= 8447, inUnitId_return:= 8447, inGoodsGroupId:= 0, inPriceListId_1:= 0, inPriceListId_2:= 0, inPriceListId_3:= 0, inPriceListId_sale:= 0, inIsGoodsKind:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_ReceiptSaleAnalyzeReal (inStartDate:= '01.06.2017', inEndDate:= '01.06.2017', inUnitId_sale:= 8447, inUnitId_return:= 8447, inGoodsGroupId:= 0, inPriceListId_1:= 0, inPriceListId_2:= 0, inPriceListId_3:= 0, inPriceListId_sale:= 0, inIsGoodsKind:= FALSE, inSession:= zfCalc_UserAdmin())
