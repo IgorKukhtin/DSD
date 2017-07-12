@@ -3,7 +3,7 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' < '#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081' '#1080#1079#1083#1080#1096#1082#1086#1074' '#1087#1086' '#1072#1087#1090#1077#1082#1072#1084'>'
-  ClientHeight = 278
+  ClientHeight = 351
   ClientWidth = 355
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 43
-    Top = 239
+    Top = 314
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
   end
   object cxButton2: TcxButton
     Left = 217
-    Top = 239
+    Top = 314
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -124,10 +124,54 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
     TabOrder = 13
     Width = 22
   end
+  object cxLabel7: TcxLabel
+    Left = 10
+    Top = 239
+    Caption = #1054#1089#1090#1072#1074#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1072
+  end
+  object cbAssortment: TcxCheckBox
+    Left = 199
+    Top = 238
+    Hint = #1076#1083#1103' '#1072#1087#1090#1077#1082'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077#1081' '#1080#1079#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1053#1058#1047' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+    TabOrder = 15
+    Width = 21
+  end
+  object edAssortment: TcxCurrencyEdit
+    Left = 226
+    Top = 238
+    EditValue = 1.000000000000000000
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    Properties.MinValue = 1.000000000000000000
+    TabOrder = 16
+    Width = 30
+  end
+  object cxLabel8: TcxLabel
+    Left = 8
+    Top = 272
+    Caption = #1053#1077' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1103#1090#1100' '#1089#1088#1086#1082#1080' '#1084#1077#1085#1077#1077' '#1061#1061#1061' '#1084#1077#1089#1103#1094#1077#1074
+  end
+  object edTerm: TcxCurrencyEdit
+    Left = 267
+    Top = 271
+    EditValue = 1.000000000000000000
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    Properties.MinValue = 1.000000000000000000
+    TabOrder = 18
+    Width = 30
+  end
+  object cbTerm: TcxCheckBox
+    Left = 234
+    Top = 271
+    Hint = #1076#1083#1103' '#1072#1087#1090#1077#1082'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077#1081' '#1080#1079#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1053#1058#1047' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+    TabOrder = 19
+    Width = 22
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
-    Left = 169
-    Top = 224
+    Left = 153
+    Top = 112
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 212
@@ -212,9 +256,41 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isAssortment'
+        Value = Null
+        Component = cbAssortment
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Assortment'
+        Value = Null
+        Component = edAssortment
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isTerm'
+        Value = Null
+        Component = cbTerm
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Term'
+        Value = Null
+        Component = edTerm
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 36
-    Top = 195
+    Left = 28
+    Top = 107
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -308,7 +384,7 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 105
-    Top = 216
+    Left = 73
+    Top = 128
   end
 end

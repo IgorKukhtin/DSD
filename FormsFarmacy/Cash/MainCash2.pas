@@ -376,6 +376,7 @@ type
       out AFiscalNumber, ACheckNumber: String): boolean;
     //подключение к локальной базе данных
     function InitLocalStorage: Boolean;
+    procedure LoadFromLocalStorage;
     //Сохранение чека в локальной базе. возвращает УИД
     function SaveLocal(ADS :TClientDataSet; AManagerId: Integer; AManagerName: String;
       ABayerName, ABayerPhone, AConfirmedKindName, AInvNumberOrder, AConfirmedKindClientName: String;
@@ -431,26 +432,24 @@ const
 procedure TMainCashForm2.AppMsgHandler(var Msg: TMsg; var Handled: Boolean);  // только 2 форма
 begin
   Handled := (Msg.hwnd = Application.Handle) and (Msg.message = FM_SERVISE);
+
   if Handled and (Msg.wParam = 1) then   //   WPARAM = 1 значит сообщения от сервиса в приложения  WPARAM = 2 от приложения в сервис
     case Msg.lParam of
-     1: // получино сообщение на обновление diff разницы из дбф
+      1: // получино сообщение на обновление diff разницы из дбф
+        if difUpdate then
         begin
-         if difUpdate then
-         begin
           difUpdate:=false;
-//         ShowMessage('получино сообщение на обновление diff разницы из дбф');
-         actAddDiffMemdata.Execute;   // вычитывает дбф в мемдату
-         actSetRimainsFromMemdata.Execute; // обновляем остатки в товарах и чеках с учетом пришедших остатков в мемдате
-
-         end;
+          actAddDiffMemdata.Execute;   // вычитывает дбф в мемдату
+          actSetRimainsFromMemdata.Execute; // обновляем остатки в товарах и чеках с учетом пришедших остатков в мемдате
         end;
-     2:  // получен запрос на сохранение CashSessionId в  CashSessionId.ini
+      2:  // получен запрос на сохранение CashSessionId в  CashSessionId.ini
         begin
-//         ShowMessage('получен запрос на сохранение CashSessionId в  CashSessionId.ini');
-         actSaveCashSesionIdToFile.Execute;
+          actSaveCashSesionIdToFile.Execute;
         end;
-
-
+      3:  // получен запрос на обновление всего
+        begin
+          LoadFromLocalStorage;
+        end;
     end;
 end;
 
@@ -3439,8 +3438,36 @@ begin
   end;
 end;
 
+procedure TMainCashForm2.LoadFromLocalStorage;
+var
+  lMsg: String;
+begin
+  startSplash('Начало обновления данных с сервера');
 
+  try
+    MainGridDBTableView.BeginUpdate;
+    RemainsCDS.DisableControls;
+    AlternativeCDS.DisableControls;
 
+    try
+      if not FileExists(Remains_lcl) or not FileExists(Alternative_lcl) then
+        ShowMessage('Нет локального хранилища.');
+
+      WaitForSingleObject(MutexRemains, INFINITE);
+      LoadLocalData(RemainsCDS, Remains_lcl);
+      ReleaseMutex(MutexRemains);
+      WaitForSingleObject(MutexAlternative, INFINITE);
+      LoadLocalData(AlternativeCDS, Alternative_lcl);
+      ReleaseMutex(MutexAlternative);
+    finally
+      RemainsCDS.EnableControls;
+      AlternativeCDS.EnableControls;
+      MainGridDBTableView.EndUpdate;
+    end;
+  finally
+    EndSplash;
+  end;
+end;
 
 { TSaveRealThread }
 { TRefreshDiffThread }

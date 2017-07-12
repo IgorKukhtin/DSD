@@ -370,6 +370,9 @@ object GoodsBarCodeForm: TGoodsBarCodeForm
       MoveParams = <>
       ActionList = <
         item
+          Action = actTest
+        end
+        item
           Action = actGetImportSetting_Price
         end
         item
@@ -378,9 +381,15 @@ object GoodsBarCodeForm: TGoodsBarCodeForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1044#1072#1085#1085#1099#1093' '#1087#1086' '#1096#1090#1088#1080#1093'-'#1082#1086#1076#1072#1084' '#1080#1079' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072'?'
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1072#1085#1085#1099#1077' '#1087#1086' '#1096#1090#1088#1080#1093'-'#1082#1086#1076#1072#1084' '#1080#1079' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1072#1085#1085#1099#1077' '#1087#1086' '#1096#1090#1088#1080#1093'-'#1082#1086#1076#1072#1084' '#1080#1079' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072
+      QuestionBeforeExecute = 
+        #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1044#1072#1085#1085#1099#1093' '#1087#1086' '#1096#1090#1088#1080#1093'-'#1082#1086#1076#1072#1084' '#1080#1079' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072' '#1087#1086' '#1074#1099#1073#1088#1072#1085#1085#1086 +
+        #1084#1091' '#1070#1088'.'#1083#1080#1094#1091'?'
+      Caption = 
+        #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1072#1085#1085#1099#1077' '#1087#1086' '#1096#1090#1088#1080#1093'-'#1082#1086#1076#1072#1084' '#1080#1079' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072' '#1087#1086' '#1074#1099#1073#1088#1072#1085#1085#1086#1084#1091' '#1070#1088'.' +
+        #1083#1080#1094#1091
+      Hint = 
+        #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1072#1085#1085#1099#1077' '#1087#1086' '#1096#1090#1088#1080#1093'-'#1082#1086#1076#1072#1084' '#1080#1079' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072' '#1087#1086' '#1074#1099#1073#1088#1072#1085#1085#1086#1084#1091' '#1070#1088'.' +
+        #1083#1080#1094#1091
       ImageIndex = 74
     end
     object actRefresh: TdsdDataSetRefresh
@@ -433,6 +442,17 @@ object GoodsBarCodeForm: TGoodsBarCodeForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
+    end
+    object actTest: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = dsdStoredProc1
+      StoredProcList = <
+        item
+          StoredProc = dsdStoredProc1
+        end>
+      Caption = 'actTest'
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -746,5 +766,22 @@ object GoodsBarCodeForm: TGoodsBarCodeForm
     PackSize = 1
     Left = 675
     Top = 234
+  end
+  object dsdStoredProc1: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_GoodsBarCode_Load_Price_Test'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inJuridicalId'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 683
+    Top = 290
   end
 end

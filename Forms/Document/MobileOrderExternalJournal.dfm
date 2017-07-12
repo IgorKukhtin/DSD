@@ -4,25 +4,25 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
   ClientWidth = 1050
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -260
   ExplicitWidth = 1066
-  ExplicitHeight = 431
+  ExplicitHeight = 434
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 77
     Width = 1050
-    Height = 339
+    Height = 319
     TabOrder = 3
     ExplicitWidth = 1050
     ExplicitHeight = 339
-    ClientRectBottom = 339
+    ClientRectBottom = 319
     ClientRectRight = 1050
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1050
       ExplicitHeight = 339
       inherited cxGrid: TcxGrid
         Width = 1050
-        Height = 339
+        Height = 319
         ExplicitWidth = 1050
         ExplicitHeight = 339
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -523,12 +523,25 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
   end
   inherited Panel: TPanel
     Width = 1050
+    Height = 51
     ExplicitWidth = 1050
+    ExplicitHeight = 51
     inherited deStart: TcxDateEdit
       EditValue = 42736d
     end
     inherited deEnd: TcxDateEdit
       EditValue = 42736d
+    end
+    object edIsMobileDate: TcxCheckBox
+      Left = 10
+      Top = 26
+      Action = actRefresh
+      Caption = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' <'#1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103' '#1085#1072' '#1084#1086#1073'. '#1091#1089#1090#1088'.>'
+      ParentShowHint = False
+      ShowHint = False
+      State = cbsChecked
+      TabOrder = 4
+      Width = 255
     end
   end
   object cxLabel27: TcxLabel [2]
@@ -873,6 +886,14 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
         Value = 41640d
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsMobileDate'
+        Value = Null
+        Component = edIsMobileDate
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

@@ -1011,6 +1011,8 @@ type
       const AItem: TListViewItem);
     procedure bSelectPartnersClick(Sender: TObject);
     procedure bOptimizeDBClick(Sender: TObject);
+    procedure LinkListControlToField14FilledListItem(Sender: TObject;
+      const AEditor: IBindListEditorItem);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -1491,6 +1493,41 @@ begin
     Assigned(lwReturnInItems.Items[AEditor.CurrentIndex].Objects.FindDrawable('DeleteButton'))
   then
     lwReturnInItems.Items[AEditor.CurrentIndex].Objects.FindDrawable('DeleteButton').Visible := FCanEditDocument;
+end;
+
+procedure TfrmMain.LinkListControlToField14FilledListItem(Sender: TObject;
+  const AEditor: IBindListEditorItem);
+var
+  DocType, Debet, Kredit: TListItemDrawable;
+  DocColor: TAlphaColor;
+begin
+  if (AEditor.CurrentIndex > -1) and Assigned(lwJuridicalCollation) and
+    Assigned(lwJuridicalCollation.Items[AEditor.CurrentIndex]) and
+    Assigned(lwJuridicalCollation.Items[AEditor.CurrentIndex].Objects) then
+  begin
+    DocType := lwJuridicalCollation.Items[AEditor.CurrentIndex].Objects.FindDrawable('DocType');
+
+    if Assigned(DocType) then
+    begin
+      if Pos('Продажа', (DocType as TListItemText).Text) > 0 then
+        DocColor := TAlphaColors.Green
+      else if Pos('Возврат от покупателя', (DocType as TListItemText).Text) > 0 then
+        DocColor := TAlphaColors.Blue
+      else if (Pos('Расчетный счет', (DocType as TListItemText).Text) > 0) or
+              (Pos('Касса', (DocType as TListItemText).Text) > 0) then
+        DocColor := TAlphaColors.Brown
+      else
+        DocColor := TAlphaColors.Red;
+
+      Debet := lwJuridicalCollation.Items[AEditor.CurrentIndex].Objects.FindDrawable('Debet');
+      if Assigned(Debet) then
+        (Debet as TListItemText).TextColor := DocColor;
+
+      Kredit := lwJuridicalCollation.Items[AEditor.CurrentIndex].Objects.FindDrawable('Kredit');
+      if Assigned(Kredit) then
+        (Kredit as TListItemText).TextColor := DocColor;
+    end;
+  end;
 end;
 
 procedure TfrmMain.LinkListControlToFieldCashFilledListItem(Sender: TObject;

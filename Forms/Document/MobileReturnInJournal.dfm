@@ -4,10 +4,8 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
   ClientWidth = 1114
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -341
-  ExplicitTop = -113
   ExplicitWidth = 1130
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -633,14 +631,14 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
     end
     object edIsPartnerDate: TcxCheckBox
       Left = 10
-      Top = 26
+      Top = 27
       Action = actRefresh
       Caption = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' <'#1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
       TabOrder = 4
       Width = 270
     end
     object edDocumentTaxKind: TcxButtonEdit
-      Left = 419
+      Left = 697
       Top = 26
       Properties.Buttons = <
         item
@@ -652,18 +650,18 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
       Width = 145
     end
     object cxLabel14: TcxLabel
-      Left = 286
+      Left = 564
       Top = 27
       Caption = #1058#1080#1087' '#1076#1083#1103' '#1092#1086#1088#1084'. '#1085#1072#1083#1086#1075'.'#1076#1086#1082'.'
       Visible = False
     end
     object cxLabel27: TcxLabel
-      Left = 885
+      Left = 883
       Top = 6
       Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
     end
     object edJuridicalBasis: TcxButtonEdit
-      Left = 963
+      Left = 961
       Top = 5
       Properties.Buttons = <
         item
@@ -675,7 +673,7 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
       Width = 150
     end
     object edPersonalTrade: TcxButtonEdit
-      Left = 666
+      Left = 664
       Top = 5
       Properties.Buttons = <
         item
@@ -687,9 +685,20 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
       Width = 207
     end
     object cxLabel3: TcxLabel
-      Left = 577
+      Left = 575
       Top = 6
       Caption = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090':'
+    end
+    object edIsMobileDate: TcxCheckBox
+      Left = 286
+      Top = 27
+      Action = actRefresh
+      Caption = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' <'#1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103' '#1085#1072' '#1084#1086#1073'. '#1091#1089#1090#1088'.>'
+      ParentShowHint = False
+      ShowHint = False
+      State = cbsChecked
+      TabOrder = 11
+      Width = 252
     end
   end
   object ExportXmlGrid: TcxGrid [2]
@@ -1422,6 +1431,14 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
         Name = 'inIsPartnerDate'
         Value = 'False'
         Component = edIsPartnerDate
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsMobileDate'
+        Value = Null
+        Component = edIsMobileDate
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

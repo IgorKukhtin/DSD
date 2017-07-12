@@ -428,7 +428,7 @@ object MainCashForm2: TMainCashForm2
     Top = 224
   end
   object Timer2: TTimer
-    Interval = 3600000
+    Interval = 420000
     OnTimer = Timer2Timer
     Left = 16
     Top = 128
@@ -570,8 +570,8 @@ object MainCashForm2: TMainCashForm2
   object Timer1: TTimer
     Interval = 300000
     OnTimer = Timer1Timer
-    Left = 88
-    Top = 128
+    Left = 92
+    Top = 132
   end
   object tiServise: TTrayIcon
     AnimateInterval = 500
@@ -589,7 +589,7 @@ object MainCashForm2: TMainCashForm2
     Left = 432
     Top = 16
     Bitmap = {
-      494C0101020034005C0080008000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102003400640080008000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000000200008000000001002000000000000000
       04000000000000000000000000000000000000FF000000FF000000FF000000FF
       000000FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF

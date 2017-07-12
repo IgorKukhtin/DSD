@@ -87,6 +87,75 @@ BEGIN
                              AND (CLO_Cash.ObjectId = inCashId OR inCashId = 0)
                              -- AND (CLO_Currency.ObjectId = inCurrencyId OR inCurrencyId = 0)
                            )
+         , tmpAccount AS (SELECT Object_Account.Id           AS AccountId
+                               , Object_Account.ObjectCode   AS AccountCode
+                               , CAST (CASE WHEN Object_Account.ObjectCode < 100000
+                                                 THEN '0'
+                                            ELSE ''
+                                       END
+                                    || Object_Account.ObjectCode || ' '
+                                    || Object_AccountGroup.ValueData
+                                    || CASE WHEN Object_AccountDirection.ValueData <> Object_AccountGroup.ValueData
+                                                 THEN ' ' || Object_AccountDirection.ValueData
+                                            ELSE ''
+                                       END
+                                    || CASE WHEN Object_Account.ValueData <> Object_AccountDirection.ValueData
+                                                 THEN ' ' || Object_Account.ValueData
+                                            ELSE ''
+                                       END                   AS TVarChar) AS AccountName_all 
+                               
+                          FROM Object AS Object_Account
+                               LEFT JOIN ObjectLink AS ObjectLink_Account_AccountGroup
+                                                    ON ObjectLink_Account_AccountGroup.ObjectId = Object_Account.Id 
+                                                   AND ObjectLink_Account_AccountGroup.DescId = zc_ObjectLink_Account_AccountGroup()
+                               LEFT JOIN Object AS Object_AccountGroup ON Object_AccountGroup.Id = ObjectLink_Account_AccountGroup.ChildObjectId
+                   
+                               LEFT JOIN ObjectLink AS ObjectLink_Account_AccountDirection
+                                                    ON ObjectLink_Account_AccountDirection.ObjectId = Object_Account.Id 
+                                                   AND ObjectLink_Account_AccountDirection.DescId = zc_ObjectLink_Account_AccountDirection()
+                               LEFT JOIN Object AS Object_AccountDirection ON Object_AccountDirection.Id = ObjectLink_Account_AccountDirection.ChildObjectId
+                    
+                          WHERE Object_Account.DescId = zc_Object_Account()
+                         )  
+                                   
+        , tmpInfoMoney AS (SELECT Object_InfoMoneyGroup.ValueData                          AS InfoMoneyGroupName
+                                , Object_InfoMoneyDestination.ValueData                    AS InfoMoneyDestinationName
+                                , Object_InfoMoney.Id                                      AS InfoMoneyId
+                                , Object_InfoMoney.ObjectCode                              AS InfoMoneyCode
+                                , Object_InfoMoney.ValueData                               AS InfoMoneyName
+                         
+                                , CAST ('(' || CAST (Object_InfoMoney.ObjectCode AS TVarChar)
+                                    || ') '|| Object_InfoMoneyGroup.ValueData
+                                    || ' ' || Object_InfoMoneyDestination.ValueData
+                                    || CASE WHEN Object_InfoMoneyDestination.ValueData <> Object_InfoMoney.ValueData THEN ' ' || Object_InfoMoney.ValueData ELSE '' END
+                                       AS TVarChar)                                        AS InfoMoneyName_all
+                           FROM Object AS Object_InfoMoney
+                                LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyDestination
+                                                     ON ObjectLink_InfoMoney_InfoMoneyDestination.ObjectId = Object_InfoMoney.Id
+                                                    AND ObjectLink_InfoMoney_InfoMoneyDestination.DescId = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
+                                LEFT JOIN Object AS Object_InfoMoneyDestination ON Object_InfoMoneyDestination.Id = ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId
+                          
+                                LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyGroup
+                                                     ON ObjectLink_InfoMoney_InfoMoneyGroup.ObjectId = Object_InfoMoney.Id
+                                                    AND ObjectLink_InfoMoney_InfoMoneyGroup.DescId = zc_ObjectLink_InfoMoney_InfoMoneyGroup()
+                                LEFT JOIN Object AS Object_InfoMoneyGroup ON Object_InfoMoneyGroup.Id = ObjectLink_InfoMoney_InfoMoneyGroup.ChildObjectId
+                         
+                          WHERE Object_InfoMoney.DescId = zc_Object_InfoMoney()
+                          )
+                                  
+        , tmpContract AS (SELECT Object_Contract.Id                            AS ContractId
+                               , Object_Contract.ObjectCode                    AS ContractCode  
+                               , Object_Contract.ValueData                     AS InvNumber
+                               , Object_ContractTag.ValueData                  AS ContractTagName
+                          FROM Object AS Object_Contract
+                               LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractTag
+                                                    ON ObjectLink_Contract_ContractTag.ObjectId = Object_Contract.Id
+                                                   AND ObjectLink_Contract_ContractTag.DescId = zc_ObjectLink_Contract_ContractTag()
+                               LEFT JOIN Object AS Object_ContractTag ON Object_ContractTag.Id = ObjectLink_Contract_ContractTag.ChildObjectId
+                        
+                          WHERE Object_Contract.DescId = zc_Object_Contract()
+                         )                           
+     --
      SELECT
         Operation.ContainerId,
         Object_Cash.ObjectCode                                                                      AS CashCode,
@@ -95,12 +164,12 @@ BEGIN
         CASE WHEN Operation.ContainerId > 0 THEN 1          WHEN Operation.DebetSumm > 0 THEN 2               WHEN Operation.KreditSumm > 0 THEN 3           ELSE -1 END :: Integer AS GroupId,
         CASE WHEN Operation.ContainerId > 0 THEN '1.Сальдо' WHEN Operation.DebetSumm > 0 THEN '2.Поступления' WHEN Operation.KreditSumm > 0 THEN '3.Платежи' ELSE '' END :: TVarChar AS GroupName,
         Object_Branch.ValueData                                                                     AS BranchName,
-        Object_InfoMoney_View.InfoMoneyGroupName                                                    AS InfoMoneyGroupName,
-        Object_InfoMoney_View.InfoMoneyDestinationName                                              AS InfoMoneyDestinationName,
-        Object_InfoMoney_View.InfoMoneyCode                                                         AS InfoMoneyCode,
-        Object_InfoMoney_View.InfoMoneyName                                                         AS InfoMoneyName,
-        Object_InfoMoney_View.InfoMoneyName_all                                                     AS InfoMoneyName_all,
-        Object_Account_View.AccountName_all                                                         AS AccountName,
+        tmpInfoMoney.InfoMoneyGroupName                                                             AS InfoMoneyGroupName,
+        tmpInfoMoney.InfoMoneyDestinationName                                                       AS InfoMoneyDestinationName,
+        tmpInfoMoney.InfoMoneyCode                                                                  AS InfoMoneyCode,
+        tmpInfoMoney.InfoMoneyName                                                                  AS InfoMoneyName,
+        tmpInfoMoney.InfoMoneyName_all                                                              AS InfoMoneyName_all,
+        tmpAccount.AccountName_all                                                                  AS AccountName,
         Object_Unit.ObjectCode                                                                      AS UnitCode,
         Object_Unit.ValueData                                                                       AS UnitName,
         tmpUnit_byProfitLoss.ProfitLossGroupCode,
@@ -110,9 +179,9 @@ BEGIN
         Object_MoneyPlace.ObjectCode                                                                AS MoneyPlaceCode,
         Object_MoneyPlace.ValueData                                                                 AS MoneyPlaceName,
         ObjectDesc.ItemName                                                                         AS ItemName,
-        Object_Contract_InvNumber_View.ContractCode                                                 AS ContractCode,
-        Object_Contract_InvNumber_View.InvNumber                                                    AS ContractInvNumber,
-        Object_Contract_InvNumber_View.ContractTagName                                              AS ContractTagName,
+        tmpContract.ContractCode                                                                    AS ContractCode,
+        tmpContract.InvNumber                                                                       AS ContractInvNumber,
+        tmpContract.ContractTagName                                                                 AS ContractTagName,
         Operation.StartAmount ::TFloat                                                              AS StartAmount,
         CASE WHEN Operation.StartAmount > 0 THEN Operation.StartAmount ELSE 0 END ::TFloat          AS StartAmountD,
         CASE WHEN Operation.StartAmount < 0 THEN -1 * Operation.StartAmount ELSE 0 END :: TFloat    AS StartAmountK,
@@ -248,7 +317,7 @@ BEGIN
                   LEFT JOIN MovementItemLinkObject AS MILO_InfoMoney
                                                    ON MILO_InfoMoney.MovementItemId = MIContainer.MovementItemId
                                                   AND MILO_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-                  LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MILO_InfoMoney.ObjectId
+                 -- LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MILO_InfoMoney.ObjectId
            GROUP BY tmpContainer.ContainerId, tmpContainer.ObjectId, tmpContainer.CashId, tmpContainer.CurrencyId,
                     MILO_InfoMoney.ObjectId, 
                     MILO_Unit.ObjectId, MILO_MoneyPlace.ObjectId, MILO_Contract.ObjectId,
@@ -295,7 +364,7 @@ BEGIN
                   LEFT JOIN MovementItemLinkObject AS MILO_InfoMoney
                                                    ON MILO_InfoMoney.MovementItemId = MIContainer.MovementItemId
                                                   AND MILO_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-                  LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MILO_InfoMoney.ObjectId
+                  --LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MILO_InfoMoney.ObjectId
            WHERE tmpContainer.ContainerId_Currency > 0
            GROUP BY tmpContainer.ContainerId, tmpContainer.ObjectId, tmpContainer.CashId, tmpContainer.CurrencyId,
                     MILO_InfoMoney.ObjectId,
@@ -310,10 +379,10 @@ BEGIN
          ) AS Operation
 
 
-     LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = Operation.ObjectId
+     LEFT JOIN tmpAccount ON tmpAccount.AccountId = Operation.ObjectId
      LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = Operation.CashId
      LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = Operation.CurrencyId
-     LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Operation.InfoMoneyId
+     LEFT JOIN tmpInfoMoney ON tmpInfoMoney.InfoMoneyId = Operation.InfoMoneyId
      LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Operation.UnitId
      LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = Operation.MoneyPlaceId
      LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_MoneyPlace.DescId
@@ -325,7 +394,7 @@ BEGIN
                          AND ObjectLink_Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
      LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Cash_Branch.ChildObjectId
 
-     LEFT JOIN Object_Contract_InvNumber_View ON Object_Contract_InvNumber_View.ContractId = Operation.ContractId
+     LEFT JOIN tmpContract ON tmpContract.ContractId = Operation.ContractId
 
      WHERE (Operation.StartAmount <> 0 OR Operation.EndAmount <> 0 OR Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0
          OR Operation.StartAmount_Currency <> 0 OR Operation.EndAmount_Currency <> 0 OR Operation.DebetSumm_Currency <> 0 OR Operation.KreditSumm_Currency <> 0);

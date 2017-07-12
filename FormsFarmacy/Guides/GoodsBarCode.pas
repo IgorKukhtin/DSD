@@ -73,6 +73,8 @@ type
     actDoLoad_Price: TExecuteImportSettingsAction;
     actGetImportSetting_Price: TdsdExecStoredProc;
     actStartLoad_Price: TMultiAction;
+    dsdStoredProc1: TdsdStoredProc;
+    actTest: TdsdExecStoredProc;
   private
     { Private declarations }
   public

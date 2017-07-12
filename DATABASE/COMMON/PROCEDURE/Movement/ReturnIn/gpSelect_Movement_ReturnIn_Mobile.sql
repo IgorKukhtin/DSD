@@ -1,11 +1,13 @@
 -- Function: gpSelect_Movement_ReturnIn_Mobile()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_ReturnIn_Mobile (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ReturnIn_Mobile (TDateTime, TDateTime, Boolean, Boolean, Boolean, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ReturnIn_Mobile(
     IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
     IN inIsPartnerDate      Boolean ,
+    IN inIsMobileDate       Boolean ,
     IN inIsErased           Boolean ,
     IN inJuridicalBasisId   Integer   ,
     IN inMemberId           Integer   , -- òîðãîâûé àãåíò
@@ -193,15 +195,17 @@ BEGIN
            , Object_Unit.ObjectCode                 AS UnitCode
            , Object_Unit.ValueData                  AS UnitName
            , Object_Position.ValueData              AS PositionName
-       FROM (SELECT Movement.*
+       FROM (SELECT Movement.Id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate
                                AND Movement.DescId   = zc_Movement_ReturnIn()
                                AND Movement.StatusId = tmpStatus.StatusId
                   JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+             WHERE inIsMobileDate = FALSE
+             
              /*WHERE inIsPartnerDate = FALSE
             UNION ALL
-             SELECT Movement.*
+             SELECT Movement.Id
              FROM MovementDate AS MovementDate_OperDatePartner
                   JOIN Movement ON Movement.Id     = MovementDate_OperDatePartner.MovementId
                                AND Movement.DescId = zc_Movement_ReturnIn()
@@ -209,8 +213,21 @@ BEGIN
                   JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
              WHERE inIsPartnerDate = TRUE
                AND MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
-               AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()*/
-            ) AS Movement
+               AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+             */
+            UNION ALL
+             SELECT MovementDate_InsertMobile.MovementId  AS Id
+             FROM MovementDate AS MovementDate_InsertMobile
+                  INNER JOIN Movement ON Movement.Id = MovementDate_InsertMobile.MovementId
+                                     AND Movement.DescId = zc_Movement_ReturnIn()
+                  INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
+                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
+             WHERE inIsMobileDate = TRUE
+               AND MovementDate_InsertMobile.ValueData >= inStartDate AND MovementDate_InsertMobile.ValueData < inEndDate + interval '1 day'
+               AND MovementDate_InsertMobile.DescId = zc_MovementDate_InsertMobile()                  
+            ) AS tmpMovement
+
+             LEFT JOIN Movement ON Movement.Id = tmpMovement.Id
 
             INNER JOIN MovementLinkObject AS MovementLinkObject_Insert
                                           ON MovementLinkObject_Insert.MovementId = Movement.Id
@@ -403,6 +420,7 @@ $BODY$
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
+ 10.07.17         * add inIsMobileDate
  22.04.17         *
 */
 

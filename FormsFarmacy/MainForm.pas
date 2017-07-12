@@ -363,6 +363,8 @@ type
     N140: TMenuItem;
     actGoodsBarCodeLoad: TdsdOpenForm;
     N141: TMenuItem;
+    actGoods_BarCode: TdsdOpenForm;
+    N142: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

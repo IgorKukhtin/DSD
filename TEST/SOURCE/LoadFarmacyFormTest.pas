@@ -326,7 +326,10 @@ end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
-
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_BarCodeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoods_BarCodeForm');
+  exit;
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAllForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsAllForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAllRetailForm'));
@@ -562,7 +565,7 @@ begin
   exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportOrderGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportOrderGoodsForm');
-
+    }
   // отчет распределение остатков
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsForm');
@@ -572,7 +575,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoods_ToForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoods_ToForm');
   exit;
-
+  {
   //Отчет Приход на точку
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeForm');

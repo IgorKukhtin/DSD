@@ -58,6 +58,7 @@ type
     bbAllPhotoOnMap: TdxBarButton;
     dxBarStatic1: TdxBarStatic;
     actAllPhotoOnMap: TdsdPartnerMapAction;
+    AddressByGPS: TcxGridDBColumn;
   private
     { Private declarations }
   public
