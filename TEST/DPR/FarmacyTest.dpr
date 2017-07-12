@@ -513,7 +513,11 @@ uses
   MemberIncomeCheck in '..\..\FormsFarmacy\Guides\MemberIncomeCheck.pas' {MemberIncomeCheckForm: TParentForm},
   MemberIncomeCheckEdit in '..\..\FormsFarmacy\Guides\MemberIncomeCheckEdit.pas' {MemberIncomeCheckEditForm: TParentForm},
   IncomeCheckDialog in '..\..\FormsFarmacy\Document\IncomeCheckDialog.pas' {IncomeCheckDialogForm: TParentForm},
-  Goods_BarCode in '..\..\FormsFarmacy\Guides\Goods_BarCode.pas' {Goods_BarCodeForm: TParentForm};
+  Goods_BarCode in '..\..\FormsFarmacy\Guides\Goods_BarCode.pas' {Goods_BarCodeForm: TParentForm},
+  MeDocCOM in '..\..\SOURCE\MeDOC\MeDocCOM.pas',
+  IFIN_J1201009 in '..\..\SOURCE\MeDOC\IFIN_J1201009.pas',
+  MEDOC_TLB in '..\..\SOURCE\MeDOC\MEDOC_TLB.pas',
+  ReportMovementCheckLight in '..\..\FormsFarmacy\Report\ReportMovementCheckLight.pas' {ReportMovementCheckLightForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

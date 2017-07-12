@@ -1,4 +1,4 @@
-unit ReportMovementCheck;
+unit ReportMovementCheckLight;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TReportMovementCheckForm = class(TAncestorReportForm)
+  TReportMovementCheckLightForm = class(TAncestorReportForm)
     cxLabel3: TcxLabel;
     ceUnit: TcxButtonEdit;
     rdUnit: TRefreshDispatcher;
@@ -68,7 +68,6 @@ type
     bbPrint: TdxBarButton;
     cbJuridical: TcxCheckBox;
     actRefreshJuridical: TdsdDataSetRefresh;
-    isPromoUnit: TcxGridDBColumn;
     cxLabel19: TcxLabel;
     ceRetail: TcxButtonEdit;
     GuidesRetail: TdsdGuides;
@@ -79,7 +78,7 @@ type
   end;
 
 var
-  ReportMovementCheckForm: TReportMovementCheckForm;
+  ReportMovementCheckLightForm: TReportMovementCheckLightForm;
 
 implementation
 
@@ -87,5 +86,5 @@ implementation
 
 initialization
 
-  RegisterClass(TReportMovementCheckForm)
+  RegisterClass(TReportMovementCheckLightForm)
 end.
