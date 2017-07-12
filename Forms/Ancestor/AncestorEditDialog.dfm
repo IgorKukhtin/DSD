@@ -1,4 +1,6 @@
 inherited AncestorEditDialogForm: TAncestorEditDialogForm
+  ExplicitWidth = 320
+  ExplicitHeight = 240
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -18,10 +20,12 @@ inherited AncestorEditDialogForm: TAncestorEditDialogForm
     object FormClose: TdsdFormClose
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
     object InsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -36,6 +40,7 @@ inherited AncestorEditDialogForm: TAncestorEditDialogForm
         Name = 'Id'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
   end
   object spInsertUpdate: TdsdStoredProc
@@ -48,6 +53,7 @@ inherited AncestorEditDialogForm: TAncestorEditDialogForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 264
@@ -63,6 +69,7 @@ inherited AncestorEditDialogForm: TAncestorEditDialogForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 224

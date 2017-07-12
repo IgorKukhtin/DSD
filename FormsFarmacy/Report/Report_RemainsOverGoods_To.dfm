@@ -976,7 +976,6 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 70
           end
           object chSumma_Over: TcxGridDBColumn
@@ -1036,9 +1035,6 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
     object cxTabSheetTotal: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridTotal: TcxGrid
         Left = 0
         Top = 0
@@ -1793,6 +1789,38 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isAssortment'
+          Value = Null
+          Component = cbAssortment
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Assortment'
+          Value = Null
+          Component = edAssortment
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isTerm'
+          Value = Null
+          Component = cbTerm
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Term'
+          Value = Null
+          Component = edTerm
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1947,10 +1975,10 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdateMIChild
+      StoredProc = spInsertUpdateMIMaster
       StoredProcList = <
         item
-          StoredProc = spInsertUpdateMIChild
+          StoredProc = spInsertUpdateMIMaster
         end>
       Caption = 'actUpdateChildDS'
       DataSource = ChildDS
@@ -2719,7 +2747,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       item
         Name = 'ioId'
         Value = Null
-        Component = MasterCDS
+        Component = ChildCDS
         ComponentItem = 'MIMaster_Id_Over'
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
@@ -2727,7 +2755,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       item
         Name = 'inMovementId'
         Value = Null
-        Component = MasterCDS
+        Component = ChildCDS
         ComponentItem = 'MovementId_Over'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2735,7 +2763,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       item
         Name = 'inGoodsId'
         Value = Null
-        Component = MasterCDS
+        Component = ChildCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2743,7 +2771,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       item
         Name = 'ioAmount'
         Value = Null
-        Component = MasterCDS
+        Component = ChildCDS
         ComponentItem = 'Amount_Over'
         DataType = ftFloat
         ParamType = ptInputOutput
@@ -2752,7 +2780,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       item
         Name = 'outSumma'
         Value = Null
-        Component = MasterCDS
+        Component = ChildCDS
         ComponentItem = 'Summa_Over'
         DataType = ftFloat
         MultiSelectSeparator = ','
@@ -2760,7 +2788,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       item
         Name = 'inRemains'
         Value = Null
-        Component = MasterCDS
+        Component = ChildCDS
         ComponentItem = 'RemainsStart'
         DataType = ftFloat
         ParamType = ptInput
@@ -2769,7 +2797,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       item
         Name = 'inAmountSend'
         Value = Null
-        Component = MasterCDS
+        Component = ChildCDS
         ComponentItem = 'AmountSend'
         DataType = ftFloat
         ParamType = ptInput
@@ -2778,7 +2806,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       item
         Name = 'inPrice'
         Value = Null
-        Component = MasterCDS
+        Component = ChildCDS
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
@@ -2787,7 +2815,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       item
         Name = 'inMCS'
         Value = Null
-        Component = MasterCDS
+        Component = ChildCDS
         ComponentItem = 'MCSValue'
         DataType = ftFloat
         ParamType = ptInput
@@ -2796,7 +2824,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       item
         Name = 'inMinExpirationDate'
         Value = 'NULL'
-        Component = MasterCDS
+        Component = ChildCDS
         ComponentItem = 'MinExpirationDate'
         DataType = ftDateTime
         ParamType = ptInput

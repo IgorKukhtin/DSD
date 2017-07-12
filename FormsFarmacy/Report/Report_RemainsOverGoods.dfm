@@ -3,10 +3,8 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
   ClientHeight = 557
   ClientWidth = 1066
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -398
-  ExplicitTop = -103
   ExplicitWidth = 1082
-  ExplicitHeight = 596
+  ExplicitHeight = 595
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1782,7 +1780,39 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
-        end>
+        end
+item
+        Name = 'isAssortment'
+        Value = Null
+        Component = cbAssortment
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Assortment'
+        Value = Null
+        Component = edAssortment
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isTerm'
+        Value = Null
+        Component = cbTerm
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Term'
+        Value = Null
+        Component = edTerm
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True

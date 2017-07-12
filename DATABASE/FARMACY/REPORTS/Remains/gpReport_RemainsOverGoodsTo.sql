@@ -192,9 +192,9 @@ BEGIN
          INSERT INTO tmpSend  (GoodsId, UnitId, Amount) 
                         SELECT MI_Send.ObjectId                 AS GoodsId
                              , MovementLinkObject_Unit.ObjectId AS UnitId
-                             , SUM (CASE WHEN MovementLinkObject_Unit.DescId = zc_MovementLinkObject_From() AND MovementLinkObject_Unit.ObjectId = inUnitId
+                             , SUM (CASE WHEN MovementLinkObject_Unit.DescId = zc_MovementLinkObject_From() AND MovementLinkObject_Unit.ObjectId <> inUnitId
                                          THEN -1 * MI_Send.Amount
-                                         WHEN MovementLinkObject_Unit.DescId = zc_MovementLinkObject_To() AND MovementLinkObject_Unit.ObjectId <> inUnitId
+                                         WHEN MovementLinkObject_Unit.DescId = zc_MovementLinkObject_To() AND MovementLinkObject_Unit.ObjectId = inUnitId
                                          THEN  1 * MI_Send.Amount
                                          ELSE 0
                                     END) ::TFloat  AS Amount--_From
@@ -239,19 +239,19 @@ BEGIN
                               --, tmp.RemainsStart + COALESCE (tmpSend.Amount, 0) AS RemainsStart
                               
                               , tmp.RemainsStart + COALESCE (tmpSend.Amount, 0)
-                              - CASE WHEN inisAssortment = TRUE AND tmp.UnitId = inUnitId
+                              - CASE WHEN inisAssortment = TRUE AND tmp.UnitId <> inUnitId
                                           THEN inAssortment
                                      ELSE 0
                                 END                                             AS RemainsStart
                               , tmp.RemainsStart                                AS RemainsStart_save
                               , tmp.MinExpirationDate
                          FROM tmp
-                              LEFT JOIN tmpSend ON tmpSend.GoodsId = tmp.GoodsId AND tmpSend.UnitId = tmp.UnitId AND tmpSend.UnitId <> inUnitId
+                              LEFT JOIN tmpSend ON tmpSend.GoodsId = tmp.GoodsId AND tmpSend.UnitId = tmp.UnitId --AND tmpSend.UnitId <> inUnitId
                         UNION
                          SELECT tmpSend.GoodsId
                               , tmpSend.UnitId
                               , COALESCE (tmpSend.Amount, 0)
-                              - CASE WHEN inisAssortment = TRUE AND tmpSend.UnitId = inUnitId
+                              - CASE WHEN inisAssortment = TRUE AND tmpSend.UnitId <> inUnitId
                                      THEN inAssortment 
                                      ELSE 0
                                 END                          AS RemainsStart
@@ -259,7 +259,7 @@ BEGIN
                               , NULL                         AS MinExpirationDate
                          FROM tmpSend
                               LEFT JOIN tmp ON tmp.GoodsId = tmpSend.GoodsId AND tmp.UnitId = tmpSend.UnitId
-                         WHERE tmpSend.UnitId <> inUnitId
+                         --WHERE tmpSend.UnitId <> inUnitId
                            AND tmp.GoodsId IS NULL
                         ;
 
