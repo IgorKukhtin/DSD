@@ -1,5 +1,5 @@
-inherited ReportMovementCheckForm: TReportMovementCheckForm
-  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093
+inherited ReportMovementCheckLightForm: TReportMovementCheckLightForm
+  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093' ('#1091#1087#1088#1086#1097#1077#1085#1085#1099#1081')'
   ClientHeight = 480
   ClientWidth = 1251
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
@@ -23,6 +23,8 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
       inherited cxGrid: TcxGrid
         Width = 1251
         Height = 422
+        ExplicitLeft = -3
+        ExplicitTop = 3
         ExplicitWidth = 1251
         ExplicitHeight = 422
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -65,27 +67,22 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountPromo
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountPromoPlanMax
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = SummaBonus
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = SummaPenalty
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = SummaPay
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -131,27 +128,22 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountPromo
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountPromoPlanMax
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = SummaBonus
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = SummaPenalty
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = SummaPay
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -313,89 +305,12 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object AmountPromo: TcxGridDBColumn
-            Caption = #1055#1083#1072#1085' '#1087#1086' '#1084#1072#1088#1082#1077#1090'., '#1096#1090'.'
-            DataBinding.FieldName = 'AmountPromo'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1083#1072#1085' '#1087#1086' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1091', '#1096#1090'.'
-            Width = 72
-          end
-          object AmountPromoPlanMax: TcxGridDBColumn
-            Caption = #1055#1083#1072#1085' '#1087#1086' '#1084#1072#1088#1082#1077#1090'. '#1076#1083#1103' '#1087#1088#1077#1084#1080#1080', '#1096#1090'. '
-            DataBinding.FieldName = 'AmountPromoPlanMax'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1083#1072#1085' '#1087#1086' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1091' '#1076#1083#1103' '#1087#1088#1077#1084#1080#1080', '#1096#1090'. '
-            Width = 78
-          end
           object PartionDescName: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103' '#1042#1080#1076
             DataBinding.FieldName = 'PartionDescName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
-          end
-          object isPromoUnit: TcxGridDBColumn
-            Caption = #1055#1083#1072#1085' '#1087#1086' '#1084#1072#1088#1082#1077#1090'. '#1074#1099#1087#1086#1083#1085#1077#1085
-            DataBinding.FieldName = 'isPromoUnit'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1083#1072#1085' '#1087#1086' '#1084#1072#1088#1082#1077#1090'. '#1074#1099#1087#1086#1083#1085#1077#1085' '#1044#1072'/'#1085#1077#1090
-            Options.Editing = False
-            Width = 70
-          end
-          object isPromoPlanMax: TcxGridDBColumn
-            Caption = #1055#1083#1072#1085' '#1087#1086' '#1084#1072#1088#1082#1077#1090'.  '#1076#1083#1103' '#1087#1088#1077#1084#1080#1080' '#1074#1099#1087#1086#1083#1085#1077#1085
-            DataBinding.FieldName = 'isPromoPlanMax'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1083#1072#1085' '#1087#1086' '#1084#1072#1088#1082#1077#1090'. '#1074#1099#1087#1086#1083#1085#1077#1085' '#1044#1072'/'#1085#1077#1090
-            Options.Editing = False
-            Width = 80
-          end
-          object PersentPlan: TcxGridDBColumn
-            Caption = '% '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1087#1083#1072#1085#1072
-            DataBinding.FieldName = 'PersentPlan'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object SummaBonus: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1077#1084#1080#1080
-            DataBinding.FieldName = 'SummaBonus'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object SummaPenalty: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072
-            DataBinding.FieldName = 'SummaPenalty'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object SummaPay: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075' '#1076#1083#1103' '#1090#1086#1095#1082#1080', '#1075#1088#1085
-            DataBinding.FieldName = 'SummaPay'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1048#1090#1086#1075' '#1076#1083#1103' '#1090#1086#1095#1082#1080' - '#1055#1088#1077#1084#1080#1103' - '#1064#1090#1088#1072#1092
-            Width = 70
           end
           object PartionInvNumber: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103' '#8470
@@ -765,7 +680,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
     Top = 160
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_Movement_Check'
+    StoredProcName = 'gpReport_Movement_Check_Light'
     Params = <
       item
         Name = 'inUnitId'
@@ -867,10 +782,6 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
         item
           Visible = True
           ItemName = 'bbGridToExcel'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end>
     end
     object dxBarButton1: TdxBarButton
@@ -890,8 +801,8 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
     end
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 152
-    Top = 8
+    Left = 224
+    Top = 24
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -899,10 +810,10 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
         Component = PeriodChoice
       end
       item
-        Component = GuidesRetail
+        Component = GuidesUnit
       end
       item
-        Component = GuidesUnit
+        Component = GuidesRetail
       end>
     Left = 432
     Top = 216

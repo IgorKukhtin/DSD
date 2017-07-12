@@ -575,14 +575,16 @@ begin  //+
     freeAndNil(sp);
   end;
 end;
+
 procedure TMainCashForm2.Timer1Timer(Sender: TObject);
 begin
- Timer1.Enabled:=False;
- try
-  SaveRealAll;
- finally
-  Timer1.Enabled:=True;
- end;
+  Timer1.Enabled := False;
+
+  try
+    SaveRealAll;
+  finally
+    Timer1.Enabled := True;
+  end;
 end;
 
 procedure TMainCashForm2.Timer2Timer(Sender: TObject);
