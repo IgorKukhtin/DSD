@@ -53,29 +53,52 @@ BEGIN
 
      -- проверка - CurrencyId должен быть уникальным
      IF EXISTS (SELECT 1
-                FROM ObjectLink AS ObjectLink_Cash_Unit
-                     INNER JOIN Object AS Object_Cash ON Object_Cash.Id       = ObjectLink_Cash_Unit.ObjectId
-                                                     AND Object_Cash.isErased = FALSE
-                     LEFT JOIN ObjectLink AS ObjectLink_Cash_Currency
-                                          ON ObjectLink_Cash_Currency.ObjectId = Object_Cash.Id
-                                         AND ObjectLink_Cash_Currency.DescId   = zc_ObjectLink_Cash_Currency()
-                WHERE ObjectLink_Cash_Unit.ChildObjectId = vbUnitId
-                  AND ObjectLink_Cash_Unit.DescId       = zc_ObjectLink_Cash_Unit()
-                GROUP BY ObjectLink_Cash_Currency.ChildObjectId
+                FROM Object AS Object_Unit
+                     LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
+                                          ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
+                                         AND ObjectLink_Unit_Parent.DescId   = zc_ObjectLink_Unit_Parent()
+                     LEFT JOIN ObjectLink AS ObjectLink_Cash_Unit
+                                          ON ObjectLink_Cash_Unit.ChildObjectId = Object_Unit.Id
+                                         AND ObjectLink_Cash_Unit.DescId        = zc_ObjectLink_Cash_Unit()
+                     LEFT JOIN ObjectLink AS ObjectLink_Cash_Unit_Parent
+                                          ON ObjectLink_Cash_Unit_Parent.ChildObjectId = ObjectLink_Unit_Parent.ChildObjectId
+                                         AND ObjectLink_Cash_Unit_Parent.DescId        = zc_ObjectLink_Cash_Unit()
+                                         AND ObjectLink_Cash_Unit.ChildObjectId        IS NULL
+                     INNER JOIN Object AS Object_Cash
+                                       ON Object_Cash.Id       = COALESCE (ObjectLink_Cash_Unit.ObjectId, ObjectLink_Cash_Unit_Parent.ObjectId)
+                                      AND Object_Cash.DescId   = zc_Object_Cash()
+                                      AND Object_Cash.isErased = FALSE
+                     INNER JOIN ObjectLink AS ObjectLink_Cash_Currency
+                                           ON ObjectLink_Cash_Currency.ObjectId      = Object_Cash.Id
+                                          AND ObjectLink_Cash_Currency.DescId        = zc_ObjectLink_Cash_Currency()
+                                          AND ObjectLink_Cash_Currency.ChildObjectId = zc_Currency_GRN()
+                WHERE Object_Unit.Id = vbUnitId
                 HAVING COUNT(*) > 1
                )
      THEN
         RAISE EXCEPTION 'Ошибка.Для магазина <%> установлено несколько касс в валюте <%>.', lfGet_Object_ValueData (vbUnitId)
                        , lfGet_Object_ValueData ((SELECT tmp.CurrencyId
                                                   FROM (SELECT ObjectLink_Cash_Currency.ChildObjectId
-                                                        FROM ObjectLink AS ObjectLink_Cash_Unit
-                                                             INNER JOIN Object AS Object_Cash ON Object_Cash.Id       = ObjectLink_Cash_Unit.ObjectId
-                                                                                             AND Object_Cash.isErased = FALSE
-                                                             LEFT JOIN ObjectLink AS ObjectLink_Cash_Currency
-                                                                                  ON ObjectLink_Cash_Currency.ObjectId = Object_Cash.Id
-                                                                                 AND ObjectLink_Cash_Currency.DescId   = zc_ObjectLink_Cash_Currency()
-                                                        WHERE ObjectLink_Cash_Unit.ChildObjectId = vbUnitId
-                                                          AND ObjectLink_Cash_Unit.DescId       = zc_ObjectLink_Cash_Unit()
+                                                        FROM Object AS Object_Unit
+                                                             LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
+                                                                                  ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
+                                                                                 AND ObjectLink_Unit_Parent.DescId   = zc_ObjectLink_Unit_Parent()
+                                                             LEFT JOIN ObjectLink AS ObjectLink_Cash_Unit
+                                                                                  ON ObjectLink_Cash_Unit.ChildObjectId = Object_Unit.Id
+                                                                                 AND ObjectLink_Cash_Unit.DescId        = zc_ObjectLink_Cash_Unit()
+                                                             LEFT JOIN ObjectLink AS ObjectLink_Cash_Unit_Parent
+                                                                                  ON ObjectLink_Cash_Unit_Parent.ChildObjectId = ObjectLink_Unit_Parent.ChildObjectId
+                                                                                 AND ObjectLink_Cash_Unit_Parent.DescId        = zc_ObjectLink_Cash_Unit()
+                                                                                 AND ObjectLink_Cash_Unit.ChildObjectId        IS NULL
+                                                             INNER JOIN Object AS Object_Cash
+                                                                               ON Object_Cash.Id       = COALESCE (ObjectLink_Cash_Unit.ObjectId, ObjectLink_Cash_Unit_Parent.ObjectId)
+                                                                              AND Object_Cash.DescId   = zc_Object_Cash()
+                                                                              AND Object_Cash.isErased = FALSE
+                                                             INNER JOIN ObjectLink AS ObjectLink_Cash_Currency
+                                                                                   ON ObjectLink_Cash_Currency.ObjectId      = Object_Cash.Id
+                                                                                  AND ObjectLink_Cash_Currency.DescId        = zc_ObjectLink_Cash_Currency()
+                                                                                  AND ObjectLink_Cash_Currency.ChildObjectId = zc_Currency_GRN()
+                                                        WHERE Object_Unit.Id = vbUnitId
                                                         GROUP BY ObjectLink_Cash_Currency.ChildObjectId
                                                         HAVING COUNT(*) > 1
                                                        ) AS tmp LIMIT 1))
@@ -100,14 +123,26 @@ BEGIN
                  -- кассы Магазина
                , tmpCash AS (SELECT Object_Cash.Id                          AS CashId
                                   , ObjectLink_Cash_Currency.ChildObjectId  AS CurrencyId
-                             FROM ObjectLink AS ObjectLink_Cash_Unit
-                                  INNER JOIN Object AS Object_Cash ON Object_Cash.Id       = ObjectLink_Cash_Unit.ObjectId
-                                                                  AND Object_Cash.isErased = FALSE
-                                  LEFT JOIN ObjectLink AS ObjectLink_Cash_Currency
-                                                       ON ObjectLink_Cash_Currency.ObjectId = Object_Cash.Id
-                                                      AND ObjectLink_Cash_Currency.DescId   = zc_ObjectLink_Cash_Currency()
-                             WHERE ObjectLink_Cash_Unit.ChildObjectId = vbUnitId
-                               AND ObjectLink_Cash_Unit.DescId        = zc_ObjectLink_Cash_Unit()
+                             FROM Object AS Object_Unit
+                                  LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
+                                                       ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
+                                                      AND ObjectLink_Unit_Parent.DescId   = zc_ObjectLink_Unit_Parent()
+                                  LEFT JOIN ObjectLink AS ObjectLink_Cash_Unit
+                                                       ON ObjectLink_Cash_Unit.ChildObjectId = Object_Unit.Id
+                                                      AND ObjectLink_Cash_Unit.DescId        = zc_ObjectLink_Cash_Unit()
+                                  LEFT JOIN ObjectLink AS ObjectLink_Cash_Unit_Parent
+                                                       ON ObjectLink_Cash_Unit_Parent.ChildObjectId = ObjectLink_Unit_Parent.ChildObjectId
+                                                      AND ObjectLink_Cash_Unit_Parent.DescId        = zc_ObjectLink_Cash_Unit()
+                                                      AND ObjectLink_Cash_Unit.ChildObjectId        IS NULL
+                                  INNER JOIN Object AS Object_Cash
+                                                    ON Object_Cash.Id       = COALESCE (ObjectLink_Cash_Unit.ObjectId, ObjectLink_Cash_Unit_Parent.ObjectId)
+                                                   AND Object_Cash.DescId   = zc_Object_Cash()
+                                                   AND Object_Cash.isErased = FALSE
+                                  INNER JOIN ObjectLink AS ObjectLink_Cash_Currency
+                                                        ON ObjectLink_Cash_Currency.ObjectId      = Object_Cash.Id
+                                                       AND ObjectLink_Cash_Currency.DescId        = zc_ObjectLink_Cash_Currency()
+                                                       AND ObjectLink_Cash_Currency.ChildObjectId = zc_Currency_GRN()
+                             WHERE Object_Unit.Id = vbUnitId
                             )
                  -- нашли кассу
                  SELECT tmpCash.CashId

@@ -12,7 +12,7 @@ inherited MainCashForm2: TMainCashForm2
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
   ExplicitWidth = 800
-  ExplicitHeight = 550
+  ExplicitHeight = 546
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]

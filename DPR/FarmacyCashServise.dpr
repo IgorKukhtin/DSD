@@ -66,7 +66,8 @@ uses
   RecadvXML in '..\SOURCE\EDI\RecadvXML.pas',
   LocalWorkUnit in '..\SOURCE\LocalWorkUnit.pas',
   Splash in '..\FormsFarmacy\Cash\Splash.pas' {frmSplash},
-  LocalStorage in '..\FormsFarmacy\Cash\LocalStorage.pas';
+  LocalStorage in '..\FormsFarmacy\Cash\LocalStorage.pas',
+  IFIN_J1201009 in '..\SOURCE\MeDOC\IFIN_J1201009.pas';
 
 {$R *.res}
 

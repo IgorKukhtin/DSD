@@ -241,18 +241,27 @@ BEGIN
     THEN
        -- находим кассу для Магазина, в которую попадет оплата
        vbCashId := (SELECT Object_Cash.Id
-                    FROM ObjectLink AS ObjectLink_Cash_Unit
+                    FROM Object AS Object_Unit
+                         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
+                                              ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
+                                             AND ObjectLink_Unit_Parent.DescId   = zc_ObjectLink_Unit_Parent()
+                         LEFT JOIN ObjectLink AS ObjectLink_Cash_Unit
+                                              ON ObjectLink_Cash_Unit.ChildObjectId = Object_Unit.Id
+                                             AND ObjectLink_Cash_Unit.DescId        = zc_ObjectLink_Cash_Unit()
+                         LEFT JOIN ObjectLink AS ObjectLink_Cash_Unit_Parent
+                                              ON ObjectLink_Cash_Unit_Parent.ChildObjectId = ObjectLink_Unit_Parent.ChildObjectId
+                                             AND ObjectLink_Cash_Unit_Parent.DescId        = zc_ObjectLink_Cash_Unit()
+                                             AND ObjectLink_Cash_Unit.ChildObjectId        IS NULL
                          INNER JOIN Object AS Object_Cash
-                                           ON Object_Cash.Id     = ObjectLink_Cash_Unit.ObjectId
-                                          AND Object_Cash.DescId = zc_Object_Cash()
+                                           ON Object_Cash.Id       = COALESCE (ObjectLink_Cash_Unit.ObjectId, ObjectLink_Cash_Unit_Parent.ObjectId)
+                                          AND Object_Cash.DescId   = zc_Object_Cash()
                                           AND Object_Cash.isErased = FALSE
                          INNER JOIN ObjectLink AS ObjectLink_Cash_Currency
-                                               ON ObjectLink_Cash_Currency.ObjectId = Object_Cash.Id
-                                              AND ObjectLink_Cash_Currency.DescId   = zc_ObjectLink_Cash_Currency()
+                                               ON ObjectLink_Cash_Currency.ObjectId      = Object_Cash.Id
+                                              AND ObjectLink_Cash_Currency.DescId        = zc_ObjectLink_Cash_Currency()
                                               AND ObjectLink_Cash_Currency.ChildObjectId = zc_Currency_GRN()
-                    WHERE ObjectLink_Cash_Unit.ChildObjectId = vbUnitId
-                      AND ObjectLink_Cash_Unit.DescId        = zc_ObjectLink_Cash_Unit()
-                    );
+                    WHERE Object_Unit.Id = vbUnitId
+                   );
 
 
        -- сохранили

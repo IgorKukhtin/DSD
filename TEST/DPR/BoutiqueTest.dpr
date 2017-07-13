@@ -257,7 +257,8 @@ uses
   Report_SaleReturnInDialog in '..\..\FormsBoutique\Report\Report_SaleReturnInDialog.pas' {Report_SaleReturnInDialogForm: TParentForm},
   Report_PartnerDebt in '..\..\FormsBoutique\Report\Report_PartnerDebt.pas' {Report_PartnerDebtForm: TParentForm},
   Report_PartnerDebtDialog in '..\..\FormsBoutique\Report\Report_PartnerDebtDialog.pas' {Report_PartnerDebtDialogForm: TParentForm},
-  Report_MovementIncomeDialog in '..\..\FormsBoutique\Report\Report_MovementIncomeDialog.pas' {Report_MovementIncomeDialogForm: TParentForm};
+  Report_MovementIncomeDialog in '..\..\FormsBoutique\Report\Report_MovementIncomeDialog.pas' {Report_MovementIncomeDialogForm: TParentForm},
+  IFIN_J1201009 in '..\..\SOURCE\MeDOC\IFIN_J1201009.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

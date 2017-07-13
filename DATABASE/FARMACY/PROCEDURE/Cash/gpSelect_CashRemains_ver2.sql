@@ -198,8 +198,8 @@ BEGIN
                                         , MovementLinkObject_To.ObjectId
                               )
            -- Коды Мориона
-         , tmpGoodsMorion AS (SELECT ObjectLink_Main_Morion.ChildObjectId          AS GoodsMainId
-                                   , MAX (Object_Goods_Morion.ObjectCode)::Integer AS MorionCode
+         , tmpGoodsMorion AS (SELECT ObjectLink_Main_Morion.ChildObjectId  AS GoodsMainId
+                                   , MAX (Object_Goods_Morion.ObjectCode)  AS MorionCode
                               FROM ObjectLink AS ObjectLink_Main_Morion
                                    JOIN ObjectLink AS ObjectLink_Child_Morion
                                                    ON ObjectLink_Child_Morion.ObjectId = ObjectLink_Main_Morion.ObjectId
@@ -214,8 +214,9 @@ BEGIN
                               GROUP BY ObjectLink_Main_Morion.ChildObjectId
                              )
            -- Штрих-коды производителя
-         , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId          AS GoodsMainId
-                                    , MAX (Object_Goods_BarCode.ValueData)::TVarChar AS BarCode
+         , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId AS GoodsMainId
+                                 -- , MAX (Object_Goods_BarCode.ValueData)  AS BarCode
+                                    , Object_Goods_BarCode.ValueData        AS BarCode
                                FROM ObjectLink AS ObjectLink_Main_BarCode
                                     JOIN ObjectLink AS ObjectLink_Child_BarCode
                                                     ON ObjectLink_Child_BarCode.ObjectId = ObjectLink_Main_BarCode.ObjectId
@@ -225,9 +226,10 @@ BEGIN
                                                    AND ObjectLink_Goods_Object_BarCode.DescId = zc_ObjectLink_Goods_Object()
                                                    AND ObjectLink_Goods_Object_BarCode.ChildObjectId = zc_Enum_GlobalConst_BarCode()
                                     LEFT JOIN Object AS Object_Goods_BarCode ON Object_Goods_BarCode.Id = ObjectLink_Goods_Object_BarCode.ObjectId
-                               WHERE ObjectLink_Main_BarCode.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                               WHERE ObjectLink_Main_BarCode.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
                                  AND ObjectLink_Main_BarCode.ChildObjectId > 0
-                               GROUP BY ObjectLink_Main_BarCode.ChildObjectId
+                                 AND TRIM (Object_Goods_BarCode.ValueData) <> ''
+                               -- GROUP BY ObjectLink_Main_BarCode.ChildObjectId
                               )
               -- данные из прайса
               , tmpObject_Price AS (SELECT ObjectLink_Price_Unit.ObjectId                                AS Id
@@ -462,8 +464,8 @@ BEGIN
 
             COALESCE(tmpIncome.AmountIncome,0)            :: TFloat   AS AmountIncome,
             CASE WHEN COALESCE(tmpIncome.AmountIncome,0) <> 0 THEN COALESCE(tmpIncome.SummSale,0) / COALESCE(tmpIncome.AmountIncome,0) ELSE 0 END  :: TFloat AS PriceSaleIncome,
-            COALESCE (tmpGoodsMorion.MorionCode, 0)::Integer AS MorionCode,
-            COALESCE (tmpGoodsBarCode.BarCode, '')::TVarChar AS BarCode
+            COALESCE (tmpGoodsMorion.MorionCode, 0) :: Integer  AS MorionCode,
+            COALESCE (tmpGoodsBarCode.BarCode, '')  :: TVarChar AS BarCode
 
           , tmpMCSAuto.MCSValueOld
           , tmpMCSAuto.StartDateMCSAuto
