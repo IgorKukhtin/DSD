@@ -111,6 +111,7 @@ type
     function GetMovementCountItems(AMovementGUID: string): Integer;
     procedure SetMovementStatus(AMovementGUID: string; AStatusId: Integer);
 
+    procedure UploadStoreRealOld;
     procedure UploadStoreReal;
     procedure UploadOrderExternal;
     procedure UploadReturnIn;
@@ -845,7 +846,9 @@ var
 implementation
 
 uses
-  System.IOUtils, CursorUtils, CommonData, Authentication, Storage, uMain, ZLib;
+  System.IOUtils, CursorUtils, CommonData, Authentication, Storage, ZLib,
+  System.StrUtils,
+  uMain, uExec;
 
 {%CLASSGROUP 'FMX.Controls.TControl'}
 
@@ -1371,6 +1374,107 @@ end;
 
 { Сохранение на сервер введенной информации по остаткам }
 procedure TSyncThread.UploadStoreReal;
+var
+  StoredProc: TdsdStoredProc;
+  SqlText: string;
+  ItemsCount, SendCount: Integer;
+begin
+  StoredProc := TdsdStoredProc.Create(nil);
+  try
+    StoredProc.OutputType := otResult;
+
+    with DM.tblMovement_StoreReal do
+    begin
+      Filter := 'isSync = 0 and StatusId = ' + DM.tblObject_ConstStatusId_Complete.AsString;
+      Filtered := True;
+      Open;
+
+      try
+        First;
+
+        while not Eof do
+        begin
+          SqlText :=
+            'DO $BODY$ ' +
+            '  DECLARE vbSession TVarChar := ''' + gc_User.Session + '''; ' +
+            'BEGIN ' +
+            '  PERFORM gpInsertUpdateMobile_Movement_StoreReal ( ' +
+            '    inGUID:= ''' + FieldByName('GUID').AsString + ''', ' +
+            '    inInvNumber:= ''' + FieldByName('INVNUMBER').AsString + ''', ' +
+            '    inOperDate:= ''' + FormatDateTime('dd.mm.yyyy', FieldByName('OPERDATE').AsDateTime) + ''', ' +
+            '    inPartnerId:= ' + IntToStr(FieldByName('PARTNERID').AsInteger) + ', ' +
+            '    inComment:= ''' + FieldByName('COMMENT').AsString + ''', ' +
+            '    inInsertDate:= ''' + FormatDateTime('dd.mm.yyyy hh:mm:ss', FieldByName('INSERTDATE').AsDateTime) + ''', ' +
+            '    inSession:= vbSession ' +
+            '  ); ';
+
+          // Загружаем товары остатков
+          DM.tblMovementItem_StoreReal.Close;
+          DM.tblMovementItem_StoreReal.Filter := 'Amount <> 0 and MovementId = ' + FieldByName('ID').AsString;
+          DM.tblMovementItem_StoreReal.Filtered := true;
+          DM.tblMovementItem_StoreReal.Open;
+          DM.tblMovementItem_StoreReal.First;
+          ItemsCount := 0;
+
+          while not DM.tblMovementItem_StoreReal.Eof do
+          begin
+            SqlText := SqlText +
+              '  PERFORM gpInsertUpdateMobile_MovementItem_StoreReal ( ' +
+              '    inGUID:= ''' + DM.tblMovementItem_StoreReal.FieldByName('GUID').AsString + ''', ' +
+              '    inMovementGUID:= ''' + FieldByName('GUID').AsString + ''', ' +
+              '    inGoodsId:= ' + IntToStr(DM.tblMovementItem_StoreReal.FieldByName('GOODSID').AsInteger) + ', ' +
+              '    inAmount:= ' + ReplaceStr(FormatFloat('0.0###', DM.tblMovementItem_StoreReal.FieldByName('AMOUNT').AsFloat), ',', '.') + ', ' +
+              '    inGoodsKindId:= ' + IntToStr(DM.tblMovementItem_StoreReal.FieldByName('GOODSKINDID').AsInteger) + ', ' +
+              '    inSession:= vbSession ' +
+              '  ); ';
+
+            Inc(ItemsCount);
+            DM.tblMovementItem_StoreReal.Next;
+          end;
+
+          SqlText := SqlText + 'END; $BODY$';
+
+          try
+            uExec.ExecSQL(SqlText);
+
+            SendCount := GetMovementCountItems(FieldByName('GUID').AsString);
+            if ItemsCount = SendCount then
+            begin
+              SetMovementStatus(FieldByName('GUID').AsString, DM.tblObject_ConstStatusId_Complete.AsInteger);
+              Edit;
+              FieldByName('IsSync').AsBoolean := true;
+              Post;
+            end else
+            begin
+              SetMovementStatus(FieldByName('GUID').AsString, DM.tblObject_ConstStatusId_UnComplete.AsInteger);
+              raise Exception.CreateFmt(
+                'По факт. остатку №%s отправились %d позиций из %d. Требуется повторная синхронизация',
+                [FieldByName('INVNUMBER').AsString, SendCount, ItemsCount]);
+            end;
+          except
+            on E : Exception do
+            begin
+              raise Exception.Create(E.Message);
+              exit;
+            end;
+          end;
+        end;
+      finally
+        DM.tblMovementItem_StoreReal.Close;
+        DM.tblMovementItem_StoreReal.Filter := '';
+        DM.tblMovementItem_StoreReal.Filtered := false;
+
+        Close;
+        Filter := '';
+        Filtered := false;
+      end;
+    end;
+  finally
+    FreeAndNil(StoredProc);
+  end;
+end;
+
+procedure TSyncThread.UploadStoreRealOld;
 var
   UploadStoredProc : TdsdStoredProc;
   ItemsCount, SendCount: Integer;
