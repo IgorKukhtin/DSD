@@ -1,4 +1,4 @@
-unit Report_MovementCheckDialog;
+unit Report_GoodsRemainsLightDialog;
 
 interface
 
@@ -22,10 +22,9 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TReport_MovementCheckDialogForm = class(TParentForm)
+  TReport_GoodsRemainsLightDialogForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
-    deEnd: TcxDateEdit;
     deStart: TcxDateEdit;
     PeriodChoice: TPeriodChoice;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
@@ -34,8 +33,7 @@ type
     edUnit: TcxButtonEdit;
     cxLabel3: TcxLabel;
     cxLabel6: TcxLabel;
-    cxLabel7: TcxLabel;
-    GuidesUnit: TdsdGuides;
+    UnitGuides: TdsdGuides;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
     actGet_UserUnit: TdsdExecStoredProc;
@@ -58,6 +56,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_MovementCheckDialogForm);
+  RegisterClass(TReport_GoodsRemainsLightDialogForm);
 
 end.
