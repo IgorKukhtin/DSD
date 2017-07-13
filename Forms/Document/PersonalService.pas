@@ -124,6 +124,10 @@ type
     bbUpdateCardSecondCash: TdxBarButton;
     macUpdateCardSecondCash: TMultiAction;
     CardSecond: TcxGridDBColumn;
+    macUpdateCardSecond: TMultiAction;
+    actUpdateCardSecond: TdsdExecStoredProc;
+    spUpdate_CardSecond: TdsdStoredProc;
+    bbUpdateCardSecond: TdxBarButton;
   private
     { Private declarations }
   public
