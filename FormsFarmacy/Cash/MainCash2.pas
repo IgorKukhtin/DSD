@@ -1771,8 +1771,10 @@ begin
 end;
 
 procedure TMainCashForm2.ceScanerKeyPress(Sender: TObject; var Key: Char);
+const zc_BarCodePref_Object : String = '20100';
 var isFind : Boolean;
     Key2 : Word;
+    str_add : String;
 begin
    isFind:= false;
    isScaner:= true;
@@ -1783,26 +1785,48 @@ begin
        RemainsCDS.AfterScroll := nil;
        RemainsCDS.DisableConstraints;
        try
-           // Сначала ищем по внутреннему Ш/К
-           StrToInt(Copy(ceScaner.Text,4, 9));
-           //нашли
-           isFind:= RemainsCDS.Locate('GoodsId_main', StrToInt(Copy(ceScaner.Text,4, 9)), []);
-           //еще проверили что равно...
-           isFind:= (isFind) and (RemainsCDS.FieldByName('GoodsId_main').AsInteger = StrToInt(Copy(ceScaner.Text,4, 9)));
-           //
-           if not isFind then
-           begin
-             isFind:= RemainsCDS.Locate('BarCode', Trim(ceScaner.Text), []);
-             //еще проверили что равно...
-             isFind:= (isFind) and (Trim(RemainsCDS.FieldByName('BarCode').AsString) = Trim(ceScaner.Text));
-           end;
-           //
-           if isFind then
-             lbScaner.Caption:='найдено ' + ceScaner.Text
-           else
-             lbScaner.Caption:='не найдено ' + ceScaner.Text;
-           //
-           ceScaner.Text:='';
+           // ЭТО Ш/К - ПРОИЗВОДИТЕЛЯ
+           if zc_BarCodePref_Object <> Copy(ceScaner.Text,1, LengTh(zc_BarCodePref_Object))
+           then begin
+                 //потом покажем
+                 str_add:= '(произв)';
+                 //нашли
+                 isFind:= RemainsCDS.Locate('BarCode', trim(ceScaner.Text), []);
+                 //еще проверили что равно...
+                 isFind:= (isFind) and (RemainsCDS.FieldByName('BarCode').AsString = trim(ceScaner.Text));
+           end
+
+           // ЭТО Ш/К - НАШ ID
+           else begin
+                 //потом покажем
+                 str_add:= '(НАШ)';
+
+                 // Сначала определим наш ID
+                 StrToInt(Copy(ceScaner.Text,4, 9));
+                 //нашли
+                 isFind:= RemainsCDS.Locate('GoodsId_main', StrToInt(Copy(ceScaner.Text,4, 9)), []);
+                 //еще проверили что равно...
+                 isFind:= (isFind) and (RemainsCDS.FieldByName('GoodsId_main').AsInteger = StrToInt(Copy(ceScaner.Text,4, 9)));
+
+                 //если не нашли - попробуем по всей строке - зачем ?
+                 if not isFind then
+                 begin
+                   isFind:= RemainsCDS.Locate('BarCode', Trim(ceScaner.Text), []);
+                   //еще проверили что равно...
+                   isFind:= (isFind) and (Trim(RemainsCDS.FieldByName('BarCode').AsString) = Trim(ceScaner.Text));
+                 end;
+            end;
+
+            //
+            if isFind
+            then
+               lbScaner.Caption:='найдено ' + str_add + ' ' + ceScaner.Text
+            else
+               lbScaner.Caption:='не найдено ' + str_add + ' ' + ceScaner.Text;
+
+            // всегда очистим
+            ceScaner.Text:='';
+
        except
             lbScaner.Caption:='Ошибка в Ш/К';
        end;

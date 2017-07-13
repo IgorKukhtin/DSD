@@ -79,17 +79,27 @@ BEGIN
                    FROM _tmpPay
                         LEFT JOIN (SELECT Object_Cash.Id               AS CashId
                                         , ObjectLink_Cash_Currency.ChildObjectId AS CurrencyId
-                                   FROM Object As Object_Cash
-                                        INNER JOIN ObjectLink AS ObjectLink_Cash_Unit
-                                                ON ObjectLink_Cash_Unit.ObjectId = Object_Cash.Id
-                                               AND ObjectLink_Cash_Unit.DescId = zc_ObjectLink_Cash_Unit()
-                                               AND ObjectLink_Cash_Unit.ChildObjectId = vbUnitId
-                                        LEFT JOIN ObjectLink AS ObjectLink_Cash_Currency
-                                               ON ObjectLink_Cash_Currency.ObjectId = Object_Cash.Id
-                                              AND ObjectLink_Cash_Currency.DescId = zc_ObjectLink_Cash_Currency()
-                                   WHERE Object_Cash.DescId = zc_Object_Cash()
-                                     AND Object_Cash.isErased = FALSE
-                                   ) AS tmp ON tmp.CurrencyId = _tmpPay.CurrencyId
+                                   FROM Object AS Object_Unit
+                                        LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
+                                                             ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
+                                                            AND ObjectLink_Unit_Parent.DescId   = zc_ObjectLink_Unit_Parent()
+                                        LEFT JOIN ObjectLink AS ObjectLink_Cash_Unit
+                                                             ON ObjectLink_Cash_Unit.ChildObjectId = Object_Unit.Id
+                                                            AND ObjectLink_Cash_Unit.DescId        = zc_ObjectLink_Cash_Unit()
+                                        LEFT JOIN ObjectLink AS ObjectLink_Cash_Unit_Parent
+                                                             ON ObjectLink_Cash_Unit_Parent.ChildObjectId = ObjectLink_Unit_Parent.ChildObjectId
+                                                            AND ObjectLink_Cash_Unit_Parent.DescId        = zc_ObjectLink_Cash_Unit()
+                                                            AND ObjectLink_Cash_Unit.ChildObjectId        IS NULL
+                                        INNER JOIN Object AS Object_Cash
+                                                          ON Object_Cash.Id       = COALESCE (ObjectLink_Cash_Unit.ObjectId, ObjectLink_Cash_Unit_Parent.ObjectId)
+                                                         AND Object_Cash.DescId   = zc_Object_Cash()
+                                                         AND Object_Cash.isErased = FALSE
+                                        INNER JOIN ObjectLink AS ObjectLink_Cash_Currency
+                                                              ON ObjectLink_Cash_Currency.ObjectId      = Object_Cash.Id
+                                                             AND ObjectLink_Cash_Currency.DescId        = zc_ObjectLink_Cash_Currency()
+                                                             AND ObjectLink_Cash_Currency.ChildObjectId = zc_Currency_GRN()
+                                   WHERE Object_Unit.Id = vbUnitId
+                                  ) AS tmp ON tmp.CurrencyId = _tmpPay.CurrencyId
                  UNION
                    -- расчетный счет подразделения
                    SELECT ObjectLink_Unit_BankAccount.ChildObjectId AS BankAccountId
@@ -162,4 +172,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpInsertUpdate_MI_GoodsAccount_Child(inMovementId := 35 , inParentId := 112 , inisPayTotal := 'False' , inisPayGRN := 'True' , inisPayUSD := 'False' , inisPayEUR := 'False' , inisPayCard := 'False' , inisDiscount := 'False' , inAmountGRN := 100 , inAmountUSD := 0 , inAmountEUR := 0 , inAmountCARD := 0 , inAmountDiscount := 0 ,  inSession := '2');
+-- SELECT * FROM gpInsertUpdate_MI_GoodsAccount_Child (inMovementId := 35 , inParentId := 112 , inisPayTotal := 'False' , inisPayGRN := 'True' , inisPayUSD := 'False' , inisPayEUR := 'False' , inisPayCard := 'False' , inisDiscount := 'False' , inAmountGRN := 100 , inAmountUSD := 0 , inAmountEUR := 0 , inAmountCARD := 0 , inAmountDiscount := 0 ,  inSession := '2');

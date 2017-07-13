@@ -39,6 +39,7 @@ $BODY$
   DECLARE vbTotalSummNalogRecalc      TFloat;
   DECLARE vbTotalSummMinus            TFloat;
   DECLARE vbTotalSummAdd              TFloat;
+  DECLARE vbTotalSummHoliday          TFloat;
   DECLARE vbTotalSummSocialIn         TFloat;
   DECLARE vbTotalSummSocialAdd        TFloat;
   DECLARE vbTotalSummChild            TFloat;
@@ -102,8 +103,8 @@ BEGIN
                                         ON MovementLinkObject_NDSKind.MovementId = Movement.Id
                                        AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
            LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
-                                 ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId 
-                                AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   
+                                 ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
+                                AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
            LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                    ON MovementFloat_ChangePercent.MovementId = Movement.Id
                                   AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
@@ -157,7 +158,7 @@ BEGIN
      END IF;
 
      -- Перевод Итоговых сумм в валюту (если надо)
-     SELECT 
+     SELECT
             -- Количество по факту (главные элементы)
             OperCount_Master
             -- Количество по факту (подчиненные элементы)
@@ -229,6 +230,7 @@ BEGIN
           , OperSumm_Nalog
           , OperSumm_Minus
           , OperSumm_Add
+          , OperSumm_Holiday
           , OperSumm_CardRecalc
           , OperSumm_CardSecondRecalc
           , OperSumm_CardSecondCash
@@ -248,13 +250,13 @@ BEGIN
             INTO vbOperCount_Master, vbOperCount_Child, vbOperCount_Partner, vbOperCount_Second, vbOperCount_Tare, vbOperCount_Sh, vbOperCount_Kg, vbOperCount_ShFrom, vbOperCount_KgFrom
                , vbOperSumm_MVAT, vbOperSumm_PVAT, vbOperSumm_PVAT_original, vbOperSumm_Partner, vbOperSumm_PartnerFrom, vbOperSumm_Currency
                , vbOperCount_Packer, vbOperSumm_Packer, vbOperSumm_Inventory
-               , vbTotalSummToPay, vbTotalSummService, vbTotalSummCard, vbTotalSummCardSecond, vbTotalSummNalog, vbTotalSummMinus, vbTotalSummAdd
+               , vbTotalSummToPay, vbTotalSummService, vbTotalSummCard, vbTotalSummCardSecond, vbTotalSummNalog, vbTotalSummMinus, vbTotalSummAdd, vbTotalSummHoliday
                , vbTotalSummCardRecalc, vbTotalSummCardSecondRecalc, vbTotalSummCardSecondCash, vbTotalSummNalogRecalc, vbTotalSummSocialIn, vbTotalSummSocialAdd
                , vbTotalSummChild, vbTotalSummChildRecalc, vbTotalSummMinusExt, vbTotalSummMinusExtRecalc
                , vbTotalSummTransport, vbTotalSummTransportAdd, vbTotalSummTransportAddLong, vbTotalSummTransportTaxi, vbTotalSummPhone
-     FROM 
+     FROM
      -- Расчет Итоговых суммы
-    (SELECT 
+    (SELECT
             -- Количество по факту (главные элементы)
             OperCount_Master
             -- Количество по факту (подчиненные элементы)
@@ -402,6 +404,7 @@ BEGIN
           , OperSumm_Nalog
           , OperSumm_Minus
           , OperSumm_Add
+          , OperSumm_Holiday
           , OperSumm_CardRecalc
           , OperSumm_CardSecondRecalc
           , OperSumm_CardSecondCash
@@ -417,7 +420,7 @@ BEGIN
           , OperSumm_TransportAddLong
           , OperSumm_TransportTaxi
           , OperSumm_Phone
-     FROM 
+     FROM
            -- получили 1 запись + !!! перевели в валюту если надо!!!
           (SELECT SUM (tmpMI.OperCount_Master)  AS OperCount_Master
                 , SUM (tmpMI.OperCount_Child)   AS OperCount_Child
@@ -476,6 +479,7 @@ BEGIN
                  , SUM (tmpMI.OperSumm_Nalog)       AS OperSumm_Nalog
                  , SUM (tmpMI.OperSumm_Minus)       AS OperSumm_Minus
                  , SUM (tmpMI.OperSumm_Add)         AS OperSumm_Add
+                 , SUM (tmpMI.OperSumm_Holiday)     AS OperSumm_Holiday
                  , SUM (tmpMI.OperSumm_CardRecalc)  AS OperSumm_CardRecalc
                  , SUM (tmpMI.OperSumm_CardSecondRecalc)  AS OperSumm_CardSecondRecalc
                  , SUM (tmpMI.OperSumm_CardSecondCash)  AS OperSumm_CardSecondCash
@@ -580,6 +584,7 @@ BEGIN
                       , tmpMI.OperSumm_Nalog
                       , tmpMI.OperSumm_Minus
                       , tmpMI.OperSumm_Add
+                      , tmpMI.OperSumm_Holiday
                       , tmpMI.OperSumm_CardRecalc
                       , tmpMI.OperSumm_CardSecondRecalc
                       , tmpMI.OperSumm_CardSecondCash
@@ -647,6 +652,7 @@ BEGIN
                              , SUM (COALESCE (MIFloat_SummNalog.ValueData, 0))         AS OperSumm_Nalog
                              , SUM (COALESCE (MIFloat_SummMinus.ValueData, 0))         AS OperSumm_Minus
                              , SUM (COALESCE (MIFloat_SummAdd.ValueData, 0))           AS OperSumm_Add
+                             , SUM (COALESCE (MIFloat_SummHoliday.ValueData, 0))       AS OperSumm_Holiday
 
                              , SUM (COALESCE (MIFloat_SummCardRecalc.ValueData, 0))         AS OperSumm_CardRecalc
                              , SUM (COALESCE (MIFloat_SummCardSecondRecalc.ValueData, 0))   AS OperSumm_CardSecondRecalc
@@ -677,14 +683,14 @@ BEGIN
                              LEFT JOIN MovementItemFloat AS MIFloat_AmountChangePercent
                                                          ON MIFloat_AmountChangePercent.MovementItemId = MovementItem.Id
                                                         AND MIFloat_AmountChangePercent.DescId = zc_MIFloat_AmountChangePercent()
-                                                        AND Movement.DescId IN (zc_Movement_SendOnPrice()) 
+                                                        AND Movement.DescId IN (zc_Movement_SendOnPrice())
                              LEFT JOIN MovementItemFloat AS MIFloat_AmountPacker
                                                          ON MIFloat_AmountPacker.MovementItemId = MovementItem.Id
                                                         AND MIFloat_AmountPacker.DescId = zc_MIFloat_AmountPacker()
                              LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
                                                          ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                                                         AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
-                                                        AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_OrderInternal()) 
+                                                        AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_OrderInternal())
 
                              LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                          ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
@@ -728,6 +734,10 @@ BEGIN
                              LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
                                                          ON MIFloat_SummAdd.MovementItemId = MovementItem.Id
                                                         AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
+                                                        AND Movement.DescId = zc_Movement_PersonalService()
+                             LEFT JOIN MovementItemFloat AS MIFloat_SummHoliday
+                                                         ON MIFloat_SummHoliday.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_SummHoliday.DescId = zc_MIFloat_SummHoliday()
                                                         AND Movement.DescId = zc_Movement_PersonalService()
                              LEFT JOIN MovementItemFloat AS MIFloat_SummCardRecalc
                                                          ON MIFloat_SummCardRecalc.MovementItemId = MovementItem.Id
@@ -814,7 +824,7 @@ BEGIN
 
      -- !!!меняется значение - переводится в валюту zc_Enum_Currency_Basis!!! - !!!нельзя что б переводился в строчной части!!!
      IF vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND vbParValue <> 0
-     THEN 
+     THEN
          vbOperSumm_Partner:= CAST (vbOperSumm_Currency * vbCurrencyValue / vbParValue AS NUMERIC (16, 2));
          vbOperSumm_PartnerFrom:= vbOperSumm_Partner;
          vbOperSumm_PVAT_original:= vbOperSumm_Partner;
@@ -854,6 +864,8 @@ BEGIN
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummMinus(), inMovementId, vbTotalSummMinus);
          -- Сохранили свойство <Итого Сумма премия>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummAdd(), inMovementId, vbTotalSummAdd);
+         -- Сохранили свойство <Итого Сумма отпускные>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummHoliday(), inMovementId, vbTotalSummHoliday);
          -- Сохранили свойство <Карта БН (ввод) - 1ф.>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummCardRecalc(), inMovementId, vbTotalSummCardRecalc);
          -- Сохранили свойство <Карта БН (ввод) - 2ф.>

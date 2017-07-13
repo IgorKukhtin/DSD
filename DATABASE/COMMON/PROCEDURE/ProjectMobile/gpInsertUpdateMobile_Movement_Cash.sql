@@ -93,8 +93,8 @@ BEGIN
                                          , inServiceDate          := DATE_TRUNC ('MONTH', inOperDate)
                                          , inAmountIn             := inAmount
                                          , inAmountOut            := 0.0
-                                         , inAmountSumm           := inAmount
-                                         , inAmountCurrency       := inAmount
+                                         , inAmountSumm           := 0.0
+                                         , inAmountCurrency       := 0.0
                                          , inComment              := COALESCE (inComment, '') || COALESCE (vbCommentIfSaleAbsent, '')
                                          , inCashId               := inCashId
                                          , inMoneyPlaceId         := inPartnerId
@@ -104,10 +104,10 @@ BEGIN
                                          , inMemberId             := inMemberId
                                          , inUnitId               := 0
                                          , inCurrencyId           := zc_Enum_Currency_Basis()
-                                         , inCurrencyValue        := 1.0
-                                         , inParValue             := 1.0
-                                         , inCurrencyPartnerValue := 1.0
-                                         , inParPartnerValue      := 1.0
+                                         , inCurrencyValue        := 0
+                                         , inParValue             := 0
+                                         , inCurrencyPartnerValue := 0
+                                         , inParPartnerValue      := 0
                                          , inMovementId_Partion   := COALESCE (vbSaleId, 0)
                                          , inUserId               := vbUserId
                                           );
