@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar, DriverCertif
                StorageLineId Integer, StorageLineCode Integer, StorageLineName TVarChar,
                PersonalServiceListId Integer, PersonalServiceListName TVarChar,
                PersonalServiceListOfficialId Integer, PersonalServiceListOfficialName TVarChar,
+               PersonalServiceListCardSecondId Integer, PersonalServiceListCardSecondName TVarChar,
                InfoMoneyId Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar,
                SheetWorkTimeId Integer, SheetWorkTimeName TVarChar,
                DateIn TDateTime, DateOut TDateTime, isDateOut Boolean, isMain Boolean, isOfficial Boolean, isErased Boolean) AS
@@ -73,6 +74,9 @@ BEGIN
          , Object_PersonalServiceListOfficial.Id           AS PersonalServiceListOfficialId 
          , Object_PersonalServiceListOfficial.ValueData    AS PersonalServiceListOfficialName 
 
+         , Object_PersonalServiceListCardSecond.Id         AS PersonalServiceListCardSecondId
+         , Object_PersonalServiceListCardSecond.ValueData  AS PersonalServiceListCardSecondName           
+
          , vbInfoMoneyId       AS InfoMoneyId
          , vbInfoMoneyName     AS InfoMoneyName
          , vbInfoMoneyName_all AS InfoMoneyName_all
@@ -107,6 +111,11 @@ BEGIN
                               AND ObjectLink_Personal_PersonalServiceListOfficial.DescId = zc_ObjectLink_Personal_PersonalServiceListOfficial()
           LEFT JOIN Object AS Object_PersonalServiceListOfficial ON Object_PersonalServiceListOfficial.Id = ObjectLink_Personal_PersonalServiceListOfficial.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceListCardSecond
+                               ON ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId = Object_Personal_View.PersonalId
+                              AND ObjectLink_Personal_PersonalServiceListCardSecond.DescId = zc_ObjectLink_Personal_PersonalServiceListCardSecond()
+          LEFT JOIN Object AS Object_PersonalServiceListCardSecond ON Object_PersonalServiceListCardSecond.Id = ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId
+          
           LEFT JOIN ObjectLink AS ObjectLink_Personal_SheetWorkTime
                                ON ObjectLink_Personal_SheetWorkTime.ObjectId = Object_Personal_View.PersonalId
                               AND ObjectLink_Personal_SheetWorkTime.DescId = zc_ObjectLink_Personal_SheetWorkTime()
@@ -132,35 +141,38 @@ BEGIN
            0   AS Id
          , 0 AS MemberCode
          , CAST ('”ƒ¿À»“‹' as TVarChar)  AS MemberName
-         , CAST ('' as TVarChar) AS DriverCertificate
-         , CAST ('' as TVarChar) AS Card
-         , 0 AS PositionId
-         , 0 AS PositionCode
-         , CAST ('' as TVarChar) AS PositionName
-         , 0 AS PositionLevelId
-         , 0 AS PositionLevelCode
-         , CAST ('' as TVarChar) AS PositionLevelName
-         , 0 AS UnitId
-         , 0 AS UnitCode
-         , CAST ('' as TVarChar) AS UnitName
-         , 0 AS PersonalGroupId
-         , 0 AS PersonalGroupCode
-         , CAST ('' as TVarChar) AS PersonalGroupName
-         , 0 AS PersonalServiceListId 
-         , CAST ('' as TVarChar) AS PersonalServiceListName 
-         , 0 AS PersonalServiceListOfficialId 
-         , CAST ('' as TVarChar) AS PersonalServiceListOfficialName 
-         , 0 AS InfoMoneyId
-         , CAST ('' as TVarChar) AS InfoMoneyName
-         , CAST ('' as TVarChar) AS InfoMoneyName_all
-         , 0 AS SheetWorkTimeId 
+         , CAST ('' as TVarChar)    AS DriverCertificate
+         , CAST ('' as TVarChar)    AS Card
+         , 0                        AS PositionId
+         , 0                        AS PositionCode
+         , CAST ('' as TVarChar)    AS PositionName
+         , 0                        AS PositionLevelId
+         , 0                        AS PositionLevelCode
+         , CAST ('' as TVarChar)    AS PositionLevelName
+         , 0                        AS UnitId
+         , 0                        AS UnitCode
+         , CAST ('' as TVarChar)    AS UnitName
+         , 0                        AS PersonalGroupId
+         , 0                        AS PersonalGroupCode
+         , CAST ('' as TVarChar)    AS PersonalGroupName
+         , 0                        AS PersonalServiceListId 
+         , CAST ('' as TVarChar)    AS PersonalServiceListName 
+         , 0                        AS PersonalServiceListOfficialId 
+         , CAST ('' as TVarChar)    AS PersonalServiceListOfficialName 
+         , 0                        AS PersonalServiceListCardSecondId 
+         , CAST ('' as TVarChar)    AS PersonalServiceListCardSecondName
+         , 0                        AS InfoMoneyId
+         , CAST ('' as TVarChar)    AS InfoMoneyName
+         , CAST ('' as TVarChar)    AS InfoMoneyName_all
+         , 0                        AS SheetWorkTimeId 
          , CAST ('' as TVarChar)    AS SheetWorkTimeName
          , CAST (NULL as TDateTime) AS DateIn
          , CAST (NULL as TDateTime) AS DateOut
-         , FALSE AS isDateOut
-         , FALSE AS isMain
-         , FALSE AS isOfficial
-         , FALSE AS isErased*/
+         , FALSE                    AS isDateOut
+         , FALSE                    AS isMain
+         , FALSE                    AS isOfficial
+         , FALSE                    AS isErased
+*/
     ;
   
 END;
@@ -171,6 +183,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 13.07.17         * add PersonalServiceListCardSecond
  25.05.17         * add StorageLine
  28.11.16         *
 */
