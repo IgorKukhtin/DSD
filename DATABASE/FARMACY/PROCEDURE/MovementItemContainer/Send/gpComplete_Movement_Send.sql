@@ -46,7 +46,7 @@ BEGIN
 
     -- дата накладной перемещения должна совпадать с текущей датой.
     -- Если пытаются провести док-т числом позже - выдаем предупреждение
-    IF (vbOperDate > CURRENT_DATE) 
+    IF (vbOperDate > CURRENT_DATE)  AND vbOperDate <> CURRENT_DATE + INTERVAL '1 MONTH'
     THEN
         RAISE EXCEPTION 'Ошибка. ПОМЕНЯЙТЕ ДАТУ НАКЛАДНОЙ НА ТЕКУЩУЮ.';
     END IF;
@@ -114,7 +114,7 @@ BEGIN
     LIMIT 1
    ;
 
-    IF (COALESCE(vbGoodsName,'') <> '') 
+    IF (COALESCE(vbGoodsName,'') <> '') AND vbOperDate <> CURRENT_DATE + INTERVAL '1 MONTH'
     THEN
         RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам Кол-во получателя <%> отличается от Факт кол-ва <%>.', vbGoodsName, vbAmount, vbAmountManual;
     END IF;

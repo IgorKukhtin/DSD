@@ -1403,6 +1403,7 @@ begin
              lbScaner.Caption:='не найдено ' + ceScaner.Text;
            //
            ceScaner.Text:='';
+
        except
             lbScaner.Caption:='Ошибка в Ш/К';
        end;
