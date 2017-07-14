@@ -71,6 +71,9 @@ type
     cxLabel11: TcxLabel;
     ceStorageLine: TcxButtonEdit;
     StorageLineGuides: TdsdGuides;
+    cxLabel12: TcxLabel;
+    cePersonalServiceListCardSecond: TcxButtonEdit;
+    GuidesPersonalServiceListCardSecond: TdsdGuides;
   private
     { Private declarations }
   public

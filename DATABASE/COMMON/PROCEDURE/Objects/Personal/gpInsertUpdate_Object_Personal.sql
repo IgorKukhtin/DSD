@@ -2,23 +2,25 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Personal(
- INOUT ioId                            Integer   , -- ключ объекта <Сотрудники>
-    IN inMemberId                      Integer   , -- ссылка на Физ.лица 
-    IN inPositionId                    Integer   , -- ссылка на Должность
-    IN inPositionLevelId               Integer   , -- ссылка на Разряд должности
-    IN inUnitId                        Integer   , -- ссылка на Подразделение
-    IN inPersonalGroupId               Integer   , -- Группировки Сотрудников
-    IN inPersonalServiceListId         Integer   , -- Ведомость начисления(главная)
-    IN inPersonalServiceListOfficialId Integer   , -- Ведомость начисления(БН)
-    IN inSheetWorkTimeId               Integer   , -- Режим работы (Шаблон табеля р.вр.)
-    IN inStorageLineId                 Integer   , -- ссылка на линию производства
-    IN inDateIn                        TDateTime , -- Дата принятия
-    IN inDateOut                       TDateTime , -- Дата увольнения
-    IN inIsDateOut                     Boolean   , -- Уволен
-    IN inIsMain                        Boolean   , -- Основное место работы
-    IN inSession                       TVarChar    -- сессия пользователя
+ INOUT ioId                                Integer   , -- ключ объекта <Сотрудники>
+    IN inMemberId                          Integer   , -- ссылка на Физ.лица 
+    IN inPositionId                        Integer   , -- ссылка на Должность
+    IN inPositionLevelId                   Integer   , -- ссылка на Разряд должности
+    IN inUnitId                            Integer   , -- ссылка на Подразделение
+    IN inPersonalGroupId                   Integer   , -- Группировки Сотрудников
+    IN inPersonalServiceListId             Integer   , -- Ведомость начисления(главная)
+    IN inPersonalServiceListOfficialId     Integer   , -- Ведомость начисления(БН)
+    IN inPersonalServiceListCardSecondId   Integer   , -- Ведомость начисления(Карта Ф2)
+    IN inSheetWorkTimeId                   Integer   , -- Режим работы (Шаблон табеля р.вр.)
+    IN inStorageLineId                     Integer   , -- ссылка на линию производства
+    IN inDateIn                            TDateTime , -- Дата принятия
+    IN inDateOut                           TDateTime , -- Дата увольнения
+    IN inIsDateOut                         Boolean   , -- Уволен
+    IN inIsMain                            Boolean   , -- Основное место работы
+    IN inSession                           TVarChar    -- сессия пользователя
 )
 RETURNS Integer
 AS
@@ -86,6 +88,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PersonalServiceList(), ioId, inPersonalServiceListId); 
    -- сохранили связь с <Ведомость начисления(БН)>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PersonalServiceListOfficial(), ioId, inPersonalServiceListOfficialId); 
+   -- сохранили связь с <Ведомость начисления(карта ф2)>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PersonalServiceListCardSecond(), ioId, inPersonalServiceListCardSecondId);    
    -- сохранили связь с <Режим работы (Шаблон табеля р.вр.)>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Personal_SheetWorkTime(), ioId, inSheetWorkTimeId);
    -- сохранили связь с <линия производства>
@@ -116,6 +120,7 @@ $BODY$
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.07.17         * add PersonalServiceListCardSecond
  25.05.16         * add StorageLine
  16.11.16         * add inSheetWorkTimeId
  26.08.15         * add PersonalServiceListOfficial

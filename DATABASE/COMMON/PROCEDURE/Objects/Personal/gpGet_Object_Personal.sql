@@ -14,6 +14,7 @@ RETURNS TABLE (MemberId Integer, MemberCode Integer, MemberName TVarChar,
                PersonalGroupId Integer, PersonalGroupName TVarChar,
                PersonalServiceListId Integer, PersonalServiceListName TVarChar,
                PersonalServiceListOfficialId Integer, PersonalServiceListOfficialName TVarChar,
+               PersonalServiceListCardSecondId Integer, PersonalServiceListCardSecondName TVarChar,
                SheetWorkTimeId Integer, SheetWorkTimeName TVarChar,
                StorageLineId Integer, StorageLineName TVarChar,
                DateIn TDateTime, DateOut TDateTime, isDateOut Boolean, isMain Boolean) AS
@@ -45,8 +46,11 @@ BEGIN
          , Object_PersonalServiceList.Id           AS PersonalServiceListId 
          , Object_PersonalServiceList.ValueData    AS PersonalServiceListName 
 
-         , COALESCE (Object_PersonalServiceListOfficial.Id, CAST (0 as Integer))           AS PersonalServiceListOfficialId 
-         , COALESCE (Object_PersonalServiceListOfficial.ValueData, CAST ('' as TVarChar))  AS PersonalServiceListOfficialName 
+         , COALESCE (Object_PersonalServiceListOfficial.Id, CAST (0 as Integer))            AS PersonalServiceListOfficialId 
+         , COALESCE (Object_PersonalServiceListOfficial.ValueData, CAST ('' as TVarChar))   AS PersonalServiceListOfficialName 
+         
+         , COALESCE (Object_PersonalServiceListCardSecond.Id, CAST (0 as Integer))          AS PersonalServiceListCardSecondId
+         , COALESCE (Object_PersonalServiceListCardSecond.ValueData, CAST ('' as TVarChar)) AS PersonalServiceListCardSecondName         
 
          , Object_SheetWorkTime.Id           AS SheetWorkTimeId 
          , Object_SheetWorkTime.ValueData    AS SheetWorkTimeName
@@ -72,6 +76,11 @@ BEGIN
                               AND ObjectLink_Personal_PersonalServiceListOfficial.DescId = zc_ObjectLink_Personal_PersonalServiceListOfficial()
           LEFT JOIN Object AS Object_PersonalServiceListOfficial ON Object_PersonalServiceListOfficial.Id = ObjectLink_Personal_PersonalServiceListOfficial.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceListCardSecond
+                               ON ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId = Object_Personal_View.PersonalId
+                              AND ObjectLink_Personal_PersonalServiceListCardSecond.DescId = zc_ObjectLink_Personal_PersonalServiceListCardSecond()
+          LEFT JOIN Object AS Object_PersonalServiceListCardSecond ON Object_PersonalServiceListCardSecond.Id = ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId
+          
           LEFT JOIN ObjectLink AS ObjectLink_Personal_SheetWorkTime
                                ON ObjectLink_Personal_SheetWorkTime.ObjectId = Object_Personal_View.PersonalId
                               AND ObjectLink_Personal_SheetWorkTime.DescId = zc_ObjectLink_Personal_SheetWorkTime()
@@ -106,6 +115,9 @@ BEGIN
            , CAST (0 as Integer)   AS PersonalServiceListOfficialId 
            , CAST ('' as TVarChar) AS PersonalServiceListOfficialName
 
+           , CAST (0 as Integer)   AS PersonalServiceListCardSecondId 
+           , CAST ('' as TVarChar) AS PersonalServiceListCardSecondName
+           
            , CAST (0 as Integer)   AS SheetWorkTimeId 
            , CAST ('' as TVarChar) AS SheetWorkTimeName
 
@@ -141,9 +153,12 @@ BEGIN
          , Object_PersonalServiceList.Id           AS PersonalServiceListId 
          , Object_PersonalServiceList.ValueData    AS PersonalServiceListName 
 
-         , COALESCE (Object_PersonalServiceListOfficial.Id, CAST (0 as Integer))           AS PersonalServiceListOfficialId 
-         , COALESCE (Object_PersonalServiceListOfficial.ValueData, CAST ('' as TVarChar))  AS PersonalServiceListOfficialName 
+         , COALESCE (Object_PersonalServiceListOfficial.Id, CAST (0 as Integer))            AS PersonalServiceListOfficialId 
+         , COALESCE (Object_PersonalServiceListOfficial.ValueData, CAST ('' as TVarChar))   AS PersonalServiceListOfficialName 
 
+         , COALESCE (Object_PersonalServiceListCardSecond.Id, CAST (0 as Integer))          AS PersonalServiceListCardSecondId
+         , COALESCE (Object_PersonalServiceListCardSecond.ValueData, CAST ('' as TVarChar)) AS PersonalServiceListCardSecondName
+         
          , Object_SheetWorkTime.Id           AS SheetWorkTimeId 
          , Object_SheetWorkTime.ValueData    AS SheetWorkTimeName
 
@@ -168,6 +183,11 @@ BEGIN
                               AND ObjectLink_Personal_PersonalServiceListOfficial.DescId = zc_ObjectLink_Personal_PersonalServiceListOfficial()
           LEFT JOIN Object AS Object_PersonalServiceListOfficial ON Object_PersonalServiceListOfficial.Id = ObjectLink_Personal_PersonalServiceListOfficial.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceListCardSecond
+                               ON ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId = Object_Personal_View.PersonalId
+                              AND ObjectLink_Personal_PersonalServiceListCardSecond.DescId = zc_ObjectLink_Personal_PersonalServiceListCardSecond()
+          LEFT JOIN Object AS Object_PersonalServiceListCardSecond ON Object_PersonalServiceListCardSecond.Id = ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId
+          
           LEFT JOIN ObjectLink AS ObjectLink_Personal_SheetWorkTime
                                ON ObjectLink_Personal_SheetWorkTime.ObjectId = Object_Personal_View.PersonalId
                               AND ObjectLink_Personal_SheetWorkTime.DescId = zc_ObjectLink_Personal_SheetWorkTime()
@@ -186,6 +206,7 @@ ALTER FUNCTION gpGet_Object_Personal (Integer, Integer, TVarChar) OWNER TO postg
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 13.07.17         * add PersonalServiceListCardSecond
  25.05.17         * add StorageLine
  16.11.16         * add SheetWorkTime
  07.05.15         * add ObjectLink_Personal_PersonalServiceList

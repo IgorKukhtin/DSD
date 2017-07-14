@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar, DriverCertif
              , StorageLineId Integer, StorageLineCode Integer, StorageLineName TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , PersonalServiceListOfficialId Integer, PersonalServiceListOfficialName TVarChar
+             , ServiceListCardSecondId Integer, ServiceListCardSecondName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , SheetWorkTimeId Integer, SheetWorkTimeName TVarChar
              , DateIn TDateTime, DateOut TDateTime, isDateOut Boolean, isMain Boolean, isOfficial Boolean
@@ -93,6 +94,9 @@ BEGIN
 
          , Object_PersonalServiceListOfficial.Id           AS PersonalServiceListOfficialId
          , Object_PersonalServiceListOfficial.ValueData    AS PersonalServiceListOfficialName
+         
+         , COALESCE (Object_PersonalServiceListCardSecond.Id, CAST (0 as Integer))          AS PersonalServiceListCardSecondId
+         , COALESCE (Object_PersonalServiceListCardSecond.ValueData, CAST ('' as TVarChar)) AS PersonalServiceListCardSecondName
 
          , vbInfoMoneyId       AS InfoMoneyId
          , vbInfoMoneyName     AS InfoMoneyName
@@ -147,6 +151,11 @@ BEGIN
                               AND ObjectLink_Personal_PersonalServiceListOfficial.DescId = zc_ObjectLink_Personal_PersonalServiceListOfficial()
           LEFT JOIN Object AS Object_PersonalServiceListOfficial ON Object_PersonalServiceListOfficial.Id = ObjectLink_Personal_PersonalServiceListOfficial.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceListCardSecond
+                               ON ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId = Object_Personal_View.PersonalId
+                              AND ObjectLink_Personal_PersonalServiceListCardSecond.DescId = zc_ObjectLink_Personal_PersonalServiceListCardSecond()
+          LEFT JOIN Object AS Object_PersonalServiceListCardSecond ON Object_PersonalServiceListCardSecond.Id = ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId
+          
           LEFT JOIN ObjectLink AS ObjectLink_Personal_SheetWorkTime
                                ON ObjectLink_Personal_SheetWorkTime.ObjectId = Object_Personal_View.PersonalId
                               AND ObjectLink_Personal_SheetWorkTime.DescId = zc_ObjectLink_Personal_SheetWorkTime()
@@ -219,6 +228,8 @@ BEGIN
          , CAST ('' as TVarChar) AS PersonalServiceListName
          , 0                     AS PersonalServiceListOfficialId
          , CAST ('' as TVarChar) AS PersonalServiceListOfficialName
+         , 0                     AS PersonalServiceListCardSecondId
+         , CAST ('' as TVarChar) AS PersonalServiceListCardSecondName
          , 0                     AS InfoMoneyId
          , CAST ('' as TVarChar) AS InfoMoneyName
          , CAST ('' as TVarChar) AS InfoMoneyName_all
@@ -241,6 +252,7 @@ ALTER FUNCTION gpSelect_Object_Personal (TDateTime, TDateTime, Boolean, Boolean,
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 13.07.17         * add PersonalServiceListCardSecond
  16.11.16         * add SheetWorkTime
  25.03.16         * add Card
  26.08.15         * add ObjectLink_Personal_PersonalServiceListOfficial

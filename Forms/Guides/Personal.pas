@@ -101,6 +101,7 @@ type
     BankSecondName: TcxGridDBColumn;
     StorageLineName: TcxGridDBColumn;
     actStorageLine: TOpenChoiceForm;
+    PersonalServiceListCardSecondChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public
