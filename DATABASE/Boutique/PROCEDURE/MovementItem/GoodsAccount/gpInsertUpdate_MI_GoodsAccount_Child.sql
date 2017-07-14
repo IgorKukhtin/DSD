@@ -160,6 +160,35 @@ BEGIN
              ; 
 
      END IF;
+     
+
+     -- "сложно" пересчитали "итоговые" суммы по ВСЕМ элементам - здесь оплата за продажу
+     PERFORM lpUpdate_MI_Sale_Total (Object.ObjectCode)
+     FROM MovementItem
+          INNER JOIN MovementItemLinkObject AS MILO_PartionMI
+                                            ON MILO_PartionMI.MovementItemId = MovementItem.Id
+                                           AND MILO_PartionMI.DescId         = zc_MILinkObject_PartionMI()
+          INNER JOIN Object ON Object.Id = MILO_PartionMI.ObjectId
+     WHERE MovementItem.MovementId = inMovementId
+       AND MovementItem.DescId     = zc_MI_Master()
+     ;
+
+     -- "сложно" пересчитали "итоговые" суммы по ВСЕМ элементам - здесь возврат оплаты
+     PERFORM lpUpdate_MI_Sale_Total (Object.ObjectCode)
+     FROM MovementItem
+          INNER JOIN MovementItemLinkObject AS MILO_PartionMI_return
+                                            ON MILO_PartionMI_return.MovementItemId = MovementItem.Id
+                                           AND MILO_PartionMI_return.DescId         = zc_MILinkObject_PartionMI()
+          INNER JOIN Object AS Object_PartionMI_return ON Object_PartionMI_return.Id = MILO_PartionMI_return.ObjectId
+
+          INNER JOIN MovementItemLinkObject AS MILO_PartionMI
+                                            ON MILO_PartionMI.MovementItemId = Object_PartionMI_return.ObjectCode
+                                           AND MILO_PartionMI.DescId         = zc_MILinkObject_PartionMI()
+          INNER JOIN Object ON Object.Id = MILO_PartionMI.ObjectId
+
+     WHERE MovementItem.MovementId = inMovementId
+       AND MovementItem.DescId     = zc_MI_Master()
+     ;
 
 END;
 $BODY$

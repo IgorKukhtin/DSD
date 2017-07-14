@@ -1919,7 +1919,10 @@ begin
     exit;
   End;
   ChangeStatus('Загрузка профиля пользователя');
-  UserSettingsStorageAddOn.LoadUserSettings;
+  //
+  //Временно убрал
+  //UserSettingsStorageAddOn.LoadUserSettings;
+  //
   try
     ChangeStatus('Инициализация оборудования');
     Cash:=TCashFactory.GetCash(iniCashType);
@@ -2510,6 +2513,10 @@ begin
     end;
         PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 9); // только 2 форма
   End;
+  //
+  //Временно убрал
+  //UserSettingsStorageAddOn.SaveUserSettings;
+  //
 end;
 
 procedure TMainCashForm2.ParentFormDestroy(Sender: TObject);

@@ -112,9 +112,9 @@ BEGIN
                                                                    AND MovementItemLinkObject.DescId = zc_MILinkObject_PaidKind()
                                    WHERE MovementItem.MovementId = inMovementId
                                      AND MovementItem.isErased = FALSE)
-                        , tmp3 AS (SELECT zc_Enum_PaidKind_FirstForm()  AS PaidKindId WHERE inMovementDescId = zc_Movement_BankAccount()  AND NOT EXISTS (SELECT 1 FROM tmp1) AND NOT EXISTS (SELECT 1 FROM tmp2)
+                        , tmp3 AS (SELECT zc_Enum_PaidKind_FirstForm()  AS PaidKindId WHERE inMovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Tax(), zc_Movement_TaxCorrective())  AND NOT EXISTS (SELECT 1 FROM tmp1) AND NOT EXISTS (SELECT 1 FROM tmp2)
                                   UNION ALL
-                                   SELECT zc_Enum_PaidKind_SecondForm() AS PaidKindId WHERE inMovementDescId <> zc_Movement_BankAccount() AND NOT EXISTS (SELECT 1 FROM tmp1) AND NOT EXISTS (SELECT 1 FROM tmp2))
+                                   SELECT zc_Enum_PaidKind_SecondForm() AS PaidKindId WHERE inMovementDescId NOT IN (zc_Movement_BankAccount(), zc_Movement_Tax(), zc_Movement_TaxCorrective()) AND NOT EXISTS (SELECT 1 FROM tmp1) AND NOT EXISTS (SELECT 1 FROM tmp2))
                      -- подзапрос
                      SELECT tmp1.PaidKindId FROM tmp1 UNION SELECT tmp2.PaidKindId FROM tmp2 UNION SELECT tmp3.PaidKindId FROM tmp3
                     ) AS tmp ON tmp.PaidKindId = _tmpPeriodClose.PaidKindId
@@ -176,9 +176,9 @@ BEGIN
                                                                    AND MovementItemLinkObject.DescId = zc_MILinkObject_PaidKind()
                                    WHERE MovementItem.MovementId = inMovementId
                                      AND MovementItem.isErased = FALSE)
-                        , tmp3 AS (SELECT zc_Enum_PaidKind_FirstForm()  AS PaidKindId WHERE inMovementDescId = zc_Movement_BankAccount()  AND NOT EXISTS (SELECT 1 FROM tmp1) AND NOT EXISTS (SELECT 1 FROM tmp2)
+                        , tmp3 AS (SELECT zc_Enum_PaidKind_FirstForm()  AS PaidKindId WHERE inMovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Tax(), zc_Movement_TaxCorrective())  AND NOT EXISTS (SELECT 1 FROM tmp1) AND NOT EXISTS (SELECT 1 FROM tmp2)
                                   UNION ALL
-                                   SELECT zc_Enum_PaidKind_SecondForm() AS PaidKindId WHERE inMovementDescId NOT IN (zc_Movement_SendDebt(), zc_Movement_BankAccount()) AND NOT EXISTS (SELECT 1 FROM tmp1) AND NOT EXISTS (SELECT 1 FROM tmp2)
+                                   SELECT zc_Enum_PaidKind_SecondForm() AS PaidKindId WHERE inMovementDescId NOT IN (zc_Movement_SendDebt(), zc_Movement_BankAccount(), zc_Movement_Tax(), zc_Movement_TaxCorrective()) AND NOT EXISTS (SELECT 1 FROM tmp1) AND NOT EXISTS (SELECT 1 FROM tmp2)
                                   UNION ALL
                                    -- индивидуально для zc_Movement_SendDebt, приоритет - НАЛ
                                    SELECT tmp_record.PaidKindId FROM (SELECT tmp2.PaidKindId FROM tmp2 WHERE inMovementDescId = zc_Movement_SendDebt() ORDER BY CASE WHEN tmp2.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN 0 ELSE 1 END LIMIT 1) AS tmp_record
@@ -266,9 +266,9 @@ BEGIN
                                                                    AND MovementItemLinkObject.DescId = zc_MILinkObject_PaidKind()
                                    WHERE MovementItem.MovementId = inMovementId
                                      AND MovementItem.isErased = FALSE)
-                        , tmp3 AS (SELECT zc_Enum_PaidKind_FirstForm()  AS PaidKindId WHERE inMovementDescId = zc_Movement_BankAccount()  AND NOT EXISTS (SELECT 1 FROM tmp1) AND NOT EXISTS (SELECT 1 FROM tmp2)
+                        , tmp3 AS (SELECT zc_Enum_PaidKind_FirstForm()  AS PaidKindId WHERE inMovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Tax(), zc_Movement_TaxCorrective())  AND NOT EXISTS (SELECT 1 FROM tmp1) AND NOT EXISTS (SELECT 1 FROM tmp2)
                                   UNION ALL
-                                   SELECT zc_Enum_PaidKind_SecondForm() AS PaidKindId WHERE inMovementDescId <> zc_Movement_BankAccount() AND NOT EXISTS (SELECT 1 FROM tmp1) AND NOT EXISTS (SELECT 1 FROM tmp2))
+                                   SELECT zc_Enum_PaidKind_SecondForm() AS PaidKindId WHERE inMovementDescId NOT IN (zc_Movement_BankAccount(), zc_Movement_Tax(), zc_Movement_TaxCorrective()) AND NOT EXISTS (SELECT 1 FROM tmp1) AND NOT EXISTS (SELECT 1 FROM tmp2))
                      -- подзапрос
                      SELECT tmp1.PaidKindId FROM tmp1 UNION SELECT tmp2.PaidKindId FROM tmp2 UNION SELECT tmp3.PaidKindId FROM tmp3
                     ) AS tmp ON tmp.PaidKindId = _tmpPeriodClose.PaidKindId

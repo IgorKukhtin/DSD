@@ -1518,7 +1518,10 @@ begin
     exit;
   End;
   ChangeStatus('Загрузка профиля пользователя');
-  UserSettingsStorageAddOn.LoadUserSettings;
+  //
+  //Временно убрал
+  //UserSettingsStorageAddOn.LoadUserSettings;
+  //
   try
     ChangeStatus('Инициализация оборудования');
     Cash:=TCashFactory.GetCash(iniCashType);
@@ -2087,6 +2090,10 @@ begin
     Except
     end;
   End;
+  //
+  //Временно убрал
+  //UserSettingsStorageAddOn.SaveUserSettings;
+  //
 end;
 
 

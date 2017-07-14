@@ -30,6 +30,8 @@ inherited MainCashForm2: TMainCashForm2
       Height = 196
       Align = alClient
       TabOrder = 0
+      ExplicitLeft = -3
+      ExplicitTop = -1
       object CheckGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = CheckDS
@@ -54,7 +56,7 @@ inherited MainCashForm2: TMainCashForm2
         object CheckGridColName: TcxGridDBColumn
           Caption = #1053#1072#1079#1074#1072#1085#1080#1077
           DataBinding.FieldName = 'GoodsName'
-          Width = 271
+          Width = 150
         end
         object CheckGridColAmount: TcxGridDBColumn
           Caption = #1050#1086#1083'-'#1074#1086
@@ -257,7 +259,7 @@ inherited MainCashForm2: TMainCashForm2
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
-          Width = 355
+          Width = 200
         end
         object MainColCode: TcxGridDBColumn
           Caption = #1050#1086#1076
@@ -265,7 +267,16 @@ inherited MainCashForm2: TMainCashForm2
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
-          Width = 73
+          Width = 62
+        end
+        object BarCode: TcxGridDBColumn
+          Caption = #1064'/'#1050' '#1087#1088#1086#1080#1079#1074'.'
+          DataBinding.FieldName = 'BarCode'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1064'/'#1050' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1103
+          Options.Editing = False
+          Width = 70
         end
         object MainColRemains: TcxGridDBColumn
           Caption = #1054#1057#1058'.'
@@ -592,6 +603,28 @@ inherited MainCashForm2: TMainCashForm2
           Width = 30
           IsCaptionAssigned = True
         end
+        object MainAmountIncome: TcxGridDBColumn
+          Caption = #1058#1086#1074'.'#1074' '#1087#1091#1090#1080
+          DataBinding.FieldName = 'AmountIncome'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1058#1086#1074#1072#1088' '#1074' '#1087#1091#1090#1080
+          Options.Editing = False
+          Width = 50
+        end
+        object MainPriceSaleIncome: TcxGridDBColumn
+          Caption = #1062#1077#1085#1072' ('#1074' '#1087#1091#1090#1080')'
+          DataBinding.FieldName = 'PriceSaleIncome'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = ',0.00;-,0.00; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1062#1077#1085#1072' ('#1090#1086#1074#1072#1088' '#1074' '#1087#1091#1090#1080')'
+          Options.Editing = False
+          Width = 55
+        end
         object mainMinExpirationDate: TcxGridDBColumn
           Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085'. '#1086#1089#1090'.'
           DataBinding.FieldName = 'MinExpirationDate'
@@ -599,7 +632,15 @@ inherited MainCashForm2: TMainCashForm2
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1086#1089#1090#1072#1090#1082#1072
           Options.Editing = False
-          Width = 100
+          Width = 70
+        end
+        object MainNDS: TcxGridDBColumn
+          Caption = #1053#1044#1057
+          DataBinding.FieldName = 'NDS'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 30
         end
         object MainConditionsKeepName: TcxGridDBColumn
           Caption = #1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103
@@ -608,7 +649,7 @@ inherited MainCashForm2: TMainCashForm2
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103
           Options.Editing = False
-          Width = 120
+          Width = 70
         end
         object MainColor_ExpirationDate: TcxGridDBColumn
           DataBinding.FieldName = 'Color_ExpirationDate'
@@ -625,37 +666,7 @@ inherited MainCashForm2: TMainCashForm2
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
-          Width = 95
-        end
-        object MainAmountIncome: TcxGridDBColumn
-          Caption = #1058#1086#1074'.'#1074' '#1087#1091#1090#1080
-          DataBinding.FieldName = 'AmountIncome'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1058#1086#1074#1072#1088' '#1074' '#1087#1091#1090#1080
-          Options.Editing = False
-          Width = 50
-        end
-        object MainPriceSaleIncome: TcxGridDBColumn
-          Caption = #1062#1077#1085#1072' ('#1090#1086#1074'.'#1074' '#1087#1091#1090#1080')'
-          DataBinding.FieldName = 'PriceSaleIncome'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DisplayFormat = ',0.00;-,0.00; ;'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1062#1077#1085#1072' ('#1090#1086#1074#1072#1088' '#1074' '#1087#1091#1090#1080')'
-          Options.Editing = False
-          Width = 80
-        end
-        object MainNDS: TcxGridDBColumn
-          Caption = #1053#1044#1057
-          DataBinding.FieldName = 'NDS'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 40
+          Width = 150
         end
         object GoodsId_main: TcxGridDBColumn
           DataBinding.FieldName = 'GoodsId_main'
@@ -670,15 +681,6 @@ inherited MainCashForm2: TMainCashForm2
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
           Width = 73
-        end
-        object BarCode: TcxGridDBColumn
-          Caption = #1064'/'#1050' '#1087#1088#1086#1080#1079#1074'.'
-          DataBinding.FieldName = 'BarCode'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1064'/'#1050' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1103
-          Options.Editing = False
-          Width = 110
         end
         object MainMCSValueOld: TcxGridDBColumn
           Caption = #1053#1058#1047' - '#1072#1074#1090#1086#1084'. '#1074#1077#1088#1085#1077#1090#1089#1103
