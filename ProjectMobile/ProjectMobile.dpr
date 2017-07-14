@@ -10,7 +10,8 @@ uses
   uConstants in 'uConstants.pas',
   uDM in 'uDM.pas' {DM: TDataModule},
   Authentication in 'Common\Authentication.pas',
-  uNetwork in 'uNetwork.pas';
+  uNetwork in 'uNetwork.pas',
+  uExec in 'uExec.pas';
 
 {$R *.res}
 

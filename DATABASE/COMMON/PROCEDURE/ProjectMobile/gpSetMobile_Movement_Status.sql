@@ -1,8 +1,8 @@
--- Function: gpSetStatusMobile_Movement - DEPRECATED !!!
+-- Function: gpSetMobile_Movement_Status
 
-DROP FUNCTION IF EXISTS gpSetStatusMobile_Movement (TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSetMobile_Movement_Status (TVarChar, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSetStatusMobile_Movement (
+CREATE OR REPLACE FUNCTION gpSetMobile_Movement_Status (
     IN inMovementGUID TVarChar , -- глобальный идентификатор документа
     IN inStatusId     Integer  , -- новый статус документа
     IN inSession      TVarChar   -- сессия пользователя
@@ -17,12 +17,6 @@ $BODY$
   DECLARE vbDescName TVarChar;
   DECLARE vbStatusId Integer;
 BEGIN
-
-      -- !!! ВРЕМЕННО !!!
-      RETURN;
-      -- !!! ВРЕМЕННО !!!
-
-      
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...);
       vbUserId:= lpGetUserBySession (inSession);
@@ -31,9 +25,9 @@ BEGIN
       SELECT MovementString_GUID.MovementId 
            , Movement.DescId
            , Movement.StatusId
-             INTO vbId 
-                , vbDescId
-                , vbStatusId
+      INTO vbId 
+         , vbDescId
+         , vbStatusId
       FROM MovementString AS MovementString_GUID
            JOIN Movement ON Movement.Id = MovementString_GUID.MovementId
       WHERE MovementString_GUID.DescId = zc_MovementString_GUID() 
@@ -41,7 +35,7 @@ BEGIN
 
 
       -- если документ нашелся
-      IF vbId <> 0
+      IF COALESCE (vbId, 0) <> 0
       THEN
            IF vbDescId NOT IN (zc_Movement_OrderExternal(), zc_Movement_ReturnIn(), zc_Movement_StoreReal())
            THEN
@@ -65,7 +59,6 @@ BEGIN
                           -- если заявка проведена, то распроводим
                           PERFORM lpUnComplete_Movement_OrderExternal (inMovementId:= vbId, inUserId:= vbUserId);
 
-
                      ELSIF vbDescId = zc_Movement_ReturnIn()
                      THEN
                           -- Распроводим Документ
@@ -74,7 +67,7 @@ BEGIN
                      ELSIF vbDescId = zc_Movement_StoreReal()
                      THEN
                           -- если фактический остаток проведен, то распроводим    
-                          PERFORM gpUnComplete_Movement_StoreReal (inMovementId:= vbId, inSession:= inSession);
+                          PERFORM lpUnComplete_Movement (inMovementId := vbId, inUserId:= vbUserId);
                      END IF;
 
                 END IF;
@@ -88,7 +81,6 @@ BEGIN
                                  PERFORM lpComplete_Movement_OrderExternal (inMovementId:= vbId, inUserId:= vbUserId);
 
                               WHEN zc_Enum_Status_Erased() THEN
-                                 -- PERFORM gpSetErased_Movement_OrderExternal (vbId, inSession);
                                  PERFORM lpSetErased_Movement (inMovementId := vbId, inUserId:= vbUserId);
                           END CASE;
 
@@ -99,7 +91,6 @@ BEGIN
                                  PERFORM gpComplete_Movement_ReturnIn (inMovementId:= vbId, inStartDateSale:= NULL, inIsLastComplete:= FALSE, inSession:= inSession);
 
                               WHEN zc_Enum_Status_Erased() THEN
-                                 -- PERFORM gpSetErased_Movement_ReturnIn (inMovementId:= vbId, inSession:= inSession);
                                  PERFORM lpSetErased_Movement (inMovementId := vbId, inUserId:= vbUserId);
                           END CASE;
 
@@ -107,11 +98,10 @@ BEGIN
                      THEN 
                           CASE inStatusId
                               WHEN zc_Enum_Status_Complete() THEN
-                                 PERFORM gpComplete_Movement_StoreReal (inMovementId:= vbId, inSession:= inSession);
+                                 PERFORM lpComplete_Movement (inMovementId:= vbId, inDescId:= vbDescId, inUserId:= vbUserId);
 
                               WHEN zc_Enum_Status_Erased() THEN
                                  PERFORM lpSetErased_Movement (inMovementId := vbId, inUserId:= vbUserId);
-
                           END CASE;
                      END IF;
 
@@ -126,8 +116,8 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.
- 27.06.17                                                       *
+ 14.07.17                                                       *
 */
 
 -- тест
--- SELECT * FROM gpSetStatusMobile_Movement (inMovementGUID:= '{A539F063-B6B2-4089-8741-B40014ED51D7}', inStatusId:= zc_Enum_Status_Erased(), inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSetMobile_Movement_Status (inMovementGUID:= '{A539F063-B6B2-4089-8741-B40014ED51D7}', inStatusId:= zc_Enum_Status_Erased(), inSession:= zfCalc_UserAdmin())
