@@ -1,8 +1,8 @@
--- Function: gpGet_Movement_GoodsAccount (Integer, TVarChar)
+-- Function: gpGet_Movement_GoodsAccount_ReturnIn (Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpGet_Movement_GoodsAccount (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_GoodsAccount_ReturnIn (Integer, TDateTime, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpGet_Movement_GoodsAccount(
+CREATE OR REPLACE FUNCTION gpGet_Movement_GoodsAccount_ReturnIn(
     IN inMovementId        Integer  , -- ключ Документа
     IN inOperDate          TDateTime, -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
@@ -122,16 +122,16 @@ BEGIN
             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
             
             LEFT JOIN ObjectLink AS ObjectLink_Client_City
-                                 ON ObjectLink_Client_City.ObjectId = Object_From.Id
+                                 ON ObjectLink_Client_City.ObjectId = Object_To.Id
                                 AND ObjectLink_Client_City.DescId = zc_ObjectLink_Client_City()
             LEFT JOIN Object AS Object_City ON Object_City.Id = ObjectLink_Client_City.ChildObjectId
 
             LEFT JOIN ObjectFloat AS ObjectFloat_DiscountTax 
-                                  ON ObjectFloat_DiscountTax.ObjectId = Object_From.Id 
+                                  ON ObjectFloat_DiscountTax.ObjectId = Object_To.Id 
                                  AND ObjectFloat_DiscountTax.DescId = zc_ObjectFloat_Client_DiscountTax()
 
             LEFT JOIN ObjectFloat AS ObjectFloat_TotalSummPay 
-                                  ON ObjectFloat_TotalSummPay.ObjectId = Object_From.Id 
+                                  ON ObjectFloat_TotalSummPay.ObjectId = Object_To.Id 
                                  AND ObjectFloat_TotalSummPay.DescId = zc_ObjectFloat_Client_TotalSummPay()
 
             LEFT JOIN ObjectFloat AS ObjectFloat_LastSumm 
@@ -139,23 +139,23 @@ BEGIN
                                  AND ObjectFloat_LastSumm.DescId = zc_ObjectFloat_Client_LastSumm()
 
             LEFT JOIN ObjectDate AS ObjectDate_LastDate 
-                                 ON ObjectDate_LastDate.ObjectId = Object_From.Id 
+                                 ON ObjectDate_LastDate.ObjectId = Object_To.Id 
                                 AND ObjectDate_LastDate.DescId = zc_ObjectDate_Client_LastDate()
 
             LEFT JOIN ObjectString AS ObjectString_Address 
-                                   ON ObjectString_Address.ObjectId = Object_From.Id 
+                                   ON ObjectString_Address.ObjectId = Object_To.Id 
                                   AND ObjectString_Address.DescId = zc_ObjectString_Client_Address()
 
             LEFT JOIN ObjectDate AS ObjectDate_HappyDate 
-                                 ON ObjectDate_HappyDate.ObjectId = Object_From.Id 
+                                 ON ObjectDate_HappyDate.ObjectId = Object_To.Id 
                                 AND ObjectDate_HappyDate.DescId = zc_ObjectDate_Client_HappyDate()
 
             LEFT JOIN ObjectString AS ObjectString_PhoneMobile 
-                                   ON ObjectString_PhoneMobile.ObjectId = Object_From.Id 
+                                   ON ObjectString_PhoneMobile.ObjectId = Object_To.Id 
                                   AND ObjectString_PhoneMobile.DescId = zc_ObjectString_Client_PhoneMobile()
 
             LEFT JOIN ObjectString AS ObjectString_Phone 
-                                   ON ObjectString_Phone.ObjectId = Object_From.Id 
+                                   ON ObjectString_Phone.ObjectId = Object_To.Id 
                                   AND ObjectString_Phone.DescId = zc_ObjectString_Client_Phone()
           
        WHERE Movement.Id = inMovementId
@@ -173,4 +173,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_GoodsAccount (inMovementId:= 1, inOperDate:= CURRENT_DATE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Movement_GoodsAccount_ReturnIn (inMovementId:= 1, inOperDate:= CURRENT_DATE, inSession:= zfCalc_UserAdmin())

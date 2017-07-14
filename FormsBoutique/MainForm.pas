@@ -158,6 +158,8 @@ type
     actReport_PartnerDebt: TdsdOpenForm;
     N56: TMenuItem;
     N58: TMenuItem;
+    actGoodsAccount_ReturnIn: TdsdOpenForm;
+    N59: TMenuItem;
   private
     { Private declarations }
   public

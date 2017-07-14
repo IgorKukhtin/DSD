@@ -1,4 +1,4 @@
-unit GoodsAccountJournal;
+unit GoodsAccount_ReturnInJournal;
 
 interface
 
@@ -28,7 +28,7 @@ uses
   dsdGuides, cxButtonEdit;
 
 type
-  TGoodsAccountJournalForm = class(TParentForm)
+  TGoodsAccount_ReturnInJournalForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -107,6 +107,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TGoodsAccountJournalForm);
+  RegisterClass(TGoodsAccount_ReturnInJournalForm);
 
 end.

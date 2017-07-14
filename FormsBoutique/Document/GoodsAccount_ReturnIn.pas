@@ -1,4 +1,4 @@
-unit ReturnIn;
+unit GoodsAccount_ReturnIn;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   cxImageComboBox, cxSplitter;
 
 type
-  TReturnInForm = class(TParentForm)
+  TGoodsAccount_ReturnInForm = class(TParentForm)
     FormParams: TdsdFormParams;
     spSelectMI: TdsdStoredProc;
     dxBarManager: TdxBarManager;
@@ -44,10 +44,7 @@ type
     edOperDate: TcxDateEdit;
     cxLabel2: TcxLabel;
     edFrom: TcxButtonEdit;
-    edTo: TcxButtonEdit;
-    cxLabel3: TcxLabel;
     cxLabel4: TcxLabel;
-    GuidesTo: TdsdGuides;
     PopupMenu: TPopupMenu;
     N1: TMenuItem;
     cxPageControl: TcxPageControl;
@@ -55,10 +52,10 @@ type
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     Code: TcxGridDBColumn;
-    GoodsName: TcxGridDBColumn;
-    Amount: TcxGridDBColumn;
-    OperPrice: TcxGridDBColumn;
-    TotalSumm: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    colAmount: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    AmountSumm: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     actUpdateMasterDS: TdsdUpdateDataSet;
     spInsertUpdateMIMaster: TdsdStoredProc;
@@ -146,6 +143,7 @@ type
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
     BarCode: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     cxSplitter1: TcxSplitter;
     spSelectBarCode: TdsdStoredProc;
@@ -158,19 +156,19 @@ type
     actInsertUpdateMIChildTotal: TdsdInsertUpdateAction;
     MacInsertUpdateMIChildTotal: TMultiAction;
     bbInsertUpdateMIChildTotal: TdxBarButton;
-    cxLabel15: TcxLabel;
-    edStartDate: TcxDateEdit;
-    edEndDate: TcxDateEdit;
     PartionMI_Id: TcxGridDBColumn;
-    SaleMI_Id: TcxGridDBColumn;
+    ReturnInMI_Id: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
-    actOpenReportForm: TdsdOpenForm;
-    bbOpenReportForm: TdxBarButton;
+    OperDate_ReturnIn: TcxGridDBColumn;
+    InvNumber_ReturnIn_Full: TcxGridDBColumn;
+    DescName: TcxGridDBColumn;
     cxLabel18: TcxLabel;
     edInsertDate: TcxDateEdit;
     edInsertName: TcxButtonEdit;
     cxLabel19: TcxLabel;
-    Amount_Return: TcxGridDBColumn;
+    cxLabel3: TcxLabel;
+    edTo: TcxButtonEdit;
+    GuidesTo: TdsdGuides;
   private
   public
   end;
@@ -180,6 +178,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReturnInForm);
+  RegisterClass(TGoodsAccount_ReturnInForm);
 
 end.

@@ -166,6 +166,9 @@ type
     edInsertDate: TcxDateEdit;
     edInsertName: TcxButtonEdit;
     cxLabel19: TcxLabel;
+    cxLabel3: TcxLabel;
+    edTo: TcxButtonEdit;
+    GuidesTo: TdsdGuides;
   private
   public
   end;

@@ -1,7 +1,7 @@
-object GoodsAccountJournalForm: TGoodsAccountJournalForm
+object GoodsAccount_ReturnInJournalForm: TGoodsAccount_ReturnInJournalForm
   Left = 0
   Top = 0
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1056#1072#1089#1095#1077#1090#1099' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1087#1086' '#1055#1088#1086#1076#1072#1078#1072#1084'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1056#1072#1089#1095#1077#1090#1099' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1087#1086' '#1042#1086#1079#1074#1088#1072#1090#1072#1084'>'
   ClientHeight = 439
   ClientWidth = 911
   Color = clBtnFace
@@ -220,20 +220,20 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 82
       end
-      object ToName: TcxGridDBColumn
+      object FromName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'FromName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 163
+      end
+      object ToName: TcxGridDBColumn
+        Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
         DataBinding.FieldName = 'ToName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 160
-      end
-      object FromName: TcxGridDBColumn
-        Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
-        DataBinding.FieldName = 'FromName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 163
       end
       object TotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
@@ -622,8 +622,8 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
-      FormName = 'TGoodsAccountForm'
-      FormNameParam.Value = 'TGoodsAccountForm'
+      FormName = 'TGoodsAccount_ReturnInForm'
+      FormNameParam.Value = 'TGoodsAccount_ReturnInForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -685,8 +685,8 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
-      FormName = 'TGoodsAccountForm'
-      FormNameParam.Value = 'TGoodsAccountForm'
+      FormName = 'TGoodsAccount_ReturnInForm'
+      FormNameParam.Value = 'TGoodsAccount_ReturnInForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1014,7 +1014,7 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_GoodsAccount'
+    StoredProcName = 'gpSelect_Movement_GoodsAccount_ReturnIn'
     DataSet = ClientDataSet
     DataSets = <
       item

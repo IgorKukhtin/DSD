@@ -316,6 +316,11 @@ object ReturnInForm: TReturnInForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalPay
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Return
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -392,6 +397,11 @@ object ReturnInForm: TReturnInForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalPay
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Return
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -518,7 +528,18 @@ object ReturnInForm: TReturnInForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 46
+            Width = 55
+          end
+          object Amount_Return: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1076#1086#1082'.'#1074#1086#1079#1074#1088#1072#1090' '#1076#1088'.)'
+            DataBinding.FieldName = 'Amount_Return'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 63
           end
           object OperPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1074#1093'.'

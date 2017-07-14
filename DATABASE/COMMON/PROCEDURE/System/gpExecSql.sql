@@ -1,14 +1,29 @@
-DROP FUNCTION gpExecSql(tvarchar, TVarChar);
+DROP FUNCTION IF EXISTS gpExecSql (TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpExecSql (TBlob, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpExecSql(IN SqlText tvarchar, IN Session TVarChar) 
-RETURNS TABLE(test INTEGER, true1 boolean, false1 boolean--, TVarChar1 TVarChar, Date1 TDateTime, float1 TFloat, text1 TBlob
-) AS $BODY$
-begin
-  RETURN QUERY SELECT 1 AS test, TRUE AS true1, false AS false1;--, 'жаба'::TVarChar AS TVarChar1, 
-  --CURRENT_DATE::TDateTime AS Date1, 12.567::TFloat AS float1, 'трактор'::TBlob AS text1;--SqlText;
-END;
-$BODY$LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION gpExecSql (
+    IN inSqlText TBlob    , -- текст SQL
+    IN inSession TVarChar   -- сессия пользователя
+) 
+RETURNS void
+AS $BODY$
+BEGIN
+      PERFORM lfExecSql (inSqlText:= inSqlText);
+END; $BODY$
+  LANGUAGE plpgsql;
 
+/*-------------------------------------------------------------------------------
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.
+ 13.07.17                                                       *
+*/
 
-
--- SELECT * FROM gpExecSql('SELECT 1 AS test', '')
+/*
+  DO $$
+  BEGIN
+        PERFORM gpExecSql(inSqlText:= 'DO $BODY$ BEGIN '
+    '  PERFORM lfGetParams(inStoredProcName:=' || quote_literal('lfGetParams') || ', inSession:= zfCalc_UserAdmin()); '
+    '  PERFORM lfGetParams(inStoredProcName:=' || quote_literal('gpGetMobile_Object_Const') || ', inSession:= zfCalc_UserAdmin()); '
+    'END; $BODY$', inSession:= zfCalc_UserAdmin());
+  END; $$;
+*/
