@@ -387,6 +387,7 @@
         </DCCReference>
         <DCCReference Include="Common\Authentication.pas"/>
         <DCCReference Include="uNetwork.pas"/>
+        <DCCReference Include="uExec.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
