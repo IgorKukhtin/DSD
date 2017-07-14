@@ -54,7 +54,8 @@ uses
   dsdDataSetDataLink in '..\SOURCE\COMPONENT\dsdDataSetDataLink.pas',
   StatusXML in '..\SOURCE\EDI\StatusXML.pas',
   dsdException in '..\SOURCE\dsdException.pas',
-  RecadvXML in '..\SOURCE\EDI\RecadvXML.pas';
+  RecadvXML in '..\SOURCE\EDI\RecadvXML.pas',
+  IFIN_J1201009 in '..\SOURCE\MeDOC\IFIN_J1201009.pas';
 
 {$R *.res}
 

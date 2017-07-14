@@ -54,7 +54,8 @@ uses
   MeDocXML in '..\SOURCE\MeDOC\MeDocXML.pas',
   dsdInternetAction in '..\SOURCE\COMPONENT\dsdInternetAction.pas',
   sevenzip in '..\GetEmail\sevenzip.pas',
-  ExternalLoad in '..\SOURCE\COMPONENT\ExternalLoad.pas';
+  ExternalLoad in '..\SOURCE\COMPONENT\ExternalLoad.pas',
+  IFIN_J1201009 in '..\SOURCE\MeDOC\IFIN_J1201009.pas';
 
 {$R *.res}
 

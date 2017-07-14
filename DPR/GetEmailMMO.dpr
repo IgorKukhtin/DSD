@@ -54,7 +54,8 @@ uses
   dsdInternetAction in '..\SOURCE\COMPONENT\dsdInternetAction.pas',
   sevenzip in '..\GetEmail\sevenzip.pas',
   ExternalLoad in '..\SOURCE\COMPONENT\ExternalLoad.pas',
-  Main in '..\GetEmail\Main.pas' {MainForm};
+  Main in '..\GetEmail\Main.pas' {MainForm},
+  IFIN_J1201009 in '..\SOURCE\MeDOC\IFIN_J1201009.pas';
 
 {$R *.res}
 

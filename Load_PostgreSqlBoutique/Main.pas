@@ -270,8 +270,8 @@ type
     function  pLoadDocument_ReturnIn_Child:Integer;
 
     function  pLoadDocument_GoodsAccount:Integer;
-    procedure pLoadDocumentItem_GoodsAccount(SaveCount:Integer);
-    function  pLoadDocument_GoodsAccount_Child:Integer;
+    function  pLoadDocumentItem_GoodsAccount(SaveCount:Integer):Integer;
+    procedure pLoadDocument_GoodsAccount_Child(SaveCount1, SaveCount2:Integer);
 
     procedure pLoadDocuments_PriceListItem;
     procedure pLoadDocuments_DiscountPeriodItem;
@@ -2081,25 +2081,35 @@ begin
 
      if not fStop then myRecordCount1:=pLoadDocument_Income;
      if not fStop then pLoadDocumentItem_Income(myRecordCount1);
+
      if not fStop then myRecordCount1:=pLoadDocument_ReturnOut;
      if not fStop then pLoadDocumentItem_ReturnOut(myRecordCount1);
+
      if not fStop then myRecordCount1:=pLoadDocument_Send;
      if not fStop then pLoadDocumentItem_Send(myRecordCount1);
+
      if not fStop then myRecordCount1:=pLoadDocument_Loss;
      if not fStop then pLoadDocumentItem_Loss(myRecordCount1);
+
      if not fStop then myRecordCount1:=pLoadDocument_Inventory;
      if not fStop then pLoadDocumentItem_Inventory(myRecordCount1);
-     if not fStop then pLoadDocuments_PriceListItem;
-     if not fStop then pLoadDocuments_DiscountPeriodItem;
+
      if not fStop then myRecordCount1:=pLoadDocument_Sale;
      if not fStop then pLoadDocumentItem_Sale(myRecordCount1);
+
      if not fStop then myRecordCount1:=pLoadDocument_ReturnIn;
      if not fStop then pLoadDocumentItem_ReturnIn(myRecordCount1);
+
      if not fStop then myRecordCount1:=pLoadDocument_Sale_Child;
      if not fStop then myRecordCount1:=pLoadDocument_ReturnIn_Child;
+
      if not fStop then myRecordCount1:=pLoadDocument_GoodsAccount;
-     if not fStop then pLoadDocumentItem_GoodsAccount(myRecordCount1);
-     if not fStop then myRecordCount1:=pLoadDocument_GoodsAccount_Child;
+     if not fStop then myRecordCount2:=pLoadDocumentItem_GoodsAccount(myRecordCount1);
+     if not fStop then pLoadDocument_GoodsAccount_Child(myRecordCount1,myRecordCount2);
+     //
+     //
+     if not fStop then pLoadDocuments_PriceListItem;
+     if not fStop then pLoadDocuments_DiscountPeriodItem;
      //
      Gauge.Visible:=false;
      DBGrid.Enabled:=true;
@@ -2712,11 +2722,10 @@ begin
       // 1.11. Возврат оплаты покупателю
       //
       // 1.12. Оплаты покупателей
-        try fExecSqFromQuery('update dba.DiscountMovement set GoodsAccountId_Postgres = null where GoodsAccountId_Postgres is not null'); except end;
-        try fExecSqFromQuery('update dba.DiscountMovementItem_byBarCode set GoodsAccountId_Postgres = null where GoodsAccountId_Postgres is not null'); except end;
+        try fExecSqFromQuery('update dba.DiscountKlientAccountMoney set MovementId_pg = null, MovementItemId_pg = null where MovementId_pg is not null or MovementItemId_pg is not null'); except end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadDocumentItem_GoodsAccount(SaveCount: Integer);
+function TMainForm.pLoadDocumentItem_GoodsAccount(SaveCount:Integer):Integer;
 begin
      if (not cbGoodsAccount.Checked)or(not cbGoodsAccount.Enabled) then exit;
      //
@@ -2728,30 +2737,53 @@ begin
         Add(' SELECT  distinct');
         Add('      DiscountMovementItem_byBarCode.Id as ObjectId');
         Add('    , DiscountMovement.GoodsAccountId_Postgres as MovementId');
+
+
+        Add(' SELECT distinct');
+        Add('      0 as ObjectId');
+        Add('    , DiscountKlientAccountMoney.MovementId_pg as MovementId');
+
         Add('    , BillItemsIncome.GoodsId_Postgres as GoodsId');
         Add('    , BillItemsIncome.Id_Postgres as PartionId');
-        Add('    , DiscountMovementItem_byBarCode.Id_Postgres as   PartionMI_Id');
-        Add('    , DiscountMovementItem_byBarCode.Id_Postgres as SaleMI_Id');
-        Add('    , if  DiscountKlientAccountMoney.Summa<>0 then 1 else 0 endif isPay ');
+        Add('    , DiscountMovementItem_byBarCode.Id_Postgres as PartionMI_Id');
+        Add('    , 0 as SaleMI_Id');
         Add('    , DiscountMovementItem_byBarCode.OperCount as Amount');
-        Add('    , DiscountMovementItem_byBarCode.SummDiscountManual as SummChangePercent');
-        Add('    , DiscountMovementItem_byBarCode.BarCode_byClient as BarCode');
-        Add('    , DiscountMovementItem_byBarCode.GoodsAccountId_Postgres');
-        Add(' FROM dba.DiscountMovementItem_byBarCode');
-        Add('    join DiscountMovement     on DiscountMovement.id = DiscountMovementItem_byBarCode.DiscountMovementId');
-        Add('    left outer join BillItemsIncome on BillItemsIncome.id  = DiscountMovementItem_byBarCode.BillItemsIncomeId');
-        Add('    join DiscountKlientAccountMoney  on DiscountKlientAccountMoney.DiscountMovementItemId = DiscountMovementItem_byBarCode.Id ');
-        Add('                                and isCurrent = 1 and discountMovementItemReturnId  is null');
-        Add('     left outer join DBA.Unit as DiscountMovement_From on DiscountMovement_From.Id = DiscountMovement.UnitID');
-        Add('    left outer join DBA.DiscountKlient as DiscountKlient on DiscountKlient.Id = DiscountMovement.DiscountKlientID');
-        Add('    left outer join DBA.Unit as DiscountMovement_To on DiscountKlient.ClientId = DiscountMovement_To.id');
-        Add(' WHERE DiscountMovement.descId = 1  AND DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
-        Add(' ORDER BY ObjectId ');
+        Add('    , 0 as SummChangePercent');
+
+        Add('    , DiscountKlientAccountMoney.InsertDate as OperDateInsert');
+        Add('    , Unit_From.Id_Postgres as FromId ');
+        Add('    , Unit_From.UnitName as UnitNameFrom');
+        Add('    , Unit_To.Id_Postgres as ToId');
+        Add('    , Unit_To.UnitName as UnitNameTo');
+        Add('    , DiscountMovement.UnitID');
+        Add('    , DiscountMovement.DiscountKlientID');
+        Add('    , DiscountKlientAccountMoney.MovementItemId_pg as Id_Postgres');
+
+        Add('  FROM DiscountKlientAccountMoney'
+             + '    left outer join DBA.Users on Users.id = DiscountKlientAccountMoney.InsertUserID'
+             + '    left outer join dba.DiscountMovementItem_byBarCode on DiscountMovementItem_byBarCode.Id = DiscountKlientAccountMoney.DiscountMovementItemId'
+             + '    left outer join DiscountMovement on DiscountMovement.id = DiscountMovementItem_byBarCode.DiscountMovementId'
+             + '                         and DiscountMovement.descId = 1'
+             + '                         and DiscountMovement.isErased = zc_rvNo()'
+             + '    left outer join Kassa on Kassa.Id = DiscountKlientAccountMoney.KassaID'
+             + '    left outer join KassaProperty on KassaProperty.KassaID = Kassa.ID'
+
+             + '    left outer join DBA.Unit as Unit_To on Unit_To.Id = DiscountMovement.UnitID'
+             + '    left outer join DBA.DiscountKlient as DiscountKlient on DiscountKlient.Id = DiscountMovement.DiscountKlientID'
+             + '    left outer join DBA.Unit as Unit_From on Unit_From.id = DiscountKlient.ClientId'
+
+             + ' WHERE DiscountKlientAccountMoney.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
+             + '   and DiscountKlientAccountMoney.isCurrent = zc_rvNo()'
+             + '   and DiscountKlientAccountMoney.discountMovementItemReturnId  is null'
+             + '   and DiscountKlientAccountMoney.isErased = zc_rvNo()'
+            );
+        Add('order by 4, 1');
         Open;
 
+        Result:=RecordCount;
         cbGoodsAccount.Caption:='1.12. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Расчеты покупателей';
         //
-        fStop:=cbOnlyOpen.Checked;
+        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMIMaster.Checked)and(not cbOnlyOpenMIChild.Checked);
         if cbOnlyOpen.Checked then exit;
         //
         Gauge.Progress:=0;
@@ -2770,9 +2802,7 @@ begin
         toStoredProc.Params.AddParam ('inisPay',ftBoolean,ptInput, False);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inSummChangePercent',ftFloat,ptInput, 0);
-
         //
-
         while not EOF do
         begin
              //!!!
@@ -2784,8 +2814,8 @@ begin
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId').AsInteger;
              toStoredProc.Params.ParamByName('inPartionId').Value:=FieldByName('PartionId').AsInteger;
              toStoredProc.Params.ParamByName('inPartionMI_Id').Value:=FieldByName('PartionMI_Id').AsInteger;
-             toStoredProc.Params.ParamByName('inSaleMI_Id').Value:=FieldByName('SaleMI_Id').AsInteger;
-             toStoredProc.Params.ParamByName('inisPay').Value:=Boolean(FieldByName('isPay').AsInteger);
+             //toStoredProc.Params.ParamByName('inSaleMI_Id').Value:=FieldByName('SaleMI_Id').AsInteger;
+             //toStoredProc.Params.ParamByName('inisPay').Value:=Boolean(FieldByName('isPay').AsInteger);
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
              toStoredProc.Params.ParamByName('inSummChangePercent').Value:=FieldByName('SummChangePercent').AsFloat;
 
@@ -3496,49 +3526,51 @@ begin
      myEnabledCB(cbGoodsAccount);
      //
      with fromQuery,Sql do begin
-{        Close;
+        Close;
         Clear;
         Add(' SELECT distinct');
-        Add('      DiscountMovement.Id as ObjectId');
+        Add('      0 as ObjectId');
         Add('    , 0 as InvNumber');
-        Add('    , date(DiscountMovement.OperDate) as OperDate   // Со временем ошибка неверный формат даты');
-        Add('    , DiscountMovement_From.Id_Postgres as FromId ');
-        Add('    , DiscountMovement_From.UnitName as UnitNameFrom');
-        Add('    , DiscountMovement_To.Id_Postgres as ToId');
-        Add('    , DiscountMovement_To.UnitName as UnitNameTo');
-        Add('    , DiscountMovement.GoodsAccountId_Postgres ');
+        Add('    , date(DiscountKlientAccountMoney.OperDate) as OperDate   // Со временем ошибка неверный формат даты');
+        Add('    , DiscountKlientAccountMoney.InsertDate as OperDateInsert');
+        Add('    , Unit_From.Id_Postgres as FromId ');
+        Add('    , Unit_From.UnitName as UnitNameFrom');
+        Add('    , Unit_To.Id_Postgres as ToId');
+        Add('    , Unit_To.UnitName as UnitNameTo');
+        Add('    , Users.UsersName as UsersName');
+        Add('    , Users.UserId_Postgres as UserId_pg');
+        Add('    , DiscountMovement.UnitID');
+        Add('    , DiscountMovement.DiscountKlientID');
+        Add('    , DiscountKlientAccountMoney.MovementId_pg as Id_Postgres');
 
-             + ' FROM dba.DiscountMovementItem_byBarCode'
-             + '    join DiscountMovement     on DiscountMovement.id = DiscountMovementItem_byBarCode.DiscountMovementId'
-             + '    join DiscountKlientAccountMoney  on DiscountKlientAccountMoney.DiscountMovementItemId = DiscountMovementItem_byBarCode.Id'
-             + '                                    and DiscountKlientAccountMoney.isCurrent = zc_rvYes()'
-             + '                                    and DiscountKlientAccountMoney.discountMovementItemReturnId  is null'
-             + '                                    and DiscountKlientAccountMoney.isErased = zc_rvNo()'
-             + '    join Kassa on Kassa.Id = DiscountKlientAccountMoney.KassaID'
-             + '    join KassaProperty  on KassaProperty.KassaID = Kassa.ID'
-             + ' WHERE DiscountMovement.descId = 1  AND DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
-             + '   and DiscountMovement.isErased = zc_rvNo()'
+        Add('  FROM DiscountKlientAccountMoney'
+             + '    left outer join DBA.Users on Users.id = DiscountKlientAccountMoney.InsertUserID'
+             + '    left outer join dba.DiscountMovementItem_byBarCode on DiscountMovementItem_byBarCode.Id = DiscountKlientAccountMoney.DiscountMovementItemId'
+             + '    left outer join DiscountMovement on DiscountMovement.id = DiscountMovementItem_byBarCode.DiscountMovementId'
+             + '                         and DiscountMovement.descId = 1'
+             + '                         and DiscountMovement.isErased = zc_rvNo()'
+             + '    left outer join Kassa on Kassa.Id = DiscountKlientAccountMoney.KassaID'
+             + '    left outer join KassaProperty on KassaProperty.KassaID = Kassa.ID'
 
-        Add(' FROM dba.DiscountMovementItem_byBarCode');
-        Add('    join DiscountMovement     on DiscountMovement.id = DiscountMovementItem_byBarCode.DiscountMovementId');
-        Add('    left outer join BillItemsIncome on BillItemsIncome.id  = DiscountMovementItem_byBarCode.BillItemsIncomeId');
-        Add('    join DiscountKlientAccountMoney  on DiscountKlientAccountMoney.DiscountMovementItemId = DiscountMovementItem_byBarCode.Id ');
-        Add('                                and isCurrent = 1 and discountMovementItemReturnId  is null');
-        Add('     left outer join DBA.Unit as DiscountMovement_From on DiscountMovement_From.Id = DiscountMovement.UnitID');
-        Add('    left outer join DBA.DiscountKlient as DiscountKlient on DiscountKlient.Id = DiscountMovement.DiscountKlientID');
-        Add('    left outer join DBA.Unit as DiscountMovement_To on DiscountKlient.ClientId = DiscountMovement_To.id');
-        Add(' WHERE DiscountMovement.descId = 1  AND DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
-        Add(' ORDER BY ObjectId ');
+             + '    left outer join DBA.Unit as Unit_To on Unit_To.Id = DiscountMovement.UnitID'
+             + '    left outer join DBA.DiscountKlient as DiscountKlient on DiscountKlient.Id = DiscountMovement.DiscountKlientID'
+             + '    left outer join DBA.Unit as Unit_From on Unit_From.id = DiscountKlient.ClientId'
+
+             + ' WHERE DiscountKlientAccountMoney.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
+             + '   and DiscountKlientAccountMoney.isCurrent = zc_rvNo()'
+             + '   and DiscountKlientAccountMoney.discountMovementItemReturnId  is null'
+             + '   and DiscountKlientAccountMoney.isErased = zc_rvNo()'
+            );
+        Add('order by 4, 1');
         Open;
-}
+
         Result:=RecordCount;
         cbGoodsAccount.Caption:='1.12. ('+IntToStr(RecordCount)+') Расчеты покупателей';
         //
         //
         //
         //
-        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMIMaster.Checked)and(not  cbOnlyOpenMIChild.Checked);
-
+        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMIMaster.Checked)and(not cbOnlyOpenMIChild.Checked);
         if cbOnlyOpen.Checked then exit;
         //
         Gauge.Progress:=0;
@@ -3551,25 +3583,38 @@ begin
         toStoredProc.Params.AddParam ('ioInvNumber',ftString,ptInput, '');  // вместо ptInputOutput ставим ptInput
         toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
         toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
         //
-
         while not EOF do
         begin
              //!!!
             if fStop then begin exit; end;
              //
-
-             //
-             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('GoodsAccountId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('ioInvNumber').Value:=FieldByName('InvNumber').AsString;
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
-             toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('ToId').AsInteger;   // inFromId= ToId - не ошибка
+             toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId').AsInteger;
+             toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId').AsInteger;
 
              if not myExecToStoredProc then ;//exit;
              //
-             if FieldByName('GoodsAccountId_Postgres').AsInteger=0 then
-               fExecSqFromQuery('update dba.DiscountMovement set GoodsAccountId_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             if FieldByName('Id_Postgres').AsInteger=0 then
+               fExecSqFromQuery(' update dba.DiscountKlientAccountMoney set MovementId_pg = '+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)
+                               +' from dba.DiscountMovementItem_byBarCode'
+                               +'      join dba.DiscountMovement on DiscountMovement.Id     = DiscountMovementItem_byBarCode.DiscountMovementId'
+                               +'                               and DiscountMovement.UnitID = ' + IntToStr(FieldByName('UnitID').AsInteger)
+                               +'                               and DiscountMovement.DiscountKlientID = ' + IntToStr(FieldByName('DiscountKlientID').AsInteger)
+                               +' where DiscountKlientAccountMoney.InsertDate = '+FormatToDateTimeServer(FieldByName('OperDateInsert').AsDateTime)
+                               +'   and DiscountMovementItem_byBarCode.Id = DiscountKlientAccountMoney.DiscountMovementItemId'
+                               +'   and DiscountKlientAccountMoney.isCurrent = zc_rvNo()'
+                               +'   and DiscountKlientAccountMoney.discountMovementItemReturnId is null'
+                               +'   and DiscountKlientAccountMoney.isErased = zc_rvNo()'
+                               );
+             //
+             fOpenSqToQuery ('select lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), '+ IntToStr(toStoredProc.Params.ParamByName('ioId').Value) +', ' + FormatToDateTimeServer(FieldByName('OperDateInsert').AsDateTime) +') '
+                           + '     , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), '+ IntToStr(toStoredProc.Params.ParamByName('ioId').Value) +', ' + IntToStr(FieldByName('UserId_pg').AsInteger) + ')'
+                             );
              //
 
              Next;
@@ -3584,9 +3629,8 @@ begin
 
 end;
 
-function TMainForm.pLoadDocument_GoodsAccount_Child: Integer;
+procedure TMainForm.pLoadDocument_GoodsAccount_Child(SaveCount1, SaveCount2:Integer);
 begin
-     Result:=0;
      //
      if (not cbGoodsAccount.Checked)or(not cbGoodsAccount.Enabled) then exit;
      //
@@ -3644,14 +3688,10 @@ begin
         Add(' GROUP BY MovementId, ParentId, KassaID');
         Open;
 
-        Result:=RecordCount;
-        cbGoodsAccount.Caption:= cbGoodsAccount.Caption + ' ('+IntToStr(RecordCount)+')Child';
-        //
-        //
+        cbGoodsAccount.Caption:='1.12. ('+IntToStr(SaveCount1)+')('+IntToStr(SaveCount2)+')('+IntToStr(RecordCount)+') Расчеты покупателей';
         //
         //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMIMaster.Checked)and(not cbOnlyOpenMIChild.Checked);
-
         if cbOnlyOpen.Checked then exit;
         //
         Gauge.Progress:=0;
@@ -4096,7 +4136,6 @@ begin
         //
         //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMIMaster.Checked)and(not cbOnlyOpenMIChild.Checked);
-
         if cbOnlyOpen.Checked then exit;
         //
         Gauge.Progress:=0;
@@ -6493,7 +6532,7 @@ begin
         Add('select Users.Id as ObjectId');
         Add('     , 0 as ObjectCode');
         Add('     , Users.UsersName as UserName');
-        Add('     , ''int''Users.UsersPassword as Password');
+        Add('     , ' + chr(39) + 'int'+char(39)+'+Users.UsersPassword as Password');
         Add('     , zc_erasedDel() as zc_erasedDel');
         Add('     , Users.Erased as Erased');
         Add('     , Users.MemberId_Postgres as MemberId');

@@ -78,7 +78,8 @@ uses
   DialogStringValue in '..\Scale\DialogStringValue.pas' {DialogStringValueForm},
   RecadvXML in '..\SOURCE\EDI\RecadvXML.pas',
   GuideWorkProgress in '..\ScaleCeh\GuideWorkProgress.pas' {GuideWorkProgressForm},
-  LocalWorkUnit in '..\SOURCE\LocalWorkUnit.pas';
+  LocalWorkUnit in '..\SOURCE\LocalWorkUnit.pas',
+  IFIN_J1201009 in '..\SOURCE\MeDOC\IFIN_J1201009.pas';
 
 {$R *.res}
 
