@@ -170,6 +170,7 @@ type
     edInsertDate: TcxDateEdit;
     edInsertName: TcxButtonEdit;
     cxLabel19: TcxLabel;
+    Amount_Return: TcxGridDBColumn;
   private
   public
   end;
