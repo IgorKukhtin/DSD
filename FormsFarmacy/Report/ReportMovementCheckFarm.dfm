@@ -3,10 +3,8 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
   ClientHeight = 480
   ClientWidth = 1251
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -583
-  ExplicitTop = -26
   ExplicitWidth = 1267
-  ExplicitHeight = 519
+  ExplicitHeight = 518
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -582,6 +580,11 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetailId'
+        Value = '0'
         MultiSelectSeparator = ','
       end
       item
