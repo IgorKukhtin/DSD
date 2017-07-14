@@ -1,12 +1,14 @@
 -- Function: gpInsertUpdate_Movement_GoodsAccount()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_GoodsAccount (Integer, TVarChar, TDateTime, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_GoodsAccount (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_GoodsAccount(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
  INOUT ioInvNumber            TVarChar  , -- Номер документа
     IN inOperDate             TDateTime , -- Дата документа
     IN inFromId               Integer   , -- От кого (в документе)
+    IN inToId                 Integer   , -- Кому (в документе)
     IN inComment              TVarChar  , -- Примечание
     IN inSession              TVarChar    -- сессия пользователя
 )                              
@@ -29,6 +31,7 @@ BEGIN
                                                  , inInvNumber         := ioInvNumber
                                                  , inOperDate          := inOperDate
                                                  , inFromId            := inFromId
+                                                 , inToId              := inToId
                                                  , inComment           := inComment
                                                  , inUserId            := vbUserId
                                                  );
@@ -40,6 +43,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 14.07.17         *
  18.05.17         *
  */
 

@@ -1,8 +1,8 @@
--- Function: gpSelect_Movement_GoodsAccount()
+-- Function: gpSelect_Movement_GoodsAccount_ReturnIn()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_GoodsAccount (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_GoodsAccount_ReturnIn (TDateTime, TDateTime, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_GoodsAccount(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_GoodsAccount_ReturnIn(
     IN inStartDate         TDateTime , -- Дата нач. периода
     IN inEndDate           TDateTime , -- Дата оконч. периода
     IN inIsErased          Boolean   , -- показывать удаленные Да/Нет
@@ -72,13 +72,13 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             INNER JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-                                            AND Object_From.DescId = zc_Object_Client()
+                                            AND Object_From.DescId = zc_Object_Unit()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
-            
+                                                        
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id
                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
@@ -101,4 +101,4 @@ $BODY$
 */
 
 -- тест
- --SELECT * FROM gpSelect_Movement_GoodsAccount (inStartDate:= '01.01.2015', inEndDate:= '01.02.2015', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+ --SELECT * FROM gpSelect_Movement_GoodsAccount_ReturnIn (inStartDate:= '01.01.2015', inEndDate:= '01.02.2015', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

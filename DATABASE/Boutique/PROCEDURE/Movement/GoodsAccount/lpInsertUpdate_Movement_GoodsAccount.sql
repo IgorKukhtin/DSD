@@ -1,12 +1,14 @@
 -- Function: lpInsertUpdate_Movement_GoodsAccount()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_GoodsAccount (Integer, TVarChar, TDateTime, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_GoodsAccount (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_GoodsAccount(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
     IN inInvNumber            TVarChar  , -- Номер документа
     IN inOperDate             TDateTime , -- Дата документа
     IN inFromId               Integer   , -- От кого (в документе)
+    IN inToId                 Integer   , -- Кому (в документе)
     IN inComment              TVarChar  , -- Примечание
     IN inUserId               Integer     -- пользователь
 )
@@ -39,6 +41,8 @@ BEGIN
 
      -- сохранили связь с <От кого (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
+     -- сохранили связь с <Кому (в документе)>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
     
      IF vbIsInsert = TRUE
      THEN
@@ -61,6 +65,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+ 14.07.17         * add inToId
  09.06.17                                                       *  add inUserId in lpInsertUpdate_Movement
  08.06.17                                                       *  lpInsertUpdate_Movement c параметрами
  18.05.17         *

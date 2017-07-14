@@ -1,9 +1,9 @@
-object GoodsAccountForm: TGoodsAccountForm
+object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
   Left = 0
   Top = 0
   BiDiMode = bdLeftToRight
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1095#1077#1090#1099' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1087#1086' '#1055#1088#1086#1076#1072#1078#1072#1084'>'
-  ClientHeight = 469
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1095#1077#1090#1099' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1087#1086' '#1042#1086#1079#1074#1088#1072#1090#1072#1084'>'
+  ClientHeight = 466
   ClientWidth = 1054
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -56,7 +56,7 @@ object GoodsAccountForm: TGoodsAccountForm
     end
     object edFrom: TcxButtonEdit
       Left = 252
-      Top = 63
+      Top = 23
       Properties.Buttons = <
         item
           Default = True
@@ -202,8 +202,8 @@ object GoodsAccountForm: TGoodsAccountForm
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object edTo: TcxButtonEdit
-      Left = 251
-      Top = 23
+      Left = 252
+      Top = 63
       Properties.Buttons = <
         item
           Default = True
@@ -217,27 +217,24 @@ object GoodsAccountForm: TGoodsAccountForm
     Left = 0
     Top = 156
     Width = 1054
-    Height = 313
+    Height = 310
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 310
-    ClientRectBottom = 313
+    ClientRectBottom = 310
     ClientRectRight = 1054
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 286
       object cxGrid: TcxGrid
         Left = 0
         Top = 83
         Width = 1054
-        Height = 206
+        Height = 203
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 203
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -296,7 +293,7 @@ object GoodsAccountForm: TGoodsAccountForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_Sale
+              Column = Amount_ReturnIn
             end
             item
               Format = ',0.####'
@@ -311,12 +308,11 @@ object GoodsAccountForm: TGoodsAccountForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalPay_Sale
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalPay_Return
+              Column = TotalPay_ReturnIn
             end
             item
               Format = ',0.####'
@@ -385,7 +381,7 @@ object GoodsAccountForm: TGoodsAccountForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_Sale
+              Column = Amount_ReturnIn
             end
             item
               Format = ',0.####'
@@ -400,12 +396,11 @@ object GoodsAccountForm: TGoodsAccountForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalPay_Sale
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalPay_Return
+              Column = TotalPay_ReturnIn
             end
             item
               Format = ',0.####'
@@ -537,9 +532,9 @@ object GoodsAccountForm: TGoodsAccountForm
             Options.Editing = False
             Width = 91
           end
-          object Amount_Sale: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1086#1076'.)'
-            DataBinding.FieldName = 'Amount_Sale'
+          object Amount_ReturnIn: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1074#1086#1079#1074#1088'.)'
+            DataBinding.FieldName = 'Amount_ReturnIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -630,21 +625,9 @@ object GoodsAccountForm: TGoodsAccountForm
             Options.Editing = False
             Width = 91
           end
-          object TotalPay_Sale: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1087#1088#1086#1076#1072#1078#1072')'
-            DataBinding.FieldName = 'TotalPay_Sale'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Properties.ReadOnly = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 91
-          end
-          object TotalPay_Return: TcxGridDBColumn
+          object TotalPay_ReturnIn: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' ('#1074#1086#1079#1074#1088#1072#1090')'
-            DataBinding.FieldName = 'TotalPay_Return'
+            DataBinding.FieldName = 'TotalPay_ReturnIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -780,10 +763,11 @@ object GoodsAccountForm: TGoodsAccountForm
             Options.Editing = False
             Width = 70
           end
-          object SaleMI_Id: TcxGridDBColumn
-            DataBinding.FieldName = 'SaleMI_Id'
+          object ReturnInMI_Id: TcxGridDBColumn
+            DataBinding.FieldName = 'ReturnInMI_Id'
             Visible = False
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 60
           end
           object DescName: TcxGridDBColumn
@@ -794,17 +778,17 @@ object GoodsAccountForm: TGoodsAccountForm
             Options.Editing = False
             Width = 70
           end
-          object OperDate_Sale: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' ('#1087#1088#1086#1076#1072#1078#1072') '
-            DataBinding.FieldName = 'OperDate_Sale'
+          object OperDate_ReturnIn: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1074#1086#1079#1074#1088#1072#1090') '
+            DataBinding.FieldName = 'OperDate_ReturnIn'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
-          object InvNumber_Sale_Full: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. ('#1087#1088#1086#1076#1072#1078#1072')'
-            DataBinding.FieldName = 'InvNumber_Sale_Full'
+          object InvNumber_ReturnIn_Full: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. ('#1074#1086#1079#1074#1088#1072#1090')'
+            DataBinding.FieldName = 'InvNumber_ReturnIn_Full'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -823,6 +807,7 @@ object GoodsAccountForm: TGoodsAccountForm
         Align = alTop
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitTop = 2
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource
@@ -1079,7 +1064,7 @@ object GoodsAccountForm: TGoodsAccountForm
     Top = 351
   end
   object spSelectMI: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_GoodsAccount'
+    StoredProcName = 'gpSelect_MovementItem_GoodsAccount_ReturnIn'
     DataSet = MasterCDS
     DataSets = <
       item
@@ -1979,7 +1964,7 @@ object GoodsAccountForm: TGoodsAccountForm
         Name = 'inMovementMI_Id'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'SaleMI_Id'
+        ComponentItem = 'ReturnInMI_Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2152,7 +2137,7 @@ object GoodsAccountForm: TGoodsAccountForm
     Top = 201
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_GoodsAccount'
+    StoredProcName = 'gpGet_Movement_GoodsAccount_ReturnIn'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2445,10 +2430,10 @@ object GoodsAccountForm: TGoodsAccountForm
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
-    FormNameParam.Value = 'TClientForm'
+    FormNameParam.Value = 'TUnitForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TClientForm'
+    FormName = 'TUnitForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -2529,8 +2514,8 @@ object GoodsAccountForm: TGoodsAccountForm
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 448
-    Top = 56
+    Left = 384
+    Top = 8
   end
   object spGetTotalSumm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_TotalSumm'
@@ -2780,10 +2765,10 @@ object GoodsAccountForm: TGoodsAccountForm
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
-    FormNameParam.Value = 'TUnitForm'
+    FormNameParam.Value = 'TClientForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnitForm'
+    FormName = 'TClientForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -2864,7 +2849,7 @@ object GoodsAccountForm: TGoodsAccountForm
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 392
-    Top = 8
+    Left = 424
+    Top = 56
   end
 end

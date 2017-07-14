@@ -1,4 +1,4 @@
-unit GoodsAccount;
+unit GoodsAccount_ReturnIn;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   cxImageComboBox, cxSplitter;
 
 type
-  TGoodsAccountForm = class(TParentForm)
+  TGoodsAccount_ReturnInForm = class(TParentForm)
     FormParams: TdsdFormParams;
     spSelectMI: TdsdStoredProc;
     dxBarManager: TdxBarManager;
@@ -157,10 +157,10 @@ type
     MacInsertUpdateMIChildTotal: TMultiAction;
     bbInsertUpdateMIChildTotal: TdxBarButton;
     PartionMI_Id: TcxGridDBColumn;
-    SaleMI_Id: TcxGridDBColumn;
+    ReturnInMI_Id: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
-    OperDate_Sale: TcxGridDBColumn;
-    InvNumber_Sale_Full: TcxGridDBColumn;
+    OperDate_ReturnIn: TcxGridDBColumn;
+    InvNumber_ReturnIn_Full: TcxGridDBColumn;
     DescName: TcxGridDBColumn;
     cxLabel18: TcxLabel;
     edInsertDate: TcxDateEdit;
@@ -178,6 +178,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TGoodsAccountForm);
+  RegisterClass(TGoodsAccount_ReturnInForm);
 
 end.

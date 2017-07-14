@@ -1223,6 +1223,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsAccountJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAccountItemEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsAccountItemEditForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAccount_ReturnInForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsAccount_ReturnInForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAccount_ReturnInJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsAccount_ReturnInJournalForm');
 end;
 procedure TLoadFormTest.LoadIncomeFormTest;
 begin
