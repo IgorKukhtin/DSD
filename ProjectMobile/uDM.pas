@@ -111,9 +111,11 @@ type
     function GetMovementCountItems(AMovementGUID: string): Integer;
     procedure SetMovementStatus(AMovementGUID: string; AStatusId: Integer);
 
-    procedure UploadStoreRealOld;
+    procedure UploadStoreRealOld; deprecated;
     procedure UploadStoreReal;
+    procedure UploadOrderExternalOld; deprecated;
     procedure UploadOrderExternal;
+    procedure UploadReturnInOld; deprecated;
     procedure UploadReturnIn;
     procedure UploadCash;
     procedure UploadTasks;
@@ -1375,102 +1377,93 @@ end;
 { Сохранение на сервер введенной информации по остаткам }
 procedure TSyncThread.UploadStoreReal;
 var
-  StoredProc: TdsdStoredProc;
   SqlText: string;
   ItemsCount, SendCount: Integer;
 begin
-  StoredProc := TdsdStoredProc.Create(nil);
-  try
-    StoredProc.OutputType := otResult;
+  with DM.tblMovement_StoreReal do
+  begin
+    Filter := 'isSync = 0 and StatusId = ' + DM.tblObject_ConstStatusId_Complete.AsString;
+    Filtered := True;
+    Open;
 
-    with DM.tblMovement_StoreReal do
-    begin
-      Filter := 'isSync = 0 and StatusId = ' + DM.tblObject_ConstStatusId_Complete.AsString;
-      Filtered := True;
-      Open;
+    try
+      First;
 
-      try
-        First;
+      while not Eof do
+      begin
+        SqlText :=
+          'DO $BODY$ ' +
+          '  DECLARE vbSession TVarChar := ''' + gc_User.Session + '''; ' +
+          'BEGIN ' +
+          '  PERFORM gpInsertUpdateMobile_Movement_StoreReal ( ' +
+          '    inGUID:= ''' + FieldByName('GUID').AsString + ''', ' +
+          '    inInvNumber:= ''' + FieldByName('INVNUMBER').AsString + ''', ' +
+          '    inOperDate:= ''' + FormatDateTime('dd.mm.yyyy', FieldByName('OPERDATE').AsDateTime) + ''', ' +
+          '    inPartnerId:= ' + IntToStr(FieldByName('PARTNERID').AsInteger) + ', ' +
+          '    inComment:= ''' + FieldByName('COMMENT').AsString + ''', ' +
+          '    inInsertDate:= ''' + FormatDateTime('dd.mm.yyyy hh:mm:ss', FieldByName('INSERTDATE').AsDateTime) + ''', ' +
+          '    inSession:= vbSession); ';
 
-        while not Eof do
+        // Загружаем товары остатков
+        DM.tblMovementItem_StoreReal.Close;
+        DM.tblMovementItem_StoreReal.Filter := 'Amount <> 0 and MovementId = ' + FieldByName('ID').AsString;
+        DM.tblMovementItem_StoreReal.Filtered := true;
+        DM.tblMovementItem_StoreReal.Open;
+        DM.tblMovementItem_StoreReal.First;
+        ItemsCount := 0;
+
+        while not DM.tblMovementItem_StoreReal.Eof do
         begin
-          SqlText :=
-            'DO $BODY$ ' +
-            '  DECLARE vbSession TVarChar := ''' + gc_User.Session + '''; ' +
-            'BEGIN ' +
-            '  PERFORM gpInsertUpdateMobile_Movement_StoreReal ( ' +
-            '    inGUID:= ''' + FieldByName('GUID').AsString + ''', ' +
-            '    inInvNumber:= ''' + FieldByName('INVNUMBER').AsString + ''', ' +
-            '    inOperDate:= ''' + FormatDateTime('dd.mm.yyyy', FieldByName('OPERDATE').AsDateTime) + ''', ' +
-            '    inPartnerId:= ' + IntToStr(FieldByName('PARTNERID').AsInteger) + ', ' +
-            '    inComment:= ''' + FieldByName('COMMENT').AsString + ''', ' +
-            '    inInsertDate:= ''' + FormatDateTime('dd.mm.yyyy hh:mm:ss', FieldByName('INSERTDATE').AsDateTime) + ''', ' +
-            '    inSession:= vbSession ' +
-            '  ); ';
+          SqlText := SqlText +
+            '  PERFORM gpInsertUpdateMobile_MovementItem_StoreReal ( ' +
+            '    inGUID:= ''' + DM.tblMovementItem_StoreReal.FieldByName('GUID').AsString + ''', ' +
+            '    inMovementGUID:= ''' + FieldByName('GUID').AsString + ''', ' +
+            '    inGoodsId:= ' + IntToStr(DM.tblMovementItem_StoreReal.FieldByName('GOODSID').AsInteger) + ', ' +
+            '    inAmount:= ' + ReplaceStr(FormatFloat('0.0###', DM.tblMovementItem_StoreReal.FieldByName('AMOUNT').AsFloat), ',', '.') + ', ' +
+            '    inGoodsKindId:= ' + IntToStr(DM.tblMovementItem_StoreReal.FieldByName('GOODSKINDID').AsInteger) + ', ' +
+            '    inSession:= vbSession); ';
 
-          // Загружаем товары остатков
-          DM.tblMovementItem_StoreReal.Close;
-          DM.tblMovementItem_StoreReal.Filter := 'Amount <> 0 and MovementId = ' + FieldByName('ID').AsString;
-          DM.tblMovementItem_StoreReal.Filtered := true;
-          DM.tblMovementItem_StoreReal.Open;
-          DM.tblMovementItem_StoreReal.First;
-          ItemsCount := 0;
+          Inc(ItemsCount);
+          DM.tblMovementItem_StoreReal.Next;
+        end;
 
-          while not DM.tblMovementItem_StoreReal.Eof do
+        SqlText := SqlText +
+          '  PERFORM gpSetMobile_Movement_Status ( ' +
+          '    inMovementGUID:= ''' + FieldByName('GUID').AsString + ''', ' +
+          '    inStatusId:= zc_Enum_Status_Complete(), ' +
+          '    inSession:= vbSession); ' +
+          'END; $BODY$';
+
+        try
+          uExec.ExecSQL(SqlText);
+
+          SendCount := GetMovementCountItems(FieldByName('GUID').AsString);
+          if ItemsCount = SendCount then
           begin
-            SqlText := SqlText +
-              '  PERFORM gpInsertUpdateMobile_MovementItem_StoreReal ( ' +
-              '    inGUID:= ''' + DM.tblMovementItem_StoreReal.FieldByName('GUID').AsString + ''', ' +
-              '    inMovementGUID:= ''' + FieldByName('GUID').AsString + ''', ' +
-              '    inGoodsId:= ' + IntToStr(DM.tblMovementItem_StoreReal.FieldByName('GOODSID').AsInteger) + ', ' +
-              '    inAmount:= ' + ReplaceStr(FormatFloat('0.0###', DM.tblMovementItem_StoreReal.FieldByName('AMOUNT').AsFloat), ',', '.') + ', ' +
-              '    inGoodsKindId:= ' + IntToStr(DM.tblMovementItem_StoreReal.FieldByName('GOODSKINDID').AsInteger) + ', ' +
-              '    inSession:= vbSession ' +
-              '  ); ';
-
-            Inc(ItemsCount);
-            DM.tblMovementItem_StoreReal.Next;
-          end;
-
-          SqlText := SqlText + 'END; $BODY$';
-
-          try
-            uExec.ExecSQL(SqlText);
-
-            SendCount := GetMovementCountItems(FieldByName('GUID').AsString);
-            if ItemsCount = SendCount then
-            begin
-              SetMovementStatus(FieldByName('GUID').AsString, DM.tblObject_ConstStatusId_Complete.AsInteger);
-              Edit;
-              FieldByName('IsSync').AsBoolean := true;
-              Post;
-            end else
-            begin
-              SetMovementStatus(FieldByName('GUID').AsString, DM.tblObject_ConstStatusId_UnComplete.AsInteger);
-              raise Exception.CreateFmt(
-                'По факт. остатку №%s отправились %d позиций из %d. Требуется повторная синхронизация',
-                [FieldByName('INVNUMBER').AsString, SendCount, ItemsCount]);
-            end;
-          except
-            on E : Exception do
-            begin
-              raise Exception.Create(E.Message);
-              exit;
-            end;
+            Edit;
+            FieldByName('IsSync').AsBoolean := true;
+            Post;
+          end else
+            raise Exception.CreateFmt(
+              'По факт. остатку №%s отправились %d позиций из %d. Требуется повторная синхронизация',
+              [FieldByName('INVNUMBER').AsString, SendCount, ItemsCount]);
+        except
+          on E : Exception do
+          begin
+            raise Exception.Create(E.Message);
+            exit;
           end;
         end;
-      finally
-        DM.tblMovementItem_StoreReal.Close;
-        DM.tblMovementItem_StoreReal.Filter := '';
-        DM.tblMovementItem_StoreReal.Filtered := false;
-
-        Close;
-        Filter := '';
-        Filtered := false;
       end;
+    finally
+      DM.tblMovementItem_StoreReal.Close;
+      DM.tblMovementItem_StoreReal.Filter := '';
+      DM.tblMovementItem_StoreReal.Filtered := false;
+
+      Close;
+      Filter := '';
+      Filtered := false;
     end;
-  finally
-    FreeAndNil(StoredProc);
   end;
 end;
 
@@ -1567,6 +1560,105 @@ end;
 
 { Сохранение на сервер введенных заявок }
 procedure TSyncThread.UploadOrderExternal;
+var
+  SqlText: string;
+  ItemsCount, SendCount: Integer;
+begin
+  with DM.tblMovement_OrderExternal do
+  begin
+    Filter := 'isSync = 0 and StatusId = ' + DM.tblObject_ConstStatusId_Complete.AsString;
+    Filtered := true;
+    Open;
+
+    try
+      First;
+      while not Eof do
+      begin
+        SqlText :=
+          'DO $BODY$ ' +
+          '  DECLARE vbSession TVarChar := ''' + gc_User.Session + '''; ' +
+          'BEGIN ' +
+          '  PERFORM gpInsertUpdateMobile_Movement_OrderExternal ( ' +
+          '    inGUID:= ''' + FieldByName('GUID').AsString + ''', ' +
+          '    inInvNumber:= ''' + FieldByName('INVNUMBER').AsString + ''', ' +
+          '    inOperDate:= ''' + FormatDateTime('dd.mm.yyyy', FieldByName('OPERDATE').AsDateTime) + ''', ' +
+          '    inComment:= ''' + FieldByName('COMMENT').AsString + ''', ' +
+          '    inPartnerId:= ' + IntToStr(FieldByName('PARTNERID').AsInteger) + ', ' +
+          '    inUnitId:= ' + IntToStr(FieldByName('UNITID').AsInteger) + ', ' +
+          '    inPaidKindId:= ' + IntToStr(FieldByName('PAIDKINDID').AsInteger) + ', ' +
+          '    inContractId:= ' + IntToStr(FieldByName('CONTRACTID').AsInteger) + ', ' +
+          '    inPriceListId:= ' + IntToStr(FieldByName('PRICELISTID').AsInteger) + ', ' +
+          '    inPriceWithVAT:= ' + BoolToStr(FieldByName('PRICEWITHVAT').AsBoolean, True) + ', ' +
+          '    inVATPercent:= ' + ReplaceStr(FormatFloat('0.0###', FieldByName('VATPERCENT').AsFloat), ',', '.') + ', ' +
+          '    inChangePercent:= ' + ReplaceStr(FormatFloat('0.0###', FieldByName('CHANGEPERCENT').AsFloat), ',', '.') + ', ' +
+          '    inInsertDate:= ''' + FormatDateTime('dd.mm.yyyy hh:mm:ss', FieldByName('INSERTDATE').AsDateTime) + ''', ' +
+          '    inSession:= vbSession); ';
+
+        // Загружаем товары заявок
+        DM.tblMovementItem_OrderExternal.Close;
+        DM.tblMovementItem_OrderExternal.Filter := 'Amount <> 0 and MovementId = ' + FieldByName('ID').AsString;
+        DM.tblMovementItem_OrderExternal.Filtered := true;
+        DM.tblMovementItem_OrderExternal.Open;
+        DM.tblMovementItem_OrderExternal.First;
+        ItemsCount := 0;
+
+        while not DM.tblMovementItem_OrderExternal.Eof do
+        begin
+          SqlText := SqlText +
+            '  PERFORM gpInsertUpdateMobile_MovementItem_OrderExternal ( ' +
+            '    inGUID:= ''' + DM.tblMovementItem_OrderExternal.FieldByName('GUID').AsString + ''', ' +
+            '    inMovementGUID:= ''' + FieldByName('GUID').AsString + ''', ' +
+            '    inGoodsId:= ' + IntToStr(DM.tblMovementItem_OrderExternal.FieldByName('GOODSID').AsInteger) + ', ' +
+            '    inGoodsKindId:= ' + IntToStr(DM.tblMovementItem_OrderExternal.FieldByName('GOODSKINDID').AsInteger) + ', ' +
+            '    inChangePercent:= ' + ReplaceStr(FormatFloat('0.0###', DM.tblMovementItem_OrderExternal.FieldByName('CHANGEPERCENT').AsFloat), ',', '.') + ', ' +
+            '    inAmount:= ' + ReplaceStr(FormatFloat('0.0###', DM.tblMovementItem_OrderExternal.FieldByName('AMOUNT').AsFloat), ',', '.') + ', ' +
+            '    inPrice:= ' + ReplaceStr(FormatFloat('0.0###', DM.tblMovementItem_OrderExternal.FieldByName('PRICE').AsFloat), ',', '.') + ', ' +
+            '    inSession:= vbSession); ';
+
+          Inc(ItemsCount);
+          DM.tblMovementItem_OrderExternal.Next;
+        end;
+
+        SqlText := SqlText +
+          '  PERFORM gpSetMobile_Movement_Status ( ' +
+          '    inMovementGUID:= ''' + FieldByName('GUID').AsString + ''', ' +
+          '    inStatusId:= zc_Enum_Status_Erased(), ' +
+          '    inSession:= vbSession); ' +
+          'END; $BODY$';
+
+        try
+          uExec.ExecSQL(SqlText);
+
+          SendCount := GetMovementCountItems(FieldByName('GUID').AsString);
+          if ItemsCount = SendCount then
+          begin
+            Edit;
+            FieldByName('IsSync').AsBoolean := true;
+            Post;
+          end else
+            raise Exception.CreateFmt(
+              'По заявке №%s отправились %d позиций из %d. Требуется повторная синхронизация',
+              [FieldByName('INVNUMBER').AsString, SendCount, ItemsCount]);
+        except
+          on E : Exception do
+          begin
+            raise Exception.Create(E.Message);
+            exit;
+          end;
+        end;
+      end;
+    finally
+      DM.tblMovementItem_OrderExternal.Close;
+      DM.tblMovementItem_OrderExternal.Filter := '';
+      DM.tblMovementItem_OrderExternal.Filtered := false;
+      Close;
+      Filter := '';
+      Filtered := false;
+    end;
+  end;
+end;
+
+procedure TSyncThread.UploadOrderExternalOld;
 var
   UploadStoredProc: TdsdStoredProc;
   ItemsCount, SendCount: Integer;
@@ -1667,6 +1759,107 @@ end;
 
 { Сохранение на сервер введенной информации по возврату товара }
 procedure TSyncThread.UploadReturnIn;
+var
+  SqlText: string;
+  ItemsCount, SendCount: Integer;
+begin
+  // Загружаем шапки возвратов
+  with DM.tblMovement_ReturnIn do
+  begin
+    Filter := 'isSync = 0 and StatusId = ' + DM.tblObject_ConstStatusId_Complete.AsString;
+    Filtered := true;
+    Open;
+
+    try
+      First;
+      while not Eof do
+      begin
+        SqlText :=
+          'DO $BODY$ ' +
+          '  DECLARE vbSession TVarChar := ''' + gc_User.Session + '''; ' +
+          'BEGIN ' +
+          '  PERFORM gpInsertUpdateMobile_Movement_ReturnIn ( ' +
+          '    inGUID:= ''' + FieldByName('GUID').AsString + ''', ' +
+          '    inInvNumber:= ''' + FieldByName('INVNUMBER').AsString + ''', ' +
+          '    inOperDate:= ''' + FormatDateTime('dd.mm.yyyy', FieldByName('OPERDATE').AsDateTime) + ''', ' +
+          '    inStatusId:= ' + IntToStr(FieldByName('STATUSID').AsInteger) + ', ' +
+          '    inPriceWithVAT:= ' + BoolToStr(FieldByName('PRICEWITHVAT').AsBoolean, True) + ', ' +
+          '    inInsertDate:= ''' + FormatDateTime('dd.mm.yyyy hh:mm:ss', FieldByName('INSERTDATE').AsDateTime) + ''', ' +
+          '    inVATPercent:= ' + ReplaceStr(FormatFloat('0.0###', FieldByName('VATPERCENT').AsFloat), ',', '.') + ', ' +
+          '    inChangePercent:= ' + ReplaceStr(FormatFloat('0.0###', FieldByName('CHANGEPERCENT').AsFloat), ',', '.') + ', ' +
+          '    inPaidKindId:= ' + IntToStr(FieldByName('PAIDKINDID').AsInteger) + ', ' +
+          '    inPartnerId:= ' + IntToStr(FieldByName('PARTNERID').AsInteger) + ', ' +
+          '    inUnitId:= ' + IntToStr(FieldByName('UNITID').AsInteger) + ', ' +
+          '    inContractId:= ' + IntToStr(FieldByName('CONTRACTID').AsInteger) + ', ' +
+          '    inComment:= ''' + FieldByName('COMMENT').AsString + ''', ' +
+          '    inSession:= vbSession); ';
+
+        // Загружаем возвращаемые товары
+        DM.tblMovementItem_ReturnIn.Close;
+        DM.tblMovementItem_ReturnIn.Filter := 'Amount <> 0 and MovementId = ' + FieldByName('ID').AsString;
+        DM.tblMovementItem_ReturnIn.Filtered := true;
+        DM.tblMovementItem_ReturnIn.Open;
+        DM.tblMovementItem_ReturnIn.First;
+        ItemsCount := 0;
+
+        while not DM.tblMovementItem_ReturnIn.Eof do
+        begin
+          SqlText := SqlText +
+            '  PERFORM gpInsertUpdateMobile_MovementItem_ReturnIn ( ' +
+            '    inGUID:= ''' + DM.tblMovementItem_ReturnIn.FieldByName('GUID').AsString + ''', ' +
+            '    inMovementGUID:= ''' + FieldByName('GUID').AsString + ''', ' +
+            '    inGoodsId:= ' + IntToStr(DM.tblMovementItem_ReturnIn.FieldByName('GOODSID').AsInteger) + ', ' +
+            '    inGoodsKindId:= ' + IntToStr(DM.tblMovementItem_ReturnIn.FieldByName('GOODSKINDID').AsInteger) + ', ' +
+            '    inAmount:= ' + ReplaceStr(FormatFloat('0.0###', DM.tblMovementItem_ReturnIn.FieldByName('AMOUNT').AsFloat), ',', '.') + ', ' +
+            '    inPrice:= ' + ReplaceStr(FormatFloat('0.0###', DM.tblMovementItem_ReturnIn.FieldByName('PRICE').AsFloat), ',', '.') + ', ' +
+            '    inChangePercent:= ' + ReplaceStr(FormatFloat('0.0###', DM.tblMovementItem_ReturnIn.FieldByName('CHANGEPERCENT').AsFloat), ',', '.') + ', ' +
+            '    inSession:= vbSession); ';
+
+          Inc(ItemsCount);
+          DM.tblMovementItem_ReturnIn.Next;
+        end;
+
+        SqlText := SqlText +
+          '  PERFORM gpSetMobile_Movement_Status ( ' +
+          '    inMovementGUID:= ''' + FieldByName('GUID').AsString + ''', ' +
+          '    inStatusId:= zc_Enum_Status_Erased(), ' +
+          '    inSession:= vbSession); ' +
+          'END; $BODY$';
+
+        try
+          uExec.ExecSQL(SqlText);
+
+          SendCount := GetMovementCountItems(FieldByName('GUID').AsString);
+          if ItemsCount = SendCount then
+          begin
+            Edit;
+            FieldByName('IsSync').AsBoolean := true;
+            Post;
+          end else
+            raise Exception.CreateFmt(
+              'По возврату №%s отправились %d позиций из %d. Требуется повторная синхронизация',
+              [FieldByName('INVNUMBER').AsString, SendCount, ItemsCount]);
+        except
+          on E : Exception do
+          begin
+            raise Exception.Create(E.Message);
+            exit;
+          end;
+        end;
+      end;
+    finally
+      DM.tblMovementItem_ReturnIn.Close;
+      DM.tblMovementItem_ReturnIn.Filter := '';
+      DM.tblMovementItem_ReturnIn.Filtered := false;
+
+      Close;
+      Filter := '';
+      Filtered := false;
+    end;
+  end;
+end;
+
+procedure TSyncThread.UploadReturnInOld;
 var
   UploadStoredProc : TdsdStoredProc;
   ItemsCount, SendCount: Integer;
