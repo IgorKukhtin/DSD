@@ -4,7 +4,7 @@ inherited PriceForm: TPriceForm
   ClientWidth = 766
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 782
-  ExplicitHeight = 448
+  ExplicitHeight = 451
   PixelsPerInch = 96
   TextHeight = 13
   object Panel: TPanel [0]
@@ -75,19 +75,19 @@ inherited PriceForm: TPriceForm
     Top = 83
     Width = 766
     Height = 330
-    ExplicitTop = 58
-    ExplicitWidth = 1059
-    ExplicitHeight = 355
+    ExplicitTop = 83
+    ExplicitWidth = 766
+    ExplicitHeight = 330
     ClientRectBottom = 330
     ClientRectRight = 766
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1059
-      ExplicitHeight = 355
+      ExplicitWidth = 766
+      ExplicitHeight = 330
       inherited cxGrid: TcxGrid
         Width = 766
         Height = 330
-        ExplicitWidth = 1059
-        ExplicitHeight = 355
+        ExplicitWidth = 766
+        ExplicitHeight = 330
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
