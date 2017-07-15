@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_GoodsAccount(
     IN inMovementId             Integer   , -- Ключ объекта <Документ>
     IN inPartionId              Integer   , -- Партия
     IN inMovementMI_Id          Integer   , -- Партия элемента продажа/возврат
-    IN inisPay                  Boolean   , -- добавить с оплатой
+    IN inIsPay                  Boolean   , -- добавить с оплатой
     IN inAmount                 TFloat    , -- Количество
    OUT outTotalPay              TFloat    , -- 
     IN inComment                TVarChar  , -- примечание
@@ -36,27 +36,24 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Партия>.';
      END IF;
 
-     -- данные из партии : GoodsId и OperPrice и CountForPrice и CurrencyId
-     SELECT Object_PartionGoods.GoodsId                                    AS GoodsId
-           INTO vbGoodsId
-     FROM Object_PartionGoods
-     WHERE Object_PartionGoods.MovementItemId = inPartionId;
+     -- данные из партии : GoodsId
+     vbGoodsId:= (SELECT Object_PartionGoods.GoodsId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inPartionId);
      
      -- определяем Партию элемента продажи/возврата
      vbPartionMI_Id := lpInsertFind_Object_PartionMI (inMovementMI_Id);
      
      -- сохранили
-     ioId:= lpInsertUpdate_MovementItem_GoodsAccount   (ioId                 := ioId
-                                                      , inMovementId         := inMovementId
-                                                      , inGoodsId            := vbGoodsId
-                                                      , inPartionId          := COALESCE(inPartionId,0)
-                                                      , inPartionMI_Id       := COALESCE(vbPartionMI_Id,0)
-                                                      , inAmount             := inAmount
-                                                      , inComment            := COALESCE(inComment,'') ::TVarChar 
-                                                      , inUserId             := vbUserId
-                                                     );
+     ioId:= lpInsertUpdate_MovementItem_GoodsAccount (ioId                 := ioId
+                                                    , inMovementId         := inMovementId
+                                                    , inGoodsId            := vbGoodsId
+                                                    , inPartionId          := COALESCE(inPartionId,0)
+                                                    , inPartionMI_Id       := COALESCE(vbPartionMI_Id,0)
+                                                    , inAmount             := inAmount
+                                                    , inComment            := COALESCE(inComment,'') ::TVarChar 
+                                                    , inUserId             := vbUserId
+                                                   );
 
-    IF inisPay = TRUE THEN
+    IF inIsPay = TRUE THEN
         -- сохранили оплату
        /*     PERFORM lpInsertUpdate_MI_GoodsAccount_Child  (ioId             := COALESCE (_tmpMI.Id,0)
                                                      , inMovementId         := inMovementId

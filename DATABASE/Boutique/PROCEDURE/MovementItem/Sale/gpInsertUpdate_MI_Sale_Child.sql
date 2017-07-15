@@ -26,9 +26,7 @@ RETURNS VOID
 AS
 $BODY$
    DECLARE vbUserId Integer;
-
    DECLARE vbUnitId Integer;
-   DECLARE vbOperDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
@@ -36,20 +34,16 @@ BEGIN
 
      -- проверка - свойство должно быть установлено
      IF COALESCE (inParentId, 0) = 0 AND vbUserId = zc_User_Sybase() THEN
-            RAISE EXCEPTION 'Ошибка.Не определено значение <inParentId>.';
+        RAISE EXCEPTION 'Ошибка.Не определено значение <inParentId>.';
      END IF;
 
 
      -- данные из документа
-     SELECT Movement.OperDate
-          , MovementLinkObject_From.ObjectId
-            INTO vbOperDate, vbUnitId
-     FROM Movement
-          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                       ON MovementLinkObject_From.MovementId = Movement.Id
-                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-     WHERE Movement.Id = inMovementId;
+     vbUnitId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From());
 
+
+     -- находим
+     CREATE TEMP TABLE _tmp_MI_Child (MovementItemId Integer, AmountToPay TFloat) ON COMMIT DROP;
 
      -- проверка - CurrencyId должен быть уникальным
      IF EXISTS (SELECT 1

@@ -2790,13 +2790,10 @@ begin
 
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPartionId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inPartionMI_Id',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inSaleMI_Id',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inisPay',ftBoolean,ptInput, False);
+        toStoredProc.Params.AddParam ('inMovementMI_Id',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inIsPay',ftBoolean,ptInput, False);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inSummChangePercent',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
 
         //
@@ -2808,13 +2805,11 @@ begin
               //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
-             toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId').AsInteger;
              toStoredProc.Params.ParamByName('inPartionId').Value:=FieldByName('PartionId').AsInteger;
              //toStoredProc.Params.ParamByName('inPartionMI_Id').Value:=FieldByName('PartionMI_Id').AsInteger;
-             toStoredProc.Params.ParamByName('inSaleMI_Id').Value:=FieldByName('SaleMI_Id').AsInteger;
-             //toStoredProc.Params.ParamByName('inisPay').Value:=Boolean(FieldByName('isPay').AsInteger);
+             toStoredProc.Params.ParamByName('inMovementMI_Id').Value:=FieldByName('SaleMI_Id').AsInteger;
+             //toStoredProc.Params.ParamByName('inIsPay').Value:=Boolean(FieldByName('isPay').AsInteger);
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
-             toStoredProc.Params.ParamByName('inSummChangePercent').Value:=FieldByName('SummChangePercent').AsFloat;
              toStoredProc.Params.ParamByName('inComment').Value:=FieldByName('CommentInfo').AsString;
 
 
