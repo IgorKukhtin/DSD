@@ -143,6 +143,7 @@ begin
      begin
           CopyValuesParamsFrom(ParamsMovement_local,execParamsMovement);
           gpInitialize_MovementDesc;
+          MainCehForm.InitializeGoodsKind(execParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger);
      end;
 end;
 {------------------------------------------------------------------------------}
