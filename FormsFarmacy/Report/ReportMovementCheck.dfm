@@ -155,7 +155,6 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -167,6 +166,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             DataBinding.FieldName = 'JuridicalCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object JuridicalName: TcxGridDBColumn
@@ -174,6 +174,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object GoodsGroupName: TcxGridDBColumn
@@ -190,6 +191,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 27
           end
           object GoodsCode: TcxGridDBColumn
@@ -197,6 +199,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
           object GoodsName: TcxGridDBColumn
@@ -204,6 +207,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 151
           end
           object NDSKindName: TcxGridDBColumn
@@ -211,6 +215,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             DataBinding.FieldName = 'NDSKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object Amount: TcxGridDBColumn
@@ -221,6 +226,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
           object PriceWithOutVAT: TcxGridDBColumn
@@ -230,6 +236,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object PriceWithVAT: TcxGridDBColumn
@@ -239,6 +246,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 78
           end
           object Price: TcxGridDBColumn
@@ -248,6 +256,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object PriceSale: TcxGridDBColumn
@@ -257,6 +266,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 58
           end
           object SummaWithOutVAT: TcxGridDBColumn
@@ -266,6 +276,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 87
           end
           object SummaWithVAT: TcxGridDBColumn
@@ -275,6 +286,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 87
           end
           object Summa: TcxGridDBColumn
@@ -284,6 +296,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 102
           end
           object SummaSale: TcxGridDBColumn
@@ -293,6 +306,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object SummaMargin: TcxGridDBColumn
@@ -302,6 +316,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object SummaMarginWithVAT: TcxGridDBColumn
@@ -311,6 +326,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object AmountPromo: TcxGridDBColumn
@@ -322,6 +338,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1083#1072#1085' '#1087#1086' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1091', '#1096#1090'.'
+            Options.Editing = False
             Width = 72
           end
           object AmountPromoPlanMax: TcxGridDBColumn
@@ -333,6 +350,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1083#1072#1085' '#1087#1086' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1091' '#1076#1083#1103' '#1087#1088#1077#1084#1080#1080', '#1096#1090'. '
+            Options.Editing = False
             Width = 78
           end
           object PartionDescName: TcxGridDBColumn
@@ -340,6 +358,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             DataBinding.FieldName = 'PartionDescName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object isPromoUnit: TcxGridDBColumn
@@ -367,6 +386,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object SummaBonus: TcxGridDBColumn
@@ -376,6 +396,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object SummaPenalty: TcxGridDBColumn
@@ -385,6 +406,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object SummaPay: TcxGridDBColumn
@@ -395,6 +417,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1048#1090#1086#1075' '#1076#1083#1103' '#1090#1086#1095#1082#1080' - '#1055#1088#1077#1084#1080#1103' - '#1064#1090#1088#1072#1092
+            Options.Editing = False
             Width = 70
           end
           object PartionInvNumber: TcxGridDBColumn
@@ -402,6 +425,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             DataBinding.FieldName = 'PartionInvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 56
           end
           object PartionOperDate: TcxGridDBColumn
@@ -409,6 +433,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             DataBinding.FieldName = 'PartionOperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object PartionPriceDescName: TcxGridDBColumn
@@ -416,6 +441,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             DataBinding.FieldName = 'PartionPriceDescName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object PartionPriceInvNumber: TcxGridDBColumn
@@ -423,6 +449,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             DataBinding.FieldName = 'PartionPriceInvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object PartionPriceOperDate: TcxGridDBColumn
@@ -430,6 +457,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             DataBinding.FieldName = 'PartionPriceOperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object UnitName: TcxGridDBColumn
@@ -445,6 +473,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             DataBinding.FieldName = 'OurJuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object ConditionsKeepName: TcxGridDBColumn
@@ -772,6 +801,18 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
     end
+    object actUpdateMainDS: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Price_MCSIsClose
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Price_MCSIsClose
+        end>
+      Caption = 'actUpdateMainDS'
+      DataSource = MasterDS
+    end
   end
   inherited MasterDS: TDataSource
     Left = 48
@@ -1014,5 +1055,39 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
         MultiSelectSeparator = ','
       end>
     Left = 680
+  end
+  object spUpdate_Price_MCSIsClose: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Price_MCSIsClose'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMCSIsClose'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MCSIsClose'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 688
+    Top = 240
   end
 end

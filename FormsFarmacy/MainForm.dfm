@@ -445,8 +445,8 @@ inherited MainForm: TMainForm
     object actReportMovementCheckLight: TdsdOpenForm [29]
       Category = #1054#1090#1095#1077#1090#1099
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093'('#1091#1087#1088'.)'
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093
+      Caption = 'C'#1091#1084#1084#1072#1088#1085#1099#1077' '#1087#1088#1086#1076#1072#1078#1080' '#1087#1086' '#1089#1077#1090#1080' '
+      Hint = 'C'#1091#1084#1084#1072#1088#1085#1099#1077' '#1087#1088#1086#1076#1072#1078#1080' '#1087#1086' '#1089#1077#1090#1080' '
       FormName = 'TReportMovementCheckLightForm'
       FormNameParam.Value = 'TReportMovementCheckLightForm'
       FormNameParam.DataType = ftString
@@ -2358,7 +2358,6 @@ inherited MainForm: TMainForm
       end
       object N143: TMenuItem
         Action = actReportMovementCheckLight
-        Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093' ('#1090#1086#1083#1100#1082#1086' '#1087#1088#1086#1076#1072#1078#1080')'
       end
       object N106: TMenuItem
         Action = actReport_MovementCheckErrorForm

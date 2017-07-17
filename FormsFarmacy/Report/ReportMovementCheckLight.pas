@@ -71,6 +71,9 @@ type
     cxLabel19: TcxLabel;
     ceRetail: TcxButtonEdit;
     GuidesRetail: TdsdGuides;
+    edJuridical: TcxButtonEdit;
+    cxLabel4: TcxLabel;
+    GuidesJuridical: TdsdGuides;
   private
     { Private declarations }
   public

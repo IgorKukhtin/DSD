@@ -109,13 +109,9 @@ type
     procedure GetDictionaries(AName : string);
 
     function GetMovementCountItems(AMovementGUID: string): Integer;
-    procedure SetMovementStatus(AMovementGUID: string; AStatusId: Integer);
 
-    procedure UploadStoreRealOld; deprecated;
     procedure UploadStoreReal;
-    procedure UploadOrderExternalOld; deprecated;
     procedure UploadOrderExternal;
-    procedure UploadReturnInOld; deprecated;
     procedure UploadReturnIn;
     procedure UploadCash;
     procedure UploadTasks;
@@ -944,30 +940,6 @@ begin
   frmMain.lProgressName.Text := FName;
 end;
 
-{ изменение текущей операции }
-procedure TSyncThread.SetMovementStatus(AMovementGUID: string;
-  AStatusId: Integer);
-var
-  StoredProc : TdsdStoredProc;
-begin
-  StoredProc := TdsdStoredProc.Create(nil);
-
-  with StoredProc, Params do
-  begin
-    OutputType := otResult;
-    Clear;
-    StoredProcName := 'gpSetStatusMobile_Movement';
-    AddParam('inMovementGUID', ftString, ptInput, AMovementGUID);
-    AddParam('inStatusId', ftInteger, ptInput, AStatusId);
-  end;
-
-  try
-    StoredProc.Execute(False, False, False);
-  finally
-    FreeAndNil(StoredProc);
-  end;
-end;
-
 procedure TSyncThread.SetNewProgressTask(AName : string);
 begin
   FName := AName;
@@ -1467,97 +1439,6 @@ begin
   end;
 end;
 
-procedure TSyncThread.UploadStoreRealOld;
-var
-  UploadStoredProc : TdsdStoredProc;
-  ItemsCount, SendCount: Integer;
-begin
-  UploadStoredProc := TdsdStoredProc.Create(nil);
-  try
-    // Загружаем шапки остатков
-    UploadStoredProc.OutputType := otResult;
-
-    with DM.tblMovement_StoreReal do
-    begin
-      Filter := 'isSync = 0 and StatusId = ' + DM.tblObject_ConstStatusId_Complete.AsString;
-      Filtered := true;
-      Open;
-
-      try
-        First;
-        while not Eof do
-        begin
-          UploadStoredProc.Params.Clear;
-          UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_Movement_StoreReal';
-          UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, FieldByName('GUID').AsString);
-          UploadStoredProc.Params.AddParam('inInvNumber', ftString, ptInput, FieldByName('INVNUMBER').AsString);
-          UploadStoredProc.Params.AddParam('inOperDate', ftDateTime, ptInput, FieldByName('OPERDATE').AsDateTime);
-          UploadStoredProc.Params.AddParam('inPartnerId', ftInteger, ptInput, FieldByName('PARTNERID').AsInteger);
-          UploadStoredProc.Params.AddParam('inComment', ftString, ptInput, FieldByName('COMMENT').AsString);
-          UploadStoredProc.Params.AddParam('inInsertDate', ftDateTime, ptInput, FieldByName('INSERTDATE').AsDateTime);
-
-          try
-            UploadStoredProc.Execute(false, false, false);
-
-            // Загружаем товары остатков
-            DM.tblMovementItem_StoreReal.Close;
-            DM.tblMovementItem_StoreReal.Filter := 'Amount <> 0 and MovementId = ' + FieldByName('ID').AsString;
-            DM.tblMovementItem_StoreReal.Filtered := true;
-            DM.tblMovementItem_StoreReal.Open;
-            DM.tblMovementItem_StoreReal.First;
-            ItemsCount := 0;
-
-            while not DM.tblMovementItem_StoreReal.Eof do
-            begin
-              UploadStoredProc.Params.Clear;
-              UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_MovementItem_StoreReal';
-              UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, DM.tblMovementItem_StoreReal.FieldByName('GUID').AsString);
-              UploadStoredProc.Params.AddParam('inMovementGUID', ftString, ptInput, FieldByName('GUID').AsString);
-              UploadStoredProc.Params.AddParam('inGoodsId', ftInteger, ptInput, DM.tblMovementItem_StoreReal.FieldByName('GOODSID').AsInteger);
-              UploadStoredProc.Params.AddParam('inAmount', ftFloat, ptInput, DM.tblMovementItem_StoreReal.FieldByName('AMOUNT').AsFloat);
-              UploadStoredProc.Params.AddParam('inGoodsKindId', ftInteger, ptInput, DM.tblMovementItem_StoreReal.FieldByName('GOODSKINDID').AsInteger);
-              UploadStoredProc.Execute(false, false, false);
-              Inc(ItemsCount);
-              DM.tblMovementItem_StoreReal.Next;
-            end;
-
-            SendCount := GetMovementCountItems(FieldByName('GUID').AsString);
-            if ItemsCount = SendCount then
-            begin
-              SetMovementStatus(FieldByName('GUID').AsString, DM.tblObject_ConstStatusId_Complete.AsInteger);
-              Edit;
-              FieldByName('IsSync').AsBoolean := true;
-              Post;
-            end else
-            begin
-              SetMovementStatus(FieldByName('GUID').AsString, DM.tblObject_ConstStatusId_UnComplete.AsInteger);
-              raise Exception.CreateFmt(
-                'По факт. остатку №%s отправились %d позиций из %d. Требуется повторная синхронизация',
-                [FieldByName('INVNUMBER').AsString, SendCount, ItemsCount]);
-            end;
-          except
-            on E : Exception do
-            begin
-              raise Exception.Create(E.Message);
-              exit;
-            end;
-          end;
-        end;
-      finally
-        DM.tblMovementItem_StoreReal.Close;
-        DM.tblMovementItem_StoreReal.Filter := '';
-        DM.tblMovementItem_StoreReal.Filtered := false;
-
-        Close;
-        Filter := '';
-        Filtered := false;
-      end;
-    end;
-  finally
-    FreeAndNil(UploadStoredProc);
-  end;
-end;
-
 { Сохранение на сервер введенных заявок }
 procedure TSyncThread.UploadOrderExternal;
 var
@@ -1655,105 +1536,6 @@ begin
       Filter := '';
       Filtered := false;
     end;
-  end;
-end;
-
-procedure TSyncThread.UploadOrderExternalOld;
-var
-  UploadStoredProc: TdsdStoredProc;
-  ItemsCount, SendCount: Integer;
-begin
-  UploadStoredProc := TdsdStoredProc.Create(nil);
-  try
-    // Загружаем шапки заявок
-    UploadStoredProc.OutputType := otResult;
-
-    with DM.tblMovement_OrderExternal do
-    begin
-      Filter := 'isSync = 0 and StatusId = ' + DM.tblObject_ConstStatusId_Complete.AsString;
-      Filtered := true;
-      Open;
-
-      try
-        First;
-        while not Eof do
-        begin
-          UploadStoredProc.Params.Clear;
-          UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_Movement_OrderExternal';
-          UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, FieldByName('GUID').AsString);
-          UploadStoredProc.Params.AddParam('inInvNumber', ftString, ptInput, FieldByName('INVNUMBER').AsString);
-          UploadStoredProc.Params.AddParam('inOperDate', ftDateTime, ptInput, FieldByName('OPERDATE').AsDateTime);
-          UploadStoredProc.Params.AddParam('inComment', ftString, ptInput, FieldByName('COMMENT').AsString);
-          UploadStoredProc.Params.AddParam('inPartnerId', ftInteger, ptInput, FieldByName('PARTNERID').AsInteger);
-          UploadStoredProc.Params.AddParam('inUnitId', ftInteger, ptInput, FieldByName('UNITID').AsInteger);
-          UploadStoredProc.Params.AddParam('inPaidKindId', ftInteger, ptInput, FieldByName('PAIDKINDID').AsInteger);
-          UploadStoredProc.Params.AddParam('inContractId', ftInteger, ptInput, FieldByName('CONTRACTID').AsInteger);
-          UploadStoredProc.Params.AddParam('inPriceListId', ftInteger, ptInput, FieldByName('PRICELISTID').AsInteger);
-          UploadStoredProc.Params.AddParam('inPriceWithVAT', ftBoolean, ptInput, FieldByName('PRICEWITHVAT').AsBoolean);
-          UploadStoredProc.Params.AddParam('inVATPercent', ftFloat, ptInput, FieldByName('VATPERCENT').AsFloat);
-          UploadStoredProc.Params.AddParam('inChangePercent', ftFloat, ptInput, FieldByName('CHANGEPERCENT').AsFloat);
-          UploadStoredProc.Params.AddParam('inInsertDate', ftDateTime, ptInput, FieldByName('INSERTDATE').AsDateTime);
-
-          try
-            UploadStoredProc.Execute(false, false, false);
-
-            // Загружаем товары заявок
-            DM.tblMovementItem_OrderExternal.Close;
-            DM.tblMovementItem_OrderExternal.Filter := 'Amount <> 0 and MovementId = ' + FieldByName('ID').AsString;
-            DM.tblMovementItem_OrderExternal.Filtered := true;
-            DM.tblMovementItem_OrderExternal.Open;
-            DM.tblMovementItem_OrderExternal.First;
-            ItemsCount := 0;
-
-            while not DM.tblMovementItem_OrderExternal.Eof do
-            begin
-              UploadStoredProc.Params.Clear;
-              UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_MovementItem_OrderExternal';
-              UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, DM.tblMovementItem_OrderExternal.FieldByName('GUID').AsString);
-              UploadStoredProc.Params.AddParam('inMovementGUID', ftString, ptInput, FieldByName('GUID').AsString);
-              UploadStoredProc.Params.AddParam('inGoodsId', ftInteger, ptInput, DM.tblMovementItem_OrderExternal.FieldByName('GOODSID').AsInteger);
-              UploadStoredProc.Params.AddParam('inGoodsKindId', ftInteger, ptInput, DM.tblMovementItem_OrderExternal.FieldByName('GOODSKINDID').AsInteger);
-              UploadStoredProc.Params.AddParam('inChangePercent', ftFloat, ptInput, DM.tblMovementItem_OrderExternal.FieldByName('CHANGEPERCENT').AsFloat);
-              UploadStoredProc.Params.AddParam('inAmount', ftFloat, ptInput, DM.tblMovementItem_OrderExternal.FieldByName('AMOUNT').AsFloat);
-              UploadStoredProc.Params.AddParam('inPrice', ftFloat, ptInput, DM.tblMovementItem_OrderExternal.FieldByName('PRICE').AsFloat);
-              UploadStoredProc.Execute(false, false, false);
-              Inc(ItemsCount);
-              DM.tblMovementItem_OrderExternal.Next;
-            end;
-
-            SendCount := GetMovementCountItems(FieldByName('GUID').AsString);
-            if ItemsCount = SendCount then
-            begin
-              SetMovementStatus(FieldByName('GUID').AsString, DM.tblObject_ConstStatusId_Erased.AsInteger);
-              Edit;
-              FieldByName('IsSync').AsBoolean := true;
-              Post;
-            end else
-            begin
-              SetMovementStatus(FieldByName('GUID').AsString, DM.tblObject_ConstStatusId_UnComplete.AsInteger);
-              raise Exception.CreateFmt(
-                'По заявке №%s отправились %d позиций из %d. Требуется повторная синхронизация',
-                [FieldByName('INVNUMBER').AsString, SendCount, ItemsCount]);
-            end;
-          except
-            on E : Exception do
-            begin
-              raise Exception.Create(E.Message);
-              exit;
-            end;
-          end;
-        end;
-      finally
-        DM.tblMovementItem_OrderExternal.Close;
-        DM.tblMovementItem_OrderExternal.Filter := '';
-        DM.tblMovementItem_OrderExternal.Filtered := false;
-        Close;
-        Filter := '';
-        Filtered := false;
-      end;
-    end;
-  finally
-    FreeAndNil(UploadStoredProc);
   end;
 end;
 
@@ -1856,106 +1638,6 @@ begin
       Filter := '';
       Filtered := false;
     end;
-  end;
-end;
-
-procedure TSyncThread.UploadReturnInOld;
-var
-  UploadStoredProc : TdsdStoredProc;
-  ItemsCount, SendCount: Integer;
-begin
-  UploadStoredProc := TdsdStoredProc.Create(nil);
-  try
-    // Загружаем шапки возвратов
-    UploadStoredProc.OutputType := otResult;
-
-    with DM.tblMovement_ReturnIn do
-    begin
-      Filter := 'isSync = 0 and StatusId = ' + DM.tblObject_ConstStatusId_Complete.AsString;
-      Filtered := true;
-      Open;
-
-      try
-        First;
-        while not Eof do
-        begin
-          UploadStoredProc.Params.Clear;
-          UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_Movement_ReturnIn';
-          UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, FieldByName('GUID').AsString);
-          UploadStoredProc.Params.AddParam('inInvNumber', ftString, ptInput, FieldByName('INVNUMBER').AsString);
-          UploadStoredProc.Params.AddParam('inOperDate', ftDateTime, ptInput, FieldByName('OPERDATE').AsDateTime);
-          UploadStoredProc.Params.AddParam('inStatusId', ftInteger, ptInput, FieldByName('STATUSID').AsInteger);
-          UploadStoredProc.Params.AddParam('inPriceWithVAT', ftBoolean, ptInput, FieldByName('PRICEWITHVAT').AsBoolean);
-          UploadStoredProc.Params.AddParam('inInsertDate', ftDateTime, ptInput, FieldByName('INSERTDATE').AsDateTime);
-          UploadStoredProc.Params.AddParam('inVATPercent', ftFloat, ptInput, FieldByName('VATPERCENT').AsFloat);
-          UploadStoredProc.Params.AddParam('inChangePercent', ftFloat, ptInput, FieldByName('CHANGEPERCENT').AsFloat);
-          UploadStoredProc.Params.AddParam('inPaidKindId', ftInteger, ptInput, FieldByName('PAIDKINDID').AsInteger);
-          UploadStoredProc.Params.AddParam('inPartnerId', ftInteger, ptInput, FieldByName('PARTNERID').AsInteger);
-          UploadStoredProc.Params.AddParam('inUnitId', ftInteger, ptInput, FieldByName('UNITID').AsInteger);
-          UploadStoredProc.Params.AddParam('inContractId', ftInteger, ptInput, FieldByName('CONTRACTID').AsInteger);
-          UploadStoredProc.Params.AddParam('inComment', ftString, ptInput, FieldByName('COMMENT').AsString);
-
-          try
-            UploadStoredProc.Execute(false, false, false);
-
-            // Загружаем возвращаемые товары
-            DM.tblMovementItem_ReturnIn.Close;
-            DM.tblMovementItem_ReturnIn.Filter := 'Amount <> 0 and MovementId = ' + FieldByName('ID').AsString;
-            DM.tblMovementItem_ReturnIn.Filtered := true;
-            DM.tblMovementItem_ReturnIn.Open;
-            DM.tblMovementItem_ReturnIn.First;
-            ItemsCount := 0;
-
-            while not DM.tblMovementItem_ReturnIn.Eof do
-            begin
-              UploadStoredProc.Params.Clear;
-              UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_MovementItem_ReturnIn';
-              UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, DM.tblMovementItem_ReturnIn.FieldByName('GUID').AsString);
-              UploadStoredProc.Params.AddParam('inMovementGUID', ftString, ptInput, FieldByName('GUID').AsString);
-              UploadStoredProc.Params.AddParam('inGoodsId', ftInteger, ptInput, DM.tblMovementItem_ReturnIn.FieldByName('GOODSID').AsInteger);
-              UploadStoredProc.Params.AddParam('inGoodsKindId', ftInteger, ptInput, DM.tblMovementItem_ReturnIn.FieldByName('GOODSKINDID').AsInteger);
-              UploadStoredProc.Params.AddParam('inAmount', ftFloat, ptInput, DM.tblMovementItem_ReturnIn.FieldByName('AMOUNT').AsFloat);
-              UploadStoredProc.Params.AddParam('inPrice', ftFloat, ptInput, DM.tblMovementItem_ReturnIn.FieldByName('PRICE').AsFloat);
-              UploadStoredProc.Params.AddParam('inChangePercent', ftFloat, ptInput, DM.tblMovementItem_ReturnIn.FieldByName('CHANGEPERCENT').AsFloat);
-              UploadStoredProc.Execute(false, false, false);
-              Inc(ItemsCount);
-              DM.tblMovementItem_ReturnIn.Next;
-            end;
-
-            SendCount := GetMovementCountItems(FieldByName('GUID').AsString);
-            if ItemsCount = SendCount then
-            begin
-              SetMovementStatus(FieldByName('GUID').AsString, DM.tblObject_ConstStatusId_Erased.AsInteger);
-              Edit;
-              FieldByName('IsSync').AsBoolean := true;
-              Post;
-            end else
-            begin
-              SetMovementStatus(FieldByName('GUID').AsString, DM.tblObject_ConstStatusId_UnComplete.AsInteger);
-              raise Exception.CreateFmt(
-                'По возврату №%s отправились %d позиций из %d. Требуется повторная синхронизация',
-                [FieldByName('INVNUMBER').AsString, SendCount, ItemsCount]);
-            end;
-          except
-            on E : Exception do
-            begin
-              raise Exception.Create(E.Message);
-              exit;
-            end;
-          end;
-        end;
-      finally
-        DM.tblMovementItem_ReturnIn.Close;
-        DM.tblMovementItem_ReturnIn.Filter := '';
-        DM.tblMovementItem_ReturnIn.Filtered := false;
-
-        Close;
-        Filter := '';
-        Filtered := false;
-      end;
-    end;
-  finally
-    FreeAndNil(UploadStoredProc);
   end;
 end;
 

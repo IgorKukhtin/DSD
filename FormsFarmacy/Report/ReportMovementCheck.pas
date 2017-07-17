@@ -72,6 +72,8 @@ type
     cxLabel19: TcxLabel;
     ceRetail: TcxButtonEdit;
     GuidesRetail: TdsdGuides;
+    actUpdateMainDS: TdsdUpdateDataSet;
+    spUpdate_Price_MCSIsClose: TdsdStoredProc;
   private
     { Private declarations }
   public

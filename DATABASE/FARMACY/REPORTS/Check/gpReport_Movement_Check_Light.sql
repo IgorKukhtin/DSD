@@ -1,10 +1,12 @@
 -- Function:  gpReport_Movement_Check_Light()
 
 DROP FUNCTION IF EXISTS gpReport_Movement_Check_Light (Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Movement_Check_Light (Integer, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION  gpReport_Movement_Check_Light(
     IN inUnitId           Integer  ,  -- Подразделение
     IN inRetailId         Integer  ,  -- ссылка на торг.сеть
+    IN inJuridicalId      Integer  ,  -- юр.лицо
     IN inDateStart        TDateTime,  -- Дата начала
     IN inDateFinal        TDateTime,  -- Дата окончания
     IN inIsPartion        Boolean,    -- 
@@ -13,7 +15,7 @@ CREATE OR REPLACE FUNCTION  gpReport_Movement_Check_Light(
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (
-  JuridicalCode  Integer, 
+  JuridicalCode  Integer,  
   JuridicalName  TVarChar,
   GoodsId        Integer, 
   GoodsCode      Integer, 
@@ -42,7 +44,9 @@ RETURNS TABLE (
   UnitName              TVarChar,
   OurJuridicalName      TVarChar,
   
-  IsClose Boolean, UpdateDate TDateTime
+  IsClose Boolean, UpdateDate TDateTime,
+  isTop boolean, isFirst boolean , isSecond boolean,
+  isSP Boolean, isPromo boolean
 )
 AS
 $BODY$
@@ -54,9 +58,7 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
     vbUserId:= lpGetUserBySession (inSession);
 
-    vbDateStartPromo := date_trunc('month', inDateStart);
-    vbDatEndPromo := date_trunc('month', inDateFinal) + interval '1 month'; 
-    
+  
     -- Результат
     RETURN QUERY
     WITH
@@ -71,6 +73,7 @@ BEGIN
                                           AND ((ObjectLink_Juridical_Retail.ChildObjectId = inRetailId AND inUnitId = 0)
                                                OR (inRetailId = 0 AND inUnitId = 0))
                 WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                  AND (ObjectLink_Unit_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0 )
              )
              
   , tmpData_Container AS (SELECT COALESCE (MIContainer.AnalyzerId,0)         AS MovementItemId_Income
@@ -194,6 +197,25 @@ BEGIN
                          , tmpData.isPrice
                     )
 
+        -- Маркетинговый контракт
+      , GoodsPromo AS (SELECT DISTINCT ObjectLink_Child_retail.ChildObjectId AS GoodsId  -- здесь товар "сети"
+                         --   , tmp.ChangePercent
+                       FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp   --CURRENT_DATE
+                                    INNER JOIN ObjectLink AS ObjectLink_Child
+                                                          ON ObjectLink_Child.ChildObjectId = tmp.GoodsId
+                                                         AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                             AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Main_retail ON ObjectLink_Main_retail.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                                   AND ObjectLink_Main_retail.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Child_retail ON ObjectLink_Child_retail.ObjectId = ObjectLink_Main_retail.ObjectId
+                                                                                    AND ObjectLink_Child_retail.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                                    /*INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                          ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_retail.ChildObjectId
+                                                         AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                                         AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId*/
+                         )
+
         -- результат
         SELECT
             Object_From_Income.ObjectCode                                      AS JuridicalCode
@@ -231,9 +253,15 @@ BEGIN
            , Object_To_Income.ValueData              AS UnitName
            , Object_OurJuridical_Income.ValueData    AS OurJuridicalName
 
-           , COALESCE(ObjectBoolean_Goods_Close.ValueData, False)            AS isClose
-           , COALESCE(ObjectDate_Update.ValueData, Null)        ::TDateTime  AS UpdateDate   
-      
+           , COALESCE(ObjectBoolean_Goods_Close.ValueData, False)  :: Boolean AS isClose
+           , COALESCE(ObjectDate_Update.ValueData, Null)          ::TDateTime AS UpdateDate   
+           
+           , COALESCE(ObjectBoolean_Goods_TOP.ValueData, false)    :: Boolean AS isTOP
+           , COALESCE(ObjectBoolean_Goods_First.ValueData, False)  :: Boolean AS isFirst
+           , COALESCE(ObjectBoolean_Goods_Second.ValueData, False) :: Boolean AS isSecond
+           
+           , COALESCE (ObjectBoolean_Goods_SP.ValueData,False)     :: Boolean AS isSP
+           , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
         FROM tmpDataRez AS tmpData
              LEFT JOIN Object AS Object_From_Income ON Object_From_Income.Id = tmpData.JuridicalId_Income
              LEFT JOIN Object AS Object_NDSKind_Income ON Object_NDSKind_Income.Id = tmpData.NDSKindId_Income
@@ -248,6 +276,8 @@ BEGIN
 
              LEFT JOIN MovementDesc AS MovementDesc_Income ON MovementDesc_Income.Id = Movement_Income.DescId
              LEFT JOIN MovementDesc AS MovementDesc_Price ON MovementDesc_Price.Id = Movement_Price.DescId
+             
+             LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods.Id
              -- условия хранения
              LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
                                   ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods.Id
@@ -265,7 +295,25 @@ BEGIN
              LEFT JOIN ObjectDate AS ObjectDate_Update
                                   ON ObjectDate_Update.ObjectId = Object_Goods.Id
                                  AND ObjectDate_Update.DescId = zc_ObjectDate_Protocol_Update()  
-                                                
+
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                     ON ObjectBoolean_Goods_TOP.ObjectId = Object_Goods.Id
+                                    AND ObjectBoolean_Goods_TOP.DescId = zc_ObjectBoolean_Goods_TOP()  
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_First
+                                     ON ObjectBoolean_Goods_First.ObjectId = Object_Goods.Id
+                                    AND ObjectBoolean_Goods_First.DescId = zc_ObjectBoolean_Goods_First() 
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Second
+                                     ON ObjectBoolean_Goods_Second.ObjectId = Object_Goods.Id
+                                    AND ObjectBoolean_Goods_Second.DescId = zc_ObjectBoolean_Goods_Second() 
+             -- получается GoodsMainId
+             LEFT JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = Object_Goods.Id
+                                                      AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+             LEFT JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                     AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+             LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
+                                      ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
+                                     AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
+                                                                                       
         ORDER BY Object_GoodsGroup.ValueData
                , Object_Goods.ValueData
 ;
@@ -276,6 +324,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 15.07.17         *
  12.07.17         *
 */
 
