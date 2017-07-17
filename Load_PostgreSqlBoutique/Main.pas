@@ -2739,7 +2739,7 @@ begin
         Add('      0 as ObjectId');
         Add('    , DiscountKlientAccountMoney.MovementId_pg as MovementId');
         Add('    , DiscountKlientAccountMoney.DiscountMovementItemId');
-        Add('    , DiscountKlientAccountMoney.InsertDate as OperDateInsert');
+        Add('    , max (DiscountKlientAccountMoney.InsertDate) as OperDateInsert');
         Add('    , BillItemsIncome.GoodsId_Postgres as GoodsId');
         Add('    , BillItemsIncome.Id_Postgres as PartionId');
         Add('    , DiscountMovementItem_byBarCode.Id_Postgres as SaleMI_Id');
@@ -2765,7 +2765,6 @@ begin
         Add(' GROUP BY ');
         Add('      DiscountKlientAccountMoney.MovementId_pg ');
         Add('    , DiscountKlientAccountMoney.DiscountMovementItemId');
-        Add('    , DiscountKlientAccountMoney.InsertDate');
         Add('    , BillItemsIncome.GoodsId_Postgres');
         Add('    , BillItemsIncome.Id_Postgres ');
         Add('    , DiscountMovementItem_byBarCode.Id_Postgres');
@@ -2801,8 +2800,7 @@ begin
         begin
              //!!!
              if fStop then begin exit; end;
-
-              //
+             //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
              toStoredProc.Params.ParamByName('inPartionId').Value:=FieldByName('PartionId').AsInteger;
@@ -3525,11 +3523,11 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add(' SELECT distinct');
+        Add(' SELECT ');
         Add('      0 as ObjectId');
         Add('    , 0 as InvNumber');
-        Add('    , date(DiscountKlientAccountMoney.OperDate) as OperDate   // Со временем ошибка неверный формат даты');
-        Add('    , DiscountKlientAccountMoney.InsertDate as OperDateInsert');
+        Add('    , DiscountKlientAccountMoney.OperDate as OperDate');    // Со временем ошибка неверный формат даты
+        Add('    , max (DiscountKlientAccountMoney.InsertDate) as OperDateInsert');
         Add('    , Unit_From.Id_Postgres as FromId ');
         Add('    , Unit_From.UnitName as UnitNameFrom');
         Add('    , Unit_To.Id_Postgres as ToId');
@@ -3558,6 +3556,17 @@ begin
              + '   and DiscountKlientAccountMoney.discountMovementItemReturnId  is null'
              + '   and DiscountKlientAccountMoney.isErased = zc_rvNo()'
             );
+        Add(' GROUP BY ');
+        Add('      DiscountKlientAccountMoney.OperDate');
+        Add('    , Unit_From.Id_Postgres ');
+        Add('    , Unit_From.UnitName ');
+        Add('    , Unit_To.Id_Postgres ');
+        Add('    , Unit_To.UnitName ');
+        Add('    , Users.UsersName ');
+        Add('    , Users.UserId_Postgres ');
+        Add('    , DiscountMovement.UnitID');
+        Add('    , DiscountMovement.DiscountKlientID');
+        Add('    , DiscountKlientAccountMoney.MovementId_pg ');
         Add('order by 4, 5');
         Open;
 
@@ -3602,7 +3611,7 @@ begin
                                +'      join dba.DiscountMovement on DiscountMovement.Id     = DiscountMovementItem_byBarCode.DiscountMovementId'
                                +'                               and DiscountMovement.UnitID = ' + IntToStr(FieldByName('UnitID').AsInteger)
                                +'                               and DiscountMovement.DiscountKlientID = ' + IntToStr(FieldByName('DiscountKlientID').AsInteger)
-                               +' where DiscountKlientAccountMoney.InsertDate = '+FormatToDateTimeServer(FieldByName('OperDateInsert').AsDateTime)
+                               +' where DiscountKlientAccountMoney.OperDate = '+FormatToDateTimeServer(FieldByName('OperDate').AsDateTime)
                                +'   and DiscountMovementItem_byBarCode.Id = DiscountKlientAccountMoney.DiscountMovementItemId'
                                +'   and DiscountKlientAccountMoney.isCurrent = zc_rvNo()'
                                +'   and DiscountKlientAccountMoney.discountMovementItemReturnId is null'
@@ -3641,7 +3650,7 @@ begin
         Add('      0 as ObjectId');
         Add('    , DiscountKlientAccountMoney.MovementId_pg as MovementId');
         Add('    , DiscountKlientAccountMoney.DiscountMovementItemId');
-        Add('    , DiscountKlientAccountMoney.InsertDate as OperDateInsert'
+        Add('    , max (DiscountKlientAccountMoney.InsertDate) as OperDateInsert'
 
              + '    , sum (if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=1 then  DiscountKlientAccountMoney.Summa else 0 endif) as AmountGRN'
              + '    , sum (if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=2 then  DiscountKlientAccountMoney.Summa else 0 endif) as AmountEUR'
@@ -3670,7 +3679,6 @@ begin
         Add(' GROUP BY ');
         Add('      DiscountKlientAccountMoney.MovementId_pg ');
         Add('    , DiscountKlientAccountMoney.DiscountMovementItemId');
-        Add('    , DiscountKlientAccountMoney.InsertDate');
         Add('    , DiscountKlientAccountMoney.MovementItemId_pg ');
         Add('order by 4, 3');
         Open;

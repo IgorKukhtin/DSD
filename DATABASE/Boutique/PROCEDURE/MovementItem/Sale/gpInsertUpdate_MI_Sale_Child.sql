@@ -32,141 +32,111 @@ BEGIN
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
 
 
-     -- проверка - свойство должно быть установлено
-     IF COALESCE (inParentId, 0) = 0 AND vbUserId = zc_User_Sybase() THEN
-        RAISE EXCEPTION 'Ошибка.Не определено значение <inParentId>.';
-     END IF;
-
-
      -- данные из документа
      vbUnitId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From());
 
 
-     -- находим
-     CREATE TEMP TABLE _tmp_MI_Child (MovementItemId Integer, AmountToPay TFloat) ON COMMIT DROP;
-
-     -- проверка - CurrencyId должен быть уникальным
-     IF EXISTS (SELECT 1
-                FROM Object AS Object_Unit
-                     LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
-                                          ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
-                                         AND ObjectLink_Unit_Parent.DescId   = zc_ObjectLink_Unit_Parent()
-                     LEFT JOIN ObjectLink AS ObjectLink_Cash_Unit
-                                          ON ObjectLink_Cash_Unit.ChildObjectId = Object_Unit.Id
-                                         AND ObjectLink_Cash_Unit.DescId        = zc_ObjectLink_Cash_Unit()
-                     LEFT JOIN ObjectLink AS ObjectLink_Cash_Unit_Parent
-                                          ON ObjectLink_Cash_Unit_Parent.ChildObjectId = ObjectLink_Unit_Parent.ChildObjectId
-                                         AND ObjectLink_Cash_Unit_Parent.DescId        = zc_ObjectLink_Cash_Unit()
-                                         AND ObjectLink_Cash_Unit.ChildObjectId        IS NULL
-                     INNER JOIN Object AS Object_Cash
-                                       ON Object_Cash.Id       = COALESCE (ObjectLink_Cash_Unit.ObjectId, ObjectLink_Cash_Unit_Parent.ObjectId)
-                                      AND Object_Cash.DescId   = zc_Object_Cash()
-                                      AND Object_Cash.isErased = FALSE
-                     INNER JOIN ObjectLink AS ObjectLink_Cash_Currency
-                                           ON ObjectLink_Cash_Currency.ObjectId      = Object_Cash.Id
-                                          AND ObjectLink_Cash_Currency.DescId        = zc_ObjectLink_Cash_Currency()
-                                          AND ObjectLink_Cash_Currency.ChildObjectId = zc_Currency_GRN()
-                WHERE Object_Unit.Id = vbUnitId
-                HAVING COUNT(*) > 1
-               )
+     -- !!!для SYBASE - по другому, + вся скидка сразу в мастере!!!
+     IF vbUserId <> zc_User_Sybase()
      THEN
-        RAISE EXCEPTION 'Ошибка.Для магазина <%> установлено несколько касс в валюте <%>.', lfGet_Object_ValueData (vbUnitId)
-                       , lfGet_Object_ValueData ((SELECT tmp.CurrencyId
-                                                  FROM (SELECT ObjectLink_Cash_Currency.ChildObjectId
-                                                        FROM Object AS Object_Unit
-                                                             LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
-                                                                                  ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
-                                                                                 AND ObjectLink_Unit_Parent.DescId   = zc_ObjectLink_Unit_Parent()
-                                                             LEFT JOIN ObjectLink AS ObjectLink_Cash_Unit
-                                                                                  ON ObjectLink_Cash_Unit.ChildObjectId = Object_Unit.Id
-                                                                                 AND ObjectLink_Cash_Unit.DescId        = zc_ObjectLink_Cash_Unit()
-                                                             LEFT JOIN ObjectLink AS ObjectLink_Cash_Unit_Parent
-                                                                                  ON ObjectLink_Cash_Unit_Parent.ChildObjectId = ObjectLink_Unit_Parent.ChildObjectId
-                                                                                 AND ObjectLink_Cash_Unit_Parent.DescId        = zc_ObjectLink_Cash_Unit()
-                                                                                 AND ObjectLink_Cash_Unit.ChildObjectId        IS NULL
-                                                             INNER JOIN Object AS Object_Cash
-                                                                               ON Object_Cash.Id       = COALESCE (ObjectLink_Cash_Unit.ObjectId, ObjectLink_Cash_Unit_Parent.ObjectId)
-                                                                              AND Object_Cash.DescId   = zc_Object_Cash()
-                                                                              AND Object_Cash.isErased = FALSE
-                                                             INNER JOIN ObjectLink AS ObjectLink_Cash_Currency
-                                                                                   ON ObjectLink_Cash_Currency.ObjectId      = Object_Cash.Id
-                                                                                  AND ObjectLink_Cash_Currency.DescId        = zc_ObjectLink_Cash_Currency()
-                                                                                  AND ObjectLink_Cash_Currency.ChildObjectId = zc_Currency_GRN()
-                                                        WHERE Object_Unit.Id = vbUnitId
-                                                        GROUP BY ObjectLink_Cash_Currency.ChildObjectId
-                                                        HAVING COUNT(*) > 1
-                                                       ) AS tmp LIMIT 1))
-                        ;
-     END IF;
+         -- заливка мастер
+         CREATE TEMP TABLE _tmp_MI_Master (MovementItemId Integer, AmountToPay TFloat) ON COMMIT DROP;
+         INSERT INTO _tmp_MI_Master (MovementItemId, AmountToPay)
+            WITH tmpMI AS (SELECT MovementItem.Id AS MovementItemId
+                                , CAST (CAST (MovementItem.Amount * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 0))
+                                      * (1 - COALESCE (MIFloat_ChangePercent.ValueData, 0) / 100) AS NUMERIC (16, 0)) AS AmountToPay
+                           FROM MovementItem
+                                LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
+                                                            ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
+                                LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                                            ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+                           WHERE MovementItem.MovementId = inMovementId
+                             AND MovementItem.DescId     = zc_MI_Master()
+                             AND MovementItem.isErased   = FALSE
+                          )
+            -- результат
+            SELECT tmpMI.MovementItemId, tmpMI.AmountToPay
+            FROM tmpMI
+            WHERE tmpMI.MovementItemId     = inParentId
+               OR COALESCE (inParentId, 0) = 0;
 
+         -- формируются Child
+         WITH tmpChild AS (SELECT *
+                           FROM lpSelect_MI_Master_calc (inUnitId          := vbUnitId
+                                                       , inAmountGRN       := inAmountGRN
+                                                       , inAmountUSD       := inAmountUSD
+                                                       , inAmountEUR       := inAmountEUR
+                                                       , inAmountCard      := inAmountCard
+                                                       , inAmountDiscount  := inAmountDiscount
+                                                       , inCurrencyValueUSD:= inCurrencyValueUSD
+                                                       , inParValueUSD     := inParValueUSD
+                                                       , inCurrencyValueEUR:= inCurrencyValueEUR
+                                                       , inParValueEUR     := inParValueEUR
+                                                       , inUserId          := vbUserId
+                                                        )
+                          )
 
-     -- оплата 1 товара
-     IF inParentId >  0
-     THEN
+         -- в мастер записать - Дополнительная скидка в продаже ГРН
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), inParentId, inAmountDiscount);
+
+         -- в мастер записать - Итого скидка в продаже ГРН
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalChangePercent(), inParentId
+                                                 , inAmountDiscount
+                                                  + COALESCE ((SELECT SUM (CAST (CAST (MovementItem.Amount * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 0))
+                                                                               * COALESCE (MIFloat_ChangePercent.ValueData, 0) / 100 AS NUMERIC (16, 0)))
+                                                               FROM MovementItem
+                                                                    LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
+                                                                                                ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
+                                                                                               AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
+                                                                    LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                                                                                ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                                                                               AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+                                                               WHERE MovementItem.Id       = inParentId
+                                                                 AND MovementItem.DescId   = zc_MI_Master()
+                                                                 AND MovementItem.isErased = FALSE
+                                                              ), 0));
+
+         -- в мастер записать - Итого оплата в продаже ГРН
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), inParentId
+                                                 , COALESCE ((SELECT SUM (_tmpCash.Amount * CASE WHEN _tmpCash.CurrencyId = zc_Currency_GRN() THEN 1 ELSE _tmpCash.CurrencyValue / _tmpCash.ParValue END)
+                                                              FROM _tmpCash
+                                                             ), 0));
+
+     ELSE
+         -- !!!для SYBASE - потом убрать!!!
+         -- проверка - свойство должно быть установлено
+         IF COALESCE (inParentId, 0) = 0 THEN
+            RAISE EXCEPTION 'Ошибка.Не определено значение <inParentId>.';
+         END IF;
+
          -- находим кассу для Магазина или р.сч., в которую попадет оплата
          CREATE TEMP TABLE _tmpCash (CashId Integer, CurrencyId Integer, Amount TFloat, CurrencyValue TFloat, ParValue TFloat) ON COMMIT DROP;
          --
          INSERT INTO _tmpCash (CashId, CurrencyId , Amount, CurrencyValue, ParValue)
-            WITH -- оплата - НАЛ
-                 tmpPay AS (SELECT zc_Currency_GRN() AS CurrencyId, inAmountGRN AS Amount, 0 AS CurrencyValue, 0 AS ParValue WHERE inAmountGRN <> 0
-                           UNION
-                            SELECT zc_Currency_USD() AS CurrencyId, inAmountUSD AS Amount, COALESCE (inCurrencyValueUSD, 1) AS CurrencyValue, CASE WHEN inParValueUSD > 0 THEN inParValueUSD ELSE  1 END AS ParValue WHERE inAmountUSD > 0
-                           UNION
-                            SELECT zc_Currency_EUR() AS CurrencyId, inAmountEUR AS Amount, COALESCE (inCurrencyValueEUR, 1) AS CurrencyValue, CASE WHEN inParValueEUR > 0 THEN inParValueEUR ELSE  1 END AS ParValue WHERE inAmountEUR > 0
-                           )
-                 -- кассы Магазина
-               , tmpCash AS (SELECT Object_Cash.Id                          AS CashId
-                                  , ObjectLink_Cash_Currency.ChildObjectId  AS CurrencyId
-                             FROM Object AS Object_Unit
-                                  LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
-                                                       ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
-                                                      AND ObjectLink_Unit_Parent.DescId   = zc_ObjectLink_Unit_Parent()
-                                  LEFT JOIN ObjectLink AS ObjectLink_Cash_Unit
-                                                       ON ObjectLink_Cash_Unit.ChildObjectId = Object_Unit.Id
-                                                      AND ObjectLink_Cash_Unit.DescId        = zc_ObjectLink_Cash_Unit()
-                                  LEFT JOIN ObjectLink AS ObjectLink_Cash_Unit_Parent
-                                                       ON ObjectLink_Cash_Unit_Parent.ChildObjectId = ObjectLink_Unit_Parent.ChildObjectId
-                                                      AND ObjectLink_Cash_Unit_Parent.DescId        = zc_ObjectLink_Cash_Unit()
-                                                      AND ObjectLink_Cash_Unit.ChildObjectId        IS NULL
-                                  INNER JOIN Object AS Object_Cash
-                                                    ON Object_Cash.Id       = COALESCE (ObjectLink_Cash_Unit.ObjectId, ObjectLink_Cash_Unit_Parent.ObjectId)
-                                                   AND Object_Cash.DescId   = zc_Object_Cash()
-                                                   AND Object_Cash.isErased = FALSE
-                                  INNER JOIN ObjectLink AS ObjectLink_Cash_Currency
-                                                        ON ObjectLink_Cash_Currency.ObjectId      = Object_Cash.Id
-                                                       AND ObjectLink_Cash_Currency.DescId        = zc_ObjectLink_Cash_Currency()
-                                                       AND ObjectLink_Cash_Currency.ChildObjectId = zc_Currency_GRN()
-                             WHERE Object_Unit.Id = vbUnitId
-                            )
-                 -- нашли кассу
-                 SELECT tmpCash.CashId
-                      , tmpPay.CurrencyId
-                      , tmpPay.Amount
-                      , tmpPay.CurrencyValue
-                      , tmpPay.ParValue
-                 FROM tmpPay
-                      INNER JOIN tmpCash ON tmpCash.CurrencyId = tmpPay.CurrencyId
-                UNION ALL
-                 -- расчетный счет Магазина - в ГРН
-                 SELECT ObjectLink_Unit_BankAccount.ChildObjectId     AS CashId
-                      , ObjectLink_BankAccount_Currency.ChildObjectId AS CurrencyId
-                      , inAmountCard AS Amount
-                      , 0            AS CurrencyValue
-                      , 0            AS ParValue
-                 FROM ObjectLink AS ObjectLink_Unit_BankAccount
-                      INNER JOIN ObjectLink AS ObjectLink_BankAccount_Currency
-                                            ON ObjectLink_BankAccount_Currency.ObjectId      = ObjectLink_Unit_BankAccount.ChildObjectId
-                                           AND ObjectLink_BankAccount_Currency.DescId        = zc_ObjectLink_BankAccount_Currency()
-                                           AND ObjectLink_BankAccount_Currency.ChildObjectId = zc_Currency_GRN()
-                 WHERE ObjectLink_Unit_BankAccount.ObjectId = vbUnitId
-                   AND ObjectLink_Unit_BankAccount.DescId   = zc_ObjectLink_Unit_BankAccount()
-                   AND inAmountCard                         <> 0
-                ;
-
-         -- проверка - CashId должен быть уникальным
-         IF EXISTS (SELECT 1 FROM _tmpCash GROUP BY _tmpCash.CashId HAVING COUNT(*) > 1) THEN
-            RAISE EXCEPTION 'Ошибка.Дублируется элемент <%>.', lfGet_Object_ValueData ((SELECT tmp.CashId FROM (SELECT _tmpCash.CashId FROM _tmpCash GROUP BY _tmpCash.CashId HAVING COUNT(*) > 1) AS tmp LIMIT 1));
-         END IF;
+            SELECT lpSelect.CashId
+                 , lpSelect.CurrencyId
+                 , CASE WHEN lpSelect.CurrencyId = zc_Currency_GRN() AND lpSelect.isBankAccount = FALSE THEN inAmountGRN
+                        WHEN lpSelect.CurrencyId = zc_Currency_GRN() AND lpSelect.isBankAccount = TRUE  THEN inAmountCard
+                        WHEN lpSelect.CurrencyId = zc_Currency_EUR() THEN inAmountEUR
+                        WHEN lpSelect.CurrencyId = zc_Currency_USD() THEN inAmountUSD
+                   END AS Amount
+                 , CASE WHEN lpSelect.CurrencyId = zc_Currency_EUR() THEN COALESCE (inCurrencyValueEUR, 1)
+                        WHEN lpSelect.CurrencyId = zc_Currency_USD() THEN COALESCE (inCurrencyValueUSD, 1)
+                        ELSE 0
+                   END AS CurrencyValue
+                 , CASE WHEN lpSelect.CurrencyId = zc_Currency_EUR() THEN CASE WHEN inParValueEUR > 0 THEN inParValueEUR ELSE 1 END
+                        WHEN lpSelect.CurrencyId = zc_Currency_USD() THEN CASE WHEN inParValueUSD > 0 THEN inParValueUSD ELSE 1 END
+                        ELSE 0
+                   END AS ParValue
+             FROM lpSelect_Object_Cash (vbUnitId, inUserId) AS lpSelect
+             WHERE 0 <> CASE WHEN lpSelect.CurrencyId = zc_Currency_GRN() AND lpSelect.isBankAccount = FALSE THEN inAmountGRN
+                             WHEN lpSelect.CurrencyId = zc_Currency_GRN() AND lpSelect.isBankAccount = TRUE  THEN inAmountCard
+                             WHEN lpSelect.CurrencyId = zc_Currency_EUR() THEN inAmountEUR
+                             WHEN lpSelect.CurrencyId = zc_Currency_USD() THEN inAmountUSD
+                        END
+            ;
 
 
          -- существущие элементы
@@ -203,45 +173,11 @@ BEGIN
               FULL JOIN _tmpMI ON _tmpMI.CashId = _tmpCash.CashId;
 
 
-         -- !!!для SYBASE - по другому, т.к. вся скидка сразу в мастере!!!
-         IF vbUserId = zc_User_Sybase()
-         THEN
-             -- !!!для SYBASE - потом убрать!!!
-             IF 1=0 THEN RAISE EXCEPTION 'Ошибка.Параметр только для загрузки из Sybase.'; END IF;
-         ELSE
-             -- в мастер записать - Дополнительная скидка в продаже ГРН
-             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), inParentId, inAmountDiscount);
+     END IF; -- !!!ФИНИШ для Sybase!!!
+     
 
-             -- в мастер записать - Итого скидка в продаже ГРН
-             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalChangePercent(), inParentId
-                                                     , inAmountDiscount
-                                                      + COALESCE ((SELECT SUM (CAST (CAST (MovementItem.Amount * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 0))
-                                                                                   * COALESCE (MIFloat_ChangePercent.ValueData, 0) / 100 AS NUMERIC (16, 0)))
-                                                                   FROM MovementItem
-                                                                        LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
-                                                                                                    ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
-                                                                                                   AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
-                                                                        LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
-                                                                                                    ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
-                                                                                                   AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
-                                                                   WHERE MovementItem.Id       = inParentId
-                                                                     AND MovementItem.DescId   = zc_MI_Master()
-                                                                     AND MovementItem.isErased = FALSE
-                                                                  ), 0));
-
-             -- в мастер записать - Итого оплата в продаже ГРН
-             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), inParentId
-                                                     , COALESCE ((SELECT SUM (_tmpCash.Amount * CASE WHEN _tmpCash.CurrencyId = zc_Currency_GRN() THEN 1 ELSE _tmpCash.CurrencyValue / _tmpCash.ParValue END)
-                                                                  FROM _tmpCash
-                                                                 ), 0));
-
-         END IF;
-
-         -- пересчитали Итоговые суммы по накладной
-         PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
-
-
-     END IF;
+     -- пересчитали Итоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
      -- "сложно" пересчитали "итоговые" суммы по ВСЕМ элементам
      PERFORM lpUpdate_MI_Sale_Total (MovementItem.Id)
