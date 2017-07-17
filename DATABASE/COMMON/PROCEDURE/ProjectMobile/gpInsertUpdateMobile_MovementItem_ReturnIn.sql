@@ -100,15 +100,7 @@ BEGIN
       -- сохранили свойство <Дата/время сохранения с мобильного устройства>
       PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_UpdateMobile(), vbMovementId, CURRENT_TIMESTAMP);
 
-
-      -- !!! ВРЕМЕННО - 04.07.17 !!!
-      -- !!!ВРЕМЕННО - УДАЛЯЕМ документ!!!
-      PERFORM lpSetErased_Movement (inMovementId:= vbMovementId, inUserId:= vbUserId);
-      -- !!! ВРЕМЕННО - 04.07.17 !!!
-
-
       RETURN vbId;
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
