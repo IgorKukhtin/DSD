@@ -50,37 +50,28 @@ if inSession = '5' then inSession = '1000137'; end if;
       -- если торговый агент не определен, то возвращать нечего
       IF vbPersonalId IS NOT NULL 
       THEN
-           -- создаем список контрагентов, что доступны торговому агенту
+           -- определяем список контрагентов+юр.лиц, что доступны торговому агенту
            CREATE TEMP TABLE tmpPartner ON COMMIT DROP
-           AS (SELECT ObjectLink_Partner_PersonalTrade.ObjectId AS PartnerId
-               FROM ObjectLink AS ObjectLink_Partner_PersonalTrade
-               WHERE ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId 
-                 AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+           AS (SELECT OP.Id AS PartnerId
+                    , OP.JuridicalId
+               FROM lfSelectMobile_Object_Partner (inIsErased:= FALSE, inSession:= inSession) AS OP
               );
 
            -- создаем список идентификаторов прайс-листов, что доступны торговому агенту 
            CREATE TEMP TABLE tmpPriceList ON COMMIT DROP
-           AS (WITH -- определяем список контрагентов+юр.лиц, что доступны торговому агенту
-                    tmpPartnerJuridical AS (SELECT tmpPartner.PartnerId
-                                                 , COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, 0) AS JuridicalId
-                                            FROM tmpPartner
-                                                 LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                                                      ON ObjectLink_Partner_Juridical.ObjectId = tmpPartner.PartnerId
-                                                                     AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                                           )
-               SELECT COALESCE(ObjectLink_Partner_PriceList.ChildObjectId
+           AS (SELECT COALESCE(ObjectLink_Partner_PriceList.ChildObjectId
                              , ObjectLink_Contract_PriceList.ChildObjectId
                              , ObjectLink_Juridical_PriceList.ChildObjectId
                              , zc_PriceList_Basis()) AS PriceListId
-               FROM tmpPartnerJuridical
+               FROM tmpPartner
                     LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceList
-                                         ON ObjectLink_Partner_PriceList.ObjectId = tmpPartnerJuridical.PartnerId
+                                         ON ObjectLink_Partner_PriceList.ObjectId = tmpPartner.PartnerId
                                         AND ObjectLink_Partner_PriceList.DescId = zc_ObjectLink_Partner_PriceList()
                     LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList
-                                         ON ObjectLink_Juridical_PriceList.ObjectId = tmpPartnerJuridical.JuridicalId
+                                         ON ObjectLink_Juridical_PriceList.ObjectId = tmpPartner.JuridicalId
                                         AND ObjectLink_Juridical_PriceList.DescId = zc_ObjectLink_Juridical_PriceList()
                     LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
-                                         ON ObjectLink_Contract_Juridical.ChildObjectId = tmpPartnerJuridical.JuridicalId
+                                         ON ObjectLink_Contract_Juridical.ChildObjectId = tmpPartner.JuridicalId
                                         AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
                     LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
                                          ON ObjectLink_Contract_PriceList.ObjectId = ObjectLink_Contract_Juridical.ObjectId
@@ -89,12 +80,12 @@ if inSession = '5' then inSession = '1000137'; end if;
                SELECT COALESCE(ObjectLink_Partner_PriceListPrior.ChildObjectId
                              , ObjectLink_Juridical_PriceListPrior.ChildObjectId
                              , zc_PriceList_BasisPrior()) AS PriceListId
-               FROM tmpPartnerJuridical
+               FROM tmpPartner
                     LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceListPrior
-                                         ON ObjectLink_Partner_PriceListPrior.ObjectId = tmpPartnerJuridical.PartnerId
+                                         ON ObjectLink_Partner_PriceListPrior.ObjectId = tmpPartner.PartnerId
                                         AND ObjectLink_Partner_PriceListPrior.DescId = zc_ObjectLink_Partner_PriceListPrior()
                     LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceListPrior
-                                         ON ObjectLink_Juridical_PriceListPrior.ObjectId = tmpPartnerJuridical.JuridicalId
+                                         ON ObjectLink_Juridical_PriceListPrior.ObjectId = tmpPartner.JuridicalId
                                         AND ObjectLink_Juridical_PriceListPrior.DescId = zc_ObjectLink_Juridical_PriceListPrior()
               );
                 
@@ -133,10 +124,7 @@ if inSession = '5' then inSession = '1000137'; end if;
                                               JOIN Object AS Object_Juridical                                                              
                                                           ON Object_Juridical.Id = ObjectProtocol.ObjectId
                                                          AND Object_Juridical.DescId = zc_Object_Juridical()
-                                              JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                                              ON ObjectLink_Partner_Juridical.ChildObjectId = ObjectProtocol.ObjectId
-                                                             AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                                              JOIN tmpPartner ON tmpPartner.PartnerId = ObjectLink_Partner_Juridical.ObjectId
+                                              JOIN tmpPartner ON tmpPartner.JuridicalId = ObjectProtocol.ObjectId
                                          WHERE ObjectProtocol.OperDate > inSyncDateIn
                                          GROUP BY ObjectProtocol.ObjectId
                                         )
@@ -165,10 +153,7 @@ if inSession = '5' then inSession = '1000137'; end if;
                                               JOIN ObjectLink AS ObjectLink_Contract_Juridical
                                                               ON ObjectLink_Contract_Juridical.ObjectId = ObjectProtocol.ObjectId
                                                              AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
-                                              JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                                              ON ObjectLink_Partner_Juridical.ChildObjectId = ObjectLink_Contract_Juridical.ChildObjectId
-                                                             AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                                              JOIN tmpPartner ON tmpPartner.PartnerId = ObjectLink_Partner_Juridical.ObjectId
+                                              JOIN tmpPartner ON tmpPartner.JuridicalId = ObjectLink_Contract_Juridical.ChildObjectId
                                          WHERE ObjectProtocol.OperDate > inSyncDateIn
                                          GROUP BY ObjectProtocol.ObjectId
                                         )

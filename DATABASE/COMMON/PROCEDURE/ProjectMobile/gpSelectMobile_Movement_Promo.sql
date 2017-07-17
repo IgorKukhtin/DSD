@@ -44,10 +44,7 @@ BEGIN
                                                              ON MI_PromoPartner.MovementId = Movement_PromoPartner.Id
                                                             AND MI_PromoPartner.DescId = zc_MI_Master()
                                                             AND MI_PromoPartner.IsErased = FALSE
-                                           JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                                           ON ObjectLink_Partner_PersonalTrade.ObjectId = MI_PromoPartner.ObjectId
-                                                          AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-                                                          AND ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
+                                           JOIN lfSelectMobile_Object_Partner (inIsErased:= FALSE, inSession:= inSession) AS OP ON OP.Id = MI_PromoPartner.ObjectId
                                            JOIN Movement AS Movement_Promo 
                                                          ON Movement_Promo.Id = Movement_PromoPartner.ParentId
                                                         AND Movement_Promo.StatusId = zc_Enum_Status_Complete()
