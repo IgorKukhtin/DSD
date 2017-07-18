@@ -1,7 +1,7 @@
 object ReturnInItemEditForm: TReturnInItemEditForm
   Left = 0
   Top = 0
-  Caption = #1054#1087#1083#1072#1090#1072'/'#1074#1086#1079#1074#1088#1072#1090
+  Caption = #1042#1086#1079#1074#1088#1072#1090
   ClientHeight = 295
   ClientWidth = 438
   Color = clBtnFace
@@ -59,7 +59,7 @@ object ReturnInItemEditForm: TReturnInItemEditForm
   object cbisPayTotal: TcxCheckBox
     Left = 316
     Top = 8
-    Caption = #1054#1073#1097#1072#1103' '#1086#1087#1083#1072#1090#1072
+    Caption = #1042#1086#1079#1074#1088#1072#1090' '#1048#1058#1054#1043#1054
     Properties.ReadOnly = True
     TabOrder = 5
     Width = 104
@@ -69,7 +69,7 @@ object ReturnInItemEditForm: TReturnInItemEditForm
     Top = 181
     Caption = #1050' '#1074#1086#1079#1074#1088#1072#1090#1091', '#1075#1088#1085':'
   end
-  object ceAmount: TcxCurrencyEdit
+  object ceAmountToPay: TcxCurrencyEdit
     Left = 31
     Top = 201
     Properties.DecimalPlaces = 4
@@ -97,7 +97,7 @@ object ReturnInItemEditForm: TReturnInItemEditForm
     Top = 181
     Caption = #1057#1076#1072#1095#1072', '#1075#1088#1085':'
   end
-  object ceAmountChange: TcxCurrencyEdit
+  object ceAmountDiff: TcxCurrencyEdit
     Left = 316
     Top = 201
     Properties.DecimalPlaces = 4
@@ -130,15 +130,6 @@ object ReturnInItemEditForm: TReturnInItemEditForm
     TabOrder = 14
     Width = 120
   end
-  object ceAmountDiscount: TcxCurrencyEdit
-    Left = 31
-    Top = 154
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    TabOrder = 15
-    Visible = False
-    Width = 120
-  end
   object cxLabel2: TcxLabel
     Left = 316
     Top = 74
@@ -149,21 +140,15 @@ object ReturnInItemEditForm: TReturnInItemEditForm
     Top = 90
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    TabOrder = 17
+    TabOrder = 16
     Width = 89
-  end
-  object cxLabel9: TcxLabel
-    Left = 8
-    Top = 154
-    Caption = #1057#1087#1080#1089#1072#1085#1080#1077' '#1087#1088#1080' '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1080
-    Visible = False
   end
   object cbisGRN: TcxCheckBox
     Left = 27
     Top = 10
     Action = actRefreshGRN
     Properties.ReadOnly = False
-    TabOrder = 19
+    TabOrder = 17
     Width = 104
   end
   object cbisUSD: TcxCheckBox
@@ -171,7 +156,7 @@ object ReturnInItemEditForm: TReturnInItemEditForm
     Top = 50
     Action = actRefreshUSD
     Properties.ReadOnly = False
-    TabOrder = 20
+    TabOrder = 18
     Width = 104
   end
   object cbisEUR: TcxCheckBox
@@ -179,7 +164,7 @@ object ReturnInItemEditForm: TReturnInItemEditForm
     Top = 90
     Action = actRefreshEUR
     Properties.ReadOnly = False
-    TabOrder = 21
+    TabOrder = 19
     Width = 104
   end
   object cbisCARD: TcxCheckBox
@@ -187,7 +172,7 @@ object ReturnInItemEditForm: TReturnInItemEditForm
     Top = 130
     Action = actRefreshCard
     Properties.ReadOnly = False
-    TabOrder = 22
+    TabOrder = 20
     Width = 147
   end
   object ActionList: TActionList
@@ -479,9 +464,9 @@ object ReturnInItemEditForm: TReturnInItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Amount'
+        Name = 'AmountToPay'
         Value = Null
-        Component = ceAmount
+        Component = ceAmountToPay
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -493,9 +478,9 @@ object ReturnInItemEditForm: TReturnInItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'AmountChange'
+        Name = 'AmountDiff'
         Value = Null
-        Component = ceAmountChange
+        Component = ceAmountDiff
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -562,31 +547,22 @@ object ReturnInItemEditForm: TReturnInItemEditForm
     IdParam.MultiSelectSeparator = ','
     ComponentList = <
       item
-        Component = ceCurrencyValue_EUR
-      end
-      item
-        Component = ceCurrencyValue_USD
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-        Component = ceAmountCARD
-      end
-      item
-        Component = ceAmountDiscount
-      end
-      item
-        Component = ceAmountEUR
+        Component = ceAmountGRN
       end
       item
         Component = ceAmountUSD
       end
       item
-        Component = ceAmountGRN
+        Component = ceAmountEUR
+      end
+      item
+        Component = ceAmountCARD
+      end
+      item
+        Component = ceCurrencyValue_EUR
+      end
+      item
+        Component = ceCurrencyValue_USD
       end>
     Left = 392
     Top = 120
@@ -631,7 +607,7 @@ object ReturnInItemEditForm: TReturnInItemEditForm
       item
         Name = 'inAmount'
         Value = 0.000000000000000000
-        Component = ceAmount
+        Component = ceAmountToPay
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -675,9 +651,9 @@ object ReturnInItemEditForm: TReturnInItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'AmountChange'
+        Name = 'AmountDiff'
         Value = 0.000000000000000000
-        Component = ceAmountChange
+        Component = ceAmountDiff
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
@@ -717,7 +693,7 @@ object ReturnInItemEditForm: TReturnInItemEditForm
       item
         Name = 'inAmount'
         Value = 0.000000000000000000
-        Component = ceAmount
+        Component = ceAmountToPay
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -749,7 +725,6 @@ object ReturnInItemEditForm: TReturnInItemEditForm
       item
         Name = 'inAmountDiscount'
         Value = 0.000000000000000000
-        Component = ceAmountDiscount
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -764,7 +739,7 @@ object ReturnInItemEditForm: TReturnInItemEditForm
       item
         Name = 'AmountChange'
         Value = 0.000000000000000000
-        Component = ceAmountChange
+        Component = ceAmountDiff
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -811,7 +786,7 @@ object ReturnInItemEditForm: TReturnInItemEditForm
       item
         Name = 'inAmount'
         Value = 0.000000000000000000
-        Component = ceAmount
+        Component = ceAmountToPay
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -843,7 +818,6 @@ object ReturnInItemEditForm: TReturnInItemEditForm
       item
         Name = 'inAmountDiscount'
         Value = 0.000000000000000000
-        Component = ceAmountDiscount
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -858,7 +832,7 @@ object ReturnInItemEditForm: TReturnInItemEditForm
       item
         Name = 'AmountChange'
         Value = 0.000000000000000000
-        Component = ceAmountChange
+        Component = ceAmountDiff
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -905,7 +879,7 @@ object ReturnInItemEditForm: TReturnInItemEditForm
       item
         Name = 'inAmount'
         Value = 0.000000000000000000
-        Component = ceAmount
+        Component = ceAmountToPay
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -937,7 +911,6 @@ object ReturnInItemEditForm: TReturnInItemEditForm
       item
         Name = 'inAmountDiscount'
         Value = 0.000000000000000000
-        Component = ceAmountDiscount
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -952,7 +925,7 @@ object ReturnInItemEditForm: TReturnInItemEditForm
       item
         Name = 'AmountChange'
         Value = 0.000000000000000000
-        Component = ceAmountChange
+        Component = ceAmountDiff
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -999,7 +972,7 @@ object ReturnInItemEditForm: TReturnInItemEditForm
       item
         Name = 'inAmount'
         Value = 0.000000000000000000
-        Component = ceAmount
+        Component = ceAmountToPay
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1031,7 +1004,6 @@ object ReturnInItemEditForm: TReturnInItemEditForm
       item
         Name = 'inAmountDiscount'
         Value = 0.000000000000000000
-        Component = ceAmountDiscount
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1046,7 +1018,7 @@ object ReturnInItemEditForm: TReturnInItemEditForm
       item
         Name = 'AmountChange'
         Value = 0.000000000000000000
-        Component = ceAmountChange
+        Component = ceAmountDiff
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -1078,7 +1050,12 @@ object ReturnInItemEditForm: TReturnInItemEditForm
         Control = ceAmountCARD
       end
       item
-        Control = ceAmountDiscount
+      end
+      item
+        Control = ceCurrencyValue_USD
+      end
+      item
+        Control = ceCurrencyValue_EUR
       end>
     Action = actRefreshTotal
     Left = 256

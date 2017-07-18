@@ -16,9 +16,9 @@ RETURNS TABLE (Id Integer
              , AmountEUR      TFloat
              , AmountCard     TFloat
              , AmountDiscount TFloat
-             , Amount         TFloat
+             , AmountToPay    TFloat
              , AmountRemains  TFloat
-             , AmountChange   TFloat
+             , AmountDiff     TFloat
              , isPayTotal     Boolean
              , isGRN          Boolean
              , isUSD          Boolean
@@ -28,19 +28,17 @@ RETURNS TABLE (Id Integer
               )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbOperDate TDateTime;
-   DECLARE vbSumm TFloat;
+   DECLARE vbUserId            Integer;
+   DECLARE vbOperDate          TDateTime;
+   DECLARE vbSummToPay         TFloat;
    DECLARE vbSummChangePercent TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
      
-     SELECT Movement.OperDate 
-    INTO vbOperDate
-     FROM Movement
-     WHERE Movement.Id = inMovementId;
+     -- данные из документа
+     vbOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
 
          -- сумма к оплате
          SELECT CAST ( SUM (((CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) <> 0

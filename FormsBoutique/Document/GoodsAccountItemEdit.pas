@@ -39,11 +39,11 @@ type
     ceAmountGRN: TcxCurrencyEdit;
     cbisPayTotal: TcxCheckBox;
     cxLabel1: TcxLabel;
-    ceAmount: TcxCurrencyEdit;
+    ceAmountToPay: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
     ceAmountRemains: TcxCurrencyEdit;
     cxLabel4: TcxLabel;
-    ceAmountChange: TcxCurrencyEdit;
+    ceAmountDiff: TcxCurrencyEdit;
     ceAmountUSD: TcxCurrencyEdit;
     ceAmountEUR: TcxCurrencyEdit;
     ceAmountCARD: TcxCurrencyEdit;

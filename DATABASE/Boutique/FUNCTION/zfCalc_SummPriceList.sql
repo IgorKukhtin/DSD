@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS zfCalc_SummPriceList (TFloat, TFloat);
 
 CREATE OR REPLACE FUNCTION zfCalc_SummPriceList(
     IN inAmount        TFloat, -- Кол-во
-    IN inOperPriceList TFloat, -- Цена по прайсу, в ГРН
+    IN inOperPriceList TFloat  -- Цена по прайсу, в ГРН
 )
 RETURNS TFloat
 AS

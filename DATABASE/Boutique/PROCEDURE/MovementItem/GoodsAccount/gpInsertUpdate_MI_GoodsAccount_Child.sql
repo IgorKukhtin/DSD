@@ -94,6 +94,10 @@ BEGIN
             FROM tmpMI
             WHERE tmpMI.MovementItemId     = inParentId
                OR COALESCE (inParentId, 0) = 0;
+               
+
+-- RAISE EXCEPTION '<%>', (select max (AmountToPay) from _tmp_MI_Master);
+               
 
          -- расчет Данных Child
          WITH tmpChild AS (SELECT *
@@ -275,4 +279,5 @@ $BODY$
 */
 
 -- тест
+-- SELECT * FROM gpInsertUpdate_MI_GoodsAccount_Child (inMovementId := 35 , inParentId := 112 , inisPayTotal := 'False' , inisPayGRN := 'True' , inisPayUSD := 'False' , inisPayEUR := 'False' , inisPayCard := 'False' , inisDiscount := 'False' , inAmountGRN := 100 , inAmountUSD := 0 , inAmountEUR := 0 , inAmountCARD := 0 , inAmountDiscount := 0 ,  inSession := '2');
 -- SELECT * FROM gpInsertUpdate_MI_GoodsAccount_Child (inMovementId := 35 , inParentId := 112 , inisPayTotal := 'False' , inisPayGRN := 'True' , inisPayUSD := 'False' , inisPayEUR := 'False' , inisPayCard := 'False' , inisDiscount := 'False' , inAmountGRN := 100 , inAmountUSD := 0 , inAmountEUR := 0 , inAmountCARD := 0 , inAmountDiscount := 0 ,  inSession := '2');

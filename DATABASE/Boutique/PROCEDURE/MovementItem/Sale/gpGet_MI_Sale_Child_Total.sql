@@ -1,8 +1,7 @@
--- Function: gpGet_Movement_Income()
+-- Function: gpGet_MI_Sale_Child_Total()
 
 DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_Total (Integer,Integer,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
 DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_Total (TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpGet_MI_Sale_Child_Total(
     IN inCurrencyValueUSD  TFloat   , --
@@ -15,8 +14,8 @@ CREATE OR REPLACE FUNCTION gpGet_MI_Sale_Child_Total(
     IN inAmountDiscount    TFloat   , --
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (AmountRemains TFloat
-             , AmountDiff    TFloat
+RETURNS TABLE (AmountRemains TFloat -- Остаток, грн
+             , AmountDiff    TFloat -- Сдача, грн
               )
 AS
 $BODY$
@@ -26,19 +25,19 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
-         -- Результат
-         RETURN QUERY
-          WITH tmp AS (SELECT inAmountToPay - (COALESCE (inAmountGRN, 0)
-                                             + COALESCE (inAmountUSD, 0) * COALESCE (inCurrencyValueUSD, 0)
-                                             + COALESCE (inAmountEUR, 0) * COALESCE (inCurrencyValueEUR, 0)
-                                             + COALESCE (inAmountCard, 0)
-                                             + COALESCE (inAmountDiscount, 0)) AS AmountDiff
-                      )
-          SELECT -- Остаток, грн
-                 CASE WHEN tmp.AmountDiff > 0 THEN      tmp.AmountDiff ELSE 0 END :: TFloat AS AmountRemains
-                 -- Сдача, грн
-               , CASE WHEN tmp.AmountDiff < 0 THEN -1 * tmp.AmountDiff ELSE 0 END :: TFloat AS AmountDiff
-          FROM tmp;
+     -- Результат
+     RETURN QUERY
+       WITH tmp AS (SELECT inAmountToPay - (COALESCE (inAmountGRN, 0)
+                                          + COALESCE (inAmountUSD, 0) * COALESCE (inCurrencyValueUSD, 0)
+                                          + COALESCE (inAmountEUR, 0) * COALESCE (inCurrencyValueEUR, 0)
+                                          + COALESCE (inAmountCard, 0)
+                                          + COALESCE (inAmountDiscount, 0)) AS AmountDiff
+                   )
+       SELECT -- Остаток, грн
+              CASE WHEN tmp.AmountDiff > 0 THEN      tmp.AmountDiff ELSE 0 END :: TFloat AS AmountRemains
+              -- Сдача, грн
+            , CASE WHEN tmp.AmountDiff < 0 THEN -1 * tmp.AmountDiff ELSE 0 END :: TFloat AS AmountDiff
+       FROM tmp;
 
 END;
 $BODY$
@@ -51,4 +50,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpGet_MI_Sale_Child_Total(inId := 92 , inMovementId := 28 ,  inSession := '2');
+-- SELECT * FROM gpGet_MI_Sale_Child_Total (inId:= 92, inMovementId:= 28, inSession:= zfCalc_UserAdmin());

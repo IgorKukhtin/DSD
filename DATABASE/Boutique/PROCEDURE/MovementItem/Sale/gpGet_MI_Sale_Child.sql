@@ -3,7 +3,6 @@
 DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child (Integer, Integer, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpGet_MI_Sale_Child(
     IN inId             Integer  , -- ключ
     IN inMovementId     Integer  , --
@@ -19,7 +18,7 @@ RETURNS TABLE (Id Integer
              , AmountDiscount TFloat
              , AmountToPay    TFloat
              , AmountRemains  TFloat
-             , AmountDiff   TFloat
+             , AmountDiff     TFloat
              , isPayTotal     Boolean
              , isGRN          Boolean
              , isUSD          Boolean

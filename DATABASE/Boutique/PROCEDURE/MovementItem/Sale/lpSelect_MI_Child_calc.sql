@@ -58,6 +58,7 @@ BEGIN
                           )
             -- ðåçóëüòàò
             SELECT tmpMI.MovementItemId, tmpMI.Summa, tmpMI.AmountToPay FROM tmpMI;
+            -- SELECT 1, 12550, 12550;
 
      END IF;
      -- !!!ÄËß ÒÅÑÒÀ!!!
@@ -441,7 +442,8 @@ $BODY$
 
 -- òåñò
 /*
-WITH tmp AS (SELECT * FROM lpSelect_MI_Child_calc (inMovementId:= 8, inUnitId:= 6332, inAmountGRN:= 1300, inAmountUSD:= 500, inAmountEUR:= 400, inAmountCard:= 0, inAmountDiscount:= 1000, inCurrencyValueUSD:= 25, inParValueUSD:= 1, inCurrencyValueEUR:= 30, inParValueEUR:= 1, inUserId:= zfCalc_UserAdmin() :: Integer))
+WITH tmp AS (SELECT * FROM lpSelect_MI_Child_calc (inMovementId:= 3190, inUnitId:= 6332, inAmountGRN:= 22, inAmountUSD:= 0, inAmountEUR:= 432 , inAmountCard:= 0, inAmountDiscount:= 0, inCurrencyValueUSD:= 0, inParValueUSD:= 1, inCurrencyValueEUR:= 29, inParValueEUR:= 1, inUserId:= zfCalc_UserAdmin() :: Integer))
+-- WITH tmp AS (SELECT * FROM lpSelect_MI_Child_calc (inMovementId:= 8, inUnitId:= 6332, inAmountGRN:= 1300, inAmountUSD:= 500, inAmountEUR:= 400, inAmountCard:= 0, inAmountDiscount:= 1000, inCurrencyValueUSD:= 25, inParValueUSD:= 1, inCurrencyValueEUR:= 30, inParValueEUR:= 1, inUserId:= zfCalc_UserAdmin() :: Integer))
 SELECT tmpAll.ParentId, tmp_GRN.Amount AS Amount_GRN, tmp_Card.Amount AS Amount_Card, tmp_EUR.Amount AS Amount_EUR, tmp_EUR.Amount_GRN AS Amount_EUR_GRN, tmp_EUR.CurrencyId AS Id_EUR, tmp_USD.Amount AS Amount_USD, tmp_USD.Amount_GRN AS Amount_USD_GRN, tmp_USD.CurrencyId AS Id_USD, tmp_EUR.CurrencyValue, tmp_EUR.ParValue, tmp_USD.CurrencyValue, tmp_USD.ParValue, tmp_EUR.CashId_Exc AS CashId_Exc_fromEUR, tmp_USD.CashId_Exc AS CashId_Exc_fromUSD
 FROM (SELECT DISTINCT tmp.ParentId FROM tmp) AS tmpAll
      LEFT JOIN tmp AS tmp_GRN  ON tmp_GRN.ParentId  = tmpAll.ParentId AND tmp_GRN.CurrencyId  = zc_Currency_GRN() AND COALESCE (tmp_GRN.CashId, 0)      IN (SELECT Id FROM Object WHERE DescId = zc_Object_Cash())

@@ -1,8 +1,8 @@
 object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
   Left = 0
   Top = 0
-  Caption = #1054#1087#1083#1072#1090#1072'/'#1074#1086#1079#1074#1088#1072#1090
-  ClientHeight = 335
+  Caption = #1056#1072#1089#1095#1077#1090#1099
+  ClientHeight = 315
   ClientWidth = 438
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,7 +18,7 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 108
-    Top = 291
+    Top = 265
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -27,7 +27,7 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
   end
   object cxButton2: TcxButton
     Left = 252
-    Top = 291
+    Top = 265
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -59,19 +59,19 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
   object cbisPayTotal: TcxCheckBox
     Left = 316
     Top = 8
-    Caption = #1054#1073#1097#1072#1103' '#1086#1087#1083#1072#1090#1072
+    Caption = #1054#1087#1083#1072#1090#1072' '#1048#1058#1054#1043#1054
     Properties.ReadOnly = True
     TabOrder = 5
     Width = 104
   end
   object cxLabel1: TcxLabel
     Left = 34
-    Top = 213
+    Top = 202
     Caption = #1050' '#1086#1087#1083#1072#1090#1077', '#1075#1088#1085':'
   end
-  object ceAmount: TcxCurrencyEdit
+  object ceAmountToPay: TcxCurrencyEdit
     Left = 34
-    Top = 236
+    Top = 220
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
@@ -80,12 +80,12 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
   end
   object cxLabel3: TcxLabel
     Left = 174
-    Top = 213
+    Top = 202
     Caption = #1054#1089#1090#1072#1090#1086#1082', '#1075#1088#1085':'
   end
   object ceAmountRemains: TcxCurrencyEdit
     Left = 174
-    Top = 236
+    Top = 220
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
@@ -94,12 +94,12 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
   end
   object cxLabel4: TcxLabel
     Left = 316
-    Top = 213
+    Top = 202
     Caption = #1057#1076#1072#1095#1072', '#1075#1088#1085':'
   end
-  object ceAmountChange: TcxCurrencyEdit
+  object ceAmountDiff: TcxCurrencyEdit
     Left = 316
-    Top = 236
+    Top = 220
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
@@ -193,7 +193,7 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
   end
   object ActionList: TActionList
     Left = 16
-    Top = 288
+    Top = 256
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
@@ -492,9 +492,9 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Amount'
+        Name = 'AmountToPay'
         Value = Null
-        Component = ceAmount
+        Component = ceAmountToPay
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -506,9 +506,9 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'AmountChange'
+        Name = 'AmountDiff'
         Value = Null
-        Component = ceAmountChange
+        Component = ceAmountDiff
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -575,23 +575,20 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 64
-    Top = 288
+    Top = 256
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
     IdParam.MultiSelectSeparator = ','
     ComponentList = <
       item
-        Component = ceCurrencyValue_EUR
+        Component = ceAmountGRN
       end
       item
-        Component = ceCurrencyValue_USD
+        Component = ceAmountUSD
       end
       item
-      end
-      item
-      end
-      item
+        Component = ceAmountEUR
       end
       item
         Component = ceAmountCARD
@@ -600,13 +597,10 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
         Component = ceAmountDiscount
       end
       item
-        Component = ceAmountEUR
+        Component = ceCurrencyValue_USD
       end
       item
-        Component = ceAmountUSD
-      end
-      item
-        Component = ceAmountGRN
+        Component = ceCurrencyValue_EUR
       end>
     Left = 384
     Top = 120
@@ -635,7 +629,7 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
       item
         Name = 'inAmount'
         Value = 0.000000000000000000
-        Component = ceAmount
+        Component = ceAmountToPay
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -688,15 +682,15 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'AmountChange'
+        Name = 'AmountDiff'
         Value = 0.000000000000000000
-        Component = ceAmountChange
+        Component = ceAmountDiff
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 368
-    Top = 288
+    Left = 344
+    Top = 272
   end
   object spGet_isGRN: TdsdStoredProc
     StoredProcName = 'gpGet_MI_Sale_Child_isGRN'
@@ -730,7 +724,7 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
       item
         Name = 'inAmount'
         Value = 0.000000000000000000
-        Component = ceAmount
+        Component = ceAmountToPay
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -777,7 +771,7 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
       item
         Name = 'AmountChange'
         Value = 0.000000000000000000
-        Component = ceAmountChange
+        Component = ceAmountDiff
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -824,7 +818,7 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
       item
         Name = 'inAmount'
         Value = 0.000000000000000000
-        Component = ceAmount
+        Component = ceAmountToPay
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -871,7 +865,7 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
       item
         Name = 'AmountChange'
         Value = 0.000000000000000000
-        Component = ceAmountChange
+        Component = ceAmountDiff
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -918,7 +912,7 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
       item
         Name = 'inAmount'
         Value = 0.000000000000000000
-        Component = ceAmount
+        Component = ceAmountToPay
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -965,7 +959,7 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
       item
         Name = 'AmountChange'
         Value = 0.000000000000000000
-        Component = ceAmountChange
+        Component = ceAmountDiff
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -1012,7 +1006,7 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
       item
         Name = 'inAmount'
         Value = 0.000000000000000000
-        Component = ceAmount
+        Component = ceAmountToPay
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1059,7 +1053,7 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
       item
         Name = 'AmountChange'
         Value = 0.000000000000000000
-        Component = ceAmountChange
+        Component = ceAmountDiff
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -1106,7 +1100,7 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
       item
         Name = 'inAmount'
         Value = 0.000000000000000000
-        Component = ceAmount
+        Component = ceAmountToPay
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1153,7 +1147,7 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
       item
         Name = 'AmountChange'
         Value = 0.000000000000000000
-        Component = ceAmountChange
+        Component = ceAmountDiff
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -1186,6 +1180,12 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
       end
       item
         Control = ceAmountDiscount
+      end
+      item
+        Control = ceCurrencyValue_USD
+      end
+      item
+        Control = ceCurrencyValue_EUR
       end>
     Action = actRefreshTotal
     Left = 256

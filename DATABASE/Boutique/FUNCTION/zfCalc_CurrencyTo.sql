@@ -12,9 +12,12 @@ AS
 $BODY$
 BEGIN
     -- БЕЗ округления
-    RETURN COALESCE (inAmount, 0)
-         / CASE WHEN inCurrencyValue > 0 THEN inCurrencyValue ELSE 0 END
-         * CASE WHEN inParValue      > 0 THEN inParValue      ELSE 1 END
+    RETURN CASE WHEN inCurrencyValue > 0
+                     THEN COALESCE (inAmount, 0)
+                        / inCurrencyValue
+                        * CASE WHEN inParValue > 0 THEN inParValue ELSE 1 END
+                ELSE 0
+           END
           ;
 
 END;
