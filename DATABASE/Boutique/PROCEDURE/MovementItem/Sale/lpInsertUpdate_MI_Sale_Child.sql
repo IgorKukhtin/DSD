@@ -8,7 +8,6 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_Sale_Child(
     IN inMovementId            Integer   , -- Ключ объекта <Документ>
     IN inParentId              Integer   , -- Ключ
     IN inCashId                Integer   , -- Касса / р.счет
---    IN inPartionId             Integer   , -- Партия
     IN inCurrencyId            Integer   , -- валюта
     IN inCashId_Exc            Integer   , -- касса обмен
     IN inAmount                TFloat    , -- Количество
@@ -37,7 +36,8 @@ BEGIN
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Currency(), ioId, inCurrencyId);
      -- сохранили связь с <>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Cash(), ioId, inCashId);
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Cash(), ioId, inCashId_Exc);
+
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);

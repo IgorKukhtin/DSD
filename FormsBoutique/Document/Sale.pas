@@ -166,6 +166,9 @@ type
     Comment: TcxGridDBColumn;
     TotalSummDebt: TcxGridDBColumn;
     isClose: TcxGridDBColumn;
+    Amount_USD_Exc: TcxGridDBColumn;
+    Amount_EUR_Exc: TcxGridDBColumn;
+    Amount_GRN_Exc: TcxGridDBColumn;
   private
   public
   end;

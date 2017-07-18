@@ -247,6 +247,10 @@ object AssetGoods_ObjectForm: TAssetGoods_ObjectForm
         item
           Visible = True
           ItemName = 'bbChoiceGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -283,6 +287,7 @@ object AssetGoods_ObjectForm: TAssetGoods_ObjectForm
       Category = 0
       Hint = '     '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides

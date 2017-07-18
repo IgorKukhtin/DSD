@@ -364,6 +364,21 @@ object SaleForm: TSaleForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummDebt
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_USD_Exc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_EUR_Exc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_GRN_Exc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -501,6 +516,21 @@ object SaleForm: TSaleForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummDebt
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_USD_Exc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_EUR_Exc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_GRN_Exc
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -766,6 +796,39 @@ object SaleForm: TSaleForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object Amount_USD_Exc: TcxGridDBColumn
+            Caption = #1054#1073#1084#1077#1085' $'
+            DataBinding.FieldName = 'Amount_USD_Exc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object Amount_EUR_Exc: TcxGridDBColumn
+            Caption = #1054#1073#1084#1077#1085' EUR'
+            DataBinding.FieldName = 'Amount_EUR_Exc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object Amount_GRN_Exc: TcxGridDBColumn
+            Caption = #1054#1073#1084#1077#1085' '#1043#1056#1053
+            DataBinding.FieldName = 'Amount_GRN_Exc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
           end
           object DiscountSaleKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1089#1082#1080#1076#1082#1080

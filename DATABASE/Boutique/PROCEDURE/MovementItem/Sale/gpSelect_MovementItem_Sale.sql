@@ -33,6 +33,11 @@ RETURNS TABLE (Id Integer, PartionId Integer
              , TotalPayOth TFloat
              , TotalCountReturn TFloat, TotalReturn TFloat
              , TotalPayReturn TFloat
+
+             , Amount_USD_Exc    TFloat
+             , Amount_EUR_Exc    TFloat
+             , Amount_GRN_Exc    TFloat
+
              , BarCode TVarChar
              , Comment TVarChar
              , isClose Boolean
@@ -74,11 +79,8 @@ BEGIN
                            , COALESCE (MIFloat_CurrencyValue.ValueData, 0)         AS CurrencyValue
                            , COALESCE (MIFloat_ParValue.ValueData, 0)              AS ParValue
                            , COALESCE (MIFloat_ChangePercent.ValueData, 0)         AS ChangePercent
-                           , CAST (CASE WHEN MIFloat_CountForPrice.ValueData <> 0
-                                             THEN MovementItem.Amount * COALESCE (MIFloat_OperPrice.ValueData, 0) / MIFloat_CountForPrice.ValueData
-                                         ELSE MovementItem.Amount * COALESCE (MIFloat_OperPrice.ValueData, 0)
-                                   END AS NUMERIC (16, 2)) AS TotalSumm
-                           , CAST (MovementItem.Amount * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 2)) AS TotalSummPriceList
+                           , zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData) AS TotalSumm
+                           , zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData)                       AS TotalSummPriceList
 
                            , COALESCE (MIFloat_SummChangePercent.ValueData, 0)     AS SummChangePercent     -- Дополнительная скидка в продаже ГРН
                            , COALESCE (MIFloat_TotalChangePercent.ValueData, 0)    AS TotalChangePercent    -- Итого скидка в продаже ГРН
@@ -92,6 +94,7 @@ BEGIN
                            , MIString_Comment.ValueData                            AS Comment
                            , COALESCE (MIBoolean_Close.ValueData, FALSE)           AS isClose
                            , MovementItem.isErased
+                           , ROW_NUMBER() OVER (PARTITION BY MovementItem.isErased ORDER BY MovementItem.Id ASC) AS Ord
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                              AND MovementItem.DescId     = zc_MI_Master()
@@ -156,8 +159,14 @@ BEGIN
                                                         AND MIString_Comment.DescId = zc_MIString_Comment()
                        )
 
-    , tmpMI_Child AS (SELECT MovementItem.ParentId
-                           , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_GRN() THEN MovementItem.Amount ELSE 0 END) AS Amount_GRN
+    , tmpMI_Child AS (SELECT COALESCE (MovementItem.ParentId, 0) AS ParentId
+                           , SUM (CASE WHEN MovementItem.ParentId IS NULL
+                                            -- Расчетная сумма в грн для обмен
+                                            THEN -1 * zfCalc_CurrencyFrom (MovementItem.Amount, MIFloat_CurrencyValue.ValueData, MIFloat_ParValue.ValueData)
+                                       WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_GRN()
+                                            THEN MovementItem.Amount
+                                       ELSE 0
+                                  END) AS Amount_GRN
                            , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_USD() THEN MovementItem.Amount ELSE 0 END) AS Amount_USD
                            , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN MovementItem.Amount ELSE 0 END) AS Amount_EUR
                            , SUM (CASE WHEN Object.DescId = zc_Object_BankAccount() THEN MovementItem.Amount ELSE 0 END) AS Amount_Bank
@@ -170,6 +179,12 @@ BEGIN
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
                                                              ON MILinkObject_Currency.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_Currency.DescId         = zc_MILinkObject_Currency()
+                            LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValue
+                                                        ON MIFloat_CurrencyValue.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_CurrencyValue.DescId         = zc_MIFloat_CurrencyValue()
+                            LEFT JOIN MovementItemFloat AS MIFloat_ParValue
+                                                        ON MIFloat_ParValue.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
                       GROUP BY MovementItem.ParentId
                      )
        -- результат
@@ -200,7 +215,7 @@ BEGIN
            , tmpMI.OperPriceList  :: TFloat AS OperPriceList
 
            , tmpMI.TotalSumm           :: TFloat AS TotalSumm
-           , (CAST (tmpMI.TotalSumm * tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END AS NUMERIC (16, 2))) :: TFloat AS TotalSummBalance
+           , zfCalc_CurrencyFrom (tmpMI.TotalSumm, tmpMI.CurrencyValue, tmpMI.ParValue) :: TFloat AS TotalSummBalance
            , tmpMI.TotalSummPriceList  :: TFloat AS TotalSummPriceList
 
            , tmpMI.CurrencyValue            :: TFloat AS CurrencyValue
@@ -225,6 +240,10 @@ BEGIN
            , tmpMI.TotalCountReturn         :: TFloat AS TotalCountReturn  -- Кол-во возврат
            , tmpMI.TotalReturn              :: TFloat AS TotalReturn       -- Сумма возврата ГРН
            , tmpMI.TotalPayReturn           :: TFloat AS TotalPayReturn    -- Сумма возврата оплаты ГРН
+           
+           , tmpMI_Child_Exc.Amount_USD     :: TFloat AS Amount_USD_Exc    -- Сумма USD - обмен приход
+           , tmpMI_Child_Exc.Amount_EUR     :: TFloat AS Amount_EUR_Exc    -- Сумма EUR - обмен приход
+           , tmpMI_Child_Exc.Amount_GRN     :: TFloat AS Amount_GRN_Exc    -- Сумма GRN - обмен расход
 
            , tmpMI.BarCode
            , tmpMI.Comment
@@ -237,6 +256,10 @@ BEGIN
                                AND Container.DescId        = zc_Container_count()
 
             LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI.Id
+            LEFT JOIN tmpMI_Child AS tmpMI_Child_Exc ON tmpMI_Child_Exc.ParentId = 0
+                                                    AND tmpMI.Ord                = 1
+                                                    AND tmpMI.isErased           = FALSE
+
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
             LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmpMI.PartionId
 

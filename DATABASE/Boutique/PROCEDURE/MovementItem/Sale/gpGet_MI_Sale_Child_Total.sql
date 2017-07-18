@@ -7,7 +7,7 @@ DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_Total (TFloat,TFloat,TFloat,TFloat,T
 CREATE OR REPLACE FUNCTION gpGet_MI_Sale_Child_Total(
     IN inCurrencyValueUSD  TFloat   , --
     IN inCurrencyValueEUR  TFloat   , --
-    IN inAmount            TFloat   , --
+    IN inAmountToPay       TFloat   , --
     IN inAmountGRN         TFloat   , --
     IN inAmountUSD         TFloat   , --
     IN inAmountEUR         TFloat   , --
@@ -16,49 +16,33 @@ CREATE OR REPLACE FUNCTION gpGet_MI_Sale_Child_Total(
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (AmountRemains TFloat
-             , AmountChange TFloat
+             , AmountDiff    TFloat
               )
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbSumm TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-         -- Результат
-         RETURN QUERY 
-          SELECT CASE WHEN inAmount - (  COALESCE(inAmountGRN,0) 
-                                    + (COALESCE(inAmountUSD,0) * COALESCE(inCurrencyValueUSD,1))
-                                    + (COALESCE(inAmountEUR,0) * COALESCE(inCurrencyValueEUR,1)) 
-                                    +  COALESCE(inAmountCard,0)
-                                    +  COALESCE(inAmountDiscount,0) ) > 0 
-                      THEN inAmount - (  COALESCE(inAmountGRN,0) 
-                                    + (COALESCE(inAmountUSD,0) * COALESCE(inCurrencyValueUSD,1))
-                                    + (COALESCE(inAmountEUR,0) * COALESCE(inCurrencyValueEUR,1)) 
-                                    +  COALESCE(inAmountCard,0) 
-                                    +  COALESCE(inAmountDiscount,0) )
-                      ELSE 0
-                 END                                            ::TFloat AS AmountRemains          
-               , CASE WHEN inAmount - (  COALESCE(inAmountGRN,0) 
-                                    + (COALESCE(inAmountUSD,0) * COALESCE(inCurrencyValueUSD,1))
-                                    + (COALESCE(inAmountEUR,0) * COALESCE(inCurrencyValueEUR,1)) 
-                                    +  COALESCE(inAmountCard,0)
-                                    +  COALESCE(inAmountDiscount,0) ) < 0 
-                      THEN (inAmount - ( COALESCE(inAmountGRN,0) 
-                                    + (COALESCE(inAmountUSD,0) * COALESCE(inCurrencyValueUSD,1))
-                                    + (COALESCE(inAmountEUR,0) * COALESCE(inCurrencyValueEUR,1)) 
-                                    +  COALESCE(inAmountCard,0) 
-                                    +  COALESCE(inAmountDiscount,0) )) * (-1)
-                      ELSE 0
-                 END                                            ::TFloat AS AmountChange
-                ;
 
+         -- Результат
+         RETURN QUERY
+          WITH tmp AS (SELECT inAmountToPay - (COALESCE (inAmountGRN, 0)
+                                             + COALESCE (inAmountUSD, 0) * COALESCE (inCurrencyValueUSD, 0)
+                                             + COALESCE (inAmountEUR, 0) * COALESCE (inCurrencyValueEUR, 0)
+                                             + COALESCE (inAmountCard, 0)
+                                             + COALESCE (inAmountDiscount, 0)) AS AmountDiff
+                      )
+          SELECT -- Остаток, грн
+                 CASE WHEN tmp.AmountDiff > 0 THEN      tmp.AmountDiff ELSE 0 END :: TFloat AS AmountRemains
+                 -- Сдача, грн
+               , CASE WHEN tmp.AmountDiff < 0 THEN -1 * tmp.AmountDiff ELSE 0 END :: TFloat AS AmountDiff
+          FROM tmp;
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
