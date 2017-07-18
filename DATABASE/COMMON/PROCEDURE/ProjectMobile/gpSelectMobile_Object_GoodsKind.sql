@@ -26,6 +26,9 @@ BEGIN
       -- Результат
       IF vbPersonalId IS NOT NULL
       THEN
+           CREATE TEMP TABLE tmpPartner ON COMMIT DROP
+           AS (SELECT OP.Id AS PartnerId FROM lfSelectMobile_Object_Partner (inIsErased:= FALSE, inSession:= inSession) AS OP);
+
            CREATE TEMP TABLE tmpGoodsKind ON COMMIT DROP
            AS (SELECT ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId AS GoodsKindId
                     , COUNT(ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId) AS GoodsKindCount
@@ -38,10 +41,7 @@ BEGIN
                                     ON ObjectLink_GoodsListSale_Partner.ObjectId = Object_GoodsListSale.Id
                                    AND ObjectLink_GoodsListSale_Partner.DescId = zc_ObjectLink_GoodsListSale_Partner()
                                    AND ObjectLink_GoodsListSale_Partner.ChildObjectId IS NOT NULL
-                    JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                    ON ObjectLink_Partner_PersonalTrade.ObjectId = ObjectLink_GoodsListSale_Partner.ChildObjectId
-                                   AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-                                   AND ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
+                    JOIN tmpPartner ON tmpPartner.PartnerId = ObjectLink_GoodsListSale_Partner.ChildObjectId
                     JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
                                     ON ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = ObjectLink_GoodsListSale_Goods.ChildObjectId
                                    AND ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()

@@ -40,30 +40,25 @@ BEGIN
                              , COALESCE(ObjectLink_Partner_PriceListPrior.ChildObjectId
                                       , ObjectLink_Juridical_PriceListPrior.ChildObjectId
                                       , zc_PriceList_BasisPrior()) AS PriceListPriorId
-               FROM ObjectLink AS ObjectLink_Partner_PersonalTrade
+               FROM lfSelectMobile_Object_Partner (inIsErased:= FALSE, inSession:= inSession) AS OP
                     LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceList
-                                         ON ObjectLink_Partner_PriceList.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
+                                         ON ObjectLink_Partner_PriceList.ObjectId = OP.Id
                                         AND ObjectLink_Partner_PriceList.DescId = zc_ObjectLink_Partner_PriceList()
                     LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceListPrior
-                                         ON ObjectLink_Partner_PriceListPrior.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
+                                         ON ObjectLink_Partner_PriceListPrior.ObjectId = OP.Id
                                         AND ObjectLink_Partner_PriceListPrior.DescId = zc_ObjectLink_Partner_PriceListPrior()
-                    LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                         ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
-                                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                     LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
-                                         ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                         ON ObjectLink_Contract_Juridical.ChildObjectId = OP.JuridicalId
                                         AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
                     LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
                                          ON ObjectLink_Contract_PriceList.ObjectId = ObjectLink_Contract_Juridical.ObjectId
                                         AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
                     LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList
-                                         ON ObjectLink_Juridical_PriceList.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                         ON ObjectLink_Juridical_PriceList.ObjectId = OP.JuridicalId
                                         AND ObjectLink_Juridical_PriceList.DescId = zc_ObjectLink_Juridical_PriceList()
                     LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceListPrior
-                                         ON ObjectLink_Juridical_PriceListPrior.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                         ON ObjectLink_Juridical_PriceListPrior.ObjectId = OP.JuridicalId
                                         AND ObjectLink_Juridical_PriceListPrior.DescId = zc_ObjectLink_Juridical_PriceListPrior()
-               WHERE ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
-                 AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
               );
                 
            -- Убрал, есть ошибка у одного торгового - пусть выгружется ВСЕ
