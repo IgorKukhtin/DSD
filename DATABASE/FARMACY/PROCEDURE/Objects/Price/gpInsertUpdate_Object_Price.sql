@@ -284,7 +284,7 @@ BEGIN
         THEN
             -- сохранили свойство <НТЗ для периода>
             PERFORM lpInsertUpdate_objectBoolean (zc_ObjectBoolean_Price_MCSAuto(), ioId, inisMCSAuto);
-            outisMCSAuto := inisMCSAuto;
+            outisMCSAuto := COALESCE (inisMCSAuto,False) ;
 
             -- !!!только в этом случае!!!
             IF COALESCE (vbIsMCSAuto_old, FALSE) = FALSE
@@ -360,6 +360,8 @@ BEGIN
         PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_MCSNotRecalcDateChange(), ioId, outMCSNotRecalcDateChange);
     END IF;
     
+    outisMCSAuto := COALESCE (outisMCSAuto,False);
+    outisMCSNotRecalcOld:= COALESCE (outisMCSNotRecalcOld,False);
 
     -- сохранили протокол
     PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
