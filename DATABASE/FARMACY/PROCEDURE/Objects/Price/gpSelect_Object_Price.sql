@@ -366,7 +366,7 @@ BEGIN
                , tmpPrice_View.MCSValueOld
                , tmpPrice_View.StartDateMCSAuto
                , tmpPrice_View.EndDateMCSAuto
-               , tmpPrice_View.isMCSAuto
+               , tmpPrice_View.isMCSAuto                           :: Boolean
                , tmpPrice_View.isMCSNotRecalcOld
 
                , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
@@ -692,7 +692,7 @@ BEGIN
                , tmpPrice_View.MCSValueOld
                , tmpPrice_View.StartDateMCSAuto
                , tmpPrice_View.EndDateMCSAuto
-               , tmpPrice_View.isMCSAuto
+               , tmpPrice_View.isMCSAuto                           :: Boolean
                , tmpPrice_View.isMCSNotRecalcOld
 
                , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
