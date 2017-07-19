@@ -28,6 +28,7 @@ BEGIN
                                             , zc_Enum_Process_AccessKey_PersonalServiceFirstForm()
                                             , zc_Enum_Process_AccessKey_PersonalServiceSbitM()
                                             , zc_Enum_Process_AccessKey_PersonalServicePav()
+                                            , zc_Enum_Process_AccessKey_PersonalServiceOther()
                                              )
                             THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr())
                        -- филиал - Kiev

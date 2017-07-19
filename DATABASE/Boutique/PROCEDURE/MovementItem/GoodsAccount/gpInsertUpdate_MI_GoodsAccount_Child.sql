@@ -155,7 +155,7 @@ BEGIN
                INTo vbTmp;
 
      ELSE
-         -- !!!для SYBASE - потом убрать!!! + временно для inParentId
+         -- !!!для SYBASE - потом убрать!!!
 
          -- находим кассу для Магазина или р.сч., в которую попадет оплата
          CREATE TEMP TABLE _tmpCash (CashId Integer, CurrencyId Integer, Amount TFloat, CurrencyValue TFloat, ParValue TFloat) ON COMMIT DROP;

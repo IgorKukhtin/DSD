@@ -63,7 +63,7 @@ BEGIN
                                              ) AS tmp
                                          INNER JOIN Movement ON Movement.Id = tmp.MovementId
                                                             AND Movement.DescId = zc_Movement_ReturnIn()
-                                                            AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '93 DAY' AND CURRENT_DATE + INTERVAL '8 DAY'
+                                                            AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '183 DAY' AND CURRENT_DATE + INTERVAL '8 DAY'
                                                             AND Movement.StatusId <> zc_Enum_Status_Erased()
                                        );
          ELSE -- по InvNumber, но для скорости ограничение - 8 DAY
