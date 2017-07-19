@@ -1077,6 +1077,13 @@ CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_PersonalService() RETURNS Integ
 CREATE OR REPLACE FUNCTION zc_Enum_ImportType_MobileBillsJournal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_MobileBillsJournal' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_MobileBillsJournal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_MobileBillsJournal' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+-- !!!
+-- !!! Типы констант для мобильного приложения
+-- !!!
+CREATE OR REPLACE FUNCTION zc_Enum_MobileConst_Public() RETURNS TVarChar AS $BODY$BEGIN RETURN 'Public'::TVarChar; END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_MobileConst_Private() RETURNS TVarChar AS $BODY$BEGIN RETURN 'Private'::TVarChar; END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
+
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

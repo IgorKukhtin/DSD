@@ -2,7 +2,6 @@
 
 DROP FUNCTION IF EXISTS gpGet_MI_GoodsAccount_Child (Integer, Integer, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpGet_MI_GoodsAccount_Child(
     IN inId             Integer  , -- ключ
     IN inMovementId     Integer  , --
@@ -41,109 +40,138 @@ BEGIN
      vbOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
 
          -- сумма к оплате
-         SELECT CAST ( SUM (((CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) <> 0
-                                  THEN CAST (COALESCE (MI_Sale.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) / COALESCE (MIFloat_CountForPrice.ValueData, 1) AS NUMERIC (16, 2))
-                                  ELSE CAST ( COALESCE (MI_Sale.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 2))
-                             END) 
-                               - COALESCE (MIFloat_TotalChangePercent.ValueData, 0)
-                               - COALESCE (MIFloat_TotalPay_Sale.ValueData, 0)
-                               - COALESCE (MIFloat_TotalReturn.ValueData, 0)
-                       ) * (CASE WHEN Movement_Sale.DescId = zc_Movement_Sale() THEN 1 ELSE -1 END))  AS TFloat) AS SummDebt 
-              , CAST ( SUM (COALESCE(MIFloat_SummChangePercent.ValueData,0) ) AS NUMERIC (16, 2))
-        INTO vbSumm, vbSummChangePercent
+         SELECT SUM ((-- Сумма к выплате из партии продажи - МИНУС возврат
+                       zfCalc_SummChangePercent (MovementItem.Amount - COALESCE (MIFloat_TotalCountReturn.ValueData, 0)
+                                               , MIFloat_OperPriceList.ValueData
+                                               , MIFloat_ChangePercent.ValueData
+                                                 )
+                      )
+                       -- минус Оплата при продаже
+                        - COALESCE (MIFloat_TotalPay.ValueData, 0)
+                          -- минус Оплата в расчетах 
+                        - COALESCE (MIFloat_TotalPayOth.ValueData, 0)
+                          -- плюс возврат оплаты
+                        + COALESCE (MIFloat_TotalPayReturn.ValueData, 0)
+                     )   AS AmountToPay
+ 
+              -- сумма доп.скидки - Списание при округлении
+              , COALESCE (SUM (COALESCE (MIFloat_SummChangePercent.ValueData, 0)), 0)
+        INTO vbSummToPay, vbSummChangePercent
          FROM MovementItem 
               LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
                                           ON MIFloat_SummChangePercent.MovementItemId = MovementItem.Id
                                          AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
 
-              LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionMI
-                                               ON MILinkObject_PartionMI.MovementItemId = MovementItem.Id
-                                              AND MILinkObject_PartionMI.DescId = zc_MILinkObject_PartionMI()
-              LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = MILinkObject_PartionMI.ObjectId
-              LEFT JOIN MovementItem AS MI_Sale ON MI_Sale.Id = Object_PartionMI.ObjectCode
-              LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MI_Sale.MovementId
-              LEFT JOIN MovementDesc ON MovementDesc.Id = Movement_Sale.DescId
-              ----         
-              LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                          ON MIFloat_CountForPrice.MovementItemId = MI_Sale.Id
-                                         AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-              LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
-                                          ON MIFloat_OperPriceList.MovementItemId = MI_Sale.Id
-                                         AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
-              LEFT JOIN MovementItemFloat AS MIFloat_TotalPay_Sale
-                                          ON MIFloat_TotalPay_Sale.MovementItemId = MI_Sale.Id
-                                         AND MIFloat_TotalPay_Sale.DescId         = zc_MIFloat_TotalPay()    
-              LEFT JOIN MovementItemFloat AS MIFloat_TotalReturn
-                                          ON MIFloat_TotalReturn.MovementItemId = MI_Sale.Id
-                                         AND MIFloat_TotalReturn.DescId         = zc_MIFloat_TotalReturn()    
-              LEFT JOIN MovementItemFloat AS MIFloat_TotalPayReturn
-                                          ON MIFloat_TotalPayReturn.MovementItemId = MI_Sale.Id
-                                         AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn() 
-              LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
-                                          ON MIFloat_TotalChangePercent.MovementItemId = MI_Sale.Id
-                                         AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()   
-          WHERE (MovementItem.Id = inId OR inId = 0)
-            AND MovementItem.MovementId = inMovementId
-            AND MovementItem.DescId     = zc_MI_Master()
-            AND MovementItem.isErased   = FALSE;
+              LEFT JOIN MovementItemLinkObject AS MILO_PartionMI_level1
+                                               ON MILO_PartionMI_level1.MovementItemId = MovementItem.Id
+                                              AND MILO_PartionMI_level1.DescId = zc_MILinkObject_PartionMI()
+              LEFT JOIN Object AS Object_PartionMI_level1 ON Object_PartionMI_level1.Id = MILO_PartionMI_level1.ObjectId
+              LEFT JOIN MovementItemLinkObject AS MILO_PartionMI_level2
+                                               ON MILO_PartionMI_level2.MovementItemId = Object_PartionMI_level1.ObjectCode
+                                              AND MILO_PartionMI_level2.DescId         = zc_MILinkObject_PartionMI()
+              LEFT JOIN Object AS Object_PartionMI_level2 ON Object_PartionMI_level2.Id = MILO_PartionMI_level2.ObjectId
 
+              LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
+                                          ON MIFloat_OperPriceList.MovementItemId = COALESCE (Object_PartionMI_level2.ObjectCode, Object_PartionMI_level1.ObjectCode)
+                                         AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
+              LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                          ON MIFloat_ChangePercent.MovementItemId = COALESCE (Object_PartionMI_level2.ObjectCode, Object_PartionMI_level1.ObjectCode)
+                                         AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+              LEFT JOIN MovementItemFloat AS MIFloat_TotalCountReturn
+                                          ON MIFloat_TotalCountReturn.MovementItemId = COALESCE (Object_PartionMI_level2.ObjectCode, Object_PartionMI_level1.ObjectCode)
+                                         AND MIFloat_TotalCountReturn.DescId         = zc_MIFloat_TotalCountReturn()
+              LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
+                                          ON MIFloat_TotalPay.MovementItemId = COALESCE (Object_PartionMI_level2.ObjectCode, Object_PartionMI_level1.ObjectCode)
+                                         AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
+              LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth
+                                          ON MIFloat_TotalPayOth.MovementItemId = COALESCE (Object_PartionMI_level2.ObjectCode, Object_PartionMI_level1.ObjectCode)
+                                         AND MIFloat_TotalPayOth.DescId         = zc_MIFloat_TotalPayOth()
+              LEFT JOIN MovementItemFloat AS MIFloat_TotalPayReturn
+                                          ON MIFloat_TotalPayReturn.MovementItemId = COALESCE (Object_PartionMI_level2.ObjectCode, Object_PartionMI_level1.ObjectCode)
+                                         AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn()
+          WHERE MovementItem.MovementId = inMovementId
+            AND MovementItem.DescId     = zc_MI_Master()
+            AND MovementItem.isErased   = FALSE
+            AND (MovementItem.Id = inId OR inId = 0);
 
      IF COALESCE (inId, 0) = 0    -- вариант оплата итого
      THEN
          -- Результат
          RETURN QUERY 
          WITH tmpMI AS 
-                     (SELECT SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_GRN() THEN COALESCE(MovementItem.Amount,0) ELSE 0 END) AS AmountGRN
-                           , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_USD() THEN COALESCE(MovementItem.Amount,0) ELSE 0 END) AS AmountUSD
-                           , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN COALESCE(MovementItem.Amount,0) ELSE 0 END) AS AmountEUR
-                           , SUM (CASE WHEN Object.DescId = zc_Object_BankAccount() THEN MovementItem.Amount ELSE 0 END) AS AmountCard
+                     (SELECT COALESCE (SUM (CASE WHEN MovementItem.ParentId IS NULL
+                                                      -- Расчетная сумма в грн для обмен
+                                                      THEN -1 * zfCalc_CurrencyFrom (MovementItem.Amount, MIFloat_CurrencyValue.ValueData, MIFloat_ParValue.ValueData)
+                                                 WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_GRN()
+                                                      THEN COALESCE (MovementItem.Amount,0)
+                                                 ELSE 0
+                                            END), 0) AS AmountGRN
+                           , COALESCE (SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_USD() THEN MovementItem.Amount ELSE 0 END), 0) AS AmountUSD
+                           , COALESCE (SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN MovementItem.Amount ELSE 0 END), 0) AS AmountEUR
+                           
+                           , COALESCE (SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_USD() THEN zfCalc_CurrencyFrom (MovementItem.Amount, MIFloat_CurrencyValue.ValueData, MIFloat_ParValue.ValueData) ELSE 0 END), 0) AS AmountUSD_GRN
+                           , COALESCE (SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN zfCalc_CurrencyFrom (MovementItem.Amount, MIFloat_CurrencyValue.ValueData, MIFloat_ParValue.ValueData) ELSE 0 END), 0) AS AmountEUR_GRN
+                            
+                           , COALESCE (SUM (CASE WHEN Object.DescId = zc_Object_BankAccount() THEN MovementItem.Amount ELSE 0 END),0) AS AmountCard
+                           , COALESCE (MAX (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_USD() THEN COALESCE (MIFloat_CurrencyValue.ValueData, 0) ELSE 0 END), 0) AS CurrencyValue_USD
+                           , COALESCE (MAX (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_USD() THEN COALESCE (MIFloat_ParValue.ValueData, 1)      ELSE 0 END), 0) AS ParValue_USD
+                           , COALESCE (MAX (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN COALESCE (MIFloat_CurrencyValue.ValueData, 0) ELSE 0 END), 0) AS CurrencyValue_EUR
+                           , COALESCE (MAX (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN COALESCE (MIFloat_ParValue.ValueData, 1)      ELSE 0 END), 0) AS ParValue_EUR
                       FROM MovementItem
                             LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
                                                              ON MILinkObject_Currency.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
+                            LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValue
+                                                        ON MIFloat_CurrencyValue.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_CurrencyValue.DescId         = zc_MIFloat_CurrencyValue()
+                            LEFT JOIN MovementItemFloat AS MIFloat_ParValue
+                                                        ON MIFloat_ParValue.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
                       WHERE MovementItem.MovementId = inMovementId
                         AND MovementItem.DescId     = zc_MI_Child()
                         AND MovementItem.isErased   = FALSE
                      )
 
-          SELECT 0                       :: Integer  AS Id
-               , tmp_USD.Amount          ::TFloat    AS CurrencyValue_USD
-               , tmp_USD.ParValue        ::TFloat    AS ParValue_USD
-               , tmp_EUR.Amount          ::TFloat    AS CurrencyValue_EUR
-               , tmp_EUR.ParValue        ::TFloat    AS ParValue_EUR
-               , tmpMI.AmountGRN         ::TFloat
-               , tmpMI.AmountUSD         ::TFloat
-               , tmpMI.AmountEUR         ::TFloat
-               , tmpMI.AmountCard        ::TFloat
-               , vbSummChangePercent     ::TFloat    AS AmountDiscount
+          SELECT 0                            :: Integer  AS Id
+               , CASE WHEN tmpMI.CurrencyValue_USD > 0 THEN tmpMI.CurrencyValue_USD ELSE tmp_USD.Amount   END :: TFloat AS CurrencyValue_USD
+               , CASE WHEN tmpMI.ParValue_USD      > 0 THEN tmpMI.ParValue_USD      ELSE tmp_USD.ParValue END :: TFloat AS ParValue_USD
+               , CASE WHEN tmpMI.CurrencyValue_EUR > 0 THEN tmpMI.CurrencyValue_EUR ELSE tmp_EUR.Amount   END :: TFloat AS CurrencyValue_EUR
+               , CASE WHEN tmpMI.ParValue_EUR      > 0 THEN tmpMI.ParValue_EUR      ELSE tmp_EUR.ParValue END :: TFloat AS ParValue_EUR
+             
+                 -- из-за обмена может быть < 0
+               , CASE WHEN tmpMI.AmountGRN > 0 THEN tmpMI.AmountGRN ELSE 0 END :: TFloat AS AmountGRN
+               , tmpMI.AmountUSD              ::TFloat
+               , tmpMI.AmountEUR              ::TFloat
+               , tmpMI.AmountCard             ::TFloat
+               , vbSummChangePercent          ::TFloat    AS AmountDiscount
 
-               , vbSumm                  ::TFloat AS Amount
+               , vbSummToPay                  ::TFloat AS AmountToPay
 
-               , CASE WHEN vbSumm - ( COALESCE (tmpMI.AmountGRN,0) 
-                                    + (COALESCE(tmpMI.AmountUSD,0) * COALESCE(tmp_USD.Amount,0))
-                                    + (COALESCE(tmpMI.AmountEUR,0) * COALESCE(tmp_EUR.Amount,0)) 
-                                    + COALESCE(tmpMI.AmountCard,0)
-                                    + COALESCE(vbSummChangePercent,0) ) > 0 
-                      THEN vbSumm - ( COALESCE (tmpMI.AmountGRN,0) 
-                                    + (COALESCE(tmpMI.AmountUSD,0) * COALESCE(tmp_USD.Amount,0))
-                                    + (COALESCE(tmpMI.AmountEUR,0) * COALESCE(tmp_EUR.Amount,0)) 
-                                    + COALESCE(tmpMI.AmountCard,0)
-                                    + COALESCE(vbSummChangePercent,0) )
+               , CASE WHEN vbSummToPay - (CASE WHEN tmpMI.AmountGRN > 0 THEN tmpMI.AmountGRN ELSE 0 END
+                                        + tmpMI.AmountUSD_GRN
+                                        + tmpMI.AmountEUR_GRN
+                                        + tmpMI.AmountCard
+                                        + vbSummChangePercent) > 0 
+                      THEN vbSummToPay - (CASE WHEN tmpMI.AmountGRN > 0 THEN tmpMI.AmountGRN ELSE 0 END
+                                        + tmpMI.AmountUSD_GRN 
+                                        + tmpMI.AmountEUR_GRN 
+                                        + tmpMI.AmountCard
+                                        + vbSummChangePercent) 
                       ELSE 0
-                 END                              ::TFloat AS AmountRemains          
-               , CASE WHEN vbSumm - ( COALESCE (tmpMI.AmountGRN,0) 
-                                    + (COALESCE(tmpMI.AmountUSD,0) * COALESCE(tmp_USD.Amount,0))
-                                    + (COALESCE(tmpMI.AmountEUR,0) * COALESCE(tmp_EUR.Amount,0)) 
-                                    + COALESCE(tmpMI.AmountCard,0)
-                                    + COALESCE(vbSummChangePercent,0) ) < 0 
-                      THEN (vbSumm - ( COALESCE (tmpMI.AmountGRN,0) 
-                                    + (COALESCE(tmpMI.AmountUSD,0) * COALESCE(tmp_USD.Amount,0))
-                                    + (COALESCE(tmpMI.AmountEUR,0) * COALESCE(tmp_EUR.Amount,0)) 
-                                    + COALESCE(tmpMI.AmountCard,0) 
-                                    + COALESCE(vbSummChangePercent,0))) * (-1)
+                 END                          ::TFloat AS AmountRemains          
+               , CASE WHEN vbSummToPay - (CASE WHEN tmpMI.AmountGRN > 0 THEN tmpMI.AmountGRN ELSE 0 END
+                                        + tmpMI.AmountUSD_GRN
+                                        + tmpMI.AmountEUR_GRN
+                                        + tmpMI.AmountCard
+                                        + vbSummChangePercent) < 0 
+                      THEN (vbSummToPay - (CASE WHEN tmpMI.AmountGRN > 0 THEN tmpMI.AmountGRN ELSE 0 END
+                                        + tmpMI.AmountUSD_GRN
+                                        + tmpMI.AmountEUR_GRN
+                                        + tmpMI.AmountCard
+                                        + vbSummChangePercent)) * (-1)
                       ELSE 0
-                 END                              ::TFloat AS AmountChange
+                 END                          ::TFloat AS AmountChange
                
                  , TRUE AS isPayTotal
                  , CASE WHEN COALESCE (tmpMI.AmountGRN,0) <> 0 THEN TRUE ELSE FALSE END     AS isGRN
@@ -161,12 +189,23 @@ BEGIN
          -- Результат
          RETURN QUERY
            WITH tmpMI AS 
-                     (SELECT SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_GRN() THEN COALESCE(MovementItem.Amount,0) ELSE 0 END) AS AmountGRN
-                           , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_USD() THEN COALESCE(MovementItem.Amount,0) ELSE 0 END) AS AmountUSD
-                           , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN COALESCE(MovementItem.Amount,0) ELSE 0 END) AS AmountEUR
-                           , SUM (CASE WHEN Object.DescId = zc_Object_BankAccount() THEN MovementItem.Amount ELSE 0 END) AS AmountCard
-                           , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_USD() THEN COALESCE(MIFloat_CurrencyValue.ValueData,0) ELSE 0 END) AS CurrencyValue_USD
-                           , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN COALESCE(MIFloat_CurrencyValue.ValueData,0) ELSE 0 END) AS CurrencyValue_EUR
+                     (SELECT COALESCE (SUM (CASE WHEN MovementItem.ParentId IS NULL
+                                                      -- Расчетная сумма в грн для обмен
+                                                      THEN -1 * zfCalc_CurrencyFrom (MovementItem.Amount, MIFloat_CurrencyValue.ValueData, MIFloat_ParValue.ValueData)
+                                                 WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_GRN()
+                                                      THEN COALESCE (MovementItem.Amount,0)
+                                                 ELSE 0
+                                            END),0) AS AmountGRN
+                           , COALESCE (SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_USD() THEN COALESCE(MovementItem.Amount,0) ELSE 0 END),0) AS AmountUSD
+                           , COALESCE (SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN COALESCE(MovementItem.Amount,0) ELSE 0 END),0) AS AmountEUR
+                           , COALESCE (SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_USD() THEN zfCalc_CurrencyFrom (MovementItem.Amount, MIFloat_CurrencyValue.ValueData, MIFloat_ParValue.ValueData) ELSE 0 END), 0) AS AmountUSD_GRN
+                           , COALESCE (SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN zfCalc_CurrencyFrom (MovementItem.Amount, MIFloat_CurrencyValue.ValueData, MIFloat_ParValue.ValueData) ELSE 0 END), 0) AS AmountEUR_GRN
+                           , COALESCE (SUM (CASE WHEN Object.DescId = zc_Object_BankAccount() THEN MovementItem.Amount ELSE 0 END),0) AS AmountCard
+                          
+                           , COALESCE (MAX (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_USD() THEN COALESCE (MIFloat_CurrencyValue.ValueData, 0) ELSE 0 END), 0) AS CurrencyValue_USD
+                           , COALESCE (MAX (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_USD() THEN COALESCE (MIFloat_ParValue.ValueData, 1)      ELSE 0 END), 0) AS ParValue_USD
+                           , COALESCE (MAX (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN COALESCE (MIFloat_CurrencyValue.ValueData, 0) ELSE 0 END), 0) AS CurrencyValue_EUR
+                           , COALESCE (MAX (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN COALESCE (MIFloat_ParValue.ValueData, 1)      ELSE 0 END), 0) AS ParValue_EUR
                       FROM MovementItem
                             LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
@@ -186,41 +225,42 @@ BEGIN
            -- Результат
            SELECT
                  inId AS Id
-               , COALESCE (tmpMI.CurrencyValue_USD, tmp_USD.Amount)      ::TFloat    AS CurrencyValue_USD
-               , tmp_USD.ParValue        ::TFloat    AS ParValue_USD
-               , COALESCE (tmpMI.CurrencyValue_EUR, tmp_EUR.Amount)      ::TFloat    AS CurrencyValue_EUR
-               , tmp_EUR.ParValue        ::TFloat    AS ParValue_EUR
+               , CASE WHEN tmpMI.CurrencyValue_USD > 0 THEN tmpMI.CurrencyValue_USD ELSE tmp_USD.Amount   END :: TFloat AS CurrencyValue_USD
+               , CASE WHEN tmpMI.ParValue_USD      > 0 THEN tmpMI.ParValue_USD      ELSE tmp_USD.ParValue END :: TFloat AS ParValue_USD
+               , CASE WHEN tmpMI.CurrencyValue_EUR > 0 THEN tmpMI.CurrencyValue_EUR ELSE tmp_EUR.Amount   END :: TFloat AS CurrencyValue_EUR
+               , CASE WHEN tmpMI.ParValue_EUR      > 0 THEN tmpMI.ParValue_EUR      ELSE tmp_EUR.ParValue END :: TFloat AS ParValue_EUR
 
-               , tmpMI.AmountGRN         ::TFloat
+                 -- из-за обмена может быть < 0
+               , CASE WHEN tmpMI.AmountGRN > 0 THEN tmpMI.AmountGRN ELSE 0 END :: TFloat AS AmountGRN 
                , tmpMI.AmountUSD         ::TFloat
                , tmpMI.AmountEUR         ::TFloat
                , tmpMI.AmountCard        ::TFloat
                , vbSummChangePercent     ::TFloat    AS AmountDiscount
 
-               , vbSumm                  ::TFloat AS Amount
+               , vbSummToPay             ::TFloat AS AmountToPay
 
-               , CASE WHEN vbSumm - (  COALESCE(tmpMI.AmountGRN,0) 
-                                    + (COALESCE(tmpMI.AmountUSD,0) * COALESCE (tmpMI.CurrencyValue_USD, tmp_USD.Amount))
-                                    + (COALESCE(tmpMI.AmountEUR,0) * COALESCE (tmpMI.CurrencyValue_EUR, tmp_EUR.Amount)) 
-                                    +  COALESCE(tmpMI.AmountCard,0) 
-                                    + COALESCE(vbSummChangePercent,0)) > 0 
-                      THEN vbSumm - ( COALESCE (tmpMI.AmountGRN,0) 
-                                    + (COALESCE(tmpMI.AmountUSD,0) * COALESCE (tmpMI.CurrencyValue_USD, tmp_USD.Amount))
-                                    + (COALESCE(tmpMI.AmountEUR,0) * COALESCE (tmpMI.CurrencyValue_EUR, tmp_EUR.Amount)) 
-                                    +  COALESCE(tmpMI.AmountCard,0)
-                                    + COALESCE(vbSummChangePercent,0) )
+               , CASE WHEN vbSummToPay - (CASE WHEN tmpMI.AmountGRN > 0 THEN tmpMI.AmountGRN ELSE 0 END
+                                        + tmpMI.AmountUSD_GRN
+                                        + tmpMI.AmountEUR_GRN
+                                        + tmpMI.AmountCard 
+                                        + vbSummChangePercent) > 0 
+                      THEN vbSummToPay - (CASE WHEN tmpMI.AmountGRN > 0 THEN tmpMI.AmountGRN ELSE 0 END
+                                        + tmpMI.AmountUSD_GRN
+                                        + tmpMI.AmountEUR_GRN
+                                        + tmpMI.AmountCard 
+                                        + vbSummChangePercent)
                       ELSE 0
                  END                                 ::TFloat AS AmountRemains          
-               , CASE WHEN vbSumm - ( COALESCE (tmpMI.AmountGRN,0) 
-                                    + (COALESCE(tmpMI.AmountUSD,0) * COALESCE (tmpMI.CurrencyValue_USD, tmp_USD.Amount))
-                                    + (COALESCE(tmpMI.AmountEUR,0) * COALESCE (tmpMI.CurrencyValue_EUR, tmp_EUR.Amount)) 
-                                    + COALESCE (tmpMI.AmountCard,0)
-                                    + COALESCE(vbSummChangePercent,0) ) < 0 
-                      THEN (vbSumm - ( COALESCE(tmpMI.AmountGRN,0) 
-                                    + (COALESCE(tmpMI.AmountUSD,0) * COALESCE (tmpMI.CurrencyValue_USD, tmp_USD.Amount))
-                                    + (COALESCE(tmpMI.AmountEUR,0) * COALESCE (tmpMI.CurrencyValue_EUR, tmp_EUR.Amount)) 
-                                    +  COALESCE(tmpMI.AmountCard,0)
-                                    + COALESCE(vbSummChangePercent,0) )) * (-1)
+               , CASE WHEN vbSummToPay - (CASE WHEN tmpMI.AmountGRN > 0 THEN tmpMI.AmountGRN ELSE 0 END
+                                        + tmpMI.AmountUSD_GRN
+                                        + tmpMI.AmountEUR_GRN
+                                        + tmpMI.AmountCard 
+                                        + vbSummChangePercent) < 0
+                      THEN (vbSummToPay - (CASE WHEN tmpMI.AmountGRN > 0 THEN tmpMI.AmountGRN ELSE 0 END
+                                         + tmpMI.AmountUSD_GRN
+                                         + tmpMI.AmountEUR_GRN
+                                         + tmpMI.AmountCard 
+                                         + vbSummChangePercent)) * (-1)
                       ELSE 0
                  END                                 ::TFloat AS AmountChange
 

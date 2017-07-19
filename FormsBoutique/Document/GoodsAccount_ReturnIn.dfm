@@ -230,11 +230,13 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
       ImageIndex = 0
       object cxGrid: TcxGrid
         Left = 0
-        Top = 83
+        Top = 0
         Width = 1054
-        Height = 203
+        Height = 286
         Align = alClient
         TabOrder = 0
+        ExplicitTop = 83
+        ExplicitHeight = 203
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -799,157 +801,6 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
           GridView = cxGridDBTableView
         end
       end
-      object cxGrid1: TcxGrid
-        Left = 0
-        Top = 0
-        Width = 1054
-        Height = 75
-        Align = alTop
-        PopupMenu = PopupMenu
-        TabOrder = 1
-        ExplicitTop = 2
-        object cxGridDBTableView1: TcxGridDBTableView
-          Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = DataSource
-          DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
-          DataController.Summary.DefaultGroupSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end>
-          DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
-              Kind = skCount
-            end>
-          DataController.Summary.SummaryGroups = <>
-          Images = dmMain.SortImageList
-          OptionsCustomize.ColumnHiding = True
-          OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsData.Deleting = False
-          OptionsData.DeletingConfirmation = False
-          OptionsData.Inserting = False
-          OptionsView.GroupByBox = False
-          OptionsView.GroupSummaryLayout = gslAlignWithColumns
-          OptionsView.HeaderAutoHeight = True
-          OptionsView.HeaderHeight = 40
-          OptionsView.Indicator = True
-          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object BarCode: TcxGridDBColumn
-            Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <'#1058#1086#1074#1072#1088'>'
-            DataBinding.FieldName = 'BarCode'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 180
-          end
-          object Amount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'Amount'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
-            Width = 120
-          end
-        end
-        object cxGridLevel1: TcxGridLevel
-          GridView = cxGridDBTableView1
-        end
-      end
-      object cxSplitter1: TcxSplitter
-        Left = 0
-        Top = 75
-        Width = 1054
-        Height = 8
-        HotZoneClassName = 'TcxXPTaskBarStyle'
-        HotZone.Visible = False
-        AlignSplitter = salTop
-        Control = cxGrid1
-      end
     end
   end
   object cxLabel5: TcxLabel
@@ -1434,8 +1285,6 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
         end
         item
           StoredProc = spSelectMI
-        end
-        item
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1456,8 +1305,6 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
         end
         item
           StoredProc = spSelectMI
-        end
-        item
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1573,10 +1420,6 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
       StoredProcList = <
         item
           StoredProc = spChangeStatus
-        end
-        item
-        end
-        item
         end>
       Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
@@ -1591,10 +1434,6 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
       StoredProcList = <
         item
           StoredProc = spChangeStatus
-        end
-        item
-        end
-        item
         end>
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
@@ -1609,10 +1448,6 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
       StoredProcList = <
         item
           StoredProc = spChangeStatus
-        end
-        item
-        end
-        item
         end>
       Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
@@ -2689,8 +2524,6 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
       item
         Name = 'inBarCode'
         Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'BarCode'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2698,53 +2531,6 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
     PackSize = 1
     Left = 150
     Top = 343
-  end
-  object dsdDBViewAddOn1: TdsdDBViewAddOn
-    ErasedFieldName = 'isErased'
-    View = cxGridDBTableView1
-    OnDblClickActionList = <
-      item
-      end>
-    ActionItemList = <
-      item
-        ShortCut = 13
-      end>
-    SortImages = dmMain.SortImageList
-    OnlyEditingCellOnEnter = True
-    ColorRuleList = <>
-    ColumnAddOnList = <>
-    ColumnEnterList = <
-      item
-      end
-      item
-      end>
-    SummaryItemList = <>
-    Left = 944
-    Top = 224
-  end
-  object ClientDataSet: TClientDataSet
-    Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
-    Params = <>
-    Left = 784
-    Top = 195
-  end
-  object DataSource: TDataSource
-    DataSet = ClientDataSet
-    Left = 744
-    Top = 187
-  end
-  object spSelectBarCode: TdsdStoredProc
-    StoredProcName = 'gpSelect_MI_BarCode'
-    DataSet = ClientDataSet
-    DataSets = <
-      item
-        DataSet = ClientDataSet
-      end>
-    Params = <>
-    PackSize = 1
-    Left = 688
-    Top = 192
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null

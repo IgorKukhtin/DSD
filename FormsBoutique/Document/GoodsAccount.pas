@@ -137,16 +137,6 @@ type
     cePhone: TcxTextEdit;
     cxLabel14: TcxLabel;
     edLastDate: TcxDateEdit;
-    dsdDBViewAddOn1: TdsdDBViewAddOn;
-    ClientDataSet: TClientDataSet;
-    DataSource: TDataSource;
-    cxGrid1: TcxGrid;
-    cxGridDBTableView1: TcxGridDBTableView;
-    BarCode: TcxGridDBColumn;
-    Amount: TcxGridDBColumn;
-    cxGridLevel1: TcxGridLevel;
-    cxSplitter1: TcxSplitter;
-    spSelectBarCode: TdsdStoredProc;
     actGoodsChoiceForm: TOpenChoiceForm;
     InsertRecord: TInsertRecord;
     cbisPay: TcxCheckBox;
