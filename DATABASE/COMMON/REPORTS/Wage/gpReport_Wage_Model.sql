@@ -535,7 +535,7 @@ BEGIN
            , tmpMovement_all.StorageLineId_From
            , tmpMovement_all.StorageLineId_To
         FROM tmpMovement_all
-             LEFT JOIN tmpGoodsMaster_out ON tmpGoodsMaster_out.MovementId = tmpGoodsMaster_out.MovementId
+             LEFT JOIN tmpGoodsMaster_out ON tmpGoodsMaster_out.MovementId = tmpMovement_all.MovementId
                                          AND tmpMovement_all.IsActive      = TRUE
         GROUP BY
              tmpMovement_all.OperDate
@@ -993,4 +993,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Report_Wage_Model (inStartDate:= '01.04.2017', inEndDate:= '01.04.2017', inUnitId:= 8439, inModelServiceId:= 633116 , inMemberId:= 0, inPositionId:= 0, inSession:= '5');
+-- SELECT * FROM gpSelect_Report_Wage_Model (inStartDate:= '02.06.2017', inEndDate:= '02.06.2017', inUnitId:= 8439, inModelServiceId:= 632844, inMemberId:= 0, inPositionId:= 0, inSession:= '5');

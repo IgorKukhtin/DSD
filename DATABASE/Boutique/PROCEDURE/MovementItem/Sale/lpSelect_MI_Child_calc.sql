@@ -250,7 +250,7 @@ BEGIN
                                 , zfCalc_CurrencyTo (SUM (tmp_Currency.Amount_EUR_grn), inCurrencyValueEUR, inParValueEUR) AS Amount_EUR
                                 , zfCalc_CurrencyTo (SUM (tmp_Currency.Amount_USD_grn), inCurrencyValueUSD, inParValueUSD) AS Amount_USD
                            FROM tmp_Currency
-                          UNION
+                          UNION ALL
                            -- из »“ќ√ќ оплат в валюте
                            SELECT  1 * (zfCalc_CurrencyFrom (inAmountEUR, inCurrencyValueEUR, inParValueEUR) - tmp.Amount_EUR_grn) AS Amount_EUR_grn
                                 ,  1 * (zfCalc_CurrencyFrom (inAmountUSD, inCurrencyValueUSD, inParValueUSD) - tmp.Amount_USD_grn) AS Amount_USD_grn
