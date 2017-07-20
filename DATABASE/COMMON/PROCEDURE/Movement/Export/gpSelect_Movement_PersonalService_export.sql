@@ -14,6 +14,10 @@ RETURNS TABLE (RowData TVarChar)
 AS
 $BODY$
    DECLARE vbBankId Integer;
+   DECLARE vbPersonalServiceListId Integer;
+   DECLARE vbPersonalServiceListName TVarChar;
+   DECLARE vbisCardSecond Boolean;
+   DECLARE vbTotalSummCardSecondRecalc TFloat;
 
    DECLARE r RECORD;
    DECLARE i Integer; -- автонумерация
@@ -33,9 +37,72 @@ BEGIN
                     WHERE MovementLinkObject_PersonalServiceList.MovementId = inMovementId
                       AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
                    );
+        -- определили Ведомость начисления
+        SELECT MLO_PersonalServiceList.ObjectId, Object_ServiceList.ValueData
+          INTO vbPersonalServiceListId, vbPersonalServiceListName
+        FROM MovementLinkObject AS MLO_PersonalServiceList
+             LEFT JOIN Object AS Object_ServiceList ON Object_ServiceList.Id = MLO_PersonalServiceList.ObjectId
+        WHERE MLO_PersonalServiceList.MovementId = inMovementId
+          AND MLO_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList();
 
+     -- Находим есть ли сотрудники к выплате по Карта БН (ввод) - 2ф.
+     IF EXISTS (SELECT 1
+                FROM MovementItem
+                  INNER JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceListCardSecond
+                                        ON ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId = MovementItem.ObjectId
+                                       AND ObjectLink_Personal_PersonalServiceListCardSecond.DescId  = zc_ObjectLink_Personal_PersonalServiceListCardSecond()
+                                       AND ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId = vbPersonalServiceListId
+                WHERE MovementItem.MovementId = inMovementId
+                                         AND MovementItem.DescId = zc_MI_Master()
+                                         AND MovementItem.isErased = False
+                LIMIT 1)
+     THEN 
+         vbisCardSecond := True;
+     ELSE 
+         vbisCardSecond := False;
+     END IF;
+     
+     -- ВЫплата Карта БН (ввод) - 2ф.
+     IF vbisCardSecond = True AND POSITION('Банк 2ф' in vbPersonalServiceListName) > 0
+     THEN
+        -- итого сумма Карта БН (ввод) - 2ф.
+        vbTotalSummCardSecondRecalc := (SELECT MovementFloat_TotalSummCardSecondRecalc.ValueData
+                                        FROM MovementFloat AS MovementFloat_TotalSummCardSecondRecalc
+                                        WHERE MovementFloat_TotalSummCardSecondRecalc.MovementId = inMovementId
+                                          AND MovementFloat_TotalSummCardSecondRecalc.DescId = zc_MovementFloat_TotalSummCardSecondRecalc()
+                                        );
+
+	-- *** Шапка файла
+	INSERT INTO _tmpResult (RowData) VALUES ('Счет;ИНН;Сумма в копейках;Фамилия;Имя;Отчество');
+
+	-- *** Строчный вывод
+	i := 0; -- обнуляем автонумерацию
+	FOR r IN (select CardSecond, personalname, inn, SummCardSecondRecalc from gpSelect_MovementItem_PersonalService(inMovementId := inMovementId, inShowAll := 'False', inIsErased := 'False',  inSession := inSession) WHERE SummCardSecondRecalc <> 0)
+	LOOP
+		IF (char_length(r.CardSecond)<>14) 
+		   OR (NOT ISNUMERIC(r.CardSecond))
+		   OR (char_length(r.personalname)=0) THEN
+		   BEGIN
+			e := 'Неверные/неполные данные: Карта - ' || r.CardSecond || ', ФИО - ' || r.personalname || ', ИНН - ' || r.inn || ', Сумма - ' || r.SummCardSecondRecalc || CHR(13) || CHR(10);
+			er := concat(er, e);
+		   END;
+		ELSE
+		BEGIN
+			-- Номер карточного счета ф2; ИНН; Сумма; Фамилия; Имя; Отчество
+			INSERT INTO _tmpResult (RowData) VALUES (''||r.CardSecond||';'||r.inn||';'||ROUND( (r.SummCardSecondRecalc*100) ::numeric, 0)||';'||LEFT(REPLACE(REPLACE(r.personalname, ' ', ';'), chr(39), ''), 80) );
+			i := i + 1; -- увеличиваем значение автонумерации
+		END;
+		END IF;
+
+        END LOOP;
+	-- Пустая строка
+	INSERT INTO _tmpResult (RowData) VALUES ('');
+        -- Сумма зачисления	
+	INSERT INTO _tmpResult (RowData) VALUES (';;'||ROUND( (vbTotalSummCardSecondRecalc*100) ::numeric, 0));    
+     END IF;
+                                   
      -- ПАТ "БАНК ВОСТОК"
-     IF vbBankId = 76968
+     IF vbBankId = 76968 
      THEN
 	-- *** Шапка файла
 	-- Тип документа (из ТЗ)
@@ -161,6 +228,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.07.17         *
  20.12.16                                        *
  01.07.16                                        
 */
