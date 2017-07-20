@@ -5,10 +5,8 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -518
-  ExplicitTop = -203
   ExplicitWidth = 1193
-  ExplicitHeight = 574
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -27,6 +25,8 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       inherited cxGrid: TcxGrid
         Width = 1177
         Height = 476
+        ExplicitLeft = -312
+        ExplicitTop = 24
         ExplicitWidth = 1177
         ExplicitHeight = 476
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -595,6 +595,34 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
+          end
+          object Date_TransferIn: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1058#1088#1072#1085#1079#1080#1090' '#1087#1086#1083#1091#1095#1077#1085')'
+            DataBinding.FieldName = 'Date_TransferIn'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
+          object Member_TransferIn: TcxGridDBColumn
+            Caption = #1060#1048#1054' ('#1074#1080#1079#1072' '#1058#1088#1072#1085#1079#1080#1090' '#1087#1086#1083#1091#1095#1077#1085')'
+            DataBinding.FieldName = 'Member_TransferIn'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
+          object Date_TransferOut: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1058#1088#1072#1085#1079#1080#1090' '#1074#1086#1079#1074#1088#1072#1097#1077#1085')'
+            DataBinding.FieldName = 'Date_TransferOut'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 138
+          end
+          object Member_TransferOut: TcxGridDBColumn
+            Caption = #1060#1048#1054' ('#1074#1080#1079#1072' '#1058#1088#1072#1085#1079#1080#1090' '#1074#1086#1079#1074#1088#1072#1097#1077#1085')'
+            DataBinding.FieldName = 'Member_TransferOut'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 131
           end
           object Member_PartnerInFrom: TcxGridDBColumn
             Caption = #1060#1048#1054' ('#1086#1090' '#1082#1086#1075#1086' '#1076#1083#1103' '#1074#1080#1079#1099' '#1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072')'

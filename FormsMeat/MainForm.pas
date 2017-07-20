@@ -873,6 +873,10 @@ type
     N173: TMenuItem;
     actReport_ReceiptSaleAnalyzeRealForm: TdsdOpenForm;
     miReport_ReceiptSaleAnalyzeRealForm: TMenuItem;
+    actReestrTransferIn: TdsdOpenForm;
+    actReestrTransferOut: TdsdOpenForm;
+    N174: TMenuItem;
+    N175: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

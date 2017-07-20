@@ -845,12 +845,14 @@ END $$;
 DO $$
 BEGIN
      -- !!! Типы состояния по реестру
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReestrKind_PartnerOut(), inDescId:= zc_Object_ReestrKind(), inCode:= 1, inName:= 'Вывезено со склада'         , inEnumName:= 'zc_Enum_ReestrKind_PartnerOut');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReestrKind_PartnerIn() , inDescId:= zc_Object_ReestrKind(), inCode:= 2, inName:= 'Получено от клиента'        , inEnumName:= 'zc_Enum_ReestrKind_PartnerIn');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReestrKind_RemakeIn()  , inDescId:= zc_Object_ReestrKind(), inCode:= 3, inName:= 'Получено для переделки'     , inEnumName:= 'zc_Enum_ReestrKind_RemakeIn');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReestrKind_RemakeBuh() , inDescId:= zc_Object_ReestrKind(), inCode:= 4, inName:= 'Бухгалтерия для исправления', inEnumName:= 'zc_Enum_ReestrKind_RemakeBuh');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReestrKind_Remake()    , inDescId:= zc_Object_ReestrKind(), inCode:= 5, inName:= 'Документ исправлен'         , inEnumName:= 'zc_Enum_ReestrKind_Remake');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReestrKind_Buh()       , inDescId:= zc_Object_ReestrKind(), inCode:= 6, inName:= 'Бухгалтерия'                , inEnumName:= 'zc_Enum_ReestrKind_Buh');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReestrKind_PartnerOut() , inDescId:= zc_Object_ReestrKind(), inCode:= 1, inName:= 'Вывезено со склада'         , inEnumName:= 'zc_Enum_ReestrKind_PartnerOut');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReestrKind_PartnerIn()  , inDescId:= zc_Object_ReestrKind(), inCode:= 2, inName:= 'Получено от клиента'        , inEnumName:= 'zc_Enum_ReestrKind_PartnerIn');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReestrKind_RemakeIn()   , inDescId:= zc_Object_ReestrKind(), inCode:= 3, inName:= 'Получено для переделки'     , inEnumName:= 'zc_Enum_ReestrKind_RemakeIn');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReestrKind_RemakeBuh()  , inDescId:= zc_Object_ReestrKind(), inCode:= 4, inName:= 'Бухгалтерия для исправления', inEnumName:= 'zc_Enum_ReestrKind_RemakeBuh');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReestrKind_Remake()     , inDescId:= zc_Object_ReestrKind(), inCode:= 5, inName:= 'Документ исправлен'         , inEnumName:= 'zc_Enum_ReestrKind_Remake');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReestrKind_Buh()        , inDescId:= zc_Object_ReestrKind(), inCode:= 6, inName:= 'Бухгалтерия'                , inEnumName:= 'zc_Enum_ReestrKind_Buh');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReestrKind_TransferIn() , inDescId:= zc_Object_ReestrKind(), inCode:= 7, inName:= 'Транзит получен'            , inEnumName:= 'zc_Enum_ReestrKind_TransferIn');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReestrKind_TransferOut(), inDescId:= zc_Object_ReestrKind(), inCode:= 8, inName:= 'Транзит возвращен'          , inEnumName:= 'zc_Enum_ReestrKind_TransferOut');
 END $$;
 
 

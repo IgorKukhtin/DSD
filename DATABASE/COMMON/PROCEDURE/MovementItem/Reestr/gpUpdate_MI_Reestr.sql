@@ -193,6 +193,24 @@ BEGIN
        PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Buh(), vbId_mi, vbMemberId_user);
     END IF;
 
+    -- <Транзит получен>
+    IF inReestrKindId = zc_Enum_ReestrKind_TransferIn()
+    THEN 
+       -- сохранили <когда сформирована виза>
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_TransferIn(), vbId_mi, CURRENT_TIMESTAMP);
+       -- сохранили связь с <кто сформировал визу>
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_TransferIn(), vbId_mi, vbMemberId_user);
+    END IF;
+
+    -- <Транзит возвращен>
+    IF inReestrKindId = zc_Enum_ReestrKind_TransferOut()
+    THEN 
+       -- сохранили <когда сформирована виза>
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_TransferOut(), vbId_mi, CURRENT_TIMESTAMP);
+       -- сохранили связь с <кто сформировал визу>
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_TransferOut(), vbId_mi, vbMemberId_user);
+    END IF;
+
     -- Установили "последнее" значение визы - <Состояние по реестру>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), vbMovementId_sale, inReestrKindId);
 
@@ -212,6 +230,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 20.07.17         *
  23.10.16         *
 */
 
