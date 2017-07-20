@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer
              , AmountUSD      TFloat
              , AmountEUR      TFloat
              , AmountCard     TFloat
-             , Amount         TFloat
+             , AmountToPay    TFloat
              , AmountRemains  TFloat
              , AmountChange   TFloat
              , isPayTotal     Boolean
@@ -91,7 +91,7 @@ BEGIN
                +  (COALESCE(tmpMI.AmountUSD,0) * COALESCE(tmp_USD.Amount,0))
                +  (COALESCE(tmpMI.AmountEUR,0) * COALESCE(tmp_EUR.Amount,0)) 
                +  COALESCE(tmpMI.AmountCard,0) )                            ::TFloat AS Amount*/
-               , vbSumm                  ::TFloat    AS Amount
+               , vbSumm                  ::TFloat    AS AmountToPay
 
                , CASE WHEN vbSumm - ( COALESCE (tmpMI.AmountGRN,0) 
                                     + (COALESCE(tmpMI.AmountUSD,0) * COALESCE(tmp_USD.Amount,0))
@@ -168,7 +168,7 @@ BEGIN
                +  (COALESCE (tmpMI.AmountUSD,0) * COALESCE (tmpMI.CurrencyValue_USD, tmp_USD.Amount))
                +  (COALESCE (tmpMI.AmountEUR,0) * COALESCE (tmpMI.CurrencyValue_EUR, tmp_EUR.Amount)) 
                +   COALESCE (tmpMI.AmountCard,0) )                            ::TFloat AS Amount*/
-               , vbSumm                  ::TFloat    AS Amount
+               , vbSumm                  ::TFloat    AS AmountToPay
 
                , CASE WHEN vbSumm - (  COALESCE(tmpMI.AmountGRN,0) 
                                     + (COALESCE(tmpMI.AmountUSD,0) * COALESCE (tmpMI.CurrencyValue_USD, tmp_USD.Amount))

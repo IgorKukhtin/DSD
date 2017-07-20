@@ -192,13 +192,8 @@ BEGIN
                            , COALESCE (tmpMI_Master.OperPrice, tmpMI_Sale.OperPrice) AS OperPrice
                            , COALESCE (tmpMI_Master.CountForPrice, tmpMI_Sale.CountForPrice) AS CountForPrice 
                            , COALESCE (tmpMI_Master.OperPriceList, tmpMI_Sale.OperPriceList) AS OperPriceList
-                           
-                           , CAST (CASE WHEN COALESCE (tmpMI_Master.CountForPrice, tmpMI_Sale.CountForPrice) <> 0
-                                           THEN CAST (COALESCE (tmpMI_Master.Amount, 0) * COALESCE (tmpMI_Master.OperPrice, tmpMI_Sale.OperPrice) / COALESCE (tmpMI_Master.CountForPrice, tmpMI_Sale.CountForPrice) AS NUMERIC (16, 2))
-                                        ELSE CAST ( COALESCE (tmpMI_Master.Amount, 0) * COALESCE (tmpMI_Master.OperPrice, tmpMI_Sale.OperPrice) AS NUMERIC (16, 2))
-                                   END AS TFloat) AS TotalSumm
-                           , CAST (COALESCE (tmpMI_Master.Amount, 0) * COALESCE (tmpMI_Master.OperPriceList, tmpMI_Sale.OperPriceList) AS NUMERIC (16, 2)) AS TotalSummPriceList
-                                   
+                           , zfCalc_SummIn (tmpMI_Master.Amount,  COALESCE (tmpMI_Master.OperPrice, tmpMI_Sale.OperPrice), COALESCE (tmpMI_Master.CountForPrice, tmpMI_Sale.CountForPrice)) AS TotalSumm
+                           , zfCalc_SummPriceList (tmpMI_Master.Amount,  COALESCE (tmpMI_Master.OperPriceList, tmpMI_Sale.OperPriceList))                                                   AS TotalSummPriceList
                            , COALESCE (tmpMI_Master.CurrencyValue, tmpMI_Sale.CurrencyValue) AS CurrencyValue
                            , COALESCE (tmpMI_Master.ParValue, tmpMI_Sale.ParValue)           AS ParValue
                            , COALESCE (tmpMI_Master.TotalChangePercent, 0)    AS TotalChangePercent
@@ -207,10 +202,7 @@ BEGIN
                            , COALESCE (tmpMI_Master.TotalPayOth, 0)           AS TotalPayOth
                            , COALESCE (tmpMI_Master.isErased, False)          AS isErased
 
-                           , CAST ((CASE WHEN COALESCE (tmpMI_Master.CountForPrice, tmpMI_Sale.CountForPrice) <> 0
-                                         THEN CAST (COALESCE (tmpMI_Master.Amount,0) * COALESCE (tmpMI_Master.OperPriceList, tmpMI_Sale.OperPriceList) / COALESCE (tmpMI_Master.CountForPrice, tmpMI_Sale.CountForPrice) AS NUMERIC (16, 2))
-                                         ELSE CAST (COALESCE (tmpMI_Master.Amount,0) * COALESCE (tmpMI_Master.OperPriceList, tmpMI_Sale.OperPriceList) AS NUMERIC (16, 2))
-                                    END) - COALESCE (tmpMI_Master.TotalChangePercent, 0)
+                           , CAST (zfCalc_SummPriceList (tmpMI_Master.Amount,  COALESCE (tmpMI_Master.OperPriceList, tmpMI_Sale.OperPriceList))  - COALESCE (tmpMI_Master.TotalChangePercent, 0)
                              AS TFloat)                                       AS TotalSummPay
                            , COALESCE (tmpMI_Master.Comment, '')              AS Comment
 
@@ -263,7 +255,7 @@ BEGIN
            , tmpMI.OperPriceList     ::TFloat
 
            , tmpMI.TotalSumm         ::TFloat
-           , (CAST (tmpMI.TotalSumm * tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END AS NUMERIC (16, 2))) :: TFloat AS TotalSummBalance 
+           , zfCalc_CurrencyFrom (tmpMI.TotalSumm, tmpMI.CurrencyValue, tmpMI.ParValue) :: TFloat AS TotalSummBalance
            , tmpMI.TotalSummPriceList       ::TFloat
 
            , tmpMI.CurrencyValue            ::TFloat
@@ -330,11 +322,8 @@ BEGIN
                            , COALESCE (MIFloat_OperPrice.ValueData, 0)             AS OperPrice
                            , COALESCE (MIFloat_CountForPrice.ValueData, 1)         AS CountForPrice 
                            , COALESCE (MIFloat_OperPriceList.ValueData, 0)         AS OperPriceList
-                           , CAST (CASE WHEN MIFloat_CountForPrice.ValueData <> 0
-                                             THEN MovementItem.Amount * COALESCE (MIFloat_OperPrice.ValueData, 0) / MIFloat_CountForPrice.ValueData
-                                         ELSE MovementItem.Amount * COALESCE (MIFloat_OperPrice.ValueData, 0)
-                                   END AS NUMERIC (16, 2)) AS TotalSumm
-                           , CAST (MovementItem.Amount * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 2)) AS TotalSummPriceList
+                           , zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData) AS TotalSumm
+                           , zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData)                       AS TotalSummPriceList
                            , COALESCE (MIFloat_CurrencyValue.ValueData, 0)         AS CurrencyValue
                            , COALESCE (MIFloat_ParValue.ValueData, 0)              AS ParValue
                            , COALESCE (MIFloat_TotalChangePercent.ValueData, 0)    AS TotalChangePercent
@@ -436,7 +425,7 @@ BEGIN
            , tmpMI.OperPriceList            ::TFloat
 
            , tmpMI.TotalSumm                ::TFloat
-           , (CAST (tmpMI.TotalSumm * tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END AS NUMERIC (16, 2))) :: TFloat AS TotalSummBalance 
+           , zfCalc_CurrencyFrom (tmpMI.TotalSumm, tmpMI.CurrencyValue, tmpMI.ParValue) :: TFloat AS TotalSummBalance
            , tmpMI.TotalSummPriceList       ::TFloat
 
            , tmpMI.CurrencyValue            ::TFloat
