@@ -2804,7 +2804,7 @@ begin
   end;
 end;
 
-{ создание новых или редактирование ранее введенных "остатков" }
+{ создание новых или редактирование ранее введенных "заявок" }
 procedure TfrmMain.CreateEditOrderExtrernal(New: boolean);
 begin
   ClearListSearch(lwOrderExternalItems);
