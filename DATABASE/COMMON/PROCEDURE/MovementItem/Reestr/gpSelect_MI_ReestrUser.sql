@@ -18,10 +18,10 @@ RETURNS TABLE ( Id Integer, MovementId Integer, LineNum Integer
               , InvNumber_Transport TVarChar, OperDate_Transport TDateTime, StatusCode_Transport Integer, StatusName_Transport TVarChar
               , Date_Insert TDateTime, MemberName_Insert TVarChar
               , Date_PartnerIn TDateTime, Date_RemakeIn TDateTime, Date_RemakeBuh TDateTime
-              , Date_Remake TDateTime, Date_Buh TDateTime
+              , Date_Remake TDateTime, Date_Buh TDateTime, Date_TransferIn TDateTime, Date_TransferOut TDateTime
               , Member_PartnerInTo TVarChar, Member_PartnerInFrom TVarChar, Member_RemakeInTo TVarChar
               , Member_RemakeInFrom TVarChar, Member_RemakeBuh TVarChar, Member_Remake TVarChar
-              , Member_Buh TVarChar
+              , Member_Buh TVarChar, Member_TransferIn TVarChar, Member_TransferOut TVarChar
               , BarCode_Sale TVarChar, OperDate_Sale TDateTime, InvNumber_Sale TVarChar
               , OperDatePartner TDateTime, InvNumberPartner TVarChar, StatusCode_Sale Integer, StatusName_Sale TVarChar
               , TotalCountKg TFloat, TotalSumm TFloat
@@ -44,19 +44,23 @@ BEGIN
 
 
      -- Определяется
-     vbDateDescId := (SELECT CASE WHEN inReestrKindId = zc_Enum_ReestrKind_PartnerIn() THEN zc_MIDate_PartnerIn()
-                                  WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeIn()  THEN zc_MIDate_RemakeIn()  
-                                  WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeBuh() THEN zc_MIDate_RemakeBuh()
-                                  WHEN inReestrKindId = zc_Enum_ReestrKind_Remake()    THEN zc_MIDate_Remake() 
-                                  WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()       THEN zc_MIDate_Buh()
+     vbDateDescId := (SELECT CASE WHEN inReestrKindId = zc_Enum_ReestrKind_PartnerIn()   THEN zc_MIDate_PartnerIn()
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeIn()    THEN zc_MIDate_RemakeIn()  
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeBuh()   THEN zc_MIDate_RemakeBuh()
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_Remake()      THEN zc_MIDate_Remake() 
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()         THEN zc_MIDate_Buh()
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_TransferIn()  THEN zc_MIDate_TransferIn()
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_TransferOut() THEN zc_MIDate_TransferOut()
                              END AS DateDescId
                       );
      -- Определяется
-     vbMILinkObjectId := (SELECT CASE WHEN inReestrKindId = zc_Enum_ReestrKind_PartnerIn() THEN zc_MILinkObject_PartnerInTo()
-                                      WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeIn()  THEN zc_MILinkObject_RemakeInTo()  
-                                      WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeBuh() THEN zc_MILinkObject_RemakeBuh()
-                                      WHEN inReestrKindId = zc_Enum_ReestrKind_Remake()    THEN zc_MILinkObject_Remake() 
-                                      WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()       THEN zc_MILinkObject_Buh()
+     vbMILinkObjectId := (SELECT CASE WHEN inReestrKindId = zc_Enum_ReestrKind_PartnerIn()   THEN zc_MILinkObject_PartnerInTo()
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeIn()    THEN zc_MILinkObject_RemakeInTo()  
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeBuh()   THEN zc_MILinkObject_RemakeBuh()
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_Remake()      THEN zc_MILinkObject_Remake() 
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()         THEN zc_MILinkObject_Buh()
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_TransferIn()  THEN zc_MILinkObject_TransferIn()
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_TransferOut() THEN zc_MILinkObject_TransferOut()
                                  END AS MILinkObjectId
                       );
 
@@ -121,6 +125,9 @@ BEGIN
             , MIDate_RemakeBuh.ValueData                AS Date_RemakeBuh
             , MIDate_Remake.ValueData                   AS Date_Remake
             , MIDate_Buh.ValueData                      AS Date_Buh
+            , MIDate_TransferIn.ValueData               AS Date_TransferIn
+            , MIDate_TransferOut.ValueData              AS Date_TransferOut
+            
             , Object_PartnerInTo.ValueData              AS Member_PartnerInTo
             , Object_PartnerInFrom.ValueData            AS Member_PartnerInFrom
             , Object_RemakeInTo.ValueData               AS Member_RemakeInTo
@@ -128,6 +135,8 @@ BEGIN
             , Object_RemakeBuh.ValueData                AS Member_RemakeBuh
             , Object_Remake.ValueData                   AS Member_Remake
             , Object_Buh.ValueData                      AS Member_Buh
+            , Object_TransferIn.ValueData               AS Member_TransferIn
+            , Object_TransferOut.ValueData              AS Member_TransferOut
 
             , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement_Sale.Id) AS BarCode_Sale
             , Movement_Sale.OperDate                    AS OperDate_Sale
@@ -212,7 +221,13 @@ BEGIN
             LEFT JOIN MovementItemDate AS MIDate_Buh
                                        ON MIDate_Buh.MovementItemId = MovementItem.Id
                                       AND MIDate_Buh.DescId = zc_MIDate_Buh()
-
+            LEFT JOIN MovementItemDate AS MIDate_TransferIn
+                                       ON MIDate_TransferIn.MovementItemId = MovementItem.Id
+                                      AND MIDate_TransferIn.DescId = zc_MIDate_TransferIn()
+            LEFT JOIN MovementItemDate AS MIDate_TransferOut
+                                       ON MIDate_TransferOut.MovementItemId = MovementItem.Id
+                                      AND MIDate_TransferOut.DescId = zc_MIDate_TransferOut()
+                                      
             LEFT JOIN MovementItemLinkObject AS MILinkObject_PartnerInTo
                                              ON MILinkObject_PartnerInTo.MovementItemId = MovementItem.Id
                                             AND MILinkObject_PartnerInTo.DescId = zc_MILinkObject_PartnerInTo()
@@ -246,7 +261,17 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Buh
                                              ON MILinkObject_Buh.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Buh.DescId = zc_MILinkObject_Buh()
-            LEFT JOIN Object AS Object_Buh ON Object_Buh.Id = MILinkObject_RemakeBuh.ObjectId
+            LEFT JOIN Object AS Object_Buh ON Object_Buh.Id = MILinkObject_Buh.ObjectId
+            
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_TransferIn
+                                             ON MILinkObject_TransferIn.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_TransferIn.DescId = zc_MILinkObject_TransferIn()
+            LEFT JOIN Object AS Object_TransferIn ON Object_TransferIn.Id = MILinkObject_TransferIn.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_TransferOut
+                                             ON MILinkObject_TransferOut.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_TransferOut.DescId = zc_MILinkObject_TransferOut()
+            LEFT JOIN Object AS Object_TransferOut ON Object_TransferOut.Id = MILinkObject_TransferOut.ObjectId            
 
             --
             LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.id = tmpMI.MovementId_Sale  -- док. продажи
@@ -304,6 +329,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.07.17         *
  29.11.16         *
  23.10.16         * 
 */

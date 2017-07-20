@@ -29,12 +29,14 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
              , JuridicalName_To TVarChar, OKPO_To TVarChar 
 
-             , Date_Insert    TDateTime
-             , Date_PartnerIn TDateTime
-             , Date_RemakeIn  TDateTime
-             , Date_RemakeBuh TDateTime
-             , Date_Remake    TDateTime
-             , Date_Buh       TDateTime
+             , Date_Insert      TDateTime
+             , Date_PartnerIn   TDateTime
+             , Date_RemakeIn    TDateTime
+             , Date_RemakeBuh   TDateTime
+             , Date_Remake      TDateTime
+             , Date_Buh         TDateTime
+             , Date_TransferIn  TDateTime
+             , Date_TransferOut TDateTime
 
              , Member_Insert        TVarChar
              , Member_PartnerInTo   TVarChar
@@ -44,6 +46,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Member_RemakeBuh     TVarChar
              , Member_Remake        TVarChar
              , Member_Buh           TVarChar
+             , Member_TransferIn    TVarChar
+             , Member_TransferOut   TVarChar
               )
 AS
 $BODY$
@@ -121,6 +125,8 @@ BEGIN
            , MIDate_RemakeBuh.ValueData      AS Date_RemakeBuh
            , MIDate_Remake.ValueData         AS Date_Remake
            , MIDate_Buh.ValueData            AS Date_Buh
+           , MIDate_TransferIn.ValueData     AS Date_TransferIn
+           , MIDate_TransferOut.ValueData    AS Date_TransferOut
 
            , CASE WHEN MIDate_Insert.DescId IS NOT NULL THEN Object_ObjectMember.ValueData ELSE '' END :: TVarChar AS Member_Insert -- т.к. в "пустышках" - "криво" формируется это свойство
            , Object_PartnerInTo.ValueData    AS Member_PartnerInTo
@@ -130,6 +136,8 @@ BEGIN
            , Object_RemakeBuh.ValueData      AS Member_RemakeBuh
            , Object_Remake.ValueData         AS Member_Remake
            , Object_Buh.ValueData            AS Member_Buh
+           , Object_TransferIn.ValueData     AS Member_TransferIn
+           , Object_TransferOut.ValueData    AS Member_TransferOut
 
        FROM (SELECT Movement.Id
              FROM tmpStatus
@@ -196,6 +204,12 @@ BEGIN
             LEFT JOIN MovementItemDate AS MIDate_Buh
                                        ON MIDate_Buh.MovementItemId = MovementItem.Id
                                       AND MIDate_Buh.DescId = zc_MIDate_Buh()
+            LEFT JOIN MovementItemDate AS MIDate_TransferIn
+                                       ON MIDate_TransferIn.MovementItemId = MovementItem.Id
+                                      AND MIDate_TransferIn.DescId = zc_MIDate_TransferIn()
+            LEFT JOIN MovementItemDate AS MIDate_TransferOut
+                                       ON MIDate_TransferOut.MovementItemId = MovementItem.Id
+                                      AND MIDate_TransferOut.DescId = zc_MIDate_TransferOut()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_PartnerInTo
                                              ON MILinkObject_PartnerInTo.MovementItemId = MovementItem.Id
@@ -232,6 +246,16 @@ BEGIN
                                             AND MILinkObject_Buh.DescId = zc_MILinkObject_Buh()
             LEFT JOIN Object AS Object_Buh ON Object_Buh.Id = MILinkObject_Buh.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_TransferIn
+                                             ON MILinkObject_TransferIn.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_TransferIn.DescId = zc_MILinkObject_TransferIn()
+            LEFT JOIN Object AS Object_TransferIn ON Object_TransferIn.Id = MILinkObject_TransferIn.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_TransferOut
+                                             ON MILinkObject_TransferOut.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_TransferOut.DescId = zc_MILinkObject_TransferOut()
+            LEFT JOIN Object AS Object_TransferOut ON Object_TransferOut.Id = MILinkObject_TransferOut.ObjectId
+            
             LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
                                     ON MovementFloat_MovementItemId.ValueData ::integer = MovementItem.Id -- tmpMI.MovementItemId
                                    AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
@@ -305,6 +329,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 20.07.17         *
  20.10.16         *
 */
 
