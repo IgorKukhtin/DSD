@@ -233,7 +233,7 @@ BEGIN
              , COALESCE (MILinkObject_Unit.ObjectId, 0)     AS UnitId
              , COALESCE (MILinkObject_Position.ObjectId, 0) AS PositionId
              , CASE WHEN MI_Child.Id > 0
-                         THEN COALESCE (MILinkObject_MoneyPlace.ObjectId, 0)
+                         THEN COALESCE (ObjectLink_Personal_PersonalServiceList.ChildObjectId, COALESCE (MILinkObject_MoneyPlace.ObjectId, 0))
                     ELSE COALESCE (MLO_PersonalServiceList.ObjectId, 0)
                END AS PersonalServiceListId
 
@@ -339,6 +339,14 @@ BEGIN
                                                                                                           AND Object.Id IS NULL -- !!!нужен только для затрат!!!
              LEFT JOIN ObjectLink AS ObjectLink_Partner_Unit ON ObjectLink_Partner_Unit.ObjectId = MILinkObject_MoneyPlace.ObjectId
                                                             AND ObjectLink_Partner_Unit.DescId = zc_ObjectLink_Partner_Unit()
+             -- Замена
+             LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceListCardSecond
+                                  ON ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId      = MI_Child.ObjectId
+                                 AND ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId = MILinkObject_MoneyPlace.ObjectId
+                                 AND ObjectLink_Personal_PersonalServiceListCardSecond.DescId        = zc_ObjectLink_Personal_PersonalServiceListCardSecond()
+             LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
+                                  ON ObjectLink_Personal_PersonalServiceList.ObjectId = ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId
+                                 AND ObjectLink_Personal_PersonalServiceList.DescId   = zc_ObjectLink_Personal_PersonalServiceList()
        ;
 
 

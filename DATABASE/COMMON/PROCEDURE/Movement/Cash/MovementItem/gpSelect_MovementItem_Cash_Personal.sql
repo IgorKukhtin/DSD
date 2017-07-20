@@ -109,7 +109,7 @@ BEGIN
                                          ) AS SummToPay
                                    , SUM (COALESCE (MIFloat_SummCard.ValueData, 0))         AS SummCard
                                    , SUM (COALESCE (MIFloat_SummCardSecond.ValueData, 0))   AS SummCardSecond
-                                   , SUM (COALESCE (MIFloat_SummCardSecondCash.ValueData, 0)) AS SummCardSecondCash
+                                   , SUM (COALESCE (MIFloat_SummCardSecondCash.ValueData, 0) + COALESCE (MIFloat_SummCardSecondRecalc.ValueData, 0)) AS SummCardSecondCash
 --                                 , SUM (COALESCE (MIFloat_SummNalog.ValueData, 0))        AS SummNalog
 --                                 , SUM (COALESCE (tmpSummNalog.SummNalog, 0))             AS SummNalog
                                    , SUM (COALESCE (MIFloat_SummMinus.ValueData, 0))        AS SummMinus
@@ -128,7 +128,8 @@ BEGIN
                                    , MILinkObject_Unit.ObjectId                             AS UnitId
                                    , MILinkObject_Position.ObjectId                         AS PositionId
                                    , MILinkObject_InfoMoney.ObjectId                        AS InfoMoneyId
-                                   , MLO_PersonalServiceList.ObjectId                       AS PersonalServiceListId
+                                     -- замена
+                                   , COALESCE (ObjectLink_Personal_PersonalServiceList.ChildObjectId, MLO_PersonalServiceList.ObjectId) AS PersonalServiceListId
                               FROM Movement
                                    INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                           AND MovementItem.DescId = zc_MI_Master()
@@ -204,6 +205,10 @@ BEGIN
                                                                ON MIFloat_SummPhone.MovementItemId = MovementItem.Id
                                                               AND MIFloat_SummPhone.DescId = zc_MIFloat_SummPhone()
 
+                                   LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecondRecalc
+                                                               ON MIFloat_SummCardSecondRecalc.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummCardSecondRecalc.DescId = zc_MIFloat_SummCardSecondRecalc()
+
                                    -- ограничение, если нужна только 1 запись
                                    LEFT JOIN (SELECT tmpMI.PersonalId, tmpMI.UnitId, tmpMI.PositionId, tmpMI.InfoMoneyId
                                               FROM tmpMI
@@ -213,6 +218,14 @@ BEGIN
                                                      AND tmp.PositionId   = MILinkObject_Position.ObjectId
                                                      AND tmp.InfoMoneyId  = MILinkObject_InfoMoney.ObjectId
                                                      AND inMovementItemId > 0
+                                   -- Замена
+                                   LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceListCardSecond
+                                                        ON ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId      = MovementItem.ObjectId
+                                                       AND ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId = MLO_PersonalServiceList.ObjectId
+                                                       AND ObjectLink_Personal_PersonalServiceListCardSecond.DescId        = zc_ObjectLink_Personal_PersonalServiceListCardSecond()
+                                   LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
+                                                        ON ObjectLink_Personal_PersonalServiceList.ObjectId = ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId
+                                                       AND ObjectLink_Personal_PersonalServiceList.DescId   = zc_ObjectLink_Personal_PersonalServiceList()
 
                               WHERE Movement.Id = inParentId
                                 AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -222,7 +235,7 @@ BEGIN
                                      , MILinkObject_Unit.ObjectId
                                      , MILinkObject_Position.ObjectId
                                      , MILinkObject_InfoMoney.ObjectId
-                                     , MLO_PersonalServiceList.ObjectId
+                                     , COALESCE (ObjectLink_Personal_PersonalServiceList.ChildObjectId, MLO_PersonalServiceList.ObjectId)
                              )
               , tmpParent AS (SELECT tmpParent_all.SummService
                                    , tmpParent_all.SummToPay_cash - COALESCE (tmpSummNalog.SummNalog, 0) AS SummToPay_cash
@@ -279,7 +292,7 @@ BEGIN
                                    , CLO_Position.ObjectId  AS PositionId
                                    , CLO_InfoMoney.ObjectId AS InfoMoneyId
                                    , tmp.PersonalServiceListId
-                              FROM (SELECT DISTINCT tmpParent_all.PersonalServiceListId FROM tmpParent_all) AS tmp
+                              FROM (SELECT DISTINCT tmpParent_all.PersonalServiceListId, tmpParent_all.InfoMoneyId FROM tmpParent_all) AS tmp
                                    INNER JOIN ContainerLinkObject AS CLO_PersonalServiceList
                                                                   ON CLO_PersonalServiceList.ObjectId    = tmp.PersonalServiceListId
                                                                  AND CLO_PersonalServiceList.DescId      = zc_ContainerLinkObject_PersonalServiceList()
@@ -293,6 +306,7 @@ BEGIN
                                    INNER JOIN ContainerLinkObject AS CLO_InfoMoney
                                                                   ON CLO_InfoMoney.ContainerId = CLO_ServiceDate.ContainerId
                                                                  AND CLO_InfoMoney.DescId      = zc_ContainerLinkObject_InfoMoney()
+                                                                 AND CLO_InfoMoney.ObjectId    = tmp.InfoMoneyId
                                    INNER JOIN ContainerLinkObject AS CLO_Unit
                                                                   ON CLO_Unit.ContainerId = CLO_ServiceDate.ContainerId
                                                                  AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()

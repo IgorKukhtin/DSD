@@ -164,18 +164,25 @@ BEGIN
             -- AS LastDateIn
             -- AS LastDateOut
 
-            , '1.26.0'::TVarChar             AS MobileVersion
-            , 'ProjectMobile.apk'::TVarChar  AS MobileAPKFileName
+            -- , '1.26.0'::TVarChar             AS MobileVersion
+            , getMobileConst.MobileVersion
+            -- , 'ProjectMobile.apk'::TVarChar  AS MobileAPKFileName
+            , getMobileConst.MobileAPKFileName
 
             , Object_PriceList_def.Id        AS PriceListId_def
             , Object_PriceList_def.ValueData AS PriceListName_def
 
-            , 0::Integer  AS OperDate_diff  -- пока на один день позже для всех, потом будет для каждого филиала отдельно задаваться
-            , 14::Integer AS ReturnDayCount -- пока 14 дней
-            , 21::Integer AS CriticalOverDays 
-            , 1::TFloat   AS CriticalDebtSum
+            -- , 0::Integer  AS OperDate_diff  -- пока на один день позже для всех, потом будет для каждого филиала отдельно задаваться
+            , getMobileConst.OperDateDiff AS OperDate_diff  -- пока на один день позже для всех, потом будет для каждого филиала отдельно задаваться
+            -- , 14::Integer AS ReturnDayCount -- пока 14 дней
+            , getMobileConst.ReturnDayCount -- пока 14 дней
+            -- , 21::Integer AS CriticalOverDays 
+            , getMobileConst.CriticalOverDays 
+            -- , 1::TFloat   AS CriticalDebtSum
+            , getMobileConst.CriticalDebtSum
 
        FROM tmpPersonal
+            LEFT JOIN gpGet_Object_MobileConst_BySession (inSession:= inSession) AS getMobileConst ON 1 = 1
             LEFT JOIN Object AS Object_PaidKind_FirstForm  ON Object_PaidKind_FirstForm.Id = zc_Enum_PaidKind_FirstForm()
             LEFT JOIN Object AS Object_PaidKind_SecondForm ON Object_PaidKind_SecondForm.Id = zc_Enum_PaidKind_SecondForm()
 

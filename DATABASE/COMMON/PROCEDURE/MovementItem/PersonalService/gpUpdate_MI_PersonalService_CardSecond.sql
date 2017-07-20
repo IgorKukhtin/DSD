@@ -24,164 +24,140 @@ BEGIN
      -- определяем <Месяц начислений>
      vbServiceDateId:= lpInsertFind_Object_ServiceDate (inOperDate:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MIDate_ServiceDate()));
 
+     -- определяем <Ведомость> - что б выбрать только этих Сотрудников
      vbPersonalServiceListId := (SELECT MLO_PersonalServiceList.ObjectId 
                                  FROM MovementLinkObject AS MLO_PersonalServiceList
                                  WHERE MLO_PersonalServiceList.MovementId = inMovementId
                                    AND MLO_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList());
 
-     CREATE TEMP TABLE _tmpContainer (MovementItemId Integer, PersonalId Integer, UnitId Integer, PositionId Integer, InfoMoneyId Integer, SummCardSecondRecalc TFloat) ON COMMIT DROP;
-         --
-         INSERT INTO _tmpContainer (MovementItemId, PersonalId, UnitId, PositionId, InfoMoneyId, SummCardSecondRecalc)
-               WITH -- сейчас данные по начислениям
-                    tmpPersonal AS (SELECT ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId AS PersonalId
-                                         , ObjectLink_Personal_Unit.ChildObjectId                     AS UnitId
-                                         , ObjectLink_Personal_Position.ChildObjectId                 AS PositionId
-                                         , zc_Enum_InfoMoney_60101()                                  AS InfoMoneyId  -- 60101 Заработная плата
-                                         , vbPersonalServiceListId                                    AS PersonalServiceListId
-                                    FROM ObjectLink AS ObjectLink_Personal_PersonalServiceListCardSecond
-                                         LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
-                                                              ON ObjectLink_Personal_Position.ObjectId = ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId
-                                                             AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
-                                   
-                                         LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
-                                                              ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId
-                                                             AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
-                                         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
-                                    WHERE ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId = vbPersonalServiceListId
-                                      AND ObjectLink_Personal_PersonalServiceListCardSecond.DescId = zc_ObjectLink_Personal_PersonalServiceListCardSecond()
-                                    )
-                                    
-                  , tmpMI AS (SELECT -- рассчитываем сумму к выплате из кассы
-                                     SUM (COALESCE (MIFloat_SummToPay.ValueData, 0)
-                                        - COALESCE (MIFloat_SummCard.ValueData, 0)
-                                        - COALESCE (MIFloat_SummCardSecond.ValueData, 0)
-                                         ) AS SummToPay_cash
-
-                                   , MovementItem.ObjectId                                  AS PersonalId
-                                   , MILinkObject_Unit.ObjectId                             AS UnitId
-                                   , MILinkObject_Position.ObjectId                         AS PositionId
-                                   , MILinkObject_InfoMoney.ObjectId                        AS InfoMoneyId
-                                   , vbPersonalServiceListId                                AS PersonalServiceListId
-                                   , MovementItem.Id                                        AS MovementItemId
-                              FROM Movement
-                                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                          AND MovementItem.DescId     = zc_MI_Master()
-                                                          AND MovementItem.isErased   = FALSE
-                                   
-                                   INNER JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceListCardSecond
-                                                         ON ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId      = MovementItem.ObjectId
-                                                        AND ObjectLink_Personal_PersonalServiceListCardSecond.DescId        = zc_ObjectLink_Personal_PersonalServiceListCardSecond()
-                                                        AND ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId = vbPersonalServiceListId
-           
-                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
-                                                                    ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
-                                                                   AND MILinkObject_InfoMoney.DescId         = zc_MILinkObject_InfoMoney()
-                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                                                    ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                                                   AND MILinkObject_Unit.DescId         = zc_MILinkObject_Unit()
-                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
-                                                                    ON MILinkObject_Position.MovementItemId = MovementItem.Id
-                                                                   AND MILinkObject_Position.DescId         = zc_MILinkObject_Position()
-                                   LEFT JOIN MovementItemFloat AS MIFloat_SummToPay
-                                                               ON MIFloat_SummToPay.MovementItemId = MovementItem.Id
-                                                              AND MIFloat_SummToPay.DescId         = zc_MIFloat_SummToPay()
-                                   LEFT JOIN MovementItemFloat AS MIFloat_SummCard
-                                                               ON MIFloat_SummCard.MovementItemId = MovementItem.Id
-                                                              AND MIFloat_SummCard.DescId         = zc_MIFloat_SummCard()
-                                   LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecond
-                                                               ON MIFloat_SummCardSecond.MovementItemId = MovementItem.Id
-                                                              AND MIFloat_SummCardSecond.DescId         = zc_MIFloat_SummCardSecond()
-                              WHERE Movement.Id       = inMovementId
-                                -- AND Movement.StatusId = zc_Enum_Status_Complete()
-                              GROUP BY MovementItem.ObjectId
-                                     , MILinkObject_Unit.ObjectId
-                                     , MILinkObject_Position.ObjectId
-                                     , MILinkObject_InfoMoney.ObjectId
-                                     --, MLO_PersonalServiceList.ObjectId
-                                     , MovementItem.Id 
-                             )
-           , tmpListPersonal AS (SELECT COALESCE (tmpMI.MovementItemId,0)                      AS MovementItemId
-                                      , COALESCE (tmpMI.SummToPay_cash,0)                      AS SummToPay_cash
-                                      , COALESCE (tmpMI.PersonalId, tmpPersonal.PersonalId)    AS PersonalId
-                                      , COALESCE (tmpMI.UnitId, tmpPersonal.UnitId)            AS UnitId
-                                      , COALESCE (tmpMI.PositionId, tmpPersonal.PositionId)    AS PositionId
-                                      , COALESCE (tmpMI.InfoMoneyId, tmpPersonal.InfoMoneyId)  AS InfoMoneyId
-                                      , COALESCE (tmpMI.PersonalServiceListId, tmpPersonal.PersonalServiceListId) AS PersonalServiceListId
-                                 FROM tmpMI
-                                    FULL JOIN tmpPersonal ON tmpPersonal.PersonalId = tmpMI.PersonalId
-                                                         AND tmpPersonal.PositionId = tmpMI.PositionId
-                                                         AND tmpPersonal.UnitId     = tmpMI.UnitId
-                                      
+     -- новые данные - MovementItem
+     CREATE TEMP TABLE _tmpMI (MovementItemId Integer, PersonalId Integer, UnitId Integer, PositionId Integer, InfoMoneyId Integer, PersonalServiceListId Integer, SummCardSecondRecalc TFloat) ON COMMIT DROP;
+     --
+     INSERT INTO _tmpMI (MovementItemId, PersonalId, UnitId, PositionId, InfoMoneyId, PersonalServiceListId, SummCardSecondRecalc)
+           WITH -- все Сотрудники из vbPersonalServiceListId - по ним и будет формироваться Инфа
+                tmpPersonal AS (SELECT ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId AS PersonalId
+                                     , ObjectLink_Personal_Unit.ChildObjectId                     AS UnitId
+                                     , ObjectLink_Personal_Position.ChildObjectId                 AS PositionId
+                                     , zc_Enum_InfoMoney_60101()                                  AS InfoMoneyId  -- 60101 Заработная плата
+                                     , ObjectLink_Personal_PersonalServiceList.ChildObjectId      AS PersonalServiceListId
+                                FROM ObjectLink AS ObjectLink_Personal_PersonalServiceListCardSecond
+                                     LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
+                                                          ON ObjectLink_Personal_Position.ObjectId = ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId
+                                                         AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+                                     LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                                          ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId
+                                                         AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+                                     LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
+                                                          ON ObjectLink_Personal_PersonalServiceList.ObjectId = ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId
+                                                         AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
+                                WHERE ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId = vbPersonalServiceListId
+                                  AND ObjectLink_Personal_PersonalServiceListCardSecond.DescId        = zc_ObjectLink_Personal_PersonalServiceListCardSecond()
                                 )
-             -- список Container - для поиска в проводках - сколько уже выплатили
-           , tmpContainer AS (SELECT CLO_ServiceDate.ContainerId
-                                   , tmpMI.PersonalId
-                                   , tmpMI.UnitId
-                                   , tmpMI.PositionId
-                                   , tmpMI.InfoMoneyId
-                              FROM tmpListPersonal AS tmpMI
-                                   INNER JOIN ContainerLinkObject AS CLO_ServiceDate
-                                                                  ON CLO_ServiceDate.ObjectId = vbServiceDateId
-                                                                 AND CLO_ServiceDate.DescId   = zc_ContainerLinkObject_ServiceDate()
-                                   INNER JOIN ContainerLinkObject AS CLO_Personal
-                                                                  ON CLO_Personal.ObjectId    = tmpMI.PersonalId
-                                                                 AND CLO_Personal.DescId      = zc_ContainerLinkObject_Personal()
-                                                                 AND CLO_Personal.ContainerId = CLO_ServiceDate.ContainerId
-                                   INNER JOIN ContainerLinkObject AS CLO_InfoMoney
-                                                                  ON CLO_InfoMoney.ObjectId    = tmpMI.InfoMoneyId
-                                                                 AND CLO_InfoMoney.DescId      = zc_ContainerLinkObject_InfoMoney()
-                                                                 AND CLO_InfoMoney.ContainerId = CLO_ServiceDate.ContainerId
-                                   INNER JOIN ContainerLinkObject AS CLO_Unit
-                                                                  ON CLO_Unit.ObjectId    = tmpMI.UnitId
-                                                                 AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
-                                                                 AND CLO_Unit.ContainerId = CLO_ServiceDate.ContainerId
-                                   INNER JOIN ContainerLinkObject AS CLO_Position
-                                                                  ON CLO_Position.ObjectId    = tmpMI.PositionId
-                                                                 AND CLO_Position.DescId      = zc_ContainerLinkObject_Position()
-                                                                 AND CLO_Position.ContainerId = CLO_ServiceDate.ContainerId
-                                   INNER JOIN ContainerLinkObject AS CLO_PersonalServiceList
-                                                                  ON CLO_PersonalServiceList.ObjectId    = tmpMI.PersonalServiceListId
-                                                                 AND CLO_PersonalServiceList.DescId      = zc_ContainerLinkObject_PersonalServiceList()
-                                                                 AND CLO_PersonalServiceList.ContainerId = CLO_ServiceDate.ContainerId
-                             )
-           -- только проводки - сколько уже выплатили (Авансом)
-         , tmpMIContainer AS (SELECT SUM (COALESCE (MIContainer.Amount, 0))  AS Amount
-                                   , tmpContainer.PersonalId
-                                   , tmpContainer.UnitId
-                                   , tmpContainer.PositionId
-                                   , tmpContainer.InfoMoneyId
-                              FROM tmpContainer
-                                   INNER JOIN MovementItemContainer AS MIContainer
-                                                                    ON MIContainer.ContainerId     = tmpContainer.ContainerId
-                                                                   AND MIContainer.DescId          = zc_MIContainer_Summ()
-                                                                   AND MIContainer.MovementDescId  = zc_Movement_Cash()
-                                                                   AND MIContainer.AnalyzerId      <> zc_Enum_AnalyzerId_Cash_PersonalCardSecond()
-                              GROUP BY tmpContainer.PersonalId
-                                     , tmpContainer.UnitId
-                                     , tmpContainer.PositionId
-                                     , tmpContainer.InfoMoneyId
-                             )
-                -- результат
-                SELECT tmpMI.MovementItemId 
-                     , tmpMI.PersonalId
-                     , tmpMI.UnitId
-                     , tmpMI.PositionId
-                     , tmpMI.InfoMoneyId
-                     , (COALESCE (tmpMI.SummToPay_cash, 0) - COALESCE (tmpMIContainer.Amount, 0) ) :: TFloat AS SummCardSecondRecalc
-                FROM tmpListPersonal AS tmpMI
-                     LEFT JOIN tmpMIContainer ON tmpMIContainer.PersonalId  = tmpMI.PersonalId
-                                             AND tmpMIContainer.UnitId      = tmpMI.UnitId
-                                             AND tmpMIContainer.PositionId  = tmpMI.PositionId
-                                             AND tmpMIContainer.InfoMoneyId = tmpMI.InfoMoneyId;
+                                
+                -- текущие элементы
+              , tmpMI AS (SELECT MovementItem.Id                                        AS MovementItemId
+                               , MovementItem.ObjectId                                  AS PersonalId
+                               , MILinkObject_Unit.ObjectId                             AS UnitId
+                               , MILinkObject_Position.ObjectId                         AS PositionId
+                               , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId, MILinkObject_Unit.ObjectId, MILinkObject_Position.ObjectId ORDER BY MovementItem.Id ASC) AS Ord
+                          FROM MovementItem
+                               LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                                ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                               AND MILinkObject_Unit.DescId         = zc_MILinkObject_Unit()
+                               LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
+                                                                ON MILinkObject_Position.MovementItemId = MovementItem.Id
+                                                               AND MILinkObject_Position.DescId         = zc_MILinkObject_Position()
+                          WHERE MovementItem.MovementId = inMovementId
+                            AND MovementItem.DescId     = zc_MI_Master()
+                            AND MovementItem.isErased   = FALSE
+                         )
+         -- нашли Сотрудникам - существующие MovementItemId, причем ТОЛЬКО ОДИН
+       , tmpListPersonal AS (SELECT tmpMI.MovementItemId                                  AS MovementItemId
+                                  , COALESCE (tmpPersonal.PersonalId,  tmpMI.PersonalId)  AS PersonalId
+                                  , COALESCE (tmpPersonal.UnitId,      tmpMI.UnitId)      AS UnitId
+                                  , COALESCE (tmpPersonal.PositionId,  tmpMI.PositionId)  AS PositionId
+                                    -- если здесь пусто - значит это лишний элемент
+                                  , tmpPersonal.InfoMoneyId                               AS InfoMoneyId
+                                    -- если здесь пусто - значит это лишний элемент
+                                  , tmpPersonal.PersonalServiceListId                     AS PersonalServiceListId
+                             FROM tmpMI
+                                  FULL JOIN tmpPersonal ON tmpPersonal.PersonalId = tmpMI.PersonalId
+                                                       AND tmpPersonal.PositionId = tmpMI.PositionId
+                                                       AND tmpPersonal.UnitId     = tmpMI.UnitId
+                                                       AND tmpMI.Ord              = 1
+                                  
+                            )
+         -- список Container - для поиска в проводках - сколько уже выплатили
+       , tmpContainer AS (SELECT CLO_ServiceDate.ContainerId
+                               , tmpMI.PersonalId
+                               , tmpMI.UnitId
+                               , tmpMI.PositionId
+                               , tmpMI.InfoMoneyId
+                          FROM tmpListPersonal AS tmpMI
+                               INNER JOIN ContainerLinkObject AS CLO_ServiceDate
+                                                              ON CLO_ServiceDate.ObjectId = vbServiceDateId
+                                                             AND CLO_ServiceDate.DescId   = zc_ContainerLinkObject_ServiceDate()
+                               INNER JOIN ContainerLinkObject AS CLO_Personal
+                                                              ON CLO_Personal.ObjectId    = tmpMI.PersonalId
+                                                             AND CLO_Personal.DescId      = zc_ContainerLinkObject_Personal()
+                                                             AND CLO_Personal.ContainerId = CLO_ServiceDate.ContainerId
+                               INNER JOIN ContainerLinkObject AS CLO_InfoMoney
+                                                              ON CLO_InfoMoney.ObjectId    = tmpMI.InfoMoneyId
+                                                             AND CLO_InfoMoney.DescId      = zc_ContainerLinkObject_InfoMoney()
+                                                             AND CLO_InfoMoney.ContainerId = CLO_ServiceDate.ContainerId
+                               INNER JOIN ContainerLinkObject AS CLO_Unit
+                                                              ON CLO_Unit.ObjectId    = tmpMI.UnitId
+                                                             AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
+                                                             AND CLO_Unit.ContainerId = CLO_ServiceDate.ContainerId
+                               INNER JOIN ContainerLinkObject AS CLO_Position
+                                                              ON CLO_Position.ObjectId    = tmpMI.PositionId
+                                                             AND CLO_Position.DescId      = zc_ContainerLinkObject_Position()
+                                                             AND CLO_Position.ContainerId = CLO_ServiceDate.ContainerId
+                               INNER JOIN ContainerLinkObject AS CLO_PersonalServiceList
+                                                              ON CLO_PersonalServiceList.ObjectId    = tmpMI.PersonalServiceListId
+                                                             AND CLO_PersonalServiceList.DescId      = zc_ContainerLinkObject_PersonalServiceList()
+                                                             AND CLO_PersonalServiceList.ContainerId = CLO_ServiceDate.ContainerId
+                         )
+       -- только проводки - сколько уже выплатили (Авансом)
+     , tmpMIContainer AS (SELECT SUM (COALESCE (MIContainer.Amount, 0))  AS Amount
+                               , tmpContainer.PersonalId
+                               , tmpContainer.UnitId
+                               , tmpContainer.PositionId
+                               , tmpContainer.InfoMoneyId
+                          FROM tmpContainer
+                               INNER JOIN MovementItemContainer AS MIContainer
+                                                                ON MIContainer.ContainerId = tmpContainer.ContainerId
+                                                               AND MIContainer.DescId      = zc_MIContainer_Summ()
+                          GROUP BY tmpContainer.PersonalId
+                                 , tmpContainer.UnitId
+                                 , tmpContainer.PositionId
+                                 , tmpContainer.InfoMoneyId
+                         )
+            -- результат
+            SELECT tmpListPersonal.MovementItemId
+                 , tmpListPersonal.PersonalId
+                 , tmpListPersonal.UnitId
+                 , tmpListPersonal.PositionId
+                 , tmpListPersonal.InfoMoneyId
+                 , tmpListPersonal.PersonalServiceListId
+                 , -1 * COALESCE (tmpMIContainer.Amount, 0) AS SummCardSecondRecalc -- т.к. в проводках долг с минусом
+            FROM tmpListPersonal
+                 LEFT JOIN tmpMIContainer ON tmpMIContainer.PersonalId  = tmpListPersonal.PersonalId
+                                         AND tmpMIContainer.UnitId      = tmpListPersonal.UnitId
+                                         AND tmpMIContainer.PositionId  = tmpListPersonal.PositionId
+                                         AND tmpMIContainer.InfoMoneyId = tmpListPersonal.InfoMoneyId
+            WHERE tmpListPersonal.MovementItemId > 0 
+               OR tmpMIContainer.Amount          < 0 -- !!! т.е. если есть долг по ЗП
+          ;
  
-     -- сохраняем строки для MI_Id = 0 
-     PERFORM lpInsertUpdate_MovementItem_PersonalService (ioId                 := 0
+     -- сохраняем элементы
+     PERFORM lpInsertUpdate_MovementItem_PersonalService (ioId                 := _tmpMI.MovementItemId
                                                         , inMovementId         := inMovementId
-                                                        , inPersonalId         := _tmpContainer.PersonalId
+                                                        , inPersonalId         := _tmpMI.PersonalId
                                                         , inIsMain             := COALESCE (ObjectBoolean_Main.ValueData, FALSE)
                                                         , inSummService        := 0
                                                         , inSummCardRecalc     := 0
-                                                        , inSummCardSecondRecalc:= _tmpContainer.SummCardSecondRecalc
+                                                        , inSummCardSecondRecalc:= _tmpMI.SummCardSecondRecalc
                                                         , inSummCardSecondCash := 0
                                                         , inSummNalogRecalc    := 0
                                                         , inSummMinus          := 0
@@ -192,47 +168,19 @@ BEGIN
                                                         , inSummChildRecalc    := 0
                                                         , inSummMinusExtRecalc := 0
                                                         , inComment            := ''
-                                                        , inInfoMoneyId        := _tmpContainer.InfoMoneyId
-                                                        , inUnitId             := _tmpContainer.UnitId
-                                                        , inPositionId         := _tmpContainer.PositionId
-                                                        , inMemberId           := ObjectLink_Personal_Member.ChildObjectId
-                                                        , inPersonalServiceListId := vbPersonalServiceListId
+                                                        , inInfoMoneyId        := _tmpMI.InfoMoneyId
+                                                        , inUnitId             := _tmpMI.UnitId
+                                                        , inPositionId         := _tmpMI.PositionId
+                                                        , inMemberId           := NULL
+                                                        , inPersonalServiceListId := _tmpMI.PersonalServiceListId
                                                         , inUserId             := vbUserId
                                                          )
-     FROM _tmpContainer
-          LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
-                               ON ObjectLink_Personal_Member.ObjectId = _tmpContainer.PersonalId
-                              AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
-          LEFT JOIN ObjectString AS ObjectString_CardSecond
-                                 ON ObjectString_CardSecond.ObjectId  = ObjectLink_Personal_Member.ChildObjectId
-                                AND ObjectString_CardSecond.DescId    = zc_ObjectString_Member_CardSecond()
+     FROM _tmpMI
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Main
-                                  ON ObjectBoolean_Main.ObjectId = _tmpContainer.PersonalId
+                                  ON ObjectBoolean_Main.ObjectId = _tmpMI.PersonalId
                                  AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Personal_Main()
-     WHERE COALESCE (_tmpContainer.MovementItemId,0) = 0
-       AND COALESCE (_tmpContainer.SummCardSecondRecalc,0) > 0
-       AND ObjectString_CardSecond.ValueData <> ''
      ;
      
-     
-     -- cохранили свойство для ранее сохраненных строк 
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardSecondRecalc()
-                                             , _tmpContainer.MovementItemId
-                                             , CASE WHEN ObjectString_CardSecond.ValueData <> '' AND _tmpContainer.SummCardSecondRecalc > 0
-                                                         THEN _tmpContainer.SummCardSecondRecalc
-                                                    ELSE 0
-                                               END
-                                              )
-     FROM _tmpContainer
-          LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
-                               ON ObjectLink_Personal_Member.ObjectId = _tmpContainer.PersonalId
-                              AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
-          LEFT JOIN ObjectString AS ObjectString_CardSecond
-                                 ON ObjectString_CardSecond.ObjectId  = ObjectLink_Personal_Member.ChildObjectId
-                                AND ObjectString_CardSecond.DescId    = zc_ObjectString_Member_CardSecond()
-     WHERE COALESCE (_tmpContainer.MovementItemId,0) <> 0
-     ;
-
 
 END;
 $BODY$

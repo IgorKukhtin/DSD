@@ -128,6 +128,7 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
                                              , zc_Enum_Process_AccessKey_PersonalServiceSB()
                                              , zc_Enum_Process_AccessKey_PersonalServiceFirstForm()
                                              , zc_Enum_Process_AccessKey_PersonalServicePav()
+                                             , zc_Enum_Process_AccessKey_PersonalServiceOther()
 
                                              , zc_Enum_Process_AccessKey_PersonalServiceKiev()
                                              , zc_Enum_Process_AccessKey_PersonalServiceKrRog()
@@ -182,6 +183,8 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
                                                                                                      )
                                                                                                      
                                                                      OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServicePav()
+                                                                        )
+                                                                     OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceOther()
                                                                         )
                                                                      OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceSbitM()
                                                                         )
