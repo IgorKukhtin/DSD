@@ -13,96 +13,81 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService_export(
 RETURNS TABLE (RowData TVarChar)
 AS
 $BODY$
-   DECLARE vbBankId Integer;
-   DECLARE vbPersonalServiceListId Integer;
-   DECLARE vbPersonalServiceListName TVarChar;
-   DECLARE vbisCardSecond Boolean;
-   DECLARE vbTotalSummCardSecondRecalc TFloat;
+   DECLARE vbBankId    Integer;
+   DECLARE vbTotalSumm TFloat;
 
    DECLARE r RECORD;
    DECLARE i Integer; -- автонумерация
    DECLARE e Text;
    DECLARE er Text;
 BEGIN
-	-- *** Временная таблица для сбора результата
-	CREATE TEMP TABLE _tmpResult (RowData TVarChar, errStr TVarChar) ON COMMIT DROP;
+     -- *** Временная таблица для сбора результата
+     CREATE TEMP TABLE _tmpResult (RowData TVarChar, errStr TVarChar) ON COMMIT DROP;
 
 
-        -- определили БАНК
-        vbBankId:= (SELECT ObjectLink_PersonalServiceList_Bank.ChildObjectId
-                    FROM MovementLinkObject AS MovementLinkObject_PersonalServiceList
-                          LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Bank
-                                               ON ObjectLink_PersonalServiceList_Bank.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId 
-                                              AND ObjectLink_PersonalServiceList_Bank.DescId = zc_ObjectLink_PersonalServiceList_Bank()
-                    WHERE MovementLinkObject_PersonalServiceList.MovementId = inMovementId
-                      AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
-                   );
-        -- определили Ведомость начисления
-        SELECT MLO_PersonalServiceList.ObjectId, Object_ServiceList.ValueData
-          INTO vbPersonalServiceListId, vbPersonalServiceListName
-        FROM MovementLinkObject AS MLO_PersonalServiceList
-             LEFT JOIN Object AS Object_ServiceList ON Object_ServiceList.Id = MLO_PersonalServiceList.ObjectId
-        WHERE MLO_PersonalServiceList.MovementId = inMovementId
-          AND MLO_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList();
+     -- определили БАНК
+     vbBankId:= (SELECT ObjectLink_PersonalServiceList_Bank.ChildObjectId
+                 FROM MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                       LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Bank
+                                            ON ObjectLink_PersonalServiceList_Bank.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
+                                           AND ObjectLink_PersonalServiceList_Bank.DescId = zc_ObjectLink_PersonalServiceList_Bank()
+                 WHERE MovementLinkObject_PersonalServiceList.MovementId = inMovementId
+                   AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                );
 
-     -- Находим есть ли сотрудники к выплате по Карта БН (ввод) - 2ф.
+
+     -- ВЫплата Карта БН (ввод) - 2ф.
      IF EXISTS (SELECT 1
                 FROM MovementItem
-                  INNER JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceListCardSecond
-                                        ON ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId = MovementItem.ObjectId
-                                       AND ObjectLink_Personal_PersonalServiceListCardSecond.DescId  = zc_ObjectLink_Personal_PersonalServiceListCardSecond()
-                                       AND ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId = vbPersonalServiceListId
+                     INNER JOIN MovementItemFloat AS MIFloat_SummCardSecondRecalc
+                                                  ON MIFloat_SummCardSecondRecalc.MovementItemId = MovementItem.Id
+                                                 AND MIFloat_SummCardSecondRecalc.DescId         = zc_MIFloat_SummCardSecondRecalc()
+                                                 AND MIFloat_SummCardSecondRecalc.ValueData      <> 0
                 WHERE MovementItem.MovementId = inMovementId
-                                         AND MovementItem.DescId = zc_MI_Master()
-                                         AND MovementItem.isErased = False
-                LIMIT 1)
-     THEN 
-         vbisCardSecond := True;
-     ELSE 
-         vbisCardSecond := False;
-     END IF;
-     
-     -- ВЫплата Карта БН (ввод) - 2ф.
-     IF vbisCardSecond = True AND POSITION('Банк 2ф' in vbPersonalServiceListName) > 0
+                  AND MovementItem.DescId     = zc_MI_Master()
+                  AND MovementItem.isErased   = FALSE
+               )
      THEN
-        -- итого сумма Карта БН (ввод) - 2ф.
-        vbTotalSummCardSecondRecalc := (SELECT MovementFloat_TotalSummCardSecondRecalc.ValueData
-                                        FROM MovementFloat AS MovementFloat_TotalSummCardSecondRecalc
-                                        WHERE MovementFloat_TotalSummCardSecondRecalc.MovementId = inMovementId
-                                          AND MovementFloat_TotalSummCardSecondRecalc.DescId = zc_MovementFloat_TotalSummCardSecondRecalc()
-                                        );
-
-	-- *** Шапка файла
+	-- Шапка файла
 	INSERT INTO _tmpResult (RowData) VALUES ('Счет;ИНН;Сумма в копейках;Фамилия;Имя;Отчество');
 
-	-- *** Строчный вывод
-	i := 0; -- обнуляем автонумерацию
-	FOR r IN (select CardSecond, personalname, inn, SummCardSecondRecalc from gpSelect_MovementItem_PersonalService(inMovementId := inMovementId, inShowAll := 'False', inIsErased := 'False',  inSession := inSession) WHERE SummCardSecondRecalc <> 0)
+	-- Строчный вывод
+	i           := 0; -- обнуляем автонумерацию
+        vbTotalSumm := 0; -- обнуляем
+
+	FOR r IN (SELECT COALESCE (gpSelect.CardSecond, '') AS CardSecond, UPPER (COALESCE (gpSelect.PersonalName, '')) AS PersonalName, COALESCE (gpSelect.INN, '') AS INN
+	                 -- добавили % и округлили до 2-х знаков + ПЕРЕВОДИМ в копейки
+	               , FLOOR (100 * CAST (COALESCE (gpSelect.SummCardSecondRecalc, 0) * 1.00705 AS NUMERIC (16, 2))) AS SummCardSecondRecalc
+	          FROM gpSelect_MovementItem_PersonalService (inMovementId:= inMovementId, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= inSession) AS gpSelect
+	          WHERE gpSelect.SummCardSecondRecalc <> 0
+	         )
 	LOOP
-		IF (char_length(r.CardSecond)<>14) 
-		   OR (NOT ISNUMERIC(r.CardSecond))
-		   OR (char_length(r.personalname)=0) THEN
-		   BEGIN
-			e := 'Неверные/неполные данные: Карта - ' || r.CardSecond || ', ФИО - ' || r.personalname || ', ИНН - ' || r.inn || ', Сумма - ' || r.SummCardSecondRecalc || CHR(13) || CHR(10);
-			er := concat(er, e);
-		   END;
-		ELSE
-		BEGIN
-			-- Номер карточного счета ф2; ИНН; Сумма; Фамилия; Имя; Отчество
-			INSERT INTO _tmpResult (RowData) VALUES (''||r.CardSecond||';'||r.inn||';'||ROUND( (r.SummCardSecondRecalc*100) ::numeric, 0)||';'||LEFT(REPLACE(REPLACE(r.personalname, ' ', ';'), chr(39), ''), 80) );
-			i := i + 1; -- увеличиваем значение автонумерации
-		END;
-		END IF;
+            -- Итого сумма - 
+            vbTotalSumm:= vbTotalSumm + r.SummCardSecondRecalc;
+            --
+            IF   CHAR_LENGTH (r.personalname) = 0
+              -- OR CHAR_LENGTH (r.CardSecond)   <> 14
+              -- OR ISNUMERIC (r.CardSecond)     = FALSE
+            THEN
+                e := 'Неверные/неполные данные: Карта - ' || r.CardSecond || ', ФИО - ' || r.personalname || ', ИНН - ' || r.inn || ', Сумма - ' || r.SummCardSecondRecalc || CHR(13) || CHR(10);
+                er := concat(er, e);
+            ELSE
+                -- Номер карточного счета ф2; ИНН; Сумма - ПЕРЕВОДИМ в копейки; Фамилия; Имя; Отчество
+                INSERT INTO _tmpResult (RowData) VALUES (''||r.CardSecond||';'||r.inn||';'|| r.SummCardSecondRecalc || ';' || LEFT(REPLACE(REPLACE(r.personalname, ' ', ';'), chr(39), ''), 80) );
+                i := i + 1; -- увеличиваем значение автонумерации
+            END IF;
 
         END LOOP;
+
 	-- Пустая строка
 	INSERT INTO _tmpResult (RowData) VALUES ('');
-        -- Сумма зачисления	
-	INSERT INTO _tmpResult (RowData) VALUES (';;'||ROUND( (vbTotalSummCardSecondRecalc*100) ::numeric, 0));    
+        -- Сумма зачисления
+	INSERT INTO _tmpResult (RowData) VALUES (';;' || vbTotalSumm);
+
      END IF;
-                                   
+
      -- ПАТ "БАНК ВОСТОК"
-     IF vbBankId = 76968 
+     IF vbBankId = 76968
      THEN
 	-- *** Шапка файла
 	-- Тип документа (из ТЗ)
@@ -119,7 +104,7 @@ BEGIN
 	INSERT INTO _tmpResult (RowData) VALUES ('PAYER_BANK_MFO=307123');
 	-- Счет списания
 	INSERT INTO _tmpResult (RowData) VALUES ('PAYER_ACCOUNT=26007010192834');
-	-- Сумма зачисления	
+	-- Сумма зачисления
 	INSERT INTO _tmpResult (RowData) VALUES ('AMOUNT='||ROUND(inAmount::numeric, 2));
 	-- Счет банка плательщика
 	INSERT INTO _tmpResult (RowData) VALUES ('PAYER_BANK_ACCOUNT=29244006');
@@ -136,10 +121,10 @@ BEGIN
 	i := 0; -- обнуляем автонумерацию
 	FOR r IN (select card, personalname, inn, SummCardRecalc from gpSelect_MovementItem_PersonalService(inMovementId := inMovementId, inShowAll := 'False', inIsErased := 'False',  inSession := inSession))
 	LOOP
-		IF (char_length(r.card)<>14) 
+		IF (char_length(r.card)<>14)
 		   OR (NOT ISNUMERIC(r.card))
-		   --OR (NOT ISNUMERIC(r.inn)) 
-		   --OR (char_length(r.inn)<>10) 
+		   --OR (NOT ISNUMERIC(r.inn))
+		   --OR (char_length(r.inn)<>10)
 		   OR (char_length(r.personalname)=0) THEN
 		   BEGIN
 			e := 'Неверные/неполные данные: Карта - ' || r.card || ', ФИО - ' || r.personalname || ', ИНН - ' || r.inn || ', Сумма - ' || r.SummCardRecalc || CHR(13) || CHR(10);
@@ -230,7 +215,7 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  20.07.17         *
  20.12.16                                        *
- 01.07.16                                        
+ 01.07.16
 */
 
 -- тест
