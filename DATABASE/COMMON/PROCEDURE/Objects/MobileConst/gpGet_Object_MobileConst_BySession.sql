@@ -41,14 +41,14 @@ BEGIN
       
       -- результат
       RETURN QUERY
-        SELECT COALESCE (mcPrivate.MobileVersion, mcPublic.MobileVersion)::TVarChar
-             , COALESCE (mcPrivate.MobileAPKFileName, mcPublic.MobileAPKFileName)::TVarChar
-             , COALESCE (mcPrivate.OperDateDiff, mcPublic.OperDateDiff)::Integer
-             , COALESCE (mcPrivate.ReturnDayCount, mcPublic.ReturnDayCount)::Integer
-             , COALESCE (mcPrivate.CriticalOverDays, mcPublic.CriticalOverDays)::Integer
-             , COALESCE (mcPrivate.CriticalDebtSum, mcPublic.CriticalDebtSum)::TFloat
-             , COALESCE (mcPrivate.UserId, mcPublic.UserId)::Integer
-             , COALESCE (mcPrivate.UserName, mcPublic.UserName)::TVarChar
+        SELECT COALESCE (mcPrivate.MobileVersion,     mcPublic.MobileVersion)::TVarChar     AS MobileVersion
+             , COALESCE (mcPrivate.MobileAPKFileName, mcPublic.MobileAPKFileName)::TVarChar AS MobileAPKFileName
+             , COALESCE (mcPrivate.OperDateDiff,      mcPublic.OperDateDiff)::Integer       AS OperDateDiff
+             , COALESCE (mcPrivate.ReturnDayCount,    mcPublic.ReturnDayCount)::Integer     AS ReturnDayCount
+             , COALESCE (mcPrivate.CriticalOverDays,  mcPublic.CriticalOverDays)::Integer   AS CriticalOverDays
+             , COALESCE (mcPrivate.CriticalDebtSum,   mcPublic.CriticalDebtSum)::TFloat     AS CriticalDebtSum
+             , COALESCE (mcPrivate.UserId,            mcPublic.UserId)::Integer             AS UserId
+             , COALESCE (mcPrivate.UserName,          mcPublic.UserName)::TVarChar          AS UserName
         FROM lpGet_Object_MobileConst (inId:= vbPublicId) AS mcPublic
              LEFT JOIN lpGet_Object_MobileConst (inId:= vbPrivateId) AS mcPrivate ON 1 = 1
         ;
