@@ -62,6 +62,45 @@ BEGIN
                                                           AND Movement.OperDate >= CURRENT_DATE - INTERVAL '4 MONTH'
                                                           AND Movement.StatusId <> zc_Enum_Status_Erased()
                                    );
+          -- продолжаем поиск - еще 4 MONTH
+          IF COALESCE (vbMovementId_ReturnIn, 0) = 0
+          THEN
+          vbMovementId_ReturnIn:= (SELECT Movement.Id
+                                   FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId
+                                         ) AS tmp
+                                       INNER JOIN Movement ON Movement.Id = tmp.MovementId
+                                                          AND Movement.DescId = zc_Movement_ReturnIn()
+                                                          AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '8 MONTH' AND CURRENT_DATE - INTERVAL '4 MONTH'
+                                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                   );
+          END IF;
+
+          -- продолжаем поиск - еще 4 MONTH
+          IF COALESCE (vbMovementId_ReturnIn, 0) = 0
+          THEN
+          vbMovementId_ReturnIn:= (SELECT Movement.Id
+                                   FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId
+                                         ) AS tmp
+                                       INNER JOIN Movement ON Movement.Id = tmp.MovementId
+                                                          AND Movement.DescId = zc_Movement_ReturnIn()
+                                                          AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '12 MONTH' AND CURRENT_DATE - INTERVAL '8 MONTH'
+                                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                   );
+          END IF;
+
+          -- продолжаем поиск - еще 4 MONTH
+          IF COALESCE (vbMovementId_ReturnIn, 0) = 0
+          THEN
+          vbMovementId_ReturnIn:= (SELECT Movement.Id
+                                   FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId
+                                         ) AS tmp
+                                       INNER JOIN Movement ON Movement.Id = tmp.MovementId
+                                                          AND Movement.DescId = zc_Movement_ReturnIn()
+                                                          AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '15 MONTH' AND CURRENT_DATE - INTERVAL '12 MONTH'
+                                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                   );
+          END IF;
+
      ELSE -- проверка - т.к. InvNumber повторяется
           IF 1 < (SELECT COUNT(*)
                   FROM Movement

@@ -63,9 +63,62 @@ BEGIN
                                              ) AS tmp
                                          INNER JOIN Movement ON Movement.Id = tmp.MovementId
                                                             AND Movement.DescId = zc_Movement_ReturnIn()
-                                                            AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '183 DAY' AND CURRENT_DATE + INTERVAL '8 DAY'
+                                                            AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '33 DAY' AND CURRENT_DATE + INTERVAL '8 DAY'
                                                             AND Movement.StatusId <> zc_Enum_Status_Erased()
                                        );
+
+              -- продолжаем поиск - еще 100 DAY
+              IF COALESCE (vbMovementId_ReturnIn, 0) = 0
+              THEN
+              vbMovementId_ReturnIn:= (SELECT Movement.Id
+                                       FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId
+                                             ) AS tmp
+                                         INNER JOIN Movement ON Movement.Id = tmp.MovementId
+                                                            AND Movement.DescId = zc_Movement_ReturnIn()
+                                                            AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '133 DAY' AND CURRENT_DATE - INTERVAL '33 DAY'
+                                                            AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                       );
+              END IF;
+              
+              -- продолжаем поиск - еще 100 DAY
+              IF COALESCE (vbMovementId_ReturnIn, 0) = 0
+              THEN
+              vbMovementId_ReturnIn:= (SELECT Movement.Id
+                                       FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId
+                                             ) AS tmp
+                                         INNER JOIN Movement ON Movement.Id = tmp.MovementId
+                                                            AND Movement.DescId = zc_Movement_ReturnIn()
+                                                            AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '233 DAY' AND CURRENT_DATE - INTERVAL '133 DAY'
+                                                            AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                       );
+              END IF;
+
+              -- продолжаем поиск - еще 100 DAY
+              IF COALESCE (vbMovementId_ReturnIn, 0) = 0
+              THEN
+              vbMovementId_ReturnIn:= (SELECT Movement.Id
+                                       FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId
+                                             ) AS tmp
+                                         INNER JOIN Movement ON Movement.Id = tmp.MovementId
+                                                            AND Movement.DescId = zc_Movement_ReturnIn()
+                                                            AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '333 DAY' AND CURRENT_DATE - INTERVAL '233 DAY'
+                                                            AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                       );
+              END IF;
+
+              -- продолжаем поиск - еще 100 DAY
+              IF COALESCE (vbMovementId_ReturnIn, 0) = 0
+              THEN
+              vbMovementId_ReturnIn:= (SELECT Movement.Id
+                                       FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId
+                                             ) AS tmp
+                                         INNER JOIN Movement ON Movement.Id = tmp.MovementId
+                                                            AND Movement.DescId = zc_Movement_ReturnIn()
+                                                            AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '433 DAY' AND CURRENT_DATE - INTERVAL '333 DAY'
+                                                            AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                       );
+              END IF;
+
          ELSE -- по InvNumber, но для скорости ограничение - 8 DAY
               vbMovementId_ReturnIn:= (SELECT Movement.Id
                                        FROM Movement

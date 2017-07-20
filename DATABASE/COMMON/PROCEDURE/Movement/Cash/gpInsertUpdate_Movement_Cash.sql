@@ -110,6 +110,12 @@ BEGIN
          -- !!!Замена!!!
          inParPartnerValue:= CASE WHEN inParPartnerValue > 0 THEN inParPartnerValue ELSE 1 END;
 
+         -- !!!Замена!!!
+         IF inAmountSumm = 0 AND inInfoMoneyId = zc_Enum_InfoMoney_41001() -- Покупка/продажа валюты
+         THEN
+             inAmountSumm:= (inAmountIn + inAmountOut) * inCurrencyPartnerValue / inParPartnerValue;
+         END IF;
+
          -- если обмен
          IF inAmountSumm <> 0 OR EXISTS (SELECT 1 FROM Object WHERE Object.Id = inMoneyPlaceId AND Object.DescId = zc_Object_Cash())
          THEN

@@ -130,6 +130,7 @@ BEGIN
                                    , MILinkObject_InfoMoney.ObjectId                        AS InfoMoneyId
                                      -- замена
                                    , COALESCE (ObjectLink_Personal_PersonalServiceList.ChildObjectId, MLO_PersonalServiceList.ObjectId) AS PersonalServiceListId
+                                   , MLO_PersonalServiceList.ObjectId AS PersonalServiceListId_calc
                               FROM Movement
                                    INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                           AND MovementItem.DescId = zc_MI_Master()
@@ -236,6 +237,7 @@ BEGIN
                                      , MILinkObject_Position.ObjectId
                                      , MILinkObject_InfoMoney.ObjectId
                                      , COALESCE (ObjectLink_Personal_PersonalServiceList.ChildObjectId, MLO_PersonalServiceList.ObjectId)
+                                     , MLO_PersonalServiceList.ObjectId
                              )
               , tmpParent AS (SELECT tmpParent_all.SummService
                                    , tmpParent_all.SummToPay_cash - COALESCE (tmpSummNalog.SummNalog, 0) AS SummToPay_cash
@@ -262,6 +264,7 @@ BEGIN
                                    , tmpParent_all.PositionId
                                    , tmpParent_all.InfoMoneyId
                                    , tmpParent_all.PersonalServiceListId
+                                   , tmpParent_all.PersonalServiceListId_calc
                               FROM tmpParent_all
                                    LEFT JOIN tmpSummNalog ON tmpSummNalog.PersonalId = tmpParent_all.PersonalId
                                                          AND tmpSummNalog.UnitId     = tmpParent_all.UnitId
@@ -292,7 +295,8 @@ BEGIN
                                    , CLO_Position.ObjectId  AS PositionId
                                    , CLO_InfoMoney.ObjectId AS InfoMoneyId
                                    , tmp.PersonalServiceListId
-                              FROM (SELECT DISTINCT tmpParent_all.PersonalServiceListId, tmpParent_all.InfoMoneyId FROM tmpParent_all) AS tmp
+                                   , tmp.PersonalServiceListId_calc
+                              FROM (SELECT DISTINCT tmpParent_all.PersonalServiceListId, tmpParent_all.PersonalServiceListId_calc, tmpParent_all.InfoMoneyId FROM tmpParent_all) AS tmp
                                    INNER JOIN ContainerLinkObject AS CLO_PersonalServiceList
                                                                   ON CLO_PersonalServiceList.ObjectId    = tmp.PersonalServiceListId
                                                                  AND CLO_PersonalServiceList.DescId      = zc_ContainerLinkObject_PersonalServiceList()
@@ -326,6 +330,7 @@ BEGIN
                                    , tmpParent.UnitId
                                    , tmpParent.PositionId
                                    , tmpParent.InfoMoneyId
+                                   , CASE WHEN tmpParent.PersonalServiceListId <> tmpParent.PersonalServiceListId_calc THEN FALSE ELSE TRUE END AS isAvance
                               FROM tmpParent
                                    INNER JOIN ContainerLinkObject AS CLO_ServiceDate
                                                                   ON CLO_ServiceDate.ObjectId = vbServiceDateId
@@ -353,7 +358,7 @@ BEGIN
                              )
           /*tmpCash*/
          , tmpMIContainer AS (SELECT SUM (CASE WHEN MIContainer.MovementId = inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() THEN MIContainer.Amount ELSE 0 END) AS Amount_current
-                                   , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance())  THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
+                                   , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) AND tmpContainer.isAvance = TRUE THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
                                    , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalCardSecond())  THEN MIContainer.Amount ELSE 0 END) AS AmountCardSecond_avance
                                    , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Cash_PersonalService() THEN MIContainer.Amount ELSE 0 END) AS Amount_service
                                    -- , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Income() THEN MIContainer.Amount ELSE 0 END) AS Amount_income

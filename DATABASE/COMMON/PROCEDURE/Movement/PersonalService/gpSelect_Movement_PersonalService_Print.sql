@@ -69,7 +69,7 @@ BEGIN
              ) :: TFloat AS TotalSummService
            , MovementFloat_TotalSummMinus.ValueData      AS TotalSummMinus
            , MovementFloat_TotalSummCard.ValueData       AS TotalSummCard
-           , MovementFloat_TotalSummCardSecond.ValueData AS TotalSummCardSecond
+           , (COALESCE (MovementFloat_TotalSummCardSecond.ValueData, 0) + COALESCE (MovementFloat_TotalSummCardSecondRecalc.ValueData, 0)) :: TFloat AS TotalSummCardSecond
            , MovementFloat_TotalSummCardSecondCash.ValueData AS TotalSummCardSecondCash
            , MovementFloat_TotalSummNalog.ValueData      AS TotalSummNalog
            , MovementFloat_TotalSummChild.ValueData      AS TotalSummChild
@@ -134,6 +134,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummCardSecond
                                     ON MovementFloat_TotalSummCardSecond.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummCardSecond.DescId = zc_MovementFloat_TotalSummCardSecond()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummCardSecondRecalc
+                                    ON MovementFloat_TotalSummCardSecondRecalc.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummCardSecondRecalc.DescId = zc_MovementFloat_TotalSummCardSecondRecalc()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummCardSecondCash
                                     ON MovementFloat_TotalSummCardSecondCash.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummCardSecondCash.DescId = zc_MovementFloat_TotalSummCardSecondCash()
@@ -224,13 +227,13 @@ BEGIN
                            , MILinkObject_PersonalServiceList.ObjectId  AS PersonalServiceListId
 
                            , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Personal_Member.ChildObjectId ORDER BY CASE WHEN MIBoolean_Main.ValueData = TRUE THEN 1 ELSE 2 END, MovementItem.Amount DESC) AS Ord --  № п/п
-                           
+
                            , COALESCE (MIBoolean_Main.ValueData, FALSE) AS isMain
-                           
+
                            , COALESCE (MIFloat_SummToPay.ValueData, 0)        AS SummToPay
                            , COALESCE (MIFloat_SummNalog.ValueData, 0)        AS SummNalog
                            , COALESCE (MIFloat_SummCard.ValueData, 0)         AS SummCard
-                           , COALESCE (MIFloat_SummCardSecond.ValueData, 0)   AS SummCardSecond
+                           , COALESCE (MIFloat_SummCardSecond.ValueData, 0) + COALESCE (MIFloat_SummCardSecondRecalc.ValueData, 0) AS SummCardSecond
                            , COALESCE (MIFloat_SummCardSecondCash.ValueData, 0)   AS SummCardSecondCash
                            , COALESCE (MIFloat_SummService.ValueData, 0)      AS SummService
                            , COALESCE (MIFloat_SummAdd.ValueData, 0)          AS SummAdd
@@ -267,7 +270,7 @@ BEGIN
                            LEFT JOIN MovementItemString AS MIString_Comment
                                                         ON MIString_Comment.MovementItemId = MovementItem.Id
                                                        AND MIString_Comment.DescId = zc_MIString_Comment()
-               
+
                            LEFT JOIN MovementItemFloat AS MIFloat_SummToPay
                                                        ON MIFloat_SummToPay.MovementItemId = MovementItem.Id
                                                       AND MIFloat_SummToPay.DescId = zc_MIFloat_SummToPay()
@@ -280,13 +283,16 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecond
                                                        ON MIFloat_SummCardSecond.MovementItemId = MovementItem.Id
                                                       AND MIFloat_SummCardSecond.DescId = zc_MIFloat_SummCardSecond()
+                           LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecondRecalc
+                                                       ON MIFloat_SummCardSecondRecalc.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_SummCardSecondRecalc.DescId = zc_MIFloat_SummCardSecondRecalc()
                            LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecondCash
                                                        ON MIFloat_SummCardSecondCash.MovementItemId = MovementItem.Id
                                                       AND MIFloat_SummCardSecondCash.DescId = zc_MIFloat_SummCardSecondCash()
                            LEFT JOIN MovementItemFloat AS MIFloat_SummNalog
                                                        ON MIFloat_SummNalog.MovementItemId = MovementItem.Id
                                                       AND MIFloat_SummNalog.DescId = zc_MIFloat_SummNalog()
-               
+
                            LEFT JOIN MovementItemFloat AS MIFloat_SummMinus
                                                        ON MIFloat_SummMinus.MovementItemId = MovementItem.Id
                                                       AND MIFloat_SummMinus.DescId = zc_MIFloat_SummMinus()
@@ -305,7 +311,7 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_SummPhone
                                                        ON MIFloat_SummPhone.MovementItemId = MovementItem.Id
                                                       AND MIFloat_SummPhone.DescId = zc_MIFloat_SummPhone()
-               
+
                          /*  LEFT JOIN MovementItemFloat AS MIFloat_SummSocialIn
                                                        ON MIFloat_SummSocialIn.MovementItemId = MovementItem.Id
                                                       AND MIFloat_SummSocialIn.DescId = zc_MIFloat_SummSocialIn()
@@ -335,7 +341,7 @@ BEGIN
                            , tmpMI_all_find.PersonalServiceListId
                            , tmpMI_all_find.isMain
                            , tmpMI_all_find.Comment
-                          
+
                            , SUM (tmpMI_all.Amount)           AS Amount
 
                            , SUM (tmpMI_all.SummToPay)        AS SummToPay
@@ -513,7 +519,7 @@ BEGIN
             , tmpAll.SummTransportAdd   :: TFloat AS SummTransportAdd
             , tmpAll.SummTransport      :: TFloat AS SummTransport
             , tmpAll.SummPhone          :: TFloat AS SummPhone
-            
+
             , tmpMIContainer_pay.Amount_avance :: TFloat AS Amount_avance
 
             , tmpAll.Comment
@@ -523,7 +529,7 @@ BEGIN
             LEFT JOIN tmpMIContainer_all ON tmpMIContainer_all.MemberId = tmpAll.MemberId
                                         AND tmpMIContainer_all.Ord      = 1 -- !!!только 1-ый!!!
             LEFT JOIN tmpMIContainer_pay ON tmpMIContainer_pay.MemberId = tmpAll.MemberId
-                                        
+
 
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmpAll.PersonalId
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpAll.UnitId
@@ -545,6 +551,7 @@ BEGIN
           OR 0 <> tmpAll.SummTransportAdd
           OR 0 <> tmpAll.SummTransport
           OR 0 <> tmpAll.SummPhone
+          OR 0 <> tmpAll.SummCardSecond
        ORDER BY Object_Personal.ValueData
       ;
 
