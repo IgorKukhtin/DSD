@@ -3,10 +3,8 @@ inherited PromoForm: TPromoForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 599
   ClientWidth = 1204
-  ExplicitLeft = -201
-  ExplicitTop = -119
   ExplicitWidth = 1220
-  ExplicitHeight = 638
+  ExplicitHeight = 637
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -25,6 +23,8 @@ inherited PromoForm: TPromoForm
       inherited cxGrid: TcxGrid
         Width = 1204
         Height = 255
+        ExplicitLeft = -1
+        ExplicitTop = 2
         ExplicitWidth = 1204
         ExplicitHeight = 255
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1140,6 +1140,22 @@ inherited PromoForm: TPromoForm
           StoredProc = spSelect_MovementItem_PromoCondition
         end>
     end
+    object macInsertUpdate_MI_Param: TMultiAction [8]
+      Category = 'Update_MI_Param'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdate_MI_Param
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1087#1086#1083#1085#1080#1090#1100' '#1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' ?'
+      InfoAfterExecute = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' '#1074#1099#1087#1086#1083#1085#1077#1085
+      Caption = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093
+      Hint = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093
+      ImageIndex = 44
+    end
     inherited actUpdateMainDS: TdsdUpdateDataSet
       StoredProcList = <
         item
@@ -1147,6 +1163,17 @@ inherited PromoForm: TPromoForm
         end
         item
         end>
+    end
+    object actInsertUpdate_MI_Param: TdsdExecStoredProc [11]
+      Category = 'Update_MI_Param'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_MI_Param
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_MI_Param
+        end>
+      Caption = 'actInsertUpdate_MI_Param'
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelect_Movement_Promo_Print
@@ -1187,7 +1214,7 @@ inherited PromoForm: TPromoForm
     inherited MovementItemProtocolOpenForm: TdsdOpenForm
       TabSheet = tsMain
     end
-    object actPartnerProtocolOpenForm: TdsdOpenForm [16]
+    object actPartnerProtocolOpenForm: TdsdOpenForm [18]
       Category = 'DSDLib'
       TabSheet = tsPartner
       MoveParams = <>
@@ -1218,7 +1245,7 @@ inherited PromoForm: TPromoForm
         end>
       isShowModal = False
     end
-    object actConditionPromoProtocolOpenForm: TdsdOpenForm [17]
+    object actConditionPromoProtocolOpenForm: TdsdOpenForm [19]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -1249,7 +1276,7 @@ inherited PromoForm: TPromoForm
         end>
       isShowModal = False
     end
-    object actAdvertisingProtocolOpenForm: TdsdOpenForm [18]
+    object actAdvertisingProtocolOpenForm: TdsdOpenForm [20]
       Category = 'DSDLib'
       TabSheet = tsAdvertising
       MoveParams = <>
@@ -1883,6 +1910,14 @@ inherited PromoForm: TPromoForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertUpdate_MI_Param'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton1'
         end
         item
@@ -2075,6 +2110,10 @@ inherited PromoForm: TPromoForm
     end
     object bbAdvertisingProtocol: TdxBarButton
       Action = actAdvertisingProtocolOpenForm
+      Category = 0
+    end
+    object bbInsertUpdate_MI_Param: TdxBarButton
+      Action = macInsertUpdate_MI_Param
       Category = 0
     end
   end
@@ -2714,8 +2753,8 @@ inherited PromoForm: TPromoForm
     Top = 272
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
-    Left = 456
-    Top = 336
+    Left = 432
+    Top = 328
   end
   inherited spGetTotalSumm: TdsdStoredProc
     StoredProcName = ''
@@ -3282,7 +3321,7 @@ inherited PromoForm: TPromoForm
     FilterOptions = [foCaseInsensitive]
     Params = <>
     Left = 728
-    Top = 128
+    Top = 152
   end
   object spSelect_Movement_Promo_Print: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Promo_Print'
@@ -3551,5 +3590,22 @@ inherited PromoForm: TPromoForm
     PackSize = 1
     Left = 902
     Top = 312
+  end
+  object spInsertUpdate_MI_Param: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_Promo_Param'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 840
+    Top = 256
   end
 end

@@ -232,6 +232,10 @@ type
     bbPartnerListProtocol: TdxBarButton;
     bbAdvertisingProtocol: TdxBarButton;
     actAdvertisingProtocolOpenForm: TdsdOpenForm;
+    spInsertUpdate_MI_Param: TdsdStoredProc;
+    actInsertUpdate_MI_Param: TdsdExecStoredProc;
+    macInsertUpdate_MI_Param: TMultiAction;
+    bbInsertUpdate_MI_Param: TdxBarButton;
   private
     { Private declarations }
   public
