@@ -793,8 +793,16 @@ type
     procedure LoadStoreRealItems(AId: integer);
     procedure GenerateStoreRealItemsList;
 
+    function InsertOrderExternal(OperDate: TDateTime; Comment: string; PartnerId, PaidKindId, ContractId,
+      PriceListId: Integer; PriceWithVAT: Boolean; VATPercent, ChangePercent, TotalWeight, TotalPrice: Currency;
+      Complete: Boolean): Integer;
+    function UpdateOrderExternal(Id: Integer; OperDate: TDateTime; Comment: string; PaidKindId: Integer;
+      PriceWithVAT: Boolean; VATPercent, ChangePercent, TotalWeight, TotalPrice: Currency;
+      Complete: Boolean; var ErrorMessage : string): Integer;
+    function InsertOrderExternalItem(MovementId, GoodsId, GoodsKindId: Integer; Amount, Price, ChangePercent: Currency): Integer;
+    procedure UpdateOrderExternalItem(MovementItemId: Integer; Amount, Price, ChangePercent: Currency);
     function SaveOrderExternal(OperDate: TDate; PaidKindId: integer; Comment: string;
-      ToralPrice, TotalWeight: Currency; DelItems : string; Complete: boolean; var ErrorMessage : string) : boolean;
+      TotalPrice, TotalWeight: Currency; DelItems : string; Complete: boolean; var ErrorMessage : string) : boolean;
     procedure NewOrderExternal;
     procedure LoadOrderExternal;
     procedure LoadAllOrderExternal(AStartDate, AEndDate: TDate);
@@ -2712,6 +2720,70 @@ begin
     end;
 end;
 
+function TDM.InsertOrderExternal(OperDate: TDateTime; Comment: string; PartnerId, PaidKindId, ContractId,
+  PriceListId: Integer; PriceWithVAT: Boolean; VATPercent, ChangePercent, TotalWeight, TotalPrice: Currency;
+  Complete: Boolean): Integer;
+var
+  GlobalId: TGUID;
+begin
+  tblMovement_OrderExternal.Append;
+
+  CreateGUID(GlobalId);
+  tblMovement_OrderExternalGUID.AsString := GUIDToString(GlobalId);
+  tblMovement_OrderExternalInvNumber.AsString := GetInvNumber('Movement_OrderExternal');
+  tblMovement_OrderExternalOperDate.AsDateTime := OperDate;
+  tblMovement_OrderExternalComment.AsString := Comment;
+
+  if Complete then
+    tblMovement_OrderExternalStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger
+  else
+    tblMovement_OrderExternalStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
+
+  tblMovement_OrderExternalPartnerId.AsInteger := PartnerId;
+  tblMovement_OrderExternalUnitId.AsInteger := tblObject_ConstUnitId.AsInteger;
+  tblMovement_OrderExternalPaidKindId.AsInteger := PaidKindId;
+  tblMovement_OrderExternalContractId.AsInteger := ContractId;
+  tblMovement_OrderExternalPriceListId.AsInteger := PriceListId;
+  tblMovement_OrderExternalPriceWithVAT.AsBoolean := PriceWithVAT;
+  tblMovement_OrderExternalVATPercent.AsFloat := VATPercent;
+  tblMovement_OrderExternalChangePercent.AsFloat := ChangePercent;
+  tblMovement_OrderExternalTotalCountKg.AsFloat := TotalWeight;
+  tblMovement_OrderExternalTotalSumm.AsFloat := TotalPrice;
+  tblMovement_OrderExternalInsertDate.AsDateTime := Now();
+  tblMovement_OrderExternalisSync.AsBoolean := false;
+
+  tblMovement_OrderExternal.Post;
+  {??? Возможно есть лучший способ получения значения Id новой записи }
+  tblMovement_OrderExternal.Refresh;
+  tblMovement_OrderExternal.Last;
+  {???}
+  Result := tblMovement_OrderExternalId.AsInteger;
+end;
+
+function TDM.InsertOrderExternalItem(MovementId, GoodsId, GoodsKindId: Integer; Amount, Price,
+  ChangePercent: Currency): Integer;
+var
+  GlobalId: TGUID;
+begin
+  tblMovementItem_OrderExternal.Append;
+
+  tblMovementItem_OrderExternalMovementId.AsInteger := MovementId;
+  CreateGUID(GlobalId);
+  tblMovementItem_OrderExternalGUID.AsString := GUIDToString(GlobalId);
+  tblMovementItem_OrderExternalGoodsId.AsInteger := GoodsId;
+  tblMovementItem_OrderExternalGoodsKindId.AsInteger := GoodsKindId;
+  tblMovementItem_OrderExternalAmount.AsCurrency := Amount;
+  tblMovementItem_OrderExternalPrice.AsCurrency := Price;
+  tblMovementItem_OrderExternalChangePercent.AsCurrency := ChangePercent;
+
+  tblMovementItem_OrderExternal.Post;
+  {??? Возможно есть лучший способ получения значения Id новой записи }
+  tblMovementItem_OrderExternal.Refresh;
+  tblMovementItem_OrderExternal.Last;
+  {???}
+  Result := tblMovementItem_OrderExternalId.AsInteger;
+end;
+
 function TDM.Connect: Boolean;
 begin
   if conMain.Connected then
@@ -3249,6 +3321,54 @@ begin
 end;
 
 { обновление программы }
+function TDM.UpdateOrderExternal(Id: Integer; OperDate: TDateTime; Comment: string; PaidKindId: Integer;
+  PriceWithVAT: Boolean; VATPercent, ChangePercent, TotalWeight, TotalPrice: Currency; Complete: Boolean;
+  var ErrorMessage: string): Integer;
+begin
+  ErrorMessage := '';
+  Result := Id;
+
+  if tblMovement_OrderExternal.Locate('Id', Id) then
+  begin
+    tblMovement_OrderExternal.Edit;
+
+    tblMovement_OrderExternalOperDate.AsDateTime := OperDate;
+    tblMovement_OrderExternalComment.AsString := Comment;
+
+    if Complete then
+      tblMovement_OrderExternalStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger
+    else
+      tblMovement_OrderExternalStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
+
+    tblMovement_OrderExternalUnitId.AsInteger := tblObject_ConstUnitId.AsInteger;
+    tblMovement_OrderExternalPaidKindId.AsInteger := PaidKindId;
+    tblMovement_OrderExternalPriceWithVAT.AsBoolean := PriceWithVAT;
+    tblMovement_OrderExternalVATPercent.AsFloat := VATPercent;
+    tblMovement_OrderExternalChangePercent.AsFloat := ChangePercent;
+    tblMovement_OrderExternalTotalCountKg.AsFloat := TotalWeight;
+    tblMovement_OrderExternalTotalSumm.AsFloat := TotalPrice;
+
+    tblMovement_OrderExternal.Post;
+
+    Result := cdsOrderExternalId.AsInteger;
+  end else
+    ErrorMessage := 'Ошибка работы с БД: не найдена редактируемая заявка';
+end;
+
+procedure TDM.UpdateOrderExternalItem(MovementItemId: Integer; Amount, Price, ChangePercent: Currency);
+begin
+  if tblMovementItem_OrderExternal.Locate('Id', MovementItemId) then
+  begin
+    tblMovementItem_OrderExternal.Edit;
+
+    tblMovementItem_OrderExternalAmount.AsCurrency := Amount;
+    tblMovementItem_OrderExternalPrice.AsCurrency := Price;
+    tblMovementItem_OrderExternalChangePercent.AsCurrency := ChangePercent;
+
+    tblMovementItem_OrderExternal.Post;
+  end;
+end;
+
 procedure TDM.UpdateProgram(const AResult: TModalResult);
 begin
   if AResult = mrYes then
@@ -3931,11 +4051,10 @@ end;
 
 { сохранение заявки на товары в БД }
 function TDM.SaveOrderExternal(OperDate: TDate; PaidKindId: integer; Comment: string;
-  ToralPrice, TotalWeight: Currency; DelItems : string; Complete: boolean; var ErrorMessage : string) : boolean;
+  TotalPrice, TotalWeight: Currency; DelItems : string; Complete: boolean; var ErrorMessage : string) : boolean;
 var
-  GlobalId: TGUID;
   MovementId: integer;
-  NewInvNumber, CurInvNumber: string;
+  CurInvNumber: string;
   b: TBookmark;
   isHasItems: boolean;
 begin
@@ -3965,77 +4084,23 @@ begin
   end;
 
 
-  if cdsOrderExternalId.AsInteger = -1 then
-    NewInvNumber := GetInvNumber('Movement_OrderExternal')
-  else
-    NewInvNumber := '0';
-
   conMain.StartTransaction;
   try
     tblMovement_OrderExternal.Open;
 
     if cdsOrderExternalId.AsInteger = -1 then
-    begin
-      tblMovement_OrderExternal.Append;
-
-      CreateGUID(GlobalId);
-      tblMovement_OrderExternalGUID.AsString := GUIDToString(GlobalId);
-      tblMovement_OrderExternalInvNumber.AsString := NewInvNumber;
-      tblMovement_OrderExternalOperDate.AsDateTime := OperDate;
-      tblMovement_OrderExternalComment.AsString := Comment;
-      if Complete then
-        tblMovement_OrderExternalStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger
-      else
-        tblMovement_OrderExternalStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
-      tblMovement_OrderExternalPartnerId.AsInteger := cdsOrderExternalPartnerId.AsInteger;
-      tblMovement_OrderExternalUnitId.AsInteger := tblObject_ConstUnitId.AsInteger;
-      tblMovement_OrderExternalPaidKindId.AsInteger := PaidKindId;
-      tblMovement_OrderExternalContractId.AsInteger := cdsOrderExternalCONTRACTID.AsInteger;
-      tblMovement_OrderExternalPriceListId.AsInteger := cdsOrderExternalPRICELISTID.AsInteger;
-      tblMovement_OrderExternalPriceWithVAT.AsBoolean := cdsOrderExternalPriceWithVAT.AsBoolean;
-      tblMovement_OrderExternalVATPercent.AsFloat := cdsOrderExternalVATPercent.AsFloat;
-      tblMovement_OrderExternalChangePercent.AsFloat := cdsOrderExternalChangePercent.AsFloat;
-      tblMovement_OrderExternalTotalCountKg.AsFloat := TotalWeight;
-      tblMovement_OrderExternalTotalSumm.AsFloat := ToralPrice;
-      tblMovement_OrderExternalInsertDate.AsDateTime := Now();
-      tblMovement_OrderExternalisSync.AsBoolean := false;
-
-      tblMovement_OrderExternal.Post;
-      {??? Возможно есть лучший способ получения значения Id новой записи }
-      tblMovement_OrderExternal.Refresh;
-      tblMovement_OrderExternal.Last;
-      {???}
-      MovementId := tblMovement_OrderExternalId.AsInteger;
-    end
+      MovementId := InsertOrderExternal(OperDate, Comment, cdsOrderExternalPartnerId.AsInteger, PaidKindId,
+        cdsOrderExternalCONTRACTID.AsInteger, cdsOrderExternalPRICELISTID.AsInteger,
+        cdsOrderExternalPriceWithVAT.AsBoolean, cdsOrderExternalVATPercent.AsFloat,
+        cdsOrderExternalChangePercent.AsFloat, TotalWeight, TotalPrice, Complete)
     else
     begin
-      if tblMovement_OrderExternal.Locate('Id', cdsOrderExternalId.AsInteger) then
-      begin
-        tblMovement_OrderExternal.Edit;
+      MovementId := UpdateOrderExternal(cdsOrderExternalId.AsInteger, OperDate, Comment, PaidKindId,
+        cdsOrderExternalPriceWithVAT.AsBoolean, cdsOrderExternalVATPercent.AsFloat,
+        cdsOrderExternalChangePercent.AsFloat, TotalWeight, TotalPrice, Complete, ErrorMessage);
 
-        tblMovement_OrderExternalOperDate.AsDateTime := OperDate;
-        tblMovement_OrderExternalComment.AsString := Comment;
-        if Complete then
-          tblMovement_OrderExternalStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger
-        else
-          tblMovement_OrderExternalStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
-        tblMovement_OrderExternalUnitId.AsInteger := tblObject_ConstUnitId.AsInteger;
-        tblMovement_OrderExternalPaidKindId.AsInteger := PaidKindId;
-        tblMovement_OrderExternalPriceWithVAT.AsBoolean := cdsOrderExternalPriceWithVAT.AsBoolean;
-        tblMovement_OrderExternalVATPercent.AsFloat := cdsOrderExternalVATPercent.AsFloat;
-        tblMovement_OrderExternalChangePercent.AsFloat := cdsOrderExternalChangePercent.AsFloat;
-        tblMovement_OrderExternalTotalCountKg.AsFloat := TotalWeight;
-        tblMovement_OrderExternalTotalSumm.AsFloat := ToralPrice;
-
-        tblMovement_OrderExternal.Post;
-
-        MovementId := cdsOrderExternalId.AsInteger;
-      end
-      else
-      begin
-        ErrorMessage := 'Ошибка работы с БД: не найдена редактируемая заявка';
-        exit;
-      end;
+      if ErrorMessage <> '' then
+        Exit;
     end;
 
     CurInvNumber := tblMovement_OrderExternalInvNumber.AsString;
@@ -4050,35 +4115,12 @@ begin
         if (FieldbyName('Count').AsFloat > 0) or (FieldbyName('RecommendCount').AsFloat > 0) then
         begin
           if FieldbyName('Id').AsInteger = -1 then // новая запись
-          begin
-            tblMovementItem_OrderExternal.Append;
-
-            tblMovementItem_OrderExternalMovementId.AsInteger := MovementId;
-            CreateGUID(GlobalId);
-            tblMovementItem_OrderExternalGUID.AsString := GUIDToString(GlobalId);
-            tblMovementItem_OrderExternalGoodsId.AsInteger := FieldbyName('GoodsId').AsInteger;
-            tblMovementItem_OrderExternalGoodsKindId.AsInteger := FieldbyName('KindID').AsInteger;
-            tblMovementItem_OrderExternalAmount.AsFloat := FieldbyName('Count').AsFloat;
-            tblMovementItem_OrderExternalPrice.AsFloat := FieldbyName('Price').AsFloat;
-            tblMovementItem_OrderExternalChangePercent.AsFloat := cdsOrderExternalChangePercent.AsFloat;
-
-            tblMovementItem_OrderExternal.Post;
-          end
+            InsertOrderExternalItem(MovementId, FieldbyName('GoodsId').AsInteger, FieldbyName('KindID').AsInteger,
+              FieldbyName('Count').AsCurrency, FieldbyName('Price').AsCurrency, cdsOrderExternalChangePercent.AsCurrency)
           else
-          begin
-            if tblMovementItem_OrderExternal.Locate('Id', FieldbyName('Id').AsInteger) then
-            begin
-              tblMovementItem_OrderExternal.Edit;
-
-              tblMovementItem_OrderExternalChangePercent.AsFloat := cdsOrderExternalChangePercent.AsFloat;
-              tblMovementItem_OrderExternalAmount.AsFloat := FieldbyName('Count').AsFloat;
-              tblMovementItem_OrderExternalPrice.AsFloat := FieldbyName('Price').AsFloat;
-
-              tblMovementItem_OrderExternal.Post;
-            end;
-          end;
-        end
-        else
+            UpdateOrderExternalItem(FieldbyName('Id').AsInteger, FieldbyName('Count').AsCurrency,
+              FieldbyName('Price').AsCurrency, cdsOrderExternalChangePercent.AsCurrency);
+        end else
           if (FieldbyName('Id').AsInteger <> -1) and tblMovementItem_OrderExternal.Locate('Id', FieldbyName('Id').AsInteger) then
             tblMovementItem_OrderExternal.Delete;
 
@@ -4102,7 +4144,7 @@ begin
       cdsOrderExternalPaidKindId.AsInteger := PaidKindId;
       cdsOrderExternalComment.AsString := Comment;
       cdsOrderExternalName.AsString := 'Заявка №' + CurInvNumber + ' на ' + FormatDateTime('DD.MM.YYYY', OperDate);
-      cdsOrderExternalPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', ToralPrice);
+      cdsOrderExternalPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', TotalPrice);
       cdsOrderExternalWeight.AsString := 'Вес: ' + FormatFloat(',0.00', TotalWeight);
       if Complete then
       begin
@@ -4137,6 +4179,8 @@ end;
 
 { создание новой заявки для выбранной ТТ (болванка) }
 procedure TDM.NewOrderExternal;
+var
+  MovementId: Integer;
 begin
   cdsOrderExternal.DisableControls;
   try
@@ -4169,6 +4213,23 @@ begin
     cdsOrderExternalPartnerFullName.AsString := qryPartnerFullName.AsString;
 
     cdsOrderExternal.Post;
+
+    conMain.StartTransaction;
+    try
+      tblMovement_OrderExternal.Open;
+      MovementId := InsertOrderExternal(cdsOrderExternalOperDate.AsDateTime, cdsOrderExternalComment.AsString,
+        cdsOrderExternalPartnerId.AsInteger, cdsOrderExternalPaidKindId.AsInteger, cdsOrderExternalContractId.AsInteger,
+        cdsOrderExternalPriceListId.AsInteger, cdsOrderExternalPriceWithVAT.AsBoolean, cdsOrderExternalVATPercent.AsCurrency,
+        cdsOrderExternalChangePercent.AsCurrency, 0, 0, False);
+      conMain.Commit;
+
+      cdsOrderExternal.Edit;
+      cdsOrderExternalId.AsInteger := MovementId;
+      cdsOrderExternal.Post;
+    except
+      conMain.Rollback;
+      raise;
+    end;
   finally
     cdsOrderExternal.EnableControls;
   end;

@@ -3199,6 +3199,8 @@ end;
 
 // присвоение количества товаров
 procedure TfrmMain.bEnterAmountClick(Sender: TObject);
+var
+  MovementItemId: Integer;
 begin
   if FEditCashAmount then
   begin
@@ -3210,6 +3212,31 @@ begin
     DM.cdsOrderItems.Edit;
     DM.cdsOrderItemsCount.AsFloat := StrToFloatDef(lAmount.Text, 0);
     DM.cdsOrderItems.Post;
+
+    if (DM.cdsOrderItemsCount.AsCurrency > 0) or (DM.cdsOrderItemsRecommendCount.AsCurrency > 0) then
+    begin
+      DM.conMain.StartTransaction;
+      try
+        DM.tblMovementItem_OrderExternal.Open;
+
+        if DM.cdsOrderItemsId.AsInteger = -1 then // новая запись
+        begin
+          MovementItemId := DM.InsertOrderExternalItem(DM.cdsOrderExternalId.AsInteger, DM.cdsOrderItemsGoodsId.AsInteger, DM.cdsOrderItemsKindId.AsInteger,
+            DM.cdsOrderItemsCount.AsCurrency, DM.cdsOrderItemsPrice.AsCurrency, DM.cdsOrderExternalChangePercent.AsCurrency);
+
+          DM.cdsOrderItems.Edit;
+          DM.cdsOrderItemsId.AsInteger := MovementItemId;
+          DM.cdsOrderItems.Post;
+        end else
+          DM.UpdateOrderExternalItem(DM.cdsOrderItemsId.AsInteger, DM.cdsOrderItemsCount.AsCurrency,
+            DM.cdsOrderItemsPrice.AsCurrency, DM.cdsOrderExternalChangePercent.AsCurrency);
+
+        DM.conMain.Commit;
+      except
+        DM.conMain.Rollback;
+        raise;
+      end;
+    end;
 
     RecalculateTotalPriceAndWeight;
   end
@@ -3252,6 +3279,8 @@ end;
 
 // добавление количества товаров к введенным ранее
 procedure TfrmMain.bAddAmountClick(Sender: TObject);
+var
+  MovementItemId: Integer;
 begin
   if FEditCashAmount then
   begin
@@ -3263,6 +3292,31 @@ begin
     DM.cdsOrderItems.Edit;
     DM.cdsOrderItemsCount.AsFloat := DM.cdsOrderItemsCount.AsFloat + StrToFloatDef(lAmount.Text, 0);
     DM.cdsOrderItems.Post;
+
+    if (DM.cdsOrderItemsCount.AsCurrency > 0) or (DM.cdsOrderItemsRecommendCount.AsCurrency > 0) then
+    begin
+      DM.conMain.StartTransaction;
+      try
+        DM.tblMovementItem_OrderExternal.Open;
+
+        if DM.cdsOrderItemsId.AsInteger = -1 then // новая запись
+        begin
+          MovementItemId := DM.InsertOrderExternalItem(DM.cdsOrderExternalId.AsInteger, DM.cdsOrderItemsGoodsId.AsInteger, DM.cdsOrderItemsKindId.AsInteger,
+            DM.cdsOrderItemsCount.AsCurrency, DM.cdsOrderItemsPrice.AsCurrency, DM.cdsOrderExternalChangePercent.AsCurrency);
+
+          DM.cdsOrderItems.Edit;
+          DM.cdsOrderItemsId.AsInteger := MovementItemId;
+          DM.cdsOrderItems.Post;
+        end else
+          DM.UpdateOrderExternalItem(DM.cdsOrderItemsId.AsInteger, DM.cdsOrderItemsCount.AsCurrency,
+            DM.cdsOrderItemsPrice.AsCurrency, DM.cdsOrderExternalChangePercent.AsCurrency);
+
+        DM.conMain.Commit;
+      except
+        DM.conMain.Rollback;
+        raise;
+      end;
+    end;
 
     RecalculateTotalPriceAndWeight;
   end
@@ -3290,6 +3344,7 @@ end;
 procedure TfrmMain.bMinusAmountClick(Sender: TObject);
 var
   NewVal: Double;
+  MovementItemId: Integer;
 begin
   if FEditCashAmount then
   begin
@@ -3309,6 +3364,31 @@ begin
     else
       DM.cdsOrderItemsCount.AsFloat := 0;
     DM.cdsOrderItems.Post;
+
+    if (DM.cdsOrderItemsCount.AsCurrency > 0) or (DM.cdsOrderItemsRecommendCount.AsCurrency > 0) then
+    begin
+      DM.conMain.StartTransaction;
+      try
+        DM.tblMovementItem_OrderExternal.Open;
+
+        if DM.cdsOrderItemsId.AsInteger = -1 then // новая запись
+        begin
+          MovementItemId := DM.InsertOrderExternalItem(DM.cdsOrderExternalId.AsInteger, DM.cdsOrderItemsGoodsId.AsInteger, DM.cdsOrderItemsKindId.AsInteger,
+            DM.cdsOrderItemsCount.AsCurrency, DM.cdsOrderItemsPrice.AsCurrency, DM.cdsOrderExternalChangePercent.AsCurrency);
+
+          DM.cdsOrderItems.Edit;
+          DM.cdsOrderItemsId.AsInteger := MovementItemId;
+          DM.cdsOrderItems.Post;
+        end else
+          DM.UpdateOrderExternalItem(DM.cdsOrderItemsId.AsInteger, DM.cdsOrderItemsCount.AsCurrency,
+            DM.cdsOrderItemsPrice.AsCurrency, DM.cdsOrderExternalChangePercent.AsCurrency);
+
+        DM.conMain.Commit;
+      except
+        DM.conMain.Rollback;
+        raise;
+      end;
+    end;
 
     RecalculateTotalPriceAndWeight;
   end
