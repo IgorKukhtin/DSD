@@ -13,6 +13,10 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, 
                                                            , TFloat, TFloat, TFloat, TFloat, TFloat
                                                            , TFloat, TFloat, TFloat, TFloat
                                                            , TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, Integer, Integer
+                                                           , TFloat, TFloat, TFloat, TFloat
+                                                           , TFloat, TFloat, TFloat, TFloat
+                                                           , TVarChar, Integer);                                                           
                                                            
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ReturnIn(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -20,7 +24,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ReturnIn(
     IN inGoodsId               Integer   , -- Товары
     IN inPartionId             Integer   , -- Партия
     IN inPartionMI_Id          Integer   , -- Партия элемента продажа/возврат
-    IN inSaleMI_Id             Integer   , -- строка док. продажи
+   -- IN inSaleMI_Id             Integer   , -- строка док. продажи
     IN inAmount                TFloat    , -- Количество
     IN inOperPrice             TFloat    , -- Цена
     IN inCountForPrice         TFloat    , -- Цена за количество
@@ -28,8 +32,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ReturnIn(
     IN inCurrencyValue         TFloat    , -- 
     IN inParValue              TFloat    , -- 
     IN inTotalChangePercent    TFloat    , -- 
-    IN inTotalPay              TFloat    , -- 
-    IN inTotalPayOth           TFloat    , -- 
+    --IN inTotalPay              TFloat    , -- 
+    --IN inTotalPayOth           TFloat    , -- 
     IN inComment               TVarChar  , -- примечание    
     IN inUserId                Integer     -- пользователь
 )
@@ -63,14 +67,10 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalChangePercent(), ioId, inTotalChangePercent);
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), ioId, inTotalPay);
+     --PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), ioId, inTotalPay);
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPayOth(), ioId, inTotalPayOth);
+     --PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPayOth(), ioId, inTotalPayOth);
     
-     IF COALESCE (inPartionMI_Id) = 0 
-        THEN 
-            inPartionMI_Id := lpInsertFind_Object_PartionMI (inSaleMI_Id);
-     END IF;
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionMI(), ioId, inPartionMI_Id);
 
