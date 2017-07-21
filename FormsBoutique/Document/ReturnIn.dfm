@@ -265,7 +265,7 @@ object ReturnInForm: TReturnInForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummPay
+              Column = TotalSummToPay
             end
             item
               Format = ',0.####'
@@ -346,7 +346,7 @@ object ReturnInForm: TReturnInForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummPay
+              Column = TotalSummToPay
             end
             item
               Format = ',0.####'
@@ -552,18 +552,6 @@ object ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 80
           end
-          object TotalChangePercent: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1057#1082#1080#1076#1082#1080' ('#1074' '#1043#1056#1053')'
-            DataBinding.FieldName = 'TotalChangePercent'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Properties.ReadOnly = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
           object TotalPay: TcxGridDBColumn
             Caption = ' '#9#1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' ('#1074' '#1043#1056#1053')'
             DataBinding.FieldName = 'TotalPay'
@@ -576,9 +564,9 @@ object ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 70
           end
-          object TotalSummPay: TcxGridDBColumn
+          object TotalSummToPay: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1082' '#1074#1086#1079#1074#1088#1072#1090#1091' ('#1080#1085#1092'.)'
-            DataBinding.FieldName = 'TotalSummPay'
+            DataBinding.FieldName = 'TotalSummToPay'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -587,6 +575,31 @@ object ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object TotalPayOth: TcxGridDBColumn
+            Caption = ' '#9#1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' ('#1074' '#1043#1056#1053')'
+            DataBinding.FieldName = 'TotalPayOth'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object TotalChangePercent: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1057#1082#1080#1076#1082#1080' ('#1074' '#1043#1056#1053')'
+            DataBinding.FieldName = 'TotalChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object TotalSummPriceList: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' ('#1087#1088#1072#1081#1089')'
@@ -648,18 +661,38 @@ object ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 70
           end
-          object TotalPayOth: TcxGridDBColumn
-            Caption = ' '#9#1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' ('#1074' '#1043#1056#1053')'
-            DataBinding.FieldName = 'TotalPayOth'
+          object Amount_USD_Exc: TcxGridDBColumn
+            Caption = #1054#1073#1084#1077#1085' $'
+            DataBinding.FieldName = 'Amount_USD_Exc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Properties.ReadOnly = False
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 50
+          end
+          object Amount_EUR_Exc: TcxGridDBColumn
+            Caption = #1054#1073#1084#1077#1085' EUR'
+            DataBinding.FieldName = 'Amount_EUR_Exc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object Amount_GRN_Exc: TcxGridDBColumn
+            Caption = #1054#1073#1084#1077#1085' '#1043#1056#1053
+            DataBinding.FieldName = 'Amount_GRN_Exc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
           end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077

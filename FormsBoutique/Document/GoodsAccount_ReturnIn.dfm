@@ -235,8 +235,6 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
         Height = 286
         Align = alClient
         TabOrder = 0
-        ExplicitTop = 83
-        ExplicitHeight = 203
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -666,6 +664,39 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 91
+          end
+                    object Amount_USD_Exc: TcxGridDBColumn
+            Caption = #1054#1073#1084#1077#1085' $'
+            DataBinding.FieldName = 'Amount_USD_Exc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object Amount_EUR_Exc: TcxGridDBColumn
+            Caption = #1054#1073#1084#1077#1085' EUR'
+            DataBinding.FieldName = 'Amount_EUR_Exc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object Amount_GRN_Exc: TcxGridDBColumn
+            Caption = #1054#1073#1084#1077#1085' '#1043#1056#1053
+            DataBinding.FieldName = 'Amount_GRN_Exc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
           end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
