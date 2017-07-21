@@ -43,7 +43,7 @@ BEGIN
 
      -- данные для расчета сумм
      SELECT MovementItem.MovementId                         AS MovementId
-          , MLO_CurrencyDocument.ObjecId                    AS CurrencyId_Doc
+          , MLO_CurrencyDocument.ObjectId                   AS CurrencyId_Doc
           , MF_CurrencyValue.ValueData                      AS CurrencyValue
           , MF_ParValue.ValueData                           AS ParValue
           , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice
@@ -77,25 +77,21 @@ BEGIN
      WHERE MovementItem.Id = inId;
 
      -- расчитали <Сумма вх.> для грида
-     outTotalSumm := CASE WHEN vbCountForPrice > 0
-                                THEN CAST (inAmount * vbOperPrice / vbCountForPrice AS NUMERIC (16, 2))
-                           ELSE CAST (inAmount * vbOperPrice AS NUMERIC (16, 2))
-                      END;
+     outTotalSumm := zfCalc_SummIn (inAmount, vbOperPrice, vbCountForPrice);
+ 
      -- расчитали <Сумма вх. (ГРН)> для грида
      outTotalSummBalance := CASE WHEN vbCurrencyId_Doc = zc_Currency_Basis()
                                       THEN outTotalSumm
-                                 ELSE CAST (CASE WHEN vbParValue > 0 THEN outTotalSumm * vbCurrencyValue / vbParValue ELSE outTotalSumm * vbCurrencyValue
-                                            END AS NUMERIC (16, 2))
+                                 ELSE zfCalc_CurrencyFrom (outTotalSumm, vbCurrencyValue, vbParValue)
                             END;
-     -- расчитали <Сумма (прайс)> для грида
-     outTotalSummPriceList := CAST (inAmount * vbOperPriceList AS NUMERIC (16, 2));
 
+     -- расчитали <Сумма (прайс)> для грида
+     outTotalSummPriceList := zfCalc_SummPriceList (inAmount, vbOperPriceList);
 
      -- Обновляем для Партии - Object_PartionGoods.Amount
      UPDATE Object_PartionGoods 
      SET Amount = inAmount
      WHERE Object_PartionGoods.MovementItemId = inId;
-
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);

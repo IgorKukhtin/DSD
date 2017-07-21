@@ -49,30 +49,16 @@ BEGIN
      --
      SELECT SUM(COALESCE(MovementItem.Amount, 0))             AS TotalCount
           , SUM(COALESCE(MIFloat_AmountRemains.ValueData, 0)) AS TotalCountRemains
-          , SUM(CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 1) <> 0
-                           THEN CAST (COALESCE (MovementItem.Amount, 0) * COALESCE (MIFloat_OperPrice.ValueData, 0) / COALESCE (MIFloat_CountForPrice.ValueData, 1) AS NUMERIC (16, 2))
-                     ELSE CAST ( COALESCE (MovementItem.Amount, 0) * COALESCE (MIFloat_OperPrice.ValueData, 0) AS NUMERIC (16, 2))
-                END)  AS TotalSumm
-          , SUM(CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 1) <> 0
-                           THEN CAST (COALESCE (MovementItem.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) / COALESCE (MIFloat_CountForPrice.ValueData, 1) AS NUMERIC (16, 2))
-                     ELSE CAST ( COALESCE (MovementItem.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 2))
-                END)  AS TotalSummPriceList
-          , SUM(CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 1) <> 0
-                           THEN CAST (COALESCE(MIFloat_AmountRemains.ValueData, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) / COALESCE (MIFloat_CountForPrice.ValueData, 1) AS NUMERIC (16, 2))
-                     ELSE CAST (COALESCE(MIFloat_AmountRemains.ValueData, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 2))
-                END)  AS TotalSummRemainsPriceList
-          ---
-          , SUM(COALESCE(MIFloat_AmountSecond.ValueData, 0))  AS TotalCountSecond
-          , SUM(COALESCE(MIFloat_AmountSecondRemains.ValueData, 0)) AS TotalCountSecondRemains
-          , SUM(CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 1) <> 0
-                           THEN CAST (COALESCE (MIFloat_AmountSecond.ValueData, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) / COALESCE (MIFloat_CountForPrice.ValueData, 1) AS NUMERIC (16, 2))
-                     ELSE CAST ( COALESCE (MIFloat_AmountSecond.ValueData, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 2))
-                END)  AS TotalSummSecondPriceList
-          , SUM(CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 1) <> 0
-                           THEN CAST (COALESCE(MIFloat_AmountSecondRemains.ValueData, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) / COALESCE (MIFloat_CountForPrice.ValueData, 1) AS NUMERIC (16, 2))
-                     ELSE CAST (COALESCE(MIFloat_AmountSecondRemains.ValueData, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 2))
-                END)  AS TotalSummSecondRemainsPriceList
 
+          , SUM(zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData)) AS TotalSumm
+          , SUM(zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData)) AS TotalSummPriceList
+          , SUM(zfCalc_SummPriceList (MIFloat_AmountRemains.ValueData, MIFloat_OperPriceList.ValueData)) AS TotalSummRemainsPriceList
+          ---
+          , SUM(COALESCE(MIFloat_AmountSecond.ValueData, 0))        AS TotalCountSecond
+          , SUM(COALESCE(MIFloat_AmountSecondRemains.ValueData, 0)) AS TotalCountSecondRemains
+          , SUM(zfCalc_SummPriceList (MIFloat_AmountSecond.ValueData, MIFloat_OperPriceList.ValueData)) AS TotalSummSecondPriceList      
+          , SUM(zfCalc_SummPriceList (MIFloat_AmountSecondRemains.ValueData, MIFloat_OperPriceList.ValueData)) AS TotalSummSecondRemainsPriceList
+          
           , SUM (COALESCE (MIFloat_TotalChangePercent.ValueData, 0)) ::TFloat  AS TotalSummChange
           , SUM (COALESCE (MIFloat_TotalPay.ValueData,0))            ::TFloat  AS TotalSummPay
 
@@ -84,10 +70,7 @@ BEGIN
 
           --, COALESCE (MIFloat_CurrencyValue.ValueData, 0)              ::TFloat AS CurrencyValue
           --, COALESCE (MIFloat_ParValue.ValueData, 0)                   ::TFloat AS ParValue
-          , SUM (CAST ((CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 1) <> 0
-                             THEN CAST ( COALESCE (MovementItem.Amount, 0) * COALESCE (MIFloat_OperPrice.ValueData, 0) / COALESCE (MIFloat_CountForPrice.ValueData, 1) AS NUMERIC (16, 2))
-                             ELSE CAST ( COALESCE (MovementItem.Amount, 0) * COALESCE (MIFloat_OperPrice.ValueData, 0) AS NUMERIC (16, 2))
-                        END) 
+          , SUM (CAST (zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData)
                         * COALESCE (MIFloat_CurrencyValue.ValueData, 0) / CASE WHEN COALESCE (MIFloat_ParValue.ValueData, 0) <> 0
                                                                                THEN COALESCE (MIFloat_ParValue.ValueData, 0) ELSE 1
                                                                           END AS NUMERIC (16, 2))   ) :: TFloat AS TotalSummBalance
@@ -205,6 +188,7 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 21.07.17         *
  15.06.17         *
  28.04.15                         * 
 */

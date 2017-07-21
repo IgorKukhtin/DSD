@@ -57,12 +57,8 @@ BEGIN
                            , COALESCE (MIFloat_OperPrice.ValueData, 0)       AS OperPrice
                            , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice
                            , COALESCE (MIFloat_OperPriceList.ValueData, 0)   AS OperPriceList
-                           , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                                             THEN MovementItem.Amount * COALESCE (MIFloat_OperPrice.ValueData, 0) / MIFloat_CountForPrice.ValueData
-                                         ELSE MovementItem.Amount * COALESCE (MIFloat_OperPrice.ValueData, 0)
-                                   END AS NUMERIC (16, 2)) AS TotalSumm
-                           , CAST (MovementItem.Amount * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 2)) AS TotalSummPriceList
-
+                           , zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData) AS TotalSumm
+                           , zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData)                       AS TotalSummPriceList
                            , MovementItem.isErased
 
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -83,19 +79,19 @@ BEGIN
        SELECT
              tmpMI.Id
            , tmpMI.PartionId
-           , Object_Goods.Id          AS GoodsId
-           , Object_Goods.ObjectCode  AS GoodsCode
-           , Object_Goods.ValueData   AS GoodsName
+           , Object_Goods.Id                     AS GoodsId
+           , Object_Goods.ObjectCode             AS GoodsCode
+           , Object_Goods.ValueData              AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-           , Object_Measure.ValueData AS MeasureName
-           , Object_Juridical.ValueData as JuridicalName
+           , Object_Measure.ValueData            AS MeasureName
+           , Object_Juridical.ValueData          AS JuridicalName
            , Object_CompositionGroup.ValueData   AS CompositionGroupName
-           , Object_Composition.ValueData   AS CompositionName
-           , Object_GoodsInfo.ValueData     AS GoodsInfoName
-           , Object_LineFabrica.ValueData   AS LineFabricaName
-           , Object_Label.ValueData         AS LabelName
-           , Object_GoodsSize.Id            AS GoodsSizeId
-           , Object_GoodsSize.ValueData     AS GoodsSizeName
+           , Object_Composition.ValueData        AS CompositionName
+           , Object_GoodsInfo.ValueData          AS GoodsInfoName
+           , Object_LineFabrica.ValueData        AS LineFabricaName
+           , Object_Label.ValueData              AS LabelName
+           , Object_GoodsSize.Id                 AS GoodsSizeId
+           , Object_GoodsSize.ValueData          AS GoodsSizeName
 
            , tmpMI.Amount
            , tmpMI.OperPrice           :: TFloat AS OperPrice
@@ -104,13 +100,10 @@ BEGIN
            , tmpMI.TotalSumm           :: TFloat AS TotalSumm
            , (CASE WHEN vbCurrencyId_Doc = zc_Currency_Basis()
                         THEN tmpMI.TotalSumm
-                   ELSE CAST (CASE WHEN vbParValue > 0 THEN tmpMI.TotalSumm * vbCurrencyValue / vbParValue ELSE tmpMI.TotalSumm * vbCurrencyValue
-                              END AS NUMERIC (16, 2))
+                   ELSE zfCalc_CurrencyFrom (tmpMI.TotalSumm, vbCurrencyValue, vbParValue)
               END) :: TFloat AS TotalSummBalance
            , tmpMI.TotalSummPriceList  :: TFloat AS TotalSummPriceList
-
            , tmpMI.isErased
-
        FROM tmpMI
             LEFT JOIN Object_PartionGoods               ON Object_PartionGoods.MovementItemId = tmpMI.PartionId
 

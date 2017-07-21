@@ -23,9 +23,6 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Send_Print());
      vbUserId:= inSession;
 
-
-   
-
       --
     OPEN Cursor1 FOR
 
@@ -44,9 +41,7 @@ BEGIN
 
            , MovementString_Comment.ValueData            AS Comment
          
-       FROM 
-
-            Movement 
+       FROM Movement 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementString AS MovementString_Comment 
@@ -69,9 +64,8 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
-
      
-      WHERE Movement.Id = inMovementId
+       WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_Send();
      
     RETURN NEXT Cursor1;
@@ -89,9 +83,9 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                         ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
                                                        AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
-                            where MovementItem.MovementId = inMovementId
-                                             AND MovementItem.DescId     = zc_MI_Master()
-                                             AND MovementItem.isErased   = false
+                       WHERE MovementItem.MovementId = inMovementId
+                         AND MovementItem.DescId     = zc_MI_Master()
+                         AND MovementItem.isErased   = false
                        )
 
        -- результат
@@ -114,9 +108,8 @@ BEGIN
            , tmpMI.Amount
            , Object_PartionGoods.OperPrice      ::TFloat
            , tmpMI.OperPriceList                ::TFloat
-           , (tmpMI.Amount * Object_PartionGoods.OperPrice) ::TFloat AS AmountSumm
-           , (tmpMI.Amount * tmpMI.OperPriceList)           ::TFloat AS AmountPriceListSumm
-
+           , zfCalc_SummIn (tmpMI.Amount, Object_PartionGoods.OperPrice, Object_PartionGoods.CountForPrice) AS TotalSumm
+           , zfCalc_SummPriceList (tmpMI.Amount, tmpMI.OperPriceList)                                       AS TotalSummPriceList
            , tmpMI.isErased
 
        FROM tmpMI
