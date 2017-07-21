@@ -51,6 +51,14 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
+     -- врменно - пока не разобрался с ошибкой в отчете
+     IF COALESCE (inAmount, 0) = 0
+     THEN
+         -- !!!ВЫХОД!!!
+         RETURN;
+     END IF;
+
+
      -- проверка
      IF COALESCE (inStaffListId, 0) = 0
      THEN

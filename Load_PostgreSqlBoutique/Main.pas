@@ -3148,19 +3148,46 @@ begin
         Close;
         Clear;
         Add('SELECT');
+        Add('      Bill.Id as ObjectId');
+        Add('    , BillItems.Id_Postgres');
+        Add('    , Bill.Id_Postgres as MovementId');
+        Add('    , Bill.BillDate AS OperDate');
+        Add('    , BillItemsIncome.GoodsId_Postgres as GoodsId');
+        Add('    , BillItemsIncome.Id_Postgres as PartionId');
+        Add('    , coalesce (BillItems_parent.Id_Postgres, -1 * case when coalesce (BillItems.Id_Postgres, 0) > 0 then BillItems.Id_Postgres else 1 end) as MovementMI_Id');
+        Add('    , BillItems.OperCount as Amount');
+        Add('    , '''' as CommentInfo');
+        Add('    , zc_rvYes() as isBill');
+        Add('    , zc_rvYes() as isClose');
+        Add('from DBA.Bill');
+        Add('    join BillItems  on BillItems.BillId = Bill.Id');
+        Add('    left outer join BillItems as BillItems_parent on BillItems_parent.Id = BillItems.ParentBillItemsId');
+        Add('    left outer join BillItemsIncome on BillItemsIncome.id  = BillItems.BillItemsIncomeId');
+        Add('where Bill.BillKind = zc_bkReturnFromClientToUnit() and Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add('  and Bill.DatabaseId = 0');
+        Add('union all');
+        Add('SELECT');
         Add('      DiscountMovementItemReturn_byBarCode.Id as ObjectId');
         Add('    , DiscountMovementItemReturn_byBarCode.Id_Postgres');
         Add('    , DiscountMovement.ReturnInId_Postgres as MovementId');
+        Add('    , DiscountMovement.OperDate');
         Add('    , BillItemsIncome.GoodsId_Postgres as GoodsId');
         Add('    , BillItemsIncome.Id_Postgres as PartionId');
-        Add('    , DiscountMovementItem_byBarCode.Id_Postgres as SaleMI_Id');
+        Add('    , DiscountMovementItem_byBarCode.Id_Postgres as MovementMI_Id');
         Add('    , DiscountMovementItemReturn_byBarCode.OperCount as Amount');
+        Add('    , trim (DiscountMovementItem_byBarCode.CommentInfo) as CommentInfo');
+        Add('    , zc_rvNo() as isBill');
+        Add('    , case when _dataRet_all.BillItemsId > 0 then zc_rvYes() else zc_rvNo() end  as isClose');
         Add('FROM dba.DiscountMovementItemReturn_byBarCode');
         Add('    join DiscountMovement     on DiscountMovement.id = DiscountMovementItemReturn_byBarCode.DiscountMovementId');
         Add('    left outer join BillItemsIncome on BillItemsIncome.id  = DiscountMovementItemReturn_byBarCode.BillItemsIncomeId');
         Add('    left outer join DiscountMovementItem_byBarCode  on DiscountMovementItem_byBarCode.Id = DiscountMovementItemReturn_byBarCode.DiscountMovementItemId ');
+
+        Add('    left outer join _dataRet_all on _dataRet_all.DatabaseId  = DiscountMovementItemReturn_byBarCode.DatabaseId');
+        Add('                                and _dataRet_all.ReplId      = DiscountMovementItemReturn_byBarCode.ReplId');
+
         Add('WHERE DiscountMovement.descId = 2  AND DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
-        Add('ORDER BY OperDate, ObjectId ');
+        Add('ORDER BY 4, 3, 1 ');
         Open;
 
         cbReturnIn.Caption:='1.9. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Возврат от покупателя';
@@ -3178,13 +3205,9 @@ begin
         toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPartionId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inPartionMI_Id',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inSaleMI_Id',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inMovementMI_Id',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inisPay',ftBoolean,ptInput, False);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
-
-
-
         //
 
         while not EOF do
@@ -3197,15 +3220,24 @@ begin
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId').AsInteger;
              toStoredProc.Params.ParamByName('inPartionId').Value:=FieldByName('PartionId').AsInteger;
-             toStoredProc.Params.ParamByName('inSaleMI_Id').Value:=FieldByName('SaleMI_Id').AsInteger;
+             toStoredProc.Params.ParamByName('inMovementMI_Id').Value:=FieldByName('MovementMI_Id').AsInteger;
+             if FieldByName('isBill').AsInteger = zc_rvYes
+             then toStoredProc.Params.ParamByName('inIsPay').Value:= TRUE
+             else toStoredProc.Params.ParamByName('inIsPay').Value:= FALSE;
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
+             // хардкод
+             if FieldByName('isClose').AsInteger = zc_rvYes
+             then toStoredProc.Params.ParamByName('inComment').Value:='*123*' + FieldByName('CommentInfo').AsString
+             else toStoredProc.Params.ParamByName('inComment').Value:=FieldByName('CommentInfo').AsString;
 
              if not myExecToStoredProc then ;//exit;
              //
-             if FieldByName('Id_Postgres').AsInteger=0 then
-               fExecSqFromQuery('update dba.DiscountMovementItemReturn_byBarCode set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             if (FieldByName('Id_Postgres').AsInteger=0) and(FieldByName('isBill').AsInteger=zc_rvYes) then
+                fExecSqFromQuery('update dba.BillItems set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString)
+             else
+                 if (FieldByName('Id_Postgres').AsInteger=0) and(FieldByName('isBill').AsInteger=zc_rvNo) then
+                   fExecSqFromQuery('update dba.DiscountMovementItemReturn_byBarCode set Id_Postgres = '+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
-
              Next;
              Application.ProcessMessages;
              Gauge.Progress:=Gauge.Progress+1;
@@ -4017,20 +4049,44 @@ begin
         Close;
         Clear;
         Add('select');
+        Add('      Bill.Id as ObjectId');
+        Add('    , Bill.Id_Postgres as Id_Postgres');
+        Add('    , 0 as InvNumber');
+        Add('    , Bill.BillDate as OperDate');
+        Add('    , Bill.BillDate as OperDateInsert');
+        Add('    , Unit_From.Id_Postgres as FromId ');
+        Add('    , Unit_From.UnitName as ClientNameFrom');
+        Add('    , Unit_To.Id_Postgres as ToId');
+        Add('    , Unit_To.UnitName as UnitNameTo');
+        Add('    , '''' as UsersName');
+        Add('    , 0 as UserId_pg');
+        Add('    , zc_rvYes() as isBill');
+        Add('from DBA.Bill');
+        Add('    left outer join DBA.Unit as Unit_From on Unit_From.Id = Bill.FromID');
+        Add('    left outer join DBA.Unit as Unit_To on Unit_To.Id = Bill.ToId');
+        Add('where Bill.BillKind = zc_bkReturnFromClientToUnit() and Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add('  and Bill.DatabaseId = 0');
+        Add('union all');
+        Add('select');
         Add('      DiscountMovement.Id as ObjectId');
         Add('    , DiscountMovement.ReturnInId_Postgres as Id_Postgres');
         Add('    , 0 as InvNumber');
         Add('    , date(DiscountMovement.OperDate) as OperDate');   // Со времене ошибка неверный формат даты
-        Add('    , DiscountMovement_From.Id_Postgres as FromId ');
-        Add('    , DiscountMovement_From.UnitName as UnitNameFrom');
-        Add('    , DiscountMovement_To.Id_Postgres as ToId');
-        Add('    , DiscountMovement_To.UnitName as UnitNameTo');
+        Add('    , DiscountMovement.OperDate as OperDateInsert');
+        Add('    , Unit_From.Id_Postgres as FromId ');
+        Add('    , Unit_From.UnitName as ClientNameFrom');
+        Add('    , Unit_To.Id_Postgres as ToId');
+        Add('    , Unit_To.UnitName as UnitNameTo');
+        Add('    , Users.UsersName as UsersName');
+        Add('    , Users.UserId_Postgres as UserId_pg');
+        Add('    , zc_rvNo() as isBill');
         Add('from DBA.DiscountMovement');
-        Add('    left outer join DBA.Unit as DiscountMovement_To on DiscountMovement_To.Id = DiscountMovement.UnitID');
         Add('    left outer join DBA.DiscountKlient as DiscountKlient on DiscountKlient.Id = DiscountMovement.DiscountKlientID');
-        Add('    left outer join DBA.Unit as DiscountMovement_From on DiscountKlient.ClientId = DiscountMovement_From.id');
+        Add('    left outer join DBA.Unit as Unit_From on Unit_From.id = DiscountKlient.ClientId');
+        Add('    left outer join DBA.Unit as Unit_To on Unit_To.Id = DiscountMovement.UnitID');
+        Add('    left outer join DBA.Users on Users.id = DiscountMovement.InsertUserID');
         Add('where DiscountMovement.descId = 2  and DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
-        Add('order by OperDate, ObjectId');
+        Add('order by 5, 1');
         Open;
 
         Result:=RecordCount;
@@ -4062,7 +4118,6 @@ begin
              //!!!
             if fStop then begin exit; end;
              //
-
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('ioInvNumber').Value:=FieldByName('InvNumber').AsString;
@@ -4072,8 +4127,15 @@ begin
 
              if not myExecToStoredProc then ;//exit;
              //
-             if FieldByName('ReturnInId_Postgres').AsInteger=0 then
-               fExecSqFromQuery('update dba.DiscountMovement set ReturnInId_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             if (FieldByName('Id_Postgres').AsInteger=0) and(FieldByName('isBill').AsInteger=zc_rvNo) then
+               fExecSqFromQuery('update dba.DiscountMovement set ReturnInId_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString)
+             else
+                 if (FieldByName('Id_Postgres').AsInteger=0) and(FieldByName('isBill').AsInteger=zc_rvYes) then
+                   fExecSqFromQuery('update dba.Bill set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             fOpenSqToQuery ('select lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), '+ IntToStr(toStoredProc.Params.ParamByName('ioId').Value) +', ' + FormatToDateTimeServer(FieldByName('OperDateInsert').AsDateTime) +') '
+                           + '     , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), '+ IntToStr(toStoredProc.Params.ParamByName('ioId').Value) +', ' + IntToStr(FieldByName('UserId_pg').AsInteger) + ')'
+                             );
              //
 
              Next;
@@ -4101,7 +4163,8 @@ begin
         Close;
         Clear;
         Add(   ' SELECT'
-             + '      DiscountMovement.OperDate'
+             + '      DiscountMovementItemReturn_byBarCode.Id as ObjectId'
+             + '    , DiscountMovement.OperDate'
              + '    , DiscountMovement.ReturnInId_Postgres as MovementId'
              + '    , DiscountMovementItemReturn_byBarCode.Id_Postgres as ParentId'
              + '    , SUM (if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=1 then  Abs(DiscountKlientAccountMoney.Summa) else 0 endif ) as AmountGRN'
@@ -4120,8 +4183,11 @@ begin
              + '    join Kassa on Kassa.Id = DiscountKlientAccountMoney.KassaID'
              + '    join KassaProperty  on KassaProperty.KassaID = Kassa.ID'
              + ' WHERE DiscountMovement.descId = 2  AND DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
-             + ' GROUP BY DiscountMovement.OperDate, MovementId, ParentId'
-             + ' ORDER BY DiscountMovement.OperDate');
+             + ' GROUP BY DiscountMovementItemReturn_byBarCode.Id'
+             + '        , DiscountMovement.OperDate'
+             + '        , DiscountMovement.ReturnInId_Postgres'
+             + '        , DiscountMovementItemReturn_byBarCode.Id_Postgres'
+             + ' ORDER BY DiscountMovement.OperDate, DiscountMovement.ReturnInId_Postgres, DiscountMovementItemReturn_byBarCode.Id_Postgres');
         Open;
 
         Result:= RecordCount;
@@ -4151,13 +4217,10 @@ begin
         toStoredProc.Params.AddParam ('inCurrencyValueEUR',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inParValueEUR',ftFloat,ptInput, 0);
         //
-
         while not EOF do
         begin
              //!!!
             if fStop then begin exit; end;
-             //
-
              //
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
              toStoredProc.Params.ParamByName('inParentId').Value:=FieldByName('ParentId').AsInteger;
@@ -4180,7 +4243,6 @@ begin
         end;
 
      end;
-     try fExecSqFromQuery_noErr(' drop table dba._TableLoadReturnIn '); except end;
      //
      myDisabledCB(cbReturnIn_Child);
 end;
@@ -4323,7 +4385,7 @@ begin
         Add('    left outer join DBA.Users on Users.id = DiscountMovement.InsertUserID');
 
         Add('where DiscountMovement.descId = 1  and DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
-        Add('order by 4, 1');
+        Add('order by 5, 1');
         Open;
 
         Result:=RecordCount;
@@ -4355,7 +4417,6 @@ begin
              //!!!
             if fStop then begin exit; end;
              //
-
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('ioInvNumber').Value:=FieldByName('InvNumber').AsString;

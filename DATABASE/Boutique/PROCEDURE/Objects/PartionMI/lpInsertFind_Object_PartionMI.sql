@@ -13,7 +13,13 @@ BEGIN
    
    -- 
    IF COALESCE (inMovementItemId, 0) = 0
-      THEN vbPartionMI_Id:= 0; -- !!!будет без партий, и элемент с пустой партией не создается!!!
+   THEN
+       RAISE EXCEPTION 'Ошибка. Значение для партии не определно <%>', inMovementItemId;
+       -- vbPartionMI_Id:= 0; -- !!!будет без партий, и элемент с пустой партией не создается!!!
+   ELSEIF inMovementItemId < 0
+   THEN
+       -- НЕ Находим - ТОЛЬКО Sybase
+       vbPartionMI_Id:= NULL;
    ELSE
        -- Находим 
        vbPartionMI_Id:= (SELECT Id FROM Object WHERE ObjectCode = inMovementItemId AND DescId = zc_Object_PartionMI());

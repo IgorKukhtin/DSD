@@ -28,6 +28,7 @@ BEGIN
                       THEN '.txt'
                  WHEN ObjectLink_PersonalServiceList_Bank.ChildObjectId = 76970 -- œ¿“ "Œ“œ ¡¿Õ "
                       THEN '.xml'
+                 ELSE '.csv'
             END AS FileExt
             INTO outFileNamePrefix, outFileExt
      FROM Movement
