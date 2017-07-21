@@ -18,8 +18,6 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_ReturnOut_Print());
      vbUserId:= inSession;
 
-
-
       --
     OPEN Cursor1 FOR
      
@@ -40,7 +38,6 @@ BEGIN
            , CAST (COALESCE (MovementFloat_CurrencyPartnerValue.ValueData, 0) AS TFloat)  AS CurrencyPartnerValue
            , MovementFloat_ParPartnerValue.ValueData   AS ParPartnerValue
 
-
            , Object_From.ValueData                       AS FromName
            , Object_To.ValueData                         AS ToName
            , Object_CurrencyDocument.ValueData           AS CurrencyDocumentName
@@ -48,8 +45,6 @@ BEGIN
            , MovementString_Comment.ValueData            AS Comment
          
        FROM  Movement
-
-          
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementString AS MovementString_Comment 
@@ -113,9 +108,7 @@ BEGIN
                            , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice 
                            , COALESCE (MIFloat_OperPriceList.ValueData, 0)   AS OperPriceList
                            , MovementItem.isErased
-                       FROM 
-                             MovementItem 
-                                            
+                       FROM MovementItem 
                             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                        AND MIFloat_CountForPrice.DescId         = zc_MIFloat_CountForPrice()
@@ -125,9 +118,9 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                         ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
                                                        AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
-                            where MovementItem.MovementId = inMovementId
-                                             AND MovementItem.DescId     = zc_MI_Master()
-                                             AND MovementItem.isErased   = false
+                       WHERE MovementItem.MovementId = inMovementId
+                         AND MovementItem.DescId     = zc_MI_Master()
+                         AND MovementItem.isErased   = false
                        )
 
        -- результат
@@ -153,16 +146,8 @@ BEGIN
            , tmpMI.CountForPrice  ::TFloat
            , tmpMI.OperPriceList  ::TFloat
 
-           , CAST (CASE WHEN tmpMI.CountForPrice <> 0
-                           THEN CAST (COALESCE (tmpMI.Amount, 0) * tmpMI.OperPrice / tmpMI.CountForPrice AS NUMERIC (16, 2))
-                        ELSE CAST ( COALESCE (tmpMI.Amount, 0) * tmpMI.OperPrice AS NUMERIC (16, 2))
-                   END AS TFloat) AS AmountSumm
-
-           , CAST (CASE WHEN tmpMI.CountForPrice <> 0
-                           THEN CAST (COALESCE (tmpMI.Amount, 0) * tmpMI.OperPriceList / tmpMI.CountForPrice AS NUMERIC (16, 2))
-                        ELSE CAST ( COALESCE (tmpMI.Amount, 0) * tmpMI.OperPriceList AS NUMERIC (16, 2))
-                   END AS TFloat) AS AmountPriceListSumm
-
+           , zfCalc_SummIn (tmpMI.Amount, tmpMI.OperPrice, tmpMI.CountForPrice) AS TotalSumm
+           , zfCalc_SummPriceList (tmpMI.Amount, tmpMI.OperPriceList)           AS TotalSummPriceList
            , tmpMI.isErased
 
        FROM tmpMI

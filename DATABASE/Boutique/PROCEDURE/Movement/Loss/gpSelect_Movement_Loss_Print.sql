@@ -23,9 +23,6 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Loss_Print());
      vbUserId:= inSession;
 
-
-   
-
       --
     OPEN Cursor1 FOR
 
@@ -48,8 +45,7 @@ BEGIN
            , Object_CurrencyDocument.ValueData           AS CurrencyDocumentName
            , MovementString_Comment.ValueData            AS Comment
          
-       FROM 
-             Movement 
+       FROM Movement 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementString AS MovementString_Comment 
@@ -102,8 +98,7 @@ BEGIN
                            , COALESCE (MIFloat_OperPrice.ValueData, 0)       AS OperPrice
                            , COALESCE (MIFloat_OperPriceList.ValueData, 0)   AS OperPriceList
                            , MovementItem.isErased
-                       FROM 
-                             MovementItem 
+                       FROM MovementItem 
                             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
@@ -136,12 +131,12 @@ BEGIN
            , Object_GoodsSize.ValueData     AS GoodsSizeName 
 
            , tmpMI.Amount
-           , tmpMI.CountForPrice  ::TFloat
-           , tmpMI.OperPrice      ::TFloat
-           , tmpMI.OperPriceList      ::TFloat
-           , (tmpMI.Amount * tmpMI.OperPrice) ::TFloat AS AmountSumm
-           , (tmpMI.Amount * tmpMI.OperPriceList) ::TFloat AS AmountPriceListSumm
+           , tmpMI.CountForPrice  :: TFloat
+           , tmpMI.OperPrice      :: TFloat
+           , tmpMI.OperPriceList  :: TFloat
 
+           , zfCalc_SummIn (tmpMI.Amount, tmpMI.OperPrice, tmpMI.CountForPrice) AS TotalSumm
+           , zfCalc_SummPriceList (tmpMI.Amount, tmpMI.OperPriceList)           AS TotalSummPriceList
            , tmpMI.isErased
 
        FROM tmpMI
@@ -172,6 +167,7 @@ ALTER FUNCTION gpSelect_Movement_Loss_Print (Integer,  TVarChar) OWNER TO postgr
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+ 21.07.17         *
  28.04.17                                                          *
  05.06.15         * 
 */

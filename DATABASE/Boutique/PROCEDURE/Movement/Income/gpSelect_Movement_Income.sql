@@ -43,11 +43,9 @@ BEGIN
 
            , CASE WHEN MLO_CurrencyDocument.ObjectId = zc_Currency_Basis()
                        THEN MF_TotalSumm.ValueData
-                  ELSE CAST (CASE WHEN MF_ParValue.ValueData <> 0
-                                  THEN MF_TotalSumm.ValueData * MF_CurrencyValue.ValueData / MF_ParValue.ValueData
-                                  ELSE MF_TotalSumm.ValueData * MF_CurrencyValue.ValueData
-                             END AS NUMERIC (16, 2))
+                  ELSE zfCalc_CurrencyFrom (MF_TotalSumm.ValueData, MF_CurrencyValue.ValueData, MF_ParValue.ValueData) 
              END :: TFloat AS TotalSummBalance
+           
            , MF_TotalSummPriceList.ValueData  AS TotalSummPriceList
 
            , MF_CurrencyValue.ValueData       AS CurrencyValue
