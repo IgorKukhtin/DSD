@@ -2147,15 +2147,7 @@ object ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPartionMI_Id'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PartionMI_Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inSaleMI_Id'
+        Name = 'inMovementMI_Id'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'SaleMI_Id'
@@ -2261,10 +2253,10 @@ object ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outTotalSummPay'
+        Name = 'outTotalSummToPay'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'TotalSummPay'
+        ComponentItem = 'TotalSummToPay'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
