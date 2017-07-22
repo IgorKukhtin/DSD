@@ -3156,6 +3156,7 @@ begin
         Add('    , BillItemsIncome.Id_Postgres as PartionId');
         Add('    , coalesce (BillItems_parent.Id_Postgres, -1 * case when coalesce (BillItems.Id_Postgres, 0) > 0 then BillItems.Id_Postgres else 1 end) as MovementMI_Id');
         Add('    , BillItems.OperCount as Amount');
+        Add('    , BillItems.OperPrice as OperPriceList');
         Add('    , '''' as CommentInfo');
         Add('    , zc_rvYes() as isBill');
         Add('    , zc_rvYes() as isClose');
@@ -3175,6 +3176,7 @@ begin
         Add('    , BillItemsIncome.Id_Postgres as PartionId');
         Add('    , DiscountMovementItem_byBarCode.Id_Postgres as MovementMI_Id');
         Add('    , DiscountMovementItemReturn_byBarCode.OperCount as Amount');
+        Add('    , DiscountMovementItem_byBarCode.OperPrice as OperPriceList');
         Add('    , trim (DiscountMovementItem_byBarCode.CommentInfo) as CommentInfo');
         Add('    , zc_rvNo() as isBill');
         Add('    , case when _dataRet_all.BillItemsId > 0 then zc_rvYes() else zc_rvNo() end  as isClose');
@@ -3208,6 +3210,8 @@ begin
         toStoredProc.Params.AddParam ('inMovementMI_Id',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inisPay',ftBoolean,ptInput, False);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('ioOperPriceList',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
         //
 
         while not EOF do
@@ -3225,6 +3229,7 @@ begin
              then toStoredProc.Params.ParamByName('inIsPay').Value:= TRUE
              else toStoredProc.Params.ParamByName('inIsPay').Value:= FALSE;
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
+             toStoredProc.Params.ParamByName('ioOperPriceList').Value:=FieldByName('OperPriceList').AsFloat;
              // хардкод
              if FieldByName('isClose').AsInteger = zc_rvYes
              then toStoredProc.Params.ParamByName('inComment').Value:='*123*' + FieldByName('CommentInfo').AsString

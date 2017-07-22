@@ -48,4 +48,4 @@ $BODY$
  */
 
 -- тест
--- select * from gpInsertUpdate_Movement_ReturnIn(ioId := 7 , ioInvNumber := '4' , inOperDate := ('01.01.2017')::TDateTime , inFromId := 230 , inToId := 229, inComment := 'df' ,  inSession := '2');
+-- SELECT * FROM gpInsertUpdate_Movement_ReturnIn (ioId := 7 , ioInvNumber := '4' , inOperDate := ('01.01.2017')::TDateTime , inFromId := 230 , inToId := 229, inComment := 'df' ,  inSession := '2');
