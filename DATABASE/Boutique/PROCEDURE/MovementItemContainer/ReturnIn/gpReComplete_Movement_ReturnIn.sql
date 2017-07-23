@@ -25,12 +25,12 @@ BEGIN
     THEN
         --распроводим документ
         PERFORM gpUpdate_Status_ReturnIn(inMovementId := inMovementId,
-                                        inStatusCode := zc_Enum_StatusCode_UnComplete(),
-                                        inSession    := inSession);
+                                         inStatusCode := zc_Enum_StatusCode_UnComplete(),
+                                         inSession    := inSession);
         --ѕроводим документ
         PERFORM gpUpdate_Status_ReturnIn(inMovementId := inMovementId,
-                                        inStatusCode := zc_Enum_StatusCode_Complete(),
-                                        inSession    := inSession);
+                                         inStatusCode := zc_Enum_StatusCode_Complete(),
+                                         inSession    := inSession);
     END IF;
 END;
 $BODY$
