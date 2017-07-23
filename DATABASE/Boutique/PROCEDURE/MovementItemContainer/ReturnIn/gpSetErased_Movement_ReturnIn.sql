@@ -30,7 +30,7 @@ BEGIN
     FROM MovementItem
          INNER JOIN MovementItemLinkObject AS MILinkObject_PartionMI
                                            ON MILinkObject_PartionMI.MovementItemId = MovementItem.Id
-                                          AND MILinkObject_PartionMI.DescId = zc_MILinkObject_PartionMI()
+                                          AND MILinkObject_PartionMI.DescId         = zc_MILinkObject_PartionMI()
          LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = MILinkObject_PartionMI.ObjectId
     WHERE MovementItem.MovementId = inMovementId
       AND MovementItem.DescId     = zc_MI_Master()
