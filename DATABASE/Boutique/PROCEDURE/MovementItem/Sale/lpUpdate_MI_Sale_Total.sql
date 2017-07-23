@@ -25,17 +25,17 @@ BEGIN
                                       
      -- данные
      SELECT  -- Дополнительная скидка в расчетах ГРН
-             COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_GoodsAccount() THEN COALESCE(MIFloat_SummChangePercent.ValueData,0) ELSE 0 END) , 0) AS TotalChangePercentPay
+             COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_GoodsAccount() THEN COALESCE (MIFloat_SummChangePercent.ValueData, 0) ELSE 0 END) , 0) AS TotalChangePercentPay
              -- оплата в расчетах ГРН
-           , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_GoodsAccount() THEN COALESCE(MIFloat_TotalPay.ValueData,0)  ELSE 0         END), 0) AS TotalPayOth
+           , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_GoodsAccount() THEN COALESCE (MIFloat_TotalPay.ValueData, 0)  ELSE 0         END), 0) AS TotalPayOth
              -- Кол-во возврат
-           , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_ReturnIn()     THEN MovementItem.Amount                     ELSE 0         END ), 0) AS TotalCountReturn
+           , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_ReturnIn()     THEN MovementItem.Amount                       ELSE 0         END ), 0) AS TotalCountReturn
              -- Сумма возврата ГРН
            , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_ReturnIn()     THEN (MovementItem.Amount * vbOperPriceList) - COALESCE (MIFloat_TotalChangePercent.ValueData, 0) ELSE 0 END), 0) AS TotalReturn
              -- Сумма возврата оплаты ГРН
-           , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_ReturnIn()     THEN COALESCE(MIFloat_TotalPay.ValueData,0)  ELSE 0         END), 0) AS TotalPayReturn
+           , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_ReturnIn()     THEN COALESCE (MIFloat_TotalPay.ValueData, 0)  ELSE 0         END), 0) AS TotalPayReturn
 
-             INTO vbTotalPayOth, vbTotalChangePercentPay, vbTotalCountReturn, vbTotalReturn, vbTotalPayReturn
+             INTO vbTotalChangePercentPay, vbTotalPayOth, vbTotalCountReturn, vbTotalReturn, vbTotalPayReturn
 
       FROM  Object AS Object_PartionMI
             INNER JOIN MovementItemLinkObject AS MILinkObject_PartionMI

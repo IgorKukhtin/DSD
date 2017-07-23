@@ -26,6 +26,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_GoodsAccount());
 
+
      -- проверка - документ должен быть сохранен
      IF COALESCE (inMovementId, 0) = 0 THEN
         RAISE EXCEPTION 'Ошибка.Документ не сохранен.';
@@ -36,22 +37,24 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Партия>.';
      END IF;
 
-     -- данные из партии : GoodsId
-     vbGoodsId:= (SELECT Object_PartionGoods.GoodsId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inPartionId);
-     
+
      -- определяем Партию элемента продажи/возврата
      vbPartionMI_Id := lpInsertFind_Object_PartionMI (inMovementMI_Id);
-     
+
+     -- данные из партии : GoodsId
+     vbGoodsId:= (SELECT Object_PartionGoods.GoodsId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inPartionId);
+    
+    
      -- сохранили
      ioId:= lpInsertUpdate_MovementItem_GoodsAccount (ioId                 := ioId
                                                     , inMovementId         := inMovementId
                                                     , inGoodsId            := vbGoodsId
-                                                    , inPartionId          := COALESCE(inPartionId,0)
-                                                    , inPartionMI_Id       := COALESCE(vbPartionMI_Id,0)
+                                                    , inPartionId          := COALESCE (inPartionId, 0)
+                                                    , inPartionMI_Id       := COALESCE (vbPartionMI_Id, 0)
                                                     , inAmount             := inAmount
-                                                    , inComment            := COALESCE(inComment,'') ::TVarChar 
+                                                    , inComment            := COALESCE (inComment,'') :: TVarChar 
                                                     , inUserId             := vbUserId
-                                                   );
+                                                     );
 
     IF inIsPay = TRUE THEN
         -- сохранили оплату

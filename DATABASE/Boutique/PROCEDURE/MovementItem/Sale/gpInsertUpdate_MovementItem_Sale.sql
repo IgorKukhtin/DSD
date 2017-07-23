@@ -61,6 +61,7 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Партия>.';
      END IF;
 
+
      -- параметры из Документа
      SELECT Movement.OperDate
           , MovementLinkObject_From.ObjectId
@@ -74,6 +75,21 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
      WHERE Movement.Id = inMovementId;
+
+
+     -- данные из партии : GoodsId и OperPrice и CountForPrice и CurrencyId
+     SELECT Object_PartionGoods.GoodsId                                    AS GoodsId
+          , COALESCE (Object_PartionGoods.CountForPrice, 1)                AS CountForPrice
+          , COALESCE (Object_PartionGoods.OperPrice, 0)                    AS OperPrice
+          , COALESCE (Object_PartionGoods.CurrencyId, zc_Currency_Basis()) AS CurrencyId
+            INTO ioGoodsId, outCountForPrice, outOperPrice, vbCurrencyId
+     FROM Object_PartionGoods
+     WHERE Object_PartionGoods.MovementItemId = inPartionId;
+
+     -- проверка - свойство должно быть установлено
+     IF COALESCE (ioGoodsId, 0) = 0 THEN
+        RAISE EXCEPTION 'Ошибка.Не установлено значение <Товар>.';
+     END IF;
 
      -- Цена (прайс)
      IF vbUserId = zc_User_Sybase()
@@ -93,19 +109,6 @@ BEGIN
 
      END IF;
 
-     -- данные из партии : GoodsId и OperPrice и CountForPrice и CurrencyId
-     SELECT Object_PartionGoods.GoodsId                                    AS GoodsId
-          , COALESCE (Object_PartionGoods.CountForPrice, 1)                AS CountForPrice
-          , COALESCE (Object_PartionGoods.OperPrice, 0)                    AS OperPrice
-          , COALESCE (Object_PartionGoods.CurrencyId, zc_Currency_Basis()) AS CurrencyId
-            INTO ioGoodsId, outCountForPrice, outOperPrice, vbCurrencyId
-     FROM Object_PartionGoods
-     WHERE Object_PartionGoods.MovementItemId = inPartionId;
-
-     -- проверка - свойство должно быть установлено
-     IF COALESCE (ioGoodsId, 0) = 0 THEN
-        RAISE EXCEPTION 'Ошибка.Не установлено значение <Товар>.';
-     END IF;
 
      -- Если НЕ Базовая Валюта
      IF vbCurrencyId <> zc_Currency_Basis()
@@ -164,18 +167,14 @@ BEGIN
 
 
      -- вернули Сумма вх. в валюте, для грида - Округлили до 2-х Знаков
-     outTotalSumm := CASE WHEN outCountForPrice > 0
-                                THEN CAST (inAmount * outOperPrice / outCountForPrice AS NUMERIC (16, 2))
-                           ELSE CAST (inAmount * outOperPrice AS NUMERIC (16, 2))
-                      END;
-     -- вернули Сумма вх. ГРН, для грида - Округлили до 2-х Знаков
-     outTotalSummBalance := CAST (outTotalSumm * outCurrencyValue / CASE WHEN outParValue <> 0 THEN outParValue ELSE 1 END AS NUMERIC (16, 2));
+     outTotalSumm := zfCalc_SummIn (inAmount, outOperPrice, outCountForPrice);
+     -- вернули сумму вх. в грн по элементу, для грида
+     outTotalSummBalance := zfCalc_CurrencyFrom (outTotalSumm, outCurrencyValue, outParValue);
+     -- расчитали Сумма по прайсу по элементу, для грида
+     outTotalSummPriceList := zfCalc_SummPriceList (inAmount, ioOperPriceList);
 
-     -- вернули Сумма по прайсу, для грида - !!!Округлили до НОЛЬ Знаков!!!
-     outTotalSummPriceList := CAST (inAmount * ioOperPriceList AS NUMERIC (16, 0));
-
-     -- вернули Итого скидка в продаже ГРН, для грида - !!!Округлили до НОЛЬ Знаков - только %, ВСЕ - нельзя!!!
-     outTotalChangePercent := CAST (outTotalSummPriceList * COALESCE (ioChangePercent, 0) / 100 AS NUMERIC (16, 0)) + COALESCE (ioSummChangePercent, 0) ;
+     -- расчитали Итого скидка в продаже ГРН, для грида - !!!Округлили до НОЛЬ Знаков - только %, ВСЕ округлять - нельзя!!!
+     outTotalChangePercent := outTotalSummPriceList - zfCalc_SummChangePercent (inAmount, ioOperPriceList, ioChangePercent) + COALESCE (ioSummChangePercent, 0);
 
      -- вернули Итого оплата в продаже ГРН, для грида
      IF inIsPay = TRUE
@@ -300,7 +299,7 @@ BEGIN
         ;
 
         -- в мастер записать - Дополнительная скидка в продаже ГРН - т.к. могли обнулить
-        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), ioId, ioSummChangePercent);
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), ioId, COALESCE (ioSummChangePercent, 0));
 
         -- в мастер записать - Итого оплата в продаже ГРН
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), ioId, outTotalPay);
@@ -309,18 +308,18 @@ BEGIN
 
 
     -- "сложно" пересчитали "итоговые" суммы по элементу
-    PERFORM lpUpdate_MI_Sale_Total(ioId);
+    PERFORM lpUpdate_MI_Sale_Total (ioId);
 
-     -- Дополнительная скидка в расчетах ГРН
-     outTotalChangePercentPay:= COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalChangePercentPay()), 0);
-     -- Итого оплата в расчетах ГРН
-     outTotalPayOth:= COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalPayOth()), 0);
+    -- вернули Дополнительная скидка в расчетах ГРН, для грида
+    outTotalChangePercentPay:= COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalChangePercentPay()), 0);
+    -- вернули Итого оплата в расчетах ГРН, для грида
+    outTotalPayOth:= COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalPayOth()), 0);
 
-    -- Кол-во возврат
+    -- вернули Кол-во возврат, для грида
     outTotalCountReturn:= COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalCountReturn()), 0);
-    -- Сумма возврата ГРН
+    -- вернули Сумма возврата ГРН, для грида
     outTotalReturn:= COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalReturn()), 0);
-    -- Сумма возврата оплаты ГРН
+    -- вернули Сумма возврата оплаты ГРН, для грида
     outTotalPayReturn:= COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalPayReturn()), 0);
 
 
