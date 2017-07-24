@@ -63,12 +63,27 @@ CONST
    + '       , Object_Partner.CalcDayCount '
    + '       , Object_Partner.OrderDayCount '
    + '       , Object_Partner.isOperDateOrder  '
+   + '       , COALESCE (OrderExternal_Partner.PartnerCount, 0) + COALESCE (StoreReal_Partner.PartnerCount, 0) AS PartnerCount '
    + ' FROM  Object_Partner  '
    + '       LEFT JOIN Object_Juridical            ON Object_Juridical.Id         = Object_Partner.JuridicalId '
    + '                                            AND Object_Juridical.ContractId = Object_Partner.ContractId '
    + '       LEFT JOIN Object_PriceList Object_PL  ON Object_PL.Id                = IFNULL(Object_Partner.PriceListId, :DefaultPriceList) '
    + '       LEFT JOIN Object_PriceList Object_PLR ON Object_PLR.Id               = IFNULL(Object_Partner.PriceListId_ret, :DefaultPriceList) '
    + '       LEFT JOIN Object_Contract             ON Object_Contract.Id          = Object_Partner.ContractId '
+   + '       LEFT JOIN (SELECT Movement_OrderExternal.PartnerId '
+   + '                       , COUNT (Movement_OrderExternal.PartnerId) AS PartnerCount '
+   + '                  FROM Movement_OrderExternal '
+   + '                       JOIN Object_Const AS OrderExternal_Const ON OrderExternal_Const.StatusId_Complete = Movement_OrderExternal.StatusId '
+   + '                  WHERE DATE (Movement_OrderExternal.OperDate) = CURRENT_DATE '
+   + '                  GROUP BY Movement_OrderExternal.PartnerId '
+   + '                 ) AS OrderExternal_Partner ON OrderExternal_Partner.PartnerId = Object_Partner.Id '
+   + '       LEFT JOIN (SELECT Movement_StoreReal.PartnerId '
+   + '                       , COUNT (Movement_StoreReal.PartnerId) AS PartnerCount '
+   + '                  FROM Movement_StoreReal '
+   + '                       JOIN Object_Const AS StoreReal_Const ON StoreReal_Const.StatusId_Complete = Movement_StoreReal.StatusId '
+   + '                  WHERE DATE (Movement_StoreReal.OperDate) = CURRENT_DATE '
+   + '                  GROUP BY Movement_StoreReal.PartnerId '
+   + '                 ) AS StoreReal_Partner ON StoreReal_Partner.PartnerId = Object_Partner.Id '
    + ' WHERE Object_Partner.isErased = 0 ';
 
 type
@@ -109,6 +124,8 @@ type
     procedure GetDictionaries(AName : string);
 
     function GetMovementCountItems(AMovementGUID: string): Integer;
+
+    function AdaptQuotMark(S: string): string;
 
     procedure UploadStoreReal;
     procedure UploadOrderExternal;
@@ -744,6 +761,7 @@ type
     tblObject_ConstCriticalDebtSum: TFloatField;
     tblMovement_RouteMemberAddressByGPS: TStringField;
     tblMovementItem_VisitAddressByGPS: TStringField;
+    qryPartnerPartnerCount: TLargeintField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
     procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);
@@ -1380,7 +1398,7 @@ begin
           '    inInvNumber:= ''' + FieldByName('INVNUMBER').AsString + ''', ' +
           '    inOperDate:= ''' + FormatDateTime('dd.mm.yyyy', FieldByName('OPERDATE').AsDateTime) + ''', ' +
           '    inPartnerId:= ' + IntToStr(FieldByName('PARTNERID').AsInteger) + ', ' +
-          '    inComment:= ''' + FieldByName('COMMENT').AsString + ''', ' +
+          '    inComment:= ''' + AdaptQuotMark(FieldByName('COMMENT').AsString) + ''', ' +
           '    inInsertDate:= ''' + FormatDateTime('dd.mm.yyyy hh:mm:ss', FieldByName('INSERTDATE').AsDateTime) + ''', ' +
           '    inSession:= vbSession); ';
 
@@ -1471,7 +1489,7 @@ begin
           '    inGUID:= ''' + FieldByName('GUID').AsString + ''', ' +
           '    inInvNumber:= ''' + FieldByName('INVNUMBER').AsString + ''', ' +
           '    inOperDate:= ''' + FormatDateTime('dd.mm.yyyy', FieldByName('OPERDATE').AsDateTime) + ''', ' +
-          '    inComment:= ''' + FieldByName('COMMENT').AsString + ''', ' +
+          '    inComment:= ''' + AdaptQuotMark(FieldByName('COMMENT').AsString) + ''', ' +
           '    inPartnerId:= ' + IntToStr(FieldByName('PARTNERID').AsInteger) + ', ' +
           '    inUnitId:= ' + IntToStr(FieldByName('UNITID').AsInteger) + ', ' +
           '    inPaidKindId:= ' + IntToStr(FieldByName('PAIDKINDID').AsInteger) + ', ' +
@@ -1581,7 +1599,7 @@ begin
           '    inPartnerId:= ' + IntToStr(FieldByName('PARTNERID').AsInteger) + ', ' +
           '    inUnitId:= ' + IntToStr(FieldByName('UNITID').AsInteger) + ', ' +
           '    inContractId:= ' + IntToStr(FieldByName('CONTRACTID').AsInteger) + ', ' +
-          '    inComment:= ''' + FieldByName('COMMENT').AsString + ''', ' +
+          '    inComment:= ''' + AdaptQuotMark(FieldByName('COMMENT').AsString) + ''', ' +
           '    inSession:= vbSession); ';
 
         // Загружаем возвращаемые товары
@@ -2119,6 +2137,11 @@ begin
 end;
 
 { синхронизация с центральной БД }
+function TSyncThread.AdaptQuotMark(S: string): string;
+begin
+  Result := ReplaceStr(S, '''', '''||CHR (39)||''');
+end;
+
 procedure TSyncThread.Execute;
 var
   Res : string;

@@ -634,6 +634,9 @@ object DM: TDM
       Size = 1000
       Calculated = True
     end
+    object qryPartnerPartnerCount: TLargeintField
+      FieldName = 'PartnerCount'
+    end
   end
   object qryPriceList: TFDQuery
     Connection = conMain
