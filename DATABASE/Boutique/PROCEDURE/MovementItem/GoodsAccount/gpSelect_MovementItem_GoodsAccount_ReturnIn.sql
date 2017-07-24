@@ -98,11 +98,12 @@ BEGIN
                                                            ON MovementLinkObject_To.MovementId = Movement.Id
                                                           AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
                                                           AND MovementLinkObject_To.ObjectId   = vbUnitId
-                                                          
-                             LEFT JOIN MovementItem AS MI_Master ON MI_Master.MovementId = Movement.Id
-                                                   AND MI_Master.DescId = zc_MI_Master()
-                                                   AND MI_Master.isErased = False
-                                                   
+
+                             LEFT JOIN MovementItem AS MI_Master 
+                                                    ON MI_Master.MovementId = Movement.Id
+                                                   AND MI_Master.DescId     = zc_MI_Master()
+                                                   AND MI_Master.isErased   = FALSE
+
                              LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                          ON MIFloat_CountForPrice.MovementItemId = MI_Master.Id
                                                         AND MIFloat_CountForPrice.DescId        = zc_MIFloat_CountForPrice()
@@ -137,8 +138,8 @@ BEGIN
                            , COALESCE (MIFloat_SummChangePercent.ValueData, 0)     AS SummChangePercent
                            , COALESCE (MIFloat_TotalPay.ValueData, 0)              AS TotalPay
                            , COALESCE (MIString_Comment.ValueData,'')              AS Comment
+                           , MovementItem.isErased                                 AS isErased
                            , ROW_NUMBER() OVER (PARTITION BY MovementItem.isErased ORDER BY MovementItem.Id ASC) AS Ord
-                           , MovementItem.isErased
                            
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                             JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -225,7 +226,6 @@ BEGIN
                       GROUP BY MovementItem.ParentId
                       )
 
-
        -- результат
        SELECT
              tmpMI.Id                                    AS Id
@@ -235,7 +235,7 @@ BEGIN
            , Object_Goods.ValueData                      AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
-                                                      
+
            , Object_CompositionGroup.ValueData           AS CompositionGroupName  
            , Object_Composition.ValueData                AS CompositionName
            , Object_GoodsInfo.ValueData                  AS GoodsInfoName
@@ -248,7 +248,7 @@ BEGIN
            , tmpMI.OperPrice                   :: TFloat AS OperPrice
            , tmpMI.CountForPrice               :: TFloat AS CountForPrice
            , tmpMI.OperPriceList               :: TFloat AS OperPriceList
-                                           
+
            , tmpMI.TotalSumm                   :: TFloat AS TotalSumm
            , tmpMI.TotalSummPriceList          :: TFloat AS TotalSummPriceList
                                            

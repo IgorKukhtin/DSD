@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS lpUpdate_Object_Client_Total (Integer, Boolean, Integer)
 
 CREATE OR REPLACE FUNCTION lpUpdate_Object_Client_Total(
     IN inMovementId          Integer   ,   -- Ключ объекта <Документ>
-    IN inIsComplete          Boolean   ,   -- Проведение Да/Нет (если Да добавляем сумму продажи иначе снимаем) 
+    IN inIsComplete          Boolean   ,   -- Проведение Да/Нет (если Да добавляем сумму продажи... иначе снимаем) 
     IN inUserId              Integer       -- сессия пользователя
 )
 RETURNS VOID
@@ -14,15 +14,15 @@ $BODY$
    DECLARE vbClientId                  Integer;
    DECLARE vbUserId                    Integer;
    DECLARE vbOperDate                  TDateTime;
-   DECLARE vbTotalSummPay_Client       TFloat;
    DECLARE vbLastDate_Client           TDateTime;
+   DECLARE vbTotalSummPay_Client       TFloat;
+   DECLARE vbTotalCount_Client         TFloat;
+   DECLARE vbTotalSumm_Client          TFloat;
+   DECLARE vbTotalSummDiscount_Client  TFloat;
    DECLARE vbTotalCount                TFloat;
    DECLARE vbTotalSummPriceList        TFloat;
    DECLARE vbTotalSummChange           TFloat;
    DECLARE vbTotalSummPay              TFloat;
-   DECLARE vbTotalCount_Client         TFloat;
-   DECLARE vbTotalSumm_Client          TFloat;
-   DECLARE vbTotalSummDiscount_Client  TFloat;
    DECLARE vbKoef                      TFloat;
 BEGIN
 
@@ -43,6 +43,7 @@ BEGIN
                                      ON MovementLinkObject_From.MovementId = Movement.Id
                                     AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
         LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+        
         LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                      ON MovementLinkObject_To.MovementId = Movement.Id
                                     AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
@@ -89,23 +90,23 @@ BEGIN
    FROM Movement
         LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                 ON MovementFloat_TotalCount.MovementId = Movement.Id
-                               AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+                               AND MovementFloat_TotalCount.DescId     = zc_MovementFloat_TotalCount()
                                
         LEFT JOIN MovementFloat AS MovementFloat_TotalSummPriceList
                                 ON MovementFloat_TotalSummPriceList.MovementId = Movement.Id
-                               AND MovementFloat_TotalSummPriceList.DescId = zc_MovementFloat_TotalSummPriceList()
+                               AND MovementFloat_TotalSummPriceList.DescId     = zc_MovementFloat_TotalSummPriceList()
                                
         LEFT JOIN MovementFloat AS MovementFloat_TotalSummChange
-                                ON MovementFloat_TotalSummChange.MovementId =  Movement.Id
-                               AND MovementFloat_TotalSummChange.DescId = zc_MovementFloat_TotalSummChange()
+                                ON MovementFloat_TotalSummChange.MovementId = Movement.Id
+                               AND MovementFloat_TotalSummChange.DescId     = zc_MovementFloat_TotalSummChange()
                                
         LEFT JOIN MovementFloat AS MovementFloat_TotalSummPay
                                 ON MovementFloat_TotalSummPay.MovementId = Movement.Id
-                               AND MovementFloat_TotalSummPay.DescId = zc_MovementFloat_TotalSummPay()
+                               AND MovementFloat_TotalSummPay.DescId     = zc_MovementFloat_TotalSummPay()
 
         LEFT JOIN MovementLinkObject AS MLO_Insert
                                      ON MLO_Insert.MovementId = Movement.Id
-                                    AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+                                    AND MLO_Insert.DescId     = zc_MovementLinkObject_Insert()
         LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
    WHERE Movement.Id = inMovementId;
      
@@ -120,7 +121,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Client_TotalSummPay(), vbClientId, vbTotalSummPay_Client + vbTotalSummPay);
         
         
-   -- Если это продажа и дата документа больше сохраненной в клиенте обновляем данные последней покупки иначе нет
+   -- Если это продажа и дата документа больше сохраненной в клиенте обновляем данные последней покупки
    IF vbMovementDescId = zc_Movement_Sale() AND inIsComplete = TRUE AND vbOperDate >= vbLastDate_Client
    THEN
        -- сохранили <Количество в последней покупке>
@@ -135,7 +136,7 @@ BEGIN
        PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Client_LastUser(), vbClientId, vbUserId);      
    END IF;
    
-   -- Если это док.продажа распроводится и дата документа больше сохраненной в клиенте обновляем данные последней покупки иначе нет
+   -- Если это док.продажа распроводится/удаляет и дата документа больше сохраненной в клиенте обновляем данные последней покупки
    IF vbMovementDescId = zc_Movement_Sale() AND inIsComplete = FALSE AND vbOperDate >= vbLastDate_Client
    THEN
        -- находим данные по последнему док.продажи
@@ -159,23 +160,23 @@ BEGIN
             
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId = Movement.Id
-                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+                                   AND MovementFloat_TotalCount.DescId     = zc_MovementFloat_TotalCount()
                                    
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPriceList
                                     ON MovementFloat_TotalSummPriceList.MovementId = Movement.Id
-                                   AND MovementFloat_TotalSummPriceList.DescId = zc_MovementFloat_TotalSummPriceList()
+                                   AND MovementFloat_TotalSummPriceList.DescId     = zc_MovementFloat_TotalSummPriceList()
                                    
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummChange
-                                    ON MovementFloat_TotalSummChange.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSummChange.DescId = zc_MovementFloat_TotalSummChange()
+                                    ON MovementFloat_TotalSummChange.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummChange.DescId     = zc_MovementFloat_TotalSummChange()
                                    
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPay
                                     ON MovementFloat_TotalSummPay.MovementId = Movement.Id
-                                   AND MovementFloat_TotalSummPay.DescId = zc_MovementFloat_TotalSummPay()
+                                   AND MovementFloat_TotalSummPay.DescId     = zc_MovementFloat_TotalSummPay()
     
             LEFT JOIN MovementLinkObject AS MLO_Insert
                                          ON MLO_Insert.MovementId = Movement.Id
-                                        AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+                                        AND MLO_Insert.DescId     = zc_MovementLinkObject_Insert()
             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
        ;
        

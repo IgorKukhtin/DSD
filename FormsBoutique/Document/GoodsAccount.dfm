@@ -1992,6 +1992,7 @@ object GoodsAccountForm: TGoodsAccountForm
         Control = edFrom
       end
       item
+        Control = edTo
       end
       item
         Control = edTotalDebt
@@ -2021,8 +2022,8 @@ object GoodsAccountForm: TGoodsAccountForm
         Control = ceComment
       end>
     GetStoredProc = spGet
-    Left = 240
-    Top = 273
+    Left = 256
+    Top = 225
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_GoodsAccount'
@@ -2214,6 +2215,7 @@ object GoodsAccountForm: TGoodsAccountForm
     IdParam.MultiSelectSeparator = ','
     GuidesList = <
       item
+        Guides = GuidesTo
       end
       item
         Guides = GuidesFrom

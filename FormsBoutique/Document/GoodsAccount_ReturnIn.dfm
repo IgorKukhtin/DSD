@@ -1974,6 +1974,7 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
         Control = edFrom
       end
       item
+        Control = edTo
       end
       item
         Control = edTotalDebt
@@ -2196,9 +2197,10 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
     IdParam.MultiSelectSeparator = ','
     GuidesList = <
       item
+        Guides = GuidesFrom
       end
       item
-        Guides = GuidesFrom
+        Guides = GuidesTo
       end>
     ActionItemList = <
       item
