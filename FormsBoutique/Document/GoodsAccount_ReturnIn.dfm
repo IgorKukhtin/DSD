@@ -665,7 +665,7 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
             Options.Editing = False
             Width = 91
           end
-                    object Amount_USD_Exc: TcxGridDBColumn
+          object Amount_USD_Exc: TcxGridDBColumn
             Caption = #1054#1073#1084#1077#1085' $'
             DataBinding.FieldName = 'Amount_USD_Exc'
             PropertiesClassName = 'TcxCurrencyEditProperties'

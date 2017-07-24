@@ -31,6 +31,9 @@ BEGIN
     WHERE MovementItem.MovementId = inMovementId
       AND MovementItem.DescId     = zc_MI_Master()
       AND MovementItem.isErased   = FALSE;
+    
+    -- сохраняем расчетные суммы по покупателю
+    PERFORM lpUpdate_Object_Client_Total (inMovementId, inIsComplete:=TRUE, vbUserId);
       
 END;
 $BODY$

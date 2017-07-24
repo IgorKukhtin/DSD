@@ -6,7 +6,14 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Client(
     IN inIsShowAll   Boolean,       -- признак показать удаленные да / нет 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, DiscountCard TVarChar, DiscountTax TFloat, DiscountTaxTwo TFloat, TotalCount TFloat, TotalSumm TFloat, TotalSummDiscount TFloat, TotalSummPay TFloat, LastCount TFloat, LastSumm TFloat, LastSummDiscount TFloat, LastDate TDateTime, Address TVarChar, HappyDate TDateTime, PhoneMobile TVarChar, Phone TVarChar, Mail TVarChar, Comment TVarChar, CityName TVarChar, DiscountKindName TVarChar, LastUserName TVarChar, isErased boolean) 
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , DiscountCard TVarChar, DiscountTax TFloat, DiscountTaxTwo TFloat
+             , TotalCount TFloat, TotalSumm TFloat, TotalSummDiscount TFloat, TotalSummPay TFloat
+             , LastCount TFloat, LastSumm TFloat, LastSummDiscount TFloat, LastDate TDateTime
+             , Address TVarChar, HappyDate TDateTime, PhoneMobile TVarChar, Phone TVarChar
+             , Mail TVarChar, Comment TVarChar, CityName TVarChar
+             , DiscountKindName TVarChar, LastUserName TVarChar
+             , isErased boolean) 
   AS
 $BODY$
    DECLARE vbUserId Integer;

@@ -10,11 +10,15 @@ RETURNS VOID
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbStatusId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_ReturnIn());
     vbUserId:= lpGetUserBySession (inSession);
 
+    -- тек.статус документа
+    vbStatusId:= (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId);
+    
     -- Распроводим Документ
     PERFORM lpUnComplete_Movement (inMovementId := inMovementId
                                  , inUserId     := vbUserId);
@@ -29,6 +33,13 @@ BEGIN
     WHERE MovementItem.MovementId = inMovementId
       AND MovementItem.DescId     = zc_MI_Master()
       AND MovementItem.isErased   = FALSE;
+
+    -- Если был статус Проведен нужно пересчитать расчетные суммы по покупателю
+    IF vbStatusId = zc_Enum_Status_Complete() 
+    THEN 
+         -- сохраняем расчетные суммы по покупателю
+         PERFORM lpUpdate_Object_Client_Total (inMovementId, inIsComplete:=FALSE, vbUserId);
+    END IF;
       
 END;
 $BODY$

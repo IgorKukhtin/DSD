@@ -679,7 +679,7 @@ object GoodsAccountForm: TGoodsAccountForm
             Options.Editing = False
             Width = 91
           end
-                    object Amount_USD_Exc: TcxGridDBColumn
+          object Amount_USD_Exc: TcxGridDBColumn
             Caption = #1054#1073#1084#1077#1085' $'
             DataBinding.FieldName = 'Amount_USD_Exc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -986,8 +986,8 @@ object GoodsAccountForm: TGoodsAccountForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 256
-    Top = 263
+    Left = 272
+    Top = 271
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -1800,7 +1800,7 @@ object GoodsAccountForm: TGoodsAccountForm
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
     Left = 456
-    Top = 200
+    Top = 256
     object N1: TMenuItem
       Action = actRefresh
     end
@@ -1957,7 +1957,7 @@ object GoodsAccountForm: TGoodsAccountForm
       end>
     PackSize = 1
     Left = 362
-    Top = 216
+    Top = 248
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -2007,8 +2007,8 @@ object GoodsAccountForm: TGoodsAccountForm
         Control = ceComment
       end>
     GetStoredProc = spGet
-    Left = 264
-    Top = 201
+    Left = 240
+    Top = 273
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_GoodsAccount'
@@ -2388,8 +2388,8 @@ object GoodsAccountForm: TGoodsAccountForm
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 448
-    Top = 56
+    Left = 432
+    Top = 40
   end
   object spGetTotalSumm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_TotalSumm'
@@ -2449,8 +2449,8 @@ object GoodsAccountForm: TGoodsAccountForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 559
-    Top = 200
+    Left = 551
+    Top = 256
   end
   object spInsertMaskMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_GoodsAccount'
@@ -2584,8 +2584,8 @@ object GoodsAccountForm: TGoodsAccountForm
       end
       item
       end>
-    Left = 320
-    Top = 168
+    Left = 360
+    Top = 280
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'

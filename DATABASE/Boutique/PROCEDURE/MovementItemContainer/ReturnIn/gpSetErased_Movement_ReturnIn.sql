@@ -9,12 +9,16 @@ CREATE OR REPLACE FUNCTION gpSetErased_Movement_ReturnIn(
 RETURNS VOID
 AS
 $BODY$
-  DECLARE vbUserId Integer;
+  DECLARE vbUserId   Integer;
+  DECLARE vbStatusId Integer;
 BEGIN
     -- проверка прав пользовател€ на вызов процедуры
     -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_ReturnIn());
     vbUserId:= lpGetUserBySession (inSession);
 
+    -- тек.статус документа
+    vbStatusId:= (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId);
+    
     -- убираем ссылки на этот док в продажах
     /*PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Child(), MLM_Child.MovementId, Null)
     FROM MovementLinkMovement AS MLM_Child
@@ -35,6 +39,13 @@ BEGIN
     WHERE MovementItem.MovementId = inMovementId
       AND MovementItem.DescId     = zc_MI_Master()
       AND MovementItem.isErased   = FALSE;
+
+    -- ≈сли был статус ѕроведен нужно пересчитать расчетные суммы по покупателю
+    IF vbStatusId = zc_Enum_Status_Complete() 
+    THEN 
+         -- сохран€ем расчетные суммы по покупателю
+         PERFORM lpUpdate_Object_Client_Total (inMovementId, inIsComplete:=FALSE, vbUserId);
+    END IF;
 
 END;
 $BODY$

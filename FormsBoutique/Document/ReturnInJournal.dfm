@@ -1104,7 +1104,7 @@ object ReturnInJournalForm: TReturnInJournalForm
     end
   end
   object spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement'
+    StoredProcName = 'gpUnComplete_Movement_ReturnIn'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1121,7 +1121,7 @@ object ReturnInJournalForm: TReturnInJournalForm
     Top = 272
   end
   object spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement'
+    StoredProcName = 'gpSetErased_Movement_ReturnIn'
     DataSet = ClientDataSet
     DataSets = <
       item
