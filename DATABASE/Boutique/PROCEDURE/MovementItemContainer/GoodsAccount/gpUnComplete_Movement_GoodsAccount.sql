@@ -9,48 +9,29 @@ CREATE OR REPLACE FUNCTION gpUnComplete_Movement_GoodsAccount(
 RETURNS VOID
 AS
 $BODY$
-  DECLARE vbUserId Integer;
+  DECLARE vbUserId   Integer;
+  DECLARE vbStatusId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_GoodsAccount());
     vbUserId:= lpGetUserBySession (inSession);
 
+    -- тек.статус документа
+    vbStatusId:= (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId);
+
     -- Распроводим Документ
     PERFORM lpUnComplete_Movement (inMovementId := inMovementId
                                  , inUserId     := vbUserId);
 
-    -- пересчитали "итоговые" суммы по элементам продажи / возврата
-    PERFORM CASE WHEN Movement_Partion.DescId = zc_Movement_Sale()     THEN lpUpdate_MI_Sale_Total(MI_Partion.Id)
-                 WHEN Movement_Partion.DescId = zc_Movement_ReturnIn() THEN lpUpdate_MI_ReturnIn_Total(MI_Partion.Id)
-            END
-    FROM MovementItem
-         INNER JOIN MovementItemLinkObject AS MILinkObject_PartionMI
-                                           ON MILinkObject_PartionMI.MovementItemId = MovementItem.Id
-                                          AND MILinkObject_PartionMI.DescId         = zc_MILinkObject_PartionMI()
-         LEFT JOIN Object       AS Object_PartionMI ON Object_PartionMI.Id = MILinkObject_PartionMI.ObjectId
-         LEFT JOIN MovementItem AS MI_Partion       ON MI_Partion.Id       = Object_PartionMI.ObjectCode
-         LEFT JOIN Movement     AS Movement_Partion ON Movement_Partion.Id = MI_Partion.MovementId
-    WHERE MovementItem.MovementId = inMovementId
-      AND MovementItem.DescId     = zc_MI_Master()
-      AND MovementItem.isErased   = FALSE;
+    -- пересчитали "итоговые" суммы по элементам партии продажи / возврата
+    PERFORM lpUpdate_MI_Partion_Total_byMovement(inMovementId);
 
-    -- пересчитали "итоговые" суммы по элементам продажи для Партия возврата
-    PERFORM lpUpdate_MI_Sale_Total(Object_PartionMI_level2.ObjectCode)
-    FROM MovementItem
-         -- получаем сразу партию Возврата
-         INNER JOIN MovementItemLinkObject AS MILO_PartionMI_level1
-                                           ON MILO_PartionMI_level1.MovementItemId = MovementItem.Id
-                                          AND MILO_PartionMI_level1.DescId = zc_MILinkObject_PartionMI()
-         LEFT JOIN Object AS Object_PartionMI_level1 ON Object_PartionMI_level1.Id = MILO_PartionMI_level1.ObjectId
-         -- получаем партию Продажи если в предыдущем была партия Возврата
-         INNER JOIN MovementItemLinkObject AS MILO_PartionMI_level2
-                                           ON MILO_PartionMI_level2.MovementItemId = Object_PartionMI_level1.ObjectCode
-                                          AND MILO_PartionMI_level2.DescId         = zc_MILinkObject_PartionMI()
-         LEFT JOIN Object AS Object_PartionMI_level2 ON Object_PartionMI_level2.Id = MILO_PartionMI_level2.ObjectId
-
-    WHERE MovementItem.MovementId = inMovementId
-      AND MovementItem.DescId     = zc_MI_Master()
-      AND MovementItem.isErased   = FALSE;
+    -- Если был статус Проведен нужно пересчитать расчетные суммы по покупателю
+    IF vbStatusId = zc_Enum_Status_Complete() 
+    THEN 
+         -- сохраняем расчетные суммы по покупателю
+         PERFORM lpUpdate_Object_Client_Total (inMovementId:= inMovementId, inIsComplete:= FALSE, inUserId:= vbUserId);
+    END IF;
 
 END;
 $BODY$

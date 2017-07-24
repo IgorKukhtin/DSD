@@ -77,7 +77,7 @@ BEGIN
                              ON ObjectDate_LastDate.ObjectId = Object_Client.Id 
                             AND ObjectDate_LastDate.DescId   = zc_ObjectDate_Client_LastDate()
    WHERE Object_Client.Id = vbClientId;
-       
+
    -- получаем данные док.продажи : кол-во, Сумма, Сумма скидки, Сумма оплаты, дата, пользователь
    SELECT Movement.OperDate                                                 AS OperDate            -- дата документа
         , COALESCE (CASE WHEN Movement.DescId = zc_Movement_GoodsAccount() THEN 0 ELSE MovementFloat_TotalCount.ValueData END, 0)         * vbKoef AS TotalCount          -- кол-во
@@ -108,6 +108,17 @@ BEGIN
                                     AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
         LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
    WHERE Movement.Id = inMovementId;
+     
+   -- сохранили ИТОГОВЫЕ СУММЫ
+   -- сохранили <Итого количество>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Client_TotalCount(), vbClientId, vbTotalCount_Client + vbTotalCount);
+   -- сохранили <Итого Сумма>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Client_TotalSumm(), vbClientId, vbTotalSumm_Client + vbTotalSummPriceList);
+   -- сохранили <Итого Сумма скидки>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Client_TotalSummDiscount(), vbClientId, vbTotalSummDiscount_Client + vbTotalSummChange);
+   -- сохранили <Итого Сумма оплаты>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Client_TotalSummPay(), vbClientId, vbTotalSummPay_Client + vbTotalSummPay);
+        
         
    -- Если это продажа и дата документа больше сохраненной в клиенте обновляем данные последней покупки иначе нет
    IF vbMovementDescId = zc_Movement_Sale() AND inIsComplete = TRUE AND vbOperDate >= vbLastDate_Client
@@ -124,16 +135,63 @@ BEGIN
        PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Client_LastUser(), vbClientId, vbUserId);      
    END IF;
    
+   -- Если это док.продажа распроводится и дата документа больше сохраненной в клиенте обновляем данные последней покупки иначе нет
+   IF vbMovementDescId = zc_Movement_Sale() AND inIsComplete = FALSE AND vbOperDate >= vbLastDate_Client
+   THEN
+       -- находим данные по последнему док.продажи
+       SELECT Movement.OperDate                                        AS OperDate            -- дата документа
+            , COALESCE (MovementFloat_TotalCount.ValueData, 0)         AS TotalCount          -- кол-во
+            , COALESCE (MovementFloat_TotalSummPriceList.ValueData, 0) AS TotalSummPriceList  -- Сумма
+            , COALESCE (MovementFloat_TotalSummChange.ValueData, 0)    AS TotalSummChange     -- Сумма скидки
+            , COALESCE (MovementFloat_TotalSummPay.ValueData, 0)       AS TotalSummPay        -- Сумма оплаты
+            , MLO_Insert.ObjectId                                      AS UserId              -- Пользователь
+              INTO vbOperDate, vbTotalCount, vbTotalSummPriceList, vbTotalSummChange, vbTotalSummPay, vbUserId
+       FROM (SELECT Movement.*
+                  , ROW_NUMBER() OVER (ORDER BY Movement.Operdate desc) AS Ord
+             FROM Movement
+                  INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                          ON MovementLinkObject_To.MovementId = Movement.Id
+                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                         AND MovementLinkObject_To.ObjectId = vbClientId
+             WHERE Movement.StatusId = zc_Enum_Status_Complete() 
+               AND Movement.DescId = zc_Movement_Sale()
+             LIMIT 1) AS Movement
+            
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCount
+                                    ON MovementFloat_TotalCount.MovementId = Movement.Id
+                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+                                   
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPriceList
+                                    ON MovementFloat_TotalSummPriceList.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummPriceList.DescId = zc_MovementFloat_TotalSummPriceList()
+                                   
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummChange
+                                    ON MovementFloat_TotalSummChange.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummChange.DescId = zc_MovementFloat_TotalSummChange()
+                                   
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPay
+                                    ON MovementFloat_TotalSummPay.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummPay.DescId = zc_MovementFloat_TotalSummPay()
+    
+            LEFT JOIN MovementLinkObject AS MLO_Insert
+                                         ON MLO_Insert.MovementId = Movement.Id
+                                        AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
+       ;
+       
+       -- сохранили <Количество в последней покупке>
+       PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Client_LastCount(), vbClientId, vbTotalCount);
+       -- сохранили <Сумма последней покупки>
+       PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Client_LastSumm(), vbClientId, vbTotalSummPriceList);
+       -- сохранили <Сумма скидки в последней покупке>
+       PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Client_LastSummDiscount(), vbClientId, vbTotalSummChange);
+       -- сохранили <Последняя дата покупки>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Client_LastDate(), vbClientId, vbOperDate);
+       -- сохранили связь с <Пользователь кто формировал последнюю покупку>
+       PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Client_LastUser(), vbClientId, vbUserId); 
+            
+   END IF;
    
-   -- сохранили <Итого количество>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Client_TotalCount(), vbClientId, vbTotalCount_Client + vbTotalCount);
-   -- сохранили <Итого Сумма>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Client_TotalSumm(), vbClientId, vbTotalSumm_Client + vbTotalSummPriceList);
-   -- сохранили <Итого Сумма скидки>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Client_TotalSummDiscount(), vbClientId, vbTotalSummDiscount_Client + vbTotalSummChange);
-   -- сохранили <Итого Сумма оплаты>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Client_TotalSummPay(), vbClientId, vbTotalSummPay_Client + vbTotalSummPay);
-
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (vbClientId, inUserId);
    

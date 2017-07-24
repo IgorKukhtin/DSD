@@ -21,19 +21,11 @@ BEGIN
     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() 
     WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
-    -- пересчитали "итоговые" суммы по элементам продажи
-    PERFORM lpUpdate_MI_Sale_Total(Object_PartionMI.ObjectCode :: Integer)
-    FROM MovementItem
-         INNER JOIN MovementItemLinkObject AS MILinkObject_PartionMI
-                                           ON MILinkObject_PartionMI.MovementItemId = MovementItem.Id
-                                          AND MILinkObject_PartionMI.DescId         = zc_MILinkObject_PartionMI()
-         LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = MILinkObject_PartionMI.ObjectId
-    WHERE MovementItem.MovementId = inMovementId
-      AND MovementItem.DescId     = zc_MI_Master()
-      AND MovementItem.isErased   = FALSE;
+    -- пересчитали "итоговые" суммы по элементам партии продажи
+    PERFORM lpUpdate_MI_Partion_Total_byMovement(inMovementId);
     
     -- сохраняем расчетные суммы по покупателю
-    PERFORM lpUpdate_Object_Client_Total (inMovementId, inIsComplete:=TRUE, vbUserId);
+    PERFORM lpUpdate_Object_Client_Total (inMovementId:= inMovementId, inIsComplete:= TRUE, inUserId:= vbUserId);
       
 END;
 $BODY$

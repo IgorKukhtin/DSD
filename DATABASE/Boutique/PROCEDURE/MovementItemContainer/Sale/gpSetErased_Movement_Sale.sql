@@ -33,10 +33,9 @@ BEGIN
     IF vbStatusId = zc_Enum_Status_Complete() 
     THEN 
          -- сохраняем расчетные суммы по покупателю
-         PERFORM lpUpdate_Object_Client_Total (inMovementId, inIsComplete:=FALSE, vbUserId);
+         PERFORM lpUpdate_Object_Client_Total (inMovementId:= inMovementId, inIsComplete:= FALSE, inUserId:= vbUserId);
     END IF;
     
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
