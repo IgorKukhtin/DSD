@@ -80,8 +80,8 @@ BEGIN
        
    -- получаем данные док.продажи : кол-во, Сумма, Сумма скидки, Сумма оплаты, дата, пользователь
    SELECT Movement.OperDate                                                 AS OperDate            -- дата документа
-        , COALESCE (MovementFloat_TotalCount.ValueData, 0)         * vbKoef AS TotalCount          -- кол-во
-        , COALESCE (MovementFloat_TotalSummPriceList.ValueData, 0) * vbKoef AS TotalSummPriceList  -- Сумма
+        , COALESCE (CASE WHEN Movement.DescId = zc_Movement_GoodsAccount() THEN 0 ELSE MovementFloat_TotalCount.ValueData END, 0)         * vbKoef AS TotalCount          -- кол-во
+        , COALESCE (CASE WHEN Movement.DescId = zc_Movement_GoodsAccount() THEN 0 ELSE MovementFloat_TotalSummPriceList.ValueData END, 0) * vbKoef AS TotalSummPriceList  -- Сумма
         , COALESCE (MovementFloat_TotalSummChange.ValueData, 0)    * vbKoef AS TotalSummChange     -- Сумма скидки
         , COALESCE (MovementFloat_TotalSummPay.ValueData, 0)       * vbKoef AS TotalSummPay        -- Сумма оплаты
         , MLO_Insert.ObjectId                                               AS UserId              -- Пользователь
