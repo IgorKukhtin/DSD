@@ -237,6 +237,10 @@ object DM: TDM
       FieldName = 'ShortAddress'
       Size = 255
     end
+    object tblObject_PartnerShortName: TStringField
+      FieldName = 'ShortName'
+      Size = 255
+    end
   end
   object tblObject_Juridical: TFDTable
     Connection = conMain
@@ -636,6 +640,10 @@ object DM: TDM
     end
     object qryPartnerPartnerCount: TLargeintField
       FieldName = 'PartnerCount'
+    end
+    object qryPartnerShortName: TStringField
+      FieldName = 'ShortName'
+      Size = 255
     end
   end
   object qryPriceList: TFDQuery

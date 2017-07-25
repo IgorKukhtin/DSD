@@ -789,6 +789,9 @@ type
     GridPanelLayout18: TGridPanelLayout;
     bOptimizeDB: TButton;
     Panel57: TPanel;
+    Layout44: TLayout;
+    Label100: TLabel;
+    lShortName: TLabel;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -5100,6 +5103,7 @@ begin
 
   // общая информация о ТТ
   lPartnerName.Text := DM.qryPartnerName.AsString;
+  lShortName.Text := DM.qryPartnerShortName.AsString;
   lPartnerAddress.Text := DM.qryPartnerAddress.AsString;
   if (DM.qryPartnerGPSN.AsFloat <> 0) and (DM.qryPartnerGPSE.AsFloat <> 0) then
     lPartnerAddressGPS.Text := GetAddress(DM.qryPartnerGPSN.AsFloat, DM.qryPartnerGPSE.AsFloat)

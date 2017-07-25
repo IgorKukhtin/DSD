@@ -10,6 +10,7 @@ RETURNS TABLE (Id               Integer
              , ObjectCode       Integer  -- Код
              , ValueData        TVarChar -- Название
              , GUID             TVarChar -- Глобальный уникальный идентификатор. Для синхронизации с Главной БД
+             , ShortName        TVarChar -- Условное обозначение 
              , Address          TVarChar -- Адрес точки доставки
              , ShortAddress     TVarChar -- Адрес точки доставки для представления на карте
              , GPSN             TFloat   -- GPS координаты точки доставки (широта)
@@ -187,17 +188,18 @@ BEGIN
              SELECT Object_Partner.Id
                   , Object_Partner.ObjectCode
                   , Object_Partner.ValueData
-                  , ObjectString_Partner_GUID.ValueData     AS GUID
-                  , ObjectString_Partner_Address.ValueData  AS Address
-                  , ObjectString_Partner_Address.ValueData  AS ShortAddress
-                  , ObjectFloat_Partner_GPSN.ValueData      AS GPSN
-                  , ObjectFloat_Partner_GPSE.ValueData      AS GPSE
+                  , ObjectString_Partner_GUID.ValueData      AS GUID
+                  , ObjectString_Partner_ShortName.ValueData AS ShortName  
+                  , ObjectString_Partner_Address.ValueData   AS Address
+                  , ObjectString_Partner_Address.ValueData   AS ShortAddress
+                  , ObjectFloat_Partner_GPSN.ValueData       AS GPSN
+                  , ObjectFloat_Partner_GPSE.ValueData       AS GPSE
                   --, REPLACE (REPLACE (LOWER (COALESCE (ObjectString_Partner_Schedule.ValueData, 't;t;t;t;t;t;t')), 'TRUE', 't'), 'FALSE', 'f')::TVarChar AS Schedule
                   --, REPLACE (REPLACE (LOWER (COALESCE (ObjectString_Partner_Delivery.ValueData, 'f;f;f;f;f;f;f')), 'TRUE', 't'), 'FALSE', 'f')::TVarChar AS Delivery
                   , zfReCalc_ScheduleOrDelivery (ObjectString_Partner_Schedule.ValueData, ObjectString_Partner_Delivery.ValueData, FALSE) AS Schedule
                   , zfReCalc_ScheduleOrDelivery (ObjectString_Partner_Schedule.ValueData, ObjectString_Partner_Delivery.ValueData, TRUE)  AS Delivery
-                  , COALESCE (tmpDebt.DebtSum, 0.0)::TFloat AS DebtSum
-                  , COALESCE (tmpDebt.OverSum, 0.0)::TFloat AS OverSum
+                  , COALESCE (tmpDebt.DebtSum, 0.0)::TFloat  AS DebtSum
+                  , COALESCE (tmpDebt.OverSum, 0.0)::TFloat  AS OverSum
                   , CASE WHEN COALESCE (tmpDebt.OverSum, 0.0) > 0.0 THEN COALESCE (tmpDebt.OverDays, 0)::Integer ELSE 0::Integer END AS OverDays
                   , COALESCE (ObjectFloat_Partner_PrepareDayCount.ValueData, 0.0)::TFloat  AS PrepareDayCount
                   , COALESCE (ObjectFloat_Partner_DocumentDayCount.ValueData, 0.0)::TFloat AS DocumentDayCount
@@ -205,7 +207,7 @@ BEGIN
                   , 7.0::TFloat AS OrderDayCount
                   , COALESCE (ObjectBoolean_Retail_OperDateOrder.ValueData, FALSE)::Boolean AS isOperDateOrder
                   , tmpContract.JuridicalId
-                  , ObjectLink_Partner_Route.ChildObjectId AS RouteId
+                  , ObjectLink_Partner_Route.ChildObjectId   AS RouteId
                   , tmpContract.ContractId
                   , COALESCE (tmpDebt.PaidKindId, ObjectLink_Contract_PaidKind.ChildObjectId) :: Integer AS PaidKindId 
                   , COALESCE (ObjectLink_Partner_PriceList.ChildObjectId, zc_PriceList_Basis()) AS PriceListId
@@ -221,6 +223,9 @@ BEGIN
                                       AND ObjectLink_Contract_PaidKind.DescId   = zc_ObjectLink_Contract_PaidKind()
 
                   LEFT JOIN tmpStoreRealDoc ON tmpStoreRealDoc.PartnerId = Object_Partner.Id
+                  LEFT JOIN ObjectString AS ObjectString_Partner_ShortName
+                                         ON ObjectString_Partner_ShortName.ObjectId = Object_Partner.Id
+                                        AND ObjectString_Partner_ShortName.DescId = zc_ObjectString_Partner_ShortName()
                   LEFT JOIN ObjectString AS ObjectString_Partner_Address
                                          ON ObjectString_Partner_Address.ObjectId = Object_Partner.Id
                                         AND ObjectString_Partner_Address.DescId = zc_ObjectString_Partner_Address()
