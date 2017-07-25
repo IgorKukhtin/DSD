@@ -40,6 +40,7 @@ CONST
    + '       , Object_Partner.ContractId '
    + '       , Object_Partner.JuridicalId '
    + '       , Object_Juridical.ValueData    AS Name '
+   + '       , Object_Partner.ShortName '
    + '       , Object_Contract.ContractTagName || '' '' || Object_Contract.ValueData AS ContractName '
    + '       , Object_Partner.Address '
    + '       , Object_Partner.ShortAddress '
@@ -762,6 +763,8 @@ type
     tblMovement_RouteMemberAddressByGPS: TStringField;
     tblMovementItem_VisitAddressByGPS: TStringField;
     qryPartnerPartnerCount: TLargeintField;
+    tblObject_PartnerShortName: TStringField;
+    qryPartnerShortName: TStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
     procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);
