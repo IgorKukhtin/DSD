@@ -3,9 +3,8 @@ inherited PromoForm: TPromoForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 599
   ClientWidth = 1204
-  ExplicitLeft = -431
   ExplicitWidth = 1220
-  ExplicitHeight = 634
+  ExplicitHeight = 637
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -524,9 +523,6 @@ inherited PromoForm: TPromoForm
           object tsPromoPartnerList: TcxTabSheet
             Caption = '2.2. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             ImageIndex = 1
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object grPartnerList: TcxGrid
               Left = 0
               Top = 0
@@ -1027,7 +1023,7 @@ inherited PromoForm: TPromoForm
     end
     object edPersonalTrade: TcxButtonEdit
       Left = 8
-      Top = 91
+      Top = 90
       Properties.Buttons = <
         item
           Default = True
@@ -1044,7 +1040,7 @@ inherited PromoForm: TPromoForm
     end
     object edPersonal: TcxButtonEdit
       Left = 380
-      Top = 91
+      Top = 90
       Properties.Buttons = <
         item
           Default = True
@@ -1097,6 +1093,36 @@ inherited PromoForm: TPromoForm
       Top = 74
       Caption = #1042#1086#1079#1074#1088#1072#1090#1099' '#1087#1086
     end
+    object cbChecked: TcxCheckBox
+      Left = 924
+      Top = 90
+      Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' ('#1076#1072'/'#1085#1077#1090')'
+      TabOrder = 36
+      Width = 118
+    end
+    object cbPromo: TcxCheckBox
+      Left = 924
+      Top = 54
+      Caption = #1040#1082#1094#1080#1103' ('#1076#1072'/'#1085#1077#1090')'
+      TabOrder = 37
+      Width = 100
+    end
+  end
+  object deMonthPromo: TcxDateEdit [2]
+    Left = 924
+    Top = 18
+    EditValue = 42917d
+    Properties.DisplayFormat = 'mmmm yyyy'
+    Properties.EditFormat = 'dd.mm.yyyy'
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 6
+    Width = 118
+  end
+  object cxLabel19: TcxLabel [3]
+    Left = 924
+    Top = 4
+    Caption = #1052#1077#1089#1103#1094' '#1072#1082#1094#1080#1080
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Top = 312
@@ -2442,6 +2468,27 @@ inherited PromoForm: TPromoForm
         Component = PersonalGuides
         ComponentItem = 'TextValue'
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MonthPromo'
+        Value = 'NULL'
+        Component = deMonthPromo
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPromo'
+        Value = Null
+        Component = cbPromo
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Checked'
+        Value = Null
+        Component = cbChecked
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 320
     Top = 264
@@ -2542,6 +2589,30 @@ inherited PromoForm: TPromoForm
         Value = 'NULL'
         Component = deOperDateEnd
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMonthPromo'
+        Value = 'NULL'
+        Component = deMonthPromo
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inChecked'
+        Value = Null
+        Component = cbChecked
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsPromo'
+        Value = Null
+        Component = cbPromo
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

@@ -4,8 +4,9 @@ inherited PromoJournalForm: TPromoJournalForm
   ClientWidth = 1084
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -34
   ExplicitWidth = 1100
-  ExplicitHeight = 469
+  ExplicitHeight = 468
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -56,6 +57,33 @@ inherited PromoJournalForm: TPromoJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object Checked: TcxGridDBColumn
+            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086
+            DataBinding.FieldName = 'Checked'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 36
+          end
+          object isPromo: TcxGridDBColumn
+            Caption = #1040#1082#1094#1080#1103
+            DataBinding.FieldName = 'isPromo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object MonthPromo: TcxGridDBColumn
+            Caption = #1052#1077#1089#1103#1094' '#1072#1082#1094#1080#1080
+            DataBinding.FieldName = 'MonthPromo'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'mmmm yyyy'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
           object StartPromo: TcxGridDBColumn
             Caption = #1040#1082#1094#1080#1103' '#1089

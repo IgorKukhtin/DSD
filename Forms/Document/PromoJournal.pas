@@ -69,6 +69,7 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    MonthPromo: TcxGridDBColumn;
   private
     { Private declarations }
   public

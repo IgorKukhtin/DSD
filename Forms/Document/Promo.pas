@@ -23,7 +23,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  cxCheckBox;
 
 type
   TPromoForm = class(TAncestorDocumentForm)
@@ -236,6 +237,10 @@ type
     actInsertUpdate_MI_Param: TdsdExecStoredProc;
     macInsertUpdate_MI_Param: TMultiAction;
     bbInsertUpdate_MI_Param: TdxBarButton;
+    cbChecked: TcxCheckBox;
+    cbPromo: TcxCheckBox;
+    deMonthPromo: TcxDateEdit;
+    cxLabel19: TcxLabel;
   private
     { Private declarations }
   public

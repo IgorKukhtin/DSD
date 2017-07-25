@@ -28,6 +28,7 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , EndReturn        TDateTime   --Дата окончания возвратов по акционной цене
              , OperDateStart    TDateTime   --Дата начала расч. продаж до акции
              , OperDateEnd      TDateTime   --Дата окончания расч. продаж до акции
+             , MonthPromo       TDateTime   --Месяц акции
              , CostPromo        TFloat      --Стоимость участия в акции
              , Comment          TVarChar    --Примечание
              , CommentMain      TVarChar    --Примечание (Общее)
@@ -43,6 +44,8 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , ContractTagName  TVarChar     --признак договора
              , isFirst          Boolean      --Первый документ в группе (для автопересчета данных)
              , ChangePercentName TVarChar    -- Скидка по договору
+             , isPromo          Boolean     --Акция (да/нет)
+             , Checked          Boolean     --Согласовано (да/нет)
               )
 
 AS
@@ -71,6 +74,7 @@ BEGIN
           , Movement_Promo.EndReturn          --Дата окончания возвратов по акционной цене
           , Movement_Promo.OperDateStart      --Дата начала расч. продаж до акции
           , Movement_Promo.OperDateEnd        --Дата окончания расч. продаж до акции
+          , Movement_Promo.MonthPromo         -- месяц акции
           , Movement_Promo.CostPromo          --Стоимость участия в акции
           , Movement_Promo.Comment            --Примечание
           , Movement_Promo.CommentMain        --Примечание (Общее)
@@ -89,7 +93,10 @@ BEGIN
                     THEN TRUE
             ELSE FALSE
             END as IsFirst
-          , COALESCE (Object_ChangePercent.ValueData, 'ДА') :: TVarChar AS ChangePercentName
+          , COALESCE (Object_ChangePercent.ValueData, 'ДА')    :: TVarChar AS ChangePercentName
+          
+          , Movement_Promo.isPromo            --Акция
+          , Movement_Promo.Checked            --согласовано
         FROM
             Movement_Promo_View AS Movement_Promo
             INNER JOIN tmpStatus ON Movement_Promo.StatusId = tmpStatus.StatusId
@@ -126,6 +133,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 25.07.17         *
  05.10.16         * add inJuridicalBasisId
  27.11.15                                                                        *inPeriodForOperDate
  17.11.15                                                                        *Movement_PromoPartner_View

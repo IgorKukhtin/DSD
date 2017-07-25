@@ -23,6 +23,7 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , EndReturn        TDateTime   --Дата окончания возвратов по акционной цене
              , OperDateStart    TDateTime   --Дата начала расч. продаж до акции
              , OperDateEnd      TDateTime   --Дата окончания расч. продаж до акции
+             , MonthPromo       TDateTime   --Месяц акции
              , CostPromo        TFloat      --Стоимость участия в акции
              , Comment          TVarChar    --Примечание
              , CommentMain      TVarChar    --Примечание (Общее)
@@ -32,6 +33,9 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , PersonalTradeName TVarChar   --Ответственный представитель коммерческого отдела
              , PersonalId       INTEGER     --Ответственный представитель маркетингового отдела	
              , PersonalName     TVarChar    --Ответственный представитель маркетингового отдела	
+             , isPromo          Boolean     --Акция (да/нет)
+             , Checked          Boolean     --Согласовано (да/нет)
+             
              )
 AS
 $BODY$
@@ -58,6 +62,7 @@ BEGIN
           , NULL::TDateTime                                   AS EndReturn           --Дата окончания возвратов по акционной цене
           , NULL::TDateTime                                   AS OperDateStart       --Дата начала расч. продаж до акции
           , NULL::TDateTime                                   AS OperDateEnd         --Дата окончания расч. продаж до акции
+          , NULL::TDateTime                                   AS MonthPromo          --Месяц акции
           , NULL::TFloat                                      AS CostPromo           --Стоимость участия в акции
           , NULL::TVarChar                                    AS Comment             --Примечание
           , NULL::TVarChar                                    AS CommentMain         --Примечание (Общее)
@@ -66,7 +71,10 @@ BEGIN
           , NULL::Integer                                     AS PersonalTradeId     --Ответственный представитель коммерческого отдела
           , NULL::TVarChar                                    AS PersonalTradeName   --Ответственный представитель коммерческого отдела
           , NULL::Integer                                     AS PersonalId          --Ответственный представитель маркетингового отдела	
-          , NULL::TVarChar                                    AS PersonalName        --Ответственный представитель маркетингового отдела	
+          , NULL::TVarChar                                    AS PersonalName        --Ответственный представитель маркетингового отдела
+          , CAST (FALSE AS Boolean)                           AS isPromo
+          , CAST (FALSE AS Boolean)         		      AS Checked
+          	
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
             LEFT OUTER JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis();
     ELSE
@@ -88,6 +96,7 @@ BEGIN
           , Movement_Promo.EndReturn          --Дата окончания возвратов по акционной цене
           , Movement_Promo.OperDateStart      --Дата начала расч. продаж до акции
           , Movement_Promo.OperDateEnd        --Дата окончания расч. продаж до акции
+          , Movement_Promo.MonthPromo         -- месяц акции
           , Movement_Promo.CostPromo          --Стоимость участия в акции
           , Movement_Promo.Comment            --Примечание
           , Movement_Promo.CommentMain        --Примечание (Общее)
@@ -96,7 +105,9 @@ BEGIN
           , Movement_Promo.PersonalTradeId    --Ответственный представитель коммерческого отдела
           , Movement_Promo.PersonalTradeName  --Ответственный представитель коммерческого отдела
           , Movement_Promo.PersonalId         --Ответственный представитель маркетингового отдела	
-          , Movement_Promo.PersonalName       --Ответственный представитель маркетингового отдела	
+          , Movement_Promo.PersonalName       --Ответственный представитель маркетингового отдела
+          , Movement_Promo.isPromo            --Акция
+          , Movement_Promo.Checked            --согласовано
              
         FROM
             Movement_Promo_View AS Movement_Promo
@@ -111,6 +122,7 @@ ALTER FUNCTION gpGet_Movement_Promo (Integer, TDateTime, TVarChar) OWNER TO post
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 25.07.17         *
  13.10.15                                                                        *
 */
 

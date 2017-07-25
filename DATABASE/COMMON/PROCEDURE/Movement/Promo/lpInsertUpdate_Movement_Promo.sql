@@ -1,6 +1,9 @@
 -- Function: lpInsertUpdate_Movement_Promo()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, Integer, Integer, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, Integer, Integer
+                                                     , TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime
+                                                     , Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Promo(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
@@ -15,6 +18,9 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Promo(
     IN inEndReturn             TDateTime  , -- Дата окончания возвратов по акционной цене
     IN inOperDateStart         TDateTime  , -- Дата начала расч. продаж до акции
     IN inOperDateEnd           TDateTime  , -- Дата окончания расч. продаж до акции
+    IN inMonthPromo            TDateTime  , -- Месяц акции
+    IN inChecked               Boolean    , -- Согласовано
+    IN inIsPromo               Boolean    , -- Акция
     IN inCostPromo             TFloat     , -- Стоимость участия в акции
     IN inComment               TVarChar   , -- Примечание
     IN inCommentMain           TVarChar   , -- Примечание (Общее)
@@ -82,7 +88,14 @@ BEGIN
     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateStart(), ioId, inOperDateStart);
     -- Дата окончания расч. продаж до акции
     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateEnd(), ioId, inOperDateEnd);
-
+    -- месяц акции
+    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Month(), ioId, inMonthPromo);
+    
+    -- сохранили свойство <Согласовано>
+    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Checked(), ioId, inChecked);
+    -- сохранили свойство <Акция>
+    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Promo(), ioId, inIsPromo);
+     
     -- Стоимость участия в акции
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CostPromo(), ioId, inCostPromo);
     -- Примечание
@@ -107,5 +120,6 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 25.07.17         *
  31.10.15                                                                       *
 */

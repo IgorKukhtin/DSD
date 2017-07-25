@@ -1,6 +1,9 @@
 -- Function: gpInsertUpdate_Movement_Promo()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, Integer, Integer, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, Integer, Integer
+                                                     , TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime
+                                                     , Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Promo(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
@@ -15,6 +18,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Promo(
     IN inEndReturn             TDateTime  , -- Дата окончания возвратов по акционной цене
     IN inOperDateStart         TDateTime  , -- Дата начала расч. продаж до акции
     IN inOperDateEnd           TDateTime  , -- Дата окончания расч. продаж до акции
+    IN inMonthPromo            TDateTime  , -- Месяц акции
+    IN inChecked               Boolean    , -- Согласовано
+    IN inIsPromo               Boolean    , -- Акция
     IN inCostPromo             TFloat     , -- Стоимость участия в акции
     IN inComment               TVarChar   , -- Примечание
     IN inCommentMain           TVarChar   , -- Примечание (Общее)
@@ -45,12 +51,15 @@ BEGIN
                                         , inEndReturn      := inEndReturn       --Дата окончания возвратов по акционной цене
                                         , inOperDateStart  := inOperDateStart   --Дата начала расч. продаж до акции
                                         , inOperDateEnd    := inOperDateEnd     --Дата окончания расч. продаж до акции
+                                        , inMonthPromo     := inMonthPromo      --месяц акции
                                         , inCostPromo      := inCostPromo       --Стоимость участия в акции
                                         , inComment        := inComment         --Примечание
                                         , inCommentMain    := inCommentMain     --Примечание (Общее)
                                         , inUnitId         := inUnitId          --Подразделение
                                         , inPersonalTradeId:= inPersonalTradeId --Ответственный представитель коммерческого отдела
-                                        , inPersonalId     := inPersonalId      --Ответственный представитель маркетингового отдела	
+                                        , inPersonalId     := inPersonalId      --Ответственный представитель маркетингового отдела
+                                        , inChecked        := inChecked         --Согласовано
+                                        , inIsPromo        := inIsPromo	        --акция
                                         , inUserId         := vbUserId
                                         );
 
@@ -61,5 +70,6 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.
+ 27.07.17         *
  31.10.15                                                                    *
 */
