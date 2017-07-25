@@ -8,9 +8,8 @@ inherited LossJournalForm: TLossJournalForm
   AddOnFormData.AddOnFormRefresh.KeyField = 'Id'
   AddOnFormData.AddOnFormRefresh.KeyParam = 'inMovementId'
   AddOnFormData.AddOnFormRefresh.GetStoredProc = spGet
-  ExplicitTop = -81
   ExplicitWidth = 837
-  ExplicitHeight = 574
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -123,6 +122,22 @@ inherited LossJournalForm: TLossJournalForm
     end
     inherited deEnd: TcxDateEdit
       EditValue = 42005d
+    end
+    object cxLabel3: TcxLabel
+      Left = 653
+      Top = 6
+      Caption = #1044#1072#1090#1072' '#1072#1087#1090#1077#1082#1080':'
+    end
+    object deOperDate: TcxDateEdit
+      Left = 729
+      Top = 5
+      EditValue = 42887d
+      Properties.DateButtons = [btnClear, btnNow, btnToday]
+      Properties.PostPopupValueOnTab = True
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 5
+      Width = 80
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -241,6 +256,50 @@ inherited LossJournalForm: TLossJournalForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actUpdate_OperDate: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Movement_OperDate
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Movement_OperDate
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 67
+    end
+    object macUpdate_OperDate: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_OperDate
+        end
+        item
+          Action = spCompete
+        end>
+      View = cxGridDBTableView
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 67
+    end
+    object macUpdate_OperDateList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_OperDate
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1080#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1080' '#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090'?'
+      InfoAfterExecute = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1072' '#1080#1079#1084#1077#1085#1077#1085#1072', '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1088#1086#1074#1077#1076#1077#1085#1099
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1080' '#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1080' '#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 67
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -355,6 +414,14 @@ inherited LossJournalForm: TLossJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_OperDateList'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -372,6 +439,10 @@ inherited LossJournalForm: TLossJournalForm
     end
     object bbPrint: TdxBarButton
       Action = actPrint
+      Category = 0
+    end
+    object bbUpdate_OperDateList: TdxBarButton
+      Action = macUpdate_OperDateList
       Category = 0
     end
   end
@@ -480,6 +551,8 @@ inherited LossJournalForm: TLossJournalForm
   end
   inherited spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement_Loss'
+    Left = 488
+    Top = 152
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -694,5 +767,30 @@ inherited LossJournalForm: TLossJournalForm
     PackSize = 1
     Left = 136
     Top = 208
+  end
+  object spUpdate_Movement_OperDate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_OperDate'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 42887d
+        Component = deOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 568
+    Top = 347
   end
 end

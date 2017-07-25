@@ -12,12 +12,13 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 
-  DECLARE vbObjectId Integer;
-  DECLARE vbJuridicalId Integer;
-  DECLARE vbOperDate    TDateTime;
-  DECLARE vbUnit        Integer;
-  DECLARE vbOrderId     Integer;
-  DECLARE vbGoodsName     TVarChar;
+  DECLARE vbObjectId        Integer;
+  DECLARE vbJuridicalId     Integer;
+  DECLARE vbOperDate        TDateTime;
+  DECLARE vbOperDate_Branch TDateTime;
+  DECLARE vbUnit            Integer;
+  DECLARE vbOrderId         Integer;
+  DECLARE vbGoodsName       TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
 --     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Income());
@@ -65,6 +66,19 @@ BEGIN
                                      AND Movement_Unit.DescId = zc_MovementLinkObject_Unit()
 
     WHERE Movement.Id = inMovementId;
+    
+    vbOperDate_Branch := (SELECT MD_Branch.ValueData
+                          FROM MovementDate AS MD_Branch
+                          WHERE MD_Branch.MovementId = inMovementId
+                            AND MD_Branch.DescId = zc_MovementDate_Branch()
+                          );
+                                                
+    -- Если пытаются провести док-т задним числом выдаем предупреждение
+    IF (vbOperDate_Branch < CURRENT_DATE) 
+    THEN
+        RAISE EXCEPTION 'Ошибка. ПОМЕНЯЙТЕ ДАТУ АПТЕКИ НАКЛАДНОЙ НА ТЕКУЩУЮ.';
+    END IF;
+    
     /*IF EXISTS(SELECT 1
               FROM Movement AS Movement_Inventory
                   INNER JOIN MovementItem AS MI_Inventory
@@ -194,6 +208,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.07.17         * проверка даты аптеки
  01.02.17         * при проведении прихода - Снять заказ из отложенных
  05.02.15                         * 
 

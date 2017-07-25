@@ -3,26 +3,25 @@ inherited IncomeJournalForm: TIncomeJournalForm
   ClientHeight = 481
   ClientWidth = 896
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -169
-  ExplicitTop = -27
   ExplicitWidth = 912
-  ExplicitHeight = 520
+  ExplicitHeight = 519
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 79
     Width = 896
-    Height = 424
+    Height = 402
     TabOrder = 3
     ExplicitWidth = 896
     ExplicitHeight = 424
-    ClientRectBottom = 424
+    ClientRectBottom = 402
     ClientRectRight = 896
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 896
       ExplicitHeight = 424
       inherited cxGrid: TcxGrid
         Width = 896
-        Height = 424
+        Height = 402
         ExplicitWidth = 896
         ExplicitHeight = 424
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -416,7 +415,9 @@ inherited IncomeJournalForm: TIncomeJournalForm
   end
   inherited Panel: TPanel
     Width = 896
+    Height = 53
     ExplicitWidth = 896
+    ExplicitHeight = 53
     inherited deStart: TcxDateEdit
       Left = 100
       EditValue = 42370d
@@ -469,6 +470,22 @@ inherited IncomeJournalForm: TIncomeJournalForm
       Width = 166
     end
   end
+  object cxLabel3: TcxLabel [2]
+    Left = 731
+    Top = 32
+    Caption = #1044#1072#1090#1072' '#1072#1087#1090#1077#1082#1080':'
+  end
+  object deBranchDate: TcxDateEdit [3]
+    Left = 804
+    Top = 31
+    EditValue = 42887d
+    Properties.DateButtons = [btnClear, btnNow, btnToday]
+    Properties.PostPopupValueOnTab = True
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 7
+    Width = 80
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
   end
@@ -496,7 +513,8 @@ inherited IncomeJournalForm: TIncomeJournalForm
     Top = 243
   end
   inherited ActionList: TActionList
-    Left = 471
+    Left = 47
+    Top = 194
     object actGetDataForSendNew: TdsdExecStoredProc [2]
       Category = 'dsdImportExport'
       MoveParams = <>
@@ -821,6 +839,37 @@ inherited IncomeJournalForm: TIncomeJournalForm
         end>
       Caption = 'actUpdateMovementCheck'
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TMovement_PeriodDialogForm'
+      FormNameParam.Value = 'TMovement_PeriodDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
     object macPrintReestr: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -855,6 +904,50 @@ inherited IncomeJournalForm: TIncomeJournalForm
           StoredProc = spGetDataForSend
         end>
       Caption = 'actGetDataForSend'
+    end
+    object actUpdateMovementCheck: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMovementCheck
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMovementCheck
+        end>
+      Caption = 'actUpdateMovementCheck'
+    end
+    object mactUpdateMovementCheck: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateMovementCheck
+        end
+        item
+          Action = actRefresh
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1091#1087#1086#1083#1085#1086#1084'. '#1083#1080#1094#1086' '#1080' '#1076#1072#1090#1091' '#1087#1088#1086#1074#1077#1088#1082#1080'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1087#1086' '#1091#1087#1086#1083#1085#1086#1084#1086#1095'. '#1083#1080#1094#1091' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1099
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1091#1087#1086#1083#1085#1086#1084'. '#1083#1080#1094#1086' '#1080' '#1076#1072#1090#1091' '#1087#1088#1086#1074#1077#1088#1082#1080
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1091#1087#1086#1083#1085#1086#1084'. '#1083#1080#1094#1086' '#1080' '#1076#1072#1090#1091' '#1087#1088#1086#1074#1077#1088#1082#1080
+      ImageIndex = 55
+    end
+    object macUpdate_BranchDateList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_BranchDate
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1080#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1072#1087#1090#1077#1082#1080' '#1080' '#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099'?'
+      InfoAfterExecute = #1044#1072#1090#1072' '#1072#1087#1090#1077#1082#1080' '#1080#1079#1084#1077#1085#1077#1085#1072
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1072#1087#1090#1077#1082#1080
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1072#1087#1090#1077#1082#1080
+      ImageIndex = 67
     end
     object mactSendOneDoc: TMultiAction
       Category = 'dsdImportExport'
@@ -942,64 +1035,33 @@ inherited IncomeJournalForm: TIncomeJournalForm
       ImageIndex = 77
       DataSource = MasterDS
     end
-    object ExecuteDialog: TExecuteDialog
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
-      ImageIndex = 35
-      FormName = 'TMovement_PeriodDialogForm'
-      FormNameParam.Value = 'TMovement_PeriodDialogForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'StartDate'
-          Value = 42370d
-          Component = deStart
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EndDate'
-          Value = 42370d
-          Component = deEnd
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      RefreshDispatcher = RefreshDispatcher
-      OpenBeforeShow = True
-    end
-    object actUpdateMovementCheck: TdsdExecStoredProc
+    object actUpdate_BranchDate: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdateMovementCheck
+      StoredProc = spUpdate_Movement_BranchDate
       StoredProcList = <
         item
-          StoredProc = spUpdateMovementCheck
+          StoredProc = spUpdate_Movement_BranchDate
         end>
-      Caption = 'actUpdateMovementCheck'
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091' '#1072#1087#1090#1077#1082#1080
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091' '#1072#1087#1090#1077#1082#1080
+      ImageIndex = 67
     end
-    object mactUpdateMovementCheck: TMultiAction
+    object macUpdate_BranchDate: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
-          Action = actUpdateMovementCheck
+          Action = actUpdate_BranchDate
         end
         item
-          Action = actRefresh
+          Action = spCompete
         end>
       View = cxGridDBTableView
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1091#1087#1086#1083#1085#1086#1084'. '#1083#1080#1094#1086' '#1080' '#1076#1072#1090#1091' '#1087#1088#1086#1074#1077#1088#1082#1080'?'
-      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1087#1086' '#1091#1087#1086#1083#1085#1086#1084#1086#1095'. '#1083#1080#1094#1091' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1099
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1091#1087#1086#1083#1085#1086#1084'. '#1083#1080#1094#1086' '#1080' '#1076#1072#1090#1091' '#1087#1088#1086#1074#1077#1088#1082#1080
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1091#1087#1086#1083#1085#1086#1084'. '#1083#1080#1094#1086' '#1080' '#1076#1072#1090#1091' '#1087#1088#1086#1074#1077#1088#1082#1080
-      ImageIndex = 55
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1072#1087#1090#1077#1082#1080
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1072#1087#1090#1077#1082#1080
+      ImageIndex = 67
     end
   end
   inherited MasterDS: TDataSource
@@ -1167,6 +1229,14 @@ inherited IncomeJournalForm: TIncomeJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_BranchDate'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbNewSend'
         end
         item
@@ -1247,6 +1317,10 @@ inherited IncomeJournalForm: TIncomeJournalForm
     end
     object bbPrintReestr: TdxBarButton
       Action = macPrintReestr
+      Category = 0
+    end
+    object bbUpdate_BranchDate: TdxBarButton
+      Action = macUpdate_BranchDateList
       Category = 0
     end
   end
@@ -1380,6 +1454,11 @@ inherited IncomeJournalForm: TIncomeJournalForm
       end>
     Left = 400
     Top = 200
+  end
+  inherited spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_Income'
+    Left = 144
+    Top = 288
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -1690,5 +1769,30 @@ inherited IncomeJournalForm: TIncomeJournalForm
     PackSize = 1
     Left = 306
     Top = 360
+  end
+  object spUpdate_Movement_BranchDate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Income_BranchDate'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBranchDate'
+        Value = 'NULL'
+        Component = deBranchDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 816
+    Top = 211
   end
 end

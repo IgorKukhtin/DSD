@@ -44,6 +44,13 @@ type
     MCSDay: TcxGridDBColumn;
     MCSPeriod: TcxGridDBColumn;
     isComplete: TcxGridDBColumn;
+    cxLabel3: TcxLabel;
+    deOperDate: TcxDateEdit;
+    spUpdate_Movement_OperDate: TdsdStoredProc;
+    actUpdate_OperDate: TdsdExecStoredProc;
+    macUpdate_OperDate: TMultiAction;
+    macUpdate_OperDateList: TMultiAction;
+    bbUpdate_OperDateList: TdxBarButton;
   private
     { Private declarations }
   public
