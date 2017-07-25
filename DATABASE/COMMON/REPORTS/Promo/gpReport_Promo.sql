@@ -21,6 +21,7 @@ RETURNS TABLE(
     ,DeteFinalSale        TDateTime --Дата отгрузки по акционным ценам
     ,DateStartPromo       TDateTime --Дата проведения акции
     ,DateFinalPromo       TDateTime --Дата проведения акции
+    ,MonthPromo           TDateTime --Месяц акции
     ,RetailName           TBlob     --Сеть, в которой проходит акция
     ,AreaName             TBlob     --Регион
     ,GoodsName            TVarChar  --Позиция
@@ -51,6 +52,8 @@ RETURNS TABLE(
     ,PriceSale            TFloat    -- * Цена на полке/скидка для покупателя
     ,Comment              TVarChar  --Комментарии
     ,ShowAll              Boolean   --Показывать все данные
+    ,isPromo              Boolean   --Акция (да/нет)
+    ,Checked              Boolean   --Согласовано (да/нет)
     )
 AS
 $BODY$
@@ -76,6 +79,7 @@ BEGIN
           , Movement_Promo.EndSale            --Дата окончания отгрузки по акционной цене
           , Movement_Promo.StartPromo         --Дата начала акции
           , Movement_Promo.EndPromo           --Дата окончания акции
+          , Movement_Promo.MonthPromo         --месяц акции
           -- , (SELECT STRING_AGG( DISTINCT Movement_PromoPartner.Retail_Name,'; ')
              -- FROM (SELECT DISTINCT Movement_PromoPartner_View.Retail_Name
                    -- FROM Movement_PromoPartner_View
@@ -90,21 +94,18 @@ BEGIN
                 Movement AS Movement_PromoPartner
                 INNER JOIN MovementItem AS MI_PromoPartner
                                         ON MI_PromoPartner.MovementId = Movement_PromoPartner.ID
-                                       AND MI_PromoPartner.DescId = zc_MI_Master()
+                                       AND MI_PromoPartner.DescId     = zc_MI_Master()
                 INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                       ON ObjectLink_Partner_Juridical.ObjectId = MI_PromoPartner.ObjectId
-                                     AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                     AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
                 INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                       ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                                     AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                     AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
                 INNER JOIN Object AS Object_Retail
                                   ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
-             WHERE
-                Movement_PromoPartner.ParentId = Movement_Promo.Id
-                AND 
-                Movement_PromoPartner.DescId = zc_Movement_PromoPartner()
-                AND
-                MI_PromoPartner.IsErased = FALSE
+             WHERE Movement_PromoPartner.ParentId = Movement_Promo.Id
+               AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
+               AND MI_PromoPartner.IsErased       = FALSE
             )::TBlob AS RetailName
             --------------------------------------
           -- , (SELECT STRING_AGG(Movement_PromoPartner.AreaName,'; ')
@@ -120,18 +121,15 @@ BEGIN
                 Movement AS Movement_PromoPartner
                 INNER JOIN MovementItem AS MI_PromoPartner
                                         ON MI_PromoPartner.MovementId = Movement_PromoPartner.ID
-                                       AND MI_PromoPartner.DescId = zc_MI_Master()
+                                       AND MI_PromoPartner.DescId     = zc_MI_Master()
                 INNER JOIN ObjectLink AS ObjectLink_Partner_Area
                                       ON ObjectLink_Partner_Area.ObjectId = MI_PromoPartner.ObjectId
-                                     AND ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
+                                     AND ObjectLink_Partner_Area.DescId   = zc_ObjectLink_Partner_Area()
                 INNER JOIN Object AS Object_Area
                                   ON Object_Area.Id = ObjectLink_Partner_Area.ChildObjectId
-             WHERE
-                Movement_PromoPartner.ParentId = Movement_Promo.Id
-                AND 
-                Movement_PromoPartner.DescId = zc_Movement_PromoPartner()
-                AND
-                MI_PromoPartner.IsErased = FALSE
+             WHERE Movement_PromoPartner.ParentId = Movement_Promo.Id
+               AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
+               AND MI_PromoPartner.IsErased       = FALSE
             )::TBlob AS AreaName
           , MI_PromoGoods.GoodsName
           , MI_PromoGoods.GoodsCode
@@ -150,34 +148,41 @@ BEGIN
           , MI_PromoGoods.AmountIn            --Кол-во возврат (факт)
           , MI_PromoGoods.AmountInWeight      --Кол-во возврат (факт) Вес
           , MI_PromoGoods.GoodsKindName       --Наименование обьекта <Вид товара>
+          
           , CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN MI_PromoGoods.GoodsWeight ELSE NULL END :: TFloat AS GoodsWeight
-          , (REPLACE(TO_CHAR(MI_PromoGoods.Amount,'FM99990D99')||' ','. ','')||'  '||chr(13)||
-              (SELECT STRING_AGG(MovementItem_PromoCondition.ConditionPromoName||': '||REPLACE(TO_CHAR(MovementItem_PromoCondition.Amount,'FM999990D09')||' ','.0 ',''), chr(13)) 
+          
+          , (REPLACE (TO_CHAR (MI_PromoGoods.Amount,'FM99990D99')||' ','. ','')||'  '||chr(13)||
+              (SELECT STRING_AGG (MovementItem_PromoCondition.ConditionPromoName||': '||REPLACE (TO_CHAR (MovementItem_PromoCondition.Amount,'FM999990D09')||' ','.0 ',''), chr(13)) 
                FROM MovementItem_PromoCondition_View AS MovementItem_PromoCondition 
                WHERE MovementItem_PromoCondition.MovementId = Movement_Promo.Id
-                 AND MovementItem_PromoCondition.IsErased = FALSE))::TBlob AS Discount
-          , MI_PromoGoods.PriceWithOutVAT
-          , MI_PromoGoods.PriceWithVAT
-          , CASE WHEN vbShowAll THEN MI_PromoGoods.Price END::TFloat AS Price
-          , CASE WHEN vbShowAll THEN Movement_Promo.CostPromo END::TFloat as CostPromo
+                 AND MovementItem_PromoCondition.IsErased   = FALSE))  :: TBlob   AS Discount
+                 
+          , MI_PromoGoods.PriceWithOutVAT                                         AS PriceWithOutVAT
+          , MI_PromoGoods.PriceWithVAT                                            AS PriceWithVAT
+          , CASE WHEN vbShowAll THEN MI_PromoGoods.Price END         :: TFloat    AS Price
+          , CASE WHEN vbShowAll THEN Movement_Promo.CostPromo END    :: TFloat    AS CostPromo
+          
           , CASE WHEN vbShowAll THEN 
-                (SELECT STRING_AGG(Movement_PromoAdvertising.AdvertisingName,'; ')
+                (SELECT STRING_AGG (Movement_PromoAdvertising.AdvertisingName,'; ')
                  FROM (SELECT DISTINCT Movement_PromoAdvertising_View.AdvertisingName
                        FROM Movement_PromoAdvertising_View
                        WHERE Movement_PromoAdvertising_View.ParentId = Movement_Promo.Id
-                         AND COALESCE(Movement_PromoAdvertising_View.AdvertisingName,'')<>''
-                         AND Movement_PromoAdvertising_View.isErased = FALSE
+                         AND COALESCE (Movement_PromoAdvertising_View.AdvertisingName,'') <> ''
+                         AND Movement_PromoAdvertising_View.isErASed = FALSE
                       ) AS Movement_PromoAdvertising
-                ) END::TBlob AS AdvertisingName
-          , CASE WHEN vbShowAll THEN Movement_Promo.OperDate END::TDateTime AS OperDate
-          , CASE WHEN vbShowAll THEN MI_PromoGoods.PriceSale END::TFloat AS PriceSale
-          , Movement_Promo.Comment
-          , vbShowAll as ShowAll
+                ) END                                                :: TBlob     AS AdvertisingName
+                
+          , CASE WHEN vbShowAll THEN Movement_Promo.OperDate END     :: TDateTime AS OperDate
+          , CASE WHEN vbShowAll THEN MI_PromoGoods.PriceSale END     :: TFloat    AS PriceSale
+          , Movement_Promo.Comment                                                AS Comment
+          , vbShowAll                                                             AS ShowAll
+          , Movement_Promo.isPromo                                                AS isPromo
+          , Movement_Promo.Checked                                                AS Checked
         FROM
             Movement_Promo_View AS Movement_Promo
             LEFT OUTER JOIN MovementItem_PromoGoods_View AS MI_PromoGoods
                                                          ON MI_PromoGoods.MovementId = Movement_Promo.Id
-                                                        AND MI_PromoGoods.IsErased = FALSE
+                                                        AND MI_PromoGoods.IsErASed = FALSE
         WHERE
             (
                 -- Movement_Promo.EndSale BETWEEN inStartDate AND inEndDate
@@ -201,6 +206,7 @@ ALTER FUNCTION gpSelect_Report_Promo (TDateTime,TDateTime,Integer,TVarChar) OWNE
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
+ 25.07.17         *
  01.12.15                                                          *
 */
 --Select * from gpSelect_Report_Promo('20150101','20160101',0,'5');
