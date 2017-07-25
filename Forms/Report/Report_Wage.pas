@@ -86,6 +86,10 @@ type
     GoodsKindComplete_ToName: TcxGridDBColumn;
     StorageLineName_From: TcxGridDBColumn;
     StorageLineName_To: TcxGridDBColumn;
+    spPersonalServiceErased: TdsdStoredProc;
+    macPersonalServiceErased: TMultiAction;
+    macPersonalServiceAll: TMultiAction;
+    actPersonalServiceErased: TdsdExecStoredProc;
   private
     { Private declarations }
   public

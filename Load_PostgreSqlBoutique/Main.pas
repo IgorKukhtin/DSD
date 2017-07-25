@@ -3184,6 +3184,8 @@ begin
         Add('    join DiscountMovement     on DiscountMovement.id = DiscountMovementItemReturn_byBarCode.DiscountMovementId');
         Add('    left outer join BillItemsIncome on BillItemsIncome.id  = DiscountMovementItemReturn_byBarCode.BillItemsIncomeId');
         Add('    left outer join DiscountMovementItem_byBarCode  on DiscountMovementItem_byBarCode.Id = DiscountMovementItemReturn_byBarCode.DiscountMovementItemId ');
+        Add('    join DiscountMovement AS DiscountMovement_sale on DiscountMovement_sale.id = DiscountMovementItem_byBarCode.DiscountMovementId');
+        Add('                                                  and DiscountMovement_sale.isErased = zc_rvNo()');
 
         Add('    left outer join _dataRet_all on _dataRet_all.DatabaseId  = DiscountMovementItemReturn_byBarCode.DatabaseId');
         Add('                                and _dataRet_all.ReplId      = DiscountMovementItemReturn_byBarCode.ReplId');

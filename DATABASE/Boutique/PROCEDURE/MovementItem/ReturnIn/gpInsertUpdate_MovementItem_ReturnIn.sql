@@ -21,15 +21,15 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn(
    OUT outTotalSummBalance      TFloat    , -- +Сумма вх. (ГРН)
  INOUT ioOperPriceList          TFloat    , -- *** - Цена по прайсу
    OUT outTotalSummPriceList    TFloat    , -- +Сумма по прайсу
-   OUT outCurrencyValue         TFloat    , -- *Курс для перевода из валюты 
+   OUT outCurrencyValue         TFloat    , -- *Курс для перевода из валюты
    OUT outParValue              TFloat    , -- *Номинал для перевода из валю
    OUT outTotalChangePercent    TFloat    , -- Итого сумма возврата Скидки (в ГРН)
    OUT outTotalPay              TFloat    , -- Итого сумма возврата оплаты (в ГРН)
    OUT outTotalPayOth           TFloat    , -- Итого сумма возврата оплаты  в расчетах (в ГРН)
    OUT outTotalSummToPay        TFloat    , -- +Сумма к возврату ГРН
-    IN inComment                TVarChar  , -- примечание   
+    IN inComment                TVarChar  , -- примечание
     IN inSession                TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS RECORD
 AS
 $BODY$
@@ -58,13 +58,13 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Не определен элемент Продажи.';
      END IF;
 
-     
+
      -- данные из шапки
      SELECT Movement.OperDate                AS OperDate
           , MovementLinkObject_From.ObjectId AS ClientId
           , MovementLinkObject_To.ObjectId   AS UnitId
             INTO vbOperDate, vbClientId, vbUnitId
-     FROM Movement 
+     FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id
                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -77,7 +77,7 @@ BEGIN
      -- определяем Партию элемента продажи/возврата
      vbPartionMI_Id := lpInsertFind_Object_PartionMI (inMovementMI_Id);
 
-     
+
      -- данные из партии : GoodsId и OperPrice и CountForPrice и CurrencyId
      SELECT Object_PartionGoods.GoodsId                                    AS GoodsId
           , COALESCE (Object_PartionGoods.CountForPrice, 1)                AS CountForPrice
@@ -86,7 +86,7 @@ BEGIN
             INTO ioGoodsId, outCountForPrice, outOperPrice, vbCurrencyId
      FROM Object_PartionGoods
      WHERE Object_PartionGoods.MovementItemId = inPartionId;
-     
+
      -- проверка - свойство должно быть установлено
      IF COALESCE (ioGoodsId, 0) = 0 THEN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Товар>.';
@@ -110,8 +110,8 @@ BEGIN
          END IF;
 
      END IF;
-     
-     
+
+
      -- Если НЕ Базовая Валюта
      IF vbCurrencyId <> zc_Currency_Basis()
      THEN
@@ -121,7 +121,7 @@ BEGIN
          FROM lfSelect_Movement_Currency_byDate (inOperDate      := vbOperDate
                                                , inCurrencyFromId:= zc_Currency_Basis()
                                                , inCurrencyToId  := vbCurrencyId
-                                                ) AS tmp;       
+                                                ) AS tmp;
          -- проверка
          IF COALESCE (vbCurrencyId, 0) = 0 THEN
             RAISE EXCEPTION 'Ошибка.Не определено значение <Валюта>.';
@@ -158,7 +158,7 @@ BEGIN
                                                     THEN COALESCE (MIFloat_TotalPay.ValueData, 0) + COALESCE (MIFloat_TotalPayOth.ValueData, 0)
 
                                                -- если вернули все что осталось - тогда возвращаем ВСЕ сколько осталось денег за продажу
-                                               WHEN MovementItem.Amount - COALESCE (MIFloat_TotalCountReturn, 0) = inAmount
+                                               WHEN MovementItem.Amount - COALESCE (MIFloat_TotalCountReturn.ValueData, 0) = inAmount
                                                     THEN COALESCE (MIFloat_TotalPay.ValueData, 0) + COALESCE (MIFloat_TotalPayOth.ValueData, 0) - COALESCE (MIFloat_TotalPayReturn.ValueData, 0)
 
                                                -- если возрат * Цену к оплате больше чем остаток оплаты - тогда тоже возвращаем ВСЕ сколько осталось денег за продажу
@@ -171,7 +171,7 @@ BEGIN
                                                     THEN COALESCE (MIFloat_TotalPay.ValueData, 0) + COALESCE (MIFloat_TotalPayOth.ValueData, 0) - COALESCE (MIFloat_TotalPayReturn.ValueData, 0)
 
                                                -- если есть долг - тогда тоже возвращаем ВСЕ сколько осталось денег за продажу
-                                               WHEN (zfCalc_SummChangePercent (MovementItem.Amount - COALESCE (MIFloat_TotalCountReturn, 0), MIFloat_OperPriceList.ValueData, MIFloat_ChangePercent.ValueData)
+                                               WHEN (zfCalc_SummChangePercent (MovementItem.Amount - COALESCE (MIFloat_TotalCountReturn.ValueData, 0), MIFloat_OperPriceList.ValueData, MIFloat_ChangePercent.ValueData)
                                                    - COALESCE (MIFloat_SummChangePercent.ValueData, 0) - COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0)
                                                     )
                                                       > COALESCE (MIFloat_TotalPay.ValueData, 0) + COALESCE (MIFloat_TotalPayOth.ValueData, 0) - COALESCE (MIFloat_TotalPayReturn.ValueData, 0)
@@ -200,7 +200,7 @@ BEGIN
                                                                    AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn()
 
                                         LEFT JOIN MovementItemFloat AS MIFloat_TotalCountReturn
-                                                                    ON MIFloat_TotalCountReturn.MovementItemId = COALESCE (Object_PartionMI_level2.ObjectCode, Object_PartionMI_level1.ObjectCode)
+                                                                    ON MIFloat_TotalCountReturn.MovementItemId = MovementItem.Id
                                                                    AND MIFloat_TotalCountReturn.DescId         = zc_MIFloat_TotalCountReturn()
 
                                         LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
@@ -240,7 +240,7 @@ BEGIN
                                                                     LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
                                                                                                 ON MIFloat_TotalChangePercent.MovementItemId = MovementItem.Id
                                                                                                AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()
-                                                                                       
+
                                                                WHERE MIL_PartionMI.DescId   = zc_MILinkObject_PartionMI ()
                                                                  AND MIL_PartionMI.ObjectId = vbPartionMI_Id
 
@@ -259,51 +259,90 @@ BEGIN
                                 LEFT JOIN MovementItemFloat AS MIFloat_TotalCountReturn
                                                             ON MIFloat_TotalCountReturn.MovementItemId = MovementItem.Id
                                                            AND MIFloat_TotalCountReturn.DescId         = zc_MIFloat_TotalCountReturn()
-                                                           
-                                                           
+
+
                              WHERE MovementItem.MovementId = inMovementId
                                AND MovementItem.Id         = inMovementMI_Id
                                AND MovementItem.DescId     = zc_MI_Master()
                                AND MovementItem.isErased   = FALSE
                             );
-     
 
-               
      -- сохранили
-     ioId:= lpInsertUpdate_MovementItem_ReturnIn(ioId                    := ioId
-                                               , inMovementId            := inMovementId
-                                               , inGoodsId               := ioGoodsId
-                                               , inPartionId             := inPartionId
-                                               , inPartionMI_Id          := vbPartionMI_Id
-                                               , inAmount                := inAmount
-                                               , inOperPrice             := COALESCE (outOperPrice, 0)
-                                               , inCountForPrice         := COALESCE (outCountForPrice, 0)
-                                               , inOperPriceList         := ioOperPriceList
-                                               , inCurrencyValue         := outCurrencyValue 
-                                               , inParValue              := outParValue 
-                                               , inTotalChangePercent    := COALESCE (outTotalChangePercent, 0)
-                                               --, inTotalPay              := COALESCE(outTotalPay,0)              ::TFloat              
-                                               --, inTotalPayOth           := COALESCE(outTotalPayOth,0)           ::TFloat    
-                                               , inComment               := COALESCE(inComment,'')               ::TVarChar       
-                                               , inUserId                := vbUserId
-                                               );
-     
+     ioId:= lpInsertUpdate_MovementItem_ReturnIn (ioId                    := ioId
+                                                , inMovementId            := inMovementId
+                                                , inGoodsId               := ioGoodsId
+                                                , inPartionId             := inPartionId
+                                                , inPartionMI_Id          := vbPartionMI_Id
+                                                , inAmount                := inAmount
+                                                , inOperPrice             := COALESCE (outOperPrice, 0)
+                                                , inCountForPrice         := COALESCE (outCountForPrice, 0)
+                                                , inOperPriceList         := ioOperPriceList
+                                                , inCurrencyValue         := outCurrencyValue
+                                                , inParValue              := outParValue
+                                                , inTotalChangePercent    := COALESCE (outTotalChangePercent, 0)
+                                                , inComment               := -- !!!для SYBASE - потом убрать!!!
+                                                                             CASE WHEN vbUserId = zc_User_Sybase() AND SUBSTRING (inComment FROM 1 FOR 5) = '*123*'
+                                                                                       THEN -- убрали хардкод
+                                                                                            SUBSTRING (inComment FROM 6 FOR CHAR_LENGTH (inComment) - 5)
+                                                                                       ELSE inComment
+                                                                             END
+                                                , inUserId                := vbUserId
+                                                 );
+
+    -- !!!для SYBASE - потом убрать!!!
+    IF vbUserId = zc_User_Sybase() AND SUBSTRING (inComment FROM 1 FOR 5) = '*123*'
+    THEN
+        -- сохранили для проверки - в SYBASE это полностью оплаченная продажа -> надо формировать проводку
+        PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Close(), ioId, TRUE);
+
+    ELSEIF vbUserId = zc_User_Sybase() AND EXISTS (SELECT 1 FROM MovementItemBoolean AS MIB WHERE MIB.MovementItemId = ioId AND MIB.DescId = zc_MIBoolean_Close() AND MIB.ValueData = TRUE)
+    THEN
+        -- убрали для проверки - в SYBASE это НЕ полностью оплаченная продажа -> НЕ надо формировать проводку
+        PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Close(), ioId, FALSE);
+
+    END IF;
+
+
+    -- Добавляем оплату в грн
     IF inIsPay = TRUE THEN
        -- находим кассу для Магазина, в которую попадет оплата
-        vbCashId := (SELECT lpSelect.CashId
-                     FROM lpSelect_Object_Cash (vbUnitId, vbUserId) AS lpSelect
-                     WHERE lpSelect.isBankAccount = FALSE
-                       AND lpSelect.CurrencyId    = zc_Currency_GRN());
-                    
+        vbCashId := (SELECT Object_Cash.Id                  AS CashId
+                     FROM Object AS Object_Unit
+                          -- если сразу получили по Магазину
+                          LEFT JOIN ObjectLink AS ObjectLink_Cash_Unit
+                                               ON ObjectLink_Cash_Unit.ChildObjectId = Object_Unit.Id
+                                              AND ObjectLink_Cash_Unit.DescId        = zc_ObjectLink_Cash_Unit()
+                          -- иначе попробуем найти через группу Подразделений
+                          LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
+                                               ON ObjectLink_Unit_Parent.ObjectId    = Object_Unit.Id
+                                              AND ObjectLink_Unit_Parent.DescId      = zc_ObjectLink_Unit_Parent()
+                                              AND ObjectLink_Cash_Unit.ChildObjectId IS NULL
+                          LEFT JOIN ObjectLink AS ObjectLink_Cash_Unit_Parent
+                                               ON ObjectLink_Cash_Unit_Parent.ChildObjectId = ObjectLink_Unit_Parent.ChildObjectId
+                                              AND ObjectLink_Cash_Unit_Parent.DescId        = zc_ObjectLink_Cash_Unit()
+                          -- нашли все кассы
+                          LEFT JOIN Object AS Object_Cash
+                                           ON Object_Cash.Id       = COALESCE (ObjectLink_Cash_Unit.ObjectId, ObjectLink_Cash_Unit_Parent.ObjectId)
+                                          AND Object_Cash.DescId   = zc_Object_Cash()
+                                          AND Object_Cash.isErased = FALSE
+                          -- Валюта
+                          INNER JOIN ObjectLink AS ObjectLink_Cash_Currency
+                                                ON ObjectLink_Cash_Currency.ObjectId      = Object_Cash.Id
+                                               AND ObjectLink_Cash_Currency.DescId        = zc_ObjectLink_Cash_Currency()
+                                               AND ObjectLink_Cash_Currency.ChildObjectId = zc_Currency_GRN()
+              
+                     WHERE Object_Unit.Id = vbUnitId
+                    );
+
         -- проверка - свойство должно быть установлено
         IF COALESCE (vbCashId, 0) = 0 THEN
           -- Для Sybase - ВРЕМЕННО
-          IF vbUserId = zc_User_Sybase() 
-          THEN vbCashId:= 4219 ;
+          IF vbUserId = zc_User_Sybase()
+          THEN vbCashId:= 4219;
           ELSE RAISE EXCEPTION 'Ошибка.Для магазина <%> Не установлено значение <Касса> в грн. (%)', lfGet_Object_ValueData (vbUnitId), vbUnitId;
           END IF;
         END IF;
-              
+
        -- сохранили
        PERFORM lpInsertUpdate_MI_ReturnIn_Child (ioId                 := tmp.Id
                                                , inMovementId         := inMovementId
@@ -316,7 +355,7 @@ BEGIN
                                                , inParValue           := tmp.ParValue
                                                , inUserId             := vbUserId
                                                 )
-                                              
+
        FROM (WITH tmpMI AS (SELECT MovementItem.Id                 AS Id
                                  , MovementItem.ObjectId           AS CashId
                                  , MILinkObject_Currency.ObjectId  AS CurrencyId
@@ -347,19 +386,19 @@ BEGIN
                   ) AS _tmpCash
                   FULL JOIN tmpMI ON tmpMI.CashId = _tmpCash.CashId
             ) AS tmp;
-            
+
        -- в мастер записать - Итого оплата при возврате ГРН
-       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), ioId, outTotalPay);       
+       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), ioId, outTotalPay);
 
     END IF;
 
-    
+
     -- "сложно" пересчитали "итоговые" суммы по элементу
     PERFORM lpUpdate_MI_ReturnIn_Total (ioId);
-    
+
     -- вернули Сумма возврата оплаты в расчетах ГРН, для грида
     outTotalPayOth:= COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalPayOth()), 0);
-    
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

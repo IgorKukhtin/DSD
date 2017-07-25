@@ -103,9 +103,17 @@ BEGIN
                         ;
      END IF;
 
+     -- !!!для SYBASE - потом убрать!!!
+     IF inUserId = zc_User_Sybase() AND NOT EXISTS (SELECT 1 FROM _tmpCash_list)
+     THEN
+          -- !!!для SYBASE - потом убрать!!!
+          IF 1=0 THEN RAISE EXCEPTION 'Ошибка.У магазина <%> не определена касса в Валюте <%>.', lfGet_Object_ValueData (inUnitId), lfGet_Object_ValueData (zc_Currency_GRN());
+          END IF;
+     ELSE
+
      -- проверка - должен быть zc_Currency_GRN - НАЛ
      IF NOT EXISTS (SELECT 1 FROM _tmpCash_list WHERE _tmpCash_list.CurrencyId = zc_Currency_GRN() AND _tmpCash_list.isBankAccount = FALSE) THEN
-        RAISE EXCEPTION 'Ошибка.У магазина <%> не определена касса в Валюте <%>.', lfGet_Object_ValueData (inUnitId), lfGet_Object_ValueData (zc_Currency_GRN());
+        RAISE EXCEPTION 'Ошибка.У магазина <%> не определена касса в Валюте <%> (%).', lfGet_Object_ValueData (inUnitId), lfGet_Object_ValueData (zc_Currency_GRN()), (SELECT COUNT(*) FROM _tmpCash_list);
      END IF;
      -- проверка - должен быть zc_Currency_EUR
      IF NOT EXISTS (SELECT 1 FROM _tmpCash_list WHERE _tmpCash_list.CurrencyId = zc_Currency_EUR() AND _tmpCash_list.isBankAccount = FALSE) THEN
@@ -122,6 +130,8 @@ BEGIN
      -- проверка - должно быть 3+1
      IF 4 <> (SELECT COUNT(*) FROM _tmpCash_list) THEN
         RAISE EXCEPTION 'Ошибка.У магазина <%> не определены ВСЕ 3 Кассы + 1 Р.счет = <%>.', lfGet_Object_ValueData (inUnitId), (SELECT COUNT(*) FROM _tmpCash_list);
+     END IF;
+
      END IF;
 
 

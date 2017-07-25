@@ -437,7 +437,7 @@ BEGIN
              LEFT OUTER JOIN ObjectLink AS OL_GoodsKindComplete_master ON OL_GoodsKindComplete_master.ObjectId = CLO_PartionGoods_master.ObjectId
                                                                       AND OL_GoodsKindComplete_master.DescId   = zc_ObjectLink_PartionGoods_GoodsKindComplete()
 
-             LEFT OUTER JOIN Container ON Container.Id = MovementItemContainer.ContainerId_Analyzer
+             LEFT OUTER JOIN Container ON Container.Id = COALESCE (MovementItemContainer.ContainerIntId_Analyzer, MovementItemContainer.ContainerId_Analyzer)
              LEFT OUTER JOIN ContainerLinkObject AS CLO_GoodsKind ON CLO_GoodsKind.ContainerId = Container.Id
                                                                  AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
              LEFT OUTER JOIN ContainerLinkObject AS CLO_PartionGoods ON CLO_PartionGoods.ContainerId = Container.Id
@@ -593,7 +593,7 @@ BEGIN
              INNER JOIN MovementItemContainer ON MovementItemContainer.MovementDescId = tmp.MovementDescId
                                              AND MovementItemContainer.DescId         = zc_MIContainer_Count()
                                              AND MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate
-             LEFT OUTER JOIN Container ON Container.Id = MovementItemContainer.ContainerId_Analyzer
+             LEFT OUTER JOIN Container ON Container.Id = COALESCE (MovementItemContainer.ContainerIntId_Analyzer, MovementItemContainer.ContainerId_Analyzer)
        ) AS tmpMI
              /*INNER JOIN MovementItem ON MovementItem.Id = tmpMI.MovementItemId
                                     AND MovementItem.isErased = FALSE

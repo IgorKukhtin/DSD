@@ -49,34 +49,35 @@ BEGIN
                                                    , inAmountPlanMin      := 0 :: TFloat
                                                    , inAmountPlanMax      := 0 :: TFloat
                                                    , inGoodsKindId        := 0 :: Integer
-                                                   , inComment            := Null :: TVarChar
-                                                   , inSession            := inSession
+                                                   , inComment            := NULL
+                                                   , inSession            := CASE WHEN inSession = zfCalc_UserAdmin() THEN '-12345' ELSE inSession END
                                                     )
      FROM _tmpData
           LEFT JOIN MovementItem_PromoGoods_View AS MI_PromoGoods 
                                                  ON MI_PromoGoods.MovementId = inMovementId
-                                                AND MI_PromoGoods.GoodsId = _tmpData.GoodsId
-                                                AND MI_PromoGoods.isErased = FALSE
+                                                AND MI_PromoGoods.GoodsId    = _tmpData.GoodsId
+                                                AND MI_PromoGoods.isErased   = FALSE
      WHERE MI_PromoGoods.Id IsNull
     ;    
 
      -- Результат - записываем в MovementItem Акция
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountOut()  , tmp.Id, COALESCE (tmp.AmountOut, 0))
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountOrder(), tmp.Id, COALESCE (tmp.AmountOrder, 0))
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountIn()   , tmp.Id, COALESCE (tmp.AmountIn, 0))
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountOut()  , tmp.Id, CASE WHEN tmp.isErased = TRUE THEN 0 ELSE COALESCE (tmp.AmountOut, 0) END)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountOrder(), tmp.Id, CASE WHEN tmp.isErased = TRUE THEN 0 ELSE COALESCE (tmp.AmountOrder, 0) END)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountIn()   , tmp.Id, CASE WHEN tmp.isErased = TRUE THEN 0 ELSE COALESCE (tmp.AmountIn, 0) END)
      FROM (SELECT MI_PromoGoods.Id
-                , COALESCE (_tmpData.AmountOut, 0)   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END AS AmountOut
-                , COALESCE (_tmpData.AmountOrder, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END AS AmountOrder
-                , COALESCE (_tmpData.AmountIn, 0)    * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END AS AmountIn
+                , MI_PromoGoods.isErased
+                , COALESCE (_tmpData.AmountOut, 0)   /* * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END*/ AS AmountOut
+                , COALESCE (_tmpData.AmountOrder, 0) /** CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END*/  AS AmountOrder
+                , COALESCE (_tmpData.AmountIn, 0)    /** CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END*/  AS AmountIn
            FROM MovementItem_PromoGoods_View AS MI_PromoGoods
-                INNER JOIN _tmpData ON _tmpData.GoodsId       = MI_PromoGoods.GoodsId
-                                   AND MI_PromoGoods.isErased = FALSE
-                LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                LEFT JOIN _tmpData ON _tmpData.GoodsId       = MI_PromoGoods.GoodsId
+                    --              AND MI_PromoGoods.isErased = FALSE
+                /*LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                      ON ObjectLink_Goods_Measure.ObjectId = MI_PromoGoods.GoodsId
                                     AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
                 LEFT JOIN ObjectFloat AS ObjectFloat_Goods_Weight
                                       ON ObjectFloat_Goods_Weight.ObjectId = ObjectLink_Goods_Measure.ObjectId
-                                     AND ObjectFloat_Goods_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
+                                     AND ObjectFloat_Goods_Weight.DescId   = zc_ObjectFloat_Goods_Weight()*/
            WHERE MI_PromoGoods.MovementId = inMovementId
            ) AS tmp
     ;

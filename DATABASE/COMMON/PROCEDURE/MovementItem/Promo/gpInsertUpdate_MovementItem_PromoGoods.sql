@@ -33,27 +33,24 @@ $BODY$
    DECLARE vbVAT TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Promo());
+    vbUserId := CASE WHEN inSession = '-12345' THEN inSession :: Integer ELSE lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Promo()) END;
 
 
     -- Проверили уникальность товар/вид товара
-    IF EXISTS(SELECT 1 
-              FROM
-                  MovementItem_PromoGoods_View AS MI_PromoGoods
-              WHERE
-                  MI_PromoGoods.MovementId = inMovementId
-                  AND
-                  MI_PromoGoods.GoodsId = inGoodsId
-                  AND
-                  COALESCE(MI_PromoGoods.GoodsKindId,0) = COALESCE(inGoodsKindId,0)
-                  AND
-                  MI_PromoGoods.Id <> COALESCE(ioId,0))
+    IF EXISTS (SELECT 1 
+               FROM MovementItem_PromoGoods_View AS MI_PromoGoods
+               WHERE MI_PromoGoods.MovementId                  = inMovementId
+                   AND MI_PromoGoods.GoodsId                   = inGoodsId
+                   AND COALESCE (MI_PromoGoods.GoodsKindId, 0) = COALESCE (inGoodsKindId, 0)
+                   AND MI_PromoGoods.Id                        <> COALESCE(ioId, 0)
+                   AND MI_PromoGoods.isErased                  = FALSE
+              )
     THEN
-        RAISE EXCEPTION 'Ошибка. В документе уже указана скидка для товара = <%> и вид = <%>.', (SELECT ValueData FROM Object WHERE Id = inGoodsId), COALESCE ((SELECT ValueData FROM Object WHERE Id = inGoodsKindId), '');
+        RAISE EXCEPTION 'Ошибка. В документе уже указана скидка для товара = <%> и вид = <%>.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (inGoodsKindId);
     END IF;
     
     -- поиск прайс-лист
-    SELECT COALESCE(Movement_Promo.PriceListId,zc_PriceList_Basis())
+    SELECT COALESCE (Movement_Promo.PriceListId, zc_PriceList_Basis())
            INTO vbPriceList
     FROM Movement_Promo_View AS Movement_Promo
     WHERE Movement_Promo.Id = inMovementId;

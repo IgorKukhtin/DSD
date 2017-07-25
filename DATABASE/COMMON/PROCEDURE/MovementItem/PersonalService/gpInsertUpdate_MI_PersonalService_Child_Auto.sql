@@ -51,7 +51,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     -- врменно - пока не разобрался с ошибкой в отчете
+     -- врменно - пока не понятно зачем 0 в отчете
      IF COALESCE (inAmount, 0) = 0
      THEN
          -- !!!ВЫХОД!!!
@@ -59,6 +59,11 @@ BEGIN
      END IF;
 
 
+     -- проверка
+     IF COALESCE (inPersonalServiceListId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не установлено значение <Ведомость Начисления>.';
+     END IF;
      -- проверка
      IF COALESCE (inStaffListId, 0) = 0
      THEN
@@ -211,7 +216,7 @@ BEGIN
                                                                         , inInfoMoneyId            := vbInfoMoneyId_def
                                                                         , inUnitId                 := inUnitId
                                                                         , inPositionId             := inPositionId
-                                                                        , inMemberId               := inMemberId
+                                                                        , inMemberId               := NULL
                                                                         , inPersonalServiceListId  := inPersonalServiceListId
                                                                         , inUserId                 := vbUserId
                                                                          ) AS tmp);
@@ -222,7 +227,7 @@ BEGIN
       END IF;
 
       -- поиск zc_MI_Child
-      vbId_Child:= (SELECT MovementItem.Id
+      vbId_Child:= 0 ;/*(SELECT MovementItem.Id
                     FROM MovementItem
                        LEFT JOIN MovementItemLinkObject AS MILinkObject_PositionLevel
                                                          ON MILinkObject_PositionLevel.MovementItemId = MovementItem.Id
@@ -245,7 +250,7 @@ BEGIN
                       AND (MILinkObject_StaffList.ObjectId         = inStaffListId         OR inStaffListId = 0)
                       AND (MILinkObject_ModelService.ObjectId      = inModelServiceId      OR inModelServiceId = 0)
                       AND (MILinkObject_StaffListSummKind.ObjectId = inStaffListSummKindId OR inStaffListSummKindId=0)
-                   );
+                   );*/
 
      -- получаем данные из спр. Штатное расписание
      SELECT ObjectFloat_HoursPlan.ValueData     AS HoursPlan
@@ -300,8 +305,8 @@ BEGIN
        -- обновляем сумму мастера = итого по чайлд
        PERFORM lpInsertUpdate_MovementItem_PersonalService (ioId                     := vbId_Master
                                                           , inMovementId             := vbMovementId
-                                                          , inPersonalId             := vbPersonalId
-                                                          , inIsMain                 := COALESCE(MIBoolean_Main.ValueData, FALSE)
+                                                          , inPersonalId             := MovementItem.ObjectId
+                                                          , inIsMain                 := COALESCE (MIBoolean_Main.ValueData, FALSE)
                                                           , inSummService            := vbSummService
                                                           , inSummCardRecalc         := COALESCE (MIFloat_SummCardRecalc.ValueData, 0)
                                                           , inSummCardSecondRecalc   := COALESCE (MIFloat_SummCardSecondRecalc.ValueData, 0)
@@ -318,10 +323,10 @@ BEGIN
                                                           , inInfoMoneyId            := MILinkObject_InfoMoney.ObjectId
                                                           , inUnitId                 := inUnitId
                                                           , inPositionId             := inPositionId
-                                                          , inMemberId               := inMemberId
-                                                          , inPersonalServiceListId  := inPersonalServiceListId
+                                                          , inMemberId               := MILinkObject_Member.ObjectId
+                                                          , inPersonalServiceListId  := NULL
                                                           , inUserId                 := vbUserId
-                                                          )
+                                                           )
        FROM MovementItem
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
@@ -365,6 +370,12 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                              ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                             AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Member
+                                             ON MILinkObject_Member.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Member.DescId         = zc_MILinkObject_Member()                                                           
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_PersonalServiceList
+                                             ON MILinkObject_PersonalServiceList.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_PersonalServiceList.DescId         = zc_MILinkObject_PersonalServiceList() 
        WHERE MovementItem.Id       = vbId_Master
          AND MovementItem.DescId   = zc_MI_Master()
          AND MovementItem.isErased = FALSE;

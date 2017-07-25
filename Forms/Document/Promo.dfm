@@ -3,8 +3,9 @@ inherited PromoForm: TPromoForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 599
   ClientWidth = 1204
+  ExplicitLeft = -431
   ExplicitWidth = 1220
-  ExplicitHeight = 637
+  ExplicitHeight = 634
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -23,8 +24,6 @@ inherited PromoForm: TPromoForm
       inherited cxGrid: TcxGrid
         Width = 1204
         Height = 255
-        ExplicitLeft = -1
-        ExplicitTop = 2
         ExplicitWidth = 1204
         ExplicitHeight = 255
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -159,6 +158,9 @@ inherited PromoForm: TPromoForm
           object Amount: TcxGridDBColumn [6]
             Caption = '% '#1089#1082#1080#1076#1082#1080
             DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
@@ -166,6 +168,9 @@ inherited PromoForm: TPromoForm
           object PriceSale: TcxGridDBColumn [7]
             Caption = #1062#1077#1085#1072' '#1085#1072' '#1087#1086#1083#1082#1077
             DataBinding.FieldName = 'PriceSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
@@ -173,6 +178,9 @@ inherited PromoForm: TPromoForm
           object Price: TcxGridDBColumn [8]
             Caption = #1073#1077#1079' '#1053#1044#1057' '#1074' '#1087#1088#1072#1081#1089#1077
             DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -180,6 +188,9 @@ inherited PromoForm: TPromoForm
           object PriceWithOutVAT: TcxGridDBColumn [9]
             Caption = #1073#1077#1079' '#1053#1044#1057' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
             DataBinding.FieldName = 'PriceWithOutVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1073#1077#1079' '#1091#1095#1077#1090#1072' '#1053#1044#1057', '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080', '#1075#1088#1085
@@ -189,6 +200,9 @@ inherited PromoForm: TPromoForm
           object PriceWithVAT: TcxGridDBColumn [10]
             Caption = #1089' '#1053#1044#1057' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
             DataBinding.FieldName = 'PriceWithVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1089' '#1091#1095#1077#1090#1086#1084' '#1053#1044#1057', '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080', '#1075#1088#1085
@@ -198,6 +212,9 @@ inherited PromoForm: TPromoForm
           object AmountReal: TcxGridDBColumn [11]
             Caption = #1055#1088#1086#1076#1072#1085#1086' '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076
             DataBinding.FieldName = 'AmountReal'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -206,6 +223,9 @@ inherited PromoForm: TPromoForm
           object AmountRealWeight: TcxGridDBColumn [12]
             Caption = #1055#1088#1086#1076#1072#1085#1086' '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076' '#1042#1077#1089
             DataBinding.FieldName = 'AmountRealWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -214,6 +234,9 @@ inherited PromoForm: TPromoForm
           object AmountPlanMin: TcxGridDBColumn [13]
             Caption = #1055#1083#1072#1085' '#1084#1080#1085'.'
             DataBinding.FieldName = 'AmountPlanMin'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -221,6 +244,9 @@ inherited PromoForm: TPromoForm
           object AmountPlanMinWeight: TcxGridDBColumn [14]
             Caption = #1055#1083#1072#1085' '#1084#1080#1085'. '#1042#1077#1089
             DataBinding.FieldName = 'AmountPlanMinWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -229,6 +255,9 @@ inherited PromoForm: TPromoForm
           object AmountPlanMax: TcxGridDBColumn [15]
             Caption = #1055#1083#1072#1085' '#1084#1072#1082#1089'.'
             DataBinding.FieldName = 'AmountPlanMax'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -236,6 +265,9 @@ inherited PromoForm: TPromoForm
           object AmountPlanMaxWeight: TcxGridDBColumn [16]
             Caption = #1055#1083#1072#1085' '#1084#1072#1082#1089'. '#1042#1077#1089
             DataBinding.FieldName = 'AmountPlanMaxWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -244,6 +276,9 @@ inherited PromoForm: TPromoForm
           object AmountOrder: TcxGridDBColumn [17]
             Caption = #1047#1072#1103#1074#1082#1072' ('#1092#1072#1082#1090')'
             DataBinding.FieldName = 'AmountOrder'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -253,6 +288,9 @@ inherited PromoForm: TPromoForm
           object AmountOrderWeight: TcxGridDBColumn [18]
             Caption = #1047#1072#1103#1074#1082#1072' ('#1092#1072#1082#1090') '#1042#1077#1089
             DataBinding.FieldName = 'AmountOrderWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -261,6 +299,9 @@ inherited PromoForm: TPromoForm
           object AmountOut: TcxGridDBColumn [19]
             Caption = #1055#1088#1086#1076#1072#1085#1086' ('#1092#1072#1082#1090')'
             DataBinding.FieldName = 'AmountOut'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -270,6 +311,9 @@ inherited PromoForm: TPromoForm
           object AmountOutWeight: TcxGridDBColumn [20]
             Caption = #1055#1088#1086#1076#1072#1085#1086' ('#1092#1072#1082#1090') '#1042#1077#1089
             DataBinding.FieldName = 'AmountOutWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -278,6 +322,9 @@ inherited PromoForm: TPromoForm
           object AmountIn: TcxGridDBColumn [21]
             Caption = #1042#1086#1079#1074#1088#1072#1090' ('#1092#1072#1082#1090')'
             DataBinding.FieldName = 'AmountIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -287,6 +334,9 @@ inherited PromoForm: TPromoForm
           object AmountInWeight: TcxGridDBColumn [22]
             Caption = #1042#1086#1079#1074#1088#1072#1090' ('#1092#1072#1082#1090') '#1042#1077#1089
             DataBinding.FieldName = 'AmountInWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -474,6 +524,9 @@ inherited PromoForm: TPromoForm
           object tsPromoPartnerList: TcxTabSheet
             Caption = '2.2. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             ImageIndex = 1
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object grPartnerList: TcxGrid
               Left = 0
               Top = 0
@@ -1150,10 +1203,10 @@ inherited PromoForm: TPromoForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1087#1086#1083#1085#1080#1090#1100' '#1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' ?'
-      InfoAfterExecute = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' '#1074#1099#1087#1086#1083#1085#1077#1085
-      Caption = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093
-      Hint = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1087#1086#1083#1085#1080#1090#1100' '#1056#1072#1089#1095#1077#1090' = '#1055#1088#1086#1076#1072#1078#1072' + '#1042#1086#1079#1074#1088#1072#1090' + '#1047#1072#1103#1074#1082#1080' ?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085' '#1088#1072#1089#1095#1077#1090' = '#1055#1088#1086#1076#1072#1078#1072' + '#1042#1086#1079#1074#1088#1072#1090' + '#1047#1072#1103#1074#1082#1080' '
+      Caption = #1056#1072#1089#1095#1077#1090' = '#1055#1088#1086#1076#1072#1078#1072' + '#1042#1086#1079#1074#1088#1072#1090' + '#1047#1072#1103#1074#1082#1080
+      Hint = #1056#1072#1089#1095#1077#1090' = '#1055#1088#1086#1076#1072#1078#1072' + '#1042#1086#1079#1074#1088#1072#1090' + '#1047#1072#1103#1074#1082#1080
       ImageIndex = 44
     end
     inherited actUpdateMainDS: TdsdUpdateDataSet

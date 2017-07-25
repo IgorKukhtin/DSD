@@ -214,16 +214,18 @@ BEGIN
                                               -- , inTotalReturn           := COALESCE (outTotalReturn, 0)
                                               -- , inTotalPayReturn        := COALESCE (outTotalPayReturn, 0)
                                               , inBarCode               := inBarCode
-                                              , inComment               := inComment
+                                              , inComment               := -- !!!для SYBASE - потом убрать!!!
+                                                                           CASE WHEN vbUserId = zc_User_Sybase() AND SUBSTRING (inComment FROM 1 FOR 5) = '*123*'
+                                                                                     THEN -- убрали хардкод
+                                                                                          SUBSTRING (inComment FROM 6 FOR CHAR_LENGTH (inComment) - 5)
+                                                                                     ELSE inComment
+                                                                           END
                                               , inUserId                := vbUserId
                                                );
 
     -- !!!для SYBASE - потом убрать!!!
     IF vbUserId = zc_User_Sybase() AND SUBSTRING (inComment FROM 1 FOR 5) = '*123*'
     THEN
-        -- убрали хардкод
-        inComment:= SUBSTRING (inComment FROM 6 FOR CHAR_LENGTH (inComment) - 5);
-
         -- сохранили для проверки - в SYBASE это полностью оплаченная продажа -> надо формировать проводку
         PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Close(), ioId, TRUE);
 
@@ -248,7 +250,7 @@ BEGIN
         IF COALESCE (vbCashId, 0) = 0 THEN
           -- Для Sybase - ВРЕМЕННО
           IF vbUserId = zc_User_Sybase() 
-          THEN vbCashId:= 4219 ;
+          THEN vbCashId:= 4219;
           ELSE RAISE EXCEPTION 'Ошибка.Для магазина <%> Не установлено значение <Касса> в грн. (%)', lfGet_Object_ValueData (vbUnitId), vbUnitId;
           END IF;
         END IF;

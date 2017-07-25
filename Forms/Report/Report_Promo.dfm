@@ -3,8 +3,10 @@ inherited Report_PromoForm: TReport_PromoForm
   ClientHeight = 434
   ClientWidth = 833
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
+  ExplicitLeft = -60
+  ExplicitTop = -12
   ExplicitWidth = 849
-  ExplicitHeight = 473
+  ExplicitHeight = 469
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -290,6 +292,9 @@ inherited Report_PromoForm: TReport_PromoForm
           object AmountReal: TcxGridDBColumn
             Caption = #1055#1088#1086#1076'. '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076
             DataBinding.FieldName = 'AmountReal'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 71
@@ -297,6 +302,9 @@ inherited Report_PromoForm: TReport_PromoForm
           object AmountRealWeight: TcxGridDBColumn
             Caption = #1055#1088#1086#1076'. '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076' ('#1074#1077#1089')'
             DataBinding.FieldName = 'AmountRealWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 69
@@ -304,6 +312,9 @@ inherited Report_PromoForm: TReport_PromoForm
           object AmountOrder: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1082#1072' ('#1092#1072#1082#1090')'
             DataBinding.FieldName = 'AmountOrder'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 63
@@ -311,6 +322,9 @@ inherited Report_PromoForm: TReport_PromoForm
           object AmountOrderWeight: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1082#1072' ('#1092#1072#1082#1090') '#1042#1077#1089
             DataBinding.FieldName = 'AmountOrderWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 64
@@ -318,6 +332,9 @@ inherited Report_PromoForm: TReport_PromoForm
           object AmountOut: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103' ('#1092#1072#1082#1090')'
             DataBinding.FieldName = 'AmountOut'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 67
@@ -325,6 +342,9 @@ inherited Report_PromoForm: TReport_PromoForm
           object AmountOutWeight: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103' ('#1092#1072#1082#1090') '#1042#1077#1089
             DataBinding.FieldName = 'AmountOutWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 66
@@ -332,6 +352,9 @@ inherited Report_PromoForm: TReport_PromoForm
           object AmountIn: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090' ('#1092#1072#1082#1090')'
             DataBinding.FieldName = 'AmountIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 62
@@ -339,6 +362,9 @@ inherited Report_PromoForm: TReport_PromoForm
           object AmountInWeight: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090' ('#1092#1072#1082#1090') '#1042#1077#1089
             DataBinding.FieldName = 'AmountInWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 63

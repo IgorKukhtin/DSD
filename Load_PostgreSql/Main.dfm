@@ -2084,7 +2084,7 @@ object MainForm: TMainForm
     object cbInsertHistoryCost_andReComplete: TCheckBox
       Tag = 30
       Left = 15
-      Top = 369
+      Top = 362
       Width = 200
       Height = 17
       Caption = '10. !!!'#1057'/'#1057' + '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077'!!!'
@@ -2163,8 +2163,8 @@ object MainForm: TMainForm
     end
     object cbHistoryCost_diff: TCheckBox
       Tag = 30
-      Left = 96
-      Top = 403
+      Left = 15
+      Top = 380
       Width = 107
       Height = 17
       Caption = #1089'/'#1089' "'#1054#1082#1088#1091#1075#1083#1077#1085#1080#1103'"'
@@ -2251,6 +2251,22 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 47
       OnClick = cbUnCompleteClick
+    end
+    object cbPromo: TCheckBox
+      Tag = 30
+      Left = 96
+      Top = 403
+      Width = 141
+      Height = 17
+      Caption = #1056#1072#1089#1095#1077#1090' '#1072#1082#1094#1080#1081
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clHighlight
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 48
+      OnClick = cbCompleteIncomeBNClick
     end
   end
   object DataSource: TDataSource

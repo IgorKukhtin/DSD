@@ -29,7 +29,7 @@ BEGIN
     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
     -- сохранили <Элемент документа>
-    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
+    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL, inUserId);
     
     -- сохранили <цена в прайсе>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, COALESCE(inPrice,0));
@@ -59,7 +59,9 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
     
     -- сохранили протокол
-    PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
+    IF inUserId > 0 THEN 
+      PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
+    END IF;
 
 END;
 $BODY$
