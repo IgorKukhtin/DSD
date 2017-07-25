@@ -1302,8 +1302,8 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 256
-    Top = 263
+    Left = 152
+    Top = 359
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET

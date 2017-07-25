@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_GoodsAccount(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , TotalSummBalance TFloat
+             , TotalSummPay TFloat
              , TotalSummChange TFloat
              , FromName TVarChar
              , ToName TVarChar
@@ -33,13 +33,13 @@ BEGIN
                        )
 
        SELECT
-             Movement.Id
-           , Movement.InvNumber
-           , Movement.OperDate
+             Movement.Id                                 AS Id
+           , Movement.InvNumber                          AS InvNumber
+           , Movement.OperDate                           AS OperDate
            , Object_Status.ObjectCode                    AS StatusCode
            , Object_Status.ValueData                     AS StatusName
 
-           , MovementFloat_TotalSummBalance.ValueData    AS TotalSummBalance
+           , MovementFloat_TotalSummPay.ValueData        AS TotalSummPay
            , MovementFloat_TotalSummChange.ValueData     AS TotalSummChange
        
            , Object_From.ValueData                       AS FromName
@@ -58,36 +58,37 @@ BEGIN
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-            LEFT JOIN MovementString AS MovementString_Comment 
-                                     ON MovementString_Comment.MovementId = Movement.Id
-                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSummBalance
-                                    ON MovementFloat_TotalSummBalance.MovementId = Movement.Id
-                                   AND MovementFloat_TotalSummBalance.DescId = zc_MovementFloat_TotalSummBalance()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPay
+                                    ON MovementFloat_TotalSummPay.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummPay.DescId     = zc_MovementFloat_TotalSummPay()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummChange
-                                    ON MovementFloat_TotalSummChange.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSummChange.DescId = zc_MovementFloat_TotalSummChange()
+                                    ON MovementFloat_TotalSummChange.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummChange.DescId     = zc_MovementFloat_TotalSummChange()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
-                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-            INNER JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+                                        AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+            INNER JOIN Object AS Object_From ON Object_From.Id     = MovementLinkObject_From.ObjectId
                                             AND Object_From.DescId = zc_Object_Client()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
-                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                        AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
             
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id
-                                  AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+                                  AND MovementDate_Insert.DescId     = zc_MovementDate_Insert()
     
             LEFT JOIN MovementLinkObject AS MLO_Insert
                                          ON MLO_Insert.MovementId = Movement.Id
-                                        AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+                                        AND MLO_Insert.DescId     = zc_MovementLinkObject_Insert()
             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
-     ;
+
+            LEFT JOIN MovementString AS MovementString_Comment 
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId     = zc_MovementString_Comment()
+            ;
   
 END;
 $BODY$

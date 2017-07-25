@@ -20,6 +20,9 @@ BEGIN
 
     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() 
     WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
+    
+    -- сохраняем расчетные суммы по покупателю
+    PERFORM lpUpdate_Object_Client_Total (inMovementId:= inMovementId, inIsComplete:= TRUE, inUserId:= vbUserId);
 
 END;
 $BODY$

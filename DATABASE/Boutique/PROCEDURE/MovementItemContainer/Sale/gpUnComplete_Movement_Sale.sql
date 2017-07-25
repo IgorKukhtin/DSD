@@ -9,15 +9,27 @@ CREATE OR REPLACE FUNCTION gpUnComplete_Movement_Sale(
 RETURNS VOID
 AS
 $BODY$
-  DECLARE vbUserId Integer;
+  DECLARE vbUserId   Integer;
+  DECLARE vbStatusId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_Sale());
     vbUserId:= lpGetUserBySession (inSession);
 
+    -- тек.статус документа
+    vbStatusId:= (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId);
+    
     -- Распроводим Документ
     PERFORM lpUnComplete_Movement (inMovementId := inMovementId
                                  , inUserId     := vbUserId);
+
+    -- Если был статус Проведен нужно пересчитать расчетные суммы по покупателю
+    IF vbStatusId = zc_Enum_Status_Complete() 
+    THEN 
+         -- сохраняем расчетные суммы по покупателю
+         PERFORM lpUpdate_Object_Client_Total (inMovementId:= inMovementId, inIsComplete:= FALSE, inUserId:= vbUserId);
+    END IF;
+    
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

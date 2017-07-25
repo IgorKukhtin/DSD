@@ -1104,7 +1104,7 @@ object SaleJournalForm: TSaleJournalForm
     end
   end
   object spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement'
+    StoredProcName = 'gpUnComplete_Movement_Sale'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1121,7 +1121,7 @@ object SaleJournalForm: TSaleJournalForm
     Top = 272
   end
   object spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement'
+    StoredProcName = 'gpSetErased_Movement_Sale'
     DataSet = ClientDataSet
     DataSets = <
       item

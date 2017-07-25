@@ -32,7 +32,17 @@ BEGIN
 
 
      -- данные из документа
-     vbUnitId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To());
+     vbUnitId:= (SELECT CASE WHEN Object_From.DescId = zc_Object_Unit() THEN MLO_From.ObjectId
+                             WHEN Object_To.DescId   = zc_Object_Unit() THEN MLO_To.ObjectId
+                        END AS UnitId
+                 FROM MovementLinkObject AS MLO_To
+                      LEFT JOIN Object AS Object_To ON Object_To.Id = MLO_To.ObjectId
+                      LEFT JOIN MovementLinkObject AS MLO_From
+                                                   ON MLO_From.MovementId = MLO_To.MovementId
+                                                  AND MLO_From.DescId     = zc_MovementLinkObject_From()
+                      LEFT JOIN Object AS Object_From ON Object_From.Id = MLO_From.ObjectId
+                 WHERE MLO_To.MovementId = inMovementId 
+                   AND MLO_To.DescId = zc_MovementLinkObject_To());
 
 
      -- !!!для SYBASE - по другому, + вся скидка сразу в мастере!!!

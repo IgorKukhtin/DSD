@@ -9,12 +9,16 @@ CREATE OR REPLACE FUNCTION gpSetErased_Movement_ReturnIn(
 RETURNS VOID
 AS
 $BODY$
-  DECLARE vbUserId Integer;
+  DECLARE vbUserId   Integer;
+  DECLARE vbStatusId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_ReturnIn());
     vbUserId:= lpGetUserBySession (inSession);
 
+    -- тек.статус документа
+    vbStatusId:= (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId);
+    
     -- убираем ссылки на этот док в продажах
     /*PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Child(), MLM_Child.MovementId, Null)
     FROM MovementLinkMovement AS MLM_Child
@@ -25,16 +29,15 @@ BEGIN
     PERFORM lpSetErased_Movement (inMovementId := inMovementId
                                 , inUserId     := vbUserId);
 
-    -- пересчитали "итоговые" суммы по элементам продажи
-    PERFORM lpUpdate_MI_Sale_Total(Object_PartionMI.ObjectCode :: Integer)
-    FROM MovementItem
-         INNER JOIN MovementItemLinkObject AS MILinkObject_PartionMI
-                                           ON MILinkObject_PartionMI.MovementItemId = MovementItem.Id
-                                          AND MILinkObject_PartionMI.DescId         = zc_MILinkObject_PartionMI()
-         LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = MILinkObject_PartionMI.ObjectId
-    WHERE MovementItem.MovementId = inMovementId
-      AND MovementItem.DescId     = zc_MI_Master()
-      AND MovementItem.isErased   = FALSE;
+    -- пересчитали "итоговые" суммы по элементам партии продажи / возврата
+    PERFORM lpUpdate_MI_Partion_Total_byMovement(inMovementId);
+
+    -- Если был статус Проведен нужно пересчитать расчетные суммы по покупателю
+    IF vbStatusId = zc_Enum_Status_Complete() 
+    THEN 
+         -- сохраняем расчетные суммы по покупателю
+         PERFORM lpUpdate_Object_Client_Total (inMovementId:= inMovementId, inIsComplete:= FALSE, inUserId:= vbUserId);
+    END IF;
 
 END;
 $BODY$

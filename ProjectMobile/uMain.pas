@@ -1013,6 +1013,7 @@ type
     procedure bOptimizeDBClick(Sender: TObject);
     procedure LinkListControlToField14FilledListItem(Sender: TObject;
       const AEditor: IBindListEditorItem);
+    procedure LinkListControlToField2FilledListItem(Sender: TObject; const AEditor: IBindListEditorItem);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -1171,7 +1172,7 @@ implementation
 
 uses
   uConstants, System.IOUtils, Authentication, Storage, CommonData, uDM, CursorUtils,
-  uNetwork;
+  uNetwork, System.StrUtils;
 
 {$R *.fmx}
 
@@ -1526,6 +1527,33 @@ begin
       Kredit := lwJuridicalCollation.Items[AEditor.CurrentIndex].Objects.FindDrawable('Kredit');
       if Assigned(Kredit) then
         (Kredit as TListItemText).TextColor := DocColor;
+    end;
+  end;
+end;
+
+procedure TfrmMain.LinkListControlToField2FilledListItem(Sender: TObject; const AEditor: IBindListEditorItem);
+var
+  PartnerCount, PartnerName: TListItemDrawable;
+  PartnerColor: TAlphaColor;
+begin
+  if (AEditor.CurrentIndex > -1) and Assigned(lwPartner) and
+    Assigned(lwPartner.Items[AEditor.CurrentIndex]) and
+    Assigned(lwPartner.Items[AEditor.CurrentIndex].Objects) then
+  begin
+    PartnerCount := lwPartner.Items[AEditor.CurrentIndex].Objects.FindDrawable('PartnerCount');
+
+    if Assigned(PartnerCount) then
+      if StrToIntDef((PartnerCount as TListItemText).Text, 0) > 0 then
+        PartnerColor := TAlphaColors.Green
+      else
+        PartnerColor := TAlphaColors.Black;
+
+    PartnerName := lwPartner.Items[AEditor.CurrentIndex].Objects.FindDrawable('Name');
+
+    if Assigned(PartnerName) then
+    begin
+      (PartnerName as TListItemText).TextColor := PartnerColor;
+      (PartnerName as TListItemText).SelectedTextColor := PartnerColor;
     end;
   end;
 end;
@@ -5022,7 +5050,7 @@ begin
   lDayInfo.Text := 'ЬРаиагв: ' + Caption;
   DM.qryPartner.Close;
 
-  sQuery := BasePartnerQuery;
+  sQuery := ReplaceStr(BasePartnerQuery, 'CURRENT_DATE', 'DATE (''' + FormatDateTime('yyyy-mm-dd', Date) + ''')');
 
   if Day < 8 then
 //or    sQuery := sQuery + ' and lower(substr(P.SCHEDULE, ' + IntToStr(2 * Day - 1) + ', 1)) = ''t''';

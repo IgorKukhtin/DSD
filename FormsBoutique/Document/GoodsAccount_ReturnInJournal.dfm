@@ -64,6 +64,8 @@ object GoodsAccount_ReturnInJournalForm: TGoodsAccount_ReturnInJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = 112
+    ExplicitTop = 49
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -75,12 +77,10 @@ object GoodsAccount_ReturnInJournalForm: TGoodsAccount_ReturnInJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = TotalSummPriceList
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = TotalCount
         end
         item
           Format = ',0.####'
@@ -95,38 +95,31 @@ object GoodsAccount_ReturnInJournalForm: TGoodsAccount_ReturnInJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = TotalSummPayOth
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = TotalCountReturn
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = TotalSummReturn
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = TotalSummPayReturn
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = TotalSummBalance
         end>
       DataController.Summary.FooterSummaryItems = <
         item
           Format = ',0.####'
           Kind = skSum
-          Column = TotalCount
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = TotalSummPriceList
         end
         item
           Format = 'C'#1090#1088#1086#1082': ,0'
@@ -146,27 +139,22 @@ object GoodsAccount_ReturnInJournalForm: TGoodsAccount_ReturnInJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = TotalSummPayOth
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = TotalCountReturn
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = TotalSummReturn
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = TotalSummPayReturn
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = TotalSummBalance
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -235,77 +223,21 @@ object GoodsAccount_ReturnInJournalForm: TGoodsAccount_ReturnInJournalForm
         Options.Editing = False
         Width = 160
       end
-      object TotalCount: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086
-        DataBinding.FieldName = 'TotalCount'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object TotalSummBalance: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' ('#1074' '#1043#1056#1053')'
-        DataBinding.FieldName = 'TotalSummBalance'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 92
-      end
-      object TotalSummPriceList: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
-        DataBinding.FieldName = 'TotalSummPriceList'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 78
-      end
       object TotalSummChange: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1074' '#1043#1056#1053
+        Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080
         DataBinding.FieldName = 'TotalSummChange'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 97
+        HeaderHint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1074' '#1043#1056#1053
+        Width = 80
       end
       object TotalSummPay: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1074' '#1043#1056#1053')'
+        Caption = #1057#1091#1084#1084#1072' '#1074#1086#1079#1074#1088'. '#1086#1087#1083#1072#1090#1099
         DataBinding.FieldName = 'TotalSummPay'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
-      object TotalSummPayOth: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1074' '#1043#1056#1053')'
-        DataBinding.FieldName = 'TotalSummPayOth'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 62
-      end
-      object TotalCountReturn: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090#1072
-        DataBinding.FieldName = 'TotalCountReturn'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 69
-      end
-      object TotalSummReturn: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1074' '#1043#1056#1053')'
-        DataBinding.FieldName = 'TotalSummReturn'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 85
-      end
-      object TotalSummPayReturn: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' ('#1074' '#1043#1056#1053')'
-        DataBinding.FieldName = 'TotalSummPayReturn'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 110
+        HeaderHint = #1057#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' '#1043#1056#1053
+        Width = 80
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -313,7 +245,7 @@ object GoodsAccount_ReturnInJournalForm: TGoodsAccount_ReturnInJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 228
+        Width = 100
       end
       object InsertName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
@@ -321,7 +253,7 @@ object GoodsAccount_ReturnInJournalForm: TGoodsAccount_ReturnInJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 101
+        Width = 80
       end
       object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
@@ -329,7 +261,7 @@ object GoodsAccount_ReturnInJournalForm: TGoodsAccount_ReturnInJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 78
+        Width = 80
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -1105,7 +1037,7 @@ object GoodsAccount_ReturnInJournalForm: TGoodsAccount_ReturnInJournalForm
     end
   end
   object spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement'
+    StoredProcName = 'gpUnComplete_Movement_GoodsAccount'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1122,7 +1054,7 @@ object GoodsAccount_ReturnInJournalForm: TGoodsAccount_ReturnInJournalForm
     Top = 272
   end
   object spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement'
+    StoredProcName = 'gpSetErased_Movement_GoodsAccount'
     DataSet = ClientDataSet
     DataSets = <
       item

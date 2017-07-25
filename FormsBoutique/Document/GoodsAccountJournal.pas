@@ -63,8 +63,6 @@ type
     bbDelete: TdxBarButton;
     actSetErased: TdsdChangeMovementStatus;
     spMovementSetErased: TdsdStoredProc;
-    TotalCount: TcxGridDBColumn;
-    TotalSummPriceList: TcxGridDBColumn;
     bbStatic: TdxBarStatic;
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
