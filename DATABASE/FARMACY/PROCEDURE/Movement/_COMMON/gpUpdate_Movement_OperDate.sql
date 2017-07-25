@@ -18,7 +18,7 @@ BEGIN
     -- lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Income_BranchDate());
     vbUserId := inSession;
 
-    IF COALESCE(inMovementId,0) = 0
+    IF COALESCE (inMovementId,0) = 0
     THEN
         RAISE EXCEPTION 'Ошибка. Документ не сохранен!';
     END IF;

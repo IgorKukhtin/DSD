@@ -13,7 +13,8 @@ $BODY$
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
-    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Income_BranchDate());
+    -- lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Income_BranchDate());
+    vbUserId := inSession;
 
     IF COALESCE(inMovementId,0) = 0
     THEN
@@ -22,7 +23,7 @@ BEGIN
 
     IF inBranchDate IS NOT NULL
     THEN
-        -- 
+        -- сохраняем <Дату Аптеки>
         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Branch(), inMovementId, inBranchDate);
     END IF;
 
