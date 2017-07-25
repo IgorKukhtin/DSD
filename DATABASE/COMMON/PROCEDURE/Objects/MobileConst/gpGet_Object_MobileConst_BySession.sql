@@ -5,14 +5,14 @@ DROP FUNCTION IF EXISTS gpGet_Object_MobileConst_BySession (TVarChar);
 CREATE OR REPLACE FUNCTION gpGet_Object_MobileConst_BySession (
     IN inSession TVarChar
 )
-RETURNS TABLE (MobileVersion     TVarChar  -- Версия мобильного приложения. Пример: "1.0.3.625"
+RETURNS TABLE (Code              Integer
+             , Name              TVarChar 
+             , MobileVersion     TVarChar  -- Версия мобильного приложения. Пример: "1.0.3.625"
              , MobileAPKFileName TVarChar  -- Название ".apk" файла мобильного приложения
              , OperDateDiff      Integer   -- На сколько дней позже создавать док Возврат и Приход денег
              , ReturnDayCount    Integer   -- Сколько дней принимаются возвраты по старым ценам
              , CriticalOverDays  Integer   -- Количество дней просрочки, после которого формирование заявки невозможно
              , CriticalDebtSum   TFloat    -- Сумма долга, после которого формирование заявки невозможно
-             , UserId            Integer   -- Связь констант для мобильного приложения с пользователем
-             , UserName          TVarChar
               )
 AS $BODY$
   DECLARE vbUserId Integer;
@@ -28,27 +28,25 @@ BEGIN
       INTO vbPublicId
       FROM Object AS Object_MobileConst
       WHERE Object_MobileConst.DescId = zc_Object_MobileConst()
-        AND Object_MobileConst.ObjectCode = 0
-        AND Object_MobileConst.ValueData = zc_Enum_MobileConst_Public();
+        AND Object_MobileConst.ObjectCode = 0;
       
       -- получаем ИД частных настроек
       SELECT Object_MobileConst.Id
       INTO vbPrivateId
       FROM Object AS Object_MobileConst
       WHERE Object_MobileConst.DescId = zc_Object_MobileConst()
-        AND Object_MobileConst.ObjectCode = vbUserId
-        AND Object_MobileConst.ValueData = zc_Enum_MobileConst_Private();
+        AND Object_MobileConst.ObjectCode = vbUserId;
       
       -- результат
       RETURN QUERY
-        SELECT COALESCE (mcPrivate.MobileVersion,     mcPublic.MobileVersion)::TVarChar     AS MobileVersion
+        SELECT COALESCE (mcPrivate.Code,              mcPublic.Code)                        AS Code
+             , COALESCE (mcPrivate.Name,              mcPublic.Name)                        AS Name
+             , COALESCE (mcPrivate.MobileVersion,     mcPublic.MobileVersion)::TVarChar     AS MobileVersion
              , COALESCE (mcPrivate.MobileAPKFileName, mcPublic.MobileAPKFileName)::TVarChar AS MobileAPKFileName
              , COALESCE (mcPrivate.OperDateDiff,      mcPublic.OperDateDiff)::Integer       AS OperDateDiff
              , COALESCE (mcPrivate.ReturnDayCount,    mcPublic.ReturnDayCount)::Integer     AS ReturnDayCount
              , COALESCE (mcPrivate.CriticalOverDays,  mcPublic.CriticalOverDays)::Integer   AS CriticalOverDays
              , COALESCE (mcPrivate.CriticalDebtSum,   mcPublic.CriticalDebtSum)::TFloat     AS CriticalDebtSum
-             , COALESCE (mcPrivate.UserId,            mcPublic.UserId)::Integer             AS UserId
-             , COALESCE (mcPrivate.UserName,          mcPublic.UserName)::TVarChar          AS UserName
         FROM lpGet_Object_MobileConst (inId:= vbPublicId) AS mcPublic
              LEFT JOIN lpGet_Object_MobileConst (inId:= vbPrivateId) AS mcPrivate ON 1 = 1
         ;
