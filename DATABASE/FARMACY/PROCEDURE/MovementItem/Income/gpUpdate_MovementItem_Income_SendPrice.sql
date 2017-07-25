@@ -7,14 +7,16 @@ CREATE OR REPLACE FUNCTION gpUpdate_MovementItem_Income_SendPrice(
 )
 RETURNS VOID AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbObjectId Integer;
-   DECLARE vbStatusId Integer;
-   DECLARE vbInvNumber TVarChar;
+   DECLARE vbUserId           Integer;
+   DECLARE vbObjectId         Integer;
+   DECLARE vbStatusId         Integer;
+   DECLARE vbGoodsId          Integer;
+   DECLARE vbNDSKindId        Integer;
+   DECLARE vbInvNumber        TVarChar;
    DECLARE vbMarginCategoryId Integer;
    DECLARE vbJuridicalPercent TFloat;
-   DECLARE vbToId Integer;
-   DECLARE vbInvNumberPoint TVarChar;
+   DECLARE vbToId             Integer;
+   DECLARE vbInvNumberPoint   TVarChar;
 BEGIN
      
      -- определяем <Статус>
@@ -26,6 +28,28 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData (vbStatusId);
      END IF;
 
+     -- находим вид НДС. 
+     SELECT ObjectId INTO vbNDSKindId
+     FROM MovementLinkObject AS MovementLinkObject_NDSKind
+     WHERE MovementLinkObject_NDSKind.MovementId = inMovementId
+       AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind();
+       
+     -- Проверяем у всех ли товаров совпадает НДС. 
+     vbGoodsId:= (SELECT MovementItem.ObjectId
+                  FROM MovementItem
+                      JOIN ObjectLink AS ObjectLink_Goods_NDSKind
+                                      ON ObjectLink_Goods_NDSKind.ObjectId      = MovementItem.ObjectId
+                                     AND ObjectLink_Goods_NDSKind.ChildObjectId <> vbNDSKindId
+                                     AND ObjectLink_Goods_NDSKind.DescId        = zc_ObjectLink_Goods_NDSKind()
+                  WHERE MovementItem.MovementId = inMovementId
+                    AND MovementItem.DescId     = zc_MI_Master()
+                    AND MovementItem.IsErased   = FALSE
+                  LIMIT 1);
+     IF vbGoodsId <> 0
+     THEN 
+         RAISE EXCEPTION 'У "%" не совпадает тип НДС с документом', lfGet_Object_ValueData (vbGoodsId);
+     END IF;
+   
      -- определяем Категорию расчета
      SELECT Object_MarginCategoryLink.MarginCategoryId  INTO vbMarginCategoryId
        FROM Object_MarginCategoryLink_View AS Object_MarginCategoryLink 
