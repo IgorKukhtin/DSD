@@ -2482,7 +2482,7 @@ begin
       PaidKindId := DM.tblObject_ConstPaidKindId_Second.AsInteger;
 
     if DM.SaveOrderExternal(deOrderDate.Date, PaidKindId, eOrderComment.Text,
-      FOrderTotalPrice, FOrderTotalCountKg, DelItems, AResult = mrNone ,ErrMes) then
+      FOrderTotalPrice, FOrderTotalCountKg, DelItems, AResult = mrNone, ErrMes) then
     begin
       if FEditDocuments then
         ChangeOrderExternalDoc;
