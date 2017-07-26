@@ -1713,6 +1713,9 @@
 				<Form>Report_MovementChecLightDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\ExportSalesForSuppliers\ExportSalesForSupp.pas">
+				<Form>ExportSalesForSuppForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

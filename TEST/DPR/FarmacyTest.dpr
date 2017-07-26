@@ -520,7 +520,8 @@ uses
   ReportMovementCheckLight in '..\..\FormsFarmacy\Report\ReportMovementCheckLight.pas' {ReportMovementCheckLightForm: TParentForm},
   Report_GoodsRemainsLight in '..\..\FormsFarmacy\Report\Report_GoodsRemainsLight.pas' {Report_GoodsRemainsLightForm: TParentForm},
   Report_GoodsRemainsLightDialog in '..\..\FormsFarmacy\Report\Report_GoodsRemainsLightDialog.pas' {Report_GoodsRemainsLightDialogForm: TParentForm},
-  Report_MovementCheckLightDialog in '..\..\FormsFarmacy\Report\Report_MovementCheckLightDialog.pas' {Report_MovementChecLightDialogForm: TParentForm};
+  Report_MovementCheckLightDialog in '..\..\FormsFarmacy\Report\Report_MovementCheckLightDialog.pas' {Report_MovementChecLightDialogForm: TParentForm},
+  ExportSalesForSupp in '..\..\ExportSalesForSuppliers\ExportSalesForSupp.pas' {ExportSalesForSuppForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
