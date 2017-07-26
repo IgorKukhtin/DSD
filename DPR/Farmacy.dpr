@@ -71,7 +71,8 @@ uses
   RoleUnion in '..\Forms\RoleUnion.pas' {RoleUnionForm: TParentForm},
   IFIN_J1201009 in '..\SOURCE\MeDOC\IFIN_J1201009.pas',
   MEDOC_TLB in '..\SOURCE\MeDOC\MEDOC_TLB.pas',
-  MeDocCOM in '..\SOURCE\MeDOC\MeDocCOM.pas';
+  MeDocCOM in '..\SOURCE\MeDOC\MeDocCOM.pas',
+  ExportSalesForSupp in '..\ExportSalesForSuppliers\ExportSalesForSupp.pas' {ExportSalesForSuppForm};
 
 {$R *.res}
 
@@ -89,7 +90,7 @@ begin
     TUpdater.AutomaticUpdateProgram;
     TUpdater.AutomaticCheckConnect;
     Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TMainForm, MainFormInstance);
+    Application.CreateForm(TMainForm, MainFormInstance);
   end;
   Application.Run;
 end.
