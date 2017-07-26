@@ -166,10 +166,12 @@ BEGIN
     
 
      RETURN QUERY
-     WITH -- подразделения для "остатки впроизводстве"
+     WITH -- подразделения для "остатки в производстве"
           tmpUnit AS (SELECT 8448 AS UnitId       --цех деликатесов+
                      UNION
                       SELECT 8447 AS UnitId       -- колбасный+
+                     UNION
+                      SELECT 8449 AS UnitId       -- ЦЕХ с/к+
                      UNION
                       SELECT 8451 AS UnitId       -- упаковка+
                      UNION

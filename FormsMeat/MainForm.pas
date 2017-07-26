@@ -877,6 +877,12 @@ type
     actReestrTransferOut: TdsdOpenForm;
     N174: TMenuItem;
     N175: TMenuItem;
+    miProductionUnionTechCK: TMenuItem;
+    miProductionUnionTechReceiptCK: TMenuItem;
+    actProductionUnionTechReceiptCK: TdsdOpenForm;
+    actProductionUnionTechCK: TdsdOpenForm;
+    miOrderInternalBasisCK: TMenuItem;
+    actOrderInternalBasisCK: TdsdOpenForm;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

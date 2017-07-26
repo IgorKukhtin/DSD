@@ -476,7 +476,7 @@ BEGIN
                                  INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                                                ON MovementLinkObject_From.MovementId = Movement.Id
                                                               AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
-                                                              AND MovementLinkObject_From.ObjectId   IN (8447, 8448) -- ЦЕХ колбасный + ЦЕХ деликатесов
+                                                              AND MovementLinkObject_From.ObjectId   IN (8447, 8448, 8449) -- ЦЕХ колбасный + ЦЕХ деликатесов + ЦЕХ с/к
                                  INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                ON MovementLinkObject_To.MovementId = Movement.Id
                                                               AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()

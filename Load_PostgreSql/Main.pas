@@ -21095,7 +21095,7 @@ begin
         toStoredProc_two.Params.AddParam ('inToId',ftInteger,ptInput, 0);
 
         Gauge.Progress:=0;
-        Gauge.MaxValue:=4;
+        Gauge.MaxValue:=5;
 
              //
              toStoredProc_two.Params.ParamByName('inStartDate').Value:=StrToDate(StartDateCompleteEdit.Text);
@@ -21109,6 +21109,14 @@ begin
              toStoredProc_two.Params.ParamByName('inStartDate').Value:=StrToDate(StartDateCompleteEdit.Text);
              toStoredProc_two.Params.ParamByName('inEndDate').Value:=StrToDate(EndDateCompleteEdit.Text) ;
              toStoredProc_two.Params.ParamByName('inFromId').Value:=8447;//ЦЕХ колбасный
+             toStoredProc_two.Params.ParamByName('inToId').Value:=8458;//Склад База ГП
+             if not myExecToStoredProc_two then ;//exit;
+        Gauge.Progress:= Gauge.Progress + 1;
+        MyDelay(1 * 1000);
+             //
+             toStoredProc_two.Params.ParamByName('inStartDate').Value:=StrToDate(StartDateCompleteEdit.Text);
+             toStoredProc_two.Params.ParamByName('inEndDate').Value:=StrToDate(EndDateCompleteEdit.Text) ;
+             toStoredProc_two.Params.ParamByName('inFromId').Value:=8449;//ЦЕХ с/к
              toStoredProc_two.Params.ParamByName('inToId').Value:=8458;//Склад База ГП
              if not myExecToStoredProc_two then ;//exit;
         Gauge.Progress:= Gauge.Progress + 1;

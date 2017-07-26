@@ -37,7 +37,7 @@ BEGIN
                             WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_ProductionUnion()
                            );
      -- расчет, временно захардкодил
-     vbIsProductionOut:= (EXISTS (SELECT MovementId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_To() AND ObjectId IN (8447, 8448)) -- ЦЕХ колбасный + ЦЕХ деликатесов
+     vbIsProductionOut:= (EXISTS (SELECT MovementId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_To() AND ObjectId IN (8447, 8448, 8449)) -- ЦЕХ колбасный + ЦЕХ деликатесов + ЦЕХ с/к
                        OR (EXISTS (SELECT 1 FROM MovementBoolean WHERE MovementId = inMovementId_Weighing AND DescId = zc_MovementBoolean_isIncome() AND ValueData = FALSE)
                            AND vbIsWeighing = TRUE)
                        OR (EXISTS (SELECT 1 FROM MovementLinkObject AS MLO_DocumentKind WHERE MLO_DocumentKind.MovementId = inMovementId AND MLO_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind() AND MLO_DocumentKind.ObjectId = zc_Enum_DocumentKind_PackDiff()))
