@@ -123,6 +123,11 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
               Format = ',0.####'
               Kind = skSum
               Column = RemainsMCS_result
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Send
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -308,6 +313,17 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
           object RemainsMCS_result: TcxGridDBColumn
             Caption = #1048#1058#1054#1043#1054' '#1082#1086#1083'-'#1074#1086' '#1088#1072#1089#1093#1086#1076
             DataBinding.FieldName = 'RemainsMCS_result'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Amount_Send: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1088#1072#1089#1093#1086#1076
+            DataBinding.FieldName = 'Amount_Send'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -566,6 +582,11 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
               Format = ',0.####'
               Kind = skSum
               Column = chRemainsMCS_result
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmount_Send
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -646,6 +667,17 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object chAmount_Send: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'Amount_Send'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
           end
           object chAmount_Sale: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' '#1087#1077#1088#1080#1086#1076
