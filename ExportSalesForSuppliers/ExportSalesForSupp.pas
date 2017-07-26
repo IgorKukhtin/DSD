@@ -1,4 +1,4 @@
-unit MainUnit;
+unit ExportSalesForSupp;
 
 interface
 
@@ -19,7 +19,7 @@ uses
   IdFTP, cxCurrencyEdit;
 
 type
-  TForm1 = class(TForm)
+  TExportSalesForSuppForm = class(TForm)
     ZConnection1: TZConnection;
     Timer1: TTimer;
     qryUnit: TZQuery;
@@ -131,6 +131,7 @@ type
     procedure btnTevaExportClick(Sender: TObject);
     procedure btnTevaSendMailClick(Sender: TObject);
     procedure btnTevaAllClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
     FileNameBaDM_byUnit: String;
@@ -162,13 +163,13 @@ type
   end;
 
 var
-  Form1: TForm1;
+  ExportSalesForSuppForm: TExportSalesForSuppForm;
 
 implementation
 
 {$R *.dfm}
 
-procedure TForm1.Add_Log(AMessage: String);
+procedure TExportSalesForSuppForm.Add_Log(AMessage: String);
 var
   F: TextFile;
 
@@ -188,7 +189,7 @@ begin
   end;
 end;
 
-procedure TForm1.btnBaDMExecuteClick(Sender: TObject);
+procedure TExportSalesForSuppForm.btnBaDMExecuteClick(Sender: TObject);
 begin
   Add_Log('Начало Формирования 2-х отчетов БаДМ');
   qryReport_Upload_BaDM.Close;
@@ -214,7 +215,7 @@ begin
   FileNameBaDM_byUnit := 'BaDMRep_'+FormatDateTime('DD_MM_YYYY',BaDMDate.Date)+'.csv';
 end;
 
-procedure TForm1.btnBaDMExportClick(Sender: TObject);
+procedure TExportSalesForSuppForm.btnBaDMExportClick(Sender: TObject);
 var
   sl,sll : TStringList;
   i : Integer;
@@ -291,7 +292,7 @@ begin
   end;
 end;
 
-procedure TForm1.btnBaDMSendFTPClick(Sender: TObject);
+procedure TExportSalesForSuppForm.btnBaDMSendFTPClick(Sender: TObject);
 begin
   try
     IdFTP1.Disconnect;
@@ -334,7 +335,7 @@ begin
   end;
 end;
 
-procedure TForm1.btnOptimaExecuteClick(Sender: TObject);
+procedure TExportSalesForSuppForm.btnOptimaExecuteClick(Sender: TObject);
 begin
   Add_Log('Начало Формирования отчета Оптима - '+qryUnit.FieldByName('UnitName').AsString);
   qryReport_Upload_Optima.Close;
@@ -352,7 +353,7 @@ begin
   FileNameOptima := 'Report_'+qryUnit.FieldByName('UnitCodePartner').AsString+'_'+FormatDateTime('YYYYMMDD',OptimaDate.Date)+'.XML';
 end;
 
-procedure TForm1.btnOptimaExportClick(Sender: TObject);
+procedure TExportSalesForSuppForm.btnOptimaExportClick(Sender: TObject);
 var
   sl : TStringList;
 begin
@@ -379,7 +380,7 @@ begin
   end;
 end;
 
-procedure TForm1.btnOptimaSendMailClick(Sender: TObject);
+procedure TExportSalesForSuppForm.btnOptimaSendMailClick(Sender: TObject);
 var
   addr: Array of String;
   S, S1: String;
@@ -413,7 +414,7 @@ begin
   End;
 end;
 
-procedure TForm1.btnTevaAllClick(Sender: TObject);
+procedure TExportSalesForSuppForm.btnTevaAllClick(Sender: TObject);
 begin
   try
     btnTevaExecuteClick(nil);
@@ -428,7 +429,7 @@ begin
   end;
 end;
 
-procedure TForm1.btnTevaExecuteClick(Sender: TObject);
+procedure TExportSalesForSuppForm.btnTevaExecuteClick(Sender: TObject);
 begin
   Add_Log('Начало Формирования отчета Тева');
 
@@ -449,7 +450,7 @@ begin
   FileNameTeva := 'Teva_' + FormatDateTime('DD_MM_YYYY', TevaDate.Date) + '.csv';
 end;
 
-procedure TForm1.btnTevaExportClick(Sender: TObject);
+procedure TExportSalesForSuppForm.btnTevaExportClick(Sender: TObject);
 var
   sl: TStringList;
 begin
@@ -485,7 +486,7 @@ begin
   end;
 end;
 
-procedure TForm1.btnTevaSendMailClick(Sender: TObject);
+procedure TExportSalesForSuppForm.btnTevaSendMailClick(Sender: TObject);
 var
   addr: array of string;
   S, S1: string;
@@ -522,7 +523,7 @@ begin
   end;
 end;
 
-procedure TForm1.btnOptimaAllClick(Sender: TObject);
+procedure TExportSalesForSuppForm.btnOptimaAllClick(Sender: TObject);
 var lCount: Integer;
 begin
   try
@@ -558,7 +559,12 @@ begin
 
 end;
 
-procedure TForm1.FormCreate(Sender: TObject);
+procedure TExportSalesForSuppForm.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  Action := caFree;
+end;
+
+procedure TExportSalesForSuppForm.FormCreate(Sender: TObject);
 var
   Ini: TIniFile;
   function GetCorrectNameFile(AName: String): String;
@@ -571,7 +577,7 @@ var
     Result := AName;
   end;
 begin
-  Ini := TIniFile.Create(ChangeFileExt(Application.ExeName, '.ini'));
+  Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'ExportSalesForSuppliers.ini');
 
   try
     SavePathBaDM := Ini.readString('Options','PathBaDM',ExtractFilePath(Application.ExeName));
@@ -687,7 +693,8 @@ begin
       end;
     end;
 
-    if not ((ParamCount >= 1) and (CompareText(ParamStr(1), 'manual') = 0)) then
+    if not (((ParamCount >= 1) and (CompareText(ParamStr(1), 'manual') = 0)) or
+      (Pos('Farmacy.exe', Application.ExeName) <> 0)) then
     begin
       btnOptimaAll.Enabled := false;
       btnOptimaExecute.Enabled := false;
@@ -714,7 +721,7 @@ begin
   end;
 end;
 
-procedure TForm1.Timer1Timer(Sender: TObject);
+procedure TExportSalesForSuppForm.Timer1Timer(Sender: TObject);
 begin
   try
     timer1.Enabled := False;
@@ -731,13 +738,13 @@ begin
   end;
 end;
 
-procedure TForm1.LInitializeISO(var VHeaderEncoding: Char; var VCharSet: string);
+procedure TExportSalesForSuppForm.LInitializeISO(var VHeaderEncoding: Char; var VCharSet: string);
 begin
   VHeaderEncoding:='B';
   VCharSet:='Windows-1251';
 end;
 
-function TForm1.SendMail(const Host: String; const Port: integer;
+function TExportSalesForSuppForm.SendMail(const Host: String; const Port: integer;
                           const Password, Username: String;
                           const Recipients:  array of String;
                           const FromAdres, Subject: String;

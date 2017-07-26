@@ -2,13 +2,13 @@ program ExportSalesForSuppliers;
 
 uses
   Vcl.Forms,
-  MainUnit in '..\ExportSalesForSuppliers\MainUnit.pas' {Form1};
+  ExportSalesForSupp in '..\ExportSalesForSuppliers\ExportSalesForSupp.pas' {ExportSalesForSuppForm};
 
 {$R *.res}
 
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TExportSalesForSuppForm, ExportSalesForSuppForm);
   Application.Run;
 end.
