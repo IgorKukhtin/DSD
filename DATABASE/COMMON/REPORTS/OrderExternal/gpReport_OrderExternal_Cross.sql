@@ -19,7 +19,7 @@ CREATE OR REPLACE FUNCTION gpReport_OrderExternal_Cross(
 RETURNS SETOF refcursor
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+    DECLARE vbUserId Integer;
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
 BEGIN
