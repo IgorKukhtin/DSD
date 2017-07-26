@@ -83,11 +83,13 @@ BEGIN
                              , zfCalc_SummIn (MI_Master.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData) AS TotalSumm
                              , zfCalc_SummPriceList (MI_Master.Amount, MIFloat_OperPriceList.ValueData)                       AS TotalSummPriceList
 
-                             , CAST (zfCalc_SummPriceList (MI_Master.Amount, MIFloat_OperPriceList.ValueData) - COALESCE (MIFloat_TotalChangePercent.ValueData, 0) AS TFloat) * (-1)   AS TotalSummToPay
+                             , CAST (zfCalc_SummPriceList (MI_Master.Amount, MIFloat_OperPriceList.ValueData) 
+                                    - COALESCE (MIFloat_TotalChangePercent.ValueData, 0) AS TFloat) * (-1)   AS TotalSummToPay
 
                              , CAST (zfCalc_SummPriceList (MI_Master.Amount, MIFloat_OperPriceList.ValueData)
                                     - COALESCE (MIFloat_TotalChangePercent.ValueData, 0)
                                     - COALESCE (MIFloat_TotalPay.ValueData, 0)
+                                    - COALESCE (MIFloat_TotalPayOth.ValueData, 0)
                                AS TFloat)                                         AS SummDebt
                         FROM Movement 
                              INNER JOIN MovementLinkObject AS MovementLinkObject_From
@@ -121,7 +123,10 @@ BEGIN
                                                         AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue() 
                              LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
                                                          ON MIFloat_TotalPay.MovementItemId = MI_Master.Id
-                                                        AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()    
+                                                        AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay() 
+                             LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth
+                                                         ON MIFloat_TotalPayOth.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_TotalPayOth.DescId         = zc_MIFloat_TotalPayOth() 
                              LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
                                                          ON MIFloat_TotalChangePercent.MovementItemId = MI_Master.Id
                                                         AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()   

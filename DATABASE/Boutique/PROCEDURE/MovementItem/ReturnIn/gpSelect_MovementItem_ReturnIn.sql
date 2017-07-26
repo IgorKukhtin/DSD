@@ -204,14 +204,15 @@ BEGIN
                            , zfCalc_SummPriceList (tmpMI_Master.Amount,  COALESCE (tmpMI_Master.OperPriceList, tmpMI_Sale.OperPriceList))                                                   AS TotalSummPriceList
                            , COALESCE (tmpMI_Master.CurrencyValue, tmpMI_Sale.CurrencyValue) AS CurrencyValue
                            , COALESCE (tmpMI_Master.ParValue, tmpMI_Sale.ParValue)           AS ParValue
-                           , COALESCE (tmpMI_Master.TotalChangePercent, 0)    AS TotalChangePercent
-                           , COALESCE (tmpMI_Master.TotalPay, 0)              AS TotalPay
-                           , COALESCE (tmpMI_Sale.TotalPay, 0)                AS TotalSummPay_Sale
-                           , COALESCE (tmpMI_Master.TotalPayOth, 0)           AS TotalPayOth
-                           , COALESCE (tmpMI_Master.isErased, False)          AS isErased
+                           , COALESCE (tmpMI_Master.TotalChangePercent, 0)           AS TotalChangePercent
+                           , COALESCE (tmpMI_Master.TotalPay, 0)                     AS TotalPay
+                           , COALESCE (tmpMI_Sale.TotalPay, 0)                       AS TotalSummPay_Sale
+                           , COALESCE (tmpMI_Master.TotalPayOth, 0)                  AS TotalPayOth
+                           , COALESCE (tmpMI_Master.isErased, False)                 AS isErased
 
-                           , CAST (zfCalc_SummPriceList (tmpMI_Master.Amount,  COALESCE (tmpMI_Master.OperPriceList, tmpMI_Sale.OperPriceList))  - COALESCE (tmpMI_Master.TotalChangePercent, 0)
-                             AS TFloat)                                       AS TotalSummToPay
+                           , CAST (zfCalc_SummPriceList (tmpMI_Master.Amount,  COALESCE (tmpMI_Master.OperPriceList, tmpMI_Sale.OperPriceList)) 
+                                  - COALESCE (tmpMI_Master.TotalChangePercent, 0)
+                             AS TFloat)                                              AS TotalSummToPay
                            , tmpMI_Master.BarCode
                            , tmpMI_Master.Comment
                            , tmpMI_Master.Ord
@@ -360,11 +361,9 @@ BEGIN
                            , COALESCE (MIFloat_TotalPay.ValueData, 0)              AS TotalPay
                            , COALESCE (MIFloat_TotalPayOth.ValueData, 0)           AS TotalPayOth
                           
-                           , CAST ((CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 1) <> 0
-                                         THEN CAST (COALESCE (MovementItem.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) / COALESCE (MIFloat_CountForPrice.ValueData, 1) AS NUMERIC (16, 2))
-                                         ELSE CAST (COALESCE (MovementItem.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 2))
-                                    END) - COALESCE (MIFloat_TotalChangePercent.ValueData, 0)
-                             AS TFloat) AS TotalSummToPay
+                           , CAST (zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData)
+                                  - COALESCE (MIFloat_TotalChangePercent.ValueData, 0)
+                                                                                   AS TFloat) AS TotalSummToPay
                            , MIString_BarCode.ValueData                            AS BarCode
                            , COALESCE (MIString_Comment.ValueData,'')              AS Comment
                            , MovementItem.isErased
