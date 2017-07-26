@@ -369,9 +369,11 @@ type
     N143: TMenuItem;
     actReport_GoodsRemainsLight: TdsdOpenForm;
     N144: TMenuItem;
+    miExportSalesForSupp: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
+    procedure miExportSalesForSuppClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -382,8 +384,11 @@ var
   MainFormInstance: TMainForm;
 
 implementation
-uses UploadUnloadData, Dialogs, Forms, SysUtils, IdGlobal, RepriceUnit;
+
 {$R *.dfm}
+
+uses
+  UploadUnloadData, Dialogs, Forms, SysUtils, IdGlobal, RepriceUnit, ExportSalesForSupp;
 
 procedure TMainForm.actSaveDataExecute(Sender: TObject);
 begin
@@ -396,6 +401,11 @@ begin
 
   Application.ProcessMessages;
   ShowMessage('Выгрузили');
+end;
+
+procedure TMainForm.miExportSalesForSuppClick(Sender: TObject);
+begin
+  TExportSalesForSuppForm.Create(Self).Show;
 end;
 
 procedure TMainForm.miRepriceClick(Sender: TObject);

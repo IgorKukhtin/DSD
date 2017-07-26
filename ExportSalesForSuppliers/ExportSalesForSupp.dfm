@@ -1,6 +1,7 @@
-object Form1: TForm1
+object ExportSalesForSuppForm: TExportSalesForSuppForm
   Left = 0
   Top = 0
+  AutoSize = True
   Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1076#1083#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
   ClientHeight = 543
   ClientWidth = 909
@@ -11,6 +12,7 @@ object Form1: TForm1
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13

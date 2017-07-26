@@ -96,9 +96,8 @@
 			<DelphiCompile Include="$(MainSource)">
 				<MainSource>MainSource</MainSource>
 			</DelphiCompile>
-			<DCCReference Include="..\ExportSalesForSuppliers\MainUnit.pas">
-				<Form>Form1</Form>
-				<FormType>dfm</FormType>
+			<DCCReference Include="..\ExportSalesForSuppliers\ExportSalesForSupp.pas">
+				<Form>ExportSalesForSuppForm</Form>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
