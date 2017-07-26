@@ -1,10 +1,13 @@
 -- Function: gpReport_OrderExternal_Cross()
 
 DROP FUNCTION IF EXISTS gpReport_OrderExternal_Cross (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_OrderExternal_Cross (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_OrderExternal_Cross(
     IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
+    IN inJuridicalId        Integer   , -- Юр.лицо
+    IN inRetailId           Integer   , -- Торг. сеть
     IN inFromId             Integer   , -- От кого (в документе)
     IN inToId               Integer   , -- Кому (в документе)
     IN inRouteId            Integer   , -- Маршрут
@@ -56,6 +59,14 @@ BEGIN
            LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteSorting
                                        ON MovementLinkObject_RouteSorting.MovementId = Movement.Id
                                       AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
+
+           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
+                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+           LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                               AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+
 /*
            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                   AND MovementItem.DescId     = zc_MI_Master()
@@ -69,7 +80,8 @@ BEGIN
          AND (COALESCE (MovementLinkObject_From.ObjectId,0) = CASE WHEN inFromId <> 0 THEN inFromId ELSE COALESCE (MovementLinkObject_From.ObjectId,0) END)
          AND (COALESCE (MovementLinkObject_Route.ObjectId,0) = CASE WHEN inRouteId <> 0 THEN inRouteId ELSE COALESCE (MovementLinkObject_Route.ObjectId,0) END)
          AND (COALESCE (MovementLinkObject_RouteSorting.ObjectId,0) = CASE WHEN inRouteSortingId <> 0 THEN inRouteSortingId ELSE COALESCE (MovementLinkObject_RouteSorting.ObjectId,0) END)
-
+         AND (COALESCE (ObjectLink_Partner_Juridical.ChildObjectId,0) = CASE WHEN inJuridicalId <> 0 THEN inJuridicalId ELSE COALESCE (ObjectLink_Partner_Juridical.ChildObjectId,0) END)
+         AND (COALESCE (ObjectLink_Juridical_Retail.ChildObjectId,0) = CASE WHEN inRetailId <> 0 THEN inRetailId ELSE COALESCE (ObjectLink_Juridical_Retail.ChildObjectId,0) END)
 --       GROUP BY
 --             Movement.Id
 --            , CAST (Movement.InvNumber  AS TVarChar)
@@ -337,12 +349,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpReport_OrderExternal_Cross (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpReport_OrderExternal_Cross (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.07.17         * add inJuridicalId, inRetailId
  20.09.14                                                        *
 
 */

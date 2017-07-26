@@ -3,10 +3,8 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
   ClientHeight = 480
   ClientWidth = 941
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -273
-  ExplicitTop = -26
   ExplicitWidth = 957
-  ExplicitHeight = 519
+  ExplicitHeight = 518
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -120,6 +118,11 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
               Format = ',0.####'
               Kind = skSum
               Column = Summa_RemainsEnd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemainsMCS_result
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -218,6 +221,11 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
               Format = ',0.####'
               Kind = skSum
               Column = Summa_RemainsEnd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemainsMCS_result
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -296,6 +304,17 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1087#1088#1080#1093#1086#1076#1072
             Width = 80
+          end
+          object RemainsMCS_result: TcxGridDBColumn
+            Caption = #1048#1058#1054#1043#1054' '#1082#1086#1083'-'#1074#1086' '#1088#1072#1089#1093#1086#1076
+            DataBinding.FieldName = 'RemainsMCS_result'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object RemainsStart: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1085#1072#1095'. '#1076#1072#1090#1091
@@ -542,6 +561,11 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
               Format = ',0.####'
               Kind = skSum
               Column = chSumma_Sale6
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chRemainsMCS_result
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -583,6 +607,11 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
               Format = ',0.####'
               Kind = skSum
               Column = chSumma_Sale6
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chRemainsMCS_result
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -606,6 +635,17 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 231
+          end
+          object chRemainsMCS_result: TcxGridDBColumn
+            Caption = #1048#1058#1054#1043#1054' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'RemainsMCS_result'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object chAmount_Sale: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' '#1087#1077#1088#1080#1086#1076
