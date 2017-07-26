@@ -109,4 +109,21 @@ SELECT * FROM gpInsertUpdate_Object_MobileConst (ioId:= 0::Integer
                                                , inCriticalDebtSum:= 25::TFloat
                                                , inSession:= zfCalc_UserAdmin()
                                                 ); 
+
+DO $BODY$
+BEGIN
+      -- меняем только версию моб. приложения
+      PERFORM gpInsertUpdate_Object_MobileConst (ioId:= C.Id
+                                               , inCode:= C.Code
+                                               , inMobileVersion:= '1.28.0'::TVarChar
+                                               , inMobileAPKFileName:= C.MobileAPKFileName
+                                               , inOperDateDiff:= C.OperDateDiff
+                                               , inReturnDayCount:= C.ReturnDayCount
+                                               , inCriticalOverDays:= C.CriticalOverDays
+                                               , inCriticalDebtSum:= C.CriticalDebtSum
+                                               , inSession:= zfCalc_UserAdmin()
+                                                )
+      FROM lpGet_Object_MobileConst (inId:= (SELECT Object.Id FROM Object WHERE Object.ObjectCode = 0 AND Object.DescId = zc_Object_MobileConst())) AS C;
+END; $BODY$
+
 */

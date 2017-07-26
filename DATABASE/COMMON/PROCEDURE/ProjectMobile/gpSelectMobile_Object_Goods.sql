@@ -60,7 +60,7 @@ BEGIN
                WHERE Object_GoodsListSale.DescId = zc_Object_GoodsListSale()
               );
            
-           IF inSyncDateIn > zc_DateStart()
+           IF inSyncDateIn > zc_DateStart() AND 1 = 0 -- пока отключим ограничение по времени
            THEN
                 RETURN QUERY
                   WITH tmpProtocol AS (SELECT ObjectProtocol.ObjectId AS GoodsId, MAX(ObjectProtocol.OperDate) AS MaxOperDate
