@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
 
              , ProfitLossGroupId Integer, ProfitLossGroupCode Integer, ProfitLossGroupName TVarChar
              , ProfitLossDirectionId Integer, ProfitLossDirectionCode Integer, ProfitLossDirectionName TVarChar
+             , BusinessId Integer, BusinessName TVarChar
              , Comment TVarChar
 
              , isErased boolean) AS
@@ -23,11 +24,10 @@ $BODY$BEGIN
 
    RETURN QUERY
    SELECT
-          Object_ArticleLoss.Id         AS Id
-        , Object_ArticleLoss.ObjectCode AS Code
-        , Object_ArticleLoss.ValueData  AS Name
+          Object_ArticleLoss.Id           AS Id
+        , Object_ArticleLoss.ObjectCode   AS Code
+        , Object_ArticleLoss.ValueData    AS Name
 
-          
         , Object_InfoMoney_View.InfoMoneyGroupName
 
         , Object_InfoMoney_View.InfoMoneyDestinationName
@@ -45,9 +45,12 @@ $BODY$BEGIN
         , View_ProfitLossDirection.ProfitLossDirectionCode
         , View_ProfitLossDirection.ProfitLossDirectionName
         
-        , ObjectString_Comment.ValueData        AS Comment       
+        , Object_Business.Id              AS BusinessId
+        , Object_Business.ValueData       AS BusinessName        
+        
+        , ObjectString_Comment.ValueData  AS Comment       
 
-        , Object_ArticleLoss.isErased    AS isErased
+        , Object_ArticleLoss.isErased     AS isErased
    FROM Object AS Object_ArticleLoss
           
         LEFT JOIN ObjectLink AS ObjectLink_ArticleLoss_InfoMoney 
@@ -60,6 +63,11 @@ $BODY$BEGIN
                             AND ObjectLink_ArticleLoss_ProfitLossDirection.DescId = zc_ObjectLink_ArticleLoss_ProfitLossDirection()
         LEFT JOIN Object_ProfitLossDirection_View AS View_ProfitLossDirection ON View_ProfitLossDirection.ProfitLossDirectionId = ObjectLink_ArticleLoss_ProfitLossDirection.ChildObjectId
 
+        LEFT JOIN ObjectLink AS ObjectLink_ArticleLoss_Business
+                             ON ObjectLink_ArticleLoss_Business.ObjectId = Object_ArticleLoss.Id
+                            AND ObjectLink_ArticleLoss_Business.DescId = zc_ObjectLink_ArticleLoss_Business()
+        LEFT JOIN Object AS Object_Business ON Object_Business.Id = ObjectLink_ArticleLoss_Business.ChildObjectId
+        
         LEFT JOIN ObjectString AS ObjectString_Comment
                                ON ObjectString_Comment.ObjectId = Object_ArticleLoss.Id
                               AND ObjectString_Comment.DescId = zc_ObjectString_ArticleLoss_Comment() 
@@ -76,9 +84,10 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».    Ã‡Ì¸ÍÓ ƒ.¿.
+ 27.07.17         * add Business
  05.07.17         *
  01.09.14         * 
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Object_ArticleLoss('2')
+-- SELECT * FROM gpSelect_Object_ArticleLoss(inShowAll:= TRUE, inSession:='2'::TVarChar)

@@ -63,6 +63,12 @@ type
     cxGridLevel1: TcxGridLevel;
     isSaleAnother: TcxGridDBColumn;
     cxSplitter1: TcxSplitter;
+    DataSourceDocs: TDataSource;
+    DataSetDocs: TClientDataSet;
+    spSend: TdsdStoredProc;
+    actSend: TdsdExecStoredProc;
+    macSend: TMultiAction;
+    bbmacSend: TdxBarButton;
   private
     { Private declarations }
   public

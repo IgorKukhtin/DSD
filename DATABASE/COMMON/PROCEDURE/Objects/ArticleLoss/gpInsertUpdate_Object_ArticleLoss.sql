@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ArticleLoss (Integer, Integer, TVarChar, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ArticleLoss (Integer, Integer, TVarChar, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ArticleLoss (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ArticleLoss(
  INOUT ioId                       Integer   ,     -- ключ объекта <Статьи списания>
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ArticleLoss(
     IN inComment                  TVarChar  ,     -- Примечание    
     IN inInfoMoneyId              Integer   ,     -- Статьи назначения
     IN inProfitLossDirectionId    Integer   ,     -- Аналитики статей отчета о прибылях и убытках - направление
+    IN inBusinessId               Integer   ,     -- Бизнес
     IN inSession                  TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -37,12 +39,13 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_ArticleLoss(), vbCode_calc, inName);
 
-   -- сохранили связь с <>
+   -- сохранили связь с <Статьи назначения>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ArticleLoss_InfoMoney(), ioId, inInfoMoneyId);
-   -- сохранили связь с <>
+   -- сохранили связь с <направление>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ArticleLoss_ProfitLossDirection(), ioId, inProfitLossDirectionId);
-   
-   -- сохранили cсвойство с <>
+   -- сохранили связь с <Бизнес>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ArticleLoss_Business(), ioId, inBusinessId);
+   -- сохранили cсвойство с <ПРимечание>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ArticleLoss_Comment(), ioId, inComment);
   
    -- сохранили протокол
@@ -57,9 +60,10 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Манько Д.А.
+ 27.07.17         * add inBusinessId
  05.07.17         * add inComment
  01.09.14         *
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_ArticleLoss(ioId:=null, inCode:=null, inName:='Регион 1', inInfoMoneyId:=0 , inSession:='2')
+-- SELECT * FROM gpInsertUpdate_Object_ArticleLoss(ioId:=null, inCode:=null, inName:='Регион 1', inComment:= '', inInfoMoneyId:=0, inProfitLossDirectionId:=0, inBusinessId:=0, inSession:='2')

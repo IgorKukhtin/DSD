@@ -1793,6 +1793,9 @@ object DM: TDM
     Params = <>
     Left = 40
     Top = 624
+    object cdsJuridicalCollationDocId: TIntegerField
+      FieldName = 'DocId'
+    end
     object cdsJuridicalCollationDocNum: TStringField
       FieldName = 'DocNum'
       Size = 200

@@ -66,6 +66,7 @@ type
     bbShowAll: TdxBarButton;
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
+    BusinessName: TcxGridDBColumn;
   private
     { Private declarations }
   public
