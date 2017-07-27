@@ -246,8 +246,8 @@ BEGIN
                                     , Object_ArticleLoss.ValueData      AS PartnerName
                                FROM Object AS Object_ArticleLoss
                                WHERE Object_ArticleLoss.ObjectCode = inPartnerCode
-                                 AND Object_ArticleLoss.DescId = zc_Object_ArticleLoss()
-                                 AND Object_ArticleLoss.isErased = FALSE
+                                 AND Object_ArticleLoss.DescId     IN (zc_Object_ArticleLoss(), zc_Object_Member())
+                                 AND Object_ArticleLoss.isErased   = FALSE
                                  AND inPartnerCode > 0
                               )
        SELECT tmpArticleLoss.ObjectDescId

@@ -78,7 +78,6 @@ $BODY$BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpSelect_Object_ArticleLoss(TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -90,4 +89,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ArticleLoss(inShowAll:= TRUE, inSession:='2'::TVarChar)
+-- SELECT * FROM gpSelect_Object_ArticleLoss (inShowAll:= TRUE, inSession:= zfCalc_UserAdmin())

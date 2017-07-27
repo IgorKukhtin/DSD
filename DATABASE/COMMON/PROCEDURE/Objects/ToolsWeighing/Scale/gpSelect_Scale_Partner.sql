@@ -59,7 +59,19 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-       WITH tmpInfoMoney AS (-- 1.1.
+       WITH tmpMember AS (SELECT lfSelect.MemberId        AS MemberId
+                               , Object_Member.DescId     AS DescId
+                               , Object_Member.ObjectCode AS MemberCode
+                               , Object_Member.ValueData  AS MemberName
+                               , Object_Unit.ObjectCode   AS UnitCode
+                               , Object_Unit.ValueData    AS UnitName
+                          FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                               INNER JOIN Object AS Object_Member ON Object_Member.Id = lfSelect.MemberId
+                               LEFT  JOIN Object AS Object_Unit   ON Object_Unit.Id   = lfSelect.UnitId
+                          WHERE inBranchCode = 301
+                            AND lfSelect.UnitId NOT IN (954062) -- Отдел Х
+                         )
+          , tmpInfoMoney AS (-- 1.1.
                              SELECT View_InfoMoney_find.InfoMoneyId
                                   , View_InfoMoney_find.InfoMoneyGroupId
                                   , zc_Movement_Income() AS MovementDescId
@@ -331,8 +343,47 @@ BEGIN
                                 AND ObjectLink_ArticleLoss_ProfitLossDirection.ChildObjectId > 0
             LEFT JOIN Object_ProfitLossDirection_View AS View_ProfitLossDirection ON View_ProfitLossDirection.ProfitLossDirectionId = ObjectLink_ArticleLoss_ProfitLossDirection.ChildObjectId
 
-       WHERE Object_ArticleLoss.DescId = zc_Object_ArticleLoss()
+       WHERE Object_ArticleLoss.DescId   = zc_Object_ArticleLoss()
          AND Object_ArticleLoss.isErased = FALSE
+
+      UNION ALL
+       SELECT tmpMember.MemberId     AS PartnerId
+            , tmpMember.MemberCode   AS PartnerCode
+            , tmpMember.MemberName   AS PartnerName
+            , '' :: TVarChar  AS JuridicalName
+            , NULL :: Integer AS PaidKindId
+            , '' :: TVarChar  AS PaidKindName
+
+            , NULL :: Integer AS ContractId
+            , tmpMember.UnitCode             AS ContractCode
+            , tmpMember.UnitCode :: TVarChar AS ContractNumber
+            , tmpMember.UnitName             AS ContractTagName
+
+            , NULL :: Integer  AS InfoMoneyId
+            , NULL :: Integer  AS InfoMoneyCode
+            , NULL :: TVarChar AS InfoMoneyName
+
+            , NULL :: TFloat AS ChangePercent
+            , NULL :: TFloat AS ChangePercentAmount
+
+            , FALSE       :: Boolean AS isEdiOrdspr
+            , FALSE       :: Boolean AS isEdiInvoice
+            , FALSE       :: Boolean AS isEdiDesadv
+
+            , TRUE        :: Boolean AS isMovement,  2 :: TFloat AS CountMovement
+            , FALSE       :: Boolean AS isAccount,   0 :: TFloat AS CountAccount
+            , FALSE       :: Boolean AS isTransport, 0 :: TFloat AS CountTransport
+            , FALSE       :: Boolean AS isQuality,   0 :: TFloat AS CountQuality
+            , FALSE       :: Boolean AS isPack   ,   0 :: TFloat AS CountPack
+            , FALSE       :: Boolean AS isSpec   ,   0 :: TFloat AS CountSpec
+            , FALSE       :: Boolean AS isTax    ,   0 :: TFloat AS CountTax
+
+            , zc_Object_ArticleLoss() AS ObjectDescId
+            , zc_Movement_Loss()      AS MovementDescId
+            , ObjectDesc.ItemName
+
+       FROM tmpMember
+            LEFT JOIN ObjectDesc ON ObjectDesc.Id = tmpMember.DescId
 
       UNION ALL
        SELECT Object_Unit.Id          AS PartnerId

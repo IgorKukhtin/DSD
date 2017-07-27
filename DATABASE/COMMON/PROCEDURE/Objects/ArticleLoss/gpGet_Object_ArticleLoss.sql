@@ -95,4 +95,4 @@ ALTER FUNCTION gpGet_Object_ArticleLoss (integer, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_ArticleLoss (0, '2')
+-- SELECT * FROM gpGet_Object_ArticleLoss (1, zfCalc_UserAdmin())
