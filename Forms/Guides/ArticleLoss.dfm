@@ -27,7 +27,6 @@ object ArticleLossForm: TArticleLossForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitHeight = 256
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -64,6 +63,15 @@ object ArticleLossForm: TArticleLossForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 200
+      end
+      object BusinessName: TcxGridDBColumn
+        Caption = #1041#1080#1079#1085#1077#1089
+        DataBinding.FieldName = 'BusinessName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
       end
       object InfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055
@@ -507,8 +515,8 @@ object ArticleLossForm: TArticleLossForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 288
-    Top = 208
+    Left = 344
+    Top = 160
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -590,6 +598,14 @@ object ArticleLossForm: TArticleLossForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'ProfitLossDirectionId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBusinessId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BusinessId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

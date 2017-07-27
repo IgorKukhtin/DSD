@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100'  '#1057#1090#1072#1090#1100#1102' '#1089#1087#1080#1089#1072#1085#1080#1103
-  ClientHeight = 309
+  ClientHeight = 333
   ClientWidth = 384
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,18 +18,18 @@
   TextHeight = 13
   object edName: TcxTextEdit
     Left = 40
-    Top = 71
+    Top = 70
     TabOrder = 0
     Width = 296
   end
   object cxLabel1: TcxLabel
     Left = 40
-    Top = 48
+    Top = 50
     Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 87
-    Top = 273
+    Left = 79
+    Top = 294
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 237
-    Top = 273
+    Left = 229
+    Top = 294
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -63,45 +63,64 @@
   end
   object cxLabel4: TcxLabel
     Left = 40
-    Top = 98
+    Top = 95
     Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
   end
   object ceInfoMoney: TcxButtonEdit
     Left = 40
-    Top = 121
+    Top = 115
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 7
     Width = 296
   end
   object cxLabel7: TcxLabel
     Left = 40
-    Top = 157
+    Top = 140
     Caption = #1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
   end
   object ceProfitLossDirection: TcxButtonEdit
     Left = 40
-    Top = 180
+    Top = 160
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 9
     Width = 296
   end
   object cxLabel8: TcxLabel
     Left = 40
-    Top = 216
+    Top = 230
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit
     Left = 40
-    Top = 233
+    Top = 250
     TabOrder = 11
+    Width = 296
+  end
+  object cxLabel2: TcxLabel
+    Left = 40
+    Top = 185
+    Caption = #1041#1080#1079#1085#1077#1089
+  end
+  object ceBusiness: TcxButtonEdit
+    Left = 40
+    Top = 205
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 13
     Width = 296
   end
   object ActionList: TActionList
@@ -176,7 +195,7 @@
       item
         Name = 'inInfoMoneyId'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -184,7 +203,15 @@
       item
         Name = 'inProfitLossDirectionId'
         Value = ''
-        Component = ProfitLossDirectionGuides
+        Component = GuidesProfitLossDirection
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBusinessId'
+        Value = Null
+        Component = GuidesBusiness
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -233,14 +260,14 @@
       item
         Name = 'InfoMoneyId'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -248,14 +275,14 @@
       item
         Name = 'ProfitLossDirectionId'
         Value = ''
-        Component = ProfitLossDirectionGuides
+        Component = GuidesProfitLossDirection
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'ProfitLossDirectionName'
         Value = ''
-        Component = ProfitLossDirectionGuides
+        Component = GuidesProfitLossDirection
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -264,6 +291,21 @@
         Name = 'Comment'
         Value = Null
         Component = ceComment
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BusinessId'
+        Value = Null
+        Component = GuidesBusiness
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BusinessName'
+        Value = Null
+        Component = GuidesBusiness
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -290,7 +332,7 @@
     Left = 344
     Top = 64
   end
-  object InfoMoneyGuides: TdsdGuides
+  object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoney
     FormNameParam.Value = 'TInfoMoneyForm'
@@ -302,7 +344,7 @@
       item
         Name = 'Key'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -310,7 +352,7 @@
       item
         Name = 'TextValue'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -319,7 +361,7 @@
     Left = 160
     Top = 108
   end
-  object ProfitLossDirectionGuides: TdsdGuides
+  object GuidesProfitLossDirection: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceProfitLossDirection
     FormNameParam.Value = 'TProfitLossDirection_ObjectForm'
@@ -332,7 +374,7 @@
       item
         Name = 'Key'
         Value = ''
-        Component = ProfitLossDirectionGuides
+        Component = GuidesProfitLossDirection
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -340,7 +382,7 @@
       item
         Name = 'TextValue'
         Value = ''
-        Component = ProfitLossDirectionGuides
+        Component = GuidesProfitLossDirection
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -348,5 +390,35 @@
       end>
     Left = 192
     Top = 160
+  end
+  object GuidesBusiness: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceBusiness
+    FormNameParam.Value = 'TBusiness_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBusiness_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    ParentDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesBusiness
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBusiness
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 224
+    Top = 208
   end
 end

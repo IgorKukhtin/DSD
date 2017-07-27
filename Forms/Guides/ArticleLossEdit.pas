@@ -41,13 +41,16 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
     cxLabel4: TcxLabel;
-    InfoMoneyGuides: TdsdGuides;
+    GuidesInfoMoney: TdsdGuides;
     ceInfoMoney: TcxButtonEdit;
     cxLabel7: TcxLabel;
     ceProfitLossDirection: TcxButtonEdit;
-    ProfitLossDirectionGuides: TdsdGuides;
+    GuidesProfitLossDirection: TdsdGuides;
     cxLabel8: TcxLabel;
     ceComment: TcxTextEdit;
+    cxLabel2: TcxLabel;
+    ceBusiness: TcxButtonEdit;
+    GuidesBusiness: TdsdGuides;
   private
     { Private declarations }
   public

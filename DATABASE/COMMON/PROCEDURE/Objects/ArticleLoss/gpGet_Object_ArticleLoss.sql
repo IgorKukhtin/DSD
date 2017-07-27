@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_ArticleLoss(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
              , ProfitLossDirectionId Integer, ProfitLossDirectionName TVarChar
+             , BusinessId Integer, BusinessName TVarChar
              , Comment TVarChar
              , isErased boolean) AS
 $BODY$
@@ -31,25 +32,31 @@ BEGIN
            , CAST (0 as Integer)    AS ProfitLossDirectionId
            , CAST ('' as TVarChar)  AS ProfitLossDirectionName
            
+           , CAST (0 as Integer)    AS BusinessId
+           , CAST ('' as TVarChar)  AS BusinessName  
+
            , CAST ('' as TVarChar)  AS Comment
-          
+
            , CAST (NULL AS Boolean) AS isErased;
    ELSE
        RETURN QUERY
        SELECT
-             Object_ArticleLoss.Id         AS Id
-           , Object_ArticleLoss.ObjectCode AS Code
-           , Object_ArticleLoss.ValueData  AS Name
+             Object_ArticleLoss.Id           AS Id
+           , Object_ArticleLoss.ObjectCode   AS Code
+           , Object_ArticleLoss.ValueData    AS Name
        
-           , Object_InfoMoney.Id          AS InfoMoneyId
-           , Object_InfoMoney.ValueData   AS InfoMoneyName 
+           , Object_InfoMoney.Id             AS InfoMoneyId
+           , Object_InfoMoney.ValueData      AS InfoMoneyName 
 
            , Object_ProfitLossDirection.Id        AS ProfitLossDirectionId
            , Object_ProfitLossDirection.ValueData AS ProfitLossDirectionName
-           
-           , ObjectString_Comment.ValueData        AS Comment
 
-           , Object_ArticleLoss.isErased   AS isErased
+           , Object_Business.Id              AS BusinessId
+           , Object_Business.ValueData       AS BusinessName  
+        
+           , ObjectString_Comment.ValueData  AS Comment
+
+           , Object_ArticleLoss.isErased     AS isErased
 
        FROM Object AS Object_ArticleLoss
            
@@ -62,6 +69,11 @@ BEGIN
                                  ON ObjectLink_ArticleLoss_ProfitLossDirection.ObjectId = Object_ArticleLoss.Id
                                 AND ObjectLink_ArticleLoss_ProfitLossDirection.DescId = zc_ObjectLink_ArticleLoss_ProfitLossDirection()
             LEFT JOIN Object AS Object_ProfitLossDirection ON Object_ProfitLossDirection.Id = ObjectLink_ArticleLoss_ProfitLossDirection.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_ArticleLoss_Business
+                                 ON ObjectLink_ArticleLoss_Business.ObjectId = Object_ArticleLoss.Id
+                                AND ObjectLink_ArticleLoss_Business.DescId = zc_ObjectLink_ArticleLoss_Business()
+            LEFT JOIN Object AS Object_Business ON Object_Business.Id = ObjectLink_ArticleLoss_Business.ChildObjectId
 
             LEFT JOIN ObjectString AS ObjectString_Comment
                                    ON ObjectString_Comment.ObjectId = Object_ArticleLoss.Id
