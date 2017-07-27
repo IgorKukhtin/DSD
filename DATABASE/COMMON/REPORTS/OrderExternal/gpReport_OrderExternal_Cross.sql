@@ -363,6 +363,6 @@ $BODY$
 -- тест
 /*
 BEGIN;
- SELECT * FROM gpReport_OrderExternal_Cross (inStartDate:= '05.11.2014', inEndDate:= '05.11.2014', inFromId := 0, inToId := 0, inRouteId := 0, inRouteSortingId := 0, inGoodsGroupId := 0, inIsByDoc := False, inSession:= '2')
+ SELECT * FROM gpReport_OrderExternal_Cross (inStartDate:= '05.11.2014', inEndDate:= '05.11.2014', inJuridicalId := 0, inRetailId := 0, inFromId := 0, inToId := 0, inRouteId := 0, inRouteSortingId := 0, inGoodsGroupId := 0, inIsByDoc := False, inSession:= '2')
 COMMIT;
 */
