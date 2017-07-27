@@ -20,7 +20,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  cxButtonEdit;
 
 type
   TArticleLossForm = class(TParentForm)
@@ -67,6 +68,7 @@ type
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     BusinessName: TcxGridDBColumn;
+    BusinessChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

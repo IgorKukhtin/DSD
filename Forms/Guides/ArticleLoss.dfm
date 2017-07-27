@@ -67,11 +67,17 @@ object ArticleLossForm: TArticleLossForm
       object BusinessName: TcxGridDBColumn
         Caption = #1041#1080#1079#1085#1077#1089
         DataBinding.FieldName = 'BusinessName'
-        Visible = False
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = BusinessChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 70
+        Width = 92
       end
       object InfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055
@@ -320,8 +326,8 @@ object ArticleLossForm: TArticleLossForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 280
-    Top = 152
+    Left = 104
+    Top = 88
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -475,6 +481,33 @@ object ArticleLossForm: TArticleLossForm
         end>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
+    end
+    object BusinessChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'BusinessChoiceForm'
+      FormName = 'TBusiness_ObjectForm'
+      FormNameParam.Value = 'TBusiness_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'BusinessId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'BusinessName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   object dsdStoredProc: TdsdStoredProc
