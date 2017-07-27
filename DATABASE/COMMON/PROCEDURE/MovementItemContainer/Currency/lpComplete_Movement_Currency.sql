@@ -82,22 +82,27 @@ BEGIN
                                     , COALESCE (ContainerLinkObject_Cash.ObjectId, COALESCE (ContainerLinkObject_BankAccount.ObjectId, COALESCE (ContainerLinkObject_Partner.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, 0)))) AS ObjectId
                                     , Container.Amount
                                FROM ContainerLinkObject AS ContainerLinkObject_Currency
-                                    INNER JOIN Container ON Container.Id = ContainerLinkObject_Currency.ContainerId
+                                    INNER JOIN Container ON Container.Id      = ContainerLinkObject_Currency.ContainerId
                                                         AND Container.DescId  = zc_Container_SummCurrency()
                                     LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Cash
                                                                   ON ContainerLinkObject_Cash.ContainerId  = ContainerLinkObject_Currency.ContainerId
-                                                                 AND ContainerLinkObject_Cash.DescId  = zc_ContainerLinkObject_Cash()
+                                                                 AND ContainerLinkObject_Cash.DescId       = zc_ContainerLinkObject_Cash()
+                                                                 AND vbPaidKindId                          = zc_Enum_PaidKind_SecondForm()
                                     LEFT JOIN ContainerLinkObject AS ContainerLinkObject_BankAccount
                                                                   ON ContainerLinkObject_BankAccount.ContainerId  = ContainerLinkObject_Currency.ContainerId
-                                                                 AND ContainerLinkObject_BankAccount.DescId  = zc_ContainerLinkObject_BankAccount()
+                                                                 AND ContainerLinkObject_BankAccount.DescId       = zc_ContainerLinkObject_BankAccount()
+                                                                 AND vbPaidKindId                                 = zc_Enum_PaidKind_FirstForm()
                                     LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Partner
                                                                   ON ContainerLinkObject_Partner.ContainerId  = ContainerLinkObject_Currency.ContainerId
-                                                                 AND ContainerLinkObject_Partner.DescId  = zc_ContainerLinkObject_Partner()
+                                                                 AND ContainerLinkObject_Partner.DescId       = zc_ContainerLinkObject_Partner()
+                                                                 AND vbPaidKindId                             = zc_Enum_PaidKind_SecondForm()
                                     LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Juridical
                                                                   ON ContainerLinkObject_Juridical.ContainerId  = ContainerLinkObject_Currency.ContainerId
-                                                                 AND ContainerLinkObject_Juridical.DescId  = zc_ContainerLinkObject_Juridical()
+                                                                 AND ContainerLinkObject_Juridical.DescId       = zc_ContainerLinkObject_Juridical()
+                                                                 AND vbPaidKindId                               = zc_Enum_PaidKind_FirstForm()
                                WHERE ContainerLinkObject_Currency.ObjectId = vbCurrencyId
-                                 AND ContainerLinkObject_Currency.DescId  = zc_ContainerLinkObject_Currency()
+                                 AND ContainerLinkObject_Currency.DescId   = zc_ContainerLinkObject_Currency()
+                                 AND 0 <> COALESCE (ContainerLinkObject_Cash.ObjectId, COALESCE (ContainerLinkObject_BankAccount.ObjectId, COALESCE (ContainerLinkObject_Partner.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, 0))))
                               ) AS tmpContainer
                               LEFT JOIN MovementItemContainer AS MIContainer
                                                               ON MIContainer.Containerid = tmpContainer.ContainerId_Currency
@@ -118,22 +123,27 @@ BEGIN
                                     , COALESCE (ContainerLinkObject_Cash.ObjectId, COALESCE (ContainerLinkObject_BankAccount.ObjectId, COALESCE (ContainerLinkObject_Partner.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, 0)))) AS ObjectId
                                     , Container.Amount
                                FROM ContainerLinkObject AS ContainerLinkObject_Currency
-                                    INNER JOIN Container ON Container.Id = ContainerLinkObject_Currency.ContainerId
+                                    INNER JOIN Container ON Container.Id      = ContainerLinkObject_Currency.ContainerId
                                                         AND Container.DescId  = zc_Container_Summ()
                                     LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Cash
                                                                   ON ContainerLinkObject_Cash.ContainerId  = ContainerLinkObject_Currency.ContainerId
-                                                                 AND ContainerLinkObject_Cash.DescId  = zc_ContainerLinkObject_Cash()
+                                                                 AND ContainerLinkObject_Cash.DescId       = zc_ContainerLinkObject_Cash()
+                                                                 AND vbPaidKindId                          = zc_Enum_PaidKind_SecondForm()
                                     LEFT JOIN ContainerLinkObject AS ContainerLinkObject_BankAccount
-                                                                  ON ContainerLinkObject_BankAccount.ContainerId  = ContainerLinkObject_Currency.ContainerId
-                                                                 AND ContainerLinkObject_BankAccount.DescId  = zc_ContainerLinkObject_BankAccount()
+                                                                  ON ContainerLinkObject_BankAccount.ContainerId = ContainerLinkObject_Currency.ContainerId
+                                                                 AND ContainerLinkObject_BankAccount.DescId      = zc_ContainerLinkObject_BankAccount()
+                                                                 AND vbPaidKindId                                = zc_Enum_PaidKind_FirstForm()
                                     LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Partner
                                                                   ON ContainerLinkObject_Partner.ContainerId  = ContainerLinkObject_Currency.ContainerId
-                                                                 AND ContainerLinkObject_Partner.DescId  = zc_ContainerLinkObject_Partner()
+                                                                 AND ContainerLinkObject_Partner.DescId       = zc_ContainerLinkObject_Partner()
+                                                                 AND vbPaidKindId                             = zc_Enum_PaidKind_SecondForm()
                                     LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Juridical
                                                                   ON ContainerLinkObject_Juridical.ContainerId  = ContainerLinkObject_Currency.ContainerId
-                                                                 AND ContainerLinkObject_Juridical.DescId  = zc_ContainerLinkObject_Juridical()
+                                                                 AND ContainerLinkObject_Juridical.DescId       = zc_ContainerLinkObject_Juridical()
+                                                                 AND vbPaidKindId                               = zc_Enum_PaidKind_FirstForm()
                                WHERE ContainerLinkObject_Currency.ObjectId = vbCurrencyId
                                  AND ContainerLinkObject_Currency.DescId  = zc_ContainerLinkObject_Currency()
+                                 AND 0 <> COALESCE (ContainerLinkObject_Cash.ObjectId, COALESCE (ContainerLinkObject_BankAccount.ObjectId, COALESCE (ContainerLinkObject_Partner.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, 0))))
                               ) AS tmpContainer
                               LEFT JOIN MovementItemContainer AS MIContainer
                                                               ON MIContainer.Containerid = tmpContainer.ContainerId
