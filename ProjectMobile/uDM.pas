@@ -765,6 +765,7 @@ type
     qryPartnerPartnerCount: TLargeintField;
     tblObject_PartnerShortName: TStringField;
     qryPartnerShortName: TStringField;
+    cdsJuridicalCollationDocId: TIntegerField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
     procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);
@@ -2389,6 +2390,7 @@ begin
           begin
             DM.cdsJuridicalCollation.Append;
 
+            DM.cdsJuridicalCollationDocId.AsInteger := FieldByName('MovementId').AsInteger;
             DM.cdsJuridicalCollationDocNum.AsString := FieldByName('InvNumber').AsString;
             DM.cdsJuridicalCollationDocType.AsString := FieldByName('ItemName').AsString;
             DM.cdsJuridicalCollationDocDate.AsDateTime := FieldByName('OperDate').AsDateTime;

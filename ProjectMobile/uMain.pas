@@ -792,6 +792,12 @@ type
     Layout44: TLayout;
     Label100: TLabel;
     lShortName: TLabel;
+    tiDocItems: TTabItem;
+    lwDocItems: TListView;
+    Panel51: TPanel;
+    lDocData: TLabel;
+    Label101: TLabel;
+    Label102: TLabel;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -1017,6 +1023,7 @@ type
     procedure LinkListControlToField14FilledListItem(Sender: TObject;
       const AEditor: IBindListEditorItem);
     procedure LinkListControlToField2FilledListItem(Sender: TObject; const AEditor: IBindListEditorItem);
+    procedure lwJuridicalCollationItemClick(const Sender: TObject; const AItem: TListViewItem);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -2025,6 +2032,13 @@ begin
       end;
     end;
   end;
+end;
+
+procedure TfrmMain.lwJuridicalCollationItemClick(const Sender: TObject; const AItem: TListViewItem);
+begin
+  lDocData.Text := DM.cdsJuridicalCollationDocType.AsString + ' №' + DM.cdsJuridicalCollationDocNum.AsString +
+    ' от ' + FormatDateTime('dd.mm.yyyy', DM.cdsJuridicalCollationDocDate.AsDateTime);
+  SwitchToForm(tiDocItems, nil);
 end;
 
 procedure TfrmMain.lwJuridicalCollationItemsItemClick(const Sender: TObject;
@@ -4756,6 +4770,9 @@ begin
     else
     if tcMain.ActiveTab = tiReportJuridicalCollation then
       lCaption.Text := 'Акт сверки'
+    else
+    if tcMain.ActiveTab = tiDocItems then
+      lCaption.Text := 'Акт сверки, содержимое документа'
     else
     if tcMain.ActiveTab = tiNewPartner then
       lCaption.Text := 'Ввод новой ТТ'
