@@ -448,6 +448,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Scale_Partner (inOperDate:= '01.01.2015', inMovementDescId:= zc_Movement_SendOnPrice(),inPartnerCode:= '0', inPaidKindId:=0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpGet_Scale_Partner (inOperDate:= '01.01.2015', inMovementDescId:= zc_Movement_Loss(),inPartnerCode:= '0', inPaidKindId:=0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpGet_Scale_Partner (inOperDate:= '01.01.2015', inMovementDescId:= zc_Movement_Sale(),inPartnerCode:= '0', inPaidKindId:=0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inBranchCode:= 301, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Scale_Partner (inOperDate:= '01.01.2015', inMovementDescId:= zc_Movement_Sale(), inPartnerCode:= '0', inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inPaidKindId:=0, inSession:= zfCalc_UserAdmin())

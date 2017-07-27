@@ -72,7 +72,7 @@ BEGIN
           , NULL::TVarChar                                    AS PersonalTradeName   --Ответственный представитель коммерческого отдела
           , NULL::Integer                                     AS PersonalId          --Ответственный представитель маркетингового отдела	
           , NULL::TVarChar                                    AS PersonalName        --Ответственный представитель маркетингового отдела
-          , CAST (FALSE AS Boolean)                           AS isPromo
+          , CAST (TRUE  AS Boolean)                           AS isPromo
           , CAST (FALSE AS Boolean)         		      AS Checked
           	
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
