@@ -33,7 +33,7 @@ BEGIN
 
                                                     LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = Container.Id
                                                                 AND MIContainer.OperDate >= CURRENT_DATE
-                                               WHERE CLO_Unit.ObjectId IN( 8447, 8448) 
+                                               WHERE CLO_Unit.ObjectId IN( 8447, 8448, 8449) 
                                                  AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                                                GROUP BY Container.ObjectId, GoodsKindId, Container.Amount, PartionGoodsId  
                                                HAVING (Container.Amount - COALESCE(SUM (MIContainer.Amount), 0)) <>0
