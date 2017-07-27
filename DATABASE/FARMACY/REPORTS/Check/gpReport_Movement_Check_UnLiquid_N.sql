@@ -37,8 +37,35 @@ BEGIN
     vbStartDate3 := inStartDate - INTERVAL '3 Month';--3
     vbStartDate6 := inStartDate - INTERVAL '6 Month';--6
 
+    -- таблица остатков
+    CREATE TEMP TABLE tmpContainer (GoodsId Integer, UnitId Integer, RemainsStart TFloat, RemainsEnd TFloat, ContainerId Integer) ON COMMIT DROP;
+      INSERT INTO  tmpContainer (GoodsId, UnitId, RemainsStart, RemainsEnd, ContainerId)
+          SELECT Container.ObjectId                                         AS GoodsId
+               , Container.WhereObjectId                                    AS UnitId
+               , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0)  AS RemainsStart
+               , Container.Amount - SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS RemainsEnd
+               , Container.Id         AS ContainerId
+          FROM Container
+               INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                     ON ObjectLink_Unit_Juridical.ObjectId = Container.WhereObjectId
+                                    AND ObjectLink_Unit_Juridical.DescId   = zc_ObjectLink_Unit_Juridical()
+               INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                     ON ObjectLink_Juridical_Retail.ObjectId      = ObjectLink_Unit_Juridical.ChildObjectId
+                                    AND ObjectLink_Juridical_Retail.DescId        = zc_ObjectLink_Juridical_Retail()
+                                    AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
+               LEFT JOIN MovementItemContainer AS MIContainer
+                                               ON MIContainer.ContainerId = Container.Id
+                                              AND MIContainer.OperDate    >= inStartDate
+          WHERE Container.DescId        = zc_Container_Count()
+           -- AND Container.WhereObjectId = inUnitId
+          GROUP BY Container.Id
+                 , Container.ObjectId
+                 , Container.Amount
+          HAVING Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
+         ;
+
     -- автоперемещения приход / расход
-    CREATE TEMP TABLE tmpSend (GoodsId Integer, UnitId Integer, Amount TFloat, PRIMARY KEY (GoodsId,UnitId)) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpSend (GoodsId Integer, UnitId Integer, Amount TFloat) ON COMMIT DROP;
       INSERT INTO  tmpSend (GoodsId, UnitId, Amount)
           SELECT MI_Send.ObjectId                 AS GoodsId
                , MovementLinkObject_Unit.ObjectId AS UnitId
@@ -68,8 +95,20 @@ BEGIN
           HAVING SUM (MI_Send.Amount) <> 0 
           ;
                       
-    CREATE TEMP TABLE _tmpCheck (GoodsId Integer, UnitId Integer, Amount_Sale TFloat, Summa_Sale TFloat, Amount_Sale1 TFloat, Summa_Sale1 TFloat, Amount_Sale3 TFloat, Summa_Sale3 TFloat, Amount_Sale6 TFloat, Summa_Sale6 TFloat, Amount TFloat, Amount_Send TFloat, PRIMARY KEY (GoodsId,UnitId)) ON COMMIT DROP;
-      INSERT INTO _tmpCheck (GoodsId, UnitId, Amount_Sale, Summa_Sale, Amount_Sale1, Summa_Sale1, Amount_Sale3, Summa_Sale3, Amount_Sale6, Summa_Sale6, Amount, Amount_Send)
+    CREATE TEMP TABLE _tmpCheck (GoodsId Integer, UnitId Integer, Amount_Sale TFloat, Summa_Sale TFloat
+                               , Amount_Sale1 TFloat, Summa_Sale1 TFloat, Amount_Sale3 TFloat, Summa_Sale3 TFloat, Amount_Sale6 TFloat, Summa_Sale6 TFloat
+                               , Amount TFloat, Amount_Send TFloat, RemainsStart TFloat, RemainsEnd TFloat) ON COMMIT DROP;
+      INSERT INTO _tmpCheck (GoodsId, UnitId, Amount_Sale, Summa_Sale, Amount_Sale1, Summa_Sale1, Amount_Sale3, Summa_Sale3, Amount_Sale6, Summa_Sale6
+                           , Amount, Amount_Send, RemainsStart, RemainsEnd)
+          WITH
+          tmpRemains AS (SELECT tmpContainer.UnitId            AS UnitId
+                              , tmpContainer.GoodsId           AS GoodsId
+                              , Sum(tmpContainer.RemainsStart) AS RemainsStart
+                              , Sum(tmpContainer.RemainsEnd)   AS RemainsEnd 
+                         FROM tmpContainer 
+                         GROUP BY tmpContainer.UnitId, tmpContainer.GoodsId
+                         )
+                         
           SELECT MIContainer.ObjectId_analyzer                AS GoodsId
                , MIContainer.WhereObjectId_analyzer           AS UnitId
                , SUM (CASE WHEN MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < inEndDate + INTERVAL '1 DAY' THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END) AS Amount_Sale
@@ -85,17 +124,23 @@ BEGIN
                , SUM (CASE WHEN MIContainer.OperDate < inStartDate THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summa_Sale6
                , SUM (COALESCE (-1 * MIContainer.Amount, 0))  AS Amount
                , COALESCE (tmpSend.Amount, 0)                 AS Amount_Send
+               , COALESCE (tmpRemains.RemainsStart, 0)        AS RemainsStart
+               , COALESCE (tmpRemains.RemainsEnd, 0)          AS RemainsEnd 
            FROM MovementItemContainer AS MIContainer
                 LEFT JOIN tmpSend ON tmpSend.GoodsId = MIContainer.ObjectId_analyzer 
                                  AND tmpSend.UnitId  = MIContainer.WhereObjectId_analyzer
+                LEFT JOIN tmpRemains ON tmpRemains.UnitId  = MIContainer.WhereObjectId_analyzer
+                                    AND tmpRemains.GoodsId = MIContainer.ObjectId_analyzer
            WHERE MIContainer.DescId = zc_MIContainer_Count()
              AND MIContainer.MovementDescId = zc_Movement_Check()
-             AND MIContainer.WhereObjectId_analyzer <> inUnitId  
+             --AND MIContainer.WhereObjectId_analyzer <> inUnitId  
              AND MIContainer.OperDate >= vbStartDate6 AND MIContainer.OperDate < inEndDate + INTERVAL '1 Day'
             -- AND MIContainer.OperDate >= '03.06.2016' AND MIContainer.OperDate < '01.12.2016'
            GROUP BY MIContainer.ObjectId_analyzer
                   , MIContainer.WhereObjectId_analyzer
                   , COALESCE (tmpSend.Amount, 0)
+                  , COALESCE (tmpRemains.RemainsStart, 0)
+                  , COALESCE (tmpRemains.RemainsEnd, 0)
            HAVING sum(COALESCE (-1 * MIContainer.Amount, 0)) <> 0
          ; 
 
@@ -107,35 +152,13 @@ BEGIN
                               , Amount_Sale3 TFloat, Summa_Sale3 TFloat
                               , Amount_Sale6 TFloat, Summa_Sale6 TFloat
                               , Amount_Send TFloat, isSaleAnother Boolean)  ON COMMIT DROP;
-      INSERT INTO _tmpData (UnitId, GoodsId, MinExpirationDate, OperDate_LastIncome, Term, Amount_LastIncome, Price_Remains, Price_RemainsEnd, RemainsStart, RemainsEnd
-                          , Amount_Sale, Summa_Sale, Amount_Sale1, Summa_Sale1, Amount_Sale3, Summa_Sale3, Amount_Sale6, Summa_Sale6, Amount_Send, isSaleAnother) 
+      INSERT INTO _tmpData (UnitId, GoodsId, MinExpirationDate, OperDate_LastIncome, Term, Amount_LastIncome
+                          , Price_Remains, Price_RemainsEnd, RemainsStart, RemainsEnd
+                          , Amount_Sale, Summa_Sale, Amount_Sale1, Summa_Sale1, Amount_Sale3, Summa_Sale3, Amount_Sale6, Summa_Sale6
+                          , Amount_Send, isSaleAnother) 
       WITH 
-      -- таблица остатков
-      tmpContainer AS (SELECT Container.ObjectId   AS GoodsId
-                            , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0)  AS RemainsStart
-                            , Container.Amount - SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS RemainsEnd
-                            , Container.Id         AS ContainerId
-                       FROM Container
-                            INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
-                                                  ON ObjectLink_Unit_Juridical.ObjectId = Container.WhereObjectId
-                                                 AND ObjectLink_Unit_Juridical.DescId   = zc_ObjectLink_Unit_Juridical()
-                            INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                                  ON ObjectLink_Juridical_Retail.ObjectId      = ObjectLink_Unit_Juridical.ChildObjectId
-                                                 AND ObjectLink_Juridical_Retail.DescId        = zc_ObjectLink_Juridical_Retail()
-                                                 AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
-                            LEFT JOIN MovementItemContainer AS MIContainer
-                                                            ON MIContainer.ContainerId = Container.Id
-                                                           AND MIContainer.OperDate    >= inStartDate
-                       WHERE Container.DescId        = zc_Container_Count()
-                         AND Container.WhereObjectId = inUnitId
-                       GROUP BY Container.Id
-                              , Container.ObjectId
-                              , Container.Amount
-                       HAVING Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
-                      )
-
-   -- связываем с партиями
-    , tmpRemains_1 AS ( SELECT tmpContainer.GoodsId
+      -- связываем с партиями
+      tmpRemains_1 AS ( SELECT tmpContainer.GoodsId
                              , Sum(tmpContainer.RemainsStart) as RemainsStart
                              , Sum(tmpContainer.RemainsEnd)   as RemainsEnd
              
@@ -165,7 +188,7 @@ BEGIN
                                    AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
 
                              LEFT JOIN Movement AS Movement_Income ON Movement_Income.Id = COALESCE (MI_Income_find.MovementId ,MI_Income.MovementId) 
-                       
+                        WHERE tmpContainer.UnitId = inUnitId
                         GROUP BY tmpContainer.ContainerId, tmpContainer.GoodsId
                                , COALESCE (Movement_Income.OperDate, NULL)
                                , COALESCE (MI_Income_find.Amount ,MI_Income.Amount)
@@ -216,7 +239,7 @@ BEGIN
                       )
 
      -- чеки, определение периода прожажи  --  ,  tmpCheck_ALL 
-    , tmpCheck AS (SELECT MIContainer.ObjectId_analyzer AS GoodsId
+    /*, tmpCheck AS (SELECT MIContainer.ObjectId_analyzer AS GoodsId
                         , SUM (CASE WHEN MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < inEndDate + INTERVAL '1 DAY' THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END) AS Amount_Sale
                         , SUM (CASE WHEN MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < inEndDate + INTERVAL '1 DAY' THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summa_Sale
 
@@ -236,7 +259,11 @@ BEGIN
                      -- AND MIContainer.OperDate >= '03.06.2016' AND MIContainer.OperDate < '01.12.2016'
                     GROUP BY MIContainer.ObjectId_analyzer
                     HAVING sum(COALESCE (-1 * MIContainer.Amount, 0)) <> 0
-                  ) 
+                  )*/
+      , tmpCheck AS (SELECT _tmpCheck.*
+                     FROM _tmpCheck
+                     WHERE _tmpCheck.UnitId = inUnitId
+                     ) 
       -- для остатка получаем значение цены
     , tmpPriceRemains AS (SELECT tmpRemains.GoodsId
                                , COALESCE (ObjectHistoryFloat_Price.ValueData, 0)       Price_Remains
@@ -285,34 +312,39 @@ BEGIN
              , tmpCheck.Summa_Sale3                                                     :: TFloat     AS Summa_Sale3
              , tmpCheck.Amount_Sale6                                                    :: TFloat     AS Amount_Sale6
              , tmpCheck.Summa_Sale6                                                     :: TFloat     AS Summa_Sale6
-             , COALESCE (tmpSend.Amount, 0)                                             :: TFloat     AS Amount_Send
+             , COALESCE (tmpSend.Amount, 0)                                                           AS Amount_Send
              , CASE WHEN (COALESCE (tmpCheck.Amount_Sale6,0)=0) AND COALESCE(tmp.Amount,0) <> 0 THEN TRUE ELSE FALSE END AS isSaleAnother
         FROM tmpRemains
              LEFT JOIN tmpCheck        ON tmpCheck.GoodsId        = tmpRemains.GoodsId
              LEFT JOIN tmpIncomeLast   ON tmpIncomeLast.GoodsId   = tmpRemains.GoodsId
              LEFT JOIN tmpPriceRemains ON tmpPriceRemains.GoodsId = tmpRemains.GoodsId
+             LEFT JOIN (SELECT _tmpCheck.GoodsId, SUM (_tmpCheck.Amount) AS Amount 
+                        FROM _tmpCheck 
+                        GROUP BY _tmpCheck.GoodsId
+                        ) AS tmp ON tmp.GoodsId = tmpRemains.GoodsId
              LEFT JOIN tmpSend ON tmpSend.GoodsId = tmpRemains.GoodsId 
                               AND tmpSend.UnitId  = inUnitId
-             LEFT JOIN (SELECT _tmpCheck.GoodsId, SUM (_tmpCheck.Amount) AS Amount FROM _tmpCheck GROUP BY _tmpCheck.GoodsId) AS tmp ON tmp.GoodsId = tmpRemains.GoodsId
         WHERE COALESCE (tmpCheck.Amount_Sale1, 0) = 0 OR COALESCE (tmpCheck.Amount_Sale3, 0) = 0 OR COALESCE (tmpCheck.Amount_Sale6, 0) = 0
         ;
 
     -- таблица неликвидных товаров, которые нужно перемещать и точки куда перемещать
     -- Таблица -данных по перемещениям
-    CREATE TEMP TABLE tmpDataTo (GoodsId Integer, UnitId Integer, RemainsMCS_result TFloat, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpDataTo (GoodsId Integer, UnitId Integer, RemainsMCS_result TFloat) ON COMMIT DROP;
       INSERT INTO tmpDataTo (GoodsId, UnitId, RemainsMCS_result)
       WITH 
       --неликвидныe товарs, которые можно перемещать
       tmpDataFrom AS (SELECT _tmpData.*, (_tmpData.RemainsEnd + _tmpData.Amount_Send) AS RemainsCalc
                       FROM  _tmpData
-                      WHERE _tmpData.Term > 6 AND _tmpData.isSaleAnother = TRUE AND _tmpData.RemainsEnd > 0
+                      WHERE _tmpData.Term > 6 
+                        AND _tmpData.isSaleAnother = TRUE 
+                        AND _tmpData.RemainsEnd > 0
                       )
       -- точки , где товар продавается в каждом из 3 периодов - за 1 мес, за 3 мес, за 6мес. 
-    , tmpDataTo AS (SELECT *, floor (_tmpCheck.Amount_Sale6 - _tmpCheck.Amount_Send) AS AmountMCS
+    , tmpDataTo AS (SELECT *
+                         , floor (_tmpCheck.Amount_Sale6 - (RemainsEnd + _tmpCheck.Amount_Send)) AS AmountMCS  -- кол-во  меньше чем было продано
                     FROM _tmpCheck
-                    WHERE _tmpCheck.Amount_Sale6 > 0/*_tmpCheck.Amount_Sale1 <> _tmpCheck.Amount_Sale3
-                      AND _tmpCheck.Amount_Sale3 <> _tmpCheck.Amount_Sale6*/
-                      AND (_tmpCheck.Amount_Sale1 + _tmpCheck.Amount_Sale3 + _tmpCheck.Amount_Sale6) <> 0
+                    WHERE _tmpCheck.UnitId <> inUnitId
+                      AND _tmpCheck.Amount_Sale6 > 0
                     )
     
     , tmpDataAll AS (SELECT tmpDataTo.UnitId           AS UnitId
@@ -325,6 +357,8 @@ BEGIN
                           , ROW_NUMBER() OVER (PARTITION BY tmpDataTo.GoodsId ORDER BY tmpDataTo.AmountMCS DESC, tmpDataTo.UnitId DESC) AS Ord
                      FROM tmpDataFrom
                           INNER JOIN tmpDataTo ON tmpDataTo.GoodsId = tmpDataFrom.GoodsId
+                                              AND tmpDataTo.AmountMCS > 0
+                     WHERE tmpDataFrom.RemainsCalc > 0
                     )
                     
     
@@ -426,10 +460,12 @@ BEGIN
                                            
            , tmpDataTo.RemainsMCS_result     :: TFloat AS RemainsMCS_result
            , tmpCheck.Amount_Send            :: TFloat AS Amount_Send
+           , tmpCheck.RemainsEnd             :: TFloat AS RemainsEnd
       FROM _tmpCheck AS tmpCheck
            LEFT JOIN tmpDataTo ON tmpDataTo.GoodsId = tmpCheck.GoodsId AND tmpDataTo.UnitId = tmpCheck.UnitId
            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpCheck.UnitId
-      WHERE COALESCE (tmpCheck.Amount_Sale1, 0) <> 0 OR COALESCE (tmpCheck.Amount_Sale3, 0) <> 0 OR COALESCE (tmpCheck.Amount_Sale6, 0) <> 0
+      WHERE tmpCheck.UnitId <> inUnitId
+        AND (COALESCE (tmpCheck.Amount_Sale1, 0) <> 0 OR COALESCE (tmpCheck.Amount_Sale3, 0) <> 0 OR COALESCE (tmpCheck.Amount_Sale6, 0) <> 0)
       ;
 
      RETURN NEXT Cursor2;
@@ -470,12 +506,14 @@ BEGIN
            , tmpDataFrom.Price_RemainsEnd    :: TFloat AS PriceFrom 
            , tmpPriceRemains.Price           :: TFloat AS PriceTo
       FROM _tmpCheck AS tmpCheck
-           INNER JOIN tmpDataTo ON tmpDataTo.GoodsId = tmpCheck.GoodsId 
-                               AND tmpDataTo.UnitId = tmpCheck.UnitId
+           INNER JOIN tmpDataTo ON tmpDataTo.GoodsId           = tmpCheck.GoodsId 
+                               AND tmpDataTo.UnitId            = tmpCheck.UnitId
+                               AND tmpDataTo.RemainsMCS_result > 0
            LEFT JOIN _tmpData AS tmpDataFrom ON tmpDataFrom.GoodsId = tmpCheck.GoodsId
            LEFT JOIN tmpPriceRemains ON tmpPriceRemains.GoodsId = tmpCheck.GoodsId
                                     AND tmpPriceRemains.UnitId  = tmpCheck.UnitId
            --LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpCheck.UnitId
+      WHERE tmpCheck.UnitId <> inUnitId
       --WHERE COALESCE (tmpCheck.Amount_Sale1, 0) <> 0 OR COALESCE (tmpCheck.Amount_Sale3, 0) <> 0 OR COALESCE (tmpCheck.Amount_Sale6, 0) <> 0
       ;
 
