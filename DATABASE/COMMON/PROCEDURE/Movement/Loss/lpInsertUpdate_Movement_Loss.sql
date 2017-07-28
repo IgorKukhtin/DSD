@@ -26,9 +26,9 @@ BEGIN
      END IF;
 
      -- ограничение прав для Рибалко Вікторія Віталіївна
-     IF inUserId = 300550 AND inFromId in (8447   -- цех колбасный
-                                         , 8448   -- ЦЕХ деликатесов
-                                         , 8449)  -- цех с/к
+     IF inUserId = 300550 AND inFromId NOT IN (8447   -- цех колбасный
+                                             , 8448   -- ЦЕХ деликатесов
+                                             , 8449)  -- цех с/к
      THEN
          RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав на изменение документа списания № <%> от <%>.', lfGet_Object_ValueData (inUserId), inInvNumber, DATE (inOperDate);
      END IF;
