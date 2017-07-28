@@ -354,12 +354,12 @@ BEGIN
             , NULL :: Integer AS PaidKindId
             , '' :: TVarChar  AS PaidKindName
 
-            , NULL :: Integer AS ContractId
+            , (-1 * zc_Object_Member()) :: Integer AS ContractId
             , tmpMember.UnitCode             AS ContractCode
             , tmpMember.UnitCode :: TVarChar AS ContractNumber
             , tmpMember.UnitName             AS ContractTagName
 
-            , NULL :: Integer  AS InfoMoneyId
+            , (-1 * zc_Object_Member()) :: Integer AS InfoMoneyId
             , NULL :: Integer  AS InfoMoneyCode
             , NULL :: TVarChar AS InfoMoneyName
 

@@ -246,9 +246,21 @@ BEGIN
                                     , Object_ArticleLoss.ValueData      AS PartnerName
                                FROM Object AS Object_ArticleLoss
                                WHERE Object_ArticleLoss.ObjectCode = inPartnerCode
-                                 AND Object_ArticleLoss.DescId     IN (zc_Object_ArticleLoss(), zc_Object_Member())
+                                 AND Object_ArticleLoss.DescId     = zc_Object_ArticleLoss()
                                  AND Object_ArticleLoss.isErased   = FALSE
                                  AND inPartnerCode > 0
+                                 AND inInfoMoneyId >=0 
+                              UNION
+                               SELECT Object_ArticleLoss.DescId         AS ObjectDescId
+                                    , Object_ArticleLoss.Id             AS PartnerId
+                                    , Object_ArticleLoss.ObjectCode     AS PartnerCode
+                                    , Object_ArticleLoss.ValueData      AS PartnerName
+                               FROM Object AS Object_ArticleLoss
+                               WHERE Object_ArticleLoss.ObjectCode = inPartnerCode
+                                 AND Object_ArticleLoss.DescId     = zc_Object_Member()
+                                 AND Object_ArticleLoss.isErased   = FALSE
+                                 AND inPartnerCode > 0
+                                 AND inInfoMoneyId = -1 * zc_Object_Member()
                               )
        SELECT tmpArticleLoss.ObjectDescId
             , tmpArticleLoss.PartnerId

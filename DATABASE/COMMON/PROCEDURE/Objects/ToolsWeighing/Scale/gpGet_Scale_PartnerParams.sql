@@ -46,8 +46,23 @@ BEGIN
                                                          ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
                                                         AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                                 WHERE Object_Partner.Id       = inPartnerId
-                                  AND Object_Partner.DescId   IN (zc_Object_Unit(), zc_Object_ArticleLoss(), zc_Object_Member())
+                                  AND Object_Partner.DescId   IN (zc_Object_Unit(), zc_Object_ArticleLoss())
                                   AND Object_Partner.isErased = FALSE
+                                  AND inContractId            >= 0
+                              UNION ALL
+                               SELECT Object_Partner.Id             AS PartnerId
+                                    , Object_Partner.ObjectCode     AS PartnerCode
+                                    , Object_Partner.ValueData      AS PartnerName
+                                    , zc_PriceList_Basis()          AS PriceListId
+                                    , 0                             AS GoodsPropertyId
+                               FROM Object AS Object_Partner
+                                    LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                         ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
+                                                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                WHERE Object_Partner.Id       = inPartnerId
+                                  AND Object_Partner.DescId   = zc_Object_Member()
+                                  AND Object_Partner.isErased = FALSE
+                                  AND inContractId            = -1 * zc_Object_Member()
                              )
 
        SELECT tmpPartner.PartnerId
