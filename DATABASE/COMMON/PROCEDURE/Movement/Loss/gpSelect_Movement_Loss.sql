@@ -94,7 +94,11 @@ BEGIN
                                          ON MovementLinkObject_ArticleLoss.MovementId = Movement.Id
                                         AND MovementLinkObject_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()
             LEFT JOIN Object AS Object_ArticleLoss ON Object_ArticleLoss.Id = MovementLinkObject_ArticleLoss.ObjectId
-
+       WHERE (vbUserId = 300550         --Рибалко Вікторія Віталіївна огр. просмотра
+          AND Object_From.Id in (8447   --цех колбасный
+                               , 8448   --ЦЕХ деликатесов
+                               , 8449)  -- цех с/к
+             ) OR vbUserId <> 300550 
             ;
 
 END;
