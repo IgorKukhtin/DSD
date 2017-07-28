@@ -32,6 +32,10 @@ $BODY$
     DECLARE vbOperSumm_PVAT TFloat;
 
     DECLARE vbStoreKeeperName TVarChar;
+    
+    DECLARE vbFromId       Integer;
+    DECLARE vbPersonalId   Integer;
+    DECLARE vbPersonalName TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_ReturnIn());
@@ -53,6 +57,7 @@ BEGIN
      -- параметры из документа
      SELECT Movement.DescId
           , Movement.StatusId
+          , Movement.OperDate
           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) AS PriceWithVAT
           , COALESCE (MovementFloat_VATPercent.ValueData, 0)        AS VATPercent
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
@@ -62,7 +67,8 @@ BEGIN
           , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0)      AS PaidKindId
           , COALESCE (MovementLinkObject_Contract.ObjectId, 0)      AS ContractId
           , COALESCE (ObjectBoolean_isDiscountPrice.ValueData, FALSE) AS isDiscountPrice
-            INTO vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbPaidKindId, vbContractId, vbIsDiscountPrice
+          , MovementLinkObject_From.ObjectId                          AS FromId
+            INTO vbDescId, vbStatusId, vbOperDate, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbPaidKindId, vbContractId, vbIsDiscountPrice, vbFromId
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
@@ -194,6 +200,24 @@ BEGIN
         ) AS tmpMI;
     END IF;*/
 
+
+     -- определение Экспедитора по дню недели
+     vbPersonalId:= COALESCE ((SELECT ObjectLink_Partner_MemberTake.ChildObjectId
+                               FROM ObjectLink AS ObjectLink_Partner_MemberTake
+                               WHERE ObjectLink_Partner_MemberTake.ObjectId = vbFromId
+                                 AND ObjectLink_Partner_MemberTake.DescId = CASE EXTRACT (DOW FROM vbOperDate)
+                                                                                WHEN 1 THEN zc_ObjectLink_Partner_MemberTake1()
+                                                                                WHEN 2 THEN zc_ObjectLink_Partner_MemberTake2()
+                                                                                WHEN 3 THEN zc_ObjectLink_Partner_MemberTake3()
+                                                                                WHEN 4 THEN zc_ObjectLink_Partner_MemberTake4()
+                                                                                WHEN 5 THEN zc_ObjectLink_Partner_MemberTake5()
+                                                                                WHEN 6 THEN zc_ObjectLink_Partner_MemberTake6()
+                                                                                WHEN 0 THEN zc_ObjectLink_Partner_MemberTake7()
+                                                                            END
+                              ), 0);
+     -- название всегда по vbPersonalId
+     vbPersonalName:= (SELECT Object.ValueData FROM Object WHERE Object.Id = vbPersonalId);
+     
      --
      OPEN Cursor1 FOR
        WITH tmpCorrective AS (SELECT MLM_TaxCorrective.MovementId, MLM_TaxCorrective.MovementChildId
@@ -206,7 +230,7 @@ BEGIN
            , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement.Id) AS IdBarCode
            , Movement.InvNumber                         AS InvNumber
            , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AS OperDate
-           , Object_Status.ObjectCode          		    AS StatusCode
+           , Object_Status.ObjectCode                   AS StatusCode
            , Object_Status.ValueData         	        AS StatusName
 
            , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AS OperDatePartner
@@ -219,14 +243,14 @@ BEGIN
                   ELSE COALESCE (MovementString_InvNumberPartner.ValueData, Movement.InvNumber)
              END AS InvNumberPartner
 
-           , MovementString_InvNumberMark.ValueData     AS InvNumberMark
-           , vbPriceWithVAT                             AS PriceWithVAT
-           , vbVATPercent                               AS VATPercent
-           , vbExtraChargesPercent - vbDiscountPercent  AS ChangePercent
+           , MovementString_InvNumberMark.ValueData         AS InvNumberMark
+           , vbPriceWithVAT                                 AS PriceWithVAT
+           , vbVATPercent                                   AS VATPercent
+           , vbExtraChargesPercent - vbDiscountPercent      AS ChangePercent
 
-           , MovementFloat_TotalCount.ValueData         AS TotalCount
-           , MovementFloat_TotalCountKg.ValueData       AS TotalCountKg
-           , MovementFloat_TotalCountSh.ValueData       AS TotalCountSh
+           , MovementFloat_TotalCount.ValueData             AS TotalCount
+           , MovementFloat_TotalCountKg.ValueData           AS TotalCountKg
+           , MovementFloat_TotalCountSh.ValueData           AS TotalCountSh
 
            , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN 1 ELSE 1 END * MovementFloat_TotalSummMVAT.ValueData AS TotalSummMVAT
            , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN 1 ELSE 1 END * MovementFloat_TotalSummPVAT.ValueData AS TotalSummPVAT
@@ -239,31 +263,32 @@ BEGIN
            , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END * MovementFloat_TotalSumm.ValueData AS TotalSumm_sign
 
            , COALESCE (Object_Partner.ValueData, Object_From.ValueData) AS FromName
-           , Object_To.ValueData               		AS ToName
-           , (Object_PaidKind.Id - 2) :: TVarChar       AS PaidKindName_user
-           , Object_PaidKind.ValueData         		AS PaidKindName
-           , View_Contract.InvNumber        		AS ContractName
-           , ObjectDate_Signing.ValueData               AS ContractSigningDate
-           , View_Contract.ContractKindName             AS ContractKind
+           , Object_To.ValueData               		    AS ToName
+           , (Object_PaidKind.Id - 2) :: TVarChar           AS PaidKindName_user
+           , Object_PaidKind.ValueData         		    AS PaidKindName
+           , View_Contract.InvNumber        		    AS ContractName
+           , ObjectDate_Signing.ValueData                   AS ContractSigningDate
+           , View_Contract.ContractKindName                 AS ContractKind
 
-           , ObjectString_FromAddress.ValueData         AS PartnerAddress_From
-           , OH_JuridicalDetails_From.FullName          AS JuridicalName_From
-           , OH_JuridicalDetails_From.JuridicalAddress  AS JuridicalAddress_From
-           , OH_JuridicalDetails_From.OKPO              AS OKPO_From
-           , OH_JuridicalDetails_From.INN               AS INN_From
-           , OH_JuridicalDetails_From.NumberVAT         AS NumberVAT_From
-           , OH_JuridicalDetails_From.AccounterName     AS AccounterName_From
-           , OH_JuridicalDetails_From.Phone             AS Phone_From
+           , ObjectString_FromAddress.ValueData             AS PartnerAddress_From
+           , OH_JuridicalDetails_From.FullName              AS JuridicalName_From
+           , OH_JuridicalDetails_From.JuridicalAddress      AS JuridicalAddress_From
+           , OH_JuridicalDetails_From.OKPO                  AS OKPO_From
+           , OH_JuridicalDetails_From.INN                   AS INN_From
+           , OH_JuridicalDetails_From.NumberVAT             AS NumberVAT_From
+           , OH_JuridicalDetails_From.AccounterName         AS AccounterName_From
+           , OH_JuridicalDetails_From.Phone                 AS Phone_From
 
-           , OH_JuridicalDetails_To.FullName            AS JuridicalName_To
-           , OH_JuridicalDetails_To.JuridicalAddress    AS JuridicalAddress_To
-           , OH_JuridicalDetails_To.OKPO                AS OKPO_To
-           , OH_JuridicalDetails_To.INN                 AS INN_To
-           , OH_JuridicalDetails_To.NumberVAT           AS NumberVAT_To
-           , OH_JuridicalDetails_To.AccounterName       AS AccounterName_To
-           , OH_JuridicalDetails_To.Phone               AS Phone_To
+           , OH_JuridicalDetails_To.FullName                AS JuridicalName_To
+           , OH_JuridicalDetails_To.JuridicalAddress        AS JuridicalAddress_To
+           , OH_JuridicalDetails_To.OKPO                    AS OKPO_To
+           , OH_JuridicalDetails_To.INN                     AS INN_To
+           , OH_JuridicalDetails_To.NumberVAT               AS NumberVAT_To
+           , OH_JuridicalDetails_To.AccounterName           AS AccounterName_To
+           , OH_JuridicalDetails_To.Phone                   AS Phone_To
 
-           , Object_Member_Driver.ValueData             AS MemberName_Driver
+           , COALESCE (Object_Member_Driver.ValueData, vbPersonalName)  AS MemberName_Driver
+           --, vbPersonalName                                 AS PersonalName         -- экспедитор 
 
            , CASE WHEN ObjectLink_Contract_JuridicalDocument.ChildObjectId > 0 THEN TRUE ELSE FALSE END AS isJuridicalDocument
 
@@ -284,10 +309,10 @@ BEGIN
            , MovementDate_OperDatePartner_Sale.ValueData    AS OperDatePartner_Sale
 
            -- , CASE WHEN View_Contract.InfoMoneyId = zc_Enum_InfoMoney_30101() THEN 'Бабенко В.П.' ELSE '' END AS StoreKeeper -- кладовщик
-           , vbStoreKeeperName AS StoreKeeper
-           , Object_BankAccount.Name                            AS BankAccount_ByContract
-           , Object_BankAccount.MFO                             AS BankMFO_ByContract
-           , Object_BankAccount.BankName                        AS BankName_ByContract
+           , vbStoreKeeperName                              AS StoreKeeper
+           , Object_BankAccount.Name                        AS BankAccount_ByContract
+           , Object_BankAccount.MFO                         AS BankMFO_ByContract
+           , Object_BankAccount.BankName                    AS BankName_ByContract
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId

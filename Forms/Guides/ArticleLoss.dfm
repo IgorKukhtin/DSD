@@ -474,10 +474,10 @@ object ArticleLossForm: TArticleLossForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdate
+      StoredProc = spUpdate
       StoredProcList = <
         item
-          StoredProc = spInsertUpdate
+          StoredProc = spUpdate
         end>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
@@ -579,33 +579,24 @@ object ArticleLossForm: TArticleLossForm
     Left = 168
     Top = 216
   end
-  object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_ArticleLoss'
+  object spUpdate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_ArticleLoss'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId'
+        Name = 'inId'
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCode'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Code'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inName'
+        Name = 'inBusinessId'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'Name'
-        DataType = ftString
+        ComponentItem = 'BusinessId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -615,30 +606,6 @@ object ArticleLossForm: TArticleLossForm
         Component = ClientDataSet
         ComponentItem = 'Comment'
         DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inInfoMoneyId '
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'InfoMoneyId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inProfitLossDirectionId'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'ProfitLossDirectionId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inBusinessId'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'BusinessId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

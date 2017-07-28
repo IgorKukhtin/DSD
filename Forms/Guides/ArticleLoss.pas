@@ -65,7 +65,7 @@ type
     ProfitLossGroupName: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    spInsertUpdate: TdsdStoredProc;
+    spUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     BusinessName: TcxGridDBColumn;
     BusinessChoiceForm: TOpenChoiceForm;
