@@ -25,6 +25,14 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
      END IF;
 
+     -- ограничение прав для Рибалко Вікторія Віталіївна
+     IF inUserId = 300550 AND inFromId in (8447   -- цех колбасный
+                                         , 8448   -- ЦЕХ деликатесов
+                                         , 8449)  -- цех с/к
+     THEN
+         RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав на изменение документа списания № <%> от <%>.', lfGet_Object_ValueData (inUserId), inInvNumber, DATE (inOperDate);
+     END IF;
+     
      -- определяем ключ доступа !!!то что захардкоженно - временно!!!
      vbAccessKeyId:= CASE WHEN COALESCE (ioId, 0) = 0 AND inFromId = 8411 -- Склад ГП ф Киев
                                THEN zc_Enum_Process_AccessKey_DocumentKiev() 

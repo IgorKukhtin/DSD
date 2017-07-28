@@ -32,7 +32,7 @@ $BODY$
     DECLARE vbOperSumm_PVAT TFloat;
 
     DECLARE vbStoreKeeperName TVarChar;
-    
+    DECLARE vbOperDate     TDateTime;   
     DECLARE vbFromId       Integer;
     DECLARE vbPersonalId   Integer;
     DECLARE vbPersonalName TVarChar;
