@@ -94,7 +94,7 @@ BEGIN
                                                                                       END) AS ProfitLossDirectionId
 
                 , COALESCE (ObjectLink_UnitFrom_Juridical.ChildObjectId, zc_Juridical_Basis()) AS JuridicalId_Basis
-                , COALESCE (ObjectLink_Business.ChildObjectId, 0)                              AS BusinessId_ProfitLoss -- по подразделению (у авто,!!!физ.лица!!!, кому, от кого)
+                , COALESCE (ObjectLink_ArticleLoss_Business.ChildObjectId, COALESCE (ObjectLink_Business.ChildObjectId, 0)) AS BusinessId_ProfitLoss -- по подразделению (у авто,!!!физ.лица!!!, кому, от кого)
                 , COALESCE (MovementLinkObject_ArticleLoss.ObjectId, lfSelect.UnitId)          AS UnitId_ProfitLoss
                 , MovementLinkObject_To.ObjectId          AS ObjectExtId_Analyzer
                 , MovementLinkObject_ArticleLoss.ObjectId AS AnalyzerId
@@ -158,6 +158,9 @@ BEGIN
                 LEFT JOIN ObjectLink AS ObjectLink_Business
                                      ON ObjectLink_Business.ObjectId = COALESCE (ObjectLink_CarTo_Unit.ChildObjectId, COALESCE (ObjectLink_PersonalTo_Unit.ChildObjectId, COALESCE (tmpMemberTo.UnitId, COALESCE (MovementLinkObject_To.ObjectId, COALESCE (tmpMemberFrom.UnitId, MovementLinkObject_From.ObjectId)))))
                                     AND ObjectLink_Business.DescId = zc_ObjectLink_Unit_Business()
+                LEFT JOIN ObjectLink AS ObjectLink_ArticleLoss_Business
+                                     ON ObjectLink_ArticleLoss_Business.ObjectId = MovementLinkObject_ArticleLoss.ObjectId
+                                    AND ObjectLink_ArticleLoss_Business.DescId   = zc_ObjectLink_ArticleLoss_Business()
                 -- для затрат (!!!если не указан ArticleLoss!!!)
                 LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfSelect
                        ON lfSelect.UnitId = COALESCE (ObjectLink_CarTo_Unit.ChildObjectId, COALESCE (ObjectLink_PersonalTo_Unit.ChildObjectId, COALESCE (tmpMemberTo.UnitId, COALESCE (MovementLinkObject_To.ObjectId, COALESCE (tmpMemberFrom.UnitId, MovementLinkObject_From.ObjectId)))))
