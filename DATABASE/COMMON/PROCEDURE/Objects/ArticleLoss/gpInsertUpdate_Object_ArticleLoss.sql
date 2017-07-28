@@ -66,4 +66,4 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_ArticleLoss(ioId:=null, inCode:=null, inName:='Регион 1', inComment:= '', inInfoMoneyId:=0, inProfitLossDirectionId:=0, inBusinessId:=0, inSession:='2')
+-- SELECT * FROM gpInsertUpdate_Object_ArticleLoss(ioId:=null, inCode:=null, inName:='Регион 1', inComment:= '', inInfoMoneyId:=0, inProfitLossDirectionId:=0, inBusinessId:=0, inSession:= zfCalc_UserAdmin())

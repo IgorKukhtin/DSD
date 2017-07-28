@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_WeighingPartner(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , MovementId_parent Integer, OperDate_parent TDateTime, InvNumber_parent TVarChar
-             , StartWeighing TDateTime, EndWeighing TDateTime 
+             , StartWeighing TDateTime, EndWeighing TDateTime
              , MovementId_Order Integer, InvNumberOrder TVarChar
              , PartionGoods TVarChar
              , WeighingNumber TFloat
@@ -16,8 +16,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , MovementDescId Integer
              , MovementDescNumber Integer, MovementDescName TVarChar
-             , FromId Integer, FromName TVarChar
-             , ToId Integer, ToName TVarChar
+             , DescId_from Integer, FromId Integer, FromName TVarChar
+             , DescId_to Integer, ToId Integer, ToName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
@@ -37,7 +37,7 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Нет прав.';
      ELSE
-       RETURN QUERY 
+       RETURN QUERY
        SELECT  Movement.Id
              , Movement.InvNumber
              , Movement.OperDate
@@ -48,7 +48,7 @@ BEGIN
              , Movement_Parent.OperDate          AS OperDate_parent
              , Movement_Parent.InvNumber         AS InvNumber_parent
 
-             , MovementDate_StartWeighing.ValueData  AS StartWeighing  
+             , MovementDate_StartWeighing.ValueData  AS StartWeighing
              , MovementDate_EndWeighing.ValueData    AS EndWeighing
 
              , MovementLinkMovement_Order.MovementChildId AS MovementId_Order
@@ -79,8 +79,10 @@ BEGIN
              , MovementFloat_MovementDescNumber.ValueData :: Integer AS MovementDescNumber
              , MovementDesc.ItemName                      AS MovementDescName
 
+             , Object_From.DescId                   AS DescId_from
              , Object_From.Id                       AS FromId
              , Object_From.ValueData                AS FromName
+             , Object_To.DescId                     AS DescId_to
              , Object_To.Id                         AS ToId
              , Object_To.ValueData                  AS ToName
              , CASE WHEN Object_To.DescId = zc_Object_Partner() THEN ObjectLink_To_Juridical.ChildObjectId
@@ -103,7 +105,7 @@ BEGIN
 
              , Object_Member.Id                   AS MemberId
              , Object_Member.ValueData            AS MemberName
-            
+
              , COALESCE (MovementBoolean_Promo.ValueData, FALSE) AS isPromo
 
        FROM Movement
@@ -117,7 +119,7 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_EndWeighing
                                    ON MovementDate_EndWeighing.MovementId = Movement.Id
                                   AND MovementDate_EndWeighing.DescId = zc_MovementDate_EndWeighing()
-                                  
+
             LEFT JOIN MovementFloat AS MovementFloat_WeighingNumber
                                     ON MovementFloat_WeighingNumber.MovementId = Movement.Id
                                    AND MovementFloat_WeighingNumber.DescId = zc_MovementFloat_WeighingNumber()
@@ -155,7 +157,7 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-            
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -174,7 +176,7 @@ BEGIN
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
-            
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
@@ -223,4 +225,3 @@ ALTER FUNCTION gpGet_Movement_WeighingPartner (Integer, TVarChar) OWNER TO postg
 
 -- тест
 -- SELECT * FROM gpGet_Movement_WeighingPartner (inMovementId := 1, inSession:= zfCalc_UserAdmin())
---select * from gpGet_Movement_WeighingPartner(inMovementId := 4312694 ,  inSession := '5');

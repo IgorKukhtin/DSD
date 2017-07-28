@@ -514,8 +514,8 @@ end if;*/
                                                   , inPriceWithVAT          := FALSE
                                                   , inVATPercent            := 20
                                                   , inFromId                := FromId
-                                                  , inToId                  := ContractId -- !!!не ошибка!!!
-                                                  , inArticleLossId         := ToId       -- !!!не ошибка!!!
+                                                  , inToId                  := CASE WHEN tmp.DescId_to = zc_Object_Member() THEN tmp.ToId ELSE ContractId END -- !!!не ошибка!!!
+                                                  , inArticleLossId         := CASE WHEN tmp.DescId_to = zc_Object_Member() THEN 0        ELSE ToId       END -- !!!не ошибка!!!
                                                   , inPaidKindId            := zc_Enum_PaidKind_SecondForm()
                                                   , inUserId                := vbUserId
                                                    )

@@ -246,8 +246,8 @@ BEGIN
                                     , Object_ArticleLoss.ValueData      AS PartnerName
                                FROM Object AS Object_ArticleLoss
                                WHERE Object_ArticleLoss.ObjectCode = inPartnerCode
-                                 AND Object_ArticleLoss.DescId = zc_Object_ArticleLoss()
-                                 AND Object_ArticleLoss.isErased = FALSE
+                                 AND Object_ArticleLoss.DescId     IN (zc_Object_ArticleLoss(), zc_Object_Member())
+                                 AND Object_ArticleLoss.isErased   = FALSE
                                  AND inPartnerCode > 0
                               )
        SELECT tmpArticleLoss.ObjectDescId
@@ -448,6 +448,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Scale_Partner (inOperDate:= '01.01.2015', inMovementDescId:= zc_Movement_SendOnPrice(),inPartnerCode:= '0', inPaidKindId:=0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpGet_Scale_Partner (inOperDate:= '01.01.2015', inMovementDescId:= zc_Movement_Loss(),inPartnerCode:= '0', inPaidKindId:=0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpGet_Scale_Partner (inOperDate:= '01.01.2015', inMovementDescId:= zc_Movement_Sale(),inPartnerCode:= '0', inPaidKindId:=0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inBranchCode:= 301, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Scale_Partner (inOperDate:= '01.01.2015', inMovementDescId:= zc_Movement_Sale(), inPartnerCode:= '0', inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inPaidKindId:=0, inSession:= zfCalc_UserAdmin())
