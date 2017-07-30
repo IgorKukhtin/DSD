@@ -14,6 +14,7 @@ $BODY$
 
   DECLARE vbObjectId        Integer;
   DECLARE vbJuridicalId     Integer;
+  DECLARE vbToId            Integer;
   DECLARE vbOperDate        TDateTime;
   DECLARE vbOperDate_Branch TDateTime;
   DECLARE vbUnit            Integer;
@@ -108,9 +109,17 @@ BEGIN
     END IF;*/
 
 
-    -- Определить
-    vbJuridicalId:= (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_From());
-
+    -- Определить от кого, кому
+    --vbJuridicalId:= (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_From());
+    SELECT MLO_From.ObjectId  AS JuridicalId
+         , MLO_To.ObjectId    AS ToId
+           INTO vbJuridicalId, vbToId
+    FROM MovementLinkObject AS MLO_From 
+         LEFT JOIN MovementLinkObject AS MLO_To
+                                      ON MLO_To.MovementId = inMovementId
+                                     AND MLO_To.DescId = zc_MovementLinkObject_To()
+    WHERE MLO_From.MovementId = inMovementId 
+      AND MLO_From.DescId = zc_MovementLinkObject_From();
 
     -- Тут устанавливаем связь между товарами покупателей и главным товаром
     PERFORM gpInsertUpdate_Object_LinkGoods(0                                 -- ключ объекта <Условия договора>
@@ -194,12 +203,51 @@ BEGIN
         WHERE MLM.descid = zc_MovementLinkMovement_Order()
           AND MLM.MovementId = inMovementId; 
 
-     IF outisDeferred = TRUE THEN
-         outisDeferred = False;
+     -- если нет заявки в привязке к приходу ищем ранее отложенную заявку
+     IF COALESCE (vbOrderId, 0) = 0   
+     THEN
+         vbOrderId := (SELECT tmp.Id
+                       FROM (SELECT Movement.Id
+                                  , CAST(row_number() OVER (ORDER BY Movement.OperDate DESC, Movement.Invnumber DESC) AS INTEGER) AS Ord
+                             FROM Movement
+                                  INNER JOIN MovementBoolean AS MovementBoolean_Deferred
+                                                             ON MovementBoolean_Deferred.MovementId = Movement.Id
+                                                            AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                                            AND MovementBoolean_Deferred.ValueData = TRUE
+                      
+                                  INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                               ON MovementLinkObject_From.MovementId = Movement.Id
+                                                              AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                              AND MovementLinkObject_From.ObjectId = vbJuridicalId
+                      
+                                  INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                               ON MovementLinkObject_To.MovementId = Movement.Id
+                                                              AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                              AND MovementLinkObject_To.ObjectId = vbToId
+                                  
+                                  LEFT JOIN MovementLinkMovement AS MLM_Master
+                                                                 ON MLM_Master.MovementId = Movement.Id
+                                                                AND MLM_Master.DescId = zc_MovementLinkMovement_Master()
+                             WHERE Movement.DescId = zc_Movement_OrderExternal()
+                               AND Movement.OperDate <= vbOperDate_Branch
+                               AND Movement.StatusId in (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                               --AND COALESCE (MLM_Master.MovementChildId, 0) = 0
+                             ) AS tmp
+                       WHERE tmp.Ord = 1
+                       );
+         outisDeferred = TRUE;
+     END IF;
+     
+     -- в найденной заявке меняем статус Отложенн на НЕ отложен
+     IF COALESCE (vbOrderId, 0) <> 0 AND outisDeferred = TRUE 
+     THEN
+         outisDeferred = FALSE;
+         -- Cохранили свойство <Отложен> НЕТ
          PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Deferred(), vbOrderId, outisDeferred);
          -- сохранили протокол
-         PERFORM lpInsert_MovementProtocol (vbOrderId, vbUserId, false);
+         PERFORM lpInsert_MovementProtocol (vbOrderId, vbUserId, FALSE);
      END IF;
+     
 
 END;
 $BODY$
@@ -208,6 +256,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 28.07.17         * 
  25.07.17         * проверка даты аптеки
  01.02.17         * при проведении прихода - Снять заказ из отложенных
  05.02.15                         * 

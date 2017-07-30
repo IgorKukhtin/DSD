@@ -12,6 +12,7 @@ object Form1: TForm1
   Font.Style = []
   OldCreateOrder = False
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
   object grReport: TcxGrid
@@ -21,10 +22,6 @@ object Form1: TForm1
     Height = 439
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = -266
-    ExplicitTop = 359
-    ExplicitWidth = 901
-    ExplicitHeight = 134
     object grtvReport: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = dsReport
@@ -62,8 +59,6 @@ object Form1: TForm1
     Height = 31
     Align = alTop
     TabOrder = 1
-    ExplicitLeft = -266
-    ExplicitWidth = 901
     object btnExecute: TButton
       Left = 359
       Top = 0
