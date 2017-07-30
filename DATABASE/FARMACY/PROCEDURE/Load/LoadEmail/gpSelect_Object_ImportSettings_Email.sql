@@ -45,6 +45,21 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
 
+
+   -- !!!
+   -- !!!что б не делать еще один шедулер - ¬ќ——“јЌќ¬Ћ≈Ќ»≈ цен и Ќ“« - здесь!!!
+   IF  (EXTRACT (HOUR   FROM CURRENT_TIMESTAMP) IN (0, 1, 2)
+    AND EXTRACT (MINUTE FROM CURRENT_TIMESTAMP) BETWEEN 1 AND 15
+       )
+    OR (EXTRACT (HOUR   FROM CURRENT_TIMESTAMP) IN (6, 7, 8, 9, 10)
+    AND EXTRACT (MINUTE FROM CURRENT_TIMESTAMP) BETWEEN 41 AND 55
+       )
+   THEN
+       PERFORM lpUpdate_Object_Price_restore();
+   END IF;
+   -- !!!
+
+
    -- –езультат
    RETURN QUERY 
      WITH tmpEmail AS (SELECT * FROM gpSelect_Object_EmailSettings (inEmailId:= 0, inIsShowAll:= FALSE, inSession:= inSession) AS tmp WHERE tmp.Value <> '' AND tmp.EmailKindId IN (zc_Enum_EmailKind_InPrice(), zc_Enum_EmailKind_IncomeMMO()))

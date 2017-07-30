@@ -263,7 +263,7 @@ BEGIN
                                                       */
 
                                                       WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21500() -- Общефирменные + Маркетинг
-                                                       AND _tmpItem.UnitId = 0
+                                                       AND (_tmpItem.UnitId = 0 OR _tmpItem.MovementDescId = zc_Movement_ProfitLossService())
                                                            THEN zc_Enum_ProfitLossDirection_11100() -- Результат основной деятельности + Маркетинг
 
                                                       WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30400() -- Доходы + услуги предоставленные
@@ -302,7 +302,7 @@ BEGIN
                                               THEN zc_Enum_ProfitLoss_10301() -- Результат основной деятельности + Скидка дополнительная + Продукция
 
                                          WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
-                                          AND _tmpItem.UnitId = 0
+                                          AND (_tmpItem.UnitId = 0 OR _tmpItem.MovementDescId = zc_Movement_ProfitLossService())
                                               THEN zc_Enum_ProfitLoss_11101() -- Результат основной деятельности + Маркетинг + Продукция
 
                                          WHEN _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_50201() -- Налог на прибыль

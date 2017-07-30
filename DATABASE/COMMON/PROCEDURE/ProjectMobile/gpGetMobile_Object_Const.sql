@@ -73,7 +73,10 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
                                ON ObjectLink_Unit_Branch.ObjectId = lfSelect.UnitId
                               AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
-     WHERE ObjectLink_User_Member.ObjectId = CASE WHEN inSession = '5' THEN 893469 /*140094*/ ELSE vbUserId END -- !!!¬–≈Ã≈ÕÕŒ - ƒÀﬂ “≈—“¿!!! - ¬ÓÎÓ¯ËÌ‡ ≈.¿.
+     WHERE ObjectLink_User_Member.ObjectId = CASE WHEN inSession = '5'       THEN 893469  -- !!!¬–≈Ã≈ÕÕŒ - ƒÀﬂ “≈—“¿!!! - ¿‰ÏËÌ    -> ¬ÓÎÓ¯ËÌ‡ ≈.¿.
+                                                  WHEN inSession = '1123966' THEN 1000168 -- !!!¬–≈Ã≈ÕÕŒ - ƒÀﬂ “≈—“¿!!! - test_mob -> ÃÓÎ‰Ó‚‡Ì ≈.¿.
+                                                  ELSE vbUserId
+                                             END
        AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
     ;
 
