@@ -2,25 +2,33 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_LossDebt (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Boolean, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_LossDebt (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_LossDebt (Integer, Integer, Integer, Integer, Integer
+                                                            , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                            , Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_LossDebt(
- INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- ключ Документа
-    IN inJuridicalId         Integer   , -- Юр.лицо
-    IN inPartnerId           Integer   , -- Контрагент
-    IN inBranchId            Integer   , -- Филиал
-    IN inContainerId         TFloat    , -- ContainerId
- INOUT ioAmountDebet         TFloat    , -- Сумма
- INOUT ioAmountKredit        TFloat    , -- Сумма
- INOUT ioSummDebet           TFloat    , -- Сумма остатка (долг)
- INOUT ioSummKredit          TFloat    , -- Сумма остатка (долг)
- INOUT ioIsCalculated        Boolean   , -- Сумма рассчитывается по остатку (да/нет)
-    IN inContractId          Integer   , -- Договор
-    IN inPaidKindId          Integer   , -- Вид форм оплаты
-    IN inInfoMoneyId         Integer   , -- Статьи назначения
-    IN inUnitId              Integer   , -- Подразделение
-    IN inSession             TVarChar    -- сессия пользователя
+ INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
+    IN inMovementId            Integer   , -- ключ Документа
+    IN inJuridicalId           Integer   , -- Юр.лицо
+    IN inPartnerId             Integer   , -- Контрагент
+    IN inBranchId              Integer   , -- Филиал
+    IN inContainerId           TFloat    , -- ContainerId
+ INOUT ioAmountDebet           TFloat    , -- Сумма
+ INOUT ioAmountKredit          TFloat    , -- Сумма
+ INOUT ioSummDebet             TFloat    , -- Сумма остатка (долг)
+ INOUT ioSummKredit            TFloat    , -- Сумма остатка (долг)
+    IN inCurrencyPartnerValue  TFloat    , -- Курс для расчета суммы операции в ГРН
+    IN inParPartnerValue       TFloat    , -- Номинал для расчета суммы операции в ГРН
+ INOUT ioAmountCurrencyDebet   TFloat    , -- Сумма операции (в валюте)
+ INOUT ioAmountCurrencyKredit  TFloat    , -- Сумма операции (в валюте)
+ INOUT ioIsCalculated          Boolean   , -- Сумма рассчитывается по остатку (да/нет)
+    IN inContractId            Integer   , -- Договор
+    IN inPaidKindId            Integer   , -- Вид форм оплаты
+    IN inInfoMoneyId           Integer   , -- Статьи назначения
+    IN inUnitId                Integer   , -- Подразделение
+    IN inCurrencyId            Integer   , -- Валюта
+    IN inSession               TVarChar    -- сессия пользователя
 )                              
 RETURNS RECORD AS
 $BODY$
@@ -41,7 +49,50 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Должна быть введена только одна сумма: <Дебет долг на дату> или <Кредит долг на дату>.';
      END IF;
 
-
+     -- проверка
+     IF (COALESCE (ioAmountCurrencyDebet, 0) <> 0) AND (COALESCE (ioAmountCurrencyKredit, 0) <> 0) THEN
+        RAISE EXCEPTION 'Ошибка.Должна быть введена только одна сумма в валюте: <Дебет> или <Кредит>.';
+     END IF;
+     
+     -- если валюта не выбрана
+     IF COALESCE (inCurrencyId, 0) <> 0 AND COALESCE (inCurrencyId, 0) <> zc_Enum_Currency_Basis()
+     THEN 
+          -- если валюта выбрана по ioIsCalculated
+          IF ioIsCalculated = TRUE
+          THEN 
+              ioSummDebet := CASE WHEN ioAmountCurrencyDebet <> 0 THEN ioAmountCurrencyDebet
+                             ELSE 0
+                             END
+                             -- по курсу в ГРН
+                           * CASE WHEN inParPartnerValue > 0 THEN inCurrencyPartnerValue / inParPartnerValue
+                                  ELSE inCurrencyPartnerValue
+                             END;
+              ioSummKredit:= CASE WHEN ioAmountCurrencyKredit <> 0 THEN ioAmountCurrencyKredit
+                                  ELSE 0
+                             END
+                             -- по курсу в ГРН
+                           * CASE WHEN inParPartnerValue > 0 THEN inCurrencyPartnerValue / inParPartnerValue
+                                  ELSE inCurrencyPartnerValue
+                             END;
+                        
+          ELSE
+              ioAmountDebet := CASE WHEN ioAmountCurrencyDebet <> 0 THEN ioAmountCurrencyDebet
+                                    ELSE 0
+                                    END
+                                    -- по курсу в ГРН
+                                  * CASE WHEN inParPartnerValue > 0 THEN inCurrencyPartnerValue / inParPartnerValue
+                                         ELSE inCurrencyPartnerValue
+                                    END;
+              ioAmountKredit := CASE WHEN ioAmountCurrencyKredit <> 0 THEN ioAmountCurrencyKredit
+                                     ELSE 0
+                                END
+                                -- по курсу в ГРН
+                              * CASE WHEN inParPartnerValue > 0 THEN inCurrencyPartnerValue / inParPartnerValue
+                                     ELSE inCurrencyPartnerValue
+                                END;
+          END IF;
+     END IF;
+     
      -- расчет
      IF ioAmountDebet <> 0 THEN
         vbAmount := ioAmountDebet;
@@ -57,24 +108,33 @@ BEGIN
 
      -- расчет
      ioIsCalculated:= (vbSumm <> 0 OR vbAmount = 0);
+         
+
      -- 
      IF vbSumm <> 0 THEN ioAmountDebet := 0; ioAmountKredit := 0; END IF;
 
      -- сохранили <Элемент документа>
-     PERFORM lpInsertUpdate_MovementItem_LossDebt (ioId                 := ioId
-                                                 , inMovementId         := inMovementId
-                                                 , inJuridicalId        := inJuridicalId
-                                                 , inPartnerId          := inPartnerId
-                                                 , inBranchId           := inBranchId
-                                                 , inContainerId        := inContainerId
-                                                 , inAmount             := vbAmount
-                                                 , inSumm               := vbSumm
-                                                 , inIsCalculated       := ioIsCalculated
-                                                 , inContractId         := inContractId
-                                                 , inPaidKindId         := inPaidKindId
-                                                 , inInfoMoneyId        := inInfoMoneyId
-                                                 , inUnitId             := inUnitId
-                                                 , inUserId             := vbUserId
+     PERFORM lpInsertUpdate_MovementItem_LossDebt (ioId                   := ioId
+                                                 , inMovementId           := inMovementId
+                                                 , inJuridicalId          := inJuridicalId
+                                                 , inPartnerId            := inPartnerId
+                                                 , inBranchId             := inBranchId
+                                                 , inContainerId          := inContainerId
+                                                 , inAmount               := vbAmount
+                                                 , inSumm                 := vbSumm
+                                                 , inCurrencyPartnerValue := inCurrencyPartnerValue
+                                                 , inParPartnerValue      := inParPartnerValue
+                                                 , inAmountCurrency       := CASE WHEN ioAmountCurrencyDebet <> 0  THEN ioAmountCurrencyDebet
+                                                                                  WHEN ioAmountCurrencyKredit <> 0 THEN -1 * ioAmountCurrencyKredit
+                                                                                  ELSE 0
+                                                                             END
+                                                 , inIsCalculated         := ioIsCalculated
+                                                 , inContractId           := inContractId
+                                                 , inPaidKindId           := inPaidKindId
+                                                 , inInfoMoneyId          := inInfoMoneyId
+                                                 , inUnitId               := inUnitId
+                                                 , inCurrencyId           := inCurrencyId
+                                                 , inUserId               := vbUserId
                                                   );
 
 END;
@@ -84,6 +144,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 31.07.17         *
  07.09.14                                        * add inBranchId
  27.08.14                                        * add inPartnerId
  10.03.14                                        * add lpInsertUpdate_MovementItem_LossDebt

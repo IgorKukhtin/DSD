@@ -5,20 +5,24 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_LossDebt (Integer, Integer, 
 
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_LossDebt(
- INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- ключ Документа
-    IN inJuridicalId         Integer   , -- Юр.лицо
-    IN inPartnerId           Integer   , -- Контрагент
-    IN inBranchId            Integer   , -- Филиал
-    IN inContainerId         TFloat    , -- ContainerId
-    IN inAmount              TFloat    , -- Сумма
-    IN inSumm                TFloat    , -- Сумма остатка (долг)
-    IN inIsCalculated        Boolean   , -- Сумма рассчитывается по остатку (да/нет)
-    IN inContractId          Integer   , -- Договор
-    IN inPaidKindId          Integer   , -- Вид форм оплаты
-    IN inInfoMoneyId         Integer   , -- Статьи назначения
-    IN inUnitId              Integer   , -- Подразделение
-    IN inUserId              Integer     -- Пользователь
+ INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
+    IN inMovementId            Integer   , -- ключ Документа
+    IN inJuridicalId           Integer   , -- Юр.лицо
+    IN inPartnerId             Integer   , -- Контрагент
+    IN inBranchId              Integer   , -- Филиал
+    IN inContainerId           TFloat    , -- ContainerId
+    IN inAmount                TFloat    , -- Сумма
+    IN inSumm                  TFloat    , -- Сумма остатка (долг)
+    IN inCurrencyPartnerValue  TFloat    , -- Курс для расчета суммы операции в ГРН
+    IN inParPartnerValue       TFloat    , -- Номинал для расчета суммы операции в ГРН
+    IN inAmountCurrency        TFloat    , -- Сумма операции (в валюте)
+    IN inIsCalculated          Boolean   , -- Сумма рассчитывается по остатку (да/нет)
+    IN inContractId            Integer   , -- Договор
+    IN inPaidKindId            Integer   , -- Вид форм оплаты
+    IN inInfoMoneyId           Integer   , -- Статьи назначения
+    IN inUnitId                Integer   , -- Подразделение
+    IN inCurrencyId            Integer   , -- Валюта
+    IN inUserId                Integer     -- Пользователь
 )                              
 RETURNS Integer AS
 $BODY$
@@ -134,6 +138,13 @@ BEGIN
      -- сохранили свойство <Сумма остатка (долг)>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), ioId, inSumm);
 
+     -- сохранили свойство <Курс>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CurrencyPartnerValue(), ioId, inCurrencyPartnerValue);
+     -- сохранили свойство <Номинал>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ParPartnerValue(), ioId, inParPartnerValue);
+     -- сохранили свойство <Сумма в валюте>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountCurrency(), ioId, inAmountCurrency);
+     
      -- сохранили связь с <Контрагенты>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Partner(), ioId, inPartnerId);
 
@@ -151,6 +162,9 @@ BEGIN
 
      -- сохранили связь с <Подразделение>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
+
+     -- сохранили связь с <Валютой>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Currency(), ioId, inCurrencyId);     
 
      -- пересчитали Итоговые суммы по документу
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);

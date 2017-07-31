@@ -566,20 +566,24 @@ BEGIN
                              , tmpContainerSumm.BranchId
                              , -1 * tmpContainerSumm.SummRemainsEnd AS OperSumm
                              , 0                                    AS OperSumm_Currency
-                             , lpInsertUpdate_MovementItem_LossDebt (ioId                 := 0
-                                                                   , inMovementId         := inMovementId
-                                                                   , inJuridicalId        := tmpContainerSumm.JuridicalId
-                                                                   , inPartnerId          := tmpContainerSumm.PartnerId
-                                                                   , inBranchId           := tmpContainerSumm.BranchId
-                                                                   , inContainerId        := 0
-                                                                   , inAmount             := 0
-                                                                   , inSumm               := 0
-                                                                   , inIsCalculated       := TRUE
-                                                                   , inContractId         := ContainerLO_Contract.ObjectId
-                                                                   , inPaidKindId         := tmpContainerSumm.PaidKindId
-                                                                   , inInfoMoneyId        := tmpContainerSumm.InfoMoneyId
-                                                                   , inUnitId             := NULL
-                                                                   , inUserId             := inUserId
+                             , lpInsertUpdate_MovementItem_LossDebt (ioId                   := 0
+                                                                   , inMovementId           := inMovementId
+                                                                   , inJuridicalId          := tmpContainerSumm.JuridicalId
+                                                                   , inPartnerId            := tmpContainerSumm.PartnerId
+                                                                   , inBranchId             := tmpContainerSumm.BranchId
+                                                                   , inContainerId          := 0
+                                                                   , inAmount               := 0
+                                                                   , inSumm                 := 0
+                                                                   , inCurrencyPartnerValue := 0
+                                                                   , inParPartnerValue      := 0
+                                                                   , inAmountCurrency       := 0
+                                                                   , inIsCalculated         := TRUE
+                                                                   , inContractId           := ContainerLO_Contract.ObjectId
+                                                                   , inPaidKindId           := tmpContainerSumm.PaidKindId
+                                                                   , inInfoMoneyId          := tmpContainerSumm.InfoMoneyId
+                                                                   , inUnitId               := NULL
+                                                                   , inCurrencyId           := NULL
+                                                                   , inUserId               := inUserId
                                                                     ) AS MovementItemId
                              , tmpContainerSumm.ContainerId
                              , 0 AS AccountGroupId, 0 AS AccountDirectionId -- сформируем позже, или ...
