@@ -36,7 +36,7 @@ BEGIN
 
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm
+     INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm, OperSumm_Currency
                          , MovementItemId, ContainerId
                          , AccountGroupId, AccountDirectionId, AccountId
                          , ProfitLossGroupId, ProfitLossDirectionId
@@ -45,6 +45,7 @@ BEGIN
                          , UnitId, PositionId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
                          , PartionMovementId, PartionGoodsId, AssetId
                          , AnalyzerId
+                         , CurrencyId
                          , IsActive, IsMaster
                           )
         -- 1.1. долг Юр Лицу
@@ -53,6 +54,7 @@ BEGIN
              , COALESCE (MovementItem.ObjectId, 0) AS ObjectId
              , COALESCE (Object.DescId, 0) AS ObjectDescId
              , MovementItem.Amount AS OperSumm
+             , COALESCE (MovementFloat_AmountCurrency.ValueData, 0) AS OperSumm_Currency
              , MovementItem.Id AS MovementItemId
 
              , 0 AS ContainerId                                                     -- сформируем позже
@@ -102,10 +104,20 @@ BEGIN
                     ELSE 0
                END AS AnalyzerId -- заполняется !!!только!!! для текущей
 
+               -- Валюта
+             , COALESCE (MILinkObject_Currency.ObjectId, zc_Enum_Currency_Basis()) AS CurrencyId
+
              , CASE WHEN MovementItem.Amount >= 0 THEN TRUE ELSE FALSE END AS IsActive
              , TRUE AS IsMaster
         FROM Movement
              JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
+
+             LEFT JOIN MovementFloat AS MovementFloat_AmountCurrency
+                                     ON MovementFloat_AmountCurrency.MovementId = Movement.Id
+                                    AND MovementFloat_AmountCurrency.DescId = zc_MovementFloat_AmountCurrency()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
+                                              ON MILinkObject_Currency.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
 
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                               ON MILinkObject_Unit.MovementItemId = MovementItem.Id
