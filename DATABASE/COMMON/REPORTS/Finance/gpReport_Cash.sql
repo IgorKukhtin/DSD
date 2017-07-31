@@ -161,8 +161,229 @@ BEGIN
                                LEFT JOIN Object AS Object_ContractTag ON Object_ContractTag.Id = ObjectLink_Contract_ContractTag.ChildObjectId
                         
                           WHERE Object_Contract.DescId = zc_Object_Contract()
-                         )                           
-     --
+                         )     
+                         
+        -- ДЛЯ движение в валюте баланса   
+        , tmpContainerBalance AS (SELECT MIContainer.MovementItemId,
+                                         tmpContainer.ObjectId,
+                                         tmpContainer.CashId,
+                                         tmpContainer.CurrencyId,
+                                         SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END ELSE 0 END)         AS DebetSumm,
+                                         SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)    AS KreditSumm,
+                                         SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() THEN MIContainer.Amount ELSE 0 END)                                        AS Summ_Currency,
+                                         MIContainer.isActive
+                                  FROM tmpContainer
+                                         LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId
+                                                                                       AND MIContainer.OperDate >= inStartDate
+                                  GROUP BY tmpContainer.ObjectId
+                                         , tmpContainer.CashId
+                                         , tmpContainer.CurrencyId
+                                         , MIContainer.isActive
+                                         , MIContainer.MovementItemId
+                                  )
+
+        , tmpMoneyPlace_Balance AS (SELECT MILO_MoneyPlace.MovementItemId
+                                         , MILO_MoneyPlace.ObjectId 
+                                    FROM MovementItemLinkObject AS MILO_MoneyPlace
+                                    WHERE MILO_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+                                      AND MILO_MoneyPlace.MovementItemId IN (SELECT DISTINCT tmpContainerBalance.MovementItemId FROM tmpContainerBalance)
+                                    )
+        , tmpInfoMoney_Balance AS (SELECT MILO_InfoMoney.MovementItemId
+                                        , MILO_InfoMoney.ObjectId 
+                                   FROM MovementItemLinkObject AS MILO_InfoMoney
+                                   WHERE MILO_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+                                     AND MILO_InfoMoney.MovementItemId IN (SELECT DISTINCT tmpContainerBalance.MovementItemId FROM tmpContainerBalance)
+                                   )
+        , tmpUnit_Balance AS (SELECT MILO_Unit.MovementItemId
+                                   , MILO_Unit.ObjectId 
+                              FROM MovementItemLinkObject AS MILO_Unit
+                              WHERE MILO_Unit.DescId = zc_MILinkObject_Unit()
+                                AND MILO_Unit.MovementItemId IN (SELECT DISTINCT tmpContainerBalance.MovementItemId FROM tmpContainerBalance)
+                              )
+        , tmpContract_Balance AS (SELECT MILO_Contract.MovementItemId
+                                       , MILO_Contract.ObjectId 
+                                  FROM MovementItemLinkObject AS MILO_Contract
+                                  WHERE MILO_Contract.DescId = zc_MILinkObject_Contract()
+                                    AND MILO_Contract.MovementItemId IN (SELECT DISTINCT tmpContainerBalance.MovementItemId FROM tmpContainerBalance)
+                                  )
+        , tmpComment_Balance AS (SELECT MIString_Comment.MovementItemId
+                                      , COALESCE (MIString_Comment.ValueData, '') AS ValueData
+                                 FROM MovementItemString AS MIString_Comment
+                                 WHERE MIString_Comment.DescId = zc_MIString_Comment()
+                                   AND MIString_Comment.MovementItemId IN (SELECT DISTINCT tmpContainerBalance.MovementItemId FROM tmpContainerBalance)
+                              ) 
+ 
+            -- ДЛЯ движение  в валюте операции
+        , tmpContainerCurrency AS (SELECT MIContainer.MovementItemId,
+                                          tmpContainer.ObjectId,
+                                          tmpContainer.CashId,
+                                          tmpContainer.CurrencyId,
+                                          SUM (CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END)      AS DebetSumm_Currency,
+                                          SUM (CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END) AS KreditSumm_Currency,
+                                          MIContainer.isActive
+                                   FROM tmpContainer
+                                          LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId_Currency
+                                                                                        AND MIContainer.OperDate >= inStartDate
+                                   WHERE tmpContainer.ContainerId_Currency > 0
+                                   GROUP BY MIContainer.MovementItemId,
+                                            tmpContainer.ObjectId,
+                                            tmpContainer.CashId, 
+                                            tmpContainer.CurrencyId,
+                                            MIContainer.isActive
+                                  )
+        , tmpMoneyPlace_Currency AS (SELECT MILO_MoneyPlace.MovementItemId
+                                          , MILO_MoneyPlace.ObjectId 
+                                     FROM MovementItemLinkObject AS MILO_MoneyPlace
+                                     WHERE MILO_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+                                       AND MILO_MoneyPlace.MovementItemId IN (SELECT DISTINCT tmpContainerCurrency.MovementItemId FROM tmpContainerCurrency)
+                                     )
+        , tmpInfoMoney_Currency AS (SELECT MILO_InfoMoney.MovementItemId
+                                         , MILO_InfoMoney.ObjectId 
+                                    FROM MovementItemLinkObject AS MILO_InfoMoney
+                                    WHERE MILO_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+                                      AND MILO_InfoMoney.MovementItemId IN (SELECT DISTINCT tmpContainerCurrency.MovementItemId FROM tmpContainerCurrency)
+                                    )
+        , tmpUnit_Currency AS (SELECT MILO_Unit.MovementItemId
+                                    , MILO_Unit.ObjectId 
+                               FROM MovementItemLinkObject AS MILO_Unit
+                               WHERE MILO_Unit.DescId = zc_MILinkObject_Unit()
+                                 AND MILO_Unit.MovementItemId IN (SELECT DISTINCT tmpContainerCurrency.MovementItemId FROM tmpContainerCurrency)
+                               )
+        , tmpContract_Currency AS (SELECT MILO_Contract.MovementItemId
+                                        , MILO_Contract.ObjectId 
+                                   FROM MovementItemLinkObject AS MILO_Contract
+                                   WHERE MILO_Contract.DescId = zc_MILinkObject_Contract()
+                                     AND MILO_Contract.MovementItemId IN (SELECT DISTINCT tmpContainerCurrency.MovementItemId FROM tmpContainerCurrency)
+                                   )
+        , tmpComment_Currency AS (SELECT MIString_Comment.MovementItemId
+                                       , COALESCE (MIString_Comment.ValueData, '') AS ValueData
+                                  FROM MovementItemString AS MIString_Comment
+                                  WHERE MIString_Comment.DescId = zc_MIString_Comment()
+                                    AND MIString_Comment.MovementItemId IN (SELECT DISTINCT tmpContainerCurrency.MovementItemId FROM tmpContainerCurrency)
+                               ) 
+                                   
+        , Operation_all AS (-- остаток  в валюте баланса
+                            SELECT tmpContainer.ContainerId,
+                                   tmpContainer.ObjectId,
+                                   tmpContainer.CashId,
+                                   tmpContainer.CurrencyId,
+                                   0                         AS InfoMoneyId,
+                                   0                         AS UnitId,
+                                   0                         AS MoneyPlaceId,
+                                   0                         AS ContractId,
+                                   tmpContainer.Amount - COALESCE(SUM (MIContainer.Amount), 0)                                                             AS StartAmount,
+                                   0                         AS DebetSumm,
+                                   0                         AS KreditSumm,
+                                   tmpContainer.Amount - COALESCE(SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0)  AS EndAmount,
+                                   0                         AS StartAmount_Currency,
+                                   0                         AS EndAmount_Currency,
+                                   0                         AS DebetSumm_Currency,
+                                   0                         AS KreditSumm_Currency,
+                                   0                         AS Summ_Currency,
+                                   ''                        AS Comment,
+                                   NULL :: Boolean           AS isActive
+                            FROM tmpContainer
+                                 LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId
+                                                                AND MIContainer.OperDate >= inStartDate
+                            GROUP BY tmpContainer.ContainerId, tmpContainer.ObjectId, tmpContainer.CashId, tmpContainer.Amount, tmpContainer.CurrencyId
+                 
+                            UNION ALL
+                            -- остаток в валюте операции
+                            SELECT tmpContainer.ContainerId,
+                                   tmpContainer.ObjectId,
+                                   tmpContainer.CashId,
+                                   tmpContainer.CurrencyId,
+                                   0                         AS InfoMoneyId,
+                                   0                         AS UnitId,
+                                   0                         AS MoneyPlaceId,
+                                   0                         AS ContractId,
+                                   0                         AS StartAmount,
+                                   0                         AS DebetSumm,
+                                   0                         AS KreditSumm,
+                                   0                         AS EndAmount,
+                                   tmpContainer.Amount_Currency - COALESCE (SUM (MIContainer.Amount), 0)  AS StartAmount_Currency,
+                                   tmpContainer.Amount_Currency - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS EndAmount_Currency,
+                                   0                         AS DebetSumm_Currency,
+                                   0                         AS KreditSumm_Currency,
+                                   0                         AS Summ_Currency,
+                                   ''                        AS Comment,
+                                   NULL :: Boolean           AS isActive
+                            FROM tmpContainer
+                                 LEFT JOIN MovementItemContainer AS MIContainer 
+                                                                 ON MIContainer.Containerid = tmpContainer.ContainerId_Currency
+                                                                AND MIContainer.OperDate >= inStartDate
+                            WHERE tmpContainer.ContainerId_Currency > 0
+                            GROUP BY tmpContainer.ContainerId, tmpContainer.ObjectId, tmpContainer.CashId, tmpContainer.Amount_Currency, tmpContainer.CurrencyId
+                 
+                            UNION ALL
+                            -- движение в валюте баланса
+                            SELECT 0                                         AS ContainerId,
+                                   tmpContainer.ObjectId                     AS ObjectId,
+                                   tmpContainer.CashId                       AS CashId,
+                                   tmpContainer.CurrencyId                   AS CurrencyId,
+                                   MILO_InfoMoney.ObjectId                   AS InfoMoneyId,
+                                   MILO_Unit.ObjectId                        AS UnitId,
+                                   MILO_MoneyPlace.ObjectId                  AS MoneyPlaceId,
+                                   MILO_Contract.ObjectId                    AS ContractId,
+                                   0                                         AS StartAmount,
+                                   SUM (tmpContainer.DebetSumm)              AS DebetSumm,
+                                   SUM (tmpContainer.KreditSumm)             AS KreditSumm,
+                                   0                                         AS EndAmount,
+                                   0                                         AS StartAmount_Currency,
+                                   0                                         AS EndAmount_Currency,
+                                   0                                         AS DebetSumm_Currency,
+                                   0                                         AS KreditSumm_Currency,
+                                   SUM (tmpContainer.Summ_Currency)          AS Summ_Currency,
+                                   COALESCE (MIString_Comment.ValueData, '') AS Comment,
+                                   tmpContainer.isActive                     AS isActive
+                            FROM tmpContainerBalance AS tmpContainer
+                                   LEFT JOIN tmpComment_Balance    AS MIString_Comment ON MIString_Comment.MovementItemId = tmpContainer.MovementItemId
+                                   LEFT JOIN tmpMoneyPlace_Balance AS MILO_MoneyPlace  ON MILO_MoneyPlace.MovementItemId  = tmpContainer.MovementItemId
+                                   LEFT JOIN tmpContract_Balance   AS MILO_Contract    ON MILO_Contract.MovementItemId    = tmpContainer.MovementItemId
+                                   LEFT JOIN tmpUnit_Balance       AS MILO_Unit        ON MILO_Unit.MovementItemId        = tmpContainer.MovementItemId
+                                   LEFT JOIN tmpInfoMoney_Balance  AS MILO_InfoMoney   ON MILO_InfoMoney.MovementItemId   = tmpContainer.MovementItemId
+                            GROUP BY tmpContainer.ObjectId, tmpContainer.CashId, tmpContainer.CurrencyId, tmpContainer.isActive,
+                                     MILO_InfoMoney.ObjectId, 
+                                     MILO_Unit.ObjectId,
+                                     MILO_MoneyPlace.ObjectId, 
+                                     MILO_Contract.ObjectId,
+                                     MIString_Comment.ValueData
+                            UNION ALL
+                            -- движение  в валюте операции
+                            SELECT 0                                         AS ContainerId,
+                                   tmpContainer.ObjectId                     AS ObjectId,
+                                   tmpContainer.CashId                       AS CashId,
+                                   tmpContainer.CurrencyId                   AS CurrencyId,
+                                   MILO_InfoMoney.ObjectId                   AS InfoMoneyId,
+                                   MILO_Unit.ObjectId                        AS UnitId,
+                                   MILO_MoneyPlace.ObjectId                  AS MoneyPlaceId,
+                                   MILO_Contract.ObjectId                    AS ContractId,
+                                   0                                         AS StartAmount,
+                                   0                                         AS DebetSumm,
+                                   0                                         AS KreditSumm,
+                                   0                                         AS EndAmount,
+                                   0                                         AS StartAmount_Currency,
+                                   0                                         AS EndAmount_Currency,
+                                   SUM (tmpContainer.DebetSumm_Currency)     AS DebetSumm_Currency,
+                                   SUM (tmpContainer.KreditSumm_Currency)    AS KreditSumm_Currency,
+                                   0                                         AS Summ_Currency,
+                                   COALESCE (MIString_Comment.ValueData, '') AS Comment,
+                                   tmpContainer.isActive                     AS isActive
+                            FROM tmpContainerCurrency AS tmpContainer
+                                   LEFT JOIN tmpComment_Currency    AS MIString_Comment ON MIString_Comment.MovementItemId = tmpContainer.MovementItemId
+                                   LEFT JOIN tmpMoneyPlace_Currency AS MILO_MoneyPlace  ON MILO_MoneyPlace.MovementItemId  = tmpContainer.MovementItemId
+                                   LEFT JOIN tmpContract_Currency   AS MILO_Contract    ON MILO_Contract.MovementItemId    = tmpContainer.MovementItemId
+                                   LEFT JOIN tmpUnit_Currency       AS MILO_Unit        ON MILO_Unit.MovementItemId        = tmpContainer.MovementItemId
+                                   LEFT JOIN tmpInfoMoney_Currency  AS MILO_InfoMoney   ON MILO_InfoMoney.MovementItemId   = tmpContainer.MovementItemId
+                            GROUP BY tmpContainer.ObjectId, tmpContainer.CashId, tmpContainer.CurrencyId, tmpContainer.isActive,
+                                     MILO_InfoMoney.ObjectId,
+                                     MILO_Unit.ObjectId, 
+                                     MILO_MoneyPlace.ObjectId, 
+                                     MILO_Contract.ObjectId,
+                                     MIString_Comment.ValueData
+                            )
+                            
+     -- Результат
      SELECT
         Operation.ContainerId,
         Object_Cash.ObjectCode                                                                      AS CashCode,
@@ -223,163 +444,7 @@ BEGIN
                      SUM (Operation_all.KreditSumm_Currency)  AS KreditSumm_Currency,
                      SUM (Operation_all.EndAmount_Currency)   AS EndAmount_Currency,
                      SUM (Operation_all.Summ_Currency)        AS Summ_Currency
-          FROM
-           -- остаток  в валюте баланса
-          (SELECT tmpContainer.ContainerId,
-                  tmpContainer.ObjectId,
-                  tmpContainer.CashId,
-                  tmpContainer.CurrencyId,
-                  0                         AS InfoMoneyId,
-                  0                         AS UnitId,
-                  0                         AS MoneyPlaceId,
-                  0                         AS ContractId,
-                  tmpContainer.Amount - COALESCE(SUM (MIContainer.Amount), 0)                                                             AS StartAmount,
-                  0                         AS DebetSumm,
-                  0                         AS KreditSumm,
-                  tmpContainer.Amount - COALESCE(SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0)  AS EndAmount,
-
-                  0                         AS StartAmount_Currency,
-                  0                         AS EndAmount_Currency,
-                  0                         AS DebetSumm_Currency,
-                  0                         AS KreditSumm_Currency,
-                  0                         AS Summ_Currency,
-
-                  '' AS Comment,
-                  NULL :: Boolean           AS isActive
-
-           FROM tmpContainer
-                LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId
-                                               AND MIContainer.OperDate >= inStartDate
-           GROUP BY tmpContainer.ContainerId, tmpContainer.ObjectId, tmpContainer.CashId, tmpContainer.Amount, tmpContainer.CurrencyId
-
-           UNION ALL
-           -- остаток в валюте операции
-           SELECT tmpContainer.ContainerId,
-                  tmpContainer.ObjectId,
-                  tmpContainer.CashId,
-                  tmpContainer.CurrencyId,
-                  0                         AS InfoMoneyId,
-                  0                         AS UnitId,
-                  0                         AS MoneyPlaceId,
-                  0                         AS ContractId,
-                  0                         AS StartAmount,
-                  0                         AS DebetSumm,
-                  0                         AS KreditSumm,
-                  0                         AS EndAmount,
-
-                  tmpContainer.Amount_Currency - COALESCE (SUM (MIContainer.Amount), 0)  AS StartAmount_Currency,
-                  tmpContainer.Amount_Currency - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS EndAmount_Currency,
-                  0                         AS DebetSumm_Currency,
-                  0                         AS KreditSumm_Currency,
-                  0                         AS Summ_Currency,
-
-                  '' AS Comment,
-                  NULL :: Boolean           AS isActive
-
-           FROM tmpContainer
-                LEFT JOIN MovementItemContainer AS MIContainer 
-                                                ON MIContainer.Containerid = tmpContainer.ContainerId_Currency
-                                               AND MIContainer.OperDate >= inStartDate
-           WHERE tmpContainer.ContainerId_Currency > 0
-           GROUP BY tmpContainer.ContainerId, tmpContainer.ObjectId, tmpContainer.CashId, tmpContainer.Amount_Currency, tmpContainer.CurrencyId
-
-           UNION ALL
-           -- движение в валюте баланса
-           SELECT 0                                 AS ContainerId,
-                  tmpContainer.ObjectId,
-                  tmpContainer.CashId,
-                  tmpContainer.CurrencyId,
-                  MILO_InfoMoney.ObjectId           AS InfoMoneyId,
-                  MILO_Unit.ObjectId                AS UnitId,
-                  MILO_MoneyPlace.ObjectId          AS MoneyPlaceId,
-                  MILO_Contract.ObjectId            AS ContractId,
-                  0                                 AS StartAmount,
-                  SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END ELSE 0 END)         AS DebetSumm,
-                  SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)    AS KreditSumm,
-                  0                                 AS EndAmount,
-
-                  0                         AS StartAmount_Currency,
-                  0                         AS EndAmount_Currency,
-                  0                         AS DebetSumm_Currency,
-                  0                         AS KreditSumm_Currency,
-                  SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() THEN MIContainer.Amount ELSE 0 END) AS Summ_Currency,
-
-                  COALESCE (MIString_Comment.ValueData, '') AS Comment,
-                  MIContainer.isActive
-           FROM tmpContainer
-                  LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId
-                                                                AND MIContainer.OperDate >= inStartDate
-                  LEFT JOIN MovementItemString AS MIString_Comment
-                                               ON MIString_Comment.MovementItemId = MIContainer.MovementItemId
-                                              AND MIString_Comment.DescId = zc_MIString_Comment()
-                  LEFT JOIN MovementItemLinkObject AS MILO_MoneyPlace
-                                                   ON MILO_MoneyPlace.MovementItemId = MIContainer.MovementItemId
-                                                  AND MILO_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
-                  LEFT JOIN MovementItemLinkObject AS MILO_Contract
-                                                   ON MILO_Contract.MovementItemId = MIContainer.MovementItemId
-                                                  AND MILO_Contract.DescId = zc_MILinkObject_Contract()
-                  LEFT JOIN MovementItemLinkObject AS MILO_Unit
-                                                   ON MILO_Unit.MovementItemId = MIContainer.MovementItemId
-                                                  AND MILO_Unit.DescId = zc_MILinkObject_Unit()
-                  LEFT JOIN MovementItemLinkObject AS MILO_InfoMoney
-                                                   ON MILO_InfoMoney.MovementItemId = MIContainer.MovementItemId
-                                                  AND MILO_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-                 -- LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MILO_InfoMoney.ObjectId
-           GROUP BY tmpContainer.ContainerId, tmpContainer.ObjectId, tmpContainer.CashId, tmpContainer.CurrencyId,
-                    MILO_InfoMoney.ObjectId, 
-                    MILO_Unit.ObjectId, MILO_MoneyPlace.ObjectId, MILO_Contract.ObjectId,
-                    MIString_Comment.ValueData,
-                    MIContainer.isActive
-           UNION ALL
-           -- движение  в валюте операции
-           SELECT 0                                 AS ContainerId,
-                  tmpContainer.ObjectId,
-                  tmpContainer.CashId,
-                  tmpContainer.CurrencyId,
-                  MILO_InfoMoney.ObjectId           AS InfoMoneyId,
-                  MILO_Unit.ObjectId                AS UnitId,
-                  MILO_MoneyPlace.ObjectId          AS MoneyPlaceId,
-                  MILO_Contract.ObjectId            AS ContractId,
-                  0                                 AS StartAmount,
-                  0                                 AS DebetSumm,
-                  0                                 AS KreditSumm,
-                  0                                 AS EndAmount,
-
-                  0                                 AS StartAmount_Currency,
-                  0                                 AS EndAmount_Currency,
-                  SUM (CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END)      AS DebetSumm_Currency,
-                  SUM (CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END) AS KreditSumm_Currency,
-                  0                                 AS Summ_Currency,
-
-                  COALESCE (MIString_Comment.ValueData, '') AS Comment,
-                  MIContainer.isActive
-           FROM tmpContainer
-                  LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId_Currency
-                                                                AND MIContainer.OperDate >= inStartDate
-                  LEFT JOIN MovementItemString AS MIString_Comment
-                                               ON MIString_Comment.MovementItemId = MIContainer.MovementItemId
-                                              AND MIString_Comment.DescId = zc_MIString_Comment()
-                  LEFT JOIN MovementItemLinkObject AS MILO_MoneyPlace
-                                                   ON MILO_MoneyPlace.MovementItemId = MIContainer.MovementItemId
-                                                  AND MILO_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
-                  LEFT JOIN MovementItemLinkObject AS MILO_Contract
-                                                   ON MILO_Contract.MovementItemId = MIContainer.MovementItemId
-                                                  AND MILO_Contract.DescId = zc_MILinkObject_Contract()
-                  LEFT JOIN MovementItemLinkObject AS MILO_Unit
-                                                   ON MILO_Unit.MovementItemId = MIContainer.MovementItemId
-                                                  AND MILO_Unit.DescId = zc_MILinkObject_Unit()
-                  LEFT JOIN MovementItemLinkObject AS MILO_InfoMoney
-                                                   ON MILO_InfoMoney.MovementItemId = MIContainer.MovementItemId
-                                                  AND MILO_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-                  --LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MILO_InfoMoney.ObjectId
-           WHERE tmpContainer.ContainerId_Currency > 0
-           GROUP BY tmpContainer.ContainerId, tmpContainer.ObjectId, tmpContainer.CashId, tmpContainer.CurrencyId,
-                    MILO_InfoMoney.ObjectId,
-                    MILO_Unit.ObjectId, MILO_MoneyPlace.ObjectId, MILO_Contract.ObjectId,
-                    MIString_Comment.ValueData,
-                    MIContainer.isActive
-           ) AS Operation_all
-
+          FROM Operation_all
           GROUP BY Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.CashId, Operation_all.CurrencyId,
                    Operation_all.InfoMoneyId, Operation_all.UnitId, Operation_all.MoneyPlaceId, Operation_all.ContractId, Operation_all.Comment, 
                    Operation_all.isActive
@@ -415,6 +480,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 31.07.17         * шустрее работает
  27.09.14                                        *
  09.09.14                                                        *
 */
