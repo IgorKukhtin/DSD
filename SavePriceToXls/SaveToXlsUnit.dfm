@@ -24,6 +24,10 @@ object Form1: TForm1
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'TabSheet1'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -211,7 +215,6 @@ object Form1: TForm1
   end
   object ZConnection1: TZConnection
     ControlsCodePage = cCP_UTF16
-    UTF8StringsAsWideField = True
     HostName = '91.210.37.210'
     Port = 5432
     Database = 'farmacy'

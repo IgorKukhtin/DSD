@@ -11,7 +11,7 @@ uses
   cxMaskEdit, cxSpinEdit, Vcl.StdCtrls, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxClasses,
   cxGridCustomView, cxGrid, ZAbstractRODataset, ZAbstractDataset, ZDataset,
-  ZAbstractConnection, ZConnection, cxGridExportLink;
+  ZAbstractConnection, ZConnection, cxGridExportLink, ZLibEx;
 
 type
   TForm1 = class(TForm)
@@ -29,17 +29,22 @@ type
     cxLabel4: TcxLabel;
     btnExport: TButton;
     FileName: TEdit;
+    btnCompress: TButton;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExecuteClick(Sender: TObject);
     procedure btnExportClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure btnCompressClick(Sender: TObject);
   private
     { Private declarations }
     SavePath, FilePath, FileTemplate: string;
-    UnitList: TStringList;
+    UnitList, RestList: TStringList;
+    function GetUnitCode(AUnitId: Integer): string;
+    function GetRestCode(AUnitId: Integer): string;
     procedure ReportExecute(AUnitId: Integer);
     procedure ReportExport(AUnitId: Integer);
+    procedure ReportCompress(AUnitId: Integer);
   public
     { Public declarations }
     procedure Add_Log(AMessage:String);
@@ -55,7 +60,6 @@ implementation
 procedure TForm1.Add_Log(AMessage: String);
 var
   F: TextFile;
-
 begin
   try
     AssignFile(F,ChangeFileExt(Application.ExeName,'.log'));
@@ -70,6 +74,11 @@ begin
   end;
   except
   end;
+end;
+
+procedure TForm1.btnCompressClick(Sender: TObject);
+begin
+  ReportCompress(UnitId.Value);
 end;
 
 procedure TForm1.btnExecuteClick(Sender: TObject);
@@ -87,6 +96,7 @@ var
   ini: TIniFile;
 Begin
   UnitList := TStringList.Create;
+  RestList := TStringList.Create;
 
   ini := TIniFile.Create(ChangeFileExt(Application.ExeName,'.ini'));
   try
@@ -105,6 +115,9 @@ Begin
 
     UnitList.CommaText := ini.ReadString('Options', 'UnitList', 'Pravda_6=183292, Kombriga_petrova_6=183293, Yurija_Kondratuka_1=183294');
     ini.WriteString('Options', 'UnitList', UnitList.CommaText);
+
+    RestList.CommaText := ini.ReadString('Options', 'RestList', 'Pravda_6=32490, Kombriga_petrova_6=33622, Yurija_Kondratuka_1=33618');
+    ini.WriteString('Options', 'RestList', RestList.CommaText);
 
     ZConnection1.Database := ini.ReadString('Connect','DataBase','farmacy');
     ini.WriteString('Connect','DataBase',ZConnection1.Database);
@@ -148,6 +161,60 @@ end;
 procedure TForm1.FormDestroy(Sender: TObject);
 begin
   UnitList.Free;
+  RestList.Free;
+end;
+
+function TForm1.GetRestCode(AUnitId: Integer): string;
+begin
+  Result := RestList.Values[GetUnitCode(AUnitId)];
+end;
+
+function TForm1.GetUnitCode(AUnitId: Integer): string;
+var
+  I: Integer;
+begin
+  Result := '';
+
+  for I := 0 to Pred(UnitList.Count) do
+    if StrToInt(UnitList.ValueFromIndex[I]) = AUnitId then
+    begin
+      Result := UnitList.Names[I];
+      Break;
+    end;
+end;
+
+procedure TForm1.ReportCompress(AUnitId: Integer);
+var
+  UnitCode, RestCode, UnitFile, RestFile: string;
+  FileIn, FileOut: TFileStream;
+  //ZipStream: TCompressionStream;
+begin
+  Add_Log('Начало архивирования отчета');
+
+  UnitCode := GetUnitCode(AUnitId);
+
+  if not ForceDirectories(FilePath + UnitCode + '\zip\') then
+  begin
+    Add_Log('Не могу создать директорию архивирования');
+    exit;
+  end;
+
+  RestCode := GetRestCode(AUnitId);
+  UnitFile := FilePath + UnitCode + '\' + Format(FileTemplate, [UnitCode]);
+  RestFile := FilePath + UnitCode + '\zip\Rest_' + RestCode + '_' + FormatDateTime('yyyymmddhhmmss', Now) + '.zip';
+
+  FileIn := TFileStream.Create(UnitFile, fmOpenRead);
+  FileOut := TFileStream.Create(RestFile, fmCreate);
+  //ZipStream := TCompressionStream.Create(FileOut);
+
+  try
+    //ZipStream.CopyFrom(FileIn, FileIn.Size);
+    ZCompressStream(FileIn, FileOut);
+  finally
+    //ZipStream.Free;
+    FileOut.Free;
+    FileIn.Free;
+  end;
 end;
 
 procedure TForm1.ReportExecute(AUnitId: Integer);
@@ -170,18 +237,12 @@ end;
 
 procedure TForm1.ReportExport(AUnitId: Integer);
 var
-  I: Integer;
   UnitCode, UnitFile: string;
   sl : TStringList;
 begin
   Add_Log('Начало выгрузки отчета');
 
-  for I := 0 to Pred(UnitList.Count) do
-    if StrToInt(UnitList.ValueFromIndex[I]) = AUnitId then
-    begin
-      UnitCode := UnitList.Names[I];
-      Break;
-    end;
+  UnitCode := GetUnitCode(AUnitId);
 
   if not ForceDirectories(FilePath + UnitCode + '\') then
   begin
@@ -222,6 +283,7 @@ begin
     begin
       ReportExecute(StrToInt(UnitList.ValueFromIndex[I]));
       ReportExport(StrToInt(UnitList.ValueFromIndex[I]));
+      ReportCompress(StrToInt(UnitList.ValueFromIndex[I]));
     end;
   finally
     Close;
