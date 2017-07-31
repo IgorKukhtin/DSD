@@ -18,9 +18,11 @@ RETURNS TABLE (Id Integer
              , BranchId Integer, BranchName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , UnitId Integer, UnitName TVarChar
+             , CurrencyId Integer, CurrencyName TVarChar
              , AmountDebet TFloat, AmountKredit TFloat
              , SummDebet TFloat, SummKredit TFloat
              , ContainerId TFloat
+             , CurrencyPartnerValue TFloat, ParPartnerValue TFloat, AmountCurrencyDebet TFloat, AmountCurrencyKredit TFloat
              , isCalculated Boolean
              , isErased Boolean
               )
@@ -37,7 +39,7 @@ BEGIN
      -- Ðåçóëüòàò
      RETURN QUERY 
 
-       SELECT 0 :: Integer AS Id
+       SELECT 0  :: Integer                            AS Id
 
             , View_InfoMoney.InfoMoneyGroupName
             , View_InfoMoney.InfoMoneyDestinationName
@@ -45,35 +47,42 @@ BEGIN
             , View_InfoMoney.InfoMoneyCode
             , View_InfoMoney.InfoMoneyName
 
-            , View_Contract.ContractId
-            , View_Contract.ContractCode
-            , View_Contract.InvNumber AS ContractName
-            , View_Contract.ContractTagName
+            , View_Contract.ContractId                 AS ContractId
+            , View_Contract.ContractCode               AS ContractCode
+            , View_Contract.InvNumber                  AS ContractName
+            , View_Contract.ContractTagName            AS ContractTagName
 
-            , Object_Juridical.Id         AS JuridicalId
-            , Object_Juridical.ObjectCode AS JuridicalCode
-            , Object_Juridical.ValueData  AS JuridicalName
-            , ObjectHistory_JuridicalDetails_View.OKPO
-            , Object_JuridicalGroup.ValueData AS JuridicalGroupName
-            , 0 :: Integer                AS PartnerId
-            , 0 :: Integer                AS PartnerCode
-            , '' :: TVarChar              AS PartnerName
-            , 0 :: Integer                AS BranchId
-            , '' :: TVarChar              AS BranchName
-            , Object_PaidKind.Id          AS PaidKindId
-            , Object_PaidKind.ValueData   AS PaidKindName
-            , 0 :: Integer   AS UnitId
-            , '' :: TVarChar AS UnitName
-
-           , 0 :: TFloat AS AmountDebet
-           , 0 :: TFloat AS AmountKredit
-           , 0 :: TFloat AS SummDebet
-           , 0 :: TFloat AS SummKredit
-
-           , 0 ::TFloat AS ContainerId
-
-           , TRUE AS isCalculated
-           , FALSE  AS isErased
+            , Object_Juridical.Id                      AS JuridicalId
+            , Object_Juridical.ObjectCode              AS JuridicalCode
+            , Object_Juridical.ValueData               AS JuridicalName
+            , ObjectHistory_JuridicalDetails_View.OKPO AS OKPO
+            , Object_JuridicalGroup.ValueData          AS JuridicalGroupName
+            , 0  :: Integer                   AS PartnerId
+            , 0  :: Integer                   AS PartnerCode
+            , '' :: TVarChar                  AS PartnerName
+            , 0 :: Integer                    AS BranchId
+            , '' :: TVarChar                  AS BranchName
+            , Object_PaidKind.Id              AS PaidKindId
+            , Object_PaidKind.ValueData       AS PaidKindName
+            , 0  :: Integer                   AS UnitId
+            , '' :: TVarChar                  AS UnitName
+            , 0  :: Integer                   AS CurrencyId
+            , '' :: TVarChar                  AS CurrencyName
+                                            
+           , 0   :: TFloat                    AS AmountDebet
+           , 0   :: TFloat                    AS AmountKredit
+           , 0   :: TFloat                    AS SummDebet
+           , 0   :: TFloat                    AS SummKredit
+                                              
+           , 0   :: TFloat                    AS CurrencyPartnerValue
+           , 0   :: TFloat                    AS ParPartnerValue
+           , 0   :: TFloat                    AS AmountCurrencyDebet
+           , 0   :: TFloat                    AS AmountCurrencyKredit
+                                              
+           , 0   :: TFloat                    AS ContainerId
+                                            
+           , TRUE                             AS isCalculated
+           , FALSE                            AS isErased
                   
        FROM Object AS Object_Juridical
             LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
@@ -124,50 +133,65 @@ BEGIN
             , View_InfoMoney.InfoMoneyCode
             , View_InfoMoney.InfoMoneyName
 
-            , View_Contract_InvNumber.ContractId
-            , View_Contract_InvNumber.ContractCode
-            , View_Contract_InvNumber.InvNumber AS ContractName
-            , View_Contract_InvNumber.ContractTagName
+            , View_Contract_InvNumber.ContractId               AS ContractId
+            , View_Contract_InvNumber.ContractCode             AS ContractCode
+            , View_Contract_InvNumber.InvNumber                AS ContractName
+            , View_Contract_InvNumber.ContractTagName          AS ContractTagName
 
-            , Object_Juridical.Id         AS JuridicalId
-            , Object_Juridical.ObjectCode AS JuridicalCode
-            , Object_Juridical.ValueData  AS JuridicalName
-            , ObjectHistory_JuridicalDetails_View.OKPO
-            , Object_JuridicalGroup.ValueData AS JuridicalGroupName
-            , Object_Partner.Id           AS PartnerId
-            , Object_Partner.ObjectCode   AS PartnerCode
-            , Object_Partner.ValueData    AS PartnerName
-            , Object_Branch.Id            AS BranchId
-            , Object_Branch.ValueData     AS BranchName
-
-            , Object_PaidKind.Id          AS PaidKindId
-            , Object_PaidKind.ValueData   AS PaidKindName
-            , Object_Unit.Id              AS UnitId
-            , Object_Unit.ValueData       AS UnitName
+            , Object_Juridical.Id                              AS JuridicalId
+            , Object_Juridical.ObjectCode                      AS JuridicalCode
+            , Object_Juridical.ValueData                       AS JuridicalName
+            , ObjectHistory_JuridicalDetails_View.OKPO         AS OKPO
+            , Object_JuridicalGroup.ValueData                  AS JuridicalGroupName
+            , Object_Partner.Id                                AS PartnerId
+            , Object_Partner.ObjectCode                        AS PartnerCode
+            , Object_Partner.ValueData                         AS PartnerName
+            , Object_Branch.Id                                 AS BranchId
+            , Object_Branch.ValueData                          AS BranchName
+                                                             
+            , Object_PaidKind.Id                               AS PaidKindId
+            , Object_PaidKind.ValueData                        AS PaidKindName
+            , Object_Unit.Id                                   AS UnitId
+            , Object_Unit.ValueData                            AS UnitName
+            , Object_Currency.Id                               AS CurrencyId
+            , Object_Currency.ValueData                        AS CurrencyName
 
            , CASE WHEN MovementItem.Amount > 0
                        THEN MovementItem.Amount
                   ELSE 0
-             END::TFloat AS AmountDebet
+             END                                     :: TFloat AS AmountDebet
            , CASE WHEN MovementItem.Amount < 0
                        THEN -1 * MovementItem.Amount
                   ELSE 0
-             END::TFloat AS AmountKredit
+             END                                     :: TFloat AS AmountKredit
 
            , CASE WHEN MIFloat_Summ.ValueData > 0
                        THEN MIFloat_Summ.ValueData
                   ELSE 0
-             END::TFloat AS SummDebet
+             END                                     :: TFloat AS SummDebet
            , CASE WHEN MIFloat_Summ.ValueData < 0
                        THEN -1 * MIFloat_Summ.ValueData
                   ELSE 0
-             END::TFloat AS SummKredit
+             END                                     :: TFloat AS SummKredit
 
-            , MIFloat_ContainerId.ValueData ::TFloat AS ContainerId
+            , MIFloat_ContainerId.ValueData          :: TFloat AS ContainerId
 
-            , MIBoolean_Calculated.ValueData AS isCalculated
+            , MIFloat_CurrencyPartnerValue.ValueData :: TFloat AS CurrencyPartnerValue
+            , MIFloat_ParPartnerValue.ValueData      :: TFloat AS ParPartnerValue
 
-            , MovementItem.isErased       AS isErased
+            , CASE WHEN MIFloat_AmountCurrency.ValueData > 0
+                       THEN MIFloat_AmountCurrency.ValueData
+                       ELSE 0
+              END                                    :: TFloat AS AmountCurrencyDebet
+
+            , CASE WHEN MIFloat_AmountCurrency.ValueData < 0
+                       THEN -1 * MIFloat_AmountCurrency.ValueData
+                       ELSE 0
+              END                                    :: TFloat AS AmountCurrencyKredit
+
+            , MIBoolean_Calculated.ValueData                   AS isCalculated
+
+            , MovementItem.isErased                            AS isErased
                   
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
        
@@ -188,7 +212,17 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_ContainerId 
                                         ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
                                        AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
-
+                                       
+            LEFT JOIN MovementItemFloat AS MIFloat_CurrencyPartnerValue
+                                        ON MIFloat_CurrencyPartnerValue.MovementItemId = MovementItem.Id
+                                       AND MIFloat_CurrencyPartnerValue.DescId = zc_MIFloat_CurrencyPartnerValue()
+            LEFT JOIN MovementItemFloat AS MIFloat_ParPartnerValue
+                                        ON MIFloat_ParPartnerValue.MovementItemId = MovementItem.Id
+                                       AND MIFloat_ParPartnerValue.DescId = zc_MIFloat_ParPartnerValue()
+            LEFT JOIN MovementItemFloat AS MIFloat_AmountCurrency 
+                                        ON MIFloat_AmountCurrency.MovementItemId = MovementItem.Id
+                                       AND MIFloat_AmountCurrency.DescId = zc_MIFloat_AmountCurrency()
+                                       
             LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
                                           ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
                                          AND MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
@@ -223,6 +257,11 @@ BEGIN
                                              ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MILinkObject_PaidKind.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
+                                             ON MILinkObject_Currency.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
+            LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MILinkObject_Currency.ObjectId
       ;
 
      ELSE
@@ -237,48 +276,63 @@ BEGIN
             , View_InfoMoney.InfoMoneyCode
             , View_InfoMoney.InfoMoneyName
 
-            , View_Contract_InvNumber.ContractId
-            , View_Contract_InvNumber.ContractCode
-            , View_Contract_InvNumber.InvNumber AS ContractName
-            , View_Contract_InvNumber.ContractTagName
+            , View_Contract_InvNumber.ContractId               AS ContractId
+            , View_Contract_InvNumber.ContractCode             AS ContractCode
+            , View_Contract_InvNumber.InvNumber                AS ContractName
+            , View_Contract_InvNumber.ContractTagName          AS ContractTagName
 
-            , Object_Juridical.Id         AS JuridicalId
-            , Object_Juridical.ObjectCode AS JuridicalCode
-            , Object_Juridical.ValueData  AS JuridicalName
-            , ObjectHistory_JuridicalDetails_View.OKPO
-            , Object_JuridicalGroup.ValueData AS JuridicalGroupName
-            , Object_Partner.Id           AS PartnerId
-            , Object_Partner.ObjectCode   AS PartnerCode
-            , Object_Partner.ValueData    AS PartnerName
-            , Object_Branch.Id            AS BranchId
-            , Object_Branch.ValueData     AS BranchName
-            , Object_PaidKind.Id          AS PaidKindId
-            , Object_PaidKind.ValueData   AS PaidKindName
-            , Object_Unit.Id              AS UnitId
-            , Object_Unit.ValueData       AS UnitName
+            , Object_Juridical.Id                              AS JuridicalId
+            , Object_Juridical.ObjectCode                      AS JuridicalCode
+            , Object_Juridical.ValueData                       AS JuridicalName
+            , ObjectHistory_JuridicalDetails_View.OKPO         AS OKPO
+            , Object_JuridicalGroup.ValueData                  AS JuridicalGroupName
+            , Object_Partner.Id                                AS PartnerId
+            , Object_Partner.ObjectCode                        AS PartnerCode
+            , Object_Partner.ValueData                         AS PartnerName
+            , Object_Branch.Id                                 AS BranchId
+            , Object_Branch.ValueData                          AS BranchName
+            , Object_PaidKind.Id                               AS PaidKindId
+            , Object_PaidKind.ValueData                        AS PaidKindName
+            , Object_Unit.Id                                   AS UnitId
+            , Object_Unit.ValueData                            AS UnitName
+            , Object_Currency.Id                               AS CurrencyId
+            , Object_Currency.ValueData                        AS CurrencyName
 
            , CASE WHEN MovementItem.Amount > 0
                        THEN MovementItem.Amount
                   ELSE 0
-             END::TFloat AS AmountDebet
+             END                                     :: TFloat AS AmountDebet
            , CASE WHEN MovementItem.Amount < 0
                        THEN -1 * MovementItem.Amount
                   ELSE 0
-             END::TFloat AS AmountKredit
+             END                                     :: TFloat AS AmountKredit
 
            , CASE WHEN MIFloat_Summ.ValueData > 0
                        THEN MIFloat_Summ.ValueData
                   ELSE 0
-             END::TFloat AS SummDebet
+             END                                     :: TFloat AS SummDebet
            , CASE WHEN MIFloat_Summ.ValueData < 0
                        THEN -1 * MIFloat_Summ.ValueData
                   ELSE 0
-             END::TFloat AS SummKredit
+             END                                     :: TFloat AS SummKredit
 
-            , MIFloat_ContainerId.ValueData ::TFloat AS ContainerId
+            , MIFloat_ContainerId.ValueData          :: TFloat AS ContainerId
+            
+            , MIFloat_CurrencyPartnerValue.ValueData :: TFloat AS CurrencyPartnerValue
+            , MIFloat_ParPartnerValue.ValueData      :: TFloat AS ParPartnerValue
+            
+            , CASE WHEN MIFloat_AmountCurrency.ValueData > 0
+                       THEN MIFloat_AmountCurrency.ValueData
+                       ELSE 0
+              END                                    :: TFloat AS AmountCurrencyDebet
 
-            , MIBoolean_Calculated.ValueData AS isCalculated
-            , MovementItem.isErased       AS isErased
+            , CASE WHEN MIFloat_AmountCurrency.ValueData < 0
+                       THEN -1 * MIFloat_AmountCurrency.ValueData
+                       ELSE 0
+              END                                    :: TFloat AS AmountCurrencyKredit
+
+            , MIBoolean_Calculated.ValueData                   AS isCalculated
+            , MovementItem.isErased                            AS isErased
                   
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
        
@@ -311,6 +365,16 @@ BEGIN
                                         ON MIFloat_Summ.MovementItemId = MovementItem.Id
                                        AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
 
+            LEFT JOIN MovementItemFloat AS MIFloat_CurrencyPartnerValue
+                                        ON MIFloat_CurrencyPartnerValue.MovementItemId = MovementItem.Id
+                                       AND MIFloat_CurrencyPartnerValue.DescId = zc_MIFloat_CurrencyPartnerValue()
+            LEFT JOIN MovementItemFloat AS MIFloat_ParPartnerValue
+                                        ON MIFloat_ParPartnerValue.MovementItemId = MovementItem.Id
+                                       AND MIFloat_ParPartnerValue.DescId = zc_MIFloat_ParPartnerValue()
+            LEFT JOIN MovementItemFloat AS MIFloat_AmountCurrency 
+                                        ON MIFloat_AmountCurrency.MovementItemId = MovementItem.Id
+                                       AND MIFloat_AmountCurrency.DescId = zc_MIFloat_AmountCurrency()
+                                                                              
             LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
                                           ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
                                          AND MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
@@ -340,6 +404,11 @@ BEGIN
                                              ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MILinkObject_PaidKind.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
+                                             ON MILinkObject_Currency.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
+            LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MILinkObject_Currency.ObjectId
       ;
      END IF;
 
@@ -351,6 +420,7 @@ ALTER FUNCTION gpSelect_MovementItem_LossDebt (Integer, Boolean, Boolean, TVarCh
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.
+ 31.07.17         *
  19.14.16         *
  07.09.14                                        * add Branch...
  27.08.14                                        * add Partner...

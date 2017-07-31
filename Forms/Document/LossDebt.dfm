@@ -426,6 +426,67 @@ object LossDebtForm: TLossDebtForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object AmountCurrencyDebet: TcxGridDBColumn
+            Caption = #1044#1077#1073#1077#1090' '#1089#1091#1084#1084#1072' ('#1074' '#1074#1072#1083#1102#1090#1077')'
+            DataBinding.FieldName = 'AmountCurrencyDebet'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.UseDisplayFormatWhenEditing = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object AmountCurrencyKredit: TcxGridDBColumn
+            Caption = #1050#1088#1077#1076#1080#1090' '#1089#1091#1084#1084#1072' ('#1074' '#1074#1072#1083#1102#1090#1077')'
+            DataBinding.FieldName = 'AmountCurrencyKredit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object CurrencyName: TcxGridDBColumn
+            Caption = #1042#1072#1083#1102#1090#1072
+            DataBinding.FieldName = 'CurrencyName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = CurrencyChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object CurrencyPartnerValue: TcxGridDBColumn
+            Caption = #1050#1091#1088#1089
+            DataBinding.FieldName = 'CurrencyPartnerValue'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.UseDisplayFormatWhenEditing = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object ParPartnerValue: TcxGridDBColumn
+            Caption = #1053#1086#1084#1080#1085#1072#1083
+            DataBinding.FieldName = 'ParPartnerValue'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.UseDisplayFormatWhenEditing = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 62
+          end
           object ContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractCode'
@@ -1214,6 +1275,33 @@ object LossDebtForm: TLossDebtForm
       Status = mtDelete
       Guides = StatusGuides
     end
+    object CurrencyChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'CurrencyChoiceForm'
+      FormName = 'TCurrency_ObjectForm'
+      FormNameParam.Value = 'TCurrency_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CurrencyId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CurrencyName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object PartnerChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1537,6 +1625,42 @@ object LossDebtForm: TLossDebtForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inCurrencyPartnerValue'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CurrencyPartnerValue'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParPartnerValue'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ParPartnerValue'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioAmountCurrencyDebet'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountCurrencyDebet'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioAmountCurrencyKredit'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountCurrencyKredit'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'ioIsCalculated'
         Value = Null
         Component = MasterCDS
@@ -1574,6 +1698,14 @@ object LossDebtForm: TLossDebtForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CurrencyId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1671,8 +1803,8 @@ object LossDebtForm: TLossDebtForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 451
-    Top = 161
+    Left = 443
+    Top = 225
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -1829,8 +1961,8 @@ object LossDebtForm: TLossDebtForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 440
-    Top = 112
+    Left = 408
+    Top = 192
   end
   object RefreshAddOn: TRefreshAddOn
     FormName = 'LossDebtJournalForm'

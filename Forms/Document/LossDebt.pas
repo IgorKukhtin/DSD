@@ -127,6 +127,7 @@ type
     cbisList: TcxCheckBox;
     ContainerId: TcxGridDBColumn;
     ContainerChoiceForm: TOpenChoiceForm;
+    CurrencyChoiceForm: TOpenChoiceForm;
   private
   public
   end;
