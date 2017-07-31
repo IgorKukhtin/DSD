@@ -43,88 +43,65 @@ BEGIN
      THEN
 
      RETURN QUERY 
-     WITH
-     tmpMovementCurrency AS (SELECT Movement.Id                    AS MovementId
-                                 , Movement.OperDate              AS OperDate
-                                 , MovementItem.Id                AS MovementItemId
-                                 , MovementItem.ObjectId          AS CurrencyFromId
-                                 , MovementItem.Amount            AS Amount
-                                 , MILinkObject_Currency.ObjectId AS CurrencyToId
-                                 , CASE WHEN MovementItem.ObjectId = zc_Enum_Currency_Basis() THEN MILinkObject_Currency.ObjectId ELSE MovementItem.ObjectId END AS CurrencyToId_calc
-                                 , MILinkObject_PaidKind.ObjectId AS PaidKindId
+        WITH -- ОДИН Курс валют из ГРН в inCurrencyId - документы только НАЛ zc_Movement_Currency 
+             tmpCurrency AS (SELECT MovementItem.Amount AS Amount -- Курс
+                                  , CASE WHEN MIFloat_ParValue.ValueData > 0
+                                              THEN MIFloat_ParValue.ValueData
+                                         ELSE 1
+                                    END AS ParValue -- Номинал
                              FROM Movement
                                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                         AND MovementItem.DescId = zc_MI_Master()
+                                                         AND MovementItem.DescId     = zc_MI_Master()
+                                                         AND MovementItem.ObjectId   = zc_Enum_Currency_Basis()
                                   INNER JOIN MovementItemLinkObject AS MILinkObject_PaidKind
                                                                     ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
-                                                                   AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
-                                                                   AND MILinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()   --zc_Enum_PaidKind_SecondForm() 
+                                                                   AND MILinkObject_PaidKind.DescId         = zc_MILinkObject_PaidKind()
+                                                                   AND MILinkObject_PaidKind.ObjectId       = zc_Enum_PaidKind_SecondForm() -- !!!здесь НАЛ!!!
                                   INNER JOIN MovementItemLinkObject AS MILinkObject_Currency
                                                                     ON MILinkObject_Currency.MovementItemId = MovementItem.Id
-                                                                   AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
-                                                                   AND MILinkObject_Currency.ObjectId = inCurrencyId
-                             WHERE Movement.DescId = zc_Movement_Currency()
+                                                                   AND MILinkObject_Currency.DescId         = zc_MILinkObject_Currency()
+                                                                   AND MILinkObject_Currency.ObjectId       = inCurrencyId
+                                  LEFT JOIN MovementItemFloat AS MIFloat_ParValue
+                                                              ON MIFloat_ParValue.MovementItemId = MovementItem.Id
+                                                             AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
+                             WHERE Movement.DescId   = zc_Movement_Currency()
                                AND Movement.OperDate <= inOperDate
                                AND Movement.StatusId = zc_Enum_Status_Complete()
+                             ORDER BY Movement.OperDate DESC
+                             LIMIT 1
                             )
-   , tmpCurrency AS (SELECT CASE WHEN tmpMovement.CurrencyFromId = zc_Enum_Currency_Basis()
-                                      THEN tmpMovement.Amount
-                                 WHEN tmpMovement.CurrencyToId = zc_Enum_Currency_Basis()
-                                      THEN CASE WHEN MIFloat_ParValue.ValueData > 0 THEN MIFloat_ParValue.ValueData ELSE 1 END / tmpMovement.Amount
-                                         * CASE WHEN MIFloat_ParValue.ValueData > 0 THEN MIFloat_ParValue.ValueData ELSE 1 END
-                            END AS Amount
-  
-                          , CASE WHEN MIFloat_ParValue.ValueData > 0
-                                      THEN MIFloat_ParValue.ValueData
-                                 ELSE 1
-                            END AS ParValue
-  
-                     FROM (SELECT tmpMovement.CurrencyToId_calc AS CurrencyToId_calc
-                                , MAX (tmpMovement.OperDate)    AS OperDate
-                           FROM tmpMovementCurrency AS tmpMovement
-                           GROUP BY tmpMovement.CurrencyToId_calc
-                          ) AS tmpMovement_find
-                          INNER JOIN tmpMovementCurrency AS tmpMovement 
-                                                         ON tmpMovement.OperDate          = tmpMovement_find.OperDate
-                                                        AND tmpMovement.CurrencyToId_calc = tmpMovement_find.CurrencyToId_calc
-                          LEFT JOIN MovementItemFloat AS MIFloat_ParValue
-                                                      ON MIFloat_ParValue.MovementItemId = tmpMovement.MovementItemId
-                                                     AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
-                    )
-   , tmpMovementCash AS (SELECT MovementFloat_CurrencyValue.ValueData        AS CurrencyValue
-                              , MovementFloat_ParValue.ValueData             AS ParValue
-                              , MovementFloat_CurrencyPartnerValue.ValueData AS CurrencyPartnerValue
-                              , MovementFloat_ParPartnerValue.ValueData      AS ParPartnerValue
-                         FROM (                          
-                               SELECT Movement.Id
-                                    , ROW_NUMBER() OVER (ORDER BY Movement.OperDate, Movement.invnumber DESC) AS Ord
-                               FROM Movement 
-                               WHERE Movement.DescId = zc_Movement_Cash()
-                                 AND Movement.OperDate BETWEEN CURRENT_DATE AND CURRENT_DATE - interval '10 day'
-                                 AND Movement.StatusId = zc_Enum_Status_Complete()
-                               ) AS Movement 
-                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                        AND MovementItem.DescId = zc_MI_Master()
-                                                       -- AND MovementItem.ObjectId = inCashId
-                                 INNER JOIN MovementItemLinkObject AS MILinkObject_Currency
-                                                                   ON MILinkObject_Currency.MovementItemId = MovementItem.Id
-                                                                  AND MILinkObject_Currency.DescId         = zc_MILinkObject_Currency()
-                                                                  AND MILinkObject_Currency.ObjectId       = inCurrencyId
-            
-                                 LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
-                                                         ON MovementFloat_CurrencyValue.MovementId = Movement.Id
-                                                        AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
-                                 LEFT JOIN MovementFloat AS MovementFloat_ParValue
-                                                         ON MovementFloat_ParValue.MovementId = Movement.Id
-                                                        AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParValue()
-                                 LEFT JOIN MovementFloat AS MovementFloat_CurrencyPartnerValue
-                                                         ON MovementFloat_CurrencyPartnerValue.MovementId = Movement.Id
-                                                        AND MovementFloat_CurrencyPartnerValue.DescId = zc_MovementFloat_CurrencyPartnerValue()
-                                 LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
-                                                         ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
-                                                        AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
-                         WHERE Movement.Ord = 1
-                         )
+         -- ОДИН Курс валют из ГРН в inCurrencyId - документы zc_Movement_Cash
+      ,  tmpMovementCash AS (SELECT MovementFloat_CurrencyValue.ValueData        AS CurrencyValue
+                                  , MovementFloat_ParValue.ValueData             AS ParValue
+                                  , MovementFloat_CurrencyPartnerValue.ValueData AS CurrencyPartnerValue
+                                  , MovementFloat_ParPartnerValue.ValueData      AS ParPartnerValue
+                             FROM Movement
+                                  INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                         AND MovementItem.DescId     = zc_MI_Master()
+                                                         AND MovementItem.ObjectId   = inCashId
+                                  INNER JOIN MovementItemLinkObject AS MILinkObject_Currency
+                                                                    ON MILinkObject_Currency.MovementItemId = MovementItem.Id
+                                                                   AND MILinkObject_Currency.DescId         = zc_MILinkObject_Currency()
+                                                                   AND MILinkObject_Currency.ObjectId       = inCurrencyId
+                
+                                  LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
+                                                          ON MovementFloat_CurrencyValue.MovementId = Movement.Id
+                                                         AND MovementFloat_CurrencyValue.DescId     = zc_MovementFloat_CurrencyValue()
+                                  LEFT JOIN MovementFloat AS MovementFloat_ParValue
+                                                          ON MovementFloat_ParValue.MovementId = Movement.Id
+                                                         AND MovementFloat_ParValue.DescId     = zc_MovementFloat_ParValue()
+                                  LEFT JOIN MovementFloat AS MovementFloat_CurrencyPartnerValue
+                                                          ON MovementFloat_CurrencyPartnerValue.MovementId = Movement.Id
+                                                         AND MovementFloat_CurrencyPartnerValue.DescId     = zc_MovementFloat_CurrencyPartnerValue()
+                                  LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
+                                                          ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
+                                                         AND MovementFloat_ParPartnerValue.DescId     = zc_MovementFloat_ParPartnerValue()
+                             WHERE Movement.DescId   = zc_Movement_Cash()
+                               AND Movement.OperDate BETWEEN inOperDate - INTERVAL '10 DAY' AND inOperDate
+                               AND Movement.StatusId = zc_Enum_Status_Complete()
+                             ORDER BY Movement.OperDate DESC, Movement.Id DESC
+                             LIMIT 1
+                            )
                           
        SELECT
              0 AS Id
@@ -138,7 +115,7 @@ BEGIN
            , 0::TFloat                                         AS AmountOut
            , 0::TFloat                                         AS AmountSumm
 
-           , DATE_TRUNC ('Month', inOperDate - INTERVAL '1 MONTH') :: TDateTime AS ServiceDate
+           , DATE_TRUNC ('MONTH', inOperDate - INTERVAL '1 MONTH') :: TDateTime AS ServiceDate
            , ''::TVarChar                                      AS Comment
            , COALESCE (Object_Cash.Id, 0)                      AS CashId
            , COALESCE (Object_Cash.ValueData, '') :: TVarChar  AS CashName
@@ -370,4 +347,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_Cash (inMovementId:= 1, inOperDate:= NULL, inCashId:= 1, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_Movement_Cash (inMovementId:= 1, inOperDate:= '31.08.2017', inCashId:= 1, inCurrencyId:= 76965, inSession:= zfCalc_UserAdmin());
