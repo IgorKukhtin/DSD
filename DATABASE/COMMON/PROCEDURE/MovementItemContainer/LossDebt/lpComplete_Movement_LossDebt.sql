@@ -85,6 +85,22 @@ BEGIN
      END IF;
 
 
+     -- проверка
+     IF   vbIsLossOnly = FALSE
+      AND EXISTS (SELECT MovementItem.MovementId
+                  FROM MovementItem
+                       INNER JOIN MovementItemLinkObject AS MILinkObject_Currency
+                                                         ON MILinkObject_Currency.MovementItemId = MovementItem.Id
+                                                        AND MILinkObject_Currency.DescId         = zc_MILinkObject_Currency()
+                                                        AND MILinkObject_Currency.ObjectId       <> zc_Enum_Currency_Basis()
+                  WHERE MovementItem.MovementId = inMovementId
+                    AND MovementItem.DescId     = zc_MI_Master()
+                    AND MovementItem.isErased   = FALSE
+                 )
+     THEN
+         RAISE EXCEPTION 'Ошибка.В документе валюте может быть только <Списание долга>.';
+     END IF;
+
      -- !!!обязательно!!! удаление "пустых" долгов
      UPDATE MovementItem SET isErased = TRUE
      FROM (SELECT MovementItem.Id

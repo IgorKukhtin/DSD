@@ -353,7 +353,7 @@ BEGIN
                                                        , inPriceListId         := CASE WHEN vbPriceListId_Dnepr <> 0 THEN vbPriceListId_Dnepr ELSE inPriceListId END
                                                        , inBoxId               := vbBoxId
                                                        , inMovementId_Promo    := COALESCE (inMovementId_Promo, 0)
-                                                       , inIsBarCode           := inIsBarCode
+                                                       , inIsBarCode           := CASE WHEN inSession = '5' THEN TRUE ELSE inIsBarCode END
                                                        , inSession             := inSession
                                                         );
 

@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpInsert_Scale_Movement_all(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inOperDate            TDateTime , -- Дата документа
     IN inSession             TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS TABLE (MovementId_begin    Integer
               )
 AS
@@ -19,10 +19,16 @@ $BODY$
    DECLARE vbIsSendOnPriceIn  Boolean;
    DECLARE vbIsProductionIn   Boolean;
 
-   DECLARE vbMovementId_find  Integer;
-   DECLARE vbMovementId_begin Integer;
-   DECLARE vbMovementDescId   Integer;
-   DECLARE vbIsTax            Boolean;
+   DECLARE vbMovementId_find    Integer;
+   DECLARE vbMovementId_begin   Integer;
+   DECLARE vbMovementDescId     Integer;
+   DECLARE vbIsTax              Boolean;
+
+   DECLARE vbGoodsId_err     Integer;
+   DECLARE vbGoodsKindId_err Integer;
+   DECLARE vbAmount_err      TFloat;
+   DECLARE vbTaxDoc_err      TFloat;
+   DECLARE vbTaxMI_err      TFloat;
 
    DECLARE vbOperDate_scale TDateTime;
    DECLARE vbOperDatePartner_order TDateTime;
@@ -108,6 +114,87 @@ end if;*/
          vbIsProductionIn:= NULL;
      END IF;
 
+     -- проверка - Количество вложение
+     IF vbMovementDescId = zc_Movement_Sale() AND inSession = '5'
+     THEN
+         WITH -- GoodsProperty
+              tmpGoodsProperty AS (SELECT zfCalc_GoodsPropertyId ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
+                                                                , (SELECT OL_Juridical.ChildObjectId FROM MovementLinkObject AS MLO LEFT JOIN ObjectLink AS OL_Juridical ON OL_Juridical.ObjectId = MLO.ObjectId AND OL_Juridical.DescId = zc_ObjectLink_Partner_Juridical() WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
+                                                                , (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
+                                                                 ) AS GoodsPropertyId
+                                  )
+              -- MovementItem
+            , tmpMI AS (SELECT MovementItem.Id                               AS MovementItemId
+                             , MovementItem.ObjectId                         AS GoodsId
+                             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                             , MovementItem.Amount
+                        FROM MovementItem
+                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                             AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                             INNER JOIN MovementItemBoolean AS MIBoolean_BarCode
+                                                            ON MIBoolean_BarCode.MovementItemId = MovementItem.Id
+                                                           AND MIBoolean_BarCode.DescId         = zc_MIBoolean_BarCode()
+                                                           AND MIBoolean_BarCode.ValueData      = TRUE
+                        WHERE MovementItem.MovementId = inMovementId
+                          AND MovementItem.DescId     = zc_MI_Master()
+                          AND MovementItem.isErased   = FALSe
+                       )
+              -- Количество вложение
+            , tmpAmountDoc AS (SELECT DISTINCT
+                                      ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                     AS GoodsId
+                                    , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0)   AS GoodsKindId
+                                    , ObjectFloat_AmountDoc.ValueData * (1 - tmpGoodsProperty.TaxDoc / 100) AS AmountStart
+                                    , ObjectFloat_AmountDoc.ValueData * (1 + tmpGoodsProperty.TaxDoc / 100) AS AmountEnd
+                                    , ObjectFloat_AmountDoc.ValueData                                       AS AmountDoc
+                                    , tmpGoodsProperty.TaxDoc                                               AS TaxDoc
+                                    , tmpMI.Amount                                                          AS Amount
+                               FROM (SELECT OFl.ObjectId AS GoodsPropertyId, OFl.ValueData AS TaxDoc
+                                     FROM tmpGoodsProperty
+                                          INNER JOIN ObjectFloat AS OFl
+                                                                 ON OFl.ObjectId  = tmpGoodsProperty.GoodsPropertyId
+                                                                AND OFl.DescId    = zc_ObjectFloat_GoodsProperty_TaxDoc()
+                                                                AND OFl.ValueData > 0
+                                    ) AS tmpGoodsProperty
+                                    INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                                          ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                                                         AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId        = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                                    LEFT JOIN ObjectFloat AS ObjectFloat_AmountDoc
+                                                          ON ObjectFloat_AmountDoc.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                         AND ObjectFloat_AmountDoc.DescId   = zc_ObjectFloat_GoodsPropertyValue_AmountDoc()
+                                    LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                                         ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                        AND ObjectLink_GoodsPropertyValue_Goods.DescId   = zc_ObjectLink_GoodsPropertyValue_Goods()
+                                    LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                                         ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                        AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId   = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+                                    INNER JOIN tmpMI ON tmpMI.GoodsId     = ObjectLink_GoodsPropertyValue_Goods.ChildObjectId
+                                                    AND tmpMI.GoodsKindId = ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId
+                               WHERE ObjectFloat_AmountDoc.ValueData > 0
+                              )
+
+         SELECT tmpAmountDoc.GoodsId, tmpAmountDoc.GoodsKindId, tmpAmountDoc.Amount, tmpAmountDoc.TaxDoc, tmpAmountDoc.Amount / tmpAmountDoc.AmountDoc * 100 - 100
+                INTO vbGoodsId_err, vbGoodsKindId_err, vbAmount_err, vbTaxDoc_err, vbTaxMI_err
+         FROM tmpAmountDoc
+         WHERE tmpAmountDoc.AmountStart > 0 AND NOT (tmpAmountDoc.Amount BETWEEN tmpAmountDoc.AmountStart AND tmpAmountDoc.AmountEnd)
+         LIMIT 1
+         ;
+         --
+         IF vbGoodsId_err > 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Сканирование для%<%> <%> Кол-во = <%>%допустимый проц.отклонения = <%>%факт проц.отклонения = <%>.'
+                           , CHR (13)
+                           , lfGet_Object_ValueData (vbGoodsId_err)
+                           , lfGet_Object_ValueData (vbGoodsKindId_err)
+                           , zfConvert_FloatToString (vbAmount_err)
+                           , CHR (13)
+                           , zfConvert_FloatToString (vbTaxDoc_err)
+                           , CHR (13)
+                           , zfConvert_FloatToString (vbTaxMI_err)
+                           ;
+         END IF;
+
+     END IF;
 
 
      -- проверка + исправление <Договор>
@@ -122,7 +209,7 @@ end if;*/
                 WHERE MovementLinkMovement_Order.MovementId = inMovementId
                   AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
                   AND MovementLinkObject_Contract.ObjectId <> MovementLinkObject_Contract_find.ObjectId)
-     THEN 
+     THEN
          -- сохранили связь с <Договор>
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), inMovementId, MovementLinkObject_Contract_find.ObjectId)
          FROM MovementLinkMovement AS MovementLinkMovement_Order
@@ -150,7 +237,7 @@ end if;*/
                 WHERE MovementLinkMovement_Order.MovementId = inMovementId
                   AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
                   AND MovementLinkObject_From.ObjectId <> MovementLinkObject_To_find.ObjectId)
-     THEN 
+     THEN
           -- сохранили связь с <От кого (Склад)>
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), inMovementId, MovementLinkObject_To_find.ObjectId)
          FROM MovementLinkMovement AS MovementLinkMovement_Order
@@ -178,7 +265,7 @@ end if;*/
                 WHERE MovementLinkMovement_Order.MovementId = inMovementId
                   AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
                   AND MovementLinkObject_To.ObjectId <> MovementLinkObject_From_find.ObjectId)
-     THEN 
+     THEN
          -- сохранили связь с <Кому (Покупатель)>
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), inMovementId, MovementLinkObject_From_find.ObjectId)
          FROM MovementLinkMovement AS MovementLinkMovement_Order
@@ -236,7 +323,7 @@ end if;*/
         SELECT 8425   -- Склад ГП ф.Харьков
        UNION
         SELECT 409007 -- Склад возвратов ф.Харьков
-        
+
        UNION
         SELECT 8415   -- Склад ГП ф.Черкассы (Кировоград)
        UNION
@@ -296,7 +383,7 @@ end if;*/
                                   AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
                                 LIMIT 1
                                );
-          END IF;                        
+          END IF;
           -- поиск существующего документа <Продажа покупателю> по Заявке
           vbMovementId_find:= (SELECT Movement.Id
                                 FROM MovementLinkMovement
@@ -334,7 +421,7 @@ end if;*/
                                   AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete()));
      END IF;
 
-     -- это <Перемещение по цене> 
+     -- это <Перемещение по цене>
      IF vbMovementDescId = zc_Movement_SendOnPrice()
      THEN
           IF EXISTS (SELECT MLM_Order.MovementChildId
@@ -643,7 +730,7 @@ end if;*/
 
     END IF;
 
-	
+
     -- сформировали связь у расходной накл. с EDI (такую же как и у заявки)
     IF vbMovementDescId = zc_Movement_Sale()
     THEN PERFORM lpUpdate_Movement_Sale_Edi_byOrder (vbMovementId_begin, (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = vbMovementId_begin AND DescId = zc_MovementLinkMovement_Order() AND MovementChildId <> 0), vbUserId);
@@ -673,9 +760,9 @@ end if;*/
                                , COALESCE (MIFloat_HeadCount.ValueData, 0)           AS HeadCount
                                , COALESCE (MIFloat_AmountPacker.ValueData, 0)        AS AmountPacker
                                , COALESCE (MIFloat_LiveWeight.ValueData, 0)          AS LiveWeight
-    
+
                                , CASE WHEN MIBoolean_BarCode.ValueData = TRUE THEN 1 ELSE 0 END AS isBarCode_value
-    
+
                                  --  № п/п
                                , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId, MILinkObject_GoodsKind.ObjectId, MIFloat_Price.ValueData ORDER BY MovementItem.Amount DESC) AS Ord
 
@@ -743,11 +830,11 @@ end if;*/
                                                             ON MIFloat_LiveWeight.MovementItemId = MovementItem.Id
                                                            AND MIFloat_LiveWeight.DescId = zc_MIFloat_LiveWeight()
                                                            AND (vbIsSendOnPriceIn = FALSE OR vbMovementDescId <> zc_Movement_SendOnPrice())
-     
+
                                 LEFT JOIN MovementItemBoolean AS MIBoolean_BarCode
                                                               ON MIBoolean_BarCode.MovementItemId =  MovementItem.Id
                                                              AND MIBoolean_BarCode.DescId = zc_MIBoolean_BarCode()
-     
+
                           WHERE MovementItem.MovementId = vbMovementId_find
                             AND MovementItem.DescId     = zc_MI_Master()
                             AND MovementItem.isErased   = FALSE
@@ -1129,7 +1216,7 @@ end if;*/
 
      -- добавили расход на переработку
      IF vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE
-     THEN 
+     THEN
          PERFORM lpInsertUpdate_MI_ProductionUnion_Child (ioId                  := 0
                                                         , inMovementId          := vbMovementId_begin
                                                         , inGoodsId             := tmp.GoodsId
@@ -1183,7 +1270,7 @@ end if;*/
           THEN
               -- создаются временные таблицы - для формирование данных для проводок - <Возврат от покупателя>
               PERFORM lpComplete_Movement_ReturnIn_CreateTemp();
-              -- Проводим Документ 
+              -- Проводим Документ
               PERFORM lpComplete_Movement_ReturnIn (inMovementId     := vbMovementId_begin
                                                   , inStartDateSale  := NULL
                                                   , inUserId         := vbUserId
@@ -1283,7 +1370,7 @@ end if;*/
 
      -- !!!Проверка что документ один!!!
      IF vbMovementDescId = zc_Movement_Inventory()
-     THEN 
+     THEN
           -- !!!проверка уникальности!!!
           /*PERFORM lpInsert_LockUnique (inKeyData:= 'Movement'
                                          || ';' || Movement.DescId :: TVarChar
@@ -1329,7 +1416,7 @@ end if;*/
                     )
                   , DATE (inOperDate - INTERVAL '1 DAY');
           END IF;
-          
+
      END IF;
 
      -- проверка когда суммирование
@@ -1380,7 +1467,7 @@ end if;*/
           THEN
               RAISE EXCEPTION 'Ошибка.Документ за <%> заблокирован другим пользователем.Повторите действие через 25 сек.', DATE (inOperDate - INTERVAL '1 DAY');
           END IF;
-          
+
      END IF;
 
 /*

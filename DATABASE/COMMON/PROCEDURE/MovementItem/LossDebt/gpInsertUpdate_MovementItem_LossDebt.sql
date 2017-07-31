@@ -55,7 +55,7 @@ BEGIN
      END IF;
      
      -- если валюта не выбрана
-     IF COALESCE (inCurrencyId, 0) <> 0 AND COALESCE (inCurrencyId, 0) <> zc_Enum_Currency_Basis()
+     IF COALESCE (inCurrencyId, 0) NOT IN (0, zc_Enum_Currency_Basis())
      THEN 
           -- если валюта выбрана по ioIsCalculated
           IF ioIsCalculated = TRUE
@@ -74,7 +74,10 @@ BEGIN
                            * CASE WHEN inParPartnerValue > 0 THEN inCurrencyPartnerValue / inParPartnerValue
                                   ELSE inCurrencyPartnerValue
                              END;
-                        
+              -- остальное - обнуляем
+              ioAmountDebet  := 0;
+              ioAmountKredit := 0;
+
           ELSE
               ioAmountDebet := CASE WHEN ioAmountCurrencyDebet <> 0 THEN ioAmountCurrencyDebet
                                     ELSE 0
@@ -90,6 +93,9 @@ BEGIN
                               * CASE WHEN inParPartnerValue > 0 THEN inCurrencyPartnerValue / inParPartnerValue
                                      ELSE inCurrencyPartnerValue
                                 END;
+              -- остальное - обнуляем
+              ioSummDebet  := 0;
+              ioSummKredit := 0;
           END IF;
      END IF;
      
@@ -106,8 +112,13 @@ BEGIN
         vbSumm := -1 * ioSummKredit;
      END IF;
 
-     -- расчет
-     ioIsCalculated:= (vbSumm <> 0 OR vbAmount = 0);
+
+     -- !!!меняется значение!!!
+     IF COALESCE (inCurrencyId, 0) IN (0, zc_Enum_Currency_Basis())
+     THEN
+         -- расчет
+         ioIsCalculated:= (vbSumm <> 0 OR vbAmount = 0);
+     END IF;
          
 
      -- 
@@ -124,7 +135,7 @@ BEGIN
                                                  , inSumm                 := vbSumm
                                                  , inCurrencyPartnerValue := inCurrencyPartnerValue
                                                  , inParPartnerValue      := inParPartnerValue
-                                                 , inAmountCurrency       := CASE WHEN ioAmountCurrencyDebet <> 0  THEN ioAmountCurrencyDebet
+                                                 , inAmountCurrency       := CASE WHEN ioAmountCurrencyDebet  <> 0 THEN  1 * ioAmountCurrencyDebet
                                                                                   WHEN ioAmountCurrencyKredit <> 0 THEN -1 * ioAmountCurrencyKredit
                                                                                   ELSE 0
                                                                              END

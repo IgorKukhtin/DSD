@@ -24,7 +24,8 @@ BEGIN
 
 
      -- Эти параметры нужны для расчета Remains
-     SELECT Movement.OperDate                AS OperDate
+     SELECT -- считаем на дату позже - для НАЛ, что б получить остаток на конец дня
+            CASE WHEN MILinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm() THEN Movement.OperDate + INTERVAL '1 DAY'  ELSE Movement.OperDate END AS OperDate
           , Movement.StatusId                AS StatusId
           , MILinkObject_CurrencyTo.ObjectId AS CurrencyId
           , MILinkObject_PaidKind.ObjectId   AS PaidKindId
