@@ -3,7 +3,7 @@ object Form1: TForm1
   Top = 0
   Caption = 'Form1'
   ClientHeight = 470
-  ClientWidth = 526
+  ClientWidth = 622
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,10 +18,11 @@ object Form1: TForm1
   object grReport: TcxGrid
     Left = 0
     Top = 31
-    Width = 526
+    Width = 622
     Height = 439
     Align = alClient
     TabOrder = 0
+    ExplicitWidth = 526
     object grtvReport: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = dsReport
@@ -55,7 +56,7 @@ object Form1: TForm1
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 526
+    Width = 622
     Height = 31
     Align = alTop
     TabOrder = 1
@@ -97,6 +98,15 @@ object Form1: TForm1
       Height = 21
       TabOrder = 4
       Text = 'pricelistForTabletki_Pravda_6.xml'
+    end
+    object btnCompress: TButton
+      Left = 519
+      Top = 0
+      Width = 94
+      Height = 25
+      Caption = #1040#1088#1093#1080#1074#1080#1088#1086#1074#1072#1090#1100
+      TabOrder = 5
+      OnClick = btnCompressClick
     end
   end
   object Timer1: TTimer
