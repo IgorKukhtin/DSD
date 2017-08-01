@@ -39,37 +39,6 @@ BEGIN
       -- Результат
       IF vbPersonalId IS NOT NULL
       THEN
-           CREATE TEMP TABLE tmpContractCondition ON COMMIT DROP
-           AS (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId              AS ContractId
-                    , ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId AS ContractConditionKindId
-                    , CASE WHEN ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = zc_Enum_ContractConditionKind_ChangePercent()
-                            AND MIN (ObjectFloat_ContractCondition_Value.ValueData) < 0.0
-                                THEN (MIN (ABS (ObjectFloat_ContractCondition_Value.ValueData)) * -1.0)::TFloat
-                                ELSE MIN (ObjectFloat_ContractCondition_Value.ValueData)::TFloat
-                      END AS ContractConditionKindValue
-               FROM ObjectLink AS ObjectLink_ContractCondition_Contract
-                    JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
-                                    ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
-                                   AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
-                                   AND ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId IN (zc_Enum_ContractConditionKind_ChangePercent()
-                                                                                                          , zc_Enum_ContractConditionKind_DelayDayCalendar()
-                                                                                                          , zc_Enum_ContractConditionKind_DelayDayBank()
-                                                                                                           )
-                    JOIN ObjectFloat AS ObjectFloat_ContractCondition_Value
-                                     ON ObjectFloat_ContractCondition_Value.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
-                                    AND ObjectFloat_ContractCondition_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
-                                    AND ObjectFloat_ContractCondition_Value.ValueData <> 0.0
-                    JOIN Object AS Object_ContractCondition
-                                ON Object_ContractCondition.Id = ObjectLink_ContractCondition_Contract.ObjectId
-                               AND NOT Object_ContractCondition.isErased
-                    JOIN Object AS Object_Contract
-                                ON Object_Contract.Id = ObjectLink_ContractCondition_Contract.ChildObjectId
-                               AND NOT Object_Contract.isErased
-               WHERE ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
-               GROUP BY ObjectLink_ContractCondition_Contract.ChildObjectId
-                      , ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId
-              );
-
            CREATE TEMP TABLE tmpContract ON COMMIT DROP
            AS (-- если vbPersonalId - Сотрудник (торговый)
                SELECT ObjectLink_Contract_Juridical.ObjectId AS ContractId
@@ -106,6 +75,38 @@ BEGIN
                                    AND ObjectLink_Contract_Juridical.DescId        = zc_ObjectLink_Partner_PersonalMerch()
                WHERE OL.ChildObjectId = vbPersonalId
                  AND OL.DescId        = zc_ObjectLink_Partner_PersonalMerch()
+              );
+
+           CREATE TEMP TABLE tmpContractCondition ON COMMIT DROP
+           AS (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId              AS ContractId
+                    , ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId AS ContractConditionKindId
+                    , CASE WHEN ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = zc_Enum_ContractConditionKind_ChangePercent()
+                            AND MIN (ObjectFloat_ContractCondition_Value.ValueData) < 0.0
+                                THEN (MIN (ABS (ObjectFloat_ContractCondition_Value.ValueData)) * -1.0)::TFloat
+                                ELSE MIN (ObjectFloat_ContractCondition_Value.ValueData)::TFloat
+                      END AS ContractConditionKindValue
+               FROM ObjectLink AS ObjectLink_ContractCondition_Contract
+                    JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
+                                    ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                                   AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
+                                   AND ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId IN (zc_Enum_ContractConditionKind_ChangePercent()
+                                                                                                          , zc_Enum_ContractConditionKind_DelayDayCalendar()
+                                                                                                          , zc_Enum_ContractConditionKind_DelayDayBank()
+                                                                                                           )
+                    JOIN ObjectFloat AS ObjectFloat_ContractCondition_Value
+                                     ON ObjectFloat_ContractCondition_Value.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                                    AND ObjectFloat_ContractCondition_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
+                                    AND ObjectFloat_ContractCondition_Value.ValueData <> 0.0
+                    JOIN Object AS Object_ContractCondition
+                                ON Object_ContractCondition.Id = ObjectLink_ContractCondition_Contract.ObjectId
+                               AND Object_ContractCondition.isErased = FALSE
+                    JOIN Object AS Object_Contract
+                                ON Object_Contract.Id = ObjectLink_ContractCondition_Contract.ChildObjectId
+                               AND Object_Contract.isErased = FALSE
+                    JOIN tmpContract ON tmpContract.ContractId = ObjectLink_ContractCondition_Contract.ChildObjectId
+               WHERE ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
+               GROUP BY ObjectLink_ContractCondition_Contract.ChildObjectId
+                      , ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId
               );
 
            IF inSyncDateIn > zc_DateStart()
