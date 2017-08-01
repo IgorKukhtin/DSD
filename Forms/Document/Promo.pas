@@ -241,6 +241,8 @@ type
     cbPromo: TcxCheckBox;
     deMonthPromo: TcxDateEdit;
     cxLabel19: TcxLabel;
+    cxLabel20: TcxLabel;
+    deCheck: TcxDateEdit;
   private
     { Private declarations }
   public

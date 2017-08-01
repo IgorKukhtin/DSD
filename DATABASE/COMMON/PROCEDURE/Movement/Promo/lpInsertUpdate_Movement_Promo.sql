@@ -4,6 +4,9 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateT
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, Integer, Integer
                                                      , TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime
                                                      , Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, Integer, Integer
+                                                     , TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime
+                                                     , Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Promo(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
@@ -19,6 +22,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Promo(
     IN inOperDateStart         TDateTime  , -- Дата начала расч. продаж до акции
     IN inOperDateEnd           TDateTime  , -- Дата окончания расч. продаж до акции
     IN inMonthPromo            TDateTime  , -- Месяц акции
+    IN inCheckDate             TDateTime  , -- Дата согласования
     IN inChecked               Boolean    , -- Согласовано
     IN inIsPromo               Boolean    , -- Акция
     IN inCostPromo             TFloat     , -- Стоимость участия в акции
@@ -91,6 +95,16 @@ BEGIN
     -- месяц акции
     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Month(), ioId, inMonthPromo);
     
+    -- дату согласования сохраняем только когда  inChecked = TRUE
+    IF inChecked = TRUE
+    THEN
+        -- дата согласования 
+        PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Check(), ioId, inCheckDate);
+    ELSE 
+        -- дата согласования 
+        PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Check(), ioId, Null);
+    END IF;
+    
     -- сохранили свойство <Согласовано>
     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Checked(), ioId, inChecked);
     -- сохранили свойство <Акция>
@@ -120,6 +134,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 01.08.17         *
  25.07.17         *
  31.10.15                                                                       *
 */

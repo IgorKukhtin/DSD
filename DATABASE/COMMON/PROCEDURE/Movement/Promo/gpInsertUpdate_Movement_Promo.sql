@@ -4,6 +4,9 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateT
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, Integer, Integer
                                                      , TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime
                                                      , Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, Integer, Integer
+                                                     , TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime
+                                                     , Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Promo(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
@@ -19,6 +22,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Promo(
     IN inOperDateStart         TDateTime  , -- Дата начала расч. продаж до акции
     IN inOperDateEnd           TDateTime  , -- Дата окончания расч. продаж до акции
     IN inMonthPromo            TDateTime  , -- Месяц акции
+    IN inCheckDate             TDateTime  , -- Дата согласования
     IN inChecked               Boolean    , -- Согласовано
     IN inIsPromo               Boolean    , -- Акция
     IN inCostPromo             TFloat     , -- Стоимость участия в акции
@@ -52,6 +56,7 @@ BEGIN
                                         , inOperDateStart  := inOperDateStart   --Дата начала расч. продаж до акции
                                         , inOperDateEnd    := inOperDateEnd     --Дата окончания расч. продаж до акции
                                         , inMonthPromo     := inMonthPromo      --месяц акции
+                                        , inCheckDate      := inCheckDate       --Дата согласования
                                         , inCostPromo      := inCostPromo       --Стоимость участия в акции
                                         , inComment        := inComment         --Примечание
                                         , inCommentMain    := inCommentMain     --Примечание (Общее)
@@ -70,6 +75,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.
+ 01.08.17         * add inCheckDate
  27.07.17         *
  31.10.15                                                                    *
 */

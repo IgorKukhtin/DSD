@@ -3,9 +3,8 @@ inherited PromoForm: TPromoForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 599
   ClientWidth = 1204
-  ExplicitLeft = -450
   ExplicitWidth = 1220
-  ExplicitHeight = 634
+  ExplicitHeight = 637
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1095,33 +1094,48 @@ inherited PromoForm: TPromoForm
       Caption = #1042#1086#1079#1074#1088#1072#1090#1099' '#1087#1086
     end
     object cbChecked: TcxCheckBox
-      Left = 924
-      Top = 90
+      Left = 1019
+      Top = 54
       Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 36
       Width = 136
     end
     object cbPromo: TcxCheckBox
-      Left = 924
-      Top = 54
+      Left = 1019
+      Top = 18
       Caption = #1040#1082#1094#1080#1103' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 37
       Width = 103
     end
+    object cxLabel20: TcxLabel
+      Left = 918
+      Top = 38
+      Caption = #1044#1072#1090#1072' '#1089#1086#1075#1083#1072#1089'.'
+    end
+    object deCheck: TcxDateEdit
+      Left = 918
+      Top = 54
+      Hint = #1044#1072#1090#1072' '#1089#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1103
+      EditValue = 42132d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 39
+      Width = 97
+    end
   end
   object deMonthPromo: TcxDateEdit [2]
-    Left = 924
+    Left = 918
     Top = 18
-    EditValue = 42917d
+    EditValue = 43070d
     Properties.DisplayFormat = 'mmmm yyyy'
     Properties.EditFormat = 'dd.mm.yyyy'
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 6
-    Width = 118
+    Width = 97
   end
   object cxLabel19: TcxLabel [3]
-    Left = 924
+    Left = 918
     Top = 4
     Caption = #1052#1077#1089#1103#1094' '#1072#1082#1094#1080#1080
   end
@@ -2490,6 +2504,13 @@ inherited PromoForm: TPromoForm
         Component = cbChecked
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CheckDate'
+        Value = 'NULL'
+        Component = deCheck
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 320
     Top = 264
@@ -2597,6 +2618,14 @@ inherited PromoForm: TPromoForm
         Name = 'inMonthPromo'
         Value = 'NULL'
         Component = deMonthPromo
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCheckDate'
+        Value = 'NULL'
+        Component = deCheck
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
