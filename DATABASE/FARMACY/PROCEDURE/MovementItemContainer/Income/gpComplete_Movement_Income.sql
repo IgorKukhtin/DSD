@@ -202,42 +202,7 @@ BEGIN
                    AND MB_Deferred.DescId = zc_MovementBoolean_Deferred()
         WHERE MLM.descid = zc_MovementLinkMovement_Order()
           AND MLM.MovementId = inMovementId; 
-
-     -- если нет заявки в привязке к приходу ищем ранее отложенную заявку
-     IF COALESCE (vbOrderId, 0) = 0   
-     THEN
-         vbOrderId := (SELECT tmp.Id
-                       FROM (SELECT Movement.Id
-                                  , CAST(row_number() OVER (ORDER BY Movement.OperDate DESC, Movement.Invnumber DESC) AS INTEGER) AS Ord
-                             FROM Movement
-                                  INNER JOIN MovementBoolean AS MovementBoolean_Deferred
-                                                             ON MovementBoolean_Deferred.MovementId = Movement.Id
-                                                            AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
-                                                            AND MovementBoolean_Deferred.ValueData = TRUE
-                      
-                                  INNER JOIN MovementLinkObject AS MovementLinkObject_From
-                                                               ON MovementLinkObject_From.MovementId = Movement.Id
-                                                              AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                              AND MovementLinkObject_From.ObjectId = vbJuridicalId
-                      
-                                  INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                                               ON MovementLinkObject_To.MovementId = Movement.Id
-                                                              AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                              AND MovementLinkObject_To.ObjectId = vbToId
-                                  
-                                  LEFT JOIN MovementLinkMovement AS MLM_Master
-                                                                 ON MLM_Master.MovementId = Movement.Id
-                                                                AND MLM_Master.DescId = zc_MovementLinkMovement_Master()
-                             WHERE Movement.DescId = zc_Movement_OrderExternal()
-                               AND Movement.OperDate <= vbOperDate_Branch
-                               AND Movement.StatusId in (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
-                               --AND COALESCE (MLM_Master.MovementChildId, 0) = 0
-                             ) AS tmp
-                       WHERE tmp.Ord = 1
-                       );
-         outisDeferred = TRUE;
-     END IF;
-     
+    
      -- в найденной заявке меняем статус Отложенн на НЕ отложен
      IF COALESCE (vbOrderId, 0) <> 0 AND outisDeferred = TRUE 
      THEN
@@ -247,6 +212,28 @@ BEGIN
          -- сохранили протокол
          PERFORM lpInsert_MovementProtocol (vbOrderId, vbUserId, FALSE);
      END IF;
+     
+     --после проведения прихода на точку - снимается ОТЛОЖЕН у ВСЕХ заявок с этой точки до даты прихода
+     PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Deferred(), Movement.Id, FALSE)            -- сохранили свойство Отложен  НЕТ
+           , lpInsert_MovementProtocol (Movement.Id, vbUserId, FALSE)                                     -- сохранили протокол
+     FROM Movement
+          INNER JOIN MovementBoolean AS MovementBoolean_Deferred
+                                     ON MovementBoolean_Deferred.MovementId = Movement.Id
+                                    AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                    AND MovementBoolean_Deferred.ValueData = TRUE
+
+          INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                       ON MovementLinkObject_From.MovementId = Movement.Id
+                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                      AND MovementLinkObject_From.ObjectId = vbJuridicalId
+
+          INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                       ON MovementLinkObject_To.MovementId = Movement.Id
+                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                      AND MovementLinkObject_To.ObjectId = vbToId
+     WHERE Movement.DescId   = zc_Movement_OrderExternal()
+       AND Movement.OperDate < vbOperDate_Branch
+       AND Movement.StatusId in (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete());
      
 
 END;
