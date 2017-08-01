@@ -11,7 +11,7 @@ uses
   cxMaskEdit, cxSpinEdit, Vcl.StdCtrls, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxClasses,
   cxGridCustomView, cxGrid, ZAbstractRODataset, ZAbstractDataset, ZDataset,
-  ZAbstractConnection, ZConnection, cxGridExportLink, ZLibEx;
+  ZAbstractConnection, ZConnection, cxGridExportLink, System.Zip;
 
 type
   TForm1 = class(TForm)
@@ -140,21 +140,26 @@ Begin
   finally
     ini.free;
   end;
-  ZConnection1.LibraryLocation := ExtractFilePath(Application.ExeName)+'libpq.dll';
+
+  ZConnection1.LibraryLocation := ExtractFilePath(Application.ExeName) + 'libpq.dll';
+
   try
     ZConnection1.Connect;
-  Except ON E:Exception do
-    Begin
+  except
+    on E: Exception do
+    begin
       Add_Log(E.Message);
       Close;
       Exit;
-    End;
+    end;
   end;
-  if not((ParamCount>=1) AND (CompareText(ParamStr(1),'manual')=0)) then
-  Begin
-    btnExecute.Enabled := false;
-    btnExport.Enabled := false;
-    Timer1.Enabled := true;
+
+  if not ((ParamCount >= 1) and (CompareText(ParamStr(1), 'manual') = 0)) then
+  begin
+    btnExecute.Enabled := False;
+    btnExport.Enabled := False;
+    btnCompress.Enabled := False;
+    Timer1.Enabled := True;
   end;
 end;
 
@@ -186,8 +191,10 @@ end;
 procedure TForm1.ReportCompress(AUnitId: Integer);
 var
   UnitCode, RestCode, UnitFile, RestFile: string;
-  FileIn, FileOut: TFileStream;
-  //ZipStream: TCompressionStream;
+  SR: TSearchRec;
+  ZipList: TStringList;
+  ZipName: string;
+  ZipFile: TZipFile;
 begin
   Add_Log('Начало архивирования отчета');
 
@@ -203,17 +210,26 @@ begin
   UnitFile := FilePath + UnitCode + '\' + Format(FileTemplate, [UnitCode]);
   RestFile := FilePath + UnitCode + '\zip\Rest_' + RestCode + '_' + FormatDateTime('yyyymmddhhmmss', Now) + '.zip';
 
-  FileIn := TFileStream.Create(UnitFile, fmOpenRead);
-  FileOut := TFileStream.Create(RestFile, fmCreate);
-  //ZipStream := TCompressionStream.Create(FileOut);
+  ZipList := TStringList.Create;
+
+  if FindFirst(FilePath + UnitCode + '\zip\Rest_*.zip', faAnyFile, SR) = 0 then
+  repeat
+    ZipList.Add(FilePath + UnitCode + '\zip\' + SR.Name);
+  until FindNext(SR) <> 0;
+  FindClose(SR);
+
+  ZipFile := TZipFile.Create;
 
   try
-    //ZipStream.CopyFrom(FileIn, FileIn.Size);
-    ZCompressStream(FileIn, FileOut);
+    ZipFile.Open(RestFile, zmWrite);
+    ZipFile.Add(UnitFile);
+    ZipFile.Close;
+
+    for ZipName in ZipList do
+      DeleteFile(ZipName);
   finally
-    //ZipStream.Free;
-    FileOut.Free;
-    FileIn.Free;
+    ZipFile.Free;
+    ZipList.Free;
   end;
 end;
 

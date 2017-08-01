@@ -1,7 +1,7 @@
 object Form1: TForm1
   Left = 0
   Top = 0
-  Caption = 'Form1'
+  Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1083#1103' tabletki.ua'
   ClientHeight = 470
   ClientWidth = 622
   Color = clBtnFace
@@ -22,7 +22,6 @@ object Form1: TForm1
     Height = 439
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 526
     object grtvReport: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = dsReport
