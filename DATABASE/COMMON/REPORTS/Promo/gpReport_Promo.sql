@@ -22,6 +22,7 @@ RETURNS TABLE(
     ,DateStartPromo       TDateTime --Дата проведения акции
     ,DateFinalPromo       TDateTime --Дата проведения акции
     ,MonthPromo           TDateTime --Месяц акции
+    ,CheckDate            TDateTime --Дата Согласования
     ,RetailName           TBlob     --Сеть, в которой проходит акция
     ,AreaName             TBlob     --Регион
     ,GoodsName            TVarChar  --Позиция
@@ -80,6 +81,7 @@ BEGIN
           , Movement_Promo.StartPromo         --Дата начала акции
           , Movement_Promo.EndPromo           --Дата окончания акции
           , Movement_Promo.MonthPromo         --месяц акции
+          , Movement_Promo.CheckDate          --Дата Согласования
           -- , (SELECT STRING_AGG( DISTINCT Movement_PromoPartner.Retail_Name,'; ')
              -- FROM (SELECT DISTINCT Movement_PromoPartner_View.Retail_Name
                    -- FROM Movement_PromoPartner_View
@@ -89,7 +91,7 @@ BEGIN
                   -- ) AS Movement_PromoPartner
             -- )::TBlob AS RetailName
             --------------------------------------
-          , COALESCE ((SELECT STRING_AGG (DISTINCT Object_Retail.ValueData,'; ')
+          , COALESCE ((SELECT STRING_AGG (DISTINCT COALESCE (Object_Retail.ValueData, MovementString_Retail.ValueData),'; ')
                        FROM
                           Movement AS Movement_PromoPartner
                           /*INNER JOIN MovementLinkObject AS MLO_Partner
@@ -106,8 +108,12 @@ BEGIN
                           LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                                ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                                               AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
-                          INNER JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
-          
+                          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+                          
+                          LEFT OUTER JOIN MovementString AS MovementString_Retail
+                                                         ON MovementString_Retail.MovementId = Movement_PromoPartner.Id
+                                                        AND MovementString_Retail.DescId = zc_MovementString_Retail()
+                                      
                        WHERE Movement_PromoPartner.ParentId = Movement_Promo.Id
                          AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
                          AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()

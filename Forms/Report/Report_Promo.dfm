@@ -264,6 +264,14 @@ inherited Report_PromoForm: TReport_PromoForm
             Options.Editing = False
             Width = 54
           end
+          object CheckDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1089#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1103
+            DataBinding.FieldName = 'CheckDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1089#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1080' '#1089' '#1053#1044#1057', '#1075#1088#1085
             DataBinding.FieldName = 'Price'

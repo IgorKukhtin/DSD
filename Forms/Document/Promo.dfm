@@ -3,6 +3,7 @@ inherited PromoForm: TPromoForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 599
   ClientWidth = 1204
+  ExplicitTop = -92
   ExplicitWidth = 1220
   ExplicitHeight = 637
   PixelsPerInch = 96
@@ -474,6 +475,14 @@ inherited PromoForm: TPromoForm
                   HeaderAlignmentVert = vaCenter
                   Options.Editing = False
                   Width = 70
+                end
+                object RetailName_inf: TcxGridDBColumn
+                  Caption = #1057#1077#1090#1100' ('#1080#1085#1092'.)'
+                  DataBinding.FieldName = 'RetailName_inf'
+                  HeaderAlignmentHorz = taCenter
+                  HeaderAlignmentVert = vaCenter
+                  HeaderHint = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+                  Width = 80
                 end
                 object ContractName: TcxGridDBColumn
                   Caption = #8470' '#1076#1086#1075'.'
@@ -3210,6 +3219,15 @@ inherited PromoForm: TPromoForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inRetailName_inf'
+        Value = Null
+        Component = PartnerCDS
+        ComponentItem = 'RetailName_inf'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outPriceListId'
         Value = Null
         Component = PriceListGuides
@@ -3458,8 +3476,8 @@ inherited PromoForm: TPromoForm
   end
   object pmCondition: TPopupMenu
     Images = dmMain.ImageList
-    Left = 584
-    Top = 488
+    Left = 592
+    Top = 512
     object MenuItem7: TMenuItem
       Action = InsertCondition
     end
@@ -3510,13 +3528,13 @@ inherited PromoForm: TPromoForm
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 392
-    Top = 488
+    Left = 376
+    Top = 496
   end
   object AdvertisingDS: TDataSource
     DataSet = AdvertisingCDS
-    Left = 464
-    Top = 504
+    Left = 472
+    Top = 520
   end
   object pmAdvertising: TPopupMenu
     Images = dmMain.ImageList
@@ -3630,8 +3648,8 @@ inherited PromoForm: TPromoForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 504
-    Top = 464
+    Left = 448
+    Top = 440
   end
   object spSelect_Movement_PromoAdvertising: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_PromoAdvertising'
@@ -3663,8 +3681,8 @@ inherited PromoForm: TPromoForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 504
-    Top = 504
+    Left = 528
+    Top = 520
   end
   object spUpdate_Movement_Promo_Data: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Promo_Data'
@@ -3751,7 +3769,7 @@ inherited PromoForm: TPromoForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 902
+    Left = 886
     Top = 312
   end
   object spInsertUpdate_MI_Param: TdsdStoredProc

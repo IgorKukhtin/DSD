@@ -23,6 +23,15 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PromoPartner (
     TVarChar   , -- Примечание
     TVarChar     -- сессия пользователя
 );
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PromoPartner (
+    Integer    , -- Ключ объекта <партнер для документа акции>
+    Integer    , -- Ключ родительского объекта <Документ акции>
+    Integer    , -- партнер
+    Integer    , -- Контракт
+    TVarChar   , -- Примечание
+    TVarChar   , -- торг.сеть доп.
+    TVarChar     -- сессия пользователя
+);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PromoPartner(
  INOUT ioId                     Integer    , -- Ключ объекта <партнер для документа акции>
@@ -30,6 +39,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PromoPartner(
     IN inPartnerId              Integer    , -- Ключ объекта <Контрагент / Юр лицо / Торговая Сеть>
     IN inContractId             Integer    , -- Ключ объекта <Контракт>
     IN inComment                TVarChar   , -- Примечание
+    IN inRetailName_inf         TVarChar   , -- торг.сеть доп.
    OUT outPriceListId           Integer    , -- ИД прайслиста в документе
    OUT outPriceListName         TVarChar   , -- Название прайслиста в документе
    OUT outPersonalMarketingId   Integer    , -- ИД сотрудника маркетингового отдела
@@ -241,6 +251,9 @@ BEGIN
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
     -- сохранили <Примечание>
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
+    -- сохранили <Торговая сеть доп.>
+    PERFORM lpInsertUpdate_MovementString (zc_MovementString_Retail(), ioId, inRetailName_inf);
+    
     --Вернули установленный прайс 
     SELECT
         Movement_Promo.PriceListId
@@ -262,6 +275,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.
+ 01.08.17         * add inRetailName_inf
  17.11.15                                                                    *inContractId
  31.10.15                                                                    *
 */
