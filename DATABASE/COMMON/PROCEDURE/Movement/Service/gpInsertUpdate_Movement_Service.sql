@@ -1,6 +1,9 @@
 -- Function: gpInsertUpdate_Movement_Service()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (Integer, TVarChar, TDateTime, TDateTime, TVarChar, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (Integer, TVarChar, TDateTime, TDateTime, TVarChar
+                                                       , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar
+                                                       , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ>
@@ -8,8 +11,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
     IN inOperDate                 TDateTime , -- Дата документа
     IN inOperDatePartner          TDateTime , -- Дата акта(контрагента)
     IN inInvNumberPartner         TVarChar  , -- Номер акта (контрагента)
-    IN inAmountIn                 TFloat    , -- Сумма операции 
-    IN inAmountOut                TFloat    , -- Сумма операции
+ INOUT ioAmountIn                 TFloat    , -- Сумма операции 
+ INOUT ioAmountOut                TFloat    , -- Сумма операции
+ INOUT ioAmountCurrencyDebet      TFloat    , -- Сумма операции (в валюте)
+ INOUT ioAmountCurrencyKredit     TFloat    , -- Сумма операции (в валюте)
+    IN inCurrencyPartnerValue     TFloat    , -- Курс для расчета суммы операции
+    IN inParPartnerValue          TFloat    , -- Номинал для расчета суммы операции
     IN inMovementId_List          TVarChar  , -- список Ид док для затрат 
     IN inComment                  TVarChar  , -- Комментарий
     IN inBusinessId               Integer   , -- Бизнес    
@@ -22,9 +29,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
     IN inUnitId                   Integer   , -- Подразделение
     IN inMovementId_Invoice       Integer   , -- документ счет  
     IN inAssetId                  Integer   , -- Для ОС
+    IN inCurrencyPartnerId        Integer   , -- Валюта (контрагента)
     IN inSession                  TVarChar    -- сессия пользователя
 )                              
-RETURNS Integer AS
+RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAccessKeyId Integer;
@@ -32,6 +40,7 @@ $BODY$
    DECLARE vbAmount TFloat;
    DECLARE vbIsInsert Boolean;
    DECLARE vbIndex Integer;
+   DECLARE vbAmountCurrency TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Service());
@@ -39,12 +48,18 @@ BEGIN
      vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Service());
 
      -- проверка
-     IF (COALESCE(inAmountIn, 0) = 0) AND (COALESCE(inAmountOut, 0) = 0) THEN
+     IF ((COALESCE(ioAmountIn, 0) = 0) AND (COALESCE(ioAmountOut, 0) = 0))  
+     OR ((COALESCE(ioAmountCurrencyDebet, 0) = 0) AND (COALESCE(ioAmountCurrencyKredit, 0) = 0))
+     THEN
         RAISE EXCEPTION 'Введите сумму.';
      END IF;
      -- проверка
-     IF (COALESCE(inAmountIn, 0) <> 0) AND (COALESCE(inAmountOut, 0) <> 0) THEN
+     IF (COALESCE(ioAmountIn, 0) <> 0) AND (COALESCE(ioAmountOut, 0) <> 0) THEN
         RAISE EXCEPTION 'Должна быть введена только одна сумма: <Дебет> или <Кредит>.';
+     END IF;
+     -- проверка
+     IF (COALESCE(ioAmountCurrencyDebet, 0) <> 0) AND (COALESCE(ioAmountCurrencyKredit, 0) <> 0) THEN
+        RAISE EXCEPTION 'Должна быть введена только одна сумма в валюте: <Дебет> или <Кредит>.';
      END IF;
      -- проверка
      IF (COALESCE (inJuridicalId, 0) = 0)
@@ -58,11 +73,38 @@ BEGIN
          RAISE EXCEPTION 'Ошибка. Для формы оплаты <%> должен быть установлен <Контрагент>.', lfGet_Object_ValueData (inPaidKindId);
      END IF;
 
+     -- если валюта выбрана
+     IF COALESCE (inCurrencyPartnerId, 0) NOT IN (0, zc_Enum_Currency_Basis())
+     THEN 
+         ioAmountIn := CASE WHEN ioAmountCurrencyDebet <> 0 THEN ioAmountCurrencyDebet
+                             ELSE 0
+                        END
+                        -- по курсу в ГРН
+                      * CASE WHEN inParPartnerValue > 0 THEN inCurrencyPartnerValue / inParPartnerValue
+                             ELSE inCurrencyPartnerValue
+                        END;
+         ioAmountOut:= CASE WHEN ioAmountCurrencyKredit <> 0 THEN ioAmountCurrencyKredit
+                             ELSE 0
+                        END
+                        -- по курсу в ГРН
+                      * CASE WHEN inParPartnerValue > 0 THEN inCurrencyPartnerValue / inParPartnerValue
+                             ELSE inCurrencyPartnerValue
+                        END;
+                        
+         vbAmountCurrency := CASE WHEN ioAmountCurrencyDebet <> 0 THEN ioAmountCurrencyDebet
+                                  WHEN ioAmountCurrencyKredit <> 0 THEN -1 * ioAmountCurrencyKredit
+                                  ELSE 0
+                             END;
+     ELSE 
+         ioAmountCurrencyDebet := 0;
+         ioAmountCurrencyKredit:= 0;
+     END IF;
+     
      -- расчет
-     IF inAmountIn <> 0 THEN
-        vbAmount := inAmountIn;
+     IF ioAmountIn <> 0 THEN
+        vbAmount := ioAmountIn;
      ELSE
-        vbAmount := -1 * inAmountOut;
+        vbAmount := -1 * ioAmountOut;
      END IF;
 
      -- 1. Распроводим Документ
@@ -85,6 +127,15 @@ BEGIN
      -- сохранили связь с документом <Счет>
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), ioId, inMovementId_Invoice);
 
+     -- сохранили связь с <Валюта (контрагента) >
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CurrencyPartner(), ioId, inCurrencyPartnerId);
+     -- сохранили свойство <Курс для перевода из вал. док. в валюту контрагента>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyPartnerValue(), ioId, inCurrencyPartnerValue);
+     -- сохранили свойство <Номинал для перевода из вал. док. в валюту контрагента>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ParPartnerValue(), ioId, inParPartnerValue);
+     -- сохранили свойство <Сумма операции (в валюте)>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountCurrency(), ioId, vbAmountCurrency);
+     
 
      -- определяем <Элемент документа>
      SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master();
@@ -176,6 +227,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 01.08.17         *
  27.08.16         * add asset
  29.04.16         *
  12.11.14                                        * add lpComplete_Movement_Finance_CreateTemp

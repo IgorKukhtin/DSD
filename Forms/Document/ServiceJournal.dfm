@@ -4,9 +4,8 @@ inherited ServiceJournalForm: TServiceJournalForm
   ClientWidth = 1020
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -344
   ExplicitWidth = 1036
-  ExplicitHeight = 452
+  ExplicitHeight = 451
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -36,6 +35,16 @@ inherited ServiceJournalForm: TServiceJournalForm
               Format = ',0.00'
               Kind = skSum
               Column = AmountOut
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountCurrencyDebet
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountCurrencyKredit
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -47,6 +56,16 @@ inherited ServiceJournalForm: TServiceJournalForm
               Format = ',0.00'
               Kind = skSum
               Column = AmountOut
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountCurrencyDebet
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountCurrencyKredit
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -91,6 +110,56 @@ inherited ServiceJournalForm: TServiceJournalForm
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Width = 77
+          end
+          object AmountCurrencyDebet: TcxGridDBColumn
+            Caption = #1044#1077#1073#1077#1090' ('#1074' '#1074#1072#1083#1102#1090#1077')'
+            DataBinding.FieldName = 'AmountCurrencyDebet'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object AmountCurrencyKredit: TcxGridDBColumn
+            Caption = #1050#1088#1077#1076#1080#1090' ('#1074' '#1074#1072#1083#1102#1090#1077')'
+            DataBinding.FieldName = 'AmountCurrencyKredit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
+            Width = 77
+          end
+          object CurrencyPartnerValue: TcxGridDBColumn
+            Caption = #1050#1091#1088#1089
+            DataBinding.FieldName = 'CurrencyPartnerValue'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object ParPartnerValue: TcxGridDBColumn
+            Caption = #1053#1086#1084#1080#1085#1072#1083
+            DataBinding.FieldName = 'ParPartnerValue'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object CurrencyPartnerName: TcxGridDBColumn
+            Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1082'.)'
+            DataBinding.FieldName = 'CurrencyPartnerName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 54
           end
           object JuridicalCode: TcxGridDBColumn
             Caption = #1050#1086#1076' ('#1102#1088'.'#1083'.)'
