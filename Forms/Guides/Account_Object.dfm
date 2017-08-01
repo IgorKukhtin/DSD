@@ -12,7 +12,6 @@ object Account_ObjectForm: TAccount_ObjectForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   PixelsPerInch = 96
@@ -301,43 +300,57 @@ object Account_ObjectForm: TAccount_ObjectForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValueAll'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'AccountName_All'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupId'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'AccountGroupId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupName'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'AccountGroupName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountDirectionId'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'AccountDirectionId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountDirectionName'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'AccountDirectionName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -352,6 +365,7 @@ object Account_ObjectForm: TAccount_ObjectForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 56
     Top = 216
   end
@@ -392,10 +406,13 @@ object Account_ObjectForm: TAccount_ObjectForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
+    PackSize = 1
     Left = 280
     Top = 216
   end

@@ -12,7 +12,6 @@ object Account_ObjectDescForm: TAccount_ObjectDescForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
@@ -306,6 +305,7 @@ object Account_ObjectDescForm: TAccount_ObjectDescForm
           Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -313,6 +313,7 @@ object Account_ObjectDescForm: TAccount_ObjectDescForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValueAll'
@@ -320,12 +321,14 @@ object Account_ObjectDescForm: TAccount_ObjectDescForm
           Component = MasterCDS
           ComponentItem = 'AccountName_All'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountGroupId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupName'
@@ -333,12 +336,14 @@ object Account_ObjectDescForm: TAccount_ObjectDescForm
           Component = MasterCDS
           ComponentItem = 'AccountGroupName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountDirectionId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountDirectionId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountDirectionName'
@@ -346,6 +351,7 @@ object Account_ObjectDescForm: TAccount_ObjectDescForm
           Component = MasterCDS
           ComponentItem = 'AccountDirectionName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -367,6 +373,7 @@ object Account_ObjectDescForm: TAccount_ObjectDescForm
         ComponentItem = 'inDescCode'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 56
@@ -413,6 +420,7 @@ object Account_ObjectDescForm: TAccount_ObjectDescForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 280
@@ -424,6 +432,7 @@ object Account_ObjectDescForm: TAccount_ObjectDescForm
         Name = 'inDescCode'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 344
     Top = 112
