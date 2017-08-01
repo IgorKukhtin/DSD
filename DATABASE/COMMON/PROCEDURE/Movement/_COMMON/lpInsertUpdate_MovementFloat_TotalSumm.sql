@@ -840,7 +840,7 @@ BEGIN
      -- Тест
      -- RAISE EXCEPTION '%', vbOperCount_Master;
 
-     IF vbMovementDescId = zc_Movement_PersonalSendCash() OR vbMovementDescId = zc_Movement_PersonalAccount() OR vbMovementDescId = zc_Movement_MobileBills()
+     IF vbMovementDescId IN (zc_Movement_PersonalSendCash(), zc_Movement_PersonalAccount(), zc_Movement_MobileBills(), zc_Movement_LossDebt())
      THEN
          -- Сохранили свойство <Итого сумма по накладной (с учетом НДС и скидки)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, vbOperCount_Master);

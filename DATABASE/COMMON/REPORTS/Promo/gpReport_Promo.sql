@@ -89,47 +89,56 @@ BEGIN
                   -- ) AS Movement_PromoPartner
             -- )::TBlob AS RetailName
             --------------------------------------
-          , (SELECT STRING_AGG( DISTINCT Object_Retail.ValueData,'; ')
-             FROM
-                Movement AS Movement_PromoPartner
-                INNER JOIN MovementItem AS MI_PromoPartner
-                                        ON MI_PromoPartner.MovementId = Movement_PromoPartner.ID
-                                       AND MI_PromoPartner.DescId     = zc_MI_Master()
-                INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                      ON ObjectLink_Partner_Juridical.ObjectId = MI_PromoPartner.ObjectId
-                                     AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
-                INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                      ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                                     AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
-                INNER JOIN Object AS Object_Retail
-                                  ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
-             WHERE Movement_PromoPartner.ParentId = Movement_Promo.Id
-               AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
-               AND MI_PromoPartner.IsErased       = FALSE
-            )::TBlob AS RetailName
+          , COALESCE ((SELECT STRING_AGG (DISTINCT Object_Retail.ValueData,'; ')
+                       FROM
+                          Movement AS Movement_PromoPartner
+                          /*INNER JOIN MovementLinkObject AS MLO_Partner
+                                                        ON MLO_Partner.MovementId = Movement_PromoPartner.ID
+                                                       AND MLO_Partner.DescId     = zc_MovementLinkObject_Partner()
+                          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = MLO_Partner.ObjectId*/
+                          INNER JOIN MovementItem AS MI_PromoPartner
+                                                  ON MI_PromoPartner.MovementId = Movement_PromoPartner.ID
+                                                 AND MI_PromoPartner.DescId     = zc_MI_Master()
+                                                 AND MI_PromoPartner.IsErased   = FALSE
+                          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                               ON ObjectLink_Partner_Juridical.ObjectId = MI_PromoPartner.ObjectId
+                                              AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                          LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                               ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                              AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
+                          INNER JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+          
+                       WHERE Movement_PromoPartner.ParentId = Movement_Promo.Id
+                         AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
+                         AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
+                      )
+            , (SELECT STRING_AGG (DISTINCT Object.ValueData,'; ')
+               FROM
+                  Movement AS Movement_PromoPartner
+                  INNER JOIN MovementLinkObject AS MLO_Partner
+                                                ON MLO_Partner.MovementId = Movement_PromoPartner.ID
+                                               AND MLO_Partner.DescId     = zc_MovementLinkObject_Partner()
+                  INNER JOIN Object ON Object.Id = MLO_Partner.ObjectId
+               WHERE Movement_PromoPartner.ParentId = Movement_Promo.Id
+                 AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
+                 AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
+                ))::TBlob AS RetailName
             --------------------------------------
-          -- , (SELECT STRING_AGG(Movement_PromoPartner.AreaName,'; ')
-             -- FROM (SELECT DISTINCT Movement_PromoPartner_View.AreaName
-                   -- FROM Movement_PromoPartner_View
-                   -- WHERE Movement_PromoPartner_View.ParentId = Movement_Promo.Id
-                     -- AND COALESCE(Movement_PromoPartner_View.AreaName,'')<>''
-                     -- AND Movement_PromoPartner_View.isErased = FALSE
-                  -- ) AS Movement_PromoPartner
-            -- )::TBlob AS AreaName
-          , (SELECT STRING_AGG( DISTINCT Object_Area.ValueData,'; ')
+          , (SELECT STRING_AGG (DISTINCT Object_Area.ValueData,'; ')
              FROM
                 Movement AS Movement_PromoPartner
                 INNER JOIN MovementItem AS MI_PromoPartner
                                         ON MI_PromoPartner.MovementId = Movement_PromoPartner.ID
                                        AND MI_PromoPartner.DescId     = zc_MI_Master()
+                                       AND MI_PromoPartner.IsErased   = FALSE
                 INNER JOIN ObjectLink AS ObjectLink_Partner_Area
                                       ON ObjectLink_Partner_Area.ObjectId = MI_PromoPartner.ObjectId
                                      AND ObjectLink_Partner_Area.DescId   = zc_ObjectLink_Partner_Area()
-                INNER JOIN Object AS Object_Area
-                                  ON Object_Area.Id = ObjectLink_Partner_Area.ChildObjectId
+                INNER JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Partner_Area.ChildObjectId
+                
              WHERE Movement_PromoPartner.ParentId = Movement_Promo.Id
                AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
-               AND MI_PromoPartner.IsErased       = FALSE
+               AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
             )::TBlob AS AreaName
           , MI_PromoGoods.GoodsName
           , MI_PromoGoods.GoodsCode
@@ -209,4 +218,7 @@ ALTER FUNCTION gpSelect_Report_Promo (TDateTime,TDateTime,Integer,TVarChar) OWNE
  25.07.17         *
  01.12.15                                                          *
 */
---Select * from gpSelect_Report_Promo('20150101','20160101',0,'5');
+
+-- тест
+-- SELECT * FROM gpSelect_Report_Promo ('20150101','20160101',0,'5');
+
