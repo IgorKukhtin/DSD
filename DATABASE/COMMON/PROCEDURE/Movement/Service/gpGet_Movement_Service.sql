@@ -14,6 +14,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
              , AmountIn TFloat, AmountOut TFloat 
+             , AmountCurrencyDebet TFloat, AmountCurrencyKredit TFloat
+             , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
              , Comment TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , PartnerId Integer, PartnerName TVarChar
@@ -24,6 +26,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , CostMovementId TVarChar, CostMovementInvNumber TVarChar
              , MovementId_Invoice Integer, InvNumber_Invoice TVarChar
              , AssetId Integer, AssetName TVarChar
+             , CurrencyPartnerId Integer, CurrencyPartnerName TVarChar
              )
 AS
 $BODY$
@@ -51,72 +54,95 @@ BEGIN
            , 0::TFloat                        AS AmountIn
            , 0::TFloat                        AS AmountOut
 
+           , 0::TFloat                        AS AmountCurrencyDebet
+           , 0::TFloat                        AS AmountCurrencyKredit
+
+           , CAST (0 AS TFloat)               AS CurrencyPartnerValue
+           , CAST (0 AS TFloat)               AS ParPartnerValue
+
            , ''::TVarChar                     AS Comment
            , 0                                AS JuridicalId
-           , CAST ('' as TVarChar)            AS JuridicalName
+           , CAST ('' AS TVarChar)            AS JuridicalName
            , 0                                AS PartnerId
-           , CAST ('' as TVarChar)            AS PartnerName
+           , CAST ('' AS TVarChar)            AS PartnerName
            , 0                                AS InfoMoneyId
-           , CAST ('' as TVarChar)            AS InfoMoneyName
+           , CAST ('' AS TVarChar)            AS InfoMoneyName
            , 0                                AS ContractId
            , ''::TVarChar                     AS ContractInvNumber
            , 0                                AS UnitId
-           , CAST ('' as TVarChar)            AS UnitName
+           , CAST ('' AS TVarChar)            AS UnitName
            , 0                                AS PaidKindId
-           , CAST ('' as TVarChar)            AS PaidKindName
-           , CAST ('' as TVarChar)            AS CostMovementId
-           , CAST ('' as TVarChar)            AS CostMovementInvNumber
+           , CAST ('' AS TVarChar)            AS PaidKindName
+           , CAST ('' AS TVarChar)            AS CostMovementId
+           , CAST ('' AS TVarChar)            AS CostMovementInvNumber
 
            , 0                                AS MovementId_Invoice
-           , CAST ('' as TVarChar)            AS InvNumber_Invoice
+           , CAST ('' AS TVarChar)            AS InvNumber_Invoice
 
            , 0                                AS AssetId
-           , CAST ('' as TVarChar)            AS AssetName
+           , CAST ('' AS TVarChar)            AS AssetName
 
-       FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status;
+           , Object_Currency.Id               AS CurrencyPartnerId
+           , Object_Currency.ValueData        AS CurrencyPartnerName
+             
+       FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
+            LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = zc_Enum_Currency_Basis();
   
      ELSE
 
      RETURN QUERY 
        SELECT
-             inMovementId as Id
+             inMovementId                        AS Id
            , CASE WHEN inMovementId = 0 THEN CAST (NEXTVAL ('Movement_Service_seq') AS TVarChar) ELSE Movement.InvNumber END AS InvNumber
-           , CASE WHEN inMovementId = 0 THEN inOperDate ELSE Movement.OperDate END AS OperDate
-           , Object_Status.ObjectCode   AS StatusCode
-           , Object_Status.ValueData    AS StatusName
+           , CASE WHEN inMovementId = 0 THEN inOperDate ELSE Movement.OperDate END                                           AS OperDate
+           , Object_Status.ObjectCode            AS StatusCode
+           , Object_Status.ValueData             AS StatusName
 
            , COALESCE (MovementDate_OperDatePartner.ValueData, zc_DateStart()) AS OperDatePartner
-           , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
+           , MovementString_InvNumberPartner.ValueData                         AS InvNumberPartner
                       
            , CASE WHEN inMovementId = 0 
                        THEN 0
                   WHEN MovementItem.Amount > 0
                        THEN MovementItem.Amount
                   ELSE 0
-             END :: TFloat AS AmountIn
+             END                       :: TFloat AS AmountIn
            , CASE WHEN inMovementId = 0
                        THEN 0
                   WHEN MovementItem.Amount < 0 
                        THEN -1 * MovementItem.Amount
                   ELSE 0
-             END :: TFloat AS AmountOut
+             END                       :: TFloat AS AmountOut
 
-           , MIString_Comment.ValueData   AS Comment
+           , CASE WHEN MovementFloat_AmountCurrency.ValueData > 0
+                  THEN MovementFloat_AmountCurrency.ValueData 
+                  ELSE 0
+             END                                  :: TFloat AS AmountCurrencyDebet
+             
+           , CASE WHEN MovementFloat_AmountCurrency.ValueData < 0
+                  THEN -1 * MovementFloat_AmountCurrency.ValueData 
+                  ELSE 0
+             END                                  :: TFloat AS AmountCurrencyKredit
+             
+           , MovementFloat_CurrencyPartnerValue.ValueData   AS CurrencyPartnerValue
+           , MovementFloat_ParPartnerValue.ValueData        AS ParPartnerValue
+             
+           , MIString_Comment.ValueData          AS Comment
 
-           , Object_Juridical.Id              AS JuridicalId
-           , Object_Juridical.ValueData       AS JuridicalName
+           , Object_Juridical.Id                 AS JuridicalId
+           , Object_Juridical.ValueData          AS JuridicalName
 
-           , Object_Partner.Id                AS PartnerId
-           , Object_Partner.ValueData         AS PartnerName
+           , Object_Partner.Id                   AS PartnerId
+           , Object_Partner.ValueData            AS PartnerName
 
            , View_InfoMoney.InfoMoneyId
-           , View_InfoMoney.InfoMoneyName_all   AS InfoMoneyName
-           , View_Contract_InvNumber.ContractId AS ContractId
-           , View_Contract_InvNumber.InvNumber  AS ContractInvNumber
-           , Object_Unit.Id                   AS UnitId
-           , Object_Unit.ValueData            AS UnitName
-           , Object_PaidKind.Id               AS PaidKindId
-           , Object_PaidKind.ValueData        AS PaidKindName
+           , View_InfoMoney.InfoMoneyName_all    AS InfoMoneyName
+           , View_Contract_InvNumber.ContractId  AS ContractId
+           , View_Contract_InvNumber.InvNumber   AS ContractInvNumber
+           , Object_Unit.Id                      AS UnitId
+           , Object_Unit.ValueData               AS UnitName
+           , Object_PaidKind.Id                  AS PaidKindId
+           , Object_PaidKind.ValueData           AS PaidKindName
 
            , MovementString_MovementId.ValueData AS CostMovementId
            , tmpCost.strInvNumber    ::TVarChar  AS CostMovementInvNumber
@@ -124,8 +150,11 @@ BEGIN
            , Movement_Invoice.Id                 AS MovementId_Invoice
            , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, COALESCE(MovementString_InvNumberPartner_Invoice.ValueData,'') || '/' || Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvNumber_Invoice
 
-           , Object_Asset.Id             AS AssetId
-           , Object_Asset.ValueData      AS AssetName
+           , Object_Asset.Id                     AS AssetId
+           , Object_Asset.ValueData              AS AssetName
+
+           , Object_CurrencyPartner.Id           AS CurrencyPartnerId
+           , Object_CurrencyPartner.ValueData    AS CurrencyPartnerName
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
@@ -134,6 +163,17 @@ BEGIN
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
 
+            LEFT JOIN MovementFloat AS MovementFloat_AmountCurrency
+                                    ON MovementFloat_AmountCurrency.MovementId = Movement.Id
+                                   AND MovementFloat_AmountCurrency.DescId = zc_MovementFloat_AmountCurrency()
+
+            LEFT JOIN MovementFloat AS MovementFloat_CurrencyPartnerValue
+                                    ON MovementFloat_CurrencyPartnerValue.MovementId = Movement.Id
+                                   AND MovementFloat_CurrencyPartnerValue.DescId = zc_MovementFloat_CurrencyPartnerValue()
+            LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
+                                    ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
+                                   AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
+                                   
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
@@ -142,6 +182,12 @@ BEGIN
                                      ON MovementString_MovementId.MovementId =  Movement.Id
                                     AND MovementString_MovementId.DescId = zc_MovementString_MovementId()
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner
+                                         ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id
+                                        AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
+            LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
+            
+            
             LEFT JOIN MovementLinkMovement AS MLM_Invoice
                                            ON MLM_Invoice.MovementId = Movement.Id
                                           AND MLM_Invoice.DescId = zc_MovementLinkMovement_Invoice()
@@ -211,6 +257,7 @@ ALTER FUNCTION gpGet_Movement_Service (Integer, Integer, TDateTime, TVarChar) OW
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 01.08.17         *
  21.07.16         *
  30.04.16         *
  17.03.14         * add zc_MovementDate_OperDatePartner, zc_MovementString_InvNumberPartner              

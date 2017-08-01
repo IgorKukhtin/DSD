@@ -29,6 +29,7 @@ $BODY$
    DECLARE vbRouteId Integer;
    DECLARE vbPersonalId Integer;
    DECLARE vbStatusId Integer;
+   DECLARE vbChangePercent TFloat;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderExternal());
@@ -95,6 +96,33 @@ BEGIN
       END IF;
       -- !!! ВРЕМЕННО - 04.07.17 !!!
 
+      SELECT CASE 
+               WHEN MIN (ObjectFloat_ContractCondition_Value.ValueData) < 0.0 THEN 
+                 (MIN (ABS (ObjectFloat_ContractCondition_Value.ValueData)) * -1.0)::TFloat
+               ELSE MIN (ObjectFloat_ContractCondition_Value.ValueData)::TFloat
+             END AS ContractConditionKindValue
+      INTO vbChangePercent
+      FROM ObjectLink AS ObjectLink_ContractCondition_Contract
+           JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
+                           ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                          AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
+                          AND ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = zc_Enum_ContractConditionKind_ChangePercent()
+           JOIN ObjectFloat AS ObjectFloat_ContractCondition_Value
+                            ON ObjectFloat_ContractCondition_Value.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                           AND ObjectFloat_ContractCondition_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
+                           AND ObjectFloat_ContractCondition_Value.ValueData <> 0.0
+           JOIN Object AS Object_ContractCondition
+                       ON Object_ContractCondition.Id = ObjectLink_ContractCondition_Contract.ObjectId
+                      AND Object_ContractCondition.isErased = FALSE
+           JOIN Object AS Object_Contract
+                       ON Object_Contract.Id = ObjectLink_ContractCondition_Contract.ChildObjectId
+                      AND Object_Contract.isErased = FALSE
+      WHERE ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
+        AND ObjectLink_ContractCondition_Contract.ChildObjectId = inContractId
+      GROUP BY ObjectLink_ContractCondition_Contract.ChildObjectId
+             , ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId;
+
+      vbChangePercent:= COALESCE (vbChangePercent, 0)::TFloat;
 
 
       IF (vbisInsert = FALSE) AND (vbStatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_Erased()))
@@ -110,7 +138,7 @@ BEGIN
                                                   , inOperDateMark    := inOperDate
                                                   , inPriceWithVAT    := inPriceWithVAT
                                                   , inVATPercent      := inVATPercent
-                                                  , inChangePercent   := inChangePercent    
+                                                  , inChangePercent   := vbChangePercent    
                                                   , inFromId          := inPartnerId
                                                   , inToId            := inUnitId
                                                   , inPaidKindId      := inPaidKindId
