@@ -241,6 +241,9 @@ type
     cbPromo: TcxCheckBox;
     deMonthPromo: TcxDateEdit;
     cxLabel19: TcxLabel;
+    cxLabel20: TcxLabel;
+    deCheck: TcxDateEdit;
+    RetailName_inf: TcxGridDBColumn;
   private
     { Private declarations }
   public

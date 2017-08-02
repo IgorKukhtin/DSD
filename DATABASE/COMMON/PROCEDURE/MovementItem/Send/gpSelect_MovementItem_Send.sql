@@ -13,7 +13,9 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , PartionGoodsDate TDateTime
              , Amount TFloat, Count TFloat, HeadCount TFloat
-             , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar
+             , PartionGoods TVarChar
+             , GoodsKindId Integer, GoodsKindName  TVarChar
+             , GoodsKindId_Complete Integer, GoodsKindName_Complete  TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
              , UnitName TVarChar
              , StorageName TVarChar
@@ -122,6 +124,8 @@ BEGIN
            , CAST (NULL AS TVarChar)    AS PartionGoods
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
+           , CAST (NULL AS Integer)     AS GoodsKindId_Complete
+           , CAST (NULL AS TVarchar)    AS GoodsKindName_Complete
            , Object_InfoMoney_View.InfoMoneyCode
            , Object_InfoMoney_View.InfoMoneyGroupName
            , Object_InfoMoney_View.InfoMoneyDestinationName
@@ -191,32 +195,34 @@ BEGIN
 
       UNION ALL
        SELECT
-             MovementItem.Id                    AS Id
-           , Object_Goods.Id                    AS GoodsId
-           , Object_Goods.ObjectCode            AS GoodsCode
-           , Object_Goods.ValueData             AS GoodsName
+             MovementItem.Id                      AS Id
+           , Object_Goods.Id                      AS GoodsId
+           , Object_Goods.ObjectCode              AS GoodsCode
+           , Object_Goods.ValueData               AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
 
            , COALESCE (tmpMIContainer.PartionDate, MIDate_PartionGoods.ValueData)   :: TDateTime AS PartionGoodsDate
-           , MovementItem.Amount                AS Amount
-           , MIFloat_CountPack.ValueData        AS Count
-           , MIFloat_HeadCount.ValueData        AS HeadCount
+           , MovementItem.Amount                   AS Amount
+           , MIFloat_CountPack.ValueData           AS Count
+           , MIFloat_HeadCount.ValueData           AS HeadCount
            , COALESCE (tmpMIContainer.PartionGoods, MIString_PartionGoods.ValueData) :: TVarChar AS PartionGoods
-           , Object_GoodsKind.Id                AS GoodsKindId
-           , Object_GoodsKind.ValueData         AS GoodsKindName
+           , Object_GoodsKind.Id                   AS GoodsKindId
+           , Object_GoodsKind.ValueData            AS GoodsKindName
+           , Object_GoodsKindComplete.Id           AS GoodsKindId_Complete
+           , Object_GoodsKindComplete.ValueData    AS GoodsKindName_Complete
            , Object_InfoMoney_View.InfoMoneyCode
            , Object_InfoMoney_View.InfoMoneyGroupName
            , Object_InfoMoney_View.InfoMoneyDestinationName
            , Object_InfoMoney_View.InfoMoneyName
 
-           , Object_Unit_partion.ValueData      AS UnitName
-           , Object_Storage.ValueData           AS StorageName
-           , tmpMIContainer.Price               AS Price
+           , Object_Unit_partion.ValueData         AS UnitName
+           , Object_Storage.ValueData              AS StorageName
+           , tmpMIContainer.Price                  AS Price
 
-           , tmpRemains.Amount :: TFloat        AS AmountRemains
+           , tmpRemains.Amount :: TFloat           AS AmountRemains
 
-           , MovementItem.isErased              AS isErased
+           , MovementItem.isErased                 AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -250,10 +256,14 @@ BEGIN
                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
+                                             ON MILO_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                            AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+            LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILO_GoodsKindComplete.ObjectId
+            
             LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementItemId = MovementItem.Id
             LEFT JOIN Object AS Object_Unit_partion ON Object_Unit_partion.Id = tmpMIContainer.UnitId
             LEFT JOIN Object AS Object_Storage      ON Object_Storage.Id      = tmpMIContainer.StorageId
-
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
@@ -281,14 +291,20 @@ BEGIN
                                  , MIFloat_HeadCount.ValueData                   AS HeadCount
                                  , MIString_PartionGoods.ValueData               AS PartionGoods
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                                 , COALESCE (MILO_GoodsKindComplete.ObjectId, 0) AS GoodsKindId_Complete
                                  , MovementItem.isErased
                             FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                                  INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                         AND MovementItem.DescId     = zc_MI_Master()
                                                         AND MovementItem.isErased   = tmpIsErased.isErased
+
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                   ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                  AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                                 LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
+                                                                  ON MILO_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                                                 AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+                                            
                                  LEFT JOIN MovementItemFloat AS MIFloat_CountPack
                                                              ON MIFloat_CountPack.MovementItemId = MovementItem.Id
                                                             AND MIFloat_CountPack.DescId         = zc_MIFloat_CountPack()
@@ -382,6 +398,8 @@ BEGIN
            , COALESCE (tmpMIContainer.PartionGoods, tmpMI_Goods.PartionGoods)    :: TVarChar  AS PartionGoods
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
+           , Object_GoodsKindComplete.Id        AS GoodsKindId_Complete
+           , Object_GoodsKindComplete.ValueData AS GoodsKindName_Complete
            , Object_InfoMoney_View.InfoMoneyCode
            , Object_InfoMoney_View.InfoMoneyGroupName
            , Object_InfoMoney_View.InfoMoneyDestinationName
@@ -400,7 +418,8 @@ BEGIN
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI_Goods.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI_Goods.GoodsKindId
-
+            LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = tmpMI_Goods.GoodsKindId_Complete
+             
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                  ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMI_Goods.GoodsId
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
@@ -433,6 +452,7 @@ ALTER FUNCTION gpSelect_MovementItem_Send (Integer, Boolean, Boolean, TVarChar) 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 02.08.17         * add GoodsKindId_Complete
  15.10.14         * add Price, Storage_Partion
  04.08.14                                        * add Object_InfoMoney_View
  04.08.14         * add zc_MILinkObject_Unit

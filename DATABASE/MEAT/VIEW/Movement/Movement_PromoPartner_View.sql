@@ -26,6 +26,7 @@ CREATE OR REPLACE VIEW Movement_PromoPartner_View AS
       , Object_Contract.ContractTagName                                   --признак контракта
       , MovementString_Comment.ValueData       AS Comment                 --Примечание
       , Object_Area.ValueData                  AS AreaName
+      , MovementString_Retail.ValueData        AS RetailName_inf
     FROM Movement AS Movement_Promo 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Promo.StatusId
     
@@ -59,6 +60,10 @@ CREATE OR REPLACE VIEW Movement_PromoPartner_View AS
         LEFT OUTER JOIN MovementString AS MovementString_Comment
                                        ON MovementString_Comment.MovementId = Movement_Promo.Id
                                       AND MovementString_Comment.DescId = zc_MovementString_Comment()
+                                      
+        LEFT OUTER JOIN MovementString AS MovementString_Retail
+                                       ON MovementString_Retail.MovementId = Movement_Promo.Id
+                                      AND MovementString_Retail.DescId = zc_MovementString_Retail()
 
     WHERE Movement_Promo.DescId = zc_Movement_PromoPartner()
    ;

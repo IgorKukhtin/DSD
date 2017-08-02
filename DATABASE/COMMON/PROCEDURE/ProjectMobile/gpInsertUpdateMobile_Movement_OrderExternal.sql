@@ -48,6 +48,11 @@ BEGIN
         AND MovementString_GUID.ValueData = inGUID;
 
       vbisInsert:= (COALESCE(vbId, 0) = 0);
+
+      IF vbisInsert = TRUE
+      THEN
+           PERFORM lpInsert_LockUnique (inKeyData:= inGUID, inUserId:= vbUserId);
+      END IF;
                                                                                        
       vbOperDatePartner:= inOperDate + (COALESCE ((SELECT ValueData FROM ObjectFloat 
                                                    WHERE ObjectId = inPartnerId 
@@ -124,7 +129,6 @@ BEGIN
 
       vbChangePercent:= COALESCE (vbChangePercent, 0)::TFloat;
 
-
       IF (vbisInsert = FALSE) AND (vbStatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_Erased()))
       THEN -- если заявка проведена, то распроводим
            PERFORM lpUnComplete_Movement_OrderExternal (inMovementId:= vbId, inUserId:= vbUserId);
@@ -183,6 +187,23 @@ $BODY$
                                                             , inPriceWithVAT:= false
                                                             , inVATPercent:= 20
                                                             , inChangePercent:= 5
+                                                            , inInsertDate:= CURRENT_TIMESTAMP 
+                                                            , inSession:= zfCalc_UserAdmin()
+                                                             )
+*/
+
+/* SELECT * FROM gpInsertUpdateMobile_Movement_OrderExternal (inGUID:= '{14F4EEA5-E10B-44D2-B6F6-DE71F0DED47E}'
+                                                            , inInvNumber:= '-2'
+                                                            , inOperDate:= CURRENT_DATE
+                                                            , inComment:= 'Тестовая заявка 2' 
+                                                            , inPartnerId:= 17819
+                                                            , inUnitId:= 8459 
+                                                            , inPaidKindId:= zc_Enum_PaidKind_SecondForm()
+                                                            , inContractId:= 16687
+                                                            , inPriceListId:= 18840
+                                                            , inPriceWithVAT:= false
+                                                            , inVATPercent:= 20
+                                                            , inChangePercent:= 10
                                                             , inInsertDate:= CURRENT_TIMESTAMP 
                                                             , inSession:= zfCalc_UserAdmin()
                                                              )

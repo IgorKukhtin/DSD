@@ -1,22 +1,23 @@
 -- Function: gpInsertUpdate_MovementItem_Send()
-
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
- INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inGoodsId             Integer   , -- Товары
-    IN inAmount              TFloat    , -- Количество
-    IN inPartionGoodsDate    TDateTime , -- Дата партии
-    IN inCount               TFloat    , -- Количество батонов или упаковок
-    IN inHeadCount           TFloat    , -- Количество голов
- INOUT ioPartionGoods        TVarChar  , -- Партия товара/Инвентарный номер
-    IN inGoodsKindId         Integer   , -- Виды товаров
-    IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
-    IN inUnitId              Integer   , -- Подразделение (для МО)
-    IN inStorageId           Integer   , -- Место хранения
-    IN inPartionGoodsId      Integer   , -- Партии товаров (для партии расхода если с МО)
-    IN inSession             TVarChar    -- сессия пользователя
+ INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
+    IN inMovementId            Integer   , -- Ключ объекта <Документ>
+    IN inGoodsId               Integer   , -- Товары
+    IN inAmount                TFloat    , -- Количество
+    IN inPartionGoodsDate      TDateTime , -- Дата партии
+    IN inCount                 TFloat    , -- Количество батонов или упаковок
+    IN inHeadCount             TFloat    , -- Количество голов
+ INOUT ioPartionGoods          TVarChar  , -- Партия товара/Инвентарный номер
+    IN inGoodsKindId           Integer   , -- Виды товаров
+    IN inGoodsKindCompleteId   Integer   , -- Виды товаров  ГП
+    IN inAssetId               Integer   , -- Основные средства (для которых закупается ТМЦ)
+    IN inUnitId                Integer   , -- Подразделение (для МО)
+    IN inStorageId             Integer   , -- Место хранения
+    IN inPartionGoodsId        Integer   , -- Партии товаров (для партии расхода если с МО)
+    IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
 AS
@@ -30,20 +31,21 @@ BEGIN
      -- сохранили
      SELECT tmp.ioId, tmp.ioPartionGoods
             INTO ioId, ioPartionGoods
-     FROM lpInsertUpdate_MovementItem_Send (ioId                 := ioId
-                                          , inMovementId         := inMovementId
-                                          , inGoodsId            := inGoodsId
-                                          , inAmount             := inAmount
-                                          , inPartionGoodsDate   := inPartionGoodsDate
-                                          , inCount              := inCount
-                                          , inHeadCount          := inHeadCount
-                                          , ioPartionGoods       := ioPartionGoods
-                                          , inGoodsKindId        := inGoodsKindId
-                                          , inAssetId            := inAssetId
-                                          , inUnitId             := inUnitId
-                                          , inStorageId          := inStorageId
-                                          , inPartionGoodsId     := inPartionGoodsId
-                                          , inUserId             := vbUserId
+     FROM lpInsertUpdate_MovementItem_Send (ioId                  := ioId
+                                          , inMovementId          := inMovementId
+                                          , inGoodsId             := inGoodsId
+                                          , inAmount              := inAmount
+                                          , inPartionGoodsDate    := inPartionGoodsDate
+                                          , inCount               := inCount
+                                          , inHeadCount           := inHeadCount
+                                          , ioPartionGoods        := ioPartionGoods
+                                          , inGoodsKindId         := inGoodsKindId
+                                          , inGoodsKindCompleteId := inGoodsKindCompleteId
+                                          , inAssetId             := inAssetId
+                                          , inUnitId              := inUnitId
+                                          , inStorageId           := inStorageId
+                                          , inPartionGoodsId      := inPartionGoodsId
+                                          , inUserId              := vbUserId
                                            ) AS tmp;
 
 END;
@@ -53,6 +55,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.08.17         * add inGoodsKindCompleteId
  29.05.15                                        *
 */
 

@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_MovementItem_Send()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Send(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Send(
     IN inHeadCount           TFloat    , -- Количество голов
  INOUT ioPartionGoods        TVarChar  , -- Партия товара/Инвентарный номер
     IN inGoodsKindId         Integer   , -- Виды товаров
+    IN inGoodsKindCompleteId Integer   , -- Виды товаров  ГП
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
     IN inUnitId              Integer   , -- Подразделение (для МО)
     IN inStorageId           Integer   , -- Место хранения
@@ -82,6 +84,8 @@ BEGIN
 
      -- сохранили связь с <Виды товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
+     -- сохранили связь с <Виды товаров ГП>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKindComplete(), ioId, inGoodsKindCompleteId);
 
      -- сохранили связь с <Основные средства (для которых закупается ТМЦ)> - почти не используется, т.к. в приходе от пост. этой партии нет
      -- PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
@@ -114,6 +118,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.08.17         * add inGoodsKindCompleteId
  29.05.15                                        * set lp
  26.07.14                                        * add inPartionGoodsDate and inUnitId and inStorageId and inPartionGoodsId and ioPartionGoods
  23.05.14                                                       *

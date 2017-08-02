@@ -33,6 +33,7 @@ CREATE OR REPLACE VIEW Movement_Promo_View AS
       , COALESCE (MovementBoolean_Promo.ValueData, FALSE)   :: Boolean AS isPromo  -- акция (да/нет)
       , COALESCE (MovementBoolean_Checked.ValueData, FALSE) :: Boolean AS Checked  -- согласовано (да/нет)
       , MovementDate_Month.ValueData                AS MonthPromo         -- месяц акции
+      , MovementDate_CheckDate.ValueData            AS CheckDate          --Дата согласования
     FROM Movement AS Movement_Promo 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Promo.StatusId
 
@@ -75,7 +76,11 @@ CREATE OR REPLACE VIEW Movement_Promo_View AS
         LEFT JOIN MovementDate AS MovementDate_Month
                                ON MovementDate_Month.MovementId = Movement_Promo.Id
                               AND MovementDate_Month.DescId = zc_MovementDate_Month()
-                               
+
+        LEFT JOIN MovementDate AS MovementDate_CheckDate
+                               ON MovementDate_CheckDate.MovementId = Movement_Promo.Id
+                              AND MovementDate_CheckDate.DescId = zc_MovementDate_Check()
+                              
         LEFT JOIN MovementFloat AS MovementFloat_CostPromo
                                 ON MovementFloat_CostPromo.MovementId = Movement_Promo.Id
                                AND MovementFloat_CostPromo.DescId = zc_MovementFloat_CostPromo()
