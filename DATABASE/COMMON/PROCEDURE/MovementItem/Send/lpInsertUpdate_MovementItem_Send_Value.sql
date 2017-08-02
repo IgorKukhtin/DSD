@@ -26,20 +26,21 @@ BEGIN
      -- сохранили
      ioId:=
     (SELECT tmp.ioId
-     FROM lpInsertUpdate_MovementItem_Send (ioId                 := ioId
-                                          , inMovementId         := inMovementId
-                                          , inGoodsId            := inGoodsId
-                                          , inAmount             := inAmount
-                                          , inPartionGoodsDate   := inPartionGoodsDate
-                                          , inCount              := inCount
-                                          , inHeadCount          := inHeadCount
-                                          , ioPartionGoods       := inPartionGoods
-                                          , inGoodsKindId        := inGoodsKindId
-                                          , inAssetId            := inAssetId
-                                          , inUnitId             := inUnitId
-                                          , inStorageId          := inStorageId
-                                          , inPartionGoodsId     := inPartionGoodsId
-                                          , inUserId             := inUserId
+     FROM lpInsertUpdate_MovementItem_Send (ioId                  := ioId
+                                          , inMovementId          := inMovementId
+                                          , inGoodsId             := inGoodsId
+                                          , inAmount              := inAmount
+                                          , inPartionGoodsDate    := inPartionGoodsDate
+                                          , inCount               := inCount
+                                          , inHeadCount           := inHeadCount
+                                          , ioPartionGoods        := inPartionGoods
+                                          , inGoodsKindId         := inGoodsKindId
+                                          , inGoodsKindCompleteId := NULL
+                                          , inAssetId             := inAssetId
+                                          , inUnitId              := inUnitId
+                                          , inStorageId           := inStorageId
+                                          , inPartionGoodsId      := inPartionGoodsId
+                                          , inUserId              := inUserId
                                            ) AS tmp);
 
 END;

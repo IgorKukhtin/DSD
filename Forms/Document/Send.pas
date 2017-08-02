@@ -65,6 +65,7 @@ type
     edDocumentKind: TcxButtonEdit;
     GuidesDocumentKind: TdsdGuides;
     edIsAuto: TcxCheckBox;
+    actGoodsKindCompleteChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public
