@@ -37,6 +37,11 @@ BEGIN
 
       vbisInsert:= (COALESCE (vbId, 0) = 0);
 
+      IF vbisInsert = TRUE
+      THEN
+           PERFORM lpInsert_LockUnique (inKeyData:= inGUID, inUserId:= vbUserId);
+      END IF;
+                                                                                       
       IF (vbisInsert = false) AND (vbStatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_Erased()))
       THEN -- если фактический остаток проведен, то распроводим    
            PERFORM gpUnComplete_Movement_StoreReal (inMovementId:= vbId, inSession:= inSession);
@@ -74,6 +79,17 @@ $BODY$
                                                        , inOperDate:= CURRENT_DATE
                                                        , inPartnerId:= 17819
                                                        , inComment:= 'Це з мобілки прийшло :)'
+                                                       , inInsertDate:= CURRENT_TIMESTAMP
+                                                       , inSession:= zfCalc_UserAdmin()
+                                                        );
+*/
+
+/* 
+  SELECT * FROM gpInsertUpdateMobile_Movement_StoreReal (inGUID:= '{F7D25B81-B904-4473-9A51-B0104B344069}'
+                                                       , inInvNumber:= '-4'
+                                                       , inOperDate:= CURRENT_DATE
+                                                       , inPartnerId:= 17819
+                                                       , inComment:= 'І знову це з мобілки прийшло :)'
                                                        , inInsertDate:= CURRENT_TIMESTAMP
                                                        , inSession:= zfCalc_UserAdmin()
                                                         );

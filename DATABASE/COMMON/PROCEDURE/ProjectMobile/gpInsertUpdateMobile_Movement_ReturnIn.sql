@@ -85,6 +85,11 @@ BEGIN
       vbisPartner        := COALESCE (vbisPartner, false)::Boolean;
       vbisList           := COALESCE (vbisList, false)::Boolean;
 
+      IF vbIsInsert = TRUE
+      THEN
+           PERFORM lpInsert_LockUnique (inKeyData:= inGUID, inUserId:= vbUserId);
+      END IF;
+                                                                                       
       SELECT ObjectLink_Contract_Currency.ChildObjectId
              INTO vbCurrencyId
       FROM ObjectLink AS ObjectLink_Contract_Currency
@@ -179,6 +184,24 @@ $BODY$
                                                     , inUnitId        := 8461                         -- Подразделение
                                                     , inContractId    := 889761                       -- Договор
                                                     , inComment       := 'Test'                       -- Примечание
+                                                    , inSession       := zfCalc_UserAdmin()
+                                                     );
+
+*/
+
+/* SELECT * FROM gpInsertUpdateMobile_Movement_ReturnIn (inGUID          := '{4CEA41E8-6EFA-4BA3-A8E7-F500A5803C61}'
+                                                    , inInvNumber     := '-11'
+                                                    , inOperDate      := CURRENT_DATE
+                                                    , inStatusId      := zc_Enum_Status_UnComplete()  -- Виды статусов
+                                                    , inPriceWithVAT  := false                        -- Цена с НДС (да/нет)
+                                                    , inInsertDate    := CURRENT_TIMESTAMP            -- Дата/время создания документа
+                                                    , inVATPercent    := 20.0                         -- % НДС
+                                                    , inChangePercent := -15.0                        -- (-)% Скидки (+)% Наценки
+                                                    , inPaidKindId    := zc_Enum_PaidKind_FirstForm() -- Вид формы оплаты
+                                                    , inPartnerId     := 889758                       -- Контрагент
+                                                    , inUnitId        := 8461                         -- Подразделение
+                                                    , inContractId    := 889761                       -- Договор
+                                                    , inComment       := 'Test 2'                     -- Примечание
                                                     , inSession       := zfCalc_UserAdmin()
                                                      );
 
