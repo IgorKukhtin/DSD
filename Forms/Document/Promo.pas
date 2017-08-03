@@ -244,6 +244,19 @@ type
     cxLabel20: TcxLabel;
     deCheck: TcxDateEdit;
     RetailName_inf: TcxGridDBColumn;
+    spInsertUpdateMISign_No: TdsdStoredProc;
+    spInsertUpdateMISign: TdsdStoredProc;
+    actInsertUpdateMISignNO: TdsdExecStoredProc;
+    actInsertUpdateMISign: TdsdExecStoredProc;
+    bbMISign: TdxBarButton;
+    bbSignNO: TdxBarButton;
+    cxLabel21: TcxLabel;
+    edstrSign: TcxTextEdit;
+    edstrSignNo: TcxTextEdit;
+    cxLabel22: TcxLabel;
+    actInsertUpdateMISign1: TMultiAction;
+    actInsertUpdateMISignNO1: TMultiAction;
+    actRefresh_Get: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

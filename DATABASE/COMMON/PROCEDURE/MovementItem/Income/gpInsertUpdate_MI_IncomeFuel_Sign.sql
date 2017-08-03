@@ -105,7 +105,7 @@ BEGIN
          IF inIsSign = TRUE
          THEN
              -- если подписыввет последний пользователь устанавливаем свойства по согласованию
-             IF zfCalc_Word_Split (vbStrIdSign, ',', vbIndex + 1) = '' -- если последний среди подписанных
+             IF zfCalc_Word_Split (vbStrIdSignNo, ',', vbIndexNo + 1) = '' -- если последний среди неподписанных
              THEN
                   -- сохранили свойство <Согласовано>
                   PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Checked(), inMovementId, TRUE);
