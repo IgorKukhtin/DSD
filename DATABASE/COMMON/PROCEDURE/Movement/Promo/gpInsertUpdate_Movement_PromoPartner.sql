@@ -252,7 +252,7 @@ BEGIN
     -- сохранили <Примечание>
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
     -- сохранили <Торговая сеть доп.>
-    PERFORM lpInsertUpdate_MovementString (zc_MovementString_Retail(), ioId, inRetailName_inf);
+    PERFORM lpInsertUpdate_MovementString (zc_MovementString_Retail(), ioId, TRIM (inRetailName_inf));
     
     --Вернули установленный прайс 
     SELECT

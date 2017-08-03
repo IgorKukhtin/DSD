@@ -5,7 +5,7 @@ inherited PromoJournalForm: TPromoJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1100
-  ExplicitHeight = 468
+  ExplicitHeight = 465
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -78,6 +78,7 @@ inherited PromoJournalForm: TPromoJournalForm
             DataBinding.FieldName = 'isPromo'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1045#1089#1083#1080' '#1044#1072' - '#1101#1090#1086' '#1040#1082#1094#1080#1103', '#1053#1077#1090' - '#1058#1077#1085#1076#1077#1088#1099
             Options.Editing = False
             Width = 45
           end

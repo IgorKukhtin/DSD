@@ -3,9 +3,9 @@ inherited PromoForm: TPromoForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 599
   ClientWidth = 1204
-  ExplicitTop = -92
+  ExplicitLeft = -431
   ExplicitWidth = 1220
-  ExplicitHeight = 637
+  ExplicitHeight = 634
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1112,6 +1112,7 @@ inherited PromoForm: TPromoForm
     object cbPromo: TcxCheckBox
       Left = 1019
       Top = 18
+      Hint = #1045#1089#1083#1080' '#1044#1072' - '#1101#1090#1086' '#1040#1082#1094#1080#1103', '#1053#1077#1090' - '#1058#1077#1085#1076#1077#1088#1099
       Caption = #1040#1082#1094#1080#1103' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 37
       Width = 103
@@ -1119,7 +1120,7 @@ inherited PromoForm: TPromoForm
     object cxLabel20: TcxLabel
       Left = 918
       Top = 38
-      Caption = #1044#1072#1090#1072' '#1089#1086#1075#1083#1072#1089'.'
+      Caption = #1044#1072#1090#1072' '#1089#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1103
     end
     object deCheck: TcxDateEdit
       Left = 918
@@ -2765,6 +2766,9 @@ inherited PromoForm: TPromoForm
       end
       item
         Control = cbChecked
+      end
+      item
+        Control = deCheck
       end>
     Left = 256
     Top = 265
