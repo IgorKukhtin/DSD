@@ -3,8 +3,9 @@ inherited Report_PromoForm: TReport_PromoForm
   ClientHeight = 434
   ClientWidth = 833
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
+  ExplicitLeft = -60
   ExplicitWidth = 849
-  ExplicitHeight = 472
+  ExplicitHeight = 469
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -256,14 +257,6 @@ inherited Report_PromoForm: TReport_PromoForm
             HeaderAlignmentVert = vaCenter
             Width = 164
           end
-          object Checked: TcxGridDBColumn
-            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086
-            DataBinding.FieldName = 'Checked'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 54
-          end
           object CheckDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1089#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1103
             DataBinding.FieldName = 'CheckDate'
@@ -271,6 +264,15 @@ inherited Report_PromoForm: TReport_PromoForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object Checked: TcxGridDBColumn
+            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086
+            DataBinding.FieldName = 'Checked'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 54
           end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1089#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1080' '#1089' '#1053#1044#1057', '#1075#1088#1085
@@ -326,6 +328,7 @@ inherited Report_PromoForm: TReport_PromoForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1045#1089#1083#1080' '#1044#1072' - '#1101#1090#1086' '#1040#1082#1094#1080#1103', '#1053#1077#1090' - '#1058#1077#1085#1076#1077#1088#1099
             Options.Editing = False
             Width = 45
           end

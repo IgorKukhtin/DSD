@@ -49,7 +49,7 @@ BEGIN
 
      -- заполняем таблицу - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (MovementItemId, MovementId, OperDate, UnitId_From, MemberId_From, BranchId_From, UnitId_To, MemberId_To, BranchId_To
-                         , MIContainerId_To, ContainerId_GoodsFrom, ContainerId_GoodsTo, GoodsId, GoodsKindId, AssetId, PartionGoods, PartionGoodsDate_From, PartionGoodsDate_To
+                         , MIContainerId_To, ContainerId_GoodsFrom, ContainerId_GoodsTo, GoodsId, GoodsKindId, GoodsKindId_complete, AssetId, PartionGoods, PartionGoodsDate_From, PartionGoodsDate_To
                          , OperCount
                          , AccountDirectionId_From, AccountDirectionId_To, InfoMoneyDestinationId, InfoMoneyId
                          , JuridicalId_basis_To, BusinessId_To
@@ -79,6 +79,7 @@ BEGIN
                                         THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                                    ELSE 0
                               END AS GoodsKindId
+                            , COALESCE (MILinkObject_GoodsKindComplete.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId_complete
                             , 0                                              AS AssetId
                             , COALESCE (MILinkObject_Storage.ObjectId, 0)    AS StorageId_Item
                             , COALESCE (MIString_PartionGoods.ValueData, '') AS PartionGoods
@@ -161,6 +162,9 @@ BEGIN
                              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
+                                                              ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                                             AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
                              LEFT JOIN MovementItemLinkObject AS MILinkObject_Storage
                                                               ON MILinkObject_Storage.MovementItemId = MovementItem.Id
                                                              AND MILinkObject_Storage.DescId = zc_MILinkObject_Storage()
@@ -319,6 +323,7 @@ BEGIN
             
             , _tmp.GoodsId
             , _tmp.GoodsKindId
+            , _tmp.GoodsKindId_complete
             , _tmp.AssetId
             , _tmp.PartionGoods
             , _tmp.PartionGoodsDate_From
@@ -397,7 +402,9 @@ BEGIN
                                                     WHEN _tmpItem.isPartionDate_From = TRUE
                                                      AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
                                                                                            , zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье
-                                                        THEN lpInsertFind_Object_PartionGoods (PartionGoodsDate_From)
+                                                        THEN lpInsertFind_Object_PartionGoods (inOperDate             := _tmpItem.PartionGoodsDate_From
+                                                                                             , inGoodsKindId_complete := _tmpItem.GoodsKindId_complete
+                                                                                              )
                                                     WHEN _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
                                                                                            , zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье
                                                         THEN 0

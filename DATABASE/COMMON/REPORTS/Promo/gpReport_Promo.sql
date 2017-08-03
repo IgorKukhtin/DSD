@@ -91,7 +91,7 @@ BEGIN
                   -- ) AS Movement_PromoPartner
             -- )::TBlob AS RetailName
             --------------------------------------
-          , COALESCE ((SELECT STRING_AGG (DISTINCT COALESCE (Object_Retail.ValueData, MovementString_Retail.ValueData),'; ')
+          , COALESCE ((SELECT STRING_AGG (DISTINCT COALESCE (MovementString_Retail.ValueData, Object_Retail.ValueData),'; ')
                        FROM
                           Movement AS Movement_PromoPartner
                           /*INNER JOIN MovementLinkObject AS MLO_Partner
@@ -113,6 +113,7 @@ BEGIN
                           LEFT OUTER JOIN MovementString AS MovementString_Retail
                                                          ON MovementString_Retail.MovementId = Movement_PromoPartner.Id
                                                         AND MovementString_Retail.DescId = zc_MovementString_Retail()
+                                                        AND MovementString_Retail.ValueData <> ''
                                       
                        WHERE Movement_PromoPartner.ParentId = Movement_Promo.Id
                          AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
