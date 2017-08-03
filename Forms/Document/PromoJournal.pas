@@ -71,6 +71,16 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     MonthPromo: TcxGridDBColumn;
     CheckDate: TcxGridDBColumn;
+    spInsertUpdateMISign: TdsdStoredProc;
+    spInsertUpdateMISign_No: TdsdStoredProc;
+    actInsertUpdateMISign0: TdsdExecStoredProc;
+    actInsertUpdateMISign1: TMultiAction;
+    actInsertUpdateMISignList: TMultiAction;
+    actInsertUpdateMISignNO: TdsdExecStoredProc;
+    actInsertUpdateMISignNO1: TMultiAction;
+    actInsertUpdateMISignNOList: TMultiAction;
+    bbSignList: TdxBarButton;
+    bbSignNOList: TdxBarButton;
   private
     { Private declarations }
   public
