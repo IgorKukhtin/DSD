@@ -99,6 +99,25 @@ BEGIN
          PERFORM lpSetErased_MovementItem (inMovementItemId:= vbId, inUserId:= vbUserId);
      END IF;
 
+     -- для док.Акция, если подписыввет последний пользователь устанавливаем свойства по согласованию
+     IF (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId) = zc_Movement_Promo()
+     THEN
+         IF inIsSign = TRUE
+         THEN
+             IF zfCalc_Word_Split (vbStrIdSign, ',', vbIndex + 1) = '' -- если последний среди подписанных
+             THEN
+                  -- сохранили свойство <Согласовано>
+                  PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Checked(), inMovementId, TRUE);
+                  -- сохранили свойство <дата согласования>
+                  PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Check(), inMovementId, CURRENT_DATE);
+             END IF;
+         ELSE 
+             -- сохранили свойство <Согласовано>
+             PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Checked(), inMovementId, FALSE);
+             -- сохранили свойство <дата согласования>
+             PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Check(), inMovementId, NULL);
+         END IF;
+     END IF;
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (vbId, vbUserId, vbIsInsert);
