@@ -210,6 +210,22 @@ inherited PromoJournalForm: TPromoJournalForm
             Options.Editing = False
             Width = 132
           end
+          object strSign: TcxGridDBColumn
+            Caption = #1060#1048#1054' '#1087#1086#1083#1100#1079'. - '#1077#1089#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+            DataBinding.FieldName = 'strSign'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object strSignNo: TcxGridDBColumn
+            Caption = #1060#1048#1054' '#1087#1086#1083#1100#1079'. - '#1086#1078#1080#1076#1072#1077#1090#1089#1103' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+            DataBinding.FieldName = 'strSignNo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
         end
       end
     end
@@ -262,8 +278,8 @@ inherited PromoJournalForm: TPromoJournalForm
     Top = 323
   end
   inherited ActionList: TActionList
-    Left = 271
-    Top = 322
+    Left = 175
+    Top = 122
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TPromoForm'
       FormNameParam.Value = 'TPromoForm'
@@ -491,6 +507,100 @@ inherited PromoJournalForm: TPromoJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actInsertUpdateMISign0: TdsdExecStoredProc
+      Category = 'Sign'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMISign
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMISign
+        end
+        item
+        end>
+      Caption = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+      Hint = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+      ImageIndex = 58
+    end
+    object actInsertUpdateMISign1: TMultiAction
+      Category = 'Sign'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdateMISign0
+        end>
+      View = cxGridDBTableView
+      Caption = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+      Hint = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+      ImageIndex = 58
+    end
+    object actInsertUpdateMISignList: TMultiAction
+      Category = 'Sign'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdateMISign1
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100' '#1042#1089#1077#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'? '
+      InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1086#1076#1087#1080#1089#1072#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100' '#1042#1089#1077#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
+      Hint = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100' '#1042#1089#1077#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
+      ImageIndex = 58
+    end
+    object actInsertUpdateMISignNO: TdsdExecStoredProc
+      Category = 'Sign'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMISign_No
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMISign_No
+        end
+        item
+        end>
+      Caption = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+      Hint = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+      ImageIndex = 52
+    end
+    object actInsertUpdateMISignNO1: TMultiAction
+      Category = 'Sign'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdateMISignNO
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+      Hint = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+      ImageIndex = 52
+    end
+    object actInsertUpdateMISignNOList: TMultiAction
+      Category = 'Sign'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdateMISignNO1
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100' '#1042#1089#1077#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'? '
+      InfoAfterExecute = #1042#1089#1077#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' '#1087#1086#1076#1087#1080#1089#1100' '#1086#1090#1084#1077#1085#1077#1085#1072' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100' '#1042#1089#1077#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100' '#1042#1089#1077#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
+      ImageIndex = 52
+    end
+  end
+  inherited MasterDS: TDataSource
+    Left = 40
+    Top = 123
+  end
+  inherited MasterCDS: TClientDataSet
+    Left = 8
+    Top = 131
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Promo'
@@ -535,8 +645,11 @@ inherited PromoJournalForm: TPromoJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
+    Left = 72
+    Top = 131
   end
   inherited BarManager: TdxBarManager
+    Top = 123
     DockControlHeights = (
       0
       0
@@ -596,6 +709,18 @@ inherited PromoJournalForm: TPromoJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbSignList'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSignNOList'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton1'
         end
         item
@@ -627,6 +752,14 @@ inherited PromoJournalForm: TPromoJournalForm
       Action = actUpdate_Movement_Promo_Data
       Category = 0
     end
+    object bbSignList: TdxBarButton
+      Action = actInsertUpdateMISignList
+      Category = 0
+    end
+    object bbSignNOList: TdxBarButton
+      Action = actInsertUpdateMISignNOList
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 208
@@ -641,6 +774,10 @@ inherited PromoJournalForm: TPromoJournalForm
       Action = mactUpdate_Movement_Promo_Data_all
     end
   end
+  inherited PeriodChoice: TPeriodChoice
+    Left = 248
+    Top = 184
+  end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
       item
@@ -652,18 +789,18 @@ inherited PromoJournalForm: TPromoJournalForm
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_Promo'
-    Left = 64
-    Top = 208
+    Left = 72
+    Top = 224
   end
   inherited spMovementUnComplete: TdsdStoredProc
     StoredProcName = 'gpUnComplete_Movement_Promo'
-    Left = 64
-    Top = 160
+    Left = 72
+    Top = 184
   end
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_Promo'
-    Left = 64
-    Top = 256
+    Left = 72
+    Top = 272
   end
   inherited FormParams: TdsdFormParams
     Left = 344
@@ -820,5 +957,53 @@ inherited PromoJournalForm: TPromoJournalForm
     PackSize = 1
     Left = 640
     Top = 48
+  end
+  object spInsertUpdateMISign: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_IncomeFuel_Sign'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSign'
+        Value = 'True'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 712
+    Top = 179
+  end
+  object spInsertUpdateMISign_No: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_IncomeFuel_Sign'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSign'
+        Value = 'False'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 704
+    Top = 227
   end
 end

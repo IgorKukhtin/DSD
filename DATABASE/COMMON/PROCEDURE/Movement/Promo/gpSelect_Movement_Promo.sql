@@ -47,6 +47,8 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , ChangePercentName TVarChar    -- Скидка по договору
              , isPromo          Boolean     --Акция (да/нет)
              , Checked          Boolean     --Согласовано (да/нет)
+             , strSign        TVarChar -- ФИО пользователей. - есть эл. подпись
+             , strSignNo      TVarChar -- ФИО пользователей. - ожидается эл. подпись
               )
 
 AS
@@ -99,6 +101,9 @@ BEGIN
           
           , Movement_Promo.isPromo            --Акция
           , Movement_Promo.Checked            --согласовано
+          
+          , tmpSign.strSign
+          , tmpSign.strSignNo
         FROM
             Movement_Promo_View AS Movement_Promo
             INNER JOIN tmpStatus ON Movement_Promo.StatusId = tmpStatus.StatusId
@@ -110,6 +115,8 @@ BEGIN
                                   AND MI_Child.ObjectId = zc_Enum_ConditionPromo_ContractChangePercentOff() -- без учета % скидки по договору
                                   AND MI_Child.isErased   = FALSE
             LEFT JOIN Object AS Object_ChangePercent ON Object_ChangePercent.Id = MI_Child.ObjectId
+
+            LEFT JOIN lpSelect_MI_IncomeFuel_Sign (inMovementId:= Movement_Promo.Id ) AS tmpSign ON tmpSign.Id = Movement_Promo.Id   -- эл.подписи  --
         WHERE
             (
                 inPeriodForOperDate = TRUE
