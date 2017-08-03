@@ -2191,4 +2191,56 @@ object DM: TDM
       Size = 500
     end
   end
+  object cdsJuridicalCollationDocItems: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 248
+    Top = 620
+    object cdsJuridicalCollationDocItemsDocId: TIntegerField
+      FieldName = 'DocId'
+    end
+    object cdsJuridicalCollationDocItemsDocItemId: TIntegerField
+      FieldName = 'DocItemId'
+    end
+    object cdsJuridicalCollationDocItemsGoodsId: TIntegerField
+      FieldName = 'GoodsId'
+    end
+    object cdsJuridicalCollationDocItemsGoodsCode: TIntegerField
+      FieldName = 'GoodsCode'
+    end
+    object cdsJuridicalCollationDocItemsGoodsName: TStringField
+      FieldName = 'GoodsName'
+      Size = 255
+    end
+    object cdsJuridicalCollationDocItemsGoodsKindId: TIntegerField
+      FieldName = 'GoodsKindId'
+    end
+    object cdsJuridicalCollationDocItemsGoodsKindName: TStringField
+      FieldName = 'GoodsKindName'
+      Size = 255
+    end
+    object cdsJuridicalCollationDocItemsPrice: TFloatField
+      FieldName = 'Price'
+    end
+    object cdsJuridicalCollationDocItemsAmount: TFloatField
+      FieldName = 'Amount'
+    end
+    object cdsJuridicalCollationDocItemsisPromo: TBooleanField
+      FieldName = 'isPromo'
+    end
+    object cdsJuridicalCollationDocItemsGoodsFullName: TStringField
+      FieldName = 'GoodsFullName'
+      Size = 510
+    end
+    object cdsJuridicalCollationDocItemsPromoText: TStringField
+      FieldName = 'PromoText'
+      Size = 32
+    end
+    object cdsJuridicalCollationDocItemsPriceText: TStringField
+      FieldName = 'PriceText'
+    end
+    object cdsJuridicalCollationDocItemsAmountText: TStringField
+      FieldName = 'AmountText'
+    end
+  end
 end

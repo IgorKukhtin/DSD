@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpReportMobile_JuridicalCollationItems (
 RETURNS TABLE (MovementId     Integer
              , MovementItemId Integer
              , GoodsId        Integer
+             , GoodsCode      Integer
              , GoodsName      TVarChar
              , GoodsKindId    Integer
              , GoodsKindName  TVarChar
@@ -76,6 +77,7 @@ BEGIN
         SELECT MovementItem.MovementId
              , MovementItem.Id                 AS MovementItemId
              , MovementItem.ObjectId           AS GoodsId
+             , Object_Goods.ObjectCode         AS GoodsCode
              , Object_Goods.ValueData          AS GoodsName
              , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
              , Object_GoodsKind.ValueData      AS GoodsKindName
