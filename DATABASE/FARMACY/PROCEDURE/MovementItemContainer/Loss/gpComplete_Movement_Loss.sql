@@ -1,28 +1,32 @@
 -- Function: gpComplete_Movement_Loss()
 
-DROP FUNCTION IF EXISTS gpComplete_Movement_Loss  (Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpComplete_Movement_Loss  (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_Loss  (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Loss(
     IN inMovementId        Integer               , -- ключ Документа
+    IN inIsCurrentData     Boolean               , -- дата документа текущая Да /Нет
+   OUT outOperDate         TDateTime             , --
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )                              
-RETURNS VOID
+RETURNS TDateTime
 AS
 $BODY$
   DECLARE vbUserId    Integer;
   DECLARE vbGoodsName TVarChar;
+  DECLARE vbInvNumber TVarChar;
   DECLARE vbAmount    TFloat;
   DECLARE vbSaldo     TFloat;
-  DECLARE vbOperDate  TDateTime;
   DECLARE vbUnitId    Integer;
 BEGIN
     vbUserId:= inSession;
     vbGoodsName := '';
-    SELECT Movement.OperDate,
-           MovementLinkObject.ObjectId
-    INTO vbOperDate,
-         vbUnitId
+    SELECT Movement.OperDate           AS OperDate,
+           Movement.InvNumber          AS InvNumber,
+           MovementLinkObject.ObjectId AS UnitId
+    INTO outOperDate
+        ,vbInvNumber
+        ,vbUnitId
     FROM Movement
         INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id
                                      AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit()
@@ -30,9 +34,19 @@ BEGIN
 
     -- дата накладной перемещения должна совпадать с текущей датой.
     -- Если пытаются провести док-т числом позже - выдаем предупреждение
-    IF (vbOperDate > CURRENT_DATE) 
+    IF (outOperDate <> CURRENT_DATE) AND (inIsCurrentData = TRUE)
     THEN
-        RAISE EXCEPTION 'Ошибка. ПОМЕНЯЙТЕ ДАТУ НАКЛАДНОЙ НА ТЕКУЩУЮ.';
+        --RAISE EXCEPTION 'Ошибка. ПОМЕНЯЙТЕ ДАТУ НАКЛАДНОЙ НА ТЕКУЩУЮ.';
+        outOperDate:= CURRENT_DATE;
+        -- сохранили <Документ> c новой датой 
+        PERFORM lpInsertUpdate_Movement (inMovementId, zc_Movement_Loss(), vbInvNumber, outOperDate, NULL);
+        
+    ELSE 
+        IF (outOperDate <> CURRENT_DATE) AND (inIsCurrentData = FALSE)
+         THEN
+              -- проверка прав на проведение задним числом
+              vbUserId:= lpCheckRight (inSession, zc_Enum_Process_CompleteDate_Loss());
+         END IF;
     END IF;
 
   --Проверка на то что бы не списали больше чем есть на остатке
@@ -49,7 +63,7 @@ BEGIN
                                             LEFT OUTER JOIN MovementItemContainer ON Container.Id = MovementItemContainer.ContainerId
                                                                                  AND 
                                                                                  (
-                                                                                    date_trunc('day', MovementItemContainer.Operdate) > vbOperDate
+                                                                                    date_trunc('day', MovementItemContainer.Operdate) > outOperDate
                                                                                  )
                                             JOIN ContainerLinkObject AS CLI_Unit 
                                                                      ON CLI_Unit.containerid = Container.Id
@@ -111,7 +125,7 @@ BEGIN
               WHERE
                   Movement_Inventory.DescId = zc_Movement_Inventory()
                   AND
-                  Movement_Inventory.OperDate >= vbOperDate
+                  Movement_Inventory.OperDate >= outOperDate
                   AND
                   Movement_Inventory.StatusId = zc_Enum_Status_Complete()
               )
@@ -137,4 +151,4 @@ $BODY$
  */
 
 -- тест
--- SELECT * FROM gpComplete_Movement_Loss (inMovementId:= 29207, inSession:= '2')
+-- SELECT * FROM gpComplete_Movement_Loss (inMovementId:= 29207, inIsCurrentData:= TRUe, inSession:= '2')

@@ -1,13 +1,16 @@
 -- Function: gpComplete_Movement_Income()
 
 DROP FUNCTION IF EXISTS gpComplete_Movement_Income (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_Income (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Income(
-    IN inMovementId        Integer              , -- ключ Документа
-   OUT outisDeferred       Boolean              , -- при проведении меняем признак отложен у Заказа
-    IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
+    IN inMovementId          Integer              , -- ключ Документа
+    IN inIsCurrentData       Boolean              , -- дата аптеки - текущая Да /Нет
+   OUT outisDeferred         Boolean              , -- при проведении меняем признак отложен у Заказа
+   OUT outOperDate_Branch    TDateTime            ,
+    IN inSession             TVarChar DEFAULT ''     -- сессия пользователя
 )
-RETURNS Boolean -- VOID
+RETURNS RECORD -- VOID
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -16,7 +19,6 @@ $BODY$
   DECLARE vbJuridicalId     Integer;
   DECLARE vbToId            Integer;
   DECLARE vbOperDate        TDateTime;
-  DECLARE vbOperDate_Branch TDateTime;
   DECLARE vbUnit            Integer;
   DECLARE vbOrderId         Integer;
   DECLARE vbGoodsName       TVarChar;
@@ -33,6 +35,28 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Документ уже проведен.';
      END IF;
+     
+     -- дата аптеки
+     outOperDate_Branch := (SELECT MD_Branch.ValueData
+                         FROM MovementDate AS MD_Branch
+                         WHERE MD_Branch.MovementId = inMovementId
+                           AND MD_Branch.DescId = zc_MovementDate_Branch()
+                         );
+     -- Если пытаются провести док-т задним числом выдаем предупреждение
+     IF (outOperDate_Branch <> CURRENT_DATE) AND (inIsCurrentData = TRUE)
+     THEN
+         --RAISE EXCEPTION 'Ошибка. ПОМЕНЯЙТЕ ДАТУ АПТЕКИ НАКЛАДНОЙ НА ТЕКУЩУЮ.';
+         outOperDate_Branch:= CURRENT_DATE;
+         -- МЕНЯЕМ ДАТУ АПТЕКИ НА ТЕКУЩУЮ
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Branch(), inMovementId, outOperDate_Branch);
+     ELSE 
+         IF (outOperDate_Branch <> CURRENT_DATE) AND (inIsCurrentData = FALSE)
+         THEN
+            -- проверка прав на проведение задним числом
+            vbUserId:= lpCheckRight (inSession, zc_Enum_Process_CompleteDate_Income());
+         END IF;
+     END IF;
+     
 
      -- !!!Проверка чтоб была заполнена колонка Факт кол-во!!!
      vbGoodsName := (SELECT Object_Goods.ValueData 
@@ -67,18 +91,6 @@ BEGIN
                                      AND Movement_Unit.DescId = zc_MovementLinkObject_Unit()
 
     WHERE Movement.Id = inMovementId;
-    
-    vbOperDate_Branch := (SELECT MD_Branch.ValueData
-                          FROM MovementDate AS MD_Branch
-                          WHERE MD_Branch.MovementId = inMovementId
-                            AND MD_Branch.DescId = zc_MovementDate_Branch()
-                          );
-                                                
-    -- Если пытаются провести док-т задним числом выдаем предупреждение
-    IF (vbOperDate_Branch < CURRENT_DATE) 
-    THEN
-        RAISE EXCEPTION 'Ошибка. ПОМЕНЯЙТЕ ДАТУ АПТЕКИ НАКЛАДНОЙ НА ТЕКУЩУЮ.';
-    END IF;
     
     /*IF EXISTS(SELECT 1
               FROM Movement AS Movement_Inventory
@@ -232,7 +244,7 @@ BEGIN
                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                                       AND MovementLinkObject_To.ObjectId = vbToId
      WHERE Movement.DescId   = zc_Movement_OrderExternal()
-       AND Movement.OperDate < vbOperDate_Branch
+       AND Movement.OperDate < outOperDate_Branch
        AND Movement.StatusId in (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete());
      
 
@@ -252,5 +264,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 579, inSession:= '2')
--- SELECT * FROM gpComplete_Movement_Income (inMovementId:= 579, inIsLastComplete:= FALSE, inSession:= '2')
+-- SELECT * FROM gpComplete_Movement_Income (inMovementId:= 579, inIsCurrentData:= FALSE, inSession:= '2')
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 579, inSession:= '2')

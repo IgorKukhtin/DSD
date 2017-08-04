@@ -372,9 +372,9 @@ inherited SendJournalForm: TSendJournalForm
       EditValue = 42005d
     end
     object cxLabel3: TcxLabel
-      Left = 626
+      Left = 610
       Top = 6
-      Caption = #1044#1072#1090#1072' '#1072#1087#1090#1077#1082#1080':'
+      Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072':'
     end
     object deOperDate: TcxDateEdit
       Left = 701
@@ -734,10 +734,18 @@ inherited SendJournalForm: TSendJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inislastcomplete'
+        Name = 'inIsCurrentData'
         Value = True
         DataType = ftBoolean
-        ParamType = ptUnknown
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outOperDate'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 80

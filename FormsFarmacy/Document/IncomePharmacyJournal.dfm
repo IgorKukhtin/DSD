@@ -4,7 +4,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
   ClientWidth = 807
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 823
-  ExplicitHeight = 508
+  ExplicitHeight = 507
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -896,6 +896,13 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsCurrentData'
+        Value = 'TRUE'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

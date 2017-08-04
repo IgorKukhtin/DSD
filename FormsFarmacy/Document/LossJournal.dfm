@@ -124,9 +124,9 @@ inherited LossJournalForm: TLossJournalForm
       EditValue = 42005d
     end
     object cxLabel3: TcxLabel
-      Left = 653
+      Left = 638
       Top = 6
-      Caption = #1044#1072#1090#1072' '#1072#1087#1090#1077#1082#1080':'
+      Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072':'
     end
     object deOperDate: TcxDateEdit
       Left = 729
@@ -477,6 +477,21 @@ inherited LossJournalForm: TLossJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsCurrentData'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outOperDate'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 80

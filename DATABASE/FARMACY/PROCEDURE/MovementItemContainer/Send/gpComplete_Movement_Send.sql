@@ -1,13 +1,15 @@
 -- Function: gpComplete_Movement_Send()
 
-DROP FUNCTION IF EXISTS gpComplete_Movement_Send  (Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpComplete_Movement_Send  (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_Send  (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Send(
     IN inMovementId        Integer               , -- ключ Документа
+    IN inIsCurrentData     Boolean               , -- дата документа текущая Да /Нет
+   OUT outOperDate         TDateTime             , --
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )                              
-RETURNS VOID
+RETURNS TDateTime
 AS
 $BODY$
   DECLARE vbUserId        Integer;
@@ -17,11 +19,10 @@ $BODY$
   DECLARE vbSaldo         TFloat;
   DECLARE vbUnit_From     Integer;
   DECLARE vbUnit_To       Integer;
-  DECLARE vbOperDate      TDateTime;
-
+  
   DECLARE vbTotalSummMVAT TFloat;
   DECLARE vbTotalSummPVAT TFloat;
-
+  DECLARE vbInvNumber TVarChar;
 BEGIN
     vbUserId:= inSession;
 
@@ -29,10 +30,12 @@ BEGIN
     -- параметры документа
     SELECT
         Movement.OperDate,
+        Movement.InvNumber,
         Movement_From.ObjectId AS Unit_From,
         Movement_To.ObjectId AS Unit_To
     INTO
-        vbOperDate,
+        outOperDate,
+        vbInvNumber,
         vbUnit_From,
         vbUnit_To
     FROM Movement
@@ -46,9 +49,19 @@ BEGIN
 
     -- дата накладной перемещения должна совпадать с текущей датой.
     -- Если пытаются провести док-т числом позже - выдаем предупреждение
-    IF (vbOperDate > CURRENT_DATE)  AND vbOperDate <> CURRENT_DATE + INTERVAL '1 MONTH'
+    IF ((outOperDate <> CURRENT_DATE) OR (outOperDate <> CURRENT_DATE + INTERVAL '1 MONTH')) AND (inIsCurrentData = TRUE)
     THEN
-        RAISE EXCEPTION 'Ошибка. ПОМЕНЯЙТЕ ДАТУ НАКЛАДНОЙ НА ТЕКУЩУЮ.';
+         --RAISE EXCEPTION 'Ошибка. ПОМЕНЯЙТЕ ДАТУ НАКЛАДНОЙ НА ТЕКУЩУЮ.';
+        outOperDate:= CURRENT_DATE;
+        -- сохранили <Документ> c новой датой 
+        PERFORM lpInsertUpdate_Movement (inMovementId, zc_Movement_Send(), vbInvNumber, outOperDate, NULL);
+        
+    ELSE
+         IF ((outOperDate <> CURRENT_DATE) OR (outOperDate <> CURRENT_DATE + INTERVAL '1 MONTH')) AND (inIsCurrentData = FALSE)
+         THEN
+             -- проверка прав на проведение задним числом
+             vbUserId:= lpCheckRight (inSession, zc_Enum_Process_CompleteDate_Send());
+         END IF;
     END IF;
 
     --
@@ -114,7 +127,7 @@ BEGIN
     LIMIT 1
    ;
 
-    IF (COALESCE(vbGoodsName,'') <> '') AND vbOperDate <> CURRENT_DATE + INTERVAL '1 MONTH'
+    IF (COALESCE(vbGoodsName,'') <> '') AND outOperDate <> CURRENT_DATE + INTERVAL '1 MONTH'
     THEN
         RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам Кол-во получателя <%> отличается от Факт кол-ва <%>.', vbGoodsName, vbAmount, vbAmountManual;
     END IF;
@@ -140,7 +153,7 @@ BEGIN
               WHERE
                   Movement_Inventory.DescId = zc_Movement_Inventory()
                   AND
-                  Movement_Inventory.OperDate >= vbOperDate
+                  Movement_Inventory.OperDate >= outOperDate
                   AND
                   Movement_Inventory.StatusId = zc_Enum_Status_Complete()
               )
@@ -222,4 +235,4 @@ $BODY$
  */
 
 -- тест
--- SELECT * FROM gpComplete_Movement_Send (inMovementId:= 29207, inSession:= '2')
+-- SELECT * FROM gpComplete_Movement_Send (inMovementId:= 29207, inIsCurrentData:= TRUe,  inSession:= '2')

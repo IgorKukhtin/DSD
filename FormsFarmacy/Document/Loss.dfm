@@ -3,9 +3,8 @@ inherited LossForm: TLossForm
   ClientHeight = 668
   ClientWidth = 800
   AddOnFormData.AddOnFormRefresh.ParentList = 'Loss'
-  ExplicitTop = -214
   ExplicitWidth = 816
-  ExplicitHeight = 707
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -190,6 +189,7 @@ inherited LossForm: TLossForm
     end
     inherited edOperDate: TcxDateEdit
       Left = 266
+      EditValue = 42951d
       Properties.SaveTime = False
       Properties.ShowTime = False
       ExplicitLeft = 266
@@ -295,6 +295,7 @@ inherited LossForm: TLossForm
           StoredProc = spChangeStatus
         end
         item
+          StoredProc = spGet
         end>
     end
     object actGoodsKindChoice: TOpenChoiceForm [13]
@@ -336,6 +337,22 @@ inherited LossForm: TLossForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actComplete: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spMovementComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementComplete
+        end
+        item
+          StoredProc = spGet
+        end>
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1076#1085#1080#1084' '#1095#1080#1089#1083#1086#1084
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1076#1085#1080#1084' '#1095#1080#1089#1083#1086#1084
+      ImageIndex = 12
     end
   end
   inherited MasterDS: TDataSource
@@ -417,6 +434,14 @@ inherited LossForm: TLossForm
         end
         item
           Visible = True
+          ItemName = 'bbComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbAddMask'
         end
         item
@@ -475,6 +500,10 @@ inherited LossForm: TLossForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    object bbComplete: TdxBarButton
+      Action = actComplete
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1175,5 +1204,35 @@ inherited LossForm: TLossForm
       end>
     Left = 648
     Top = 24
+  end
+  object spMovementComplete: TdsdStoredProc
+    StoredProcName = 'gpComplete_Movement_Loss'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inmovementid'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsCurrentData'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outOperDate'
+        Component = edOperDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 72
+    Top = 376
   end
 end
