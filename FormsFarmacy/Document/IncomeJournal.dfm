@@ -12,18 +12,19 @@ inherited IncomeJournalForm: TIncomeJournalForm
     Width = 896
     Height = 402
     TabOrder = 3
+    ExplicitTop = 79
     ExplicitWidth = 896
-    ExplicitHeight = 424
+    ExplicitHeight = 402
     ClientRectBottom = 402
     ClientRectRight = 896
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 896
-      ExplicitHeight = 424
+      ExplicitHeight = 402
       inherited cxGrid: TcxGrid
         Width = 896
         Height = 402
         ExplicitWidth = 896
-        ExplicitHeight = 424
+        ExplicitHeight = 402
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -1363,10 +1364,25 @@ inherited IncomeJournalForm: TIncomeJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inIsCurrentData'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outisDeferred'
         Value = Null
         DataType = ftBoolean
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outOperDate_Branch'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'BranchDate'
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 80
@@ -1457,7 +1473,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
   end
   inherited spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement_Income'
-    Left = 144
+    Left = 96
     Top = 288
   end
   object PrintHeaderCDS: TClientDataSet

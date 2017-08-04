@@ -2,10 +2,8 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 516
   ClientWidth = 1054
-  ExplicitLeft = -327
-  ExplicitTop = -62
   ExplicitWidth = 1070
-  ExplicitHeight = 555
+  ExplicitHeight = 554
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1480,6 +1478,22 @@
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1088#1086#1074#1077#1088#1082#1080' '#1091#1087'. '#1083#1080#1094#1086#1084
       ImageIndex = 26
     end
+    object actComplete: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spMovementComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementComplete
+        end
+        item
+          StoredProc = spGet
+        end>
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1076#1085#1080#1084' '#1095#1080#1089#1083#1086#1084
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1076#1085#1080#1084' '#1095#1080#1089#1083#1086#1084
+      ImageIndex = 12
+    end
   end
   inherited MasterDS: TDataSource
     Top = 448
@@ -1556,6 +1570,10 @@
           BeginGroup = True
           Visible = True
           ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbComplete'
         end
         item
           Visible = True
@@ -1742,6 +1760,10 @@
     end
     object bbPrintReestr: TdxBarButton
       Action = actPrintReestr
+      Category = 0
+    end
+    object bbComplete: TdxBarButton
+      Action = actComplete
       Category = 0
     end
   end
@@ -3251,5 +3273,36 @@
     PackSize = 1
     Left = 338
     Top = 360
+  end
+  object spMovementComplete: TdsdStoredProc
+    StoredProcName = 'gpComplete_Movement_Income'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inmovementid'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsCurrentData'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisDeferred'
+        Value = Null
+        DataType = ftBoolean
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 56
+    Top = 344
   end
 end

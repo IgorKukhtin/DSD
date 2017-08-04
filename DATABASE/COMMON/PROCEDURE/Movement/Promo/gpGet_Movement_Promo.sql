@@ -36,7 +36,8 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , PersonalName     TVarChar    --Ответственный представитель маркетингового отдела	
              , isPromo          Boolean     --Акция (да/нет)
              , Checked          Boolean     --Согласовано (да/нет)
-             
+             , strSign          TVarChar    -- ФИО пользователей. - есть эл. подпись
+             , strSignNo        TVarChar    -- ФИО пользователей. - ожидается эл. подпись
              )
 AS
 $BODY$
@@ -76,7 +77,8 @@ BEGIN
           , NULL::TVarChar                                    AS PersonalName        --Ответственный представитель маркетингового отдела
           , CAST (TRUE  AS Boolean)                           AS isPromo
           , CAST (FALSE AS Boolean)         		      AS Checked
-          	
+          , NULL::TVarChar                                    AS strSign
+          , NULL::TVarChar                                    AS strSignNo
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
             LEFT OUTER JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis();
     ELSE
@@ -111,9 +113,10 @@ BEGIN
           , Movement_Promo.PersonalName       --Ответственный представитель маркетингового отдела
           , Movement_Promo.isPromo            --Акция
           , Movement_Promo.Checked            --согласовано
-             
-        FROM
-            Movement_Promo_View AS Movement_Promo
+          , tmpSign.strSign
+          , tmpSign.strSignNo             
+        FROM Movement_Promo_View AS Movement_Promo
+             LEFT JOIN lpSelect_MI_IncomeFuel_Sign (inMovementId:= Movement_Promo.Id ) AS tmpSign ON tmpSign.Id = Movement_Promo.Id   -- эл.подписи  --
         WHERE Movement_Promo.Id =  inMovementId;
     END IF;
 
