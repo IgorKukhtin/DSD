@@ -516,7 +516,7 @@ type
     GridPanelLayout1: TGridPanelLayout;
     Label51: TLabel;
     Label52: TLabel;
-    bsJuridicalCollation: TBindSourceDB;
+    bsJuridicalCollationDocItems: TBindSourceDB;
     GridPanelLayout2: TGridPanelLayout;
     GridPanelLayout3: TGridPanelLayout;
     tiNewPartner: TTabItem;
@@ -798,6 +798,8 @@ type
     lDocData: TLabel;
     Label101: TLabel;
     Label102: TLabel;
+    bsJuridicalCollation: TBindSourceDB;
+    LinkListControlToField8: TLinkListControlToField;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -2038,6 +2040,7 @@ procedure TfrmMain.lwJuridicalCollationItemClick(const Sender: TObject; const AI
 begin
   lDocData.Text := DM.cdsJuridicalCollationDocType.AsString + ' №' + DM.cdsJuridicalCollationDocNum.AsString +
     ' от ' + FormatDateTime('dd.mm.yyyy', DM.cdsJuridicalCollationDocDate.AsDateTime);
+  DM.GenerateJuridicalCollationDocItems(DM.cdsJuridicalCollationDocId.AsInteger);
   SwitchToForm(tiDocItems, nil);
 end;
 

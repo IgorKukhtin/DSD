@@ -148,11 +148,12 @@ type
     TaskName : string;
 
     DateStart, DateEnd: TDate;
-    JuridicalId, PartnerId, ContractId, PaidKindId: integer;
+    JuridicalId, PartnerId, ContractId, PaidKindId, DocId: Integer;
 
     procedure SetTaskName(AName : string);
 
     function LoadJuridicalCollation: string;
+    function LoadJuridicalCollationDocItems: string;
     function UpdateProgram: string;
     function ShowAllPartnerOnMap: string;
   protected
@@ -766,6 +767,21 @@ type
     tblObject_PartnerShortName: TStringField;
     qryPartnerShortName: TStringField;
     cdsJuridicalCollationDocId: TIntegerField;
+    cdsJuridicalCollationDocItems: TClientDataSet;
+    cdsJuridicalCollationDocItemsDocId: TIntegerField;
+    cdsJuridicalCollationDocItemsDocItemId: TIntegerField;
+    cdsJuridicalCollationDocItemsGoodsId: TIntegerField;
+    cdsJuridicalCollationDocItemsGoodsName: TStringField;
+    cdsJuridicalCollationDocItemsGoodsKindId: TIntegerField;
+    cdsJuridicalCollationDocItemsGoodsKindName: TStringField;
+    cdsJuridicalCollationDocItemsPrice: TFloatField;
+    cdsJuridicalCollationDocItemsAmount: TFloatField;
+    cdsJuridicalCollationDocItemsisPromo: TBooleanField;
+    cdsJuridicalCollationDocItemsGoodsFullName: TStringField;
+    cdsJuridicalCollationDocItemsPromoText: TStringField;
+    cdsJuridicalCollationDocItemsGoodsCode: TIntegerField;
+    cdsJuridicalCollationDocItemsPriceText: TStringField;
+    cdsJuridicalCollationDocItemsAmountText: TStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
     procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);
@@ -852,7 +868,8 @@ type
     procedure LoadAllCash(AStartDate, AEndDate: TDate);
 
     procedure GenerateJuridicalCollation(ADateStart, ADateEnd: TDate;
-      AJuridicalId, APartnerId, AContractId, APaidKindId: integer);
+      AJuridicalId, APartnerId, AContractId, APaidKindId: Integer);
+    procedure GenerateJuridicalCollationDocItems(ADocId: Integer);
 
     function LoadTasks(Active: TActiveMode; SaveData: boolean = true; ADate: TDate = 0; APartnerId: integer = 0): integer;
     function CloseTask(ATasksId: integer; ATaskComment: string): boolean;
@@ -2451,6 +2468,80 @@ begin
   end;
 end;
 
+function TWaitThread.LoadJuridicalCollationDocItems: string;
+var
+  GetStoredProc : TdsdStoredProc;
+begin
+  Result := '';
+
+  DM.cdsJuridicalCollationDocItems.DisableControls;
+
+  GetStoredProc := TdsdStoredProc.Create(nil);
+  try
+    GetStoredProc.StoredProcName := 'gpReportMobile_JuridicalCollationItems';
+    GetStoredProc.OutputType := otDataSet;
+    GetStoredProc.DataSet := TClientDataSet.Create(nil);
+
+    GetStoredProc.Params.AddParam('inMovementId', ftInteger, ptInput, DocId);
+
+    try
+      GetStoredProc.Execute(false, false, true);
+
+      with GetStoredProc.DataSet do
+      begin
+        First;
+
+        while not Eof do
+        begin
+          DM.cdsJuridicalCollationDocItems.Append;
+
+          DM.cdsJuridicalCollationDocItemsDocId.AsInteger := FieldByName('MovementId').AsInteger;
+          DM.cdsJuridicalCollationDocItemsDocItemId.AsInteger := FieldByName('MovementItemId').AsInteger;
+          DM.cdsJuridicalCollationDocItemsGoodsId.AsInteger := FieldByName('GoodsId').AsInteger;
+          DM.cdsJuridicalCollationDocItemsGoodsCode.AsInteger := FieldByName('GoodsCode').AsInteger;
+          DM.cdsJuridicalCollationDocItemsGoodsName.AsString := FieldByName('GoodsName').AsString;
+          DM.cdsJuridicalCollationDocItemsGoodsKindId.AsInteger := FieldByName('GoodsKindId').AsInteger;
+          DM.cdsJuridicalCollationDocItemsGoodsKindName.AsString := FieldByName('GoodsKindName').AsString;
+          DM.cdsJuridicalCollationDocItemsPrice.AsFloat := FieldByName('Price').AsFloat;
+          DM.cdsJuridicalCollationDocItemsAmount.AsFloat := FieldByName('Amount').AsFloat;
+          DM.cdsJuridicalCollationDocItemsisPromo.AsBoolean := FieldByName('isPromo').AsBoolean;
+          DM.cdsJuridicalCollationDocItemsGoodsFullName.AsString := FieldByName('GoodsCode').AsString + ' ' + FieldByName('GoodsName').AsString;
+          DM.cdsJuridicalCollationDocItemsPromoText.AsString := '';
+
+          if Trim(FieldByName('GoodsKindName').AsString) <> '' then
+            DM.cdsJuridicalCollationDocItemsGoodsFullName.AsString :=
+              DM.cdsJuridicalCollationDocItemsGoodsFullName.AsString + ' (' + FieldByName('GoodsKindName').AsString + ')';
+
+          if FieldByName('isPromo').AsBoolean then
+            DM.cdsJuridicalCollationDocItemsPromoText.AsString := 'Акция!';
+
+          DM.cdsJuridicalCollationDocItemsPriceText.AsString := FormatFloat('0.00#', FieldByName('Price').AsFloat);
+          DM.cdsJuridicalCollationDocItemsAmountText.AsString := FormatFloat('0.00', FieldByName('Amount').AsFloat);
+
+          DM.cdsJuridicalCollationDocItems.Post;
+
+          Next;
+        end;
+
+        DM.cdsJuridicalCollationDocItems.First;
+      end;
+
+      Synchronize(procedure
+          begin
+            frmMain.lwJuridicalCollationItems.ScrollViewPos := 0;
+          end);
+    except
+      on E : Exception do
+      begin
+        Result := E.Message;
+      end;
+    end;
+  finally
+    FreeAndNil(GetStoredProc);
+    DM.cdsJuridicalCollationDocItems.EnableControls;
+  end;
+end;
+
 { получение новой версии программы }
 function TWaitThread.UpdateProgram: string;
 var
@@ -2590,6 +2681,12 @@ begin
     begin
       SetTaskName('Формирование акта сверки');
       Res := LoadJuridicalCollation;
+    end
+    else
+    if TaskName = 'JuridicalCollationDocItems' then
+    begin
+      SetTaskName('Получение позиций по документу');
+      Res := LoadJuridicalCollationDocItems;
     end
     else
     if TaskName = 'UpdateProgram' then
@@ -3097,6 +3194,7 @@ begin
   cdsReturnIn.CreateDataSet;
   cdsReturnInItems.CreateDataSet;
   cdsJuridicalCollation.CreateDataSet;
+  cdsJuridicalCollationDocItems.CreateDataSet;
   cdsTasks.CreateDataSet;
 
   IsUploadRouteMember := false;
@@ -5750,6 +5848,17 @@ begin
   WaitThread.PartnerId := APartnerId;
   WaitThread.ContractId := AContractId;
   WaitThread.PaidKindId := APaidKindId;
+  WaitThread.Start;
+end;
+
+procedure TDM.GenerateJuridicalCollationDocItems(ADocId: Integer);
+begin
+  DM.cdsJuridicalCollationDocItems.EmptyDataSet;
+
+  WaitThread := TWaitThread.Create(true);
+  WaitThread.FreeOnTerminate := true;
+  WaitThread.TaskName := 'JuridicalCollationDocItems';
+  WaitThread.DocId := ADocId;
   WaitThread.Start;
 end;
 
