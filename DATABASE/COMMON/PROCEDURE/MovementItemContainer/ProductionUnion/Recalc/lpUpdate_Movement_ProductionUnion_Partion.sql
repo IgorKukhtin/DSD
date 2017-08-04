@@ -232,7 +232,7 @@ BEGIN
                                      INNER JOIN MovementItemContainer AS MIContainer
                                                                       ON MIContainer.ContainerId = tmp.ContainerId
                                                                      AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                                     AND MIContainer.MovementDescId IN (zc_Movement_ProductionUnion(), zc_Movement_Loss())
+                                                                     AND MIContainer.MovementDescId IN (zc_Movement_ProductionUnion(), zc_Movement_Loss(), zc_Movement_Send())
                                                                      AND MIContainer.DescId      = zc_MIContainer_Count()
                                                                      AND MIContainer.isActive    = FALSE
                                      LEFT JOIN MovementItemBoolean AS MIBoolean_isAuto
