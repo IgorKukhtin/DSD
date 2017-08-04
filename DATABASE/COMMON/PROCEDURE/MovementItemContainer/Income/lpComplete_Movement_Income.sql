@@ -757,12 +757,12 @@ BEGIN
      -- формируются Партии товара, ЕСЛИ надо ...
      UPDATE _tmpItem SET PartionGoodsId = CASE WHEN vbMovementDescId = zc_Movement_IncomeAsset()
                                                  OR _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
-                                                   THEN lpInsertFind_Object_PartionGoods (inMovementId    := inMovementId
-                                                                                        , inGoodsId       := _tmpItem.GoodsId
-                                                                                        , inUnitId        := _tmpItem.UnitId_Asset
-                                                                                        , inStorageId     := NULL
-                                                                                        , inInvNumber     := NULL
-                                                                                         )
+                                                    THEN lpInsertFind_Object_PartionGoods (inMovementId    := inMovementId
+                                                                                         , inGoodsId       := _tmpItem.GoodsId
+                                                                                         , inUnitId        := _tmpItem.UnitId_Asset
+                                                                                         , inStorageId     := NULL
+                                                                                         , inInvNumber     := NULL
+                                                                                          )
                                                WHEN vbOperDate >= zc_DateStart_PartionGoods()
                                                 AND vbAccountDirectionId_To = zc_Enum_AccountDirection_20200() -- Запасы + на складах
                                                 AND (_tmpItem.isPartionCount OR _tmpItem.isPartionSumm)
