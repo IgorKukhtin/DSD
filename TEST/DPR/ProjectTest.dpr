@@ -749,7 +749,6 @@ uses
   ConditionPromo in '..\..\Forms\Guides\ConditionPromo.pas' {ConditionPromoForm: TParentForm},
   PromoTest in '..\SOURCE\Movement\All\PromoTest.pas',
   PromoJournal in '..\..\Forms\Document\PromoJournal.pas' {PromoJournalForm: TParentForm},
-  Promo in '..\..\Forms\Document\Promo.pas' {PromoForm: TParentForm},
   PromoPartner in '..\..\Forms\Guides\PromoPartner.pas' {PromoPartnerForm: TParentForm},
   Report_Branch_App7Dialog in '..\..\Forms\Report\Report_Branch_App7Dialog.pas' {Report_Branch_App7DialogForm: TParentForm},
   Report_Branch_App7 in '..\..\Forms\Report\Report_Branch_App7.pas' {Report_Branch_App7Form: TParentForm},
@@ -949,7 +948,8 @@ uses
   GoodsPropertyValueDoc in '..\..\Forms\Guides\GoodsPropertyValueDoc.pas' {GoodsPropertyValueDocForm: TParentForm},
   Report_ReceiptSaleAnalyze in '..\..\Forms\Report\Report_ReceiptSaleAnalyze.pas' {Report_ReceiptSaleAnalyzeForm: TParentForm},
   AssetGoods_Object in '..\..\Forms\Guides\AssetGoods_Object.pas' {AssetGoods_ObjectForm: TParentForm},
-  IFIN_J1201009 in '..\..\SOURCE\MeDOC\IFIN_J1201009.pas';
+  IFIN_J1201009 in '..\..\SOURCE\MeDOC\IFIN_J1201009.pas',
+  Promo in '..\..\Forms\Document\Promo.pas' {PromoForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

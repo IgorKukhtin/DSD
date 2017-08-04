@@ -2345,11 +2345,6 @@
 				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\Promo.pas">
-				<Form>PromoForm</Form>
-				<FormType>dfm</FormType>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\PromoPartner.pas">
 				<Form>PromoPartnerForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -3153,6 +3148,10 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\MeDOC\IFIN_J1201009.pas"/>
+			<DCCReference Include="..\..\Forms\Document\Promo.pas">
+				<Form>PromoForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

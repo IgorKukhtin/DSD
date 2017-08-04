@@ -5,7 +5,6 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -340
   ExplicitWidth = 1382
   ExplicitHeight = 572
   PixelsPerInch = 96
@@ -1273,7 +1272,6 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitTop = 422
     object cxGridDBTableViewReceiptChild: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS

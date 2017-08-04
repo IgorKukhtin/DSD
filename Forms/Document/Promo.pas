@@ -257,6 +257,17 @@ type
     actInsertUpdateMISign1: TMultiAction;
     actInsertUpdateMISignNO1: TMultiAction;
     actRefresh_Get: TdsdDataSetRefresh;
+    SignCDS: TClientDataSet;
+    SignDS: TDataSource;
+    dsdDBViewAddOnSign: TdsdDBViewAddOn;
+    spSelectMISign: TdsdStoredProc;
+    CalcCDS: TClientDataSet;
+    CalcDS: TDataSource;
+    dsdDBViewAddOnCalc: TdsdDBViewAddOn;
+    spSelectCalc: TdsdStoredProc;
+    calcPromoCondition: TcxGridDBColumn;
+    calcProfit: TcxGridDBColumn;
+    Color_PriceIn: TcxGridDBColumn;
   private
     { Private declarations }
   public
