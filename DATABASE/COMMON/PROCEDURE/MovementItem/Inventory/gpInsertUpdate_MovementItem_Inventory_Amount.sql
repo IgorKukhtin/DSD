@@ -10,9 +10,20 @@ RETURNS VOID
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbUnitId Integer;
+   DECLARE vbOperDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Inventory());
+
+     SELECT Movement.OperDate                  AS OperDate
+          , MovementLinkObject_From.ObjectId   AS UnitId
+          INTO vbOperDate, vbUnitId
+     FROM Movement
+      INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                    ON MovementLinkObject_From.MovementId = Movement.Id
+                                   AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()    
+     WHERE Movement.Id = inMovementId;
 
      -- сохранили
      PERFORM lpInsertUpdate_MovementItem_Inventory (ioId                 := COALESCE (tmp.MovementItemId, 0)
@@ -50,13 +61,7 @@ BEGIN
                  FROM (SELECT Container.Id                                               AS ContainerId
                             , Container.ObjectId                                         AS GoodsId
                             , Container.Amount  - COALESCE (SUM (MIContainer.Amount), 0) AS Amount_End
-                       FROM Movement
-                            INNER JOIN MovementLinkObject AS MovementLinkObject_From
-                                                          ON MovementLinkObject_From.MovementId = Movement.Id
-                                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                            INNER JOIN ContainerLinkObject AS CLO_Unit
-                                                           ON CLO_Unit.ObjectId = MovementLinkObject_From.ObjectId
-                                                          AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                       FROM ContainerLinkObject AS CLO_Unit
                             INNER JOIN Container ON Container.Id = CLO_Unit.ContainerId
                                                 AND Container.DescId = zc_Container_Count()
                             LEFT JOIN ContainerLinkObject AS CLO_Account
@@ -64,8 +69,9 @@ BEGIN
                                                          AND CLO_Account.DescId      = zc_ContainerLinkObject_Account()
                             LEFT JOIN MovementItemContainer AS MIContainer
                                                             ON MIContainer.ContainerId = Container.Id
-                                                           AND MIContainer.OperDate > Movement.OperDate -- т.к. остаток на Дата + 1
-                       WHERE Movement.Id =  inMovementId
+                                                           AND MIContainer.OperDate > vbOperDate -- т.к. остаток на Дата + 1
+                       WHERE CLO_Unit.ObjectId = vbUnitId
+                         AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                          AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
                       GROUP BY Container.Id
                               , Container.ObjectId
@@ -130,8 +136,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.08.17         *
  26.04.15                                        * all
- 24.04.15          *
+ 24.04.15         *
 */
 
 -- тест
