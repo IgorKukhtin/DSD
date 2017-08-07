@@ -185,7 +185,23 @@
     Left = 15
     Top = 220
     TabOrder = 22
-    Width = 449
+    Width = 209
+  end
+  object cxLabel10: TcxLabel
+    Left = 255
+    Top = 203
+    Caption = #1056#1072#1081#1086#1085
+  end
+  object ceProvinceCity: TcxButtonEdit
+    Left = 255
+    Top = 220
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 24
+    Width = 209
   end
   object ActionList: TActionList
     Left = 196
@@ -323,9 +339,17 @@
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProvinceCityId'
+        Value = Null
+        Component = GuidesProvinceCity
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 372
+    Left = 404
     Top = 228
   end
   object dsdFormParams: TdsdFormParams
@@ -451,6 +475,21 @@
         Component = edAddress
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProvinceCityId'
+        Value = Null
+        Component = GuidesProvinceCity
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProvinceCityName'
+        Value = Null
+        Component = GuidesProvinceCity
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 164
@@ -542,5 +581,34 @@
       end>
     Left = 152
     Top = 104
+  end
+  object GuidesProvinceCity: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceProvinceCity
+    FormNameParam.Value = 'TProvinceCityForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TProvinceCityForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesProvinceCity
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesProvinceCity
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 336
+    Top = 208
   end
 end

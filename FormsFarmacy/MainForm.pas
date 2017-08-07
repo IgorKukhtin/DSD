@@ -370,6 +370,8 @@ type
     actReport_GoodsRemainsLight: TdsdOpenForm;
     N144: TMenuItem;
     miExportSalesForSupp: TMenuItem;
+    actProvinceCity: TdsdOpenForm;
+    N145: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

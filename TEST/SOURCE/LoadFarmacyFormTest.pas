@@ -83,6 +83,7 @@ type
     procedure LoadProfitLossDirectionFormTest;
     procedure LoadPromoFormTest;
     procedure LoadPromoUnitFormTest;
+    procedure LoadProvinceCityFormTest;
     procedure LoadReasonDifferencesFormTest;
     procedure LoadReportPromoParamsFormTest;
     procedure LoadReportSoldParamsFormTest;
@@ -861,6 +862,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPromoUnitJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoUnitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoUnitForm');
+end;
+
+procedure TLoadFormTest.LoadProvinceCityFormTest;
+begin
+  // Микрорайон в населенном пункте
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProvinceCityForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProvinceCityForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProvinceCityEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProvinceCityEditForm');
 end;
 
 procedure TLoadFormTest.MainFormTest;

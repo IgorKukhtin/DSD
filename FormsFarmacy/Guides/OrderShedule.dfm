@@ -56,6 +56,14 @@ object OrderSheduleForm: TOrderSheduleForm
         Options.Editing = False
         Width = 99
       end
+      object ProvinceCityName: TcxGridDBColumn
+        Caption = #1056#1072#1081#1086#1085
+        DataBinding.FieldName = 'ProvinceCityName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 89
+      end
       object UnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'UnitName'

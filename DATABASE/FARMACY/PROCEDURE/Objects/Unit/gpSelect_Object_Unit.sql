@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Unit(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Address TVarChar
+             , ProvinceCityId Integer, ProvinceCityName TVarChar
              , ParentId Integer, ParentName TVarChar
              , JuridicalName TVarChar, MarginCategoryName TVarChar, isLeaf boolean, isErased boolean
              , RouteId integer, RouteName TVarChar
@@ -38,6 +39,9 @@ BEGIN
       , Object_Unit.ObjectCode                             AS Code
       , Object_Unit.ValueData                              AS Name
       , ObjectString_Unit_Address.ValueData                AS Address
+
+      , Object_ProvinceCity.Id                             AS ProvinceCityId
+      , Object_ProvinceCity.ValueData                      AS ProvinceCityName
 
       , COALESCE(ObjectLink_Unit_Parent.ChildObjectId,0)   AS ParentId
       , Object_Parent.ValueData                            AS ParentName
@@ -79,6 +83,11 @@ BEGIN
                              ON ObjectLink_Unit_MarginCategory.ObjectId = Object_Unit.Id
                             AND ObjectLink_Unit_MarginCategory.DescId = zc_ObjectLink_Unit_MarginCategory()
         LEFT JOIN Object AS Object_MarginCategory ON Object_MarginCategory.Id = ObjectLink_Unit_MarginCategory.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_ProvinceCity
+                             ON ObjectLink_Unit_ProvinceCity.ObjectId = Object_Unit.Id
+                            AND ObjectLink_Unit_ProvinceCity.DescId = zc_ObjectLink_Unit_ProvinceCity()
+        LEFT JOIN Object AS Object_ProvinceCity ON Object_ProvinceCity.Id = ObjectLink_Unit_ProvinceCity.ChildObjectId
         
         LEFT JOIN ObjectBoolean AS ObjectBoolean_isLeaf 
                                 ON ObjectBoolean_isLeaf.ObjectId = Object_Unit.Id
@@ -131,6 +140,7 @@ ALTER FUNCTION gpSelect_Object_Unit(TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 08.08.17         * add ProvinceCity
  06.03.17         * add Address
  31.01.17         * add isMarginCategory
  16.01.17         * add isUploadBadm

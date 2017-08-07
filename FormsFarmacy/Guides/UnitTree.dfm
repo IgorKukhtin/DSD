@@ -183,6 +183,13 @@ object UnitTreeForm: TUnitTreeForm
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
+      object ProvinceCityName: TcxGridDBColumn
+        Caption = #1056#1072#1081#1086#1085
+        DataBinding.FieldName = 'ProvinceCityName'
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

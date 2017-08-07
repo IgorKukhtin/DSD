@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer,
                Value5 TFloat, Value6 TFloat, Value7 TFloat,
                OurJuridicalName TVarChar,
                UnitId Integer, UnitName TVarChar,
+               ProvinceCityId Integer, ProvinceCityName TVarChar,
                JuridicalName TVarChar,
                ContractId Integer, ContractName TVarChar,
                isErased boolean,
@@ -90,10 +91,13 @@ BEGIN
            , Object_OrderShedule.Value6 
            , Object_OrderShedule.Value7 
 
-           , Object_Unit_Juridical.ValueData  AS OurJuridicalName
-           , Object_Unit.Id                   AS UnitId
-           , Object_Unit.ValueData            AS UnitName 
-
+           , Object_Unit_Juridical.ValueData      AS OurJuridicalName
+           , Object_Unit.Id                       AS UnitId
+           , Object_Unit.ValueData                AS UnitName 
+           
+           , Object_ProvinceCity.Id               AS ProvinceCityId
+           , Object_ProvinceCity.ValueData        AS ProvinceCityName
+      
            , Object_Contract_Juridical.ValueData  AS JuridicalName
            , Object_Contract.Id                   AS ContractId
            , Object_Contract.ValueData            AS ContractName 
@@ -143,6 +147,11 @@ BEGIN
                                AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
            LEFT JOIN Object AS Object_Unit_Juridical ON Object_Unit_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId       
 
+           LEFT JOIN ObjectLink AS ObjectLink_Unit_ProvinceCity
+                                ON ObjectLink_Unit_ProvinceCity.ObjectId = Object_Unit.Id
+                               AND ObjectLink_Unit_ProvinceCity.DescId = zc_ObjectLink_Unit_ProvinceCity()
+           LEFT JOIN Object AS Object_ProvinceCity ON Object_ProvinceCity.Id = ObjectLink_Unit_ProvinceCity.ChildObjectId
+        
             --
            LEFT JOIN ObjectFloat AS ObjectFloat_OrderSumm
                                  ON ObjectFloat_OrderSumm.ObjectId = Object_Contract_Juridical.Id
@@ -164,6 +173,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 08.08.17         *
  22.06.17         *
  14.01.17         *
  05.10.16         * parce

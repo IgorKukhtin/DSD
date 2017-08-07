@@ -80,6 +80,7 @@ type
     actInsertUpdate: TdsdUpdateDataSet;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    ProvinceCityName: TcxGridDBColumn;
   private
     { Private declarations }
   public
