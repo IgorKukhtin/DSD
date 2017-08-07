@@ -7,9 +7,10 @@ RETURNS void
 AS $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
+  --
   vbUserId := lpGetUserBySession (inSession);
 
+  -- Протокол пользователя - ошибки raise error и т.п.
   INSERT INTO UserProtocol (UserId, OperDate, ProtocolData)
        SELECT vbUserId, current_timestamp, inProtocolData;
   

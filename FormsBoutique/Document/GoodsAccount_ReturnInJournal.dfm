@@ -64,8 +64,6 @@ object GoodsAccount_ReturnInJournalForm: TGoodsAccount_ReturnInJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = 112
-    ExplicitTop = 49
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -226,6 +224,9 @@ object GoodsAccount_ReturnInJournalForm: TGoodsAccount_ReturnInJournalForm
       object TotalSummChange: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080
         DataBinding.FieldName = 'TotalSummChange'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1074' '#1043#1056#1053
@@ -234,6 +235,9 @@ object GoodsAccount_ReturnInJournalForm: TGoodsAccount_ReturnInJournalForm
       object TotalSummPay: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1074#1086#1079#1074#1088'. '#1086#1087#1083#1072#1090#1099
         DataBinding.FieldName = 'TotalSummPay'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1057#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' '#1043#1056#1053
@@ -454,10 +458,6 @@ object GoodsAccount_ReturnInJournalForm: TGoodsAccount_ReturnInJournalForm
     end
     object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel
-      Category = 0
-    end
-    object bbReCompleteAll: TdxBarButton
-      Action = actReCompleteAll
       Category = 0
     end
     object bbMIContainer: TdxBarButton
@@ -689,21 +689,6 @@ object GoodsAccount_ReturnInJournalForm: TGoodsAccount_ReturnInJournalForm
       ImageIndex = 13
       Status = mtDelete
       DataSource = DataSource
-    end
-    object actReCompleteAll: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spMovementReCompleteAll
-      StoredProcList = <
-        item
-          StoredProc = spMovementReCompleteAll
-        end>
-      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      ImageIndex = 10
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076'?'
-      InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1099'.'
     end
     object actCompleteList: TMultiAction
       Category = 'DSDLib'
@@ -1118,31 +1103,6 @@ object GoodsAccount_ReturnInJournalForm: TGoodsAccount_ReturnInJournalForm
     Left = 448
     Top = 56
   end
-  object spMovementReCompleteAll: TdsdStoredProc
-    StoredProcName = 'gpCompletePeriod_Movement_GoodsAccount'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inStartDate'
-        Value = 41640d
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndtDate'
-        Value = 41640d
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 240
-    Top = 288
-  end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_GoodsAccount_Print'
     DataSet = PrintHeaderCDS
@@ -1207,13 +1167,6 @@ object GoodsAccount_ReturnInJournalForm: TGoodsAccount_ReturnInJournalForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsLastComplete'
-        Value = 'True'
-        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

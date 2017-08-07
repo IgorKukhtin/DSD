@@ -4822,19 +4822,6 @@ begin
         toStoredProc.Params.AddParam ('inCityId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inDiscountKindId',ftInteger,ptInput, 0);
         //
-        toStoredProc_two.StoredProcName:='gpInsertUpdate_Object_Client_Sybase';
-        toStoredProc_two.OutputType := otResult;
-        toStoredProc_two.Params.Clear;
-        toStoredProc_two.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
-        toStoredProc_two.Params.AddParam ('inTotalCount',ftFloat,ptInput, 0);
-        toStoredProc_two.Params.AddParam ('inTotalSumm',ftFloat,ptInput, 0);
-        toStoredProc_two.Params.AddParam ('inTotalSummDiscount',ftFloat,ptInput, 0);
-        toStoredProc_two.Params.AddParam ('inTotalSummPay',ftFloat,ptInput, 0);
-        toStoredProc_two.Params.AddParam ('inLastCount',ftFloat,ptInput, 0);
-        toStoredProc_two.Params.AddParam ('inLastSumm',ftFloat,ptInput, 0);
-        toStoredProc_two.Params.AddParam ('inLastSummDiscount',ftFloat,ptInput, 0);
-        toStoredProc_two.Params.AddParam ('inLastDate',ftDateTime,ptInput, '');
-        toStoredProc_two.Params.AddParam ('inLastUserID',ftInteger,ptInput, 0);
         while not EOF do
         begin
 
@@ -4871,19 +4858,6 @@ begin
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.Unit set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
-             //
-             //toStoredProc_two.Params.ParamByName('ioId').Value:=toStoredProc.Params.ParamByName('ioId').Value;
-             //toStoredProc_two.Params.ParamByName('inTotalCount').Value:=FieldByName('TotalCount').AsFloat;
-             //toStoredProc_two.Params.ParamByName('inTotalSumm').Value:=FieldByName('TotalSumm').AsFloat;
-             //toStoredProc_two.Params.ParamByName('inTotalSummDiscount').Value:=FieldByName('TotalSummDiscount').AsFloat;
-             //toStoredProc_two.Params.ParamByName('inTotalSummPay').Value:=FieldByName('TotalSummPay').AsFloat;
-             //toStoredProc_two.Params.ParamByName('inLastCount').Value:=FieldByName('LastCount').AsFloat;
-             //toStoredProc_two.Params.ParamByName('inLastSumm').Value:=FieldByName('LastSumm').AsFloat;
-             //toStoredProc_two.Params.ParamByName('inLastSummDiscount').Value:=FieldByName('LastSummDiscount').AsFloat;
-             //toStoredProc_two.Params.ParamByName('inLastDate').Value:=FieldByName('LastDate').AsDateTime;
-             //toStoredProc_two.Params.ParamByName('inLastUserID').Value:=FieldByName('LastUserID').AsInteger;
-             //if not myExecToStoredProc_two then ;//exit;
-
              //
              Next;
              Application.ProcessMessages;

@@ -114,6 +114,40 @@ BEGIN
        END IF; -- if NOT FOUND
 
    END IF; -- if COALESCE (ioId, 0) = 0
+
+
+   -- Ведение протокола
+   INSERT INTO ObjectProtocol (ObjectId, OperDate, UserId, ProtocolData, isInsert)
+      SELECT vbUserId, CURRENT_TIMESTAMP, vbUserId
+           , '<XML>'
+          || '<Field FieldName = "Ключ" FieldValue = "'       || COALESCE (ioId :: TVarChar, '') || '"/>'
+          || '<Field FieldName = "Код" FieldValue = "'        || COALESCE (inCode :: TVarChar, '') || '"/>'
+          || '<Field FieldName = "Название" FieldValue = "'   || COALESCE (inName, '') || '"/>'
+          || '<Field FieldName = "Роль" FieldValue = "'       || COALESCE (lfGet_Object_ValueData (inRoleId), '') || '"/>'
+          || '<Field FieldName = "Роль (код)" FieldValue = "' || COALESCE (inRoleCode :: TVarChar, '') || '"/>'
+
+          || '<Field FieldName = "Пользователь - Исключение" FieldValue = "'       || COALESCE (lfGet_Object_ValueData (inUserId_excl), '') || '"/>'
+          || '<Field FieldName = "Пользователь - Исключение (код)" FieldValue = "' || COALESCE (inUserCode_excl :: TVarChar, '') || '"/>'
+
+--          || '<Field FieldName = "Вид Документа" FieldValue = "' || COALESCE (inDescId :: TVarChar, '') || '"/>'
+--          || '<Field FieldName = "Вид Документа - Исключение" FieldValue = "' || COALESCE (inDescId_excl :: TVarChar, '') || '"/>'
+
+          || '<Field FieldName = "Филиал" FieldValue = "'       || COALESCE (lfGet_Object_ValueData (inBranchId), '') || '"/>'
+          || '<Field FieldName = "Филиал (код)" FieldValue = "' || COALESCE (inBranchCode :: TVarChar, '') || '"/>'
+
+          || '<Field FieldName = "ФО" FieldValue = "'       || COALESCE (lfGet_Object_ValueData (inPaidKindId), '') || '"/>'
+          || '<Field FieldName = "ФО (код)" FieldValue = "' || COALESCE (inPaidKindCode :: TVarChar, '') || '"/>'
+
+          || '<Field FieldName = "Дни" FieldValue = "' || COALESCE (inPeriod :: TVarChar, '') || '"/>'
+
+          || '<Field FieldName = "Период закрыт до" FieldValue = "' || zfConvert_DateToString (inCloseDate) || '"/>'
+          || CASE WHEN inCloseDate_excl  > zc_DateStart() THEN '<Field FieldName = "Период закрыт до - Исключение с" FieldValue = "' || zfConvert_DateToString (inCloseDate_excl) || '"/>' ELSE '' END
+          || CASE WHEN inCloseDate_store > zc_DateStart() THEN '<Field FieldName = "Период закрыт до - для кол-во склад" FieldValue = "' || zfConvert_DateToString (inCloseDate_store) || '"/>' ELSE '' END
+
+          || '</XML>' AS ProtocolData
+           , TRUE AS isInsert
+            ;
+
   
 END;
 $BODY$

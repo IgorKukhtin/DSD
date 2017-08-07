@@ -13,11 +13,12 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-IF inSession = '9464' THEN vbUserId := 9464;
-ELSE
-   -- проверка прав пользователя на вызов процедуры
-   vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Object_User()); -- не ошибка, просто будем использовать этот процесс
-END IF;
+    --
+    IF inSession = '9464' THEN vbUserId := 9464;
+    ELSE
+       -- проверка прав пользователя на вызов процедуры
+       vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Object_User()); -- не ошибка, просто будем использовать этот процесс
+    END IF;
 
    -- изменили элемент справочника по значению <Ключ объекта>
    UPDATE PeriodClose SET OperDate  = CURRENT_TIMESTAMP
@@ -26,6 +27,16 @@ END IF;
                         , Period    = '0 DAY' :: INTERVAL
    WHERE Id = inId;
   
+   -- Ведение протокола
+   INSERT INTO ObjectProtocol (ObjectId, OperDate, UserId, ProtocolData, isInsert)
+      SELECT vbUserId, CURRENT_TIMESTAMP, vbUserId
+           , '<XML>'
+          || '<Field FieldName = "Период закрыт до" FieldValue = "' || zfConvert_DateToString (inCloseDate) || '"/>'
+          || '</XML>' AS ProtocolData
+           , TRUE AS isInsert
+            ;
+
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

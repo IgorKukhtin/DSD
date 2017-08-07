@@ -15,6 +15,12 @@ BEGIN
                                , inUserId     := inUserId
                                 );
 
+    -- 6.1. пересчитали "итоговые" суммы по элементам партии продажи - ОБЯЗАТЕЛЬНО после lpComplete
+    PERFORM lpUpdate_MI_Partion_Total_byMovement (inMovementId);
+
+    -- 6.2. меняются ИТОГОВЫЕ суммы по покупателю
+    PERFORM lpUpdate_Object_Client_Total (inMovementId:= inMovementId, inIsComplete:= TRUE, inUserId:= inUserId);
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -24,3 +30,6 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
  18.05.17         * 
 */
+
+-- тест
+-- SELECT * FROM lpComplete_Movement_GoodsAccount (inMovementId:= 1100, inUserId:= zfCalc_UserAdmin() :: Integer)

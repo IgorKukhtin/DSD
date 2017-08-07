@@ -11,15 +11,17 @@ RETURNS VOID
 AS
 $BODY$
 BEGIN
+
      CASE inStatusCode
-         WHEN zc_Enum_StatusCode_UnComplete() THEN
-            PERFORM gpUnComplete_Movement_ReturnIn (inMovementId, inSession);
-         WHEN zc_Enum_StatusCode_Complete() THEN
-            PERFORM gpComplete_Movement_ReturnIn (inMovementId,inSession);
-         WHEN zc_Enum_StatusCode_Erased() THEN
-            PERFORM gpSetErased_Movement_ReturnIn (inMovementId, inSession);
-         ELSE
-            RAISE EXCEPTION 'Нет статуса с кодом <%>', inStatusCode;
+
+         WHEN zc_Enum_StatusCode_UnComplete() THEN PERFORM gpUnComplete_Movement_ReturnIn (inMovementId, inSession);
+
+         WHEN zc_Enum_StatusCode_Complete()   THEN PERFORM gpComplete_Movement_ReturnIn (inMovementId,inSession);
+
+         WHEN zc_Enum_StatusCode_Erased()     THEN PERFORM gpSetErased_Movement_ReturnIn (inMovementId, inSession);
+
+         ELSE RAISE EXCEPTION 'Нет статуса с кодом <%>', inStatusCode;
+
      END CASE;
 
 END;
@@ -31,3 +33,6 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
  14.05.17         *
  */
+
+-- тест
+-- SELECT * FROM gpUpdate_Status_Sale (inMovementId:= 1100, inStatusCode:= zc_Enum_StatusCode_UnComplete(), inSession:= zfCalc_UserAdmin())

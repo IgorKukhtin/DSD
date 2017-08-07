@@ -48,27 +48,27 @@ BEGIN
      -- проверка
      IF COALESCE (inMovementId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.В документе не заполнено значение <Ведомость>.';
+         RAISE EXCEPTION 'Ошибка.Документ не сохрнен.';
      END IF;
      -- проверка
      IF COALESCE (inPersonalId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Не заполнено значение <ФИО (сотрудник)>.';
+         RAISE EXCEPTION 'Ошибка.Не заполнено значение <ФИО (сотрудник)> для Сумма начислено = <%>.', zfConvert_FloatToString (inSummService);
      END IF;
      -- проверка
      IF COALESCE (inInfoMoneyId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Не заполнено значение <УП статья>.';
+         RAISE EXCEPTION 'Ошибка.Не заполнено значение <УП статья> для Сумма начислено = <%>.', zfConvert_FloatToString (inSummService);
      END IF;
      -- проверка
      IF COALESCE (inUnitId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Не заполнено значение <Подразделение>.';
+         RAISE EXCEPTION 'Ошибка.Не заполнено значение <Подразделение> для Сумма начислено = <%>.', zfConvert_FloatToString (inSummService);
      END IF;
      -- проверка
      IF COALESCE (inPositionId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Не заполнено значение <Должность>.';
+         RAISE EXCEPTION 'Ошибка.Не заполнено значение <Должность> для Сумма начислено = <%>.', zfConvert_FloatToString (inSummService);
      END IF;
 
      -- проверка - распределение !!!если это БН!!!
