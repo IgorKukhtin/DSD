@@ -3,8 +3,7 @@ inherited PromoForm: TPromoForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 599
   ClientWidth = 1204
-  ExplicitLeft = -143
-  ExplicitTop = -92
+  ExplicitTop = -61
   ExplicitWidth = 1220
   ExplicitHeight = 637
   PixelsPerInch = 96
@@ -856,7 +855,6 @@ inherited PromoForm: TPromoForm
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsData.Inserting = False
           OptionsView.GroupByBox = False
           OptionsView.HeaderHeight = 40
@@ -912,7 +910,7 @@ inherited PromoForm: TPromoForm
             DataBinding.FieldName = 'AmountRetIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -923,14 +921,15 @@ inherited PromoForm: TPromoForm
             DataBinding.FieldName = 'ContractCondition'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 81
           end
-          object calcAmountOut: TcxGridDBColumn
+          object calcAmountPlanMax: TcxGridDBColumn
             Caption = #1054#1090#1075#1088'. '#1064#1090
-            DataBinding.FieldName = 'AmountOut'
+            DataBinding.FieldName = 'AmountPlanMax'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -939,19 +938,20 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 60
           end
-          object calcSummaOut: TcxGridDBColumn
+          object calcSummaPlanMax: TcxGridDBColumn
             Caption = #1054#1090#1075'.'#1075#1088#1085
-            DataBinding.FieldName = 'SummaOut'
+            DataBinding.FieldName = 'SummaPlanMax'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
-          object calcPriceSale: TcxGridDBColumn
+          object calcPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089#1086#1074#1072#1103' , '#1075#1088#1085
-            DataBinding.FieldName = 'PriceSale'
+            DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -979,13 +979,14 @@ inherited PromoForm: TPromoForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 140
           end
-          object calcProfit: TcxGridDBColumn
+          object calcSummaProfit: TcxGridDBColumn
             Caption = #1055#1088#1080#1073#1099#1083#1100', '#1075#1088#1085
-            DataBinding.FieldName = 'Profit'
+            DataBinding.FieldName = 'SummaProfit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -995,54 +996,63 @@ inherited PromoForm: TPromoForm
           object Color_PriceIn: TcxGridDBColumn
             DataBinding.FieldName = 'Color_PriceIn'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Width = 30
           end
           object Color_RetIn: TcxGridDBColumn
             DataBinding.FieldName = 'Color_RetIn'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Width = 30
           end
           object Color_ContractCond: TcxGridDBColumn
             DataBinding.FieldName = 'Color_ContractCond'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Width = 30
           end
-          object Color_AmountOut: TcxGridDBColumn
-            DataBinding.FieldName = 'Color_AmountOut'
+          object Color_AmountPlanMax: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_AmountPlanMax'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Width = 30
           end
-          object Color_SummaOut: TcxGridDBColumn
-            DataBinding.FieldName = 'Color_SummaOut'
+          object Color_SummaPlanMax: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_SummaPlanMax'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Width = 30
           end
-          object Color_PriceSale: TcxGridDBColumn
-            DataBinding.FieldName = 'Color_PriceSale'
+          object Color_Price: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_Price'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Width = 30
           end
           object Color_PriceWithVAT: TcxGridDBColumn
             DataBinding.FieldName = 'Color_PriceWithVAT'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Width = 30
           end
           object Color_PromoCond: TcxGridDBColumn
             DataBinding.FieldName = 'Color_PromoCond'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Width = 30
           end
-          object Color_Profit: TcxGridDBColumn
-            DataBinding.FieldName = 'Color_Profit'
+          object Color_SummaProfit: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_SummaProfit'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Width = 30
           end
@@ -1589,6 +1599,20 @@ inherited PromoForm: TPromoForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ImageIndex = 0
     end
+    object actUpdateCalcDS: TdsdUpdateDataSet [6]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_Calc
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_Calc
+        end
+        item
+        end>
+      Caption = 'actUpdateCalcDS'
+      DataSource = CalcDS
+    end
     inherited actMISetErased: TdsdUpdateErased
       Category = 'Goods'
       TabSheet = tsMain
@@ -1618,7 +1642,7 @@ inherited PromoForm: TPromoForm
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ShortCut = 0
     end
-    object UpdateConditionDS: TdsdUpdateDataSet [8]
+    object UpdateConditionDS: TdsdUpdateDataSet [9]
       Category = 'Condition'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1644,7 +1668,7 @@ inherited PromoForm: TPromoForm
           StoredProc = spSelect_MovementItem_PromoCondition
         end>
     end
-    object macInsertUpdate_MI_Param: TMultiAction [11]
+    object macInsertUpdate_MI_Param: TMultiAction [12]
       Category = 'Update_MI_Param'
       MoveParams = <>
       ActionList = <
@@ -1668,7 +1692,7 @@ inherited PromoForm: TPromoForm
         item
         end>
     end
-    object actInsertUpdate_MI_Param: TdsdExecStoredProc [14]
+    object actInsertUpdate_MI_Param: TdsdExecStoredProc [15]
       Category = 'Update_MI_Param'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1719,7 +1743,7 @@ inherited PromoForm: TPromoForm
       TabSheet = tsMain
       Enabled = False
     end
-    object actPartnerProtocolOpenForm: TdsdOpenForm [21]
+    object actPartnerProtocolOpenForm: TdsdOpenForm [22]
       Category = 'DSDLib'
       TabSheet = tsPartner
       MoveParams = <>
@@ -1750,7 +1774,7 @@ inherited PromoForm: TPromoForm
         end>
       isShowModal = False
     end
-    object actConditionPromoProtocolOpenForm: TdsdOpenForm [22]
+    object actConditionPromoProtocolOpenForm: TdsdOpenForm [23]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -1782,7 +1806,7 @@ inherited PromoForm: TPromoForm
         end>
       isShowModal = False
     end
-    object actAdvertisingProtocolOpenForm: TdsdOpenForm [23]
+    object actAdvertisingProtocolOpenForm: TdsdOpenForm [24]
       Category = 'DSDLib'
       TabSheet = tsAdvertising
       MoveParams = <>
@@ -4303,8 +4327,8 @@ inherited PromoForm: TPromoForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 968
-    Top = 275
+    Left = 976
+    Top = 291
   end
   object SignCDS: TClientDataSet
     Aggregates = <>
@@ -4401,8 +4425,8 @@ inherited PromoForm: TPromoForm
         ColorValueList = <>
       end
       item
-        ColorColumn = calcAmountOut
-        BackGroundValueColumn = Color_AmountOut
+        ColorColumn = calcAmountPlanMax
+        BackGroundValueColumn = Color_AmountPlanMax
         ColorValueList = <>
       end
       item
@@ -4411,13 +4435,13 @@ inherited PromoForm: TPromoForm
         ColorValueList = <>
       end
       item
-        ColorColumn = calcPriceSale
-        BackGroundValueColumn = Color_PriceSale
+        ColorColumn = calcPrice
+        BackGroundValueColumn = Color_Price
         ColorValueList = <>
       end
       item
-        ColorColumn = calcSummaOut
-        BackGroundValueColumn = Color_SummaOut
+        ColorColumn = calcSummaPlanMax
+        BackGroundValueColumn = Color_SummaPlanMax
         ColorValueList = <>
       end
       item
@@ -4426,8 +4450,8 @@ inherited PromoForm: TPromoForm
         ColorValueList = <>
       end
       item
-        ColorColumn = calcProfit
-        BackGroundValueColumn = Color_Profit
+        ColorColumn = calcSummaProfit
+        BackGroundValueColumn = Color_SummaProfit
         ColorValueList = <>
       end>
     ColumnAddOnList = <>
@@ -4465,5 +4489,84 @@ inherited PromoForm: TPromoForm
     PackSize = 1
     Left = 1068
     Top = 392
+  end
+  object spInsertUpdate_Calc: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_PromoGoods_Calc'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = CalcCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceIn'
+        Value = Null
+        Component = CalcCDS
+        ComponentItem = 'PriceIn'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNum'
+        Value = Null
+        Component = CalcCDS
+        ComponentItem = 'Num'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountPlanMax'
+        Value = Null
+        Component = CalcCDS
+        ComponentItem = 'AmountPlanMax'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummaPlanMax'
+        Value = Null
+        Component = CalcCDS
+        ComponentItem = 'SummaPlanMax'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountRetIn'
+        Value = Null
+        Component = CalcCDS
+        ComponentItem = 'AmountRetIn'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountContractCondition'
+        Value = Null
+        Component = CalcCDS
+        ComponentItem = 'ContractCondition'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummaProfit'
+        Value = Null
+        Component = CalcCDS
+        ComponentItem = 'SummaProfit'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 800
+    Top = 408
   end
 end

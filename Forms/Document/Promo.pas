@@ -266,8 +266,10 @@ type
     dsdDBViewAddOnCalc: TdsdDBViewAddOn;
     spSelectCalc: TdsdStoredProc;
     calcPromoCondition: TcxGridDBColumn;
-    calcProfit: TcxGridDBColumn;
+    calcSummaProfit: TcxGridDBColumn;
     Color_PriceIn: TcxGridDBColumn;
+    spInsertUpdate_Calc: TdsdStoredProc;
+    actUpdateCalcDS: TdsdUpdateDataSet;
   private
     { Private declarations }
   public
