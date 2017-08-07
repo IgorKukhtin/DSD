@@ -93,6 +93,26 @@ BEGIN
                          WHERE (MLO_From.ObjectId = vbUnitId OR vbUnitId = 0)
                            AND (MLO_Contract.ObjectId = tmpPartner.ContractId OR tmpPartner.ContractId = 0)
                         )
+  -- док.возвраты
+  , tmpMovement_ReturnIn AS (SELECT Movement.Id AS MovementId
+                             FROM _tmpPartner_new AS tmpPartner
+                                  INNER JOIN MovementLinkObject AS MLO_From ON MLO_From.ObjectId = tmpPartner.PartnerId
+                                                                           AND MLO_From.DescId   = zc_MovementLinkObject_From()
+                                  INNER JOIN MovementDate AS MovementDate_OperDatePartner
+                                                          ON MovementDate_OperDatePartner.ValueData BETWEEN vbStartDate - INTERVAL '0 DAY' AND vbEndDate + INTERVAL '0 DAY'
+                                                         AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                                                         AND MovementDate_OperDatePartner.MovementId = MLO_From.MovementId
+                                  INNER JOIN Movement ON Movement.Id       = MLO_From.MovementId
+                                                     AND Movement.DescId   = zc_Movement_ReturnIn()
+                                                     AND Movement.StatusId = zc_Enum_Status_Complete()
+                                  LEFT JOIN MovementLinkObject AS MLO_To ON MLO_To.MovementId = MLO_From.MovementId
+                                                                        AND MLO_To.DescId = zc_MovementLinkObject_To()
+                                  LEFT JOIN MovementLinkObject AS MLO_Contract ON MLO_Contract.MovementId = MLO_From.MovementId
+                                                                              AND MLO_Contract.DescId = zc_MovementLinkObject_Contract()
+                             WHERE (MLO_To.ObjectId = vbUnitId OR vbUnitId = 0)
+                               AND (MLO_Contract.ObjectId = tmpPartner.ContractId OR tmpPartner.ContractId = 0)
+                            )
+                        
   , tmpMI_promo_all AS (SELECT MI_PromoGoods.Id AS MovementItemId
                              , MI_PromoGoods.GoodsId
                              -- !!!, COALESCE (MI_PromoGoods.GoodsKindId, 0) AS GoodsKindId
@@ -133,6 +153,29 @@ BEGIN
                                                          AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
                          GROUP BY tmpMI_promo.MovementItemId
                         )
+   
+   , tmpMI_ReturnIn AS (SELECT tmpMI_promo.MovementItemId AS MovementItemId_promo
+                             , SUM (CASE WHEN COALESCE (MIFloat_PromoMovement.MovementItemId, 0) = 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) AS AmountPartner
+                        FROM tmpMovement_ReturnIn
+                             INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement_ReturnIn.MovementId
+                                                    AND MovementItem.DescId     = zc_MI_Master()
+                                                    AND MovementItem.isErased   = FALSE
+                             LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                                         ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+                                                        AND MIFloat_PromoMovement.ValueData <> 0
+                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                             AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                             INNER JOIN tmpMI_promo ON tmpMI_promo.GoodsId      = MovementItem.ObjectId
+                                                   AND (tmpMI_promo.GoodsKindId = MILinkObject_GoodsKind.ObjectId OR tmpMI_promo.GoodsKindId = 0)
+                             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                         ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_AmountPartner.DescId         = zc_MIFloat_AmountPartner()
+                        GROUP BY tmpMI_promo.MovementItemId
+                       )
+                     
+                     
                 SELECT MIN (tmp.tmpId)
                 FROM (SELECT CASE lpInsertUpdate_MovementItemFloat (inDescId        := zc_MIFloat_AmountReal()
                                                                   , inMovementItemId:= tmpMI_promo.MovementItemId
@@ -143,6 +186,16 @@ BEGIN
                              END AS tmpId
                       FROM tmpMI_promo
                            LEFT JOIN tmpMI_sale ON tmpMI_sale.MovementItemId_promo = tmpMI_promo.MovementItemId
+                     UNION
+                      SELECT CASE lpInsertUpdate_MovementItemFloat (inDescId        := zc_MIFloat_AmountRetIn()
+                                                                  , inMovementItemId:= tmpMI_promo.MovementItemId
+                                                                  , inValueData     := COALESCE (tmpMI_ReturnIn.AmountPartner, 0)
+                                                                   )
+                                   WHEN TRUE THEN 0
+                                   ELSE -1 -- т.е. показать ошибку
+                             END AS tmpId
+                      FROM tmpMI_promo
+                           LEFT JOIN tmpMI_ReturnIn ON tmpMI_ReturnIn.MovementItemId_promo = tmpMI_promo.MovementItemId
                      ) AS tmp
                );     
 END;
