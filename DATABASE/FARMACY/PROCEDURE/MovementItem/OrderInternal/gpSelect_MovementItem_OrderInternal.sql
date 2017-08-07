@@ -413,6 +413,7 @@ BEGIN
 
            , tmpMI.ConditionsKeepName
 
+           , CASE WHEN (COALESCE(OrderSheduleListToday.DOW,  0) = 0 AND COALESCE(OrderSheduleListToday.DoW_D,0) = 0) THEN zc_Color_White() ELSE 12910591 END  AS OrderShedule_Color   -- бледно желтый /*14024703*//*12320767*/
        FROM tmpMI        --_tmpOrderInternal_MI AS
             LEFT JOIN (SELECT tmpMI.MIMasterId, CASE WHEN COUNT (*) > 1 THEN FALSE ELSE TRUE END AS isOneJuridical
                        FROM tmpMI_Child AS tmpMI
@@ -1274,7 +1275,8 @@ BEGIN
            , OrderSheduleList.OperDate_Dostavka                 ::TVarChar   AS OperDate_Dostavka
 
            , COALESCE(tmpGoodsConditionsKeep.ConditionsKeepName, '') ::TVarChar  AS ConditionsKeepName
-          
+
+           , CASE WHEN (COALESCE(OrderSheduleListToday.DOW,  0) = 0 AND COALESCE(OrderSheduleListToday.DoW_D,0) = 0) THEN zc_Color_White() ELSE 12910591 END  AS OrderShedule_Color   -- бледно желтый
        FROM tmpData AS tmpMI
 
             LEFT JOIN tmpPriceView AS Object_Price_View ON tmpMI.GoodsId                    = Object_Price_View.GoodsId

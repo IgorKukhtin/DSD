@@ -3,6 +3,7 @@ inherited PromoForm: TPromoForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 599
   ClientWidth = 1204
+  ExplicitTop = -92
   ExplicitWidth = 1220
   ExplicitHeight = 637
   PixelsPerInch = 96
@@ -531,9 +532,6 @@ inherited PromoForm: TPromoForm
           object tsPromoPartnerList: TcxTabSheet
             Caption = '2.2. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             ImageIndex = 1
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object grPartnerList: TcxGrid
               Left = 0
               Top = 0
@@ -1057,6 +1055,12 @@ inherited PromoForm: TPromoForm
             VisibleForCustomization = False
             Width = 30
           end
+          object calcGroupNum: TcxGridDBColumn
+            DataBinding.FieldName = 'GroupNum'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 30
+          end
         end
         object cxGridLevel2: TcxGridLevel
           GridView = cxGridDBTableViewCalc
@@ -1066,9 +1070,6 @@ inherited PromoForm: TPromoForm
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -1627,6 +1628,46 @@ inherited PromoForm: TPromoForm
       ShortCut = 0
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <'#1058#1086#1074#1072#1088'> ?'
     end
+    object actPrint_Calc: TdsdPrintAction [8]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1083#1072#1085#1080#1088#1091#1077#1084#1099#1077' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1072#1082#1094#1080#1080
+      Hint = #1055#1083#1072#1085#1080#1088#1091#1077#1084#1099#1077' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1072#1082#1094#1080#1080
+      ImageIndex = 15
+      DataSets = <
+        item
+          UserName = 'frxHead'
+          IndexFieldNames = 'GroupNum;GoodsName;Num'
+          GridView = cxGridDBTableViewCalc
+        end>
+      Params = <
+        item
+          Name = 'InvNumber'
+          Value = ''
+          Component = edInvNumber
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Comment'
+          Value = ''
+          Component = edComment
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CommentMain'
+          Value = ''
+          Component = edCommentMain
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1083#1072#1085#1080#1088#1091#1077#1084#1099#1077' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1072#1082#1094#1080#1080
+      ReportNameParam.Value = #1055#1083#1072#1085#1080#1088#1091#1077#1084#1099#1077' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1072#1082#1094#1080#1080
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+    end
     inherited actMISetUnErased: TdsdUpdateErased
       Category = 'Goods'
       TabSheet = tsMain
@@ -1640,7 +1681,7 @@ inherited PromoForm: TPromoForm
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ShortCut = 0
     end
-    object UpdateConditionDS: TdsdUpdateDataSet [9]
+    object UpdateConditionDS: TdsdUpdateDataSet [10]
       Category = 'Condition'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1666,7 +1707,7 @@ inherited PromoForm: TPromoForm
           StoredProc = spSelect_MovementItem_PromoCondition
         end>
     end
-    object macInsertUpdate_MI_Param: TMultiAction [12]
+    object macInsertUpdate_MI_Param: TMultiAction [13]
       Category = 'Update_MI_Param'
       MoveParams = <>
       ActionList = <
@@ -1690,7 +1731,7 @@ inherited PromoForm: TPromoForm
         item
         end>
     end
-    object actInsertUpdate_MI_Param: TdsdExecStoredProc [15]
+    object actInsertUpdate_MI_Param: TdsdExecStoredProc [16]
       Category = 'Update_MI_Param'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1740,7 +1781,7 @@ inherited PromoForm: TPromoForm
     inherited MovementItemProtocolOpenForm: TdsdOpenForm
       TabSheet = tsMain
     end
-    object actPartnerProtocolOpenForm: TdsdOpenForm [22]
+    object actPartnerProtocolOpenForm: TdsdOpenForm [23]
       Category = 'DSDLib'
       TabSheet = tsPartner
       MoveParams = <>
@@ -1771,7 +1812,7 @@ inherited PromoForm: TPromoForm
         end>
       isShowModal = False
     end
-    object actConditionPromoProtocolOpenForm: TdsdOpenForm [23]
+    object actConditionPromoProtocolOpenForm: TdsdOpenForm [24]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -1802,7 +1843,7 @@ inherited PromoForm: TPromoForm
         end>
       isShowModal = False
     end
-    object actAdvertisingProtocolOpenForm: TdsdOpenForm [24]
+    object actAdvertisingProtocolOpenForm: TdsdOpenForm [25]
       Category = 'DSDLib'
       TabSheet = tsAdvertising
       MoveParams = <>
@@ -2610,6 +2651,14 @@ inherited PromoForm: TPromoForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end>
     end
@@ -2689,6 +2738,10 @@ inherited PromoForm: TPromoForm
     end
     object bbSignNO: TdxBarButton
       Action = actInsertUpdateMISignNO1
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = actPrint_Calc
       Category = 0
     end
   end

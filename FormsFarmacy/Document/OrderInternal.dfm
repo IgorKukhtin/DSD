@@ -2,10 +2,9 @@ inherited OrderInternalForm: TOrderInternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 532
   ClientWidth = 1229
-  ExplicitLeft = -532
-  ExplicitTop = -78
+  ExplicitLeft = -140
   ExplicitWidth = 1245
-  ExplicitHeight = 571
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -490,6 +489,12 @@ inherited OrderInternalForm: TOrderInternalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
+          end
+          object OrderShedule_Color: TcxGridDBColumn
+            DataBinding.FieldName = 'OrderShedule_Color'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 30
           end
         end
       end
@@ -1299,6 +1304,10 @@ inherited OrderInternalForm: TOrderInternalForm
         ColorColumn = PartionGoodsDate
         ValueColumn = PartionGoodsDateColor
         ColorValueList = <>
+      end
+      item
+        BackGroundValueColumn = OrderShedule_Color
+        ColorValueList = <>
       end>
     SummaryItemList = <
       item
@@ -1310,8 +1319,8 @@ inherited OrderInternalForm: TOrderInternalForm
         DataSummaryItemIndex = 5
       end>
     SearchAsFilter = False
-    Left = 470
-    Top = 161
+    Left = 454
+    Top = 145
   end
   inherited PopupMenu: TPopupMenu
     Left = 24
