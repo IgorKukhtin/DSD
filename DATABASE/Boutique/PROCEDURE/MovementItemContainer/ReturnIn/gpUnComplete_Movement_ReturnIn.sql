@@ -13,7 +13,7 @@ $BODY$
   DECLARE vbStatusId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_ReturnIn());
+    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_UnComplete_ReturnIn());
     vbUserId:= lpGetUserBySession (inSession);
 
     -- тек.статус документа
@@ -24,12 +24,12 @@ BEGIN
                                  , inUserId     := vbUserId);
 
     -- пересчитали "итоговые" суммы по элементам партии продажи
-    PERFORM lpUpdate_MI_Partion_Total_byMovement(inMovementId);
+    PERFORM lpUpdate_MI_Partion_Total_byMovement (inMovementId);
 
-    -- Если был статус Проведен нужно пересчитать расчетные суммы по покупателю
+    -- Если был статус Проведен
     IF vbStatusId = zc_Enum_Status_Complete() 
     THEN 
-         -- сохраняем расчетные суммы по покупателю
+         -- меняются ИТОГОВЫЕ суммы по покупателю
          PERFORM lpUpdate_Object_Client_Total (inMovementId:= inMovementId, inIsComplete:= FALSE, inUserId:= vbUserId);
     END IF;
       
@@ -43,3 +43,6 @@ $BODY$
  23.07.17         *
  14.05.17         *
 */
+
+-- тест
+-- SELECT * FROM gpUnComplete_Movement_ReturnIn (inMovementId:= 1100, inSession:= zfCalc_UserAdmin())

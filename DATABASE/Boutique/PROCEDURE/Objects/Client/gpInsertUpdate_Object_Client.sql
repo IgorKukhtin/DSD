@@ -1,5 +1,7 @@
 -- Покупатели
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Client_Sybase (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Client_Sybase (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Client (Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Client(
@@ -35,11 +37,11 @@ BEGIN
    -- Нужен для загрузки из Sybase т.к. там код = 0 
    IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) = 0  THEN  ioCode := NEXTVAL ('Object_Client_seq'); 
    ELSEIF ioCode = 0
-         THEN ioCode := COALESCE ((SELECT ObjectCode FROM Object WHERE Id = ioId),0);
+         THEN ioCode:= (SELECT ObjectCode FROM Object WHERE Id = ioId);
    END IF; 
 
-   -- проверка прав уникальности для свойства <Наименование >
-   --PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Client(), inName);
+   -- проверка прав уникальности для свойства <Название>
+   -- PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Client(), inName);
 
 
    -- сохранили <Объект>
@@ -83,7 +85,6 @@ $BODY$
 13.05.17                                                           *
 02.03.17                                                           *
 01.03.17                                                           *
-
 */
 
 -- тест

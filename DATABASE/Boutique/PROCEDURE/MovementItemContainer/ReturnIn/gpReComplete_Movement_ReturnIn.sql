@@ -12,25 +12,22 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_ReturnIn());
+    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_ReturnIn());
     vbUserId:= lpGetUserBySession (inSession);
-    
+
     -- только если документ проведен
-    IF EXISTS(
-                SELECT 1
-                FROM Movement
-                WHERE Id = inMovementId
-                  AND StatusId = zc_Enum_Status_Complete()
-              )
+    IF EXISTS (SELECT 1 FROM Movement WHERE Id = inMovementId AND StatusId = zc_Enum_Status_Complete())
     THEN
-        --распроводим документ
-        PERFORM gpUpdate_Status_ReturnIn(inMovementId := inMovementId,
-                                         inStatusCode := zc_Enum_StatusCode_UnComplete(),
-                                         inSession    := inSession);
-        --Проводим документ
-        PERFORM gpUpdate_Status_ReturnIn(inMovementId := inMovementId,
-                                         inStatusCode := zc_Enum_StatusCode_Complete(),
-                                         inSession    := inSession);
+        -- распроводим документ
+        PERFORM gpUpdate_Status_ReturnIn (inMovementId := inMovementId
+                                        , inStatusCode := zc_Enum_StatusCode_UnComplete()
+                                        , inSession    := inSession
+                                         );
+        -- Проводим документ
+        PERFORM gpUpdate_Status_ReturnIn (inMovementId := inMovementId
+                                        , inStatusCode := zc_Enum_StatusCode_Complete()
+                                        , inSession    := inSession
+                                         );
     END IF;
 END;
 $BODY$
@@ -41,3 +38,6 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Вoробкало А.А.
  14.05.17         *
 */
+
+-- тест
+-- SELECT * FROM gpReComplete_Movement_ReturnIn (inMovementId:= 1100, inSession:= zfCalc_UserAdmin())

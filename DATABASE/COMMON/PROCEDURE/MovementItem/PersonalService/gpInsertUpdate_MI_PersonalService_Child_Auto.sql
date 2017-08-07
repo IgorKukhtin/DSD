@@ -117,11 +117,16 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Personal_Main
                                   ON ObjectBoolean_Personal_Main.ObjectId = COALESCE (tmp1.PersonalId, COALESCE (tmp2.PersonalId, tmp3.PersonalId))
                                  AND ObjectBoolean_Personal_Main.DescId = zc_ObjectBoolean_Personal_Main()
-      WHERE Object_Member.DescId = zc_Object_Member()
-        AND Object_Member.Id =  inMemberId
-      ORDER BY CASE WHEN ObjectBoolean_Personal_Main.ValueData = TRUE THEN 0 ELSE 1 END, COALESCE (tmp1.PersonalId, COALESCE (tmp2.PersonalId, tmp3.PersonalId))
-      LIMIT 1
-      ;
+     WHERE Object_Member.DescId = zc_Object_Member()
+       AND Object_Member.Id =  inMemberId
+     ORDER BY CASE WHEN ObjectBoolean_Personal_Main.ValueData = TRUE THEN 0 ELSE 1 END, COALESCE (tmp1.PersonalId, COALESCE (tmp2.PersonalId, tmp3.PersonalId))
+     LIMIT 1
+     ;
+     -- проверка
+     IF COALESCE (vbPersonalId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не определно <ФИО (сотрудник)> у <%> для Сумма = <%>.', lfGet_Object_ValueData (inMemberId), zfConvert_FloatToString (inAmount);
+     END IF;
 
 
     -- поиск документа (ключ - Месяц начислений + ведомость) - ТОЛЬКО ОДИН
@@ -394,4 +399,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpInsertUpdate_MI_PersonalService_Child_Auto(inFromId := 183292 , inToId := 183290 , inOperDate := ('01.06.2016')::TDateTime , inGoodsId := 3022 , inRemainsMCS_result := 0.8 , inPrice_from := 155.1 , inPrice_to := 155.1 ,  inSession := '3');
+-- SELECT * FROM gpInsertUpdate_MI_PersonalService_Child_Auto(inFromId := 183292 , inToId := 183290 , inOperDate := ('01.06.2016')::TDateTime , inGoodsId := 3022 , inRemainsMCS_result := 0.8 , inPrice_from := 155.1 , inPrice_to := 155.1 ,  inSession := '3');

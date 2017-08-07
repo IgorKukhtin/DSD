@@ -80,7 +80,7 @@ BEGIN
    WHERE Object_Client.Id = vbClientId;
 
    -- получаем данные док.продажи : кол-во, Сумма, Сумма скидки, Сумма оплаты, дата, пользователь
-   SELECT Movement.OperDate                                                 AS OperDate            -- дата документа
+   SELECT COALESCE (MD_Insert.ValueData, Movement.OperDate)                 AS OperDate            -- дата/время создания, а уже потом - дата документа
         , COALESCE (CASE WHEN Movement.DescId = zc_Movement_GoodsAccount() THEN 0 ELSE MovementFloat_TotalCount.ValueData END, 0)         * vbKoef AS TotalCount          -- кол-во
         , COALESCE (CASE WHEN Movement.DescId = zc_Movement_GoodsAccount() THEN 0 ELSE MovementFloat_TotalSummPriceList.ValueData END, 0) * vbKoef AS TotalSummPriceList  -- Сумма
         , COALESCE (MovementFloat_TotalSummChange.ValueData, 0)    * vbKoef AS TotalSummChange     -- Сумма скидки
@@ -107,6 +107,11 @@ BEGIN
         LEFT JOIN MovementLinkObject AS MLO_Insert
                                      ON MLO_Insert.MovementId = Movement.Id
                                     AND MLO_Insert.DescId     = zc_MovementLinkObject_Insert()
+        LEFT JOIN MovementDate AS MD_Insert
+                               ON MD_Insert.MovementId = Movement.Id
+                              AND MD_Insert.DescId     = zc_MovementDate_Insert()
+
+                                    
         LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
    WHERE Movement.Id = inMovementId;
      
@@ -122,7 +127,7 @@ BEGIN
         
         
    -- Если это продажа и дата документа больше сохраненной в клиенте обновляем данные последней покупки
-   IF vbMovementDescId = zc_Movement_Sale() AND inIsComplete = TRUE AND vbOperDate >= vbLastDate_Client
+   IF vbMovementDescId = zc_Movement_Sale() AND inIsComplete = TRUE AND vbOperDate > vbLastDate_Client
    THEN
        -- сохранили <Количество в последней покупке>
        PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Client_LastCount(), vbClientId, vbTotalCount);
@@ -137,25 +142,29 @@ BEGIN
    END IF;
    
    -- Если это док.продажа распроводится/удаляет и дата документа больше сохраненной в клиенте обновляем данные последней покупки
-   IF vbMovementDescId = zc_Movement_Sale() AND inIsComplete = FALSE AND vbOperDate >= vbLastDate_Client
+   IF vbMovementDescId = zc_Movement_Sale() AND inIsComplete = FALSE AND vbOperDate > vbLastDate_Client
    THEN
        -- находим данные по последнему док.продажи
-       SELECT Movement.OperDate                                        AS OperDate            -- дата документа
+       SELECT COALESCE (MD_Insert.ValueData, Movement.OperDate)        AS OperDate            -- дата/время создания, а уже потом - дата документа
             , COALESCE (MovementFloat_TotalCount.ValueData, 0)         AS TotalCount          -- кол-во
             , COALESCE (MovementFloat_TotalSummPriceList.ValueData, 0) AS TotalSummPriceList  -- Сумма
             , COALESCE (MovementFloat_TotalSummChange.ValueData, 0)    AS TotalSummChange     -- Сумма скидки
             , COALESCE (MovementFloat_TotalSummPay.ValueData, 0)       AS TotalSummPay        -- Сумма оплаты
             , MLO_Insert.ObjectId                                      AS UserId              -- Пользователь
               INTO vbOperDate, vbTotalCount, vbTotalSummPriceList, vbTotalSummChange, vbTotalSummPay, vbUserId
-       FROM (SELECT Movement.*
-                  , ROW_NUMBER() OVER (ORDER BY Movement.Operdate desc) AS Ord
+       FROM (SELECT Movement.Id
+                  , COALESCE (MD_Insert.ValueData, Movement.OperDate) AS OperDate
              FROM Movement
                   INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                          ON MovementLinkObject_To.MovementId = Movement.Id
-                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                         AND MovementLinkObject_To.ObjectId = vbClientId
+                                                ON MovementLinkObject_To.MovementId = Movement.Id
+                                               AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                               AND MovementLinkObject_To.ObjectId = vbClientId
+                  LEFT JOIN MovementDate AS MD_Insert
+                                         ON MD_Insert.MovementId = Movement.Id
+                                        AND MD_Insert.DescId     = zc_MovementDate_Insert()
              WHERE Movement.StatusId = zc_Enum_Status_Complete() 
                AND Movement.DescId = zc_Movement_Sale()
+             ORDER BY MD_Insert.ValueData DESC -- для скорости - без Movement.OperDate
              LIMIT 1) AS Movement
             
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
