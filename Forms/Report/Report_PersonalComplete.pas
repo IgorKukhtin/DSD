@@ -59,7 +59,7 @@ type
     spGetDescSets: TdsdStoredProc;
     SaleJournal: TdsdOpenForm;
     actIsDay: TdsdDataSetRefresh;
-    cbinIsDay: TcxCheckBox;
+    cbIsDay: TcxCheckBox;
     actPrint: TdsdPrintAction;
     bbPrint3: TdxBarButton;
     Panel1: TPanel;
@@ -81,6 +81,7 @@ type
     edBranch: TcxButtonEdit;
     BranchGuides: TdsdGuides;
     BranchName: TcxGridDBColumn;
+    bbIsDay: TdxBarControlContainerItem;
   private
   public
   end;
