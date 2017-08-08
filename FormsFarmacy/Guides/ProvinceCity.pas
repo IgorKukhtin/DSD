@@ -1,4 +1,4 @@
-unit OrderShedule;
+unit ProvinceCity;
 
 interface
 
@@ -8,10 +8,11 @@ uses
   cxLookAndFeelPainters, cxStyles, cxCustomData, cxFilter, cxData,
   cxDataStorage, cxEdit, Data.DB, cxDBData, cxGridLevel, cxClasses,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGrid, Datasnap.DBClient, dsdDB, cxPropertiesStore, dxBar,
-  Vcl.ActnList, dsdAction, ParentForm, DataModul, dsdAddOn, dxBarExtItems,
-  dxSkinsCore, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
-  dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  cxGrid, Datasnap.DBClient, cxPropertiesStore, dxBar,
+  Vcl.ActnList, DataModul, ParentForm, dsdDB, dsdAction, dsdAddOn, dxBarExtItems,
+  cxGridBandedTableView, cxGridDBBandedTableView, cxCheckBox, dxSkinsCore,
+  dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
+  dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
   dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
   dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
   dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
@@ -21,66 +22,49 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  cxContainer, dsdGuides, cxTextEdit, cxMaskEdit, cxButtonEdit, cxLabel,
-  Vcl.ExtCtrls;
+  Vcl.Menus;
 
 type
-  TOrderSheduleForm = class(TParentForm)
-    cxGridDBTableView: TcxGridDBTableView;
+  TProvinceCityForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
-    Value8: TcxGridDBColumn;
-    MasterDS: TDataSource;
-    MasterCDS: TClientDataSet;
+    DataSource: TDataSource;
+    ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
     ActionList: TActionList;
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
-    actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
     spSelect: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
-    isErased: TcxGridDBColumn;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
     bbSetErased: TdxBarButton;
     bbSetUnErased: TdxBarButton;
-    Code: TcxGridDBColumn;
     dsdGridToExcel: TdsdGridToExcel;
-    bbGridToExcel: TdxBarButton;
-    dxBarStatic1: TdxBarStatic;
-    bbChoiceGuides: TdxBarButton;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    bbToExcel: TdxBarButton;
+    dxBarStatic: TdxBarStatic;
     spErasedUnErased: TdsdStoredProc;
+    bbChoice: TdxBarButton;
+    cxGridDBTableView: TcxGridDBTableView;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    UnitName: TcxGridDBColumn;
-    ContractName: TcxGridDBColumn;
-    actShowErased: TBooleanStoredProcAction;
-    bbShowErased: TdxBarButton;
+    actInsert: TdsdInsertUpdateAction;
+    pmGrid: TPopupMenu;
+    pmAdd: TMenuItem;
+    N1: TMenuItem;
+    N2: TMenuItem;
+    dsdSetUnErased: TdsdUpdateErased;
+    dsdSetErased: TdsdUpdateErased;
+    N3: TMenuItem;
+    N4: TMenuItem;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
-    Value1: TcxGridDBColumn;
-    Color_Calc1: TcxGridDBColumn;
-    Inf_Text2: TcxGridDBColumn;
-    actInsertMask: TdsdInsertUpdateAction;
-    bbInsertMask: TdxBarButton;
-    Panel: TPanel;
-    cxLabel4: TcxLabel;
-    ceUnit: TcxButtonEdit;
-    UnitGuides: TdsdGuides;
-    cxLabel1: TcxLabel;
-    ceJuridical: TcxButtonEdit;
-    JuridicalGuides: TdsdGuides;
-    RefreshDispatcher: TRefreshDispatcher;
-    spInsertUpdate: TdsdStoredProc;
-    actInsertUpdate: TdsdUpdateDataSet;
-    actShowAll: TBooleanStoredProcAction;
-    bbShowAll: TdxBarButton;
-    ProvinceCityName: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -92,6 +76,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TOrderSheduleForm);
+  RegisterClass(TProvinceCityForm);
 
 end.

@@ -3,7 +3,7 @@ inherited ContractForm: TContractForm
   ClientWidth = 828
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 844
-  ExplicitHeight = 347
+  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -19,7 +19,6 @@ inherited ContractForm: TContractForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -29,6 +28,7 @@ inherited ContractForm: TContractForm
             Caption = #1053#1086#1084#1077#1088' '#1076#1086#1075#1086#1074#1086#1088#1072
             DataBinding.FieldName = 'Name'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 123
           end
           object JuridicalBasisName: TcxGridDBColumn
@@ -36,12 +36,14 @@ inherited ContractForm: TContractForm
             DataBinding.FieldName = 'JuridicalBasisName'
             Visible = False
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 145
           end
           object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 212
           end
           object BankAccountName: TcxGridDBColumn
@@ -68,6 +70,7 @@ inherited ContractForm: TContractForm
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 120
           end
           object Percent_Juridical: TcxGridDBColumn
@@ -101,6 +104,7 @@ inherited ContractForm: TContractForm
             Caption = #1054#1090#1089#1088#1086#1095#1082#1072
             DataBinding.FieldName = 'Deferment'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 98
           end
           object isReport: TcxGridDBColumn
@@ -132,11 +136,33 @@ inherited ContractForm: TContractForm
             Options.Editing = False
             Width = 86
           end
+          object OrderSumm: TcxGridDBColumn
+            Caption = #1052#1080#1085'. '#1089#1091#1084#1084#1072' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072
+            DataBinding.FieldName = 'OrderSumm'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object OrderSummComment: TcxGridDBColumn
+            Caption = #1052#1080#1085'. '#1089#1091#1084#1084#1072' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'OrderSummComment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object OrderTime: TcxGridDBColumn
+            Caption = #1052#1072#1082#1089'. '#1074#1088#1077#1084#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'OrderTime'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 268
           end
           object isErased: TcxGridDBColumn
@@ -145,6 +171,7 @@ inherited ContractForm: TContractForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 88
           end
         end
@@ -172,6 +199,20 @@ inherited ContractForm: TContractForm
       Caption = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1086#1090#1095#1077#1090#1077' '#1044#1072'/'#1053#1077#1090
       Hint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1086#1090#1095#1077#1090#1077' '#1044#1072'/'#1053#1077#1090
       ImageIndex = 52
+    end
+    object actUpdateMainDS: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_OrderParam
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_OrderParam
+        end
+        item
+        end>
+      Caption = 'actUpdateMainDS'
+      DataSource = MasterDS
     end
   end
   inherited MasterDS: TDataSource
@@ -264,6 +305,8 @@ inherited ContractForm: TContractForm
       item
         Action = actUpdate
       end>
+    Left = 528
+    Top = 232
   end
   object spUpdate_Contract_isReport: TdsdStoredProc
     StoredProcName = 'gpUpdate_Contract_isReport'
@@ -309,5 +352,53 @@ inherited ContractForm: TContractForm
     PackSize = 1
     Left = 504
     Top = 99
+  end
+  object spUpdate_OrderParam: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Contract_OrderParam'
+    DataSet = MasterCDS
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOrderSumm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OrderSumm'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOrderSummComment'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OrderSummComment'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOrderTime'
+        Value = 'TRUE'
+        Component = MasterCDS
+        ComponentItem = 'OrderTime'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 312
+    Top = 171
   end
 end

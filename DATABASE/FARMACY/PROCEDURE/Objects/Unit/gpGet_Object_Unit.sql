@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Unit(
     IN inSession     TVarChar       -- сессия пользователя 
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
-               Address TVarChar,
+               Address TVarChar, 
+               ProvinceCityId Integer, ProvinceCityName TVarChar,
                ParentId Integer, ParentName TVarChar,
                JuridicalId Integer, JuridicalName TVarChar, 
                MarginCategoryId Integer, MarginCategoryName TVarChar,
@@ -29,6 +30,9 @@ BEGIN
            , lfGet_ObjectCode(0, zc_Object_Unit()) AS Code
            , CAST ('' as TVarChar) AS Name
            , CAST ('' as TVarChar) AS Address
+           
+           , CAST (0 as Integer)   AS ProvinceCityId
+           , CAST ('' as TVarChar) AS ProvinceCityName
            
            , CAST (0 as Integer)   AS ParentId
            , CAST ('' as TVarChar) AS ParentName 
@@ -56,6 +60,9 @@ BEGIN
       , Object_Unit.ValueData                              AS Name
       , ObjectString_Unit_Address.ValueData                AS Address
 
+      , Object_ProvinceCity.Id                             AS ProvinceCityId
+      , Object_ProvinceCity.ValueData                      AS ProvinceCityName
+      
       , Object_Parent.Id                                   AS ParentId
       , Object_Parent.ValueData                            AS ParentName
 
@@ -66,8 +73,8 @@ BEGIN
       , Object_MarginCategory.ValueData                    AS MarginCategoryName
       , ObjectBoolean_isLeaf.ValueData                     AS isLeaf
 
-      , ObjectFloat_TaxService.ValueData                     AS TaxService
-      , ObjectFloat_TaxServiceNigth.ValueData                AS TaxServiceNigth
+      , ObjectFloat_TaxService.ValueData                   AS TaxService
+      , ObjectFloat_TaxServiceNigth.ValueData              AS TaxServiceNigth
 
       , CASE WHEN COALESCE(ObjectDate_StartServiceNigth.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_StartServiceNigth.ValueData ELSE Null END ::TDateTime  AS StartServiceNigth
       , CASE WHEN COALESCE(ObjectDate_EndServiceNigth.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_EndServiceNigth.ValueData ELSE Null END ::TDateTime  AS EndServiceNigth
@@ -90,6 +97,11 @@ BEGIN
                              ON ObjectLink_Unit_MarginCategory.ObjectId = Object_Unit.Id
                             AND ObjectLink_Unit_MarginCategory.DescId = zc_ObjectLink_Unit_MarginCategory()
         LEFT JOIN Object AS Object_MarginCategory ON Object_MarginCategory.Id = ObjectLink_Unit_MarginCategory.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_ProvinceCity
+                             ON ObjectLink_Unit_ProvinceCity.ObjectId = Object_Unit.Id
+                            AND ObjectLink_Unit_ProvinceCity.DescId = zc_ObjectLink_Unit_ProvinceCity()
+        LEFT JOIN Object AS Object_ProvinceCity ON Object_ProvinceCity.Id = ObjectLink_Unit_ProvinceCity.ChildObjectId
         
         LEFT JOIN ObjectBoolean AS ObjectBoolean_isLeaf 
                                 ON ObjectBoolean_isLeaf.ObjectId = Object_Unit.Id
@@ -134,6 +146,7 @@ ALTER FUNCTION gpGet_Object_Unit (integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.08.17         * add ProvinceCity
  06.03.17         * add Address
  08.04.16         *
  24.02.16         * 

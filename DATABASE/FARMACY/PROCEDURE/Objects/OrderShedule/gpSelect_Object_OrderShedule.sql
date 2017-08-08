@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer,
                Value5 TFloat, Value6 TFloat, Value7 TFloat,
                OurJuridicalName TVarChar,
                UnitId Integer, UnitName TVarChar,
+               ProvinceCityId Integer, ProvinceCityName TVarChar,
                JuridicalName TVarChar,
                ContractId Integer, ContractName TVarChar,
                isErased boolean,
@@ -90,10 +91,13 @@ BEGIN
            , Object_OrderShedule.Value6 
            , Object_OrderShedule.Value7 
 
-           , Object_Unit_Juridical.ValueData  AS OurJuridicalName
-           , Object_Unit.Id                   AS UnitId
-           , Object_Unit.ValueData            AS UnitName 
-
+           , Object_Unit_Juridical.ValueData      AS OurJuridicalName
+           , Object_Unit.Id                       AS UnitId
+           , Object_Unit.ValueData                AS UnitName 
+           
+           , Object_ProvinceCity.Id               AS ProvinceCityId
+           , Object_ProvinceCity.ValueData        AS ProvinceCityName
+      
            , Object_Contract_Juridical.ValueData  AS JuridicalName
            , Object_Contract.Id                   AS ContractId
            , Object_Contract.ValueData            AS ContractName 
@@ -123,10 +127,22 @@ BEGIN
            , CASE WHEN Object_OrderShedule.Value6 = 1 THEN zc_Color_Yelow() WHEN Object_OrderShedule.Value6 = 2 THEN zc_Color_Aqua() WHEN Object_OrderShedule.Value6 = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_Calc6
            , CASE WHEN Object_OrderShedule.Value7 = 1 THEN zc_Color_Yelow() WHEN Object_OrderShedule.Value7 = 2 THEN zc_Color_Aqua() WHEN Object_OrderShedule.Value7 = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_Calc7
 
-           , CASE WHEN COALESCE (ObjectFloat_OrderSumm.ValueData,0) = 0 THEN COALESCE (ObjectString_OrderSumm.ValueData,'') 
-                  ELSE CAST (ObjectFloat_OrderSumm.ValueData AS NUMERIC (16, 2)) ||' ' || COALESCE (ObjectString_OrderSumm.ValueData,'')
+           , CASE WHEN COALESCE (ObjectFloat_OrderSumm_Contract.ValueData, 0) = 0 
+                  THEN CASE WHEN COALESCE (ObjectFloat_OrderSumm.ValueData, 0) = 0 
+                            THEN CASE WHEN COALESCE (ObjectString_OrderSumm_Contract.ValueData, '') <> '' 
+                                      THEN ObjectString_OrderSumm_Contract.ValueData 
+                                      ELSE COALESCE (ObjectString_OrderSumm.ValueData,'')
+                                 END
+                            ELSE CAST (ObjectFloat_OrderSumm.ValueData AS NUMERIC (16, 2)) ||' ' || COALESCE (ObjectString_OrderSumm.ValueData,'')
+                       END
+                  ELSE CAST (ObjectFloat_OrderSumm_Contract.ValueData AS NUMERIC (16, 2)) ||' ' || COALESCE (ObjectString_OrderSumm_Contract.ValueData,'')
              END                                            ::TVarChar AS OrderSumm
-           , COALESCE (ObjectString_OrderTime.ValueData,'') ::TVarChar AS OrderTime
+
+            /*CASE WHEN COALESCE (ObjectFloat_OrderSumm.ValueData,0) = 0 THEN COALESCE (ObjectString_OrderSumm.ValueData,'') 
+                  ELSE CAST (ObjectFloat_OrderSumm.ValueData AS NUMERIC (16, 2)) ||' ' || COALESCE (ObjectString_OrderSumm.ValueData,'')
+             END                                            ::TVarChar AS OrderSumm 
+             */
+           , COALESCE (ObjectString_OrderTime_Contract.ValueData, COALESCE (ObjectString_OrderTime.ValueData,'')) ::TVarChar AS OrderTime
 
        FROM tmpObject AS Object_OrderShedule
            FULL JOIN tmpAll ON tmpAll.UnitId = Object_OrderShedule.UnitId
@@ -143,6 +159,11 @@ BEGIN
                                AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
            LEFT JOIN Object AS Object_Unit_Juridical ON Object_Unit_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId       
 
+           LEFT JOIN ObjectLink AS ObjectLink_Unit_ProvinceCity
+                                ON ObjectLink_Unit_ProvinceCity.ObjectId = Object_Unit.Id
+                               AND ObjectLink_Unit_ProvinceCity.DescId = zc_ObjectLink_Unit_ProvinceCity()
+           LEFT JOIN Object AS Object_ProvinceCity ON Object_ProvinceCity.Id = ObjectLink_Unit_ProvinceCity.ChildObjectId
+        
             --
            LEFT JOIN ObjectFloat AS ObjectFloat_OrderSumm
                                  ON ObjectFloat_OrderSumm.ObjectId = Object_Contract_Juridical.Id
@@ -153,6 +174,16 @@ BEGIN
            LEFT JOIN ObjectString AS ObjectString_OrderTime
                                   ON ObjectString_OrderTime.ObjectId = Object_Contract_Juridical.Id
                                  AND ObjectString_OrderTime.DescId = zc_ObjectString_Juridical_OrderTime()
+           --
+           LEFT JOIN ObjectFloat AS ObjectFloat_OrderSumm_Contract
+                                 ON ObjectFloat_OrderSumm_Contract.ObjectId = Object_Contract.Id
+                                AND ObjectFloat_OrderSumm_Contract.DescId = zc_ObjectFloat_Contract_OrderSumm()
+           LEFT JOIN ObjectString AS ObjectString_OrderSumm_Contract 
+                                  ON ObjectString_OrderSumm_Contract.ObjectId = Object_Contract.Id
+                                 AND ObjectString_OrderSumm_Contract.DescId = zc_ObjectString_Contract_OrderSumm()
+           LEFT JOIN ObjectString AS ObjectString_OrderTime_Contract
+                                  ON ObjectString_OrderTime_Contract.ObjectId = Object_Contract.Id
+                                 AND ObjectString_OrderTime_Contract.DescId = zc_ObjectString_Contract_OrderTime()
  ;
   
 END;
@@ -164,6 +195,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 08.08.17         *
  22.06.17         *
  14.01.17         *
  05.10.16         * parce

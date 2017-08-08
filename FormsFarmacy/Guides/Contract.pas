@@ -36,6 +36,11 @@ type
     actUpdateisReport: TdsdExecStoredProc;
     bbUpdateisReport: TdxBarButton;
     GroupMemberSPName: TcxGridDBColumn;
+    spUpdate_OrderParam: TdsdStoredProc;
+    OrderSumm: TcxGridDBColumn;
+    OrderSummComment: TcxGridDBColumn;
+    OrderTime: TcxGridDBColumn;
+    actUpdateMainDS: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

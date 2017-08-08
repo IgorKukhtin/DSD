@@ -1,32 +1,32 @@
 inherited ContractEditForm: TContractEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' '#1044#1086#1075#1086#1074#1086#1088
-  ClientHeight = 349
+  ClientHeight = 437
   ClientWidth = 353
   ExplicitWidth = 359
-  ExplicitHeight = 377
+  ExplicitHeight = 465
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 60
-    Top = 311
+    Top = 406
     ExplicitLeft = 60
-    ExplicitTop = 311
+    ExplicitTop = 406
   end
   inherited bbCancel: TcxButton
     Left = 204
-    Top = 311
+    Top = 406
     ExplicitLeft = 204
-    ExplicitTop = 311
+    ExplicitTop = 406
   end
   object cxLabel2: TcxLabel [2]
     Left = 8
-    Top = 307
+    Top = 360
     Caption = #1050#1086#1076
     Visible = False
   end
   object edCode: TcxCurrencyEdit [3]
     Left = 8
-    Top = 323
+    Top = 376
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
@@ -64,12 +64,12 @@ inherited ContractEditForm: TContractEditForm
   end
   object cxLabel3: TcxLabel [8]
     Left = 8
-    Top = 256
+    Top = 353
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit [9]
     Left = 8
-    Top = 276
+    Top = 373
     TabOrder = 7
     Width = 339
   end
@@ -202,20 +202,54 @@ inherited ContractEditForm: TContractEditForm
     Top = 208
     Caption = #1041#1072#1085#1082
   end
+  object cxLabel14: TcxLabel [28]
+    Left = 10
+    Top = 261
+    Caption = #1052#1080#1085'. '#1079#1072#1082#1072#1079', '#1075#1088#1085
+  end
+  object ceOrderSumm: TcxCurrencyEdit [29]
+    Left = 8
+    Top = 282
+    Properties.DisplayFormat = ',0.##'
+    TabOrder = 29
+    Width = 110
+  end
+  object cxLabel15: TcxLabel [30]
+    Left = 123
+    Top = 261
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1084#1080#1085'. '#1089#1091#1084#1084#1077' '#1079#1072#1082#1072#1079#1072
+  end
+  object ceOrderSummComment: TcxTextEdit [31]
+    Left = 123
+    Top = 282
+    TabOrder = 31
+    Width = 224
+  end
+  object cxLabel16: TcxLabel [32]
+    Left = 8
+    Top = 309
+    Caption = #1052#1072#1082#1089#1080#1084#1072#1083#1100#1085#1086#1077' '#1074#1088#1077#1084#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' ('#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086')'
+  end
+  object ceOrderTime: TcxTextEdit [33]
+    Left = 8
+    Top = 330
+    TabOrder = 33
+    Width = 339
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 291
     Top = 73
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 304
-    Top = 304
+    Top = 357
   end
   inherited ActionList: TActionList
     Left = 119
     Top = 8
   end
   inherited FormParams: TdsdFormParams
-    Left = 216
+    Left = 248
     Top = 21
   end
   inherited spInsertUpdate: TdsdStoredProc
@@ -300,6 +334,30 @@ inherited ContractEditForm: TContractEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inOrderSumm'
+        Value = Null
+        Component = ceOrderSumm
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOrderSummComment'
+        Value = Null
+        Component = ceOrderSummComment
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOrderTime'
+        Value = Null
+        Component = ceOrderTime
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = ''
         Component = edComment
@@ -324,7 +382,7 @@ inherited ContractEditForm: TContractEditForm
         MultiSelectSeparator = ','
       end>
     Left = 298
-    Top = 244
+    Top = 297
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Contract'
@@ -457,6 +515,27 @@ inherited ContractEditForm: TContractEditForm
         Component = edBank
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OrderSumm'
+        Value = Null
+        Component = ceOrderSumm
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OrderSummComment'
+        Value = Null
+        Component = ceOrderSummComment
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OrderTime'
+        Value = Null
+        Component = ceOrderTime
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 226
     Top = 177
@@ -581,7 +660,7 @@ inherited ContractEditForm: TContractEditForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 72
-    Top = 222
+    Left = 128
+    Top = 206
   end
 end

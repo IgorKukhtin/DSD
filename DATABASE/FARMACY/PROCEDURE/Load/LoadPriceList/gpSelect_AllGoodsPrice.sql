@@ -314,13 +314,20 @@ BEGIN
         -- CASE WHEN ResultSet.isTop_calc = TRUE THEN ResultSet.isTop_calc ELSE ResultSet.IsTop END :: Boolean AS IsTop,
         ResultSet.IsTop_Goods,
         ResultSet.IsPromo,
-        CASE WHEN COALESCE (inUnitId_to, 0) = 0 AND (ResultSet.isPriceFix = TRUE OR ResultSet.PriceFix_Goods <> 0)
+        CASE WHEN ResultSet.MinExpirationDate < (CURRENT_DATE + Interval '6 month')
+                  THEN FALSE
+             WHEN COALESCE (inUnitId_to, 0) = 0 AND (ResultSet.isPriceFix = TRUE OR ResultSet.PriceFix_Goods <> 0)
                   THEN TRUE
              WHEN -- COALESCE (inUnitId_to, 0) = 0 AND (ResultSet.isIncome = TRUE /*OR ResultSet.isTop_calc = TRUE*/ OR ResultSet.isPriceFix = TRUE OR ResultSet.PriceFix_Goods <> 0)
                   COALESCE (inUnitId_to, 0) = 0 AND ResultSet.isIncome = TRUE
                   THEN FALSE
              WHEN COALESCE (inUnitId_to, 0) = 0
                   THEN TRUE
+             WHEN inUnitId_to <> 0 
+              AND ResultSet.MinExpirationDate < (CURRENT_DATE + Interval '6 month') 
+              AND ResultSet.MinExpirationDate_to < (CURRENT_DATE + Interval '6 month')
+              AND ResultSet.isIncome = TRUE
+                  THEN FALSE
              WHEN inUnitId_to <> 0 AND ResultSet.LastPrice_to > 0 AND 0 <> CAST (CASE WHEN COALESCE (ResultSet.LastPrice,0) = 0 THEN 0.0
                                                                                       ELSE (ResultSet.LastPrice_to / ResultSet.LastPrice) * 100 - 100
                                                                                  END AS NUMERIC (16, 1))

@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                GroupMemberSPId Integer, GroupMemberSPName TVarChar,
                BankAccountId Integer, BankAccountName TVarChar, BankName TVarChar, 
                Deferment Integer, Percent TFloat, PercentSP TFloat,
+               OrderSumm TFloat, OrderSummComment TVarChar, OrderTime TVarChar,
                Comment TVarChar,
                StartDate TDateTime, EndDate TDateTime,
                isErased boolean) AS
@@ -45,6 +46,10 @@ BEGIN
            , CAST (0 AS TFloat)    AS Percent
            , CAST (0 AS TFloat)    AS PercentSP
 
+           , CAST (0 AS TFloat)    AS OrderSumm
+           , CAST ('' as TVarChar) AS OrderSummComment
+           , CAST ('' as TVarChar) AS OrderTime
+           
            , CAST (NULL AS TVarChar) AS Comment  
 
            , CURRENT_DATE :: TDateTime AS StartDate
@@ -76,6 +81,10 @@ BEGIN
            , Object_Contract_View.Percent
            , Object_Contract_View.PercentSP
 
+           , ObjectFloat_OrderSumm.ValueData  AS OrderSumm
+           , ObjectString_OrderSumm.ValueData AS OrderSummComment
+           , ObjectString_OrderTime.ValueData AS OrderTime
+           
            , Object_Contract_View.Comment
 
            , COALESCE (ObjectDate_Start.ValueData, CURRENT_DATE) :: TDateTime   AS StartDate 
@@ -94,6 +103,18 @@ BEGIN
                                 AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
             LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId 
 
+            LEFT JOIN ObjectFloat AS ObjectFloat_OrderSumm
+                                  ON ObjectFloat_OrderSumm.ObjectId = Object_Contract_View.ContractId
+                                 AND ObjectFloat_OrderSumm.DescId = zc_ObjectFloat_Contract_OrderSumm()
+                                 
+            LEFT JOIN ObjectString AS ObjectString_OrderSumm 
+                                   ON ObjectString_OrderSumm.ObjectId = Object_Contract_View.ContractId
+                                  AND ObjectString_OrderSumm.DescId = zc_ObjectString_Contract_OrderSumm()
+                                  
+            LEFT JOIN ObjectString AS ObjectString_OrderTime
+                                   ON ObjectString_OrderTime.ObjectId = Object_Contract_View.ContractId
+                                  AND ObjectString_OrderTime.DescId = zc_ObjectString_Contract_OrderTime()
+                                 
       WHERE Object_Contract_View.Id = inId;
    END IF;
   
@@ -108,6 +129,7 @@ ALTER FUNCTION gpGet_Object_Contract (integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 08.08.17         *
  03.05.17         * add BankAccount
  08.12.16         *
  01.07.14         *

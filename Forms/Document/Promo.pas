@@ -270,6 +270,9 @@ type
     Color_PriceIn: TcxGridDBColumn;
     spInsertUpdate_Calc: TdsdStoredProc;
     actUpdateCalcDS: TdsdUpdateDataSet;
+    bb: TdxBarButton;
+    actPrint_Calc: TdsdPrintAction;
+    calcGroupNum: TcxGridDBColumn;
   private
     { Private declarations }
   public

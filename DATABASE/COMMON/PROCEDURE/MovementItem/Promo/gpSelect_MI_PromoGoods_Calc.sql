@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_PromoGoods_Calc(
     IN inIsErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (NUM Integer --
+RETURNS TABLE (NUM Integer , GroupNum Integer --
       , Id                      Integer --идентификатор
       , GoodsId                 Integer --ИД объекта <товар>
       , GoodsCode               Integer --код объекта  <товар>
@@ -259,7 +259,11 @@ BEGIN
                    )   
                    
     -- результат
-    SELECT CASE WHEN tmpData_All.NUM = 5 THEN 0 ELSE tmpData_All.NUM END
+    SELECT CASE WHEN tmpData_All.NUM = 5 THEN 0 ELSE tmpData_All.NUM END AS NUM
+         , CASE WHEN tmpData_All.NUM IN (1, 2) THEN 1
+                WHEN tmpData_All.NUM IN (3, 4) THEN 2 
+                ELSE 3 
+           END AS GroupNum
          , CASE WHEN tmpData_All.NUM = 5 THEN 0 ELSE tmpData_All.Id END  
          , tmpData_All.GoodsId                             
          , tmpData_All.GoodsCode                           

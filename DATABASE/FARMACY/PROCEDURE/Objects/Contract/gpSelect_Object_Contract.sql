@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                BankAccountId Integer, BankAccountName TVarChar, BankName TVarChar, 
                Percent_Juridical TFloat,
                Deferment Integer, Percent TFloat, PercentSP TFloat, 
+               OrderSumm TFloat, OrderSummComment TVarChar, OrderTime TVarChar,
                Comment TVarChar,
                StartDate TDateTime, EndDate TDateTime,
                isReport Boolean,
@@ -46,6 +47,10 @@ BEGIN
            , Object_Contract_View.Percent
            , Object_Contract_View.PercentSP
 
+           , ObjectFloat_OrderSumm.ValueData  AS OrderSumm
+           , ObjectString_OrderSumm.ValueData AS OrderSummComment
+           , ObjectString_OrderTime.ValueData AS OrderTime
+           
            , Object_Contract_View.Comment
 
            , ObjectDate_Start.ValueData   AS StartDate 
@@ -60,6 +65,18 @@ BEGIN
                                  ON ObjectDate_End.ObjectId = Object_Contract_View.ContractId
                                 AND ObjectDate_End.DescId = zc_ObjectDate_Contract_End()  
 
+           LEFT JOIN ObjectFloat AS ObjectFloat_OrderSumm
+                                 ON ObjectFloat_OrderSumm.ObjectId = Object_Contract_View.ContractId
+                                AND ObjectFloat_OrderSumm.DescId = zc_ObjectFloat_Contract_OrderSumm()
+                                
+           LEFT JOIN ObjectString AS ObjectString_OrderSumm 
+                                  ON ObjectString_OrderSumm.ObjectId = Object_Contract_View.ContractId
+                                 AND ObjectString_OrderSumm.DescId = zc_ObjectString_Contract_OrderSumm()
+                                 
+           LEFT JOIN ObjectString AS ObjectString_OrderTime
+                                  ON ObjectString_OrderTime.ObjectId = Object_Contract_View.ContractId
+                                 AND ObjectString_OrderTime.DescId = zc_ObjectString_Contract_OrderTime()
+                                 
            LEFT JOIN ObjectFloat AS ObjectFloat_Percent
                                  ON ObjectFloat_Percent.ObjectId = Object_Contract_View.JuridicalId
                                 AND ObjectFloat_Percent.DescId = zc_ObjectFloat_Juridical_Percent()
@@ -84,7 +101,10 @@ ALTER FUNCTION gpSelect_Object_Contract(TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
- 03.05.17         * add BankAccount
+ 08.08.17         * add OrderTime_inf
+                        OrderSumm_inf
+                        OrderSumm
+  03.05.17         * add BankAccount
  11.01.17         * add isReport
  08.12.16         * add Percent
  01.07.14         *
