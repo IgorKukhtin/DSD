@@ -125,7 +125,11 @@ BEGIN
      -- проверка
      IF COALESCE (vbPersonalId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Не определно <ФИО (сотрудник)> у <%> для Сумма = <%>.', lfGet_Object_ValueData (inMemberId), zfConvert_FloatToString (inAmount);
+         RAISE EXCEPTION 'Ошибка.Не определно <ФИО (сотрудник)> у <%> + <%> + <%> для Сумма = <%>.'
+                       , lfGet_Object_ValueData (inMemberId)
+                       , lfGet_Object_ValueData (inPositionId)
+                       , lfGet_Object_ValueData (inUnitId)
+                       , zfConvert_FloatToString (inAmount);
      END IF;
 
 
