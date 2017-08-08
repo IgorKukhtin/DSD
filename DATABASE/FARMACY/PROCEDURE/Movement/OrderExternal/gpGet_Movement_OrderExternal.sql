@@ -105,13 +105,28 @@ BEGIN
            , Object_OrderKind.ValueData                         AS OrderKindName
            , COALESCE (MovementString_Comment.ValueData,'')       :: TVarChar AS Comment
 
-          , COALESCE (tmpOrderShedule.Zakaz_Text, '')    ::TVarChar   AS Zakaz_Text   --День заказа (информативно)
+          , COALESCE (tmpOrderShedule.Zakaz_Text, '')   ::TVarChar   AS Zakaz_Text   --День заказа (информативно)
           , COALESCE (tmpOrderShedule.Dostavka_Text,'') ::TVarChar   AS Dostavka_Text   --День доставки (информативно)
 
-           , CASE WHEN COALESCE (ObjectFloat_OrderSumm.ValueData,0) = 0 THEN COALESCE (ObjectString_OrderSumm.ValueData,'') 
+           , CASE WHEN COALESCE (ObjectFloat_OrderSumm_Contract.ValueData, 0) = 0 
+                  THEN CASE WHEN COALESCE (ObjectFloat_OrderSumm.ValueData, 0) = 0 
+                            THEN CASE WHEN COALESCE (ObjectString_OrderSumm_Contract.ValueData, '') <> '' 
+                                      THEN ObjectString_OrderSumm_Contract.ValueData 
+                                      ELSE COALESCE (ObjectString_OrderSumm.ValueData,'')
+                                 END
+                            ELSE CAST (ObjectFloat_OrderSumm.ValueData AS NUMERIC (16, 2)) ||' ' || COALESCE (ObjectString_OrderSumm.ValueData,'')
+                       END
+                  ELSE CAST (ObjectFloat_OrderSumm_Contract.ValueData AS NUMERIC (16, 2)) ||' ' || COALESCE (ObjectString_OrderSumm_Contract.ValueData,'')
+             END                                          ::TVarChar AS OrderSumm
+             
+           /*, CASE WHEN COALESCE (ObjectFloat_OrderSumm.ValueData,0) = 0 THEN COALESCE (ObjectString_OrderSumm.ValueData,'') 
                   ELSE CAST (ObjectFloat_OrderSumm.ValueData AS NUMERIC (16, 2)) ||' ' || COALESCE (ObjectString_OrderSumm.ValueData,'')
-             END                                            ::TVarChar AS OrderSumm
-           , COALESCE (ObjectString_OrderTime.ValueData,'') ::TVarChar AS OrderTime
+             END                                          ::TVarChar AS OrderSumm
+             */
+           , CASE WHEN COALESCE (ObjectString_OrderTime_Contract.ValueData,'')  <> ''  
+                  THEN ObjectString_OrderTime_Contract.ValueData 
+                  ELSE COALESCE (ObjectString_OrderTime.ValueData,'') 
+             END                                          ::TVarChar AS OrderTime
 
            , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) :: Boolean  AS isDeferred
 
@@ -163,7 +178,17 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_OrderTime
                                   ON ObjectString_OrderTime.ObjectId = Object_From.Id
                                  AND ObjectString_OrderTime.DescId = zc_ObjectString_Juridical_OrderTime()
-
+            --
+            LEFT JOIN ObjectFloat AS ObjectFloat_OrderSumm_Contract
+                                  ON ObjectFloat_OrderSumm_Contract.ObjectId = Object_Contract.Id
+                                 AND ObjectFloat_OrderSumm_Contract.DescId = zc_ObjectFloat_Contract_OrderSumm()
+            LEFT JOIN ObjectString AS ObjectString_OrderSumm_Contract 
+                                   ON ObjectString_OrderSumm_Contract.ObjectId = Object_Contract.Id
+                                  AND ObjectString_OrderSumm_Contract.DescId = zc_ObjectString_Contract_OrderSumm()
+            LEFT JOIN ObjectString AS ObjectString_OrderTime_Contract
+                                   ON ObjectString_OrderTime_Contract.ObjectId = Object_Contract.Id
+                                  AND ObjectString_OrderTime_Contract.DescId = zc_ObjectString_Contract_OrderTime()
+                                 
             -- График заказа/доставки
             LEFT JOIN tmpOrderShedule ON tmpOrderShedule.ContractId = Object_Contract.Id
                                      AND tmpOrderShedule.UnitId = Object_To.Id

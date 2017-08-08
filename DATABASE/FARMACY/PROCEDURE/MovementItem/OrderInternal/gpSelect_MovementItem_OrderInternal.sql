@@ -77,7 +77,8 @@ BEGIN
      OPEN Cursor1 FOR
      WITH  
         --Данные Справочника График заказа/доставки
-        tmpDateList AS (SELECT ''||tmp.OperDate :: Date || ' (' ||tmpDayOfWeek.DayOfWeekName ||')' AS OperDate
+        tmpDateList AS (SELECT ''||tmpDayOfWeek.DayOfWeekName|| '-' || DATE_PART ('day', tmp.OperDate :: Date) ||'' AS OperDate
+                           --''||tmp.OperDate :: Date || ' (' ||tmpDayOfWeek.DayOfWeekName ||')' AS OperDate
                              , tmpDayOfWeek.Number
                              , tmpDayOfWeek.DayOfWeekName
                         FROM (SELECT generate_series ( CURRENT_DATE,  CURRENT_DATE+interval '6 day', '1 day' :: INTERVAL) AS OperDate) AS tmp
@@ -629,7 +630,8 @@ BEGIN
     OPEN Cursor1 FOR
      WITH
      --Данные Справочника График заказа/доставки
-        tmpDateList AS (SELECT ''||tmp.OperDate :: Date || ' (' ||tmpDayOfWeek.DayOfWeekName ||')' AS OperDate
+        tmpDateList AS (SELECT ''||tmpDayOfWeek.DayOfWeekName|| '-' || DATE_PART ('day', tmp.OperDate :: Date) ||'' AS OperDate
+                             --''||tmp.OperDate :: Date || ' (' ||tmpDayOfWeek.DayOfWeekName ||')' AS OperDate
                              , tmpDayOfWeek.Number
                              , tmpDayOfWeek.DayOfWeekName
                         FROM (SELECT generate_series ( CURRENT_DATE,  CURRENT_DATE+interval '6 day', '1 day' :: INTERVAL) AS OperDate) AS tmp
