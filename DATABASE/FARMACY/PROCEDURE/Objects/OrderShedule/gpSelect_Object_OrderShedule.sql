@@ -142,7 +142,10 @@ BEGIN
                   ELSE CAST (ObjectFloat_OrderSumm.ValueData AS NUMERIC (16, 2)) ||' ' || COALESCE (ObjectString_OrderSumm.ValueData,'')
              END                                            ::TVarChar AS OrderSumm 
              */
-           , COALESCE (ObjectString_OrderTime_Contract.ValueData, COALESCE (ObjectString_OrderTime.ValueData,'')) ::TVarChar AS OrderTime
+           , CASE WHEN COALESCE (ObjectString_OrderTime_Contract.ValueData,'')  <> ''  
+                  THEN ObjectString_OrderTime_Contract.ValueData 
+                  ELSE COALESCE (ObjectString_OrderTime.ValueData,'') 
+             END ::TVarChar AS OrderTime
 
        FROM tmpObject AS Object_OrderShedule
            FULL JOIN tmpAll ON tmpAll.UnitId = Object_OrderShedule.UnitId
