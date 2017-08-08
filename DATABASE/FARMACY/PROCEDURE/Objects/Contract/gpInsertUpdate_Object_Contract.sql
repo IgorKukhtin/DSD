@@ -14,7 +14,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract
      (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TDateTime, TDateTime, Tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract 
      (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TDateTime, TDateTime, Tvarchar);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract 
+     (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Tvarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Договор>
@@ -27,6 +28,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
     IN inDeferment               Integer   ,    -- Дней отсрочки
     IN inPercent                 TFloat    ,    -- % Корректировки наценки
     IN inPercentSP               TFloat    ,    -- % cкидки Соц.проект
+    IN inOrderSumm               TFloat    ,    -- минимальная сумма для заказа
+    IN inOrderSummComment        TVarChar  ,    -- Примечание к минимальной сумме для заказа
+    IN inOrderTime               TVarChar  ,    -- информативно - максимальное время отправки
     IN inComment                 TVarChar  ,    -- примечание
     IN inStartDate               TDateTime,     -- Дата с которой действует договор
     IN inEndDate                 TDateTime,     -- Дата до которой действует договор    
@@ -69,27 +73,33 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Contract_Percent(), ioId, inPercent);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Contract_PercentSP(), ioId, inPercentSP);
-
+   -- сохранили свойство <минимальная сумма для заказа>
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Contract_OrderSumm(), ioId, inOrderSumm);
+   
+   
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Contract_Start(), ioId, inStartDate);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Contract_End(), ioId, inEndDate);
    -- сохранили свойство <Комментарий>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Contract_Comment(), ioId, inComment);
-
+   -- сохранили свойство <информативно - максимальное время отправки>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Contract_OrderTime(), ioId, inOrderTime);
+      -- сохранили свойство <Примечание к минимальной сумме для заказа>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Contract_OrderSumm(), ioId, inOrderSummComment);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TDateTime, TDateTime, tvarchar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.08.17         *
  03.05.17         * add BankAccountId
  16.03.17         * inPercentSP
  05.03.17         * inGroupMemberSPId

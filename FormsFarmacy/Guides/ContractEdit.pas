@@ -9,7 +9,18 @@ uses
   dxSkinsDefaultPainters, cxControls, cxContainer, cxEdit, cxCheckBox,
   dsdGuides, cxMaskEdit, cxButtonEdit, cxTextEdit, cxCurrencyEdit, cxLabel,
   dsdDB, dsdAction, Vcl.ActnList, cxPropertiesStore, dsdAddOn, Vcl.StdCtrls,
-  cxButtons, Vcl.ComCtrls, dxCore, cxDateUtils, cxDropDownEdit, cxCalendar;
+  cxButtons, Vcl.ComCtrls, dxCore, cxDateUtils, cxDropDownEdit, cxCalendar,
+  dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
+  dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue;
 
 type
   TContractEditForm = class(TAncestorEditDialogForm)
@@ -43,6 +54,12 @@ type
     BankAccountGuides: TdsdGuides;
     edBank: TcxTextEdit;
     cxLabel13: TcxLabel;
+    cxLabel14: TcxLabel;
+    ceOrderSumm: TcxCurrencyEdit;
+    cxLabel15: TcxLabel;
+    ceOrderSummComment: TcxTextEdit;
+    cxLabel16: TcxLabel;
+    ceOrderTime: TcxTextEdit;
   private
     { Private declarations }
   public

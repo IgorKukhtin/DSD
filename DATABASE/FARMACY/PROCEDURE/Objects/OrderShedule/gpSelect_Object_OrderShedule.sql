@@ -127,10 +127,22 @@ BEGIN
            , CASE WHEN Object_OrderShedule.Value6 = 1 THEN zc_Color_Yelow() WHEN Object_OrderShedule.Value6 = 2 THEN zc_Color_Aqua() WHEN Object_OrderShedule.Value6 = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_Calc6
            , CASE WHEN Object_OrderShedule.Value7 = 1 THEN zc_Color_Yelow() WHEN Object_OrderShedule.Value7 = 2 THEN zc_Color_Aqua() WHEN Object_OrderShedule.Value7 = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_Calc7
 
-           , CASE WHEN COALESCE (ObjectFloat_OrderSumm.ValueData,0) = 0 THEN COALESCE (ObjectString_OrderSumm.ValueData,'') 
-                  ELSE CAST (ObjectFloat_OrderSumm.ValueData AS NUMERIC (16, 2)) ||' ' || COALESCE (ObjectString_OrderSumm.ValueData,'')
+           , CASE WHEN COALESCE (ObjectFloat_OrderSumm_Contract.ValueData, 0) = 0 
+                  THEN CASE WHEN COALESCE (ObjectFloat_OrderSumm.ValueData, 0) = 0 
+                            THEN CASE WHEN COALESCE (ObjectString_OrderSumm_Contract.ValueData, '') <> '' 
+                                      THEN ObjectString_OrderSumm_Contract.ValueData 
+                                      ELSE COALESCE (ObjectString_OrderSumm.ValueData,'')
+                                 END
+                            ELSE CAST (ObjectFloat_OrderSumm.ValueData AS NUMERIC (16, 2)) ||' ' || COALESCE (ObjectString_OrderSumm.ValueData,'')
+                       END
+                  ELSE CAST (ObjectFloat_OrderSumm_Contract.ValueData AS NUMERIC (16, 2)) ||' ' || COALESCE (ObjectString_OrderSumm_Contract.ValueData,'')
              END                                            ::TVarChar AS OrderSumm
-           , COALESCE (ObjectString_OrderTime.ValueData,'') ::TVarChar AS OrderTime
+
+            /*CASE WHEN COALESCE (ObjectFloat_OrderSumm.ValueData,0) = 0 THEN COALESCE (ObjectString_OrderSumm.ValueData,'') 
+                  ELSE CAST (ObjectFloat_OrderSumm.ValueData AS NUMERIC (16, 2)) ||' ' || COALESCE (ObjectString_OrderSumm.ValueData,'')
+             END                                            ::TVarChar AS OrderSumm 
+             */
+           , COALESCE (ObjectString_OrderTime_Contract.ValueData, COALESCE (ObjectString_OrderTime.ValueData,'')) ::TVarChar AS OrderTime
 
        FROM tmpObject AS Object_OrderShedule
            FULL JOIN tmpAll ON tmpAll.UnitId = Object_OrderShedule.UnitId
@@ -162,6 +174,16 @@ BEGIN
            LEFT JOIN ObjectString AS ObjectString_OrderTime
                                   ON ObjectString_OrderTime.ObjectId = Object_Contract_Juridical.Id
                                  AND ObjectString_OrderTime.DescId = zc_ObjectString_Juridical_OrderTime()
+           --
+           LEFT JOIN ObjectFloat AS ObjectFloat_OrderSumm_Contract
+                                 ON ObjectFloat_OrderSumm_Contract.ObjectId = Object_Contract.Id
+                                AND ObjectFloat_OrderSumm_Contract.DescId = zc_ObjectFloat_Contract_OrderSumm()
+           LEFT JOIN ObjectString AS ObjectString_OrderSumm_Contract 
+                                  ON ObjectString_OrderSumm_Contract.ObjectId = Object_Contract.Id
+                                 AND ObjectString_OrderSumm_Contract.DescId = zc_ObjectString_Contract_OrderSumm()
+           LEFT JOIN ObjectString AS ObjectString_OrderTime_Contract
+                                  ON ObjectString_OrderTime_Contract.ObjectId = Object_Contract.Id
+                                 AND ObjectString_OrderTime_Contract.DescId = zc_ObjectString_Contract_OrderTime()
  ;
   
 END;
