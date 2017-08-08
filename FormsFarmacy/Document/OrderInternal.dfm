@@ -1297,15 +1297,12 @@ inherited OrderInternalForm: TOrderInternalForm
     ColorRuleList = <
       item
         ValueColumn = PartionGoodsDateColor
+        BackGroundValueColumn = OrderShedule_Color
         ColorValueList = <>
       end
       item
         ColorColumn = PartionGoodsDate
         ValueColumn = PartionGoodsDateColor
-        ColorValueList = <>
-      end
-      item
-        BackGroundValueColumn = OrderShedule_Color
         ColorValueList = <>
       end>
     SummaryItemList = <
