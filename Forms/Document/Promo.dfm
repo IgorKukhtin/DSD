@@ -12,7 +12,6 @@ inherited PromoForm: TPromoForm
     Top = 139
     Width = 1204
     Height = 460
-    Properties.ActivePage = cxTabSheetCalc
     ExplicitTop = 139
     ExplicitWidth = 1204
     ExplicitHeight = 460
@@ -1615,14 +1614,10 @@ inherited PromoForm: TPromoForm
       Hint = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 52
     end
-    inherited actGridToExcel: TdsdGridToExcel
-      Enabled = False
-    end
     object InsertRecord: TInsertRecord [7]
       Category = 'Goods'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView
       Action = GoodsChoiceForm
@@ -1648,7 +1643,6 @@ inherited PromoForm: TPromoForm
     inherited actMISetErased: TdsdUpdateErased
       Category = 'Goods'
       TabSheet = tsMain
-      Enabled = False
       StoredProcList = <
         item
           StoredProc = spErasedMIMaster
@@ -1703,7 +1697,6 @@ inherited PromoForm: TPromoForm
     inherited actMISetUnErased: TdsdUpdateErased
       Category = 'Goods'
       TabSheet = tsMain
-      Enabled = False
       StoredProcList = <
         item
           StoredProc = spUnErasedMIMaster
@@ -1813,7 +1806,6 @@ inherited PromoForm: TPromoForm
     end
     inherited MovementItemProtocolOpenForm: TdsdOpenForm
       TabSheet = tsMain
-      Enabled = False
     end
     object actPartnerProtocolOpenForm: TdsdOpenForm [25]
       Category = 'DSDLib'
@@ -1850,7 +1842,6 @@ inherited PromoForm: TPromoForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1044#1086#1087'. '#1089#1082#1080#1076#1082#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1044#1086#1087'. '#1089#1082#1080#1076#1082#1072'>'
       ImageIndex = 34
@@ -2481,9 +2472,7 @@ inherited PromoForm: TPromoForm
     end
     object actOpenReportForm: TdsdOpenForm
       Category = 'DSDLib'
-      TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       Caption = #1054#1090#1095#1077#1090' <'#1056#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1094#1077#1085#1086#1074#1099#1093' '#1072#1082#1094#1080#1081'>'
       Hint = #1054#1090#1095#1077#1090' <'#1056#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1094#1077#1085#1086#1074#1099#1093' '#1072#1082#1094#1080#1081'>'
       ImageIndex = 25
