@@ -279,6 +279,8 @@ type
     actUpdate_Movement_Promo_Calc: TdsdExecStoredProc;
     spUpdate_Movement_Promo_Calc: TdsdStoredProc;
     bb: TdxBarButton;
+    AmountRetInWeight: TcxGridDBColumn;
+    AmountRetIn: TcxGridDBColumn;
   private
     { Private declarations }
   public

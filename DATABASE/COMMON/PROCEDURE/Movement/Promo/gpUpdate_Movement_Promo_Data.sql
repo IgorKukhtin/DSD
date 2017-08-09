@@ -39,7 +39,7 @@ BEGIN
      PERFORM lpUpdate_Movement_Promo_Auto (inMovementId := inMovementId
                                          , inUserId     := vbUserId
                                           );
-
+/*
      -- данные по акциям
      CREATE TEMP TABLE _tmpMI_promo (GoodsId Integer, GoodsKindId Integer, PriceWithOutVAT TFloat, PriceWithVAT TFloat) ON COMMIT DROP;
      -- данные по продажам, в которых будет установлен признак "акция"
@@ -111,10 +111,10 @@ BEGIN
                               LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                           ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                          AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                              /*INNER JOIN MovementItemFloat AS MIFloat_Price
-                                                           ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                          AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                                          AND MIFloat_Price.ValueData = CASE WHEN tmpMovement_sale.PriceWithVAT = TRUE THEN _tmpMI_promo.PriceWithVAT ELSE _tmpMI_promo.PriceWithOutVAT END*/
+                              -- INNER JOIN MovementItemFloat AS MIFloat_Price
+                              --                              ON MIFloat_Price.MovementItemId = MovementItem.Id
+                              --                             AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                              --                             AND MIFloat_Price.ValueData = CASE WHEN tmpMovement_sale.PriceWithVAT = TRUE THEN _tmpMI_promo.PriceWithVAT ELSE _tmpMI_promo.PriceWithOutVAT END
                          WHERE MIFloat_AmountPartner.ValueData > 0
                            AND COALESCE (MIFloat_PromoMovement.ValueData, inMovementId) = inMovementId
                         )
@@ -158,10 +158,10 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
                                          ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                                         AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
-             /*INNER JOIN MovementItemFloat AS MIFloat_Price
-                                          ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                         AND MIFloat_Price.ValueData = CASE WHEN tmpMovement_sale.PriceWithVAT = TRUE THEN _tmpMI_promo.PriceWithVAT ELSE _tmpMI_promo.PriceWithOutVAT END*/
+             -- INNER JOIN MovementItemFloat AS MIFloat_Price
+             --                              ON MIFloat_Price.MovementItemId = MovementItem.Id
+             --                             AND MIFloat_Price.DescId = zc_MIFloat_Price()
+             --                             AND MIFloat_Price.ValueData = CASE WHEN tmpMovement_sale.PriceWithVAT = TRUE THEN _tmpMI_promo.PriceWithVAT ELSE _tmpMI_promo.PriceWithOutVAT END
         WHERE (MovementItem.Amount <> 0 OR MIFloat_AmountSecond.ValueData <> 0)
           AND COALESCE (MIFloat_PromoMovement.ValueData, inMovementId) = inMovementId
        ;
@@ -202,6 +202,7 @@ BEGIN
                                   AND MI_PromoGoods.Amount   <> 0 -- % скидки на товар
      WHERE MI_PromoGoods.MovementId = inMovementId
     ;
+    */
      
 
 END;
