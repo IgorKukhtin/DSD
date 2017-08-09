@@ -3,8 +3,8 @@
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <C'#1091#1084#1084#1072#1088#1085#1099#1077' '#1087#1088#1086#1076#1072#1078#1080' '#1087#1086' '#1089#1077#1090#1080' >'
-  ClientHeight = 296
-  ClientWidth = 327
+  ClientHeight = 284
+  ClientWidth = 407
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,8 +18,8 @@
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 47
-    Top = 255
+    Left = 87
+    Top = 249
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 221
-    Top = 255
+    Left = 261
+    Top = 249
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -62,7 +62,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 4
-    Width = 305
+    Width = 390
   end
   object cxLabel3: TcxLabel
     Left = 10
@@ -85,19 +85,19 @@
     Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
     Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
     TabOrder = 8
-    Width = 86
+    Width = 83
   end
   object cbPartionPrice: TcxCheckBox
-    Left = 121
+    Left = 94
     Top = 63
     Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
     Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1087#1072#1088#1090#1080#1080' '#1094#1077#1085#1099
     TabOrder = 9
-    Width = 197
+    Width = 196
   end
   object сbJuridical: TcxCheckBox
-    Left = 221
-    Top = 27
+    Left = 291
+    Top = 63
     Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
     Caption = #1087#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
     TabOrder = 10
@@ -118,7 +118,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 12
-    Width = 305
+    Width = 390
   end
   object cxLabel4: TcxLabel
     Left = 10
@@ -135,7 +135,15 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 14
-    Width = 305
+    Width = 390
+  end
+  object cbList: TcxCheckBox
+    Left = 241
+    Top = 27
+    Hint = #1058#1054#1051#1068#1050#1054' '#1055#1054' '#1057#1055#1048#1057#1050#1059
+    Caption = #1058#1054#1051#1068#1050#1054' '#1055#1054' '#1057#1055#1048#1057#1050#1059
+    TabOrder = 15
+    Width = 136
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -220,6 +228,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisList'
+        Value = Null
+        Component = cbList
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'RetailId'
         Value = Null
         Component = GuidesRetail
@@ -260,11 +276,11 @@
     KeyField = 'Id'
     LookupControl = edUnit
     Key = '0'
-    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnitTreeForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -348,7 +364,7 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 125
+    Left = 45
     Top = 243
   end
   object GuidesRetail: TdsdGuides

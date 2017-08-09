@@ -49,6 +49,9 @@ type
     spUpdate_Unit_isMarginCategory: TdsdStoredProc;
     actUpdateisMarginCategory: TdsdExecStoredProc;
     bbisMarginCategory: TdxBarButton;
+    spUpdate_Unit_isReport: TdsdStoredProc;
+    actUpdateisReport: TdsdExecStoredProc;
+    bbUpdateisReport: TdxBarButton;
   private
     { Private declarations }
   public

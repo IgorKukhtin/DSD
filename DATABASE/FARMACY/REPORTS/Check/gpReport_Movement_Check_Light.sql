@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpReport_Movement_Check_Light (Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Movement_Check_Light (Integer, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Movement_Check_Light (Integer, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION  gpReport_Movement_Check_Light(
     IN inUnitId           Integer  ,  -- Подразделение
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION  gpReport_Movement_Check_Light(
     IN inIsPartion        Boolean,    -- 
     IN inisPartionPrice   Boolean,    -- 
     IN inisJuridical      Boolean,    -- 
+    IN inisUnitList       Boolean,    -- 
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (
@@ -63,7 +65,8 @@ BEGIN
     RETURN QUERY
     WITH
     tmpUnit AS (SELECT inUnitId AS UnitId
-                WHERE COALESCE (inUnitId, 0) <> 0
+                WHERE COALESCE (inUnitId, 0) <> 0 
+                  AND inisUnitList = FALSE
                UNION 
                 SELECT ObjectLink_Unit_Juridical.ObjectId     AS UnitId
                 FROM ObjectLink AS ObjectLink_Unit_Juridical
@@ -74,6 +77,13 @@ BEGIN
                                                OR (inRetailId = 0 AND inUnitId = 0))
                 WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                   AND (ObjectLink_Unit_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0 )
+                  AND inisUnitList = FALSE
+               UNION
+                SELECT ObjectBoolean_Report.ObjectId          AS UnitId
+                FROM ObjectBoolean AS ObjectBoolean_Report
+                WHERE ObjectBoolean_Report.DescId = zc_ObjectBoolean_Unit_Report()
+                  AND ObjectBoolean_Report.ValueData = TRUE
+                  AND inisUnitList = TRUE
              )
              
   , tmpData_Container AS (SELECT COALESCE (MIContainer.AnalyzerId,0)         AS MovementItemId_Income

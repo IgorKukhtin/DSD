@@ -74,6 +74,8 @@ type
     edJuridical: TcxButtonEdit;
     cxLabel4: TcxLabel;
     GuidesJuridical: TdsdGuides;
+    cbList: TcxCheckBox;
+    actRefreshList: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

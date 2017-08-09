@@ -498,21 +498,21 @@ inherited ReportMovementCheckLightForm: TReportMovementCheckLightForm
       Width = 188
     end
     object cbPartion: TcxCheckBox
-      Left = 127
+      Left = 264
       Top = 35
       Action = actRefreshIsPartion
       TabOrder = 6
       Width = 83
     end
     object cbPartionPrice: TcxCheckBox
-      Left = 213
+      Left = 348
       Top = 35
       Action = actRefreshPartionPrice
       TabOrder = 7
       Width = 195
     end
     object cbJuridical: TcxCheckBox
-      Left = 410
+      Left = 545
       Top = 35
       Action = actRefreshJuridical
       TabOrder = 8
@@ -534,6 +534,13 @@ inherited ReportMovementCheckLightForm: TReportMovementCheckLightForm
       Properties.ReadOnly = True
       TabOrder = 10
       Width = 132
+    end
+    object cbList: TcxCheckBox
+      Left = 120
+      Top = 35
+      Action = actRefreshList
+      TabOrder = 11
+      Width = 137
     end
   end
   object edJuridical: TcxButtonEdit [2]
@@ -578,6 +585,19 @@ inherited ReportMovementCheckLightForm: TReportMovementCheckLightForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actRefreshList: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1058#1054#1051#1068#1050#1054' '#1055#1054' '#1057#1055#1048#1057#1050#1059
+      Hint = #1058#1054#1051#1068#1050#1054' '#1055#1054' '#1057#1055#1048#1057#1050#1059
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -684,6 +704,14 @@ inherited ReportMovementCheckLightForm: TReportMovementCheckLightForm
           Name = 'inisJuridical'
           Value = Null
           Component = cbJuridical
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisList'
+          Value = Null
+          Component = cbList
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -843,6 +871,14 @@ inherited ReportMovementCheckLightForm: TReportMovementCheckLightForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisUnitList'
+        Value = Null
+        Component = cbList
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 168
@@ -908,7 +944,7 @@ inherited ReportMovementCheckLightForm: TReportMovementCheckLightForm
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 224
-    Top = 24
+    Top = 72
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -937,11 +973,11 @@ inherited ReportMovementCheckLightForm: TReportMovementCheckLightForm
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceUnit
-    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnitTreeForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -960,7 +996,8 @@ inherited ReportMovementCheckLightForm: TReportMovementCheckLightForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 344
+    Left = 336
+    Top = 88
   end
   object spGet_UserUnit: TdsdStoredProc
     StoredProcName = 'gpGet_UserUnit'
@@ -1013,8 +1050,7 @@ inherited ReportMovementCheckLightForm: TReportMovementCheckLightForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 536
-    Top = 8
+    Left = 512
   end
   object GuidesJuridical: TdsdGuides
     KeyField = 'Id'

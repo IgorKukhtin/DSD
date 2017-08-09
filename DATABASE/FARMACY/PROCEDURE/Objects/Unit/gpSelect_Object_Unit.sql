@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isOver Boolean
              , isUploadBadm Boolean
              , isMarginCategory Boolean
+             , isReport Boolean
              , Num_byReportBadm Integer
 ) AS
 $BODY$
@@ -62,10 +63,11 @@ BEGIN
       , ObjectDate_StartServiceNigth.ValueData               AS StartServiceNigth
       , ObjectDate_EndServiceNigth.ValueData                 AS EndServiceNigth
 
-      , COALESCE(ObjectBoolean_RepriceAuto.ValueData, False) AS isRepriceAuto
-      , COALESCE(ObjectBoolean_Over.ValueData, False)        AS isOver
-      , COALESCE(ObjectBoolean_UploadBadm.ValueData, False)  AS isUploadBadm
-      , COALESCE(ObjectBoolean_MarginCategory.ValueData, False)  AS isMarginCategory
+      , COALESCE(ObjectBoolean_RepriceAuto.ValueData, FALSE) AS isRepriceAuto
+      , COALESCE(ObjectBoolean_Over.ValueData, FALSE)        AS isOver
+      , COALESCE(ObjectBoolean_UploadBadm.ValueData, FALSE)  AS isUploadBadm
+      , COALESCE(ObjectBoolean_MarginCategory.ValueData, FALSE)  AS isMarginCategory
+      , COALESCE(ObjectBoolean_Report.ValueData, FALSE)          AS isReport
       , COALESCE(tmpByBadm.Num_byReportBadm, Null) ::Integer     AS Num_byReportBadm
 
     FROM Object AS Object_Unit
@@ -117,7 +119,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_MarginCategory
                                 ON ObjectBoolean_MarginCategory.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_MarginCategory.DescId = zc_ObjectBoolean_Unit_MarginCategory()
-
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Report
+                                ON ObjectBoolean_Report.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_Report.DescId = zc_ObjectBoolean_Unit_Report()
+                               
         LEFT JOIN ObjectDate AS ObjectDate_StartServiceNigth
                              ON ObjectDate_StartServiceNigth.ObjectId = Object_Unit.Id
                             AND ObjectDate_StartServiceNigth.DescId = zc_ObjectDate_Unit_StartServiceNigth()
@@ -140,6 +145,7 @@ ALTER FUNCTION gpSelect_Object_Unit(TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 09.08.17         * add isReport
  08.08.17         * add ProvinceCity
  06.03.17         * add Address
  31.01.17         * add isMarginCategory

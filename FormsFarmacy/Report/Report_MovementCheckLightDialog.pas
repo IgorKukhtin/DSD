@@ -50,6 +50,7 @@ type
     cxLabel4: TcxLabel;
     edJuridical: TcxButtonEdit;
     GuidesJuridical: TdsdGuides;
+    cbList: TcxCheckBox;
   private
     { Private declarations }
   public

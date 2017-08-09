@@ -1,23 +1,23 @@
 inherited Unit_ObjectForm: TUnit_ObjectForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
   ClientHeight = 420
-  ClientWidth = 771
-  ExplicitWidth = 787
-  ExplicitHeight = 459
+  ClientWidth = 809
+  ExplicitWidth = 825
+  ExplicitHeight = 458
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 771
+    Width = 809
     Height = 394
     ExplicitWidth = 771
     ExplicitHeight = 394
     ClientRectBottom = 394
-    ClientRectRight = 771
+    ClientRectRight = 809
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 771
       ExplicitHeight = 394
       inherited cxGrid: TcxGrid
-        Width = 771
+        Width = 809
         Height = 394
         ExplicitWidth = 771
         ExplicitHeight = 394
@@ -139,6 +139,15 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Options.Editing = False
             Width = 115
           end
+          object isReport: TcxGridDBColumn
+            Caption = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1086#1090#1095#1077#1090#1077
+            DataBinding.FieldName = 'isReport'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1086#1090#1095#1077#1090#1077
+            Options.Editing = False
+            Width = 72
+          end
         end
       end
     end
@@ -213,6 +222,19 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actUpdateisReport: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isReport
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isReport
+        end>
+      Caption = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1086#1090#1095#1077#1090#1077
+      Hint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1086#1090#1095#1077#1090#1077
+      ImageIndex = 38
     end
     object actUpdateisMarginCategory: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -382,6 +404,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateisReport'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -423,6 +453,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
     object bbisMarginCategory: TdxBarButton
       Action = actUpdateisMarginCategory
+      Category = 0
+    end
+    object bbUpdateisReport: TdxBarButton
+      Action = actUpdateisReport
       Category = 0
     end
   end
@@ -593,7 +627,41 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 624
-    Top = 211
+    Left = 664
+    Top = 203
+  end
+  object spUpdate_Unit_isReport: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isReport'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisReport'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isReport'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisReport'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isReport'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 648
+    Top = 267
   end
 end
