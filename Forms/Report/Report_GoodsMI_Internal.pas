@@ -50,7 +50,7 @@ type
     edPaidKind: TcxButtonEdit;
     PaidKindGuides: TdsdGuides;
     ExecuteDialog: TExecuteDialog;
-    bb: TdxBarButton;
+    bbExecuteDialog: TdxBarButton;
     PriceOut_zavod: TcxGridDBColumn;
     PriceIn_zavod: TcxGridDBColumn;
     GoodsGroupNameFull: TcxGridDBColumn;
@@ -88,6 +88,8 @@ type
     LocationItemName: TcxGridDBColumn;
     LocationItemName_by: TcxGridDBColumn;
     Summ_ProfitLoss: TcxGridDBColumn;
+    actPrintArticleLoss: TdsdPrintAction;
+    bbPrintArticleLoss: TdxBarButton;
   private
     { Private declarations }
   public

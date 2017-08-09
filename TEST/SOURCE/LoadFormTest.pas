@@ -1657,13 +1657,13 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckContractInMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckContractInMovementForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_OrderExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_OrderExternalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_OrderExternalDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_OrderExternalDialogForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_OrderExternal_SaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_OrderExternal_SaleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_OrderExternal_SaleDialogForm'));
@@ -1704,14 +1704,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_MemberForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MemberDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MemberDialogForm');
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CashForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CashDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CashUserForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BankAccountForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BankAccountForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BankAccountDialogForm'));
@@ -1737,7 +1737,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalCompleteDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalCompleteForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalCompleteForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_InternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_InternalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_InternalDialogForm'));
@@ -1748,7 +1748,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_ReturnInToLinkForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_ReturnInToLinkDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_ReturnInToLinkDialogForm');
-  }
+
 end;
 
 procedure TLoadFormTest.LoadReportAssetFormTest;
