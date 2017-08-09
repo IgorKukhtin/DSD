@@ -5,9 +5,8 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -422
   ExplicitWidth = 1092
-  ExplicitHeight = 391
+  ExplicitHeight = 390
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -877,6 +876,133 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
       isShowModal = True
       OpenBeforeShow = True
     end
+    object actPrintArticleLoss: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42370d
+          FromParam.Component = deStart
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'StartDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42370d
+          FromParam.Component = deEnd
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'EndDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProcList = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1089#1090#1072#1090#1100#1080' '#1089#1087#1080#1089#1072#1085#1080#1103')'
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1089#1090#1072#1090#1100#1080' '#1089#1087#1080#1089#1072#1085#1080#1103')'
+      ImageIndex = 16
+      DataSets = <
+        item
+          UserName = 'frxDBDItems'
+          IndexFieldNames = 
+            'ArticleLossName;GoodsGroupNameFull;GoodsName;GoodsKindName;Parti' +
+            'onGoods'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = ''
+          Component = GoodsGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = ''
+          Component = FromGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToName'
+          Value = ''
+          Component = ToGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isLocation'
+          Value = 'False'
+          Component = cbLocation
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGoodsKind'
+          Value = 'False'
+          Component = cbGoodsKind
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPartionGoods'
+          Value = 'False'
+          Component = cbPartionGoods
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DescName'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'InDescName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1089#1090#1072#1090#1100#1080' '#1089#1087#1080#1089#1072#1085#1080#1103')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1089#1090#1072#1090#1100#1080' '#1089#1087#1080#1089#1072#1085#1080#1103')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -1097,7 +1223,7 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbExecuteDialog'
         end
         item
           Visible = True
@@ -1137,6 +1263,14 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintArticleLoss'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1144,7 +1278,7 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
           ItemName = 'dxBarStatic'
         end>
     end
-    object bb: TdxBarButton
+    object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
       Category = 0
     end
@@ -1172,6 +1306,10 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
       Hint = 'bbPartionGoods'
       Visible = ivAlways
       Control = cbPartionGoods
+    end
+    object bbPrintArticleLoss: TdxBarButton
+      Action = actPrintArticleLoss
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

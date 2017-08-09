@@ -3,9 +3,8 @@ inherited Report_PromoForm: TReport_PromoForm
   ClientHeight = 434
   ClientWidth = 833
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
-  ExplicitLeft = -60
   ExplicitWidth = 849
-  ExplicitHeight = 469
+  ExplicitHeight = 472
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -22,6 +21,8 @@ inherited Report_PromoForm: TReport_PromoForm
       inherited cxGrid: TcxGrid
         Width = 833
         Height = 377
+        ExplicitLeft = 64
+        ExplicitTop = 160
         ExplicitWidth = 833
         ExplicitHeight = 377
         inherited cxGridDBTableView: TcxGridDBTableView

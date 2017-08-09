@@ -47,8 +47,10 @@ end;
 procedure TLoadReportTest.LoadPromoFormTest;
 begin
   LoadReportFromFile('Акция', ReportPath + '\Товарный Учет\PrintMovement_Promo.fr3');
-  LoadReportFromFile('Отчет_по_акциям', ReportPath + '\Отчеты (товарные)\Отчет_по_Акциям.fr3');
   LoadReportFromFile('Планируемые результаты акции', ReportPath + '\Товарный Учет\PrintMovement_Promo_Calc.fr3');
+
+  LoadReportFromFile('Отчет_по_акциям', ReportPath + '\Отчеты (товарные)\Отчет_по_Акциям.fr3');
+  LoadReportFromFile('Отчет Результаты ценовых акций', ReportPath + '\Отчеты (товарные)\Отчет Результаты ценовых акций.fr3');
 end;
 
 procedure TLoadReportTest.LoadReceiptFormTest;
@@ -90,9 +92,10 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+   {
   LoadReportFromFile('PrintMovement_SaleJuridicalInvoice', ReportPath + '\Товарный Учет\PrintMovement_SaleJuridicalInvoice.fr3');
   exit;
-  {LoadReportFromFile('PrintMovement_IncomeSticker', ReportPath + '\Товарный Учет\PrintMovement_IncomeSticker.fr3');
+  LoadReportFromFile('PrintMovement_IncomeSticker', ReportPath + '\Товарный Учет\PrintMovement_IncomeSticker.fr3');
   exit;
 
   LoadReportFromFile('Отчет движение по товару (партии ТМЦ+МНМА)', ReportPath + '\Отчеты (товарные)\Отчет движение по товару (партии ТМЦ+МНМА).fr3');
@@ -171,7 +174,10 @@ begin
   LoadReportFromFile('Отчет по товару (продажа по покупателям)', ReportPath + '\Отчеты (Отчеты (товарные)\Отчет по товару (продажа по покупателям).fr3');
   LoadReportFromFile('Отчет по товару (приход от поставщика)', ReportPath + '\Отчеты (товарные)\Отчет по товару (приход от поставщика).fr3');
   LoadReportFromFile('Отчет по товару (внутренний)', ReportPath + '\Отчеты (товарные)\Отчет по товару (внутренний).fr3');
-
+}
+  LoadReportFromFile('Отчет по товару (статьи списания)', ReportPath + '\Отчеты (товарные)\Отчет по товару (статьи списания).fr3');
+ exit;
+ {
   LoadReportFromFile('Отчет по просрочке', ReportPath + '\Отчеты (Отчеты (товарные)\Отчет по просрочке.fr3');
 
   LoadReportFromFile('Отчет По Отгрузкам', ReportPath + '\Отчеты (товарные)\Отчет По Отгрузкам.fr3');
