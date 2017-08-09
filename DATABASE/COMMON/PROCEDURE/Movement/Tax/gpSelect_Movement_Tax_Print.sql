@@ -1,4 +1,4 @@
- -- Function: gpSelect_Movement_Tax_Print()
+-- Function: gpSelect_Movement_Tax_Print()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar);
 
@@ -177,17 +177,17 @@ BEGIN
              END ::TVarChar AS CHARCODE
            -- , 'Неграш О.В.'::TVarChar                    AS N10
            , CASE WHEN Object_PersonalSigning.PersonalName <> '' 
-                  THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1)
+                  THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1, FALSE)
                   ELSE CASE WHEN Object_PersonalBookkeeper_View.PersonalName <> '' 
-                            THEN zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1)
+                            THEN zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1, FALSE)
                             ELSE 'Рудик Н.В.' 
                        END 
              END                            :: TVarChar AS N10
            , CASE WHEN Object_PersonalSigning.PersonalName <> '' 
-                  THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1)
+                  THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1, TRUE)
                   ELSE CASE WHEN Object_PersonalBookkeeper_View.PersonalName <> '' 
-                            THEN zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1)
-                            ELSE 'Рудик Н.В.' 
+                            THEN zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1, TRUE)
+                            ELSE 'Н. В. Рудик' 
                        END 
              END                            :: TVarChar AS N10_ifin
            , 'оплата з поточного рахунка'::TVarChar     AS N9
@@ -267,9 +267,9 @@ BEGIN
            , OH_JuridicalDetails_From.INN               AS INN_From
            , OH_JuridicalDetails_From.NumberVAT         AS NumberVAT_From
            , CASE WHEN Object_PersonalSigning.PersonalName <> '' 
-                  THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1)
+                  THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1, FALSE)
                   ELSE CASE WHEN Object_PersonalBookkeeper_View.PersonalName <> '' 
-                            THEN zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1)
+                            THEN zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1, FALSE)
                             ELSE 'Рудик Н.В.' 
                        END
               END                           :: TVarChar AS AccounterName_From

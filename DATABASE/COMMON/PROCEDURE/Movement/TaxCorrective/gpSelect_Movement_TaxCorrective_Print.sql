@@ -271,9 +271,9 @@ BEGIN
              END ::TVarChar AS CHARCODE
            -- , 'Неграш О.В.'::TVarChar                                        AS N10
            , CASE WHEN Object_PersonalSigning.PersonalName <> '' 
-                  THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1)
+                  THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1, FALSE)
                   ELSE CASE WHEN Object_PersonalBookkeeper_View.PersonalName <> '' 
-                            THEN zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1) 
+                            THEN zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1, FALSE) 
                             ELSE 'Рудик Н.В.' 
                        END
              END                                                :: TVarChar AS N10
@@ -359,9 +359,9 @@ BEGIN
            , OH_JuridicalDetails_To.NumberVAT                               AS NumberVAT_To
          -- , COALESCE (Object_Personal_View.PersonalName, OH_JuridicalDetails_To.AccounterName) :: TVarChar AS AccounterName_To 
            , CASE WHEN Object_PersonalSigning.PersonalName <> '' 
-                  THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1)
+                  THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1, FALSE)
                   ELSE CASE WHEN COALESCE (Object_PersonalBookkeeper_View.PersonalName,'') <> '' 
-                            THEN zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1)
+                            THEN zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1, FALSE)
                             ELSE 'Рудик Н.В.' /*'А.В. Марухно'*/ 
                        END  
              END                                                :: TVarChar AS AccounterName_To

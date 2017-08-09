@@ -207,7 +207,7 @@ BEGIN
 
            , Object_RouteSorting.ValueData 	        AS RouteSortingName
 
-           , CASE WHEN COALESCE (Object_PersonalStore_View.PersonalName, '') <> '' THEN zfConvert_FIO (Object_PersonalStore_View.PersonalName,2) ELSE vbStoreKeeperName END  AS StoreKeeper -- кладовщик
+           , CASE WHEN COALESCE (Object_PersonalStore_View.PersonalName, '') <> '' THEN zfConvert_FIO (Object_PersonalStore_View.PersonalName, 2, FALSE) ELSE vbStoreKeeperName END  AS StoreKeeper -- кладовщик
            , '' :: TVarChar                             AS Through     -- через кого
            , CASE WHEN OH_JuridicalDetails_To.OKPO IN ('32516492', '39135315', '39622918') THEN 'м. Київ, вул Ольжича, 18/22' ELSE '' END :: TVarChar  AS UnitAddress -- адреса складання
 
@@ -246,7 +246,7 @@ BEGIN
            , OH_JuridicalDetails_To.MFO                 AS BankMFO_To
            , OH_JuridicalDetails_To.Phone               AS Phone_To
 
-           , CASE WHEN COALESCE (Object_PersonalCollation.ValueData, '') = '' THEN '' ELSE zfConvert_FIO(Object_PersonalCollation.ValueData,2) END :: TVarChar        AS PersonalCollationName
+           , CASE WHEN COALESCE (Object_PersonalCollation.ValueData, '') = '' THEN '' ELSE zfConvert_FIO (Object_PersonalCollation.ValueData, 2, FALSE) END :: TVarChar        AS PersonalCollationName
       
            , ObjectString_Partner_GLNCode.ValueData     AS DeliveryPlaceGLNCode
     
@@ -280,7 +280,7 @@ BEGIN
            , OH_JuridicalDetails_From.INN               AS INN_From
            , OH_JuridicalDetails_From.NumberVAT         AS NumberVAT_From
            , OH_JuridicalDetails_From.AccounterName     AS AccounterName_From
-           , CASE WHEN COALESCE (OH_JuridicalDetails_From.MainName, '') = '' THEN '' ELSE zfConvert_FIO(OH_JuridicalDetails_From.MainName,2) END :: TVarChar   AS MainName_From --- , zfConvert_FIO(OH_JuridicalDetails_From.MainName,2)          AS MainName_From
+           , CASE WHEN COALESCE (OH_JuridicalDetails_From.MainName, '') = '' THEN '' ELSE zfConvert_FIO (OH_JuridicalDetails_From.MainName, 2, FALSE) END :: TVarChar   AS MainName_From --- , zfConvert_FIO (OH_JuridicalDetails_From.MainName, 2, FALSE)          AS MainName_From
            , OH_JuridicalDetails_From.BankAccount       AS BankAccount_From
            , OH_JuridicalDetails_From.BankName          AS BankName_From
            , OH_JuridicalDetails_From.MFO               AS BankMFO_From
@@ -335,7 +335,7 @@ BEGIN
            , CASE WHEN COALESCE (ObjectString_PlaceOf.ValueData, '') <> '' THEN COALESCE (ObjectString_PlaceOf.ValueData, '') 
                   ELSE 'м.Днiпропетровськ' 
                   END  :: TVarChar   AS PlaceOf 
-           , CASE WHEN COALESCE (Object_Personal_View.PersonalName, '') <> '' THEN zfConvert_FIO (Object_Personal_View.PersonalName,2) ELSE '' END AS PersonalBookkeeperName   -- бухгалтер из спр.Филиалы 
+           , CASE WHEN COALESCE (Object_Personal_View.PersonalName, '') <> '' THEN zfConvert_FIO (Object_Personal_View.PersonalName, 2, FALSE) ELSE '' END AS PersonalBookkeeperName   -- бухгалтер из спр.Филиалы 
            
            , MovementSale_Comment.ValueData        AS SaleComment 
            , CASE WHEN TRIM (MovementOrder_Comment.ValueData) <> TRIM (COALESCE (MovementSale_Comment.ValueData, '')) THEN MovementOrder_Comment.ValueData ELSE '' END AS OrderComment
