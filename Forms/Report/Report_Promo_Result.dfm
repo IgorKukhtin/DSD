@@ -655,6 +655,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
     object dxBarButton1: TdxBarButton
       Action = actPrint
       Category = 0
+      UnclickAfterDoing = False
     end
     object dxBarButton2: TdxBarButton
       Action = actReport_PromoDialog
