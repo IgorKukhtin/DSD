@@ -3,9 +3,9 @@ inherited PromoForm: TPromoForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 599
   ClientWidth = 1204
-  ExplicitTop = -50
+  ExplicitLeft = -431
   ExplicitWidth = 1220
-  ExplicitHeight = 637
+  ExplicitHeight = 634
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -57,6 +57,11 @@ inherited PromoForm: TPromoForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountInWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRetInWeight
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -88,6 +93,11 @@ inherited PromoForm: TPromoForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountInWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRetInWeight
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -215,6 +225,7 @@ inherited PromoForm: TPromoForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -231,7 +242,30 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 80
           end
-          object AmountPlanMin: TcxGridDBColumn [13]
+          object AmountRetIn: TcxGridDBColumn [13]
+            Caption = #1042#1086#1079#1074#1088'. '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076
+            DataBinding.FieldName = 'AmountRetIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object AmountRetInWeight: TcxGridDBColumn [14]
+            Caption = #1042#1086#1079#1074#1088'. '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076' '#1042#1077#1089
+            DataBinding.FieldName = 'AmountRetInWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object AmountPlanMin: TcxGridDBColumn [15]
             Caption = #1055#1083#1072#1085' '#1084#1080#1085'.'
             DataBinding.FieldName = 'AmountPlanMin'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -241,7 +275,7 @@ inherited PromoForm: TPromoForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object AmountPlanMinWeight: TcxGridDBColumn [14]
+          object AmountPlanMinWeight: TcxGridDBColumn [16]
             Caption = #1055#1083#1072#1085' '#1084#1080#1085'. '#1042#1077#1089
             DataBinding.FieldName = 'AmountPlanMinWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -252,7 +286,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 70
           end
-          object AmountPlanMax: TcxGridDBColumn [15]
+          object AmountPlanMax: TcxGridDBColumn [17]
             Caption = #1055#1083#1072#1085' '#1084#1072#1082#1089'.'
             DataBinding.FieldName = 'AmountPlanMax'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -262,7 +296,7 @@ inherited PromoForm: TPromoForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object AmountPlanMaxWeight: TcxGridDBColumn [16]
+          object AmountPlanMaxWeight: TcxGridDBColumn [18]
             Caption = #1055#1083#1072#1085' '#1084#1072#1082#1089'. '#1042#1077#1089
             DataBinding.FieldName = 'AmountPlanMaxWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -273,7 +307,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 70
           end
-          object AmountOrder: TcxGridDBColumn [17]
+          object AmountOrder: TcxGridDBColumn [19]
             Caption = #1047#1072#1103#1074#1082#1072' ('#1092#1072#1082#1090')'
             DataBinding.FieldName = 'AmountOrder'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -285,7 +319,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 80
           end
-          object AmountOrderWeight: TcxGridDBColumn [18]
+          object AmountOrderWeight: TcxGridDBColumn [20]
             Caption = #1047#1072#1103#1074#1082#1072' ('#1092#1072#1082#1090') '#1042#1077#1089
             DataBinding.FieldName = 'AmountOrderWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -296,7 +330,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 70
           end
-          object AmountOut: TcxGridDBColumn [19]
+          object AmountOut: TcxGridDBColumn [21]
             Caption = #1055#1088#1086#1076#1072#1085#1086' ('#1092#1072#1082#1090')'
             DataBinding.FieldName = 'AmountOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -308,7 +342,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 80
           end
-          object AmountOutWeight: TcxGridDBColumn [20]
+          object AmountOutWeight: TcxGridDBColumn [22]
             Caption = #1055#1088#1086#1076#1072#1085#1086' ('#1092#1072#1082#1090') '#1042#1077#1089
             DataBinding.FieldName = 'AmountOutWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -319,7 +353,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 70
           end
-          object AmountIn: TcxGridDBColumn [21]
+          object AmountIn: TcxGridDBColumn [23]
             Caption = #1042#1086#1079#1074#1088#1072#1090' ('#1092#1072#1082#1090')'
             DataBinding.FieldName = 'AmountIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -331,7 +365,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 80
           end
-          object AmountInWeight: TcxGridDBColumn [22]
+          object AmountInWeight: TcxGridDBColumn [24]
             Caption = #1042#1086#1079#1074#1088#1072#1090' ('#1092#1072#1082#1090') '#1042#1077#1089
             DataBinding.FieldName = 'AmountInWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1485,7 +1519,7 @@ inherited PromoForm: TPromoForm
   object cxLabel21: TcxLabel [4]
     Left = 919
     Top = 74
-    Caption = #1060#1048#1054' -'#1077#1089#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+    Caption = #1045#1089#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
   end
   object edstrSign: TcxTextEdit [5]
     Left = 919
@@ -1504,7 +1538,7 @@ inherited PromoForm: TPromoForm
   object cxLabel22: TcxLabel [7]
     Left = 1048
     Top = 74
-    Caption = #1060#1048#1054' -'#1086#1078#1080#1076'. '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+    Caption = #1054#1078#1080#1076#1072#1077#1090#1089#1103' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Top = 312
@@ -1545,7 +1579,9 @@ inherited PromoForm: TPromoForm
     end
     object mactUpdate_Movement_Promo_Calc: TMultiAction [2]
       Category = 'Update_Promo_Data'
+      TabSheet = cxTabSheetCalc
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = actUpdate_Movement_Promo_Calc
@@ -1602,7 +1638,9 @@ inherited PromoForm: TPromoForm
     end
     object actInsertUpdateMISignNO1: TMultiAction [5]
       Category = 'Sign'
+      TabSheet = cxTabSheetSign
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = actInsertUpdateMISignNO
@@ -1722,6 +1760,7 @@ inherited PromoForm: TPromoForm
       DataSource = ConditionPromoDS
     end
     inherited actShowErased: TBooleanStoredProcAction
+      TabSheet = tsMain
       StoredProcList = <
         item
           StoredProc = spSelect
@@ -1735,6 +1774,7 @@ inherited PromoForm: TPromoForm
     end
     object macInsertUpdate_MI_Param: TMultiAction [15]
       Category = 'Update_MI_Param'
+      TabSheet = tsMain
       MoveParams = <>
       ActionList = <
         item
@@ -1809,7 +1849,7 @@ inherited PromoForm: TPromoForm
     end
     object actPartnerProtocolOpenForm: TdsdOpenForm [25]
       Category = 'DSDLib'
-      TabSheet = tsPartner
+      TabSheet = tsMain
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1055#1072#1088#1090#1085#1077#1088#1099'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1055#1072#1088#1090#1085#1077#1088#1099'>'
@@ -1871,7 +1911,7 @@ inherited PromoForm: TPromoForm
     end
     object actAdvertisingProtocolOpenForm: TdsdOpenForm [27]
       Category = 'DSDLib'
-      TabSheet = tsAdvertising
+      TabSheet = tsMain
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
@@ -1979,7 +2019,7 @@ inherited PromoForm: TPromoForm
     end
     object InsertRecordPartner: TInsertRecord
       Category = 'Partner'
-      TabSheet = tsPartner
+      TabSheet = tsMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       View = cxGridDBTableViewPartner
@@ -1991,7 +2031,7 @@ inherited PromoForm: TPromoForm
     end
     object ErasedPartner: TdsdUpdateErased
       Category = 'Partner'
-      TabSheet = tsPartner
+      TabSheet = tsMain
       MoveParams = <>
       StoredProc = spErasedMIPartner
       StoredProcList = <
@@ -2010,7 +2050,7 @@ inherited PromoForm: TPromoForm
     end
     object UnErasedPartner: TdsdUpdateErased
       Category = 'Partner'
-      TabSheet = tsPartner
+      TabSheet = tsMain
       MoveParams = <>
       StoredProc = spUnErasedMIPartner
       StoredProcList = <
@@ -2101,7 +2141,7 @@ inherited PromoForm: TPromoForm
     end
     object InsertCondition: TInsertRecord
       Category = 'Condition'
-      TabSheet = tsConditionPromo
+      TabSheet = tsMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       View = grtvConditionPromo
@@ -2113,7 +2153,7 @@ inherited PromoForm: TPromoForm
     end
     object ErasedCondition: TdsdUpdateErased
       Category = 'Condition'
-      TabSheet = tsConditionPromo
+      TabSheet = tsMain
       MoveParams = <>
       StoredProc = spErasedMICondition
       StoredProcList = <
@@ -2132,7 +2172,7 @@ inherited PromoForm: TPromoForm
     end
     object UnErasedCondition: TdsdUpdateErased
       Category = 'Condition'
-      TabSheet = tsConditionPromo
+      TabSheet = tsMain
       MoveParams = <>
       StoredProc = spUnErasedMIPartner
       StoredProcList = <
@@ -2245,7 +2285,7 @@ inherited PromoForm: TPromoForm
     end
     object InsertRecordAdvertising: TInsertRecord
       Category = 'Advertising'
-      TabSheet = tsAdvertising
+      TabSheet = tsMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       View = grtvAdvertising
@@ -2257,7 +2297,7 @@ inherited PromoForm: TPromoForm
     end
     object ErasedAdvertising: TdsdUpdateErased
       Category = 'Advertising'
-      TabSheet = tsAdvertising
+      TabSheet = tsMain
       MoveParams = <>
       StoredProc = spErasedAdvertising
       StoredProcList = <
@@ -2276,7 +2316,7 @@ inherited PromoForm: TPromoForm
     end
     object unErasedAdvertising: TdsdUpdateErased
       Category = 'Advertising'
-      TabSheet = tsAdvertising
+      TabSheet = tsMain
       MoveParams = <>
       StoredProc = spUnErasedAdvertising
       StoredProcList = <
@@ -2353,6 +2393,7 @@ inherited PromoForm: TPromoForm
     end
     object mactUpdate_Movement_Promo_Data: TMultiAction
       Category = 'Update_Promo_Data'
+      TabSheet = tsMain
       MoveParams = <>
       ActionList = <
         item
@@ -2361,8 +2402,8 @@ inherited PromoForm: TPromoForm
         item
           Action = actRefresh
         end>
-      Caption = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1072#1082#1094#1080#1080
-      Hint = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1072#1082#1094#1080#1080
+      Caption = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' -'#1040#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1077#1088#1080#1086#1076' + '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+      Hint = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' -'#1040#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1077#1088#1080#1086#1076' + '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
       ImageIndex = 45
     end
     object actPartnerListRefresh: TdsdDataSetRefresh
@@ -2382,6 +2423,7 @@ inherited PromoForm: TPromoForm
     end
     object mactAddAllPartner: TMultiAction
       Category = 'Partner'
+      TabSheet = tsMain
       MoveParams = <>
       ActionList = <
         item
@@ -2458,7 +2500,9 @@ inherited PromoForm: TPromoForm
     end
     object actInsertUpdateMISign1: TMultiAction
       Category = 'Sign'
+      TabSheet = cxTabSheetSign
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = actInsertUpdateMISign
@@ -2581,7 +2625,7 @@ inherited PromoForm: TPromoForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -2613,7 +2657,7 @@ inherited PromoForm: TPromoForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -2625,7 +2669,7 @@ inherited PromoForm: TPromoForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -2649,7 +2693,7 @@ inherited PromoForm: TPromoForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -2657,7 +2701,7 @@ inherited PromoForm: TPromoForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -2719,7 +2763,14 @@ inherited PromoForm: TPromoForm
         item
           Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
     end
     inherited bbShowAll: TdxBarButton
       Visible = ivNever

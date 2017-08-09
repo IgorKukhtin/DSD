@@ -24,7 +24,7 @@ BEGIN
     -- Проверили уникальность товар/вид товара
     IF inNum NOT IN (2, 4)
     THEN
-        RAISE EXCEPTION 'Ошибка. Строка № <%> не редактируется' , inNum;
+        RAISE EXCEPTION 'Ошибка. Строка № <%> не редактируется' , zfConvert_FloatToString (inNum);
     END IF;
     
     IF inNum = 2

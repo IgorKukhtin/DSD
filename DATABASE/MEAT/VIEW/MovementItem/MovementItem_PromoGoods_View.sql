@@ -17,9 +17,15 @@ CREATE OR REPLACE VIEW MovementItem_PromoGoods_View AS
       , MIFloat_PriceWithOutVAT.ValueData      AS PriceWithOutVAT     --Цена отгрузки без учета НДС, с учетом скидки, грн
       , MIFloat_PriceWithVAT.ValueData         AS PriceWithVAT        --Цена отгрузки с учетом НДС, с учетом скидки, грн
       , MIFloat_PriceSale.ValueData            AS PriceSale           --Цена на полке
+
       , MIFloat_AmountReal.ValueData           AS AmountReal          --Объем продаж в аналогичный период, кг
       , (MIFloat_AmountReal.ValueData
           * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountRealWeight    --Объем продаж в аналогичный период, кг Вес
+
+      , MIFloat_AmountRetIn.ValueData          AS AmountRetIn          --Объем возврат в аналогичный период, кг
+      , (MIFloat_AmountRetIn.ValueData
+          * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountRetInWeight    --Объем возврат в аналогичный период, кг Вес
+
       , MIFloat_AmountPlanMin.ValueData        AS AmountPlanMin       --Минимум планируемого объема продаж на акционный период (в кг)
       , (MIFloat_AmountPlanMin.ValueData
           * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountPlanMinWeight --Минимум планируемого объема продаж на акционный период (в кг) Вес
@@ -65,6 +71,9 @@ CREATE OR REPLACE VIEW MovementItem_PromoGoods_View AS
         LEFT JOIN MovementItemFloat AS MIFloat_AmountReal
                                     ON MIFloat_AmountReal.MovementItemId = MovementItem.Id
                                    AND MIFloat_AmountReal.DescId = zc_MIFloat_AmountReal()
+        LEFT JOIN MovementItemFloat AS MIFloat_AmountRetIn
+                                    ON MIFloat_AmountRetIn.MovementItemId = MovementItem.Id
+                                   AND MIFloat_AmountRetIn.DescId = zc_MIFloat_AmountRetIn()
         LEFT JOIN MovementItemFloat AS MIFloat_AmountPlanMin
                                     ON MIFloat_AmountPlanMin.MovementItemId = MovementItem.Id
                                    AND MIFloat_AmountPlanMin.DescId = zc_MIFloat_AmountPlanMin()
