@@ -3,7 +3,7 @@ inherited PromoForm: TPromoForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 599
   ClientWidth = 1204
-  ExplicitTop = -69
+  ExplicitTop = -50
   ExplicitWidth = 1220
   ExplicitHeight = 637
   PixelsPerInch = 96
@@ -12,6 +12,7 @@ inherited PromoForm: TPromoForm
     Top = 139
     Width = 1204
     Height = 460
+    Properties.ActivePage = cxTabSheetCalc
     ExplicitTop = 139
     ExplicitWidth = 1204
     ExplicitHeight = 460
@@ -1531,7 +1532,33 @@ inherited PromoForm: TPromoForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actInsertUpdateMISignNO: TdsdExecStoredProc [1]
+    object actUpdate_Movement_Promo_Calc: TdsdExecStoredProc [1]
+      Category = 'Update_Promo_Data'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Movement_Promo_Calc
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Movement_Promo_Calc
+        end>
+      Caption = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' ('#1082#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088')'
+      Hint = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' ('#1082#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088')'
+    end
+    object mactUpdate_Movement_Promo_Calc: TMultiAction [2]
+      Category = 'Update_Promo_Data'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Movement_Promo_Calc
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' ('#1082#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088')'
+      Hint = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' ('#1082#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088')'
+      ImageIndex = 42
+    end
+    object actInsertUpdateMISignNO: TdsdExecStoredProc [3]
       Category = 'Sign'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1574,7 +1601,7 @@ inherited PromoForm: TPromoForm
           StoredProc = spSelectCalc
         end>
     end
-    object actInsertUpdateMISignNO1: TMultiAction [3]
+    object actInsertUpdateMISignNO1: TMultiAction [5]
       Category = 'Sign'
       MoveParams = <>
       ActionList = <
@@ -1588,10 +1615,14 @@ inherited PromoForm: TPromoForm
       Hint = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 52
     end
-    object InsertRecord: TInsertRecord [5]
+    inherited actGridToExcel: TdsdGridToExcel
+      Enabled = False
+    end
+    object InsertRecord: TInsertRecord [7]
       Category = 'Goods'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView
       Action = GoodsChoiceForm
@@ -1600,7 +1631,7 @@ inherited PromoForm: TPromoForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ImageIndex = 0
     end
-    object actUpdateCalcDS: TdsdUpdateDataSet [6]
+    object actUpdateCalcDS: TdsdUpdateDataSet [8]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1617,6 +1648,7 @@ inherited PromoForm: TPromoForm
     inherited actMISetErased: TdsdUpdateErased
       Category = 'Goods'
       TabSheet = tsMain
+      Enabled = False
       StoredProcList = <
         item
           StoredProc = spErasedMIMaster
@@ -1628,7 +1660,7 @@ inherited PromoForm: TPromoForm
       ShortCut = 0
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <'#1058#1086#1074#1072#1088'> ?'
     end
-    object actPrint_Calc: TdsdPrintAction [8]
+    object actPrint_Calc: TdsdPrintAction [10]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
@@ -1671,6 +1703,7 @@ inherited PromoForm: TPromoForm
     inherited actMISetUnErased: TdsdUpdateErased
       Category = 'Goods'
       TabSheet = tsMain
+      Enabled = False
       StoredProcList = <
         item
           StoredProc = spUnErasedMIMaster
@@ -1681,7 +1714,7 @@ inherited PromoForm: TPromoForm
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ShortCut = 0
     end
-    object UpdateConditionDS: TdsdUpdateDataSet [10]
+    object UpdateConditionDS: TdsdUpdateDataSet [12]
       Category = 'Condition'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1707,7 +1740,7 @@ inherited PromoForm: TPromoForm
           StoredProc = spSelect_MovementItem_PromoCondition
         end>
     end
-    object macInsertUpdate_MI_Param: TMultiAction [13]
+    object macInsertUpdate_MI_Param: TMultiAction [15]
       Category = 'Update_MI_Param'
       MoveParams = <>
       ActionList = <
@@ -1731,7 +1764,7 @@ inherited PromoForm: TPromoForm
         item
         end>
     end
-    object actInsertUpdate_MI_Param: TdsdExecStoredProc [16]
+    object actInsertUpdate_MI_Param: TdsdExecStoredProc [18]
       Category = 'Update_MI_Param'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1780,8 +1813,9 @@ inherited PromoForm: TPromoForm
     end
     inherited MovementItemProtocolOpenForm: TdsdOpenForm
       TabSheet = tsMain
+      Enabled = False
     end
-    object actPartnerProtocolOpenForm: TdsdOpenForm [23]
+    object actPartnerProtocolOpenForm: TdsdOpenForm [25]
       Category = 'DSDLib'
       TabSheet = tsPartner
       MoveParams = <>
@@ -1812,10 +1846,11 @@ inherited PromoForm: TPromoForm
         end>
       isShowModal = False
     end
-    object actConditionPromoProtocolOpenForm: TdsdOpenForm [24]
+    object actConditionPromoProtocolOpenForm: TdsdOpenForm [26]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1044#1086#1087'. '#1089#1082#1080#1076#1082#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1044#1086#1087'. '#1089#1082#1080#1076#1082#1072'>'
       ImageIndex = 34
@@ -1843,7 +1878,7 @@ inherited PromoForm: TPromoForm
         end>
       isShowModal = False
     end
-    object actAdvertisingProtocolOpenForm: TdsdOpenForm [25]
+    object actAdvertisingProtocolOpenForm: TdsdOpenForm [27]
       Category = 'DSDLib'
       TabSheet = tsAdvertising
       MoveParams = <>
@@ -2448,6 +2483,7 @@ inherited PromoForm: TPromoForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       Caption = #1054#1090#1095#1077#1090' <'#1056#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1094#1077#1085#1086#1074#1099#1093' '#1072#1082#1094#1080#1081'>'
       Hint = #1054#1090#1095#1077#1090' <'#1056#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1094#1077#1085#1086#1074#1099#1093' '#1072#1082#1094#1080#1081'>'
       ImageIndex = 25
@@ -2529,6 +2565,14 @@ inherited PromoForm: TPromoForm
         item
           Visible = True
           ItemName = 'bbInsertUpdate_MI_Param'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
         end
         item
           Visible = True
@@ -2772,6 +2816,10 @@ inherited PromoForm: TPromoForm
     end
     object bbOpenReportForm: TdxBarButton
       Action = actOpenReportForm
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = mactUpdate_Movement_Promo_Calc
       Category = 0
     end
   end
@@ -4646,6 +4694,23 @@ inherited PromoForm: TPromoForm
       end>
     PackSize = 1
     Left = 800
+    Top = 408
+  end
+  object spUpdate_Movement_Promo_Calc: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Promo_Calc'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 704
     Top = 408
   end
 end
