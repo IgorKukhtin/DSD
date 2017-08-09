@@ -3,6 +3,7 @@ inherited PromoForm: TPromoForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 599
   ClientWidth = 1204
+  ExplicitTop = -69
   ExplicitWidth = 1220
   ExplicitHeight = 637
   PixelsPerInch = 96

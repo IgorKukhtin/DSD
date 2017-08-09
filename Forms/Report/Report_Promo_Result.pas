@@ -43,20 +43,15 @@ type
     AmountPlanMinWeight: TcxGridDBColumn;
     AmountPlanMax: TcxGridDBColumn;
     AmountPlanMaxWeight: TcxGridDBColumn;
-    GoodsKindName: TcxGridDBColumn;
     GoodsWeight: TcxGridDBColumn;
     Discount: TcxGridDBColumn;
-    PriceWithOutVAT: TcxGridDBColumn;
     PriceWithVAT: TcxGridDBColumn;
     Price: TcxGridDBColumn;
     CostPromo: TcxGridDBColumn;
-    AdvertisingName: TcxGridDBColumn;
-    OperDate: TcxGridDBColumn;
     PriceSale: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     dxBarButton1: TdxBarButton;
-    ShowAll: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
     actReport_PromoDialog: TExecuteDialog;
     dxBarButton2: TdxBarButton;
@@ -66,8 +61,6 @@ type
     PersonalName: TcxGridDBColumn;
     AmountReal: TcxGridDBColumn;
     AmountRealWeight: TcxGridDBColumn;
-    AmountOrder: TcxGridDBColumn;
-    AmountOrderWeight: TcxGridDBColumn;
     AmountOut: TcxGridDBColumn;
     AmountOutWeight: TcxGridDBColumn;
     AmountIn: TcxGridDBColumn;
@@ -75,6 +68,10 @@ type
     actOpenPromo: TdsdOpenForm;
     dxBarButton3: TdxBarButton;
     FormParams: TdsdFormParams;
+    MainDiscount: TcxGridDBColumn;
+    PersentResult: TcxGridDBColumn;
+    PriceIn1: TcxGridDBColumn;
+    Profit_Virt: TcxGridDBColumn;
   private
     { Private declarations }
   public
