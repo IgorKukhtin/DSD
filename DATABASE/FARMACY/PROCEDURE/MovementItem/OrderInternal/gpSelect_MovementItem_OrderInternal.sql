@@ -749,15 +749,17 @@ BEGIN
                                                           ON MovementLinkObject_Unit.MovementId = Movement_Send.Id
                                                          AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_To()
                                                          AND MovementLinkObject_Unit.ObjectId = vbUnitId
-                            INNER JOIN MovementBoolean AS MovementBoolean_isAuto
+                            -- закомментил - пусть будут все перемещения, не только Авто
+                            /*INNER JOIN MovementBoolean AS MovementBoolean_isAuto
                                                        ON MovementBoolean_isAuto.MovementId = Movement_Send.Id
-                                                      AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
-                                                      AND MovementBoolean_isAuto.ValueData = TRUE
+                                                      AND MovementBoolean_isAuto.DescId     = zc_MovementBoolean_isAuto()
+                                                      AND MovementBoolean_isAuto.ValueData  = TRUE*/
                             INNER JOIN MovementItem AS MI_Send
                                                     ON MI_Send.MovementId = Movement_Send.Id
                                                    AND MI_Send.DescId = zc_MI_Master()
                                                    AND MI_Send.isErased = FALSE
-                     WHERE Movement_Send.OperDate >= vbOperDate - interval '30 day' 
+                     -- WHERE Movement_Send.OperDate >= vbOperDate - interval '30 DAY' 
+                     WHERE Movement_Send.OperDate BETWEEN CURRENT_DATE - INTERVAL '10 DAY' AND CURRENT_DATE + INTERVAL '10 DAY'
                        AND Movement_Send.OperDate < vbOperDateEnd
                        AND Movement_Send.DescId = zc_Movement_Send()
                        AND Movement_Send.StatusId = zc_Enum_Status_UnComplete()
@@ -857,7 +859,7 @@ BEGIN
                                                    ON MovementDate_Branch.MovementId = Movement_Income.Id
                                                   AND MovementDate_Branch.DescId = zc_MovementDate_Branch() 
                        WHERE Movement_Income.DescId = zc_Movement_Income()
-                         AND MovementDate_Branch.ValueData >= CURRENT_DATE
+                         AND MovementDate_Branch.ValueData BETWEEN CURRENT_DATE - INTERVAL '7 DAY' AND CURRENT_DATE + INTERVAL '7 DAY'
                          AND Movement_Income.StatusId = zc_Enum_Status_UnComplete()
                        GROUP BY MovementItem_Income.ObjectId
 
