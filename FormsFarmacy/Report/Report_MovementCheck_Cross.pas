@@ -79,6 +79,7 @@ type
     spGetUnitName: TdsdStoredProc;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    GoodsGroupName: TcxGridDBBandedColumn;
   private
   public
   end;

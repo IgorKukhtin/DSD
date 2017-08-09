@@ -1,7 +1,7 @@
 object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
   Left = 0
   Top = 0
-  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1083#1072#1085#1091' '#1084#1072#1088#1082#1077#1090#1087#1088#1086#1076#1072#1078' ('#1092#1072#1088#1084#1072#1094#1077#1074#1090#1091')'
+  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1077#1087#1072#1088#1072#1090#1072#1084' '#1077#1078#1077#1084#1077#1089#1103#1095'. '#1084#1072#1088#1082#1077#1090'. '#1087#1083#1072#1085#1072
   ClientHeight = 334
   ClientWidth = 822
   Color = clBtnFace
@@ -176,6 +176,16 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
           Options.Moving = False
           Width = 57
         end>
+      object GoodsGroupName: TcxGridDBBandedColumn
+        Caption = #1043#1088#1091#1087#1087#1072
+        DataBinding.FieldName = 'GoodsGroupName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 88
+        Position.BandIndex = 0
+        Position.ColIndex = 0
+        Position.RowIndex = 0
+      end
       object GoodsCode: TcxGridDBBandedColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'GoodsCode'
@@ -185,7 +195,7 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
         Options.Moving = False
         Width = 34
         Position.BandIndex = 0
-        Position.ColIndex = 0
+        Position.ColIndex = 1
         Position.RowIndex = 0
       end
       object GoodsName: TcxGridDBBandedColumn
@@ -199,7 +209,7 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
         Options.Moving = False
         Width = 145
         Position.BandIndex = 0
-        Position.ColIndex = 1
+        Position.ColIndex = 2
         Position.RowIndex = 0
       end
       object PromoAmount: TcxGridDBBandedColumn
@@ -213,7 +223,7 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
         Options.Moving = False
         Width = 40
         Position.BandIndex = 0
-        Position.ColIndex = 2
+        Position.ColIndex = 3
         Position.RowIndex = 0
       end
       object PromoAmountPlanMax: TcxGridDBBandedColumn
@@ -227,7 +237,7 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
         Options.Moving = False
         Width = 50
         Position.BandIndex = 0
-        Position.ColIndex = 4
+        Position.ColIndex = 5
         Position.RowIndex = 0
       end
       object Price: TcxGridDBBandedColumn
@@ -241,7 +251,7 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
         Options.Moving = False
         Width = 40
         Position.BandIndex = 0
-        Position.ColIndex = 5
+        Position.ColIndex = 6
         Position.RowIndex = 0
       end
       object PromoSum: TcxGridDBBandedColumn
@@ -255,7 +265,7 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
         Options.Moving = False
         Width = 54
         Position.BandIndex = 0
-        Position.ColIndex = 6
+        Position.ColIndex = 7
         Position.RowIndex = 0
       end
       object PromoPlanMaxSum: TcxGridDBBandedColumn
@@ -269,7 +279,7 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
         Options.Moving = False
         Width = 55
         Position.BandIndex = 0
-        Position.ColIndex = 7
+        Position.ColIndex = 8
         Position.RowIndex = 0
       end
       object TotalAmount: TcxGridDBBandedColumn
@@ -283,7 +293,7 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
         Options.Moving = False
         Width = 47
         Position.BandIndex = 0
-        Position.ColIndex = 8
+        Position.ColIndex = 9
         Position.RowIndex = 0
       end
       object PromoAmountDiff: TcxGridDBBandedColumn
@@ -297,7 +307,7 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
         Options.Moving = False
         Width = 49
         Position.BandIndex = 0
-        Position.ColIndex = 9
+        Position.ColIndex = 10
         Position.RowIndex = 0
       end
       object PromoAmountPlanMaxDiff: TcxGridDBBandedColumn
@@ -311,7 +321,7 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
         Options.Moving = False
         Width = 57
         Position.BandIndex = 0
-        Position.ColIndex = 10
+        Position.ColIndex = 11
         Position.RowIndex = 0
       end
       object Value: TcxGridDBBandedColumn
@@ -333,7 +343,7 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
         Options.Editing = False
         Width = 50
         Position.BandIndex = 0
-        Position.ColIndex = 3
+        Position.ColIndex = 4
         Position.RowIndex = 0
       end
     end
@@ -448,8 +458,8 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 14
-    Top = 119
+    Left = 54
+    Top = 175
     DockControlHeights = (
       0
       0
@@ -569,8 +579,8 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 51
-    Top = 119
+    Left = 123
+    Top = 199
     object actUpdateChildDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>

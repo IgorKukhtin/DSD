@@ -206,6 +206,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             Caption = #8470' '#1088#1077#1075
             DataBinding.FieldName = 'SertificatNumber'
             HeaderHint = #1053#1086#1084#1077#1088' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
+            Options.Editing = False
             Width = 54
           end
           object SertificatStart: TcxGridDBColumn
@@ -213,6 +214,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             Caption = #1053#1072#1095'. '#1088#1077#1075'.'
             DataBinding.FieldName = 'SertificatStart'
             HeaderHint = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
+            Options.Editing = False
             Width = 63
           end
           object SertificatEnd: TcxGridDBColumn
@@ -220,6 +222,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             Caption = #1054#1082#1086#1085#1095'. '#1088#1077#1075'.'
             DataBinding.FieldName = 'SertificatEnd'
             HeaderHint = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
+            Options.Editing = False
             Width = 58
           end
           object DublePriceColour: TcxGridDBColumn
@@ -264,6 +267,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             DataBinding.FieldName = 'isPrint'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
           object PrintCount: TcxGridDBColumn
@@ -274,6 +278,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1077#1095#1072#1090#1072#1077#1084#1099#1093' '#1089#1090#1080#1082#1077#1088#1086#1074
+            Options.Editing = False
             Width = 62
           end
           object isDeferred: TcxGridDBColumn
@@ -491,15 +496,15 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       Enabled = False
     end
     inherited actUpdateMainDS: TdsdUpdateDataSet
+      StoredProc = spUpdate_MovementItem_Income_AmountManual
       StoredProcList = <
-        item
-          StoredProc = spInsertUpdateMIMaster
-        end
         item
           StoredProc = spUpdate_MovementItem_Income_AmountManual
         end
         item
           StoredProc = spGetTotalSumm
+        end
+        item
         end>
     end
     inherited actPrint: TdsdPrintAction
@@ -898,7 +903,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     end
   end
   inherited MasterDS: TDataSource
-    Top = 448
+    Top = 376
   end
   inherited MasterCDS: TClientDataSet
     Left = 96
@@ -1495,29 +1500,6 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 368
@@ -1600,8 +1582,8 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     ComponentList = <
       item
       end>
-    Left = 512
-    Top = 328
+    Left = 544
+    Top = 312
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -1840,55 +1822,10 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         ComponentItem = 'AmountDiff'
         DataType = ftFloat
         MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 336
-    Top = 368
+    Left = 368
+    Top = 336
   end
   object spGet_Movement_ManualAmountTrouble: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_ManualAmountTrouble'
@@ -1927,8 +1864,8 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 544
-    Top = 432
+    Left = 536
+    Top = 400
   end
   object spUpdate_MovementItem_Income_SetEqualAmount: TdsdStoredProc
     StoredProcName = 'gpUpdate_MovementItem_Income_SetEqualAmount'

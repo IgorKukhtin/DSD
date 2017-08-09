@@ -168,9 +168,10 @@ BEGIN
     
 
      vbQueryText := '
-          SELECT Object_Goods.Id         AS GoodsId
-               , Object_Goods.ObjectCode AS GoodsCode
-               , Object_Goods.ValueData  AS GoodsName
+          SELECT Object_Goods.Id                 AS GoodsId
+               , Object_Goods.ObjectCode         AS GoodsCode
+               , Object_Goods.ValueData          AS GoodsName
+               , Object_GoodsGroup.ValueData     AS GoodsGroupName
                , _tmpMovPromoUnit.Amount         AS PromoAmount
                , _tmpMovPromoUnit.AmountPlanMax  AS PromoAmountPlanMax
                , _tmpGoods.Price
@@ -204,6 +205,11 @@ BEGIN
          LEFT JOIN _tmpMovPromoUnit ON _tmpMovPromoUnit.GoodsId = D.Key[1]
          LEFT JOIN (SELECT tmpMI.GoodsId, SUM(tmpMI.Amount) AS Amount FROM tmpMI GROUP BY tmpMI.GoodsId) AS tmpData ON tmpData.GoodsId = D.Key[1]
          LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = D.Key[1]
+         
+         LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                              ON ObjectLink_Goods_GoodsGroup.ObjectId = _tmpGoods.GoodsId
+                             AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+         LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
         ORDER BY Object_Goods.ValueData
         ';
 
