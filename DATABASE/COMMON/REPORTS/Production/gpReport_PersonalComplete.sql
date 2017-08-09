@@ -76,7 +76,7 @@ BEGIN
                             WHERE Movement.DescId = zc_Movement_WeighingPartner()
                               AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                               AND (MovementLinkObject_Personal.ObjectId = inPersonalId OR inPersonalId=0)
-                              AND (ObjectLink_Unit_Branch.ChildObjectId = inBranchId OR inBranchId = 0 )
+                              AND (COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis()) = inBranchId) -- OR inBranchId = 0 
                              
                             --  AND Movement.StatusId = zc_Enum_Status_Complete()    
                           GROUP BY  Movement.Id, Movement.InvNumber, Movement.OperDate, Object_Branch.ValueData

@@ -553,6 +553,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
       OptionsCustomize.DataRowSizing = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.Footer = True
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
@@ -687,7 +688,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
       GridView = cxGridDBTableView
     end
   end
-  object cbinIsDay: TcxCheckBox
+  object cbIsDay: TcxCheckBox
     Left = 301
     Top = 87
     Action = actIsDay
@@ -701,11 +702,11 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
     Width = 945
     Height = 54
     Align = alTop
-    TabOrder = 5
+    TabOrder = 4
     object deStart: TcxDateEdit
       Left = 60
       Top = 5
-      EditValue = 42005d
+      EditValue = 42736d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -714,7 +715,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
     object deEnd: TcxDateEdit
       Left = 60
       Top = 30
-      EditValue = 42005d
+      EditValue = 42736d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 3
@@ -797,7 +798,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = cbinIsDay
+        Component = cbIsDay
         Properties.Strings = (
           'Checked')
       end
@@ -880,11 +881,11 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbDialogForm'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'bbDialogForm'
         end
         item
           Visible = True
@@ -900,7 +901,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'bbIsDay'
         end
         item
           Visible = True
@@ -957,10 +958,18 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
       Category = 0
       Hint = '   '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbPrint3: TdxBarButton
       Action = actPrint
       Category = 0
+    end
+    object bbIsDay: TdxBarControlContainerItem
+      Caption = 'bbIsDay'
+      Category = 0
+      Hint = 'bbIsDay'
+      Visible = ivAlways
+      Control = cbIsDay
     end
   end
   object ActionList: TActionList
@@ -999,6 +1008,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
       FormName = 'TReport_PersonalCompleteDialogForm'
       FormNameParam.Value = 'TReport_PersonalCompleteDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -1006,6 +1016,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -1013,6 +1024,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PersonalId'
@@ -1020,6 +1032,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           Component = PersonalGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PersonalName'
@@ -1028,6 +1041,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PositionId'
@@ -1035,6 +1049,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           Component = PositionGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PositionName'
@@ -1043,13 +1058,15 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inIsDay'
           Value = Null
-          Component = cbinIsDay
+          Component = cbIsDay
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchId'
@@ -1057,6 +1074,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           Component = BranchGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchName'
@@ -1065,6 +1083,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1077,22 +1096,26 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
       FormName = 'TMovementGoodsJournalForm'
       FormNameParam.Value = 'TMovementGoodsJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
           Value = 41640d
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsKindId'
           Value = 0
           Component = MasterCDS
           ComponentItem = 'GoodsKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsKindName'
@@ -1100,12 +1123,14 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
@@ -1113,12 +1138,14 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           Component = MasterCDS
           ComponentItem = 'GoodsName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartionGoodsId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PartionGoodsId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartionGoodsName'
@@ -1126,12 +1153,14 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           Component = MasterCDS
           ComponentItem = 'PartionGoodsName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'LocationId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'LocationId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'LocationName'
@@ -1139,21 +1168,25 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           Component = MasterCDS
           ComponentItem = 'LocationName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupId'
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupName'
           Value = Null
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId_Detail'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -1161,12 +1194,14 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName_Detail'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitGroupId'
           Value = Null
           Component = PersonalGuides
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitGroupName'
@@ -1174,6 +1209,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           Component = PersonalGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescSet'
@@ -1181,6 +1217,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           Component = FormParams
           ComponentItem = 'SaleDesc'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1217,12 +1254,14 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           Value = 42005d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 42005d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PersonalName'
@@ -1230,6 +1269,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           Component = PersonalGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PositionName'
@@ -1237,21 +1277,25 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           Component = PositionGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inIsDay'
           Value = 'False'
-          Component = cbinIsDay
+          Component = cbIsDay
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isPrint'
           Value = 'False'
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082#1072#1084
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082#1072#1084
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -1273,12 +1317,14 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           Value = 42005d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 42005d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PersonalName'
@@ -1286,6 +1332,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           Component = PersonalGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PositionName'
@@ -1293,21 +1340,25 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           Component = PositionGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inIsDay'
           Value = 'False'
-          Component = cbinIsDay
+          Component = cbIsDay
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isPrint'
           Value = 'True'
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082#1072#1084
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082#1072#1084
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
   end
   object spReport: TdsdStoredProc
@@ -1324,6 +1375,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -1331,6 +1383,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalId'
@@ -1338,6 +1391,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Component = PersonalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPositionId'
@@ -1345,6 +1399,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Component = PositionGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBranchId'
@@ -1352,13 +1407,15 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Component = BranchGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsDay'
         Value = Null
-        Component = cbinIsDay
+        Component = cbIsDay
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 256
@@ -1380,8 +1437,8 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
       end>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 456
-    Top = 392
+    Left = 432
+    Top = 344
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 344
@@ -1393,6 +1450,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
     Key = '0'
     FormNameParam.Value = 'TPositionForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPositionForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1403,6 +1461,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1411,11 +1470,14 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 368
     Top = 16
   end
   object PeriodChoice: TPeriodChoice
+    DateStart = deStart
+    DateEnd = deEnd
     Left = 176
     Top = 176
   end
@@ -1425,6 +1487,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
     Key = '0'
     FormNameParam.Value = 'TPersonal_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1435,6 +1498,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1443,12 +1507,14 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PositionId'
         Value = Null
         Component = PositionGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PositionName'
@@ -1456,11 +1522,13 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Component = PositionGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 304
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ShowDialogAction = ExecuteDialog
     ComponentList = <
@@ -1480,7 +1548,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Component = deStart
       end
       item
-        Component = cbinIsDay
+        Component = cbIsDay
       end
       item
         Component = BranchGuides
@@ -1493,9 +1561,10 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
       item
         Name = 'inIsDay'
         Value = Null
-        Component = cbinIsDay
+        Component = cbIsDay
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 424
     Top = 224
@@ -1511,6 +1580,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Component = FormParams
         ComponentItem = 'IncomeDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnOutDesc'
@@ -1518,6 +1588,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Component = FormParams
         ComponentItem = 'ReturnOutDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SaleDesc'
@@ -1525,6 +1596,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Component = FormParams
         ComponentItem = 'SaleDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnInDesc'
@@ -1532,6 +1604,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Component = FormParams
         ComponentItem = 'ReturnInDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MoneyDesc'
@@ -1539,6 +1612,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Component = FormParams
         ComponentItem = 'MoneyDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ServiceDesc'
@@ -1546,6 +1620,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Component = FormParams
         ComponentItem = 'ServiceDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SendDebtDesc'
@@ -1553,6 +1628,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Component = FormParams
         ComponentItem = 'SendDebtDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OtherDesc'
@@ -1560,6 +1636,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Component = FormParams
         ComponentItem = 'OtherDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SaleRealDesc'
@@ -1567,6 +1644,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Component = FormParams
         ComponentItem = 'SaleRealDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnInRealDesc'
@@ -1574,6 +1652,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Component = FormParams
         ComponentItem = 'ReturnInRealDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TransferDebtDesc'
@@ -1581,6 +1660,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Component = FormParams
         ComponentItem = 'TransferDebtDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PriceCorrectiveDesc'
@@ -1588,6 +1668,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Component = FormParams
         ComponentItem = 'PriceCorrectiveDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ServiceRealDesc'
@@ -1595,6 +1676,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Component = FormParams
         ComponentItem = 'ServiceRealDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ChangeCurrencyDesc'
@@ -1602,6 +1684,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Component = FormParams
         ComponentItem = 'ChangeCurrencyDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 528
@@ -1613,6 +1696,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
     Key = '0'
     FormNameParam.Value = 'TBranch_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBranch_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1623,6 +1707,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1631,6 +1716,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 576
     Top = 16
