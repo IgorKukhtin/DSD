@@ -3,9 +3,9 @@ inherited PromoForm: TPromoForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 599
   ClientWidth = 1204
-  ExplicitLeft = -431
+  ExplicitTop = -92
   ExplicitWidth = 1220
-  ExplicitHeight = 634
+  ExplicitHeight = 637
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -420,6 +420,8 @@ inherited PromoForm: TPromoForm
               Align = alClient
               PopupMenu = pmPartner
               TabOrder = 0
+              ExplicitLeft = -24
+              ExplicitTop = -19
               object cxGridDBTableViewPartner: TcxGridDBTableView
                 Navigator.Buttons.CustomButtons = <>
                 DataController.DataSource = PartnerDS
@@ -2526,6 +2528,56 @@ inherited PromoForm: TPromoForm
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
+          Name = 'inStartDate'
+          Value = 'NULL'
+          Component = deStartPromo
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inEndDate'
+          Value = 'NULL'
+          Component = deEndPromo
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitId'
+          Value = 'Null'
+          Component = UnitGuides
+          ComponentItem = 'Key'
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitName'
+          Value = Null
+          Component = UnitGuides
+          ComponentItem = 'Key'
+          DataType = ftString
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inRetailId'
+          Value = 'Null'
+          Component = PartnerListCDS
+          ComponentItem = 'RetailId'
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inRetailName'
+          Value = 'Null'
+          Component = PartnerListCDS
+          ComponentItem = 'RetailName'
+          DataType = ftString
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'inMovementId'
           Value = Null
           Component = FormParams
@@ -3716,6 +3768,7 @@ inherited PromoForm: TPromoForm
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnit
+    Key = 'Null'
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -3779,8 +3832,8 @@ inherited PromoForm: TPromoForm
   end
   object PartnerDS: TDataSource
     DataSet = PartnerCDS
-    Left = 160
-    Top = 512
+    Left = 192
+    Top = 520
   end
   object spErasedMIPartner: TdsdStoredProc
     StoredProcName = 'gpMovement_PromoPartner_SetErased'
@@ -4194,7 +4247,7 @@ inherited PromoForm: TPromoForm
   object AdvertisingDS: TDataSource
     DataSet = AdvertisingCDS
     Left = 472
-    Top = 520
+    Top = 496
   end
   object pmAdvertising: TPopupMenu
     Images = dmMain.ImageList
@@ -4341,8 +4394,8 @@ inherited PromoForm: TPromoForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 528
-    Top = 520
+    Left = 552
+    Top = 504
   end
   object spUpdate_Movement_Promo_Data: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Promo_Data'
@@ -4365,7 +4418,7 @@ inherited PromoForm: TPromoForm
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 304
+    Left = 272
     Top = 520
   end
   object PartnerLisrDS: TDataSource
@@ -4390,8 +4443,8 @@ inherited PromoForm: TPromoForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 48
-    Top = 512
+    Left = 64
+    Top = 496
   end
   object dsdDBViewAddOnPartnerList: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -4404,8 +4457,8 @@ inherited PromoForm: TPromoForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 422
-    Top = 553
+    Left = 478
+    Top = 537
   end
   object spInsertUpdate_Movement_PromoPartnerFromRetail: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_PromoPartnerFromRetail'

@@ -883,6 +883,8 @@ type
     actProductionUnionTechCK: TdsdOpenForm;
     miOrderInternalBasisCK: TMenuItem;
     actOrderInternalBasisCK: TdsdOpenForm;
+    actReport_Promo_Result: TdsdOpenForm;
+    N176: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

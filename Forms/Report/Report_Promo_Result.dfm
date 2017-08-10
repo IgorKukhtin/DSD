@@ -1,25 +1,26 @@
 inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
   Caption = #1054#1090#1095#1077#1090' <'#1056#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1094#1077#1085#1086#1074#1099#1093' '#1072#1082#1094#1080#1081'>'
   ClientHeight = 434
-  ClientWidth = 833
+  ClientWidth = 935
+  AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 849
+  ExplicitWidth = 951
   ExplicitHeight = 472
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 833
+    Width = 935
     Height = 377
     TabOrder = 3
     ExplicitWidth = 833
     ExplicitHeight = 377
     ClientRectBottom = 377
-    ClientRectRight = 833
+    ClientRectRight = 935
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 833
       ExplicitHeight = 377
       inherited cxGrid: TcxGrid
-        Width = 833
+        Width = 935
         Height = 377
         ExplicitWidth = 833
         ExplicitHeight = 377
@@ -93,7 +94,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 41
+            Width = 49
           end
           object UnitName: TcxGridDBColumn
             Caption = #1057#1082#1083#1072#1076
@@ -440,33 +441,30 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
     end
   end
   inherited Panel: TPanel
-    Width = 833
-    Visible = False
+    Width = 935
+    ExplicitLeft = 56
     ExplicitWidth = 833
     inherited deStart: TcxDateEdit
-      Left = 109
+      Left = 100
       EditValue = 42309d
-      Visible = False
-      ExplicitLeft = 109
+      ExplicitLeft = 100
     end
     inherited deEnd: TcxDateEdit
+      Left = 301
       EditValue = 42309d
-      Visible = False
-    end
-    inherited cxLabel1: TcxLabel
-      Visible = False
+      ExplicitLeft = 301
     end
     inherited cxLabel2: TcxLabel
-      Visible = False
+      Left = 191
+      ExplicitLeft = 191
     end
     object cxLabel17: TcxLabel
-      Left = 417
+      Left = 394
       Top = 6
-      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-      Visible = False
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object edUnit: TcxButtonEdit
-      Left = 507
+      Left = 482
       Top = 5
       Properties.Buttons = <
         item
@@ -475,9 +473,25 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Visible = False
-      Width = 286
+      Width = 196
     end
+  end
+  object cxLabel3: TcxLabel [2]
+    Left = 685
+    Top = 6
+    Caption = #1058#1086#1088#1075'. '#1089#1077#1090#1100':'
+  end
+  object ceRetail: TcxButtonEdit [3]
+    Left = 747
+    Top = 5
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 162
   end
   inherited ActionList: TActionList
     object actPrint: TdsdPrintAction
@@ -518,8 +532,8 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_PromoDialogForm'
-      FormNameParam.Value = 'TReport_PromoDialogForm'
+      FormName = 'TReport_Promo_ResultDialogForm'
+      FormNameParam.Value = 'TReport_Promo_ResultDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -542,7 +556,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
         item
           Name = 'UnitId'
           Value = Null
-          Component = UnitGuides
+          Component = GuidesUnit
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -550,7 +564,24 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
         item
           Name = 'UnitName'
           Value = Null
-          Component = UnitGuides
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'RetailId'
+          Value = Null
+          Component = GuidesRetail
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'RetailName'
+          Value = Null
+          Component = GuidesRetail
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -605,6 +636,38 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
     StoredProcName = 'gpSelect_Report_Promo_Result'
     Params = <
       item
+        Name = 'inStartDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetailId'
+        Value = Null
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inMovementId'
         Value = Null
         Component = FormParams
@@ -629,7 +692,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
         end
         item
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'dxBarButton2'
         end
         item
           Visible = True
@@ -637,7 +700,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True
@@ -687,11 +750,14 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
         Component = PeriodChoice
       end
       item
-        Component = UnitGuides
+        Component = GuidesUnit
+      end
+      item
+        Component = GuidesRetail
       end>
     Top = 184
   end
-  object UnitGuides: TdsdGuides
+  object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
@@ -703,7 +769,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
       item
         Name = 'Key'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -712,23 +778,101 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 700
+    Left = 540
   end
   object FormParams: TdsdFormParams
     Params = <
       item
         Name = 'inMovementId'
         Value = Null
-        ParamType = ptInputOutput
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetailId'
+        Value = Null
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetailName'
+        Value = Null
+        Component = GuidesRetail
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 344
     Top = 152
+  end
+  object GuidesRetail: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceRetail
+    FormNameParam.Value = 'TRetailForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TRetailForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 812
   end
 end

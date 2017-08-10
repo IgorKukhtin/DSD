@@ -1,7 +1,12 @@
 --
 DROP FUNCTION IF EXISTS gpSelect_Report_Promo_Result (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Report_Promo_Result (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Report_Promo_Result (
+    IN inStartDate      TDateTime, --дата начала периода
+    IN inEndDate        TDateTime, --дата окончания периода
+    IN inUnitId         Integer,   --подразделение 
+    IN inRetailId       Integer,   --подразделение 
     IN inMovementId     Integer,   --документ акции
     IN inSession        TVarChar   --сессия пользователя
 )
@@ -63,6 +68,33 @@ BEGIN
 
     -- Результат
     RETURN QUERY
+    WITH 
+    tmpMovement AS (SELECT DISTINCT Movement_Promo.*
+                    FROM Movement_Promo_View AS Movement_Promo
+                    
+                         LEFT JOIN Movement AS Movement_PromoPartner 
+                                             ON Movement_PromoPartner.ParentId = Movement_Promo.Id
+                                            AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
+                                            AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
+                          LEFT JOIN MovementItem AS MI_PromoPartner
+                                                 ON MI_PromoPartner.MovementId = Movement_PromoPartner.ID
+                                                AND MI_PromoPartner.DescId     = zc_MI_Master()
+                                                AND MI_PromoPartner.IsErased   = FALSE
+                          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                               ON ObjectLink_Partner_Juridical.ObjectId = MI_PromoPartner.ObjectId
+                                              AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                          INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                ON ObjectLink_Juridical_Retail.ObjectId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MI_PromoPartner.ObjectId)
+                                               AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
+                                              AND (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
+                    
+                    WHERE (Movement_Promo.Id = inMovementId OR inMovementId = 0)
+                      AND (Movement_Promo.StartSale BETWEEN inStartDate AND inEndDate
+                            OR inStartDate BETWEEN Movement_Promo.StartSale AND Movement_Promo.EndSale)
+                      AND (Movement_Promo.UnitId = inUnitId OR inUnitId = 0)
+                      AND Movement_Promo.StatusId = zc_Enum_Status_Complete()
+                    )
+                    
         SELECT
             Movement_Promo.Id                --ИД документа акции
           , Movement_Promo.InvNumber          -- * № документа акции
@@ -171,7 +203,7 @@ BEGIN
           , (MI_PromoGoods.Price * MI_PromoGoods.AmountRealWeight)                                                                    :: TFloat AS SummReal
           , (MI_PromoGoods.PriceWithVAT * (COALESCE (MI_PromoGoods.AmountOutWeight, 0) - COALESCE (MI_PromoGoods.AmountInWeight, 0))) :: TFloat AS SummPromo
           , 0                                 :: TFloat    AS ContractCondition      -- Бонус сети, %
-          , CASE WHEN COALESCE (MIFloat_PriceIn1.ValueData, 0) <>0
+          , CASE WHEN COALESCE (MIFloat_PriceIn1.ValueData, 0) <> 0 AND (COALESCE (MI_PromoGoods.AmountOutWeight, 0) - COALESCE (MI_PromoGoods.AmountInWeight, 0)) <> 0
                  THEN (MI_PromoGoods.PriceWithVAT * (COALESCE (MI_PromoGoods.AmountOutWeight, 0) - COALESCE (MI_PromoGoods.AmountInWeight, 0)))
                     - (COALESCE (MIFloat_PriceIn1.ValueData, 0) 
                        + 0
@@ -180,14 +212,13 @@ BEGIN
                  ELSE 0
             END                               :: TFloat    AS Profit
           , ''                                :: TVarChar  AS Comment                -- Примечание
-        FROM Movement_Promo_View AS Movement_Promo
-            LEFT OUTER JOIN MovementItem_PromoGoods_View AS MI_PromoGoods
-                                                         ON MI_PromoGoods.MovementId = Movement_Promo.Id
-                                                        AND MI_PromoGoods.IsErASed = FALSE
-            LEFT JOIN MovementItemFloat AS MIFloat_PriceIn1
-                                        ON MIFloat_PriceIn1.MovementItemId = MI_PromoGoods.Id
-                                       AND MIFloat_PriceIn1.DescId = zc_MIFloat_PriceIn1()
-        WHERE Movement_Promo.Id = inMovementId
+        FROM tmpMovement AS Movement_Promo
+             LEFT OUTER JOIN MovementItem_PromoGoods_View AS MI_PromoGoods
+                                                          ON MI_PromoGoods.MovementId = Movement_Promo.Id
+                                                         AND MI_PromoGoods.IsErASed = FALSE
+             LEFT JOIN MovementItemFloat AS MIFloat_PriceIn1
+                                         ON MIFloat_PriceIn1.MovementItemId = MI_PromoGoods.Id
+                                        AND MIFloat_PriceIn1.DescId = zc_MIFloat_PriceIn1()
         ;
 END;
 $BODY$

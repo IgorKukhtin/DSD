@@ -29,7 +29,7 @@ type
   TReport_Promo_ResultForm = class(TAncestorReportForm)
     cxLabel17: TcxLabel;
     edUnit: TcxButtonEdit;
-    UnitGuides: TdsdGuides;
+    GuidesUnit: TdsdGuides;
     DateStartSale: TcxGridDBColumn;
     DeteFinalSale: TcxGridDBColumn;
     DateStartPromo: TcxGridDBColumn;
@@ -72,6 +72,9 @@ type
     PersentResult: TcxGridDBColumn;
     PriceIn1: TcxGridDBColumn;
     Profit_Virt: TcxGridDBColumn;
+    cxLabel3: TcxLabel;
+    ceRetail: TcxButtonEdit;
+    GuidesRetail: TdsdGuides;
   private
     { Private declarations }
   public
