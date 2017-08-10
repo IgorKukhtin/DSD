@@ -5,9 +5,8 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -689
   ExplicitWidth = 1359
-  ExplicitHeight = 466
+  ExplicitHeight = 465
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -119,6 +118,14 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 68
+          end
+          object StorageLineName: TcxGridDBColumn
+            Caption = #1051#1080#1085#1080#1103' '#1087#1088'-'#1074#1072
+            DataBinding.FieldName = 'StorageLineName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
@@ -303,15 +310,15 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
       Width = 169
     end
     object cbGroupMovement: TcxCheckBox
-      Left = 959
+      Left = 962
       Top = 5
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       TabOrder = 11
       Width = 172
     end
     object cbGroupPartion: TcxCheckBox
-      Left = 959
-      Top = 29
+      Left = 962
+      Top = 26
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1087#1072#1088#1090#1080#1080
       TabOrder = 12
       Width = 145
@@ -348,6 +355,13 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         end>
       TabOrder = 16
       Width = 147
+    end
+    object cbStorageLine: TcxCheckBox
+      Left = 962
+      Top = 48
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1051#1080#1085#1080#1102' '#1087#1088'-'#1074#1072
+      TabOrder = 17
+      Width = 144
     end
   end
   object cxLabel7: TcxLabel [2]
@@ -758,7 +772,7 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGroupMovement'
+        Name = 'inIsMovement'
         Value = Null
         Component = cbGroupMovement
         DataType = ftBoolean
@@ -766,9 +780,17 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGroupPartion'
+        Name = 'inIsPartion'
         Value = Null
         Component = cbGroupPartion
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsStorageLine'
+        Value = Null
+        Component = cbStorageLine
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -931,8 +953,8 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
       end
       item
       end>
-    Left = 152
-    Top = 192
+    Left = 232
+    Top = 200
   end
   object GoodsGroupGuides: TdsdGuides
     KeyField = 'Id'
