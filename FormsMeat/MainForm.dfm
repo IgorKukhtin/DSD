@@ -5,7 +5,7 @@ inherited MainForm: TMainForm
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 260
+  ExplicitHeight = 257
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -319,7 +319,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actmiProductionSeparateStorageLine: TdsdOpenForm [15]
+    object actProductionSeparateStorageLine: TdsdOpenForm [15]
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1086' '#1101#1083#1077#1084#1077#1085#1090#1072#1084')'
@@ -5754,9 +5754,6 @@ inherited MainForm: TMainForm
       object miTransportGoods: TMenuItem
         Action = actTransportGoods
       end
-      object N83: TMenuItem
-        Action = actPromoJournal
-      end
     end
     object N42: TMenuItem [1]
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
@@ -5791,7 +5788,8 @@ inherited MainForm: TMainForm
         Action = actProductionSeparate
       end
       object N177: TMenuItem
-        Action = actmiProductionSeparateStorageLine
+        Action = actProductionSeparateStorageLine
+        Hint = 'miProductionSeparateStorageLine'
       end
       object miProductionUnion: TMenuItem
         Action = actProductionUnion
@@ -5848,7 +5846,26 @@ inherited MainForm: TMainForm
         Action = actReceiptCost
       end
     end
-    object miFinanceDocuments: TMenuItem [2]
+    object miPromoAll: TMenuItem [2]
+      Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075
+      object miPromoJournal: TMenuItem
+        Action = actPromoJournal
+      end
+      object miProfitLossService: TMenuItem
+        Action = actProfitLossService
+        Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089#1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087#1077#1088#1080#1086#1076#1086#1074')'
+      end
+      object N178: TMenuItem
+        Caption = '-'
+      end
+      object miReport_Promo: TMenuItem
+        Action = actReport_Promo
+      end
+      object miReport_Promo_Result: TMenuItem
+        Action = actReport_Promo_Result
+      end
+    end
+    object miFinanceDocuments: TMenuItem [3]
       Caption = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       object miIncomeCashOld: TMenuItem
         Action = actCashOperationOld
@@ -5895,10 +5912,6 @@ inherited MainForm: TMainForm
       object miJuridicalService: TMenuItem
         Action = actService
       end
-      object miProfitLossService: TMenuItem
-        Action = actProfitLossService
-        Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089#1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087#1077#1088#1080#1086#1076#1086#1074')'
-      end
       object miBankLoad: TMenuItem
         Action = actBankLoad
       end
@@ -5940,7 +5953,7 @@ inherited MainForm: TMainForm
         end
       end
     end
-    object miTaxDocuments: TMenuItem [3]
+    object miTaxDocuments: TMenuItem [4]
       Caption = #1053#1072#1083#1086#1075#1086#1074#1099#1081' '#1091#1095#1077#1090
       object miTax: TMenuItem
         Action = actTax
@@ -6009,7 +6022,7 @@ inherited MainForm: TMainForm
         Action = actReport_GoodsMI_TransferDebtOut
       end
     end
-    object miAssetDocuments: TMenuItem [4]
+    object miAssetDocuments: TMenuItem [5]
       Caption = #1054#1057
       object N130: TMenuItem
         Action = actIncomeAsset
@@ -6045,13 +6058,13 @@ inherited MainForm: TMainForm
         Action = actReport_MotionGoods_Asset
       end
     end
-    object miHistory: TMenuItem [5]
+    object miHistory: TMenuItem [6]
       Caption = #1048#1089#1090#1086#1088#1080#1080
       object miPriceListItem: TMenuItem
         Action = actPriceListItem
       end
     end
-    object miTransportDocuments: TMenuItem [6]
+    object miTransportDocuments: TMenuItem [7]
       Caption = #1058#1088#1072#1085#1089#1087#1086#1088#1090
       object miTransport: TMenuItem
         Action = actTransport
@@ -6132,7 +6145,7 @@ inherited MainForm: TMainForm
         Action = actReport_Transport_ProfitLoss
       end
     end
-    object miPersonalDocuments: TMenuItem [7]
+    object miPersonalDocuments: TMenuItem [8]
       Caption = #1055#1077#1088#1089#1086#1085#1072#1083
       object miPersonalGroup: TMenuItem
         Action = actPersonalGroup
@@ -6226,7 +6239,7 @@ inherited MainForm: TMainForm
         Action = actReport_SheetWorkTime
       end
     end
-    object miPersonalTrade: TMenuItem [8]
+    object miPersonalTrade: TMenuItem [9]
       Caption = #1052#1086#1073#1080#1083#1100#1085#1099#1081' '#1072#1075#1077#1085#1090
       object N158: TMenuItem
         Action = actTask
@@ -6280,7 +6293,7 @@ inherited MainForm: TMainForm
         Action = actMobileConst
       end
     end
-    object miReportsProduction: TMenuItem [9]
+    object miReportsProduction: TMenuItem [10]
       Caption = #1054#1090#1095#1077#1090#1099' ('#1087#1088'-'#1074#1086')'
       object miReportProductionUnion: TMenuItem
         Action = actReport_Production_Union
@@ -6346,7 +6359,7 @@ inherited MainForm: TMainForm
         Action = actReport_Check_OrderInternalBySend
       end
     end
-    object miReportsGoods: TMenuItem [10]
+    object miReportsGoods: TMenuItem [11]
       Caption = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       object miReport_MotionGoods: TMenuItem
         Action = actReport_MotionGoods
@@ -6459,17 +6472,11 @@ inherited MainForm: TMainForm
       object C1: TMenuItem
         Action = actReport_Weighing
       end
-      object N88: TMenuItem
-        Action = actReport_Promo
-      end
-      object N176: TMenuItem
-        Action = actReport_Promo_Result
-      end
       object N92: TMenuItem
         Action = actReport_Tara
       end
     end
-    object miReportsFinance: TMenuItem [11]
+    object miReportsFinance: TMenuItem [12]
       Caption = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       object miReport_JuridicalSold: TMenuItem
         Action = actReport_JuridicalSold
@@ -6526,7 +6533,7 @@ inherited MainForm: TMainForm
         Action = actReport_Invoice
       end
     end
-    object miReportMain: TMenuItem [12]
+    object miReportMain: TMenuItem [13]
       Caption = #1054#1090#1095#1077#1090#1099' ('#1059#1055')'
       object miReport_Balance: TMenuItem
         Action = actReport_Balance
@@ -6544,7 +6551,7 @@ inherited MainForm: TMainForm
         Action = actReport_Goods_byMovement
       end
     end
-    object N84: TMenuItem [13]
+    object N84: TMenuItem [14]
       Caption = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1083#1080#1072#1083#1099')'
       object N110: TMenuItem
         Action = actReport_Branch_App1
@@ -6739,7 +6746,7 @@ inherited MainForm: TMainForm
         end
       end
     end
-    object miJuridicalGuides: TMenuItem [15]
+    object miJuridicalGuides: TMenuItem [16]
       Caption = #1050#1083#1080#1077#1085#1090#1099
       object N113: TMenuItem
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072

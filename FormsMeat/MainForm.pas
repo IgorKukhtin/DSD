@@ -643,7 +643,7 @@ type
     N81: TMenuItem;
     N82: TMenuItem;
     actPromoJournal: TdsdOpenForm;
-    N83: TMenuItem;
+    miPromoJournal: TMenuItem;
     N84: TMenuItem;
     actReport_Branch_App7: TdsdOpenForm;
     N710: TMenuItem;
@@ -660,7 +660,7 @@ type
     actReport_Branch_App7_New: TdsdOpenForm;
     N711: TMenuItem;
     actReport_Promo: TdsdOpenForm;
-    N88: TMenuItem;
+    miReport_Promo: TMenuItem;
     actReport_SheetWorkTime: TdsdOpenForm;
     N89: TMenuItem;
     actForms: TdsdOpenForm;
@@ -884,9 +884,11 @@ type
     miOrderInternalBasisCK: TMenuItem;
     actOrderInternalBasisCK: TdsdOpenForm;
     actReport_Promo_Result: TdsdOpenForm;
-    N176: TMenuItem;
-    actmiProductionSeparateStorageLine: TdsdOpenForm;
+    miReport_Promo_Result: TMenuItem;
+    actProductionSeparateStorageLine: TdsdOpenForm;
     N177: TMenuItem;
+    miPromoAll: TMenuItem;
+    N178: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
