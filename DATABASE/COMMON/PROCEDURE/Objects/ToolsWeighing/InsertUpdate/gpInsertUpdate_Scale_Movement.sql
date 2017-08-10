@@ -105,7 +105,7 @@ BEGIN
                                                                               END :: Integer
                                                    , inFromId              := inFromId
                                                    , inToId                := inToId
-                                                   , inContractId          := inContractId
+                                                   , inContractId          := CASE WHEN inContractId > 0 THEN inContractId ELSE 0 END
                                                    , inPriceListId         := CASE WHEN vbPriceListId_Dnepr <> 0 THEN vbPriceListId_Dnepr ELSE inPriceListId END
                                                    , inPaidKindId          := inPaidKindId
                                                    , inMovementId_Order    := inMovementId_Order
@@ -121,6 +121,14 @@ BEGIN
           -- сохранили связь с <Физические лица(Водитель/экспедитор)> 
           PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Member(), inId, (SELECT Object_Personal_View.MemberId FROM Object_Personal_View WHERE Object_Personal_View.PersonalId = inMovementId_Transport));
      END IF;
+
+
+-- !!! ВРЕМЕННО !!!
+if inSession = '5' AND 1=1
+then
+    RAISE EXCEPTION 'Admin - Test = OK - %', inToId;
+    -- 'Повторите действие через 3 мин.'
+end if;
 
 
      -- Результат
