@@ -1,6 +1,15 @@
+
 DROP FUNCTION IF EXISTS gpSelect_Report_Promo(
     TDateTime, --дата начала периода
     TDateTime, --дата окончания периода
+    Integer,   --подразделение 
+    TVarChar   --сессия пользователя
+);
+DROP FUNCTION IF EXISTS gpSelect_Report_Promo(
+    TDateTime, --дата начала периода
+    TDateTime, --дата окончания периода
+    Boolean,   --показать только Акции
+    Boolean,   --показать только Тендеры
     Integer,   --подразделение 
     TVarChar   --сессия пользователя
 );
@@ -8,6 +17,8 @@ DROP FUNCTION IF EXISTS gpSelect_Report_Promo(
 CREATE OR REPLACE FUNCTION gpSelect_Report_Promo(
     IN inStartDate      TDateTime, --дата начала периода
     IN inEndDate        TDateTime, --дата окончания периода
+    IN inIsPromo        Boolean,   --показать только Акции
+    IN inIsTender       Boolean,   --показать только Тендеры
     IN inUnitId         Integer,   --подразделение 
     IN inSession        TVarChar   --сессия пользователя
 )
@@ -199,25 +210,22 @@ BEGIN
             LEFT OUTER JOIN MovementItem_PromoGoods_View AS MI_PromoGoods
                                                          ON MI_PromoGoods.MovementId = Movement_Promo.Id
                                                         AND MI_PromoGoods.IsErASed = FALSE
-        WHERE
-            (
-                -- Movement_Promo.EndSale BETWEEN inStartDate AND inEndDate
+        WHERE (-- Movement_Promo.EndSale BETWEEN inStartDate AND inEndDate
                 Movement_Promo.StartSale BETWEEN inStartDate AND inEndDate
                 OR
                 inStartDate BETWEEN Movement_Promo.StartSale AND Movement_Promo.EndSale
-            )
-            AND
-            (
-                Movement_Promo.UnitId = inUnitId
-                OR
-                inUnitId = 0
-            )
-            AND
-            Movement_Promo.StatusId = zc_Enum_Status_Complete();
+               )
+           AND (Movement_Promo.UnitId = inUnitId OR inUnitId = 0)
+           AND Movement_Promo.StatusId = zc_Enum_Status_Complete()
+           AND (  (Movement_Promo.isPromo = TRUE AND inIsPromo = TRUE) 
+               OR (COALESCE (Movement_Promo.isPromo, FALSE) = FALSE AND inIsTender = TRUE)
+               OR (inIsPromo = FALSE AND inIsTender = FALSE)
+               )
+               ;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Report_Promo (TDateTime,TDateTime,Integer,TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Report_Promo (TDateTime,TDateTime,Integer,TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -227,5 +235,7 @@ ALTER FUNCTION gpSelect_Report_Promo (TDateTime,TDateTime,Integer,TVarChar) OWNE
 */
 
 -- тест
--- SELECT * FROM gpSelect_Report_Promo ('20150101','20160101',0,'5');
+-- select * from gpSelect_Report_Promo(inStartDate := ('01.09.2016')::TDateTime , inEndDate := ('30.06.2017')::TDateTime , inIsPromo := 'True' , inIsTender := 'False' , inUnitId := 0 ,  inSession := '5');
+
+
 

@@ -23,7 +23,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  cxCheckBox;
 
 type
   TReport_PromoForm = class(TAncestorReportForm)
@@ -74,6 +75,8 @@ type
     AmountInWeight: TcxGridDBColumn;
     actOpenPromo: TdsdOpenForm;
     dxBarButton3: TdxBarButton;
+    cbPromo: TcxCheckBox;
+    cbTender: TcxCheckBox;
   private
     { Private declarations }
   public

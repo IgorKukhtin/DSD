@@ -1,10 +1,13 @@
 --
 DROP FUNCTION IF EXISTS gpSelect_Report_Promo_Result (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Report_Promo_Result (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Report_Promo_Result (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Report_Promo_Result (
     IN inStartDate      TDateTime, --дата начала периода
     IN inEndDate        TDateTime, --дата окончани€ периода
+    IN inIsPromo        Boolean,   --показать только јкции
+    IN inIsTender       Boolean,   --показать только “ендеры
     IN inUnitId         Integer,   --подразделение 
     IN inRetailId       Integer,   --подразделение 
     IN inMovementId     Integer,   --документ акции
@@ -93,6 +96,10 @@ BEGIN
                             OR inStartDate BETWEEN Movement_Promo.StartSale AND Movement_Promo.EndSale)
                       AND (Movement_Promo.UnitId = inUnitId OR inUnitId = 0)
                       AND Movement_Promo.StatusId = zc_Enum_Status_Complete()
+                      AND (  (Movement_Promo.isPromo = TRUE AND inIsPromo = TRUE) 
+                          OR (COALESCE (Movement_Promo.isPromo, FALSE) = FALSE AND inIsTender = TRUE)
+                          OR (inIsPromo = FALSE AND inIsTender = FALSE)
+                          )
                     )
                     
         SELECT
@@ -231,5 +238,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Report_Promo ('20150101','20160101',0,'5');
-
+-- select * from gpSelect_Report_Promo_Result(inStartDate := ('21.09.2016')::TDateTime , inEndDate := ('01.11.2016')::TDateTime , inIsPromo := 'False' , inIsTender := 'True' , inUnitId := 0 , inRetailId := 0 , inMovementId := 0 ,  inSession := '5');
