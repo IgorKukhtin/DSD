@@ -759,7 +759,7 @@ BEGIN
                                                    AND MI_Send.DescId = zc_MI_Master()
                                                    AND MI_Send.isErased = FALSE
                      -- WHERE Movement_Send.OperDate >= vbOperDate - interval '30 DAY' 
-                     WHERE Movement_Send.OperDate BETWEEN CURRENT_DATE - INTERVAL '10 DAY' AND CURRENT_DATE + INTERVAL '10 DAY'
+                     WHERE Movement_Send.OperDate BETWEEN CURRENT_DATE - INTERVAL '30 DAY' AND CURRENT_DATE + INTERVAL '30 DAY'
                        AND Movement_Send.OperDate < vbOperDateEnd
                        AND Movement_Send.DescId = zc_Movement_Send()
                        AND Movement_Send.StatusId = zc_Enum_Status_UnComplete()

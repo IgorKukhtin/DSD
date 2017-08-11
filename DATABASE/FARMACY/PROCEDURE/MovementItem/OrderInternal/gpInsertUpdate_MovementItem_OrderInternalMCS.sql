@@ -135,7 +135,8 @@ BEGIN
                                         INNER JOIN MovementDate AS MovementDate_Branch
                                                                 ON MovementDate_Branch.MovementId = Movement_Income.Id
                                                                AND MovementDate_Branch.DescId = zc_MovementDate_Branch() 
-                                                               AND MovementDate_Branch.ValueData >= CURRENT_DATE
+                                                               -- AND MovementDate_Branch.ValueData >= CURRENT_DATE
+                                                               AND MovementDate_Branch.ValueData BETWEEN CURRENT_DATE - INTERVAL '7 DAY' AND CURRENT_DATE + INTERVAL '7 DAY'
                                 WHERE Movement_Income.DescId = zc_Movement_Income()
                                   AND Movement_Income.StatusId = zc_Enum_Status_UnComplete()
                                 GROUP BY MovementItem_Income.ObjectId
@@ -152,13 +153,15 @@ BEGIN
                                                                   ON MovementLinkObject_To.MovementId = Movement.Id
                                                                  AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
                                                                  AND MovementLinkObject_To.ObjectId   = inUnitId
-                                    INNER JOIN MovementBoolean AS MovementBoolean_isAuto
+                                    -- закомментил - пусть будут все перемещения, не только Авто
+                                    /*INNER JOIN MovementBoolean AS MovementBoolean_isAuto
                                                                ON MovementBoolean_isAuto.MovementId = Movement.Id
                                                               AND MovementBoolean_isAuto.DescId     = zc_MovementBoolean_isAuto()
-                                                              AND MovementBoolean_isAuto.ValueData  = TRUE
+                                                              AND MovementBoolean_isAuto.ValueData  = TRUE*/
                              WHERE Movement.DescId = zc_Movement_Send()
                                   AND Movement.StatusId = zc_Enum_Status_UnComplete()
-                                  AND Movement.OperDate >= CURRENT_DATE - INTERVAL '14 DAY' AND Movement.OperDate < CURRENT_DATE + INTERVAL '14 DAY'
+                                  -- AND Movement.OperDate >= CURRENT_DATE - INTERVAL '14 DAY' AND Movement.OperDate < CURRENT_DATE + INTERVAL '14 DAY'
+                                  AND Movement.OperDate >= CURRENT_DATE - INTERVAL '30 DAY' AND Movement.OperDate < CURRENT_DATE + INTERVAL '30 DAY'
                              GROUP BY MovementItem.ObjectId
                             )
    , tmpMI_OrderExternal AS (SELECT MI_OrderExternal.ObjectId                AS GoodsId

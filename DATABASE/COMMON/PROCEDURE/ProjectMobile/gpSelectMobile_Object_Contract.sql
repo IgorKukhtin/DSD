@@ -136,7 +136,7 @@ BEGIN
                        , CASE WHEN -- Ограничим - если удален
                                    Object_Contract.isErased = TRUE
                                    -- Ограничим - если Завершен
-                                OR COALESCE (ObjectLink_Contract_ContractStateKind.ChildObjectId, zc_Enum_ContractStateKind_Close()) = zc_Enum_ContractStateKind_Close()
+                                OR COALESCE (ObjectLink_Contract_ContractStateKind.ChildObjectId, 0) = zc_Enum_ContractStateKind_Close()
                                    -- Ограничим - если НЕ ГП
                                 OR COALESCE (ObjectLink_Contract_InfoMoney.ChildObjectId, 0) <> zc_Enum_InfoMoney_30101() -- Доходы + Продукция + Готовая продукция
                                    THEN FALSE
@@ -209,7 +209,7 @@ BEGIN
                        , CASE WHEN -- Ограничим - если удален
                                    Object_Contract.isErased = TRUE
                                    -- Ограничим - если Завершен
-                                OR COALESCE (ObjectLink_Contract_ContractStateKind.ChildObjectId, zc_Enum_ContractStateKind_Close()) = zc_Enum_ContractStateKind_Close()
+                                OR COALESCE (ObjectLink_Contract_ContractStateKind.ChildObjectId, 0) = zc_Enum_ContractStateKind_Close()
                                    -- Ограничим - если НЕ ГП
                                 OR COALESCE (ObjectLink_Contract_InfoMoney.ChildObjectId, 0) <> zc_Enum_InfoMoney_30101() -- Доходы + Продукция + Готовая продукция
                                    THEN FALSE
