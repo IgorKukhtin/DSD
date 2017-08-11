@@ -5,7 +5,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 951
-  ExplicitHeight = 472
+  ExplicitHeight = 469
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -342,6 +342,9 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
           object PersentResult: TcxGridDBColumn
             Caption = #1056#1077#1079#1091#1083#1100#1090#1072#1090', %'
             DataBinding.FieldName = 'PersentResult'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 73
@@ -483,13 +486,13 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 116
-      EditValue = 42309d
+      EditValue = 42736d
       ExplicitLeft = 116
     end
     inherited deEnd: TcxDateEdit
       Left = 117
       Top = 32
-      EditValue = 42309d
+      EditValue = 42736d
       ExplicitLeft = 117
       ExplicitTop = 32
     end

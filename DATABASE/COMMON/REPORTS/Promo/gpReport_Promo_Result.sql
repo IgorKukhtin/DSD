@@ -201,10 +201,14 @@ BEGIN
           , MI_PromoGoods.AmountSale          -- продажа - возврат 
           , MI_PromoGoods.AmountSaleWeight    -- продажа - возврат 
           
-          , CASE WHEN COALESCE (MI_PromoGoods.AmountRealWeight, 0) <> 0
-                 THEN (MI_PromoGoods.AmountSaleWeight/ MI_PromoGoods.AmountRealWeight - 1) *100
-                 ELSE 0
-            END                    :: TFloat AS PersentResult
+          , CAST (CASE WHEN COALESCE (MI_PromoGoods.AmountRealWeight, 0) = 0 AND MI_PromoGoods.AmountSaleWeight > 0
+                            THEN 100
+                       WHEN COALESCE (MI_PromoGoods.AmountRealWeight, 0) <> 0
+                            THEN (MI_PromoGoods.AmountSaleWeight / MI_PromoGoods.AmountRealWeight - 1) *100
+                       WHEN MI_PromoGoods.AmountSaleWeight < 0
+                            THEN -100
+                       ELSE 0
+                  END AS NUMERIC (16, 0))     :: TFloat AS PersentResult
           
           , (REPLACE (TO_CHAR (MI_PromoGoods.Amount,'FM99990D99')||' ','. ','')||'  '||chr(13)||
               (SELECT STRING_AGG (MovementItem_PromoCondition.ConditionPromoName||': '||REPLACE (TO_CHAR (MovementItem_PromoCondition.Amount,'FM999990D09')||' ','.0 ',''), chr(13)) 
