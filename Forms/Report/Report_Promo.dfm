@@ -8,21 +8,20 @@ inherited Report_PromoForm: TReport_PromoForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 83
     Width = 833
-    Height = 377
+    Height = 351
     TabOrder = 3
     ExplicitWidth = 833
     ExplicitHeight = 377
-    ClientRectBottom = 377
+    ClientRectBottom = 351
     ClientRectRight = 833
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 833
       ExplicitHeight = 377
       inherited cxGrid: TcxGrid
         Width = 833
-        Height = 377
-        ExplicitLeft = 64
-        ExplicitTop = 160
+        Height = 351
         ExplicitWidth = 833
         ExplicitHeight = 377
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -174,7 +173,6 @@ inherited Report_PromoForm: TReport_PromoForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 111
@@ -195,7 +193,6 @@ inherited Report_PromoForm: TReport_PromoForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 104
@@ -440,20 +437,38 @@ inherited Report_PromoForm: TReport_PromoForm
   end
   inherited Panel: TPanel
     Width = 833
+    Height = 57
     ExplicitWidth = 833
+    ExplicitHeight = 57
     inherited deStart: TcxDateEdit
+      Left = 114
       EditValue = 42309d
+      ExplicitLeft = 114
     end
     inherited deEnd: TcxDateEdit
+      Left = 114
+      Top = 32
       EditValue = 42309d
+      ExplicitLeft = 114
+      ExplicitTop = 32
+    end
+    inherited cxLabel1: TcxLabel
+      Left = 22
+      ExplicitLeft = 22
+    end
+    inherited cxLabel2: TcxLabel
+      Left = 3
+      Top = 33
+      ExplicitLeft = 3
+      ExplicitTop = 33
     end
     object cxLabel17: TcxLabel
-      Left = 417
+      Left = 211
       Top = 6
-      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object edUnit: TcxButtonEdit
-      Left = 507
+      Left = 301
       Top = 5
       Properties.Buttons = <
         item
@@ -463,6 +478,20 @@ inherited Report_PromoForm: TReport_PromoForm
       Properties.ReadOnly = True
       TabOrder = 5
       Width = 286
+    end
+    object cbPromo: TcxCheckBox
+      Left = 211
+      Top = 32
+      Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+      TabOrder = 6
+      Width = 144
+    end
+    object cbTender: TcxCheckBox
+      Left = 368
+      Top = 32
+      Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1058#1077#1085#1076#1077#1088#1099
+      TabOrder = 7
+      Width = 165
     end
   end
   inherited ActionList: TActionList
@@ -541,6 +570,22 @@ inherited Report_PromoForm: TReport_PromoForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPromo'
+          Value = Null
+          Component = cbPromo
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isTender'
+          Value = Null
+          Component = cbTender
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -603,6 +648,22 @@ inherited Report_PromoForm: TReport_PromoForm
         Value = 41395d
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsPromo'
+        Value = Null
+        Component = cbPromo
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsTender'
+        Value = Null
+        Component = cbTender
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -735,6 +796,6 @@ inherited Report_PromoForm: TReport_PromoForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 700
+    Left = 420
   end
 end

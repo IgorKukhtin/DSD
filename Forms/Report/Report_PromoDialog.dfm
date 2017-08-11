@@ -1,22 +1,22 @@
 inherited Report_PromoDialogForm: TReport_PromoDialogForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
-  ClientHeight = 133
+  ClientHeight = 151
   ClientWidth = 446
   ExplicitWidth = 452
-  ExplicitHeight = 158
+  ExplicitHeight = 179
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 114
-    Top = 88
+    Top = 115
     ExplicitLeft = 114
-    ExplicitTop = 88
+    ExplicitTop = 115
   end
   inherited bbCancel: TcxButton
     Left = 258
-    Top = 88
+    Top = 115
     ExplicitLeft = 258
-    ExplicitTop = 88
+    ExplicitTop = 115
   end
   object cxLabel1: TcxLabel [2]
     Left = 26
@@ -46,12 +46,12 @@ inherited Report_PromoDialogForm: TReport_PromoDialogForm
   end
   object cxLabel17: TcxLabel [6]
     Left = 23
-    Top = 46
+    Top = 73
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
   object edUnit: TcxButtonEdit [7]
     Left = 139
-    Top = 45
+    Top = 72
     Properties.Buttons = <
       item
         Default = True
@@ -61,17 +61,31 @@ inherited Report_PromoDialogForm: TReport_PromoDialogForm
     TabOrder = 7
     Width = 301
   end
+  object cbPromo: TcxCheckBox [8]
+    Left = 26
+    Top = 35
+    Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+    TabOrder = 8
+    Width = 144
+  end
+  object cbTender: TcxCheckBox [9]
+    Left = 239
+    Top = 35
+    Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1058#1077#1085#1076#1077#1088#1099
+    TabOrder = 9
+    Width = 161
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 128
-    Top = 80
+    Top = 107
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 101
-    Top = 80
+    Top = 107
   end
   inherited ActionList: TActionList
     Left = 156
-    Top = 79
+    Top = 106
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -81,6 +95,7 @@ inherited Report_PromoDialogForm: TReport_PromoDialogForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
@@ -88,6 +103,7 @@ inherited Report_PromoDialogForm: TReport_PromoDialogForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitId'
@@ -95,6 +111,7 @@ inherited Report_PromoDialogForm: TReport_PromoDialogForm
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
@@ -103,15 +120,33 @@ inherited Report_PromoDialogForm: TReport_PromoDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPromo'
+        Value = Null
+        Component = cbPromo
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isTender'
+        Value = Null
+        Component = cbTender
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 101
-    Top = 48
+    Top = 75
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -122,6 +157,7 @@ inherited Report_PromoDialogForm: TReport_PromoDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -130,14 +166,15 @@ inherited Report_PromoDialogForm: TReport_PromoDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 369
-    Top = 32
+    Top = 59
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
     Left = 232
-    Top = 40
+    Top = 67
   end
 end

@@ -72,6 +72,7 @@ type
     actPrintTotal: TdsdPrintAction;
     bbPrintTotal: TdxBarButton;
     Num: TcxGridDBColumn;
+    cbStorageLine: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -1,10 +1,13 @@
 --
 DROP FUNCTION IF EXISTS gpSelect_Report_Promo_Result (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Report_Promo_Result (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Report_Promo_Result (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Report_Promo_Result (
     IN inStartDate      TDateTime, --дата начала периода
     IN inEndDate        TDateTime, --дата окончания периода
+    IN inIsPromo        Boolean,   --показать только Акции
+    IN inIsTender       Boolean,   --показать только Тендеры
     IN inUnitId         Integer,   --подразделение 
     IN inRetailId       Integer,   --подразделение 
     IN inMovementId     Integer,   --документ акции
@@ -39,6 +42,7 @@ RETURNS TABLE(
     ,AmountOutWeight      TFloat    --Кол-во реализация (факт) Вес
     ,AmountIn             TFloat    --Кол-во возврат (факт)
     ,AmountInWeight       TFloat    --Кол-во возврат (факт) Вес
+    ,AmountSale           TFloat    --продажи за весь период отгрузки по акционной цене за минусом возврата
     ,AmountSaleWeight     TFloat    --продажи за весь период отгрузки по акционной цене за минусом возврата, в кг
     
     ,PersentResult        TFloat    --Результат, % ((продажи в акц.период/продажи в доакц пер.-1)*100)
@@ -93,7 +97,24 @@ BEGIN
                             OR inStartDate BETWEEN Movement_Promo.StartSale AND Movement_Promo.EndSale)
                       AND (Movement_Promo.UnitId = inUnitId OR inUnitId = 0)
                       AND Movement_Promo.StatusId = zc_Enum_Status_Complete()
+                      AND (  (Movement_Promo.isPromo = TRUE AND inIsPromo = TRUE) 
+                          OR (COALESCE (Movement_Promo.isPromo, FALSE) = FALSE AND inIsTender = TRUE)
+                          OR (inIsPromo = FALSE AND inIsTender = FALSE)
+                          )
                     )
+  , tmpMI AS (SELECT MI_PromoGoods.*
+                   , (COALESCE (MI_PromoGoods.AmountOut, 0) - COALESCE (MI_PromoGoods.AmountIn, 0))             :: TFloat  AS AmountSale       -- продажа - возврат 
+                   , (COALESCE (MI_PromoGoods.AmountOutWeight, 0) - COALESCE (MI_PromoGoods.AmountInWeight, 0)) :: TFloat  AS AmountSaleWeight -- продажа - возврат 
+                   , (COALESCE (MI_PromoGoods.Price, 0) - COALESCE (MI_PromoGoods.PriceWithVAT,0))              :: TFloat  AS Price_Diff
+                   , MIFloat_PriceIn1.ValueData                                                                 :: TFloat  AS PriceIn1               --себестоимость факт,  за кг
+              FROM tmpMovement AS Movement_Promo
+                   LEFT JOIN MovementItem_PromoGoods_View AS MI_PromoGoods
+                                                          ON MI_PromoGoods.MovementId = Movement_Promo.Id
+                                                         AND MI_PromoGoods.IsErASed = FALSE
+                   LEFT JOIN MovementItemFloat AS MIFloat_PriceIn1
+                                               ON MIFloat_PriceIn1.MovementItemId = MI_PromoGoods.Id
+                                              AND MIFloat_PriceIn1.DescId = zc_MIFloat_PriceIn1()
+              )
                     
         SELECT
             Movement_Promo.Id                --ИД документа акции
@@ -177,10 +198,11 @@ BEGIN
           , MI_PromoGoods.AmountOutWeight     --Кол-во реализация (факт) Вес
           , MI_PromoGoods.AmountIn            --Кол-во возврат (факт)
           , MI_PromoGoods.AmountInWeight      --Кол-во возврат (факт) Вес
-          , (COALESCE (MI_PromoGoods.AmountOutWeight, 0) - COALESCE (MI_PromoGoods.AmountInWeight, 0)) :: TFloat  AS AmountSaleWeight -- продажа - возврат 
+          , MI_PromoGoods.AmountSale          -- продажа - возврат 
+          , MI_PromoGoods.AmountSaleWeight    -- продажа - возврат 
           
-          , CASE WHEN (COALESCE (MI_PromoGoods.AmountOutWeight, 0) - COALESCE (MI_PromoGoods.AmountInWeight, 0)) <> 0
-                 THEN (MI_PromoGoods.AmountRealWeight/ (COALESCE (MI_PromoGoods.AmountOutWeight, 0) - COALESCE (MI_PromoGoods.AmountInWeight, 0)) - 1) *100
+          , CASE WHEN COALESCE (MI_PromoGoods.AmountRealWeight, 0) <> 0
+                 THEN (MI_PromoGoods.AmountSaleWeight/ MI_PromoGoods.AmountRealWeight - 1) *100
                  ELSE 0
             END                    :: TFloat AS PersentResult
           
@@ -190,35 +212,30 @@ BEGIN
                WHERE MovementItem_PromoCondition.MovementId = Movement_Promo.Id
                  AND MovementItem_PromoCondition.IsErased   = FALSE))  :: TBlob   AS Discount
                  
-          , 0 :: Tfloat AS MainDiscount
+          , 0                                 :: TFloat AS MainDiscount
                  
-          , MI_PromoGoods.PriceWithVAT                                            AS PriceWithVAT
-          , MI_PromoGoods.Price               :: TFloat    AS Price
-          , Movement_Promo.CostPromo          :: TFloat    AS CostPromo
-          
-          , MI_PromoGoods.PriceSale           :: TFloat    AS PriceSale
+          , MI_PromoGoods.PriceWithVAT        :: TFloat
+          , MI_PromoGoods.Price               :: TFloat
+          , Movement_Promo.CostPromo          :: TFloat
+          , MI_PromoGoods.PriceSale           :: TFloat    
 
-          , MIFloat_PriceIn1.ValueData        :: TFloat    AS PriceIn1               --себестоимость факт,  за кг
-          , ((MI_PromoGoods.Price - MI_PromoGoods.PriceWithVAT) * (COALESCE (MI_PromoGoods.AmountOutWeight, 0) - COALESCE (MI_PromoGoods.AmountInWeight, 0))) :: TFloat AS Profit_Virt
-          , (MI_PromoGoods.Price * MI_PromoGoods.AmountRealWeight)                                                                    :: TFloat AS SummReal
-          , (MI_PromoGoods.PriceWithVAT * (COALESCE (MI_PromoGoods.AmountOutWeight, 0) - COALESCE (MI_PromoGoods.AmountInWeight, 0))) :: TFloat AS SummPromo
-          , 0                                 :: TFloat    AS ContractCondition      -- Бонус сети, %
-          , CASE WHEN COALESCE (MIFloat_PriceIn1.ValueData, 0) <> 0 AND (COALESCE (MI_PromoGoods.AmountOutWeight, 0) - COALESCE (MI_PromoGoods.AmountInWeight, 0)) <> 0
-                 THEN (MI_PromoGoods.PriceWithVAT * (COALESCE (MI_PromoGoods.AmountOutWeight, 0) - COALESCE (MI_PromoGoods.AmountInWeight, 0)))
-                    - (COALESCE (MIFloat_PriceIn1.ValueData, 0) 
+          , MI_PromoGoods.PriceIn1            --себестоимость факт,  за кг
+          , (MI_PromoGoods.Price_Diff * COALESCE (MI_PromoGoods.AmountSaleWeight, 0))    :: TFloat AS Profit_Virt
+          , (MI_PromoGoods.Price * COALESCE (MI_PromoGoods.AmountRealWeight, 0))         :: TFloat AS SummReal
+          , (MI_PromoGoods.PriceWithVAT * COALESCE (MI_PromoGoods.AmountSaleWeight, 0) ) :: TFloat AS SummPromo
+          , 0                                                                            :: TFloat    AS ContractCondition      -- Бонус сети, %
+          
+          , CASE WHEN COALESCE (MI_PromoGoods.PriceIn1, 0) <> 0 AND COALESCE (MI_PromoGoods.AmountSaleWeight, 0) <> 0
+                 THEN (MI_PromoGoods.PriceWithVAT * COALESCE (MI_PromoGoods.AmountSaleWeight, 0))
+                    - (COALESCE (MI_PromoGoods.PriceIn1, 0) 
                        + 0
-                       + (( (MI_PromoGoods.PriceWithVAT * (COALESCE (MI_PromoGoods.AmountOutWeight, 0) - COALESCE (MI_PromoGoods.AmountInWeight, 0))) * 0 /*ContractCondition*/ ) / (COALESCE (MI_PromoGoods.AmountOutWeight, 0) - COALESCE (MI_PromoGoods.AmountInWeight, 0)) )
-                       ) * (COALESCE (MI_PromoGoods.AmountOutWeight, 0) - COALESCE (MI_PromoGoods.AmountInWeight, 0)) 
+                       + (( (MI_PromoGoods.PriceWithVAT * COALESCE (MI_PromoGoods.AmountSaleWeight, 0))  * 0 /*ContractCondition*/ ) / COALESCE (MI_PromoGoods.AmountSaleWeight, 0))
+                       ) * COALESCE (MI_PromoGoods.AmountSaleWeight, 0) 
                  ELSE 0
             END                               :: TFloat    AS Profit
           , ''                                :: TVarChar  AS Comment                -- Примечание
         FROM tmpMovement AS Movement_Promo
-             LEFT OUTER JOIN MovementItem_PromoGoods_View AS MI_PromoGoods
-                                                          ON MI_PromoGoods.MovementId = Movement_Promo.Id
-                                                         AND MI_PromoGoods.IsErASed = FALSE
-             LEFT JOIN MovementItemFloat AS MIFloat_PriceIn1
-                                         ON MIFloat_PriceIn1.MovementItemId = MI_PromoGoods.Id
-                                        AND MIFloat_PriceIn1.DescId = zc_MIFloat_PriceIn1()
+             LEFT JOIN tmpMI AS MI_PromoGoods ON MI_PromoGoods.MovementId = Movement_Promo.Id
         ;
 END;
 $BODY$
@@ -231,5 +248,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Report_Promo ('20150101','20160101',0,'5');
-
+-- select * from gpSelect_Report_Promo_Result(inStartDate := ('21.09.2016')::TDateTime , inEndDate := ('01.11.2016')::TDateTime , inIsPromo := 'False' , inIsTender := 'True' , inUnitId := 0 , inRetailId := 0 , inMovementId := 0 ,  inSession := '5');
