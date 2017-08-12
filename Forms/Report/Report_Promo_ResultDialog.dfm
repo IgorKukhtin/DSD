@@ -3,7 +3,7 @@ inherited Report_Promo_ResultDialogForm: TReport_Promo_ResultDialogForm
   ClientHeight = 187
   ClientWidth = 418
   ExplicitWidth = 424
-  ExplicitHeight = 215
+  ExplicitHeight = 212
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -26,7 +26,7 @@ inherited Report_Promo_ResultDialogForm: TReport_Promo_ResultDialogForm
   object deStart: TcxDateEdit [3]
     Left = 117
     Top = 8
-    EditValue = 41395d
+    EditValue = 42736d
     Properties.ShowTime = False
     TabOrder = 3
     Width = 83
@@ -39,7 +39,7 @@ inherited Report_Promo_ResultDialogForm: TReport_Promo_ResultDialogForm
   object deEnd: TcxDateEdit [5]
     Left = 319
     Top = 8
-    EditValue = 41395d
+    EditValue = 42736d
     Properties.ShowTime = False
     TabOrder = 5
     Width = 82

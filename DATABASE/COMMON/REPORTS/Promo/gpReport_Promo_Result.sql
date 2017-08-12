@@ -151,17 +151,17 @@ BEGIN
                          AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
                          AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
                       )
-            , (SELECT STRING_AGG (DISTINCT Object.ValueData,'; ')
-               FROM
-                  Movement AS Movement_PromoPartner
-                  INNER JOIN MovementLinkObject AS MLO_Partner
-                                                ON MLO_Partner.MovementId = Movement_PromoPartner.ID
-                                               AND MLO_Partner.DescId     = zc_MovementLinkObject_Partner()
-                  INNER JOIN Object ON Object.Id = MLO_Partner.ObjectId
-               WHERE Movement_PromoPartner.ParentId = Movement_Promo.Id
-                 AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
-                 AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
-                ))                                                               ::TBlob AS RetailName             -- * торговая сеть
+                    , (SELECT STRING_AGG (DISTINCT Object.ValueData,'; ')
+                       FROM
+                          Movement AS Movement_PromoPartner
+                          INNER JOIN MovementLinkObject AS MLO_Partner
+                                                        ON MLO_Partner.MovementId = Movement_PromoPartner.ID
+                                                       AND MLO_Partner.DescId     = zc_MovementLinkObject_Partner()
+                          INNER JOIN Object ON Object.Id = MLO_Partner.ObjectId
+                       WHERE Movement_PromoPartner.ParentId = Movement_Promo.Id
+                         AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
+                         AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
+                        ))                                                       :: TBlob AS RetailName    -- * торговая сеть
             --------------------------------------
           , (SELECT STRING_AGG (DISTINCT Object_Area.ValueData,'; ')
              FROM
@@ -178,7 +178,7 @@ BEGIN
              WHERE Movement_PromoPartner.ParentId = Movement_Promo.Id
                AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
                AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
-            )                                                                    ::TBlob AS AreaName               -- * регион
+            )                                                                    :: TBlob AS AreaName      -- * регион
             
           , MI_PromoGoods.GoodsName
           , MI_PromoGoods.GoodsCode
@@ -210,11 +210,17 @@ BEGIN
                        ELSE 0
                   END AS NUMERIC (16, 0))     :: TFloat AS PersentResult
           
-          , (REPLACE (TO_CHAR (MI_PromoGoods.Amount,'FM99990D99')||' ','. ','')||'  '||chr(13)||
-              (SELECT STRING_AGG (MovementItem_PromoCondition.ConditionPromoName||': '||REPLACE (TO_CHAR (MovementItem_PromoCondition.Amount,'FM999990D09')||' ','.0 ',''), chr(13)) 
-               FROM MovementItem_PromoCondition_View AS MovementItem_PromoCondition 
-               WHERE MovementItem_PromoCondition.MovementId = Movement_Promo.Id
-                 AND MovementItem_PromoCondition.IsErased   = FALSE))  :: TBlob   AS Discount
+          , (CASE WHEN MI_PromoGoods.Amount <> 0
+                       THEN zfConvert_FloatToString (MI_PromoGoods.Amount)
+                  ELSE (SELECT STRING_AGG (zfConvert_FloatToString (MovementItem_PromoCondition.Amount)
+                                 ||' - ' || MovementItem_PromoCondition.ConditionPromoName
+                                        , '; ' ) 
+                       FROM MovementItem_PromoCondition_View AS MovementItem_PromoCondition
+                       WHERE MovementItem_PromoCondition.MovementId = Movement_Promo.Id
+                         AND MovementItem_PromoCondition.IsErased   = FALSE
+                         AND MovementItem_PromoCondition.Amount     <> 0
+                       )
+             END) :: TBlob   AS Discount
                  
           , 0                                 :: TFloat AS MainDiscount
                  
@@ -252,4 +258,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_Report_Promo_Result(inStartDate := ('21.09.2016')::TDateTime , inEndDate := ('01.11.2016')::TDateTime , inIsPromo := 'False' , inIsTender := 'True' , inUnitId := 0 , inRetailId := 0 , inMovementId := 0 ,  inSession := '5');
+-- SELECT * FROM gpSelect_Report_Promo_Result (inStartDate:= '21.09.2017', inEndDate:= '21.09.2017', inIsPromo:= TRUE, inIsTender:= FALSE, inUnitId:= 0, inRetailId:= 0, inMovementId:= 0, inSession:= zfCalc_UserAdmin());
