@@ -5,7 +5,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 951
-  ExplicitHeight = 472
+  ExplicitHeight = 469
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -29,63 +29,100 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
-              Format = ',0.###'
+              Format = ',0.####'
               Kind = skSum
               Column = SummReal
             end
             item
-              Format = ',0.###'
+              Format = ',0.####'
               Kind = skSum
               Column = SummPromo
-            end>
-          DataController.Summary.FooterSummaryItems = <
+            end
             item
-              Format = ',0.###'
+              Format = ',0.####'
               Kind = skSum
               Column = AmountPlanMinWeight
             end
             item
-              Format = ',0.###'
+              Format = ',0.####'
               Kind = skSum
               Column = AmountPlanMaxWeight
             end
             item
-              Format = ',0.###'
+              Format = ',0.####'
               Kind = skSum
               Column = AmountRealWeight
             end
             item
-              Format = ',0.###'
-              Kind = skSum
-            end
-            item
-              Format = ',0.###'
+              Format = ',0.####'
               Kind = skSum
               Column = AmountOutWeight
             end
             item
-              Format = ',0.###'
+              Format = ',0.####'
               Kind = skSum
               Column = AmountInWeight
             end
             item
-              Format = ',0.###'
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSaleWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Profit
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPlanMinWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPlanMaxWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRealWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountOutWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountInWeight
+            end
+            item
+              Format = ',0.####'
               Kind = skSum
               Column = SummReal
             end
             item
-              Format = ',0.###'
+              Format = ',0.####'
               Kind = skSum
               Column = SummPromo
             end
             item
-              Format = ',0.###'
+              Format = ',0.####'
               Kind = skSum
               Column = AmountSaleWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Profit
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
+          OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -342,6 +379,9 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
           object PersentResult: TcxGridDBColumn
             Caption = #1056#1077#1079#1091#1083#1100#1090#1072#1090', %'
             DataBinding.FieldName = 'PersentResult'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 73
@@ -483,13 +523,13 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 116
-      EditValue = 42309d
+      EditValue = 42736d
       ExplicitLeft = 116
     end
     inherited deEnd: TcxDateEdit
       Left = 117
       Top = 32
-      EditValue = 42309d
+      EditValue = 42736d
       ExplicitLeft = 117
       ExplicitTop = 32
     end
@@ -524,6 +564,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
       Left = 208
       Top = 32
       Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+      State = cbsChecked
       TabOrder = 6
       Width = 144
     end

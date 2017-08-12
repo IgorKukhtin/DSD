@@ -125,28 +125,28 @@ BEGIN
      IF vbSumm <> 0 THEN ioAmountDebet := 0; ioAmountKredit := 0; END IF;
 
      -- сохранили <Ёлемент документа>
-     PERFORM lpInsertUpdate_MovementItem_LossDebt (ioId                   := ioId
-                                                 , inMovementId           := inMovementId
-                                                 , inJuridicalId          := inJuridicalId
-                                                 , inPartnerId            := inPartnerId
-                                                 , inBranchId             := inBranchId
-                                                 , inContainerId          := inContainerId
-                                                 , inAmount               := vbAmount
-                                                 , inSumm                 := vbSumm
-                                                 , inCurrencyPartnerValue := inCurrencyPartnerValue
-                                                 , inParPartnerValue      := inParPartnerValue
-                                                 , inAmountCurrency       := CASE WHEN ioAmountCurrencyDebet  <> 0 THEN  1 * ioAmountCurrencyDebet
-                                                                                  WHEN ioAmountCurrencyKredit <> 0 THEN -1 * ioAmountCurrencyKredit
-                                                                                  ELSE 0
-                                                                             END
-                                                 , inIsCalculated         := ioIsCalculated
-                                                 , inContractId           := inContractId
-                                                 , inPaidKindId           := inPaidKindId
-                                                 , inInfoMoneyId          := inInfoMoneyId
-                                                 , inUnitId               := inUnitId
-                                                 , inCurrencyId           := inCurrencyId
-                                                 , inUserId               := vbUserId
-                                                  );
+     ioId:= lpInsertUpdate_MovementItem_LossDebt (ioId                   := ioId
+                                                , inMovementId           := inMovementId
+                                                , inJuridicalId          := inJuridicalId
+                                                , inPartnerId            := inPartnerId
+                                                , inBranchId             := inBranchId
+                                                , inContainerId          := inContainerId
+                                                , inAmount               := vbAmount
+                                                , inSumm                 := vbSumm
+                                                , inCurrencyPartnerValue := inCurrencyPartnerValue
+                                                , inParPartnerValue      := inParPartnerValue
+                                                , inAmountCurrency       := CASE WHEN ioAmountCurrencyDebet  <> 0 THEN  1 * ioAmountCurrencyDebet
+                                                                                 WHEN ioAmountCurrencyKredit <> 0 THEN -1 * ioAmountCurrencyKredit
+                                                                                 ELSE 0
+                                                                            END
+                                                , inIsCalculated         := ioIsCalculated
+                                                , inContractId           := inContractId
+                                                , inPaidKindId           := inPaidKindId
+                                                , inInfoMoneyId          := inInfoMoneyId
+                                                , inUnitId               := inUnitId
+                                                , inCurrencyId           := inCurrencyId
+                                                , inUserId               := vbUserId
+                                                 );
 
 END;
 $BODY$
