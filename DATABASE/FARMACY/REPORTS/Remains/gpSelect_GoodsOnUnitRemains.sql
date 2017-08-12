@@ -7,16 +7,16 @@ DROP FUNCTION IF EXISTS gpSelect_GoodsOnUnitRemains (Integer, Integer, TDateTime
 
 CREATE OR REPLACE FUNCTION gpSelect_GoodsOnUnitRemains(
     IN inUnitId           Integer  ,  -- Подразделение
-    IN inRetailId         Integer  ,  -- ссылка на торг.сеть
+    --IN inRetailId         Integer  ,  -- ссылка на торг.сеть
     IN inRemainsDate      TDateTime,  -- Дата остатка
     IN inIsPartion        Boolean,    -- 
     IN inisPartionPrice   Boolean,    -- 
-    IN inisJuridical      Boolean,    --
+    IN inisJuridical      Boolean,    -- 
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (ContainerId Integer
              , Id Integer, GoodsCode Integer, GoodsName TVarChar, GoodsGroupName TVarChar
-             , NDSKindName TVarChar, isSP Boolean
+             , NDSKindName TVarChar, isSP Boolean, isPromo boolean
              , ConditionsKeepName TVarChar
              , Amount TFloat, Price TFloat, PriceWithVAT TFloat, PriceWithOutVAT TFloat, PriceSale  TFloat
              
@@ -49,7 +49,7 @@ BEGIN
     CREATE TEMP TABLE tmpUnit (UnitId Integer) ON COMMIT DROP;
     
     -- список подразделений
-    INSERT INTO tmpUnit (UnitId)
+    /*INSERT INTO tmpUnit (UnitId)
                 SELECT inUnitId AS UnitId
                 WHERE COALESCE (inUnitId, 0) <> 0
                UNION 
@@ -61,18 +61,19 @@ BEGIN
                                           AND ((ObjectLink_Juridical_Retail.ChildObjectId = inRetailId AND inUnitId = 0)
                                                OR (inRetailId = 0 AND inUnitId = 0))
                 WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical();
+     */
             
     INSERT INTO tmpContainerCount(ContainerId, GoodsId, Amount)
                                 SELECT Container.Id                AS ContainerId
                                      , Container.ObjectID          AS GoodsId
                                      , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS Amount
                                 FROM Container
-                                    INNER JOIN tmpUnit ON tmpUnit.UnitId = Container.WhereObjectId
+                                    --INNER JOIN tmpUnit ON tmpUnit.UnitId = Container.WhereObjectId
                                     LEFT JOIN MovementItemContainer AS MIContainer 
                                                                     ON MIContainer.ContainerId = Container.Id
                                                                    AND MIContainer.OperDate >= inRemainsDate
                                 WHERE Container.DescId = zc_Container_count()
-                                --  AND Container.WhereObjectId = inUnitId
+                                  AND Container.WhereObjectId = inUnitId
                                 GROUP BY Container.Id  
                                      , Container.Amount 
                                      , Container.ObjectId
@@ -191,23 +192,42 @@ BEGIN
                              ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
                             AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
                  )
+                 
+    -- Маркетинговый контракт
+  , GoodsPromo AS (SELECT DISTINCT ObjectLink_Child_retail.ChildObjectId AS GoodsId  -- здесь товар "сети"
+                     --   , tmp.ChangePercent
+                   FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp        -- inRemainsDate   --CURRENT_DATE
+                                INNER JOIN ObjectLink AS ObjectLink_Child
+                                                      ON ObjectLink_Child.ChildObjectId = tmp.GoodsId
+                                                     AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                                INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                         AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                                INNER JOIN ObjectLink AS ObjectLink_Main_retail ON ObjectLink_Main_retail.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                               AND ObjectLink_Main_retail.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                INNER JOIN ObjectLink AS ObjectLink_Child_retail ON ObjectLink_Child_retail.ObjectId = ObjectLink_Main_retail.ObjectId
+                                                                                AND ObjectLink_Child_retail.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                                INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                      ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_retail.ChildObjectId
+                                                     AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                                     AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
+                   )
 
-, SelectMinPrice_AllGoods AS (SELECT tmp.*
-                              FROM lpSelectMinPrice_AllGoods(inUnitId := inUnitId,
-                                                             inObjectId := vbObjectId, 
-                                                             inUserId := vbUserId) AS tmp -- limit 1
-                             )
-          
-, SelectMinPrice_AllGoods_onDate AS (SELECT tmp.*
-                                     FROM lpSelectMinPrice_AllGoods_onDate(inOperDate := inRemainsDate,
-                                                                           inUnitId   := inUnitId,
-                                                                           inObjectId := vbObjectId, 
-                                                                           inUserId   := vbUserId) AS tmp -- limit 1
-                                     )
-, Object_Price AS (SELECT Object_Price.Id       AS Id
-                        , Object_Price.GoodsId  AS GoodsId
-                   FROM Object_Price_View AS Object_Price
-                   WHERE Object_Price.UnitId = inUnitId 
+  , SelectMinPrice_AllGoods AS (SELECT tmp.*
+                                FROM lpSelectMinPrice_AllGoods(inUnitId := inUnitId,
+                                                               inObjectId := vbObjectId, 
+                                                               inUserId := vbUserId) AS tmp -- limit 1
+                               )
+            
+  , SelectMinPrice_AllGoods_onDate AS (SELECT tmp.*
+                                       FROM lpSelectMinPrice_AllGoods_onDate(inOperDate := inRemainsDate,
+                                                                             inUnitId   := inUnitId,
+                                                                             inObjectId := vbObjectId, 
+                                                                             inUserId   := vbUserId) AS tmp -- limit 1
+                                       )
+  , Object_Price AS (SELECT Object_Price.Id       AS Id
+                          , Object_Price.GoodsId  AS GoodsId
+                     FROM Object_Price_View AS Object_Price
+                     WHERE Object_Price.UnitId = inUnitId 
                    )
 
         -- Результат
@@ -218,6 +238,7 @@ BEGIN
              , Object_GoodsGroup.ValueData                                AS GoodsGroupName
              , Object_NDSKind_Income.ValueData                            AS NDSKindName
              , tmpGoods.isSP                                 :: Boolean   AS isSP
+             , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END :: Boolean AS isPromo
              , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar   AS ConditionsKeepName
              
              , tmpData.Amount :: TFloat AS Amount
@@ -297,6 +318,8 @@ BEGIN
             LEFT JOIN SelectMinPrice_AllGoods ON SelectMinPrice_AllGoods.GoodsId = tmpData.GoodsId
             LEFT JOIN SelectMinPrice_AllGoods_onDate ON SelectMinPrice_AllGoods_onDate.GoodsId = tmpData.GoodsId
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = SelectMinPrice_AllGoods_onDate.ContractId
+            
+            LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = tmpData.GoodsId
             -- условия хранения
             /*LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
                                  ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods.Id
@@ -314,6 +337,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 12.08.17         *
  24.05.17         *
  12.01.17         *
  05.10.16         * add inisJuridical
