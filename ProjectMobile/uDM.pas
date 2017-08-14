@@ -2157,12 +2157,12 @@ begin
   end;
 end;
 
-{ синхронизация с центральной БД }
 function TSyncThread.AdaptQuotMark(S: string): string;
 begin
   Result := ReplaceStr(S, '''', '''||CHR (39)||''');
 end;
 
+{ синхронизация с центральной БД }
 procedure TSyncThread.Execute;
 var
   Res : string;
