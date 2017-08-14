@@ -13,7 +13,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
                , TotalCount TFloat, TotalCountChild TFloat, PartionGoods TVarChar
                , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
                , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-               , StorageLineId Integer, StorageLineName TVarChar
+               , GoodsKindId Integer, GoodsKindName TVarChar
+               , StorageLineId_old Integer, StorageLineId Integer, StorageLineName TVarChar
                , Amount TFloat
                )
 AS
@@ -39,6 +40,7 @@ BEGIN
                          )
         , tmpMI_Master AS (SELECT tmpMovement.Id                     AS MovementId
                                 , MovementItem.ObjectId              AS GoodsId
+                                , MILinkObject_GoodsKind.ObjectId    AS GoodsKindId
                                 , MILinkObject_StorageLine.ObjectId  AS StorageLineId
                                 , SUM (MovementItem.Amount)          AS Amount
                            FROM tmpMovement
@@ -46,11 +48,16 @@ BEGIN
                                                       AND MovementItem.DescId     = zc_MI_Master()
                                                       AND MovementItem.isErased   = FALSE
                       
+                                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                 ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_StorageLine
                                                                  ON MILinkObject_StorageLine.MovementItemId = MovementItem.Id
                                                                 AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
                            GROUP BY tmpMovement.Id 
                                   , MovementItem.ObjectId
+                                  , MILinkObject_GoodsKind.ObjectId
                                   , MILinkObject_StorageLine.ObjectId
                           )
                          
@@ -73,6 +80,9 @@ BEGIN
            , Object_Goods.Id                      AS GoodsId
            , Object_Goods.ObjectCode              AS GoodsCode
            , Object_Goods.ValueData               AS GoodsName
+           , Object_GoodsKind.Id                  AS GoodsKindId
+           , Object_GoodsKind.ValueData           AS GoodsKindName
+           , Object_StorageLine.Id                AS StorageLineId_old
            , Object_StorageLine.Id                AS StorageLineId
            , Object_StorageLine.ValueData         AS StorageLineName
                                                
@@ -110,6 +120,7 @@ BEGIN
           
           LEFT JOIN tmpMI_Master ON tmpMI_Master.MovementId = Movement.Id
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI_Master.GoodsId
+          LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI_Master.GoodsKindId
           LEFT JOIN Object AS Object_StorageLine ON Object_StorageLine.Id = tmpMI_Master.StorageLineId
           ;
 

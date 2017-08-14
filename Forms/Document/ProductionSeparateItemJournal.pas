@@ -49,6 +49,9 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     PrintItemsTwoCDS: TClientDataSet;
     GoodsCode: TcxGridDBColumn;
+    actStorageLine: TOpenChoiceForm;
+    actUpdateMainDS: TdsdUpdateDataSet;
+    spUpdateMIStorageLine: TdsdStoredProc;
   private
     { Private declarations }
   public
