@@ -4,19 +4,23 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integ
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PersonalServiceList(
- INOUT ioId             Integer   ,     -- ключ объекта <> 
-    IN inCode           Integer   ,     -- Код объекта  
-    IN inName           TVarChar  ,     -- Название объекта 
-    IN inJuridicalId    Integer   ,     -- Юр. лицо
-    IN inPaidKindId     Integer   ,     -- 
-    IN inBranchId       Integer   ,     -- 
-    IN inBankId         Integer   ,     -- 
-    IN inisSecond       Boolean   ,     -- 
-   -- IN inMemberId       Integer   ,     -- Физ лица(пользователь)
-    IN inSession        TVarChar        -- сессия пользователя
+ INOUT ioId                    Integer   ,     -- ключ объекта <> 
+    IN inCode                  Integer   ,     -- Код объекта  
+    IN inName                  TVarChar  ,     -- Название объекта 
+    IN inJuridicalId           Integer   ,     -- Юр. лицо
+    IN inPaidKindId            Integer   ,     -- 
+    IN inBranchId              Integer   ,     -- 
+    IN inBankId                Integer   ,     -- 
+    IN inMemberHeadManagerId   Integer   ,     -- Физ лица(исполнительный директор)
+    IN inMemberManagerId       Integer   ,     -- Физ лица(директор)
+    IN inMemberBookkeeperId    Integer   ,     -- Физ лица(бухгалтер)
+    IN inisSecond              Boolean   ,     -- 
+   -- IN inMemberId            Integer   ,     -- Физ лица(пользователь)
+    IN inSession               TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$
@@ -50,6 +54,14 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PersonalServiceList_Branch(), ioId, inBranchId);
    -- сохранили св-во 
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PersonalServiceList_Bank(), ioId, inBankId);
+   
+   -- сохранили св-во 
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PersonalServiceList_MemberHeadManager(), ioId, inMemberHeadManagerId);
+   -- сохранили св-во 
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PersonalServiceList_MemberManager(), ioId, inMemberManagerId);
+   -- сохранили св-во 
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PersonalServiceList_MemberBookkeeper(), ioId, inMemberBookkeeperId);
+
    -- сохранили св-во 
    --PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PersonalServiceList_Member(), ioId, inMemberId);
    -- сохранили свойство <>
@@ -75,4 +87,4 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_PersonalServiceList(ioId:=null, inCode:=null, inName:='Торговая сеть 1', inSession:='2')
+-- select * from gpInsertUpdate_Object_PersonalServiceList(ioId := 957950 , inCode := 226 , inName := 'Ведомость Хлеб БН' , inJuridicalId := 131931 , inPaidKindId := 4 , inBranchId := 0 , inBankId := 0 , inMemberHeadManagerId := 0 , inMemberManagerId := 0 , inMemberBookkeeperId := 0 , inisSecond := 'False' ,  inSession := '5');
