@@ -800,6 +800,9 @@ type
     Label102: TLabel;
     bsJuridicalCollation: TBindSourceDB;
     LinkListControlToField8: TLinkListControlToField;
+    Layout46: TLayout;
+    Label103: TLabel;
+    lChangePercent: TLabel;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -5131,6 +5134,11 @@ begin
     lPartnerAddressGPS.Text := '-';
 
   lContractName.Text := DM.qryPartnerContractName.AsString;
+
+  if DM.qryPartnerChangePercent.AsFloat < -0.0001 then
+    lChangePercent.Text := FormatFloat(',0.##', Abs(DM.qryPartnerChangePercent.AsFloat)) + '%'
+  else
+    lChangePercent.Text := '-';
 
   if DM.qryPartnerisOperDateOrder.AsBoolean then
     lOperDateOrder.Text := 'по дате заявки'

@@ -2157,12 +2157,12 @@ begin
   end;
 end;
 
-{ синхронизация с центральной БД }
 function TSyncThread.AdaptQuotMark(S: string): string;
 begin
   Result := ReplaceStr(S, '''', '''||CHR (39)||''');
 end;
 
+{ синхронизация с центральной БД }
 procedure TSyncThread.Execute;
 var
   Res : string;
@@ -3310,39 +3310,44 @@ begin
 end;
 
 procedure TDM.qryPartnerCalcFields(DataSet: TDataSet);
+var
+  ContractInfo: string;
 begin
-  DataSet.FieldByName('FullName').AsString := DataSet.FieldByName('Name').AsString + chr(13) + chr(10) +
+  DataSet.FieldByName('FullName').AsString := DataSet.FieldByName('Name').AsString + sLineBreak +
     DataSet.FieldByName('Address').AsString;
 
   // информация о долгах ТТ
   if DataSet.FieldByName('PaidKindId').AsInteger = DM.tblObject_ConstPaidKindId_First.AsInteger then // БН
   begin
-    DataSet.FieldByName('ContractInfo').AsString := DM.tblObject_ConstPaidKindName_First.AsString + ' : ' + DataSet.FieldByName('ContractName').AsString +
+    ContractInfo := DM.tblObject_ConstPaidKindName_First.AsString + ' : ' + DataSet.FieldByName('ContractName').AsString +
       '  долг : ' + FormatFloat(',0.##', DM.qryPartnerDebtSumJ.AsFloat) +
       ' : ' + FormatFloat(',0.##', DM.qryPartnerOverSumJ.AsFloat) +
       ' : ' + DM.qryPartnerOverDaysJ.AsString + ' дн';
 
-    DataSet.FieldByName('FullName').AsString := DataSet.FieldByName('FullName').AsString + chr(13) + chr(10) +
+    DataSet.FieldByName('FullName').AsString := DataSet.FieldByName('FullName').AsString + sLineBreak +
       DM.tblObject_ConstPaidKindName_First.AsString + ' : ' + DataSet.FieldByName('ContractName').AsString;
-  end
-  else
+  end else
   if DM.qryPartnerPaidKindId.AsInteger = DM.tblObject_ConstPaidKindId_Second.AsInteger then // Нал
   begin
-    DataSet.FieldByName('ContractInfo').AsString := DM.tblObject_ConstPaidKindName_Second.AsString + ' : ' + DataSet.FieldByName('ContractName').AsString +
+    ContractInfo := DM.tblObject_ConstPaidKindName_Second.AsString + ' : ' + DataSet.FieldByName('ContractName').AsString +
       '  долг : ' + FormatFloat(',0.##', DM.qryPartnerDebtSum.AsFloat) +
       ' : ' + FormatFloat(',0.##', DM.qryPartnerOverSum.AsFloat) +
       ' : ' + DM.qryPartnerOverDays.AsString + ' дн';
 
-    DataSet.FieldByName('FullName').AsString := DataSet.FieldByName('FullName').AsString + chr(13) + chr(10) +
+    DataSet.FieldByName('FullName').AsString := DataSet.FieldByName('FullName').AsString + sLineBreak +
       DM.tblObject_ConstPaidKindName_Second.AsString + ' : ' + DataSet.FieldByName('ContractName').AsString;
-  end
-  else  // нет договора
+  end else  // нет договора
   begin
-    DataSet.FieldByName('ContractInfo').AsString := DataSet.FieldByName('ContractName').AsString;
+    ContractInfo := DataSet.FieldByName('ContractName').AsString;
 
-    DataSet.FieldByName('FullName').AsString := DataSet.FieldByName('FullName').AsString + chr(13) + chr(10) +
+    DataSet.FieldByName('FullName').AsString := DataSet.FieldByName('FullName').AsString + sLineBreak +
       DataSet.FieldByName('ContractName').AsString;
   end;
+
+  if DataSet.FieldByName('ChangePercent').AsFloat < -0.0001 then
+    ContractInfo := ContractInfo + '; скидка: ' + FormatFloat(',0.##', Abs(DataSet.FieldByName('ChangePercent').AsFloat)) + '%';
+
+  DataSet.FieldByName('ContractInfo').AsString := ContractInfo;
 end;
 
 procedure TDM.qryPhotoGroupDocsCalcFields(DataSet: TDataSet);

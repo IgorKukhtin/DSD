@@ -4,8 +4,9 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
   ClientWidth = 1073
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -116
   ExplicitWidth = 1089
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -67,7 +68,6 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           OptionsView.HeaderHeight = 40
           Styles.Content = nil
@@ -77,15 +77,18 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 100
           end
           inherited colOperDate: TcxGridDBColumn [1]
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 70
           end
           inherited colInvNumber: TcxGridDBColumn [2]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 70
           end
           object FromName: TcxGridDBColumn
@@ -93,6 +96,7 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 150
           end
           object ToName: TcxGridDBColumn
@@ -100,14 +104,30 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 150
           end
           object StorageLineName: TcxGridDBColumn
             Caption = #1051#1080#1085#1080#1103' '#1087#1088'-'#1074#1072
             DataBinding.FieldName = 'StorageLineName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actStorageLine
+                Default = True
+                Kind = bkEllipsis
+              end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
+            Width = 90
+          end
+          object StorageLineId_old: TcxGridDBColumn
+            Caption = #1048#1044' '#1051#1080#1085#1080#1103' '#1087#1088'-'#1074#1072
+            DataBinding.FieldName = 'StorageLineId_old'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 90
           end
           object GoodsCode: TcxGridDBColumn
@@ -116,6 +136,7 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
+            Options.Editing = False
             Width = 38
           end
           object GoodsName: TcxGridDBColumn
@@ -125,6 +146,14 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 117
+          end
+          object GoodsKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 86
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
@@ -145,6 +174,7 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 89
           end
           object TotalCountChild: TcxGridDBColumn
@@ -155,6 +185,7 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 88
           end
           object PartionGoods: TcxGridDBColumn
@@ -162,6 +193,7 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
             DataBinding.FieldName = 'PartionGoods'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 140
           end
         end
@@ -206,6 +238,33 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
     Left = 471
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TProductionSeparateForm'
+    end
+    object actStorageLine: TOpenChoiceForm [4]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TStorageLineForm'
+      FormName = 'TStorageLineForm'
+      FormNameParam.Value = 'TStorageLineForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'StorageLineId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'StorageLineName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TProductionSeparateForm'
@@ -379,6 +438,18 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actUpdateMainDS: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMIStorageLine
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMIStorageLine
+        end>
+      Caption = 'actUpdateMainDS'
+      DataSource = MasterDS
     end
   end
   inherited MasterDS: TDataSource
@@ -773,5 +844,54 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
     Params = <>
     Left = 684
     Top = 166
+  end
+  object spUpdateMIStorageLine: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_ProductionSeparate_StorageLine'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStorageLineId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StorageLineId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioStorageLineId_old'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StorageLineId_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 552
+    Top = 384
   end
 end

@@ -3,9 +3,8 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
   ClientHeight = 364
   ClientWidth = 1009
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -324
   ExplicitWidth = 1025
-  ExplicitHeight = 403
+  ExplicitHeight = 402
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -428,6 +427,15 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
+          end
+          object isPromo: TcxGridDBColumn
+            Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1082#1086#1085#1090#1088#1072#1082#1090
+            DataBinding.FieldName = 'isPromo'
+            PropertiesClassName = 'TcxCheckBoxProperties'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
           end
         end
       end

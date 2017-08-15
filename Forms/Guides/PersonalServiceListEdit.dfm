@@ -2,7 +2,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'>'
-  ClientHeight = 285
+  ClientHeight = 413
   ClientWidth = 302
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 41
-    Top = 252
+    Left = 44
+    Top = 378
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -37,8 +37,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 185
-    Top = 252
+    Left = 188
+    Top = 378
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -132,9 +132,57 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     TabOrder = 14
     Width = 95
   end
+  object cxLabel6: TcxLabel
+    Left = 10
+    Top = 230
+    Caption = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1080#1089#1087'. '#1076#1080#1088#1077#1082#1090#1086#1088')'
+  end
+  object edMemberHeadManager: TcxButtonEdit
+    Left = 10
+    Top = 248
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 16
+    Width = 273
+  end
+  object cxLabel7: TcxLabel
+    Left = 10
+    Top = 275
+    Caption = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1076#1080#1088#1077#1082#1090#1086#1088')'
+  end
+  object edMemberManager: TcxButtonEdit
+    Left = 10
+    Top = 293
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 18
+    Width = 273
+  end
+  object cxLabel8: TcxLabel
+    Left = 10
+    Top = 320
+    Caption = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')'
+  end
+  object edMemberBookkeeper: TcxButtonEdit
+    Left = 10
+    Top = 338
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 20
+    Width = 273
+  end
   object ActionList: TActionList
     Left = 152
-    Top = 56
+    Top = 40
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -225,6 +273,30 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMemberHeadManagerId'
+        Value = Null
+        Component = GuidesMemberHeadManager
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMemberManagerId'
+        Value = Null
+        Component = GuidesMemberManager
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMemberBookkeeperId'
+        Value = Null
+        Component = GuidesMemberBookkeeper
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisSecond'
         Value = Null
         Component = ceisSecond
@@ -233,8 +305,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 104
-    Top = 56
+    Left = 240
+    Top = 8
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -339,10 +411,55 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Component = ceisSecond
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberBookkeeperId'
+        Value = Null
+        Component = GuidesMemberBookkeeper
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberBookkeeperName'
+        Value = Null
+        Component = GuidesMemberBookkeeper
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberHeadManagerId'
+        Value = Null
+        Component = GuidesMemberHeadManager
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberHeadManagerName'
+        Value = Null
+        Component = GuidesMemberHeadManager
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberManagerId'
+        Value = Null
+        Component = GuidesMemberManager
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberManagerName'
+        Value = Null
+        Component = GuidesMemberManager
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 208
-    Top = 104
+    Left = 240
+    Top = 72
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -356,12 +473,12 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 160
-    Top = 88
+    Left = 176
+    Top = 56
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 24
-    Top = 128
+    Left = 40
+    Top = 56
   end
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
@@ -390,7 +507,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 88
+    Left = 104
     Top = 104
   end
   object PaidKindGuides: TdsdGuides
@@ -418,7 +535,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         MultiSelectSeparator = ','
       end>
     Left = 213
-    Top = 195
+    Top = 187
   end
   object BranchGuides: TdsdGuides
     KeyField = 'Id'
@@ -476,5 +593,95 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
       end>
     Left = 69
     Top = 184
+  end
+  object GuidesMemberHeadManager: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMemberHeadManager
+    FormNameParam.Value = 'TMember_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMember_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesMemberHeadManager
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesMemberHeadManager
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 181
+    Top = 240
+  end
+  object GuidesMemberManager: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMemberManager
+    FormNameParam.Value = 'TMember_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMember_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesMemberManager
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesMemberManager
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 204
+    Top = 285
+  end
+  object GuidesMemberBookkeeper: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMemberBookkeeper
+    FormNameParam.Value = 'TMember_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMember_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesMemberBookkeeper
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesMemberBookkeeper
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 109
+    Top = 336
   end
 end

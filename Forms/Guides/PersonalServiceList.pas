@@ -69,6 +69,8 @@ type
     MemberManagerChoice: TOpenChoiceForm;
     MemberBookkeeperChoice: TOpenChoiceForm;
     isSecond: TcxGridDBColumn;
+    dsdSetErased: TdsdUpdateErased;
+    dsdSetUnErased: TdsdUpdateErased;
   private
     { Private declarations }
   public
