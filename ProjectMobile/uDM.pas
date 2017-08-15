@@ -6089,14 +6089,10 @@ end;
 
 
 initialization
-
-Structure := TStructure.Create;
-Randomize;
-
+  Structure := TStructure.Create;
+  Randomize;
 finalization
-
-FreeAndNil(Structure);
-
+  FreeAndNil(Structure);
 end.
 
 

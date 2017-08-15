@@ -1,9 +1,11 @@
 -- Function: gpSelect_Object_Goods()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_GoodsSP(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_GoodsSP(Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsSP(
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inShowErased    Boolean ,
+    IN inSession       TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isErased_inf Boolean, isErased Boolean
@@ -139,13 +141,12 @@ BEGIN
                                 AND ObjectDate_InsertSP.DescId = zc_ObjectDate_Protocol_InsertSP()
      
    WHERE ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
-     AND ObjectBoolean_Goods_SP.ValueData;
+     AND (ObjectBoolean_Goods_SP.ValueData = TRUE OR inShowErased = TRUE);
 
   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_GoodsSP(TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

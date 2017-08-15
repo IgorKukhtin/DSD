@@ -46,6 +46,7 @@ type
     UpdateDataSet: TdsdUpdateDataSet;
     isDocument: TcxGridDBColumn;
     SPName: TcxGridDBColumn;
+    InvNumber_int: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -85,7 +85,7 @@ object GoodsSPForm: TGoodsSPForm
         DataBinding.FieldName = 'ColSP'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 56
+        Width = 59
       end
       object IntenalSPName: TcxGridDBColumn
         Caption = #1052#1110#1078#1085#1072#1088#1086#1076#1085#1072' '#1085#1077#1087#1072#1090#1077#1085#1090#1086#1074#1072#1085#1072' '#1085#1072#1079#1074#1072' (2)'
@@ -358,6 +358,14 @@ object GoodsSPForm: TGoodsSPForm
         end
         item
           Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -457,11 +465,26 @@ object GoodsSPForm: TGoodsSPForm
       Action = actStartLoad
       Category = 0
     end
+    object bbShowErased: TdxBarButton
+      Action = actShowErased
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 288
     Top = 160
+    object actSetErasedGoodsSp: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isSp_SetErased
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isSp_SetErased
+        end>
+      Caption = 'actGetImportSetting'
+    end
     object actGetImportSetting: TdsdExecStoredProc
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
@@ -738,6 +761,9 @@ object GoodsSPForm: TGoodsSPForm
           Action = actGetImportSetting
         end
         item
+          Action = actSetErasedGoodsSp
+        end
+        item
           Action = actDoLoad
         end
         item
@@ -764,6 +790,25 @@ object GoodsSPForm: TGoodsSPForm
           MultiSelectSeparator = ','
         end>
     end
+    object actShowErased: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_GoodsSp'
@@ -772,7 +817,15 @@ object GoodsSPForm: TGoodsSPForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inShowErased'
+        Value = Null
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 48
     Top = 216
@@ -795,8 +848,8 @@ object GoodsSPForm: TGoodsSPForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 80
-    Top = 328
+    Left = 64
+    Top = 288
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1212,5 +1265,14 @@ object GoodsSPForm: TGoodsSPForm
     PackSize = 1
     Left = 523
     Top = 270
+  end
+  object spUpdate_isSp_SetErased: TdsdStoredProc
+    StoredProcName = 'gpSetErased_GoodsSP'
+    DataSets = <>
+    OutputType = otResult
+    Params = <>
+    PackSize = 1
+    Left = 355
+    Top = 230
   end
 end

@@ -8,9 +8,8 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
   AddOnFormData.AddOnFormRefresh.KeyField = 'Id'
   AddOnFormData.AddOnFormRefresh.KeyParam = 'inMovementId'
   AddOnFormData.AddOnFormRefresh.GetStoredProc = spUpdate
-  ExplicitTop = -37
   ExplicitWidth = 761
-  ExplicitHeight = 530
+  ExplicitHeight = 529
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -95,6 +94,14 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Width = 71
+          end
+          object InvNumber_int: TcxGridDBColumn [4]
+            Caption = #8470' '#1076#1086#1082'. ('#1089#1086#1088#1090'.)'
+            DataBinding.FieldName = 'InvNumber_int'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1076#1086#1082'. ('#1089#1086#1088#1090#1080#1088#1086#1074#1082#1072')'
+            Width = 61
           end
           inherited colOperDate: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter

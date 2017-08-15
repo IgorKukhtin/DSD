@@ -92,6 +92,7 @@ type
     ceDays: TcxCurrencyEdit;
     cxLabel8: TcxLabel;
     cxLabel4: TcxLabel;
+    DiffSP2: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -330,15 +330,26 @@ inherited PriceForm: TPriceForm
             Width = 91
           end
           object PriceSP: TcxGridDBColumn
-            Caption = #1056#1086#1079#1084#1110#1088' '#1074#1110#1076#1096#1082#1086#1076#1091#1074#1072#1085#1085#1103' '#1079#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091' (15)'
+            Caption = #1062#1077#1085#1072' '#1089#1087
             DataBinding.FieldName = 'PriceSP'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 103
+          end
+          object DiffSP2: TcxGridDBColumn
+            Caption = #1056#1086#1079#1084#1110#1088' '#1074#1110#1076#1096#1082#1086#1076#1091#1074#1072#1085#1085#1103' '#1079#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091' (15)'
+            DataBinding.FieldName = 'DiffSP2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 104
           end
           object PaymentSP: TcxGridDBColumn
             Caption = #1057#1091#1084#1072' '#1076#1086#1087#1083#1072#1090#1080' '#1079#1072' '#1091#1087#1072#1082#1086#1074#1082#1091', '#1075#1088#1085' (16)'
@@ -1011,7 +1022,7 @@ inherited PriceForm: TPriceForm
   end
   inherited BarManager: TdxBarManager
     Left = 184
-    Top = 152
+    Top = 176
     DockControlHeights = (
       0
       0
@@ -1628,7 +1639,7 @@ inherited PriceForm: TPriceForm
       end>
     PackSize = 1
     Left = 272
-    Top = 152
+    Top = 192
   end
   object rdUnit: TRefreshDispatcher
     IdParam.Value = Null
@@ -1735,8 +1746,8 @@ inherited PriceForm: TPriceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 392
-    Top = 168
+    Left = 344
+    Top = 200
   end
   object spDelete_Object_MCS: TdsdStoredProc
     StoredProcName = 'gpDelete_Object_MCS'
