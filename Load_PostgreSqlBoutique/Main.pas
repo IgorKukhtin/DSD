@@ -3381,7 +3381,7 @@ begin
         Add('    , BillItemsIncome.GoodsId_Postgres as GoodsId');
         Add('    , BillItemsIncome.Id_Postgres as PartionId');
         Add('    , case when DiscountMovement.UnitId in (978, 4647, 11425, 7360,  29018, 11772, 969) then '+ IntToStr(zc_Enum_DiscountSaleKind_Outlet));
-        Add('           when DiscountMovementItem_byBarCode.DiscountTax > DiscountKlient.DiscountTax then '+ IntToStr(zc_Enum_DiscountSaleKind_Period));
+        Add('           when DiscountMovementItem_byBarCode.DiscountTax >= DiscountKlient.DiscountTax then '+ IntToStr(zc_Enum_DiscountSaleKind_Period));
         Add('           when DiscountMovementItem_byBarCode.DiscountTax > 0 then '+ IntToStr(zc_Enum_DiscountSaleKind_Client));
         Add('           else 0');
         Add('      end as DiscountSaleKindId');
@@ -6478,6 +6478,17 @@ begin
         Add('    , Unit.UnitName as ObjectName');
         Add('    , if Unit.ParentId<> 200 then  Unit.ParentId else 0 endif as  IDParentId ');
         Add('    ,  Parent.Id_Postgres as ParentId ');
+        Add('    ,  case when ObjectId = 4647 then 50');     //магазин Vintag 50   -
+        Add('            when ObjectId = 7360 then 90');     //магазин Vintag 90   -
+        Add('            when ObjectId = 11425 then 80');    //магазин Vintag 80   -
+
+        Add('            when ObjectId = 969 then -1');      //магазин Sopra       -
+        Add('            when ObjectId = 978 then -1');      //магазин Vintag      -
+        Add('            when ObjectId = 11772 then -1');  //магазин Терри-Out   - Склад Terri
+        Add('            when ObjectId = 29018 then -1')  ;  //магазин Savoy-O     -
+        Add('            else 0');
+        Add('       end   as DiscountTax');
+
         Add('    , zc_erasedDel() as zc_erasedDel');
         Add('    , Unit.Erased as Erased');
         Add('    , Unit.Id_Postgres');
@@ -6539,6 +6550,7 @@ begin
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inDiscountTax').Value:=FieldByName('DiscountTax').AsFloat;
              toStoredProc.Params.ParamByName('inParentId').Value:=FieldByName('ParentId').AsInteger;
              toStoredProc.Params.ParamByName('inChildId').Value:=FieldByName('ChildId').AsInteger;
              toStoredProc.Params.ParamByName('inBankAccountId').Value:=FieldByName('BankAccountId').AsInteger;

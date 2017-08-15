@@ -28,7 +28,7 @@ BEGIN
 
 
      -- Параметры из документа
-     SELECT _tmp.MovementDescId, _tmp.OperDate, _tmp.ClientId, _tmp.UnitId
+     SELECT _tmp.MovementDescId, _tmp.OperDate, _tmp.UnitId, _tmp.ClientId
           , _tmp.AccountDirectionId_From, _tmp.AccountDirectionId_To
             INTO vbMovementDescId
                , vbOperDate
@@ -42,25 +42,25 @@ BEGIN
                 , COALESCE (CASE WHEN Object_To.DescId   = zc_Object_Client() THEN Object_To.Id   ELSE 0 END, 0) AS ClientId
 
                   -- Аналитики счетов - направления - !!!ВРЕМЕННО - zc_Enum_AccountDirection_10100!!! Запасы + Магазины
-                , COALESCE (ObjectLink_UnitTo_AccountDirection.ChildObjectId, zc_Enum_AccountDirection_10100()) AS AccountDirectionId_From
+                , COALESCE (ObjectLink_Unit_AccountDirection.ChildObjectId, zc_Enum_AccountDirection_10100()) AS AccountDirectionId_From
 
                   -- !!!ВСЕГДА - zc_Enum_AccountDirection_20100!!! Дебиторы + Покупатели
-                , zc_Enum_AccountDirection_20100()) AS AccountDirectionId_To
+                , zc_Enum_AccountDirection_20100() AS AccountDirectionId_To
 
            FROM Movement
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                              ON MovementLinkObject_From.MovementId = Movement.Id
-                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                            AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
                 LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                              ON MovementLinkObject_To.MovementId = Movement.Id
-                                            AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                            AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
                 LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
-                LEFT JOIN ObjectLink AS ObjectLink_UnitFrom_AccountDirection
-                                     ON ObjectLink_UnitFrom_AccountDirection.ObjectId = MovementLinkObject_From.ObjectId
-                                    AND ObjectLink_UnitFrom_AccountDirection.DescId   = zc_ObjectLink_Unit_AccountDirection()
+                LEFT JOIN ObjectLink AS ObjectLink_Unit_AccountDirection
+                                     ON ObjectLink_Unit_AccountDirection.ObjectId = MovementLinkObject_From.ObjectId
+                                    AND ObjectLink_Unit_AccountDirection.DescId   = zc_ObjectLink_Unit_AccountDirection()
 
            WHERE Movement.Id       = inMovementId
              AND Movement.DescId   = zc_Movement_Sale()
@@ -78,7 +78,9 @@ BEGIN
      INSERT INTO _tmpItem (MovementItemId
                          , ContainerId_Summ, ContainerId_Goods
                          , GoodsId, PartionId, GoodsSizeId
-                         , OperCount, OperPrice, CountForPrice, OperSumm, OperSumm_Currency, OperSumm_ToPay
+                         , OperCount, OperPrice, CountForPrice, OperSumm, OperSumm_Currency
+                         , OperSumm_ToPay, OperSummPriceList, TotalChangePercent, TotalPay
+                         , Summ_10201, Summ_10202, Summ_10203, Summ_10204
                          , AccountId, InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                          , CurrencyValue, ParValue
                           )
@@ -103,20 +105,34 @@ BEGIN
                -- Цена за количество - из партии
              , _tmp.CountForPrice
 
-               -- сумма по Вх. в zc_Currency_Basis
+               -- Сумма по Вх. в zc_Currency_Basis
              , CASE WHEN _tmp.CurrencyId = zc_Currency_Basis()
                          THEN _tmp.OperSumm_Currency
                     WHEN _tmp.CurrencyId = tmpCurrency.CurrencyFromId
                          THEN zfCalc_CurrencyFrom (_tmp.OperSumm_Currency, tmpCurrency.Amount, tmpCurrency.ParValue)
                     WHEN _tmp.CurrencyId = tmpCurrency.CurrencyToId
                          THEN zfCalc_CurrencyTo (_tmp.OperSumm_Currency, tmpCurrency.Amount, tmpCurrency.ParValue)
-               END
-               -- сумма по Вх. в ВАЛЮТЕ
+               END AS OperSumm
+               -- Сумма по Вх. в ВАЛЮТЕ
              , _tmp.OperSumm_Currency
 
-             , 0 AS AccountId                 -- Счет(справочника), сформируем позже
 
-               -- УП для Income = УП долг Контрагента
+               -- Сумма к Оплате
+             , _tmp.OperSummPriceList - _tmp.TotalChangePercent AS OperSumm_ToPay
+
+             , _tmp.OperSummPriceList  -- Сумма по Прайсу
+             , _tmp.TotalChangePercent -- Итого сумма Скидки
+             , _tmp.TotalPay           -- Итого сумма оплаты
+
+             , _tmp.Summ_10201         -- Сезонная скидка
+             , _tmp.Summ_10202         -- Скидка outlet
+             , _tmp.Summ_10203         -- Скидка клиента
+             , _tmp.Summ_10204         -- Скидка дополнительная
+
+
+             , 0 AS AccountId          -- Счет(справочника), сформируем позже
+
+               -- УП для Sale - для определения счета Запасы
              , _tmp.InfoMoneyGroupId
              , _tmp.InfoMoneyDestinationId
              , _tmp.InfoMoneyId
@@ -135,12 +151,24 @@ BEGIN
                    , CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END AS CountForPrice
                    , Object_PartionGoods.CurrencyId   AS CurrencyId
 
-                     -- сумма по Вх. в Валюте - с округлением до 2-х знаков
+                     -- Сумма по Вх. в Валюте - с округлением до 2-х знаков
                    , zfCalc_SummIn (MovementItem.Amount, Object_PartionGoods.OperPrice, Object_PartionGoods.CountForPrice) AS OperSumm_Currency
 
-                     -- сумма по Прайсу - с округлением до 2-х знаков
-                   , zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData) AS OperSumm_Currency
-           , ( (tmpMI.Amount, tmpMI.OperPriceList) - tmpMI.TotalChangePercent) :: TFloat AS TotalSummToPay
+                     -- Сумма по Прайсу - с округлением до 2-х знаков
+                   , zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData) AS OperSummPriceList
+                     -- Итого сумма Скидки (в ГРН) - только для текущего документа - суммируется 1)по %скидки + 2)дополнительная
+                   , COALESCE (MIFloat_TotalChangePercent.ValueData, 0)                          AS TotalChangePercent
+                     -- Итого сумма оплаты (в ГРН) - в текущем документе по zc_MI_Child
+                   , COALESCE (MIFloat_TotalPay.ValueData, 0)                                    AS TotalPay
+
+                     -- Сезонная скидка
+                   , CASE WHEN MILinkObject_DiscountSaleKind.ObjectId = zc_Enum_DiscountSaleKind_Period() THEN zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData) - zfCalc_SummChangePercent (MovementItem.Amount, MIFloat_OperPriceList.ValueData, MIFloat_ChangePercent.ValueData) ELSE 0 END AS Summ_10201
+                     -- Скидка outlet
+                   , CASE WHEN MILinkObject_DiscountSaleKind.ObjectId = zc_Enum_DiscountSaleKind_Outlet() THEN zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData) - zfCalc_SummChangePercent (MovementItem.Amount, MIFloat_OperPriceList.ValueData, MIFloat_ChangePercent.ValueData) ELSE 0 END AS Summ_10202
+                     -- Скидка клиента
+                   , CASE WHEN MILinkObject_DiscountSaleKind.ObjectId = zc_Enum_DiscountSaleKind_Client() THEN zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData) - zfCalc_SummChangePercent (MovementItem.Amount, MIFloat_OperPriceList.ValueData, MIFloat_ChangePercent.ValueData) ELSE 0 END AS Summ_10203
+                     -- Скидка дополнительная
+                   , COALESCE (MIFloat_SummChangePercent.ValueData, 0) AS Summ_10204
 
                      -- Управленческая группа
                    , View_InfoMoney.InfoMoneyGroupId
@@ -153,9 +181,26 @@ BEGIN
                    JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                     AND MovementItem.DescId     = zc_MI_Master()
                                     AND MovementItem.isErased   = FALSE
-                   LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
-                                               ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
-                                              AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()
+                   LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
+                                               ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
+                                              AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
+                   LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
+                                               ON MIFloat_TotalChangePercent.MovementItemId = MovementItem.Id
+                                              AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()
+                   LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
+                                               ON MIFloat_TotalPay.MovementItemId = MovementItem.Id
+                                              AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
+                   LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                               ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                              AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
+                   LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
+                                               ON MIFloat_SummChangePercent.MovementItemId = MovementItem.Id
+                                              AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
+                                              
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_DiscountSaleKind
+                                                    ON MILinkObject_DiscountSaleKind.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_DiscountSaleKind.DescId         = zc_MILinkObject_DiscountSaleKind()
+
                    LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                         ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
                                        AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
@@ -170,6 +215,13 @@ BEGIN
              LEFT JOIN tmpCurrency ON tmpCurrency.CurrencyFromId = _tmp.CurrencyId OR tmpCurrency.CurrencyToId = _tmp.CurrencyId
             ;
 
+     -- проверка что скидка та что надо
+     IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.TotalChangePercent <> _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204)
+     THEN
+         RAISE EXCEPTION 'Ошибка. Скида итого <%> не равна <%>.', (SELECT _tmpItem.TotalChangePercent FROM _tmpItem WHERE _tmpItem.TotalChangePercent <> _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204 ORDER BY _tmpItem.MovementItemId LIMIT 1)
+                                                                , (SELECT _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204 FROM _tmpItem WHERE _tmpItem.TotalChangePercent <> _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204 ORDER BY _tmpItem.MovementItemId LIMIT 1)
+         ;
+     END IF;
 
 
      -- 5.0. Пересохраним св-ва из партии: <Цена> + <Цена за количество> + Курс - из истории
