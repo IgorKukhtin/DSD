@@ -124,11 +124,9 @@ BEGIN
           LEFT JOIN Object AS Object_StorageLine ON Object_StorageLine.Id = tmpMI_Master.StorageLineId
           ;
 
-
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

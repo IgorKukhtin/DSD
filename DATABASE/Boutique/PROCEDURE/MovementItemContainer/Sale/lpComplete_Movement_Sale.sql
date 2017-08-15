@@ -138,6 +138,10 @@ BEGIN
                      -- сумма по Вх. в Валюте - с округлением до 2-х знаков
                    , zfCalc_SummIn (MovementItem.Amount, Object_PartionGoods.OperPrice, Object_PartionGoods.CountForPrice) AS OperSumm_Currency
 
+                     -- сумма по Прайсу - с округлением до 2-х знаков
+                   , zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData) AS OperSumm_Currency
+           , ( (tmpMI.Amount, tmpMI.OperPriceList) - tmpMI.TotalChangePercent) :: TFloat AS TotalSummToPay
+
                      -- Управленческая группа
                    , View_InfoMoney.InfoMoneyGroupId
                      -- Управленческие назначения
@@ -152,9 +156,6 @@ BEGIN
                    LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
                                                ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
                                               AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()
-                   LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                               ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                              AND MIFloat_CountForPrice.DescId         = zc_MIFloat_CountForPrice()
                    LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                         ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
                                        AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
