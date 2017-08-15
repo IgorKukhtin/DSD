@@ -74,5 +74,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lfSelect_Movement_CurrencyAll_byDate (inOperDate:= CURRENT_DATE, inCurrencyFromId:= (SELECT Id FROM Object WHERE DescId = zc_Object_Currency() AND ObjectCode = 980), inCurrencyToId:= (SELECT Id FROM Object WHERE DescId = zc_Object_Currency() AND ObjectCode = 840));
--- SELECT * FROM lfSelect_Movement_CurrencyAll_byDate (inOperDate:= CURRENT_DATE, inCurrencyFromId:= (SELECT Id FROM Object WHERE DescId = zc_Object_Currency() AND ObjectCode = 980), inCurrencyToId:= (SELECT Id FROM Object WHERE DescId = zc_Object_Currency() AND ObjectCode = 643));
+-- SELECT * FROM lfSelect_Movement_CurrencyAll_byDate (inOperDate:= CURRENT_DATE, inCurrencyFromId:= zc_Currency_Basis(), inCurrencyToId:= zc_Currency_Basis());
+-- SELECT * FROM lfSelect_Movement_CurrencyAll_byDate (inOperDate:= CURRENT_DATE, inCurrencyFromId:= 9, inCurrencyToId:= zc_Currency_Basis());

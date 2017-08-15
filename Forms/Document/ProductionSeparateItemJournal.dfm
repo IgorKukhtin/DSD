@@ -4,9 +4,10 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
   ClientWidth = 1073
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -116
+  ExplicitLeft = -300
+  ExplicitTop = -113
   ExplicitWidth = 1089
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -117,6 +118,7 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
