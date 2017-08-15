@@ -50,10 +50,10 @@ BEGIN
                                  ON ObjectLink_Cash_Unit_Parent.ChildObjectId = ObjectLink_Unit_Parent.ChildObjectId
                                 AND ObjectLink_Cash_Unit_Parent.DescId        = zc_ObjectLink_Cash_Unit()
             -- нашли все кассы
-            LEFT JOIN Object AS Object_Cash
-                             ON Object_Cash.Id       = COALESCE (ObjectLink_Cash_Unit.ObjectId, ObjectLink_Cash_Unit_Parent.ObjectId)
-                            AND Object_Cash.DescId   = zc_Object_Cash()
-                            AND Object_Cash.isErased = FALSE
+            INNER JOIN Object AS Object_Cash
+                              ON Object_Cash.Id       = COALESCE (ObjectLink_Cash_Unit.ObjectId, ObjectLink_Cash_Unit_Parent.ObjectId)
+                             AND Object_Cash.DescId   = zc_Object_Cash()
+                             AND Object_Cash.isErased = FALSE
             -- Валюта
             LEFT JOIN ObjectLink AS ObjectLink_Cash_Currency
                                  ON ObjectLink_Cash_Currency.ObjectId = Object_Cash.Id
@@ -103,8 +103,9 @@ BEGIN
                         ;
      END IF;
 
+
      -- !!!для SYBASE - потом убрать!!!
-     IF inUserId = zc_User_Sybase() AND NOT EXISTS (SELECT 1 FROM _tmpCash_list)
+     IF inUserId = zc_User_Sybase() AND NOT EXISTS (SELECT 1 FROM _tmpCash_list WHERE _tmpCash_list.isBankAccount = FALSE)
      THEN
           -- !!!для SYBASE - потом убрать!!!
           IF 1=0 THEN RAISE EXCEPTION 'Ошибка.У магазина <%> не определена касса в Валюте <%>.', lfGet_Object_ValueData (inUnitId), lfGet_Object_ValueData (zc_Currency_GRN());

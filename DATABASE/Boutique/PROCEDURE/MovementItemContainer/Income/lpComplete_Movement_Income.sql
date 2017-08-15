@@ -127,17 +127,14 @@ BEGIN
                    , MovementItem.Amount              AS OperCount
 
                      -- сумма по Контрагенту в Валюте Баланса - с округлением до 2-х знаков
-                   , CAST (MovementItem.Amount
-                         * CASE WHEN vbCurrencyDocumentId <> zc_Currency_Basis()
-                                     -- так переводится в валюту zc_Currency_Basis - с округлением до 2-х знаков
-                                     THEN CAST (COALESCE (MIFloat_OperPrice.ValueData, 0) * vbCurrencyValue / CASE WHEN vbParValue > 0 THEN vbParValue ELSE 1 END AS NUMERIC (16, 2))
-                                ELSE COALESCE (MIFloat_OperPrice.ValueData, 0)
-                           END
-                         / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
-                     AS NUMERIC (16, 2)) AS OperSumm
+                   , CASE WHEN vbCurrencyDocumentId <> zc_Currency_Basis()
+                               -- так переводится в валюту zc_Currency_Basis - с округлением до 2-х знаков
+                               THEN zfCalc_CurrencyFrom (zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData), vbCurrencyValue, vbParValue)
+                          ELSE zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData)
+                     END AS OperSumm
 
                      -- сумма по Контрагенту в Валюте - с округлением до 2-х знаков
-                   , CAST (MovementItem.Amount * COALESCE (MIFloat_OperPrice.ValueData, 0) / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS NUMERIC (16, 2)) AS OperSumm_Currency
+                   , zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData) AS OperSumm_Currency
 
                      -- Управленческая группа
                    , View_InfoMoney.InfoMoneyGroupId

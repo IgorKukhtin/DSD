@@ -306,7 +306,7 @@ BEGIN
     -- Добавляем оплату в грн
     IF inIsPay = TRUE THEN
        -- находим кассу для Магазина, в которую попадет оплата
-        vbCashId := (SELECT Object_Cash.Id                  AS CashId
+        vbCashId := (SELECT Object_Cash.Id AS CashId
                      FROM Object AS Object_Unit
                           -- если сразу получили по Магазину
                           LEFT JOIN ObjectLink AS ObjectLink_Cash_Unit
@@ -390,11 +390,15 @@ BEGIN
        -- в мастер записать - Итого оплата при возврате ГРН
        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), ioId, outTotalPay);
 
+       -- пересчитали Итоговые суммы по накладной
+       PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+
     END IF;
 
 
     -- "сложно" пересчитали "итоговые" суммы по элементу
     PERFORM lpUpdate_MI_ReturnIn_Total (ioId);
+
 
     -- вернули Сумма возврата оплаты в расчетах ГРН, для грида
     outTotalPayOth:= COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalPayOth()), 0);

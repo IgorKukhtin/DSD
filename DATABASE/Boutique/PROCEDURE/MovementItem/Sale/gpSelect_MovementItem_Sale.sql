@@ -226,9 +226,9 @@ BEGIN
            , tmpMI.TotalChangePercentPay    :: TFloat AS TotalChangePercentPay -- Дополнительная скидка в расчетах ГРН
 
              -- Сумма к оплате ГРН
-           , (tmpMI.Amount * tmpMI.OperPriceList - tmpMI.TotalChangePercent) :: TFloat AS TotalSummToPay
+           , (zfCalc_SummPriceList (tmpMI.Amount, tmpMI.OperPriceList) - tmpMI.TotalChangePercent) :: TFloat AS TotalSummToPay
              -- Сумма долга в продаже ГРН
-           , (tmpMI.Amount * tmpMI.OperPriceList - tmpMI.TotalChangePercent - tmpMI.TotalPay) :: TFloat AS TotalSummDebt
+           , (zfCalc_SummPriceList (tmpMI.Amount, tmpMI.OperPriceList) - tmpMI.TotalChangePercent - tmpMI.TotalPay) :: TFloat AS TotalSummDebt
 
            , tmpMI_Child.Amount_GRN         :: TFloat AS TotalPay_Grn
            , tmpMI_Child.Amount_USD         :: TFloat AS TotalPay_USD

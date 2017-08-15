@@ -3417,13 +3417,13 @@ begin
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('ioGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPartionId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('ioDiscountSaleKindId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inisPay',ftBoolean,ptInput, False);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('ioChangePercent',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inSummChangePercent',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('ioSummChangePercent',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('ioOperPriceList',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inBarCode',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
@@ -3436,7 +3436,7 @@ begin
               //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
-             toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId').AsInteger;
+             toStoredProc.Params.ParamByName('ioGoodsId').Value:=FieldByName('GoodsId').AsInteger;
              toStoredProc.Params.ParamByName('inPartionId').Value:=FieldByName('PartionId').AsInteger;
              toStoredProc.Params.ParamByName('ioDiscountSaleKindId').Value:=FieldByName('DiscountSaleKindId').AsInteger;
              if FieldByName('isBill').AsInteger = zc_rvYes
@@ -3444,7 +3444,7 @@ begin
              else toStoredProc.Params.ParamByName('inIsPay').Value:= FALSE;
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
              toStoredProc.Params.ParamByName('ioChangePercent').Value:=FieldByName('ChangePercent').AsFloat;
-             toStoredProc.Params.ParamByName('inSummChangePercent').Value:=FieldByName('SummChangePercent').AsFloat;
+             toStoredProc.Params.ParamByName('ioSummChangePercent').Value:=FieldByName('SummChangePercent').AsFloat;
              toStoredProc.Params.ParamByName('ioOperPriceList').Value:=FieldByName('OperPriceList').AsFloat;
              toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode').AsString;
              // хардкод

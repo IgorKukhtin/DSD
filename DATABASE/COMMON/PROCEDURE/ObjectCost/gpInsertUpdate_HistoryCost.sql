@@ -429,6 +429,7 @@ end if;
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (1196707, 1196716, 1196720, 1171167, 1172189); -- 05.2017
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (1153992, 1159046, 1154906, 1145420, 1154908, 1145419) -- 06.2017
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (1153989, 1145422); -- 06.2017
+     DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (130771, 128511, 1489115, 131613, 1453527, 129793); -- 08.2017
 
 
      
@@ -1086,4 +1087,4 @@ SELECT * FROM HistoryCost WHERE ('01.03.2017' BETWEEN StartDate AND EndDate) and
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.03.2017', inEndDate:= '31.03.2017', inBranchId:= 0, inItearationCount:= 500, inInsert:= -1, inDiffSumm:= 0, inSession:= '2')  WHERE Price <> PriceNext
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.05.2017', inEndDate:= '31.05.2017', inBranchId:= 0, inItearationCount:= 100, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') ORDER BY ABS (Price) DESC -- WHERE CalcSummCurrent <> CalcSummNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.08.2017', inEndDate:= '31.08.2017', inBranchId:= 0, inItearationCount:= 50, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') ORDER BY ABS (Price) DESC -- WHERE CalcSummCurrent <> CalcSummNext

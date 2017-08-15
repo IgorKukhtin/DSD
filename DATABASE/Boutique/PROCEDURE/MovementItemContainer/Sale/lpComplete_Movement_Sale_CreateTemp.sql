@@ -1,8 +1,8 @@
--- Function: lpComplete_Movement_ReturnOut_CreateTemp ()
+-- Function: lpComplete_Movement_Sale_CreateTemp ()
 
-DROP FUNCTION IF EXISTS lpComplete_Movement_ReturnOut_CreateTemp ();
+DROP FUNCTION IF EXISTS lpComplete_Movement_Sale_CreateTemp ();
 
-CREATE OR REPLACE FUNCTION lpComplete_Movement_ReturnOut_CreateTemp()
+CREATE OR REPLACE FUNCTION lpComplete_Movement_Sale_CreateTemp()
 RETURNS VOID
 AS
 $BODY$
@@ -11,11 +11,11 @@ BEGIN
      PERFORM lpComplete_Movement_All_CreateTemp();
 
      -- таблица - элементы по контрагенту, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItem_SummPartner (MovementItemId Integer, ContainerId Integer, ContainerId_Currency Integer, AccountId Integer
-                                           , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                                           , GoodsId Integer, PartionId Integer
-                                           , OperSumm TFloat, OperSumm_Currency TFloat
-                                            ) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpItem_SummClient (MovementItemId Integer, ContainerId Integer, ContainerId_Currency Integer, AccountId Integer
+                                          , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
+                                          , GoodsId Integer, PartionId Integer
+                                          , OperSumm TFloat, OperSumm_Currency TFloat
+                                           ) ON COMMIT DROP;
 
      -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer
@@ -23,6 +23,7 @@ BEGIN
                                , GoodsId Integer, PartionId Integer, GoodsSizeId Integer
                                , OperCount TFloat, OperPrice TFloat, CountForPrice TFloat, OperSumm TFloat, OperSumm_Currency TFloat
                                , AccountId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
+                               , CurrencyValue TFloat, ParValue TFloat
                                 ) ON COMMIT DROP;
 
 END;$BODY$
@@ -31,8 +32,8 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 28.06.17                                        *
+ 12.08.17                                        *
 */
 
 -- тест
--- SELECT * FROM lpComplete_Movement_ReturnOut_CreateTemp ()
+-- SELECT * FROM lpComplete_Movement_Sale_CreateTemp ()
