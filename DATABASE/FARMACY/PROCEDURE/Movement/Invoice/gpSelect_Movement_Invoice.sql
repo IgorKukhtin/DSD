@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Invoice(
 )
 RETURNS TABLE (Id Integer
              , InvNumber TVarChar
+             , InvNumber_int Integer
              , OperDate TDateTime
              , StatusCode Integer
              , StatusName TVarChar
@@ -85,6 +86,10 @@ BEGIN
     SELECT     
         Movement.Id
       , Movement.InvNumber
+      , CASE WHEN COALESCE (Movement.InvNumber, '') <> ''
+             THEN COALESCE (CAST (LEFT (Movement.InvNumber, CASE WHEN POSITION ('/' in Movement.InvNumber) = 0 THEN length (Movement.InvNumber) ELSE POSITION ('/' in Movement.InvNumber) -1 END ) AS NUMERIC (16,0)),0) 
+             ELSE 0
+        END :: integer  AS InvNumber_int
       , Movement.OperDate
       , Object_Status.ObjectCode                               AS StatusCode
       , Object_Status.ValueData                                AS StatusName
@@ -189,6 +194,7 @@ ALTER FUNCTION gpSelect_Movement_Invoice (TDateTime, TDateTime, Boolean, TVarCha
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 15.08.17         * add InvNumber_int
  13.05.17         * add SPName
  21.04.17         *
  22.03.17         *
