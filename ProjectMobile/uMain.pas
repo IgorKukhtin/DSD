@@ -803,6 +803,8 @@ type
     Layout46: TLayout;
     Label103: TLabel;
     lChangePercent: TLabel;
+    lDocPartnerName: TLabel;
+    lDocInfo: TLabel;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -2043,6 +2045,15 @@ procedure TfrmMain.lwJuridicalCollationItemClick(const Sender: TObject; const AI
 begin
   lDocData.Text := DM.cdsJuridicalCollationDocType.AsString + ' №' + DM.cdsJuridicalCollationDocNum.AsString +
     ' от ' + FormatDateTime('dd.mm.yyyy', DM.cdsJuridicalCollationDocDate.AsDateTime);
+  lDocPartnerName.Text := FJuridicalList[FJuridicalIndex].Name;
+  lDocInfo.Text := DM.cdsJuridicalCollationPaidKindShow.AsString;
+
+  DM.tblObject_Contract.Open;
+  if DM.tblObject_Contract.Locate('Id', FContractIdList[cbContracts.ItemIndex], []) then
+    if DM.tblObject_ContractChangePercent.AsFloat < -0.0001 then
+      lDocInfo.Text := lDocInfo.Text + '; Скидка: ' + FormatFloat(',0.##', Abs(DM.tblObject_ContractChangePercent.AsFloat)) + ' %';
+  DM.tblObject_Contract.Close;
+
   DM.GenerateJuridicalCollationDocItems(DM.cdsJuridicalCollationDocId.AsInteger);
   SwitchToForm(tiDocItems, nil);
 end;
