@@ -215,8 +215,8 @@ BEGIN
 
       , tmpGoodsMain AS (SELECT tmpMI.GoodsId
                               , COALESCE (ObjectBoolean_Goods_SP.ValueData,False)  :: Boolean  AS isSP
-                              , (COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) * 1.1) :: TFloat   AS PriceOptSP
-                              , CASE WHEN DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData) = vbOperDate THEN TRUE ELSE FALSE END AS isMarketToday 
+                              , CAST ((COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) * 1.1) AS NUMERIC (16,2))    :: TFloat   AS PriceOptSP
+                              , CASE WHEN DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData) = vbOperDate THEN TRUE ELSE FALSE END  AS isMarketToday 
                               , DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData)                   ::TDateTime  AS LastPriceDate
                               , COALESCE (ObjectFloat_CountPrice.ValueData,0) ::TFloat AS CountPrice
                          FROM  _tmpOrderInternal_MI AS tmpMI
@@ -1163,8 +1163,8 @@ BEGIN
 
       , tmpGoodsMain AS (SELECT tmpMI.GoodsId                                                           AS GoodsId
                               , COALESCE (ObjectBoolean_Goods_SP.ValueData,False)           :: Boolean  AS isSP
-                              , (COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) * 1.1) :: TFloat   AS PriceOptSP
-                              , CASE WHEN DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData) = vbOperDate THEN TRUE ELSE FALSE END AS isMarketToday 
+                              , CAST ((COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) * 1.1) AS NUMERIC (16,2))    :: TFloat   AS PriceOptSP
+                              , CASE WHEN DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData) = vbOperDate THEN TRUE ELSE FALSE END  AS isMarketToday 
                               , DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData)          ::TDateTime AS LastPriceDate
                               , COALESCE (ObjectFloat_CountPrice.ValueData,0)               ::TFloat    AS CountPrice
                          FROM tmpData AS tmpMI
@@ -1243,8 +1243,8 @@ BEGIN
            , tmpMI.ContractName
            , tmpMI.MakerName 
            , tmpMI.SuperFinalPrice 
-           , (COALESCE (tmpGoodsMain.PriceOptSP,0) * 1.1)       ::TFloat     AS PriceOptSP
-           , CASE WHEN tmpGoodsMain.isSP = TRUE AND (tmpMI.Price > (COALESCE (tmpGoodsMain.PriceOptSP,0) * 1.1)) THEN TRUE ELSE FALSE END isPriceDiff
+           , COALESCE (tmpGoodsMain.PriceOptSP,0)        ::TFloat     AS PriceOptSP
+           , CASE WHEN tmpGoodsMain.isSP = TRUE AND (tmpMI.Price > (COALESCE (tmpGoodsMain.PriceOptSP,0))) THEN TRUE ELSE FALSE END isPriceDiff
            , COALESCE(tmpMI.isCalculated, FALSE)                      AS isCalculated
            , CASE WHEN tmpGoodsMain.isSP = TRUE THEN 25088 --zc_Color_GreenL()   --товар соц.проекта
                   WHEN tmpMI.PartionGoodsDate < vbDate180 THEN zc_Color_Blue() --456
