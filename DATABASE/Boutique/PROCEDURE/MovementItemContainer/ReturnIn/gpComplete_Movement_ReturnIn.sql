@@ -14,8 +14,11 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
 
-    -- собственно проводки
-    PERFORM lpComplete_Movement_ReturnIn (inMovementId  -- ключ Документа
+     -- создаются временные таблицы - для формирование данных по проводкам
+     PERFORM lpComplete_Movement_ReturnIn_CreateTemp();
+
+    -- проводки
+    PERFORM lpComplete_Movement_ReturnIn (inMovementId  -- Документ
                                         , vbUserId);    -- Пользователь
 
 END;

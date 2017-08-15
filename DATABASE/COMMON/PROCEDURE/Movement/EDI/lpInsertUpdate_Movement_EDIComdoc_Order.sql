@@ -321,7 +321,23 @@ BEGIN
                                                                , inContractId          := vbContractId
                                                                , inRouteId             := vbRouteId
                                                                , inRouteSortingId      := vbRouteSortingId
-                                                               , inPersonalId          := vbMemberTakeId
+                                                               , inPersonalId          := COALESCE ((SELECT ObjectLink_Partner_MemberTake.ChildObjectId
+                                                                                                     FROM ObjectLink AS ObjectLink_Partner_MemberTake
+                                                                                                     WHERE ObjectLink_Partner_MemberTake.ObjectId = vbPartnerId
+                                                                                                       AND ObjectLink_Partner_MemberTake.DescId
+                                                  = CASE EXTRACT (DOW FROM vbOperDate + (((COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_PrepareDayCount()),  0)
+                                                                                         + COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0)
+                                                                                          ) :: TVarChar || ' DAY') :: INTERVAL)
+                                                                 )
+                                                       WHEN 1 THEN zc_ObjectLink_Partner_MemberTake1()
+                                                       WHEN 2 THEN zc_ObjectLink_Partner_MemberTake2()
+                                                       WHEN 3 THEN zc_ObjectLink_Partner_MemberTake3()
+                                                       WHEN 4 THEN zc_ObjectLink_Partner_MemberTake4()
+                                                       WHEN 5 THEN zc_ObjectLink_Partner_MemberTake5()
+                                                       WHEN 6 THEN zc_ObjectLink_Partner_MemberTake6()
+                                                       WHEN 0 THEN zc_ObjectLink_Partner_MemberTake7()
+                                                    END
+                                                                                                    ), vbMemberTakeId)
                                                                , inPriceListId         := vbPriceListId
                                                                , inPartnerId           := COALESCE ((SELECT ObjectId FROM MovementLinkObject WHERE MovementId = vbMovementId_Order AND DescId = zc_MovementLinkObject_Partner()), 0)
                                                                , inUserId              := inUserId
