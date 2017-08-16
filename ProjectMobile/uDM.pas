@@ -102,6 +102,9 @@ type
     procedure Execute; override;
   end;
 
+  TUploadTaskType = (uttAll, uttStoreReal, uttOrderExternal, uttReturnIn, uttCash, uttTasks, uttNewPartners,
+    uttPartnerGPS, uttRouteMember, uttPhotos);
+
   { отдельный поток для синхронизации }
   TSyncThread = class(TThread)
   private
@@ -115,6 +118,9 @@ type
 
     SyncDataIn : TDateTime;
     SyncDataOut : TDateTime;
+
+    UploadTaskType: TUploadTaskType;
+    DocGUID: string;
 
     procedure Update;
     procedure SetNewProgressTask(AName : string);
@@ -801,7 +807,9 @@ type
     procedure InitStructure;
   public
     { Public declarations }
-    IsUploadRouteMember: boolean;
+    IsUploadRouteMember: Boolean;
+    IsSyncStart: Boolean;
+    IsLastSyncSuccess: Boolean;
 
     function Connect: Boolean;
     function ConnectWithOutDB: Boolean;
@@ -817,7 +825,8 @@ type
     procedure ShowAllPartnerOnMap;
 
     function GetConfigurationInfo: boolean;
-    procedure SynchronizeWithMainDatabase(LoadData: boolean = true; UploadData: boolean = true);
+    procedure SynchronizeWithMainDatabase(LoadData: Boolean = True; UploadData: Boolean = True;
+      UploadTaskType: TUploadTaskType = uttAll; DocGUID: string = '');
 
     function GetInvNumber(ATableName: string): string;
 
@@ -1595,7 +1604,11 @@ begin
   // Загружаем шапки возвратов
   with DM.tblMovement_ReturnIn do
   begin
-    Filter := 'isSync = 0 and StatusId = ' + DM.tblObject_ConstStatusId_Complete.AsString;
+    if DocGUID = '' then
+      Filter := 'isSync = 0 and StatusId = ' + DM.tblObject_ConstStatusId_Complete.AsString
+    else
+      Filter := 'GUID = ''' + DocGUID + '''';
+
     Filtered := true;
     Open;
 
@@ -1662,7 +1675,7 @@ begin
           if ItemsCount = SendCount then
           begin
             Edit;
-            FieldByName('IsSync').AsBoolean := true;
+            FieldByName('IsSync').AsBoolean := True;
             Post;
           end else
             raise Exception.CreateFmt(
@@ -2177,10 +2190,18 @@ begin
     FAllMax := FAllMax + 17;  // Количесто операций при загрузке данных из центра
 
   if UploadData then
-    FAllMax := FAllMax + 9;  // Количесто операций при сохранении данных в центр
+  begin
+    if UploadTaskType = uttAll then
+    begin
+      FAllMax := FAllMax + 9;  // Количесто операций при сохранении данных в центр
+      DocGUID := '';
+    end else
+      FAllMax := FAllMax + 1;  // Количесто операций при сохранении данных в центр
+  end;
 
   Synchronize(procedure
               begin
+                DM.IsSyncStart := True;
                 frmMain.pProgress.Visible := true;
                 frmMain.vsbMain.Enabled := false;
               end);
@@ -2194,32 +2215,59 @@ begin
     if UploadData and (DM.tblObject_Const.RecordCount > 0) then
     begin
       try
-        SetNewProgressTask('Сохранение остатков');
-        UploadStoreReal;
+        if UploadTaskType in [uttAll, uttStoreReal] then
+        begin
+          SetNewProgressTask('Сохранение остатков');
+          UploadStoreReal;
+        end;
 
-        SetNewProgressTask('Сохранение заявок');
-        UploadOrderExternal;
+        if UploadTaskType in [uttAll, uttOrderExternal] then
+        begin
+          SetNewProgressTask('Сохранение заявок');
+          UploadOrderExternal;
+        end;
 
-        SetNewProgressTask('Сохранение возвратов');
-        UploadReturnIn;
+        if UploadTaskType in [uttAll, uttReturnIn] then
+        begin
+          SetNewProgressTask('Сохранение возвратов');
+          UploadReturnIn;
+        end;
 
-        SetNewProgressTask('Сохранение оплат');
-        UploadCash;
+        if UploadTaskType in [uttAll, uttCash] then
+        begin
+          SetNewProgressTask('Сохранение оплат');
+          UploadCash;
+        end;
 
-        SetNewProgressTask('Сохранение заданий');
-        UploadTasks;
+        if UploadTaskType in [uttAll, uttTasks] then
+        begin
+          SetNewProgressTask('Сохранение заданий');
+          UploadTasks;
+        end;
 
-        SetNewProgressTask('Сохранение координат ТТ');
-        UploadPartnerGPS;
+        if UploadTaskType in [uttAll, uttPartnerGPS] then
+        begin
+          SetNewProgressTask('Сохранение координат ТТ');
+          UploadPartnerGPS;
+        end;
 
-        SetNewProgressTask('Сохранение маршрута');
-        UploadRouteMember;
+        if UploadTaskType in [uttAll, uttRouteMember] then
+        begin
+          SetNewProgressTask('Сохранение маршрута');
+          UploadRouteMember;
+        end;
 
-        SetNewProgressTask('Сохранение фотографий');
-        UploadPhotos;
+        if UploadTaskType in [uttAll, uttPhotos] then
+        begin
+          SetNewProgressTask('Сохранение фотографий');
+          UploadPhotos;
+        end;
 
-        SetNewProgressTask('Сохранение новых ТТ');
-        UploadNewPartners;
+        if UploadTaskType in [uttAll, uttNewPartners] then
+        begin
+          SetNewProgressTask('Сохранение новых ТТ');
+          UploadNewPartners;
+        end;
 
         SyncDataOut := Now();
         DM.tblObject_Const.Edit;
@@ -2324,8 +2372,10 @@ begin
 
       Synchronize(procedure
                   begin
-                    frmMain.pProgress.Visible := false;
-                    frmMain.vsbMain.Enabled := true;
+                    DM.IsLastSyncSuccess := True;
+                    frmMain.pProgress.Visible := False;
+                    frmMain.vsbMain.Enabled := True;
+                    DM.IsSyncStart := False;
 
                     if LoadData then
                     begin
@@ -2342,8 +2392,10 @@ begin
     begin
       Synchronize(procedure
                   begin
-                    frmMain.pProgress.Visible := false;
-                    frmMain.vsbMain.Enabled := true;
+                    DM.IsLastSyncSuccess := False;
+                    frmMain.pProgress.Visible := False;
+                    frmMain.vsbMain.Enabled := True;
+                    DM.IsSyncStart := False;
                     ShowMessage('Ошибка синхронизации (' + Res + ')');
                   end);
     end;
@@ -3598,15 +3650,18 @@ begin
 end;
 
 { синхронизация данных с центральной БД }
-procedure TDM.SynchronizeWithMainDatabase(LoadData: boolean = true; UploadData: boolean = true);
+procedure TDM.SynchronizeWithMainDatabase(LoadData: Boolean = True; UploadData: Boolean = True;
+      UploadTaskType: TUploadTaskType = uttAll; DocGUID: string = '');
 begin
   if gc_User.Local or (not LoadData and not UploadData) then
-    exit;
+    Exit;
 
-  SyncThread := TSyncThread.Create(true);
-  SyncThread.FreeOnTerminate := true;
+  SyncThread := TSyncThread.Create(True);
+  SyncThread.FreeOnTerminate := True;
   SyncThread.LoadData := LoadData;
   SyncThread.UploadData := UploadData;
+  SyncThread.UploadTaskType := UploadTaskType;
+  SyncThread.DocGUID := DocGUID;
   SyncThread.Start;
 end;
 
@@ -4944,24 +4999,25 @@ function TDM.SaveReturnIn(OperDate: TDate; PaidKindId: integer; Comment : string
   ToralPrice, TotalWeight: Currency; DelItems : string; Complete: boolean; var ErrorMessage : string) : boolean;
 var
   GlobalId: TGUID;
-  MovementId: integer;
+  DocGUID: string;
+  MovementId: Integer;
   NewInvNumber, CurInvNumber: string;
   b: TBookmark;
-  isHasItems: boolean;
+  isHasItems: Boolean;
 begin
-  Result := false;
+  Result := False;
 
   // Проверяем есть ли "реальные" записи
   with cdsReturnInItems do
   begin
-    isHasItems := false;
+    isHasItems := False;
     First;
-    while not EOF do
+    while not Eof do
     begin
       if FieldbyName('Count').AsFloat > 0 then
       begin
-        isHasItems := true;
-        break;
+        isHasItems := True;
+        Break;
       end;
 
       Next;
@@ -4970,7 +5026,7 @@ begin
     if not isHasItems then
     begin
       ErrorMessage := 'В возврате отсутствуют товары. Сохранение невозможно';
-      exit;
+      Exit;
     end;
   end;
 
@@ -5014,6 +5070,7 @@ begin
       tblMovement_ReturnIn.Last;
       {???}
       MovementId := tblMovement_ReturnInId.AsInteger;
+      DocGUID := tblMovement_ReturnInGUID.AsString;
     end
     else
     begin
@@ -5037,7 +5094,8 @@ begin
 
         tblMovement_ReturnIn.Post;
 
-        MovementId := cdsReturnInId.AsInteger;
+        MovementId := tblMovement_ReturnInId.AsInteger;
+        DocGUID := tblMovement_ReturnInGUID.AsString;
       end
       else
       begin
@@ -5053,7 +5111,7 @@ begin
     with cdsReturnInItems do
     begin
       First;
-      while not EOF do
+      while not Eof do
       begin
         if FieldbyName('Count').AsFloat > 0 then
         begin
@@ -5097,8 +5155,6 @@ begin
     if DelItems <> '' then
       conMain.ExecSQL('delete from MOVEMENTITEM_RETURNIN where ID in (' + DelItems + ')');
 
-    conMain.Commit;
-
     //обновляем данные в локальном хранилище
     cdsReturnIn.DisableControls;
     try
@@ -5134,7 +5190,47 @@ begin
     end;
     //=========
 
-    Result := true;
+    Result := True;
+
+    if Complete then
+    begin
+      SynchronizeWithMainDatabase(False, True, uttReturnIn, DocGUID);
+
+      while IsSyncStart do Sleep(20);
+      ShowMessage('Ждемс ...');
+
+      if not IsLastSyncSuccess then
+      begin
+        tblMovement_ReturnIn.Open;
+        if tblMovement_ReturnIn.Locate('Id', MovementId) then
+        begin
+          tblMovement_ReturnIn.Edit;
+          tblMovement_ReturnInStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
+          tblMovement_ReturnIn.Post;
+        end;
+        tblMovement_ReturnIn.Close;
+
+        //обновляем данные в локальном хранилище
+        cdsReturnIn.DisableControls;
+        try
+          if cdsReturnIn.Locate('Id', MovementId, []) then
+          begin
+            cdsReturnIn.Edit;
+            cdsReturnInStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
+            cdsReturnInStatus.AsString := tblObject_ConstStatusName_UnComplete.AsString;
+            cdsReturnIn.Post;
+          end;
+        finally
+          cdsReturnIn.EnableControls;
+
+          b := cdsReturnIn.Bookmark;
+          cdsReturnIn.First;
+          cdsReturnIn.GotoBookmark(b);
+        end;
+      end;
+    end;
+
+    conMain.Commit;
   except
     on E : Exception do
     begin
