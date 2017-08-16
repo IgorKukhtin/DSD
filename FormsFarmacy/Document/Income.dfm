@@ -1094,7 +1094,36 @@
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1088#1080#1075#1080#1085#1072#1083' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 58
     end
-    object actCalculateSalePrice: TdsdExecStoredProc [22]
+    object macCalculateSalePrice: TMultiAction [22]
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_OrderExternal_Deferred
+        end
+        item
+          Action = actCalculateSalePrice
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1088#1077#1089#1095#1077#1090#1077' '#1094#1077#1085' '#1080' '#1080#1079#1084#1077#1085#1077#1085#1080#1080' '#1089#1090#1072#1090#1091#1089#1072' '#1079#1072#1103#1074#1082#1080'?'
+      InfoAfterExecute = #1062#1077#1085#1099' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1087#1077#1088#1077#1089#1095#1080#1090#1072#1085#1099
+      Caption = #1056#1072#1089#1095#1077#1090' '#1094#1077#1085#1099' '#1087#1088#1086#1076#1072#1078#1080', '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1089#1090#1072#1090#1091#1089#1072' '#1079#1072#1103#1074#1082#1080
+      Hint = #1056#1072#1089#1095#1077#1090' '#1094#1077#1085#1099' '#1087#1088#1086#1076#1072#1078#1080', '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1089#1090#1072#1090#1091#1089#1072' '#1079#1072#1103#1074#1082#1080
+      ImageIndex = 75
+    end
+    object actUpdate_OrderExternal_Deferred: TdsdExecStoredProc [23]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_OrderExternal_Deferred
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_OrderExternal_Deferred
+        end>
+      Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1089#1090#1072#1090#1091#1089#1072' '#1079#1072#1082#1072#1079#1072
+      Hint = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1089#1090#1072#1090#1091#1089#1072' '#1079#1072#1082#1072#1079#1072
+      ImageIndex = 75
+    end
+    object actCalculateSalePrice: TdsdExecStoredProc [24]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1112,10 +1141,8 @@
       Caption = #1056#1072#1089#1095#1077#1090' '#1094#1077#1085#1099' '#1087#1088#1086#1076#1072#1078#1080
       Hint = #1056#1072#1089#1095#1077#1090' '#1094#1077#1085#1099' '#1087#1088#1086#1076#1072#1078#1080
       ImageIndex = 75
-      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1088#1077#1089#1095#1077#1090#1077' '#1094#1077#1085'?'
-      InfoAfterExecute = #1062#1077#1085#1099' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1087#1077#1088#1077#1089#1095#1080#1090#1072#1085#1099
     end
-    object actPrintStickerOld: TdsdPrintAction [23]
+    object actPrintStickerOld: TdsdPrintAction [25]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
@@ -1150,7 +1177,7 @@
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
     end
-    object actPrintReestr: TdsdPrintAction [24]
+    object actPrintReestr: TdsdPrintAction [26]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -1185,7 +1212,7 @@
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
-    object mactEditPartnerData: TMultiAction [25]
+    object mactEditPartnerData: TMultiAction [27]
       Category = 'PartnerData'
       MoveParams = <>
       ActionList = <
@@ -1202,7 +1229,7 @@
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1080' '#1076#1072#1090#1091' '#1086#1087#1083#1072#1090#1099
       ImageIndex = 35
     end
-    inherited actPrint: TdsdPrintAction [26]
+    inherited actPrint: TdsdPrintAction [28]
       StoredProc = spSelectPrint
       StoredProcList = <
         item
@@ -1729,7 +1756,7 @@
       Category = 0
     end
     object bbCalculateSalePrice: TdxBarButton
-      Action = actCalculateSalePrice
+      Action = macCalculateSalePrice
       Category = 0
     end
     object dxBarButton1: TdxBarButton
@@ -2663,8 +2690,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 368
-    Top = 272
+    Left = 376
+    Top = 304
   end
   inherited spGetTotalSumm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Summ'
@@ -3304,5 +3331,22 @@
     PackSize = 1
     Left = 56
     Top = 344
+  end
+  object spUpdate_OrderExternal_Deferred: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_OrderExternal_Deferred_byIncome'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 344
+    Top = 208
   end
 end

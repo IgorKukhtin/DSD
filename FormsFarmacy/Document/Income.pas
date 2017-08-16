@@ -154,6 +154,9 @@ type
     bbComplete: TdxBarButton;
     spMovementComplete: TdsdStoredProc;
     actComplete: TdsdExecStoredProc;
+    macCalculateSalePrice: TMultiAction;
+    actUpdate_OrderExternal_Deferred: TdsdExecStoredProc;
+    spUpdate_OrderExternal_Deferred: TdsdStoredProc;
   private
     { Private declarations }
   public

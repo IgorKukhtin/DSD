@@ -6,11 +6,11 @@ DROP FUNCTION IF EXISTS gpComplete_Movement_Income (Integer, Boolean, TVarChar);
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Income(
     IN inMovementId          Integer              , -- ключ Документа
     IN inIsCurrentData       Boolean              , -- дата аптеки - текущая Да /Нет
-   OUT outisDeferred         Boolean              , -- при проведении меняем признак отложен у Заказа
+   --OUT outisDeferred         Boolean              , -- при проведении меняем признак отложен у Заказа
    OUT outOperDate_Branch    TDateTime            ,
     IN inSession             TVarChar DEFAULT ''     -- сессия пользователя
 )
-RETURNS RECORD -- VOID
+RETURNS TDateTime --RECORD -- VOID
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -204,6 +204,9 @@ BEGIN
 
      UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
+
+ -- пока убираем, будет в приходе при нажатии кнопки Пересчитать расходную цену в накладной
+/*
      -- при проведении прихода - Снять заказ из отложенных
         SELECT MLM.MovementChildId 
              , COALESCE (MB_Deferred.ValueData, False) AS isDeferred
@@ -246,7 +249,7 @@ BEGIN
      WHERE Movement.DescId   = zc_Movement_OrderExternal()
        AND Movement.OperDate < outOperDate_Branch
        AND Movement.StatusId in (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete());
-     
+     */
 
 END;
 $BODY$
