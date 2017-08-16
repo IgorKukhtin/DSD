@@ -327,6 +327,7 @@ end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_BarCodeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_BarCodeForm');
   exit;
@@ -343,12 +344,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPartnerCodeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPartnerCodeMasterForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPartnerCodeMasterForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
   exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsMainForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsMainForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsMainEditForm'));

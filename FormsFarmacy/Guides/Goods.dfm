@@ -4,7 +4,7 @@ inherited GoodsForm: TGoodsForm
   ClientWidth = 883
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 899
-  ExplicitHeight = 482
+  ExplicitHeight = 481
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -192,6 +192,25 @@ inherited GoodsForm: TGoodsForm
             HeaderHint = #1055#1086#1089#1083#1077#1076'. '#1076#1072#1090#1072' '#1085#1072#1083#1080#1095#1080#1103' '#1085#1072' '#1088#1099#1085#1082#1077
             Options.Editing = False
             Width = 65
+          end
+          object LastPriceOldDate: TcxGridDBColumn
+            Caption = #1055#1088#1077#1076#1087#1086#1089#1083#1077#1076'. '#1076#1072#1090#1072' '#1085#1072#1083#1080#1095#1080#1103' '#1085#1072' '#1088#1099#1085#1082#1077
+            DataBinding.FieldName = 'LastPriceOldDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1077#1076#1087#1086#1089#1083#1077#1076'. '#1076#1072#1090#1072' '#1085#1072#1083#1080#1095#1080#1103' '#1085#1072' '#1088#1099#1085#1082#1077
+            Width = 85
+          end
+          object CountDays: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085'. ('#1085#1072#1083#1080#1095#1080#1077' '#1085#1072' '#1088#1099#1085#1082#1077')'
+            DataBinding.FieldName = 'CountDays'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##; ; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1084#1077#1078#1076#1091' '#1076#1072#1090#1072#1084#1080' '#1085#1072#1083#1080#1095#1080#1103' '#1085#1072' '#1088#1099#1085#1082#1077
+            Options.Editing = False
+            Width = 66
           end
           object CountPrice: TcxGridDBColumn
             Caption = #1053#1072' '#1088#1099#1085#1082#1077' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1072#1081#1089#1086#1074
@@ -454,6 +473,9 @@ inherited GoodsForm: TGoodsForm
         end
         item
           StoredProc = spUpdate_Goods_isSecond
+        end
+        item
+          StoredProc = spUpdate_Goods_LastPriceOld
         end>
       Caption = 'UpdateDataSet'
       DataSource = MasterDS
@@ -1044,5 +1066,48 @@ inherited GoodsForm: TGoodsForm
     PackSize = 1
     Left = 680
     Top = 107
+  end
+  object spUpdate_Goods_LastPriceOld: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_LastPriceOld'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsMainId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsMainId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLastPriceDate'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'LastPriceDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLastPriceOldDate'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'LastPriceOldDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCountDays'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountDays'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 560
+    Top = 176
   end
 end

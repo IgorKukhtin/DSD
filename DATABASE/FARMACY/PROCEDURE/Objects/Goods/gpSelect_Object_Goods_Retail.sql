@@ -6,7 +6,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_Goods_Retail(TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_Retail(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, IdBarCode TVarChar, Name TVarChar, isErased Boolean
+RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar, Name TVarChar, isErased Boolean
              , GoodsGroupId Integer, GoodsGroupName TVarChar
              , MeasureId Integer, MeasureName TVarChar
              , NDSKindId Integer, NDSKindName TVarChar
@@ -19,7 +19,8 @@ RETURNS TABLE (Id Integer, Code Integer, IdBarCode TVarChar, Name TVarChar, isEr
              , RetailCode Integer, RetailName TVarChar
              , isPromo boolean
              , isMarketToday Boolean
-             , LastPriceDate TDateTime
+             , LastPriceDate TDateTime, LastPriceOldDate TDateTime
+             , CountDays TFloat
              , InsertName TVarChar, InsertDate TDateTime 
              , UpdateName TVarChar, UpdateDate TDateTime
              , ConditionsKeepName TVarChar
@@ -196,6 +197,7 @@ BEGIN
                                GROUP BY ObjectLink_Main_BarCode.ChildObjectId
                               )                  
       SELECT Object_Goods_View.Id
+           , ObjectLink_Main.ChildObjectId     AS GoodsMainId 
            , Object_Goods_View.GoodsCodeInt
 --           , ObjectString.ValueData                           AS GoodsCode
            , zfFormat_BarCode(zc_BarCodePref_Object(), ObjectLink_Main.ChildObjectId) AS IdBarCode         --ObjectLink_Main.ChildObjectId
@@ -228,7 +230,11 @@ BEGIN
 
            --, CASE WHEN COALESCE(tmpLoadPriceList.MainGoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isMarketToday
            , CASE WHEN DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData) = CURRENT_DATE THEN TRUE ELSE FALSE END AS isMarketToday
+           
            , DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData)                   ::TDateTime  AS LastPriceDate
+           , DATE_TRUNC ('DAY', ObjectDate_LastPriceOld.ValueData)                ::TDateTime  AS LastPriceOldDate
+           
+           , CAST (DATE_PART ('DAY', (ObjectDate_LastPriceOld.ValueData - ObjectDate_LastPrice.ValueData)) AS NUMERIC (15,2))  :: TFloat  AS CountDays
 
            , COALESCE(Object_Insert.ValueData, '')         ::TVarChar  AS InsertName
            , COALESCE(ObjectDate_Insert.ValueData, Null)   ::TDateTime AS InsertDate
@@ -273,6 +279,10 @@ BEGIN
                                 ON ObjectDate_LastPrice.ObjectId = ObjectLink_Main.ChildObjectId
                                AND ObjectDate_LastPrice.DescId = zc_ObjectDate_Goods_LastPrice()
 
+           LEFT JOIN ObjectDate AS ObjectDate_LastPriceOld
+                                ON ObjectDate_LastPriceOld.ObjectId = ObjectLink_Main.ChildObjectId
+                               AND ObjectDate_LastPriceOld.DescId = zc_ObjectDate_Goods_LastPriceOld()
+
            LEFT JOIN ObjectFloat AS ObjectFloat_CountPrice
                                  ON ObjectFloat_CountPrice.ObjectId = ObjectLink_Main.ChildObjectId
                                 AND ObjectFloat_CountPrice.DescId = zc_ObjectFloat_Goods_CountPrice()
@@ -303,6 +313,7 @@ ALTER FUNCTION gpSelect_Object_Goods_Retail(TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.
+ 16.08.17         * LastPriceOld
  19.05.17                                                       * MorionCode, BarCode
  21.04.17         *
  19.04.17         * add zc_ObjectDate_Goods_LastPrice
