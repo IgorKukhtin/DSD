@@ -1685,12 +1685,12 @@ begin
   if not gc_User.Local then
   begin
     if not DM.GetConfigurationInfo then
-      exit;
+      Exit;
 
     if NeedSync then
       DM.SynchronizeWithMainDatabase
     else
-    DM.CheckUpdate; // проверка небходимости обновления
+      DM.CheckUpdate; // проверка небходимости обновления
   end;
 
   // сохранение логина в ini файле
@@ -2588,7 +2588,15 @@ begin
       if FEditDocuments then
         ChangeReturnInDoc;
 
-      ShowMessage('Сохранение возврата прошло успешно.');
+      if (AResult = mrNone) and DM.IsLastSyncSuccess then
+        ShowMessage('Сохранение и синхронизация возврата прошла успешно.')
+      else if (AResult = mrNone) and not DM.IsLastSyncSuccess then
+        TDialogService.MessageDialog('Сохранение возврата прошло успешно, но синхронизация не прошла.' +
+          sLineBreak + 'Документ останется пока не проведенным.' +
+          sLineBreak + 'Повторите сохранение позднее.', TMsgDlgType.mtWarning, [TMsgDlgBtn.mbOK], TMsgDlgBtn.mbOK, 0, nil)
+      else if AResult <> mrNone then
+        ShowMessage('Сохранение возврата прошло успешно.');
+
       ReturnPriorForm;
     end
     else

@@ -64,6 +64,8 @@ type
     CountPrice: TcxGridDBColumn;
     MorionCode: TcxGridDBColumn;
     BarCode: TcxGridDBColumn;
+    CountDays: TcxGridDBColumn;
+    spUpdate_Goods_LastPriceOld: TdsdStoredProc;
   private
     { Private declarations }
   public

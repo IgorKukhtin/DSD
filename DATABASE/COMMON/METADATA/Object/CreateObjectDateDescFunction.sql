@@ -228,6 +228,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_Goods_LastPrice() RETURNS Integer AS $B
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectDate_Goods_LastPrice', 'Дата загрузки прайса' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Goods_LastPrice');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Goods_LastPriceOld() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Goods_LastPriceOld'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectDate_Goods_LastPriceOld', 'Пред Послед. дата наличия на рынке' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Goods_LastPriceOld');
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectDate_User_UpdateMobileFrom() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_User_UpdateMobileFrom'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
@@ -239,6 +243,7 @@ INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 16.08.17         * zc_ObjectDate_Goods_LastPriceOld
  09.06.17         * zc_ObjectDate_Price_StartDateMCSAuto
                     zc_ObjectDate_Price_EndDateMCSAuto
  14.04.17         * zc_ObjectDate_GoodsListIncome_Last
