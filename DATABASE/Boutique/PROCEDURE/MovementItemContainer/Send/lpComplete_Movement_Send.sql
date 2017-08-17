@@ -177,18 +177,22 @@ BEGIN
      UPDATE _tmpItem SET ContainerId_GoodsFrom = lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
                                                                                     , inUnitId                 := vbUnitId_From
                                                                                     , inMemberId               := NULL
+                                                                                    , inClientId               := NULL
                                                                                     , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
                                                                                     , inGoodsId                := _tmpItem.GoodsId
                                                                                     , inPartionId              := _tmpItem.PartionId
+                                                                                    , inPartionId_MI           := NULL
                                                                                     , inGoodsSizeId            := _tmpItem.GoodsSizeId
                                                                                     , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
                                                                                      )
                        , ContainerId_GoodsTo   = lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
                                                                                     , inUnitId                 := vbUnitId_To
                                                                                     , inMemberId               := NULL
+                                                                                    , inClientId               := NULL
                                                                                     , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
                                                                                     , inGoodsId                := _tmpItem.GoodsId
                                                                                     , inPartionId              := _tmpItem.PartionId
+                                                                                    , inPartionId_MI           := NULL
                                                                                     , inGoodsSizeId            := _tmpItem.GoodsSizeId
                                                                                     , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
                                                                                      );
@@ -218,6 +222,7 @@ BEGIN
      UPDATE _tmpItem SET ContainerId_SummFrom = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
                                                                                   , inUnitId                 := vbUnitId_From
                                                                                   , inMemberId               := NULL
+                                                                                  , inClientId               := NULL
                                                                                   , inJuridicalId_basis      := vbJuridicalId_Basis
                                                                                   , inBusinessId             := vbBusinessId
                                                                                   , inAccountId              := _tmpItem.AccountId_From
@@ -226,11 +231,13 @@ BEGIN
                                                                                   , inContainerId_Goods      := _tmpItem.ContainerId_GoodsFrom
                                                                                   , inGoodsId                := _tmpItem.GoodsId
                                                                                   , inPartionId              := _tmpItem.PartionId
+                                                                                  , inPartionId_MI           := NULL
                                                                                   , inGoodsSizeId            := _tmpItem.GoodsSizeId
                                                                                    )
                        , ContainerId_SummTo   = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
                                                                                   , inUnitId                 := vbUnitId_To
                                                                                   , inMemberId               := NULL
+                                                                                  , inClientId               := NULL
                                                                                   , inJuridicalId_basis      := vbJuridicalId_Basis
                                                                                   , inBusinessId             := vbBusinessId
                                                                                   , inAccountId              := _tmpItem.AccountId_To
@@ -239,6 +246,7 @@ BEGIN
                                                                                   , inContainerId_Goods      := _tmpItem.ContainerId_GoodsTo
                                                                                   , inGoodsId                := _tmpItem.GoodsId
                                                                                   , inPartionId              := _tmpItem.PartionId
+                                                                                  , inPartionId_MI           := NULL
                                                                                   , inGoodsSizeId            := _tmpItem.GoodsSizeId
                                                                                    );
 

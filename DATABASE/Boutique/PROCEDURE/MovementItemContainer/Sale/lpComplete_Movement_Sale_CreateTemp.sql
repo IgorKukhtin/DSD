@@ -11,10 +11,10 @@ BEGIN
      PERFORM lpComplete_Movement_All_CreateTemp();
 
      -- таблица - элементы по контрагенту, со всеми свойствами дл€ формировани€ јналитик в проводках
-     CREATE TEMP TABLE _tmpItem_SummClient (MovementItemId Integer, ContainerId Integer, AccountId Integer
+     CREATE TEMP TABLE _tmpItem_SummClient (MovementItemId Integer, ContainerId_Summ Integer, ContainerId_Summ_20102 Integer, ContainerId_Goods Integer, AccountId Integer, AccountId_20102 Integer
                                           , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                                          , GoodsId Integer, PartionId Integer, PartionId_MI Integer
-                                          , OperCount TFloat, OperSumm TFloat
+                                          , GoodsId Integer, PartionId Integer, GoodsSizeId Integer, PartionId_MI Integer
+                                          , OperCount TFloat, OperCount_sale TFloat, OperSumm TFloat, OperSumm_ToPay TFloat, TotalPay TFloat
                                            ) ON COMMIT DROP;
 
      -- таблица - элементы документа, со всеми свойствами дл€ формировани€ јналитик в проводках

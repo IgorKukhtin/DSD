@@ -187,6 +187,16 @@ BEGIN
                                                        AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
                       GROUP BY MovementItem.ParentId
                      )
+   , tmpContainer AS (SELECT Container.*
+                      FROM tmpMI_Master
+                           INNER JOIN Container ON Container.PartionId     = tmpMI_Master.PartionId
+                                               AND Container.WhereObjectId = vbUnitId
+                                               AND Container.DescId        = zc_Container_count()
+                           LEFT JOIN ContainerLinkObject AS CLO_Client
+                                                         ON CLO_Client.ContainerId = Container.Id
+                                                        AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
+                      WHERE CLO_Client.ContainerId IS NULL
+                     )
        -- результат
        SELECT
              tmpMI.Id
@@ -251,9 +261,7 @@ BEGIN
            , tmpMI.isErased
 
        FROM tmpMI_Master AS tmpMI
-            LEFT JOIN Container ON Container.PartionId     = tmpMI.PartionId
-                               AND Container.WhereObjectId = vbUnitId
-                               AND Container.DescId        = zc_Container_count()
+            LEFT JOIN tmpContainer AS Container ON Container.PartionId = tmpMI.PartionId
 
             LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI.Id
             LEFT JOIN tmpMI_Child AS tmpMI_Child_Exc ON tmpMI_Child_Exc.ParentId = 0

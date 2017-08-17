@@ -101,6 +101,7 @@ BEGIN
      -- !!!
      -- !!! Баланс: Управленческие Счета (1+2+3 уровень)
      -- !!!
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20102,  inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_20102');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 100301, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_100301');
 
 

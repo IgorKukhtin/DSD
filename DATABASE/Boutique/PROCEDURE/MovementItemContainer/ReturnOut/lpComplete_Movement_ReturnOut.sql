@@ -190,9 +190,11 @@ BEGIN
      UPDATE _tmpItem SET ContainerId_Goods = lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
                                                                                 , inUnitId                 := vbUnitId
                                                                                 , inMemberId               := NULL
+                                                                                , inClientId               := NULL
                                                                                 , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
                                                                                 , inGoodsId                := _tmpItem.GoodsId
                                                                                 , inPartionId              := _tmpItem.PartionId
+                                                                                , inPartionId_MI           := NULL
                                                                                 , inGoodsSizeId            := _tmpItem.GoodsSizeId
                                                                                 , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
                                                                                  );
@@ -215,6 +217,7 @@ BEGIN
      UPDATE _tmpItem SET ContainerId_Summ = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
                                                                               , inUnitId                 := vbUnitId
                                                                               , inMemberId               := NULL
+                                                                              , inClientId               := NULL
                                                                               , inJuridicalId_basis      := vbJuridicalId_Basis
                                                                               , inBusinessId             := vbBusinessId
                                                                               , inAccountId              := _tmpItem.AccountId
@@ -223,6 +226,7 @@ BEGIN
                                                                               , inContainerId_Goods      := _tmpItem.ContainerId_Goods
                                                                               , inGoodsId                := _tmpItem.GoodsId
                                                                               , inPartionId              := _tmpItem.PartionId
+                                                                              , inPartionId_MI           := NULL
                                                                               , inGoodsSizeId            := _tmpItem.GoodsSizeId
                                                                                );
 

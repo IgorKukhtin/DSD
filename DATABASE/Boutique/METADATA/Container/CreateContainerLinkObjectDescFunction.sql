@@ -46,6 +46,9 @@ CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_GoodsSize() RETURNS Integer AS
 INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
   SELECT 'zc_ContainerLinkObject_GoodsSize', 'Размер', zc_Object_GoodsSize() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_GoodsSize');
 
+CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_PartionMI() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_PartionMI'); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
+  SELECT 'zc_ContainerLinkObject_PartionMI', 'Партия элемента продажа/возврат', zc_Object_PartionMI() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_PartionMI');
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
