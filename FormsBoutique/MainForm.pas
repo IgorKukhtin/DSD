@@ -160,6 +160,8 @@ type
     N58: TMenuItem;
     actGoodsAccount_ReturnIn: TdsdOpenForm;
     N59: TMenuItem;
+    actGoodsPrint: TdsdOpenForm;
+    N64: TMenuItem;
   private
     { Private declarations }
   public

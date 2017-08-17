@@ -21,8 +21,9 @@ BEGIN
      vbUserId:= inSession;
      
      -- Определить от кого, кому, дата аптеки
-     SELECT MLO_From.ObjectId  AS JuridicalId
-          , MLO_To.ObjectId    AS ToId
+     SELECT MLO_From.ObjectId   AS JuridicalId
+          , MLO_To.ObjectId     AS ToId
+          , MD_Branch.ValueData AS OperDate_Branch
             INTO vbJuridicalId, vbToId, vbOperDate_Branch
      FROM MovementLinkObject AS MLO_From 
           LEFT JOIN MovementLinkObject AS MLO_To

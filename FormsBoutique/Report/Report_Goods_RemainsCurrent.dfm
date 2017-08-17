@@ -1,42 +1,50 @@
 inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   Caption = #1054#1090#1095#1077#1090' <'#1058#1077#1082#1091#1097#1080#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1090#1086#1074#1072#1088#1072'>'
   ClientHeight = 425
-  ClientWidth = 1065
+  ClientWidth = 1103
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1081
+  ExplicitWidth = 1119
   ExplicitHeight = 463
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
-    Width = 1065
+    Width = 1103
     Height = 73
-    ExplicitWidth = 1065
+    ExplicitWidth = 1103
     ExplicitHeight = 73
     inherited deStart: TcxDateEdit
-      Left = 997
+      Left = 994
+      Top = 52
       EditValue = 42736d
       Visible = False
-      ExplicitLeft = 997
+      ExplicitLeft = 994
+      ExplicitTop = 52
     end
     inherited deEnd: TcxDateEdit
-      Left = 1037
+      Left = 1034
+      Top = 52
       EditValue = 42736d
       Visible = False
-      ExplicitLeft = 1037
+      ExplicitLeft = 1034
+      ExplicitTop = 52
     end
     inherited cxLabel1: TcxLabel
       Left = 994
+      Top = 53
       Caption = #1057':'
       Visible = False
       ExplicitLeft = 994
+      ExplicitTop = 53
       ExplicitWidth = 15
     end
     inherited cxLabel2: TcxLabel
       Left = 1015
+      Top = 53
       Caption = #1087#1086':'
       Visible = False
       ExplicitLeft = 1015
+      ExplicitTop = 53
       ExplicitWidth = 20
     end
     object cxLabel3: TcxLabel
@@ -67,14 +75,14 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Width = 82
     end
     object cbSize: TcxCheckBox
-      Left = 714
+      Left = 711
       Top = 5
       Action = actRefreshSize
       TabOrder = 7
-      Width = 90
+      Width = 86
     end
     object cbPartner: TcxCheckBox
-      Left = 804
+      Left = 800
       Top = 5
       Action = actRefreshPartner
       TabOrder = 8
@@ -159,24 +167,41 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       TabOrder = 18
       Width = 199
     end
+    object cxLabel9: TcxLabel
+      Left = 872
+      Top = 36
+      Caption = #1057#1077#1089#1089#1080#1103':'
+    end
+    object edGoodsPrint: TcxButtonEdit
+      Left = 921
+      Top = 35
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 20
+      Width = 182
+    end
   end
   inherited PageControl: TcxPageControl [1]
     Top = 99
-    Width = 1065
+    Width = 1103
     Height = 326
     TabOrder = 3
     ExplicitTop = 99
-    ExplicitWidth = 1065
+    ExplicitWidth = 1103
     ExplicitHeight = 326
     ClientRectBottom = 326
-    ClientRectRight = 1065
+    ClientRectRight = 1103
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1065
+      ExplicitWidth = 1103
       ExplicitHeight = 326
       inherited cxGrid: TcxGrid
-        Width = 1065
+        Width = 1103
         Height = 326
-        ExplicitWidth = 1065
+        ExplicitWidth = 1103
         ExplicitHeight = 326
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -1040,7 +1065,39 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 534
-    Top = 6
+    Left = 518
+    Top = 65534
+  end
+  object GuidesGoodsPrint: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsPrint
+    Key = '0'
+    FormNameParam.Name = 'TGoodsPrintChoiceForm'
+    FormNameParam.Value = 'TGoodsPrintChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsPrintChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesGoodsPrint
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoodsPrint
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 982
+    Top = 22
   end
 end
