@@ -1558,15 +1558,12 @@ begin
     Assigned(lwPartner.Items[AEditor.CurrentIndex].Objects) then
   begin
     PartnerCount := lwPartner.Items[AEditor.CurrentIndex].Objects.FindDrawable('PartnerCount');
-
+    PartnerColor := TAlphaColors.Black;
     if Assigned(PartnerCount) then
       if StrToIntDef((PartnerCount as TListItemText).Text, 0) > 0 then
-        PartnerColor := TAlphaColors.Green
-      else
-        PartnerColor := TAlphaColors.Black;
+        PartnerColor := TAlphaColors.Green;
 
     PartnerName := lwPartner.Items[AEditor.CurrentIndex].Objects.FindDrawable('Name');
-
     if Assigned(PartnerName) then
     begin
       (PartnerName as TListItemText).TextColor := PartnerColor;
@@ -2588,18 +2585,10 @@ begin
       if FEditDocuments then
         ChangeReturnInDoc;
 
-      if (AResult = mrNone) and DM.IsLastSyncSuccess then
-        ShowMessage('Сохранение и синхронизация возврата прошла успешно.')
-      else if (AResult = mrNone) and not DM.IsLastSyncSuccess then
-        TDialogService.MessageDialog('Сохранение возврата прошло успешно, но синхронизация не прошла.' +
-          sLineBreak + 'Документ останется пока не проведенным.' +
-          sLineBreak + 'Повторите сохранение позднее.', TMsgDlgType.mtWarning, [TMsgDlgBtn.mbOK], TMsgDlgBtn.mbOK, 0, nil)
-      else if AResult <> mrNone then
-        ShowMessage('Сохранение возврата прошло успешно.');
+      ShowMessage('Сохранение возврата прошло успешно.');
 
       ReturnPriorForm;
-    end
-    else
+    end else
       TDialogService.MessageDialog(ErrMes, TMsgDlgType.mtError, [TMsgDlgBtn.mbOK], TMsgDlgBtn.mbOK, 0, nil);
   end;
 end;
