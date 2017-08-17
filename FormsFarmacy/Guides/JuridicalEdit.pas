@@ -12,7 +12,18 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, Datasnap.DBClient, dxBarExtItems, cxCalendar, dxSkinsCore,
   dxSkinsDefaultPainters, cxImageComboBox, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter, Vcl.ComCtrls, dxCore, cxDateUtils, cxDropDownEdit;
+  dxSkinsdxBarPainter, Vcl.ComCtrls, dxCore, cxDateUtils, cxDropDownEdit,
+  dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
+  dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue;
 
 type
   TJuridicalEditForm = class(TAncestorDialogForm)
@@ -103,6 +114,7 @@ type
     cxLabel21: TcxLabel;
     edLicense: TcxDBTextEdit;
     chisLoadBarcode: TcxCheckBox;
+    cbisDeferred: TcxCheckBox;
   private
     { Private declarations }
   public

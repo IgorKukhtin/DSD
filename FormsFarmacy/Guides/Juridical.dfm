@@ -96,6 +96,15 @@ inherited JuridicalForm: TJuridicalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object isDeferred: TcxGridDBColumn
+            Caption = #1047#1072#1082#1072#1079' '#1074#1089#1077#1075#1076#1072' "'#1054#1090#1083#1086#1078#1077#1085'"'
+            DataBinding.FieldName = 'isDeferred'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1089#1082#1083#1102#1095#1077#1085#1080#1077' - '#1079#1072#1082#1072#1079' '#1074#1089#1077#1075#1076#1072' "'#1054#1090#1083#1086#1078#1077#1085'"'
+            Options.Editing = False
+            Width = 84
+          end
           object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'

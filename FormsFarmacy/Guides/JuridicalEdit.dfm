@@ -4,24 +4,24 @@
   ClientHeight = 392
   ClientWidth = 890
   ExplicitWidth = 896
-  ExplicitHeight = 421
+  ExplicitHeight = 420
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 53
-    Top = 339
+    Top = 360
     Action = InsertUpdateGuides
     TabOrder = 3
     ExplicitLeft = 53
-    ExplicitTop = 339
+    ExplicitTop = 360
   end
   inherited bbCancel: TcxButton
     Left = 164
-    Top = 339
+    Top = 360
     Action = actFormClose
     TabOrder = 4
     ExplicitLeft = 164
-    ExplicitTop = 339
+    ExplicitTop = 360
   end
   object edName: TcxTextEdit [2]
     Left = 5
@@ -445,13 +445,13 @@
   object ceOrderSummComment: TcxTextEdit [17]
     Left = 111
     Top = 221
-    TabOrder = 18
+    TabOrder = 17
     Width = 167
   end
   object ceOrderTime: TcxTextEdit [18]
     Left = 8
     Top = 264
-    TabOrder = 22
+    TabOrder = 21
     Width = 270
   end
   object cxLabel14: TcxLabel [19]
@@ -464,6 +464,13 @@
     Top = 298
     Caption = #1088#1072#1079#1088#1077#1096#1080#1090#1100' '#1080#1084#1087#1086#1088#1090' '#1096#1090#1088#1080#1093'-'#1082#1086#1076#1086#1074
     TabOrder = 24
+    Width = 270
+  end
+  object cbisDeferred: TcxCheckBox [21]
+    Left = 8
+    Top = 325
+    Caption = #1080#1089#1082#1083#1102#1095#1077#1085#1080#1077' - '#1079#1072#1082#1072#1079' '#1074#1089#1077#1075#1076#1072' "'#1054#1090#1083#1086#1078#1077#1085'"'
+    TabOrder = 25
     Width = 270
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -782,6 +789,14 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDeferred'
+        Value = Null
+        Component = cbisDeferred
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 240
@@ -873,6 +888,13 @@
         Name = 'isLoadBarcode'
         Value = False
         Component = chisLoadBarcode
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDeferred'
+        Value = Null
+        Component = cbisDeferred
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

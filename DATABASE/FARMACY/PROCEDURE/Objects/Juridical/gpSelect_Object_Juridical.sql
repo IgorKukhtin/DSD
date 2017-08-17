@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, OKPO TVarChar,
                Percent TFloat, PayOrder TFloat,
                OrderSumm TVarChar, OrderTime TVarChar,
                isLoadBarcode Boolean,
+               isDeferred Boolean,
                isErased boolean) AS
 $BODY$
 BEGIN
@@ -37,7 +38,8 @@ BEGIN
              END                                            ::TVarChar AS OrderSumm
            , COALESCE (ObjectString_OrderTime.ValueData,'') ::TVarChar AS OrderTime
 
-           , COALESCE (ObjectBoolean_LoadBarcode.ValueData, FALSE) AS isLoadBarcode
+           , COALESCE (ObjectBoolean_LoadBarcode.ValueData, FALSE)     AS isLoadBarcode
+           , COALESCE (ObjectBoolean_Deferred.ValueData, FALSE)        AS isDeferred
 
            , Object_Juridical.isErased           AS isErased
            
@@ -72,6 +74,10 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_LoadBarcode 
                                    ON ObjectBoolean_LoadBarcode.ObjectId = Object_Juridical.Id
                                   AND ObjectBoolean_LoadBarcode.DescId = zc_ObjectBoolean_Juridical_LoadBarcode()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_Deferred
+                                   ON ObjectBoolean_Deferred.ObjectId = Object_Juridical.Id
+                                  AND ObjectBoolean_Deferred.DescId = zc_ObjectBoolean_Juridical_Deferred()
        WHERE Object_Juridical.DescId = zc_Object_Juridical();
   
 END;
@@ -84,6 +90,7 @@ ALTER FUNCTION gpSelect_Object_Juridical(TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.  Ярошенко Р.Ф.
+ 17.08.17         * add isDeferred
  27.06.17                                                                        * isLoadBarcode
  14.01.17         * 
  02.12.15                                                         * PayOrder
