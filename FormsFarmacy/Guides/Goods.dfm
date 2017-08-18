@@ -199,6 +199,7 @@ inherited GoodsForm: TGoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1088#1077#1076#1087#1086#1089#1083#1077#1076'. '#1076#1072#1090#1072' '#1085#1072#1083#1080#1095#1080#1103' '#1085#1072' '#1088#1099#1085#1082#1077
+            Options.Editing = False
             Width = 85
           end
           object CountDays: TcxGridDBColumn
@@ -209,6 +210,17 @@ inherited GoodsForm: TGoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1084#1077#1078#1076#1091' '#1076#1072#1090#1072#1084#1080' '#1085#1072#1083#1080#1095#1080#1103' '#1085#1072' '#1088#1099#1085#1082#1077
+            Options.Editing = False
+            Width = 66
+          end
+          object CountDays_inf: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085'. '#1053#1045#1058' '#1085#1072' '#1088#1099#1085#1082#1077
+            DataBinding.FieldName = 'CountDays_inf'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##; ; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1053#1045#1058' '#1085#1072' '#1088#1099#1085#1082#1077
             Options.Editing = False
             Width = 66
           end
@@ -473,9 +485,6 @@ inherited GoodsForm: TGoodsForm
         end
         item
           StoredProc = spUpdate_Goods_isSecond
-        end
-        item
-          StoredProc = spUpdate_Goods_LastPriceOld
         end>
       Caption = 'UpdateDataSet'
       DataSource = MasterDS

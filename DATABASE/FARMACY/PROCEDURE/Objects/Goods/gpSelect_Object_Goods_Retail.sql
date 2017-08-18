@@ -20,7 +20,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , isPromo boolean
              , isMarketToday Boolean
              , LastPriceDate TDateTime, LastPriceOldDate TDateTime
-             , CountDays TFloat
+             , CountDays TFloat, CountDays_inf TFloat
              , InsertName TVarChar, InsertDate TDateTime 
              , UpdateName TVarChar, UpdateDate TDateTime
              , ConditionsKeepName TVarChar
@@ -234,8 +234,9 @@ BEGIN
            , DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData)                   ::TDateTime  AS LastPriceDate
            , DATE_TRUNC ('DAY', ObjectDate_LastPriceOld.ValueData)                ::TDateTime  AS LastPriceOldDate
            
-           , CAST (DATE_PART ('DAY', (ObjectDate_LastPriceOld.ValueData - ObjectDate_LastPrice.ValueData)) AS NUMERIC (15,2))  :: TFloat  AS CountDays
-
+           , CAST (DATE_PART ('DAY', (ObjectDate_LastPrice.ValueData - ObjectDate_LastPriceOld.ValueData)) AS NUMERIC (15,2))  :: TFloat  AS CountDays
+           , CAST (DATE_PART ('DAY', (CURRENT_DATE - ObjectDate_LastPrice.ValueData)) AS NUMERIC (15,2))                       :: TFloat  AS CountDays_inf
+           
            , COALESCE(Object_Insert.ValueData, '')         ::TVarChar  AS InsertName
            , COALESCE(ObjectDate_Insert.ValueData, Null)   ::TDateTime AS InsertDate
            , COALESCE(Object_Update.ValueData, '')         ::TVarChar  AS UpdateName

@@ -45,27 +45,47 @@ BEGIN
          vbPriceListId := gpInsertUpdate_Movement_PriceList(0, '', vbOperDate, vbJuridicalId, vbContractId, inSession);
       END IF;
 
+
+     -- переносим последнюю дату прайса в ПРЕДпоследнюю 
+     PERFORM CASE WHEN COALESCE (ObjectDate_LastPriceOLd.ValueData, NULL) <> NULL
+                  THEN CASE WHEN COALESCE (ObjectDate_LastPrice.ValueData, NULL) <> NULL AND ObjectDate_LastPrice.ValueData > ObjectDate_LastPriceOLd.ValueData
+                            THEN lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_LastPriceOld(), GoodsId, ObjectDate_LastPrice.ValueData)              
+                       END
+                  ELSE lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_LastPriceOld(), GoodsId, ObjectDate_LastPrice.ValueData) 
+             END 
+        
+      FROM LoadPriceListItem 
+           JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
+              
+           LEFT JOIN ObjectDate AS ObjectDate_LastPrice
+                                ON ObjectDate_LastPrice.ObjectId = LoadPriceListItem.GoodsId
+                               AND ObjectDate_LastPrice.DescId = zc_ObjectDate_Goods_LastPrice()
+           LEFT JOIN ObjectDate AS ObjectDate_LastPriceOld
+                                ON ObjectDate_LastPriceOld.ObjectId = LoadPriceListItem.GoodsId
+                               AND ObjectDate_LastPriceOld.DescId = zc_ObjectDate_Goods_LastPriceOld()
+      WHERE GoodsId <> 0 AND LoadPriceListId = inId;
+      
      -- Перенос элементов прайса
      PERFORM 
          lpInsertUpdate_MovementItem_PriceList(
-        MovementItem.Id , -- Ключ объекта <Элемент документа>
-          vbPriceListId , -- Ключ объекта <Документ>
-                GoodsId , -- Товары
-        Object_Goods.Id , -- Товар прайс-листа
-
-           CASE WHEN LoadPriceList.NDSinPrice = TRUE
-                     THEN Price 
-                ELSE Price * (100 + ObjectFloat_NDSKind_NDS.ValueData) / 100 
-           END:: TFloat  , -- Цена
-
-           CASE WHEN LoadPriceList.NDSinPrice = TRUE
-                     THEN PriceOriginal 
-                ELSE PriceOriginal * (100 + ObjectFloat_NDSKind_NDS.ValueData) / 100
-           END:: TFloat  , -- !!!Цена оригинальная!!!
-
-          ExpirationDate , -- Партия товара
-                 Remains , -- остаток
-                vbUserId)
+                                               MovementItem.Id , -- Ключ объекта <Элемент документа>
+                                                 vbPriceListId , -- Ключ объекта <Документ>
+                                                       GoodsId , -- Товары
+                                               Object_Goods.Id , -- Товар прайс-листа
+                                       
+                                                  CASE WHEN LoadPriceList.NDSinPrice = TRUE
+                                                            THEN Price 
+                                                       ELSE Price * (100 + ObjectFloat_NDSKind_NDS.ValueData) / 100 
+                                                  END:: TFloat  , -- Цена
+                                       
+                                                  CASE WHEN LoadPriceList.NDSinPrice = TRUE
+                                                            THEN PriceOriginal 
+                                                       ELSE PriceOriginal * (100 + ObjectFloat_NDSKind_NDS.ValueData) / 100
+                                                  END:: TFloat  , -- !!!Цена оригинальная!!!
+                                       
+                                                 ExpirationDate , -- Партия товара
+                                                        Remains , -- остаток
+                                                       vbUserId)
         , lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_LastPrice(), GoodsId, vbOperDate)              -- дата прайса --CURRENT_TIMESTAMP
         , lpInsertUpdate_Goods_CountPrice (vbPriceListId, vbOperDate, GoodsId)
        FROM LoadPriceListItem 
@@ -103,6 +123,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 18.08.17         *
  21.04.17         *
  28.01.15                        *  меняем цены в случае изменения прайса
  26.10.14                        *  

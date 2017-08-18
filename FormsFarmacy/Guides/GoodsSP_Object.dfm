@@ -764,7 +764,14 @@ object GoodsSP_ObjectForm: TGoodsSP_ObjectForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inShowErased'
+        Value = 'False'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 48
     Top = 216

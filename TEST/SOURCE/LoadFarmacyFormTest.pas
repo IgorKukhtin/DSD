@@ -1273,10 +1273,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TIntenalSPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIntenalSPEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIntenalSPEditForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSP_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSP_ObjectForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSPForm');
   exit;
