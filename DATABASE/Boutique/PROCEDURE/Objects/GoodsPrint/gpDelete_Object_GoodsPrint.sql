@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpDelete_Object_GoodsPrint(
  INOUT ioUserId            Integer,
    OUT outInsertDate       TDateTime,     -- 
    OUT outGoodsPrintName   TVarChar,     --
+   OUT outUserName         TVarChar,     --
     IN inSession           TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
@@ -21,23 +22,29 @@ BEGIN
 
    IF COALESCE (ioId, 0) = 0
    THEN
-        RETURN;
+       -- удаляем все элементы текущего пользователя 
+       DELETE FROM Object_GoodsPrint 
+       WHERE Object_GoodsPrint.UserId = ioUserId;
+   ELSE                     
+       -- удаляем все элементы текущей сессии пользователя 
+       DELETE FROM Object_GoodsPrint 
+       WHERE Object_GoodsPrint.UserId = ioUserId
+         AND Object_GoodsPrint.InsertDate IN (SELECT tmp.InsertDate 
+                                              FROM  (SELECT Object_GoodsPrint.InsertDate
+                                                          , ROW_NUMBER() OVER (PARTITION BY Object_GoodsPrint.UserId ORDER BY Object_GoodsPrint.InsertDate)  AS ord  
+                                                     FROM Object_GoodsPrint
+                                                     WHERE Object_GoodsPrint.UserId = ioUserId
+                                                     GROUP BY Object_GoodsPrint.UserId, Object_GoodsPrint.InsertDate
+                                                     ) AS tmp 
+                                              WHERE tmp.Ord = ioId
+                                              )  
+       ;
+
+
    END IF;
    
-   outInsertDate := (SELECT tmp.InsertDate 
-                     FROM  (SELECT Object_GoodsPrint.InsertDate
-                                 , ROW_NUMBER() OVER( PARTITION BY Object_GoodsPrint.UserId ORDER BY Object_GoodsPrint.InsertDate)  AS ord  
-                            FROM Object_GoodsPrint
-                            WHERE Object_GoodsPrint.UserId = ioUserId
-                            GROUP BY Object_GoodsPrint.UserId, Object_GoodsPrint.InsertDate
-                            ) AS tmp 
-                     WHERE tmp.Ord = ioId) :: TDateTime;
-                        
-   -- удаляем все элементы текущей сессии пользователя 
-   DELETE FROM Object_GoodsPrint 
-   WHERE InsertDate = outInsertDate AND UserId = ioUserId;
-
-   ioUserId := 0;
+   ioUserId := vbUserId;
+   outUserName := lfGet_Object_ValueData (vbUserId) ::TVarChar;
    ioId := 0 ;
    outInsertDate := Null;
    outGoodsPrintName := '' :: TVarChar;

@@ -88,6 +88,10 @@ type
     edUser: TcxButtonEdit;
     cxLabel6: TcxLabel;
     edUnit: TcxButtonEdit;
+    spDelete_Object_GoodsPrint: TdsdStoredProc;
+    actDeleteGoodsPrint: TdsdExecStoredProc;
+    spGet_GoodsPrint_User: TdsdStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
