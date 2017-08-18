@@ -354,15 +354,6 @@ object GoodsPrintForm: TGoodsPrintForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbSetErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetUnErased'
-        end
-        item
-          BeginGroup = True
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -895,6 +886,7 @@ object GoodsPrintForm: TGoodsPrintForm
         Component = GuidesUnit
       end
       item
+        Component = GuidesUser
       end>
     Left = 544
     Top = 104

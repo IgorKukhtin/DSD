@@ -7,11 +7,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsPrint_Choice(
     IN inSession     TVarChar       --  сессия пользователя
 )
 RETURNS TABLE (Id                   Integer
-             , UnitId               Integer
-             , UnitName             TVarChar
+             , Name                 TVarChar
              , UserId               Integer
              , UserName             TVarChar
-             , Amount               TFloat
              , InsertDate           TDateTime
  ) 
 AS
@@ -25,21 +23,19 @@ BEGIN
 
      -- Результат
      RETURN QUERY 
-       SELECT DISTINCT
-             Object_GoodsPrint.Id           AS Id
-           , Object_Unit.Id                 AS UnitId
-           , Object_Unit.ValueData          AS UnitName
+       SELECT 
+             ROW_NUMBER() OVER( PARTITION BY Object_User.Id ORDER BY Object_GoodsPrint.InsertDate)  :: integer  AS Id
+           , (Object_User.ValueData||' '||Object_GoodsPrint.InsertDate)                             :: TVarChar AS Name
            , Object_User.Id                 AS UserId
            , Object_User.ValueData          AS UserName 
-           , Object_GoodsPrint.Amount       AS Amount       
            , Object_GoodsPrint.InsertDate   AS InsertDate
+           
                       
        FROM Object_GoodsPrint
-            
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id        = Object_GoodsPrint.UnitId 
             LEFT JOIN Object AS Object_User ON Object_User.Id        = Object_GoodsPrint.UserId 
-            
-     WHERE Object_GoodsPrint.UserId = inUserId OR inUserId = 0
+       WHERE Object_GoodsPrint.UserId = inUserId OR inUserId = 0
+       GROUP BY Object_User.Id      
+              , Object_GoodsPrint.InsertDate 
     ;
 
 END;

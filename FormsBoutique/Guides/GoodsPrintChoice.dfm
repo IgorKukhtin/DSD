@@ -3,7 +3,7 @@ object GoodsPrintChoiceForm: TGoodsPrintChoiceForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1077#1089#1089#1080#1103' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103' '#1087#1077#1095#1072#1090#1080' '#1094#1077#1085#1085#1080#1082#1086#1074'>'
   ClientHeight = 336
-  ClientWidth = 774
+  ClientWidth = 533
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12,7 +12,6 @@ object GoodsPrintChoiceForm: TGoodsPrintChoiceForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
@@ -21,13 +20,15 @@ object GoodsPrintChoiceForm: TGoodsPrintChoiceForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 774
+    Width = 533
     Height = 310
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitHeight = 350
+    ExplicitLeft = -248
+    ExplicitTop = 78
+    ExplicitWidth = 797
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -40,7 +41,6 @@ object GoodsPrintChoiceForm: TGoodsPrintChoiceForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = Amount
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -50,7 +50,6 @@ object GoodsPrintChoiceForm: TGoodsPrintChoiceForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = Amount
         end
         item
           Format = 'C'#1090#1088#1086#1082': ,0'
@@ -77,32 +76,18 @@ object GoodsPrintChoiceForm: TGoodsPrintChoiceForm
         Width = 58
       end
       object InsertDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1089#1077#1089#1089#1080#1080
+        Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1077#1089#1089#1080#1080
         DataBinding.FieldName = 'InsertDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 97
-      end
-      object UnitName: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-        DataBinding.FieldName = 'UnitName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 100
+        Width = 169
       end
       object UserName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
         DataBinding.FieldName = 'UserName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 180
-      end
-      object Amount: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1087#1077#1095#1072#1090#1080
-        DataBinding.FieldName = 'Amount'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 106
+        Width = 272
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -138,14 +123,14 @@ object GoodsPrintChoiceForm: TGoodsPrintChoiceForm
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
-    Left = 56
-    Top = 224
+    Left = 104
+    Top = 176
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 24
-    Top = 184
+    Top = 168
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -159,8 +144,8 @@ object GoodsPrintChoiceForm: TGoodsPrintChoiceForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 96
-    Top = 64
+    Left = 112
+    Top = 80
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -200,20 +185,7 @@ object GoodsPrintChoiceForm: TGoodsPrintChoiceForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbSetErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetUnErased'
-        end
-        item
-          BeginGroup = True
-          Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbShowAll'
         end
         item
           Visible = True
@@ -395,7 +367,7 @@ object GoodsPrintChoiceForm: TGoodsPrintChoiceForm
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'SessionName'
+          ComponentItem = 'Name'
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -404,6 +376,14 @@ object GoodsPrintChoiceForm: TGoodsPrintChoiceForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'UserId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InsertDate'
+          Value = 'NULL'
+          Component = MasterCDS
+          ComponentItem = 'InsertDate'
+          DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -479,18 +459,10 @@ object GoodsPrintChoiceForm: TGoodsPrintChoiceForm
       end>
     Params = <
       item
-        Name = 'inUnitId'
+        Name = 'inUserId'
         Value = Null
         Component = GuidesUser
         ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsShowAll'
-        Value = False
-        Component = actShowAll
-        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -519,8 +491,8 @@ object GoodsPrintChoiceForm: TGoodsPrintChoiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 680
-    Top = 96
+    Left = 392
+    Top = 248
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 288
@@ -584,14 +556,14 @@ object GoodsPrintChoiceForm: TGoodsPrintChoiceForm
   object FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'MasterUnitId'
+        Name = 'MasterUserId'
         Value = ''
         Component = GuidesUser
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'MasterUnitName'
+        Name = 'MasterUserName'
         Value = ''
         Component = GuidesUser
         ComponentItem = 'TextValue'
@@ -611,8 +583,8 @@ object GoodsPrintChoiceForm: TGoodsPrintChoiceForm
       end
       item
       end>
-    Left = 544
-    Top = 104
+    Left = 304
+    Top = 120
   end
   object spUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_PartionGoods'
@@ -635,7 +607,7 @@ object GoodsPrintChoiceForm: TGoodsPrintChoiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 680
-    Top = 160
+    Left = 456
+    Top = 240
   end
 end

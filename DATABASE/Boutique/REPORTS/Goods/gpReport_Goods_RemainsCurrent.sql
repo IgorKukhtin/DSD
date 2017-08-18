@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent(Integer,Boolean, Boolean,Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent(Integer,Integer,Integer,Integer,Integer,Integer,Boolean, Boolean,Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent(Integer,Integer,Integer,Integer,Integer,Integer,Integer, TDateTime, Boolean, Boolean,Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION  gpReport_Goods_RemainsCurrent(
     IN inUnitId           Integer  ,  -- Подразделение / группа
@@ -10,14 +11,18 @@ CREATE OR REPLACE FUNCTION  gpReport_Goods_RemainsCurrent(
     IN inPeriodId         Integer  ,  -- 
     IN inPeriodYearStart  Integer  ,  --
     IN inPeriodYearEnd    Integer  ,  --
+    IN inUserId           Integer  ,  -- Id пользователя сессии GoodsPrint
+    IN inGoodsPrintId     Integer  ,  -- GoodsPrintId
     IN inisPartion        Boolean,    -- 
     IN inisPartner        Boolean,    --
     IN inisSize           Boolean,    --
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (InvNumber_Partion  TVarChar,
+RETURNS TABLE (PartionId          Integer,
+               InvNumber_Partion  TVarChar,
                OperDate_Partion   TDateTime,
                DescName_Partion   TVarChar,
+               UnitId         Integer,
                UnitName       TVarChar,
                PartnerName    TVarChar,
                BrandName      TVarChar,
@@ -45,7 +50,8 @@ RETURNS TABLE (InvNumber_Partion  TVarChar,
                TotalSumm           TFloat,
                TotalSummPriceList  TFloat,
                TotalSummBalance    TFloat,
-               DiscountTax         TFloat
+               DiscountTax         TFloat,
+               Amount_GoodsPrint   TFloat
 
   )
 AS
@@ -121,6 +127,7 @@ BEGIN
       */
      , tmpData  AS  (SELECT tmpContainer.UnitId
                           , tmpContainer.GoodsId
+                          , CASE WHEN inisPartion = TRUE THEN tmpContainer.PartionId        ELSE 0                        END    AS PartionId
                           , CASE WHEN inisPartion = TRUE THEN MovementDesc_Partion.ItemName ELSE CAST (NULL AS TVarChar)  END    AS DescName_Partion
                           , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE CAST (NULL AS TVarChar)  END    AS InvNumber_Partion
                           , CASE WHEN inisPartion = TRUE THEN Movement_Partion.OperDate     ELSE CAST (NULL AS TDateTime) END    AS OperDate_Partion
@@ -170,6 +177,7 @@ BEGIN
                        AND (Object_PartionGoods.PeriodYear <= inPeriodYearEnd OR inPeriodYearEnd = 0) 
                      GROUP BY tmpContainer.UnitId
                             , tmpContainer.GoodsId
+                            , CASE WHEN inisPartion = TRUE THEN tmpContainer.PartionId        ELSE 0                        END
                             , CASE WHEN inisPartion = TRUE THEN MovementDesc_Partion.ItemName ELSE CAST (NULL AS TVarChar)  END
                             , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE CAST (NULL AS TVarChar)  END
                             , CASE WHEN inisPartion = TRUE THEN Movement_Partion.OperDate     ELSE CAST (NULL AS TDateTime) END
@@ -211,11 +219,28 @@ BEGIN
                      AND ObjectLink_DiscountPeriodItem_Unit.ChildObjectId = inUnitId --783
                      AND (ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData <> 0 OR ObjectHistory_DiscountPeriodItem.StartDate <> zc_DateStart())              
                    )
+ , tmpGoodsPrint AS (SELECT Object_GoodsPrint.UnitId
+                          , Object_GoodsPrint.PartionId
+                          , Object_GoodsPrint.Amount  
+                     FROM  (SELECT Object_GoodsPrint.InsertDate
+                                 , ROW_NUMBER() OVER( PARTITION BY Object_GoodsPrint.UserId ORDER BY Object_GoodsPrint.InsertDate)  AS ord  
+                            FROM Object_GoodsPrint
+                            WHERE Object_GoodsPrint.UserId = inUserId 
+                            GROUP BY Object_GoodsPrint.UserId
+                                   , Object_GoodsPrint.InsertDate
+                            ) AS tmp 
+                               LEFT JOIN Object_GoodsPrint ON Object_GoodsPrint.InsertDate = tmp.InsertDate
+                                                          AND Object_GoodsPrint.UserId     = inUserId
+                      WHERE tmp.Ord = inGoodsPrintId AND inGoodsPrintId <> 0 AND inisPartion = TRUE
+                                           
+                  )
 
         SELECT
-             tmpData.InvNumber_Partion
+             tmpData.PartionId
+           , tmpData.InvNumber_Partion
            , tmpData.OperDate_Partion
            , tmpData.DescName_Partion
+           , Object_Unit.Id                 AS UnitId
            , Object_Unit.ValueData          AS UnitName
            , Object_Partner.ValueData       AS PartnerName
            , Object_Brand.ValueData         AS BrandName
@@ -251,6 +276,7 @@ BEGIN
 
            , COALESCE (tmpDiscount.ValuePrice,0) :: TFloat  AS DiscountTax
 
+           , COALESCE (tmpGoodsPrint.Amount, 0) :: TFloat  AS Amount_GoodsPrint
         FROM tmpData
             LEFT JOIN Object AS Object_Unit    ON Object_Unit.Id    = tmpData.UnitId
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpData.PartnerId
@@ -279,6 +305,8 @@ BEGIN
             
             LEFT JOIN tmpDiscount ON tmpDiscount.UnitId = tmpData.UnitId
                                  AND tmpDiscount.GoodsId= tmpData.GoodsId
+            LEFT JOIN tmpGoodsPrint ON tmpGoodsPrint.UnitId    = tmpData.UnitId
+                                   AND tmpGoodsPrint.PartionId = tmpData.PartionId
 ;
  END;
 $BODY$

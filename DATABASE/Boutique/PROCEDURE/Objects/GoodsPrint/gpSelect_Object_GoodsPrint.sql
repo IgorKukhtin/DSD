@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsPrint(
     IN inUserId      Integer,       --  пользовать 
     IN inSession     TVarChar       --  сессия пользователя
 )
-RETURNS TABLE (Id                   Integer
+RETURNS TABLE  (Num                  Integer
              , UnitId               Integer
              , UnitName             TVarChar
              , UserId               Integer
@@ -43,9 +43,18 @@ BEGIN
 
 
      -- Результат
-     RETURN QUERY 
-       SELECT 
-             Object_GoodsPrint.Id                AS Id
+     RETURN QUERY
+     WITH 
+     tmpOrd AS (SELECT Object_GoodsPrint.UserId
+                     , Object_GoodsPrint.InsertDate
+                     , ROW_NUMBER() OVER( PARTITION BY Object_GoodsPrint.UserId ORDER BY Object_GoodsPrint.InsertDate)  AS ord  
+                FROM Object_GoodsPrint
+                GROUP BY Object_GoodsPrint.UserId
+                       , Object_GoodsPrint.InsertDate
+                ) 
+
+       SELECT  
+             tmpOrd.Ord               :: integer AS Id
            , Object_Unit.Id                      AS UnitId
            , Object_Unit.ValueData               AS UnitName
            , Object_User.Id                      AS UserId
@@ -70,12 +79,12 @@ BEGIN
            , Object_Label.ValueData              AS LabelName
            , Object_CompositionGroup.ValueData   AS CompositionGroupName
            , Object_GoodsSize.ValueData          AS GoodsSizeName
-                      
-       FROM Object_GoodsPrint
+                               
+       FROM Object_GoodsPrint 
             LEFT JOIN Object AS Object_Unit  ON Object_Unit.Id         = Object_GoodsPrint.UnitId 
             LEFT JOIN Object AS Object_User  ON Object_User.Id         = Object_GoodsPrint.UserId 
             
-            LEFT JOIN Object_PartionGoods    ON Object_PartionGoods.Id = Object_GoodsPrint.PartionId 
+            LEFT JOIN Object_PartionGoods    ON Object_PartionGoods.MovementItemId = Object_GoodsPrint.PartionId 
             LEFT JOIN Movement               ON Movement.Id            = Object_PartionGoods.MovementId
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id        = Object_PartionGoods.GoodsId 
             
@@ -94,13 +103,14 @@ BEGIN
             LEFT JOIN  Object AS Object_Label            ON Object_Label.Id            = Object_PartionGoods.LabelId
             LEFT JOIN  Object AS Object_CompositionGroup ON Object_CompositionGroup.Id = Object_PartionGoods.CompositionGroupId
             LEFT JOIN  Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = Object_PartionGoods.GoodsSizeId
-
-
+ 
+            LEFT JOIN  tmpOrd ON tmpOrd.UserId     = Object_GoodsPrint.UserId 
+                             AND tmpOrd.InsertDate = Object_GoodsPrint.InsertDate
+            
      WHERE (Object_GoodsPrint.UserId = inUserId OR inUserId = 0)
        AND (Object_GoodsPrint.UnitId = inUnitId OR inUnitId = 0)
-     ORDER BY Object_User.ValueData
-            , Object_Unit.ValueData
-            , Object_GoodsPrint.Id
+
+        
     ;
 
 END;

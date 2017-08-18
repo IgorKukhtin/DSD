@@ -1,51 +1,72 @@
--- Function: gpInsertUpdate_Object_GoodsItem (Integer, Integer, Integer, TVarChar)
-/*
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsItem (Integer, Integer, Integer, TVarChar);
+-- Function: gpInsertUpdate_Object_GoodsPrint (Integer, Integer, Integer, TVarChar)
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsItem(
- INOUT ioId           Integer,       -- Ключ объекта <Товары с размерами>            
-    IN inGoodsId      Integer,       -- Ключ объекта <Товары>             
-    IN inGoodsSizeId  Integer,       -- Ключ объекта <Размер товара>
-    IN inSession      TVarChar       -- сессия пользователя
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsPrint (Integer, Integer, Integer, Integer, TFloat, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsPrint(
+ INOUT ioId                Integer,       -- Ключ объекта <>            
+ INOUT ioUserId            Integer,
+    IN inUnitId            Integer,       -- 
+    IN inPartionId         Integer,       --
+    IN inAmount            TFloat,       -- 
+   OUT outInsertDate       TDateTime,     -- 
+   OUT outGoodsPrintName   TVarChar,     --
+    IN inSession           TVarChar       -- сессия пользователя
 )
-RETURNS integer
+RETURNS RECORD
 AS
 $BODY$
   DECLARE vbUserId Integer;
-  DECLARE vbId Integer;
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsInfo());
    vbUserId:= lpGetUserBySession (inSession);
 
-   -- проверяем есть ли уже такая связь
-   vbId:= (SELECT Object_GoodsItem.Id 
-           FROM Object_GoodsItem 
-           WHERE Object_GoodsItem.GoodsId = inGoodsId 
-             AND Object_GoodsItem.GoodsSizeId = inGoodsSizeId 
-             AND Object_GoodsItem.Id <> COALESCE (ioId, 0)
-           );
-   IF COALESCE (vbId, 0) <> 0 THEN ioId := vbId; END IF; 
+   IF COALESCE (inPartionId, 0) = 0
+   THEN
+        RAISE EXCEPTION 'Ошибка.Не определено значение <Партия>.';
+   END IF;
    
-   IF COALESCE (ioId, 0) = 0 THEN
-      -- добавили новый элемент справочника и вернули значение <Ключ объекта>
-      INSERT INTO Object_GoodsItem (GoodsId, GoodsSizeId)
-                  VALUES (inGoodsId, inGoodsSizeId) RETURNING Id INTO ioId;
+   IF COALESCE (ioId, 0) = 0
+   THEN
+       outInsertDate := CURRENT_TIMESTAMP;
+       
+       ioUserId := vbUserId;
+       
+       ioId := (SELECT MAX (tmp.ord) + 1
+               FROM  (SELECT Object_GoodsPrint.InsertDate
+                           , ROW_NUMBER() OVER( PARTITION BY Object_GoodsPrint.UserId ORDER BY Object_GoodsPrint.InsertDate)  AS ord  
+                      FROM Object_GoodsPrint
+                      WHERE Object_GoodsPrint.UserId = ioUserId
+                      GROUP BY Object_GoodsPrint.UserId, Object_GoodsPrint.InsertDate
+                      ) AS tmp 
+                 ) ;
    ELSE
-       -- изменили элемент справочника по значению <Ключ объекта>
-       UPDATE Object_GoodsItem SET GoodsId = inGoodsId, GoodsSizeId = inGoodsSizeId WHERE Id = ioId ;
+       outInsertDate := (SELECT tmp.InsertDate 
+                        FROM  (SELECT Object_GoodsPrint.InsertDate
+                                    , ROW_NUMBER() OVER( PARTITION BY Object_GoodsPrint.UserId ORDER BY Object_GoodsPrint.InsertDate)  AS ord  
+                               FROM Object_GoodsPrint
+                               WHERE Object_GoodsPrint.UserId = ioUserId
+                               GROUP BY Object_GoodsPrint.UserId, Object_GoodsPrint.InsertDate
+                               ) AS tmp 
+                        WHERE tmp.Ord = ioId) :: TDateTime;
+   END IF;
+   outGoodsPrintName := (lfGet_Object_ValueData (vbUserId) ||' ' || outInsertDate) :: TVarChar;
+   
+   -- изменили элемент 
+   UPDATE Object_GoodsPrint 
+   SET Amount = inAmount
+   WHERE InsertDate = outInsertDate AND UserId = ioUserId AND UnitId = inUnitId AND PartionId = inPartionId;
 
-       -- если такой элемент не был найден
-       IF NOT FOUND THEN
-          -- добавили новый элемент справочника со значением <Ключ объекта>
-          INSERT INTO Object_GoodsItem (Id, GoodsId, GoodsSizeId)
-                     VALUES (ioId, inGoodsId, inGoodsSizeId);
-       END IF; -- if NOT FOUND
-
-   END IF; -- if COALESCE (ioId, 0) = 0  
-
-
+   -- если такой элемент не был найден
+   IF NOT FOUND 
+   THEN
+       -- добавили новый элемент 
+       INSERT INTO Object_GoodsPrint (PartionId, UnitId, UserId, Amount, InsertDate)
+                   VALUES (inPartionId, inUnitId, ioUserId, inAmount, outInsertDate);
+   END IF; -- if NOT FOUND
+   
+      
 END;
 $BODY$
 
@@ -55,10 +76,8 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
-11.04.17          *
-10.03.17                                                          *
+17.08.17          *
 */
 
 -- тест
--- 
-*/
+-- select * from gpInsertUpdate_Object_GoodsPrint(ioId := 0 , ioUserId := 0 , inUnitId := 4198 , inPartionId := 0 , inAmount := 5 ::TFloat,  inSession := '2'::TVarChar);

@@ -59,9 +59,7 @@ type
     bbProtocolOpenForm: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    UnitName: TcxGridDBColumn;
     InsertDate: TcxGridDBColumn;
-    Amount: TcxGridDBColumn;
     cxLabel6: TcxLabel;
     edUser: TcxButtonEdit;
     GuidesUser: TdsdGuides;
