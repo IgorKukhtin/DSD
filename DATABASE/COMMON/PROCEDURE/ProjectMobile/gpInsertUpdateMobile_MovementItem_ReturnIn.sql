@@ -121,8 +121,8 @@ $BODY$
 -- тест
 /* SELECT * FROM gpInsertUpdateMobile_MovementItem_ReturnIn (inGUID:= '{A2F91EC1-9A34-4A77-A145-5A3290DFDD70}'
                                                         , inMovementGUID:= '{D2399D25-513D-4F68-A1ED-FCD21C63A0B7}'
-                                                        , inGoodsId:= 1
-                                                        , inGoodsKindId:= 0
+                                                        , inGoodsId:= 8213
+                                                        , inGoodsKindId:= 8348
                                                         , inAmount:= 3
                                                         , inPrice:= 45.89 
                                                         , inChangePercent:= -5.0  
