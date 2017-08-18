@@ -5,6 +5,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarC
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
@@ -18,6 +19,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
     IN inOrderSummComment        TVarChar  ,    -- Примечание к минимальной сумме для заказа
     IN inOrderTime               TVarChar  ,    -- информативно - максимальное время отправки
     IN inisLoadBarcode           Boolean   ,    -- импорт штрих-кодов
+    IN inisDeferred              Boolean   ,    -- Исключение - заказ всегда "Отложен"
     IN inSession                 TVarChar       -- сессия пользователя
 )
   RETURNS Integer AS
@@ -61,6 +63,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Juridical_OrderTime(), ioId, inOrderTime);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Juridical_LoadBarcode(), ioId, inisLoadBarcode);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Juridical_Deferred(), ioId, inisDeferred);
 
    -- сохранили протокол
    --PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -74,7 +78,8 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.  Ярошенко Р.Ф.
-4 27.06.17                                                                        *
+ 17.08.17         *              
+ 27.06.17                                                                        *
  14.01.17         *
  02.12.15                                                         * PayOrder
  10.04.15                        * 

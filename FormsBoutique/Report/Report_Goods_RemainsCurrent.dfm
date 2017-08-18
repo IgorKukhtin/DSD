@@ -1,42 +1,53 @@
 inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   Caption = #1054#1090#1095#1077#1090' <'#1058#1077#1082#1091#1097#1080#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1090#1086#1074#1072#1088#1072'>'
   ClientHeight = 425
-  ClientWidth = 1065
+  ClientWidth = 1111
+  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1081
+  AddOnFormData.Params = FormParams
+  ExplicitLeft = -196
+  ExplicitWidth = 1127
   ExplicitHeight = 463
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
-    Width = 1065
+    Width = 1111
     Height = 73
-    ExplicitWidth = 1065
+    ExplicitWidth = 1103
     ExplicitHeight = 73
     inherited deStart: TcxDateEdit
-      Left = 997
+      Left = 994
+      Top = 52
       EditValue = 42736d
       Visible = False
-      ExplicitLeft = 997
+      ExplicitLeft = 994
+      ExplicitTop = 52
     end
     inherited deEnd: TcxDateEdit
-      Left = 1037
+      Left = 1034
+      Top = 52
       EditValue = 42736d
       Visible = False
-      ExplicitLeft = 1037
+      ExplicitLeft = 1034
+      ExplicitTop = 52
     end
     inherited cxLabel1: TcxLabel
       Left = 994
+      Top = 53
       Caption = #1057':'
       Visible = False
       ExplicitLeft = 994
+      ExplicitTop = 53
       ExplicitWidth = 15
     end
     inherited cxLabel2: TcxLabel
       Left = 1015
+      Top = 53
       Caption = #1087#1086':'
       Visible = False
       ExplicitLeft = 1015
+      ExplicitTop = 53
       ExplicitWidth = 20
     end
     object cxLabel3: TcxLabel
@@ -67,14 +78,14 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Width = 82
     end
     object cbSize: TcxCheckBox
-      Left = 714
+      Left = 711
       Top = 5
       Action = actRefreshSize
       TabOrder = 7
-      Width = 90
+      Width = 86
     end
     object cbPartner: TcxCheckBox
-      Left = 804
+      Left = 800
       Top = 5
       Action = actRefreshPartner
       TabOrder = 8
@@ -82,12 +93,12 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     end
     object cxLabel5: TcxLabel
       Left = 9
-      Top = 36
+      Top = 37
       Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072':'
     end
     object edBrand: TcxButtonEdit
       Left = 101
-      Top = 32
+      Top = 35
       Properties.Buttons = <
         item
           Default = True
@@ -99,7 +110,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     end
     object cxLabel6: TcxLabel
       Left = 360
-      Top = 36
+      Top = 37
       Caption = #1057#1077#1079#1086#1085':'
     end
     object edPeriod: TcxButtonEdit
@@ -116,7 +127,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     end
     object cxLabel7: TcxLabel
       Left = 626
-      Top = 36
+      Top = 37
       Caption = #1043#1086#1076' ('#1085#1072#1095'.):'
     end
     object edPeriodYearStart: TcxCurrencyEdit
@@ -130,7 +141,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     end
     object cxLabel8: TcxLabel
       Left = 735
-      Top = 36
+      Top = 37
       Caption = #1043#1086#1076' ('#1086#1082#1086#1085'.):'
     end
     object edPeriodYearEnd: TcxCurrencyEdit
@@ -159,24 +170,42 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       TabOrder = 18
       Width = 199
     end
+    object cxLabel9: TcxLabel
+      Left = 858
+      Top = 37
+      Caption = #1057#1077#1089#1089#1080#1103':'
+    end
+    object edGoodsPrint: TcxButtonEdit
+      Left = 900
+      Top = 35
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 20
+      Width = 213
+    end
   end
   inherited PageControl: TcxPageControl [1]
     Top = 99
-    Width = 1065
+    Width = 1111
     Height = 326
     TabOrder = 3
     ExplicitTop = 99
-    ExplicitWidth = 1065
+    ExplicitWidth = 1103
     ExplicitHeight = 326
     ClientRectBottom = 326
-    ClientRectRight = 1065
+    ClientRectRight = 1111
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1065
+      ExplicitWidth = 1103
       ExplicitHeight = 326
       inherited cxGrid: TcxGrid
-        Width = 1065
+        Width = 1111
         Height = 326
-        ExplicitWidth = 1065
+        ExplicitLeft = 3
+        ExplicitWidth = 1103
         ExplicitHeight = 326
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -226,7 +255,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -290,6 +318,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object GoodsCode: TcxGridDBColumn
@@ -297,6 +326,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
           object GoodsName: TcxGridDBColumn
@@ -304,6 +334,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object GoodsSizeName: TcxGridDBColumn
@@ -311,6 +342,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             DataBinding.FieldName = 'GoodsSizeName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object MeasureName: TcxGridDBColumn
@@ -319,6 +351,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 45
           end
           object CurrencyName: TcxGridDBColumn
@@ -336,6 +369,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
           object Remains: TcxGridDBColumn
@@ -346,6 +380,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object OperPrice: TcxGridDBColumn
@@ -355,6 +390,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object CountForPrice: TcxGridDBColumn
@@ -376,6 +412,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object TotalSummBalance: TcxGridDBColumn
@@ -385,6 +422,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object OperPriceList: TcxGridDBColumn
@@ -394,6 +432,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object TotalSummPriceList: TcxGridDBColumn
@@ -403,6 +442,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object CompositionGroupName: TcxGridDBColumn
@@ -435,6 +475,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             DataBinding.FieldName = 'LineFabricaName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object CurrencyValue: TcxGridDBColumn
@@ -442,6 +483,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             DataBinding.FieldName = 'CurrencyValue'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 45
           end
           object FabrikaName: TcxGridDBColumn
@@ -459,6 +501,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 45
           end
           object JuridicalName: TcxGridDBColumn
@@ -485,6 +528,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object InvNumber_Partion: TcxGridDBColumn
@@ -493,6 +537,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 73
           end
           object OperDate_Partion: TcxGridDBColumn
@@ -500,7 +545,16 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             DataBinding.FieldName = 'OperDate_Partion'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
+          end
+          object Amount_GoodsPrint: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1087#1077#1095#1072#1090#1080
+            DataBinding.FieldName = 'Amount_GoodsPrint'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
           end
         end
       end
@@ -756,6 +810,78 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actGoodsPrint_Rem: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_GoodsPrint_Remains
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_GoodsPrint_Remains
+        end>
+      Caption = 'actGoodsPrint'
+    end
+    object actGoodsPrint: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_GoodsPrint
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_GoodsPrint
+        end>
+      Caption = 'actGoodsPrint'
+    end
+    object macGoodsPrint_Rem: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGoodsPrint_Rem
+        end>
+      View = cxGridDBTableView
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1074' '#1087#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1074' '#1087#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074
+    end
+    object macGoodsPrintList_Rem: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macGoodsPrint_Rem
+        end
+        item
+          Action = actRefresh
+        end>
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1074' '#1087#1077#1095#1072#1090#1100' '#1094#1077#1085#1085#1080#1082#1086#1074
+      ImageIndex = 27
+    end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_GoodsPrint
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_GoodsPrint
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = MasterDS
+    end
+    object actDeleteGoodsPrint: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spDelete_Object_GoodsPrint
+      StoredProcList = <
+        item
+          StoredProc = spDelete_Object_GoodsPrint
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = 'actGoodsPrint'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 48
@@ -815,6 +941,22 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inUserId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsPrintId'
+        Value = 0
+        Component = GuidesGoodsPrint
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisPartion'
         Value = Null
         Component = cbPartion
@@ -838,8 +980,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 80
-    Top = 192
+    Left = 72
+    Top = 208
   end
   inherited BarManager: TdxBarManager
     Left = 120
@@ -873,6 +1015,22 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         end
         item
           Visible = True
+          ItemName = 'bbGoodsPrintList'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDeleteGoodsPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -890,6 +1048,16 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
       Category = 0
+    end
+    object bbGoodsPrintList: TdxBarButton
+      Action = macGoodsPrintList_Rem
+      Category = 0
+    end
+    object bbDeleteGoodsPrint: TdxBarButton
+      Action = actDeleteGoodsPrint
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1074#1089#1077' '#1080#1079' '#1087#1077#1095#1072#1090#1080' '#1094#1077#1085#1085#1080#1082#1086#1074
+      Category = 0
+      ImageIndex = 52
     end
   end
   inherited PeriodChoice: TPeriodChoice
@@ -918,6 +1086,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       end
       item
         Component = edPeriodYearEnd
+      end
+      item
       end>
     Left = 384
     Top = 176
@@ -978,8 +1148,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 142
-    Top = 34
+    Left = 166
+    Top = 26
   end
   object GuidesPeriod: TdsdGuides
     KeyField = 'Id'
@@ -1040,7 +1210,239 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 534
-    Top = 6
+    Left = 518
+    Top = 65534
+  end
+  object GuidesGoodsPrint: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsPrint
+    Key = '0'
+    FormNameParam.Value = 'TGoodsPrintChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsPrintChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesGoodsPrint
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoodsPrint
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UserId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InsertDate'
+        Value = 'NULL'
+        Component = FormParams
+        ComponentItem = 'InsertDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 942
+    Top = 22
+  end
+  object spInsertUpdate_GoodsPrint: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_GoodsPrint'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = GuidesGoodsPrint
+        ComponentItem = 'Key'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioUserId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserId'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount_GoodsPrint'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outInsertDate'
+        Value = 'NULL'
+        Component = FormParams
+        ComponentItem = 'InsertDate'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsPrintName'
+        Value = Null
+        Component = GuidesGoodsPrint
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 640
+    Top = 200
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'InsertDate'
+        Value = 0c
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    Left = 248
+    Top = 240
+  end
+  object spInsertUpdate_GoodsPrint_Remains: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_GoodsPrint'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = '0'
+        Component = GuidesGoodsPrint
+        ComponentItem = 'Key'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioUserId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'UserId'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Remains'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outInsertDate'
+        Value = 0c
+        Component = FormParams
+        ComponentItem = 'InsertDate'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsPrintName'
+        Value = ''
+        Component = GuidesGoodsPrint
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 768
+    Top = 256
+  end
+  object spDelete_Object_GoodsPrint: TdsdStoredProc
+    StoredProcName = 'gpDelete_Object_GoodsPrint'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = '0'
+        Component = GuidesGoodsPrint
+        ComponentItem = 'Key'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioUserId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'UserId'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outInsertDate'
+        Value = 0c
+        Component = FormParams
+        ComponentItem = 'InsertDate'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsPrintName'
+        Value = ''
+        Component = GuidesGoodsPrint
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 840
+    Top = 200
   end
 end

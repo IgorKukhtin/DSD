@@ -36,6 +36,7 @@ type
     OrderTime: TcxGridDBColumn;
     OKPO: TcxGridDBColumn;
     isLoadBarcode: TcxGridDBColumn;
+    isDeferred: TcxGridDBColumn;
   private
     { Private declarations }
   public

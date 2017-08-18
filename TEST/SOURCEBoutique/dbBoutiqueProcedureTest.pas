@@ -95,6 +95,7 @@ type
     procedure CreateGoodsGroup;
     procedure CreateGoods;
     procedure CreateGoodsItem;
+    procedure CreateGoodsPrint;
     procedure CreateImportSettings;
     procedure CreateImportSettingsItems;
     procedure CreateInfoMoney;
@@ -324,6 +325,11 @@ end;
 procedure TdbObjectProcedureTest.CreateGoodsItem;
 begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\GoodsItem - !!!\');
+end;
+
+ procedure TdbObjectProcedureTest.CreateGoodsPrint;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\GoodsPrint\');
 end;
 
 procedure TdbObjectProcedureTest.CreateGoodsSize;

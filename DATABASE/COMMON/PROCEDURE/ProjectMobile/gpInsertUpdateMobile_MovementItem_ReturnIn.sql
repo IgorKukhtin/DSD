@@ -72,6 +72,13 @@ BEGIN
            -- если есть кол-во
            IF inAmount <> 0
            THEN
+                -- !!! ВРЕМЕННО ДЛЯ ТЕСТА
+                IF inSession = zfCalc_UserAdmin() AND inAmount = 2.0
+                THEN
+                     RAISE EXCEPTION 'Админу нельзя сохранять количество товара равным двум. :)';
+                END IF; 
+                -- !!! ВРЕМЕННО ДЛЯ ТЕСТА
+
                 -- сохранили элемент возврата
                 SELECT ioId INTO vbId
                 FROM lpInsertUpdate_MovementItem_ReturnIn (ioId                 := vbId

@@ -58,6 +58,22 @@ type
     cxLabel4: TcxLabel;
     edPartner: TcxButtonEdit;
     GuidesPartner: TdsdGuides;
+    cxLabel9: TcxLabel;
+    edGoodsPrint: TcxButtonEdit;
+    GuidesGoodsPrint: TdsdGuides;
+    spInsertUpdate_GoodsPrint: TdsdStoredProc;
+    actGoodsPrint: TdsdExecStoredProc;
+    macGoodsPrintList_Rem: TMultiAction;
+    FormParams: TdsdFormParams;
+    Amount_GoodsPrint: TcxGridDBColumn;
+    actUpdateDataSet: TdsdUpdateDataSet;
+    bbGoodsPrintList: TdxBarButton;
+    spInsertUpdate_GoodsPrint_Remains: TdsdStoredProc;
+    actGoodsPrint_Rem: TdsdExecStoredProc;
+    macGoodsPrint_Rem: TMultiAction;
+    spDelete_Object_GoodsPrint: TdsdStoredProc;
+    actDeleteGoodsPrint: TdsdExecStoredProc;
+    bbDeleteGoodsPrint: TdxBarButton;
   private
     { Private declarations }
   public

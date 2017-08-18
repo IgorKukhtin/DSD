@@ -260,7 +260,9 @@ uses
   Report_MovementIncomeDialog in '..\..\FormsBoutique\Report\Report_MovementIncomeDialog.pas' {Report_MovementIncomeDialogForm: TParentForm},
   IFIN_J1201009 in '..\..\SOURCE\MeDOC\IFIN_J1201009.pas',
   GoodsAccount_ReturnIn in '..\..\FormsBoutique\Document\GoodsAccount_ReturnIn.pas' {GoodsAccount_ReturnInForm: TParentForm},
-  GoodsAccount_ReturnInJournal in '..\..\FormsBoutique\Document\GoodsAccount_ReturnInJournal.pas' {GoodsAccount_ReturnInJournalForm: TParentForm};
+  GoodsAccount_ReturnInJournal in '..\..\FormsBoutique\Document\GoodsAccount_ReturnInJournal.pas' {GoodsAccount_ReturnInJournalForm: TParentForm},
+  GoodsPrintChoice in '..\..\FormsBoutique\Guides\GoodsPrintChoice.pas' {GoodsPrintChoiceForm: TParentForm},
+  GoodsPrint in '..\..\FormsBoutique\Guides\GoodsPrint.pas' {GoodsPrintForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
