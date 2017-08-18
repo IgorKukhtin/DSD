@@ -1,19 +1,20 @@
 inherited PriceForm: TPriceForm
   Caption = #1055#1088#1072#1081#1089' - '#1083#1080#1089#1090' '#1090#1077#1082#1091#1097#1080#1081
   ClientHeight = 413
-  ClientWidth = 766
+  ClientWidth = 789
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 782
+  ExplicitWidth = 805
   ExplicitHeight = 451
   PixelsPerInch = 96
   TextHeight = 13
   object Panel: TPanel [0]
     Left = 0
     Top = 0
-    Width = 766
+    Width = 789
     Height = 57
     Align = alTop
     TabOrder = 6
+    ExplicitWidth = 766
     object deOperDate: TcxDateEdit
       Left = 662
       Top = 32
@@ -73,18 +74,18 @@ inherited PriceForm: TPriceForm
   end
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 766
+    Width = 789
     Height = 330
     ExplicitTop = 83
     ExplicitWidth = 766
     ExplicitHeight = 330
     ClientRectBottom = 330
-    ClientRectRight = 766
+    ClientRectRight = 789
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 766
       ExplicitHeight = 330
       inherited cxGrid: TcxGrid
-        Width = 766
+        Width = 789
         Height = 330
         ExplicitWidth = 766
         ExplicitHeight = 330
@@ -586,12 +587,39 @@ inherited PriceForm: TPriceForm
             Options.Editing = False
             Width = 100
           end
+          object CheckPriceDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1055#1086#1103#1074#1080#1083#1089#1103' '#1085#1072' '#1088#1099#1085#1082#1077' + '#1080#1089#1087#1088'. '#1053#1058#1047' '
+            DataBinding.FieldName = 'CheckPriceDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1055#1086#1103#1074#1080#1083#1089#1103' '#1085#1072' '#1088#1099#1085#1082#1077' + '#1080#1089#1087#1088#1072#1074#1080#1090#1100' '#1053#1058#1047' '
+            Options.Editing = False
+            Width = 82
+          end
+          object isCorrectMCS: TcxGridDBColumn
+            Caption = #1055#1086#1103#1074#1080#1083#1089#1103' '#1085#1072' '#1088#1099#1085#1082#1077' - '#1080#1089#1087#1088#1072#1074#1080#1090#1100' '#1053#1058#1047
+            DataBinding.FieldName = 'isCorrectMCS'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1103#1074#1080#1083#1089#1103' '#1085#1072' '#1088#1099#1085#1082#1077' - '#1080#1089#1087#1088#1072#1074#1080#1090#1100' '#1053#1058#1047' ('#1076#1072'/'#1085#1077#1090') '
+            Options.Editing = False
+            Width = 72
+          end
           object Color_ExpirationDate: TcxGridDBColumn
             DataBinding.FieldName = 'Color_ExpirationDate'
             Visible = False
             Options.Editing = False
             VisibleForCustomization = False
             Width = 30
+          end
+          object isExcludeMCS: TcxGridDBColumn
+            Caption = #1048#1089#1082#1083'. '#1080#1079' '#1089#1087'. '#1076#1083#1103' '#1080#1089#1087#1088'. '#1053#1058#1047
+            DataBinding.FieldName = 'isExcludeMCS'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1089#1082#1083#1102#1095#1072#1077#1090#1089#1103' '#1080#1079' '#1089#1087#1080#1089#1082#1072' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1103' '#1053#1058#1047' ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 65
           end
         end
       end
@@ -976,6 +1004,43 @@ inherited PriceForm: TPriceForm
         end>
       isShowModal = False
     end
+    object actUpdate_CheckPrice: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_CheckPrice
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_CheckPrice
+        end>
+      Caption = 'actUpdate_CheckPrice'
+      ImageIndex = 27
+    end
+    object macUpdate_CheckPriceList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_CheckPrice
+        end>
+      View = cxGridDBTableView
+      Caption = #1047#1072#1092#1080#1082#1089#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1082#1086#1075#1076#1072' '#1055#1086#1103#1074#1080#1083#1089#1103' '#1085#1072' '#1088#1099#1085#1082#1077
+      Hint = #1047#1072#1092#1080#1082#1089#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1082#1086#1075#1076#1072' '#1055#1086#1103#1074#1080#1083#1089#1103' '#1085#1072' '#1088#1099#1085#1082#1077
+      ImageIndex = 27
+    end
+    object macUpdate_CheckPrice: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_CheckPriceList
+        end>
+      QuestionBeforeExecute = #1047#1072#1092#1080#1082#1089#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1082#1086#1075#1076#1072' '#1055#1086#1103#1074#1080#1083#1089#1103' '#1085#1072' '#1088#1099#1085#1082#1077'?'
+      InfoAfterExecute = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1082#1086#1075#1076#1072' '#1055#1086#1103#1074#1080#1083#1089#1103' '#1085#1072' '#1088#1099#1085#1082#1077' '#1047#1072#1092#1080#1082#1089#1080#1088#1086#1074#1072#1085#1072'.'
+      Caption = #1047#1072#1092#1080#1082#1089#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1082#1086#1075#1076#1072' '#1055#1086#1103#1074#1080#1083#1089#1103' '#1085#1072' '#1088#1099#1085#1082#1077
+      Hint = #1047#1072#1092#1080#1082#1089#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1082#1086#1075#1076#1072' '#1055#1086#1103#1074#1080#1083#1089#1103' '#1085#1072' '#1088#1099#1085#1082#1077
+      ImageIndex = 27
+    end
   end
   inherited MasterDS: TDataSource
     Top = 144
@@ -1110,6 +1175,14 @@ inherited PriceForm: TPriceForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbOpenForm'
         end
         item
@@ -1163,6 +1236,10 @@ inherited PriceForm: TPriceForm
     end
     object bbOpenForm: TdxBarButton
       Action = dsdOpenForm
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = macUpdate_CheckPrice
       Category = 0
     end
   end
@@ -1403,8 +1480,8 @@ inherited PriceForm: TPriceForm
         Value = '5'
         MultiSelectSeparator = ','
       end>
-    Left = 264
-    Top = 48
+    Left = 200
+    Top = 104
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_Price'
@@ -1766,7 +1843,7 @@ inherited PriceForm: TPriceForm
       end>
     PackSize = 1
     Left = 504
-    Top = 184
+    Top = 208
   end
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'
@@ -1807,7 +1884,50 @@ inherited PriceForm: TPriceForm
       item
         Component = UnitGuides
       end>
-    Left = 656
-    Top = 184
+    Left = 632
+    Top = 216
+  end
+  object spUpdate_CheckPrice: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Price_CheckPrice'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisCorrectMCS'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isCorrectMCS'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioCheckPriceDate'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'CheckPriceDate'
+        DataType = ftDateTime
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 448
+    Top = 304
   end
 end
