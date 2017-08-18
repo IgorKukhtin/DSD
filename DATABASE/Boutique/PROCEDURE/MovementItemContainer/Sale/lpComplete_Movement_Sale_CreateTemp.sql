@@ -14,7 +14,9 @@ BEGIN
      CREATE TEMP TABLE _tmpItem_SummClient (MovementItemId Integer, ContainerId_Summ Integer, ContainerId_Summ_20102 Integer, ContainerId_Goods Integer, AccountId Integer, AccountId_20102 Integer
                                           , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                           , GoodsId Integer, PartionId Integer, GoodsSizeId Integer, PartionId_MI Integer
-                                          , OperCount TFloat, OperCount_sale TFloat, OperSumm TFloat, OperSumm_ToPay TFloat, TotalPay TFloat
+                                          , OperCount TFloat, OperSumm TFloat, OperSumm_ToPay TFloat, TotalPay TFloat
+                                          , OperCount_sale TFloat, OperSumm_sale TFloat, OperSummPriceList_sale TFloat
+                                          , Summ_10201 TFloat, Summ_10202 TFloat, Summ_10203 TFloat, Summ_10204 TFloat
                                            ) ON COMMIT DROP;
 
      -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
