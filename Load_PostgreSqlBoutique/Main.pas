@@ -156,6 +156,7 @@ type
     cbComplete_List: TCheckBox;
     cb100MSec: TCheckBox;
     cbOnlyOpenMIChild: TCheckBox;
+    cbCurrency: TCheckBox;
 
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
@@ -245,6 +246,8 @@ type
     procedure pLoadGuide_User;
 
    // Documents
+    procedure pLoadDocument_Currency;
+
     function  pLoadDocument_Income:Integer;
     procedure pLoadDocumentItem_Income(SaveCount:Integer);
 
@@ -2079,6 +2082,8 @@ begin
      DataSource.DataSet:=fromQuery;
      CursorGridChange;
 
+     if not fStop then pLoadDocument_Currency;
+
      if not fStop then myRecordCount1:=pLoadDocument_Income;
      if not fStop then pLoadDocumentItem_Income(myRecordCount1);
 
@@ -3779,6 +3784,101 @@ begin
 
      //
      myDisabledCB(cbGoodsAccount);
+end;
+
+procedure TMainForm.pLoadDocument_Currency;
+var zc_Currency_GRN, zc_Currency_EUR, zc_Currency_USD : Integer;
+begin
+     if (not cbCurrency.Checked)or(not cbCurrency.Enabled) then exit;
+     //
+     fOpenSqToQuery_two(' select zc_Currency_GRN() as zc_Currency_GRN, zc_Currency_EUR() as zc_Currency_EUR, zc_Currency_USD() as zc_Currency_USD');
+     zc_Currency_GRN:=toSqlQuery_two.FieldByName('zc_Currency_GRN').Value;
+     zc_Currency_EUR:=toSqlQuery_two.FieldByName('zc_Currency_EUR').Value;
+     zc_Currency_USD:=toSqlQuery_two.FieldByName('zc_Currency_USD').Value;
+     //
+     myEnabledCB(cbCurrency);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add(' select cast (' + chr(39) + '1980-01-01' + chr(39) + ' as date) as OperDate ');
+        Add('     , 5.5 as Amount ');
+        Add('     , ' + IntToStr(zc_Currency_GRN) + ' as CurrencyFromId ');
+        Add('     , ' + IntToStr(zc_Currency_USD) + ' as CurrencyToId  ');
+        Add(' union all ');
+        Add(' select cast (' + chr(39) + '1980-01-01' + chr(39) + ' as date) as OperDate ');
+        Add('     , 6.7 as Amount ');
+        Add('     , ' + IntToStr(zc_Currency_GRN) + ' as CurrencyFromId ');
+        Add('     , ' + IntToStr(zc_Currency_EUR) + ' as CurrencyToId  ');
+
+        Add(' union all ');
+        Add(' select zf_FormatToDateServer_01 (OperDAte) as a, max (KursClient) as Amount ');
+        Add('     , ' + IntToStr(zc_Currency_GRN) + ' as CurrencyFromId ');
+        Add('     , ' + IntToStr(zc_Currency_USD) + ' as CurrencyToId  ');
+        Add(' from ClientAccountMoney ');
+        Add('      join kassaProperty on kassaProperty.kassaId = ClientAccountMoney .kassaId ');
+        Add(' where KursClient <> 0 and ValutaId = 5 ');
+        Add(' group by a ');
+
+        Add(' union all ');
+        Add(' select zf_FormatToDateServer_01 (OperDAte) as a, max (KursClient) as Amount ');
+        Add('     , ' + IntToStr(zc_Currency_GRN) + ' as CurrencyFromId ');
+        Add('     , ' + IntToStr(zc_Currency_EUR) + ' as CurrencyToId  ');
+        Add(' from ClientAccountMoney ');
+        Add('      join kassaProperty on kassaProperty.kassaId = ClientAccountMoney .kassaId ');
+        Add(' where KursClient <> 0 and ValutaId = 2 ');
+        Add(' group by a ');
+
+        Add(' order by 1, 4 ');
+
+        Open;
+
+        cbCurrency.Caption:='1.0. ('+IntToStr(RecordCount)+') йспяш';
+        //
+        //
+        fStop:=(cbOnlyOpen.Checked);
+
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_Movement_Currency';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('ioInvNumber',ftString,ptInputOutput, '');
+        toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
+        toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inParValue',ftFloat,ptInput, 1);
+        toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inCurrencyFromId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCurrencyToId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+            if fStop then begin exit; end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=0;
+             toStoredProc.Params.ParamByName('ioInvNumber').Value:='';
+             toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
+             toStoredProc.Params.ParamByName('inAmount').Value:= FieldByName('Amount').AsFloat;
+             toStoredProc.Params.ParamByName('inParValue').Value:= 1;
+             toStoredProc.Params.ParamByName('inCurrencyFromId').Value:=FieldByName('CurrencyFromId').AsInteger;
+             toStoredProc.Params.ParamByName('inCurrencyToId').Value:=FieldByName('CurrencyToId').AsInteger;
+
+             if not myExecToStoredProc then ;//exit;
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+
+     end;
+     //
+     myDisabledCB(cbCurrency);
 end;
 
 function TMainForm.pLoadDocument_Income: Integer;
@@ -6048,8 +6148,9 @@ begin
      myDisabledCB(cbMeasure);
 end;
 procedure TMainForm.pLoadGuide_Member;
+var PersonalId : Integer;
 begin
-      if (not cbMember.Checked)or(not cbMember.Enabled) then exit;
+     if (not cbMember.Checked)or(not cbMember.Enabled) then exit;
      //
      myEnabledCB(cbMember);
      //
@@ -6082,11 +6183,28 @@ begin
         toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inEMail',ftString,ptInput, '');
         //
-
+        toStoredProc_two.StoredProcName:='gpInsertUpdate_Object_Personal';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc_two.Params.AddParam ('ioCode',ftInteger,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc_two.Params.AddParam ('inMemberId',ftInteger,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inPositionId',ftInteger,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inUnitId',ftInteger,ptInput, 0);
+        //
         while not EOF do
         begin
              //!!!
              if fStop then begin   exit; end;
+             //
+             fOpenSqToQuery_two(' select ObjectId AS Id_find'
+                               +' from ObjectLink'
+                               +' where DescId = zc_ObjectLink_Personal_Member()'
+                               +'   and ChildObjectId = ' + IntToStr(FieldByName('Id_Postgres').AsInteger));
+             if toSqlQuery_two.RecordCount > 0
+             then PersonalId:=toSqlQuery_two.FieldByName('Id_find').Value
+             else PersonalId:=0;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -6096,6 +6214,14 @@ begin
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.Users set MemberId_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             toStoredProc_two.Params.ParamByName('ioId').Value:=PersonalId;
+             toStoredProc_two.Params.ParamByName('ioCode').Value:=0;
+             toStoredProc_two.Params.ParamByName('inName').Value:='';
+             toStoredProc_two.Params.ParamByName('inMemberId').Value:=toStoredProc.Params.ParamByName('ioId').Value;
+             toStoredProc_two.Params.ParamByName('inPositionId').Value:=0;
+             toStoredProc_two.Params.ParamByName('inUnitId').Value:=0;
+             if not myExecToStoredProc_two then ;//exit;
              //
              Next;
              Application.ProcessMessages;

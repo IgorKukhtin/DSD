@@ -231,6 +231,14 @@ BEGIN
      END IF;
 
 
+     -- проверка что скидка та что надо
+     IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.TotalChangePercent <> _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204)
+     THEN
+         RAISE EXCEPTION 'Ошибка. Скида итого <%> не равна <%>.', (SELECT _tmpItem.TotalChangePercent FROM _tmpItem WHERE _tmpItem.TotalChangePercent <> _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204 ORDER BY _tmpItem.MovementItemId LIMIT 1)
+                                                                , (SELECT _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204 FROM _tmpItem WHERE _tmpItem.TotalChangePercent <> _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204 ORDER BY _tmpItem.MovementItemId LIMIT 1)
+         ;
+     END IF;
+
 
      -- заполняем таблицу - элементы по контрагенту, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem_SummClient (MovementItemId, ContainerId_Summ, ContainerId_Summ_20102, ContainerId_Goods, AccountId, AccountId_20102, InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
@@ -239,40 +247,89 @@ BEGIN
                                     , OperCount_sale TFloat, OperSumm_sale TFloat, OperSummPriceList_sale TFloat
                                     , Summ_10201 TFloat, Summ_10202 TFloat, Summ_10203 TFloat, Summ_10204 TFloat
                                      )
-        SELECT _tmpItem.MovementItemId
+        SELECT tmp.MovementItemId
              , 0 AS ContainerId_Summ, 0 AS ContainerId_Summ_20102, 0 AS ContainerId_Goods, 0 AS AccountId, 0 AS AccountId_20102
-             , _tmpItem.InfoMoneyGroupId, _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyId
-             , _tmpItem.GoodsId
-             , _tmpItem.PartionId
-             , _tmpItem.GoodsSizeId
+             , tmp.InfoMoneyGroupId, tmp.InfoMoneyDestinationId, tmp.InfoMoneyId
+             , tmp.GoodsId
+             , tmp.PartionId
+             , tmp.GoodsSizeId
 
                -- определяем Партию элемента продажи/возврата
-             , lpInsertFind_Object_PartionMI (_tmpItem.MovementItemId)
+             , lpInsertFind_Object_PartionMI (tmp.MovementItemId)
 
                -- все кол-во
-             , _tmpItem.OperCount
+             , tmp.OperCount
 
              , (_tmpItem.OperSumm)          AS OperSumm       -- сумма по вх.
              , (_tmpItem.OperSumm_ToPay)    AS OperSumm_ToPay -- сумма к оплате
              , (_tmpItem.TotalPay)          AS TotalPay       -- сумма оплаты
 
                -- расчет кол-во которое попадает в ПРОДАЖУ
-             , CASE WHEN _tmpItem.OperSumm_ToPay = _tmpItem.TotalPay
-                         THEN _tmpItem.OperCount
-                    ELSE -- иначе Оплату разделим на Цену "к оплате" - и отбросим дробную часть
-                         FLOOR (_tmpItem.TotalPay / (_tmpItem.OperSumm_ToPay / _tmpItem.OperCount))
-               END AS OperCount_sale
+             , tmp.OperCount_sale
 
                -- расчет с/с которое попадает в ПРОДАЖУ
-             , CASE WHEN _tmpItem.OperSumm_ToPay = _tmpItem.TotalPay
-                         THEN _tmpItem.OperSumm
+             , CASE WHEN tmp.OperSumm_ToPay = tmp.TotalPay
+                         THEN tmp.OperSumm
                     ELSE -- иначе кол-во которое попадает в ПРОДАЖУ
-                         FLOOR (_tmpItem.TotalPay / (_tmpItem.OperSumm_ToPay / _tmpItem.OperCount))
+                         tmp.OperCount_sale
                          -- Цена с/с в ГРН - округлили до 2-х знаков
-                       * ROUND (_tmpItem.OperSumm / _tmpItem.OperCount * 100) / 100
+                       * ROUND (tmp.OperSumm / tmp.OperCount * 100) / 100
                END AS OperSumm_sale
 
-        FROM _tmpItem
+               -- расчет Суммы которая попадает в ПРОДАЖУ
+             , CASE WHEN tmp.OperSumm_ToPay = tmp.TotalPay
+                         THEN tmp.OperSummPriceList
+                    ELSE -- иначе кол-во которое попадает в ПРОДАЖУ
+                         tmp.OperCount_sale
+                         -- Цена ПРАЙС в ГРН - округлили до 2-х знаков
+                       * ROUND (tmp.OperSummPriceList / tmp.OperCount * 100) / 100
+               END AS OperSummPriceList_sale
+
+               -- расчет сезонная скидка которая попадает в ПРОДАЖУ
+             , CASE WHEN tmp.OperSumm_ToPay = tmp.TotalPay
+                         THEN tmp.Summ_10201
+                    ELSE -- иначе кол-во которое попадает в ПРОДАЖУ
+                         tmp.OperCount_sale
+                         -- Цена "скидки" в ГРН - округлили до 2-х знаков
+                       * ROUND (tmp.Summ_10201 / tmp.OperCount * 100) / 100
+               END AS Summ_10201
+
+               -- расчет скидка outlet которая попадает в ПРОДАЖУ
+             , CASE WHEN tmp.OperSumm_ToPay = tmp.TotalPay
+                         THEN tmp.Summ_10202
+                    ELSE -- иначе кол-во которое попадает в ПРОДАЖУ
+                         tmp.OperCount_sale
+                         -- Цена "скидки" в ГРН - округлили до 2-х знаков
+                       * ROUND (tmp.Summ_10202 / tmp.OperCount * 100) / 100
+               END AS Summ_10202
+
+               -- расчет скидка клиента которая попадает в ПРОДАЖУ
+             , CASE WHEN tmp.OperSumm_ToPay = tmp.TotalPay
+                         THEN tmp.Summ_10203
+                    ELSE -- иначе кол-во которое попадает в ПРОДАЖУ
+                         tmp.OperCount_sale
+                         -- Цена "скидки" в ГРН - округлили до 2-х знаков
+                       * ROUND (tmp.Summ_10203 / tmp.OperCount * 100) / 100
+               END AS Summ_10203
+
+               -- расчет Скидка дополнительная которая попадает в ПРОДАЖУ
+             , CASE WHEN tmp.OperSumm_ToPay = tmp.TotalPay
+                         THEN tmp.Summ_10204
+                    ELSE -- иначе кол-во которое попадает в ПРОДАЖУ
+                         tmp.OperCount_sale
+                         -- Цена "скидки" в ГРН - округлили до 2-х знаков
+                       * ROUND (tmp.Summ_10204 / tmp.OperCount * 100) / 100
+               END AS Summ_10204
+
+        FROM (SELECT _tmpItem.*
+                     -- расчет кол-во которое попадает в ПРОДАЖУ
+                   , CASE WHEN _tmpItem.OperSumm_ToPay = _tmpItem.TotalPay
+                               THEN _tmpItem.OperCount
+                          ELSE -- иначе Оплату разделим на Цену "к оплате" - и отбросим дробную часть
+                               FLOOR (_tmpItem.TotalPay / (_tmpItem.OperSumm_ToPay / _tmpItem.OperCount))
+                     END AS OperCount_sale
+              FROM _tmpItem
+             ) AS tmp
         ;
 
 
@@ -589,6 +646,59 @@ BEGIN
        ;
 
 
+     -- 5.4. формируются Проводки - МИНУС остаток сумма у Покупателя
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId
+                                       , MovementItemId, ContainerId, ParentId
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, PartionId, WhereObjectId_Analyzer
+                                       , AccountId_Analyzer
+                                       , ContainerId_Analyzer, ContainerIntId_Analyzer
+                                       , ObjectIntId_Analyzer, ObjectExtId_Analyzer
+                                       , Amount, OperDate, IsActive
+                                        )
+       -- проводки - c/c
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId
+            , _tmpItem_SummClient.MovementItemId
+            , _tmpItem_SummClient.ContainerId_Summ
+            , 0                                       AS ParentId
+            , _tmpItem_SummClient.AccountId           AS AccountId              -- счет
+            , zc_Enum_AnalyzerId_SaleCount_10100()    AS AnalyzerId             -- Кол-во, реализация - Типы аналитик (проводки)
+            , _tmpItem_SummClient.GoodsId             AS ObjectId_Analyzer      -- Товар
+            , _tmpItem_SummClient.PartionId           AS PartionId              -- Партия
+            , vbWhereObjectId_Analyzer_to             AS WhereObjectId_Analyzer -- Место учета
+            , _tmpItem.AccountId                      AS AccountId_Analyzer     -- Счет - корреспондент - остаток
+            , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
+            , _tmpItem.ContainerId_Summ               AS ContainerIntId_Analyzer-- Контейнер - Корреспондент - остаток
+            , _tmpItem_SummClient.GoodsSizeId         AS ObjectIntId_Analyzer   -- Аналитический справочник
+            , vbUnitId                                AS ObjectExtId_Analyzer   -- Аналитический справочник - Подразделение
+            , -1 * _tmpItem_SummClient.TotalPay       AS Amount
+            , vbOperDate                              AS OperDate
+            , FALSE                                   AS isActive
+       FROM _tmpItem
+            LEFT JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId
+       WHERE _tmpItem_SummClient.OperCount_sale > 0
+      UNION ALL
+       -- проводки - Прибыль будущих периодов - С ПЛЮСОМ
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId
+            , _tmpItem_SummClient.MovementItemId
+            , _tmpItem_SummClient.ContainerId_Summ_20102
+            , 0                                       AS ParentId
+            , _tmpItem_SummClient.AccountId_20102     AS AccountId              -- счет
+            , 0                                       AS AnalyzerId             -- нет - Типы аналитик (проводки)
+            , _tmpItem_SummClient.GoodsId             AS ObjectId_Analyzer      -- Товар
+            , _tmpItem_SummClient.PartionId           AS PartionId              -- Партия
+            , vbWhereObjectId_Analyzer_to             AS WhereObjectId_Analyzer -- Место учета
+            , _tmpItem.AccountId                      AS AccountId_Analyzer     -- Счет - корреспондент - остаток
+            , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
+            , _tmpItem.ContainerId_Summ               AS ContainerIntId_Analyzer-- Контейнер - Корреспондент - остаток
+            , _tmpItem_SummClient.GoodsSizeId         AS ObjectIntId_Analyzer   -- Аналитический справочник
+            , vbUnitId                                AS ObjectExtId_Analyzer   -- Аналитический справочник - Подразделение
+            , -1 * (_tmpItem_SummClient.OperSumm_ToPay - _tmpItem_SummClient.OperSumm) AS Amount
+            , vbOperDate                              AS OperDate
+            , TRUE                                    AS isActive
+       FROM _tmpItem
+            LEFT JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId;
+       WHERE _tmpItem_SummClient.OperCount_sale > 0
+       ;
 
 
      -- 5.0. Пересохраним св-ва из партии: <Цена> + <Цена за количество> + Курс - из истории

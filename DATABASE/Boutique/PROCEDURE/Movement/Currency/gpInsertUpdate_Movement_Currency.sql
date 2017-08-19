@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Currency(
     IN inCurrencyFromId           Integer   , -- валюта в которой вводится курc
     IN inCurrencyToId             Integer   , -- валюта для которой вводится курс
     IN inSession                  TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -22,6 +22,27 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Currency());
+
+
+     -- ВРЕМЕННО - для Sybase найдем Id
+     IF vbUserId = zc_User_Sybase()
+     THEN
+         ioId:= (SELECT Movement.Id
+                 FROM Movement
+                      INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                             AND MovementItem.DescId     = zc_MI_Master()
+                                             AND MovementItem.ObjectId   = inCurrencyFromId
+                      INNER JOIN MovementItemLinkObject AS MILinkObject_CurrencyTo
+                                                        ON MILinkObject_CurrencyTo.MovementItemId = MovementItem.Id
+                                                       AND MILinkObject_CurrencyTo.DescId         = zc_MILinkObject_Currency()
+                                                       AND MILinkObject_CurrencyTo.ObjectId       = inCurrencyToId
+                 WHERE Movement.DescId   = zc_Movement_Currency()
+                   AND Movement.OperDate = inOperDate
+                );
+         --
+         -- IF ioId <> 0 THEN PERFORM gpUnComplete_Movement_Currency (ioId, inSession); END IF;
+     END IF;
+
 
      -- проверка
      IF COALESCE (inCurrencyFromId, 0) = 0
@@ -41,7 +62,7 @@ BEGIN
      END IF;
 
      IF COALESCE (ioId, 0) = 0 THEN
-         ioInvNumber:= CAST (NEXTVAL ('movement_currency_seq') AS TVarChar);  
+         ioInvNumber:= CAST (NEXTVAL ('movement_currency_seq') AS TVarChar);
      END IF;
 
      -- 1. Распроводим Документ
@@ -69,7 +90,7 @@ BEGIN
 
      -- сохранили <Элемент документа>
      vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inCurrencyFromId,Null, ioId, inAmount, NULL);
-    
+
      -- Номинал валюты для которой вводится курс
      IF COALESCE (inParValue, 0) = 0 THEN inParValue := 1; END IF;
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ParValue(), vbMovementItemId, inParValue);

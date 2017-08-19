@@ -30,14 +30,41 @@ BEGIN
          THEN ioCode := COALESCE ((SELECT ObjectCode FROM Object WHERE Id = ioId), 0);
    END IF; 
 
-   -- проверка прав уникальности для свойства <Наименование>
-   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Personal(), inName);
+   -- проверка
+   IF ioId > 0 AND vbUserId = zc_User_Sybase()
+   THEN
+       -- <Подразделения>
+       inPositionId:= (SELECT FROM ObjectLink WHERE DescId = zc_ObjectLink_Personal_Position() AND Id = ioId);
+       -- <Подразделения>
+       inUnitId:= (SELECT FROM ObjectLink WHERE DescId = zc_ObjectLink_Personal_Unit() AND Id = ioId);
+   END IF;
+
+
+   -- проверка
+   IF COALESCE (inMemberId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка. <ФИО> не выбрано.';
+   END IF;
+   -- проверка
+   IF COALESCE (inUnitId, 0) = 0 AND vbUserId <> zc_User_Sybase()
+   THEN
+       RAISE EXCEPTION 'Ошибка. <Подразделение> не выбрано.';
+   END IF;
+   -- проверка
+   IF COALESCE (inPositionId, 0) = 0 AND vbUserId <> zc_User_Sybase()
+   THEN
+       RAISE EXCEPTION 'Ошибка. <Должность> не выбрана.';
+   END IF;
+
+
+   -- проверка прав уникальности для свойства <Название>
+   -- PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Personal(), (SELECT Object.ValueData FROM Object WHERE Object.Id = inMemberId));
                                           
    -- проверка уникальности для свойства <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Personal(), ioCode);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Personal(), ioCode, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Personal(), ioCode, (SELECT Object.ValueData FROM Object WHERE Object.Id = inMemberId));
    
    -- сохранили связь с <Физические лица>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_Member(), ioId, inMemberId);

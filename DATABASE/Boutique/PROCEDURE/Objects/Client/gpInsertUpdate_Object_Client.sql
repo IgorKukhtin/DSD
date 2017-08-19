@@ -27,8 +27,22 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Client());
+   -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Client());
    vbUserId:= lpGetUserBySession (inSession);
+
+     -- ВРЕМЕННО - для Sybase найдем Id
+     IF vbUserId = zc_User_Sybase()
+     THEN
+         ioId:= (SELECT Object.Id
+                 FROM Object
+                 WHERE Object.DescId    = zc_Object_Client()
+                   AND TRIM (LOWER (Object.ValueData)) = TRIM (LOWER (inName))
+                );
+         --
+         -- IF ioId <> 0 THEN PERFORM gpUnComplete_Movement_Currency (ioId, inSession); END IF;
+     END IF;
+
+
 
    -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
    IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) <> 0 THEN  ioCode := NEXTVAL ('Object_Client_seq'); 
@@ -40,9 +54,9 @@ BEGIN
          THEN ioCode:= (SELECT ObjectCode FROM Object WHERE Id = ioId);
    END IF; 
 
-   -- проверка прав уникальности для свойства <Название>
-   -- PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Client(), inName);
 
+   -- проверка прав уникальности для свойства <Название>
+   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Client(), inName);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Client(), ioCode, inName);
