@@ -16,6 +16,7 @@ CREATE OR REPLACE VIEW Object_ImportExportLink_View AS
      , ObjectLink_LinkType.ChildObjectId    AS LinkTypeId
      , LinkType.ValueData                   AS LinkTypeName
      , ObjectBlob_Text.ValueData            AS SomeText
+     , Object_ImportExportLink.isErased     AS isErased
    FROM Object AS Object_ImportExportLink
        LEFT JOIN ObjectLink AS ObjectLink_ObjectMain
                             ON ObjectLink_ObjectMain.ObjectId = Object_ImportExportLink.Id
@@ -47,6 +48,7 @@ ALTER TABLE Object_ImportExportLink_View OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.08.17         * isErased
  08.12.14                        * 
 */
 

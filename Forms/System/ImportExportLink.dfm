@@ -4,7 +4,7 @@ inherited ImportExportLinkForm: TImportExportLinkForm
   ClientWidth = 847
   AddOnFormData.isAlwaysRefresh = False
   ExplicitWidth = 863
-  ExplicitHeight = 430
+  ExplicitHeight = 433
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -114,6 +114,15 @@ inherited ImportExportLinkForm: TImportExportLinkForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 120
+          end
+          object isErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085
+            DataBinding.FieldName = 'isErased'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 49
           end
         end
       end
@@ -243,6 +252,37 @@ inherited ImportExportLinkForm: TImportExportLinkForm
         end>
       isShowModal = False
     end
+    object dsdSetErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = MasterDS
+    end
+    object dsdSetUnErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 32776
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = MasterDS
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -266,6 +306,18 @@ inherited ImportExportLinkForm: TImportExportLinkForm
       0)
     inherited Bar: TdxBar
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErased'
+        end
         item
           Visible = True
           ItemName = 'dxBarStatic'
@@ -300,6 +352,14 @@ inherited ImportExportLinkForm: TImportExportLinkForm
     end
     object bbProtocolOpenForm: TdxBarButton
       Action = actProtocolOpenForm
+      Category = 0
+    end
+    object bbSetErased: TdxBarButton
+      Action = dsdSetErased
+      Category = 0
+    end
+    object bbSetUnErased: TdxBarButton
+      Action = dsdSetUnErased
       Category = 0
     end
   end
@@ -369,5 +429,22 @@ inherited ImportExportLinkForm: TImportExportLinkForm
     PackSize = 1
     Left = 248
     Top = 168
+  end
+  object spErasedUnErased: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 480
+    Top = 120
   end
 end

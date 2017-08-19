@@ -8,7 +8,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ImportExportLink(
 RETURNS TABLE (Id Integer, IntegerKey Integer, StringKey TVarChar
             , MainId Integer, ValueId Integer, ObjectMainName TVarChar, DescMainName TVarChar
             , ObjectChildName TVarChar, DescChildName TVarChar
-            , LinkTypeId Integer, LinkTypeName TVarChar, SomeText TBlob) AS
+            , LinkTypeId Integer, LinkTypeName TVarChar, SomeText TBlob
+            , isErased Boolean
+            ) AS
 $BODY$BEGIN
    
    -- проверка прав пользователя на вызов процедуры
@@ -28,7 +30,7 @@ $BODY$BEGIN
      , Object_ImportExportLink_View.LinkTypeId
      , Object_ImportExportLink_View.LinkTypeName
      , Object_ImportExportLink_View.SomeText
-
+     , Object_ImportExportLink_View.isErased
    FROM Object_ImportExportLink_View;
   
 END;$BODY$

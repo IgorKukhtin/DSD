@@ -186,6 +186,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_Price_EndDateMCSAuto() RETURNS Integer 
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_Price(), 'zc_ObjectDate_Price_EndDateMCSAuto', 'Дата окончания действия выставленного фармацевтом НТЗ' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Price_EndDateMCSAuto');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Price_CheckPrice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Price_CheckPrice'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Price(), 'zc_ObjectDate_Price_CheckPrice', 'дата/время когда Появился на рынке - и высветился признак исправить НТЗ (да/нет)' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Price_CheckPrice');
+
+
 
 
 CREATE OR REPLACE FUNCTION zc_ObjectDate_ReportSoldParams_PlanDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ReportSoldParams_PlanDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;

@@ -1273,10 +1273,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TIntenalSPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIntenalSPEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIntenalSPEditForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSP_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSP_ObjectForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSPForm');
   exit;
@@ -1323,7 +1323,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceGroupSettingsTopForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceGroupSettingsTopForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalSettingsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalSettingsForm');
   exit;
@@ -1340,10 +1340,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMovementProtocolForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementItemProtocolForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportExportLinkForm'));
   TdsdFormStorageFactory.GetStorage.Load('TImportExportLinkForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportExportLinkTypeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TImportExportLinkTypeForm');
 

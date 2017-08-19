@@ -93,6 +93,14 @@ type
     cxLabel8: TcxLabel;
     cxLabel4: TcxLabel;
     DiffSP2: TcxGridDBColumn;
+    isCorrectMCS: TcxGridDBColumn;
+    isExcludeMCS: TcxGridDBColumn;
+    CheckPriceDate: TcxGridDBColumn;
+    spUpdate_CheckPrice: TdsdStoredProc;
+    actUpdate_CheckPrice: TdsdExecStoredProc;
+    bb: TdxBarButton;
+    macUpdate_CheckPriceList: TMultiAction;
+    macUpdate_CheckPrice: TMultiAction;
   private
     { Private declarations }
   public

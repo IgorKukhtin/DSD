@@ -33,7 +33,7 @@ BEGIN
        
        ioUserId := vbUserId;
        
-       ioId := (SELECT MAX (tmp.ord) + 1
+       ioId := (SELECT COALESCE (MAX (tmp.ord), 0) + 1
                FROM  (SELECT Object_GoodsPrint.InsertDate
                            , ROW_NUMBER() OVER( PARTITION BY Object_GoodsPrint.UserId ORDER BY Object_GoodsPrint.InsertDate)  AS ord  
                       FROM Object_GoodsPrint

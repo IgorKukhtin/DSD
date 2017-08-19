@@ -32,7 +32,7 @@ type
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
     dxBarButton1: TdxBarButton;
-    actGet_UserUnit: TdsdExecStoredProc;
+    actGet_User: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     UnitName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
@@ -74,6 +74,7 @@ type
     spDelete_Object_GoodsPrint: TdsdStoredProc;
     actDeleteGoodsPrint: TdsdExecStoredProc;
     bbDeleteGoodsPrint: TdxBarButton;
+    spGet_GoodsPrint_User: TdsdStoredProc;
   private
     { Private declarations }
   public

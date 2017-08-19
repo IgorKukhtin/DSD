@@ -26,9 +26,6 @@ object GoodsPrintChoiceForm: TGoodsPrintChoiceForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitLeft = -248
-    ExplicitTop = 78
-    ExplicitWidth = 797
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource

@@ -40,7 +40,9 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , isPromo boolean
              , isTop boolean, TOPDateChange TDateTime
              , PercentMarkup TFloat, PercentMarkupDateChange TDateTime
+             , CheckPriceDate TDateTime
              , Color_ExpirationDate Integer
+             , isCorrectMCS Boolean, isExcludeMCS Boolean
              ) AS
 $BODY$
 DECLARE
@@ -118,7 +120,11 @@ BEGIN
                ,NULL::TDateTime                  AS TOPDateChange
                ,NULL::TFloat                     AS PercentMarkup 
                ,NULL::TDateTime                  AS PercentMarkupDateChange
+               ,NULL::TDateTime                  AS CheckPriceDate
                ,zc_Color_Black()                 AS Color_ExpirationDate 
+               
+               ,NULL::Boolean                    AS isCorrectMCS
+               ,NULL::Boolean                    AS isExcludeMCS 
             WHERE 1=0;
     ELSEIF inisShowAll = True
     THEN
@@ -443,12 +449,25 @@ BEGIN
 
                , tmpPrice_View.PercentMarkup           AS PercentMarkup
                , tmpPrice_View.PercentMarkupDateChange AS PercentMarkupDateChange
+               , ObjectDate_CheckPrice.ValueData       AS CheckPriceDate
                
                , CASE WHEN ObjectBoolean_Goods_SP.ValueData = TRUE THEN 25088 --zc_Color_GreenL()
                       WHEN Object_Remains.MinExpirationDate < CURRENT_DATE  + zc_Interval_ExpirationDate() THEN zc_Color_Blue() 
                       WHEN (tmpPrice_View.isTop = TRUE OR Object_Goods_View.isTop = TRUE) THEN 15993821 -- розовый
                       ELSE zc_Color_Black() 
                  END     AS Color_ExpirationDate                --vbAVGDateEnd
+
+               , CASE WHEN DATE_PART ('DAY', (CURRENT_DATE - ObjectDate_LastPrice.ValueData)) <= 30 
+                       AND Object_Remains.Remains = 0 
+                       AND COALESCE (tmpPrice_View.MCSValue,0) = 0
+                      THEN TRUE
+                      ELSE FALSE
+                 END                        ::Boolean  AS isCorrectMCS
+                 
+               , CASE WHEN DATE_PART ('DAY', (CURRENT_DATE - ObjectDate_CheckPrice.ValueData)) <= 11  THEN TRUE
+                      WHEN COALESCE (ObjectDate_CheckPrice.ValueData, NULL) = NULL THEN FALSE
+                      ELSE FALSE
+                 END                        ::Boolean  AS isExcludeMCS 
 
             FROM Object_Goods_View
                 INNER JOIN ObjectLink ON ObjectLink.ObjectId = Object_Goods_View.Id 
@@ -458,6 +477,10 @@ BEGIN
                 LEFT OUTER JOIN tmpRemeins AS Object_Remains
                                            ON Object_Remains.ObjectId = Object_Goods_View.Id
    
+                LEFT JOIN ObjectDate AS ObjectDate_CheckPrice
+                                     ON ObjectDate_CheckPrice.ObjectId = tmpPrice_View.Id
+                                    AND ObjectDate_CheckPrice.DescId = zc_ObjectDate_Price_CheckPrice()
+
                 -- получаем значения цены и НТЗ из истории значений на дату                                                           
                 LEFT JOIN ObjectHistory AS ObjectHistory_Price
                                         ON ObjectHistory_Price.ObjectId = tmpPrice_View.Id 
@@ -506,6 +529,10 @@ BEGIN
                                     ON ObjectLink_Goods_IntenalSP.ObjectId = ObjectLink_Main.ChildObjectId
                                    AND ObjectLink_Goods_IntenalSP.DescId = zc_ObjectLink_Goods_IntenalSP()
                LEFT JOIN Object AS Object_IntenalSP ON Object_IntenalSP.Id = ObjectLink_Goods_IntenalSP.ChildObjectId
+               
+               LEFT JOIN ObjectDate AS ObjectDate_LastPrice
+                                    ON ObjectDate_LastPrice.ObjectId = ObjectLink_Main.ChildObjectId
+                                   AND ObjectDate_LastPrice.DescId = zc_ObjectDate_Goods_LastPrice()
         
             WHERE (inisShowDel = True OR Object_Goods_View.isErased = False)
               AND (Object_Goods_View.Id = inGoodsId OR inGoodsId = 0)
@@ -587,6 +614,7 @@ BEGIN
                             , MCS_EndDateMCSAuto.ValueData                        AS EndDateMCSAuto
                             , COALESCE(Price_MCSAuto.ValueData,False)          :: Boolean   AS isMCSAuto
                             , COALESCE(Price_MCSNotRecalcOld.ValueData,False)  :: Boolean   AS isMCSNotRecalcOld
+                            , ObjectDate_CheckPrice.ValueData                     AS CheckPrice
                        FROM ObjectLink        AS ObjectLink_Price_Unit
                             INNER JOIN ObjectLink       AS Price_Goods
                                     ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
@@ -615,6 +643,10 @@ BEGIN
                             LEFT JOIN ObjectDate        AS MCS_EndDateMCSAuto
                                     ON MCS_EndDateMCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
                                    AND MCS_EndDateMCSAuto.DescId = zc_ObjectDate_Price_EndDateMCSAuto()
+
+                            LEFT JOIN ObjectDate AS ObjectDate_CheckPrice
+                                   ON ObjectDate_CheckPrice.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                  AND ObjectDate_CheckPrice.DescId = zc_ObjectDate_Price_CheckPrice()
 
                             LEFT JOIN ObjectBoolean      AS MCS_isClose
                                     ON MCS_isClose.ObjectId = ObjectLink_Price_Unit.ObjectId
@@ -827,6 +859,7 @@ BEGIN
 
                , tmpPrice_View.PercentMarkup           AS PercentMarkup
                , tmpPrice_View.PercentMarkupDateChange AS PercentMarkupDateChange
+               , tmpPrice_View.CheckPrice              AS CheckPriceDate
 
                , CASE WHEN ObjectBoolean_Goods_SP.ValueData = TRUE THEN 25088 --zc_Color_GreenL()
                       WHEN Object_Remains.MinExpirationDate < CURRENT_DATE  + zc_Interval_ExpirationDate() THEN zc_Color_Blue() 
@@ -834,6 +867,18 @@ BEGIN
                       ELSE zc_Color_Black() 
                  END      AS Color_ExpirationDate                --vbAVGDateEnd
                
+               , CASE WHEN DATE_PART ('DAY', (CURRENT_DATE - ObjectDate_LastPrice.ValueData)) <= 30 
+                       AND Object_Remains.Remains = 0 
+                       AND COALESCE (tmpPrice_View.MCSValue,0) = 0
+                      THEN TRUE
+                      ELSE FALSE
+                 END                        ::Boolean  AS isCorrectMCS
+                 
+               , CASE WHEN DATE_PART ('DAY', (CURRENT_DATE - tmpPrice_View.CheckPrice)) <= 11  THEN TRUE
+                      WHEN COALESCE (tmpPrice_View.CheckPrice, NULL) = NULL THEN FALSE
+                      ELSE FALSE
+                 END                        ::Boolean  AS isExcludeMCS 
+                 
             FROM tmpPrice_View
                 LEFT OUTER JOIN Object_Goods_View ON Object_Goods_View.id = tmpPrice_View.Goodsid
                 LEFT OUTER JOIN tmpRemeins AS Object_Remains
@@ -887,6 +932,10 @@ BEGIN
                                    AND ObjectLink_Goods_IntenalSP.DescId = zc_ObjectLink_Goods_IntenalSP()
                LEFT JOIN Object AS Object_IntenalSP ON Object_IntenalSP.Id = ObjectLink_Goods_IntenalSP.ChildObjectId
         
+               LEFT JOIN ObjectDate AS ObjectDate_LastPrice
+                                    ON ObjectDate_LastPrice.ObjectId = ObjectLink_Main.ChildObjectId
+                                   AND ObjectDate_LastPrice.DescId = zc_ObjectDate_Goods_LastPrice()
+                                   
             WHERE (inisShowDel = True OR Object_Goods_View.isErased = False)
               AND (Object_Goods_View.Id = inGoodsId OR inGoodsId = 0)
             ORDER BY GoodsGroupName, GoodsName;

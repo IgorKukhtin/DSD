@@ -6,7 +6,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -196
   ExplicitWidth = 1127
   ExplicitHeight = 463
   PixelsPerInch = 96
@@ -14,7 +13,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   inherited Panel: TPanel [0]
     Width = 1111
     Height = 73
-    ExplicitWidth = 1103
+    ExplicitWidth = 1111
     ExplicitHeight = 73
     inherited deStart: TcxDateEdit
       Left = 994
@@ -194,18 +193,17 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     Height = 326
     TabOrder = 3
     ExplicitTop = 99
-    ExplicitWidth = 1103
+    ExplicitWidth = 1111
     ExplicitHeight = 326
     ClientRectBottom = 326
     ClientRectRight = 1111
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1103
+      ExplicitWidth = 1111
       ExplicitHeight = 326
       inherited cxGrid: TcxGrid
         Width = 1111
         Height = 326
-        ExplicitLeft = 3
-        ExplicitWidth = 1103
+        ExplicitWidth = 1111
         ExplicitHeight = 326
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -598,20 +596,25 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       end>
   end
   inherited ActionList: TActionList
-    object actGet_UserUnit: TdsdExecStoredProc
+    Top = 319
+    object actGet_User: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
+      StoredProc = spGet_GoodsPrint_User
       StoredProcList = <
         item
+          StoredProc = spGet_GoodsPrint_User
         end>
-      Caption = 'actGet_UserUnit'
+      Caption = 'actGet_User'
     end
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
+      StoredProc = spGet_GoodsPrint_User
       StoredProcList = <
         item
+          StoredProc = spGet_GoodsPrint_User
         end
         item
           StoredProc = spSelect
@@ -1257,6 +1260,21 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUserId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUserName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserName'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 942
     Top = 22
@@ -1440,9 +1458,41 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outUserName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserName'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 840
     Top = 200
+  end
+  object spGet_GoodsPrint_User: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_GoodsPrint_User'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'UserId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'UserId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UserName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 376
+    Top = 288
   end
 end

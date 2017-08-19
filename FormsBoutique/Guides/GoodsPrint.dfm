@@ -3,7 +3,7 @@ object GoodsPrintForm: TGoodsPrintForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1086#1074#1072#1088#1099' '#1076#1083#1103' '#1087#1077#1095#1072#1090#1080' '#1094#1077#1085#1085#1080#1082#1086#1074'>'
   ClientHeight = 376
-  ClientWidth = 774
+  ClientWidth = 727
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,7 +13,7 @@ object GoodsPrintForm: TGoodsPrintForm
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.isAlwaysRefresh = False
-  AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
@@ -21,12 +21,13 @@ object GoodsPrintForm: TGoodsPrintForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 61
-    Width = 774
+    Width = 727
     Height = 315
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 774
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -251,10 +252,11 @@ object GoodsPrintForm: TGoodsPrintForm
   object Panel: TPanel
     Left = 0
     Top = 0
-    Width = 774
+    Width = 727
     Height = 35
     Align = alTop
     TabOrder = 5
+    ExplicitWidth = 774
     object cxLabel1: TcxLabel
       Left = 332
       Top = 7
@@ -358,6 +360,14 @@ object GoodsPrintForm: TGoodsPrintForm
         end
         item
           Visible = True
+          ItemName = 'bbSetErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -415,7 +425,8 @@ object GoodsPrintForm: TGoodsPrintForm
       ShortCut = 115
     end
     object bbSetErased: TdxBarButton
-      Action = dsdSetErased
+      Action = actDeleteGoodsPrint
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103' '#1080#1079' '#1087#1077#1095#1072#1090#1080' '#1094#1077#1085#1085#1080#1082#1086#1074
       Category = 0
     end
     object bbSetUnErased: TdxBarButton
@@ -462,6 +473,23 @@ object GoodsPrintForm: TGoodsPrintForm
     Images = dmMain.ImageList
     Left = 8
     Top = 120
+    object actRefreshStart: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_GoodsPrint_User
+      StoredProcList = <
+        item
+          StoredProc = spGet_GoodsPrint_User
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -746,6 +774,21 @@ object GoodsPrintForm: TGoodsPrintForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object actDeleteGoodsPrint: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spDelete_Object_GoodsPrint
+      StoredProcList = <
+        item
+          StoredProc = spDelete_Object_GoodsPrint
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = 'actGoodsPrint'
+      ImageIndex = 52
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_GoodsPrint'
@@ -796,8 +839,8 @@ object GoodsPrintForm: TGoodsPrintForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 680
-    Top = 96
+    Left = 600
+    Top = 208
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 288
@@ -855,7 +898,7 @@ object GoodsPrintForm: TGoodsPrintForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 176
+    Left = 256
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -942,5 +985,60 @@ object GoodsPrintForm: TGoodsPrintForm
         MultiSelectSeparator = ','
       end>
     Left = 448
+  end
+  object spDelete_Object_GoodsPrint: TdsdStoredProc
+    StoredProcName = 'gpDelete_Object_GoodsPrint'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = '0'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioUserId'
+        Value = '0'
+        Component = GuidesUser
+        ComponentItem = 'Key'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outUserName'
+        Value = Null
+        Component = GuidesUser
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 464
+    Top = 232
+  end
+  object spGet_GoodsPrint_User: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_GoodsPrint_User'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'UserId'
+        Value = '0'
+        Component = GuidesUser
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UserName'
+        Value = Null
+        Component = GuidesUser
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 296
+    Top = 128
   end
 end
