@@ -13,7 +13,7 @@ $BODY$
   DECLARE vbJuridicalId     Integer;
   DECLARE vbToId            Integer;
   DECLARE vbContractId      Integer;
-  DECLARE vbOperDate_Branch TDateTime;
+  DECLARE vbOperDate        TDateTime;
   DECLARE vbOrderId         Integer;
   DECLARE vbisDeferred      Boolean;
 BEGIN
@@ -25,32 +25,32 @@ BEGIN
      SELECT MLO_From.ObjectId                     AS JuridicalId
           , MLO_To.ObjectId                       AS ToId
           , COALESCE (MLO_Contract.ObjectId, 0)   AS ContractId
-          , MD_Branch.ValueData                   AS OperDate_Branch
-            INTO vbJuridicalId, vbToId, vbContractId, vbOperDate_Branch
-     FROM MovementLinkObject AS MLO_From 
+          , Movement.OperDate                     AS OperDate
+            INTO vbJuridicalId, vbToId, vbContractId, vbOperDate
+     FROM Movement
+          LEFT JOIN MovementLinkObject AS MLO_From 
+                                       ON MLO_From.MovementId = inMovementId 
+                                      AND MLO_From.DescId = zc_MovementLinkObject_From()
           LEFT JOIN MovementLinkObject AS MLO_To
                                        ON MLO_To.MovementId = inMovementId
                                       AND MLO_To.DescId = zc_MovementLinkObject_To()
-          LEFT JOIN MovementDate AS MD_Branch
-                                 ON MD_Branch.MovementId = inMovementId
-                                AND MD_Branch.DescId = zc_MovementDate_Branch() 
           LEFT JOIN MovementLinkObject AS MLO_Contract
                                        ON MLO_Contract.MovementId = inMovementId
                                       AND MLO_Contract.DescId = zc_MovementLinkObject_Contract()
-     WHERE MLO_From.MovementId = inMovementId 
-       AND MLO_From.DescId = zc_MovementLinkObject_From();
+     WHERE Movement.Id = inMovementId 
+       AND Movement.DescId = zc_Movement_Income();
 
    
      -- Снять заказ из отложенных, привязанный к этому приходу
-        SELECT MLM.MovementChildId 
-             , COALESCE (MB_Deferred.ValueData, False) AS isDeferred
-      INTO vbOrderId, vbisDeferred
-        FROM MovementLinkMovement AS MLM 
-             LEFT JOIN MovementBoolean AS MB_Deferred
-                    ON MB_Deferred.MovementId = MLM.MovementChildId
-                   AND MB_Deferred.DescId = zc_MovementBoolean_Deferred()
-        WHERE MLM.descid = zc_MovementLinkMovement_Order()
-          AND MLM.MovementId = inMovementId; 
+     SELECT MLM.MovementChildId 
+          , COALESCE (MB_Deferred.ValueData, False) AS isDeferred
+          INTO vbOrderId, vbisDeferred
+     FROM MovementLinkMovement AS MLM 
+          LEFT JOIN MovementBoolean AS MB_Deferred
+                 ON MB_Deferred.MovementId = MLM.MovementChildId
+                AND MB_Deferred.DescId = zc_MovementBoolean_Deferred()
+     WHERE MLM.descid = zc_MovementLinkMovement_Order()
+       AND MLM.MovementId = inMovementId; 
     
      -- в найденной заявке меняем статус Отложенн на НЕ отложен
      IF COALESCE (vbOrderId, 0) <> 0 AND vbisDeferred = TRUE 
@@ -91,7 +91,7 @@ BEGIN
                                  AND ObjectBoolean_Deferred.DescId = zc_ObjectBoolean_Juridical_Deferred()                                     
           
      WHERE Movement.DescId   = zc_Movement_OrderExternal()
-       AND Movement.OperDate < vbOperDate_Branch
+       AND Movement.OperDate <= vbOperDate
        AND Movement.StatusId in (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
        AND COALESCE (ObjectBoolean_Deferred.ValueData, FALSE) = FALSE
        ;

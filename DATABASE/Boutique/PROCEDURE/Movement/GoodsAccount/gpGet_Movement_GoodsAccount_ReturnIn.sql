@@ -21,11 +21,15 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbUnitId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Get_Movement_GoodsAccount());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- определять магазин по принадлежности пользователя к сотруднику
+     vbUnitId:= lpGetUnitBySession (inSession);
+     
      IF COALESCE (inMovementId, 0) = 0
      THEN
          RETURN QUERY 
@@ -45,8 +49,8 @@ BEGIN
              , CAST (0 as TFloat)               AS TotalDebt
              , CAST (0 as TFloat)               AS DiscountTax
 
-             , 0                                AS FromId
-             , CAST ('' as TVarChar)            AS FromName
+             , Object_Unit.Id                                   AS FromId
+             , COALESCE (Object_Unit.ValueData, '') :: TVarChar AS FromName
              , 0                                AS ToId
              , CAST ('' as TVarChar)            AS ToName
            
@@ -61,7 +65,8 @@ BEGIN
              , CURRENT_TIMESTAMP ::TDateTime    AS InsertDate
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
-               LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId;
+               LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
+               LEFT JOIN Object AS Object_Unit   ON Object_Unit.Id   = vbUnitId;
      ELSE
        RETURN QUERY 
          SELECT

@@ -21,11 +21,15 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbUnitId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Get_Movement_GoodsAccount());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- определять магазин по принадлежности пользователя к сотруднику
+     vbUnitId:= lpGetUnitBySession (inSession);
+     
      IF COALESCE (inMovementId, 0) = 0
      THEN
          RETURN QUERY 
@@ -47,8 +51,8 @@ BEGIN
 
              , 0                                AS FromId
              , CAST ('' as TVarChar)            AS FromName
-             , 0                                AS ToId
-             , CAST ('' as TVarChar)            AS ToName
+             , Object_Unit.Id                                   AS ToId
+             , COALESCE (Object_Unit.ValueData, '') :: TVarChar AS ToName
            
              , CAST (NULL AS TDateTime)         AS HappyDate	
              , CAST ('' as TVarChar)            AS CityName
@@ -61,7 +65,8 @@ BEGIN
              , CURRENT_TIMESTAMP ::TDateTime    AS InsertDate
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
-               LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId;
+               LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
+               LEFT JOIN Object AS Object_Unit   ON Object_Unit.Id   = vbUnitId;
      ELSE
        RETURN QUERY 
          SELECT
