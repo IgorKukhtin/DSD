@@ -15,9 +15,6 @@ $BODY$
   DECLARE vbAccountDirectionId_To   Integer;
   DECLARE vbJuridicalId_Basis       Integer; -- значение пока НЕ определяется
   DECLARE vbBusinessId              Integer; -- значение пока НЕ определяется
-
-  DECLARE vbWhereObjectId_Analyzer_from Integer; -- Аналитика для проводок
-  DECLARE vbWhereObjectId_Analyzer_to   Integer; -- Аналитика для проводок
 BEGIN
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
@@ -66,12 +63,6 @@ BEGIN
              AND Movement.DescId   = zc_Movement_Sale()
              AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
           ) AS _tmp;
-
-
-     -- доопределили - Аналитику для проводок
-     vbWhereObjectId_Analyzer_from:= CASE WHEN vbUnitId   <> 0 THEN vbUnitId   END;
-     -- доопределили - Аналитику для проводок
-     vbWhereObjectId_Analyzer_to  := CASE WHEN vbClientId <> 0 THEN vbClientId END;
 
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
@@ -244,8 +235,9 @@ BEGIN
      INSERT INTO _tmpItem_SummClient (MovementItemId, ContainerId_Summ, ContainerId_Summ_20102, ContainerId_Goods, AccountId, AccountId_20102, InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                                     , GoodsId, PartionId, GoodsSizeId, PartionId_MI
                                     , OperCount, OperSumm, OperSumm_ToPay, TotalPay
-                                    , OperCount_sale TFloat, OperSumm_sale TFloat, OperSummPriceList_sale TFloat
-                                    , Summ_10201 TFloat, Summ_10202 TFloat, Summ_10203 TFloat, Summ_10204 TFloat
+                                    , OperCount_sale, OperSumm_sale, OperSummPriceList_sale
+                                    , Summ_10201, Summ_10202, Summ_10203, Summ_10204
+                                    , ContainerId_ProfitLoss_10101, ContainerId_ProfitLoss_10201, ContainerId_ProfitLoss_10202, ContainerId_ProfitLoss_10203, ContainerId_ProfitLoss_10204, ContainerId_ProfitLoss_10301
                                      )
         SELECT tmp.MovementItemId
              , 0 AS ContainerId_Summ, 0 AS ContainerId_Summ_20102, 0 AS ContainerId_Goods, 0 AS AccountId, 0 AS AccountId_20102
@@ -260,9 +252,9 @@ BEGIN
                -- все кол-во
              , tmp.OperCount
 
-             , (_tmpItem.OperSumm)          AS OperSumm       -- сумма по вх.
-             , (_tmpItem.OperSumm_ToPay)    AS OperSumm_ToPay -- сумма к оплате
-             , (_tmpItem.TotalPay)          AS TotalPay       -- сумма оплаты
+             , (tmp.OperSumm)          AS OperSumm       -- сумма по вх.
+             , (tmp.OperSumm_ToPay)    AS OperSumm_ToPay -- сумма к оплате
+             , (tmp.TotalPay)          AS TotalPay       -- сумма оплаты
 
                -- расчет кол-во которое попадает в ПРОДАЖУ
              , tmp.OperCount_sale
@@ -320,6 +312,8 @@ BEGIN
                          -- Цена "скидки" в ГРН - округлили до 2-х знаков
                        * ROUND (tmp.Summ_10204 / tmp.OperCount * 100) / 100
                END AS Summ_10204
+
+             , 0 AS ContainerId_ProfitLoss_10101, 0 AS ContainerId_ProfitLoss_10201, 0 AS ContainerId_ProfitLoss_10202, 0 AS ContainerId_ProfitLoss_10203, 0 AS ContainerId_ProfitLoss_10204, 0 AS ContainerId_ProfitLoss_10301
 
         FROM (SELECT _tmpItem.*
                      -- расчет кол-во которое попадает в ПРОДАЖУ
@@ -445,8 +439,98 @@ BEGIN
                                                                                           )
                              ;
 
+     -- 3.3. создаем контейнеры для Проводки - Прибыль
+     UPDATE _tmpItem_SummClient SET ContainerId_ProfitLoss_10101 = tmpItem_byProfitLoss.ContainerId_ProfitLoss_10101
+                                  , ContainerId_ProfitLoss_10201 = tmpItem_byProfitLoss.ContainerId_ProfitLoss_10201
+                                  , ContainerId_ProfitLoss_10202 = tmpItem_byProfitLoss.ContainerId_ProfitLoss_10202
+                                  , ContainerId_ProfitLoss_10203 = tmpItem_byProfitLoss.ContainerId_ProfitLoss_10203
+                                  , ContainerId_ProfitLoss_10204 = tmpItem_byProfitLoss.ContainerId_ProfitLoss_10204
+                                  , ContainerId_ProfitLoss_10301 = tmpItem_byProfitLoss.ContainerId_ProfitLoss_10301
+     FROM (SELECT -- для Сумма по ценам продажи
+                  lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                        , inParentId          := NULL
+                                        , inObjectId          := zc_Enum_Account_100301 () -- прибыль текущего периода
+                                        , inPartionId         := NULL
+                                        , inJuridicalId_basis := vbJuridicalId_Basis
+                                        , inBusinessId        := vbBusinessId
+                                        , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
+                                        , inObjectId_1        := zc_Enum_ProfitLoss_10101() -- Сумма по ценам продажи
+                                        , inDescId_2          := zc_ContainerLinkObject_Unit()
+                                        , inObjectId_2        := vbUnitId
+                                         ) AS ContainerId_ProfitLoss_10101
+                  -- для Себестоимость реализации
+                , lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                        , inParentId          := NULL
+                                        , inObjectId          := zc_Enum_Account_100301 () -- прибыль текущего периода
+                                        , inPartionId         := NULL
+                                        , inJuridicalId_basis := vbJuridicalId_Basis
+                                        , inBusinessId        := vbBusinessId
+                                        , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
+                                        , inObjectId_1        := zc_Enum_ProfitLoss_10301() -- Себестоимость реализации
+                                        , inDescId_2          := zc_ContainerLinkObject_Unit()
+                                        , inObjectId_2        := vbUnitId
+                                         ) AS ContainerId_ProfitLoss_10301
+                  -- для Сезонная скидка
+                , lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                        , inParentId          := NULL
+                                        , inObjectId          := zc_Enum_Account_100301 () -- прибыль текущего периода
+                                        , inPartionId         := NULL
+                                        , inJuridicalId_basis := vbJuridicalId_Basis
+                                        , inBusinessId        := vbBusinessId
+                                        , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
+                                        , inObjectId_1        := zc_Enum_ProfitLoss_10201() -- Сезонная скидка
+                                        , inDescId_2          := zc_ContainerLinkObject_Unit()
+                                        , inObjectId_2        := vbUnitId
+                                         ) AS ContainerId_ProfitLoss_10201
+                  -- для Скидка outlet
+                , lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                        , inParentId          := NULL
+                                        , inObjectId          := zc_Enum_Account_100301 () -- прибыль текущего периода
+                                        , inPartionId         := NULL
+                                        , inJuridicalId_basis := vbJuridicalId_Basis
+                                        , inBusinessId        := vbBusinessId
+                                        , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
+                                        , inObjectId_1        := zc_Enum_ProfitLoss_10202() -- Скидка outlet
+                                        , inDescId_2          := zc_ContainerLinkObject_Unit()
+                                        , inObjectId_2        := vbUnitId
+                                         ) AS ContainerId_ProfitLoss_10202
 
-     -- 4.1. формируются Проводки - остаток количество
+                  -- для Скидка клиента
+                , lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                        , inParentId          := NULL
+                                        , inObjectId          := zc_Enum_Account_100301 () -- прибыль текущего периода
+                                        , inPartionId         := NULL
+                                        , inJuridicalId_basis := vbJuridicalId_Basis
+                                        , inBusinessId        := vbBusinessId
+                                        , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
+                                        , inObjectId_1        := zc_Enum_ProfitLoss_10203() -- Скидка клиента
+                                        , inDescId_2          := zc_ContainerLinkObject_Unit()
+                                        , inObjectId_2        := vbUnitId
+                                         ) AS ContainerId_ProfitLoss_10203
+
+                  -- для Скидка дополнительная
+                , lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                        , inParentId          := NULL
+                                        , inObjectId          := zc_Enum_Account_100301 () -- прибыль текущего периода
+                                        , inPartionId         := NULL
+                                        , inJuridicalId_basis := vbJuridicalId_Basis
+                                        , inBusinessId        := vbBusinessId
+                                        , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
+                                        , inObjectId_1        := zc_Enum_ProfitLoss_10204() -- Скидка дополнительная
+                                        , inDescId_2          := zc_ContainerLinkObject_Unit()
+                                        , inObjectId_2        := vbUnitId
+                                         ) AS ContainerId_ProfitLoss_10204
+
+                , tmpItem_byDestination.InfoMoneyDestinationId
+           FROM (SELECT DISTINCT _tmpItem_SummClient.InfoMoneyDestinationId
+                 FROM _tmpItem_SummClient
+                 WHERE _tmpItem_SummClient.OperCount_sale > 0
+                ) AS tmpItem_byDestination
+          ) AS tmpItem_byProfitLoss
+     WHERE _tmpItem_SummClient.InfoMoneyDestinationId = tmpItem_byProfitLoss.InfoMoneyDestinationId;
+
+
+     -- 4.1. формируются Проводки - МИНУС остаток количество Магазин
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId
                                        , MovementItemId, ContainerId, ParentId
                                        , AccountId, AnalyzerId, ObjectId_Analyzer, PartionId, WhereObjectId_Analyzer
@@ -464,20 +548,21 @@ BEGIN
             , 0                                       AS AnalyzerId             -- нет - Типы аналитик (проводки)
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- Товар
             , _tmpItem.PartionId                      AS PartionId              -- Партия
-            , vbWhereObjectId_Analyzer_from           AS WhereObjectId_Analyzer -- Место учета
-            , _tmpItem_SummClient.AccountId           AS AccountId_Analyzer     -- Счет - корреспондент - по Покупателю !!!хотя их ДВА!!!
-            , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
-            , _tmpItem_SummClient.ContainerId_Goods   AS ContainerIntId_Analyzer-- Контейнер - Корреспондент - Покупатель в продаже/возврат
+            , vbUnitId                                AS WhereObjectId_Analyzer -- Место учета
+            , _tmpItem_SummClient.AccountId           AS AccountId_Analyzer     -- Счет - корреспондент - Покупатель !!!хотя их ДВА!!!
+            , _tmpItem_SummClient.ContainerId_Summ    AS ContainerId_Analyzer   -- Контейнер - Корреспондент - Покупатель в продаже/возврат !!!хотя их ТРИ!!!
+            , _tmpItem.ContainerId_Summ               AS ContainerIntId_Analyzer-- Контейнер - "товар"
             , _tmpItem.GoodsSizeId                    AS ObjectIntId_Analyzer   -- Аналитический справочник
             , vbClientId                              AS ObjectExtId_Analyzer   -- Аналитический справочник - Покупатель
             , -1 * _tmpItem.OperCount                 AS Amount
             , vbOperDate                              AS OperDate
             , FALSE                                   AS isActive
        FROM _tmpItem
-            LEFT JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId;
+            LEFT JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId
+           ;
 
 
-     -- 4.2. формируются Проводки - остаток сумма
+     -- 4.2. формируются Проводки - МИНУС остаток сумма c/c Магазин
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId
                                        , MovementItemId, ContainerId, ParentId
                                        , AccountId, AnalyzerId, ObjectId_Analyzer, PartionId, WhereObjectId_Analyzer
@@ -495,21 +580,21 @@ BEGIN
             , 0                                       AS AnalyzerId             -- нет - Типы аналитик (проводки)
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- Товар
             , _tmpItem.PartionId                      AS PartionId              -- Партия
-            , vbWhereObjectId_Analyzer_from           AS WhereObjectId_Analyzer -- Место учета
-            , _tmpItem_SummClient.AccountId           AS AccountId_Analyzer     -- Счет - корреспондент - по Покупателю !!!хотя их ДВА!!!
-            , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
-            , _tmpItem_SummClient.ContainerId_Summ    AS ContainerIntId_Analyzer-- Контейнер - Корреспондент - Покупатель в продаже/возврат !!!хотя их ДВА!!!
+            , vbUnitId                                AS WhereObjectId_Analyzer -- Место учета
+            , _tmpItem_SummClient.AccountId           AS AccountId_Analyzer     -- Счет - корреспондент - Покупатель !!!хотя их ДВА!!!
+            , _tmpItem_SummClient.ContainerId_Summ    AS ContainerId_Analyzer   -- Контейнер - Корреспондент - Покупатель в продаже/возврат !!!хотя их ТРИ!!!
+            , _tmpItem.ContainerId_Summ               AS ContainerIntId_Analyzer-- Контейнер - тот же самый
             , _tmpItem.GoodsSizeId                    AS ObjectIntId_Analyzer   -- Аналитический справочник
             , vbClientId                              AS ObjectExtId_Analyzer   -- Аналитический справочник - Контрагент
             , -1 * _tmpItem.OperSumm                  AS Amount
             , vbOperDate                              AS OperDate
             , FALSE                                   AS isActive
        FROM _tmpItem
-            LEFT JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId;
+            LEFT JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId
+           ;
 
 
-
-     -- 5.1. формируются Проводки - остаток количество у Покупателя
+     -- 5.1. формируются Проводки - ПЛЮС остаток количество у Дебиторы покупатели
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId
                                        , MovementItemId, ContainerId, ParentId
                                        , AccountId, AnalyzerId, ObjectId_Analyzer, PartionId, WhereObjectId_Analyzer
@@ -524,23 +609,24 @@ BEGIN
             , _tmpItem_SummClient.ContainerId_Goods
             , 0                                       AS ParentId
             , _tmpItem_SummClient.AccountId           AS AccountId              -- счет из суммового учета
-            , 0                                       AS AnalyzerId             -- нет - Типы аналитик (проводки)
+            , zc_Enum_AnalyzerId_SaleCount_10100()    AS AnalyzerId             -- Кол-во, реализация  - Типы аналитик (проводки)
             , _tmpItem_SummClient.GoodsId             AS ObjectId_Analyzer      -- Товар
             , _tmpItem_SummClient.PartionId           AS PartionId              -- Партия
-            , vbWhereObjectId_Analyzer_to             AS WhereObjectId_Analyzer -- Место учета
+            , vbClientId                              AS WhereObjectId_Analyzer -- Место учета
             , _tmpItem.AccountId                      AS AccountId_Analyzer     -- Счет - корреспондент - остаток
-            , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
-            , _tmpItem.ContainerId_Goods              AS ContainerIntId_Analyzer-- Контейнер - Корреспондент - остаток
+            , _tmpItem.ContainerId_Summ               AS ContainerId_Analyzer   -- Контейнер - Корреспондент - остаток
+            , _tmpItem_SummClient.ContainerId_Summ    AS ContainerIntId_Analyzer-- Контейнер - "товар"
             , _tmpItem_SummClient.GoodsSizeId         AS ObjectIntId_Analyzer   -- Аналитический справочник
             , vbUnitId                                AS ObjectExtId_Analyzer   -- Аналитический справочник - Подразделение
             , 1 * _tmpItem_SummClient.OperCount       AS Amount
             , vbOperDate                              AS OperDate
             , TRUE                                    AS isActive
        FROM _tmpItem
-            LEFT JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId;
+            LEFT JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId
+           ;
 
 
-     -- 5.2. формируются Проводки - остаток сумма у Покупателя
+     -- 5.2. формируются Проводки - ПЛЮС остаток сумма у Дебиторы покупатели
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId
                                        , MovementItemId, ContainerId, ParentId
                                        , AccountId, AnalyzerId, ObjectId_Analyzer, PartionId, WhereObjectId_Analyzer
@@ -555,13 +641,13 @@ BEGIN
             , _tmpItem_SummClient.ContainerId_Summ
             , 0                                       AS ParentId
             , _tmpItem_SummClient.AccountId           AS AccountId              -- счет
-            , 0                                       AS AnalyzerId             -- нет - Типы аналитик (проводки)
+            , zc_Enum_AnalyzerId_SaleSumm_10300()     AS AnalyzerId             -- Сумма с/с, реализация   - Типы аналитик (проводки)
             , _tmpItem_SummClient.GoodsId             AS ObjectId_Analyzer      -- Товар
             , _tmpItem_SummClient.PartionId           AS PartionId              -- Партия
-            , vbWhereObjectId_Analyzer_to             AS WhereObjectId_Analyzer -- Место учета
+            , vbClientId             AS WhereObjectId_Analyzer -- Место учета
             , _tmpItem.AccountId                      AS AccountId_Analyzer     -- Счет - корреспондент - остаток
-            , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
-            , _tmpItem.ContainerId_Summ               AS ContainerIntId_Analyzer-- Контейнер - Корреспондент - остаток
+            , _tmpItem.ContainerId_Summ               AS ContainerId_Analyzer   -- Контейнер - Корреспондент - остаток
+            , _tmpItem_SummClient.ContainerId_Summ    AS ContainerIntId_Analyzer-- Контейнер - тот же самый
             , _tmpItem_SummClient.GoodsSizeId         AS ObjectIntId_Analyzer   -- Аналитический справочник
             , vbUnitId                                AS ObjectExtId_Analyzer   -- Аналитический справочник - Подразделение
             , 1 * _tmpItem_SummClient.OperSumm        AS Amount
@@ -576,20 +662,53 @@ BEGIN
             , _tmpItem_SummClient.ContainerId_Summ
             , 0                                       AS ParentId
             , _tmpItem_SummClient.AccountId           AS AccountId              -- счет
-            , 0                                       AS AnalyzerId             -- нет - Типы аналитик (проводки)
+            , _tmpCalc.AnalyzerId                     AS AnalyzerId             -- Типы аналитик (проводки)
             , _tmpItem_SummClient.GoodsId             AS ObjectId_Analyzer      -- Товар
             , _tmpItem_SummClient.PartionId           AS PartionId              -- Партия
-            , vbWhereObjectId_Analyzer_to             AS WhereObjectId_Analyzer -- Место учета
-            , _tmpItem.AccountId                      AS AccountId_Analyzer     -- Счет - корреспондент - остаток
-            , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
-            , _tmpItem.ContainerId_Summ               AS ContainerIntId_Analyzer-- Контейнер - Корреспондент - остаток
+            , vbClientId                              AS WhereObjectId_Analyzer -- Место учета
+            , _tmpItem_SummClient.AccountId_20102        AS AccountId_Analyzer  -- Счет - корреспондент - Прибыль будущих периодов
+            , _tmpItem_SummClient.ContainerId_Summ_20102 AS ContainerId_Analyzer-- Контейнер - Корреспондент - Прибыль будущих периодов
+            , _tmpItem_SummClient.ContainerId_Summ    AS ContainerIntId_Analyzer-- Контейнер - тот же самый
             , _tmpItem_SummClient.GoodsSizeId         AS ObjectIntId_Analyzer   -- Аналитический справочник
             , vbUnitId                                AS ObjectExtId_Analyzer   -- Аналитический справочник - Подразделение
-            , 1 * (_tmpItem_SummClient.OperSumm_ToPay - _tmpItem_SummClient.OperSumm) AS Amount
+            , 1 * _tmpCalc.Amount                     AS Amount
             , vbOperDate                              AS OperDate
             , TRUE                                    AS isActive
-       FROM _tmpItem
-            LEFT JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId
+       FROM _tmpItem_SummClient
+            LEFT JOIN (-- сезонная скидка
+                       SELECT _tmpItem.MovementItemId
+                            , -1* _tmpItem.Summ_10201             AS Amount
+                            , zc_Enum_AnalyzerId_SaleSumm_10201() AS AnalyzerId
+                       FROM _tmpItem
+                       WHERE _tmpItem.Summ_10201 <> 0
+                      UNION ALL
+                       -- скидка outlet
+                       SELECT _tmpItem.MovementItemId
+                            , -1 * _tmpItem.Summ_10202            AS Amount
+                            , zc_Enum_AnalyzerId_SaleSumm_10202() AS AnalyzerId
+                       FROM _tmpItem
+                       WHERE _tmpItem.Summ_10202 <> 0
+                      UNION ALL
+                       -- скидка клиента
+                       SELECT _tmpItem.MovementItemId
+                            , -1 * _tmpItem.Summ_10203            AS Amount
+                            , zc_Enum_AnalyzerId_SaleSumm_10203() AS AnalyzerId
+                       FROM _tmpItem
+                       WHERE _tmpItem.Summ_10203 <> 0
+                      UNION ALL
+                       -- скидка дополнительная
+                       SELECT _tmpItem.MovementItemId
+                            , -1 * _tmpItem.Summ_10204            AS Amount
+                            , zc_Enum_AnalyzerId_SaleSumm_10204() AS AnalyzerId
+                       FROM _tmpItem
+                       WHERE _tmpItem.Summ_10204 <> 0
+                      UNION ALL
+                       -- Сумма, реализация (по прайсу) - !!!ХОТЯ ЗДЕСЬ ПРИБЫЛЬ без скидки!!!
+                       SELECT _tmpItem.MovementItemId
+                            , _tmpItem.OperSummPriceList - _tmpItem.OperSumm AS Amount
+                            , zc_Enum_AnalyzerId_SaleSumm_10100()            AS AnalyzerId
+                       FROM _tmpItem
+                      ) AS _tmpCalc ON _tmpCalc.MovementItemId = _tmpItem_SummClient.MovementItemId
       UNION ALL
        -- проводки - Прибыль будущих периодов - С МИНУСОМ
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId
@@ -600,20 +719,22 @@ BEGIN
             , 0                                       AS AnalyzerId             -- нет - Типы аналитик (проводки)
             , _tmpItem_SummClient.GoodsId             AS ObjectId_Analyzer      -- Товар
             , _tmpItem_SummClient.PartionId           AS PartionId              -- Партия
-            , vbWhereObjectId_Analyzer_to             AS WhereObjectId_Analyzer -- Место учета
-            , _tmpItem.AccountId                      AS AccountId_Analyzer     -- Счет - корреспондент - остаток
-            , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
-            , _tmpItem.ContainerId_Summ               AS ContainerIntId_Analyzer-- Контейнер - Корреспондент - остаток
+            , vbClientId                              AS WhereObjectId_Analyzer -- Место учета
+            , _tmpItem_SummClient.AccountId           AS AccountId_Analyzer     -- Счет - корреспондент - остаток
+            , _tmpItem_SummClient.ContainerId_Summ    AS ContainerId_Analyzer   -- Контейнер - Корреспондент - остаток
+            , _tmpItem_SummClient.ContainerId_Summ_20102 AS ContainerIntId_Analyzer -- Контейнер - тот же самый
             , _tmpItem_SummClient.GoodsSizeId         AS ObjectIntId_Analyzer   -- Аналитический справочник
             , vbUnitId                                AS ObjectExtId_Analyzer   -- Аналитический справочник - Подразделение
-            , -1 * (_tmpItem_SummClient.OperSumm_ToPay - _tmpItem_SummClient.OperSumm) AS Amount
+            , -1 * (_tmpItem.OperSummPriceList - _tmpItem.OperSumm
+                  - _tmpItem.Summ_10201 - _tmpItem.Summ_10202 - _tmpItem.Summ_10203 - _tmpItem.Summ_10204
+                   ) AS Amount
             , vbOperDate                              AS OperDate
-            , FALSE                                   AS isActive
+            , TRUE                                    AS isActive
        FROM _tmpItem
             LEFT JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId;
 
 
-     -- 5.3. формируются Проводки - МИНУС остаток количество у Покупателя
+     -- 5.3. формируются Проводки - МИНУС остаток количество у Дебиторы покупатели
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId
                                        , MovementItemId, ContainerId, ParentId
                                        , AccountId, AnalyzerId, ObjectId_Analyzer, PartionId, WhereObjectId_Analyzer
@@ -622,7 +743,7 @@ BEGIN
                                        , ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , Amount, OperDate, IsActive
                                         )
-       -- проводки
+       -- проводки - кол-во
        SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId
             , _tmpItem_SummClient.MovementItemId
             , _tmpItem_SummClient.ContainerId_Goods
@@ -631,10 +752,10 @@ BEGIN
             , zc_Enum_AnalyzerId_SaleCount_10100()    AS AnalyzerId             -- Кол-во, реализация - Типы аналитик (проводки)
             , _tmpItem_SummClient.GoodsId             AS ObjectId_Analyzer      -- Товар
             , _tmpItem_SummClient.PartionId           AS PartionId              -- Партия
-            , vbWhereObjectId_Analyzer_to             AS WhereObjectId_Analyzer -- Место учета
-            , _tmpItem.AccountId                      AS AccountId_Analyzer     -- Счет - корреспондент - остаток
-            , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
-            , _tmpItem.ContainerId_Goods              AS ContainerIntId_Analyzer-- Контейнер - Корреспондент - остаток
+            , vbClientId                              AS WhereObjectId_Analyzer -- Место учета
+            , zc_Enum_Account_100301()                         AS AccountId_Analyzer     -- Счет - Корреспондент - прибыль текущего периода
+            , _tmpItem_SummClient.ContainerId_ProfitLoss_10101 AS ContainerId_Analyzer   -- Контейнер - Корреспондент - ОПиУ !!!хотя их МНОГО!!!
+            , _tmpItem_SummClient.ContainerId_Summ    AS ContainerIntId_Analyzer-- Контейнер - "товар"
             , _tmpItem_SummClient.GoodsSizeId         AS ObjectIntId_Analyzer   -- Аналитический справочник
             , vbUnitId                                AS ObjectExtId_Analyzer   -- Аналитический справочник - Подразделение
             , -1 * _tmpItem_SummClient.OperCount_sale AS Amount
@@ -646,7 +767,7 @@ BEGIN
        ;
 
 
-     -- 5.4. формируются Проводки - МИНУС остаток сумма у Покупателя
+     -- 5.4. формируются Проводки - МИНУС остаток сумма у Дебиторы покупатели
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId
                                        , MovementItemId, ContainerId, ParentId
                                        , AccountId, AnalyzerId, ObjectId_Analyzer, PartionId, WhereObjectId_Analyzer
@@ -655,19 +776,19 @@ BEGIN
                                        , ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , Amount, OperDate, IsActive
                                         )
-       -- проводки - c/c
+       -- проводки - Сумма оплаты
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId
             , _tmpItem_SummClient.MovementItemId
             , _tmpItem_SummClient.ContainerId_Summ
             , 0                                       AS ParentId
             , _tmpItem_SummClient.AccountId           AS AccountId              -- счет
-            , zc_Enum_AnalyzerId_SaleCount_10100()    AS AnalyzerId             -- Кол-во, реализация - Типы аналитик (проводки)
+            , 0                                       AS AnalyzerId             -- нет - Типы аналитик (проводки)
             , _tmpItem_SummClient.GoodsId             AS ObjectId_Analyzer      -- Товар
             , _tmpItem_SummClient.PartionId           AS PartionId              -- Партия
-            , vbWhereObjectId_Analyzer_to             AS WhereObjectId_Analyzer -- Место учета
-            , _tmpItem.AccountId                      AS AccountId_Analyzer     -- Счет - корреспондент - остаток
-            , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
-            , _tmpItem.ContainerId_Summ               AS ContainerIntId_Analyzer-- Контейнер - Корреспондент - остаток
+            , vbClientId                              AS WhereObjectId_Analyzer -- Место учета
+            , 0                                       AS AccountId_Analyzer     -- Счет - Корреспондент - КАССА
+            , 0                                       AS ContainerId_Analyzer   -- Контейнер - Корреспондент - КАССА !!!хотя их МНОГО!!!
+            , _tmpItem_SummClient.ContainerId_Summ    AS ContainerIntId_Analyzer-- Контейнер - тот же самый
             , _tmpItem_SummClient.GoodsSizeId         AS ObjectIntId_Analyzer   -- Аналитический справочник
             , vbUnitId                                AS ObjectExtId_Analyzer   -- Аналитический справочник - Подразделение
             , -1 * _tmpItem_SummClient.TotalPay       AS Amount
@@ -675,7 +796,7 @@ BEGIN
             , FALSE                                   AS isActive
        FROM _tmpItem
             LEFT JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId
-       WHERE _tmpItem_SummClient.OperCount_sale > 0
+       WHERE _tmpItem_SummClient.TotalPay <> 0
       UNION ALL
        -- проводки - Прибыль будущих периодов - С ПЛЮСОМ
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId
@@ -686,19 +807,111 @@ BEGIN
             , 0                                       AS AnalyzerId             -- нет - Типы аналитик (проводки)
             , _tmpItem_SummClient.GoodsId             AS ObjectId_Analyzer      -- Товар
             , _tmpItem_SummClient.PartionId           AS PartionId              -- Партия
-            , vbWhereObjectId_Analyzer_to             AS WhereObjectId_Analyzer -- Место учета
-            , _tmpItem.AccountId                      AS AccountId_Analyzer     -- Счет - корреспондент - остаток
-            , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
-            , _tmpItem.ContainerId_Summ               AS ContainerIntId_Analyzer-- Контейнер - Корреспондент - остаток
+            , vbClientId                              AS WhereObjectId_Analyzer -- Место учета
+            , zc_Enum_Account_100301()                         AS AccountId_Analyzer     -- Счет - Корреспондент - прибыль текущего периода
+            , _tmpItem_SummClient.ContainerId_ProfitLoss_10101 AS ContainerId_Analyzer   -- Контейнер - Корреспондент - ОПиУ !!!хотя их МНОГО!!!
+            , _tmpItem_SummClient.ContainerId_Summ_20102 AS ContainerIntId_Analyzer -- Контейнер - тот же самый
             , _tmpItem_SummClient.GoodsSizeId         AS ObjectIntId_Analyzer   -- Аналитический справочник
             , vbUnitId                                AS ObjectExtId_Analyzer   -- Аналитический справочник - Подразделение
-            , -1 * (_tmpItem_SummClient.OperSumm_ToPay - _tmpItem_SummClient.OperSumm) AS Amount
+            , 1 * (_tmpItem_SummClient.OperSummPriceList_sale - _tmpItem_SummClient.OperSumm_sale
+                 - _tmpItem_SummClient.Summ_10201 - _tmpItem_SummClient.Summ_10202 - _tmpItem_SummClient.Summ_10203 - _tmpItem_SummClient.Summ_10204
+                  ) AS Amount
             , vbOperDate                              AS OperDate
-            , TRUE                                    AS isActive
+            , FALSE                                   AS isActive
        FROM _tmpItem
-            LEFT JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId;
+            LEFT JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpItem.MovementItemId
        WHERE _tmpItem_SummClient.OperCount_sale > 0
-       ;
+      ;
+
+
+     -- ОПИУ
+
+
+     -- 1. формируются Проводки - Прибыль
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId
+                                       , MovementItemId, ContainerId, ParentId
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, PartionId, WhereObjectId_Analyzer
+                                       , AccountId_Analyzer
+                                       , ContainerId_Analyzer, ContainerIntId_Analyzer
+                                       , ObjectIntId_Analyzer, ObjectExtId_Analyzer
+                                       , Amount, OperDate, IsActive
+                                        )
+       -- проводки
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId
+            , _tmpItem_SummClient.MovementItemId
+            , _tmpCalc.ContainerId_ProfitLoss
+            , 0                                       AS ParentId
+            , zc_Enum_Account_100301()                AS AccountId              -- прибыль текущего периода
+            , _tmpCalc.AnalyzerId                     AS AnalyzerId             -- Типы аналитик (проводки)
+            , _tmpItem_SummClient.GoodsId             AS ObjectId_Analyzer      -- Товар
+            , _tmpItem_SummClient.PartionId           AS PartionId              -- Партия
+            , vbClientId                              AS WhereObjectId_Analyzer -- Место учета
+            , _tmpItem_SummClient.AccountId           AS AccountId_Analyzer     -- Счет - корреспондент - Покупатель !!!хотя их ДВА!!!
+            , 0                                       AS ContainerId_Analyzer   -- в ОПиУ не нужен
+            , _tmpItem_SummClient.ContainerId_Summ    AS ContainerIntId_Analyzer-- Контейнер "товар"
+            , _tmpItem_SummClient.GoodsSizeId         AS ObjectIntId_Analyzer   -- Аналитический справочник
+            , vbUnitId                                AS ObjectExtId_Analyzer   -- Аналитический справочник - Подразделение
+            , 1 * _tmpCalc.Amount                     AS Amount
+            , vbOperDate                              AS OperDate
+            , FALSE                                   AS isActive
+       FROM _tmpItem_SummClient
+            INNER JOIN
+            (-- Сумма, реализация (по прайсу)
+             SELECT _tmpItem_SummClient.MovementItemId               AS MovementItemId
+                  , _tmpItem_SummClient.ContainerId_ProfitLoss_10101 AS ContainerId_ProfitLoss
+                  , zc_Enum_AnalyzerId_SaleSumm_10100()              AS AnalyzerId
+                  , -1 * _tmpItem_SummClient.OperSummPriceList_sale  AS Amount
+             FROM _tmpItem_SummClient
+             WHERE _tmpItem_SummClient.OperCount_sale > 0 
+            UNION ALL
+             -- сезонная скидка
+             SELECT _tmpItem_SummClient.MovementItemId               AS MovementItemId
+                  , _tmpItem_SummClient.ContainerId_ProfitLoss_10201 AS ContainerId_ProfitLoss
+                  , zc_Enum_AnalyzerId_SaleSumm_10201()              AS AnalyzerId
+                  , _tmpItem_SummClient.Summ_10201                   AS Amount
+             FROM _tmpItem_SummClient
+             WHERE _tmpItem_SummClient.OperCount_sale <> 0 
+               AND _tmpItem_SummClient.Summ_10201     <> 0
+
+            UNION ALL
+             -- скидка outlet
+             SELECT _tmpItem_SummClient.MovementItemId               AS MovementItemId
+                  , _tmpItem_SummClient.ContainerId_ProfitLoss_10202 AS ContainerId_ProfitLoss
+                  , zc_Enum_AnalyzerId_SaleSumm_10202()              AS AnalyzerId
+                  , _tmpItem_SummClient.Summ_10202                   AS Amount
+             FROM _tmpItem_SummClient
+             WHERE _tmpItem_SummClient.OperCount_sale <> 0 
+               AND _tmpItem_SummClient.Summ_10202     <> 0
+            UNION ALL
+             -- скидка клиента
+             SELECT _tmpItem_SummClient.MovementItemId               AS MovementItemId
+                  , _tmpItem_SummClient.ContainerId_ProfitLoss_10203 AS ContainerId_ProfitLoss
+                  , zc_Enum_AnalyzerId_SaleSumm_10203()              AS AnalyzerId
+                  , _tmpItem_SummClient.Summ_10203                   AS Amount
+             FROM _tmpItem_SummClient
+             WHERE _tmpItem_SummClient.OperCount_sale <> 0 
+               AND _tmpItem_SummClient.Summ_10203     <> 0
+            UNION ALL
+             -- скидка дополнительная
+             SELECT _tmpItem_SummClient.MovementItemId               AS MovementItemId
+                  , _tmpItem_SummClient.ContainerId_ProfitLoss_10204 AS ContainerId_ProfitLoss
+                  , zc_Enum_AnalyzerId_SaleSumm_10204()              AS AnalyzerId
+                  , _tmpItem_SummClient.Summ_10204                   AS Amount
+             FROM _tmpItem_SummClient
+             WHERE _tmpItem_SummClient.OperCount_sale <> 0 
+               AND _tmpItem_SummClient.Summ_10204     <> 0
+            UNION ALL
+             -- скидка дополнительная
+             SELECT _tmpItem_SummClient.MovementItemId               AS MovementItemId
+                  , _tmpItem_SummClient.ContainerId_ProfitLoss_10301 AS ContainerId_ProfitLoss
+                  , zc_Enum_AnalyzerId_SaleSumm_10300()              AS AnalyzerId
+                  , _tmpItem_SummClient.OperSumm_sale                AS Amount
+             FROM _tmpItem_SummClient
+             WHERE _tmpItem_SummClient.OperCount_sale <> 0 
+            ) AS _tmpCalc ON _tmpCalc.MovementItemId = _tmpItem_SummClient.MovementItemId
+           ;
+
+
 
 
      -- 5.0. Пересохраним св-ва из партии: <Цена> + <Цена за количество> + Курс - из истории
@@ -707,7 +920,6 @@ BEGIN
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_CurrencyValue(), _tmpItem.MovementItemId, _tmpItem.CurrencyValue)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ParValue(),      _tmpItem.MovementItemId, _tmpItem.ParValue)
      FROM _tmpItem;
-
 
 
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки

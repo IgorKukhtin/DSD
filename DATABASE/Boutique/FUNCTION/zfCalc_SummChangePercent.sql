@@ -10,11 +10,14 @@ CREATE OR REPLACE FUNCTION zfCalc_SummChangePercent(
 RETURNS TFloat
 AS
 $BODY$
+   DECLARE vbSumm TFloat;
 BEGIN
+    -- Округление до 0 знаков
+    vbSumm:= zfCalc_SummPriceList (inAmount, inOperPriceList);
 
-    RETURN CAST (zfCalc_SummPriceList (inAmount, inOperPriceList) -- Округление до 0 знаков
-               * (1 - COALESCE (inChangePercent, 0) / 100)
-                AS NUMERIC (16, 0)); -- еще раз округлили до 0 знаков
+    -- еще раз округлили до 0 знаков
+    RETURN vbSumm
+         - CAST (vbSumm * COALESCE (inChangePercent, 0) / 100 AS NUMERIC (16, 0));
                 
 END;
 $BODY$
@@ -28,4 +31,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM zfCalc_SummChangePercent (inAmount:= 2, inOperPriceList:= 3, inChangePercent:= 10)
+-- SELECT * FROM zfCalc_SummChangePercent (inAmount:= 1, inOperPriceList:= 250, inChangePercent:= 15)
