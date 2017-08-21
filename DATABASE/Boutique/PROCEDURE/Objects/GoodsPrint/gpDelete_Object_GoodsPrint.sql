@@ -5,7 +5,6 @@ DROP FUNCTION IF EXISTS gpDelete_Object_GoodsPrint (Integer, Integer, TVarChar);
 CREATE OR REPLACE FUNCTION gpDelete_Object_GoodsPrint(
  INOUT ioId                Integer,       -- Ключ объекта <>            
  INOUT ioUserId            Integer,
-   OUT outInsertDate       TDateTime,     -- 
    OUT outGoodsPrintName   TVarChar,     --
    OUT outUserName         TVarChar,     --
     IN inSession           TVarChar       -- сессия пользователя
@@ -46,7 +45,7 @@ BEGIN
    ioUserId := vbUserId;
    outUserName := lfGet_Object_ValueData (vbUserId) ::TVarChar;
    ioId := 0 ;
-   outInsertDate := Null;
+   --outInsertDate := Null;
    outGoodsPrintName := '' :: TVarChar;
       
 END;

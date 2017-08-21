@@ -75,6 +75,13 @@ type
     actDeleteGoodsPrint: TdsdExecStoredProc;
     bbDeleteGoodsPrint: TdxBarButton;
     spGet_GoodsPrint_User: TdsdStoredProc;
+    actPrintSticker: TdsdPrintAction;
+    bbPrintSticker: TdxBarButton;
+    PrintItemsCDS: TClientDataSet;
+    PrintHeaderCDS: TClientDataSet;
+    spSelectPrintSticker: TdsdStoredProc;
+    macGoodsPrintList_Print: TMultiAction;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public
