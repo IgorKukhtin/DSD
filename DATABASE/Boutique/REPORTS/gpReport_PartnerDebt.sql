@@ -1,5 +1,5 @@
 -- Function:  gpReport_PartnerDebt()
-
+/*
 DROP FUNCTION IF EXISTS gpReport_PartnerDebt (Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION  gpReport_PartnerDebt (
@@ -342,6 +342,7 @@ BEGIN
  END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
+*/
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
