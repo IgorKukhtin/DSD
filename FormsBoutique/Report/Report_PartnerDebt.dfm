@@ -559,8 +559,10 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
+      StoredProc = spGet_UserUnit
       StoredProcList = <
         item
+          StoredProc = spGet_UserUnit
         end
         item
           StoredProc = spSelect

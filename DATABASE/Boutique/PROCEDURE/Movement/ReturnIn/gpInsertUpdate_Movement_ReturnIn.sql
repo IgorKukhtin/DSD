@@ -15,10 +15,20 @@ RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbUnitId Integer;
 BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ReturnIn());
 
+     -- определ€ем магазин по принадлежности пользовател€ к сотруднику
+     vbUnitId:= lpGetUnitBySession (inSession);
+
+     -- если у пользовател€ = 0, тогда может смотреть любой магазин, иначе только свой
+     IF COALESCE (vbUnitId, 0 ) <> 0 AND COALESCE (vbUnitId) <> inToId
+     THEN
+         RAISE EXCEPTION 'ќшибка.” ѕользовател€ <%> нет прав на подразделение <%> .', lfGet_Object_ValueData (vbUserId), lfGet_Object_ValueData (inToId);
+     END IF;
+     
 
      -- определ€етс€ уникальный є док.
      IF COALESCE (ioId, 0) = 0 THEN
