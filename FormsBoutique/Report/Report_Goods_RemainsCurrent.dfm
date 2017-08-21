@@ -13,7 +13,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   inherited Panel: TPanel [0]
     Width = 1115
     Height = 73
-    ExplicitWidth = 1111
+    ExplicitWidth = 1115
     ExplicitHeight = 73
     inherited deStart: TcxDateEdit
       Left = 994
@@ -193,20 +193,18 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     Height = 334
     TabOrder = 3
     ExplicitTop = 99
-    ExplicitWidth = 1111
-    ExplicitHeight = 326
+    ExplicitWidth = 1115
+    ExplicitHeight = 334
     ClientRectBottom = 334
     ClientRectRight = 1115
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1111
-      ExplicitHeight = 326
+      ExplicitWidth = 1115
+      ExplicitHeight = 334
       inherited cxGrid: TcxGrid
         Width = 1115
         Height = 334
-        ExplicitLeft = 96
-        ExplicitTop = 3
-        ExplicitWidth = 1111
-        ExplicitHeight = 515
+        ExplicitWidth = 1115
+        ExplicitHeight = 334
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item

@@ -820,7 +820,7 @@ end;
 //
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-{
+
   //текущие долги
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PartnerDebtForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PartnerDebtForm');
@@ -836,6 +836,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_AccountForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_AccountDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_AccountDialogForm');
+  {
   //Отчет Остаток товара
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsForm');
