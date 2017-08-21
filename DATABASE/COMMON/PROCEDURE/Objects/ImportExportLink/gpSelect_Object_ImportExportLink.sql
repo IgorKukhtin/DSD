@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_GoodsKind()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ImportExportLink(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ImportExportLink(Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ImportExportLink(
+    IN inIsErased       Boolean,       -- показать удаденные Да/Нет
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, IntegerKey Integer, StringKey TVarChar
@@ -31,11 +33,12 @@ $BODY$BEGIN
      , Object_ImportExportLink_View.LinkTypeName
      , Object_ImportExportLink_View.SomeText
      , Object_ImportExportLink_View.isErased
-   FROM Object_ImportExportLink_View;
+   FROM Object_ImportExportLink_View
+   WHERE (COALESCE (Object_ImportExportLink_View.isErased, False) = False OR inIsErased = TRUE);
   
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_ImportExportLink(TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_ImportExportLink(TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

@@ -283,6 +283,25 @@ inherited ImportExportLinkForm: TImportExportLinkForm
       isSetErased = False
       DataSource = MasterDS
     end
+    object actShowErased: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -293,6 +312,15 @@ inherited ImportExportLinkForm: TImportExportLinkForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ImportExportLink'
+    Params = <
+      item
+        Name = 'inIsErased'
+        Value = Null
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     Left = 88
     Top = 80
   end
@@ -317,6 +345,14 @@ inherited ImportExportLinkForm: TImportExportLinkForm
         item
           Visible = True
           ItemName = 'bbSetUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
         end
         item
           Visible = True
@@ -360,6 +396,10 @@ inherited ImportExportLinkForm: TImportExportLinkForm
     end
     object bbSetUnErased: TdxBarButton
       Action = dsdSetUnErased
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = actShowErased
       Category = 0
     end
   end
