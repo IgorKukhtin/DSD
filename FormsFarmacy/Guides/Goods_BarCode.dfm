@@ -69,6 +69,14 @@ inherited Goods_BarCodeForm: TGoods_BarCodeForm
             HeaderAlignmentVert = vaCenter
             Width = 110
           end
+          object OrdBar: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087' '#1064'/'#1050' '#1087#1088#1086#1080#1079#1074'.'
+            DataBinding.FieldName = 'OrdBar'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
           object Name: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'

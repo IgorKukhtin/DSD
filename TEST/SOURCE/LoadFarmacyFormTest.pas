@@ -327,11 +327,11 @@ end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_BarCodeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_BarCodeForm');
   exit;
-  //
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAllForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsAllForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAllRetailForm'));
