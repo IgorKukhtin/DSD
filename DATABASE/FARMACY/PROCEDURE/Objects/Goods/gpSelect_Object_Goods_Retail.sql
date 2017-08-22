@@ -24,7 +24,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , InsertName TVarChar, InsertDate TDateTime 
              , UpdateName TVarChar, UpdateDate TDateTime
              , ConditionsKeepName TVarChar
-             , MorionCode Integer, BarCode TVarChar 
+             , MorionCode Integer, BarCode TVarChar, OrdBar Integer
               ) AS
 $BODY$ 
   DECLARE vbUserId Integer;
@@ -181,8 +181,11 @@ BEGIN
                                 AND ObjectLink_Main_Morion.ChildObjectId > 0
                               GROUP BY ObjectLink_Main_Morion.ChildObjectId
                              )
-         , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId          AS GoodsMainId
-                                    , MAX (Object_Goods_BarCode.ValueData)::TVarChar AS BarCode
+         , tmpGoodsBarCode AS (SELECT DISTINCT 
+                                      ObjectLink_Main_BarCode.ChildObjectId    AS GoodsMainId
+                                    , Object_Goods_BarCode.ValueData           AS BarCode
+                                   -- , MAX (Object_Goods_BarCode.ValueData)::TVarChar AS BarCode
+                                    , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Main_BarCode.ChildObjectId ORDER BY ObjectLink_Main_BarCode.ChildObjectId DESC) AS Ord
                                FROM ObjectLink AS ObjectLink_Main_BarCode
                                     JOIN ObjectLink AS ObjectLink_Child_BarCode
                                                     ON ObjectLink_Child_BarCode.ObjectId = ObjectLink_Main_BarCode.ObjectId
@@ -194,7 +197,8 @@ BEGIN
                                     LEFT JOIN Object AS Object_Goods_BarCode ON Object_Goods_BarCode.Id = ObjectLink_Goods_Object_BarCode.ObjectId
                                WHERE ObjectLink_Main_BarCode.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
                                  AND ObjectLink_Main_BarCode.ChildObjectId > 0
-                               GROUP BY ObjectLink_Main_BarCode.ChildObjectId
+                                 AND TRIM (Object_Goods_BarCode.ValueData) <> ''
+                               --GROUP BY ObjectLink_Main_BarCode.ChildObjectId
                               )                  
       SELECT Object_Goods_View.Id
            , ObjectLink_Main.ChildObjectId     AS GoodsMainId 
@@ -245,7 +249,7 @@ BEGIN
 
            , tmpGoodsMorion.MorionCode
            , tmpGoodsBarCode.BarCode
- 
+           , tmpGoodsBarCode.Ord     :: Integer AS OrdBar
       FROM Object_Goods_View
            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = Object_Goods_View.ObjectId
            LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_View.Id 
@@ -314,6 +318,7 @@ ALTER FUNCTION gpSelect_Object_Goods_Retail(TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.
+ 22.08.17         *
  16.08.17         * LastPriceOld
  19.05.17                                                       * MorionCode, BarCode
  21.04.17         *

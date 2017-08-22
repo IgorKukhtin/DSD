@@ -106,6 +106,8 @@ type
   private
     function AdaptQuotMark(S: string): string;
     function GetMovementCountItems(AGUID: string): Integer;
+    procedure UpdateMovementReturnInAuto(AGUID: string);
+    procedure FeedbackMovementReturnIn(AGUIDList: TStringList);
   public
     procedure SaveSyncDataOut(ADate: TDateTime);
     procedure SyncStoreReal(AGUID: string);
@@ -5855,6 +5857,77 @@ begin
   Result := ReplaceStr(S, '''', '''||CHR (39)||''');
 end;
 
+procedure TSyncData.FeedbackMovementReturnIn(AGUIDList: TStringList);
+var
+  GUID: string;
+  ReturnInProc: TdsdStoredProc;
+  ReturnInItemProc: TdsdStoredProc;
+begin
+  ReturnInProc := TdsdStoredProc.Create(nil);
+  ReturnInProc.OutputType := otDataSet;
+  ReturnInProc.Params.Clear;
+  ReturnInProc.StoredProcName := 'gpGetMobile_Movement_ReturnIn';
+  ReturnInProc.Params.AddParam('inGUID', ftString, ptInput, '');
+  ReturnInProc.DataSet := TClientDataSet.Create(nil);
+
+  ReturnInItemProc := TdsdStoredProc.Create(nil);
+  ReturnInItemProc.OutputType := otDataSet;
+  ReturnInItemProc.Params.Clear;
+  ReturnInItemProc.StoredProcName := 'gpSelectMobile_MovementItem_ReturnIn';
+  ReturnInItemProc.Params.AddParam('inMovementGUID', ftString, ptInput, '');
+  ReturnInItemProc.DataSet := TClientDataSet.Create(nil);
+
+  try
+    if AGUIDList.Count <> 0 then
+      for GUID in AGUIDList do
+      begin
+        UpdateMovementReturnInAuto(GUID);
+        ReturnInProc.ParamByName('inGUID').Value := GUID;
+        ReturnInProc.Execute(False, False, False);
+
+        ReturnInProc.DataSet.First;
+        if not ReturnInProc.DataSet.Eof then
+        begin
+          DM.conMain.ExecSQL('update Movement_ReturnIn ' +
+                             'set ChangePercent = :inChangePercent ' +
+                             '  , TotalCountKg = :inTotalCountKg ' +
+                             '  , TotalSummPVAT = :inTotalSummPVAT ' +
+                             'where GUID = :inGUID', [
+                               ReturnInProc.DataSet.FieldByName('ChangePercent').AsFloat,
+                               ReturnInProc.DataSet.FieldByName('TotalCountKg').AsFloat,
+                               ReturnInProc.DataSet.FieldByName('TotalSummPVAT').AsFloat,
+                               GUID]);
+
+          ReturnInItemProc.ParamByName('inMovementGUID').Value := GUID;
+          ReturnInItemProc.Execute(False, False, False);
+
+          ReturnInItemProc.DataSet.First;
+          while not ReturnInItemProc.DataSet.Eof do
+          begin
+            DM.conMain.ExecSQL('update MovementItem_ReturnIn ' +
+                               'set GoodsId = :inGoodsId ' +
+                               '  , GoodsKindId = :inGoodsKindId ' +
+                               '  , Amount = :inAmount ' +
+                               '  , Price = :inPrice ' +
+                               '  , ChangePercent = :inChangePercent ' +
+                               'where GUID = :inGUID', [
+                                 ReturnInItemProc.DataSet.FieldByName('GoodsId').AsInteger,
+                                 ReturnInItemProc.DataSet.FieldByName('GoodsKindId').AsInteger,
+                                 ReturnInItemProc.DataSet.FieldByName('Amount').AsFloat,
+                                 ReturnInItemProc.DataSet.FieldByName('Price').AsFloat,
+                                 ReturnInItemProc.DataSet.FieldByName('ChangePercent').AsFloat,
+                                 ReturnInItemProc.DataSet.FieldByName('GUID').AsString]);
+
+            ReturnInItemProc.DataSet.Next;
+          end;
+        end;
+      end;
+  finally
+    ReturnInProc.Free;
+    ReturnInItemProc.Free;
+  end;
+end;
+
 function TSyncData.GetMovementCountItems(AGUID: string): Integer;
 var
   StoredProc : TdsdStoredProc;
@@ -6008,10 +6081,13 @@ procedure TSyncData.SyncReturnIn(AGUID: string);
 var
   SqlText: string;
   ItemsCount, SendCount: Integer;
+  GUIDList: TStringList;
 begin
   // Загружаем шапки возвратов
   with DM.tblMovement_ReturnIn do
   begin
+    GUIDList := TStringList.Create;
+
     if AGUID = '' then
       Filter := 'isSync = 0 and StatusId = ' + DM.tblObject_ConstStatusId_Complete.AsString
     else
@@ -6085,6 +6161,8 @@ begin
           Edit;
           FieldByName('IsSync').AsBoolean := True;
           Post;
+
+          GUIDList.Add(FieldByName('GUID').AsString);
         end else
           raise Exception.CreateFmt(
             'По возврату №%s отправились %d позиций из %d. Требуется повторная синхронизация',
@@ -6095,6 +6173,8 @@ begin
 
       if AGUID <> '' then
         SaveSyncDataOut(Now);
+
+      FeedbackMovementReturnIn(GUIDList);
     finally
       DM.tblMovementItem_ReturnIn.Close;
       DM.tblMovementItem_ReturnIn.Filter := '';
@@ -6102,6 +6182,7 @@ begin
       Close;
       Filter := '';
       Filtered := False;
+      GUIDList.Free;
     end;
   end;
 end;
@@ -6195,6 +6276,27 @@ begin
       Filter := '';
       Filtered := False;
     end;
+  end;
+end;
+
+procedure TSyncData.UpdateMovementReturnInAuto(AGUID: string);
+var
+  StoredProc : TdsdStoredProc;
+begin
+  StoredProc := TdsdStoredProc.Create(nil);
+
+  with StoredProc, Params do
+  begin
+    OutputType := otResult;
+    Clear;
+    StoredProcName := 'gpUpdateMobile_Movement_ReturnIn_Auto';
+    AddParam('inMovementGUID', ftString, ptInput, AGUID);
+  end;
+
+  try
+    StoredProc.Execute(False, False, False);
+  finally
+    FreeAndNil(StoredProc);
   end;
 end;
 

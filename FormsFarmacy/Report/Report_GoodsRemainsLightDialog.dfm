@@ -126,8 +126,8 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 255
-    Top = 94
+    Left = 287
+    Top = 62
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -292,8 +292,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 111
-    Top = 114
+    Left = 103
+    Top = 130
   end
   object GuidesRetail: TdsdGuides
     KeyField = 'Id'
@@ -322,7 +322,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 112
-    Top = 160
+    Left = 152
+    Top = 176
   end
 end

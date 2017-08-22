@@ -4,7 +4,6 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
   ClientWidth = 1065
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -12
   ExplicitWidth = 1081
   ExplicitHeight = 463
   PixelsPerInch = 96
@@ -550,16 +549,20 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
+      StoredProc = spGet_UserUnit
       StoredProcList = <
         item
+          StoredProc = spGet_UserUnit
         end>
       Caption = 'actGet_UserUnit'
     end
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
+      StoredProc = spGet_UserUnit
       StoredProcList = <
         item
+          StoredProc = spGet_UserUnit
         end
         item
           StoredProc = spSelect
@@ -962,5 +965,29 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
         MultiSelectSeparator = ','
       end>
     Left = 400
+  end
+  object spGet_UserUnit: TdsdStoredProc
+    StoredProcName = 'gpGet_UserUnit'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'UnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 584
+    Top = 144
   end
 end

@@ -482,16 +482,20 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
+      StoredProc = spGet_UserUnit
       StoredProcList = <
         item
+          StoredProc = spGet_UserUnit
         end>
       Caption = 'actGet_UserUnit'
     end
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
+      StoredProc = spGet_UserUnit
       StoredProcList = <
         item
+          StoredProc = spGet_UserUnit
         end
         item
           StoredProc = spSelect
@@ -810,8 +814,8 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 72
-    Top = 160
+    Left = 80
+    Top = 200
   end
   inherited BarManager: TdxBarManager
     Left = 120
@@ -926,5 +930,29 @@ inherited Report_SaleReturnInForm: TReport_SaleReturnInForm
         MultiSelectSeparator = ','
       end>
     Left = 400
+  end
+  object spGet_UserUnit: TdsdStoredProc
+    StoredProcName = 'gpGet_UserUnit'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'UnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 608
+    Top = 208
   end
 end

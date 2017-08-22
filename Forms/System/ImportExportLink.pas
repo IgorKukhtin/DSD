@@ -46,6 +46,8 @@ type
     dsdSetUnErased: TdsdUpdateErased;
     bbSetErased: TdxBarButton;
     bbSetUnErased: TdxBarButton;
+    actShowErased: TBooleanStoredProcAction;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

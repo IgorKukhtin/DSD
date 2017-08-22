@@ -58,6 +58,7 @@ type
     CountPrice: TcxGridDBColumn;
     MorionCode: TcxGridDBColumn;
     BarCode: TcxGridDBColumn;
+    OrdBar: TcxGridDBColumn;
   private
     { Private declarations }
   public

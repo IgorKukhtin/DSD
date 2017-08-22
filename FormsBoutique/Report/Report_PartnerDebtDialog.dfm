@@ -13,6 +13,7 @@ object Report_PartnerDebtDialogForm: TReport_PartnerDebtDialogForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
@@ -125,5 +126,67 @@ object Report_PartnerDebtDialogForm: TReport_PartnerDebtDialogForm
       end>
     Left = 102
     Top = 17
+  end
+  object spGet_UserUnit: TdsdStoredProc
+    StoredProcName = 'gpGet_UserUnit'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'UnitId'
+        Value = '0'
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 168
+    Top = 72
+  end
+  object ActionList: TActionList
+    Left = 155
+    Top = 49
+    object actGet_UserUnit: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_UserUnit
+      StoredProcList = <
+        item
+          StoredProc = spGet_UserUnit
+        end>
+      Caption = 'actGet_UserUnit'
+    end
+    object actRefreshStart: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_UserUnit
+      StoredProcList = <
+        item
+          StoredProc = spGet_UserUnit
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actRefresh: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
   end
 end

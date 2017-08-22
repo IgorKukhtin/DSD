@@ -45,6 +45,7 @@ type
     bbOpenReportForm: TdxBarButton;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
+    spGet_UserUnit: TdsdStoredProc;
   private
     { Private declarations }
   public
