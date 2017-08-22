@@ -15,20 +15,36 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_...());
 
-      outBarCode:=
-      (SELECT Object_BarCode.ValueData
-       FROM ObjectLink AS ObjectLink_BarCode_Goods
-            INNER JOIN ObjectLink AS ObjectLink_BarCode_Object
-                                 ON ObjectLink_BarCode_Object.ObjectId      = ObjectLink_BarCode_Goods.ObjectId
-                                AND ObjectLink_BarCode_Object.DescId        = zc_ObjectLink_BarCode_Object()
-                                AND ObjectLink_BarCode_Object.ChildObjectId = inObjectId
+      IF 1 < (SELECT COUNT(*)
+              FROM ObjectLink AS ObjectLink_BarCode_Goods
+                   INNER JOIN ObjectLink AS ObjectLink_BarCode_Object
+                                        ON ObjectLink_BarCode_Object.ObjectId      = ObjectLink_BarCode_Goods.ObjectId
+                                       AND ObjectLink_BarCode_Object.DescId        = zc_ObjectLink_BarCode_Object()
+                                       AND ObjectLink_BarCode_Object.ChildObjectId = inObjectId
 
-            INNER JOIN Object AS Object_BarCode ON Object_BarCode.Id = ObjectLink_BarCode_Goods.ObjectId
+                   INNER JOIN Object AS Object_BarCode ON Object_BarCode.Id = ObjectLink_BarCode_Goods.ObjectId
 
-       WHERE ObjectLink_BarCode_Goods.ChildObjectId = inGoodsId
-         AND ObjectLink_BarCode_Goods.DescId        = zc_ObjectLink_BarCode_Goods()
-      )
-      ;
+              WHERE ObjectLink_BarCode_Goods.ChildObjectId = inGoodsId
+                AND ObjectLink_BarCode_Goods.DescId        = zc_ObjectLink_BarCode_Goods()
+             )
+      THEN
+          RAISE EXCEPTION 'Ошибка. В справочник ш/к для проекта <%> дублируется товар <%>.', lfGet_Object_ValueData (inObjectId), lfGet_Object_ValueData (inGoodsId);
+      END IF;
+
+      -- Определяется ш/к
+      outBarCode:= (SELECT Object_BarCode.ValueData
+                    FROM ObjectLink AS ObjectLink_BarCode_Goods
+                         INNER JOIN ObjectLink AS ObjectLink_BarCode_Object
+                                              ON ObjectLink_BarCode_Object.ObjectId      = ObjectLink_BarCode_Goods.ObjectId
+                                             AND ObjectLink_BarCode_Object.DescId        = zc_ObjectLink_BarCode_Object()
+                                             AND ObjectLink_BarCode_Object.ChildObjectId = inObjectId
+
+                         INNER JOIN Object AS Object_BarCode ON Object_BarCode.Id = ObjectLink_BarCode_Goods.ObjectId
+
+                    WHERE ObjectLink_BarCode_Goods.ChildObjectId = inGoodsId
+                      AND ObjectLink_BarCode_Goods.DescId        = zc_ObjectLink_BarCode_Goods()
+                   )
+                   ;
 /*
       outBarCode:= '4034541002175'; -- 6124
       outBarCode:= '4820043368662'; -- 6136
