@@ -521,9 +521,9 @@ BEGIN
                                     ON MovementBoolean_Peresort.MovementId =  Movement_Production.Id
                                    AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
 
-     WHERE (vbIsXleb = FALSE OR (View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_30103() -- Хлеб
+     WHERE /*(vbIsXleb = FALSE OR (View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_30103() -- Хлеб
                                 AND vbIsXleb = TRUE))
-        AND (tmpBranchJuridical.JuridicalId > 0 OR tmpMovement.AccessKeyId > 0)
+        AND */(tmpBranchJuridical.JuridicalId > 0 OR tmpMovement.AccessKeyId > 0)
     ;
 
 END;

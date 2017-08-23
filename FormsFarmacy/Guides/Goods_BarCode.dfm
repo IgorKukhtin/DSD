@@ -4,7 +4,7 @@ inherited Goods_BarCodeForm: TGoods_BarCodeForm
   ClientWidth = 883
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 899
-  ExplicitHeight = 481
+  ExplicitHeight = 478
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -366,6 +366,14 @@ inherited Goods_BarCodeForm: TGoods_BarCodeForm
       FormNameParam.Value = 'TGoodsEditForm'
       DataSetRefresh = spRefreshOneRecord
     end
+    inherited dsdSetUnErased: TdsdUpdateErased
+      Enabled = False
+      ShortCut = 0
+    end
+    inherited dsdSetErased: TdsdUpdateErased
+      Enabled = False
+      ShortCut = 0
+    end
     inherited dsdChoiceGuides: TdsdChoiceGuides
       Params = <
         item
@@ -495,14 +503,6 @@ inherited Goods_BarCodeForm: TGoods_BarCodeForm
         item
           Visible = True
           ItemName = 'bbEdit'
-        end
-        item
-          Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
         end
         item
           BeginGroup = True
