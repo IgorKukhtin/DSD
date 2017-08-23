@@ -861,7 +861,7 @@ type
     procedure GenerateOrderExtrenalItemsList;
 
     function SaveReturnIn(OperDate: TDate; PaidKindId: integer; Comment : string;
-      ToralPrice, TotalWeight: Currency; DelItems : string; Complete: boolean; var ErrorMessage : string) : boolean;
+      TotalPrice, TotalWeight: Currency; DelItems : string; Complete: boolean; var ErrorMessage : string) : boolean;
     procedure NewReturnIn;
     procedure LoadReturnIn;
     procedure LoadAllReturnIn(AStartDate, AEndDate: TDate);
@@ -4642,11 +4642,11 @@ end;
 
 { сохранение возвратов в БД }
 function TDM.SaveReturnIn(OperDate: TDate; PaidKindId: integer; Comment : string;
-  ToralPrice, TotalWeight: Currency; DelItems : string; Complete: boolean; var ErrorMessage : string) : boolean;
+  TotalPrice, TotalWeight: Currency; DelItems : string; Complete: boolean; var ErrorMessage : string) : boolean;
 var
   GlobalId: TGUID;
   DocGUID: string;
-  MovementId: Integer;
+  MovementId, MovementItemId: Integer;
   NewInvNumber, CurInvNumber: string;
   b: TBookmark;
   isHasItems: Boolean;
@@ -4706,7 +4706,7 @@ begin
       tblMovement_ReturnInVATPercent.AsFloat := cdsReturnInVATPercent.AsFloat;
       tblMovement_ReturnInChangePercent.AsFloat := cdsReturnInChangePercent.AsFloat;
       tblMovement_ReturnInTotalCountKg.AsFloat := TotalWeight;
-      tblMovement_ReturnInTotalSummPVAT.AsFloat := ToralPrice;
+      tblMovement_ReturnInTotalSummPVAT.AsFloat := TotalPrice;
       tblMovement_ReturnInInsertDate.AsDateTime := Now();
       tblMovement_ReturnInisSync.AsBoolean := false;
 
@@ -4736,7 +4736,7 @@ begin
         tblMovement_ReturnInVATPercent.AsFloat := cdsReturnInVATPercent.AsFloat;
         tblMovement_ReturnInChangePercent.AsFloat := cdsReturnInChangePercent.AsFloat;
         tblMovement_ReturnInTotalCountKg.AsFloat := TotalWeight;
-        tblMovement_ReturnInTotalSummPVAT.AsFloat := ToralPrice;
+        tblMovement_ReturnInTotalSummPVAT.AsFloat := TotalPrice;
 
         tblMovement_ReturnIn.Post;
 
@@ -4759,6 +4759,8 @@ begin
       First;
       while not Eof do
       begin
+        MovementItemId := -1;
+
         if FieldbyName('Count').AsFloat > 0 then
         begin
           if FieldbyName('Id').AsInteger = -1 then // новая запись
@@ -4775,6 +4777,11 @@ begin
             tblMovementItem_ReturnInChangePercent.AsFloat := cdsReturnInChangePercent.AsFloat;
 
             tblMovementItem_ReturnIn.Post;
+            {??? Возможно есть лучший способ получения значения Id новой записи }
+            tblMovementItem_ReturnIn.Refresh;
+            tblMovementItem_ReturnIn.Last;
+            {???}
+            MovementItemId := tblMovementItem_ReturnInId.AsInteger;
           end
           else
           begin
@@ -4787,12 +4794,21 @@ begin
               tblMovementItem_ReturnInPrice.AsFloat := FieldbyName('Price').AsFloat;
 
               tblMovementItem_ReturnIn.Post;
+
+              MovementItemId := tblMovementItem_ReturnInId.AsInteger;
             end;
           end;
         end
         else
           if (FieldbyName('Id').AsInteger <> -1) and tblMovementItem_ReturnIn.Locate('Id', FieldbyName('Id').AsInteger) then
             tblMovementItem_ReturnIn.Delete;
+
+        if MovementItemId <> -1 then
+        begin
+          Edit;
+          FieldbyName('Id').AsInteger := MovementItemId;
+          Post;
+        end;
 
         Next;
       end;
@@ -4817,7 +4833,7 @@ begin
       cdsReturnInPaidKindId.AsInteger := PaidKindId;
       cdsReturnInComment.AsString := Comment;
       cdsReturnInName.AsString := 'Возврат №' + CurInvNumber + ' от ' + FormatDateTime('DD.MM.YYYY', OperDate);
-      cdsReturnInPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', ToralPrice);
+      cdsReturnInPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', TotalPrice);
       cdsReturnInWeight.AsString := 'Вес: ' + FormatFloat(',0.00', TotalWeight);
 
       if Complete then
@@ -4846,11 +4862,21 @@ begin
       try
         SyncData.SyncReturnIn(DocGUID);
 
+        tblMovement_ReturnIn.Open;
+        if tblMovement_ReturnIn.Locate('Id', MovementId) then
+        begin
+          TotalPrice := tblMovement_ReturnInTotalSummPVAT.AsCurrency;
+          TotalWeight := tblMovement_ReturnInTotalCountKg.AsCurrency;
+        end;
+        tblMovement_ReturnIn.Close;
+
         //обновляем данные в локальном хранилище
         cdsReturnIn.DisableControls;
         if cdsReturnIn.Locate('Id', MovementId, []) then
         begin
           cdsReturnIn.Edit;
+          cdsReturnInPrice.AsString := 'Стоимость: ' + FormatFloat(',0.00', TotalPrice);
+          cdsReturnInWeight.AsString := 'Вес: ' + FormatFloat(',0.00', TotalWeight);
           cdsReturnInisSync.AsBoolean := True;
           cdsReturnIn.Post;
         end;
@@ -5882,6 +5908,7 @@ begin
       for GUID in AGUIDList do
       begin
         UpdateMovementReturnInAuto(GUID);
+
         ReturnInProc.ParamByName('inGUID').Value := GUID;
         ReturnInProc.Execute(False, False, False);
 
