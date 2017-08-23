@@ -1,9 +1,12 @@
--- Function:  gpReport_PartnerDebt()
+-- Function:  gpReport_MotionByPartner()
 
-DROP FUNCTION IF EXISTS gpReport_PartnerDebt (Integer,TVarChar);
+DROP FUNCTION IF EXISTS gpReport_MotionByPartner (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION  gpReport_PartnerDebt (
+CREATE OR REPLACE FUNCTION gpReport_MotionByPartner (
+    IN inStartDate        TDateTime,  -- Дата начала
+    IN inEndDate          TDateTime,  -- Дата окончания
     IN inUnitId           Integer  ,  -- Подразделение
+    IN inPartnerId        Integer  ,  -- Покупатель
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId            Integer
@@ -14,7 +17,6 @@ RETURNS TABLE (MovementId            Integer
              , DescName_Sale         TVarChar
              , OperDate_Sale         TDateTime
              , Invnumber_Sale        TVarChar             
-             , PartnerId             Integer
              , PartnerName           TVarChar
              , PartionId             Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
@@ -40,8 +42,14 @@ RETURNS TABLE (MovementId            Integer
              , TotalChangePercent TFloat
              , TotalPay           TFloat
              , TotalPayOth        TFloat
-             , CountDebt          TFloat
-             , SummDebt           TFloat
+             , CountDebt_Start    TFloat
+             , SummDebt_Start     TFloat
+             , CountDebt_End      TFloat
+             , SummDebt_End       TFloat
+             , AmountSale        TFloat
+             , AmountKredit       TFloat
+             , SumPay           TFloat
+             , SumSale          TFloat 
   )
 AS
 $BODY$
@@ -52,47 +60,90 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
 
-     -- определяем магазин по принадлежности пользователя к сотруднику
-     vbUnitId:= lpGetUnitBySession (inSession);
-     
-     -- если у пользователя = 0, тогда может смотреть любой магазин, иначе только свой
-     IF COALESCE (vbUnitId, 0 ) <> 0 AND COALESCE (vbUnitId) <> inUnitId
-     THEN
-         RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав просмотра данных по подразделению <%> .', lfGet_Object_ValueData (vbUserId), lfGet_Object_ValueData (inUnitId);
-     END IF;
-    
     -- Результат
     RETURN QUERY
     WITH
-     tmpContainer AS (SELECT tmp.UnitId
+    tmpContainer_All AS (SELECT Container.WhereObjectId          AS UnitId
+                              , CLO_Client.ObjectId              AS PartnerId
+                              , Container.PartionId              AS PartionId
+                              , CLO_PartionMI.ObjectId           AS PartionMI_Id
+                              
+                              , (CASE WHEN Container.DescId = zc_Container_count() 
+                                          THEN Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) ELSE 0 END)                                                            AS StartAmount
+                              , (CASE WHEN Container.DescId = zc_Container_count() 
+                                          THEN Container.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END) AS EndAmount
+                              , (CASE WHEN Container.DescId = zc_Container_Summ() 
+                                          THEN Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) ELSE 0 END)                                                            AS StartSum
+                              , (CASE WHEN Container.DescId = zc_Container_Summ() 
+                                          THEN Container.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END) AS EndSum
+                           -- продажа кол
+                              , SUM (CASE WHEN Container.DescId = zc_Container_count() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                            AND MIContainer.isActive = TRUE AND MIContainer.MovementDescId = zc_Movement_Sale() 
+                                           THEN  COALESCE (MIContainer.Amount, 0) 
+                                           ELSE 0 
+                                     END)                                                  AS AmountSale
+                           -- возврат
+                              , SUM (CASE WHEN Container.DescId = zc_Container_count() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                            AND MIContainer.isActive = TRUE AND MIContainer.MovementDescId = zc_Movement_ReturnIn()
+                                           THEN  COALESCE (MIContainer.Amount, 0) 
+                                           ELSE 0 
+                                      END)                                                 AS AmountKredit
+                           -- Сумма оплаты в продаже
+                              , SUM (CASE WHEN Container.DescId = zc_Container_Summ() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                            AND MIContainer.isActive = FALSE AND MIContainer.MovementDescId = zc_Movement_Sale() 
+                                           THEN (-1) * COALESCE (MIContainer.Amount, 0) 
+                                           ELSE 0 
+                                      END)                                                 AS SumPay
+                           -- Сумма продажи
+                              , SUM (CASE WHEN Container.DescId = zc_Container_Summ() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                            AND MIContainer.isActive = TRUE AND MIContainer.MovementDescId = zc_Movement_Sale()
+                                           THEN COALESCE (MIContainer.Amount, 0) 
+                                           ELSE 0
+                                     END)  AS SumSale
+                         FROM Container
+                              INNER JOIN ContainerLinkObject AS CLO_Client
+                                                             ON CLO_Client.ContainerId = Container.Id
+                                                            AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
+                                                            AND CLO_Client.ObjectId    = inPartnerId
+                              LEFT JOIN ContainerLinkObject AS CLO_PartionMI
+                                                            ON CLO_PartionMI.ContainerId = Container.Id
+                                                           AND CLO_PartionMI.DescId = zc_ContainerLinkObject_PartionMI()
+                              LEFT JOIN MovementItemContainer AS MIContainer
+                                                              ON MIContainer.Containerid = Container.Id
+                                                             AND MIContainer.OperDate >= inStartDate
+                         WHERE Container.WhereObjectId = inUnitId OR inUnitId = 0
+                           AND Container.ObjectId <> zc_Enum_Account_20102()
+                         GROUP BY Container.WhereObjectId 
+                                , CLO_Client.ObjectId
+                                , Container.PartionId
+                                , CLO_PartionMI.ObjectId
+                                , Container.Amount 
+                                , Container.DescId
+                         HAVING  (CASE WHEN Container.DescId = zc_Container_count() 
+                                          THEN Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) ELSE 0 END) <> 0
+                             OR  (CASE WHEN Container.DescId = zc_Container_count() 
+                                          THEN Container.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END) <> 0
+                             OR  (CASE WHEN Container.DescId = zc_Container_Summ() 
+                                          THEN Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) ELSE 0 END) <> 0
+                             OR  (CASE WHEN Container.DescId = zc_Container_Summ() 
+                                          THEN Container.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END) <> 0
+                             OR SUM (CASE WHEN Container.DescId = zc_Container_Summ() AND COALESCE (MIContainer.Amount, 0) > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  COALESCE (MIContainer.Amount, 0) ELSE 0 END) <> 0
+                             OR SUM (CASE WHEN Container.DescId = zc_Container_Summ() AND COALESCE (MIContainer.Amount, 0) < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN (-1) * COALESCE (MIContainer.Amount, 0) ELSE 0 END) <> 0
+                         ) 
+                      
+   , tmpContainer AS (SELECT tmp.UnitId
                            , tmp.PartnerId
                            , tmp.PartionId
                            , tmp.PartionMI_Id
-                           , SUM (COALESCE (tmp.Amount,0))    AS CountDebt
-                           , SUM (COALESCE (tmp.AmountSum,0)) AS SummDebt
-                      FROM
-                          (SELECT Container.WhereObjectId                                                                    AS UnitId
-                                , CLO_Client.ObjectId                                                                        AS PartnerId
-                                , Container.PartionId                                                                        AS PartionId
-                                , CLO_PartionMI.ObjectId                                                                     AS PartionMI_Id
-                                , SUM (CASE WHEN Container.DescId = zc_Container_count() THEN Container.Amount ELSE 0 END )  AS Amount
-                                , SUM (CASE WHEN Container.DescId = zc_Container_Summ() THEN Container.Amount ELSE 0 END )   AS AmountSum
-                           FROM Container
-                                INNER JOIN ContainerLinkObject AS CLO_Client
-                                                       ON CLO_Client.ContainerId = Container.Id
-                                                      AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
-                                LEFT JOIN ContainerLinkObject AS CLO_PartionMI
-                                                              ON CLO_PartionMI.ContainerId = Container.Id
-                                                             AND CLO_PartionMI.DescId = zc_ContainerLinkObject_PartionMI()
-                           WHERE Container.WhereObjectId = inUnitId
-                             AND Container.ObjectId <> zc_Enum_Account_20102()
-                           GROUP BY Container.WhereObjectId 
-                                  , CLO_Client.ObjectId
-                                  , Container.PartionId
-                                  , CLO_PartionMI.ObjectId
-                                  , Container.Amount 
-                           HAVING (Container.Amount) <> 0
-                           ) AS tmp 
+                           , SUM (COALESCE (tmp.StartAmount,0))    AS CountDebt_Start
+                           , SUM (COALESCE (tmp.StartSum,0))       AS SummDebt_Start
+                           , SUM (COALESCE (tmp.EndAmount,0))      AS CountDebt_End
+                           , SUM (COALESCE (tmp.EndSum,0))         AS SummDebt_End
+                           , SUM (COALESCE (tmp.AmountSale,0))    AS AmountSale
+                           , SUM (COALESCE (tmp.AmountKredit,0))   AS AmountKredit
+                           , SUM (COALESCE (tmp.SumPay,0))       AS SumPay
+                           , SUM (COALESCE (tmp.SumSale,0))      AS SumSale
+                      FROM tmpContainer_All AS tmp 
                       GROUP BY tmp.UnitId
                              , tmp.PartnerId
                              , tmp.PartionId
@@ -116,8 +167,14 @@ BEGIN
                              , tmpContainer.PartionId
                              , MovementItem.Amount
 
-                             , tmpContainer.CountDebt
-                             , tmpContainer.SummDebt
+                             , tmpContainer.CountDebt_Start
+                             , tmpContainer.SummDebt_Start
+                             , tmpContainer.CountDebt_End
+                             , tmpContainer.SummDebt_End
+                             , tmpContainer.AmountSale
+                             , tmpContainer.AmountKredit
+                             , tmpContainer.SumPay
+                             , tmpContainer.SumSale
        
                         FROM tmpContainer
                          LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = tmpContainer.PartionMI_Id
@@ -184,7 +241,7 @@ BEGIN
                                                      AND MIFloat_TotalPayOth_Sale.DescId         = zc_MIFloat_TotalPayOth()
                     )
                     
-     , tmpData  AS  (SELECT tmp.MovementId
+  /*   , tmpData  AS  (SELECT tmp.MovementId
                           , tmp.MovementDescId
                           , tmp.OperDate
                           , tmp.Invnumber
@@ -202,12 +259,18 @@ BEGIN
                           , tmp.TotalChangePercent
                           , tmp.TotalPay                          
                           , tmp.TotalPayOth
-                          , tmp.CountDebt
-                          , tmp.SummDebt
+                          , tmp.CountDebt_Start
+                          , tmp.SummDebt_Start
+                          , tmp.CountDebt_Start
+                          , tmp.SummDebt_Start
+                          , tmp.AmountSale
+                          , tmp.AmountKredit
+                          , tmp.SumPay
+                          , tmp.SumSale
                      FROM tmpData_All AS tmp
                      WHERE tmp.CountDebt <> 0
                     )
-
+*/
      
         SELECT tmpData.MovementId
              , MovementDesc.ItemName          AS DescName
@@ -219,7 +282,6 @@ BEGIN
              , tmpData.OperDate_Sale
              , tmpData.Invnumber_Sale
 
-             , Object_Partner.Id              AS PartnerId
              , Object_Partner.ValueData       AS PartnerName
              , tmpData.PartionId
              , Object_Goods.Id                AS GoodsId
@@ -251,9 +313,15 @@ BEGIN
              , tmpData.TotalPay                 ::TFloat
              , tmpData.TotalPayOth              ::TFloat
 
-             , tmpData.CountDebt                ::TFloat
-             , tmpData.SummDebt                 ::TFloat
-        FROM tmpData
+             , tmpData.CountDebt_Start          ::TFloat
+             , tmpData.SummDebt_Start           ::TFloat
+             , tmpData.CountDebt_End            ::TFloat
+             , tmpData.SummDebt_End             ::TFloat
+             , tmpData.AmountSale              ::TFloat
+             , tmpData.AmountKredit             ::TFloat
+             , tmpData.SumPay                 ::TFloat
+             , tmpData.SumSale                ::TFloat 
+        FROM tmpData_All AS tmpData
             LEFT JOIN MovementDesc ON MovementDesc.Id = tmpData.MovementDescId
             LEFT JOIN MovementDesc AS MovementDesc_Sale ON MovementDesc_Sale.Id = tmpData.MovementDescId_Sale
             
@@ -287,10 +355,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
- 21.08.17         * на проводках
- 04.07.17         *
+ 22.08.17         *
 */
 
 -- тест
--- select * from gpReport_PartnerDebt (inUnitId := 506 ,  inSession := '2');
--- select * from gpReport_PartnerDebt(inUnitId := 4195 ,  inSession := '2');
+--select * from gpReport_MotionByPartner(inStartDate := ('17.02.2017')::TDateTime , inEndDate := ('28.02.2017')::TDateTime , inUnitId := 4195 , inPartnerId := 9765 ,  inSession := '2');

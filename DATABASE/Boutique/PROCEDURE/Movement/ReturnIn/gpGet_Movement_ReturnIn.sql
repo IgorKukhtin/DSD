@@ -30,6 +30,24 @@ BEGIN
      -- определять магазин по принадлежности пользователя к сотруднику
      vbUnitId:= lpGetUnitBySession (inSession);
      
+     IF inOperDate < '01.01.2017' THEN inOperDate := CURRENT_DATE; END IF;
+     -- пытаемся найти последний непроведенный документ
+     IF COALESCE (inMovementId, 0) = 0
+     THEN
+         inMovementId:= (SELECT tmp.Id
+                         FROM (SELECT Movement.Id
+                                    , ROW_NUMBER() OVER (ORDER BY Movement.Operdate desc, Movement.Id desc) AS Ord
+                               FROM Movement
+                                    INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                            ON MovementLinkObject_To.MovementId = Movement.Id
+                                           AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                           AND MovementLinkObject_To.ObjectId = vbUnitId
+                               WHERE Movement.DescId   = zc_Movement_ReturnIn()
+                                 AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                               ) AS tmp
+                         WHERE tmp.Ord = 1);
+     END IF;
+     
      IF COALESCE (inMovementId, 0) = 0
      THEN
          RETURN QUERY 

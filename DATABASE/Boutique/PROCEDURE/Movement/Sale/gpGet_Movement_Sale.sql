@@ -21,6 +21,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
+   DECLARE vbId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Sale());
@@ -28,6 +29,25 @@ BEGIN
      
      -- определять магазин по принадлежности пользователя к сотруднику
      vbUnitId:= lpGetUnitBySession (inSession);
+     
+     IF inOperDate < '01.01.2017' THEN inOperDate := CURRENT_DATE; END IF;
+     -- пытаемся найти последний непроведенный документ
+     IF COALESCE (inMovementId, 0) = 0
+     THEN
+         inMovementId:= (SELECT tmp.Id
+                         FROM (SELECT Movement.Id
+                                    , ROW_NUMBER() OVER (ORDER BY Movement.Operdate desc, Movement.Id desc) AS Ord
+                               FROM Movement
+                                    INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                            ON MovementLinkObject_From.MovementId = Movement.Id
+                                           AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                           AND MovementLinkObject_From.ObjectId = vbUnitId
+                               WHERE Movement.DescId   = zc_Movement_Sale()
+                                 AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                               ) AS tmp
+                         WHERE tmp.Ord = 1);
+     END IF;
+     
      
      IF COALESCE (inMovementId, 0) = 0
      THEN
