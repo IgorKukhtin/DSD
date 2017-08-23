@@ -46,10 +46,10 @@ RETURNS TABLE (MovementId            Integer
              , SummDebt_Start     TFloat
              , CountDebt_End      TFloat
              , SummDebt_End       TFloat
-             , AmountDebet        TFloat
+             , AmountSale        TFloat
              , AmountKredit       TFloat
-             , SumDebet           TFloat
-             , SumKredit          TFloat 
+             , SumPay           TFloat
+             , SumSale          TFloat 
   )
 AS
 $BODY$
@@ -68,18 +68,38 @@ BEGIN
                               , Container.PartionId              AS PartionId
                               , CLO_PartionMI.ObjectId           AS PartionMI_Id
                               
-                              ,  (CASE WHEN Container.DescId = zc_Container_count() 
+                              , (CASE WHEN Container.DescId = zc_Container_count() 
                                           THEN Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) ELSE 0 END)                                                            AS StartAmount
-                              ,  (CASE WHEN Container.DescId = zc_Container_count() 
+                              , (CASE WHEN Container.DescId = zc_Container_count() 
                                           THEN Container.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END) AS EndAmount
-                              ,  (CASE WHEN Container.DescId = zc_Container_Summ() 
+                              , (CASE WHEN Container.DescId = zc_Container_Summ() 
                                           THEN Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) ELSE 0 END)                                                            AS StartSum
-                              ,  (CASE WHEN Container.DescId = zc_Container_Summ() 
+                              , (CASE WHEN Container.DescId = zc_Container_Summ() 
                                           THEN Container.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END) AS EndSum
-                              ,  SUM (CASE WHEN Container.DescId = zc_Container_count() AND COALESCE (MIContainer.Amount, 0) > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  COALESCE (MIContainer.Amount, 0) ELSE 0 END)       AS AmountDebet
-                              ,  SUM (CASE WHEN Container.DescId = zc_Container_count() AND COALESCE (MIContainer.Amount, 0) < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN (-1) * COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS AmountKredit
-                              ,  SUM (CASE WHEN Container.DescId = zc_Container_Summ() AND COALESCE (MIContainer.Amount, 0) > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  COALESCE (MIContainer.Amount, 0) ELSE 0 END)        AS SumDebet
-                              ,  SUM (CASE WHEN Container.DescId = zc_Container_Summ() AND COALESCE (MIContainer.Amount, 0) < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN (-1) * COALESCE (MIContainer.Amount, 0) ELSE 0 END)  AS SumKredit
+                           -- продажа кол
+                              , SUM (CASE WHEN Container.DescId = zc_Container_count() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                            AND MIContainer.isActive = TRUE AND MIContainer.MovementDescId = zc_Movement_Sale() 
+                                           THEN  COALESCE (MIContainer.Amount, 0) 
+                                           ELSE 0 
+                                     END)                                                  AS AmountSale
+                           -- возврат
+                              , SUM (CASE WHEN Container.DescId = zc_Container_count() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                            AND MIContainer.isActive = TRUE AND MIContainer.MovementDescId = zc_Movement_ReturnIn()
+                                           THEN  COALESCE (MIContainer.Amount, 0) 
+                                           ELSE 0 
+                                      END)                                                 AS AmountKredit
+                           -- Сумма оплаты в продаже
+                              , SUM (CASE WHEN Container.DescId = zc_Container_Summ() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                            AND MIContainer.isActive = FALSE AND MIContainer.MovementDescId = zc_Movement_Sale() 
+                                           THEN (-1) * COALESCE (MIContainer.Amount, 0) 
+                                           ELSE 0 
+                                      END)                                                 AS SumPay
+                           -- Сумма продажи
+                              , SUM (CASE WHEN Container.DescId = zc_Container_Summ() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                            AND MIContainer.isActive = TRUE AND MIContainer.MovementDescId = zc_Movement_Sale()
+                                           THEN COALESCE (MIContainer.Amount, 0) 
+                                           ELSE 0
+                                     END)  AS SumSale
                          FROM Container
                               INNER JOIN ContainerLinkObject AS CLO_Client
                                                              ON CLO_Client.ContainerId = Container.Id
@@ -92,6 +112,7 @@ BEGIN
                                                               ON MIContainer.Containerid = Container.Id
                                                              AND MIContainer.OperDate >= inStartDate
                          WHERE Container.WhereObjectId = inUnitId OR inUnitId = 0
+                           AND Container.ObjectId <> zc_Enum_Account_20102()
                          GROUP BY Container.WhereObjectId 
                                 , CLO_Client.ObjectId
                                 , Container.PartionId
@@ -118,10 +139,10 @@ BEGIN
                            , SUM (COALESCE (tmp.StartSum,0))       AS SummDebt_Start
                            , SUM (COALESCE (tmp.EndAmount,0))      AS CountDebt_End
                            , SUM (COALESCE (tmp.EndSum,0))         AS SummDebt_End
-                           , SUM (COALESCE (tmp.AmountDebet,0))    AS AmountDebet
+                           , SUM (COALESCE (tmp.AmountSale,0))    AS AmountSale
                            , SUM (COALESCE (tmp.AmountKredit,0))   AS AmountKredit
-                           , SUM (COALESCE (tmp.SumDebet,0))       AS SumDebet
-                           , SUM (COALESCE (tmp.SumKredit,0))      AS SumKredit
+                           , SUM (COALESCE (tmp.SumPay,0))       AS SumPay
+                           , SUM (COALESCE (tmp.SumSale,0))      AS SumSale
                       FROM tmpContainer_All AS tmp 
                       GROUP BY tmp.UnitId
                              , tmp.PartnerId
@@ -150,10 +171,10 @@ BEGIN
                              , tmpContainer.SummDebt_Start
                              , tmpContainer.CountDebt_End
                              , tmpContainer.SummDebt_End
-                             , tmpContainer.AmountDebet
+                             , tmpContainer.AmountSale
                              , tmpContainer.AmountKredit
-                             , tmpContainer.SumDebet
-                             , tmpContainer.SumKredit
+                             , tmpContainer.SumPay
+                             , tmpContainer.SumSale
        
                         FROM tmpContainer
                          LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = tmpContainer.PartionMI_Id
@@ -242,10 +263,10 @@ BEGIN
                           , tmp.SummDebt_Start
                           , tmp.CountDebt_Start
                           , tmp.SummDebt_Start
-                          , tmp.AmountDebet
+                          , tmp.AmountSale
                           , tmp.AmountKredit
-                          , tmp.SumDebet
-                          , tmp.SumKredit
+                          , tmp.SumPay
+                          , tmp.SumSale
                      FROM tmpData_All AS tmp
                      WHERE tmp.CountDebt <> 0
                     )
@@ -296,10 +317,10 @@ BEGIN
              , tmpData.SummDebt_Start           ::TFloat
              , tmpData.CountDebt_End            ::TFloat
              , tmpData.SummDebt_End             ::TFloat
-             , tmpData.AmountDebet              ::TFloat
+             , tmpData.AmountSale              ::TFloat
              , tmpData.AmountKredit             ::TFloat
-             , tmpData.SumDebet                 ::TFloat
-             , tmpData.SumKredit                ::TFloat 
+             , tmpData.SumPay                 ::TFloat
+             , tmpData.SumSale                ::TFloat 
         FROM tmpData_All AS tmpData
             LEFT JOIN MovementDesc ON MovementDesc.Id = tmpData.MovementDescId
             LEFT JOIN MovementDesc AS MovementDesc_Sale ON MovementDesc_Sale.Id = tmpData.MovementDescId_Sale

@@ -1273,6 +1273,13 @@ object SaleForm: TSaleForm
         DataType = ftBoolean
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 0c
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 246
     Top = 351
@@ -2666,7 +2673,7 @@ object SaleForm: TSaleForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = 0c
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -2820,6 +2827,13 @@ object SaleForm: TSaleForm
         Value = 'NULL'
         Component = edInsertDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
         MultiSelectSeparator = ','
       end>
     PackSize = 1

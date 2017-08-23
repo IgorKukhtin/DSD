@@ -461,7 +461,7 @@ object ReturnInForm: TReturnInForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 61
           end
           object CompositionName: TcxGridDBColumn
             Caption = #1057#1086#1089#1090#1072#1074
@@ -1079,6 +1079,13 @@ object ReturnInForm: TReturnInForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 0c
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 246
@@ -2440,7 +2447,7 @@ object ReturnInForm: TReturnInForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = 0c
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -2608,6 +2615,13 @@ object ReturnInForm: TReturnInForm
         Value = 'NULL'
         Component = edInsertDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
         MultiSelectSeparator = ','
       end>
     PackSize = 1

@@ -52,6 +52,10 @@ type
     edClient: TcxButtonEdit;
     GuidesClient: TdsdGuides;
     FormParams: TdsdFormParams;
+    AmountSale: TcxGridDBColumn;
+    AmountKredit: TcxGridDBColumn;
+    SumPay: TcxGridDBColumn;
+    SumSale: TcxGridDBColumn;
   private
     { Private declarations }
   public

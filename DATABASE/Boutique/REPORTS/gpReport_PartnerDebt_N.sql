@@ -64,39 +64,40 @@ BEGIN
     -- Результат
     RETURN QUERY
     WITH
-     tmpContainer_All AS (SELECT tmp.UnitId
-                               , tmp.PartnerId
-                               , tmp.PartionId
-                               , tmp.PartionMI_Id
-                               , SUM (COALESCE (tmp.Amount,0))    AS CountDebt
-                               , SUM (COALESCE (tmp.AmountSum,0)) AS SummDebt
-                          FROM
-                              (SELECT Container.WhereObjectId                                                                    AS UnitId
-                                    , CLO_Client.ObjectId                                                                        AS PartnerId
-                                    , Container.PartionId                                                                        AS PartionId
-                                    , CLO_PartionMI.ObjectId                                                                     AS PartionMI_Id
-                                    , SUM (CASE WHEN Container.DescId = zc_Container_count() THEN Container.Amount ELSE 0 END )  AS Amount
-                                    , SUM (CASE WHEN Container.DescId = zc_Container_Summ() THEN Container.Amount ELSE 0 END )   AS AmountSum
-                               FROM Container
-                                    INNER JOIN ContainerLinkObject AS CLO_Client
-                                                           ON CLO_Client.ContainerId = Container.Id
-                                                          AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
-                                    LEFT JOIN ContainerLinkObject AS CLO_PartionMI
-                                                                  ON CLO_PartionMI.ContainerId = Container.Id
-                                                                 AND CLO_PartionMI.DescId = zc_ContainerLinkObject_PartionMI()
-                               WHERE Container.WhereObjectId = inUnitId
-                               GROUP BY Container.WhereObjectId 
-                                      , CLO_Client.ObjectId
-                                      , Container.PartionId
-                                      , CLO_PartionMI.ObjectId
-                                      , Container.Amount 
-                               HAVING (Container.Amount) <> 0
-                               ) AS tmp 
-                          GROUP BY tmp.UnitId
-                                 , tmp.PartnerId
-                                 , tmp.PartionId
-                                 , tmp.PartionMI_Id
-                          )
+     tmpContainer AS (SELECT tmp.UnitId
+                           , tmp.PartnerId
+                           , tmp.PartionId
+                           , tmp.PartionMI_Id
+                           , SUM (COALESCE (tmp.Amount,0))    AS CountDebt
+                           , SUM (COALESCE (tmp.AmountSum,0)) AS SummDebt
+                      FROM
+                          (SELECT Container.WhereObjectId                                                                    AS UnitId
+                                , CLO_Client.ObjectId                                                                        AS PartnerId
+                                , Container.PartionId                                                                        AS PartionId
+                                , CLO_PartionMI.ObjectId                                                                     AS PartionMI_Id
+                                , SUM (CASE WHEN Container.DescId = zc_Container_count() THEN Container.Amount ELSE 0 END )  AS Amount
+                                , SUM (CASE WHEN Container.DescId = zc_Container_Summ() THEN Container.Amount ELSE 0 END )   AS AmountSum
+                           FROM Container
+                                INNER JOIN ContainerLinkObject AS CLO_Client
+                                                       ON CLO_Client.ContainerId = Container.Id
+                                                      AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
+                                LEFT JOIN ContainerLinkObject AS CLO_PartionMI
+                                                              ON CLO_PartionMI.ContainerId = Container.Id
+                                                             AND CLO_PartionMI.DescId = zc_ContainerLinkObject_PartionMI()
+                           WHERE Container.WhereObjectId = inUnitId
+                             AND Container.ObjectId <> zc_Enum_Account_20102()
+                           GROUP BY Container.WhereObjectId 
+                                  , CLO_Client.ObjectId
+                                  , Container.PartionId
+                                  , CLO_PartionMI.ObjectId
+                                  , Container.Amount 
+                           HAVING (Container.Amount) <> 0
+                           ) AS tmp 
+                      GROUP BY tmp.UnitId
+                             , tmp.PartnerId
+                             , tmp.PartionId
+                             , tmp.PartionMI_Id
+                      )
                          
    , tmpDataPartion AS (SELECT Movement.Id              AS MovementId
                              , Movement.DescId          AS MovementDescId

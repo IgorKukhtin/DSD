@@ -162,6 +162,26 @@ inherited Report_MotionByPartnerForm: TReport_MotionByPartnerForm
               Format = ',0.####'
               Kind = skSum
               Column = SummDebt_End
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountKredit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SumPay
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SumSale
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -225,6 +245,26 @@ inherited Report_MotionByPartnerForm: TReport_MotionByPartnerForm
               Format = ',0.####'
               Kind = skSum
               Column = SummDebt_End
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountKredit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SumPay
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SumSale
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -561,6 +601,37 @@ inherited Report_MotionByPartnerForm: TReport_MotionByPartnerForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object AmountSale: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1086#1076#1072#1085#1086
+            DataBinding.FieldName = 'AmountSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object AmountKredit: TcxGridDBColumn
+            DataBinding.FieldName = 'AmountKredit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Options.Editing = False
+          end
+          object SumPay: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' '#1074' '#1075#1088#1085
+            DataBinding.FieldName = 'SumPay'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object SumSale: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080
+            DataBinding.FieldName = 'SumSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
         end
       end
