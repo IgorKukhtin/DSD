@@ -1,9 +1,10 @@
-inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
-  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1077#1082#1091#1097#1080#1084' '#1076#1086#1083#1075#1072#1084'>'
+inherited Report_MotionByPartnerForm: TReport_MotionByPartnerForm
+  Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 425
   ClientWidth = 1065
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 1081
   ExplicitHeight = 463
   PixelsPerInch = 96
@@ -14,42 +15,42 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
     ExplicitWidth = 1065
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
-      Left = 775
+      Left = 36
       Top = 6
       EditValue = 42736d
-      ExplicitLeft = 775
+      ExplicitLeft = 36
       ExplicitTop = 6
     end
     inherited deEnd: TcxDateEdit
-      Left = 889
+      Left = 150
       Top = 6
       EditValue = 42736d
-      ExplicitLeft = 889
+      ExplicitLeft = 150
       ExplicitTop = 6
     end
     inherited cxLabel1: TcxLabel
-      Left = 568
+      Left = 18
       Top = 7
-      Caption = #1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' '#1079#1072' '#1087#1077#1088#1080#1086#1076' c:'
-      ExplicitLeft = 568
+      Caption = #1057':'
+      ExplicitLeft = 18
       ExplicitTop = 7
-      ExplicitWidth = 203
+      ExplicitWidth = 15
     end
     inherited cxLabel2: TcxLabel
-      Left = 868
+      Left = 128
       Top = 7
       Caption = #1087#1086':'
-      ExplicitLeft = 868
+      ExplicitLeft = 128
       ExplicitTop = 7
       ExplicitWidth = 20
     end
     object cxLabel3: TcxLabel
-      Left = 34
+      Left = 271
       Top = 7
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object edUnit: TcxButtonEdit
-      Left = 128
+      Left = 361
       Top = 6
       Properties.Buttons = <
         item
@@ -61,7 +62,7 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
       Properties.UseNullString = True
       TabOrder = 5
       Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
-      Width = 329
+      Width = 201
     end
   end
   inherited PageControl: TcxPageControl [1]
@@ -137,7 +138,7 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountDebt
+              Column = CountDebt_Start
             end
             item
               Format = ',0.####'
@@ -150,7 +151,17 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = SummDebt
+              Column = SummDebt_Start
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountDebt_End
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummDebt_End
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -190,7 +201,7 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountDebt
+              Column = CountDebt_Start
             end
             item
               Format = ',0.####'
@@ -203,7 +214,17 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = SummDebt
+              Column = SummDebt_Start
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountDebt_End
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummDebt_End
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -445,9 +466,9 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
             HeaderAlignmentVert = vaCenter
             Width = 72
           end
-          object CountDebt: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1083#1075
-            DataBinding.FieldName = 'CountDebt'
+          object CountDebt_Start: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1083#1075' ('#1085#1072#1095'.)'
+            DataBinding.FieldName = 'CountDebt_Start'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -457,9 +478,33 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
             Options.Editing = False
             Width = 80
           end
-          object SummDebt: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1076#1086#1083#1075#1072
-            DataBinding.FieldName = 'SummDebt'
+          object SummDebt_Start: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1076#1086#1083#1075#1072' ('#1085#1072#1095'.)'
+            DataBinding.FieldName = 'SummDebt_Start'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1057#1082#1080#1076#1082#1080' ('#1074' '#1043#1056#1053')'
+            Width = 71
+          end
+          object CountDebt_End: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1083#1075' ('#1082#1086#1085#1077#1095#1085'.)'
+            DataBinding.FieldName = 'CountDebt_End'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object SummDebt_End: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1076#1086#1083#1075#1072' ('#1082#1086#1085#1077#1095#1085'.)'
+            DataBinding.FieldName = 'SummDebt_End'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -521,6 +566,26 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
       end
     end
   end
+  object cxLabel4: TcxLabel [2]
+    Left = 595
+    Top = 7
+    Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100':'
+  end
+  object edClient: TcxButtonEdit [3]
+    Left = 665
+    Top = 6
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.Nullstring = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
+    Properties.ReadOnly = True
+    Properties.UseNullString = True
+    TabOrder = 7
+    Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+    Width = 201
+  end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
@@ -555,11 +620,8 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spGet_UserUnit
+      StoredProc = spSelect
       StoredProcList = <
-        item
-          StoredProc = spGet_UserUnit
-        end
         item
           StoredProc = spSelect
         end>
@@ -574,8 +636,8 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_PartnerDebtDialogForm'
-      FormNameParam.Value = 'TReport_PartnerDebtDialogForm'
+      FormName = 'TReport_MotionByPartnerDialogForm'
+      FormNameParam.Value = 'TReport_MotionByPartnerDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -593,6 +655,39 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
           Component = GuidesUnit
           ComponentItem = 'TextValue'
           DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerId'
+          Value = Null
+          Component = GuidesClient
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerName'
+          Value = Null
+          Component = GuidesClient
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartDate'
+          Value = 'NULL'
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 'NULL'
+          Component = deEnd
+          DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -659,29 +754,13 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
       Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' '#1079#1072' '#1087#1077#1088#1080#1086#1076'>'
       Hint = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' '#1079#1072' '#1087#1077#1088#1080#1086#1076'>'
       ImageIndex = 55
-      FormName = 'TReport_MotionByPartnerForm'
-      FormNameParam.Value = 'TReport_MotionByPartnerForm'
+      FormName = 'TReport_GoodsForm'
+      FormNameParam.Value = 'TReport_GoodsForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'StartDate'
-          Value = '0'
-          Component = deStart
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EndDate'
-          Value = 'NULL'
-          Component = deEnd
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UninId'
+          Name = 'LocationId'
           Value = ''
           Component = GuidesUnit
           ComponentItem = 'Key'
@@ -689,7 +768,7 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'UnitName'
+          Name = 'LocationName'
           Value = ''
           Component = GuidesUnit
           ComponentItem = 'TextValue'
@@ -698,18 +777,68 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PartnerId'
+          Name = 'GoodsId'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PartnerId'
+          ComponentItem = 'GoodsId'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PartnerName'
+          Name = 'GoodsName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PartnerName'
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsSizeId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsSizeId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsSizeName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsSizeName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionId'
+          Value = '0'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPeriod'
+          Value = 'TRUE'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPartion'
+          Value = 'TRUE'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId'
+          Value = '0'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -899,12 +1028,36 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
     Top = 160
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_PartnerDebt'
+    StoredProcName = 'gpReport_MotionByPartner'
     Params = <
+      item
+        Name = 'inStartDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'inUnitId'
         Value = Null
         Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = GuidesClient
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -944,22 +1097,6 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
         end
         item
           Visible = True
-          ItemName = 'bbOpenReportForm'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenReportForm_Partner'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -992,8 +1129,8 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
     end
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 984
-    Top = 8
+    Left = 240
+    Top = 0
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -1036,7 +1173,7 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 400
+    Left = 424
   end
   object spGet_UserUnit: TdsdStoredProc
     StoredProcName = 'gpGet_UserUnit'
@@ -1061,5 +1198,82 @@ inherited Report_PartnerDebtForm: TReport_PartnerDebtForm
     PackSize = 1
     Left = 584
     Top = 144
+  end
+  object GuidesClient: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edClient
+    FormNameParam.Value = 'TClientForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TClientForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesClient
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesClient
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 728
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'UnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerId'
+        Value = ''
+        Component = GuidesClient
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerName'
+        Value = ''
+        Component = GuidesClient
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartDate'
+        Value = ''
+        Component = deStart
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDate'
+        Value = ''
+        Component = deEnd
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    Left = 296
+    Top = 264
   end
 end

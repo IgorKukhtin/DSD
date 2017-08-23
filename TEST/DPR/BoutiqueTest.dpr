@@ -262,7 +262,9 @@ uses
   GoodsAccount_ReturnIn in '..\..\FormsBoutique\Document\GoodsAccount_ReturnIn.pas' {GoodsAccount_ReturnInForm: TParentForm},
   GoodsAccount_ReturnInJournal in '..\..\FormsBoutique\Document\GoodsAccount_ReturnInJournal.pas' {GoodsAccount_ReturnInJournalForm: TParentForm},
   GoodsPrintChoice in '..\..\FormsBoutique\Guides\GoodsPrintChoice.pas' {GoodsPrintChoiceForm: TParentForm},
-  GoodsPrint in '..\..\FormsBoutique\Guides\GoodsPrint.pas' {GoodsPrintForm: TParentForm};
+  GoodsPrint in '..\..\FormsBoutique\Guides\GoodsPrint.pas' {GoodsPrintForm: TParentForm},
+  Report_MotionByPartner in '..\..\FormsBoutique\Report\Report_MotionByPartner.pas' {Report_MotionByPartnerForm: TParentForm},
+  Report_MotionByPartnerDialog in '..\..\FormsBoutique\Report\Report_MotionByPartnerDialog.pas' {Report_MotionByPartnerDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

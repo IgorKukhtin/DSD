@@ -162,6 +162,8 @@ type
     N59: TMenuItem;
     actGoodsPrint: TdsdOpenForm;
     N64: TMenuItem;
+    actReport_MotionByPartner: TdsdOpenForm;
+    N65: TMenuItem;
   private
     { Private declarations }
   public
