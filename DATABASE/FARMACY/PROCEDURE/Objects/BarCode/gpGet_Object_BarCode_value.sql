@@ -23,6 +23,7 @@ BEGIN
                                        AND ObjectLink_BarCode_Object.ChildObjectId = inObjectId
 
                    INNER JOIN Object AS Object_BarCode ON Object_BarCode.Id = ObjectLink_BarCode_Goods.ObjectId
+                                                      AND Object_BarCode.isErased = FALSE
 
               WHERE ObjectLink_BarCode_Goods.ChildObjectId = inGoodsId
                 AND ObjectLink_BarCode_Goods.DescId        = zc_ObjectLink_BarCode_Goods()
@@ -39,7 +40,8 @@ BEGIN
                                              AND ObjectLink_BarCode_Object.DescId        = zc_ObjectLink_BarCode_Object()
                                              AND ObjectLink_BarCode_Object.ChildObjectId = inObjectId
 
-                         INNER JOIN Object AS Object_BarCode ON Object_BarCode.Id = ObjectLink_BarCode_Goods.ObjectId
+                         INNER JOIN Object AS Object_BarCode ON Object_BarCode.Id       = ObjectLink_BarCode_Goods.ObjectId
+                                                            AND Object_BarCode.isErased = FALSE
 
                     WHERE ObjectLink_BarCode_Goods.ChildObjectId = inGoodsId
                       AND ObjectLink_BarCode_Goods.DescId        = zc_ObjectLink_BarCode_Goods()

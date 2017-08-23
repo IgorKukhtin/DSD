@@ -30,6 +30,14 @@ CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_Currency() RETURNS Integer AS 
 INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
   SELECT 'zc_ContainerLinkObject_Currency', 'Валюта', zc_Object_Currency() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_Currency');
 
+CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_Cash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_Cash'); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
+  SELECT 'zc_ContainerLinkObject_Cash', 'Касса', zc_Object_Cash() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_Cash');
+
+CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_BankAccount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_BankAccount'); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
+  SELECT 'zc_ContainerLinkObject_BankAccount', 'Расчетный счет', zc_Object_Cash() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_BankAccount');
+
 CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_Unit'); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
   SELECT 'zc_ContainerLinkObject_Unit', 'Подразделение', zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_Unit');

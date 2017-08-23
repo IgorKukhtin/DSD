@@ -18,7 +18,9 @@ $BODY$
 BEGIN
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
-     -- !!!обязательно!!! очистили таблицу - элементы по контрагенту, со всеми свойствами для формирования Аналитик в проводках
+     -- !!!обязательно!!! очистили таблицу - элементы оплаты, со всеми свойствами для формирования Аналитик в проводках
+     DELETE FROM _tmpPay;
+     -- !!!обязательно!!! очистили таблицу - элементы по покупателю, со всеми свойствами для формирования Аналитик в проводках
      DELETE FROM _tmpItem_SummClient;
      -- !!!обязательно!!! очистили таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      DELETE FROM _tmpItem;
@@ -222,15 +224,6 @@ BEGIN
      END IF;
 
 
-     -- проверка что скидка та что надо
-     IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.TotalChangePercent <> _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204)
-     THEN
-         RAISE EXCEPTION 'Ошибка. Скида итого <%> не равна <%>.', (SELECT _tmpItem.TotalChangePercent FROM _tmpItem WHERE _tmpItem.TotalChangePercent <> _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204 ORDER BY _tmpItem.MovementItemId LIMIT 1)
-                                                                , (SELECT _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204 FROM _tmpItem WHERE _tmpItem.TotalChangePercent <> _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204 ORDER BY _tmpItem.MovementItemId LIMIT 1)
-         ;
-     END IF;
-
-
      -- заполняем таблицу - элементы по контрагенту, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem_SummClient (MovementItemId, ContainerId_Summ, ContainerId_Summ_20102, ContainerId_Goods, AccountId, AccountId_20102, InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                                     , GoodsId, PartionId, GoodsSizeId, PartionId_MI
@@ -325,6 +318,143 @@ BEGIN
               FROM _tmpItem
              ) AS tmp
         ;
+
+
+     -- проверка что сумма оплаты ....
+     -- IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.TotalChangePercent <> _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204)
+     -- THEN
+     --     RAISE EXCEPTION 'Ошибка. Скида итого <%> не равна <%>.', (SELECT _tmpItem.TotalChangePercent FROM _tmpItem WHERE _tmpItem.TotalChangePercent <> _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204 ORDER BY _tmpItem.MovementItemId LIMIT 1)
+     --                                                            , (SELECT _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204 FROM _tmpItem WHERE _tmpItem.TotalChangePercent <> _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204 ORDER BY _tmpItem.MovementItemId LIMIT 1)
+     --     ;
+     -- END IF;
+
+
+     -- заполняем таблицу - элементы оплаты, со всеми свойствами для формирования Аналитик в проводках
+     INSERT INTO _tmpPay (MovementItemId, ParentId, ObjectId, ObjectDescId, CurrencyId
+                        , AccountId, ContainerId, ContainerId_Currency
+                        , OperSumm, OperSumm_Currency
+                        , ObjectId_from
+                        , AccountId_from, ContainerId_from
+                        , OperSumm_from
+                         )
+        SELECT tmp.MovementItemId
+             , tmp.ParentId
+             , tmp.ObjectId
+             , tmp.ObjectDescId
+             , tmp.CurrencyId
+             , tmp.AccountId
+
+               -- ContainerId
+             , lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                     , inParentId          := NULL
+                                     , inObjectId          := tmp.AccountId
+                                     , inPartionId         := NULL
+                                     , inJuridicalId_basis := vbJuridicalId_Basis
+                                     , inBusinessId        := vbBusinessId
+                                     , inDescId_1          := CASE WHEN tmp.ObjectDescId = zc_Object_Cash() THEN zc_ContainerLinkObject_Cash() WHEN tmp.ObjectDescId = zc_Object_BankAccount() THEN zc_ContainerLinkObject_BankAccount() END
+                                     , inObjectId_1        := tmp.ObjectId
+                                     , inDescId_2          := zc_ContainerLinkObject_Currency()
+                                     , inObjectId_2        := tmp.CurrencyId
+                                      ) AS ContainerId
+
+               -- ContainerId_Currency
+             , CASE WHEN tmp.CurrencyId <> zc_Currency_Basis() THEN
+               lpInsertFind_Container (inContainerDescId   := zc_Container_SummCurrency()
+                                     , inParentId          := NULL
+                                     , inObjectId          := tmp.AccountId
+                                     , inPartionId         := NULL
+                                     , inJuridicalId_basis := vbJuridicalId_Basis
+                                     , inBusinessId        := vbBusinessId
+                                     , inDescId_1          := CASE WHEN tmp.ObjectDescId = zc_Object_Cash() THEN zc_ContainerLinkObject_Cash() WHEN tmp.ObjectDescId = zc_Object_BankAccount() THEN zc_ContainerLinkObject_BankAccount() END
+                                     , inObjectId_1        := tmp.ObjectId
+                                     , inDescId_2          := zc_ContainerLinkObject_Currency()
+                                     , inObjectId_2        := tmp.CurrencyId
+                                      )
+               END AS ContainerId_Currency
+
+             , tmp.OperSumm
+             , tmp.OperSumm_Currency
+
+             , tmp.ObjectId_from
+             , tmp.AccountId_from
+             , CASE WHEN tmp.OperSumm_from <> 0 THEN
+               lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                     , inParentId          := NULL
+                                     , inObjectId          := tmp.AccountId_from
+                                     , inPartionId         := NULL
+                                     , inJuridicalId_basis := vbJuridicalId_Basis
+                                     , inBusinessId        := vbBusinessId
+                                     , inDescId_1          := zc_ContainerLinkObject_Cash()
+                                     , inObjectId_1        := tmp.ObjectId_from
+                                     , inDescId_2          := zc_ContainerLinkObject_Currency()
+                                     , inObjectId_2        := tmp.CurrencyId_from
+                                      )
+                         ELSE 0
+               END AS ContainerId_from
+             , tmp.OperSumm_from
+
+        FROM (SELECT MovementItem.Id       AS MovementItemId
+                   , MovementItem.ParentId AS ParentId
+                   , MovementItem.ObjectId AS ObjectId
+                   , Object.DescId         AS ObjectDescId
+
+                   , CASE -- Денежные средства + Касса магазинов + касса*****
+                          WHEN MILinkObject_Currency.ObjectId = zc_Currency_Basis() AND Object.DescId = zc_Object_Cash()
+                              THEN zc_Enum_Account_30201()
+                          -- Денежные средства + Касса магазинов + в валюте
+                          WHEN Object.DescId = zc_Object_Cash()
+                              THEN zc_Enum_Account_30202()
+                          -- Денежные средства + расчетный счет + расчетный счет
+                          WHEN MILinkObject_Currency.ObjectId = zc_Currency_Basis() AND Object.DescId = zc_Object_BankAccount()
+                              THEN zc_Enum_Account_30301()
+                     END AS AccountId
+
+                     -- если надо - переведем сумму в Валюте в ГРН
+                   , CASE WHEN MILinkObject_Currency.ObjectId = zc_Currency_Basis() THEN MovementItem.Amount ELSE zfCalc_CurrencyFrom (MovementItem.Amount, MIFloat_CurrencyValue.ValueData, MIFloat_ParValue.ValueData) END AS OperSumm
+                   , CASE WHEN MILinkObject_Currency.ObjectId = zc_Currency_Basis() THEN 0 ELSE MovementItem.Amount END AS OperSumm_Currency
+                   , MILinkObject_Currency.ObjectId AS CurrencyId
+
+                     -- Валюта для обмен
+                   , CASE WHEN MovementItem.ParentId IS NULL THEN zc_Currency_Basis()   ELSE 0 END AS CurrencyId_from
+                     -- Касса в грн для обмен
+                   , CASE WHEN MovementItem.ParentId IS NULL THEN MILinkObject_Cash.ObjectId ELSE 0 END AS ObjectId_from
+                     -- Счет в грн для обмен всегда - Денежные средства + Касса магазинов + касса*****
+                   , CASE WHEN MovementItem.ParentId IS NULL THEN zc_Enum_Account_30201()    ELSE 0 END AS AccountId_from
+                     -- Расчетная сумма в грн для обмен
+                   , CASE WHEN MovementItem.ParentId IS NULL THEN zfCalc_CurrencyFrom (MovementItem.Amount, MIFloat_CurrencyValue.ValueData, MIFloat_ParValue.ValueData) ELSE 0 END AS OperSumm_from
+              FROM Movement
+                   JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                    AND MovementItem.DescId     = zc_MI_Child()
+                                    AND MovementItem.isErased   = FALSE
+                   LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
+                                                    ON MILinkObject_Currency.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_Currency.DescId         = zc_MILinkObject_Currency()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Cash
+                                                    ON MILinkObject_Cash.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_Cash.DescId         = zc_MILinkObject_Cash()
+                   LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValue
+                                               ON MIFloat_CurrencyValue.MovementItemId = MovementItem.Id
+                                              AND MIFloat_CurrencyValue.DescId         = zc_MIFloat_CurrencyValue()
+                   LEFT JOIN MovementItemFloat AS MIFloat_ParValue
+                                               ON MIFloat_ParValue.MovementItemId = MovementItem.Id
+                                              AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
+              WHERE Movement.Id       = inMovementId
+                AND Movement.DescId   = zc_Movement_Sale()
+                AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+             ) AS tmp
+        ;
+
+
+
+     -- проверка что сумма оплаты ....
+     IF  COALESCE ((SELECT SUM (_tmpItem_SummClient.TotalPay) FROM _tmpItem_SummClient), 0)
+      <> COALESCE ((SELECT SUM (_tmpPay.OperSumm - _tmpPay.OperSumm_from) FROM _tmpPay), 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка. Сумма оплаты Main <%> не равна Child <%>.', (SELECT SUM (_tmpItem_SummClient.TotalPay) FROM _tmpItem_SummClient)
+                                                                            , (SELECT SUM (_tmpPay.OperSumm - _tmpPay.OperSumm_from) FROM _tmpPay)
+         ;
+     END IF;
 
 
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -851,7 +981,7 @@ BEGIN
             , _tmpItem_SummClient.ContainerId_Summ    AS ContainerIntId_Analyzer-- Контейнер "товар"
             , _tmpItem_SummClient.GoodsSizeId         AS ObjectIntId_Analyzer   -- Аналитический справочник
             , vbUnitId                                AS ObjectExtId_Analyzer   -- Аналитический справочник - Подразделение
-            , 1 * _tmpCalc.Amount                     AS Amount
+            , _tmpCalc.Amount                         AS Amount
             , vbOperDate                              AS OperDate
             , FALSE                                   AS isActive
        FROM _tmpItem_SummClient
@@ -862,7 +992,7 @@ BEGIN
                   , zc_Enum_AnalyzerId_SaleSumm_10100()              AS AnalyzerId
                   , -1 * _tmpItem_SummClient.OperSummPriceList_sale  AS Amount
              FROM _tmpItem_SummClient
-             WHERE _tmpItem_SummClient.OperCount_sale > 0 
+             WHERE _tmpItem_SummClient.OperCount_sale > 0
             UNION ALL
              -- сезонная скидка
              SELECT _tmpItem_SummClient.MovementItemId               AS MovementItemId
@@ -870,7 +1000,7 @@ BEGIN
                   , zc_Enum_AnalyzerId_SaleSumm_10201()              AS AnalyzerId
                   , _tmpItem_SummClient.Summ_10201                   AS Amount
              FROM _tmpItem_SummClient
-             WHERE _tmpItem_SummClient.OperCount_sale <> 0 
+             WHERE _tmpItem_SummClient.OperCount_sale <> 0
                AND _tmpItem_SummClient.Summ_10201     <> 0
 
             UNION ALL
@@ -880,7 +1010,7 @@ BEGIN
                   , zc_Enum_AnalyzerId_SaleSumm_10202()              AS AnalyzerId
                   , _tmpItem_SummClient.Summ_10202                   AS Amount
              FROM _tmpItem_SummClient
-             WHERE _tmpItem_SummClient.OperCount_sale <> 0 
+             WHERE _tmpItem_SummClient.OperCount_sale <> 0
                AND _tmpItem_SummClient.Summ_10202     <> 0
             UNION ALL
              -- скидка клиента
@@ -889,7 +1019,7 @@ BEGIN
                   , zc_Enum_AnalyzerId_SaleSumm_10203()              AS AnalyzerId
                   , _tmpItem_SummClient.Summ_10203                   AS Amount
              FROM _tmpItem_SummClient
-             WHERE _tmpItem_SummClient.OperCount_sale <> 0 
+             WHERE _tmpItem_SummClient.OperCount_sale <> 0
                AND _tmpItem_SummClient.Summ_10203     <> 0
             UNION ALL
              -- скидка дополнительная
@@ -898,7 +1028,7 @@ BEGIN
                   , zc_Enum_AnalyzerId_SaleSumm_10204()              AS AnalyzerId
                   , _tmpItem_SummClient.Summ_10204                   AS Amount
              FROM _tmpItem_SummClient
-             WHERE _tmpItem_SummClient.OperCount_sale <> 0 
+             WHERE _tmpItem_SummClient.OperCount_sale <> 0
                AND _tmpItem_SummClient.Summ_10204     <> 0
             UNION ALL
              -- скидка дополнительная
@@ -907,10 +1037,86 @@ BEGIN
                   , zc_Enum_AnalyzerId_SaleSumm_10300()              AS AnalyzerId
                   , _tmpItem_SummClient.OperSumm_sale                AS Amount
              FROM _tmpItem_SummClient
-             WHERE _tmpItem_SummClient.OperCount_sale <> 0 
+             WHERE _tmpItem_SummClient.OperCount_sale <> 0
             ) AS _tmpCalc ON _tmpCalc.MovementItemId = _tmpItem_SummClient.MovementItemId
            ;
 
+
+     -- 2. формируются Проводки - оплаты
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId
+                                       , MovementItemId, ContainerId, ParentId
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, PartionId, WhereObjectId_Analyzer
+                                       , AccountId_Analyzer
+                                       , ContainerId_Analyzer, ContainerIntId_Analyzer
+                                       , ObjectIntId_Analyzer, ObjectExtId_Analyzer
+                                       , Amount, OperDate, IsActive
+                                        )
+       -- проводки
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId
+            , _tmpPay.MovementItemId
+            , _tmpPay.ContainerId
+            , 0                                       AS ParentId
+            , _tmpPay.AccountId                       AS AccountId              -- счет
+            , 0                                       AS AnalyzerId             -- нет - Типы аналитик (проводки)
+            , _tmpPay.CurrencyId                      AS ObjectId_Analyzer      -- Валюта
+            , 0                                       AS PartionId              -- Партия
+            , _tmpPay.ObjectId                        AS WhereObjectId_Analyzer -- Место учета
+            , COALESCE (_tmpItem_SummClient.AccountId, _tmpPay.AccountId_from)          AS AccountId_Analyzer   -- Счет - корреспондент - Покупатель / или ОБМЕН
+            , COALESCE (_tmpItem_SummClient.ContainerId_Summ, _tmpPay.ContainerId_from) AS ContainerId_Analyzer -- Контейнер - Корреспондент - Покупатель / или ОБМЕН
+            , _tmpPay.ContainerId                     AS ContainerIntId_Analyzer-- Контейнер - тот же самый
+            , vbUnitId                                AS ObjectIntId_Analyzer   -- Аналитический справочник - Подразделение
+            , vbClientId                              AS ObjectExtId_Analyzer   -- Аналитический справочник - Покупатель
+            , 1 * _tmpPay.OperSumm                    AS Amount
+            , vbOperDate                              AS OperDate
+            , TRUE                                    AS isActive
+       FROM _tmpPay
+            LEFT JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpPay.ParentId
+
+      UNION ALL
+       -- проводки - ОБМЕН
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId
+            , _tmpPay.MovementItemId
+            , _tmpPay.ContainerId_from
+            , 0                                       AS ParentId
+            , _tmpPay.AccountId_from                  AS AccountId              -- счет
+            , 0                                       AS AnalyzerId             -- нет - Типы аналитик (проводки)
+            , zc_Currency_Basis()                     AS ObjectId_Analyzer      -- Валюта
+            , 0                                       AS PartionId              -- Партия
+            , _tmpPay.ObjectId_from                   AS WhereObjectId_Analyzer -- Место учета
+            , _tmpPay.AccountId                       AS AccountId_Analyzer     -- Счет - корреспондент -  ОБМЕН
+            , _tmpPay.ContainerId                     AS ContainerId_Analyzer   -- Контейнер - Корреспондент - ОБМЕН
+            , _tmpPay.ContainerId_from                AS ContainerIntId_Analyzer-- Контейнер - тот же самый
+            , vbUnitId                                AS ObjectIntId_Analyzer   -- Аналитический справочник - Подразделение
+            , vbClientId                              AS ObjectExtId_Analyzer   -- Аналитический справочник - Покупатель
+            , -1 * _tmpPay.OperSumm_from              AS Amount
+            , vbOperDate                              AS OperDate
+            , FALSE                                   AS isActive
+       FROM _tmpPay
+       WHERE _tmpPay.OperSumm_from <> 0
+
+      UNION ALL
+       -- проводки - ЗАБАЛАСОВЫЙ Валютный Счет
+       SELECT 0, zc_MIContainer_SummCurrency() AS DescId, vbMovementDescId, inMovementId
+            , _tmpPay.MovementItemId
+            , _tmpPay.ContainerId_Currency
+            , 0                                       AS ParentId
+            , _tmpPay.AccountId                       AS AccountId              -- счет
+            , 0                                       AS AnalyzerId             -- нет - Типы аналитик (проводки)
+            , _tmpPay.CurrencyId                      AS ObjectId_Analyzer      -- Валюта
+            , 0                                       AS PartionId              -- Партия
+            , _tmpPay.ObjectId                        AS WhereObjectId_Analyzer -- Место учета
+            , COALESCE (_tmpItem_SummClient.AccountId, _tmpPay.AccountId_from)          AS AccountId_Analyzer   -- Счет - корреспондент - Покупатель / или ОБМЕН
+            , COALESCE (_tmpItem_SummClient.ContainerId_Summ, _tmpPay.ContainerId_from) AS ContainerId_Analyzer -- Контейнер - Корреспондент - Покупатель / или ОБМЕН
+            , _tmpPay.ContainerId                     AS ContainerIntId_Analyzer-- Контейнер - тот же самый
+            , vbUnitId                                AS ObjectIntId_Analyzer   -- Аналитический справочник - Подразделение
+            , vbClientId                              AS ObjectExtId_Analyzer   -- Аналитический справочник - Покупатель
+            , 1 * _tmpPay.OperSumm_Currency           AS Amount
+            , vbOperDate                              AS OperDate
+            , TRUE                                    AS isActive
+       FROM _tmpPay
+            LEFT JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpPay.ParentId
+       WHERE _tmpPay.OperSumm_Currency <> 0
+      ;
 
 
 
