@@ -46,10 +46,12 @@ RETURNS TABLE (MovementId            Integer
              , SummDebt_Start     TFloat
              , CountDebt_End      TFloat
              , SummDebt_End       TFloat
-             , AmountSale        TFloat
-             , AmountKredit       TFloat
-             , SumPay           TFloat
-             , SumSale          TFloat 
+             , AmountSale         TFloat
+             , SumPay             TFloat
+             , SumSale            TFloat 
+             , SumPayReturnIn     TFloat
+             , AmountReturnIn     TFloat
+             , SumReturnIn        TFloat 
   )
 AS
 $BODY$
@@ -82,12 +84,12 @@ BEGIN
                                            THEN  COALESCE (MIContainer.Amount, 0) 
                                            ELSE 0 
                                      END)                                                  AS AmountSale
-                           -- возврат
+                           -- кол-во возврата
                               , SUM (CASE WHEN Container.DescId = zc_Container_count() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                             AND MIContainer.isActive = TRUE AND MIContainer.MovementDescId = zc_Movement_ReturnIn()
                                            THEN  COALESCE (MIContainer.Amount, 0) 
                                            ELSE 0 
-                                      END)                                                 AS AmountKredit
+                                      END)                                                 AS AmountReturnIn
                            -- Сумма оплаты в продаже
                               , SUM (CASE WHEN Container.DescId = zc_Container_Summ() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                             AND MIContainer.isActive = FALSE AND MIContainer.MovementDescId = zc_Movement_Sale() 
@@ -100,6 +102,11 @@ BEGIN
                                            THEN COALESCE (MIContainer.Amount, 0) 
                                            ELSE 0
                                      END)  AS SumSale
+
+                              -- сумма оплаты возврата
+                              , 0 AS SumPayReturnIn
+                              -- сумма возврата
+                              , 0 AS SumReturnIn
                          FROM Container
                               INNER JOIN ContainerLinkObject AS CLO_Client
                                                              ON CLO_Client.ContainerId = Container.Id
@@ -111,7 +118,7 @@ BEGIN
                               LEFT JOIN MovementItemContainer AS MIContainer
                                                               ON MIContainer.Containerid = Container.Id
                                                              AND MIContainer.OperDate >= inStartDate
-                         WHERE Container.WhereObjectId = inUnitId OR inUnitId = 0
+                         WHERE (Container.WhereObjectId = inUnitId OR inUnitId = 0)
                            AND Container.ObjectId <> zc_Enum_Account_20102()
                          GROUP BY Container.WhereObjectId 
                                 , CLO_Client.ObjectId
@@ -139,10 +146,12 @@ BEGIN
                            , SUM (COALESCE (tmp.StartSum,0))       AS SummDebt_Start
                            , SUM (COALESCE (tmp.EndAmount,0))      AS CountDebt_End
                            , SUM (COALESCE (tmp.EndSum,0))         AS SummDebt_End
-                           , SUM (COALESCE (tmp.AmountSale,0))    AS AmountSale
-                           , SUM (COALESCE (tmp.AmountKredit,0))   AS AmountKredit
-                           , SUM (COALESCE (tmp.SumPay,0))       AS SumPay
-                           , SUM (COALESCE (tmp.SumSale,0))      AS SumSale
+                           , SUM (COALESCE (tmp.AmountSale,0))     AS AmountSale
+                           , SUM (COALESCE (tmp.SumPay,0))         AS SumPay
+                           , SUM (COALESCE (tmp.SumSale,0))        AS SumSale
+                           , SUM (COALESCE (tmp.AmountReturnIn,0)) AS AmountReturnIn
+                           , SUM (COALESCE (tmp.SumPayReturnIn,0)) AS SumPayReturnIn
+                           , SUM (COALESCE (tmp.SumReturnIn,0))    AS SumReturnIn
                       FROM tmpContainer_All AS tmp 
                       GROUP BY tmp.UnitId
                              , tmp.PartnerId
@@ -172,10 +181,11 @@ BEGIN
                              , tmpContainer.CountDebt_End
                              , tmpContainer.SummDebt_End
                              , tmpContainer.AmountSale
-                             , tmpContainer.AmountKredit
+                             , tmpContainer.AmountReturnIn
                              , tmpContainer.SumPay
                              , tmpContainer.SumSale
-       
+                             , tmpContainer.SumPayReturnIn
+                             , tmpContainer.SumReturnIn
                         FROM tmpContainer
                          LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = tmpContainer.PartionMI_Id
                          LEFT JOIN MovementItem               ON MovementItem.Id     = Object_PartionMI.ObjectCode
@@ -241,37 +251,7 @@ BEGIN
                                                      AND MIFloat_TotalPayOth_Sale.DescId         = zc_MIFloat_TotalPayOth()
                     )
                     
-  /*   , tmpData  AS  (SELECT tmp.MovementId
-                          , tmp.MovementDescId
-                          , tmp.OperDate
-                          , tmp.Invnumber
-                          , tmp.MovementId_Sale
-                          , tmp.MovementDescId_Sale
-                          , tmp.OperDate_Sale
-                          , tmp.Invnumber_Sale
-                          , tmp.PartnerId
-                          , tmp.PartionId
-                          , tmp.ChangePercent
-                          , tmp.OperPriceList
-                          , tmp.Amount
-                          , tmp.TotalSummPriceList
-                          , tmp.SummChangePercent
-                          , tmp.TotalChangePercent
-                          , tmp.TotalPay                          
-                          , tmp.TotalPayOth
-                          , tmp.CountDebt_Start
-                          , tmp.SummDebt_Start
-                          , tmp.CountDebt_Start
-                          , tmp.SummDebt_Start
-                          , tmp.AmountSale
-                          , tmp.AmountKredit
-                          , tmp.SumPay
-                          , tmp.SumSale
-                     FROM tmpData_All AS tmp
-                     WHERE tmp.CountDebt <> 0
-                    )
-*/
-     
+    
         SELECT tmpData.MovementId
              , MovementDesc.ItemName          AS DescName
              , tmpData.OperDate
@@ -317,10 +297,13 @@ BEGIN
              , tmpData.SummDebt_Start           ::TFloat
              , tmpData.CountDebt_End            ::TFloat
              , tmpData.SummDebt_End             ::TFloat
-             , tmpData.AmountSale              ::TFloat
-             , tmpData.AmountKredit             ::TFloat
-             , tmpData.SumPay                 ::TFloat
-             , tmpData.SumSale                ::TFloat 
+             , tmpData.AmountSale               ::TFloat
+             , tmpData.SumPay                   ::TFloat
+             , tmpData.SumSale                  ::TFloat 
+             , tmpData.SumPayReturnIn           ::TFloat
+             , tmpData.AmountReturnIn           ::TFloat
+             , tmpData.SumReturnIn              ::TFloat 
+
         FROM tmpData_All AS tmpData
             LEFT JOIN MovementDesc ON MovementDesc.Id = tmpData.MovementDescId
             LEFT JOIN MovementDesc AS MovementDesc_Sale ON MovementDesc_Sale.Id = tmpData.MovementDescId_Sale
@@ -359,4 +342,4 @@ $BODY$
 */
 
 -- тест
---select * from gpReport_MotionByPartner(inStartDate := ('17.02.2017')::TDateTime , inEndDate := ('28.02.2017')::TDateTime , inUnitId := 4195 , inPartnerId := 9765 ,  inSession := '2');
+--select * from gpReport_MotionByPartner(inStartDate := ('01.03.2017')::TDateTime , inEndDate := ('31.03.2017')::TDateTime , inUnitId := 4195 , inPartnerId := 9765 ,  inSession := '2');
