@@ -4857,7 +4857,7 @@ begin
     end;
     //=========
 
-    if Complete then
+    (*if Complete then
     begin
       try
         SyncData.SyncReturnIn(DocGUID);
@@ -4920,7 +4920,7 @@ begin
 
         Exit;
       end;
-    end;
+    end;*)
 
     Result := True;
   except
@@ -6201,7 +6201,7 @@ begin
       if AGUID <> '' then
         SaveSyncDataOut(Now);
 
-      FeedbackMovementReturnIn(GUIDList);
+      //FeedbackMovementReturnIn(GUIDList);
     finally
       DM.tblMovementItem_ReturnIn.Close;
       DM.tblMovementItem_ReturnIn.Filter := '';

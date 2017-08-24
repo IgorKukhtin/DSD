@@ -224,6 +224,13 @@ BEGIN
                                                );
 
     -- !!!дл€ SYBASE - потом убрать!!!
+    IF vbUserId = zc_User_Sybase() AND inIsPay = FALSE
+    THEN
+        -- в мастер записать - ƒополнительна€ скидка в продаже √–Ќ - т.к. .....
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), ioId, COALESCE (ioSummChangePercent, 0));
+    END IF;
+
+    -- !!!дл€ SYBASE - потом убрать!!!
     IF vbUserId = zc_User_Sybase() AND SUBSTRING (inComment FROM 1 FOR 5) = '*123*'
     THEN
         -- сохранили дл€ проверки - в SYBASE это полностью оплаченна€ продажа -> надо формировать проводку

@@ -115,6 +115,14 @@ BEGIN
      -- !!! Баланс: Управленческие Счета (1+2+3 уровень)
      -- !!!
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20102,  inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_20102');
+
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 30101,  inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_30101');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 30102,  inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_30102');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 30201,  inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_30201');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 30202,  inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_30202');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 30301,  inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_30301');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 30302,  inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_30302');
+
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 100301, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_100301');
 
 

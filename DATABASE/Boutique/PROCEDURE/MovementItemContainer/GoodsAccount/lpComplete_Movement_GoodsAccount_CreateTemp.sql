@@ -1,8 +1,8 @@
--- Function: lpComplete_Movement_Sale_CreateTemp ()
+-- Function: lpComplete_Movement_GoodsAccount_CreateTemp ()
 
-DROP FUNCTION IF EXISTS lpComplete_Movement_Sale_CreateTemp ();
+DROP FUNCTION IF EXISTS lpComplete_Movement_GoodsAccount_CreateTemp ();
 
-CREATE OR REPLACE FUNCTION lpComplete_Movement_Sale_CreateTemp()
+CREATE OR REPLACE FUNCTION lpComplete_Movement_GoodsAccount_CreateTemp()
 RETURNS VOID
 AS
 $BODY$
@@ -25,7 +25,7 @@ BEGIN
                                           , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                           , GoodsId Integer, PartionId Integer, GoodsSizeId Integer, PartionId_MI Integer
                                           , OperCount TFloat, OperSumm TFloat, OperSumm_ToPay TFloat, TotalPay TFloat
-                                          , OperCount_sale TFloat, OperSumm_sale TFloat, OperSummPriceList_sale TFloat
+                                          , OperCount_GoodsAccount TFloat, OperSumm_GoodsAccount TFloat, OperSummPriceList_GoodsAccount TFloat
                                           , Summ_10201 TFloat, Summ_10202 TFloat, Summ_10203 TFloat, Summ_10204 TFloat
                                           , ContainerId_ProfitLoss_10101 TFloat, ContainerId_ProfitLoss_10201 TFloat, ContainerId_ProfitLoss_10202 TFloat, ContainerId_ProfitLoss_10203 TFloat, ContainerId_ProfitLoss_10204 TFloat, ContainerId_ProfitLoss_10301 TFloat
                                            ) ON COMMIT DROP;
@@ -51,4 +51,4 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM lpComplete_Movement_Sale_CreateTemp ()
+-- SELECT * FROM lpComplete_Movement_GoodsAccount_CreateTemp ()

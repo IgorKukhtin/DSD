@@ -655,6 +655,12 @@ inherited Goods_BarCodeForm: TGoods_BarCodeForm
   inherited PopupMenu: TPopupMenu
     Left = 144
     Top = 256
+    inherited N4: TMenuItem
+      Visible = False
+    end
+    inherited N5: TMenuItem
+      Visible = False
+    end
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Goods'
