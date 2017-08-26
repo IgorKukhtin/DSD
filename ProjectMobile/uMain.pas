@@ -323,9 +323,6 @@ type
     Label35: TLabel;
     deReturnDate: TDateEdit;
     pReturnInTotals: TPanel;
-    lTotalPriceReturn: TLabel;
-    lTotalWeightReturn: TLabel;
-    lPriceWithPercentReturn: TLabel;
     Panel26: TPanel;
     Label20: TLabel;
     eReturnComment: TEdit;
@@ -805,6 +802,11 @@ type
     lChangePercent: TLabel;
     lDocPartnerName: TLabel;
     lDocInfo: TLabel;
+    bSyncReturnIn: TButton;
+    Panel58: TPanel;
+    lTotalPriceReturn: TLabel;
+    lPriceWithPercentReturn: TLabel;
+    lTotalWeightReturn: TLabel;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -1031,6 +1033,7 @@ type
       const AEditor: IBindListEditorItem);
     procedure LinkListControlToField2FilledListItem(Sender: TObject; const AEditor: IBindListEditorItem);
     procedure lwJuridicalCollationItemClick(const Sender: TObject; const AItem: TListViewItem);
+    procedure bSyncReturnInClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -1193,6 +1196,12 @@ uses
 
 {$R *.fmx}
 
+const
+  sCostWithExtraCharge = 'Стоимость с наценкой';
+  sCostWithDiscount = 'Стоимость со скидкой';
+  sTotalCostWithVAT = 'Общая стоимость (с НДС)';
+  sTotalWeight = 'Общий вес';
+
 function CorrectPassword : string;
 begin
     { Obscure the 'cupcdvum' password a little. }
@@ -1347,6 +1356,8 @@ begin
   FPaidKindIdList := TList<integer>.Create;
 
   FEditCashAmount := false;
+
+  pReturnInTotals.Height := 69;
 end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
@@ -4359,6 +4370,13 @@ begin
   DM.SynchronizeWithMainDatabase(cbLoadData.IsChecked, cbUploadData.IsChecked);
 end;
 
+procedure TfrmMain.bSyncReturnInClick(Sender: TObject);
+begin
+  {TDialogService.MessageDialog(FormatFloat('0.##', pReturnInTotals.Height), TMsgDlgType.mtInformation,
+    [TMsgDlgBtn.mbOk], TMsgDlgBtn.mbOk, 0, nil);}
+  DM.SyncReturnIn(DM.cdsReturnInId.AsInteger);
+end;
+
 // выход с формы фотографирования без сохранения
 procedure TfrmMain.bClosePhotoClick(Sender: TObject);
 begin
@@ -5951,16 +5969,16 @@ begin
     pOrderTotals.Height := 70;
 
     if DM.cdsOrderExternalChangePercent.AsCurrency > 0 then
-      lPriceWithPercent.Text := ' Стоимость с учетом наценки (' +
+      lPriceWithPercent.Text := Format('%s (', [sCostWithExtraCharge]) +
         FormatFloat(',0.00', DM.cdsOrderExternalChangePercent.AsCurrency) + '%) : ' + FormatFloat(',0.00', TotalPriceWithPercent)
     else
-      lPriceWithPercent.Text := ' Стоимость с учетом скидки (' +
+      lPriceWithPercent.Text := Format('%s (', [sCostWithDiscount]) +
         FormatFloat(',0.00', -DM.cdsOrderExternalChangePercent.AsCurrency) + '%) : ' + FormatFloat(',0.00', TotalPriceWithPercent);
   end;
 
-  lTotalPrice.Text := 'Общая стоимость (с учетом НДС) : ' + FormatFloat(',0.00', FOrderTotalPrice);
+  lTotalPrice.Text := Format('%s : ', [sTotalCostWithVAT]) + FormatFloat(',0.00', FOrderTotalPrice);
 
-  lTotalWeight.Text := 'Общий вес : ' + FormatFloat(',0.00', FOrderTotalCountKg);
+  lTotalWeight.Text := Format('%s : ', [sTotalWeight]) + FormatFloat(',0.00', FOrderTotalCountKg);
 end;
 
 // пересчет общей цены и веса для выбранных товаров для возврата
@@ -6012,16 +6030,16 @@ begin
     pReturnInTotals.Height := 70;
 
     if DM.cdsReturnInChangePercent.AsCurrency > 0 then
-      lPriceWithPercentReturn.Text := ' Стоимость с учетом наценки (' +
+      lPriceWithPercentReturn.Text := Format('%s (', [sCostWithExtraCharge]) +
         FormatFloat(',0.00', DM.cdsReturnInChangePercent.AsCurrency) + '%) : ' + FormatFloat(',0.00', TotalPriceWithPercent)
     else
-      lPriceWithPercentReturn.Text := ' Стоимость с учетом скидки (' +
+      lPriceWithPercentReturn.Text := Format('%s (', [sCostWithDiscount]) +
         FormatFloat(',0.00', -DM.cdsReturnInChangePercent.AsCurrency) + '%) : ' + FormatFloat(',0.00', TotalPriceWithPercent);
   end;
 
-  lTotalPriceReturn.Text := 'Общая стоимость (с учетом НДС) : ' + FormatFloat(',0.00', FReturnInTotalPrice);
+  lTotalPriceReturn.Text := Format('%s : ', [sTotalCostWithVAT]) + FormatFloat(',0.00', FReturnInTotalPrice);
 
-  lTotalWeightReturn.Text := 'Общий вес : ' + FormatFloat(',0.00', FReturnInTotalCountKg);
+  lTotalWeightReturn.Text := Format('%s : ', [sTotalWeight]) + FormatFloat(',0.00', FReturnInTotalCountKg);
 end;
 
 // переход на заданную форму с сохранением её в стэк открываемых форм

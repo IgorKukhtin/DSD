@@ -869,6 +869,7 @@ type
     procedure DefaultReturnInItems;
     procedure LoadReturnInItems(AId: integer);
     procedure GenerateReturnInItemsList;
+    procedure SyncReturnIn(AMovementId: Integer);
 
     procedure SavePhotoGroup(AGroupName: string);
     procedure LoadPhotoGroups;
@@ -3309,6 +3310,17 @@ begin
   SyncThread.UploadData := UploadData;
   SyncThread.UploadTaskType := UploadTaskType;
   SyncThread.Start;
+end;
+
+procedure TDM.SyncReturnIn(AMovementId: Integer);
+begin
+  tblMovement_ReturnIn.Open;
+  if tblMovement_ReturnIn.Locate('Id', AMovementId) then
+    if tblMovement_ReturnInStatusId.AsInteger = tblObject_ConstStatusId_Complete.AsInteger then
+    begin
+      SyncData.SyncReturnIn(tblMovement_ReturnInGUID.AsString);
+    end;
+  tblMovement_ReturnIn.Close;
 end;
 
 { получение уникального номера (каждый год начинается с 1) }
