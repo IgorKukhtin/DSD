@@ -111,6 +111,10 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    mactIFin: TMultiAction;
+    mactIFinALL: TMultiAction;
+    bbIFin: TdxBarButton;
+    bbIFinALL: TdxBarButton;
   private
     { Private declarations }
   public

@@ -168,24 +168,30 @@ BEGIN
                    JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                     AND MovementItem.DescId     = zc_MI_Master()
                                     AND MovementItem.isErased   = FALSE
+                                    
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionMI
+                                                    ON MILinkObject_PartionMI.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_PartionMI.DescId         = zc_MILinkObject_PartionMI()
+                   LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = MILinkObject_PartionMI.ObjectId
+
                    LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
-                                               ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
+                                               ON MIFloat_OperPriceList.MovementItemId = Object_PartionMI.ObjectCode
                                               AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
                    LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
-                                               ON MIFloat_TotalChangePercent.MovementItemId = MovementItem.Id
+                                               ON MIFloat_TotalChangePercent.MovementItemId = Object_PartionMI.ObjectCode
                                               AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()
                    LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
-                                               ON MIFloat_TotalPay.MovementItemId = MovementItem.Id
+                                               ON MIFloat_TotalPay.MovementItemId = Object_PartionMI.ObjectCode
                                               AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()
                    LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
-                                               ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                               ON MIFloat_ChangePercent.MovementItemId = Object_PartionMI.ObjectCode
                                               AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
                    LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
-                                               ON MIFloat_SummChangePercent.MovementItemId = MovementItem.Id
+                                               ON MIFloat_SummChangePercent.MovementItemId = Object_PartionMI.ObjectCode
                                               AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
 
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_DiscountSaleKind
-                                                    ON MILinkObject_DiscountSaleKind.MovementItemId = MovementItem.Id
+                                                    ON MILinkObject_DiscountSaleKind.MovementItemId = Object_PartionMI.ObjectCode
                                                    AND MILinkObject_DiscountSaleKind.DescId         = zc_MILinkObject_DiscountSaleKind()
 
                    LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
@@ -196,10 +202,9 @@ BEGIN
 
 
               WHERE Movement.Id       = inMovementId
-                AND Movement.DescId   = zc_Movement_Sale()
+                AND Movement.DescId   = zc_Movement_GoodsAccount()
                 AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
              ) AS _tmp
-             LEFT JOIN tmpCurrency ON tmpCurrency.CurrencyFromId = _tmp.CurrencyId OR tmpCurrency.CurrencyToId = _tmp.CurrencyId
             ;
 
 

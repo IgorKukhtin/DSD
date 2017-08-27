@@ -4,9 +4,9 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   ClientWidth = 1118
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog1
-  ExplicitTop = -55
+  ExplicitLeft = -144
   ExplicitWidth = 1134
-  ExplicitHeight = 574
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -545,6 +545,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       HeaderDataSet = PrintItemsCDS
       ItemsDataSet = PrintItemsCDS
       AskFilePath = False
+      IsMedoc = False
     end
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
@@ -861,6 +862,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       MoveParams = <>
       HeaderDataSet = PrintItemsCDS
       ItemsDataSet = PrintItemsCDS
+      IsMedoc = False
     end
     object mactMeDoc: TMultiAction
       Category = 'TaxLib'
@@ -878,7 +880,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         item
           Action = actRefresh
         end>
-      InfoAfterExecute = #1060#1072#1081#1083' '#1091#1089#1087#1077#1096#1085#1086' '#1074#1099#1075#1088#1091#1078#1077#1085
+      InfoAfterExecute = #1060#1072#1081#1083' '#1091#1089#1087#1077#1096#1085#1086' '#1074#1099#1075#1088#1091#1078#1077#1085' '#1076#1083#1103' '#1052#1077#1044#1086#1082
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' '#1052#1077#1044#1086#1082
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' '#1052#1077#1044#1086#1082
       ImageIndex = 30
@@ -1074,7 +1076,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       Category = 'DSDLib'
       MoveParams = <>
     end
-    object mactMedocDECLAR: TMultiAction
+    object mactMedocALL: TMultiAction
       Category = 'TaxLib'
       MoveParams = <>
       ActionList = <
@@ -1087,10 +1089,10 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1074#1099#1075#1088#1091#1079#1082#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?'
-      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1074#1099#1075#1088#1091#1078#1077#1085#1099
-      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1085#1072#1083#1086#1075#1086#1074#1099#1093' '#1074' '#1052#1045#1044#1054#1050
-      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1085#1072#1083#1086#1075#1086#1074#1099#1093' '#1074' '#1052#1045#1044#1054#1050
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1074#1099#1075#1088#1091#1079#1082#1077' '#1074' '#1052#1045#1044#1054#1050' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?'
+      InfoAfterExecute = #1042#1057#1045' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1074#1099#1075#1088#1091#1078#1077#1085#1099' '#1074' '#1052#1045#1044#1054#1050
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1042#1057#1045#1061' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1086#1082' '#1074' '#1052#1045#1044#1054#1050
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1042#1057#1045#1061' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1086#1082' '#1074' '#1052#1045#1044#1054#1050
       ImageIndex = 28
     end
     object actGetDirectory: TdsdExecStoredProc
@@ -1152,6 +1154,46 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           StoredProc = spUpdateIsMedoc
         end>
       Caption = 'actUpdateIsMedoc'
+    end
+    object mactIFin: TMultiAction
+      Category = 'TaxLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateIsMedoc
+        end
+        item
+          Action = actMedocProcedure
+        end
+        item
+          Action = MedocAction
+        end
+        item
+          Action = actRefresh
+        end>
+      InfoAfterExecute = #1060#1072#1081#1083' '#1091#1089#1087#1077#1096#1085#1086' '#1074#1099#1075#1088#1091#1078#1077#1085' '#1076#1083#1103' IFin'
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' IFin'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' IFin'
+      ImageIndex = 47
+    end
+    object mactIFinALL: TMultiAction
+      Category = 'TaxLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetDirectory
+        end
+        item
+          Action = mactMEDOCList
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1074#1099#1075#1088#1091#1079#1082#1077' '#1074' IFin '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?'
+      InfoAfterExecute = #1042#1057#1045' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1074#1099#1075#1088#1091#1078#1077#1085#1099' '#1074' IFin'
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1042#1057#1045#1061' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1086#1082' '#1074' IFin'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1042#1057#1045#1061' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1086#1082' '#1074' IFin'
+      ImageIndex = 48
     end
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -1361,6 +1403,22 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbIFin'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbIFinALL'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbExecuteDialog'
         end
         item
@@ -1383,6 +1441,9 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
     end
     inherited bbInsertMask: TdxBarButton
       Action = actInsertMaskMulti
@@ -1421,7 +1482,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       Category = 0
     end
     object bbSaveDeclarForMedoc: TdxBarButton
-      Action = mactMedocDECLAR
+      Action = mactMedocALL
       Category = 0
     end
     object bbMedocFalse: TdxBarButton
@@ -1430,6 +1491,14 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object bbIFin: TdxBarButton
+      Action = mactIFin
+      Category = 0
+    end
+    object bbIFinALL: TdxBarButton
+      Action = mactIFinALL
       Category = 0
     end
   end

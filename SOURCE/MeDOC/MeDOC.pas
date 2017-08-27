@@ -25,8 +25,9 @@ type
     procedure CreateJ1201207XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
     procedure CreateJ1201208XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
     procedure CreateJ1201209XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
+    procedure CreateJ1201209XMLFile_IFIN(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
   public
-    procedure CreateXMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
+    procedure CreateXMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string; FIsMedoc : Boolean);
   end;
 
   TMedocAction = class(TdsdCustomAction)
@@ -65,7 +66,7 @@ type
 
 implementation
 
-uses VCL.ActnList, StrUtils, SysUtils, Dialogs, DateUtils, MeDocXML, IFIN_J1201009;
+uses VCL.ActnList, StrUtils, SysUtils, Dialogs, DateUtils, MeDocXML, IFIN_J1201009, IFIN_J1201209;
 
 procedure Register;
 begin
@@ -476,10 +477,10 @@ end;
 
 procedure TMedoc.CreateJ1201009XMLFile_IFIN(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
 var
-  ZVIT: IXMLDECLARType;
+  ZVIT: IFIN_J1201009.IXMLDECLARType;
   i: integer;
 begin
-  ZVIT := NewDECLAR;
+  ZVIT := IFIN_J1201009.NewDECLAR;
 
   //J1201009.xsd
   ZVIT.NoNamespaceSchemaLocation := Copy(HeaderDataSet.FieldByName('CHARCODE').AsString, 1, 8) + '.xsd';
@@ -1707,6 +1708,36 @@ begin
   ZVIT.OwnerDocument.SaveToFile(FileName);
 end;
 
+procedure TMedocCorrective.CreateJ1201209XMLFile_IFIN(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
+var
+  ZVIT: IFIN_J1201209.IXMLDeclarContent;
+  i: integer;
+const
+  NS = 'xsi';
+  NS_URI = 'http://www.w3.org/2001/XMLSchema-instance';
+  TaxDateFormat = 'YYYYMMDD';
+begin
+  ZVIT := IFIN_J1201209.NewDECLAR;
+
+  ZVIT.DeclareNamespace(NS, NS_URI);
+  //F1201209.xsd
+  ZVIT.SetAttributeNS('noNamespaceSchemaLocation', NS_URI, Copy(HeaderDataSet.FieldByName('CHARCODE').AsString, 1, 8) + '.xsd');
+
+  ZVIT.DECLARHEAD.TIN := HeaderDataSet.FieldByName('OKPO_To').AsString;
+  //F1201209
+  ZVIT.DECLARHEAD.C_DOC := Copy(HeaderDataSet.FieldByName('CHARCODE').AsString, 1, 3); // F12
+  ZVIT.DECLARHEAD.C_DOC_SUB := Copy(HeaderDataSet.FieldByName('CHARCODE').AsString, 4, 3); //012
+  ZVIT.DECLARHEAD.C_DOC_VER := Copy(HeaderDataSet.FieldByName('CHARCODE').AsString, 8, 1); // 9
+
+  //Номер нового отчётного (уточняющего) документа - Для первого поданного (отчётного) документа значение данного элемента равняется 0. Для каждого последующего нового отчётного (уточняющего) документа этого же типа для данного отчётного периода значение увеличивается на единицу
+  ZVIT.DECLARHEAD.C_DOC_TYPE := 0;
+  //Номер документа в периоде	- Значение данного элемента содержит порядковый номер каждого однотипного документа в данном периоде.
+  ZVIT.DECLARHEAD.C_DOC_CNT := HeaderDataSet.FieldByName('InvNumberPartner').AsInteger;
+
+  ZVIT.OwnerDocument.Encoding :='WINDOWS-1251';
+  ZVIT.OwnerDocument.SaveToFile(FileName);
+
+end;
 
 procedure TMedocCorrective.CreateJ1201207XMLFile(HeaderDataSet,
   ItemsDataSet: TDataSet; FileName: string);
@@ -1857,8 +1888,7 @@ begin
   ZVIT.OwnerDocument.SaveToFile(FileName);
 end;
 
-procedure TMedocCorrective.CreateXMLFile(HeaderDataSet, ItemsDataSet: TDataSet;
-  FileName: string);
+procedure TMedocCorrective.CreateXMLFile(HeaderDataSet, ItemsDataSet: TDataSet;  FileName: string; FIsMedoc : Boolean);
 var
   F: TFormatSettings;
 begin
@@ -1868,6 +1898,13 @@ begin
    F.ShortTimeFormat := 'hh24:mi:ss';
 
 
+   if FIsMedoc = FALSE
+   then
+       // так для IFin
+       CreateJ1201209XMLFile_IFIN(HeaderDataSet, ItemsDataSet, FileName)
+   else
+
+   // так для Медка
    if HeaderDataSet.FieldByName('OperDate').asDateTime >= StrToDateTime( '01.03.2017', F) then
       CreateJ1201209XMLFile(HeaderDataSet, ItemsDataSet, FileName)
    else
