@@ -53,7 +53,6 @@ type
     GuidesClient: TdsdGuides;
     FormParams: TdsdFormParams;
     AmountSale: TcxGridDBColumn;
-    AmountKredit: TcxGridDBColumn;
     SumPay: TcxGridDBColumn;
     SumSale: TcxGridDBColumn;
   private
