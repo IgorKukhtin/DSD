@@ -83,7 +83,8 @@ uses
   MediCard.Dsgn in '..\FormsFarmacy\DiscountService\MediCard.Dsgn.pas',
   MediCard.Classes in '..\FormsFarmacy\DiscountService\MediCard.Classes.pas',
   LocalStorage in '..\FormsFarmacy\Cash\LocalStorage.pas',
-  IFIN_J1201009 in '..\SOURCE\MeDOC\IFIN_J1201009.pas';
+  IFIN_J1201009 in '..\SOURCE\MeDOC\IFIN_J1201009.pas',
+  IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas';
 
 {$R *.res}
 

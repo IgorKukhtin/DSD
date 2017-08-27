@@ -1059,8 +1059,33 @@ begin
          break;
       HeaderDataSet.Next;
     end;
-    FileName := FormatDateTime('dd_mm_yyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime) + '_' +
-                trim(HeaderDataSet.FieldByName('InvNumberPartner').AsString) + '-' + 'NALOG.xml';
+
+    if isMedoc = True then
+      // так для Медка
+      FileName := FormatDateTime('dd_mm_yyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime)
+          + '_' + trim(HeaderDataSet.FieldByName('InvNumberPartner').AsString) + '-' + 'NALOG.xml'
+    else
+      // так для IFin
+      FileName := '0000'
+
+                  //Номер ЄДРПОУ, Дополняется слева нулями до 10 знаков.
+                + HeaderDataSet.FieldByName('OKPO_To_ifin').AsString
+
+                + HeaderDataSet.FieldByName('CHARCODE').AsString
+
+                + '1'  // Состояние документа.
+
+                + '00' //Номер нового отчёнтого (уточняющего) док-та в отчётном периоде. Дополняется слева нулями до 2 знаков
+
+                  //Номер документа в периоде. Дополняется слева нулями до 7 знаков.
+                + HeaderDataSet.FieldByName('InvNumberPartner_ifin').AsString
+
+                + '1'  //Код отчётного периода (1-месяц, 2-квартал, 3-полугодие, 4-девять мес., 5-год).
+
+                + FormatDateTime('mmyyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime)
+                +'.xml';
+
+
     if Directory <> '' then begin
        if not DirectoryExists(Directory) then
           ForceDirectories(Directory);
@@ -1070,7 +1095,7 @@ begin
     if (not AskFilePath) or Execute then begin
        with TMedocCorrective.Create do
        try
-         CreateXMLFile(Self.HeaderDataSet, Self.ItemsDataSet, FileName);
+         CreateXMLFile(Self.HeaderDataSet, Self.ItemsDataSet, FileName, isMedoc);
        finally
          Free;
        end;

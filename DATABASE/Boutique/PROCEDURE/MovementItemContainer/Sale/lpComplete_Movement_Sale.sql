@@ -313,7 +313,7 @@ BEGIN
                    , CASE WHEN _tmpItem.OperSumm_ToPay = _tmpItem.TotalPay
                                THEN _tmpItem.OperCount
                           ELSE -- иначе Оплату разделим на Цену "к оплате" - и отбросим дробную часть
-                               FLOOR (_tmpItem.TotalPay / (_tmpItem.OperSumm_ToPay / _tmpItem.OperCount))
+                               0 -- FLOOR (_tmpItem.TotalPay / (_tmpItem.OperSumm_ToPay / _tmpItem.OperCount))
                      END AS OperCount_sale
               FROM _tmpItem
              ) AS tmp

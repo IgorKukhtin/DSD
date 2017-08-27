@@ -523,7 +523,8 @@ uses
   Report_MovementCheckLightDialog in '..\..\FormsFarmacy\Report\Report_MovementCheckLightDialog.pas' {Report_MovementChecLightDialogForm: TParentForm},
   ExportSalesForSupp in '..\..\ExportSalesForSuppliers\ExportSalesForSupp.pas' {ExportSalesForSuppForm},
   ProvinceCityEdit in '..\..\FormsFarmacy\Guides\ProvinceCityEdit.pas' {ProvinceCityEditForm: TParentForm},
-  ProvinceCity in '..\..\FormsFarmacy\Guides\ProvinceCity.pas' {ProvinceCityForm: TParentForm};
+  ProvinceCity in '..\..\FormsFarmacy\Guides\ProvinceCity.pas' {ProvinceCityForm: TParentForm},
+  IFIN_J1201209 in '..\..\SOURCE\MeDOC\IFIN_J1201209.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

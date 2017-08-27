@@ -72,7 +72,8 @@ uses
   IFIN_J1201009 in '..\SOURCE\MeDOC\IFIN_J1201009.pas',
   MEDOC_TLB in '..\SOURCE\MeDOC\MEDOC_TLB.pas',
   MeDocCOM in '..\SOURCE\MeDOC\MeDocCOM.pas',
-  ExportSalesForSupp in '..\ExportSalesForSuppliers\ExportSalesForSupp.pas' {ExportSalesForSuppForm};
+  ExportSalesForSupp in '..\ExportSalesForSuppliers\ExportSalesForSupp.pas' {ExportSalesForSuppForm},
+  IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas';
 
 {$R *.res}
 

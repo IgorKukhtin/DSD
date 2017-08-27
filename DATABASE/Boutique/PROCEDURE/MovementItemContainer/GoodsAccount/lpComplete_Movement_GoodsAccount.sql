@@ -71,7 +71,7 @@ BEGIN
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (MovementItemId
                          , ContainerId_Summ, ContainerId_Goods
-                         , GoodsId, PartionId, GoodsSizeId
+                         , GoodsId, PartionId, PartionId_MI, GoodsSizeId
                          , OperCount, OperPrice, CountForPrice, OperSumm, OperSumm_Currency
                          , OperSumm_ToPay, OperSummPriceList, TotalChangePercent, TotalPay
                          , Summ_10201, Summ_10202, Summ_10203, Summ_10204
@@ -84,6 +84,7 @@ BEGIN
              , 0 AS ContainerId_Goods         -- сформируем позже
              , _tmp.GoodsId
              , _tmp.PartionId
+             , _tmp.PartionId_MI
              , _tmp.GoodsSizeId
              , _tmp.OperCount
 
@@ -132,6 +133,8 @@ BEGIN
         FROM (SELECT MovementItem.Id                  AS MovementItemId
                    , MovementItem.ObjectId            AS GoodsId
                    , MovementItem.PartionId           AS PartionId
+                   -- , Object_PartionMI.ObjectCode      AS MovementItemId_MI
+                   , MILinkObject_PartionMI.ObjectId  AS PartionId_MI
                    , Object_PartionGoods.GoodsSizeId  AS GoodsSizeId
                    , MovementItem.Amount              AS OperCount
                    , Object_PartionGoods.OperPrice    AS OperPrice
@@ -169,6 +172,10 @@ BEGIN
                                     AND MovementItem.DescId     = zc_MI_Master()
                                     AND MovementItem.isErased   = FALSE
                                     
+                   LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent_curr
+                                               ON MIFloat_SummChangePercent_curr.MovementItemId = MovementItem.Id
+                                              AND MIFloat_SummChangePercent_curr.DescId         = zc_MIFloat_SummChangePercent()
+
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionMI
                                                     ON MILinkObject_PartionMI.MovementItemId = MovementItem.Id
                                                    AND MILinkObject_PartionMI.DescId         = zc_MILinkObject_PartionMI()

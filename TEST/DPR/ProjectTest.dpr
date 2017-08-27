@@ -952,7 +952,8 @@ uses
   Promo in '..\..\Forms\Document\Promo.pas' {PromoForm: TParentForm},
   Report_Promo_Result in '..\..\Forms\Report\Report_Promo_Result.pas' {Report_Promo_ResultForm: TParentForm},
   Report_Promo_ResultDialog in '..\..\Forms\Report\Report_Promo_ResultDialog.pas' {Report_Promo_ResultDialogForm: TParentForm},
-  ProductionSeparateItemJournal in '..\..\Forms\Document\ProductionSeparateItemJournal.pas' {ProductionSeparateItemJournalForm: TParentForm};
+  ProductionSeparateItemJournal in '..\..\Forms\Document\ProductionSeparateItemJournal.pas' {ProductionSeparateItemJournalForm: TParentForm},
+  IFIN_J1201209 in '..\..\SOURCE\MeDOC\IFIN_J1201209.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}
