@@ -528,8 +528,10 @@ begin
   ZVIT.DECLARBODY.HORIG1.Nil_ := true;
   ZVIT.DECLARBODY.HTYPR.Nil_ := true;
 
-  ZVIT.DECLARBODY.HFILL :=FormatDateTime('ddmmyyyy', now);
-  ZVIT.DECLARBODY.HNUM := '1';
+  //ZVIT.DECLARBODY.HFILL :=FormatDateTime('ddmmyyyy', now);
+  ZVIT.DECLARBODY.HFILL :=FormatDateTime('ddmmyyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime);
+  //ZVIT.DECLARBODY.HNUM := '1';
+  ZVIT.DECLARBODY.HNUM := HeaderDataSet.FieldByName('InvNumberPartner').AsString;
   ZVIT.DECLARBODY.HNUM1.Nil_ := true;
 
   ZVIT.DECLARBODY.HNAMESEL := HeaderDataSet.FieldByName('JuridicalName_From').AsString;
@@ -654,8 +656,8 @@ begin
   ZVIT.DECLARBODY.R003G10S.Nil_ := true;
 
 
-  ZVIT.OwnerDocument.Encoding :='WINDOWS-1251';
-  ZVIT.OwnerDocument.SaveToFile(FileName);
+  //ZVIT.OwnerDocument.Encoding :='WINDOWS-1251';
+  //ZVIT.OwnerDocument.SaveToFile(FileName);
 
 end;
 
@@ -1755,9 +1757,9 @@ begin
   ZVIT.DECLARHEAD.C_DOC_VER := Copy(HeaderDataSet.FieldByName('CHARCODE').AsString, 8, 1); // 9
 
   //Номер нового отчётного (уточняющего) документа - Для первого поданного (отчётного) документа значение данного элемента равняется 0. Для каждого последующего нового отчётного (уточняющего) документа этого же типа для данного отчётного периода значение увеличивается на единицу
-  ZVIT.DECLARHEAD.C_DOC_TYPE := 0;
+  ZVIT.DECLARHEAD.C_DOC_TYPE := '00';
   //Номер документа в периоде	- Значение данного элемента содержит порядковый номер каждого однотипного документа в данном периоде.
-  ZVIT.DECLARHEAD.C_DOC_CNT := HeaderDataSet.FieldByName('InvNumberPartner').AsInteger;
+  ZVIT.DECLARHEAD.C_DOC_CNT := HeaderDataSet.FieldByName('InvNumberPartner').AsString;
 
   ZVIT.OwnerDocument.Encoding :='WINDOWS-1251';
   ZVIT.OwnerDocument.SaveToFile(FileName);

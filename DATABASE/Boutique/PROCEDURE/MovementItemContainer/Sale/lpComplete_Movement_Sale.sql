@@ -1,4 +1,4 @@
-DROP FUNCTION IF EXISTS lpComplete_Movement_Sale (Integer, Integer);
+16:42 27.08.2017DROP FUNCTION IF EXISTS lpComplete_Movement_Sale (Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpComplete_Movement_Sale(
     IN inMovementId        Integer  , -- ключ Документа
@@ -85,50 +85,48 @@ BEGIN
                                                                        )
                             )
         -- результат
-        SELECT _tmp.MovementItemId
+        SELECT tmp.MovementItemId
              , 0 AS ContainerId_Summ          -- сформируем позже
              , 0 AS ContainerId_Goods         -- сформируем позже
-             , _tmp.GoodsId
-             , _tmp.PartionId
-             , _tmp.GoodsSizeId
-             , _tmp.OperCount
+             , tmp.GoodsId
+             , tmp.PartionId
+             , tmp.GoodsSizeId
+             , tmp.OperCount
 
                -- Цена - из партии
-             , _tmp.OperPrice
+             , tmp.OperPrice
                -- Цена за количество - из партии
-             , _tmp.CountForPrice
+             , tmp.CountForPrice
 
                -- Сумма по Вх. в zc_Currency_Basis
-             , CASE WHEN _tmp.CurrencyId = zc_Currency_Basis()
-                         THEN _tmp.OperSumm_Currency
-                    WHEN _tmp.CurrencyId = tmpCurrency.CurrencyToId
-                         THEN zfCalc_CurrencyFrom (_tmp.OperSumm_Currency, tmpCurrency.Amount, tmpCurrency.ParValue)
-                    WHEN _tmp.CurrencyId = tmpCurrency.CurrencyFromId
-                         THEN zfCalc_CurrencyTo (_tmp.OperSumm_Currency, tmpCurrency.Amount, tmpCurrency.ParValue)
+             , CASE WHEN tmp.CurrencyId = zc_Currency_Basis()
+                         THEN tmp.OperSumm_Currency
+                    WHEN tmp.CurrencyId = tmpCurrency.CurrencyToId
+                         THEN zfCalc_CurrencyFrom (tmp.OperSumm_Currency, tmpCurrency.Amount, tmpCurrency.ParValue)
+                    WHEN tmp.CurrencyId = tmpCurrency.CurrencyFromId
+                         THEN zfCalc_CurrencyTo (tmp.OperSumm_Currency, tmpCurrency.Amount, tmpCurrency.ParValue)
                END AS OperSumm
                -- Сумма по Вх. в ВАЛЮТЕ
-             , _tmp.OperSumm_Currency
-
+             , tmp.OperSumm_Currency
 
                -- Сумма к Оплате
-             , _tmp.OperSummPriceList - _tmp.TotalChangePercent AS OperSumm_ToPay
+             , tmp.OperSummPriceList - tmp.TotalChangePercent AS OperSumm_ToPay
 
-             , _tmp.OperSummPriceList  -- Сумма по Прайсу
-             , _tmp.TotalChangePercent -- Итого сумма Скидки
-             , _tmp.TotalPay           -- Итого сумма оплаты
+             , tmp.OperSummPriceList  -- Сумма по Прайсу
+             , tmp.TotalChangePercent -- Итого сумма Скидки
+             , tmp.TotalPay           -- Итого сумма оплаты
 
-             , _tmp.Summ_10201         -- Сезонная скидка
-             , _tmp.Summ_10202         -- Скидка outlet
-             , _tmp.Summ_10203         -- Скидка клиента
-             , _tmp.Summ_10204         -- Скидка дополнительная
-
+             , tmp.Summ_10201         -- Сезонная скидка
+             , tmp.Summ_10202         -- Скидка outlet
+             , tmp.Summ_10203         -- Скидка клиента
+             , tmp.Summ_10204         -- Скидка дополнительная
 
              , 0 AS AccountId          -- Счет(справочника), сформируем позже
 
                -- УП для Sale - для определения счета Запасы
-             , _tmp.InfoMoneyGroupId
-             , _tmp.InfoMoneyDestinationId
-             , _tmp.InfoMoneyId
+             , tmp.InfoMoneyGroupId
+             , tmp.InfoMoneyDestinationId
+             , tmp.InfoMoneyId
 
                -- Курс - из истории
              , tmpCurrency.Amount   AS CurrencyValue
@@ -204,8 +202,8 @@ BEGIN
               WHERE Movement.Id       = inMovementId
                 AND Movement.DescId   = zc_Movement_Sale()
                 AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
-             ) AS _tmp
-             LEFT JOIN tmpCurrency ON tmpCurrency.CurrencyFromId = _tmp.CurrencyId OR tmpCurrency.CurrencyToId = _tmp.CurrencyId
+             ) AS tmp
+             LEFT JOIN tmpCurrency ON tmpCurrency.CurrencyFromId = tmp.CurrencyId OR tmpCurrency.CurrencyToId = tmp.CurrencyId
             ;
 
      -- проверка что оплачено НЕ больше чем надо
@@ -318,7 +316,6 @@ BEGIN
               FROM _tmpItem
              ) AS tmp
         ;
-
 
      -- проверка что сумма оплаты ....
      -- IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.TotalChangePercent <> _tmpItem.Summ_10201 + _tmpItem.Summ_10202 + _tmpItem.Summ_10203 + _tmpItem.Summ_10204)
@@ -444,8 +441,6 @@ BEGIN
                 AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
              ) AS tmp
         ;
-
-
 
      -- проверка что сумма оплаты ....
      IF  COALESCE ((SELECT SUM (_tmpItem_SummClient.TotalPay) FROM _tmpItem_SummClient), 0)
@@ -1131,14 +1126,14 @@ BEGIN
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable();
 
-    -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
-    PERFORM lpComplete_Movement (inMovementId := inMovementId
-                               , inDescId     := zc_Movement_Sale()
-                               , inUserId     := inUserId
-                                );
+     -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
+     PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                , inDescId     := zc_Movement_Sale()
+                                , inUserId     := inUserId
+                                 );
 
-    -- 6. меняются ИТОГОВЫЕ суммы по покупателю
-    PERFORM lpUpdate_Object_Client_Total (inMovementId:= inMovementId, inIsComplete:= TRUE, inUserId:= inUserId);
+     -- 6. меняются ИТОГОВЫЕ суммы по покупателю
+     PERFORM lpUpdate_Object_Client_Total (inMovementId:= inMovementId, inIsComplete:= TRUE, inUserId:= inUserId);
 
 END;
 $BODY$

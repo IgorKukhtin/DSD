@@ -278,6 +278,14 @@ BEGIN
                        END
              END                                                :: TVarChar AS N10
            -- , 'А.В. МАРУХНО'::TVarChar                                        AS N10
+           , CASE WHEN Object_PersonalSigning.PersonalName <> '' 
+                  THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1, TRUE)
+                  ELSE CASE WHEN Object_PersonalBookkeeper_View.PersonalName <> '' 
+                            THEN zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1, TRUE)
+                            ELSE 'Н. В. Рудик' 
+                       END 
+             END                            :: TVarChar AS N10_ifin
+
            , 'оплата з поточного рахунка'::TVarChar                         AS N9
            , CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
                        THEN 'Змiна цiни'
@@ -290,6 +298,7 @@ BEGIN
            , MovementBoolean_PriceWithVAT.ValueData                         AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData                             AS VATPercent
            , CAST (REPEAT (' ', 7 - LENGTH (MovementString_InvNumberPartner.ValueData)) || MovementString_InvNumberPartner.ValueData AS TVarChar) AS InvNumberPartner
+           , CAST (REPEAT ('0', 7 - LENGTH (MovementString_InvNumberPartner.ValueData)) || MovementString_InvNumberPartner.ValueData AS TVarChar) AS InvNumberPartner_ifin
 
            , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
            , MovementFloat_TotalSummMVAT.ValueData                          AS TotalSummMVAT
@@ -355,6 +364,7 @@ BEGIN
            , OH_JuridicalDetails_To.JuridicalAddress                        AS JuridicalAddress_To
 
            , OH_JuridicalDetails_To.OKPO                                    AS OKPO_To
+           , (REPEAT ('0', 10 - LENGTH (OH_JuridicalDetails_To.OKPO)) ||  OH_JuridicalDetails_To.OKPO) :: TVarChar AS OKPO_To_ifin
            , OH_JuridicalDetails_To.INN                                     AS INN_To
            , OH_JuridicalDetails_To.NumberVAT                               AS NumberVAT_To
          -- , COALESCE (Object_Personal_View.PersonalName, OH_JuridicalDetails_To.AccounterName) :: TVarChar AS AccounterName_To 
@@ -931,5 +941,5 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, TVarChar
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 185675, inisClientCopy:= FALSE, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 520880, inisClientCopy:= FALSE ,inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 5812683, inisClientCopy:= FALSE, inSession:= zfCalc_UserAdmin()); FETCH ALL "<unnamed portal 2>";
+-- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 5812683, inisClientCopy:= FALSE ,inSession:= zfCalc_UserAdmin()); FETCH ALL "<unnamed portal 1>";

@@ -155,15 +155,15 @@ type
     function Get_C_DOC: UnicodeString;
     function Get_C_DOC_SUB: UnicodeString;
     function Get_C_DOC_VER: UnicodeString;
-    function Get_C_DOC_TYPE: LongWord;
-    function Get_C_DOC_CNT: LongWord;
-    function Get_C_REG: Integer;
-    function Get_C_RAJ: Integer;
-    function Get_PERIOD_MONTH: Integer;
-    function Get_PERIOD_TYPE: Integer;
-    function Get_PERIOD_YEAR: Integer;
-    function Get_C_STI_ORIG: Integer;
-    function Get_C_DOC_STAN: Integer;
+    function Get_C_DOC_TYPE: UnicodeString;
+    function Get_C_DOC_CNT: UnicodeString;
+    function Get_C_REG: UnicodeString;
+    function Get_C_RAJ: UnicodeString;
+    function Get_PERIOD_MONTH: UnicodeString;
+    function Get_PERIOD_TYPE: UnicodeString;
+    function Get_PERIOD_YEAR: UnicodeString;
+    function Get_C_STI_ORIG: UnicodeString;
+    function Get_C_DOC_STAN: UnicodeString;
     function Get_LINKED_DOCS: IXMLDHead_LINKED_DOCS;
     function Get_D_FILL: UnicodeString;
     function Get_SOFTWARE: UnicodeString;
@@ -171,15 +171,15 @@ type
     procedure Set_C_DOC(Value: UnicodeString);
     procedure Set_C_DOC_SUB(Value: UnicodeString);
     procedure Set_C_DOC_VER(Value: UnicodeString);
-    procedure Set_C_DOC_TYPE(Value: LongWord);
-    procedure Set_C_DOC_CNT(Value: LongWord);
-    procedure Set_C_REG(Value: Integer);
-    procedure Set_C_RAJ(Value: Integer);
-    procedure Set_PERIOD_MONTH(Value: Integer);
-    procedure Set_PERIOD_TYPE(Value: Integer);
-    procedure Set_PERIOD_YEAR(Value: Integer);
-    procedure Set_C_STI_ORIG(Value: Integer);
-    procedure Set_C_DOC_STAN(Value: Integer);
+    procedure Set_C_DOC_TYPE(Value: UnicodeString);
+    procedure Set_C_DOC_CNT(Value: UnicodeString);
+    procedure Set_C_REG(Value: UnicodeString);
+    procedure Set_C_RAJ(Value: UnicodeString);
+    procedure Set_PERIOD_MONTH(Value: UnicodeString);
+    procedure Set_PERIOD_TYPE(Value: UnicodeString);
+    procedure Set_PERIOD_YEAR(Value: UnicodeString);
+    procedure Set_C_STI_ORIG(Value: UnicodeString);
+    procedure Set_C_DOC_STAN(Value: UnicodeString);
     procedure Set_D_FILL(Value: UnicodeString);
     procedure Set_SOFTWARE(Value: UnicodeString);
     { Methods & Properties }
@@ -187,15 +187,15 @@ type
     property C_DOC: UnicodeString read Get_C_DOC write Set_C_DOC;
     property C_DOC_SUB: UnicodeString read Get_C_DOC_SUB write Set_C_DOC_SUB;
     property C_DOC_VER: UnicodeString read Get_C_DOC_VER write Set_C_DOC_VER;
-    property C_DOC_TYPE: LongWord read Get_C_DOC_TYPE write Set_C_DOC_TYPE;
-    property C_DOC_CNT: LongWord read Get_C_DOC_CNT write Set_C_DOC_CNT;
-    property C_REG: Integer read Get_C_REG write Set_C_REG;
-    property C_RAJ: Integer read Get_C_RAJ write Set_C_RAJ;
-    property PERIOD_MONTH: Integer read Get_PERIOD_MONTH write Set_PERIOD_MONTH;
-    property PERIOD_TYPE: Integer read Get_PERIOD_TYPE write Set_PERIOD_TYPE;
-    property PERIOD_YEAR: Integer read Get_PERIOD_YEAR write Set_PERIOD_YEAR;
-    property C_STI_ORIG: Integer read Get_C_STI_ORIG write Set_C_STI_ORIG;
-    property C_DOC_STAN: Integer read Get_C_DOC_STAN write Set_C_DOC_STAN;
+    property C_DOC_TYPE: UnicodeString read Get_C_DOC_TYPE write Set_C_DOC_TYPE;
+    property C_DOC_CNT: UnicodeString read Get_C_DOC_CNT write Set_C_DOC_CNT;
+    property C_REG: UnicodeString read Get_C_REG write Set_C_REG;
+    property C_RAJ: UnicodeString read Get_C_RAJ write Set_C_RAJ;
+    property PERIOD_MONTH: UnicodeString read Get_PERIOD_MONTH write Set_PERIOD_MONTH;
+    property PERIOD_TYPE: UnicodeString read Get_PERIOD_TYPE write Set_PERIOD_TYPE;
+    property PERIOD_YEAR: UnicodeString read Get_PERIOD_YEAR write Set_PERIOD_YEAR;
+    property C_STI_ORIG: UnicodeString read Get_C_STI_ORIG write Set_C_STI_ORIG;
+    property C_DOC_STAN: UnicodeString read Get_C_DOC_STAN write Set_C_DOC_STAN;
     property LINKED_DOCS: IXMLDHead_LINKED_DOCS read Get_LINKED_DOCS;
     property D_FILL: UnicodeString read Get_D_FILL write Set_D_FILL;
     property SOFTWARE: UnicodeString read Get_SOFTWARE write Set_SOFTWARE;
@@ -218,33 +218,33 @@ type
   IXMLDHead_LINKED_DOCS_DOC = interface(IXMLNode)
     ['{D1B7A7D2-DFF9-4072-82AE-B0D8C67257FA}']
     { Property Accessors }
-    function Get_NUM: LongWord;
-    function Get_TYPE_: LongWord;
+    function Get_NUM: UnicodeString;
+    function Get_TYPE_: UnicodeString;
     function Get_C_DOC: UnicodeString;
     function Get_C_DOC_SUB: UnicodeString;
     function Get_C_DOC_VER: UnicodeString;
-    function Get_C_DOC_TYPE: LongWord;
-    function Get_C_DOC_CNT: LongWord;
-    function Get_C_DOC_STAN: Integer;
+    function Get_C_DOC_TYPE: UnicodeString;
+    function Get_C_DOC_CNT: UnicodeString;
+    function Get_C_DOC_STAN: UnicodeString;
     function Get_FILENAME: UnicodeString;
-    procedure Set_NUM(Value: LongWord);
-    procedure Set_TYPE_(Value: LongWord);
+    procedure Set_NUM(Value: UnicodeString);
+    procedure Set_TYPE_(Value: UnicodeString);
     procedure Set_C_DOC(Value: UnicodeString);
     procedure Set_C_DOC_SUB(Value: UnicodeString);
     procedure Set_C_DOC_VER(Value: UnicodeString);
-    procedure Set_C_DOC_TYPE(Value: LongWord);
-    procedure Set_C_DOC_CNT(Value: LongWord);
-    procedure Set_C_DOC_STAN(Value: Integer);
+    procedure Set_C_DOC_TYPE(Value: UnicodeString);
+    procedure Set_C_DOC_CNT(Value: UnicodeString);
+    procedure Set_C_DOC_STAN(Value: UnicodeString);
     procedure Set_FILENAME(Value: UnicodeString);
     { Methods & Properties }
-    property NUM: LongWord read Get_NUM write Set_NUM;
-    property TYPE_: LongWord read Get_TYPE_ write Set_TYPE_;
+    property NUM: UnicodeString read Get_NUM write Set_NUM;
+    property TYPE_: UnicodeString read Get_TYPE_ write Set_TYPE_;
     property C_DOC: UnicodeString read Get_C_DOC write Set_C_DOC;
     property C_DOC_SUB: UnicodeString read Get_C_DOC_SUB write Set_C_DOC_SUB;
     property C_DOC_VER: UnicodeString read Get_C_DOC_VER write Set_C_DOC_VER;
-    property C_DOC_TYPE: LongWord read Get_C_DOC_TYPE write Set_C_DOC_TYPE;
-    property C_DOC_CNT: LongWord read Get_C_DOC_CNT write Set_C_DOC_CNT;
-    property C_DOC_STAN: Integer read Get_C_DOC_STAN write Set_C_DOC_STAN;
+    property C_DOC_TYPE: UnicodeString read Get_C_DOC_TYPE write Set_C_DOC_TYPE;
+    property C_DOC_CNT: UnicodeString read Get_C_DOC_CNT write Set_C_DOC_CNT;
+    property C_DOC_STAN: UnicodeString read Get_C_DOC_STAN write Set_C_DOC_STAN;
     property FILENAME: UnicodeString read Get_FILENAME write Set_FILENAME;
   end;
 
@@ -1727,15 +1727,15 @@ type
     function Get_C_DOC: UnicodeString;
     function Get_C_DOC_SUB: UnicodeString;
     function Get_C_DOC_VER: UnicodeString;
-    function Get_C_DOC_TYPE: LongWord;
-    function Get_C_DOC_CNT: LongWord;
-    function Get_C_REG: Integer;
-    function Get_C_RAJ: Integer;
-    function Get_PERIOD_MONTH: Integer;
-    function Get_PERIOD_TYPE: Integer;
-    function Get_PERIOD_YEAR: Integer;
-    function Get_C_STI_ORIG: Integer;
-    function Get_C_DOC_STAN: Integer;
+    function Get_C_DOC_TYPE: UnicodeString;
+    function Get_C_DOC_CNT: UnicodeString;
+    function Get_C_REG: UnicodeString;
+    function Get_C_RAJ: UnicodeString;
+    function Get_PERIOD_MONTH: UnicodeString;
+    function Get_PERIOD_TYPE: UnicodeString;
+    function Get_PERIOD_YEAR: UnicodeString;
+    function Get_C_STI_ORIG: UnicodeString;
+    function Get_C_DOC_STAN: UnicodeString;
     function Get_LINKED_DOCS: IXMLDHead_LINKED_DOCS;
     function Get_D_FILL: UnicodeString;
     function Get_SOFTWARE: UnicodeString;
@@ -1743,15 +1743,15 @@ type
     procedure Set_C_DOC(Value: UnicodeString);
     procedure Set_C_DOC_SUB(Value: UnicodeString);
     procedure Set_C_DOC_VER(Value: UnicodeString);
-    procedure Set_C_DOC_TYPE(Value: LongWord);
-    procedure Set_C_DOC_CNT(Value: LongWord);
-    procedure Set_C_REG(Value: Integer);
-    procedure Set_C_RAJ(Value: Integer);
-    procedure Set_PERIOD_MONTH(Value: Integer);
-    procedure Set_PERIOD_TYPE(Value: Integer);
-    procedure Set_PERIOD_YEAR(Value: Integer);
-    procedure Set_C_STI_ORIG(Value: Integer);
-    procedure Set_C_DOC_STAN(Value: Integer);
+    procedure Set_C_DOC_TYPE(Value: UnicodeString);
+    procedure Set_C_DOC_CNT(Value: UnicodeString);
+    procedure Set_C_REG(Value: UnicodeString);
+    procedure Set_C_RAJ(Value: UnicodeString);
+    procedure Set_PERIOD_MONTH(Value: UnicodeString);
+    procedure Set_PERIOD_TYPE(Value: UnicodeString);
+    procedure Set_PERIOD_YEAR(Value: UnicodeString);
+    procedure Set_C_STI_ORIG(Value: UnicodeString);
+    procedure Set_C_DOC_STAN(Value: UnicodeString);
     procedure Set_D_FILL(Value: UnicodeString);
     procedure Set_SOFTWARE(Value: UnicodeString);
   public
@@ -1775,23 +1775,23 @@ type
   TXMLDHead_LINKED_DOCS_DOC = class(TXMLNode, IXMLDHead_LINKED_DOCS_DOC)
   protected
     { IXMLDHead_LINKED_DOCS_DOC }
-    function Get_NUM: LongWord;
-    function Get_TYPE_: LongWord;
+    function Get_NUM: UnicodeString;
+    function Get_TYPE_: UnicodeString;
     function Get_C_DOC: UnicodeString;
     function Get_C_DOC_SUB: UnicodeString;
     function Get_C_DOC_VER: UnicodeString;
-    function Get_C_DOC_TYPE: LongWord;
-    function Get_C_DOC_CNT: LongWord;
-    function Get_C_DOC_STAN: Integer;
+    function Get_C_DOC_TYPE: UnicodeString;
+    function Get_C_DOC_CNT: UnicodeString;
+    function Get_C_DOC_STAN: UnicodeString;
     function Get_FILENAME: UnicodeString;
-    procedure Set_NUM(Value: LongWord);
-    procedure Set_TYPE_(Value: LongWord);
+    procedure Set_NUM(Value: UnicodeString);
+    procedure Set_TYPE_(Value: UnicodeString);
     procedure Set_C_DOC(Value: UnicodeString);
     procedure Set_C_DOC_SUB(Value: UnicodeString);
     procedure Set_C_DOC_VER(Value: UnicodeString);
-    procedure Set_C_DOC_TYPE(Value: LongWord);
-    procedure Set_C_DOC_CNT(Value: LongWord);
-    procedure Set_C_DOC_STAN(Value: Integer);
+    procedure Set_C_DOC_TYPE(Value: UnicodeString);
+    procedure Set_C_DOC_CNT(Value: UnicodeString);
+    procedure Set_C_DOC_STAN(Value: UnicodeString);
     procedure Set_FILENAME(Value: UnicodeString);
   end;
 
@@ -2995,92 +2995,92 @@ begin
   ChildNodes['C_DOC_VER'].NodeValue := Value;
 end;
 
-function TXMLDHead.Get_C_DOC_TYPE: LongWord;
+function TXMLDHead.Get_C_DOC_TYPE: UnicodeString;
 begin
   Result := ChildNodes['C_DOC_TYPE'].NodeValue;
 end;
 
-procedure TXMLDHead.Set_C_DOC_TYPE(Value: LongWord);
+procedure TXMLDHead.Set_C_DOC_TYPE(Value: UnicodeString);
 begin
   ChildNodes['C_DOC_TYPE'].NodeValue := Value;
 end;
 
-function TXMLDHead.Get_C_DOC_CNT: LongWord;
+function TXMLDHead.Get_C_DOC_CNT: UnicodeString;
 begin
   Result := ChildNodes['C_DOC_CNT'].NodeValue;
 end;
 
-procedure TXMLDHead.Set_C_DOC_CNT(Value: LongWord);
+procedure TXMLDHead.Set_C_DOC_CNT(Value: UnicodeString);
 begin
   ChildNodes['C_DOC_CNT'].NodeValue := Value;
 end;
 
-function TXMLDHead.Get_C_REG: Integer;
+function TXMLDHead.Get_C_REG: UnicodeString;
 begin
   Result := ChildNodes['C_REG'].NodeValue;
 end;
 
-procedure TXMLDHead.Set_C_REG(Value: Integer);
+procedure TXMLDHead.Set_C_REG(Value: UnicodeString);
 begin
   ChildNodes['C_REG'].NodeValue := Value;
 end;
 
-function TXMLDHead.Get_C_RAJ: Integer;
+function TXMLDHead.Get_C_RAJ: UnicodeString;
 begin
   Result := ChildNodes['C_RAJ'].NodeValue;
 end;
 
-procedure TXMLDHead.Set_C_RAJ(Value: Integer);
+procedure TXMLDHead.Set_C_RAJ(Value: UnicodeString);
 begin
   ChildNodes['C_RAJ'].NodeValue := Value;
 end;
 
-function TXMLDHead.Get_PERIOD_MONTH: Integer;
+function TXMLDHead.Get_PERIOD_MONTH: UnicodeString;
 begin
   Result := ChildNodes['PERIOD_MONTH'].NodeValue;
 end;
 
-procedure TXMLDHead.Set_PERIOD_MONTH(Value: Integer);
+procedure TXMLDHead.Set_PERIOD_MONTH(Value: UnicodeString);
 begin
   ChildNodes['PERIOD_MONTH'].NodeValue := Value;
 end;
 
-function TXMLDHead.Get_PERIOD_TYPE: Integer;
+function TXMLDHead.Get_PERIOD_TYPE: UnicodeString;
 begin
   Result := ChildNodes['PERIOD_TYPE'].NodeValue;
 end;
 
-procedure TXMLDHead.Set_PERIOD_TYPE(Value: Integer);
+procedure TXMLDHead.Set_PERIOD_TYPE(Value: UnicodeString);
 begin
   ChildNodes['PERIOD_TYPE'].NodeValue := Value;
 end;
 
-function TXMLDHead.Get_PERIOD_YEAR: Integer;
+function TXMLDHead.Get_PERIOD_YEAR: UnicodeString;
 begin
   Result := ChildNodes['PERIOD_YEAR'].NodeValue;
 end;
 
-procedure TXMLDHead.Set_PERIOD_YEAR(Value: Integer);
+procedure TXMLDHead.Set_PERIOD_YEAR(Value: UnicodeString);
 begin
   ChildNodes['PERIOD_YEAR'].NodeValue := Value;
 end;
 
-function TXMLDHead.Get_C_STI_ORIG: Integer;
+function TXMLDHead.Get_C_STI_ORIG: UnicodeString;
 begin
   Result := ChildNodes['C_STI_ORIG'].NodeValue;
 end;
 
-procedure TXMLDHead.Set_C_STI_ORIG(Value: Integer);
+procedure TXMLDHead.Set_C_STI_ORIG(Value: UnicodeString);
 begin
   ChildNodes['C_STI_ORIG'].NodeValue := Value;
 end;
 
-function TXMLDHead.Get_C_DOC_STAN: Integer;
+function TXMLDHead.Get_C_DOC_STAN: UnicodeString;
 begin
   Result := ChildNodes['C_DOC_STAN'].NodeValue;
 end;
 
-procedure TXMLDHead.Set_C_DOC_STAN(Value: Integer);
+procedure TXMLDHead.Set_C_DOC_STAN(Value: UnicodeString);
 begin
   ChildNodes['C_DOC_STAN'].NodeValue := Value;
 end;
@@ -3137,22 +3137,22 @@ end;
 
 { TXMLDHead_LINKED_DOCS_DOC }
 
-function TXMLDHead_LINKED_DOCS_DOC.Get_NUM: LongWord;
+function TXMLDHead_LINKED_DOCS_DOC.Get_NUM: UnicodeString;
 begin
   Result := AttributeNodes['NUM'].NodeValue;
 end;
 
-procedure TXMLDHead_LINKED_DOCS_DOC.Set_NUM(Value: LongWord);
+procedure TXMLDHead_LINKED_DOCS_DOC.Set_NUM(Value: UnicodeString);
 begin
   SetAttribute('NUM', Value);
 end;
 
-function TXMLDHead_LINKED_DOCS_DOC.Get_TYPE_: LongWord;
+function TXMLDHead_LINKED_DOCS_DOC.Get_TYPE_: UnicodeString;
 begin
   Result := AttributeNodes['TYPE'].NodeValue;
 end;
 
-procedure TXMLDHead_LINKED_DOCS_DOC.Set_TYPE_(Value: LongWord);
+procedure TXMLDHead_LINKED_DOCS_DOC.Set_TYPE_(Value: UnicodeString);
 begin
   SetAttribute('TYPE', Value);
 end;
@@ -3187,32 +3187,32 @@ begin
   ChildNodes['C_DOC_VER'].NodeValue := Value;
 end;
 
-function TXMLDHead_LINKED_DOCS_DOC.Get_C_DOC_TYPE: LongWord;
+function TXMLDHead_LINKED_DOCS_DOC.Get_C_DOC_TYPE: UnicodeString;
 begin
   Result := ChildNodes['C_DOC_TYPE'].NodeValue;
 end;
 
-procedure TXMLDHead_LINKED_DOCS_DOC.Set_C_DOC_TYPE(Value: LongWord);
+procedure TXMLDHead_LINKED_DOCS_DOC.Set_C_DOC_TYPE(Value: UnicodeString);
 begin
   ChildNodes['C_DOC_TYPE'].NodeValue := Value;
 end;
 
-function TXMLDHead_LINKED_DOCS_DOC.Get_C_DOC_CNT: LongWord;
+function TXMLDHead_LINKED_DOCS_DOC.Get_C_DOC_CNT: UnicodeString;
 begin
   Result := ChildNodes['C_DOC_CNT'].NodeValue;
 end;
 
-procedure TXMLDHead_LINKED_DOCS_DOC.Set_C_DOC_CNT(Value: LongWord);
+procedure TXMLDHead_LINKED_DOCS_DOC.Set_C_DOC_CNT(Value: UnicodeString);
 begin
   ChildNodes['C_DOC_CNT'].NodeValue := Value;
 end;
 
-function TXMLDHead_LINKED_DOCS_DOC.Get_C_DOC_STAN: Integer;
+function TXMLDHead_LINKED_DOCS_DOC.Get_C_DOC_STAN: UnicodeString;
 begin
   Result := ChildNodes['C_DOC_STAN'].NodeValue;
 end;
 
-procedure TXMLDHead_LINKED_DOCS_DOC.Set_C_DOC_STAN(Value: Integer);
+procedure TXMLDHead_LINKED_DOCS_DOC.Set_C_DOC_STAN(Value: UnicodeString);
 begin
   ChildNodes['C_DOC_STAN'].NodeValue := Value;
 end;

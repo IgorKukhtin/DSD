@@ -2703,6 +2703,8 @@ begin
         try fExecSqFromQuery('update dba.Bill set Id_Postgres = null where Id_Postgres is not null'); except end;
         try fExecSqFromQuery('update dba.BillItemsIncome set Id_Postgres = null where Id_Postgres is not null'); except end;
         try fExecSqFromQuery('update dba.BillItemsIncome set GoodsId_Postgres = null where GoodsId_Postgres is not null'); except end;
+      // 1.0. ALL
+        try fExecSqFromQuery('update dba.BillItems set Id_Postgres = null where Id_Postgres is not null'); except end;
       // 1.2. Возврат поставщику
         try fExecSqFromQuery('update dba.BillItems set ReturnOutId_Postgres = null where ReturnOutId_Postgres is not null'); except end;
       // 1.3. Перемещение

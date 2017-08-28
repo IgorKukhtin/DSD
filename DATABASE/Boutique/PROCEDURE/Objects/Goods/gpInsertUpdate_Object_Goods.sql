@@ -43,7 +43,7 @@ BEGIN
    -- PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Goods(), inName);
 
    -- проверка уникальности для свойства <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Goods(), ioCode);
+   -- PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Goods(), ioCode);
 
    -- определяем признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;

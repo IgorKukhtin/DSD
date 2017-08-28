@@ -38,7 +38,7 @@ BEGIN
          -- Определили курс на Дату документа
          SELECT COALESCE (tmp.Amount, 1), COALESCE (tmp.ParValue,0)
                 INTO outCurrencyValue, outParValue
-         FROM lfSelect_Movement_Currency_byDate (inOperDate      := (SELECT Movement.OperDate FROM Movement  WHERE Movement.Id = ioId)
+         FROM lfSelect_Movement_Currency_byDate (inOperDate      := inOperDate -- (SELECT Movement.OperDate FROM Movement  WHERE Movement.Id = ioId)
                                                , inCurrencyFromId:= zc_Currency_Basis()
                                                , inCurrencyToId  := inCurrencyDocumentId
                                                 ) AS tmp;
