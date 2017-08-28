@@ -279,7 +279,7 @@ BEGIN
                             THEN PersonalBookkeeper_INN.ValueData
                             ELSE '2649713447' 
                        END
-              END                           :: TVarChar AS AccounterINN_From
+             END                            :: TVarChar AS AccounterINN_From
            , OH_JuridicalDetails_From.BankAccount       AS BankAccount_From
            , OH_JuridicalDetails_From.BankName          AS BankName_From
            , OH_JuridicalDetails_From.MFO               AS BankMFO_From

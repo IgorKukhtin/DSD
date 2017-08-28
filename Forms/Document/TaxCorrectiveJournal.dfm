@@ -4,7 +4,6 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   ClientWidth = 1118
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog1
-  ExplicitLeft = -144
   ExplicitWidth = 1134
   ExplicitHeight = 570
   PixelsPerInch = 96
@@ -538,14 +537,13 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   inherited ActionList: TActionList
     Left = 47
     Top = 266
-    object MedocCorrectiveActionList: TMedocCorrectiveAction [0]
+    object MedocListAction: TMedocCorrectiveAction [0]
       Category = 'TaxLib'
       MoveParams = <>
-      Caption = 'MedocCorrectiveActionList'
+      Caption = 'MedocListAction'
       HeaderDataSet = PrintItemsCDS
       ItemsDataSet = PrintItemsCDS
       AskFilePath = False
-      IsMedoc = False
     end
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
@@ -862,7 +860,6 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       MoveParams = <>
       HeaderDataSet = PrintItemsCDS
       ItemsDataSet = PrintItemsCDS
-      IsMedoc = False
     end
     object mactMeDoc: TMultiAction
       Category = 'TaxLib'
@@ -872,7 +869,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           Action = actUpdateIsMedoc
         end
         item
-          Action = actMedocProcedure
+          Action = actSelect_Medoc
         end
         item
           Action = MedocAction
@@ -885,7 +882,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' '#1052#1077#1044#1086#1082
       ImageIndex = 30
     end
-    object actMedocProcedure: TdsdExecStoredProc
+    object actSelect_Medoc: TdsdExecStoredProc
       Category = 'TaxLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -894,7 +891,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         item
           StoredProc = spSelectPrintTaxCorrective_Client
         end>
-      Caption = 'actMedocProcedure'
+      Caption = 'actSelect_Medoc'
     end
     object ExecuteDialog1: TExecuteDialog
       Category = 'DSDLib'
@@ -1084,7 +1081,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           Action = actGetDirectory
         end
         item
-          Action = mactMEDOCList
+          Action = mactMEDOCGrid
         end
         item
           Action = actRefresh
@@ -1106,7 +1103,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         end>
       Caption = 'actGetDirectory'
     end
-    object mactMEDOCList: TMultiAction
+    object mactMEDOCGrid: TMultiAction
       Category = 'TaxLib'
       MoveParams = <>
       ActionList = <
@@ -1114,13 +1111,13 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           Action = actUpdateIsMedoc
         end
         item
-          Action = spTaxPrint
+          Action = actSelect_Medoc_list
         end
         item
-          Action = MedocCorrectiveActionList
+          Action = MedocListAction
         end>
       View = cxGridDBTableView
-      Caption = 'mactMEDOCList'
+      Caption = 'mactMEDOCGrid'
     end
     object EDIAction: TEDIAction
       Category = 'TaxLib'
@@ -1133,7 +1130,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
-    object spTaxPrint: TdsdExecStoredProc
+    object actSelect_Medoc_list: TdsdExecStoredProc
       Category = 'TaxLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1142,7 +1139,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         item
           StoredProc = spSelectPrintTaxCorrective_Client
         end>
-      Caption = 'spTaxPrint'
+      Caption = 'actSelect_Medoc_list'
     end
     object actUpdateIsMedoc: TdsdExecStoredProc
       Category = 'TaxLib'
@@ -1163,10 +1160,10 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           Action = actUpdateIsMedoc
         end
         item
-          Action = actMedocProcedure
+          Action = actSelect_Medoc
         end
         item
-          Action = MedocAction
+          Action = IFinAction
         end
         item
           Action = actRefresh
@@ -1184,7 +1181,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           Action = actGetDirectory
         end
         item
-          Action = mactMEDOCList
+          Action = mactIFinGrid
         end
         item
           Action = actRefresh
@@ -1210,6 +1207,39 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object IFinListAction: TMedocCorrectiveAction
+      Category = 'TaxLib'
+      MoveParams = <>
+      Caption = 'MedocListAction'
+      HeaderDataSet = PrintItemsCDS
+      ItemsDataSet = PrintItemsCDS
+      AskFilePath = False
+      IsMedoc = False
+    end
+    object IFinAction: TMedocCorrectiveAction
+      Category = 'TaxLib'
+      MoveParams = <>
+      Caption = 'IFinAction'
+      HeaderDataSet = PrintItemsCDS
+      ItemsDataSet = PrintItemsCDS
+      IsMedoc = False
+    end
+    object mactIFinGrid: TMultiAction
+      Category = 'TaxLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateIsMedoc
+        end
+        item
+          Action = actSelect_Medoc_list
+        end
+        item
+          Action = IFinListAction
+        end>
+      View = cxGridDBTableView
+      Caption = 'mactMEDOCGrid'
     end
   end
   inherited MasterDS: TDataSource
@@ -1838,7 +1868,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       item
         Name = 'Directory'
         Value = Null
-        Component = MedocCorrectiveActionList
+        Component = MedocListAction
         ComponentItem = 'Directory'
         DataType = ftString
         MultiSelectSeparator = ','

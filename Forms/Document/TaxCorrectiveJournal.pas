@@ -87,7 +87,7 @@ type
     mactPrint_TaxCorrective_Client: TMultiAction;
     mactPrint_TaxCorrective_Us: TMultiAction;
     spUpdateIsMedoc: TdsdStoredProc;
-    MedocCorrectiveActionList: TMedocCorrectiveAction;
+    MedocListAction: TMedocCorrectiveAction;
     IsMedoc: TcxGridDBColumn;
     actUpdateIsMedoc: TdsdExecStoredProc;
     DocumentValue: TcxGridDBColumn;
@@ -115,6 +115,9 @@ type
     mactIFinALL: TMultiAction;
     bbIFin: TdxBarButton;
     bbIFinALL: TdxBarButton;
+    IFinListAction: TMedocCorrectiveAction;
+    IFinAction: TMedocCorrectiveAction;
+    mactIFinGrid: TMultiAction;
   private
     { Private declarations }
   public

@@ -21,10 +21,13 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
    vbUserId := lpGetUserBySession (inSession);
 
-   SELECT FromId, ToName, Object_Unit_View.JuridicalName INTO vbJuridicalId, vbUnitName, vbMainJuridicalName
+
+      SELECT FromId, REPLACE (REPLACE (ToName, '/', '_'), '\', '_'), Object_Unit_View.JuridicalName
+             INTO vbJuridicalId, vbUnitName, vbMainJuridicalName
        FROM Movement_OrderExternal_View 
             LEFT JOIN Object_Unit_View ON Object_Unit_View.Id = ToId
        WHERE Movement_OrderExternal_View.Id = inMovementId;
+
 
    IF vbJuridicalId = 59611 THEN --Оптима
 

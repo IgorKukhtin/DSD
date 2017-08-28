@@ -4,7 +4,6 @@ inherited TaxJournalForm: TTaxJournalForm
   ClientWidth = 1110
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog1
-  ExplicitLeft = -337
   ExplicitWidth = 1126
   ExplicitHeight = 570
   PixelsPerInch = 96
@@ -1074,7 +1073,7 @@ inherited TaxJournalForm: TTaxJournalForm
           Action = actUpdateIsMedoc
         end
         item
-          Action = actSelectTax_Medoc
+          Action = actSelect_Medoc
         end
         item
           Action = MedocAction
@@ -1087,7 +1086,7 @@ inherited TaxJournalForm: TTaxJournalForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' '#1052#1077#1044#1086#1082
       ImageIndex = 30
     end
-    object actSelectTax_Medoc: TdsdExecStoredProc
+    object actSelect_Medoc: TdsdExecStoredProc
       Category = 'TaxLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1096,7 +1095,7 @@ inherited TaxJournalForm: TTaxJournalForm
         item
           StoredProc = spSelectTax_Client
         end>
-      Caption = 'actSelectTax_Medoc'
+      Caption = 'actSelect_Medoc'
     end
     object mactMedocALL: TMultiAction
       Category = 'TaxLib'
@@ -1136,7 +1135,7 @@ inherited TaxJournalForm: TTaxJournalForm
           Action = actUpdateIsMedoc
         end
         item
-          Action = actSelectTax_Medoc_list
+          Action = actSelect_Medoc_list
         end
         item
           Action = MedocListAction
@@ -1156,7 +1155,7 @@ inherited TaxJournalForm: TTaxJournalForm
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
-    object actSelectTax_Medoc_list: TdsdExecStoredProc
+    object actSelect_Medoc_list: TdsdExecStoredProc
       Category = 'TaxLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1165,7 +1164,7 @@ inherited TaxJournalForm: TTaxJournalForm
         item
           StoredProc = spSelectTax_Client
         end>
-      Caption = 'actSelectTax_Medoc_list'
+      Caption = 'actSelect_Medoc_list'
     end
     object actUpdateIsMedoc: TdsdExecStoredProc
       Category = 'TaxLib'
@@ -1234,7 +1233,7 @@ inherited TaxJournalForm: TTaxJournalForm
           Action = actUpdateIsMedoc
         end
         item
-          Action = actSelectTax_Medoc
+          Action = actSelect_Medoc
         end
         item
           Action = IFinAction
@@ -1266,14 +1265,6 @@ inherited TaxJournalForm: TTaxJournalForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1042#1057#1045#1061' '#1085#1072#1083#1086#1075#1086#1074#1099#1093' '#1074' IFin'
       ImageIndex = 48
     end
-    object IFinAction: TMedocAction
-      Category = 'TaxLib'
-      MoveParams = <>
-      Caption = 'IFinAction'
-      HeaderDataSet = PrintHeaderCDS
-      ItemsDataSet = PrintItemsCDS
-      IsMedoc = False
-    end
     object IFinListAction: TMedocAction
       Category = 'TaxLib'
       MoveParams = <>
@@ -1281,6 +1272,14 @@ inherited TaxJournalForm: TTaxJournalForm
       HeaderDataSet = PrintHeaderCDS
       ItemsDataSet = PrintItemsCDS
       AskFilePath = False
+      IsMedoc = False
+    end
+    object IFinAction: TMedocAction
+      Category = 'TaxLib'
+      MoveParams = <>
+      Caption = 'IFinAction'
+      HeaderDataSet = PrintHeaderCDS
+      ItemsDataSet = PrintItemsCDS
       IsMedoc = False
     end
     object mactIFinGrid: TMultiAction
@@ -1291,7 +1290,7 @@ inherited TaxJournalForm: TTaxJournalForm
           Action = actUpdateIsMedoc
         end
         item
-          Action = actSelectTax_Medoc_list
+          Action = actSelect_Medoc_list
         end
         item
           Action = IFinListAction

@@ -73,7 +73,7 @@ type
     MedocAction: TMedocAction;
     bbMeDoc: TdxBarButton;
     mactMeDoc: TMultiAction;
-    actSelectTax_Medoc: TdsdExecStoredProc;
+    actSelect_Medoc: TdsdExecStoredProc;
     actMovementCheck: TdsdOpenForm;
     bbMovementCheck: TdxBarButton;
     spChecked: TdsdStoredProc;
@@ -96,7 +96,7 @@ type
     actGetDirectory: TdsdExecStoredProc;
     mactMEDOCGrid: TMultiAction;
     EDIAction: TEDIAction;
-    actSelectTax_Medoc_list: TdsdExecStoredProc;
+    actSelect_Medoc_list: TdsdExecStoredProc;
     IsMedoc: TcxGridDBColumn;
     spUpdateIsMedoc: TdsdStoredProc;
     MedocListAction: TMedocAction;
