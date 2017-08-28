@@ -180,8 +180,36 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
                                   ON ObjectLink_GoodsGroup.ObjectId = MovementItem.ObjectId
                                  AND ObjectLink_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-       )
-    , tmpGoods     AS (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI)
+        )
+  , tmpGoods AS (SELECT tmp.GoodsId
+                      , ObjectString_Goods_UKTZED.ValueData     AS Goods_UKTZED
+                      , ObjectString_Goods_TaxImport.ValueData  AS Goods_TaxImport
+                      , ObjectString_Goods_DKPP.ValueData       AS Goods_DKPP
+                      , ObjectString_Goods_TaxAction.ValueData  AS Goods_TaxAction
+                      , COALESCE (ObjectLink_Goods_Measure.ChildObjectId, zc_Measure_Sh())  AS MeasureId
+                      , ObjectLink_Goods_InfoMoney.ChildObjectId AS InfoMoneyId
+                 FROM (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI
+                     ) AS tmp
+                      LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
+                                             ON ObjectString_Goods_UKTZED.ObjectId = tmp.GoodsId
+                                            AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
+                      LEFT JOIN ObjectString AS ObjectString_Goods_TaxImport
+                                             ON ObjectString_Goods_TaxImport.ObjectId = tmp.GoodsId
+                                            AND ObjectString_Goods_TaxImport.DescId = zc_ObjectString_Goods_TaxImport()
+                      LEFT JOIN ObjectString AS ObjectString_Goods_DKPP
+                                             ON ObjectString_Goods_DKPP.ObjectId = tmp.GoodsId
+                                            AND ObjectString_Goods_DKPP.DescId = zc_ObjectString_Goods_DKPP()
+                      LEFT JOIN ObjectString AS ObjectString_Goods_TaxAction
+                                             ON ObjectString_Goods_TaxAction.ObjectId = tmp.GoodsId
+                                            AND ObjectString_Goods_TaxAction.DescId = zc_ObjectString_Goods_TaxAction()
+                      LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                           ON ObjectLink_Goods_Measure.ObjectId = tmp.GoodsId
+                                          AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                      LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                           ON ObjectLink_Goods_InfoMoney.ObjectId = tmp.GoodsId
+                                          AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                 )
+
     , tmpUKTZED    AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED (tmp.GoodsGroupId) AS CodeUKTZED FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
     , tmpTaxImport AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_TaxImport (tmp.GoodsGroupId) AS TaxImport FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
     , tmpDKPP      AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_DKPP (tmp.GoodsGroupId) AS DKPP FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
@@ -257,7 +285,76 @@ BEGIN
                                   ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                  AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
        )
-  , tmpMITax AS (SELECT * FROM lpSelect_TaxFromTaxCorrective ((SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Child())))
+    , tmpMITax AS (SELECT * FROM lpSelect_TaxFromTaxCorrective ((SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Child())))
+
+    , tmpPersonalBookkeeper AS (SELECT ObjectLink_Branch_PersonalBookkeeper.ObjectId AS BranchId
+                                     , Object_PersonalBookkeeper_View.MemberId 
+                                     , PersonalBookkeeper_INN.ValueData AS PersonalBookkeeper_INN
+                                     , Object_PersonalBookkeeper_View.PersonalName AS PersonalName
+                                FROM ObjectLink AS ObjectLink_Branch_PersonalBookkeeper
+                                     LEFT JOIN Object_Personal_View AS Object_PersonalBookkeeper_View ON Object_PersonalBookkeeper_View.PersonalId = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId
+                                     LEFT JOIN ObjectString AS PersonalBookkeeper_INN
+                                                            ON PersonalBookkeeper_INN.ObjectId = Object_PersonalBookkeeper_View.MemberId 
+                                                           AND PersonalBookkeeper_INN.DescId = zc_ObjectString_Member_INN()
+                                WHERE ObjectLink_Branch_PersonalBookkeeper.DescId = zc_ObjectLink_Branch_PersonalBookkeeper()
+                                ) 
+                
+    , tmpPersonalSigning AS (SELECT ObjectLink_Contract_PersonalSigning.ObjectId AS ContractId
+                                  , Object_PersonalSigning.MemberId 
+                                  , PersonalSigning_INN.ValueData AS PersonalSigning_INN
+                                  , Object_PersonalSigning.PersonalName AS PersonalName
+                             FROM ObjectLink AS ObjectLink_Contract_PersonalSigning
+                                  LEFT JOIN Object_Personal_View AS Object_PersonalSigning ON Object_PersonalSigning.PersonalId = ObjectLink_Contract_PersonalSigning.ChildObjectId   
+                                  LEFT JOIN ObjectString AS PersonalSigning_INN
+                                                         ON PersonalSigning_INN.ObjectId = Object_PersonalSigning.MemberId 
+                                                        AND PersonalSigning_INN.DescId = zc_ObjectString_Member_INN()
+                             WHERE ObjectLink_Contract_PersonalSigning.DescId = zc_ObjectLink_Contract_PersonalSigning()
+                            )
+    
+    , tmpTotalSumm AS (SELECT MovementFloat_TotalSumm.MovementId
+                            , MovementFloat_TotalSumm.ValueData
+                       FROM MovementFloat AS MovementFloat_TotalSumm
+                       WHERE MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+                         AND MovementFloat_TotalSumm.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)
+                       )
+    , tmpVATPercent AS (SELECT MovementFloat_VATPercent.MovementId
+                             , MovementFloat_VATPercent.ValueData
+                        FROM MovementFloat AS MovementFloat_VATPercent
+                        WHERE MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+                          AND MovementFloat_VATPercent.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)
+                       )
+    , tmpTotalSummMVAT AS (SELECT MovementFloat_TotalSummMVAT.MovementId
+                                , MovementFloat_TotalSummMVAT.ValueData
+                           FROM MovementFloat AS MovementFloat_TotalSummMVAT
+                           WHERE MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
+                             AND MovementFloat_TotalSummMVAT.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)
+                           )
+    , tmpTotalSummPVAT AS (SELECT MovementFloat_TotalSummPVAT.MovementId
+                                , MovementFloat_TotalSummPVAT.ValueData
+                           FROM MovementFloat AS MovementFloat_TotalSummPVAT
+                           WHERE MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
+                             AND MovementFloat_TotalSummPVAT.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)
+                           )
+    , tmpReturnIn AS (SELECT Movement_ReturnIn.Id
+                           , Movement_ReturnIn.InvNumber
+                           , Movement_ReturnIn.OperDate
+                           , MovementString_InvNumberMark.ValueData     AS InvNumberMark
+                           , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
+                           , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
+                      FROM Movement AS Movement_ReturnIn
+                           LEFT JOIN MovementString AS MovementString_InvNumberMark
+                                                    ON MovementString_InvNumberMark.MovementId = Movement_ReturnIn.Id
+                                                   AND MovementString_InvNumberMark.DescId = zc_MovementString_InvNumberMark()
+               
+                           LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                                  ON MovementDate_OperDatePartner.MovementId = Movement_ReturnIn.Id
+                                                 AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+               
+                           LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                                    ON MovementString_InvNumberPartner.MovementId = Movement_ReturnIn.Id
+                                                   AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+                      WHERE Movement_ReturnIn.Id = inMovementId
+                     )
 
       -- ÐÅÇÓËÜÒÀÒ
       SELECT inMovementId                                                   AS inMovementId
@@ -270,18 +367,18 @@ BEGIN
                   ELSE 'J1201209'
              END ::TVarChar AS CHARCODE
            -- , 'Íåãðàø Î.Â.'::TVarChar                                        AS N10
-           , CASE WHEN Object_PersonalSigning.PersonalName <> '' 
-                  THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1, FALSE)
-                  ELSE CASE WHEN Object_PersonalBookkeeper_View.PersonalName <> '' 
-                            THEN zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1, FALSE) 
+           , CASE WHEN tmpPersonalSigning.PersonalName <> '' 
+                  THEN zfConvert_FIO (tmpPersonalSigning.PersonalName, 1, FALSE)
+                  ELSE CASE WHEN tmpPersonalBookkeeper.PersonalName <> '' 
+                            THEN zfConvert_FIO (tmpPersonalBookkeeper.PersonalName, 1, FALSE) 
                             ELSE 'Ðóäèê Í.Â.' 
                        END
              END                                                :: TVarChar AS N10
            -- , 'À.Â. ÌÀÐÓÕÍÎ'::TVarChar                                        AS N10
-           , CASE WHEN Object_PersonalSigning.PersonalName <> '' 
-                  THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1, TRUE)
-                  ELSE CASE WHEN Object_PersonalBookkeeper_View.PersonalName <> '' 
-                            THEN zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1, TRUE)
+           , CASE WHEN tmpPersonalSigning.PersonalName <> '' 
+                  THEN zfConvert_FIO (tmpPersonalSigning.PersonalName, 1, TRUE)
+                  ELSE CASE WHEN tmpPersonalBookkeeper.PersonalName <> '' 
+                            THEN zfConvert_FIO (tmpPersonalBookkeeper.PersonalName, 1, TRUE)
                             ELSE 'Í. Â. Ðóäèê' 
                        END 
              END                            :: TVarChar AS N10_ifin
@@ -305,9 +402,9 @@ BEGIN
            , MovementFloat_TotalSummPVAT.ValueData                          AS TotalSummPVAT
            , MovementFloat_TotalSumm.ValueData                              AS TotalSumm
 
-           , View_Contract.InvNumber         		                    AS ContractName
+           , Object_Contract.ValueData         		                    AS ContractName
            , ObjectDate_Signing.ValueData                                   AS ContractSigningDate
-           , View_Contract.ContractKindName                                 AS ContractKind
+           , Object_ContractKind.ValueData                                 AS ContractKind
 
            , CAST (REPEAT (' ', 7 - LENGTH (MS_DocumentChild_InvNumberPartner.ValueData)) || MS_DocumentChild_InvNumberPartner.ValueData AS TVarChar) AS InvNumber_Child
            , Movement_child.OperDate                                        AS OperDate_Child
@@ -368,17 +465,17 @@ BEGIN
            , OH_JuridicalDetails_To.INN                                     AS INN_To
            , OH_JuridicalDetails_To.NumberVAT                               AS NumberVAT_To
          -- , COALESCE (Object_Personal_View.PersonalName, OH_JuridicalDetails_To.AccounterName) :: TVarChar AS AccounterName_To 
-           , CASE WHEN Object_PersonalSigning.PersonalName <> '' 
-                  THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1, FALSE)
-                  ELSE CASE WHEN COALESCE (Object_PersonalBookkeeper_View.PersonalName,'') <> '' 
-                            THEN zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1, FALSE)
+           , CASE WHEN tmpPersonalSigning.PersonalName <> '' 
+                  THEN zfConvert_FIO (tmpPersonalSigning.PersonalName, 1, FALSE)
+                  ELSE CASE WHEN COALESCE (tmpPersonalBookkeeper.PersonalName,'') <> '' 
+                            THEN zfConvert_FIO (tmpPersonalBookkeeper.PersonalName, 1, FALSE)
                             ELSE 'Ðóäèê Í.Â.' /*'À.Â. Ìàðóõíî'*/ 
                        END  
              END                                                :: TVarChar AS AccounterName_To
-           , CASE WHEN Object_PersonalSigning.PersonalName <> '' 
-                  THEN PersonalSigning_INN.ValueData
-                  ELSE CASE WHEN Object_PersonalBookkeeper_View.PersonalName <> '' 
-                            THEN PersonalBookkeeper_INN.ValueData
+           , CASE WHEN tmpPersonalSigning.PersonalName <> '' 
+                  THEN tmpPersonalSigning.PersonalSigning_INN
+                  ELSE CASE WHEN tmpPersonalBookkeeper.PersonalName <> '' 
+                            THEN tmpPersonalBookkeeper.PersonalBookkeeper_INN
                             ELSE '2649713447' 
                        END                                                    
               END                                               :: TVarChar AS AccounterINN_To
@@ -427,35 +524,35 @@ BEGIN
            , CASE WHEN Movement.OperDate < '01.01.2017'
                        THEN ''
 
-                  WHEN ObjectString_Goods_UKTZED.ValueData <> ''
-                       THEN CASE WHEN vbIsLongUKTZED = TRUE THEN ObjectString_Goods_UKTZED.ValueData ELSE SUBSTRING (ObjectString_Goods_UKTZED.ValueData FROM 1 FOR 4) END
+                  WHEN tmpGoods.Goods_UKTZED <> ''
+                       THEN CASE WHEN vbIsLongUKTZED = TRUE THEN tmpGoods.Goods_UKTZED ELSE SUBSTRING (tmpGoods.Goods_UKTZED FROM 1 FOR 4) END
 
                   WHEN tmpUKTZED.CodeUKTZED <> ''
                        THEN CASE WHEN vbIsLongUKTZED = TRUE THEN tmpUKTZED.CodeUKTZED ELSE SUBSTRING (tmpUKTZED.CodeUKTZED FROM 1 FOR 4) END
 
-                  WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101())
+                  WHEN tmpGoods.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101())
                        THEN '1601'
-                  WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_21001(), zc_Enum_InfoMoney_30102())
+                  WHEN tmpGoods.InfoMoneyId IN (zc_Enum_InfoMoney_21001(), zc_Enum_InfoMoney_30102())
                        THEN '1602'
-                  WHEN ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30103()
+                  WHEN tmpGoods.InfoMoneyId = zc_Enum_InfoMoney_30103()
                        THEN '1905'
                   ELSE '0'
               END :: TVarChar AS GoodsCodeUKTZED
 
            , CASE WHEN Movement.OperDate < '01.01.2017' THEN ''
-                  WHEN ObjectString_Goods_TaxImport.ValueData <> '' THEN ObjectString_Goods_TaxImport.ValueData
+                  WHEN tmpGoods.Goods_TaxImport <> '' THEN tmpGoods.Goods_TaxImport
                   WHEN tmpTaxImport.TaxImport <> '' THEN tmpTaxImport.TaxImport
                   ELSE ''
              END :: TVarChar AS GoodsCodeTaxImport
 
            , CASE WHEN Movement.OperDate < '01.01.2017' THEN ''
-                  WHEN ObjectString_Goods_DKPP.ValueData <> '' THEN ObjectString_Goods_DKPP.ValueData
+                  WHEN tmpGoods.Goods_DKPP <> '' THEN tmpGoods.Goods_DKPP
                   WHEN tmpDKPP.DKPP <> '' THEN tmpDKPP.DKPP
                   ELSE ''
              END :: TVarChar AS GoodsCodeDKPP
 
            , CASE WHEN Movement.OperDate < '01.01.2017' THEN ''
-                  WHEN ObjectString_Goods_TaxAction.ValueData <> '' THEN ObjectString_Goods_TaxAction.ValueData
+                  WHEN tmpGoods.Goods_TaxAction <> '' THEN tmpGoods.Goods_TaxAction
                   WHEN tmpTaxAction.TaxAction <> '' THEN tmpTaxAction.TaxAction
                   ELSE ''
              END :: TVarChar AS GoodsCodeTaxAction
@@ -494,9 +591,9 @@ BEGIN
            , CAST (REPEAT (' ', 4 - LENGTH (MovementString_InvNumberBranch.ValueData)) || MovementString_InvNumberBranch.ValueData AS TVarChar) AS InvNumberBranch
            , CAST (REPEAT (' ', 4 - LENGTH (MovementString_InvNumberBranch_Child.ValueData)) || MovementString_InvNumberBranch_Child.ValueData AS TVarChar) AS InvNumberBranch_Child
 
-           , MovementString_InvNumberMark.ValueData     AS InvNumberMark
-           , COALESCE (MovementDate_OperDatePartner.ValueData, Movement_ReturnIn.OperDate) AS OperDatePartner_ReturnIn
-           , COALESCE (MovementString_InvNumberPartner_ReturnIn.ValueData, Movement_ReturnIn.InvNumber) AS InvNumberPartner_ReturnIn
+           , tmpReturnIn.InvNumberMark     AS InvNumberMark
+           , COALESCE (tmpReturnIn.OperDatePartner, tmpReturnIn.OperDate) AS OperDatePartner_ReturnIn
+           , COALESCE (tmpReturnIn.InvNumberPartner, tmpReturnIn.InvNumber) AS InvNumberPartner_ReturnIn
 --           , COALESCE (MovementFloat_VATPercent.ValueData, 0) AS VATPercent
 
            , Movement_Sale.InvNumber                        AS InvNumber_Sale
@@ -520,6 +617,19 @@ BEGIN
             LEFT JOIN tmpDKPP ON tmpDKPP.GoodsGroupId = tmpMI.GoodsGroupId
             LEFT JOIN tmpTaxAction ON tmpTaxAction.GoodsGroupId = tmpMI.GoodsGroupId
 
+            LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = tmpMI.GoodsId
+                                                  AND tmpObject_GoodsPropertyValue.GoodsKindId = tmpMI.GoodsKindId
+            LEFT JOIN tmpObject_GoodsPropertyValueGroup ON tmpObject_GoodsPropertyValueGroup.GoodsId = tmpMI.GoodsId
+                                                       AND tmpObject_GoodsPropertyValue.GoodsId IS NULL
+            LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = tmpMI.GoodsId
+                                                        AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = tmpMI.GoodsKindId
+
+            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
+            LEFT JOIN tmpGoods ON tmpGoods.GoodsId = tmpMI.GoodsId
+            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = tmpGoods.MeasureId
+
+-- MOVEMENT
             LEFT JOIN MovementBoolean AS MovementBoolean_isCopy
                                       ON MovementBoolean_isCopy.MovementId = tmpMI.MovementId
                                      AND MovementBoolean_isCopy.DescId = zc_MovementBoolean_isCopy()
@@ -540,163 +650,116 @@ BEGIN
                                      ON MovementString_InvNumberPartnerEDI.MovementId =  MovementLinkMovement_ChildEDI.MovementChildId
                                     AND MovementString_InvNumberPartnerEDI.DescId = zc_MovementString_InvNumberPartner()
 
-            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
-            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
+            LEFT JOIN Movement ON Movement.Id = tmpMI.MovementId 
 
-            LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
-                                   ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
-                                  AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
-            LEFT JOIN ObjectString AS ObjectString_Goods_TaxImport
-                                   ON ObjectString_Goods_TaxImport.ObjectId = Object_Goods.Id
-                                  AND ObjectString_Goods_TaxImport.DescId = zc_ObjectString_Goods_TaxImport()
-            LEFT JOIN ObjectString AS ObjectString_Goods_DKPP
-                                   ON ObjectString_Goods_DKPP.ObjectId = Object_Goods.Id
-                                  AND ObjectString_Goods_DKPP.DescId = zc_ObjectString_Goods_DKPP()
-            LEFT JOIN ObjectString AS ObjectString_Goods_TaxAction
-                                   ON ObjectString_Goods_TaxAction.ObjectId = Object_Goods.Id
-                                  AND ObjectString_Goods_TaxAction.DescId = zc_ObjectString_Goods_TaxAction()
-
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
-                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = COALESCE (ObjectLink_Goods_Measure.ChildObjectId, zc_Measure_Sh())
-
-            LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = tmpMI.GoodsId
-                                                  AND tmpObject_GoodsPropertyValue.GoodsKindId = tmpMI.GoodsKindId
-            LEFT JOIN tmpObject_GoodsPropertyValueGroup ON tmpObject_GoodsPropertyValueGroup.GoodsId = tmpMI.GoodsId
-                                                       AND tmpObject_GoodsPropertyValue.GoodsId IS NULL
-            LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = tmpMI.GoodsId
-                                                        AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = tmpMI.GoodsKindId
-                                                  -- AND tmpObject_GoodsPropertyValue.Name <> ''
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
-                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-            -- LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
-
--- MOVEMENT
-            LEFT JOIN Movement ON Movement.Id = tmpMI.MovementId
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
                                          ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
                                         AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+
             LEFT JOIN MovementString AS MovementString_InvNumberBranch
-                                     ON MovementString_InvNumberBranch.MovementId =  Movement.Id
+                                     ON MovementString_InvNumberBranch.MovementId = Movement.Id
                                     AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                      ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                      ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
 
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
-                                     ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                     ON MovementString_InvNumberPartner.MovementId = Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-
-            LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+            LEFT JOIN tmpTotalSumm AS MovementFloat_TotalSumm
+                                    ON MovementFloat_TotalSumm.MovementId = Movement.Id
+            LEFT JOIN tmpVATPercent AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
-                                   AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
-
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
+            LEFT JOIN tmpTotalSummMVAT AS MovementFloat_TotalSummMVAT
                                     ON MovementFloat_TotalSummMVAT.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
+            LEFT JOIN tmpTotalSummPVAT AS MovementFloat_TotalSummPVAT
                                     ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Branch
                                          ON MovementLinkObject_Branch.MovementId = Movement.Id
                                         AND MovementLinkObject_Branch.DescId = zc_MovementLinkObject_Branch()
-            LEFT JOIN ObjectLink AS ObjectLink_Branch_PersonalBookkeeper
-                                 ON ObjectLink_Branch_PersonalBookkeeper.ObjectId = MovementLinkObject_Branch.ObjectId
-                                AND ObjectLink_Branch_PersonalBookkeeper.DescId = zc_ObjectLink_Branch_PersonalBookkeeper()
-            LEFT JOIN Object_Personal_View AS Object_PersonalBookkeeper_View ON Object_PersonalBookkeeper_View.PersonalId = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId
 
-            LEFT JOIN ObjectString AS PersonalBookkeeper_INN
-                                   ON PersonalBookkeeper_INN.ObjectId = Object_PersonalBookkeeper_View.MemberId 
-                                  AND PersonalBookkeeper_INN.DescId = zc_ObjectString_Member_INN()
+            LEFT JOIN tmpPersonalBookkeeper ON tmpPersonalBookkeeper.BranchId = MovementLinkObject_Branch.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-            LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_From.Id
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
-
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                          ON MovementLinkObject_Partner.MovementId = Movement.Id
                                         AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+
             LEFT JOIN ObjectString AS ObjectString_FromAddress
                                    ON ObjectString_FromAddress.ObjectId = MovementLinkObject_Partner.ObjectId
                                   AND ObjectString_FromAddress.DescId = zc_ObjectString_Partner_Address()
 
-            /*LEFT JOIN ObjectString AS ObjectString_BuyerGLNCode
-                                   ON ObjectString_BuyerGLNCode.ObjectId = Object_To.Id
-                                  AND ObjectString_BuyerGLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
-            LEFT JOIN ObjectString AS ObjectString_SupplierGLNCode
-                                   ON ObjectString_SupplierGLNCode.ObjectId = Object_From.Id
-                                  AND ObjectString_SupplierGLNCode.DescId = zc_ObjectString_Juridical_GLNCode()*/
-
             LEFT JOIN ObjectString AS ObjectString_Partner_GLNCodeJuridical
-                                   ON ObjectString_Partner_GLNCodeJuridical.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, Object_From.Id)
+                                   ON ObjectString_Partner_GLNCodeJuridical.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_From.ObjectId)
                                   AND ObjectString_Partner_GLNCodeJuridical.DescId = zc_ObjectString_Partner_GLNCodeJuridical()
+
             LEFT JOIN ObjectString AS ObjectString_Partner_GLNCodeCorporate
-                                   ON ObjectString_Partner_GLNCodeCorporate.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, Object_From.Id)
+                                   ON ObjectString_Partner_GLNCodeCorporate.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_From.ObjectId)
                                   AND ObjectString_Partner_GLNCodeCorporate.DescId = zc_ObjectString_Partner_GLNCodeCorporate()
 
             LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                 ON ObjectLink_Juridical_Retail.ObjectId = Object_From.Id
+                                 ON ObjectLink_Juridical_Retail.ObjectId = MovementLinkObject_From.ObjectId
                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+
             LEFT JOIN ObjectString AS ObjectString_Juridical_GLNCode
-                                   ON ObjectString_Juridical_GLNCode.ObjectId = Object_From.Id
+                                   ON ObjectString_Juridical_GLNCode.ObjectId = MovementLinkObject_From.ObjectId
                                   AND ObjectString_Juridical_GLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
+
             LEFT JOIN ObjectString AS ObjectString_Retail_GLNCodeCorporate
                                    ON ObjectString_Retail_GLNCodeCorporate.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
                                   AND ObjectString_Retail_GLNCodeCorporate.DescId = zc_ObjectString_Retail_GLNCodeCorporate()
 
             LEFT JOIN ObjectString AS ObjectString_JuridicalTo_GLNCode
-                                   ON ObjectString_JuridicalTo_GLNCode.ObjectId = Object_To.Id
+                                   ON ObjectString_JuridicalTo_GLNCode.ObjectId = MovementLinkObject_To.ObjectId
                                   AND ObjectString_JuridicalTo_GLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
-
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-            LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = MovementLinkObject_Contract.ObjectId
+
+            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
+                                 ON ObjectLink_Contract_ContractKind.ObjectId = MovementLinkObject_Contract.ObjectId
+                                AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
+                                AND Object_Contract.ValueData <> '-'
+     
+            LEFT JOIN Object AS Object_ContractKind ON Object_ContractKind.Id = ObjectLink_Contract_ContractKind.ChildObjectId
+
             LEFT JOIN ObjectDate AS ObjectDate_Signing
                                  ON ObjectDate_Signing.ObjectId = MovementLinkObject_Contract.ObjectId
                                 AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
-                                AND View_Contract.InvNumber <> '-'
+                                AND Object_Contract.ValueData <> '-'
 
-            LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalSigning
-                                 ON ObjectLink_Contract_PersonalSigning.ObjectId = View_Contract.ContractId
-                                AND ObjectLink_Contract_PersonalSigning.DescId = zc_ObjectLink_Contract_PersonalSigning()
-            LEFT JOIN Object_Personal_View AS Object_PersonalSigning ON Object_PersonalSigning.PersonalId = ObjectLink_Contract_PersonalSigning.ChildObjectId   
-
-            LEFT JOIN ObjectString AS PersonalSigning_INN
-                                   ON PersonalSigning_INN.ObjectId = Object_PersonalSigning.MemberId 
-                                  AND PersonalSigning_INN.DescId = zc_ObjectString_Member_INN()
+            LEFT JOIN tmpPersonalSigning ON tmpPersonalSigning.ContractId =  Object_Contract.Id
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_child
                                            ON MovementLinkMovement_child.MovementId = Movement.Id
                                           AND MovementLinkMovement_child.DescId = zc_MovementLinkMovement_Child()
+
             LEFT JOIN Movement AS Movement_child ON Movement_child.Id = MovementLinkMovement_child.MovementChildId
                                                 AND Movement_child.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind_Child
                                          ON MovementLinkObject_DocumentTaxKind_Child.MovementId = MovementLinkMovement_child.MovementChildId
                                         AND MovementLinkObject_DocumentTaxKind_Child.DescId = zc_MovementLinkObject_DocumentTaxKind()
 
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
-                                                                ON OH_JuridicalDetails_To.JuridicalId = Object_To.Id
+                                                                ON OH_JuridicalDetails_To.JuridicalId = MovementLinkObject_To.ObjectId
                                                                AND COALESCE (Movement_child.OperDate, Movement.OperDate) >= OH_JuridicalDetails_To.StartDate AND COALESCE (Movement_child.OperDate, Movement.OperDate) < OH_JuridicalDetails_To.EndDate
+
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
-                                                                ON OH_JuridicalDetails_From.JuridicalId = Object_From.Id
+                                                                ON OH_JuridicalDetails_From.JuridicalId = MovementLinkObject_From.ObjectId
                                                                AND COALESCE (Movement_child.OperDate, Movement.OperDate) >= OH_JuridicalDetails_From.StartDate AND COALESCE (Movement_child.OperDate, Movement.OperDate) < OH_JuridicalDetails_From.EndDate
 
 ---- íîìåðà ñòðîê â ÍÍ
@@ -704,47 +767,40 @@ BEGIN
                                            AND tmpMITax1.GoodsId     = Object_Goods.Id
                                            AND tmpMITax1.GoodsKindId = Object_GoodsKind.Id
                                            AND tmpMITax1.Price       = tmpMI.Price
+
             LEFT JOIN tmpMITax AS tmpMITax2 ON tmpMITax2.Kind        = 2
                                            AND tmpMITax2.GoodsId     = Object_Goods.Id
                                            AND tmpMITax2.Price       = tmpMI.Price
                                            AND tmpMITax1.GoodsId     IS NULL
-----
+
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child_Sale
                                            ON MovementLinkMovement_Child_Sale.MovementChildId = MovementLinkMovement_Child.MovementChildId
                                           AND MovementLinkMovement_Child_Sale.DescId = zc_MovementLinkMovement_Master()
                                           AND MovementLinkObject_DocumentTaxKind_Child.ObjectId = zc_Enum_DocumentTaxKind_Tax() -- íàëîãîâàÿ
+
             LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MovementLinkMovement_Child_Sale.MovementId
             LEFT JOIN MovementString AS MovementString_InvNumberPartner_Sale
                                      ON MovementString_InvNumberPartner_Sale.MovementId =  MovementLinkMovement_Child_Sale.MovementId
                                     AND MovementString_InvNumberPartner_Sale.DescId = zc_MovementString_InvNumberPartner()
+
             LEFT JOIN MovementString AS MovementString_InvNumberOrder_Sale
                                      ON MovementString_InvNumberOrder_Sale.MovementId =  MovementLinkMovement_Child_Sale.MovementId
                                     AND MovementString_InvNumberOrder_Sale.DescId = zc_MovementString_InvNumberOrder()
+
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner_Sale
                                    ON MovementDate_OperDatePartner_Sale.MovementId =  MovementLinkMovement_Child_Sale.MovementId
                                   AND MovementDate_OperDatePartner_Sale.DescId = zc_MovementDate_OperDatePartner()
 
 --   09.07.14
-            LEFT JOIN Movement AS Movement_ReturnIn ON Movement_ReturnIn.Id = inMovementId
-
-            LEFT JOIN MovementString AS MovementString_InvNumberMark
-                                     ON MovementString_InvNumberMark.MovementId =  Movement_ReturnIn.Id
-                                    AND MovementString_InvNumberMark.DescId = zc_MovementString_InvNumberMark()
-            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
-                                   ON MovementDate_OperDatePartner.MovementId =  Movement_ReturnIn.Id
-                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-            LEFT JOIN MovementString AS MovementString_InvNumberPartner_ReturnIn
-                                     ON MovementString_InvNumberPartner_ReturnIn.MovementId =  Movement_ReturnIn.Id
-                                    AND MovementString_InvNumberPartner_ReturnIn.DescId = zc_MovementString_InvNumberPartner()
-
+            LEFT JOIN tmpReturnIn ON 1 = 1
 --   09.07.14
-
             LEFT JOIN MovementString AS MovementString_InvNumberBranch_Child
-                                     ON MovementString_InvNumberBranch_Child.MovementId =  Movement_child.Id
+                                     ON MovementString_InvNumberBranch_Child.MovementId = Movement_child.Id
                                     AND MovementString_InvNumberBranch_Child.DescId = zc_MovementString_InvNumberBranch()
-            LEFT JOIN MovementString AS MS_DocumentChild_InvNumberPartner ON MS_DocumentChild_InvNumberPartner.MovementId = Movement_child.Id
-                                                                         AND MS_DocumentChild_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
+            LEFT JOIN MovementString AS MS_DocumentChild_InvNumberPartner 
+                                     ON MS_DocumentChild_InvNumberPartner.MovementId = Movement_child.Id
+                                    AND MS_DocumentChild_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
        ORDER BY MovementString_InvNumberPartner.ValueData
               , Object_Goods.ValueData 
@@ -912,11 +968,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
+ 28.08.17         *
  29.01.16         *
  14.01.15                                                       *
  16.07.14                                        * add tmpObject_GoodsPropertyValueGroup
@@ -942,4 +999,4 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, TVarChar
 
 -- òåñò
 -- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 5812683, inisClientCopy:= FALSE, inSession:= zfCalc_UserAdmin()); FETCH ALL "<unnamed portal 2>";
--- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 5812683, inisClientCopy:= FALSE ,inSession:= zfCalc_UserAdmin()); FETCH ALL "<unnamed portal 1>";
+-- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 5812683, inisClientCopy:= FALSE ,inSession:= zfCalc_UserAdmin()); FETCH ALL "<unnamed portal 3>";
