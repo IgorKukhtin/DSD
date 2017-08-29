@@ -60,7 +60,7 @@ BEGIN
    SELECT StartDate, EndDate INTO outStartDate, outEndDate FROM ObjectHistory WHERE Id = ioId;
 
    -- Проверка
-   IF inIsLast = TRUE AND COALESCE (outEndDate, zc_Date_Start()) <> zc_Date_End()
+   IF inIsLast = TRUE AND COALESCE (outEndDate, zc_DateStart()) <> zc_DateEnd()
    THEN
        RAISE EXCEPTION 'Ошибка. inIsLast = TRUE AND outEndDate = <%>', outEndDate;
    END IF;

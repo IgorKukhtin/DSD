@@ -5,9 +5,8 @@ inherited Report_MotionByPartnerForm: TReport_MotionByPartnerForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -30
   ExplicitWidth = 1081
-  ExplicitHeight = 460
+  ExplicitHeight = 457
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -73,17 +72,17 @@ inherited Report_MotionByPartnerForm: TReport_MotionByPartnerForm
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 1065
-    ExplicitHeight = 366
+    ExplicitHeight = 363
     ClientRectBottom = 363
     ClientRectRight = 1065
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1065
-      ExplicitHeight = 366
+      ExplicitHeight = 363
       inherited cxGrid: TcxGrid
         Width = 1065
         Height = 363
         ExplicitWidth = 1065
-        ExplicitHeight = 366
+        ExplicitHeight = 363
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item

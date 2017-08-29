@@ -15,9 +15,11 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem(
 RETURNS Integer
 AS
 $BODY$
-  DECLARE vbStatusId  Integer;
-  DECLARE vbInvNumber TVarChar;
-  DECLARE vbIsErased  Boolean;
+  DECLARE vbStatusId   Integer;
+  DECLARE vbInvNumber  TVarChar;
+  DECLARE vbIsErased   Boolean;
+  DECLARE vbMovementId Integer;
+  DECLARE vbDescId     Integer;
 BEGIN
      -- мен€ем параметр
      IF inParentId = 0
@@ -70,20 +72,47 @@ BEGIN
                            VALUES (inDescId, inObjectId, inPartionId, inMovementId, inAmount, inParentId) RETURNING Id INTO ioId;
      ELSE
          --
-         UPDATE MovementItem SET ObjectId = inObjectId, PartionId = inPartionId, Amount = inAmount, ParentId = inParentId/*, MovementId = inMovementId*/ WHERE Id = ioId
-         RETURNING isErased INTO vbIsErased;
-         --
+         UPDATE MovementItem SET ObjectId   = inObjectId
+                               , PartionId  = inPartionId
+                               , Amount     = inAmount
+                               , ParentId   = inParentId
+                            -- , MovementId = inMovementId
+                            -- , DescId     = inDescId
+         WHERE Id = ioId
+         RETURNING isErased, MovementId, DescId INTO vbIsErased, vbMovementId, vbDescId
+        ;
+
+         -- если такой элемент не был найден
          IF NOT FOUND THEN
-            RAISE EXCEPTION 'ќшибка.Ёлемент <%> в документе є <%> не найдена.', ioId, vbInvNumber;
+            -- ќшибка
+            RAISE EXCEPTION 'ќшибка.Ёлемент <%> в документе є <%> не найден.', ioId, vbInvNumber;
+            --
             INSERT INTO MovementItem (Id, DescId, ObjectId, PartionId, MovementId, Amount, ParentId)
                               VALUES (ioId, inDescId, inObjectId, inPartionId, inMovementId, inAmount, inParentId) RETURNING Id INTO ioId;
          END IF;
-         --
+ 
+         -- ѕроверка
          IF vbIsErased = TRUE
          THEN
              RAISE EXCEPTION 'ќшибка.Ёлемент не может корректироватьс€ т.к. он <”дален>.';
          END IF;
+
+         -- ѕроверка - т.к. DescId - !!!Ќ≈ ћ≈Ќя≈“—я!!!
+         IF COALESCE (inDescId, -1) <> COALESCE (vbDescId, -2)
+         THEN
+             RAISE EXCEPTION 'ќшибка изменени€ DescId с <%>(<%>) на <%>(<%>)', (SELECT ItemName FROM MovementItemDesc WHERE Id = vbDescId), vbDescId
+                                                                             , (SELECT ItemName FROM MovementItemDesc WHERE Id = inDescId), inDescId
+                                                                              ;
+         END IF;
+
+         -- ѕроверка - т.к. MovementId - !!!Ќ≈ ћ≈Ќя≈“—я!!!
+         IF COALESCE (inMovementId, -1) <> COALESCE (vbMovementId, -2)
+         THEN
+             RAISE EXCEPTION 'ќшибка изменени€ MovementId с <%> на <%>', vbMovementId, inMovementId;
+         END IF;
+
      END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

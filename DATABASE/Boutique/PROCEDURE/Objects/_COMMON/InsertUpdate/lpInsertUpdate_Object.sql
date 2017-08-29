@@ -12,21 +12,40 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object(
 )
 AS
 $BODY$
+  DECLARE vbDescId Integer;
 BEGIN
+
    IF COALESCE (ioId, 0) = 0 THEN
       -- добавили новый элемент справочника и вернули значение <Ключ объекта>
       INSERT INTO Object (DescId, ObjectCode, ValueData, AccessKeyId)
                   VALUES (inDescId, inObjectCode, inValueData, inAccessKeyId) RETURNING Id INTO ioId;
+
    ELSE
        -- изменили элемент справочника по значению <Ключ объекта>
-       UPDATE Object SET ObjectCode = inObjectCode, ValueData = inValueData, AccessKeyId = inAccessKeyId WHERE Id = ioId AND DescId = inDescId;
+       UPDATE Object SET ObjectCode = inObjectCode, ValueData = inValueData, AccessKeyId = inAccessKeyId
+       WHERE  Id     = ioId
+       -- AND DescId = inDescId
+       RETURNING DescId INTO vbDescId
+      ;
 
        -- если такой элемент не был найден
        IF NOT FOUND THEN
+          -- Ошибка
+          RAISE EXCEPTION 'Ошибка. Запрещаем создание записи с определенным ключом <%>', ioId;
+
           -- добавили новый элемент справочника со значением <Ключ объекта>
           INSERT INTO Object (Id, DescId, ObjectCode, ValueData, AccessKeyId)
                      VALUES (ioId, inDescId, inObjectCode, inValueData, inAccessKeyId);
        END IF; -- if NOT FOUND
+
+
+       -- Проверка - т.к. DescId - !!!НЕ МЕНЯЕТСЯ!!!
+       IF COALESCE (inDescId, -1) <> COALESCE (vbDescId, -2)
+       THEN
+           RAISE EXCEPTION 'Ошибка изменения DescId с <%>(<%>) на <%>(<%>)', (SELECT ItemName FROM ObjectDesc WHERE Id = vbDescId), vbDescId
+                                                                           , (SELECT ItemName FROM ObjectDesc WHERE Id = inDescId), inDescId
+                                                                            ;
+       END IF;
 
    END IF; -- if COALESCE (ioId, 0) = 0
 

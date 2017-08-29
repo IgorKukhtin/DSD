@@ -16,6 +16,7 @@ RETURNS Integer
 AS
 $BODY$
   DECLARE vbStatusId Integer;
+  DECLARE vbDescId   Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      IF inOperDate <> DATE_TRUNC('DAY', inOperDate) THEN
@@ -35,28 +36,40 @@ BEGIN
                       RETURNING Id INTO ioId;
      ELSE
         --
-        UPDATE Movement SET DescId    = inDescId
-                          , InvNumber = inInvNumber
+        UPDATE Movement SET InvNumber = inInvNumber
                           , OperDate  = inOperDate
                           , ParentId  = inParentId
+                       -- , DescId    = inDescId
         WHERE Id = ioId
-        RETURNING StatusId INTO vbStatusId;
+        RETURNING StatusId, DescId INTO vbStatusId, vbDescId
+       ;
 
-        --
+        -- Проверка
         IF vbStatusId <> zc_Enum_Status_UnComplete() THEN
            RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', inInvNumber, lfGet_Object_ValueData (vbStatusId);
-        END IF;
-        --
+        END IF; 
+        
+        -- Проверка
         IF vbStatusId = zc_Enum_Status_Complete() THEN
            RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', inInvNumber, lfGet_Object_ValueData (vbStatusId);
         END IF;
 
-        --
-        IF NOT FOUND
+        -- если такой элемент не был найден
+        IF NOT FOUND THEN
+           -- Ошибка
+           RAISE EXCEPTION 'Ошибка. Запрещаем создание записи с определенным ключом <%>', ioId;
+           --
+           INSERT INTO Movement (Id, DescId, InvNumber, OperDate, StatusId, ParentId)
+                         VALUES (ioId, inDescId, inInvNumber, inOperDate, zc_Enum_Status_UnComplete(), inParentId)
+                         RETURNING Id INTO ioId;
+        END IF;
+
+        -- Проверка - т.к. DescId - !!!НЕ МЕНЯЕТСЯ!!!
+        IF COALESCE (inDescId, -1) <> COALESCE (vbDescId, -2)
         THEN
-            INSERT INTO Movement (Id, DescId, InvNumber, OperDate, StatusId, ParentId)
-                          VALUES (ioId, inDescId, inInvNumber, inOperDate, zc_Enum_Status_UnComplete(), inParentId)
-                          RETURNING Id INTO ioId;
+            RAISE EXCEPTION 'Ошибка изменения DescId с <%>(<%>) на <%>(<%>)', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId), vbDescId
+                                                                            , (SELECT ItemName FROM MovementDesc WHERE Id = inDescId), inDescId
+                                                                             ;
         END IF;
 
      END IF;

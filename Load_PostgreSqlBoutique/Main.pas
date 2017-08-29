@@ -4859,6 +4859,7 @@ begin
 end;
 
 procedure TMainForm.pLoadGuide_Client;
+var ObjectName : String;
 begin
      if (not cbClient.Checked)or(not cbClient.Enabled) then exit;
      //
@@ -4893,6 +4894,8 @@ begin
         Add(', DiscountKlient.CommentInfo as  Comments');
         Add(', DiscountKlient.City as CityName');
         Add(', DiscountKlient.KindDiscount as KindDiscount');
+        Add(', DiscountKlient.DatabaseId');
+        Add(', DiscountKlient.ReplId');
         Add(', users.userId_postgres as LastUserID');
         Add('from Unit inner join DiscountKlient on DiscountKlient.ClientId = Unit.id');
         Add('     left outer join Users on users.id = DiscountKlient.LastUserID');
@@ -4926,12 +4929,17 @@ begin
         //
         while not EOF do
         begin
+             //
+             fOpenSqToQuery (' SELECT gpGet_Object_Client_SYBASE('+IntToStr(FieldByName('DatabaseId').AsInteger)+','+IntToStr(FieldByName('ReplId').AsInteger)+') as RetV');
+             if toSqlQuery.FieldByName('RetV').AsString <> ''
+             then ObjectName:=toSqlQuery.FieldByName('RetV').AsString
+             else ObjectName:=FieldByName('ObjectName').AsString;
 
              //!!!
              if fStop then begin {EnableControls;}exit;end;
 
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inName').Value:=ObjectName;
              toStoredProc.Params.ParamByName('inDiscountCard').Value:=FieldByName('DiscountCard').AsString;
              toStoredProc.Params.ParamByName('inDiscountTax').Value:=FieldByName('DiscountTax').AsFloat;
              toStoredProc.Params.ParamByName('inDiscountTaxTwo').Value:=FieldByName('DiscountTaxTwo').AsFloat;
