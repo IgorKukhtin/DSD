@@ -12,19 +12,19 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
     Width = 1251
     Height = 421
     TabOrder = 3
-    ExplicitTop = 99
+    ExplicitTop = 59
     ExplicitWidth = 1251
-    ExplicitHeight = 381
+    ExplicitHeight = 421
     ClientRectBottom = 421
     ClientRectRight = 1251
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1251
-      ExplicitHeight = 381
+      ExplicitHeight = 421
       inherited cxGrid: TcxGrid
         Width = 1251
         Height = 421
         ExplicitWidth = 1251
-        ExplicitHeight = 381
+        ExplicitHeight = 421
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -35,7 +35,6 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = Summa
             end
             item
               Format = ',0.00'
@@ -45,22 +44,18 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = SummaMargin
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = SummaWithVAT
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = SummaWithOutVAT
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = SummaMarginWithVAT
             end
             item
               Format = ',0.####'
@@ -86,7 +81,6 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = Summa
             end
             item
               Format = ',0.00'
@@ -96,7 +90,6 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = SummaMargin
             end
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
@@ -111,17 +104,14 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = SummaWithVAT
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = SummaWithOutVAT
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = SummaMarginWithVAT
             end
             item
               Format = ',0.####'
@@ -152,6 +142,15 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object CountUnit: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1090#1086#1095#1077#1082
+            DataBinding.FieldName = 'CountUnit'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1090#1086#1095#1077#1082', '#1085#1072' '#1082#1086#1090#1086#1088#1099#1093' '#1087#1088#1086#1076#1072#1077#1090#1089#1103' '#1087#1088#1077#1087#1072#1088#1072#1090
+            Options.Editing = False
+            Width = 56
+          end
           object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
@@ -207,33 +206,6 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object PriceWithOutVAT: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1073#1077#1079' '#1053#1044#1057')'
-            DataBinding.FieldName = 'PriceWithOutVAT'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object PriceWithVAT: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1089' '#1053#1044#1057')'
-            DataBinding.FieldName = 'PriceWithVAT'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 78
-          end
-          object Price: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'. ('#1089' '#1053#1044#1057')'
-            DataBinding.FieldName = 'Price'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
           object PriceSale: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
             DataBinding.FieldName = 'PriceSale'
@@ -243,54 +215,9 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
             HeaderAlignmentVert = vaCenter
             Width = 58
           end
-          object SummaWithOutVAT: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1073#1077#1079' '#1053#1044#1057')'
-            DataBinding.FieldName = 'SummaWithOutVAT'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 87
-          end
-          object SummaWithVAT: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1089' '#1053#1044#1057')'
-            DataBinding.FieldName = 'SummaWithVAT'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 87
-          end
-          object Summa: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'. ('#1089' '#1053#1044#1057')'
-            DataBinding.FieldName = 'Summa'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 102
-          end
           object SummaSale: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080
             DataBinding.FieldName = 'SummaSale'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object SummaMargin: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1085#1072#1094#1077#1085#1082#1080' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'.'
-            DataBinding.FieldName = 'SummaMargin'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object SummaMarginWithVAT: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1085#1072#1094#1077#1085#1082#1080
-            DataBinding.FieldName = 'SummaMarginWithVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
@@ -314,6 +241,13 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
             Width = 67
+          end
+          object MCSNotRecalc: TcxGridDBColumn
+            Caption = #1057#1087#1077#1094#1082#1086#1085#1090#1088#1086#1083#1100' '#1082#1086#1076#1072
+            DataBinding.FieldName = 'MCSNotRecalc'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 59
           end
           object UpdateDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'. '#1090#1086#1074#1072#1088#1072')'
@@ -394,10 +328,12 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 29
+      EditValue = 42979d
       ExplicitLeft = 29
     end
     inherited deEnd: TcxDateEdit
       Left = 144
+      EditValue = 42979d
       ExplicitLeft = 144
     end
     inherited cxLabel1: TcxLabel

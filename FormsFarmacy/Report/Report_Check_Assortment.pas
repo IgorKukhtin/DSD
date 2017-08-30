@@ -37,17 +37,13 @@ type
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
-    Price: TcxGridDBColumn;
     PriceSale: TcxGridDBColumn;
-    Summa: TcxGridDBColumn;
     SummaSale: TcxGridDBColumn;
-    SummaMargin: TcxGridDBColumn;
     spGet_UserUnit: TdsdStoredProc;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     GoodsGroupName: TcxGridDBColumn;
     NDSKindName: TcxGridDBColumn;
-    PriceWithOutVAT: TcxGridDBColumn;
     actRefreshIsPartion: TdsdDataSetRefresh;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
@@ -58,6 +54,8 @@ type
     actRefreshJuridical: TdsdDataSetRefresh;
     cbList: TcxCheckBox;
     actRefreshList: TdsdDataSetRefresh;
+    CountUnit: TcxGridDBColumn;
+    MCSNotRecalc: TcxGridDBColumn;
   private
     { Private declarations }
   public
