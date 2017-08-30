@@ -23,6 +23,8 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
       inherited cxGrid: TcxGrid
         Width = 1251
         Height = 421
+        ExplicitLeft = 29
+        ExplicitTop = 40
         ExplicitWidth = 1251
         ExplicitHeight = 421
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -657,6 +659,10 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
       Action = actPrint
       Category = 0
     end
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    Left = 496
+    Top = 152
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 224

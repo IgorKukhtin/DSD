@@ -81,7 +81,6 @@ BEGIN
              )
   -- продажи за период по всем выбранным подразделениям
   , tmpData_Container AS (SELECT MIContainer.WhereObjectId_analyzer          AS UnitId
-                               , COALESCE (MIContainer.AnalyzerId,0)         AS MovementItemId_Income
                                , MIContainer.ObjectId_analyzer               AS GoodsId
                                , SUM (COALESCE (-1 * MIContainer.Amount, 0)) AS Amount
                                , SUM (COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0)) AS SummaSale
@@ -90,8 +89,7 @@ BEGIN
                           WHERE MIContainer.DescId = zc_MIContainer_Count()
                             AND MIContainer.MovementDescId = zc_Movement_Check()
                             AND MIContainer.OperDate >= inDateStart AND MIContainer.OperDate < inDateFinal + INTERVAL '1 DAY'
-                          GROUP BY COALESCE (MIContainer.AnalyzerId,0)
-                                 , MIContainer.ObjectId_analyzer
+                          GROUP BY MIContainer.ObjectId_analyzer
                                  , MIContainer.WhereObjectId_analyzer 
                           HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
                           )
