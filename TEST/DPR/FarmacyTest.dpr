@@ -524,7 +524,9 @@ uses
   ExportSalesForSupp in '..\..\ExportSalesForSuppliers\ExportSalesForSupp.pas' {ExportSalesForSuppForm},
   ProvinceCityEdit in '..\..\FormsFarmacy\Guides\ProvinceCityEdit.pas' {ProvinceCityEditForm: TParentForm},
   ProvinceCity in '..\..\FormsFarmacy\Guides\ProvinceCity.pas' {ProvinceCityForm: TParentForm},
-  IFIN_J1201209 in '..\..\SOURCE\MeDOC\IFIN_J1201209.pas';
+  IFIN_J1201209 in '..\..\SOURCE\MeDOC\IFIN_J1201209.pas',
+  Report_Check_Assortment in '..\..\FormsFarmacy\Report\Report_Check_Assortment.pas' {Report_Check_AssortmentForm: TParentForm},
+  Report_Check_AssortmentDialog in '..\..\FormsFarmacy\Report\Report_Check_AssortmentDialog.pas' {Report_Check_AssortmentDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

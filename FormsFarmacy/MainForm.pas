@@ -372,6 +372,8 @@ type
     miExportSalesForSupp: TMenuItem;
     actProvinceCity: TdsdOpenForm;
     N145: TMenuItem;
+    actReport_Check_Assortment: TdsdOpenForm;
+    N146: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
