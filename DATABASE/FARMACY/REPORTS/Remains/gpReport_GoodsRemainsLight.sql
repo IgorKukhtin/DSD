@@ -318,4 +318,4 @@ $BODY$
 
 -- тест
 --
--- SELECT * FROM gpReport_GoodsRemainsLight (inUnitId := 377613 , inRetailId:=0, inRemainsDate := ('10.05.2016')::TDateTime, inIsPartion:= FALSE, inisPartionPrice:= FALSE, inisJuridical:=True, inSession := '3'::tvarchar);
+-- select * from gpReport_GoodsRemainsLight(inUnitId := 183292 , inRetailId := 0 , inJuridicalId := 0 , inRemainsDate := ('13.07.2017')::TDateTime , inIsPartion := 'False' , inisPartionPrice := 'False' , inisJuridical := 'True' , inisUnitList := 'False' ,  inSession := '3');
