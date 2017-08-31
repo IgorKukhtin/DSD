@@ -76,7 +76,7 @@ BEGIN
                                           AND ((ObjectLink_Juridical_Retail.ChildObjectId = inRetailId AND inUnitId = 0)
                                                OR (inRetailId = 0 AND inUnitId = 0))
                 WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                  AND (ObjectLink_Unit_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0 )
+                  AND (ObjectLink_Unit_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
                   AND inisUnitList = FALSE
                UNION
                 SELECT ObjectBoolean_Report.ObjectId          AS UnitId

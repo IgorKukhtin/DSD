@@ -45,6 +45,10 @@ type
     cxLabel19: TcxLabel;
     ceRetail: TcxButtonEdit;
     GuidesRetail: TdsdGuides;
+    cxLabel1: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    GuidesJuridical: TdsdGuides;
+    cbList: TcxCheckBox;
   private
     { Private declarations }
   public

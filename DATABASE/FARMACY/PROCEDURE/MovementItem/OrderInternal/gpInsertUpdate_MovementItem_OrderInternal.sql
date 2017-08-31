@@ -23,6 +23,7 @@ RETURNS TABLE(ioId Integer, ioPrice TFloat, ioPartnerGoodsCode TVarChar, ioPartn
             , ioJuridicalName TVarChar, ioContractName TVarChar
             , outSumm TFloat, outCalcAmount TFloat, outSummAll TFloat, outAmountAll TFloat, outCalcAmountAll TFloat
             , outAmount TFloat, outMessageText TVarChar
+            , outMakerName TVarChar, outPartionGoodsDate TDateTime
 ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -36,6 +37,8 @@ $BODY$
    DECLARE vbAmountAll TFloat;   
    DECLARE vbCalcAmountAll TFloat;   
    DECLARE vbMinimumLot TFloat;   
+   DECLARE vbMakerName TVarChar;
+   DECLARE vbPartionGoodsDate TDateTime;
 
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -64,9 +67,12 @@ BEGIN
              , (MovementItem.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0)) :: TFloat AS outAmountAll
              , COALESCE (MIFloat_AmountManual.ValueData, (CEIL ((MovementItem.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1))) :: TFloat AS outCalcAmountAll
 
-            , MovementItem.Amount            AS outAmount
+             , MovementItem.Amount            AS outAmount
              , ('Ошибка.' || CHR (13) || 'Для товара <' || lfGet_Object_ValueData (MovementItem.ObjectId) || '> уже сформировано кол-во заказа = <' || MovementItem.Amount :: TVarChar || '>.' || CHR (13) || 'Информация обновлена.') :: TVarChar AS outMessageText 
 
+             , MIString_Maker.ValueData       :: TVarChar    AS outMakerName
+             , MIDate_PartionGoods.ValueData  :: TDateTime   AS outPartionGoodsDate
+       
         FROM MovementItem
              LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountSecond
                                                ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
@@ -75,6 +81,14 @@ BEGIN
                                                ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
                                               AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
                                               AND MIFloat_AmountManual.ValueData <> 0
+                                         
+             LEFT JOIN MovementItemString AS MIString_Maker 
+                                          ON MIString_Maker.MovementItemId = MovementItem.Id
+                                         AND MIString_Maker.DescId = zc_MIString_Maker()
+            
+             LEFT JOIN MovementItemDate AS MIDate_PartionGoods                                        
+                                        ON MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                                       AND MIDate_PartionGoods.MovementItemId = MovementItem.Id
         WHERE MovementItem.Id = vbId;
 
         -- !!!Выход!!!
@@ -125,8 +139,7 @@ BEGIN
         LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountManual
                                           ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
                                          AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
-    WHERE
-        Id = inId;
+    WHERE Id = inId;
     
     IF (coalesce(vbCalcAmount,0) <> coalesce(inAmountManual,0)) or (COALESCE(vbCalcAmountAll,0) <> COALESCE(inAmountManual,0))
     THEN
@@ -143,27 +156,40 @@ BEGIN
     vbCalcAmount := CEIL(inAmount / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1);     
     vbSumm := vbCalcAmount * inPrice;
     SELECT
-        (CEIL(inAmount / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1))::TFloat
-       ,(CEIL(inAmount / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1) * inPrice)::TFloat
-       ,inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0)
-       ,COALESCE(MIFloat_AmountManual.ValueData,(CEIL((inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1)))::TFloat
-       ,COALESCE(MIFloat_AmountManual.ValueData,(CEIL((inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1))) * inPrice::TFloat
+         (CEIL(inAmount / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1))::TFloat
+       , (CEIL(inAmount / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1) * inPrice)::TFloat
+       , inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0)
+       , COALESCE(MIFloat_AmountManual.ValueData,(CEIL((inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1)))::TFloat
+       , COALESCE(MIFloat_AmountManual.ValueData,(CEIL((inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1))) * inPrice::TFloat
+       , MIString_Maker.ValueData       :: TVarChar
+       , MIDate_PartionGoods.ValueData  :: TDateTime
+       
     INTO
-        vbCalcAmount
-       ,vbSumm
-       ,vbAmountAll
-       ,vbCalcAmountAll
-       ,vbSummAll
-    FROM
-        MovementItem
+         vbCalcAmount
+       , vbSumm
+       , vbAmountAll
+       , vbCalcAmountAll
+       , vbSummAll
+       , vbMakerName
+       , vbPartionGoodsDate
+       
+    FROM MovementItem
         LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountSecond
                                           ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                                          AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
         LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountManual
                                           ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
                                          AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
-    WHERE
-        Id = vbId;
+                                         
+        LEFT JOIN MovementItemString AS MIString_Maker 
+                                     ON MIString_Maker.MovementItemId = MovementItem.Id
+                                    AND MIString_Maker.DescId = zc_MIString_Maker()
+       
+        LEFT JOIN MovementItemDate AS MIDate_PartionGoods                                        
+                                   ON MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                                  AND MIDate_PartionGoods.MovementItemId = MovementItem.Id
+    WHERE Id = vbId;
+    
     -- пересчитали Итоговые суммы
     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
@@ -180,8 +206,10 @@ BEGIN
            , vbSummAll
            , vbAmountAll
            , vbCalcAmountAll
-           , inAmount       AS outAmount
-           , '' :: TVarChar AS outMessageText
+           , inAmount            AS outAmount
+           , '' :: TVarChar      AS outMessageText
+           , vbMakerName         AS outMakerName
+           , vbPartionGoodsDate  AS PartionGoodsDate
           ;
 
 
@@ -192,6 +220,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 30.08.17
  30.03.16                                        * add ошибка лайт
  06.02.15                         *
  23.10.14                         *

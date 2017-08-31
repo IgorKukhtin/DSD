@@ -269,8 +269,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 14
-    Top = 193
+    Left = 326
+    Top = 145
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'

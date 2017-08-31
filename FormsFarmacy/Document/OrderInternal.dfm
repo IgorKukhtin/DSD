@@ -10,7 +10,7 @@ inherited OrderInternalForm: TOrderInternalForm
     Top = 75
     Width = 1229
     Height = 457
-    ExplicitTop = 75
+    ExplicitTop = 91
     ExplicitWidth = 1229
     ExplicitHeight = 457
     ClientRectBottom = 457
@@ -1704,6 +1704,22 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMakerName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MakerName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPartionGoodsDate'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'PartionGoodsDate'
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 160

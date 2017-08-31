@@ -459,7 +459,7 @@ inherited MainForm: TMainForm
     object actReport_GoodsRemainsLight: TdsdOpenForm [30]
       Category = #1054#1090#1095#1077#1090#1099
       MoveParams = <>
-      Caption = #1054#1089#1090#1072#1090#1082#1080' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084' ('#1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100')'
+      Caption = #1057#1091#1084#1084#1072#1088#1085#1099#1077' '#1086#1089#1090#1072#1090#1082#1080' '#1087#1086' '#1089#1077#1090#1080
       FormName = 'TReport_GoodsRemainsLightForm'
       FormNameParam.Value = 'TReport_GoodsRemainsLightForm'
       FormNameParam.DataType = ftString

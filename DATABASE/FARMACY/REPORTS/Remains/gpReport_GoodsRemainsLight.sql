@@ -1,14 +1,18 @@
  -- Function: gpReport_GoodsRemainsLight()
 
 DROP FUNCTION IF EXISTS gpReport_GoodsRemainsLight (Integer, Integer, TDateTime, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsRemainsLight (Integer, Integer, Integer, TDateTime, Boolean, Boolean, Boolean, Boolean, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsRemainsLight(
     IN inUnitId           Integer  ,  -- Подразделение
     IN inRetailId         Integer  ,  -- ссылка на торг.сеть
+    IN inJuridicalId      Integer  ,  -- Юр.лицо
     IN inRemainsDate      TDateTime,  -- Дата остатка
-    IN inIsPartion        Boolean,    -- 
-    IN inisPartionPrice   Boolean,    -- 
+    IN inIsPartion        Boolean,    --
+    IN inisPartionPrice   Boolean,    --
     IN inisJuridical      Boolean,    --
+    IN inisUnitList       Boolean,    --
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (ContainerId Integer
@@ -23,6 +27,9 @@ RETURNS TABLE (ContainerId Integer
 
              , UnitName TVarChar, OurJuridicalName TVarChar
              , JuridicalCode  Integer, JuridicalName  TVarChar
+             , IsClose Boolean, UpdateDate TDateTime
+             , isTop boolean, isFirst boolean , isSecond boolean
+             , isPromo boolean
              )
 AS
 $BODY$
@@ -43,7 +50,8 @@ BEGIN
     -- список подразделений
     INSERT INTO tmpUnit (UnitId)
                 SELECT inUnitId AS UnitId
-                WHERE COALESCE (inUnitId, 0) <> 0
+                WHERE COALESCE (inUnitId, 0) <> 0 
+                  AND inisUnitList = FALSE
                UNION 
                 SELECT ObjectLink_Unit_Juridical.ObjectId     AS UnitId
                 FROM ObjectLink AS ObjectLink_Unit_Juridical
@@ -52,7 +60,15 @@ BEGIN
                                           AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                                           AND ((ObjectLink_Juridical_Retail.ChildObjectId = inRetailId AND inUnitId = 0)
                                                OR (inRetailId = 0 AND inUnitId = 0))
-                WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical();
+                WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                  AND (ObjectLink_Unit_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
+                  AND inisUnitList = FALSE
+               UNION
+                SELECT ObjectBoolean_Report.ObjectId          AS UnitId
+                FROM ObjectBoolean AS ObjectBoolean_Report
+                WHERE ObjectBoolean_Report.DescId = zc_ObjectBoolean_Unit_Report()
+                  AND ObjectBoolean_Report.ValueData = TRUE
+                  AND inisUnitList = TRUE;
             
     INSERT INTO tmpContainerCount(ContainerId, GoodsId, Amount)
                                 SELECT Container.Id                AS ContainerId
@@ -131,9 +147,10 @@ BEGIN
                                                           ON MIFloat_PriceWithOutVAT.MovementItemId = tmpData_all.MovementItemId
                                                          AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
                               -- Поставшик, для элемента прихода от поставщика (или NULL)
-                              LEFT JOIN MovementLinkObject AS MovementLinkObject_From_Income
-                                                           ON MovementLinkObject_From_Income.MovementId = tmpData_all.MovementId
-                                                          AND MovementLinkObject_From_Income.DescId     = zc_MovementLinkObject_From()
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_From_Income
+                                                            ON MovementLinkObject_From_Income.MovementId = tmpData_all.MovementId
+                                                           AND MovementLinkObject_From_Income.DescId     = zc_MovementLinkObject_From()
+                                                           AND (MovementLinkObject_From_Income.ObjectId  = inJuridicalId OR inJuridicalId = 0)
                               -- Вид НДС, для элемента прихода от поставщика (или NULL)
                               LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind_Income
                                                            ON MovementLinkObject_NDSKind_Income.MovementId = tmpData_all.MovementId
@@ -183,16 +200,34 @@ BEGIN
                              ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
                             AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
                  )
+        -- Маркетинговый контракт
+      , GoodsPromo AS (SELECT DISTINCT ObjectLink_Child_retail.ChildObjectId AS GoodsId  -- здесь товар "сети"
+                         --   , tmp.ChangePercent
+                       FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp   --CURRENT_DATE
+                                    INNER JOIN ObjectLink AS ObjectLink_Child
+                                                          ON ObjectLink_Child.ChildObjectId = tmp.GoodsId
+                                                         AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                             AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Main_retail ON ObjectLink_Main_retail.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                                   AND ObjectLink_Main_retail.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Child_retail ON ObjectLink_Child_retail.ObjectId = ObjectLink_Main_retail.ObjectId
+                                                                                    AND ObjectLink_Child_retail.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                                    /*INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                          ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_retail.ChildObjectId
+                                                         AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                                         AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId*/
+                       )
 
         -- Результат
         SELECT tmpData.ContainerId                           :: Integer   AS ContainerId
              , Object_Goods.Id                                            AS Id
-             , Object_Goods.ObjectCode                       ::Integer    AS GoodsCode
+             , Object_Goods.ObjectCode                       :: Integer   AS GoodsCode
              , Object_Goods.ValueData                                     AS GoodsName
              , Object_GoodsGroup.ValueData                                AS GoodsGroupName
              , Object_NDSKind_Income.ValueData                            AS NDSKindName
              , tmpGoods.isSP                                 :: Boolean   AS isSP
-             , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar   AS ConditionsKeepName
+             , COALESCE(Object_ConditionsKeep.ValueData, '') :: TVarChar  AS ConditionsKeepName
              
              , tmpData.Amount :: TFloat AS Amount
              , CASE WHEN tmpData.Amount <> 0 THEN tmpData.Summa           / tmpData.Amount ELSE 0 END :: TFloat AS Price
@@ -215,6 +250,15 @@ BEGIN
              
              , Object_From_Income.ObjectCode                              AS JuridicalCode
              , Object_From_Income.ValueData                               AS JuridicalName
+             
+             , COALESCE(ObjectBoolean_Goods_Close.ValueData, False)  :: Boolean AS isClose
+             , COALESCE(ObjectDate_Update.ValueData, Null)          ::TDateTime AS UpdateDate   
+             
+             , COALESCE(ObjectBoolean_Goods_TOP.ValueData, false)    :: Boolean AS isTOP
+             , COALESCE(ObjectBoolean_Goods_First.ValueData, False)  :: Boolean AS isFirst
+             , COALESCE(ObjectBoolean_Goods_Second.ValueData, False) :: Boolean AS isSecond
+             
+             , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
 
         FROM tmpData
              LEFT JOIN tmpGoods ON tmpGoods.GoodsId = tmpData.GoodsId
@@ -237,9 +281,28 @@ BEGIN
         
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
 
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Close
+                                    ON ObjectBoolean_Goods_Close.ObjectId = Object_Goods.Id
+                                   AND ObjectBoolean_Goods_Close.DescId = zc_ObjectBoolean_Goods_Close()  
+            LEFT JOIN ObjectDate AS ObjectDate_Update
+                                 ON ObjectDate_Update.ObjectId = Object_Goods.Id
+                                AND ObjectDate_Update.DescId = zc_ObjectDate_Protocol_Update()  
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                    ON ObjectBoolean_Goods_TOP.ObjectId = Object_Goods.Id
+                                   AND ObjectBoolean_Goods_TOP.DescId = zc_ObjectBoolean_Goods_TOP()  
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_First
+                                    ON ObjectBoolean_Goods_First.ObjectId = Object_Goods.Id
+                                   AND ObjectBoolean_Goods_First.DescId = zc_ObjectBoolean_Goods_First() 
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Second
+                                    ON ObjectBoolean_Goods_Second.ObjectId = Object_Goods.Id
+                                   AND ObjectBoolean_Goods_Second.DescId = zc_ObjectBoolean_Goods_Second() 
+
             LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
                                   ON ObjectFloat_NDSKind_NDS.ObjectId = COALESCE (tmpData.NDSKindId_Income, ObjectLink_Goods_NDSKind.ChildObjectId)
                                  AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS() 
+                                 
+            LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods.Id
          ;
 
 END;
