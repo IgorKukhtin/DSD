@@ -86,11 +86,11 @@ BEGIN
              LEFT JOIN MovementItemString AS MIString_Maker 
                                           ON MIString_Maker.MovementItemId = MovementItem.Id
                                          AND MIString_Maker.DescId = zc_MIString_Maker()
-            
              LEFT JOIN MovementItemDate AS MIDate_PartionGoods                                        
                                         ON MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
                                        AND MIDate_PartionGoods.MovementItemId = MovementItem.Id
 
+            
         WHERE MovementItem.Id = vbId;
 
         -- !!!Выход!!!
@@ -145,7 +145,7 @@ BEGIN
         LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountManual
                                           ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
                                          AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
-    WHERE Id = inId;
+    WHERE MovementItem.Id = inId;
     
     IF (coalesce(vbCalcAmount,0) <> coalesce(inAmountManual,0)) or (COALESCE(vbCalcAmountAll,0) <> COALESCE(inAmountManual,0))
     THEN
@@ -157,13 +157,15 @@ BEGIN
           -- сохранили свойство <Примечание>
     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbId, inComment);
      
-    IF COALESCE (vbMakerName, '') = ''
+    IF COALESCE (inContractName, '') = ''
     THEN 
         DROP TABLE IF EXISTS _tmpMI;
         PERFORM lpCreateTempTable_OrderInternal(inMovementId, vbObjectId, inGoodsId, vbUserId);
         SELECT MinPrice.MakerName
+             , MinPrice.ContractName
              , MinPrice.PartionGoodsDate
          INTO  vbMakerName
+             , inContractName
              , vbPartionGoodsDate
          FROM (
                  SELECT *, MIN(DDD.Id) OVER(PARTITION BY MovementItemId) AS MinId 
@@ -186,6 +188,7 @@ BEGIN
        , COALESCE (MIFloat_AmountManual.ValueData,(CEIL((inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1))) * inPrice::TFloat
 
        , COALESCE (MIString_Maker.ValueData, vbMakerName)              :: TVarChar    AS outMakerName
+       , COALESCE (Object_Contract.ValueData, inContractName)          :: TVarChar    AS ioContractName     
        , COALESCE (MIDate_PartionGoods.ValueData, vbPartionGoodsDate)  :: TDateTime   AS outPartionGoodsDate
        
     INTO
@@ -195,6 +198,7 @@ BEGIN
        , vbCalcAmountAll
        , vbSummAll
        , vbMakerName
+       , inContractName
        , vbPartionGoodsDate
     FROM MovementItem
         LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountSecond
@@ -211,7 +215,12 @@ BEGIN
         LEFT JOIN MovementItemDate AS MIDate_PartionGoods                                        
                                    ON MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
                                   AND MIDate_PartionGoods.MovementItemId = MovementItem.Id
-    WHERE Id = vbId;
+
+        LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract 
+                                         ON MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                                        AND MILinkObject_Contract.MovementItemId = MovementItem.Id
+        LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MILinkObject_Contract.ObjectId AND Object_Contract.DescId = zc_Object_Contract()
+    WHERE MovementItem.Id = vbId;
     
     -- пересчитали Итоговые суммы
     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
@@ -223,7 +232,7 @@ BEGIN
            , inPartnerGoodsCode
            , inPartnerGoodsName
            , inJuridicalName
-           , inContractName
+           , inContractName      AS ioContractName
            , vbSumm
            , vbCalcAmount
            , vbSummAll
