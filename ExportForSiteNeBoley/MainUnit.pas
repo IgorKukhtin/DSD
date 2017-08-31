@@ -47,6 +47,7 @@ type
     procedure AddToLog(S: string);
     procedure ExportRun;
     procedure ExportSave;
+    procedure SaveToXML;
   public
     { Public declarations }
   end;
@@ -124,6 +125,7 @@ begin
     OldDecimalSeparator := FormatSettings.DecimalSeparator;
     FormatSettings.DecimalSeparator := '.';
     ExportGridToText(FilePath, ExportGrid, True, True, ';', '', '', 'CSV');
+    SaveToXML;
     FormatSettings.DecimalSeparator := OldDecimalSeparator;
     Saving := False;
   except
@@ -199,6 +201,44 @@ end;
 procedure TMainForm.SaveActionUpdate(Sender: TObject);
 begin
   SaveAction.Enabled := not Saving;
+end;
+
+procedure TMainForm.SaveToXML;
+var
+  XML: TStringList;
+begin
+  XML := TStringList.Create;
+
+  try
+    XML.Add('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>');
+    XML.Add('<Root>');
+
+    with ZQuery do
+    begin
+      DisableControls;
+      First;
+
+      while not Eof do
+      begin
+        XML.Add(Format('  <Rest Code="%s" Name="%s" Price="%f" Quantity="1" Url="%s"/>', [
+          ZQueryGoodsCode.AsString,
+          ZQueryGoodsNameForSite.AsString,
+          ZQueryPrice.AsFloat,
+          ZQueryGoodsURL.AsString
+        ]));
+
+        Next;
+      end;
+
+      First;
+      EnableControls;
+    end;
+
+    XML.Add('</Root>');
+    XML.SaveToFile(ChangeFileExt(FilePath, '.xml'), TEncoding.UTF8);
+  finally
+    XML.Free;
+  end;
 end;
 
 procedure TMainForm.TimerTimer(Sender: TObject);

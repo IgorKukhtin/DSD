@@ -22,6 +22,7 @@ object MainForm: TMainForm
     Width = 624
     Height = 41
     Align = alTop
+    BevelOuter = bvNone
     TabOrder = 0
     object ExportButton: TButton
       Left = 111
@@ -46,7 +47,6 @@ object MainForm: TMainForm
     Width = 624
     Height = 380
     Align = alClient
-    BorderStyle = cxcbsNone
     TabOrder = 1
     object ExportGridDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
