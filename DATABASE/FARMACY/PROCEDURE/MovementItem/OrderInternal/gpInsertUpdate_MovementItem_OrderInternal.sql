@@ -48,12 +48,13 @@ BEGIN
      -- определяется <Торговая сеть>
      vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
     
-
      -- Поиск
      vbId:= (SELECT MovementItem.Id FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.ObjectId = inGoodsId AND MovementItem.isErased = FALSE);
+
      -- Проверка что б такого элемента не было - т.е. ошибку лайт)
      IF COALESCE (vbId, 0) <> 0 AND COALESCE (inId, 0) = 0
      THEN
+     
         RETURN QUERY
         SELECT MovementItem.Id    AS ioId
              , inPrice            AS ioPrice
@@ -72,7 +73,7 @@ BEGIN
 
              , MIString_Maker.ValueData       :: TVarChar    AS outMakerName
              , MIDate_PartionGoods.ValueData  :: TDateTime   AS outPartionGoodsDate
-       
+            
         FROM MovementItem
              LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountSecond
                                                ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
@@ -89,6 +90,7 @@ BEGIN
              LEFT JOIN MovementItemDate AS MIDate_PartionGoods                                        
                                         ON MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
                                        AND MIDate_PartionGoods.MovementItemId = MovementItem.Id
+
         WHERE MovementItem.Id = vbId;
 
         -- !!!Выход!!!
@@ -103,12 +105,16 @@ BEGIN
             , MinPrice.GoodsCode
             , MinPrice.GoodsName
             , MinPrice.JuridicalName
-            , MinPrice.ContractName   
+            , MinPrice.ContractName  
+            , MinPrice.MakerName
+            , MinPrice.PartionGoodsDate
         INTO inPrice
             , inPartnerGoodsCode
             , inPartnerGoodsName
             , inJuridicalName
             , inContractName 
+            , vbMakerName
+            , vbPartionGoodsDate
         FROM (
                 SELECT *, MIN(DDD.Id) OVER(PARTITION BY MovementItemId) AS MinId 
                 FROM(
@@ -151,7 +157,24 @@ BEGIN
           -- сохранили свойство <Примечание>
     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbId, inComment);
      
-    
+    IF COALESCE (vbMakerName, '') = ''
+    THEN 
+        DROP TABLE IF EXISTS _tmpMI;
+        PERFORM lpCreateTempTable_OrderInternal(inMovementId, vbObjectId, inGoodsId, vbUserId);
+        SELECT MinPrice.MakerName
+             , MinPrice.PartionGoodsDate
+         INTO  vbMakerName
+             , vbPartionGoodsDate
+         FROM (
+                 SELECT *, MIN(DDD.Id) OVER(PARTITION BY MovementItemId) AS MinId 
+                 FROM(
+                         SELECT *, MIN(SuperFinalPrice) OVER(PARTITION BY MovementItemId) AS MinSuperFinalPrice
+                         FROM _tmpMI
+                     ) AS DDD
+                 WHERE DDD.SuperFinalPrice = DDD.MinSuperFinalPrice
+              ) AS MinPrice
+         WHERE MinPrice.Id = MinPrice.MinId;
+    END IF;
 
     vbCalcAmount := CEIL(inAmount / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1);     
     vbSumm := vbCalcAmount * inPrice;
@@ -159,10 +182,11 @@ BEGIN
          (CEIL(inAmount / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1))::TFloat
        , (CEIL(inAmount / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1) * inPrice)::TFloat
        , inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0)
-       , COALESCE(MIFloat_AmountManual.ValueData,(CEIL((inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1)))::TFloat
-       , COALESCE(MIFloat_AmountManual.ValueData,(CEIL((inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1))) * inPrice::TFloat
-       , MIString_Maker.ValueData       :: TVarChar
-       , MIDate_PartionGoods.ValueData  :: TDateTime
+       , COALESCE (MIFloat_AmountManual.ValueData,(CEIL((inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1)))::TFloat
+       , COALESCE (MIFloat_AmountManual.ValueData,(CEIL((inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1))) * inPrice::TFloat
+
+       , COALESCE (MIString_Maker.ValueData, vbMakerName)              :: TVarChar    AS outMakerName
+       , COALESCE (MIDate_PartionGoods.ValueData, vbPartionGoodsDate)  :: TDateTime   AS outPartionGoodsDate
        
     INTO
          vbCalcAmount
@@ -172,7 +196,6 @@ BEGIN
        , vbSummAll
        , vbMakerName
        , vbPartionGoodsDate
-       
     FROM MovementItem
         LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountSecond
                                           ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
@@ -209,7 +232,7 @@ BEGIN
            , inAmount            AS outAmount
            , '' :: TVarChar      AS outMessageText
            , vbMakerName         AS outMakerName
-           , vbPartionGoodsDate  AS PartionGoodsDate
+           , vbPartionGoodsDate  AS outPartionGoodsDate
           ;
 
 
@@ -220,7 +243,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 30.08.17
+ 30.08.17         *
  30.03.16                                        * add ошибка лайт
  06.02.15                         *
  23.10.14                         *
