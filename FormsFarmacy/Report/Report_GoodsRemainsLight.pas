@@ -38,16 +38,20 @@ type
     NDSKindName: TcxGridDBColumn;
     actRefreshPartionPrice: TdsdDataSetRefresh;
     actRefreshIsPartion: TdsdDataSetRefresh;
-    cbPartion: TcxCheckBox;
-    cbPartionPrice: TcxCheckBox;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     actRefreshJuridical: TdsdDataSetRefresh;
-    cbJuridical: TcxCheckBox;
-    isSP: TcxGridDBColumn;
     cxLabel19: TcxLabel;
     ceRetail: TcxButtonEdit;
     GuidesRetail: TdsdGuides;
+    cxLabel3: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    GuidesJuridical: TdsdGuides;
+    cbList: TcxCheckBox;
+    actRefreshList: TdsdDataSetRefresh;
+    cbPartion: TcxCheckBox;
+    cbPartionPrice: TcxCheckBox;
+    cbJuridical: TcxCheckBox;
   private
     { Private declarations }
   public

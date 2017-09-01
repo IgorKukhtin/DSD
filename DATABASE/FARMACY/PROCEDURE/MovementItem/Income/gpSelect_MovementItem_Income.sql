@@ -169,7 +169,7 @@ BEGIN
                           , (((COALESCE (MovementItem.Amount, 0)) * COALESCE(MIFloat_PriceSale.ValueData,0))::NUMERIC (16, 2))::TFloat AS SummSale
                           , COALESCE(MIFloat_JuridicalPrice.ValueData,0)               ::TFloat     AS JuridicalPrice
                           , COALESCE(MIFloat_JuridicalPriceWithVAT.ValueData,0)        ::TFloat     AS JuridicalPriceWithVAT
-                          , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateStart()) :: TDateTime AS ExpirationDate
+                          , COALESCE (MIDate_ExpirationDate.ValueData, NULL)           :: TDateTime AS ExpirationDate
                           , COALESCE(MIString_PartionGoods.ValueData, '')              :: TVarChar  AS PartionGoods
 
                           , MIFloat_AmountManual.ValueData      AS AmountManual
@@ -178,17 +178,17 @@ BEGIN
                           , MILinkObject_ReasonDifferences.ObjectId AS ReasonDifferencesId
 
                           , COALESCE (MIFloat_PrintCount.ValueData, 0)   ::TFloat      AS PrintCount
-                          , COALESCE (MIBoolean_Print.ValueData, TRUE) ::Boolean     AS isPrint
+                          , COALESCE (MIBoolean_Print.ValueData, TRUE)   ::Boolean     AS isPrint
 
-                          , MIString_FEA.ValueData             AS FEA
-                          , MIString_Measure.ValueData         AS Measure
+                          , MIString_FEA.ValueData              AS FEA
+                          , MIString_Measure.ValueData          AS Measure
 
                           , MIString_SertificatNumber.ValueData AS SertificatNumber
                           , MIDate_SertificatStart.ValueData    AS SertificatStart
                           , MIDate_SertificatEnd.ValueData      AS SertificatEnd
 
-                          , Object_Insert.ValueData        AS InsertName
-                          , MIDate_Insert.ValueData        AS InsertDate
+                          , Object_Insert.ValueData             AS InsertName
+                          , MIDate_Insert.ValueData             AS InsertDate
 
                      FROM tmpIsErased
                         JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -558,7 +558,7 @@ BEGIN
                      , MovementItem.isErased
                      , MIFloat_AmountManual.ValueData      AS AmountManual
 
-                     , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateStart()) :: TDateTime AS ExpirationDate
+                     , COALESCE (MIDate_ExpirationDate.ValueData, NULL) :: TDateTime AS ExpirationDate
                      , COALESCE(MIString_PartionGoods.ValueData, '')              :: TVarChar  AS PartionGoods
                      , MIString_FEA.ValueData              AS FEA
                      , MIString_Measure.ValueData          AS Measure

@@ -1,27 +1,25 @@
 inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1077#1096#1085#1103#1103'>'
   ClientHeight = 668
-  ClientWidth = 844
-  ExplicitLeft = -176
-  ExplicitTop = -214
-  ExplicitWidth = 860
-  ExplicitHeight = 707
+  ClientWidth = 820
+  ExplicitWidth = 836
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 151
-    Width = 844
+    Width = 820
     Height = 517
     ExplicitTop = 151
     ExplicitWidth = 844
     ExplicitHeight = 517
     ClientRectBottom = 517
-    ClientRectRight = 844
+    ClientRectRight = 820
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 844
       ExplicitHeight = 493
       inherited cxGrid: TcxGrid
-        Width = 844
+        Width = 820
         Height = 493
         ExplicitWidth = 844
         ExplicitHeight = 493
@@ -208,7 +206,7 @@ inherited OrderExternalForm: TOrderExternalForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 844
+    Width = 820
     Height = 125
     TabOrder = 3
     ExplicitWidth = 844
@@ -452,6 +450,18 @@ inherited OrderExternalForm: TOrderExternalForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080
       OpenAfterCreate = False
     end
+    object spUpdateisDeferredYes: TdsdExecStoredProc [7]
+      Category = 'Deferred'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isDeferred_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isDeferred_Yes
+        end>
+      Caption = #1054#1090#1083#1086#1078#1077#1085' - '#1044#1072
+      Hint = #1054#1090#1083#1086#1078#1077#1085' - '#1044#1072
+    end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -498,7 +508,7 @@ inherited OrderExternalForm: TOrderExternalForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [16]
+    object actGoodsKindChoice: TOpenChoiceForm [17]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -603,6 +613,9 @@ inherited OrderExternalForm: TOrderExternalForm
         end
         item
           Action = actUpdateUserSend
+        end
+        item
+          Action = spUpdateisDeferredYes
         end
         item
           Action = actCompleteMovement
@@ -1191,8 +1204,8 @@ inherited OrderExternalForm: TOrderExternalForm
   inherited RefreshAddOn: TRefreshAddOn
     FormName = 'OrderExternalJournalForm'
     DataSet = 'MasterCDS'
-    Left = 73
-    Top = 105
+    Left = 33
+    Top = 25
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderExternal_SetErased'
@@ -1621,5 +1634,36 @@ inherited OrderExternalForm: TOrderExternalForm
     PackSize = 1
     Left = 282
     Top = 344
+  end
+  object spUpdate_isDeferred_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_isDeferred'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDeferred'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisDeferred'
+        Value = Null
+        Component = edisDeferred
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 312
+    Top = 435
   end
 end

@@ -1725,6 +1725,14 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\MeDOC\IFIN_J1201209.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Check_Assortment.pas">
+				<Form>Report_Check_AssortmentForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Check_AssortmentDialog.pas">
+				<Form>Report_Check_AssortmentDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

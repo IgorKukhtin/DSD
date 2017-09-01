@@ -1,4 +1,4 @@
-unit Report_GoodsRemainsLightDialog;
+unit Report_Check_AssortmentDialog;
 
 interface
 
@@ -22,9 +22,10 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TReport_GoodsRemainsLightDialogForm = class(TParentForm)
+  TReport_Check_AssortmentDialogForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
+    deEnd: TcxDateEdit;
     deStart: TcxDateEdit;
     PeriodChoice: TPeriodChoice;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
@@ -33,21 +34,13 @@ type
     edUnit: TcxButtonEdit;
     cxLabel3: TcxLabel;
     cxLabel6: TcxLabel;
-    UnitGuides: TdsdGuides;
+    cxLabel7: TcxLabel;
+    GuidesUnit: TdsdGuides;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
     actGet_UserUnit: TdsdExecStoredProc;
     spGet_UserUnit: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
-    ñbPartion: TcxCheckBox;
-    cbPartionPrice: TcxCheckBox;
-    ñbJuridical: TcxCheckBox;
-    cxLabel19: TcxLabel;
-    ceRetail: TcxButtonEdit;
-    GuidesRetail: TdsdGuides;
-    cxLabel1: TcxLabel;
-    edJuridical: TcxButtonEdit;
-    GuidesJuridical: TdsdGuides;
     cbList: TcxCheckBox;
   private
     { Private declarations }
@@ -60,6 +53,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_GoodsRemainsLightDialogForm);
+  RegisterClass(TReport_Check_AssortmentDialogForm);
 
 end.
