@@ -44,7 +44,8 @@ BEGIN
 
      -- определяем Торговую сеть входящего подразделения
      vbRetailId:= CASE WHEN vbUserId IN (3, 183242, 375661) -- Админ + Люба + Юра
-                  THEN vbObjectId
+                          OR vbUserId IN (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId IN (393039)) -- Старший менеджер
+                       THEN vbObjectId
                   ELSE
                   (SELECT ObjectLink_Juridical_Retail.ChildObjectId
                    FROM ObjectLink AS ObjectLink_Unit_Juridical
@@ -248,4 +249,4 @@ ALTER FUNCTION gpSelect_Movement_Check (TDateTime, TDateTime, Boolean, Integer, 
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Check (inStartDate:= '01.08.2016', inEndDate:= '01.08.2016', inIsErased := FALSE, inUnitId:= 1, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Check (inStartDate:= '01.08.2017', inEndDate:= '01.08.2017', inIsErased := FALSE, inUnitId:= 1, inSession:= '2')

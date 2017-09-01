@@ -11,15 +11,15 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-    -- проверка прав пользователя на вызов процедуры
-    vbUserId:= lpGetUserBySession (inSession);
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpGetUserBySession (inSession);
 
      -- создаются временные таблицы - для формирование данных по проводкам
      PERFORM lpComplete_Movement_ReturnIn_CreateTemp();
 
-    -- проводки
-    PERFORM lpComplete_Movement_ReturnIn (inMovementId  -- Документ
-                                        , vbUserId);    -- Пользователь
+     -- проводки
+     PERFORM lpComplete_Movement_ReturnIn (inMovementId  -- Документ
+                                         , vbUserId);    -- Пользователь
 
 END;
 $BODY$

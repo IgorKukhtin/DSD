@@ -374,13 +374,21 @@ BEGIN
         , ObjectFloat_Weight.ValueData   AS Weight
 
         , CAST (COALESCE(Object_PartionGoods.Id, 0) AS Integer)           AS PartionGoodsId
-        , CASE WHEN ObjectLink_Goods.ChildObjectId <> 0 AND ObjectLink_Unit.ChildObjectId <> 0
-                    THEN zfCalc_PartionGoodsName_InvNumber (inInvNumber       := Object_PartionGoods.ValueData
-                                                          , inOperDate        := ObjectDate_PartionGoods_Value.ValueData
-                                                          , inPrice           := ObjectFloat_PartionGoods_Price.ValueData
-                                                          , inUnitName_Partion:= Object_Unit.ValueData
-                                                          , inStorageName     := Object_Storage.ValueData
-                                                          , inGoodsName       := ''
+        , CASE WHEN ObjectLink_Goods.ChildObjectId <> 0 AND ObjectLink_Unit.ChildObjectId <> 0 AND Object_PartionGoods.ObjectCode > 0
+                    THEN zfCalc_PartionGoodsName_Asset (inMovementId      := Object_PartionGoods.ObjectCode          -- 
+                                                      , inInvNumber       := Object_PartionGoods.ValueData           -- Инвентарный номер
+                                                      , inOperDate        := ObjectDate_PartionGoods_Value.ValueData -- Дата ввода в эксплуатацию
+                                                      , inUnitName        := Object_Unit.ValueData                   -- Подразделение использования
+                                                      , inStorageName     := Object_Storage.ValueData                -- Место хранения
+                                                      , inGoodsName       := ''                                      -- Основные средства или Товар
+                                                       )
+               WHEN ObjectLink_Goods.ChildObjectId <> 0 AND ObjectLink_Unit.ChildObjectId <> 0
+                    THEN zfCalc_PartionGoodsName_InvNumber (inInvNumber       := Object_PartionGoods.ValueData             -- Инвентарный номер
+                                                          , inOperDate        := ObjectDate_PartionGoods_Value.ValueData   -- Дата перемещения
+                                                          , inPrice           := ObjectFloat_PartionGoods_Price.ValueData  -- Цена
+                                                          , inUnitName_Partion:= Object_Unit.ValueData                     -- Подразделение(для цены)
+                                                          , inStorageName     := Object_Storage.ValueData                  -- Место хранения
+                                                          , inGoodsName       := ''                                        -- Товар
                                                            )
                ELSE COALESCE (Object_PartionGoods.ValueData, '')
           END :: TVarChar AS PartionGoodsName
