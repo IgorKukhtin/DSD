@@ -10,19 +10,35 @@ BEGIN
      -- таблица - ѕроводки
      PERFORM lpComplete_Movement_All_CreateTemp();
 
-     -- таблица - элементы по контрагенту, со всеми свойствами дл€ формировани€ јналитик в проводках
-     CREATE TEMP TABLE _tmpItem_SummPartner (MovementItemId Integer, ContainerId Integer, ContainerId_Currency Integer, AccountId Integer
-                                           , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                                           , GoodsId Integer, PartionId Integer
-                                           , OperSumm TFloat, OperSumm_Currency TFloat
-                                            ) ON COMMIT DROP;
+     -- таблица - элементы оплаты, со всеми свойствами дл€ формировани€ јналитик в проводках
+     CREATE TEMP TABLE _tmpPay (MovementItemId Integer, ParentId Integer
+                              , ObjectId Integer, ObjectDescId Integer, CurrencyId Integer
+                              , AccountId Integer, ContainerId Integer, ContainerId_Currency Integer
+                              , OperSumm TFloat, OperSumm_Currency TFloat
+                              , ObjectId_from Integer
+                              , AccountId_from Integer, ContainerId_from Integer
+                              , OperSumm_from TFloat
+                               ) ON COMMIT DROP;
+
+     -- таблица - элементы по покупателю, со всеми свойствами дл€ формировани€ јналитик в проводках
+     CREATE TEMP TABLE _tmpItem_SummClient (MovementItemId Integer, ContainerId_Summ Integer, ContainerId_Summ_20102 Integer, ContainerId_Goods Integer, AccountId Integer, AccountId_20102 Integer
+                                          , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
+                                          , GoodsId Integer, PartionId Integer, GoodsSizeId Integer, PartionId_MI Integer
+                                          , OperCount TFloat, OperSumm TFloat, OperSumm_ToPay TFloat, TotalPay TFloat
+                                          , OperCount_sale TFloat, OperSumm_sale TFloat, OperSummPriceList_sale TFloat
+                                          , Summ_10201 TFloat, Summ_10202 TFloat, Summ_10203 TFloat, Summ_10204 TFloat
+                                          , ContainerId_ProfitLoss_10101 TFloat, ContainerId_ProfitLoss_10201 TFloat, ContainerId_ProfitLoss_10202 TFloat, ContainerId_ProfitLoss_10203 TFloat, ContainerId_ProfitLoss_10204 TFloat, ContainerId_ProfitLoss_10301 TFloat
+                                           ) ON COMMIT DROP;
 
      -- таблица - элементы документа, со всеми свойствами дл€ формировани€ јналитик в проводках
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer
                                , ContainerId_Summ Integer, ContainerId_Goods Integer
                                , GoodsId Integer, PartionId Integer, GoodsSizeId Integer
-                               , OperCount TFloat, OperSumm TFloat, OperSumm_Currency TFloat
+                               , OperCount TFloat, OperPrice TFloat, CountForPrice TFloat, OperSumm TFloat, OperSumm_Currency TFloat
+                               , OperSumm_ToPay TFloat, OperSummPriceList TFloat, TotalChangePercent TFloat, TotalPay TFloat
+                               , Summ_10201 TFloat, Summ_10202 TFloat, Summ_10203 TFloat, Summ_10204 TFloat
                                , AccountId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
+                               , CurrencyValue TFloat, ParValue TFloat
                                 ) ON COMMIT DROP;
 
 END;$BODY$

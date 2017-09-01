@@ -1148,7 +1148,7 @@ BEGIN
      -- формируются Партии товара, ЕСЛИ надо ...
      UPDATE _tmpItem SET PartionGoodsId = CASE WHEN _tmpItem.ObjectDescId     = zc_Object_Asset()
                                                  OR _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
-                                                    THEN (SELECT ObjectLink_Goods.ObjectId
+                                                    THEN (SELECT CLO_PartionGoods.ObjectId -- ObjectLink_Goods.ObjectId
                                                           FROM ObjectLink AS ObjectLink_Goods
                                                                INNER JOIN ObjectLink AS ObjectLink_Unit
                                                                                      ON ObjectLink_Unit.ObjectId = ObjectLink_Goods.ObjectId
@@ -1158,9 +1158,19 @@ BEGIN
                                                                                     AND ObjectLink_Storage.DescId   = zc_ObjectLink_PartionGoods_Storage()
                                                                LEFT JOIN Container ON Container.ObjectId = ObjectLink_Goods.ChildObjectId
                                                                                   AND Container.DescId   = zc_Container_Count()
+                                                               LEFT JOIN ContainerLinkObject AS CLO_Unit
+                                                                                             ON CLO_Unit.ContainerId = Container.Id
+                                                                                            AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
+                                                               LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                                                             ON CLO_PartionGoods.ContainerId = Container.Id
+                                                                                            AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
                                                           WHERE ObjectLink_Goods.DescId        = zc_ObjectLink_PartionGoods_Goods()
                                                             AND ObjectLink_Goods.ChildObjectId = _tmpItem.GoodsId
-                                                          ORDER BY Container.Amount DESC
+                                                          ORDER BY CASE WHEN CLO_PartionGoods.ObjectId = ObjectLink_Goods.ObjectId AND CLO_Unit.ObjectId = vbUnitId_From AND Container.Amount > 0 THEN 1
+                                                                        WHEN CLO_Unit.ObjectId = vbUnitId_From THEN 2
+                                                                        ELSE 3
+                                                                   END ASC
+                                                                 , Container.Amount DESC
                                                           LIMIT 1
                                                          )
                                                WHEN vbAccountDirectionId_From = zc_Enum_AccountDirection_20200() -- Запасы + на складах

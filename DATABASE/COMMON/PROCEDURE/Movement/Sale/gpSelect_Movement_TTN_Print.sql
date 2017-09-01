@@ -235,8 +235,37 @@ BEGIN
 
 
     OPEN Cursor2 FOR
+       -- список Названия покупателя для товаров + GoodsKindId
+  WITH tmpObject_GoodsPropertyValue AS (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                             , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
+                                             , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+                                             , Object_GoodsPropertyValue.ValueData  AS Name
+                                        FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
+                                             ) AS tmpGoodsProperty
+                                             INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                                                   ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                                                                  AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                                             LEFT JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+
+                                             LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                                                  ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                 AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                                             LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                                                  ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                 AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+                                       )
+       -- список Названия для товаров (нужны если не найдем по GoodsKindId)
+     , tmpObject_GoodsPropertyValueGroup AS (SELECT tmpObject_GoodsPropertyValue.GoodsId
+                                                  , tmpObject_GoodsPropertyValue.Name
+                                             FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE Name <> '' GROUP BY GoodsId
+                                                  ) AS tmpGoodsProperty_find
+                                                  LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
+                                            )
+      -- Результат
       SELECT Object_Goods.ObjectCode         AS GoodsCode
-           , (Object_Goods.ValueData || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
+           , (CASE WHEN COALESCE (tmpObject_GoodsPropertyValueGroup.Name, tmpObject_GoodsPropertyValue.Name) <> '' THEN COALESCE (tmpObject_GoodsPropertyValueGroup.Name, tmpObject_GoodsPropertyValue.Name) ELSE Object_Goods.ValueData END
+           || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
+             ) :: TVarChar AS GoodsName
            , (CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE Object_GoodsKind.ValueData END) :: TVarChar AS GoodsKindName
            , Object_Measure.ValueData        AS MeasureName
            , tmpMI.Amount                    AS Amount
@@ -364,6 +393,11 @@ BEGIN
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
+
+            LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId     = Object_Goods.Id
+                                                  AND tmpObject_GoodsPropertyValue.GoodsKindId = Object_GoodsKind.Id
+            LEFT JOIN tmpObject_GoodsPropertyValueGroup ON tmpObject_GoodsPropertyValueGroup.GoodsId = Object_Goods.Id
+                                                       AND tmpObject_GoodsPropertyValue.GoodsId      IS NULL
 
        WHERE tmpMI.AmountPartner <> 0
        ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData
