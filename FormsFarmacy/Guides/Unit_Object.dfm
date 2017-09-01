@@ -9,17 +9,17 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   inherited PageControl: TcxPageControl
     Width = 809
     Height = 394
-    ExplicitWidth = 771
+    ExplicitWidth = 809
     ExplicitHeight = 394
     ClientRectBottom = 394
     ClientRectRight = 809
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 771
+      ExplicitWidth = 809
       ExplicitHeight = 394
       inherited cxGrid: TcxGrid
         Width = 809
         Height = 394
-        ExplicitWidth = 771
+        ExplicitWidth = 809
         ExplicitHeight = 394
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -181,14 +181,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           Name = 'KeyList'
           Value = Null
           Component = cxGridDBTableView
-          ComponentItem = 'UnitId'
+          ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValuelist'
           Value = Null
           Component = cxGridDBTableView
-          ComponentItem = 'ceName'
+          ComponentItem = 'Name'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
