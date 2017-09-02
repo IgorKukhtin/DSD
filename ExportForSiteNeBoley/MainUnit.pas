@@ -9,7 +9,7 @@ uses
   cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData, Vcl.StdCtrls,
   cxGridLevel, cxClasses, cxGridCustomView, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGrid, Vcl.ExtCtrls, ZAbstractConnection, ZConnection, ZAbstractRODataset,
-  ZDataset, Vcl.ActnList, cxGridExportLink;
+  ZDataset, Vcl.ActnList, cxGridExportLink, System.StrUtils, System.Zip;
 
 type
   TMainForm = class(TForm)
@@ -42,12 +42,16 @@ type
     procedure TimerTimer(Sender: TObject);
   private
     { Private declarations }
-    FilePath: string;
+    FilePath, RestFilePath, InetFilePath, ExportFilePath, InetDostFilePath, ExportDostFilePath: string;
     Running, Saving: Boolean;
     procedure AddToLog(S: string);
     procedure ExportRun;
     procedure ExportSave;
+    procedure ExportCompress(AFileName: string);
+    function EscSpecChars(S: string): string;
     procedure SaveToXML;
+    procedure ExportCopy(AFileFrom, AFileTo: string);
+    procedure ExportCopies;
   public
     { Public declarations }
   end;
@@ -77,6 +81,16 @@ begin
 
   Writeln(F, FormatDateTime('yyyy.mm.dd hh:mm:ss.zzz', Now) + ' ' + S);
   CloseFile(F);
+end;
+
+function TMainForm.EscSpecChars(S: string): string;
+begin
+  Result := S;
+  Result := ReplaceText(Result, '&',  '&amp;');
+  Result := ReplaceText(Result, '"',  '&quot;');
+  Result := ReplaceText(Result, '''', '&apos;');
+  Result := ReplaceText(Result, '<',  '&lt;');
+  Result := ReplaceText(Result, '>',  '&gt;');
 end;
 
 procedure TMainForm.ExportRun;
@@ -137,17 +151,79 @@ begin
   end;
 end;
 
+procedure TMainForm.ExportCompress(AFileName: string);
+var
+  ZipName: string;
+  ZipFile: TZipFile;
+begin
+  AddToLog(Format('Архивирование отчета "%s"', [AFileName]));
+
+  ZipName := ChangeFileExt(AFileName, '.zip');
+  if FileExists(ZipName) then
+    DeleteFile(ZipName);
+
+  ZipFile := TZipFile.Create;
+  try
+    ZipFile.Open(ZipName, zmWrite);
+    ZipFile.Add(AFileName);
+    ZipFile.Close;
+  finally
+    ZipFile.Free;
+  end;
+end;
+
+procedure TMainForm.ExportCopies;
+begin
+  ExportCopy(RestFilePath, InetFilePath);
+  ExportCopy(RestFilePath, ExportFilePath);
+  ExportCopy(RestFilePath, InetDostFilePath);
+  ExportCopy(RestFilePath, ExportDostFilePath);
+end;
+
+procedure TMainForm.ExportCopy(AFileFrom, AFileTo: string);
+begin
+  if not ForceDirectories(ExtractFilePath(AFileTo)) then
+  begin
+    AddToLog(Format('Не могу создать директорию выгрузки "%s"', [ExtractFilePath(AFileTo)]));
+    Exit;
+  end;
+
+  CopyFile(PChar(AFileFrom), PChar(AFileTo), False);
+end;
+
 procedure TMainForm.FormCreate(Sender: TObject);
 var
   IniFile: TIniFile;
+  ExePath: string;
 begin
   Running := False;
   Saving := False;
   IniFile := TIniFile.Create(ChangeFileExt(Application.ExeName, '.ini'));
 
   try
-    FilePath := IniFile.ReadString('Options', 'FilePath', ExtractFilePath(Application.ExeName) + 'neboley.csv');
+    // Options
+
+    ExePath := ExtractFilePath(Application.ExeName);
+
+    FilePath := IniFile.ReadString('Options', 'FilePath', ExePath + 'neboley.csv');
     IniFile.WriteString('Options', 'FilePath', FilePath);
+
+    RestFilePath := IniFile.ReadString('Options', 'RestFilePath', ExePath + 'Rest_70006.xml');
+    IniFile.WriteString('Options', 'RestFilePath', RestFilePath);
+
+    InetFilePath := IniFile.ReadString('Options', 'InetFilePath', ExePath + 'internet-apteka-neboley.xml');
+    IniFile.WriteString('Options', 'InetFilePath', InetFilePath);
+
+    ExportFilePath := IniFile.ReadString('Options', 'ExportFilePath', ExePath + 'export.xml');
+    IniFile.WriteString('Options', 'ExportFilePath', ExportFilePath);
+
+    InetDostFilePath := IniFile.ReadString('Options', 'InetDostFilePath', ExePath + 'internet-apteka-neboley-dostavka.xml');
+    IniFile.WriteString('Options', 'InetDostFilePath', InetDostFilePath);
+
+    ExportDostFilePath := IniFile.ReadString('Options', 'ExportDostFilePath', ExePath + 'export-dostavka.xml');
+    IniFile.WriteString('Options', 'ExportDostFilePath', ExportDostFilePath);
+
+    // Connect
 
     ZConnection.HostName := IniFile.ReadString('Connect', 'HostName', '91.210.37.210');
     IniFile.WriteString('Connect', 'HostName', ZConnection.HostName);
@@ -196,6 +272,8 @@ end;
 procedure TMainForm.SaveActionExecute(Sender: TObject);
 begin
   ExportSave;
+  ExportCompress(RestFilePath);
+  ExportCopies;
 end;
 
 procedure TMainForm.SaveActionUpdate(Sender: TObject);
@@ -222,7 +300,7 @@ begin
       begin
         XML.Add(Format('  <Rest Code="%s" Name="%s" Price="%f" Quantity="1" Url="%s"/>', [
           ZQueryGoodsCode.AsString,
-          ZQueryGoodsNameForSite.AsString,
+          EscSpecChars(ZQueryGoodsNameForSite.AsString),
           ZQueryPrice.AsFloat,
           ZQueryGoodsURL.AsString
         ]));
@@ -235,7 +313,14 @@ begin
     end;
 
     XML.Add('</Root>');
-    XML.SaveToFile(ChangeFileExt(FilePath, '.xml'), TEncoding.UTF8);
+
+    if not ForceDirectories(ExtractFilePath(RestFilePath)) then
+    begin
+      AddToLog(Format('Не могу создать директорию выгрузки "%s"', [ExtractFilePath(RestFilePath)]));
+      Exit;
+    end;
+
+    XML.SaveToFile(RestFilePath, TEncoding.UTF8);
   finally
     XML.Free;
   end;
@@ -243,11 +328,14 @@ end;
 
 procedure TMainForm.TimerTimer(Sender: TObject);
 begin
+  Timer.Enabled := False;
+
   try
     ExportRun;
     ExportSave;
+    ExportCompress(RestFilePath);
+    ExportCopies;
   finally
-    Timer.Enabled := False;
     Close;
   end;
 end;
