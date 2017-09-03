@@ -511,11 +511,12 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_AssortmentForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_AssortmentdForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_AssortmentDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_AssortmentDialogForm');
-  {exit;
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementPriceListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementPriceListForm');
@@ -614,12 +615,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_CrossForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_CrossForm');
   exit;
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsLightForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRReport_GoodsRemainsLightForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsLightDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRReport_GoodsRemainsLightDialogForm');
-  {
+
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckLightForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckLightForm');
@@ -672,13 +673,13 @@ begin
   //Отчет Ценовая интервенция2
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceIntervention2Form'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PriceIntervention2Form');
-
+   }
   // средний чек
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckMiddleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckMiddleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckMiddleDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckMiddleDialogForm');
-
+  {
   // отчет распределение остатков
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsForm');
