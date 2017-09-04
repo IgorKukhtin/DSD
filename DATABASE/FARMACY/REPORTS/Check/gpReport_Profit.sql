@@ -41,8 +41,18 @@ RETURNS TABLE (
   SummaWithVAT2         TFloat,
   SummaSale2            TFloat,
   SummaProfit2          TFloat,
-  Tax2                  TFloat
+  Tax2                  TFloat,
 
+  SummSale_SP           TFloat,
+  SummSale_1303         TFloat,
+  SummPrimeCost_1303    TFloat,
+  SummaSaleWithSP       TFloat,
+  SummaProfitWithSP     TFloat,
+  PersentProfitWithSP   TFloat,
+  SummaSaleAll          TFloat,
+  SummaAll              TFloat,
+  SummaProfitAll        TFloat,
+  PersentProfitAll      TFloat
 )
 AS
 $BODY$
@@ -69,7 +79,8 @@ BEGIN
                         WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                        )
  -- данные из проводок
- , tmpData_ContainerAll AS (SELECT COALESCE (MIContainer.AnalyzerId,0) :: Integer  AS MovementItemId
+ , tmpData_ContainerAll AS (SELECT MIContainer.MovementItemId AS MI_Id
+                              , COALESCE (MIContainer.AnalyzerId,0) :: Integer  AS MovementItemId
                               , COALESCE (MIContainer.WhereObjectId_analyzer,0) AS UnitId
                               , MIContainer.ObjectId_analyzer                   AS GoodsId
                               , SUM (COALESCE (-1 * MIContainer.Amount, 0))     AS Amount
@@ -82,6 +93,7 @@ BEGIN
                          GROUP BY COALESCE (MIContainer.WhereObjectId_analyzer,0)
                                 , MIContainer.ObjectId_analyzer    
                                 , COALESCE (MIContainer.AnalyzerId,0)
+                                , MIContainer.MovementItemId
                          HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
                         )
  , tmpData_Container AS (SELECT tmpData_ContainerAll.*
@@ -89,16 +101,79 @@ BEGIN
                               INNER JOIN tmpUnit ON  tmpUnit.UnitId = tmpData_ContainerAll.UnitId
                         )
 
+        , tmpMIF_SummChangePercent AS (SELECT MIFloat_SummChangePercent.*
+                                           FROM MovementItemFloat AS MIFloat_SummChangePercent
+                                           WHERE MIFloat_SummChangePercent.DescId =  zc_MIFloat_SummChangePercent()
+                                             AND MIFloat_SummChangePercent.MovementItemId IN (SELECT DISTINCT tmpData_Container.MI_Id FROM tmpData_Container)
+                                          )
+
+       -- выбираем продажи по товарам соц.проекта 1303
+        , tmpMovement_Sale AS (SELECT MovementLinkObject_Unit.ObjectId             AS UnitId
+                                    , Movement_Sale.Id                             AS Id
+                               FROM Movement AS Movement_Sale
+                                    INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                            ON MovementLinkObject_Unit.MovementId = Movement_Sale.Id
+                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                    INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
+                                    
+                                    INNER JOIN MovementString AS MovementString_InvNumberSP
+                                           ON MovementString_InvNumberSP.MovementId = Movement_Sale.Id
+                                          AND MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP()
+                                          AND COALESCE (MovementString_InvNumberSP.ValueData,'') <> ''
+
+                               WHERE Movement_Sale.DescId = zc_Movement_Sale()
+                                 AND Movement_Sale.OperDate >= inStartDate AND Movement_Sale.OperDate < inEndDate + INTERVAL '1 DAY'
+                                 AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
+                               )
+     , tmpMF_TotalSummPrimeCost AS (SELECT MovementFloat_TotalSummPrimeCost.*
+                                    FROM MovementFloat AS MovementFloat_TotalSummPrimeCost
+                                    WHERE MovementFloat_TotalSummPrimeCost.DescId = zc_MovementFloat_TotalSummPrimeCost()
+                                      AND MovementFloat_TotalSummPrimeCost.MovementId IN (SELECT DISTINCT tmpMovement_Sale.Id FROM tmpMovement_Sale)
+                                   )
+   , tmpSummPrimeCost AS (SELECT Movement_Sale.UnitId
+                                       , SUM (COALESCE (tmpMF_TotalSummPrimeCost.ValueData, 0)) AS TotalSummPrimeCost
+                                  FROM tmpMovement_Sale AS Movement_Sale
+                                       LEFT JOIN tmpMF_TotalSummPrimeCost ON tmpMF_TotalSummPrimeCost.MovementId = Movement_Sale.Id
+                          GROUP BY Movement_Sale.UnitId
+                                 )
+
+        , tmpSale_1303 AS (SELECT Movement_Sale.UnitId                    AS UnitId
+                                , tmpSummPrimeCost.TotalSummPrimeCost
+                                , SUM (COALESCE (-1 * MIContainer.Amount, MI_Sale.Amount) * COALESCE (MIFloat_PriceSale.ValueData, 0)) AS SummSale_1303
+                           FROM tmpMovement_Sale AS Movement_Sale
+                                LEFT JOIN tmpSummPrimeCost ON tmpSummPrimeCost.UnitId = Movement_Sale.UnitId
+                                INNER JOIN MovementItem AS MI_Sale
+                                                        ON MI_Sale.MovementId = Movement_Sale.Id
+                                                       AND MI_Sale.DescId = zc_MI_Master()
+                                                       AND MI_Sale.isErased = FALSE
+                           
+                                LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
+                                                            ON MIFloat_PriceSale.MovementItemId = MI_Sale.Id
+                                                           AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+  
+                                LEFT JOIN MovementItemContainer AS MIContainer
+                                                                ON MIContainer.MovementItemId = MI_Sale.Id
+                                                               AND MIContainer.DescId = zc_MIContainer_Count() 
+                           GROUP BY Movement_Sale.UnitId, tmpSummPrimeCost.TotalSummPrimeCost
+                           ) 
+
        -- находим ИД док.прихода
        , tmpData_all AS (SELECT COALESCE (MI_Income_find.Id,         MI_Income.Id)         :: Integer AS MovementItemId
                               , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId) :: Integer AS MovementId
  
                               , tmpData_Container.GoodsId
                               , tmpData_Container.UnitId
-                              , SUM (COALESCE (tmpData_Container.Amount, 0))    AS Amount
-                              , SUM (COALESCE (tmpData_Container.SummaSale, 0)) AS SummaSale
+                              , SUM (COALESCE (tmpData_Container.Amount, 0))        AS Amount
+                              , SUM (COALESCE (tmpData_Container.SummaSale, 0))     AS SummaSale
+
+                              , SUM (COALESCE (MovementFloat_SummChangePercent.ValueData, 0)) AS SummChangePercent_SP
+               
                          FROM tmpData_Container
-                               -- элемент прихода
+                              -- сумма скидки SP
+                              LEFT JOIN tmpMIF_SummChangePercent AS MovementFloat_SummChangePercent
+                                                                 ON MovementFloat_SummChangePercent.MovementItemId = tmpData_Container.MI_Id
+   
+                              -- элемент прихода
                               LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = tmpData_Container.MovementItemId
 
                               -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
@@ -123,6 +198,9 @@ BEGIN
                       
                               , SUM (tmpData_all.Amount)    AS Amount
                               , SUM (tmpData_all.SummaSale) AS SummaSale
+
+                              , SUM (tmpData_all.SummChangePercent_SP) AS SummChangePercent_SP
+
                          FROM tmpData_all
                               -- цена с учетом НДС, для элемента прихода от поставщика (и % корректировки наценки zc_Object_Juridical) (или NULL)
                               LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPrice
@@ -150,8 +228,40 @@ BEGIN
                                 , tmpData_all.GoodsId
                                 , tmpData_all.UnitId
                         )
-      
-               
+   , tmpData_Case AS (SELECT tmpData.UnitId
+                  , SUM(tmpData.Summa)        AS Summa
+                  , SUM(tmpData.SummaSale)    AS SummaSale
+                  , SUM(tmpData.SummaWithVAT) AS SummaWithVAT
+                  
+                  , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical1Id OR tmpData.JuridicalId_Income = inJuridical2Id THEN 0 ELSE tmpData.Summa END)     AS SummaFree
+                  , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical1Id OR tmpData.JuridicalId_Income = inJuridical2Id THEN 0 ELSE tmpData.SummaSale END) AS SummaSaleFree
+                  
+                  , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical1Id THEN tmpData.Summa ELSE 0 END)     AS Summa1
+                  , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical1Id THEN tmpData.SummaSale ELSE 0 END) AS SummaSale1
+                  , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical1Id THEN tmpData.SummaSale-tmpData.Summa ELSE 0 END) AS SummaProfit1
+                  , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical1Id THEN tmpData.SummaWithVAT ELSE 0 END)     AS SummaWithVAT1
+                  
+                  , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical2Id THEN tmpData.Summa ELSE 0 END)     AS Summa2
+                  , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical2Id THEN tmpData.SummaSale ELSE 0 END) AS SummaSale2
+                  , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical2Id THEN tmpData.SummaSale-tmpData.Summa ELSE 0 END) AS SummaProfit2
+                  , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical2Id THEN tmpData.SummaWithVAT ELSE 0 END)     AS SummaWithVAT2
+              
+                  , SUM (tmpData.SummChangePercent_SP) AS SummChangePercent_SP
+
+                  , tmpSale_1303.SummSale_1303
+                  , tmpSale_1303.TotalSummPrimeCost
+
+                 , SUM (tmpData.SummaSale + COALESCE (tmpData.SummChangePercent_SP, 0))                 AS SummaSaleWithSP
+                 , SUM (tmpData.SummaSale + COALESCE (tmpData.SummChangePercent_SP, 0) - tmpData.Summa) AS SummaProfitWithSP
+
+             FROM tmpData
+                  LEFT JOIN tmpSale_1303 ON tmpSale_1303.UnitId = tmpData.UnitId
+             GROUP BY tmpData.UnitId
+                  , tmpSale_1303.SummSale_1303
+                  , tmpSale_1303.TotalSummPrimeCost
+             )
+
+     -- результат  
         SELECT
              Object_JuridicalMain.ObjectCode         AS JuridicalMainCode
            , Object_JuridicalMain.ValueData          AS JuridicalMainName
@@ -183,25 +293,25 @@ BEGIN
            , tmp.SummaProfit2                        :: TFloat AS SummaProfit2
            , CAST (CASE WHEN tmp.Summa2 <> 0 THEN ((tmp.SummaWithVAT2-tmp.Summa2)*100 / tmp.Summa2) ELSE 0 END AS NUMERIC (16, 2)) :: TFloat AS Tax2
            
-       FROM (SELECT tmpData.UnitId
-                  , SUM(tmpData.Summa)        AS Summa
-                  , SUM(tmpData.SummaSale)    AS SummaSale
-                  , SUM(tmpData.SummaWithVAT) AS SummaWithVAT
-                  
-                  , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical1Id OR tmpData.JuridicalId_Income = inJuridical2Id THEN 0 ELSE tmpData.Summa END)     AS SummaFree
-                  , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical1Id OR tmpData.JuridicalId_Income = inJuridical2Id THEN 0 ELSE tmpData.SummaSale END) AS SummaSaleFree
-                  
-                  , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical1Id THEN tmpData.Summa ELSE 0 END)     AS Summa1
-                  , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical1Id THEN tmpData.SummaSale ELSE 0 END) AS SummaSale1
-                  , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical1Id THEN tmpData.SummaSale-tmpData.Summa ELSE 0 END) AS SummaProfit1
-                  , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical1Id THEN tmpData.SummaWithVAT ELSE 0 END)     AS SummaWithVAT1
-                  
-                  , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical2Id THEN tmpData.Summa ELSE 0 END)     AS Summa2
-                  , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical2Id THEN tmpData.SummaSale ELSE 0 END) AS SummaSale2
-                  , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical2Id THEN tmpData.SummaSale-tmpData.Summa ELSE 0 END) AS SummaProfit2
-                  , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical2Id THEN tmpData.SummaWithVAT ELSE 0 END)     AS SummaWithVAT2
-             FROM tmpData
-             GROUP BY tmpData.UnitId) AS tmp
+           , tmp.SummChangePercent_SP  :: TFloat AS SummSale_SP
+           , tmp.SummSale_1303         :: TFloat
+           , tmp.TotalSummPrimeCost    :: TFloat AS SummPrimeCost_1303
+
+           , tmp.SummaSaleWithSP       :: TFloat AS SummaSaleWithSP
+           , tmp.SummaProfitWithSP     :: TFloat AS SummaProfitWithSP
+
+           , CASE WHEN tmp.SummaSaleWithSP <> 0 THEN (tmp.SummaProfitWithSP / tmp.SummaSaleWithSP *100) ELSE 0 END :: TFloat AS PersentProfitWithSP
+           
+           , (tmp.SummaSaleWithSP + COALESCE (tmp.SummSale_1303, 0))        :: TFloat AS SummaSaleAll
+           , (tmp.Summa + COALESCE (tmp.TotalSummPrimeCost, 0))             :: TFloat AS SummaAll
+           , (tmp.SummaSaleWithSP + COALESCE (tmp.SummSale_1303, 0) - tmp.Summa - COALESCE (tmp.TotalSummPrimeCost, 0))        :: TFloat AS SummaProfitAll
+           , CASE WHEN (tmp.SummaSaleWithSP + COALESCE (tmp.SummSale_1303, 0)) <> 0 
+                  THEN ((tmp.SummaSaleWithSP + COALESCE (tmp.SummSale_1303, 0) - tmp.Summa - COALESCE (tmp.TotalSummPrimeCost, 0)) 
+                     / (tmp.SummaSaleWithSP + COALESCE (tmp.SummSale_1303, 0))) * 100 
+                  ELSE 0
+             END :: TFloat AS PersentProfitAll
+
+       FROM tmpData_Case AS tmp
              
                 LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmp.UnitId
 
@@ -209,8 +319,8 @@ BEGIN
                                      ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
                                     AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                 LEFT JOIN Object AS Object_JuridicalMain ON Object_JuridicalMain.Id = ObjectLink_Unit_Juridical.ChildObjectId
-            ORDER BY Object_JuridicalMain.ValueData 
-               , Object_Unit.ValueData 
+       ORDER BY Object_JuridicalMain.ValueData 
+              , Object_Unit.ValueData 
         ;
 END;
 $BODY$
@@ -225,4 +335,5 @@ $BODY$
 */
 -- тест
 -- SELECT * FROM gpReport_Profit (inUnitId:= 0, inStartDate:= '20150801'::TDateTime, inEndDate:= '20150810'::TDateTime, inIsPartion:= FALSE, inSession:= '3')
--- SELECT * from gpReport_Profit(inStartDate := ('01.11.2016')::TDateTime , inEndDate := ('05.11.2016')::TDateTime , inJuridical1Id := 59610 ::Integer , inJuridical2Id := 59612  ::Integer,  inSession := '3'::TVarChar);
+-- 
+SELECT * from gpReport_Profit(inStartDate := ('01.11.2016')::TDateTime , inEndDate := ('05.11.2016')::TDateTime , inJuridical1Id := 59610 ::Integer , inJuridical2Id := 59612  ::Integer,  inSession := '3'::TVarChar);

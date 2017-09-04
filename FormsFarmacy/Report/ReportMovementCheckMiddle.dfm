@@ -14,12 +14,12 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
     TabOrder = 3
     ExplicitTop = 91
     ExplicitWidth = 1251
-    ExplicitHeight = 655
+    ExplicitHeight = 497
     ClientRectBottom = 497
     ClientRectRight = 1251
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1251
-      ExplicitHeight = 655
+      ExplicitHeight = 497
       inherited cxGrid: TcxGrid
         Width = 1251
         Height = 289
@@ -744,7 +744,6 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
         Height = 106
         Align = alBottom
         TabOrder = 1
-        ExplicitTop = 432
         object grChartDBChartView1: TcxGridDBChartView
           DataController.DataSource = MasterDS
           DiagramColumn.Active = True
@@ -880,7 +879,6 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
         AlignSplitter = salBottom
         AutoSnap = True
         Control = grChart
-        ExplicitTop = 513
       end
       object cxGrid1: TcxGrid
         Left = 0
@@ -890,8 +888,6 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 3
-        ExplicitTop = 248
-        ExplicitHeight = 148
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -1386,7 +1382,6 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
         AlignSplitter = salTop
         AutoSnap = True
         Control = cxGrid
-        ExplicitTop = -8
       end
     end
   end
