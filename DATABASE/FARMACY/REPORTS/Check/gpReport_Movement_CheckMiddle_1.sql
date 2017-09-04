@@ -70,28 +70,6 @@ BEGIN
                                                 AND ObjectLink_Juridical_Retail.ChildObjectId =  vbObjectId
                         WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                        )
-      /*  , tmpMovementCheck AS (SELECT MovementLinkObject_Unit.ObjectId AS UnitId
-                                    , Movement_Check.Id
-                                    , CASE WHEN inisDay = True THEN DATE_TRUNC('day', Movement_Check.OperDate) ELSE NULL END              ::TDateTime  AS OperDate
-                               FROM Movement AS Movement_Check
-                                    INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                                  ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
-                                                                 AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                    INNER JOIN _tmpUnit_List ON (_tmpUnit_List.UnitId = MovementLinkObject_Unit.ObjectId OR COALESCE(inUnitId,'0') = '0')
-                                    -- если пользователь выбрал подразделения другой торг.сети
-                                    -- или inUnitId=0,
-                                    -- делаем доп.ограничение подразделениями текущей торг.сети
-                                    INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
-                                    
-                               WHERE Movement_Check.DescId = zc_Movement_Check()
-                                 AND DATE_TRUNC('day', Movement_Check.OperDate) BETWEEN inDateStart AND inDateEnd
-                                 AND Movement_Check.StatusId = zc_Enum_Status_Complete()
-                               GROUP BY Movement_Check.Id
-                                      , MovementLinkObject_Unit.ObjectId
-                                      , CASE WHEN inisDAy = True THEN DATE_TRUNC('day', Movement_Check.OperDate) ELSE NULL END
-                              )
-         
-         */
         , tmpMovementCheck_All AS (SELECT Movement_Check.Id
                                         , CASE WHEN True = True THEN DATE_TRUNC('day', Movement_Check.OperDate) ELSE NULL END              ::TDateTime  AS OperDate
                                    FROM Movement AS Movement_Check

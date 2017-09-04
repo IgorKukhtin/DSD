@@ -70,6 +70,31 @@ type
     pcolPersentProfit: TcxDBPivotGridField;
     actPrint: TdsdPrintAction;
     bbactPrint: TdxBarButton;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    OperDate: TcxGridDBColumn;
+    chSummaSale: TcxGridDBColumn;
+    chSumma: TcxGridDBColumn;
+    chSummaWithVAT: TcxGridDBColumn;
+    chSummaProfit: TcxGridDBColumn;
+    chSummaProfitWithVAT: TcxGridDBColumn;
+    chPersentProfit: TcxGridDBColumn;
+    chPersentProfitWithVAT: TcxGridDBColumn;
+    chSummSale_SP: TcxGridDBColumn;
+    chSummSale_1303: TcxGridDBColumn;
+    chSummPrimeCost_1303: TcxGridDBColumn;
+    chSummaSaleWithSP: TcxGridDBColumn;
+    chSummaProfitWithSP: TcxGridDBColumn;
+    chPersentProfitWithSP: TcxGridDBColumn;
+    chSummaSaleAll: TcxGridDBColumn;
+    chSummaAll: TcxGridDBColumn;
+    chSummaProfitAll: TcxGridDBColumn;
+    chPersentProfitAll: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    cxSplitter2: TcxSplitter;
+    ChildCDS: TClientDataSet;
+    ChildDS: TDataSource;
+    dsdDBViewAddOn1: TdsdDBViewAddOn;
   private
     { Private declarations }
   public

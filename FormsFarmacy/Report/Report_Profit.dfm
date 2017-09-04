@@ -4,7 +4,6 @@ inherited Report_ProfitForm: TReport_ProfitForm
   ClientWidth = 1198
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -217
   ExplicitWidth = 1214
   ExplicitHeight = 706
   PixelsPerInch = 96
@@ -23,14 +22,18 @@ inherited Report_ProfitForm: TReport_ProfitForm
     inherited tsMain: TcxTabSheet
       Caption = #1055#1088#1086#1089#1090#1086#1077' '#1087#1088#1077#1076#1089#1090#1072#1074#1083#1077#1085#1080#1077
       TabVisible = True
-      ExplicitTop = 24
+      ExplicitLeft = 3
+      ExplicitTop = 21
       ExplicitWidth = 1198
       ExplicitHeight = 553
       inherited cxGrid: TcxGrid
         Width = 1198
-        Height = 369
+        Height = 222
+        Align = alTop
+        ExplicitLeft = 3
+        ExplicitTop = 3
         ExplicitWidth = 1198
-        ExplicitHeight = 369
+        ExplicitHeight = 222
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -653,6 +656,463 @@ inherited Report_ProfitForm: TReport_ProfitForm
           GridView = grChartDBChartView1
         end
       end
+      object cxGrid1: TcxGrid
+        Left = 0
+        Top = 229
+        Width = 1198
+        Height = 140
+        Align = alClient
+        PopupMenu = PopupMenu
+        TabOrder = 3
+        ExplicitLeft = 3
+        ExplicitTop = 239
+        ExplicitHeight = 185
+        object cxGridDBTableView1: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = ChildDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.00;-,0.00'
+              Kind = skSum
+              Position = spFooter
+            end
+            item
+              Format = ',0.00;-,0.00'
+              Kind = skSum
+              Position = spFooter
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = chSumma
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = chSummaProfit
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = chSummaSale
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = chSummaWithVAT
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = chSummaProfitWithVAT
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.00;-,0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = chSummaProfit
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = chSumma
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = chSummaSale
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = chSummaWithVAT
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = chSummaProfitWithVAT
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object OperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072
+            DataBinding.FieldName = 'OperDate'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'MMMM.YYYY'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 153
+          end
+          object chSummaSale: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1074' '#1094#1077#1085#1072#1093' '#1088#1077#1072#1083#1080#1079', '#1075#1088#1085
+            DataBinding.FieldName = 'SummaSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 123
+          end
+          object chSumma: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'. ('#1089' '#1053#1044#1057'), '#1075#1088#1085
+            DataBinding.FieldName = 'Summa'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 107
+          end
+          object chSummaWithVAT: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072' ('#1089' '#1053#1044#1057'), '#1075#1088#1085
+            DataBinding.FieldName = 'SummaWithVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 118
+          end
+          object chSummaProfit: TcxGridDBColumn
+            Caption = #1044#1086#1093#1086#1076' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'., '#1075#1088#1085
+            DataBinding.FieldName = 'SummaProfit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 77
+          end
+          object chSummaProfitWithVAT: TcxGridDBColumn
+            Caption = #1044#1086#1093#1086#1076', '#1075#1088#1085
+            DataBinding.FieldName = 'SummaProfitWithVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 79
+          end
+          object chPersentProfit: TcxGridDBColumn
+            Caption = '% '#1076#1086#1093#1086#1076#1072' '#1086#1090' '#1074#1072#1083#1072' ('#1089' '#1091#1095'. % '#1082#1086#1088#1088'.)'
+            DataBinding.FieldName = 'PersentProfit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 95
+          end
+          object chPersentProfitWithVAT: TcxGridDBColumn
+            Caption = '% '#1076#1086#1093#1086#1076#1072' '#1086#1090' '#1074#1072#1083#1072
+            DataBinding.FieldName = 'PersentProfitWithVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 92
+          end
+          object chSummSale_SP: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1088#1077#1080#1084#1073#1091#1088#1089#1072#1094#1080#1080
+            DataBinding.FieldName = 'SummSale_SP'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 107
+          end
+          object chSummSale_1303: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1055#1050#1052#1059' 1303 '#1074' '#1094#1077#1085#1072#1093' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
+            DataBinding.FieldName = 'SummSale_1303'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 107
+          end
+          object chSummPrimeCost_1303: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1055#1050#1052#1059' 1303 '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072
+            DataBinding.FieldName = 'SummPrimeCost_1303'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 107
+          end
+          object chSummaSaleWithSP: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1074' '#1094#1077#1085#1072#1093' '#1088#1077#1072#1083#1080#1079' '#1089' '#1088#1077#1080#1084#1073#1091#1088#1089#1072#1094#1080#1077#1081
+            DataBinding.FieldName = 'SummaSaleWithSP'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 107
+          end
+          object chSummaProfitWithSP: TcxGridDBColumn
+            Caption = #1044#1086#1093#1086#1076' '#1089' '#1091#1095'. '#1088#1077#1080#1084#1073#1091#1088#1089#1072#1094#1080#1080
+            DataBinding.FieldName = 'SummaProfitWithSP'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 107
+          end
+          object chPersentProfitWithSP: TcxGridDBColumn
+            Caption = '% '#1076#1086#1093#1086#1076#1072' '#1086#1090' '#1074#1072#1083#1072' '#1089' '#1088#1077#1080#1084#1073#1091#1088#1089#1072#1094#1080#1077#1081
+            DataBinding.FieldName = 'PersentProfitWithSP'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 123
+          end
+          object chSummaSaleAll: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1094#1077#1085#1072#1093' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080', '#1075#1088#1085
+            DataBinding.FieldName = 'SummaSaleAll'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 220
+          end
+          object chSummaAll: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
+            DataBinding.FieldName = 'SummaAll'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 164
+          end
+          object chSummaProfitAll: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1044#1086#1093#1086#1076', '#1075#1088#1085
+            DataBinding.FieldName = 'SummaProfitAll'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 179
+          end
+          object chPersentProfitAll: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' % '#1076#1086#1093#1086#1076#1072
+            DataBinding.FieldName = 'PersentProfitAll'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 162
+          end
+        end
+        object cxGridLevel1: TcxGridLevel
+          GridView = cxGridDBTableView1
+        end
+      end
+      object cxSplitter2: TcxSplitter
+        Left = 0
+        Top = 222
+        Width = 1198
+        Height = 7
+        AlignSplitter = salTop
+        PositionAfterOpen = 10
+        AutoSnap = True
+        MinSize = 10
+        Control = cxGrid
+      end
     end
     object tsPivot: TcxTabSheet
       Caption = #1057#1074#1086#1076#1085#1072#1103' '#1090#1072#1073#1083#1080#1094#1072
@@ -999,6 +1459,14 @@ inherited Report_ProfitForm: TReport_ProfitForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpReport_Profit'
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end
+      item
+        DataSet = ChildCDS
+      end>
+    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inStartDate'
@@ -1046,8 +1514,8 @@ inherited Report_ProfitForm: TReport_ProfitForm
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
-    Left = 456
-    Top = 80
+    Left = 432
+    Top = 88
   end
   inherited BarManager: TdxBarManager
     Left = 368
@@ -1228,5 +1696,75 @@ inherited Report_ProfitForm: TReport_ProfitForm
       end>
     Left = 416
     Top = 32
+  end
+  object ChildCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 72
+    Top = 424
+  end
+  object ChildDS: TDataSource
+    DataSet = ChildCDS
+    Left = 184
+    Top = 424
+  end
+  object dsdDBViewAddOn1: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView1
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <
+      item
+        ColorValueList = <>
+      end
+      item
+        ColorValueList = <>
+      end
+      item
+        ColorValueList = <>
+      end
+      item
+        ColorValueList = <>
+      end
+      item
+        ColorValueList = <>
+      end
+      item
+        ColorValueList = <>
+      end
+      item
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = SummaSale1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = SummaSale2
+        ColorValueList = <>
+      end
+      item
+        ColorValueList = <>
+      end
+      item
+        ColorValueList = <>
+      end
+      item
+        ColorValueList = <>
+      end
+      item
+        ColorValueList = <>
+      end
+      item
+        ColorValueList = <>
+      end>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    Left = 288
+    Top = 424
   end
 end
