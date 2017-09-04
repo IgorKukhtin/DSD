@@ -32,7 +32,7 @@ BEGIN
     -- определяется <Торговая сеть>
     vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
 
-    vbStartDate:= DATE_TRUNC('month', inStartDate) -  Interval '6 MONTH';
+    vbStartDate:= DATE_TRUNC('month', inStartDate) -  Interval '5 MONTH';
     vbEndDate:= DATE_TRUNC('month', inStartDate);                         --  Interval '1 Day';
 
     -- Результат
@@ -200,36 +200,89 @@ BEGIN
                     )
                         
        , tmpData_Case AS (SELECT tmpData.UnitId
-                               , SUM(tmpData.Summa)        AS Summa
-                               , SUM(tmpData.SummaSale)    AS SummaSale
-                               , SUM(tmpData.SummaWithVAT) AS SummaWithVAT
+                                     , SUM(tmpData.Summa)        AS Summa
+                                     , SUM(tmpData.SummaSale)    AS SummaSale
+                                     , SUM(tmpData.SummaWithVAT) AS SummaWithVAT
+                                     
+                                     , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical1Id OR tmpData.JuridicalId_Income = inJuridical2Id THEN 0 ELSE tmpData.Summa END)     AS SummaFree
+                                     , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical1Id OR tmpData.JuridicalId_Income = inJuridical2Id THEN 0 ELSE tmpData.SummaSale END) AS SummaSaleFree
+                                     
+                                     , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical1Id THEN tmpData.Summa ELSE 0 END)     AS Summa1
+                                     , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical1Id THEN tmpData.SummaSale ELSE 0 END) AS SummaSale1
+                                     , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical1Id THEN tmpData.SummaSale-tmpData.Summa ELSE 0 END) AS SummaProfit1
+                                     , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical1Id THEN tmpData.SummaWithVAT ELSE 0 END)     AS SummaWithVAT1
+                                     
+                                     , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical2Id THEN tmpData.Summa ELSE 0 END)     AS Summa2
+                                     , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical2Id THEN tmpData.SummaSale ELSE 0 END) AS SummaSale2
+                                     , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical2Id THEN tmpData.SummaSale-tmpData.Summa ELSE 0 END) AS SummaProfit2
+                                     , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical2Id THEN tmpData.SummaWithVAT ELSE 0 END)     AS SummaWithVAT2
+                                 
+                                     , tmpSP.SummChangePercent_SP  AS SummSale_SP
+                                     , tmpSale_1303.SummSale_1303
+                                     , tmpSale_1303.TotalSummPrimeCost AS SummPrimeCost_1303
+                   
+                                FROM tmpData
+                                     LEFT JOIN tmpSale_1303 ON tmpSale_1303.UnitId = tmpData.UnitId
+                                     LEFT JOIN tmpSP        ON tmpSP.UnitId        = tmpData.UnitId
+                                GROUP BY tmpData.UnitId
+                                     , tmpSale_1303.SummSale_1303
+                                     , tmpSale_1303.TotalSummPrimeCost
+                                     , tmpSP.SummChangePercent_SP
+                               )
+
+       , tmpData_Full AS (SELECT tmpData.UnitId
+                               , tmpData.Summa
+                               , tmpData.SummaSale
+                               , tmpData.SummaWithVAT
                                
-                               , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical1Id OR tmpData.JuridicalId_Income = inJuridical2Id THEN 0 ELSE tmpData.Summa END)     AS SummaFree
-                               , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical1Id OR tmpData.JuridicalId_Income = inJuridical2Id THEN 0 ELSE tmpData.SummaSale END) AS SummaSaleFree
+                               , tmpData.SummaFree
+                               , tmpData.SummaSaleFree
                                
-                               , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical1Id THEN tmpData.Summa ELSE 0 END)     AS Summa1
-                               , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical1Id THEN tmpData.SummaSale ELSE 0 END) AS SummaSale1
-                               , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical1Id THEN tmpData.SummaSale-tmpData.Summa ELSE 0 END) AS SummaProfit1
-                               , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical1Id THEN tmpData.SummaWithVAT ELSE 0 END)     AS SummaWithVAT1
+                               , tmpData.Summa1
+                               , tmpData.SummaSale1
+                               , tmpData.SummaProfit1
+                               , tmpData.SummaWithVAT1
                                
-                               , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical2Id THEN tmpData.Summa ELSE 0 END)     AS Summa2
-                               , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical2Id THEN tmpData.SummaSale ELSE 0 END) AS SummaSale2
-                               , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical2Id THEN tmpData.SummaSale-tmpData.Summa ELSE 0 END) AS SummaProfit2
-                               , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical2Id THEN tmpData.SummaWithVAT ELSE 0 END)     AS SummaWithVAT2
+                               , tmpData.Summa2
+                               , tmpData.SummaSale2
+                               , tmpData.SummaProfit2
+                               , tmpData.SummaWithVAT2
                            
-                               , tmpSP.SummChangePercent_SP  AS SummSale_SP
-                               , tmpSale_1303.SummSale_1303
-                               , tmpSale_1303.TotalSummPrimeCost
-             
-                          FROM tmpData
-                               LEFT JOIN tmpSale_1303 ON tmpSale_1303.UnitId = tmpData.UnitId
-                               LEFT JOIN tmpSP        ON tmpSP.UnitId        = tmpData.UnitId
-                          GROUP BY tmpData.UnitId
-                               , tmpSale_1303.SummSale_1303
-                               , tmpSale_1303.TotalSummPrimeCost
-                               , tmpSP.SummChangePercent_SP
+                               , tmpData.SummSale_SP
+                               , tmpData.SummSale_1303
+                               , tmpData.SummPrimeCost_1303
+                               
+                               , (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0))                  AS SummaSaleWithSP
+                               , (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0) - tmpData.Summa)  AS SummaProfitWithSP
+                    
+                               , CASE WHEN (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0)) <> 0
+                                      THEN ((tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0) - tmpData.Summa) / (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0)) *100)
+                                      ELSE 0 
+                                 END                                                                      AS PersentProfitWithSP
+                               
+                               , (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0) + COALESCE (tmpData.SummSale_1303, 0))        AS SummaSaleAll
+                               , (tmpData.Summa + COALESCE (tmpData.SummPrimeCost_1303, 0))                                           AS SummaAll
+                               , (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0) + COALESCE (tmpData.SummSale_1303, 0) - tmpData.Summa - COALESCE (tmpData.SummPrimeCost_1303, 0))  AS SummaProfitAll
+                               , CASE WHEN (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0) + COALESCE (tmpData.SummSale_1303, 0)) <> 0 
+                                      THEN ( (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0) + COALESCE (tmpData.SummSale_1303, 0) - tmpData.Summa - COALESCE (tmpData.SummPrimeCost_1303, 0)) 
+                                           / (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0) + COALESCE (tmpData.SummSale_1303, 0)) ) * 100 
+                                      ELSE 0
+                                 END                                                                                                   AS PersentProfitAll
+                          FROM tmpData_Case AS tmpData
                           )
 
+       -- определяем лучшую и худшую аптеки по ср.чеку
+       , tmpBestBad AS (SELECT DISTINCT tmp.UnitId
+                             , tmp.Ord_Best
+                             , tmp.Ord_Bad 
+                         FROM (SELECT tmp.*
+                                    , Row_Number() OVER (ORDER BY tmp.PersentProfitAll Asc)  AS Ord_Bad
+                                    , Row_Number() OVER (ORDER BY tmp.PersentProfitAll DESC) AS Ord_Best
+                               FROM tmpData_Full as tmp
+                               ) as tmp
+                         WHERE tmp.Ord_Best IN (1,2,3) OR tmp.Ord_Bad IN (1,2,3)
+                         ) 
+                         
      -- результат  
         SELECT
              Object_JuridicalMain.ObjectCode         AS JuridicalMainCode
@@ -262,32 +315,33 @@ BEGIN
            , tmp.SummaProfit2                        :: TFloat AS SummaProfit2
            , CAST (CASE WHEN tmp.Summa2 <> 0 THEN ((tmp.SummaWithVAT2-tmp.Summa2)*100 / tmp.Summa2) ELSE 0 END AS NUMERIC (16, 2)) :: TFloat AS Tax2
            
-           , tmp.SummSale_SP           :: TFloat AS SummSale_SP
+           , tmp.SummSale_SP           :: TFloat
            , tmp.SummSale_1303         :: TFloat
-           , tmp.TotalSummPrimeCost    :: TFloat AS SummPrimeCost_1303
+           , tmp.SummPrimeCost_1303    :: TFloat
 
-           , (tmp.SummaSale + COALESCE (tmp.SummSale_SP, 0))               :: TFloat AS SummaSaleWithSP
-           , (tmp.SummaSale + COALESCE (tmp.SummSale_SP, 0) - tmp.Summa)   :: TFloat AS SummaProfitWithSP
+           , tmp.SummaSaleWithSP       :: TFloat
+           , tmp.SummaProfitWithSP     :: TFloat
 
-           , CASE WHEN (tmp.SummaSale + COALESCE (tmp.SummSale_SP, 0)) <> 0 THEN ((tmp.SummaSale + COALESCE (tmp.SummSale_SP, 0) - tmp.Summa) / (tmp.SummaSale + COALESCE (tmp.SummSale_SP, 0)) *100) ELSE 0 END :: TFloat AS PersentProfitWithSP
+           , tmp.PersentProfitWithSP   :: TFloat
            
-           , ((tmp.SummaSale + COALESCE (tmp.SummSale_SP, 0)) + COALESCE (tmp.SummSale_1303, 0))        :: TFloat AS SummaSaleAll
-           , (tmp.Summa + COALESCE (tmp.TotalSummPrimeCost, 0))             :: TFloat AS SummaAll
-           , ((tmp.SummaSale + COALESCE (tmp.SummSale_SP, 0)) + COALESCE (tmp.SummSale_1303, 0) - tmp.Summa - COALESCE (tmp.TotalSummPrimeCost, 0))        :: TFloat AS SummaProfitAll
-           , CASE WHEN ((tmp.SummaSale + COALESCE (tmp.SummSale_SP, 0)) + COALESCE (tmp.SummSale_1303, 0)) <> 0 
-                  THEN (((tmp.SummaSale + COALESCE (tmp.SummSale_SP, 0)) + COALESCE (tmp.SummSale_1303, 0) - tmp.Summa - COALESCE (tmp.TotalSummPrimeCost, 0)) 
-                     / ((tmp.SummaSale + COALESCE (tmp.SummSale_SP, 0)) + COALESCE (tmp.SummSale_1303, 0))) * 100 
-                  ELSE 0
-             END :: TFloat AS PersentProfitAll
+           , tmp.SummaSaleAll          :: TFloat
+           , tmp.SummaProfitAll        :: TFloat
+           , tmp.PersentProfitAll      :: TFloat
+           
+           , CASE WHEN tmpBestBad.Ord_Best IN (1,2,3) THEN 8716164 
+                  WHEN tmpBestBad.Ord_Bad  IN (1,2,3) THEN 10917116 
+                  ELSE zc_Color_White()
+             END                         AS Color_Best        -- зеленый лучший   -- красный худший
 
-       FROM tmpData_Case AS tmp
-             
+       FROM tmpData_Full AS tmp
                 LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmp.UnitId
 
                 LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                      ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
                                     AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                 LEFT JOIN Object AS Object_JuridicalMain ON Object_JuridicalMain.Id = ObjectLink_Unit_Juridical.ChildObjectId
+                
+                LEFT JOIN tmpBestBad ON tmpBestBad.UnitId = tmp.UnitId
        ORDER BY Object_JuridicalMain.ValueData 
               , Object_Unit.ValueData;
               

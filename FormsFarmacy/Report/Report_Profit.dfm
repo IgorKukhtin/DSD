@@ -4,6 +4,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
   ClientWidth = 1198
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -219
   ExplicitWidth = 1214
   ExplicitHeight = 706
   PixelsPerInch = 96
@@ -22,16 +23,13 @@ inherited Report_ProfitForm: TReport_ProfitForm
     inherited tsMain: TcxTabSheet
       Caption = #1055#1088#1086#1089#1090#1086#1077' '#1087#1088#1077#1076#1089#1090#1072#1074#1083#1077#1085#1080#1077
       TabVisible = True
-      ExplicitLeft = 3
-      ExplicitTop = 21
+      ExplicitTop = 24
       ExplicitWidth = 1198
       ExplicitHeight = 553
       inherited cxGrid: TcxGrid
         Width = 1198
         Height = 222
         Align = alTop
-        ExplicitLeft = 3
-        ExplicitTop = 3
         ExplicitWidth = 1198
         ExplicitHeight = 222
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -165,6 +163,46 @@ inherited Report_ProfitForm: TReport_ProfitForm
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
               Column = SummaProfitWithVAT
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummSale_SP
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummSale_1303
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummPrimeCost_1303
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummaSaleWithSP
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummaProfitWithSP
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummaSaleAll
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummaAll
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummaProfitAll
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -290,6 +328,46 @@ inherited Report_ProfitForm: TReport_ProfitForm
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
               Column = SummaProfitWithVAT
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummSale_SP
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummSale_1303
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummPrimeCost_1303
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummaSaleWithSP
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummaProfitWithSP
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummaSaleAll
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummaAll
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummaProfitAll
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -600,6 +678,12 @@ inherited Report_ProfitForm: TReport_ProfitForm
             HeaderAlignmentVert = vaCenter
             Width = 95
           end
+          object Color_Best: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_Best'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 30
+          end
         end
       end
       object cxSplitter1: TcxSplitter
@@ -664,9 +748,6 @@ inherited Report_ProfitForm: TReport_ProfitForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 3
-        ExplicitLeft = 3
-        ExplicitTop = 239
-        ExplicitHeight = 185
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -790,6 +871,21 @@ inherited Report_ProfitForm: TReport_ProfitForm
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
               Column = chSummaProfitWithVAT
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = chSummaSaleAll
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = chSummaAll
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = chSummaProfitAll
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -904,6 +1000,21 @@ inherited Report_ProfitForm: TReport_ProfitForm
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
               Column = chSummaProfitWithVAT
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = chSummaSaleAll
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = chSummaAll
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = chSummaProfitAll
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1620,6 +1731,11 @@ inherited Report_ProfitForm: TReport_ProfitForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = Color_Best
+        ColorValueList = <>
+      end>
     Left = 352
     Top = 288
   end
