@@ -62,9 +62,11 @@ BEGIN
                                         END) AS Amount_Send_in
                                  , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send()            AND MIContainer.IsActive = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount_Send_out
                                  , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion()
-                                              AND MIContainer.IsActive = FALSE
+                                              AND MIContainer.IsActive       = FALSE
                                               AND (MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReWork()
-                                                OR MLO_DocumentKind.ObjectId > 0)
+                                                OR MLO_DocumentKind.ObjectId > 0
+                                                OR MIContainer.ObjectExtId_Analyzer <> MIContainer.WhereObjectId_Analyzer
+                                                  )
                                                   THEN -1 * MIContainer.Amount
                                              ELSE 0
                                         END) AS Amount_Production
