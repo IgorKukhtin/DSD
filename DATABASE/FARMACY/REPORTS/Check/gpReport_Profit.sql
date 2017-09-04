@@ -69,13 +69,12 @@ BEGIN
                         WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                        )
  -- данные из проводок
- , tmpData_Container AS (SELECT COALESCE (MIContainer.AnalyzerId,0) :: Integer  AS MovementItemId
+ , tmpData_ContainerAll AS (SELECT COALESCE (MIContainer.AnalyzerId,0) :: Integer  AS MovementItemId
                               , COALESCE (MIContainer.WhereObjectId_analyzer,0) AS UnitId
                               , MIContainer.ObjectId_analyzer                   AS GoodsId
                               , SUM (COALESCE (-1 * MIContainer.Amount, 0))     AS Amount
                               , SUM (COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0)) AS SummaSale
                          FROM MovementItemContainer AS MIContainer
-                              INNER JOIN tmpUnit ON  tmpUnit.UnitId = MIContainer.WhereObjectId_analyzer
                          WHERE MIContainer.DescId = zc_MIContainer_Count()
                            AND MIContainer.MovementDescId = zc_Movement_Check()
                            AND MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < inEndDate + INTERVAL '1 DAY'
@@ -84,6 +83,10 @@ BEGIN
                                 , MIContainer.ObjectId_analyzer    
                                 , COALESCE (MIContainer.AnalyzerId,0)
                          HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
+                        )
+ , tmpData_Container AS (SELECT tmpData_ContainerAll.*
+                         FROM tmpData_ContainerAll
+                              INNER JOIN tmpUnit ON  tmpUnit.UnitId = tmpData_ContainerAll.UnitId
                         )
 
        -- находим ИД док.прихода
@@ -222,4 +225,4 @@ $BODY$
 */
 -- тест
 -- SELECT * FROM gpReport_Profit (inUnitId:= 0, inStartDate:= '20150801'::TDateTime, inEndDate:= '20150810'::TDateTime, inIsPartion:= FALSE, inSession:= '3')
--- SELECT * from gpReport_Profit(inStartDate := ('01.05.2016')::TDateTime , inEndDate := ('05.05.2016')::TDateTime , inJuridical1Id := 59611::Integer , inJuridical2Id := 0 ::Integer,  inSession := '3'::TVarChar);
+-- SELECT * from gpReport_Profit(inStartDate := ('01.11.2016')::TDateTime , inEndDate := ('05.11.2016')::TDateTime , inJuridical1Id := 59610 ::Integer , inJuridical2Id := 59612  ::Integer,  inSession := '3'::TVarChar);
