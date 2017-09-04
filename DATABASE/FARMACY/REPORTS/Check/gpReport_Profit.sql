@@ -106,7 +106,16 @@ BEGIN
                                            WHERE MIFloat_SummChangePercent.DescId =  zc_MIFloat_SummChangePercent()
                                              AND MIFloat_SummChangePercent.MovementItemId IN (SELECT DISTINCT tmpData_Container.MI_Id FROM tmpData_Container)
                                           )
-
+        , tmpSP AS (SELECT tmpData_Container.UnitId
+                         , SUM (COALESCE (MovementFloat_SummChangePercent.ValueData, 0)) AS SummChangePercent_SP
+               
+                    FROM (SELECT DISTINCT tmpData_Container.MI_ID, tmpData_Container.UnitId FROM tmpData_Container) AS tmpData_Container
+                         -- сумма скидки SP
+                         LEFT JOIN tmpMIF_SummChangePercent AS MovementFloat_SummChangePercent
+                                                            ON MovementFloat_SummChangePercent.MovementItemId = tmpData_Container.MI_Id
+                    GROUP BY tmpData_Container.UnitId
+                    )
+                    
         -- выбираем продажи по товарам соц.проекта 1303
         , tmpMovement_Sale AS (SELECT MovementLinkObject_Unit.ObjectId             AS UnitId
                                     , Movement_Sale.Id                             AS Id
@@ -167,13 +176,7 @@ BEGIN
                               , SUM (COALESCE (tmpData_Container.Amount, 0))        AS Amount
                               , SUM (COALESCE (tmpData_Container.SummaSale, 0))     AS SummaSale
 
-                              , SUM (COALESCE (MovementFloat_SummChangePercent.ValueData, 0)) AS SummChangePercent_SP
-               
                          FROM tmpData_Container
-                              -- сумма скидки SP
-                              LEFT JOIN tmpMIF_SummChangePercent AS MovementFloat_SummChangePercent
-                                                                 ON MovementFloat_SummChangePercent.MovementItemId = tmpData_Container.MI_Id
-   
                               -- элемент прихода
                               LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = tmpData_Container.MovementItemId
 
@@ -199,8 +202,6 @@ BEGIN
                   
                           , SUM (tmpData_all.Amount)    AS Amount
                           , SUM (tmpData_all.SummaSale) AS SummaSale
-
-                          , SUM (tmpData_all.SummChangePercent_SP) AS SummChangePercent_SP
 
                      FROM tmpData_all
                           -- цена с учетом НДС, для элемента прихода от поставщика (и % корректировки наценки zc_Object_Juridical) (или NULL)
@@ -248,19 +249,17 @@ BEGIN
                                , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical2Id THEN tmpData.SummaSale-tmpData.Summa ELSE 0 END) AS SummaProfit2
                                , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical2Id THEN tmpData.SummaWithVAT ELSE 0 END)     AS SummaWithVAT2
                            
-                               , SUM (tmpData.SummChangePercent_SP) AS SummChangePercent_SP
-             
+                               , tmpSP.SummChangePercent_SP  AS SummSale_SP
                                , tmpSale_1303.SummSale_1303
                                , tmpSale_1303.TotalSummPrimeCost
-             
-                               , SUM (tmpData.SummaSale + COALESCE (tmpData.SummChangePercent_SP, 0))                 AS SummaSaleWithSP
-                               , SUM (tmpData.SummaSale + COALESCE (tmpData.SummChangePercent_SP, 0) - tmpData.Summa) AS SummaProfitWithSP
              
                           FROM tmpData
                                LEFT JOIN tmpSale_1303 ON tmpSale_1303.UnitId = tmpData.UnitId
+                               LEFT JOIN tmpSP        ON tmpSP.UnitId        = tmpData.UnitId
                           GROUP BY tmpData.UnitId
                                , tmpSale_1303.SummSale_1303
                                , tmpSale_1303.TotalSummPrimeCost
+                               , tmpSP.SummChangePercent_SP
                           )
 
      -- результат  
@@ -295,21 +294,21 @@ BEGIN
            , tmp.SummaProfit2                        :: TFloat AS SummaProfit2
            , CAST (CASE WHEN tmp.Summa2 <> 0 THEN ((tmp.SummaWithVAT2-tmp.Summa2)*100 / tmp.Summa2) ELSE 0 END AS NUMERIC (16, 2)) :: TFloat AS Tax2
            
-           , tmp.SummChangePercent_SP  :: TFloat AS SummSale_SP
+           , tmp.SummSale_SP           :: TFloat AS SummSale_SP
            , tmp.SummSale_1303         :: TFloat
            , tmp.TotalSummPrimeCost    :: TFloat AS SummPrimeCost_1303
 
-           , tmp.SummaSaleWithSP       :: TFloat AS SummaSaleWithSP
-           , tmp.SummaProfitWithSP     :: TFloat AS SummaProfitWithSP
+           , (tmp.SummaSale + COALESCE (tmp.SummSale_SP, 0))               :: TFloat AS SummaSaleWithSP
+           , (tmp.SummaSale + COALESCE (tmp.SummSale_SP, 0) - tmp.Summa)   :: TFloat AS SummaProfitWithSP
 
-           , CASE WHEN tmp.SummaSaleWithSP <> 0 THEN (tmp.SummaProfitWithSP / tmp.SummaSaleWithSP *100) ELSE 0 END :: TFloat AS PersentProfitWithSP
+           , CASE WHEN (tmp.SummaSale + COALESCE (tmp.SummSale_SP, 0)) <> 0 THEN ((tmp.SummaSale + COALESCE (tmp.SummSale_SP, 0) - tmp.Summa) / (tmp.SummaSale + COALESCE (tmp.SummSale_SP, 0)) *100) ELSE 0 END :: TFloat AS PersentProfitWithSP
            
-           , (tmp.SummaSaleWithSP + COALESCE (tmp.SummSale_1303, 0))        :: TFloat AS SummaSaleAll
+           , ((tmp.SummaSale + COALESCE (tmp.SummSale_SP, 0)) + COALESCE (tmp.SummSale_1303, 0))        :: TFloat AS SummaSaleAll
            , (tmp.Summa + COALESCE (tmp.TotalSummPrimeCost, 0))             :: TFloat AS SummaAll
-           , (tmp.SummaSaleWithSP + COALESCE (tmp.SummSale_1303, 0) - tmp.Summa - COALESCE (tmp.TotalSummPrimeCost, 0))        :: TFloat AS SummaProfitAll
-           , CASE WHEN (tmp.SummaSaleWithSP + COALESCE (tmp.SummSale_1303, 0)) <> 0 
-                  THEN ((tmp.SummaSaleWithSP + COALESCE (tmp.SummSale_1303, 0) - tmp.Summa - COALESCE (tmp.TotalSummPrimeCost, 0)) 
-                     / (tmp.SummaSaleWithSP + COALESCE (tmp.SummSale_1303, 0))) * 100 
+           , ((tmp.SummaSale + COALESCE (tmp.SummSale_SP, 0)) + COALESCE (tmp.SummSale_1303, 0) - tmp.Summa - COALESCE (tmp.TotalSummPrimeCost, 0))        :: TFloat AS SummaProfitAll
+           , CASE WHEN ((tmp.SummaSale + COALESCE (tmp.SummSale_SP, 0)) + COALESCE (tmp.SummSale_1303, 0)) <> 0 
+                  THEN (((tmp.SummaSale + COALESCE (tmp.SummSale_SP, 0)) + COALESCE (tmp.SummSale_1303, 0) - tmp.Summa - COALESCE (tmp.TotalSummPrimeCost, 0)) 
+                     / ((tmp.SummaSale + COALESCE (tmp.SummSale_SP, 0)) + COALESCE (tmp.SummSale_1303, 0))) * 100 
                   ELSE 0
              END :: TFloat AS PersentProfitAll
 
