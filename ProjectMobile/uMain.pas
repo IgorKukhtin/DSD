@@ -1356,8 +1356,6 @@ begin
   FPaidKindIdList := TList<integer>.Create;
 
   FEditCashAmount := false;
-
-  pReturnInTotals.Height := 69;
 end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
