@@ -38,6 +38,11 @@ const
   // размер шрифта по умолчанию
   DefaultSize = 11;
 
+  sCostWithExtraCharge = 'Стоимость с наценкой';
+  sCostWithDiscount = 'Стоимость со скидкой';
+  sTotalCostWithVAT = 'Общая стоимость (с НДС)';
+  sTotalWeight = 'Общий вес';
+
 type
   TFormStackItem = record
     PageIndex: Integer;
@@ -807,6 +812,10 @@ type
     lTotalPriceReturn: TLabel;
     lPriceWithPercentReturn: TLabel;
     lTotalWeightReturn: TLabel;
+    Panel59: TPanel;
+    lTotalPriceDoc: TLabel;
+    lPriceWithPercentDoc: TLabel;
+    lTotalWeightDoc: TLabel;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -1195,12 +1204,6 @@ uses
   uNetwork, System.StrUtils;
 
 {$R *.fmx}
-
-const
-  sCostWithExtraCharge = 'Стоимость с наценкой';
-  sCostWithDiscount = 'Стоимость со скидкой';
-  sTotalCostWithVAT = 'Общая стоимость (с НДС)';
-  sTotalWeight = 'Общий вес';
 
 function CorrectPassword : string;
 begin
