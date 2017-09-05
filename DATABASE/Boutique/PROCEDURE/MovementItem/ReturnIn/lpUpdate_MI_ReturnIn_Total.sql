@@ -26,8 +26,8 @@ BEGIN
                                                                    ON MIFloat_TotalPay.MovementItemId = MovementItem.Id
                                                                   AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay() 
                                  WHERE Object_PartionMI.ObjectCode = inMovementItemId 
-                                   AND Object_PartionMI.DescId = zc_Object_PartionMI() 
-                                ) , 0);
+                                   AND Object_PartionMI.DescId     = zc_Object_PartionMI() 
+                                ), 0);
                               
      -- сохранили свойство <Итого сумма возврата оплаты (в ГРН) из Расчетов>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPayOth(), inMovementItemId, vbTotalPayOth);

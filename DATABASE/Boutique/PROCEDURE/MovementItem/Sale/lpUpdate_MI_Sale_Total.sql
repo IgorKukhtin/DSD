@@ -13,28 +13,26 @@ $BODY$
    DECLARE vbTotalCountReturn      TFloat;   -- Кол-во возврат
    DECLARE vbTotalReturn           TFloat;   -- Сумма возврата ГРН
    DECLARE vbTotalPayReturn        TFloat;   -- Сумма возврата оплаты ГРН
-   DECLARE vbOperPriceToPay        TFloat;   -- цена К оплате
-   DECLARE vbMovementId            Integer;  -- для скорости
+   -- DECLARE vbOperPriceToPay        TFloat;   -- цена К оплате
+   -- DECLARE vbMovementId            Integer;  -- для скорости
 BEGIN
 
      -- для скорости
-     vbMovementId:= (SELECT MovementItem.MovementId FROM MovementItem WHERE MovementItem.Id = inMovementItemId);
+     -- vbMovementId:= (SELECT MovementItem.MovementId FROM MovementItem WHERE MovementItem.Id = inMovementItemId);
      
      -- определили цена К оплате
-     vbOperPriceToPay := COALESCE ((SELECT (zfCalc_SummChangePercent (MovementItem.Amount, MIFloat_OperPriceList.ValueData, MIFloat_ChangePercent.ValueData)
-                                          - COALESCE (MIFloat_SummChangePercent.ValueData, 0) - COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0)
+     /*vbOperPriceToPay := COALESCE ((SELECT (-- сумма по ценам продажи
+                                            zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData)
+                                            -- МИНУС - Итого сумма Скидки (в ГРН) - для ВСЕХ документов - суммируется 1)по %скидки + 2)дополнительная + 3)дополнительная в оплатах
+                                          - COALESCE (MIFloat_TotalChangePercent.ValueData, 0) - COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0)
                                            ) / MovementItem.Amount
                                     FROM MovementItem
                                          LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                                      ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
                                                                     AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
-
-                                         LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
-                                                                     ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
-                                                                    AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
-                                         LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
-                                                                     ON MIFloat_SummChangePercent.MovementItemId = MovementItem.Id
-                                                                    AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
+                                         LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
+                                                                     ON MIFloat_TotalChangePercent.MovementItemId = MovementItem.Id
+                                                                    AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()
                                          LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercentPay
                                                                      ON MIFloat_TotalChangePercentPay.MovementItemId = MovementItem.Id
                                                                     AND MIFloat_TotalChangePercentPay.DescId         = zc_MIFloat_TotalChangePercentPay()
@@ -43,17 +41,17 @@ BEGIN
                                       AND MovementItem.Id         = inMovementItemId
                                       AND MovementItem.DescId     = zc_MI_Master()
                                       -- AND MovementItem.isErased   = FALSE
-                                   ), 0);
+                                   ), 0);*/
 
      -- данные
      SELECT  -- Дополнительная скидка в расчетах ГРН
-             COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_GoodsAccount() THEN COALESCE (MIFloat_SummChangePercent.ValueData, 0) ELSE 0 END) , 0) AS TotalChangePercentPay
+             COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_GoodsAccount() THEN COALESCE (MIFloat_SummChangePercent.ValueData, 0) ELSE 0 END), 0) AS TotalChangePercentPay
              -- оплата в расчетах ГРН
            , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_GoodsAccount() THEN COALESCE (MIFloat_TotalPay.ValueData, 0)  ELSE 0         END), 0) AS TotalPayOth
              -- Кол-во возврат
-           , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_ReturnIn()     THEN MovementItem.Amount                       ELSE 0         END ), 0) AS TotalCountReturn
-             -- Сумма возврата ГРН
-           , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_ReturnIn()     THEN MovementItem.Amount * vbOperPriceToPay    ELSE 0         END), 0) AS TotalReturn
+           , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_ReturnIn()     THEN MovementItem.Amount                       ELSE 0         END), 0) AS TotalCountReturn
+             -- Сумма возврата со скидкой (в ГРН)
+           , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_ReturnIn()     THEN zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData) - COALESCE (MIFloat_TotalChangePercent.ValueData, 0) ELSE 0 END), 0) AS TotalReturn
              -- Сумма возврата оплаты ГРН + Итого сумма возврата оплаты из Расчетов
            , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_ReturnIn()     THEN COALESCE (MIFloat_TotalPay.ValueData, 0) + COALESCE (MIFloat_TotalPayOth.ValueData, 0) ELSE 0 END), 0) AS TotalPayReturn
 
@@ -69,6 +67,10 @@ BEGIN
 
             INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
                                AND Movement.StatusId = zc_Enum_Status_Complete()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
+                                        ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
+                                       AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
 
             LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
                                         ON MIFloat_TotalPay.MovementItemId = MovementItem.Id
