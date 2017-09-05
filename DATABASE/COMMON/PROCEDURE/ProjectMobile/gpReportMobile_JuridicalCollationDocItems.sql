@@ -6,17 +6,6 @@ CREATE OR REPLACE FUNCTION gpReportMobile_JuridicalCollationDocItems (
     IN inMovementId Integer  , -- ИД документа
     IN inSession    TVarChar   -- сессия пользователя
 )
-/*RETURNS TABLE (MovementId     Integer
-             , MovementItemId Integer
-             , GoodsId        Integer
-             , GoodsCode      Integer
-             , GoodsName      TVarChar
-             , GoodsKindId    Integer
-             , GoodsKindName  TVarChar
-             , Price          TFloat
-             , Amount         TFloat
-             , isPromo        Boolean
-              )*/
 RETURNS SETOF REFCURSOR
 AS $BODY$
    DECLARE vbUserId Integer;
@@ -32,19 +21,23 @@ BEGIN
         SELECT Movement.Id
              , Movement.InvNumber
              , Movement.OperDate
-             , COALESCE (MovementFloat_TotalCountKg.ValueData, 0)::TFloat AS TotalCountKg
+             , COALESCE (MovementFloat_TotalCountKg.ValueData, 0)::TFloat  AS TotalCountKg
              , COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0)::TFloat AS TotalSummPVAT
-             , COALESCE (MovementFloat_TotalSumm.ValueData, 0)::TFloat AS TotalSumm
+             , COALESCE (MovementFloat_TotalSumm.ValueData, 0)::TFloat     AS TotalSumm
+             , COALESCE (MovementFloat_ChangePercent.ValueData, 0)::TFloat AS ChangePercent
         FROM Movement
              LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
                                      ON MovementFloat_TotalCountKg.MovementId = Movement.Id
                                     AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
              LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
                                      ON MovementFloat_TotalSummPVAT.MovementId = Movement.Id
-                                    AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()                        
+                                    AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
              LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                      ON MovementFloat_TotalSumm.MovementId = Movement.Id
-                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()                        
+                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                     ON MovementFloat_ChangePercent.MovementId = Movement.Id
+                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
         WHERE Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
           AND Movement.Id = inMovementId;
       RETURN NEXT vbCursorDocHeader;
@@ -137,4 +130,8 @@ END; $BODY$
  04.09.17                                                                         *
 */
 
--- SELECT * FROM gpReportMobile_JuridicalCollationDocItems (inMovementId:= 5282247, inSession:= zfCalc_UserAdmin());
+-- START TRANSACTION;
+-- SELECT * FROM gpReportMobile_JuridicalCollationDocItems (inMovementId:= 5280790, inSession:= zfCalc_UserAdmin());
+-- FETCH ALL "CursorDocHeader";
+-- FETCH ALL "CursorDocItems";
+-- COMMIT; -- ВНИМАНИЕ!!! закроет зафетченный курсор, вызывать после просмотра данных
