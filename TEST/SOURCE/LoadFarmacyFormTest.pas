@@ -511,6 +511,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OverOrderForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_OverOrderForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OverOrderDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_OverOrderDialogForm');
+  exit;
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_AssortmentForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_AssortmentdForm');
@@ -658,13 +663,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_WageForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WageDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WageDialogForm');
-
+   }
   //отчет доходности
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitDialogForm');
-
+  {
   //Отчет Ценовая интервенция
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceInterventionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PriceInterventionForm');

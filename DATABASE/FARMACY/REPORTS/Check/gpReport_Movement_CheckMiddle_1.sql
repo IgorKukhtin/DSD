@@ -70,27 +70,33 @@ BEGIN
                                                 AND ObjectLink_Juridical_Retail.ChildObjectId =  vbObjectId
                         WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                        )
+        , tmpMovementCheck_All AS (SELECT Movement_Check.Id
+                                        , CASE WHEN True = True THEN DATE_TRUNC('day', Movement_Check.OperDate) ELSE NULL END              ::TDateTime  AS OperDate
+                                   FROM Movement AS Movement_Check
+                                   WHERE Movement_Check.DescId = zc_Movement_Check()
+                                     AND Movement_Check.OperDate >= '01.07.2017' AND Movement_Check.OperDate < '01.08.2017'
+                                     AND Movement_Check.StatusId = zc_Enum_Status_Complete()
+                                   )         
+        , tmpMLO_Unit AS (SELECT MovementLinkObject_Unit.MovementId
+                               , MovementLinkObject_Unit.ObjectId 
+                          FROM MovementLinkObject AS MovementLinkObject_Unit
+                          WHERE MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                            AND MovementLinkObject_Unit.MovementId IN ( SELECT tmpMovementCheck_All.Id FROM tmpMovementCheck_All)
+                         )
+ 
         , tmpMovementCheck AS (SELECT MovementLinkObject_Unit.ObjectId AS UnitId
                                     , Movement_Check.Id
-                                    , CASE WHEN inisDay = True THEN DATE_TRUNC('day', Movement_Check.OperDate) ELSE NULL END              ::TDateTime  AS OperDate
-                               FROM Movement AS Movement_Check
-                                    INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                                  ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
-                                                                 AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                    , Movement_Check.OperDate
+                               FROM tmpMovementCheck_All  AS Movement_Check
+                                    INNER JOIN tmpMLO_Unit AS MovementLinkObject_Unit
+                                                           ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
                                     INNER JOIN _tmpUnit_List ON (_tmpUnit_List.UnitId = MovementLinkObject_Unit.ObjectId OR COALESCE(inUnitId,'0') = '0')
                                     -- если пользователь выбрал подразделения другой торг.сети
                                     -- или inUnitId=0,
                                     -- делаем доп.ограничение подразделениями текущей торг.сети
                                     INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
-                                    
-                               WHERE Movement_Check.DescId = zc_Movement_Check()
-                                 AND DATE_TRUNC('day', Movement_Check.OperDate) BETWEEN inDateStart AND inDateEnd
-                                 AND Movement_Check.StatusId = zc_Enum_Status_Complete()
-                               GROUP BY Movement_Check.Id
-                                      , MovementLinkObject_Unit.ObjectId
-                                      , CASE WHEN inisDAy = True THEN DATE_TRUNC('day', Movement_Check.OperDate) ELSE NULL END
                               )
-                   
+
         , tmpMLO_SPKind AS (SELECT MovementLinkObject_SPKind.*
                             FROM MovementLinkObject AS MovementLinkObject_SPKind
                             WHERE MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
@@ -405,7 +411,7 @@ BEGIN
                         WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                           AND inUnitHistoryId = 0
                        )
-        , tmpMovementCheck AS (SELECT Movement_Check.Id
+      /*  , tmpMovementCheck AS (SELECT Movement_Check.Id
                                     , DATE_TRUNC('Month', Movement_Check.OperDate)                                                                  AS OperDate
                                FROM Movement AS Movement_Check
                                     INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -418,7 +424,34 @@ BEGIN
                                GROUP BY Movement_Check.Id
                                       , DATE_TRUNC('Month', Movement_Check.OperDate) 
                               )
+                              */
                       
+        , tmpMovementCheck_All AS (SELECT Movement_Check.Id
+                                        , DATE_TRUNC('Month', Movement_Check.OperDate)  ::TDateTime  AS OperDate
+                                   FROM Movement AS Movement_Check
+                                   WHERE Movement_Check.DescId = zc_Movement_Check()
+                                     AND Movement_Check.OperDate >= '01.07.2017' AND Movement_Check.OperDate < '01.08.2017'
+                                     AND Movement_Check.StatusId = zc_Enum_Status_Complete()
+                                   )         
+        , tmpMLO_Unit AS (SELECT MovementLinkObject_Unit.MovementId
+                               , MovementLinkObject_Unit.ObjectId 
+                          FROM MovementLinkObject AS MovementLinkObject_Unit
+                          WHERE MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                            AND MovementLinkObject_Unit.MovementId IN ( SELECT tmpMovementCheck_All.Id FROM tmpMovementCheck_All)
+                         )
+ 
+        , tmpMovementCheck AS (SELECT Movement_Check.Id
+                                    , Movement_Check.OperDate
+                               FROM tmpMovementCheck_All  AS Movement_Check
+                                    INNER JOIN tmpMLO_Unit AS MovementLinkObject_Unit
+                                                           ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
+                                    INNER JOIN _tmpUnit_List ON (_tmpUnit_List.UnitId = MovementLinkObject_Unit.ObjectId OR COALESCE(inUnitId,'0') = '0')
+                                    -- если пользователь выбрал подразделения другой торг.сети
+                                    -- или inUnitId=0,
+                                    -- делаем доп.ограничение подразделениями текущей торг.сети
+                                    INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
+                              )
+                              
         , tmpMLO_SPKind AS (SELECT MovementLinkObject_SPKind.*
                             FROM MovementLinkObject AS MovementLinkObject_SPKind
                             WHERE MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
@@ -639,4 +672,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_Movement_CheckMiddle(inUnitId := 183292 , inDateStart := ('01.02.2016')::TDateTime , inDateEnd := ('29.02.2016')::TDateTime , inSession := '3');
---select * from gpReport_Movement_CheckMiddle(inUnitId := '183294,375626,389328' , inDateStart := ('01.01.2016')::TDateTime , inDateFinal := ('27.01.2016')::TDateTime , inisDay := 'False' , inValue1 := 100 , inValue2 := 200 , inValue3 := 300 , inValue4 := 400 , inValue5 := 500 , inValue6 := 1000 ,  inSession := '3');
+--select * from gpReport_Movement_CheckMiddle(inUnitId := '183294,375626,389328'::TVarChar , inUnitHistoryId:= 389328, inDateStart := ('01.01.2016')::TDateTime , inDateEnd := ('27.01.2016')::TDateTime , inisDay := 'False' ::Boolean, inValue1 := 100 ::TFloat, inValue2 := 200 ::TFloat, inValue3 := 300::TFloat , inValue4 := 400::TFloat , inValue5 := 500 ::TFloat, inValue6 := 1000 ::TFloat,  inSession := '3'::TVarChar);
+-- FETCH ALL "<unnamed portal 3>";----

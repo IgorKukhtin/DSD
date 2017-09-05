@@ -15,7 +15,17 @@ uses
   cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, cxPivotGridChartConnection,
   cxCustomPivotGrid, cxDBPivotGrid, cxGridChartView, cxGridDBChartView,
   cxSplitter, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter;
+  dxSkinsdxBarPainter, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
+  dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue;
 
 type
   TReport_ProfitForm = class(TAncestorReportForm)
@@ -60,6 +70,31 @@ type
     pcolPersentProfit: TcxDBPivotGridField;
     actPrint: TdsdPrintAction;
     bbactPrint: TdxBarButton;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    OperDate: TcxGridDBColumn;
+    chSummaSale: TcxGridDBColumn;
+    chSumma: TcxGridDBColumn;
+    chSummaWithVAT: TcxGridDBColumn;
+    chSummaProfit: TcxGridDBColumn;
+    chSummaProfitWithVAT: TcxGridDBColumn;
+    chPersentProfit: TcxGridDBColumn;
+    chPersentProfitWithVAT: TcxGridDBColumn;
+    chSummSale_SP: TcxGridDBColumn;
+    chSummSale_1303: TcxGridDBColumn;
+    chSummPrimeCost_1303: TcxGridDBColumn;
+    chSummaSaleWithSP: TcxGridDBColumn;
+    chSummaProfitWithSP: TcxGridDBColumn;
+    chPersentProfitWithSP: TcxGridDBColumn;
+    chSummaSaleAll: TcxGridDBColumn;
+    chSummaAll: TcxGridDBColumn;
+    chSummaProfitAll: TcxGridDBColumn;
+    chPersentProfitAll: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    cxSplitter2: TcxSplitter;
+    ChildCDS: TClientDataSet;
+    ChildDS: TDataSource;
+    dsdDBViewAddOn1: TdsdDBViewAddOn;
   private
     { Private declarations }
   public

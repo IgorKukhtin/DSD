@@ -2171,6 +2171,7 @@ end;
 function TWaitThread.LoadJuridicalCollationDocItems: string;
 var
   GetStoredProc : TdsdStoredProc;
+  TotalCountKg, TotalSummPVAT, TotalSumm, ChangePercent: Currency;
 begin
   Result := '';
 
@@ -2178,16 +2179,25 @@ begin
 
   GetStoredProc := TdsdStoredProc.Create(nil);
   try
-    GetStoredProc.StoredProcName := 'gpReportMobile_JuridicalCollationItems';
-    GetStoredProc.OutputType := otDataSet;
-    GetStoredProc.DataSet := TClientDataSet.Create(nil);
+    GetStoredProc.StoredProcName := 'gpReportMobile_JuridicalCollationDocItems';
+    GetStoredProc.OutputType := otMultiDataSet;
+    GetStoredProc.DataSets.Add.DataSet := TClientDataSet.Create(nil);
+    GetStoredProc.DataSets.Add.DataSet := TClientDataSet.Create(nil);
 
     GetStoredProc.Params.AddParam('inMovementId', ftInteger, ptInput, DocId);
 
     try
-      GetStoredProc.Execute(false, false, true);
+      GetStoredProc.Execute(False, False, True);
 
-      with GetStoredProc.DataSet do
+      with GetStoredProc.DataSets[0].DataSet do
+      begin
+        TotalCountKg := FieldByName('TotalCountKg').AsCurrency;
+        TotalSummPVAT := FieldByName('TotalSummPVAT').AsCurrency;
+        TotalSumm := FieldByName('TotalSumm').AsCurrency;
+        ChangePercent := FieldByName('ChangePercent').AsCurrency;
+      end;
+
+      with GetStoredProc.DataSets[1].DataSet do
       begin
         First;
 
@@ -2228,6 +2238,12 @@ begin
 
       Synchronize(procedure
           begin
+            frmMain.lTotalPriceDoc.Text := Format('%s : ', [sTotalCostWithVAT]) +
+              FormatFloat(',0.00', TotalSummPVAT);
+            frmMain.lPriceWithPercentDoc.Text := Format('%s (', [sCostWithDiscount]) +
+              FormatFloat(',0.00', -ChangePercent) + '%) : ' + FormatFloat(',0.00', TotalSumm);
+            frmMain.lTotalWeightDoc.Text := Format('%s : ', [sTotalWeight]) +
+              FormatFloat(',0.00', TotalCountKg);
             frmMain.lwJuridicalCollationItems.ScrollViewPos := 0;
           end);
     except

@@ -633,4 +633,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_Movement_CheckMiddle(inUnitId := 183292 , inDateStart := ('01.02.2016')::TDateTime , inDateEnd := ('29.02.2016')::TDateTime , inSession := '3');
---select * from gpReport_Movement_CheckMiddle(inUnitId := '183294,375626,389328' , inDateStart := ('01.01.2016')::TDateTime , inDateFinal := ('27.01.2016')::TDateTime , inisDay := 'False' , inValue1 := 100 , inValue2 := 200 , inValue3 := 300 , inValue4 := 400 , inValue5 := 500 , inValue6 := 1000 ,  inSession := '3');
+--select * from gpReport_Movement_CheckMiddle(inUnitId := '183294,375626,389328'::TVarChar , inUnitHistoryId:= 389328, inDateStart := ('01.07.2017')::TDateTime , inDateEnd := ('31.07.2017')::TDateTime , inisDay := 'False' ::Boolean, inValue1 := 100 ::TFloat, inValue2 := 200 ::TFloat, inValue3 := 300::TFloat , inValue4 := 400::TFloat , inValue5 := 500 ::TFloat, inValue6 := 1000 ::TFloat,  inSession := '3'::TVarChar);
+-- FETCH ALL "<unnamed portal 7>";----

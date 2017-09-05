@@ -1,31 +1,49 @@
--- Function: gpReportMobile_JuridicalCollationItems
+-- Function: gpReportMobile_JuridicalCollationDocItems
 
-DROP FUNCTION IF EXISTS gpReportMobile_JuridicalCollationItems (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReportMobile_JuridicalCollationDocItems (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReportMobile_JuridicalCollationItems (
+CREATE OR REPLACE FUNCTION gpReportMobile_JuridicalCollationDocItems (
     IN inMovementId Integer  , -- ИД документа
     IN inSession    TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (MovementId     Integer
-             , MovementItemId Integer
-             , GoodsId        Integer
-             , GoodsCode      Integer
-             , GoodsName      TVarChar
-             , GoodsKindId    Integer
-             , GoodsKindName  TVarChar
-             , Price          TFloat
-             , Amount         TFloat
-             , isPromo        Boolean
-              )
+RETURNS SETOF REFCURSOR
 AS $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbCursorDocHeader REFCURSOR = 'CursorDocHeader';
+   DECLARE vbCursorDocItems REFCURSOR = 'CursorDocItems';
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
       vbUserId:= lpGetUserBySession (inSession);
 
-      -- Результат
-      RETURN QUERY
+      -- Шапка документа
+      OPEN vbCursorDocHeader FOR
+        SELECT Movement.Id
+             , Movement.InvNumber
+             , Movement.OperDate
+             , COALESCE (MovementFloat_TotalCountKg.ValueData, 0)::TFloat  AS TotalCountKg
+             , COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0)::TFloat AS TotalSummPVAT
+             , COALESCE (MovementFloat_TotalSumm.ValueData, 0)::TFloat     AS TotalSumm
+             , COALESCE (MovementFloat_ChangePercent.ValueData, 0)::TFloat AS ChangePercent
+        FROM Movement
+             LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
+                                     ON MovementFloat_TotalCountKg.MovementId = Movement.Id
+                                    AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
+             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
+                                     ON MovementFloat_TotalSummPVAT.MovementId = Movement.Id
+                                    AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
+             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                     ON MovementFloat_TotalSumm.MovementId = Movement.Id
+                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                     ON MovementFloat_ChangePercent.MovementId = Movement.Id
+                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+        WHERE Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+          AND Movement.Id = inMovementId;
+      RETURN NEXT vbCursorDocHeader;
+
+      -- Строчная часть документа
+      OPEN vbCursorDocItems FOR
         WITH -- определяем дату документа и котрагента
              tmpMovement AS (SELECT Movement.Id
                                   , Movement.OperDate
@@ -79,8 +97,8 @@ BEGIN
              , MovementItem.ObjectId           AS GoodsId
              , Object_Goods.ObjectCode         AS GoodsCode
              , Object_Goods.ValueData          AS GoodsName
-             , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
-             , Object_GoodsKind.ValueData      AS GoodsKindName
+             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
+             , COALESCE (Object_GoodsKind.ValueData, '')::TVarChar AS GoodsKindName
              , MIFloat_Price.ValueData         AS Price
              , MovementItem.Amount
              , (tmpPromoGoods.GoodsId IS NOT NULL)::Boolean AS isPromo
@@ -100,8 +118,8 @@ BEGIN
              LEFT JOIN Object AS Object_GoodsKind
                               ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
                              AND Object_GoodsKind.DescId = zc_Object_GoodsKind() 
-             LEFT JOIN tmpPromoGoods ON tmpPromoGoods.GoodsId = MovementItem.ObjectId
-        ;
+             LEFT JOIN tmpPromoGoods ON tmpPromoGoods.GoodsId = MovementItem.ObjectId;
+      RETURN NEXT vbCursorDocItems;
 
 END; $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -109,7 +127,11 @@ END; $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.   Ярошенко Р.Ф.
- 03.08.17                                                                         *
+ 04.09.17                                                                         *
 */
 
--- SELECT * FROM gpReportMobile_JuridicalCollationItems (inMovementId:= 5282247, inSession:= zfCalc_UserAdmin());
+-- START TRANSACTION;
+-- SELECT * FROM gpReportMobile_JuridicalCollationDocItems (inMovementId:= 5280790, inSession:= zfCalc_UserAdmin());
+-- FETCH ALL "CursorDocHeader";
+-- FETCH ALL "CursorDocItems";
+-- COMMIT; -- ВНИМАНИЕ!!! закроет зафетченный курсор, вызывать после просмотра данных

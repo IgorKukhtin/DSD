@@ -526,7 +526,9 @@ uses
   ProvinceCity in '..\..\FormsFarmacy\Guides\ProvinceCity.pas' {ProvinceCityForm: TParentForm},
   IFIN_J1201209 in '..\..\SOURCE\MeDOC\IFIN_J1201209.pas',
   Report_Check_Assortment in '..\..\FormsFarmacy\Report\Report_Check_Assortment.pas' {Report_Check_AssortmentForm: TParentForm},
-  Report_Check_AssortmentDialog in '..\..\FormsFarmacy\Report\Report_Check_AssortmentDialog.pas' {Report_Check_AssortmentDialogForm: TParentForm};
+  Report_Check_AssortmentDialog in '..\..\FormsFarmacy\Report\Report_Check_AssortmentDialog.pas' {Report_Check_AssortmentDialogForm: TParentForm},
+  Report_OverOrder in '..\..\FormsFarmacy\Report\Report_OverOrder.pas' {Report_OverOrderForm: TParentForm},
+  Report_OverOrderDialog in '..\..\FormsFarmacy\Report\Report_OverOrderDialog.pas' {Report_OverOrderDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
