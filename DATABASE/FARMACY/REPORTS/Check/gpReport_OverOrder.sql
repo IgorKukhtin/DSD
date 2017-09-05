@@ -74,6 +74,7 @@ BEGIN
                            FROM Container 
                                 INNER JOIN tmpUnit ON Container.WhereObjectId = tmpUnit.Unitid
                            WHERE Container.DescId = zc_Container_Count()
+                             AND Container.Amount <> 0
                            GROUP BY Container.Id, Container.ObjectId, Container.Amount, Container.WhereObjectId
                            )
         , tmpRemains_All AS (SELECT tmp.GoodsId
@@ -90,7 +91,8 @@ BEGIN
                                                                        AND MIContainer.OperDate >= inStartDate
                                                                        AND MIContainer.DescId = zc_Container_Count()
                                    GROUP BY tmpContainer.ContainerId, tmpContainer.ObjectId, tmpContainer.Amount, tmpContainer.WhereObjectId
-                                   HAVING tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
+                                   HAVING (tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0)) <> 0
+                                       OR (tmpContainer.Amount - SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END)) <> 0
                                    ) AS tmp
                              GROUP BY tmp.GoodsId
                                     , tmp.UnitId
