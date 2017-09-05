@@ -511,6 +511,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OverOrderForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_OverOrderForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OverOrderDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_OverOrderDialogForm');
+  exit;
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_AssortmentForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_AssortmentdForm');

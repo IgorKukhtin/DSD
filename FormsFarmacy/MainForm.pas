@@ -374,6 +374,9 @@ type
     N145: TMenuItem;
     actReport_Check_Assortment: TdsdOpenForm;
     N146: TMenuItem;
+    actReport_OverOrder: TdsdOpenForm;
+    N147: TMenuItem;
+    N148: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

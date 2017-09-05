@@ -11,17 +11,17 @@ inherited OrderExternalForm: TOrderExternalForm
     Width = 820
     Height = 517
     ExplicitTop = 151
-    ExplicitWidth = 844
+    ExplicitWidth = 820
     ExplicitHeight = 517
     ClientRectBottom = 517
     ClientRectRight = 820
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 844
+      ExplicitWidth = 820
       ExplicitHeight = 493
       inherited cxGrid: TcxGrid
         Width = 820
         Height = 493
-        ExplicitWidth = 844
+        ExplicitWidth = 820
         ExplicitHeight = 493
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -209,7 +209,7 @@ inherited OrderExternalForm: TOrderExternalForm
     Width = 820
     Height = 125
     TabOrder = 3
-    ExplicitWidth = 844
+    ExplicitWidth = 820
     ExplicitHeight = 125
     inherited edInvNumber: TcxTextEdit
       Left = 12
@@ -1302,8 +1302,8 @@ inherited OrderExternalForm: TOrderExternalForm
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 508
-    Top = 193
+    Left = 500
+    Top = 209
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
