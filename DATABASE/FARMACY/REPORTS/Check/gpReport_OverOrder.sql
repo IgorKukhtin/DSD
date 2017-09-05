@@ -57,7 +57,7 @@ BEGIN
                                                 AND (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
                        WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                         AND (ObjectLink_Unit_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
-                        AND inUnitId = ''
+                        AND inUnitId = '0'
                       )
                        
         , tmpUnit AS (SELECT _tmpUnit_List.UnitId
@@ -65,8 +65,7 @@ BEGIN
                      UNION All
                       SELECT tmpUnits.UnitId
                       FROM tmpUnits
-                     
-                     )             
+                     )            
           -- таблица остатков
         , tmpContainer AS (SELECT Container.Id AS ContainerId
                                 , Container.ObjectId  
@@ -75,7 +74,6 @@ BEGIN
                            FROM Container 
                                 INNER JOIN tmpUnit ON Container.WhereObjectId = tmpUnit.Unitid
                            WHERE Container.DescId = zc_Container_Count()
---and 1=0
                            GROUP BY Container.Id, Container.ObjectId, Container.Amount, Container.WhereObjectId
                            )
         , tmpRemains_All AS (SELECT tmp.GoodsId
@@ -208,18 +206,26 @@ BEGIN
                        GROUP BY MI_Order.ObjectId
                        )  
 
+        , tmpCheckMov_All AS (SELECT Movement_Check.Id
+                              FROM Movement AS Movement_Check
+                              WHERE Movement_Check.DescId = zc_Movement_Check()
+                                AND Movement_Check.OperDate >= inStartDate AND Movement_Check.OperDate < inEndDate + INTERVAL '1 Day'
+                                AND Movement_Check.StatusId = zc_Enum_Status_Complete()
+                              GROUP BY Movement_Check.Id
+                             )
+        , tmpMLO_Unit AS (SELECT MovementLinkObject_Unit.*
+                          FROM MovementLinkObject AS MovementLinkObject_Unit
+                          WHERE MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                            AND MovementLinkObject_Unit.MovementId IN (SELECT tmpCheckMov_All.Id FROM tmpCheckMov_All)
+                            AND MovementLinkObject_Unit.ObjectId IN ( SELECT tmpUnit.UnitId FROM tmpUnit)
+                          )
+
         , tmpCheckMov AS (SELECT Movement_Check.Id
-                          FROM Movement AS Movement_Check
-                             INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                           ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
-                                                          AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                             INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
-                             
-                          WHERE Movement_Check.DescId = zc_Movement_Check()
-                            AND Movement_Check.OperDate >= inStartDate AND Movement_Check.OperDate < inEndDate + INTERVAL '1 Day'
-                            AND Movement_Check.StatusId = zc_Enum_Status_Complete()
+                          FROM tmpCheckMov_All AS Movement_Check
+                               INNER JOIN tmpMLO_Unit AS MovementLinkObject_Unit
+                                                      ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
                           GROUP BY Movement_Check.Id
-                        )
+                          )
         , tmpCheckMI AS (SELECT MI_Check.*
                          FROM tmpCheckMov AS Movement_Check
                               INNER JOIN MovementItem AS MI_Check
@@ -383,5 +389,5 @@ $BODY$
 */
 
 -- тест
---select * from gpReport_OverOrder(inStartDate := ('01.10.2016')::TDateTime, inEndDate := ('27.10.2016')::TDateTime , inRetailId := 0, inJuridicalId := 0 , inUnitId := '183294,375626,389328'::TVarChar, inSession := '3'::TVarChar);
---    FETCH ALL "<unnamed portal 48>";----
+--select * from gpReport_OverOrder(inStartDate := ('01.08.2017')::TDateTime, inEndDate := ('01.08.2017')::TDateTime , inRetailId := 0, inJuridicalId := 0 , inUnitId := '183294,375626,389328'::TVarChar, inSession := '3'::TVarChar);
+-- FETCH ALL "<unnamed portal 14>";----

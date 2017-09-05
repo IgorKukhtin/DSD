@@ -3,7 +3,6 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
   ClientHeight = 414
   ClientWidth = 960
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -111
   ExplicitWidth = 976
   ExplicitHeight = 452
   PixelsPerInch = 96
@@ -392,6 +391,7 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
     ExplicitHeight = 65
     inherited deStart: TcxDateEdit
       Left = 29
+      EditValue = 42736d
       ExplicitLeft = 29
     end
     object ceUnit: TcxButtonEdit [1]
@@ -412,6 +412,7 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
     inherited deEnd: TcxDateEdit
       Left = 29
       Top = 31
+      EditValue = 42736d
       TabOrder = 2
       ExplicitLeft = 29
       ExplicitTop = 31
