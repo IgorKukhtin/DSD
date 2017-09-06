@@ -56,11 +56,12 @@ BEGIN
 
      -- Результат
      IF inShowAll = TRUE
+                AND COALESCE (vbPriceListId, 0) = 0
                 AND EXISTS (SELECT 1
                             FROM Object AS Object_GoodsListIncome
                                  INNER JOIN ObjectLink AS ObjectLink_GoodsListIncome_Juridical
-                                                       ON ObjectLink_GoodsListIncome_Juridical.ObjectId = Object_GoodsListIncome.Id
-                                                      AND ObjectLink_GoodsListIncome_Juridical.DescId = zc_ObjectLink_GoodsListIncome_Juridical()
+                                                       ON ObjectLink_GoodsListIncome_Juridical.ObjectId      = Object_GoodsListIncome.Id
+                                                      AND ObjectLink_GoodsListIncome_Juridical.DescId        = zc_ObjectLink_GoodsListIncome_Juridical()
                                                       AND ObjectLink_GoodsListIncome_Juridical.ChildObjectId = vbJuridicalId_From
 
                                  INNER JOIN ObjectLink AS ObjectLink_GoodsListIncome_Goods

@@ -9,20 +9,25 @@ CREATE OR REPLACE FUNCTION lpGet_DefaultValue(
 RETURNS TVarChar AS
 $BODY$
 BEGIN
+
+  IF LOWER (inDefaultKey) = LOWER ('zc_Object_Unit') AND inUserId = 183242 -- Люба
+  THEN RETURN '0'; -- !!!захардодил для Pharmacy!!!
+  ELSE
   
   RETURN COALESCE (CASE WHEN 1=0 AND 0 < (SELECT RoleId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
                              THEN '-1' -- !!!захардодил для Pharmacy!!!
                         ELSE (SELECT DefaultValue
                               FROM DefaultValue 
                                    INNER JOIN DefaultKeys ON DefaultKeys.Id = DefaultValue.DefaultKeyId
-                                   LEFT JOIN (SELECT RoleId, 2 AS OrderId FROM ObjectLink_UserRole_View WHERE UserId = inUserId
-                                             UNION 
-                                              SELECT inUserId AS RoleId, 1 AS OrderId
-                                             ) AS UserRole ON UserRole.RoleId = DefaultValue.UserKeyId
+                                   INNER JOIN (SELECT RoleId, 2 AS OrderId FROM ObjectLink_UserRole_View WHERE UserId = inUserId
+                                              UNION 
+                                               SELECT inUserId AS RoleId, 1 AS OrderId
+                                              ) AS UserRole ON UserRole.RoleId = DefaultValue.UserKeyId
                               WHERE DefaultKeys.Key = inDefaultKey
                               ORDER BY UserRole.OrderId 
                               LIMIT 1)
                    END, '0') :: TVarChar;
+  END IF;
 
 END;
 $BODY$

@@ -235,7 +235,8 @@ BEGIN
                                                                     INNER JOIN MovementItem ON MovementItem.Id       = MIL_PartionMI.MovementItemId
                                                                                            AND MovementItem.DescId   = zc_MI_Master()
                                                                                            AND MovementItem.isErased = FALSE
-                                                                    INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                                                    INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                                                       AND Movement.DescId   = zc_Movement_ReturnIn()
                                                                                        AND Movement.StatusId = zc_Enum_Status_Complete()
                                                                     LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
                                                                                                 ON MIFloat_TotalChangePercent.MovementItemId = MovementItem.Id
@@ -245,9 +246,10 @@ BEGIN
                                                                  AND MIL_PartionMI.ObjectId = vbPartionMI_Id
 
                                                               ), 0)
-                                          -- иначе вообще пропроционально
-                                          ELSE (COALESCE (MIFloat_TotalChangePercent.ValueData, 0) + COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0))
-                                             / MovementItem.Amount * inAmount
+                                          -- иначе вообще пропроционально - отбросим дробную часть после второго знака
+                                          ELSE FLOOR (100 * (COALESCE (MIFloat_TotalChangePercent.ValueData, 0) + COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0))
+                                                           / MovementItem.Amount * inAmount)
+                                                    / 100
                                      END
                              FROM MovementItem
                                 LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent

@@ -285,4 +285,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_GoodsListIncome_byReport (inPeriod:= 12, inInfoMoneyId:= 0, inInfoMoneyDestinationId:= zc_Enum_InfoMoneyDestination_10200(), inSession := zfCalc_UserAdmin());
+-- SELECT * FROM gpInsertUpdate_Object_GoodsListIncome_byReport (inPeriod:= 12, inInfoMoneyId:= 0, inInfoMoneyDestinationId:= zc_Enum_InfoMoneyDestination_30500(), inSession := zfCalc_UserAdmin());
