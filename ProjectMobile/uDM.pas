@@ -1404,8 +1404,6 @@ begin
               exit;
             end;
           end;
-
-          Next;
         end;
       finally
         Close;
@@ -1458,8 +1456,6 @@ begin
               exit;
             end;
           end;
-
-          Next;
         end;
       finally
         Close;
@@ -1587,8 +1583,6 @@ begin
               exit;
             end;
           end;
-
-          Next;
         end;
       finally
         Close;
@@ -1639,8 +1633,6 @@ begin
               exit;
             end;
           end;
-
-          Next;
         end;
       finally
         Close;
@@ -1698,8 +1690,6 @@ begin
               exit;
             end;
           end;
-
-          Next;
         end;
       finally
         Close;
@@ -1762,8 +1752,6 @@ begin
               exit;
             end;
           end;
-
-          Next;
         end;
       finally
         Close;
@@ -6116,7 +6104,8 @@ begin
             'По заявке №%s отправились %d позиций из %d. Требуется повторная синхронизация',
             [FieldByName('INVNUMBER').AsString, SendCount, ItemsCount]);
 
-        Next;
+        if AGUID <> '' then
+          Next;
       end;
 
       if AGUID <> '' then
@@ -6223,7 +6212,8 @@ begin
             'По возврату №%s отправились %d позиций из %d. Требуется повторная синхронизация',
             [FieldByName('INVNUMBER').AsString, SendCount, ItemsCount]);
 
-        Next;
+        if AGUID <> '' then
+          Next;
       end;
 
       if AGUID <> '' then
@@ -6318,7 +6308,8 @@ begin
             'По факт. остатку №%s отправились %d позиций из %d. Требуется повторная синхронизация',
             [FieldByName('INVNUMBER').AsString, SendCount, ItemsCount]);
 
-        Next;
+        if AGUID <> '' then
+          Next;  
       end;
 
       if AGUID <> '' then
