@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderInternal(
     IN inMovementId  Integer      , -- ключ Документа
     IN inShowAll     Boolean      , --
     IN inIsErased    Boolean      , --
-    IN inIsLink    Boolean      , -- проверка привязки к поставщику
+    IN inIsLink      Boolean      , -- проверка привязки к поставщику
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS SETOF refcursor 
