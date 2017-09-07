@@ -121,7 +121,6 @@ type
     isLast_2days: TcxGridDBColumn;
     isRepeat: TcxGridDBColumn;
     spSelect_Link: TdsdStoredProc;
-    actSelect_Link1: TdsdExecStoredProc;
     bbSelect_Link: TdxBarButton;
     actRefresh_Link: TdsdDataSetRefresh;
   private

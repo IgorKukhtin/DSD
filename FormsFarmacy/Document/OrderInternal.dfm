@@ -830,21 +830,7 @@ inherited OrderInternalForm: TOrderInternalForm
   inherited ActionList: TActionList
     Left = 127
     Top = 215
-    object actRefresh_Link: TdsdDataSetRefresh [0]
-      Category = 'DeleteLink'
-      MoveParams = <>
-      StoredProc = spSelect_Link
-      StoredProcList = <
-        item
-          StoredProc = spSelect_Link
-        end>
-      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1089' '#1087#1088#1086#1074#1077#1088#1082#1086#1081' '#1087#1088#1080#1074#1103#1079#1082#1080'  '#1082' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1089' '#1087#1088#1086#1074#1077#1088#1082#1086#1081' '#1087#1088#1080#1074#1103#1079#1082#1080'  '#1082' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
-      ImageIndex = 50
-      ShortCut = 116
-      RefreshOnTabSetChanges = True
-    end
-    object mactDeleteLinkGroup: TMultiAction [1]
+    object mactDeleteLinkGroup: TMultiAction [0]
       Category = 'DeleteLink'
       MoveParams = <>
       ActionList = <
@@ -858,7 +844,7 @@ inherited OrderInternalForm: TOrderInternalForm
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1089#1074#1103#1079#1100
       ImageIndex = 72
     end
-    object mactDeleteLinkDS: TMultiAction [2]
+    object mactDeleteLinkDS: TMultiAction [1]
       Category = 'DeleteLink'
       MoveParams = <>
       ActionList = <
@@ -937,7 +923,7 @@ inherited OrderInternalForm: TOrderInternalForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [16]
+    object actGoodsKindChoice: TOpenChoiceForm [15]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1028,19 +1014,6 @@ inherited OrderInternalForm: TOrderInternalForm
         end>
       Caption = 'actDeleteLink'
     end
-    object actSelect_Link1: TdsdExecStoredProc
-      Category = 'DeleteLink'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spSelect_Link
-      StoredProcList = <
-        item
-          StoredProc = spSelect_Link
-        end>
-      Caption = 'actSelect_Link'
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1089' '#1087#1088#1086#1074#1077#1088#1082#1086#1081' '#1087#1088#1080#1074#1103#1079#1082#1080'  '#1082' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
-      ImageIndex = 50
-    end
     object actShowMessage: TShowMessageAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1123,6 +1096,19 @@ inherited OrderInternalForm: TOrderInternalForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actRefresh_Link: TdsdDataSetRefresh
+      Category = 'Dataset'
+      MoveParams = <>
+      StoredProc = spSelect_Link
+      StoredProcList = <
+        item
+          StoredProc = spSelect_Link
+        end>
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1089' '#1087#1088#1086#1074#1077#1088#1082#1086#1081' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1082' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1089' '#1087#1088#1086#1074#1077#1088#1082#1086#1081' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1082' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
+      ImageIndex = 50
+      RefreshOnTabSetChanges = False
     end
   end
   inherited MasterDS: TDataSource
@@ -1359,6 +1345,7 @@ inherited OrderInternalForm: TOrderInternalForm
     object bbSelect_Link: TdxBarButton
       Action = actRefresh_Link
       Category = 0
+      ShortCut = 8308
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1879,7 +1866,7 @@ inherited OrderInternalForm: TOrderInternalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 328
+    Left = 288
     Top = 144
   end
   object ChildDS: TDataSource
