@@ -3,14 +3,18 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
-    IN inPrice               TFloat    , -- Цена
+    IN inPrice               TFloat    , -- Цена Усред. закуп.
+    IN inPriceUnitFrom       TFloat    , -- Цена отправителя
+ INOUT ioPriceUnitTo         TFloat    , -- Цена получателя
    OUT outSumma              TFloat    , -- Сумма
+   OUT outSummaUnitTo        TFloat    , -- Сумма в ценах получателя
     IN inAmountManual        TFloat    , -- Кол-во ручное
    OUT outAmountDiff         TFloat    , -- Причина разногласия
     IN inReasonDifferencesId Integer   , -- Причина разногласия
@@ -20,14 +24,38 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbUnitId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
     vbUserId := inSession;
+    
+    --определяем подразделение получателя
+    SELECT MovementLinkObject_To.ObjectId AS UnitId
+           INTO vbUnitId
+    FROM MovementLinkObject AS MovementLinkObject_To
+    WHERE MovementLinkObject_To.MovementId = inMovementId
+      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To();
+           
+    --если цена получателя = 0 заменяем ее на цену отвравителя и записываем в прайс
+    IF COALESCE (ioPriceUnitTo, 0) = 0 AND COALESCE (inPriceUnitFrom, 0) <> 0 
+    THEN
+        ioPriceUnitTo := inPriceUnitFrom;
+        
+        --переоценить товар
+        PERFORM lpInsertUpdate_Object_Price(inGoodsId := inGoodsId,
+                                            inUnitId  := vbUnitId,
+                                            inPrice   := ioPriceUnitTo,
+                                            inDate    := CURRENT_DATE::TDateTime,
+                                            inUserId  := vbUserId);
+    END IF;
+    
     --Посчитали сумму
-    outSumma := ROUND(inAmount * inPrice,2); 
-
+    outSumma := ROUND(inAmount * inPrice, 2); 
     outAmountDiff := COALESCE(inAmountManual,0) - coalesce(inAmount,0);
+    
+    outSummaUnitTo := ROUND(inAmount * ioPriceUnitTo, 2); 
+
 
     IF outAmountDiff = 0
     THEN
@@ -51,6 +79,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07.09.17         *
  28.06.16         *
  29.05.15                                        *
 */

@@ -528,7 +528,8 @@ uses
   Report_Check_Assortment in '..\..\FormsFarmacy\Report\Report_Check_Assortment.pas' {Report_Check_AssortmentForm: TParentForm},
   Report_Check_AssortmentDialog in '..\..\FormsFarmacy\Report\Report_Check_AssortmentDialog.pas' {Report_Check_AssortmentDialogForm: TParentForm},
   Report_OverOrder in '..\..\FormsFarmacy\Report\Report_OverOrder.pas' {Report_OverOrderForm: TParentForm},
-  Report_OverOrderDialog in '..\..\FormsFarmacy\Report\Report_OverOrderDialog.pas' {Report_OverOrderDialogForm: TParentForm};
+  Report_OverOrderDialog in '..\..\FormsFarmacy\Report\Report_OverOrderDialog.pas' {Report_OverOrderDialogForm: TParentForm},
+  PriceBySendDialog in '..\..\FormsFarmacy\Document\PriceBySendDialog.pas' {PriceBySendDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

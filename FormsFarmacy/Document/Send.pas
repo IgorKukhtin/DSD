@@ -87,6 +87,11 @@ type
     spMovementComplete: TdsdStoredProc;
     bbComplete: TdxBarButton;
     actComplete: TdsdExecStoredProc;
+    spInsert_Object_Price: TdsdStoredProc;
+    actExecuteDialogInsertPrice: TExecuteDialog;
+    actInsertPrice: TdsdDataSetRefresh;
+    macInsertPrice: TMultiAction;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

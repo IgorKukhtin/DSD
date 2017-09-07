@@ -1216,6 +1216,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
+  // диалог изменения цены получателя
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceBySendDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceBySendDialogForm');
 end;
 
 procedure TLoadFormTest.LoadSendOnPriceFormTest;
