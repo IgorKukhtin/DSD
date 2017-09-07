@@ -593,115 +593,143 @@ BEGIN
                                                          AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
                                                          AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
                          )
-   , tmpPrice_View AS (SELECT ObjectLink_Price_Unit.ObjectId          AS Id
-                            , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
-                            , MCS_Value.ValueData                     AS MCSValue 
-                            , Price_Goods.ChildObjectId               AS GoodsId
-                            , price_datechange.valuedata              AS DateChange 
-                            , MCS_datechange.valuedata                AS MCSDateChange 
-                            , COALESCE(MCS_isClose.ValueData,False)   AS MCSIsClose 
-                            , MCSIsClose_DateChange.valuedata         AS MCSIsCloseDateChange
-                            , COALESCE(MCS_NotRecalc.ValueData,False) AS MCSNotRecalc 
-                            , MCSNotRecalc_DateChange.valuedata       AS MCSNotRecalcDateChange 
-                            , COALESCE(Price_Fix.ValueData,False)     AS Fix 
-                            , Fix_DateChange.valuedata                AS FixDateChange 
-                            , COALESCE(Price_Top.ValueData,False)     AS isTop   
-                            , Price_TOPDateChange.ValueData           AS TopDateChange 
-                            , COALESCE(Price_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup 
-                            , Price_PercentMarkupDateChange.ValueData             AS PercentMarkupDateChange 
-                            , COALESCE(Price_MCSValueOld.ValueData,0)    ::TFloat AS MCSValueOld         
-                            , MCS_StartDateMCSAuto.ValueData                      AS StartDateMCSAuto
-                            , MCS_EndDateMCSAuto.ValueData                        AS EndDateMCSAuto
-                            , COALESCE(Price_MCSAuto.ValueData,False)          :: Boolean   AS isMCSAuto
-                            , COALESCE(Price_MCSNotRecalcOld.ValueData,False)  :: Boolean   AS isMCSNotRecalcOld
-                            , ObjectDate_CheckPrice.ValueData                     AS CheckPrice
-                       FROM ObjectLink        AS ObjectLink_Price_Unit
-                            INNER JOIN ObjectLink       AS Price_Goods
-                                    ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
-                                   AND (Price_Goods.ChildObjectId = inGoodsId OR inGoodsId = 0)
-
-                            LEFT JOIN ObjectFloat       AS Price_Value
-                                   ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                  AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
-                            LEFT JOIN ObjectDate        AS Price_DateChange
-                                   ON Price_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                  AND Price_DateChange.DescId = zc_ObjectDate_Price_DateChange()
-                            LEFT JOIN ObjectFloat       AS MCS_Value
-                                    ON MCS_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
-                            LEFT JOIN ObjectFloat       AS Price_MCSValueOld
-                                    ON Price_MCSValueOld.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND Price_MCSValueOld.DescId = zc_ObjectFloat_Price_MCSValueOld()
-
-                            LEFT JOIN ObjectDate        AS MCS_DateChange
-                                    ON MCS_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND MCS_DateChange.DescId = zc_ObjectDate_Price_MCSDateChange()
-                            LEFT JOIN ObjectDate        AS MCS_StartDateMCSAuto
-                                    ON MCS_StartDateMCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND MCS_StartDateMCSAuto.DescId = zc_ObjectDate_Price_StartDateMCSAuto()
-                            LEFT JOIN ObjectDate        AS MCS_EndDateMCSAuto
-                                    ON MCS_EndDateMCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND MCS_EndDateMCSAuto.DescId = zc_ObjectDate_Price_EndDateMCSAuto()
-
-                            LEFT JOIN ObjectDate AS ObjectDate_CheckPrice
-                                   ON ObjectDate_CheckPrice.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                  AND ObjectDate_CheckPrice.DescId = zc_ObjectDate_Price_CheckPrice()
-
-                            LEFT JOIN ObjectBoolean      AS MCS_isClose
-                                    ON MCS_isClose.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND MCS_isClose.DescId = zc_ObjectBoolean_Price_MCSIsClose()
-                            LEFT JOIN ObjectDate        AS MCSIsClose_DateChange
-                                    ON MCSIsClose_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND MCSIsClose_DateChange.DescId = zc_ObjectDate_Price_MCSIsCloseDateChange()
-                            LEFT JOIN ObjectBoolean     AS MCS_NotRecalc
-                                    ON MCS_NotRecalc.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND MCS_NotRecalc.DescId = zc_ObjectBoolean_Price_MCSNotRecalc()
-                            LEFT JOIN ObjectDate        AS MCSNotRecalc_DateChange
-                                    ON MCSNotRecalc_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND MCSNotRecalc_DateChange.DescId = zc_ObjectDate_Price_MCSNotRecalcDateChange()
-                            LEFT JOIN ObjectBoolean     AS Price_Fix
-                                    ON Price_Fix.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND Price_Fix.DescId = zc_ObjectBoolean_Price_Fix()
-                            LEFT JOIN ObjectDate        AS Fix_DateChange
-                                    ON Fix_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND Fix_DateChange.DescId = zc_ObjectDate_Price_FixDateChange()
-                            LEFT JOIN ObjectBoolean     AS Price_Top
-                                    ON Price_Top.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND Price_Top.DescId = zc_ObjectBoolean_Price_Top()
-                            LEFT JOIN ObjectDate        AS Price_TOPDateChange
-                                    ON Price_TOPDateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND Price_TOPDateChange.DescId = zc_ObjectDate_Price_TOPDateChange()     
-
-                            LEFT JOIN ObjectFloat       AS Price_PercentMarkup
-                                    ON Price_PercentMarkup.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND Price_PercentMarkup.DescId = zc_ObjectFloat_Price_PercentMarkup()
-                            LEFT JOIN ObjectDate        AS Price_PercentMarkupDateChange
-                                    ON Price_PercentMarkupDateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND Price_PercentMarkupDateChange.DescId = zc_ObjectDate_Price_PercentMarkupDateChange()    
-
-                            LEFT JOIN ObjectBoolean     AS Price_MCSAuto
-                                    ON Price_MCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND Price_MCSAuto.DescId = zc_ObjectBoolean_Price_MCSAuto()
-                            LEFT JOIN ObjectBoolean     AS Price_MCSNotRecalcOld
-                                    ON Price_MCSNotRecalcOld.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND Price_MCSNotRecalcOld.DescId = zc_ObjectBoolean_Price_MCSNotRecalcOld()
-                       WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                         AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
-                       )
+      , tmpPrice_View AS (SELECT ObjectLink_Price_Unit.ObjectId          AS Id
+                               , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
+                               , MCS_Value.ValueData                     AS MCSValue 
+                               , Price_Goods.ChildObjectId               AS GoodsId
+                               , price_datechange.valuedata              AS DateChange 
+                               , MCS_datechange.valuedata                AS MCSDateChange 
+                               , COALESCE(MCS_isClose.ValueData,False)   AS MCSIsClose 
+                               , MCSIsClose_DateChange.valuedata         AS MCSIsCloseDateChange
+                               , COALESCE(MCS_NotRecalc.ValueData,False) AS MCSNotRecalc 
+                               , MCSNotRecalc_DateChange.valuedata       AS MCSNotRecalcDateChange 
+                               , COALESCE(Price_Fix.ValueData,False)     AS Fix 
+                               , Fix_DateChange.valuedata                AS FixDateChange 
+                               , COALESCE(Price_Top.ValueData,False)     AS isTop   
+                               , Price_TOPDateChange.ValueData           AS TopDateChange 
+                               , COALESCE(Price_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup 
+                               , Price_PercentMarkupDateChange.ValueData             AS PercentMarkupDateChange 
+                               , COALESCE(Price_MCSValueOld.ValueData,0)    ::TFloat AS MCSValueOld         
+                               , MCS_StartDateMCSAuto.ValueData                      AS StartDateMCSAuto
+                               , MCS_EndDateMCSAuto.ValueData                        AS EndDateMCSAuto
+                               , COALESCE(Price_MCSAuto.ValueData,False)          :: Boolean   AS isMCSAuto
+                               , COALESCE(Price_MCSNotRecalcOld.ValueData,False)  :: Boolean   AS isMCSNotRecalcOld
+                               , ObjectDate_CheckPrice.ValueData                     AS CheckPrice
+                          FROM ObjectLink        AS ObjectLink_Price_Unit
+                               INNER JOIN ObjectLink       AS Price_Goods
+                                       ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                      AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                                      AND (Price_Goods.ChildObjectId = inGoodsId OR inGoodsId = 0)
+   
+                               LEFT JOIN ObjectFloat       AS Price_Value
+                                      ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                     AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+                               LEFT JOIN ObjectDate        AS Price_DateChange
+                                      ON Price_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                     AND Price_DateChange.DescId = zc_ObjectDate_Price_DateChange()
+                               LEFT JOIN ObjectFloat       AS MCS_Value
+                                       ON MCS_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                      AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
+                               LEFT JOIN ObjectFloat       AS Price_MCSValueOld
+                                       ON Price_MCSValueOld.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                      AND Price_MCSValueOld.DescId = zc_ObjectFloat_Price_MCSValueOld()
+   
+                               LEFT JOIN ObjectDate        AS MCS_DateChange
+                                       ON MCS_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                      AND MCS_DateChange.DescId = zc_ObjectDate_Price_MCSDateChange()
+                               LEFT JOIN ObjectDate        AS MCS_StartDateMCSAuto
+                                       ON MCS_StartDateMCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                      AND MCS_StartDateMCSAuto.DescId = zc_ObjectDate_Price_StartDateMCSAuto()
+                               LEFT JOIN ObjectDate        AS MCS_EndDateMCSAuto
+                                       ON MCS_EndDateMCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                      AND MCS_EndDateMCSAuto.DescId = zc_ObjectDate_Price_EndDateMCSAuto()
+   
+                               LEFT JOIN ObjectDate AS ObjectDate_CheckPrice
+                                      ON ObjectDate_CheckPrice.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                     AND ObjectDate_CheckPrice.DescId = zc_ObjectDate_Price_CheckPrice()
+   
+                               LEFT JOIN ObjectBoolean      AS MCS_isClose
+                                       ON MCS_isClose.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                      AND MCS_isClose.DescId = zc_ObjectBoolean_Price_MCSIsClose()
+                               LEFT JOIN ObjectDate        AS MCSIsClose_DateChange
+                                       ON MCSIsClose_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                      AND MCSIsClose_DateChange.DescId = zc_ObjectDate_Price_MCSIsCloseDateChange()
+                               LEFT JOIN ObjectBoolean     AS MCS_NotRecalc
+                                       ON MCS_NotRecalc.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                      AND MCS_NotRecalc.DescId = zc_ObjectBoolean_Price_MCSNotRecalc()
+                               LEFT JOIN ObjectDate        AS MCSNotRecalc_DateChange
+                                       ON MCSNotRecalc_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                      AND MCSNotRecalc_DateChange.DescId = zc_ObjectDate_Price_MCSNotRecalcDateChange()
+                               LEFT JOIN ObjectBoolean     AS Price_Fix
+                                       ON Price_Fix.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                      AND Price_Fix.DescId = zc_ObjectBoolean_Price_Fix()
+                               LEFT JOIN ObjectDate        AS Fix_DateChange
+                                       ON Fix_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                      AND Fix_DateChange.DescId = zc_ObjectDate_Price_FixDateChange()
+                               LEFT JOIN ObjectBoolean     AS Price_Top
+                                       ON Price_Top.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                      AND Price_Top.DescId = zc_ObjectBoolean_Price_Top()
+                               LEFT JOIN ObjectDate        AS Price_TOPDateChange
+                                       ON Price_TOPDateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                      AND Price_TOPDateChange.DescId = zc_ObjectDate_Price_TOPDateChange()     
+   
+                               LEFT JOIN ObjectFloat       AS Price_PercentMarkup
+                                       ON Price_PercentMarkup.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                      AND Price_PercentMarkup.DescId = zc_ObjectFloat_Price_PercentMarkup()
+                               LEFT JOIN ObjectDate        AS Price_PercentMarkupDateChange
+                                       ON Price_PercentMarkupDateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                      AND Price_PercentMarkupDateChange.DescId = zc_ObjectDate_Price_PercentMarkupDateChange()    
+   
+                               LEFT JOIN ObjectBoolean     AS Price_MCSAuto
+                                       ON Price_MCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                      AND Price_MCSAuto.DescId = zc_ObjectBoolean_Price_MCSAuto()
+                               LEFT JOIN ObjectBoolean     AS Price_MCSNotRecalcOld
+                                       ON Price_MCSNotRecalcOld.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                      AND Price_MCSNotRecalcOld.DescId = zc_ObjectBoolean_Price_MCSNotRecalcOld()
+                          WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                            AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
+                          )
+      -- объединяем товары прайса с товарами, которые есть на остатке. (если цена = 0, а остаток есть нужно показать такие товары)
+      , tmpPrice_All AS (SELECT tmpPrice.Id
+                              , tmpPrice.Price 
+                              , tmpPrice.MCSValue 
+                              , COALESCE (tmpPrice.GoodsId, tmpRemeins.ObjectId) AS GoodsId
+                              , tmpPrice.DateChange 
+                              , tmpPrice.MCSDateChange 
+                              , COALESCE(tmpPrice.MCSIsClose, False)             AS MCSIsClose
+                              , tmpPrice.MCSIsCloseDateChange                    
+                              , COALESCE(tmpPrice.MCSNotRecalc, False)           AS MCSNotRecalc 
+                              , tmpPrice.MCSNotRecalcDateChange                  
+                              , COALESCE(tmpPrice.Fix, False)                    AS Fix
+                              , tmpPrice.FixDateChange                           
+                              , COALESCE(tmpPrice.isTop, False)                  AS isTop   
+                              , tmpPrice.TopDateChange 
+                              , tmpPrice.PercentMarkup 
+                              , tmpPrice.PercentMarkupDateChange 
+                              , tmpPrice.MCSValueOld         
+                              , tmpPrice.StartDateMCSAuto
+                              , tmpPrice.EndDateMCSAuto
+                              , COALESCE(tmpPrice.isMCSAuto, False)          :: Boolean   AS isMCSAuto
+                              , COALESCE(tmpPrice.isMCSNotRecalcOld, False)  :: Boolean   AS isMCSNotRecalcOld
+                              , tmpPrice.CheckPrice
+                              , tmpRemeins.Remains
+                              , tmpRemeins.MinExpirationDate 
+                        FROM tmpPrice_View AS tmpPrice
+                             FULL JOIN tmpRemeins ON tmpRemeins.ObjectId = tmpPrice.GoodsId
+                        )
 
             -- Результат     
             SELECT
-                 tmpPrice_View.Id                                                      AS Id
-               , COALESCE (tmpPrice_View.Price,0)                         :: TFloat    AS Price
-               , COALESCE (tmpPrice_View.MCSValue,0)                      :: TFloat    AS MCSValue
+                 tmpPrice_All.Id                                                       AS Id
+               , COALESCE (tmpPrice_All.Price,0)                          :: TFloat    AS Price
+               , COALESCE (tmpPrice_All.MCSValue,0)                       :: TFloat    AS MCSValue
                , COALESCE (ObjectHistoryFloat_MCSPeriod.ValueData, 0)     :: TFloat    AS MCSPeriod
                , COALESCE (ObjectHistoryFloat_MCSDay.ValueData, 0)        :: TFloat    AS MCSDay
                , COALESCE (ObjectHistory_Price.StartDate, NULL /*zc_DateStart()*/) :: TDateTime AS StartDate
                                         
                , Object_Goods_View.id                      AS GoodsId
                , Object_Goods_View.GoodsCodeInt            AS GoodsCode
---               , zfFormat_BarCode(zc_BarCodePref_Object(), tmpPrice_View.Id) ::TVarChar AS IdBarCode
+--               , zfFormat_BarCode(zc_BarCodePref_Object(), tmpPrice_All.Id) ::TVarChar AS IdBarCode
                , Object_Goods_View.GoodsName               AS GoodsName
                , Object_IntenalSP.ValueData                AS IntenalSPName
                , Object_Goods_View.GoodsGroupName          AS GoodsGroupName
@@ -709,46 +737,46 @@ BEGIN
                , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
                , Object_Goods_View.isTop                   AS Goods_isTop
                , Object_Goods_View.PercentMarkup           AS Goods_PercentMarkup
-               , tmpPrice_View.DateChange                  AS DateChange
-               , tmpPrice_View.MCSDateChange               AS MCSDateChange
-               , tmpPrice_View.MCSIsClose                  AS MCSIsClose
-               , tmpPrice_View.MCSIsCloseDateChange        AS MCSIsCloseDateChange
-               , tmpPrice_View.MCSNotRecalc                AS MCSNotRecalc
-               , tmpPrice_View.MCSNotRecalcDateChange      AS MCSNotRecalcDateChange
-               , tmpPrice_View.Fix                         AS Fix
-               , tmpPrice_View.FixDateChange               AS FixDateChange
-               , Object_Remains.MinExpirationDate          AS MinExpirationDate   --, CASE WHEN inGoodsId = 0 THEN SelectMinPrice_AllGoods.MinExpirationDate ELSE SelectMinPrice_List.PartionGoodsDate END AS MinExpirationDate
-               , Object_Remains.Remains                    AS Remains
-               , (Object_Remains.Remains * COALESCE (tmpPrice_View.Price,0)) ::TFloat AS SummaRemains
+               , tmpPrice_All.DateChange                   AS DateChange
+               , tmpPrice_All.MCSDateChange                AS MCSDateChange
+               , tmpPrice_All.MCSIsClose                   AS MCSIsClose
+               , tmpPrice_All.MCSIsCloseDateChange         AS MCSIsCloseDateChange
+               , tmpPrice_All.MCSNotRecalc                 AS MCSNotRecalc
+               , tmpPrice_All.MCSNotRecalcDateChange       AS MCSNotRecalcDateChange
+               , tmpPrice_All.Fix                          AS Fix
+               , tmpPrice_All.FixDateChange                AS FixDateChange
+               , tmpPrice_All.MinExpirationDate            AS MinExpirationDate   --, CASE WHEN inGoodsId = 0 THEN SelectMinPrice_AllGoods.MinExpirationDate ELSE SelectMinPrice_List.PartionGoodsDate END AS MinExpirationDate
+               , tmpPrice_All.Remains                      AS Remains
+               , (tmpPrice_All.Remains * COALESCE (tmpPrice_All.Price,0)) ::TFloat AS SummaRemains
 
-               , CASE WHEN COALESCE (Object_Remains.Remains, 0) > COALESCE (tmpPrice_View.MCSValue, 0) THEN COALESCE (Object_Remains.Remains, 0) - COALESCE (tmpPrice_View.MCSValue, 0) ELSE 0 END :: TFloat AS RemainsNotMCS
-               , CASE WHEN COALESCE (Object_Remains.Remains, 0) > COALESCE (tmpPrice_View.MCSValue, 0) THEN (COALESCE (Object_Remains.Remains, 0) - COALESCE (tmpPrice_View.MCSValue, 0)) * COALESCE (tmpPrice_View.Price, 0) ELSE 0 END :: TFloat AS SummaNotMCS
+               , CASE WHEN COALESCE (tmpPrice_All.Remains, 0) > COALESCE (tmpPrice_All.MCSValue, 0) THEN COALESCE (tmpPrice_All.Remains, 0) - COALESCE (tmpPrice_All.MCSValue, 0) ELSE 0 END :: TFloat AS RemainsNotMCS
+               , CASE WHEN COALESCE (tmpPrice_All.Remains, 0) > COALESCE (tmpPrice_All.MCSValue, 0) THEN (COALESCE (tmpPrice_All.Remains, 0) - COALESCE (tmpPrice_All.MCSValue, 0)) * COALESCE (tmpPrice_All.Price, 0) ELSE 0 END :: TFloat AS SummaNotMCS
                               
                , COALESCE (ObjectFloat_Goods_PriceRetSP.ValueData,0) ::TFloat  AS PriceRetSP
                , COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) ::TFloat  AS PriceOptSP
               -- , COALESCE (ObjectFloat_Goods_PriceSP.ValueData,0)    ::TFloat  AS PriceSP
               -- , COALESCE (ObjectFloat_Goods_PaymentSP.ValueData,0)  ::TFloat  AS PaymentSP
 
-               , CASE WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
-                      THEN COALESCE (tmpPrice_View.Price,0) -- по нашей цене, т.к. она меньше чем цена возмещения
+               , CASE WHEN COALESCE (tmpPrice_All.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
+                      THEN COALESCE (tmpPrice_All.Price,0) -- по нашей цене, т.к. она меньше чем цена возмещения
 
                  ELSE
 
                  CASE WHEN COALESCE (ObjectFloat_Goods_PaymentSP.ValueData, 0) = 0
                       THEN 0 -- по 0, т.к. цена доплаты = 0
 
-                 WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
+                 WHEN COALESCE (tmpPrice_All.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
                       THEN 0 -- по 0, т.к. наша меньше чем цена возмещения
 
-                 WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
+                 WHEN COALESCE (tmpPrice_All.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
                    AND 0 > COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - COALESCE (tmpPrice_View.Price,0) 
+                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - COALESCE (tmpPrice_All.Price,0) 
                            ) -- разница с ценой возмещения и "округлили в большую"
                       THEN 0
 
-                 WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
+                 WHEN COALESCE (tmpPrice_All.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
                       THEN COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - COALESCE (tmpPrice_View.Price,0) 
+                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - COALESCE (tmpPrice_All.Price,0) 
                            ) -- разница с ценой возмещения и "округлили в большую"
 
                  ELSE COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
@@ -761,21 +789,21 @@ BEGIN
             , CASE WHEN COALESCE (ObjectFloat_Goods_PaymentSP.ValueData, 0) = 0
                       THEN 0 -- по 0, т.к. цена доплаты = 0
 
-                 WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
+                 WHEN COALESCE (tmpPrice_All.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
                       THEN 0 -- по 0, т.к. наша меньше чем цена возмещения
 
-                 -- WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PaymentSP.ValueData, 0)
-                 --      THEN COALESCE (tmpPrice_View.Price,0) -- по нашей цене, т.к. она меньше чем цена доплаты
+                 -- WHEN COALESCE (tmpPrice_All.Price,0) < COALESCE (ObjectFloat_Goods_PaymentSP.ValueData, 0)
+                 --      THEN COALESCE (tmpPrice_All.Price,0) -- по нашей цене, т.к. она меньше чем цена доплаты
 
-                 WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
+                 WHEN COALESCE (tmpPrice_All.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
                    AND 0 > COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - COALESCE (tmpPrice_View.Price,0) 
+                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - COALESCE (tmpPrice_All.Price,0) 
                            ) -- разница с ценой возмещения и "округлили в большую"
                       THEN 0
 
-                 WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
+                 WHEN COALESCE (tmpPrice_All.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
                       THEN COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - COALESCE (tmpPrice_View.Price,0) 
+                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - COALESCE (tmpPrice_All.Price,0) 
                            ) -- разница с ценой возмещения и "округлили в большую"
 
                  ELSE COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
@@ -783,29 +811,29 @@ BEGIN
                END   ::TFloat  AS PaymentSP
 
                    -- из gpSelect_CashRemains_ver2
-               ,  (CASE WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
-                             THEN COALESCE (tmpPrice_View.Price,0) -- по нашей цене, т.к. она меньше чем цена возмещения
+               ,  (CASE WHEN COALESCE (tmpPrice_All.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
+                             THEN COALESCE (tmpPrice_All.Price,0) -- по нашей цене, т.к. она меньше чем цена возмещения
        
                         ELSE
        
                    CASE WHEN COALESCE (ObjectFloat_Goods_PaymentSP.ValueData, 0) = 0
                              THEN 0 -- по 0, т.к. цена доплаты = 0
        
-                        WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
+                        WHEN COALESCE (tmpPrice_All.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
                              THEN 0 -- по 0, т.к. наша меньше чем цена возмещения
        
-                        -- WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PaymentSP.ValueData, 0)
-                        --      THEN COALESCE (tmpPrice_View.Price,0) -- по нашей цене, т.к. она меньше чем цена доплаты
+                        -- WHEN COALESCE (tmpPrice_All.Price,0) < COALESCE (ObjectFloat_Goods_PaymentSP.ValueData, 0)
+                        --      THEN COALESCE (tmpPrice_All.Price,0) -- по нашей цене, т.к. она меньше чем цена доплаты
        
-                        WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
+                        WHEN COALESCE (tmpPrice_All.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
                           AND 0 > COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                                - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - COALESCE (tmpPrice_View.Price,0)
+                                - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - COALESCE (tmpPrice_All.Price,0)
                                   ) -- разница с ценой возмещения и "округлили в большую"
                              THEN 0
        
-                        WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
+                        WHEN COALESCE (tmpPrice_All.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
                              THEN COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                                - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - COALESCE (tmpPrice_View.Price,0)
+                                - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - COALESCE (tmpPrice_All.Price,0)
                                   ) -- разница с ценой возмещения и "округлили в большую"
        
                         ELSE COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
@@ -818,21 +846,21 @@ BEGIN
                  - CASE WHEN COALESCE (ObjectFloat_Goods_PaymentSP.ValueData, 0) = 0
                              THEN 0 -- по 0, т.к. цена доплаты = 0
        
-                        WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
+                        WHEN COALESCE (tmpPrice_All.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
                              THEN 0 -- по 0, т.к. наша меньше чем цена возмещения
        
-                        -- WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PaymentSP.ValueData, 0)
-                        --      THEN COALESCE (tmpPrice_View.Price,0) -- по нашей цене, т.к. она меньше чем цена доплаты
+                        -- WHEN COALESCE (tmpPrice_All.Price,0) < COALESCE (ObjectFloat_Goods_PaymentSP.ValueData, 0)
+                        --      THEN COALESCE (tmpPrice_All.Price,0) -- по нашей цене, т.к. она меньше чем цена доплаты
        
-                        WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
+                        WHEN COALESCE (tmpPrice_All.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
                           AND 0 > COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                                - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - COALESCE (tmpPrice_View.Price,0)
+                                - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - COALESCE (tmpPrice_All.Price,0)
                                   ) -- разница с ценой возмещения и "округлили в большую"
                              THEN 0
        
-                        WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
+                        WHEN COALESCE (tmpPrice_All.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
                              THEN COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                                - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - COALESCE (tmpPrice_View.Price,0)
+                                - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - COALESCE (tmpPrice_All.Price,0)
                                   ) -- разница с ценой возмещения и "округлили в большую"
        
                         ELSE COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
@@ -840,11 +868,11 @@ BEGIN
                    END
                   ) :: TFloat AS DiffSP2
 
-               , tmpPrice_View.MCSValueOld
-               , tmpPrice_View.StartDateMCSAuto
-               , tmpPrice_View.EndDateMCSAuto
-               , tmpPrice_View.isMCSAuto                           :: Boolean
-               , tmpPrice_View.isMCSNotRecalcOld
+               , tmpPrice_All.MCSValueOld
+               , tmpPrice_All.StartDateMCSAuto
+               , tmpPrice_All.EndDateMCSAuto
+               , tmpPrice_All.isMCSAuto                            :: Boolean
+               , tmpPrice_All.isMCSNotRecalcOld
 
                , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
                , Object_Goods_View.isErased                                    AS isErased 
@@ -854,38 +882,37 @@ BEGIN
                , Object_Goods_View.isSecond
                , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
 
-               , tmpPrice_View.isTop                   AS isTop
-               , tmpPrice_View.TopDateChange           AS TopDateChange
+               , tmpPrice_All.isTop                    AS isTop
+               , tmpPrice_All.TopDateChange            AS TopDateChange
 
-               , tmpPrice_View.PercentMarkup           AS PercentMarkup
-               , tmpPrice_View.PercentMarkupDateChange AS PercentMarkupDateChange
-               , tmpPrice_View.CheckPrice              AS CheckPriceDate
+               , tmpPrice_All.PercentMarkup            AS PercentMarkup
+               , tmpPrice_All.PercentMarkupDateChange  AS PercentMarkupDateChange
+               , tmpPrice_All.CheckPrice               AS CheckPriceDate
 
                , CASE WHEN ObjectBoolean_Goods_SP.ValueData = TRUE THEN 25088 --zc_Color_GreenL()
-                      WHEN Object_Remains.MinExpirationDate < CURRENT_DATE  + zc_Interval_ExpirationDate() THEN zc_Color_Blue() 
-                      WHEN (tmpPrice_View.isTop = TRUE OR Object_Goods_View.isTop = TRUE) THEN 15993821 -- розовый
+                      WHEN tmpPrice_All.MinExpirationDate < CURRENT_DATE  + zc_Interval_ExpirationDate() THEN zc_Color_Blue() 
+                      WHEN (tmpPrice_All.isTop = TRUE OR Object_Goods_View.isTop = TRUE) THEN 15993821 -- розовый
                       ELSE zc_Color_Black() 
                  END      AS Color_ExpirationDate                --vbAVGDateEnd
                
                , CASE WHEN DATE_PART ('DAY', (CURRENT_DATE - ObjectDate_LastPrice.ValueData)) <= 30 
-                       AND Object_Remains.Remains = 0 
-                       AND COALESCE (tmpPrice_View.MCSValue,0) = 0
+                       AND tmpPrice_All.Remains = 0 
+                       AND COALESCE (tmpPrice_All.MCSValue,0) = 0
                       THEN TRUE
                       ELSE FALSE
                  END                        ::Boolean  AS isCorrectMCS
                  
-               , CASE WHEN DATE_PART ('DAY', (CURRENT_DATE - tmpPrice_View.CheckPrice)) <= 11  THEN TRUE
-                      WHEN COALESCE (tmpPrice_View.CheckPrice, NULL) = NULL THEN FALSE
+               , CASE WHEN DATE_PART ('DAY', (CURRENT_DATE - tmpPrice_All.CheckPrice)) <= 11  THEN TRUE
+                      WHEN COALESCE (tmpPrice_All.CheckPrice, NULL) = NULL THEN FALSE
                       ELSE FALSE
                  END                        ::Boolean  AS isExcludeMCS 
                  
-            FROM tmpPrice_View
-                LEFT OUTER JOIN Object_Goods_View ON Object_Goods_View.id = tmpPrice_View.Goodsid
-                LEFT OUTER JOIN tmpRemeins AS Object_Remains
-                                           ON Object_Remains.ObjectId = tmpPrice_View.GoodsId
+            FROM tmpPrice_All
+                LEFT OUTER JOIN Object_Goods_View ON Object_Goods_View.id = tmpPrice_All.Goodsid
+             --   LEFT OUTER JOIN tmpRemeins AS Object_Remains ON Object_Remains.ObjectId = tmpPrice_View.GoodsId
 
                 LEFT JOIN ObjectHistory AS ObjectHistory_Price
-                                        ON ObjectHistory_Price.ObjectId = tmpPrice_View.Id 
+                                        ON ObjectHistory_Price.ObjectId = tmpPrice_All.Id 
                                        AND ObjectHistory_Price.DescId = zc_ObjectHistory_Price()
 --                                       AND vbStartDate >= ObjectHistory_Price.StartDate AND vbStartDate < ObjectHistory_Price.EndDate
                                        AND ObjectHistory_Price.EndDate = zc_DateEnd()
@@ -948,6 +975,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А. 
+ 07.09.17         *
  15.08.17         *
  12.06.17         * 
  09.06.17         *
