@@ -16,7 +16,11 @@ CREATE OR REPLACE FUNCTION gpReport_Movement_Check_GrowthAndFalling (
     IN inisJuridicalSplit Boolean   , --
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (GoodsId                Integer
+RETURNS TABLE (UnitId                 Integer
+             , UnitName               TVarChar
+             , JuridicalId            Integer
+             , JuridicalName          TVarChar
+             , GoodsId                Integer
              , GoodsCode              Integer
              , GoodsName              TVarChar
              , AmountBefore           TFloat
@@ -34,108 +38,194 @@ BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- PERFORM lpCheckRight (inSession, zc_Enum_Process_...);
       vbUserId:= lpGetUserBySession (inSession);
+
+      CREATE TEMP TABLE tmpUnit ON COMMIT DROP
+      AS (SELECT UnitIds.UnitId
+               , COALESCE (ObjectLink_Juridical.ChildObjectId, 0) AS JuridicalId
+          FROM (SELECT inUnitId AS UnitId
+                WHERE inisUnitList = FALSE
+                UNION
+                SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
+                FROM ObjectLink AS ObjectLink_Unit_Juridical
+                     JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                     ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                    AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                    AND ((ObjectLink_Juridical_Retail.ChildObjectId = inRetailId AND inUnitId = 0)
+                                      OR (inRetailId = 0 AND inUnitId = 0))
+                WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                  AND (ObjectLink_Unit_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
+                  AND inisUnitList = FALSE
+                UNION
+                SELECT ObjectBoolean_Report.ObjectId AS UnitId
+                FROM ObjectBoolean AS ObjectBoolean_Report
+                WHERE ObjectBoolean_Report.DescId = zc_ObjectBoolean_Unit_Report()
+                  AND ObjectBoolean_Report.ValueData = TRUE
+                  AND inisUnitList = TRUE
+               ) AS UnitIds
+               LEFT JOIN ObjectLink AS ObjectLink_Juridical
+                                    ON ObjectLink_Juridical.ObjectId = UnitIds.UnitId
+                                   AND ObjectLink_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+         );
+
+      CREATE TEMP TABLE tmpData ON COMMIT DROP
+      AS (SELECT tmpUnit.UnitId
+               , tmpUnit.JuridicalId
+               , MIContainer.ObjectId_analyzer AS GoodsId
+               , SUM (-1.0 * COALESCE (MIContainer.Amount, 0.0))::TFloat AS Amount
+               , SUM (-1.0 * COALESCE (MIContainer.Amount, 0.0) * COALESCE (MIContainer.Price, 0.0))::TFloat AS Summa
+          FROM MovementItemContainer AS MIContainer
+               JOIN tmpUnit ON tmpUnit.UnitId = MIContainer.WhereObjectId_analyzer
+          WHERE MIContainer.DescId = zc_MIContainer_Count()
+            AND MIContainer.MovementDescId = zc_Movement_Check()
+            AND MIContainer.OperDate >= inDateStart
+            AND MIContainer.OperDate < (inDateFinal + INTERVAL '1 DAY')
+            AND ABS (COALESCE (MIContainer.Amount, 0.0)) <> 0
+            AND ABS (COALESCE (MIContainer.Price, 0.0)) <> 0
+          GROUP BY tmpUnit.UnitId
+                 , tmpUnit.JuridicalId
+                 , MIContainer.ObjectId_analyzer
+         );
+
+      CREATE TEMP TABLE tmpDataBefore ON COMMIT DROP
+      AS (SELECT tmpUnit.UnitId
+               , tmpUnit.JuridicalId
+               , MIContainer.ObjectId_analyzer AS GoodsId
+               , SUM (-1.0 * COALESCE (MIContainer.Amount, 0.0))::TFloat AS Amount
+               , SUM (-1.0 * COALESCE (MIContainer.Amount, 0.0) * COALESCE (MIContainer.Price, 0.0))::TFloat AS Summa
+          FROM MovementItemContainer AS MIContainer
+               JOIN tmpUnit ON tmpUnit.UnitId = MIContainer.WhereObjectId_analyzer
+          WHERE MIContainer.DescId = zc_MIContainer_Count()
+            AND MIContainer.MovementDescId = zc_Movement_Check()
+            AND MIContainer.OperDate >= inDateStartBefore 
+            AND MIContainer.OperDate < (inDateFinalBefore + INTERVAL '1 DAY')
+            AND ABS (COALESCE (MIContainer.Amount, 0.0)) <> 0
+            AND ABS (COALESCE (MIContainer.Price, 0.0)) <> 0
+          GROUP BY tmpUnit.UnitId
+                 , tmpUnit.JuridicalId
+                 , MIContainer.ObjectId_analyzer
+         );
+
+      CREATE TEMP TABLE tmpDataAll (
+        UnitId       Integer,
+        JuridicalId  Integer, 
+        GoodsId      Integer,
+        AmountBefore TFloat,  
+        Amount       TFloat,
+        SummaBefore  TFloat,
+        Summa        TFloat
+      ) ON COMMIT DROP;
+
+      IF inisUnitSplit = TRUE AND inisJuridicalSplit = TRUE
+      THEN
+           INSERT INTO tmpDataAll 
+                  SELECT tmpData.UnitId
+                       , tmpData.JuridicalId 
+                       , tmpData.GoodsId
+                       , COALESCE (tmpDataBefore.Amount, 0.0)::TFloat AS AmountBefore
+                       , tmpData.Amount
+                       , COALESCE (tmpDataBefore.Summa, 0.0)::TFloat AS SummaBefore
+                       , tmpData.Summa 
+                  FROM tmpData
+                       LEFT JOIN tmpDataBefore ON tmpDataBefore.UnitId = tmpData.UnitId
+                                              AND tmpDataBefore.JuridicalId = tmpData.JuridicalId
+                                              AND tmpDataBefore.GoodsId = tmpData.GoodsId
+                  ;
+      ELSIF inisUnitSplit = TRUE AND inisJuridicalSplit = FALSE
+      THEN
+           INSERT INTO tmpDataAll
+                  SELECT tmpData.UnitId
+                       , 0::Integer AS JuridicalId 
+                       , tmpData.GoodsId
+                       , SUM (COALESCE (tmpDataBefore.Amount, 0.0))::TFloat AS AmountBefore
+                       , SUM (tmpData.Amount)::TFloat                       AS Amount
+                       , SUM (COALESCE (tmpDataBefore.Summa, 0.0))::TFloat  AS SummaBefore
+                       , SUM (tmpData.Summa)::TFloat                        AS Summa
+                  FROM tmpData
+                       LEFT JOIN tmpDataBefore ON tmpDataBefore.UnitId = tmpData.UnitId
+                                              AND tmpDataBefore.JuridicalId = tmpData.JuridicalId
+                                              AND tmpDataBefore.GoodsId = tmpData.GoodsId
+                  GROUP BY tmpData.UnitId
+                         , tmpData.GoodsId
+                  ;
+      ELSIF inisUnitSplit = FALSE AND inisJuridicalSplit = TRUE
+      THEN
+           INSERT INTO tmpDataAll
+                  SELECT 0::Integer AS UnitId
+                       , tmpData.JuridicalId 
+                       , tmpData.GoodsId
+                       , SUM (COALESCE (tmpDataBefore.Amount, 0.0))::TFloat AS AmountBefore
+                       , SUM (tmpData.Amount)::TFloat                       AS Amount
+                       , SUM (COALESCE (tmpDataBefore.Summa, 0.0))::TFloat  AS SummaBefore
+                       , SUM (tmpData.Summa)::TFloat                        AS Summa
+                  FROM tmpData
+                       LEFT JOIN tmpDataBefore ON tmpDataBefore.UnitId = tmpData.UnitId
+                                              AND tmpDataBefore.JuridicalId = tmpData.JuridicalId
+                                              AND tmpDataBefore.GoodsId = tmpData.GoodsId
+                  GROUP BY tmpData.JuridicalId
+                         , tmpData.GoodsId
+                  ;
+      ELSE
+           INSERT INTO tmpDataAll
+                  SELECT 0::Integer AS UnitId
+                       , 0::Integer AS JuridicalId 
+                       , tmpData.GoodsId
+                       , SUM (COALESCE (tmpDataBefore.Amount, 0.0))::TFloat AS AmountBefore
+                       , SUM (tmpData.Amount)::TFloat                       AS Amount
+                       , SUM (COALESCE (tmpDataBefore.Summa, 0.0))::TFloat  AS SummaBefore
+                       , SUM (tmpData.Summa)::TFloat                        AS Summa
+                  FROM tmpData
+                       LEFT JOIN tmpDataBefore ON tmpDataBefore.UnitId = tmpData.UnitId
+                                              AND tmpDataBefore.JuridicalId = tmpData.JuridicalId
+                                              AND tmpDataBefore.GoodsId = tmpData.GoodsId
+                  GROUP BY tmpData.GoodsId
+                  ;
+      END IF;
     
       -- Результат
       RETURN QUERY
-        WITH tmpUnit AS (SELECT inUnitId AS UnitId
-                         WHERE inisUnitList = FALSE
-                         UNION
-                         SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
-                         FROM ObjectLink AS ObjectLink_Unit_Juridical
-                              JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                              ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
-                                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                             AND ((ObjectLink_Juridical_Retail.ChildObjectId = inRetailId AND inUnitId = 0)
-                                               OR (inRetailId = 0 AND inUnitId = 0))
-                         WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                           AND (ObjectLink_Unit_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
-                           AND inisUnitList = FALSE
-                         UNION
-                         SELECT ObjectBoolean_Report.ObjectId AS UnitId
-                         FROM ObjectBoolean AS ObjectBoolean_Report
-                         WHERE ObjectBoolean_Report.DescId = zc_ObjectBoolean_Unit_Report()
-                           AND ObjectBoolean_Report.ValueData = TRUE
-                           AND inisUnitList = TRUE
-                        )
-           , tmpMIContainer AS (SELECT MIContainer.ObjectId_analyzer AS GoodsId
-                                     , SUM (-1.0 * COALESCE (MIContainer.Amount, 0.0))::TFloat AS Amount
-                                     , SUM (-1.0 * COALESCE (MIContainer.Amount, 0.0) * COALESCE (MIContainer.Price, 0.0))::TFloat AS Summa
-                                FROM MovementItemContainer AS MIContainer
-                                     JOIN tmpUnit ON tmpUnit.UnitId = MIContainer.WhereObjectId_analyzer
-                                WHERE MIContainer.DescId = zc_MIContainer_Count()
-                                  AND MIContainer.MovementDescId = zc_Movement_Check()
-                                  AND MIContainer.OperDate >= inDateStart
-                                  AND MIContainer.OperDate < (inDateFinal + INTERVAL '1 DAY')
-                                  AND ABS (COALESCE (MIContainer.Amount, 0.0)) <> 0
-                                  AND ABS (COALESCE (MIContainer.Price, 0.0)) <> 0
-                                GROUP BY MIContainer.ObjectId_analyzer
-                               )
-           , tmpMIContainerBefore AS (SELECT MIContainer.ObjectId_analyzer AS GoodsId
-                                           , SUM (-1.0 * COALESCE (MIContainer.Amount, 0.0))::TFloat AS Amount
-                                           , SUM (-1.0 * COALESCE (MIContainer.Amount, 0.0) * COALESCE (MIContainer.Price, 0.0))::TFloat AS Summa
-                                      FROM MovementItemContainer AS MIContainer
-                                           JOIN tmpUnit ON tmpUnit.UnitId = MIContainer.WhereObjectId_analyzer
-                                      WHERE MIContainer.DescId = zc_MIContainer_Count()
-                                        AND MIContainer.MovementDescId = zc_Movement_Check()
-                                        AND MIContainer.OperDate >= inDateStartBefore 
-                                        AND MIContainer.OperDate < (inDateFinalBefore + INTERVAL '1 DAY')
-                                        AND ABS (COALESCE (MIContainer.Amount, 0.0)) <> 0
-                                        AND ABS (COALESCE (MIContainer.Price, 0.0)) <> 0
-                                      GROUP BY MIContainer.ObjectId_analyzer
-                                     )
-           , tmpDataAll AS (SELECT tmpMIContainer.GoodsId
-                                 , Object_Goods.ObjectCode AS GoodsCode
-                                 , Object_Goods.ValueData AS GoodsName
-                                 , COALESCE (tmpMIContainerBefore.Amount, 0.0)::TFloat AS AmountBefore
-                                 , tmpMIContainer.Amount
-                                 , COALESCE (tmpMIContainerBefore.Summa, 0.0)::TFloat AS SummaBefore
-                                 , tmpMIContainer.Summa 
-                                 , CASE
-                                        WHEN ((tmpMIContainer.Amount - COALESCE (tmpMIContainerBefore.Amount, 0.0)) > 0) AND (COALESCE (tmpMIContainerBefore.Amount, 0.0) <> 0) THEN
-                                          ((tmpMIContainer.Amount - COALESCE (tmpMIContainerBefore.Amount, 0.0)) / COALESCE (tmpMIContainerBefore.Amount, 0.0) * 100.0)::TFloat
-                                        WHEN (tmpMIContainer.Amount > 0) AND (COALESCE (tmpMIContainerBefore.Amount, 0.0) = 0) THEN
-                                          100::TFloat
-                                        ELSE  
-                                          0::TFloat
-                                   END AS AmountGrowthInPercent
-                                 , CASE
-                                        WHEN ((tmpMIContainer.Amount - COALESCE (tmpMIContainerBefore.Amount, 0.0)) < 0) AND (COALESCE (tmpMIContainer.Amount, 0.0) <> 0) THEN
-                                          ((COALESCE (tmpMIContainerBefore.Amount, 0.0) - tmpMIContainer.Amount) / COALESCE (tmpMIContainer.Amount, 0.0) * 100.0)::TFloat
-                                        ELSE  
-                                          0::TFloat
-                                   END AS AmountFallingInPercent
-                                 , CASE
-                                        WHEN ((tmpMIContainer.Summa - COALESCE (tmpMIContainerBefore.Summa, 0.0)) > 0) AND (COALESCE (tmpMIContainerBefore.Summa, 0.0) <> 0) THEN
-                                          ((tmpMIContainer.Summa - COALESCE (tmpMIContainerBefore.Summa, 0.0)) / COALESCE (tmpMIContainerBefore.Summa, 0.0) * 100.0)::TFloat
-                                        WHEN (tmpMIContainer.Summa > 0) AND (COALESCE (tmpMIContainerBefore.Summa, 0.0) = 0) THEN
-                                          100::TFloat
-                                        ELSE  
-                                          0::TFloat
-                                   END AS SummaGrowthInPercent
-                                 , CASE
-                                        WHEN ((tmpMIContainer.Summa - COALESCE (tmpMIContainerBefore.Summa, 0.0)) < 0) AND (COALESCE (tmpMIContainer.Summa, 0.0) <> 0) THEN
-                                          ((COALESCE (tmpMIContainerBefore.Summa, 0.0) - tmpMIContainer.Summa) / COALESCE (tmpMIContainer.Summa, 0.0) * 100.0)::TFloat
-                                        ELSE  
-                                          0::TFloat
-                                   END AS SummaFallingInPercent
-                            FROM tmpMIContainer
-                                 LEFT JOIN Object AS Object_Goods
-                                                  ON Object_Goods.Id = tmpMIContainer.GoodsId
-                                                 AND Object_Goods.DescId = zc_Object_Goods() 
-                                 LEFT JOIN tmpMIContainerBefore ON tmpMIContainerBefore.GoodsId = tmpMIContainer.GoodsId
-                            )
-        SELECT tmpDataAll.GoodsId
-             , tmpDataAll.GoodsCode
-             , tmpDataAll.GoodsName
+        SELECT tmpDataAll.UnitId
+             , COALESCE (Object_Unit.ValueData, '')::TVarChar AS UnitName
+             , tmpDataAll.JuridicalId
+             , COALESCE (Object_Juridical.ValueData, '')::TVarChar AS JuridicalName 
+             , tmpDataAll.GoodsId
+             , Object_Goods.ObjectCode AS GoodsCode
+             , Object_Goods.ValueData AS GoodsName
              , tmpDataAll.AmountBefore
              , tmpDataAll.Amount
              , tmpDataAll.SummaBefore
-             , tmpDataAll.Summa
-             , tmpDataAll.AmountGrowthInPercent
-             , tmpDataAll.AmountFallingInPercent
-             , tmpDataAll.SummaGrowthInPercent
-             , tmpDataAll.SummaFallingInPercent
+             , tmpDataAll.Summa 
+             , CASE
+                    WHEN (tmpDataAll.Amount - tmpDataAll.AmountBefore) > 0 AND tmpDataAll.AmountBefore <> 0 THEN
+                      ((tmpDataAll.Amount - tmpDataAll.AmountBefore) / tmpDataAll.AmountBefore * 100.0)::TFloat
+                    WHEN tmpDataAll.Amount > 0 AND tmpDataAll.AmountBefore = 0 THEN
+                      100::TFloat
+                    ELSE  
+                      0::TFloat
+               END AS AmountGrowthInPercent
+             , CASE
+                    WHEN (tmpDataAll.Amount - tmpDataAll.AmountBefore) < 0 AND tmpDataAll.Amount <> 0 THEN
+                      ((tmpDataAll.AmountBefore - tmpDataAll.Amount) / tmpDataAll.Amount * 100.0)::TFloat
+                    ELSE  
+                      0::TFloat
+               END AS AmountFallingInPercent
+             , CASE
+                    WHEN (tmpDataAll.Summa - tmpDataAll.SummaBefore) > 0 AND tmpDataAll.SummaBefore <> 0 THEN
+                      ((tmpDataAll.Summa - tmpDataAll.SummaBefore) / tmpDataAll.SummaBefore * 100.0)::TFloat
+                    WHEN tmpDataAll.Summa > 0 AND tmpDataAll.SummaBefore = 0 THEN
+                      100::TFloat
+                    ELSE  
+                      0::TFloat
+               END AS SummaGrowthInPercent
+             , CASE
+                    WHEN (tmpDataAll.Summa - tmpDataAll.SummaBefore) < 0 AND tmpDataAll.Summa <> 0 THEN
+                      ((tmpDataAll.SummaBefore - tmpDataAll.Summa) / tmpDataAll.Summa * 100.0)::TFloat
+                    ELSE  
+                      0::TFloat
+               END AS SummaFallingInPercent
         FROM tmpDataAll
+             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpDataAll.UnitId
+             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpDataAll.JuridicalId
+             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpDataAll.GoodsId
         ;
 END; $BODY$
   LANGUAGE plpgsql VOLATILE;
