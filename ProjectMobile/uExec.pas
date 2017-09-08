@@ -20,7 +20,7 @@ begin
   StoredProc.Params.AddParam('inSqlText', ftBlob, ptInput, ASQL);
 
   try
-    StoredProc.Execute(false, false, false);
+    StoredProc.Execute(False, False, False);
   finally
     StoredProc.Free;
   end;
