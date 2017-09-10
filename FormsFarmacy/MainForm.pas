@@ -321,7 +321,6 @@ type
     N122: TMenuItem;
     actReport_MinPrice_onGoods: TdsdOpenForm;
     N123: TMenuItem;
-    N124: TMenuItem;
     actReport_Badm: TdsdOpenForm;
     N126: TMenuItem;
     actUnit_byReportBadm: TdsdOpenForm;
@@ -377,6 +376,8 @@ type
     actReport_OverOrder: TdsdOpenForm;
     N147: TMenuItem;
     N148: TMenuItem;
+    actReport_Check_Rating: TdsdOpenForm;
+    N124: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

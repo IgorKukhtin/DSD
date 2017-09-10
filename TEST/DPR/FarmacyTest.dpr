@@ -529,7 +529,9 @@ uses
   Report_Check_AssortmentDialog in '..\..\FormsFarmacy\Report\Report_Check_AssortmentDialog.pas' {Report_Check_AssortmentDialogForm: TParentForm},
   Report_OverOrder in '..\..\FormsFarmacy\Report\Report_OverOrder.pas' {Report_OverOrderForm: TParentForm},
   Report_OverOrderDialog in '..\..\FormsFarmacy\Report\Report_OverOrderDialog.pas' {Report_OverOrderDialogForm: TParentForm},
-  PriceBySendDialog in '..\..\FormsFarmacy\Document\PriceBySendDialog.pas' {PriceBySendDialogForm: TParentForm};
+  PriceBySendDialog in '..\..\FormsFarmacy\Document\PriceBySendDialog.pas' {PriceBySendDialogForm: TParentForm},
+  Report_Check_Rating in '..\..\FormsFarmacy\Report\Report_Check_Rating.pas' {Report_Check_RatingForm: TParentForm},
+  Report_Check_RatingDialog in '..\..\FormsFarmacy\Report\Report_Check_RatingDialog.pas' {Report_Check_RatingDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
