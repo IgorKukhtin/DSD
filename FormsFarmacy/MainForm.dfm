@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 666
   KeyPreview = True
   ExplicitWidth = 682
-  ExplicitHeight = 229
+  ExplicitHeight = 230
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -2040,6 +2040,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReportMovementCheckGrowthAndFalling: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1040#1085#1072#1083#1080#1079' '#1087#1088#1086#1076#1072#1078' '#1087#1088#1077#1087#1072#1088#1072#1090#1086#1074
+      Hint = #1040#1085#1072#1083#1080#1079' '#1087#1088#1086#1076#1072#1078' '#1087#1088#1077#1087#1072#1088#1072#1090#1086#1074
+      FormName = 'TReportMovementCheckGrowthAndFallingForm'
+      FormNameParam.Value = 'TReportMovementCheckGrowthAndFallingForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -2478,6 +2490,9 @@ inherited MainForm: TMainForm
       end
       object N147: TMenuItem
         Action = actReport_OverOrder
+      end
+      object miReportMovementCheckGrowthAndFalling: TMenuItem
+        Action = actReportMovementCheckGrowthAndFalling
       end
     end
     object N131: TMenuItem [7]

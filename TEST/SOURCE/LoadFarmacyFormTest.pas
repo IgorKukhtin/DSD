@@ -511,6 +511,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckGrowthAndFallingForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckGrowthAndFallingForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckGrowthAndFallingDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckGrowthAndFallingDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_RatingForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_RatingForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_RatingDialogForm'));
