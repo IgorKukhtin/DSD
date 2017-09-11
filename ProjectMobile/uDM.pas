@@ -113,6 +113,7 @@ type
     procedure SyncStoreReal(AGUID: string);
     procedure SyncOrderExternal(AGUID: string);
     procedure SyncReturnIn(AGUID: string);
+    procedure SyncRouteMember;
   end;
 
   TUploadTaskType = (uttAll, uttStoreReal, uttOrderExternal, uttReturnIn, uttCash, uttTasks, uttNewPartners,
@@ -1404,8 +1405,6 @@ begin
               exit;
             end;
           end;
-
-          Next;
         end;
       finally
         Close;
@@ -1458,8 +1457,6 @@ begin
               exit;
             end;
           end;
-
-          Next;
         end;
       finally
         Close;
@@ -1587,8 +1584,6 @@ begin
               exit;
             end;
           end;
-
-          Next;
         end;
       finally
         Close;
@@ -1639,8 +1634,6 @@ begin
               exit;
             end;
           end;
-
-          Next;
         end;
       finally
         Close;
@@ -1655,64 +1648,18 @@ end;
 
 { сохранение на сервер маршрута контрагента }
 procedure TSyncThread.UploadRouteMember;
-var
-  UploadStoredProc : TdsdStoredProc;
 begin
-  UploadStoredProc := TdsdStoredProc.Create(nil);
   Synchronize(procedure
               begin
-                DM.IsUploadRouteMember := true;
+                DM.IsUploadRouteMember := True;
               end);
   try
-    UploadStoredProc.OutputType := otResult;
-
-    with DM.tblMovement_RouteMember do
-    begin
-      Filter := 'isSync = 0';
-      Filtered := true;
-      Open;
-
-      try
-        First;
-        while not Eof do
-        begin
-          UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_Movement_RouteMember';
-          UploadStoredProc.Params.Clear;
-          UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, FieldByName('GUID').AsString);
-          UploadStoredProc.Params.AddParam('inInvNumber', ftString, ptInput, FieldByName('ID').AsString);
-          UploadStoredProc.Params.AddParam('inInsertDate', ftDateTime, ptInput, FieldByName('INSERTDATE').AsDateTime);
-          UploadStoredProc.Params.AddParam('inGPSN', ftFloat, ptInput, FieldByName('GPSN').AsFloat);
-          UploadStoredProc.Params.AddParam('inGPSE', ftFloat, ptInput, FieldByName('GPSE').AsFloat);
-          UploadStoredProc.Params.AddParam('inAddressByGPS', ftString, ptInput, FieldByName('AddressByGPS').AsString);
-
-          try
-            UploadStoredProc.Execute(false, false, false);
-
-            Edit;
-            FieldByName('IsSync').AsBoolean := true;
-            Post;
-          except
-            on E : Exception do
-            begin
-              raise Exception.Create(E.Message);
-              exit;
-            end;
-          end;
-
-          Next;
-        end;
-      finally
-        Close;
-        Filter := '';
-        Filtered := false;
-      end;
-    end;
+    SyncData.SyncRouteMember;
   finally
     Synchronize(procedure
                 begin
-                  DM.IsUploadRouteMember := false;
+                  DM.IsUploadRouteMember := False;
                 end);
-    FreeAndNil(UploadStoredProc);
   end;
 end;
 
@@ -1762,8 +1709,6 @@ begin
               exit;
             end;
           end;
-
-          Next;
         end;
       finally
         Close;
@@ -6116,7 +6061,8 @@ begin
             'По заявке №%s отправились %d позиций из %d. Требуется повторная синхронизация',
             [FieldByName('INVNUMBER').AsString, SendCount, ItemsCount]);
 
-        Next;
+        if AGUID <> '' then
+          Next;
       end;
 
       if AGUID <> '' then
@@ -6223,7 +6169,8 @@ begin
             'По возврату №%s отправились %d позиций из %d. Требуется повторная синхронизация',
             [FieldByName('INVNUMBER').AsString, SendCount, ItemsCount]);
 
-        Next;
+        if AGUID <> '' then
+          Next;
       end;
 
       if AGUID <> '' then
@@ -6238,6 +6185,58 @@ begin
       Filter := '';
       Filtered := False;
       GUIDList.Free;
+    end;
+  end;
+end;
+
+procedure TSyncData.SyncRouteMember;
+var
+  SqlText: string;
+begin
+  with DM.tblMovement_RouteMember do
+  begin
+    Filter := 'isSync = 0';
+    Filtered := True;
+    Open;
+
+    try
+      First;
+      SqlText :=
+        'DO $BODY$ ' +
+        '  DECLARE vbSession TVarChar := ''' + gc_User.Session + '''; ' +
+        'BEGIN ';
+
+      while not Eof do
+      begin
+        SqlText := SqlText +
+          '  PERFORM gpInsertUpdateMobile_Movement_RouteMember ( ' +
+          '    inGUID:= ''' + FieldByName('GUID').AsString + ''', ' +
+          '    inInvNumber:= ''' + FieldByName('ID').AsString + ''', ' +
+          '    inInsertDate:= ''' + FormatDateTime('dd.mm.yyyy hh:mm:ss', FieldByName('INSERTDATE').AsDateTime) + ''', ' +
+          '    inGPSN:= ' + ReplaceStr(FormatFloat('0.0###', FieldByName('GPSN').AsFloat), ',', '.') + ', ' +
+          '    inGPSE:= ' + ReplaceStr(FormatFloat('0.0###', FieldByName('GPSE').AsFloat), ',', '.') + ', ' +
+          '    inAddressByGPS:= ''' + AdaptQuotMark(FieldByName('AddressByGPS').AsString) + ''', ' +
+          '    inSession:= vbSession); ';
+
+        Next;
+      end;
+
+      SqlText := SqlText +
+        'END; $BODY$';
+
+      uExec.ExecSQL(SqlText);
+
+      First;
+      while not Eof do
+      begin
+        Edit;
+        FieldByName('IsSync').AsBoolean := True;
+        Post;
+      end;
+    finally
+      Close;
+      Filtered := False;
+      Filter := '';
     end;
   end;
 end;
@@ -6318,7 +6317,8 @@ begin
             'По факт. остатку №%s отправились %d позиций из %d. Требуется повторная синхронизация',
             [FieldByName('INVNUMBER').AsString, SendCount, ItemsCount]);
 
-        Next;
+        if AGUID <> '' then
+          Next;  
       end;
 
       if AGUID <> '' then

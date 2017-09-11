@@ -49,7 +49,7 @@ BEGIN
             , zfCalc_Word_Split (tmp.CurName_all, ';', 2) AS CurName2
               INTO vbCurName1, vbCurName2
        FROM (SELECT STRING_AGG (tmp.CurName, ';') AS CurName_all
-             FROM (SELECT gpSelect_MovementItem_OrderInternal (inInternalOrder, FALSE, FALSE, inSession) :: TVarChar AS CurName
+             FROM (SELECT gpSelect_MovementItem_OrderInternal (inInternalOrder, FALSE, FALSE, FALSE, inSession) :: TVarChar AS CurName
                   ) AS tmp
             ) AS tmp;
 

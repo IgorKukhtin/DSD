@@ -50,6 +50,7 @@ BEGIN
         -- данные из проводок
         , tmpData_ContainerAll AS (SELECT MIContainer.MovementItemId AS MI_Id
                                      , COALESCE (MIContainer.AnalyzerId,0) :: Integer  AS MovementItemId
+                                     , MIContainer.MovementId        AS MovementId
                                      , COALESCE (MIContainer.WhereObjectId_analyzer,0) AS UnitId
                                      , MIContainer.ObjectId_analyzer                   AS GoodsId
                                      , SUM (COALESCE (-1 * MIContainer.Amount, 0))     AS Amount
@@ -63,24 +64,38 @@ BEGIN
                                        , MIContainer.ObjectId_analyzer    
                                        , COALESCE (MIContainer.AnalyzerId,0)
                                        , MIContainer.MovementItemId
+                                       , MIContainer.MovementId
                                 HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
                                )
         , tmpData_Container AS (SELECT tmpData_ContainerAll.*
                                 FROM tmpData_ContainerAll
-                                     INNER JOIN tmpUnit ON  tmpUnit.UnitId = tmpData_ContainerAll.UnitId
+                                     INNER JOIN tmpUnit ON tmpUnit.UnitId = tmpData_ContainerAll.UnitId
                                )
-
+        -- док. соц проекта, если заполнен № рецепта
+        , tmpMS_InvNumberSP AS (SELECT tmp.MovementId
+                                FROM (SELECT DISTINCT tmpData_Container.MovementId
+                                      FROM tmpData_Container
+                                      ) AS tmp
+                                      INNER JOIN MovementString AS MovementString_InvNumberSP
+                                                                ON MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP()
+                                                               AND MovementString_InvNumberSP.MovementId = tmp.MovementId
+                                                               AND MovementString_InvNumberSP.ValueData <> ''
+                                )
+                                           
         , tmpMIF_SummChangePercent AS (SELECT MIFloat_SummChangePercent.*
-                                           FROM MovementItemFloat AS MIFloat_SummChangePercent
-                                           WHERE MIFloat_SummChangePercent.DescId =  zc_MIFloat_SummChangePercent()
-                                             AND MIFloat_SummChangePercent.MovementItemId IN (SELECT DISTINCT tmpData_Container.MI_Id FROM tmpData_Container)
-                                          )
+                                       FROM MovementItemFloat AS MIFloat_SummChangePercent
+                                       WHERE MIFloat_SummChangePercent.DescId =  zc_MIFloat_SummChangePercent()
+                                         AND MIFloat_SummChangePercent.MovementItemId IN (SELECT DISTINCT tmpData_Container.MI_Id FROM tmpData_Container)
+                                      )
         , tmpSP AS (SELECT tmpData_Container.UnitId
                          , SUM (COALESCE (MovementFloat_SummChangePercent.ValueData, 0)) AS SummChangePercent_SP
-                    FROM (SELECT DISTINCT tmpData_Container.MI_ID, tmpData_Container.UnitId FROM tmpData_Container) AS tmpData_Container
-                         -- сумма скидки SP
-                         LEFT JOIN tmpMIF_SummChangePercent AS MovementFloat_SummChangePercent
-                                                            ON MovementFloat_SummChangePercent.MovementItemId = tmpData_Container.MI_Id
+                    FROM (SELECT DISTINCT tmpData_Container.MI_ID, tmpData_Container.UnitId 
+                          FROM tmpData_Container
+                               INNER JOIN tmpMS_InvNumberSP ON tmpMS_InvNumberSP.MovementId = tmpData_Container.MovementId
+                          ) AS tmpData_Container
+                            -- сумма скидки SP
+                            LEFT JOIN tmpMIF_SummChangePercent AS MovementFloat_SummChangePercent
+                                                               ON MovementFloat_SummChangePercent.MovementItemId = tmpData_Container.MI_Id
                     GROUP BY tmpData_Container.UnitId
                     )
                     
@@ -361,6 +376,7 @@ BEGIN
         -- данные из проводок
         , tmpData_ContainerAll AS (SELECT MIContainer.MovementItemId                      AS MI_Id
                                         , DATE_TRUNC('Month', MIContainer.OperDate)       AS OperDate
+                                        , MIContainer.MovementId                          AS MovementId
                                         , COALESCE (MIContainer.AnalyzerId,0) :: Integer  AS MovementItemId
                                         , COALESCE (MIContainer.WhereObjectId_analyzer,0) AS UnitId
                                         , MIContainer.ObjectId_analyzer                   AS GoodsId
@@ -375,6 +391,7 @@ BEGIN
                                           , COALESCE (MIContainer.AnalyzerId,0)
                                           , MIContainer.MovementItemId
                                           , COALESCE (MIContainer.WhereObjectId_analyzer,0)
+                                          , MIContainer.MovementId
                                    HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
                                   )
         , tmpData_Container AS (SELECT tmpData_ContainerAll.*
@@ -383,13 +400,27 @@ BEGIN
                                )
 
         , tmpMIF_SummChangePercent AS (SELECT MIFloat_SummChangePercent.*
-                                           FROM MovementItemFloat AS MIFloat_SummChangePercent
-                                           WHERE MIFloat_SummChangePercent.DescId =  zc_MIFloat_SummChangePercent()
-                                             AND MIFloat_SummChangePercent.MovementItemId IN (SELECT DISTINCT tmpData_Container.MI_Id FROM tmpData_Container)
-                                          )
+                                       FROM MovementItemFloat AS MIFloat_SummChangePercent
+                                       WHERE MIFloat_SummChangePercent.DescId =  zc_MIFloat_SummChangePercent()
+                                         AND MIFloat_SummChangePercent.MovementItemId IN (SELECT DISTINCT tmpData_Container.MI_Id FROM tmpData_Container)
+                                      )
+        -- док. соц проекта, если заполнен № рецепта
+        , tmpMS_InvNumberSP AS (SELECT tmp.MovementId
+                                FROM (SELECT DISTINCT tmpData_Container.MovementId
+                                      FROM tmpData_Container
+                                      ) AS tmp
+                                      INNER JOIN MovementString AS MovementString_InvNumberSP
+                                                                ON MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP()
+                                                               AND MovementString_InvNumberSP.MovementId = tmp.MovementId
+                                                               AND MovementString_InvNumberSP.ValueData <> ''
+                                )
+                                
         , tmpSP AS (SELECT tmpData_Container.OperDate
                          , SUM (COALESCE (MovementFloat_SummChangePercent.ValueData, 0)) AS SummChangePercent_SP
-                    FROM (SELECT DISTINCT tmpData_Container.MI_ID, tmpData_Container.OperDate FROM tmpData_Container) AS tmpData_Container
+                    FROM (SELECT DISTINCT tmpData_Container.MI_ID, tmpData_Container.OperDate 
+                          FROM tmpData_Container
+                               INNER JOIN tmpMS_InvNumberSP ON tmpMS_InvNumberSP.MovementId = tmpData_Container.MovementId
+                          ) AS tmpData_Container
                          -- сумма скидки SP
                          LEFT JOIN tmpMIF_SummChangePercent AS MovementFloat_SummChangePercent
                                                             ON MovementFloat_SummChangePercent.MovementItemId = tmpData_Container.MI_Id

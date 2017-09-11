@@ -1,26 +1,26 @@
 inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
-  ClientHeight = 558
+  ClientHeight = 550
   ClientWidth = 1015
   ExplicitWidth = 1031
-  ExplicitHeight = 596
+  ExplicitHeight = 588
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
     Width = 1015
-    Height = 432
+    Height = 424
     ExplicitTop = 126
     ExplicitWidth = 1015
     ExplicitHeight = 432
-    ClientRectBottom = 432
+    ClientRectBottom = 424
     ClientRectRight = 1015
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1015
       ExplicitHeight = 408
       inherited cxGrid: TcxGrid
         Width = 1015
-        Height = 408
+        Height = 400
         ExplicitWidth = 1015
         ExplicitHeight = 408
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -532,8 +532,8 @@ inherited SendForm: TSendForm
     Width = 218
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 187
-    Top = 480
+    Left = 203
+    Top = 440
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 40
@@ -636,6 +636,10 @@ inherited SendForm: TSendForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    inherited actNewDocument: TdsdInsertUpdateAction [16]
+    end
+    inherited MultiAction: TMultiAction [17]
     end
     object actRefreshPrice: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -837,6 +841,58 @@ inherited SendForm: TSendForm
         end>
       isShowModal = False
     end
+    object actInsertPrice: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spInsert_Object_Price
+      StoredProcList = <
+        item
+          StoredProc = spInsert_Object_Price
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 56
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
+    end
+    object actExecuteDialogInsertPrice: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1094#1077#1085#1091' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1094#1077#1085#1091' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
+      ImageIndex = 56
+      FormName = 'TPriceBySendDialogForm'
+      FormNameParam.Value = 'TPriceBySendDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inPriceNew'
+          Value = 42951d
+          Component = FormParams
+          ComponentItem = 'inPriceNew'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object macInsertPrice: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecuteDialogInsertPrice
+        end
+        item
+          Action = actInsertPrice
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1062#1077#1085#1091' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1062#1077#1085#1091' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
+      ImageIndex = 56
+    end
   end
   inherited MasterDS: TDataSource
     Top = 424
@@ -952,6 +1008,14 @@ inherited SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -988,6 +1052,10 @@ inherited SendForm: TSendForm
     end
     object bbComplete: TdxBarButton
       Action = actComplete
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = macInsertPrice
       Category = 0
     end
   end
@@ -1060,7 +1128,7 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     Left = 344
-    Top = 496
+    Top = 456
   end
   inherited StatusGuides: TdsdGuides
     Left = 80
@@ -1334,8 +1402,8 @@ inherited SendForm: TSendForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Send_SetErased'
-    Left = 550
-    Top = 520
+    Left = 638
+    Top = 448
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Send_SetUnErased'
@@ -1388,10 +1456,36 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPriceUnitFrom'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PriceUnitFrom'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPriceUnitTo'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PriceUnitTo'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outSumma'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'SumPriceIn'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummaUnitTo'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummaUnitTo'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -1418,21 +1512,6 @@ inherited SendForm: TSendForm
         Component = MasterCDS
         ComponentItem = 'ReasonDifferencesId'
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -2019,6 +2098,7 @@ inherited SendForm: TSendForm
       end
       item
         Name = 'outOperDate'
+        Value = 'NULL'
         Component = edOperDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -2026,5 +2106,65 @@ inherited SendForm: TSendForm
     PackSize = 1
     Left = 296
     Top = 280
+  end
+  object spInsert_Object_Price: TdsdStoredProc
+    StoredProcName = 'gpInsert_Object_Price_BySend'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = 42261d
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = 'edInvNumber'
+        Component = MasterCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceNew'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inPriceNew'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPriceUnitTo'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PriceUnitTo'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummaUnitTo'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummaUnitTo'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 274
+    Top = 344
   end
 end

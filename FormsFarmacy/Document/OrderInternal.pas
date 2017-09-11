@@ -117,6 +117,12 @@ type
     AmountDeferred: TcxGridDBColumn;
     isPriceDiff: TcxGridDBColumn;
     OrderShedule_Color: TcxGridDBColumn;
+    Fond_Color: TcxGridDBColumn;
+    isLast_2days: TcxGridDBColumn;
+    isRepeat: TcxGridDBColumn;
+    spSelect_Link: TdsdStoredProc;
+    bbSelect_Link: TdxBarButton;
+    actRefresh_Link: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

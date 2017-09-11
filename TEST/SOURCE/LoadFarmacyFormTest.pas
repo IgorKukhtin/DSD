@@ -511,6 +511,16 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckGrowthAndFallingForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckGrowthAndFallingForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckGrowthAndFallingDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckGrowthAndFallingDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_RatingForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Check_RatingForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_RatingDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Check_RatingDialogForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OverOrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OverOrderForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OverOrderDialogForm'));
@@ -1216,6 +1226,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
+  // диалог изменения цены получателя
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceBySendDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceBySendDialogForm');
 end;
 
 procedure TLoadFormTest.LoadSendOnPriceFormTest;

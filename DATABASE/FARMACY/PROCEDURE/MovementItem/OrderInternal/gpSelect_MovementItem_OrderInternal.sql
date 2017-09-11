@@ -1,11 +1,13 @@
 -- Function: gpSelect_MovementItem_OrderInternal()
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_OrderInternal (Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_OrderInternal (Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderInternal(
     IN inMovementId  Integer      , -- ключ Документа
     IN inShowAll     Boolean      , --
     IN inIsErased    Boolean      , --
+    IN inIsLink      Boolean      , -- проверка привязки к поставщику
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS SETOF refcursor 
@@ -326,20 +328,96 @@ BEGIN
                                                 ON MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
                                                AND MIBoolean_Calculated.MovementItemId = tmpMI.MovementItemId
                                    ) 
+      -- на остатке стоит 0 и они были в заказе вчерашнем и позавчерашнем - НО их в приходе НЕТ сегодня и они опять повторно попали в текущий заказ. 
+      -- Такие позиции лучше подсветить строку цветом - голубым, зеленым и сделать, наверно, допколонку - ограничить по таким позициям весь заказ. 
+      -- Выбираем товары остаток =0, приход сегодня = 0
+      , tmpGoodsList AS (SELECT tmpMI.GoodsId                AS GoodsId
+                              , COALESCE (tmpMI.Amount, 0)   AS Amount
+                              , COALESCE (tmpMI.Remains, 0)  AS Remains
+                              , COALESCE (tmpMI.Income, 0)   AS Income
+                         FROM tmpMI
+                         WHERE COALESCE (tmpMI.Amount, 0) > 0   --COALESCE (tmpMI.Remains, 0) = 0 AND COALESCE (tmpMI.Income, 0) = 0 AND
+                        )
+      , tmpLastOrder AS (SELECT Movement.Id
+                              , ROW_NUMBER() OVER (ORDER BY Movement.Id DESC, Movement.Operdate DESC) AS Ord
+                         FROM Movement
+                              INNER JOIN MovementLinkObject AS MLO_Unit
+                                                            ON MLO_Unit.MovementId = Movement.Id
+                                                           AND MLO_Unit.DescId     = zc_MovementLinkObject_Unit()
+                                                           AND MLO_Unit.ObjectId   = vbUnitId
+                         WHERE Movement.DescId = zc_Movement_OrderInternal()
+                           AND Movement.Operdate >= vbOperDate - INTERVAL '30 DAY' AND Movement.Operdate < vbOperDate
+                        )
+      -- заказы вчера / позавчера
+      , tmpOrderLast_2days AS (SELECT tmpGoodsList.GoodsId
+                                    , COUNT (DISTINCT Movement.Id) AS Amount
+                               FROM tmpLastOrder AS Movement
+                                    INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                           AND MovementItem.DescId     = zc_MI_Master()
+                                                           AND MovementItem.isErased   = FALSE
+                                    INNER JOIN tmpGoodsList ON tmpGoodsList.GoodsId = MovementItem.ObjectId
+                                                           AND tmpGoodsList.Remains = 0 
+                                                           AND tmpGoodsList.Income = 0 
+                               WHERE Movement.Ord IN (1, 2)
+                               GROUP BY tmpGoodsList.GoodsId
+                               )
+      -- повторный заказ  --позиции, которые уже заказаны в прошлом Автозаказе точки, но не пришли на точку и опять стоят в следующем Автозаказе а том же кол-ве или больше 
+      , tmpRepeat AS (SELECT tmpGoods.GoodsId
+                          ,  CASE WHEN tmpGoods.Amount >= COALESCE (MovementItem.Amount, 0) THEN TRUE ELSE FALSE END isRepeat 
+                      FROM tmpLastOrder AS Movement
+                           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                  AND MovementItem.DescId     = zc_MI_Master()
+                                                  AND MovementItem.isErased   = FALSE
+                           INNER JOIN (SELECT tmpGoodsList.GoodsId, tmpGoodsList.Amount
+                                       FROM tmpGoodsList
+                                       WHERE tmpGoodsList.Income = 0
+                                       ) AS tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId 
+                      WHERE Movement.Ord = 1
+                     )  
+
+      -- нет привязки по поставщику в последних 10 внутренних заказах
+      -- товары без привязки к поставщику
+      -- расчет через кнопку, т.к. отрабатывает не быстро
+      , tmpGoodsNotLink AS (SELECT DISTINCT tmpGoodsList.GoodsId
+                            FROM tmpGoodsList
+                                 LEFT JOIN (SELECT DISTINCT tmpGoodsList.GoodsId
+                                            FROM tmpGoodsList
+                                                 LEFT JOIN Object_LinkGoods_View AS LinkGoods_Partner_Main
+                                                                                 ON LinkGoods_Partner_Main.GoodsId = tmpGoodsList.GoodsId  -- Связь товара поставщика с общим
+                                     
+                                                 INNER JOIN Object_LinkGoods_View AS LinkGoods_Main_Retail -- связь товара сети с главным товаром
+                                                                                  ON LinkGoods_Main_Retail.GoodsMainId = LinkGoods_Partner_Main.GoodsMainId
+                                                 INNER JOIN Object ON Object.id = LinkGoods_Main_Retail.ObjectId AND Object.Descid = zc_Object_Juridical() 
+                                              ) AS tmp ON tmp.GoodsId = tmpGoodsList.GoodsId
+                            WHERE tmp.GoodsId IS NULL
+                              AND inIsLink = TRUE
+                            )
+
+      , tmpOrderLast_10 AS (SELECT tmpGoodsNotLink.GoodsId
+                                 , COUNT (DISTINCT Movement.Id) AS Amount
+                            FROM tmpLastOrder AS Movement 
+                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                        AND MovementItem.DescId     = zc_MI_Master()
+                                                        AND MovementItem.isErased   = FALSE
+                                 INNER JOIN tmpGoodsNotLink ON tmpGoodsNotLink.GoodsId = MovementItem.ObjectId 
+                            WHERE Movement.Ord <= 10
+                            GROUP BY tmpGoodsNotLink.GoodsId
+                            ) 
+             
                                
        -- Результат 1
        SELECT
              tmpMI.MovementItemId                                   AS Id
-           , tmpMI.GoodsId                                         
-           , tmpMI.GoodsCode
-           , tmpMI.GoodsName
-           , tmpMI.Multiplicity
-           , tmpMI.GoodsGroupId
-           , tmpMI.NDSKindId
-           , tmpMI.NDSKindName
-           , tmpMI.NDS
+           , tmpMI.GoodsId                                          AS GoodsId
+           , tmpMI.GoodsCode                                        AS GoodsCode
+           , tmpMI.GoodsName                                        AS GoodsName
+           , tmpMI.Multiplicity                                     AS Multiplicity
+           , tmpMI.GoodsGroupId                                     AS GoodsGroupId
+           , tmpMI.NDSKindId                                        AS NDSKindId
+           , tmpMI.NDSKindName                                      AS NDSKindName
+           , tmpMI.NDS                                              AS NDS
 
-           , tmpMI.isTOP
+           , tmpMI.isTOP                                            AS isTOP
            , tmpMI.isUnitTOP                                        AS isTOP_Price
            , tmpMI.isClose
            , tmpMI.isFirst
@@ -414,7 +492,23 @@ BEGIN
 
            , tmpMI.ConditionsKeepName
 
-           , CASE WHEN COALESCE(OrderSheduleListToday.DOW,  0) = 0 THEN zc_Color_White() ELSE 12910591 END  AS OrderShedule_Color   -- бледно желтый /*14024703*//*12320767*/
+           , CASE WHEN COALESCE(OrderSheduleListToday.DOW,  0) <> 0 THEN 12910591      -- бледно желтый
+                  WHEN COALESCE (tmpOrderLast_2days.Amount, 0)  > 1 THEN 16777134      -- цвет фона - голубой подрязд 2 дня заказ; 
+                  WHEN COALESCE (tmpOrderLast_10.Amount, 0)     > 9 THEN 167472630     -- цвет фона - розовый подрязд 10 заказов нет привязки к товару поставщика; 
+                  ELSE zc_Color_White()
+             END  AS OrderShedule_Color  
+
+           
+           , CASE WHEN COALESCE (tmpOrderLast_2days.Amount, 0) > 1 THEN 16777134   -- цвет фона - голубой подрязд 2 дня заказ; 
+                  WHEN COALESCE (tmpOrderLast_10.Amount, 0) > 9 THEN 167472630     -- цвет фона - розовый подрязд 10 заказов нет привязки к товару поставщика; 
+                  ELSE  zc_Color_White()
+             END  AS Fond_Color
+             
+           , CASE WHEN COALESCE (tmpOrderLast_2days.Amount, 0) > 1 THEN TRUE  
+                  ELSE  FALSE
+             END  AS isLast_2days
+           , COALESCE (tmpRepeat.isRepeat, FALSE) AS isRepeat  
+           
        FROM tmpMI        --_tmpOrderInternal_MI AS
             LEFT JOIN (SELECT tmpMI.MIMasterId, CASE WHEN COUNT (*) > 1 THEN FALSE ELSE TRUE END AS isOneJuridical
                        FROM tmpMI_Child AS tmpMI
@@ -437,6 +531,10 @@ BEGIN
             LEFT JOIN tmpMIF_AmountManual   AS MIFloat_AmountManual   ON MIFloat_AmountManual.MovementItemId   = tmpMI.MovementItemId      --and 1=0
 
             LEFT JOIN tmpMIString_Comment AS MIString_Comment ON MIString_Comment.MovementItemId = tmpMI.MovementItemId               --       and 1=0
+            
+            LEFT JOIN tmpOrderLast_2days ON tmpOrderLast_2days.GoodsId = tmpMI.GoodsId 
+            LEFT JOIN tmpOrderLast_10 ON tmpOrderLast_10.GoodsId       = tmpMI.GoodsId
+            LEFT JOIN tmpRepeat       ON tmpRepeat.GoodsId             = tmpMI.GoodsId
            ;
 
      RETURN NEXT Cursor1;
@@ -1198,6 +1296,86 @@ BEGIN
                                         LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
                                   )
                                   
+      -- на остатке стоит 0 и они были в заказе вчерашнем и позавчерашнем - НО их в приходе НЕТ сегодня и они опять повторно попали в текущий заказ. 
+      -- Такие позиции лучше подсветить строку цветом - голубым, зеленым и сделать, наверно, допколонку - ограничить по таким позициям весь заказ. 
+      -- Выбираем товары
+      , tmpGoodsList AS (SELECT tmpMI.GoodsId                      AS GoodsId
+                              , COALESCE (tmpMI.Amount, 0)         AS Amount
+                              , COALESCE (Remains.Amount, 0)       AS RemainsAmount
+                              , COALESCE (Income.Income_Amount, 0) AS IncomeAmount
+                         FROM tmpMI
+                              LEFT JOIN tmpRemains AS Remains ON Remains.ObjectId      = tmpMI.GoodsId
+                              LEFT JOIN tmpIncome  AS Income  ON Income.Income_GoodsId = tmpMI.GoodsId
+                         WHERE COALESCE (tmpMI.Amount, 0) > 0
+                        )
+      , tmpLastOrder AS (SELECT Movement.Id
+                              , ROW_NUMBER() OVER (ORDER BY Movement.Id DESC, Movement.Operdate DESC) AS Ord
+                         FROM Movement
+                              INNER JOIN MovementLinkObject AS MLO_Unit
+                                                            ON MLO_Unit.MovementId = Movement.Id
+                                                           AND MLO_Unit.DescId     = zc_MovementLinkObject_Unit()
+                                                           AND MLO_Unit.ObjectId   = vbUnitId
+                         WHERE Movement.DescId = zc_Movement_OrderInternal()
+                           AND Movement.Operdate >= vbOperDate - INTERVAL '30 DAY' AND Movement.Operdate < vbOperDate
+                         )
+      -- заказы вчера / позавчера
+      , tmpOrderLast_2days AS (SELECT tmpGoodsList.GoodsId
+                                    , COUNT (DISTINCT Movement.Id) AS Amount
+                               FROM tmpLastOrder AS Movement
+                                    INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                           AND MovementItem.DescId     = zc_MI_Master()
+                                                           AND MovementItem.isErased   = FALSE
+                                    INNER JOIN tmpGoodsList ON tmpGoodsList.GoodsId = MovementItem.ObjectId
+                                                           AND tmpGoodsList.RemainsAmount = 0                  -- остаток = 0
+                                                           AND tmpGoodsList.IncomeAmount = 0                    -- приход сегодня = 0
+                               WHERE Movement.Ord IN (1, 2)
+                               GROUP BY tmpGoodsList.GoodsId
+                               )
+      -- повторный заказ  --позиции, которые уже заказаны в прошлом Автозаказе точки, но не пришли на точку и опять стоят в следующем Автозаказе а том же кол-ве или больше 
+      , tmpRepeat AS (SELECT tmpGoods.GoodsId
+                          ,  CASE WHEN tmpGoods.Amount >= COALESCE (MovementItem.Amount, 0) THEN TRUE ELSE FALSE END isRepeat 
+                      FROM tmpLastOrder AS Movement
+                           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                  AND MovementItem.DescId     = zc_MI_Master()
+                                                  AND MovementItem.isErased   = FALSE
+                           INNER JOIN (SELECT tmpGoodsList.GoodsId, tmpGoodsList.Amount
+                                       FROM tmpGoodsList
+                                       WHERE COALESCE (tmpGoodsList.IncomeAmount, 0) = 0
+                                         AND COALESCE (tmpGoodsList.Amount, 0) > 0
+                                       ) AS tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
+                      WHERE Movement.Ord = 1
+                     )
+
+      -- нет привязки по поставщику в последних 10 внутренних заказах
+      -- товары без привязки к поставщику
+      -- расчет через кнопку, т.к. отрабатывает не быстро
+      , tmpGoodsNotLink AS (SELECT DISTINCT tmpGoodsList.GoodsId
+                            FROM tmpGoodsList
+                                 LEFT JOIN (SELECT DISTINCT tmpGoodsList.GoodsId
+                                            FROM tmpGoodsList
+                                                 LEFT JOIN Object_LinkGoods_View AS LinkGoods_Partner_Main
+                                                                                 ON LinkGoods_Partner_Main.GoodsId = tmpGoodsList.GoodsId  -- Связь товара поставщика с общим
+                                     
+                                                 INNER JOIN Object_LinkGoods_View AS LinkGoods_Main_Retail -- связь товара сети с главным товаром
+                                                                                  ON LinkGoods_Main_Retail.GoodsMainId = LinkGoods_Partner_Main.GoodsMainId
+                                                 INNER JOIN Object on Object.id = LinkGoods_Main_Retail.ObjectId and Object.Descid = zc_Object_Juridical() 
+                                              ) AS tmp ON tmp.GoodsId = tmpGoodsList.GoodsId
+                            WHERE tmp.GoodsId IS NULL
+                              AND inIsLink = TRUE
+                            )
+
+      , tmpOrderLast_10 AS (SELECT tmpGoodsNotLink.GoodsId
+                                 , COUNT (DISTINCT Movement.Id) AS Amount
+                            FROM tmpLastOrder AS Movement 
+                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                        AND MovementItem.DescId     = zc_MI_Master()
+                                                        AND MovementItem.isErased   = FALSE
+                                 INNER JOIN tmpGoodsNotLink ON tmpGoodsNotLink.GoodsId = MovementItem.ObjectId 
+                            WHERE Movement.Ord <= 10
+                            GROUP BY tmpGoodsNotLink.GoodsId
+                            )
+
+                     
        -- Результат 1
        SELECT
              tmpMI.Id                                                AS Id
@@ -1280,7 +1458,23 @@ BEGIN
 
            , COALESCE(tmpGoodsConditionsKeep.ConditionsKeepName, '') ::TVarChar  AS ConditionsKeepName
 
-           , CASE WHEN COALESCE(OrderSheduleListToday.DOW,  0) = 0 THEN zc_Color_White() ELSE 12910591 END  AS OrderShedule_Color   -- бледно желтый
+           , CASE WHEN COALESCE(OrderSheduleListToday.DOW,  0) <> 0 THEN 12910591      -- бледно желтый
+                  WHEN COALESCE (tmpOrderLast_2days.Amount, 0)  > 1 THEN 16777134      -- цвет фона - голубой подрязд 2 дня заказ; 
+                  WHEN COALESCE (tmpOrderLast_10.Amount, 0)     > 9 THEN 167472630     -- цвет фона - розовый подрязд 10 заказов нет привязки к товару поставщика; 
+                  ELSE zc_Color_White()
+             END  AS OrderShedule_Color  
+           
+           , CASE WHEN COALESCE (tmpOrderLast_2days.Amount, 0) > 1 THEN 16777134   -- цвет фона - голубой подрязд 2 дня заказ; 
+                  WHEN COALESCE (tmpOrderLast_10.Amount, 0) > 9 THEN 167472630     -- цвет фона - розовый подрязд 10 заказов нет привязки к товару поставщика; 
+                  ELSE  zc_Color_White()
+             END  AS Fond_Color
+             
+           , CASE WHEN COALESCE (tmpOrderLast_2days.Amount, 0) > 1 THEN TRUE  
+                  ELSE  FALSE
+             END  AS isLast_2days
+             
+           , COALESCE (tmpRepeat.isRepeat, FALSE) AS isRepeat
+           
        FROM tmpData AS tmpMI
 
             LEFT JOIN tmpPriceView AS Object_Price_View ON tmpMI.GoodsId                    = Object_Price_View.GoodsId
@@ -1301,6 +1495,10 @@ BEGIN
                       
             LEFT JOIN GoodsPromo ON GoodsPromo.JuridicalId = tmpMI.JuridicalId
                                 AND GoodsPromo.GoodsId     = tmpMI.GoodsId
+                                
+            LEFT JOIN tmpOrderLast_2days ON tmpOrderLast_2days.GoodsId = tmpMI.GoodsId 
+            LEFT JOIN tmpOrderLast_10    ON tmpOrderLast_10.GoodsId    = tmpMI.GoodsId  
+            LEFT JOIN tmpRepeat          ON tmpRepeat.GoodsId          = tmpMI.GoodsId                              
            ;
 
      RETURN NEXT Cursor1;
@@ -1369,7 +1567,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_OrderInternal (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_MovementItem_OrderInternal (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -1425,5 +1623,5 @@ where Movement.DescId = zc_Movement_OrderInternal()
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_OrderInternal (inMovementId:= 3961103, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '3'); -- FETCH ALL "<unnamed portal 6>";
--- SELECT * FROM gpSelect_MovementItem_OrderInternal (inMovementId:= 3961103, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '3'); -- FETCH ALL "<unnamed portal 6>";
+-- SELECT * FROM gpSelect_MovementItem_OrderInternal (inMovementId:= 3961103, inShowAll:= TRUE, inIsErased:= FALSE, inIsLink:= FALSE, inSession:= '3'); -- FETCH ALL "<unnamed portal 6>";
+-- SELECT * FROM gpSelect_MovementItem_OrderInternal (inMovementId:= 3961103, inShowAll:= FALSE, inIsErased:= FALSE, inIsLink:= FALSE, inSession:= '3'); -- FETCH ALL "<unnamed portal 6>";
