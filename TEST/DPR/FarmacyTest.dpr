@@ -517,10 +517,10 @@ uses
   MeDocCOM in '..\..\SOURCE\MeDOC\MeDocCOM.pas',
   IFIN_J1201009 in '..\..\SOURCE\MeDOC\IFIN_J1201009.pas',
   MEDOC_TLB in '..\..\SOURCE\MeDOC\MEDOC_TLB.pas',
-  ReportMovementCheckLight in '..\..\FormsFarmacy\Report\ReportMovementCheckLight.pas' {ReportMovementCheckLightForm: TParentForm},
+  ReportMovementCheckGrowthAndFalling in '..\..\FormsFarmacy\Report\ReportMovementCheckGrowthAndFalling.pas' {ReportMovementCheckGrowthAndFallingForm: TParentForm},
   Report_GoodsRemainsLight in '..\..\FormsFarmacy\Report\Report_GoodsRemainsLight.pas' {Report_GoodsRemainsLightForm: TParentForm},
   Report_GoodsRemainsLightDialog in '..\..\FormsFarmacy\Report\Report_GoodsRemainsLightDialog.pas' {Report_GoodsRemainsLightDialogForm: TParentForm},
-  Report_MovementCheckLightDialog in '..\..\FormsFarmacy\Report\Report_MovementCheckLightDialog.pas' {Report_MovementChecLightDialogForm: TParentForm},
+  ReportMovementCheckGrowthAndFallingDialog in '..\..\FormsFarmacy\Report\ReportMovementCheckGrowthAndFallingDialog.pas' {ReportMovementCheckGrowthAndFallingDialogForm: TParentForm},
   ExportSalesForSupp in '..\..\ExportSalesForSuppliers\ExportSalesForSupp.pas' {ExportSalesForSuppForm},
   ProvinceCityEdit in '..\..\FormsFarmacy\Guides\ProvinceCityEdit.pas' {ProvinceCityEditForm: TParentForm},
   ProvinceCity in '..\..\FormsFarmacy\Guides\ProvinceCity.pas' {ProvinceCityForm: TParentForm},
@@ -531,7 +531,9 @@ uses
   Report_OverOrderDialog in '..\..\FormsFarmacy\Report\Report_OverOrderDialog.pas' {Report_OverOrderDialogForm: TParentForm},
   PriceBySendDialog in '..\..\FormsFarmacy\Document\PriceBySendDialog.pas' {PriceBySendDialogForm: TParentForm},
   Report_Check_Rating in '..\..\FormsFarmacy\Report\Report_Check_Rating.pas' {Report_Check_RatingForm: TParentForm},
-  Report_Check_RatingDialog in '..\..\FormsFarmacy\Report\Report_Check_RatingDialog.pas' {Report_Check_RatingDialogForm: TParentForm};
+  Report_Check_RatingDialog in '..\..\FormsFarmacy\Report\Report_Check_RatingDialog.pas' {Report_Check_RatingDialogForm: TParentForm},
+  Report_MovementCheckLightDialog in '..\..\FormsFarmacy\Report\Report_MovementCheckLightDialog.pas' {Report_MovementChecLightDialogForm: TParentForm},
+  ReportMovementCheckLight in '..\..\FormsFarmacy\Report\ReportMovementCheckLight.pas' {ReportMovementCheckLightForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

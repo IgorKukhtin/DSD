@@ -378,6 +378,8 @@ type
     N148: TMenuItem;
     actReport_Check_Rating: TdsdOpenForm;
     N124: TMenuItem;
+    actReportMovementCheckGrowthAndFalling: TdsdOpenForm;
+    miReportMovementCheckGrowthAndFalling: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
