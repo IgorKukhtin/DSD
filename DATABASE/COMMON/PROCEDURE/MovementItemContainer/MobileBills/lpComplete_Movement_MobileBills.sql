@@ -291,7 +291,7 @@ BEGIN
                                                                        AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
              LEFT JOIN Object ON Object.Id = ObjectLink_Contract_Juridical.ChildObjectId
 
-             LEFT JOIN Object AS Object_Employee ON Object_Employee.Id = _tmpItem.ObjectIntId_Analyzer
+             LEFT JOIN Object AS Object_Employee ON Object_Employee.Id     = _tmpItem.ObjectIntId_Analyzer
                                                 AND Object_Employee.DescId = zc_Object_Founder()
 
         WHERE ObjectLink_Unit_Contract.ChildObjectId > 0
@@ -405,6 +405,9 @@ BEGIN
                                           ON MIFloat_Overlimit.MovementItemId = _tmpItem.MovementItemId
                                          AND MIFloat_Overlimit.DescId = zc_MIFloat_Overlimit()
 
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Contract ON ObjectLink_Unit_Contract.ObjectId = _tmpItem.UnitId
+                                                             AND ObjectLink_Unit_Contract.DescId = zc_ObjectLink_Unit_Contract()
+
              LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
                                   ON ObjectLink_Personal_Position.ObjectId = _tmpItem.ObjectIntId_Analyzer
                                  AND ObjectLink_Personal_Position.DescId   = zc_ObjectLink_Personal_Position()
@@ -414,6 +417,7 @@ BEGIN
              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_60101() -- 60101 Заработная плата + Заработная плата
 
         WHERE MIFloat_Overlimit.ValueData <> 0
+          AND ObjectLink_Unit_Contract.ChildObjectId IS NULL
        ;
 
 

@@ -496,6 +496,7 @@ BEGIN
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 100401, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_100401');
 
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 110101, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_110101');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 110151, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_110151');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 110201, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_110201');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 110301, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_110301');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 110302, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_110302');
@@ -574,6 +575,7 @@ BEGIN
      -- !!! УП: Управленческие статьи назначения (1+2+3 уровень)
      -- !!!
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10101, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_10101');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10102, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_10102');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10105, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_10105');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10106, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_10106');
 

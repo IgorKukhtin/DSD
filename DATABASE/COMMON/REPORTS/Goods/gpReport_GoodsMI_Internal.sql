@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpReport_GoodsMI_Internal (TDateTime, TDateTime, Integer
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_Internal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Internal (
-    IN inStartDate    TDateTime ,  
+    IN inStartDate    TDateTime ,
     IN inEndDate      TDateTime ,
     IN inDescId       Integer   ,
     IN inFromId       Integer   ,
@@ -22,14 +22,14 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , LocationId Integer, LocationCode Integer, LocationName TVarChar, LocationItemName TVarChar
              , LocationId_by Integer, LocationCode_by Integer, LocationName_by TVarChar, LocationItemName_by TVarChar
              , ArticleLossCode Integer, ArticleLossName TVarChar
-             , AmountOut TFloat, AmountOut_Weight TFloat, AmountOut_Sh TFloat, SummOut_zavod TFloat, SummOut_branch TFloat, SummOut_60000 TFloat 
+             , AmountOut TFloat, AmountOut_Weight TFloat, AmountOut_Sh TFloat, SummOut_zavod TFloat, SummOut_branch TFloat, SummOut_60000 TFloat
              , AmountIn TFloat, AmountIn_Weight TFloat, AmountIn_Sh TFloat,  SummIn_zavod TFloat, SummIn_branch TFloat, SummIn_60000 TFloat
-             , Summ_ProfitLoss TFloat
+             , Amount_Send_pl TFloat, Summ_ProfitLoss TFloat
              , PriceOut_zavod TFloat, PriceOut_branch TFloat, PriceIn_zavod TFloat, PriceIn_branch TFloat
              , Price_PriceList TFloat, SummOut_PriceList TFloat
              , ProfitLossCode Integer, ProfitLossGroupName TVarChar, ProfitLossDirectionName TVarChar, ProfitLossName TVarChar
              , ProfitLossName_All TVarChar
-             )   
+             )
 AS
 $BODY$
  DECLARE vbUserId    Integer;
@@ -48,14 +48,14 @@ BEGIN
          DELETE FROM _tmpGoods;
          DELETE FROM _tmpUnit;
      ELSE
-         -- таблица - 
+         -- таблица -
          CREATE TEMP TABLE _tmpGoods (GoodsId Integer, InfoMoneyId Integer, TradeMarkId Integer, MeasureId Integer, Weight TFloat) ON COMMIT DROP;
          CREATE TEMP TABLE _tmpUnit (UnitId Integer, UnitId_by Integer, isActive Boolean) ON COMMIT DROP;
      END IF;
 
     -- Ограничения по товару
-    IF inGoodsGroupId <> 0 
-    THEN 
+    IF inGoodsGroupId <> 0
+    THEN
         INSERT INTO _tmpGoods (GoodsId, MeasureId, Weight)
            SELECT lfSelect.GoodsId, ObjectLink_Goods_Measure.ChildObjectId AS MeasureId, ObjectFloat_Weight.ValueData AS Weight
            FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect
@@ -65,7 +65,7 @@ BEGIN
                                       ON ObjectFloat_Weight.ObjectId = lfSelect.GoodsId
                                      AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
           ;
-    ELSE 
+    ELSE
         INSERT INTO _tmpGoods (GoodsId, MeasureId, Weight)
            SELECT Object.Id, ObjectLink_Goods_Measure.ChildObjectId AS MeasureId, ObjectFloat_Weight.ValueData AS Weight
            FROM Object
@@ -111,16 +111,50 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-            -- Цены из прайса
+             -- Цены из прайса
         WITH tmpPriceList AS (SELECT lfSelect.GoodsId    AS GoodsId
                                    , CASE WHEN TRUE = COALESCE ((SELECT OB.ValueData FROM ObjectBoolean AS OB WHERE OB.ObjectId = inPriceListId AND OB.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT()), FALSE)
                                             OR 0    = COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inPriceListId AND ObjectFloat.DescId = zc_ObjectFloat_PriceList_VATPercent()), 0)
                                                THEN lfSelect.ValuePrice
                                           ELSE lfSelect.ValuePrice * (1 + COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inPriceListId AND ObjectFloat.DescId = zc_ObjectFloat_PriceList_VATPercent()), 0) / 100)
                                      END AS Price_vat
-                              FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inEndDate) AS lfSelect 
+                              FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inEndDate) AS lfSelect
                              )
-    SELECT Object_GoodsGroup.ValueData                AS GoodsGroupName 
+     , tmpSend_ProfitLoss AS (SELECT MIContainer.Id
+                                   , MIContainer.MovementId
+                                   , MIContainer.DescId
+                                   , MIContainer.MovementItemId
+                                   , MIContainer.ContainerId
+                                   , MIContainer.isActive, MIContainer.WhereObjectId_analyzer, MIContainer.ObjectExtId_Analyzer
+                                   , MIContainer.ObjectId_analyzer
+                                   , MIContainer.ObjectIntId_Analyzer
+                                   , MIContainer.AccountId
+                                   , MIContainer.ContainerId_Analyzer
+
+                                   , MIContainer.Amount
+                                   , MIContainer.AnalyzerId
+
+                              FROM MovementItemContainer AS MIContainer
+                                   INNER JOIN _tmpUnit ON _tmpUnit.UnitId   = MIContainer.WhereObjectId_analyzer
+                                                      AND _tmpUnit.isActive = MIContainer.isActive
+                              WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                AND MIContainer.MovementDescId = zc_Movement_Send()
+                                AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss()
+                                AND MIContainer.isActive = FALSE
+                                AND MIContainer.ParentId IS NULL
+                                AND inDescId = zc_Movement_Loss()
+                                AND COALESCE (MIContainer.AccountId, 0) NOT IN (12102, zc_Enum_Account_100301()) -- Прибыль текущего периода
+                             )
+  , tmpSend_ProfitLoss_mi AS (SELECT tmp.Id
+                                   , MovementItem.Amount
+                              FROM (SELECT MAX(tmpSend_ProfitLoss.Id) AS Id, tmpSend_ProfitLoss.MovementItemId, tmpSend_ProfitLoss.MovementId FROM tmpSend_ProfitLoss GROUP BY tmpSend_ProfitLoss.MovementItemId, tmpSend_ProfitLoss.MovementId
+                                   ) AS tmp
+                                   LEFT JOIN MovementItem ON MovementItem.Id         = tmp.MovementItemId
+                                                         AND MovementItem.MovementId = tmp.MovementId
+                                                         AND MovementItem.DescId     = zc_MI_Master()
+                             )
+    -- Результат
+    SELECT Object_GoodsGroup.ValueData                AS GoodsGroupName
          , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
          , Object_Goods.Id                            AS GoodsId
          , Object_Goods.ObjectCode                    AS GoodsCode
@@ -148,14 +182,15 @@ BEGIN
          , CASE WHEN vbIsBranch = TRUE THEN 0 ELSE tmpOperationGroup.SummOut_zavod END :: TFloat AS SummOut_zavod
          , tmpOperationGroup.SummOut_branch   :: TFloat AS SummOut_branch
          , CASE WHEN vbIsBranch = TRUE THEN 0 ELSE tmpOperationGroup.SummOut_60000 END :: TFloat AS SummOut_60000
-         
+
          , tmpOperationGroup.AmountIn        :: TFloat AS AmountIn
          , tmpOperationGroup.AmountIn_Weight :: TFloat AS AmountIn_Weight
          , tmpOperationGroup.AmountIn_Sh     :: TFloat AS AmountIn_Sh
          , CASE WHEN vbIsBranch = TRUE THEN 0 ELSE tmpOperationGroup.SummIn_zavod END :: TFloat AS SummIn_zavod
          , tmpOperationGroup.SummIn_branch   :: TFloat AS SummIn_branch
          , CASE WHEN vbIsBranch = TRUE THEN 0 ELSE tmpOperationGroup.SummIn_60000 END :: TFloat AS SummIn_60000
-         
+
+         , tmpOperationGroup.Amount_Send_pl  :: TFloat AS Amount_Send_pl
          , tmpOperationGroup.Summ_ProfitLoss :: TFloat AS Summ_ProfitLoss
 
          , CASE WHEN tmpOperationGroup.AmountOut <> 0 THEN tmpOperationGroup.SummOut_zavod  / tmpOperationGroup.AmountOut ELSE 0 END :: TFloat AS PriceOut_zavod
@@ -163,8 +198,8 @@ BEGIN
          , CASE WHEN tmpOperationGroup.AmountIn  <> 0 THEN tmpOperationGroup.SummIn_zavod   / tmpOperationGroup.AmountIn  ELSE 0 END :: TFloat AS PriceIn_zavod
          , CASE WHEN tmpOperationGroup.AmountIn  <> 0 THEN tmpOperationGroup.SummIn_branch  / tmpOperationGroup.AmountIn  ELSE 0 END :: TFloat AS PriceIn_branch
 
-         , tmpPriceList.Price_vat ::TFloat AS Price_PriceList 
-         , (tmpOperationGroup.AmountOut * tmpPriceList.Price_vat) :: TFloat AS SummOut_PriceList 
+         , tmpPriceList.Price_vat ::TFloat AS Price_PriceList
+         , (tmpOperationGroup.AmountOut * tmpPriceList.Price_vat) :: TFloat AS SummOut_PriceList
 
          , View_ProfitLoss.ProfitLossCode, View_ProfitLoss.ProfitLossGroupName, View_ProfitLoss.ProfitLossDirectionName, View_ProfitLoss.ProfitLossName
          , View_ProfitLoss.ProfitLossName_all
@@ -177,22 +212,23 @@ BEGIN
                 , tmpContainer.GoodsKindId
                 , CLO_PartionGoods.ObjectId AS PartionGoodsId
 
-                , SUM (tmpContainer.AmountOut)         AS AmountOut 
+                , SUM (tmpContainer.AmountOut)         AS AmountOut
                 , SUM (tmpContainer.AmountOut_Weight)  AS AmountOut_Weight
                 , SUM (tmpContainer.AmountOut_sh)      AS AmountOut_sh
                 , SUM (tmpContainer.SummOut)           AS SummOut_zavod
                 , SUM (CASE WHEN COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.SummOut ELSE 0 END) AS SummOut_branch
                 , SUM (CASE WHEN Object_Account_View.AccountDirectionId = zc_Enum_AccountDirection_60200() THEN tmpContainer.SummOut ELSE 0 END)                AS SummOut_60000
 
-                , SUM (tmpContainer.AmountIn)          AS AmountIn 
+                , SUM (tmpContainer.AmountIn)          AS AmountIn
                 , SUM (tmpContainer.AmountIn_Weight)   AS AmountIn_Weight
                 , SUM (tmpContainer.AmountIn_sh)       AS AmountIn_sh
                 , SUM (tmpContainer.SummIn)            AS SummIn_zavod
                 , SUM (CASE WHEN COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.SummIn ELSE 0 END) AS SummIn_branch
                 , SUM (CASE WHEN Object_Account_View.AccountDirectionId = zc_Enum_AccountDirection_60200() THEN tmpContainer.SummIn ELSE 0 END)                AS SummIn_60000
 
-                , SUM (tmpContainer.Summ_ProfitLoss)          AS Summ_ProfitLoss
-                
+                , SUM (tmpContainer.Summ_ProfitLoss)   AS Summ_ProfitLoss
+                , SUM (tmpContainer.Amount_Send_pl)       AS Amount_Send_pl
+
            FROM (SELECT tmpMI.ContainerId
                       , tmpMI.UnitId
                       , tmpMI.UnitId_by
@@ -211,8 +247,9 @@ BEGIN
                       , tmpMI.AmountIn * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END AS AmountIn_Weight
                       , CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpMI.AmountIn ELSE 0 END AS AmountIn_sh
                       , tmpMI.SummIn
-                      
+
                       , tmpMI.Summ_ProfitLoss
+                      , tmpMI.Amount_Send_pl
 
                  FROM (SELECT CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ContainerId END AS ContainerId
                             , CASE WHEN MIContainer.isActive = FALSE THEN MIContainer.WhereObjectId_analyzer ELSE MIContainer.ObjectExtId_Analyzer END AS UnitId
@@ -231,11 +268,13 @@ BEGIN
 
                             , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND (inDescId = zc_Movement_Loss() OR MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss()) THEN CASE WHEN inDescId IN(zc_Movement_Loss(), zc_Movement_Send()) THEN -1 ELSE 1 END * MIContainer.Amount ELSE 0 END) AS Summ_ProfitLoss
 
+                            , 0 AS Amount_Send_pl
+
                        FROM MovementItemContainer AS MIContainer
                             INNER JOIN _tmpUnit ON _tmpUnit.UnitId    = MIContainer.WhereObjectId_analyzer
                                                AND (_tmpUnit.UnitId_by = COALESCE (MIContainer.ObjectExtId_Analyzer, 0) OR _tmpUnit.UnitId_by = 0)
                                                AND _tmpUnit.isActive  = MIContainer.isActive
-                       WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate  
+                       WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                          AND MIContainer.MovementDescId = inDescId
                          AND COALESCE (MIContainer.AccountId,0) NOT IN (12102, zc_Enum_Account_100301 ()) -- Прибыль текущего периода
                        GROUP BY CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ContainerId END
@@ -264,16 +303,10 @@ BEGIN
 
                             , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND (inDescId = zc_Movement_Loss() OR MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss()) THEN CASE WHEN inDescId IN(zc_Movement_Loss(), zc_Movement_Send()) THEN -1 ELSE 1 END * MIContainer.Amount ELSE 0 END) AS Summ_ProfitLoss
 
-                       FROM MovementItemContainer AS MIContainer
-                            INNER JOIN _tmpUnit ON _tmpUnit.UnitId    = MIContainer.WhereObjectId_analyzer
-                                               AND _tmpUnit.isActive  = MIContainer.isActive
-                       WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate  
-                         AND MIContainer.MovementDescId = zc_Movement_Send()
-                         AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss()
-                         AND MIContainer.isActive = FALSE
-                         AND MIContainer.ParentId IS NULL
-                         AND inDescId = zc_Movement_Loss()
-                         AND COALESCE (MIContainer.AccountId, 0) NOT IN (12102, zc_Enum_Account_100301()) -- Прибыль текущего периода
+                            , SUM (COALESCE (tmpSend_ProfitLoss_mi.Amount, 0)) AS Amount_Send_pl
+
+                       FROM tmpSend_ProfitLoss AS MIContainer
+                            LEFT JOIN tmpSend_ProfitLoss_mi ON tmpSend_ProfitLoss_mi.Id         = tmpSend_ProfitLoss_mi.Id
                        GROUP BY CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ContainerId END
                               , CASE WHEN MIContainer.isActive = FALSE THEN MIContainer.WhereObjectId_analyzer ELSE MIContainer.ObjectExtId_Analyzer END
                               , CASE WHEN MIContainer.isActive = TRUE  THEN MIContainer.WhereObjectId_analyzer ELSE MIContainer.ObjectExtId_Analyzer END
@@ -318,7 +351,7 @@ BEGIN
           LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpOperationGroup.PartionGoodsId
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
-                               ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id 
+                               ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id
                               AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
           LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
 
@@ -327,7 +360,7 @@ BEGIN
                               AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
           LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                                           AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
@@ -335,7 +368,7 @@ BEGIN
                                  ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                 AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
   ;
-         
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -344,7 +377,7 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  12.08.15                                        * all
- 19.07.15         * 
+ 19.07.15         *
 */
 
 -- тест

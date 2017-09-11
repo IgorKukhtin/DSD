@@ -118,8 +118,8 @@ BEGIN
                                                              AND CLO_PersonalServiceList.DescId      = zc_ContainerLinkObject_PersonalServiceList()
                                                              AND CLO_PersonalServiceList.ContainerId = CLO_ServiceDate.ContainerId
                          )
-       -- только проводки - сколько уже выплатили (Авансом)
-     , tmpMIContainer AS (SELECT SUM (COALESCE (MIContainer.Amount, 0))  AS Amount
+   -- только проводки - сколько уже выплатили (Авансом)
+ , tmpMIContainer_all AS (SELECT MIContainer.*
                                , tmpContainer.PersonalId
                                , tmpContainer.UnitId
                                , tmpContainer.PositionId
@@ -128,10 +128,41 @@ BEGIN
                                INNER JOIN MovementItemContainer AS MIContainer
                                                                 ON MIContainer.ContainerId = tmpContainer.ContainerId
                                                                AND MIContainer.DescId      = zc_MIContainer_Summ()
-                          GROUP BY tmpContainer.PersonalId
-                                 , tmpContainer.UnitId
-                                 , tmpContainer.PositionId
-                                 , tmpContainer.InfoMoneyId
+                         )
+       -- только 
+     , tmpSummCard AS (SELECT SUM (COALESCE (MIFloat_SummCard.ValueData, 0))  AS Amount
+                               , tmp.PersonalId
+                               , tmp.UnitId
+                               , tmp.PositionId
+                               , tmp.InfoMoneyId
+                          FROM (SELECT DISTINCT
+                                       tmpMIContainer_all.MovementItemId
+                                     , tmpMIContainer_all.PersonalId
+                                     , tmpMIContainer_all.UnitId
+                                     , tmpMIContainer_all.PositionId
+                                     , tmpMIContainer_all.InfoMoneyId
+                                FROM tmpMIContainer_all
+                                WHERE tmpMIContainer_all.MovementDescId = zc_Movement_PersonalService()
+                               ) AS tmp
+                               INNER JOIN MovementItemFloat AS MIFloat_SummCard
+                                                            ON MIFloat_SummCard.MovementItemId = tmp.MovementItemId
+                                                           AND MIFloat_SummCard.DescId         = zc_MIFloat_SummCard()
+                          GROUP BY tmp.PersonalId
+                                 , tmp.UnitId
+                                 , tmp.PositionId
+                                 , tmp.InfoMoneyId
+                         )
+       -- только проводки - сколько уже выплатили (Авансом)
+     , tmpMIContainer AS (SELECT SUM (COALESCE (CASE WHEN tmpMIContainer_all.MovementDescId = zc_Movement_BankAccount() THEN 0 ELSE tmpMIContainer_all.Amount END, 0))  AS Amount
+                               , tmpMIContainer_all.PersonalId
+                               , tmpMIContainer_all.UnitId
+                               , tmpMIContainer_all.PositionId
+                               , tmpMIContainer_all.InfoMoneyId
+                          FROM tmpMIContainer_all
+                          GROUP BY tmpMIContainer_all.PersonalId
+                                 , tmpMIContainer_all.UnitId
+                                 , tmpMIContainer_all.PositionId
+                                 , tmpMIContainer_all.InfoMoneyId
                          )
             -- результат
             SELECT tmpListPersonal.MovementItemId
@@ -140,14 +171,18 @@ BEGIN
                  , tmpListPersonal.PositionId
                  , tmpListPersonal.InfoMoneyId
                  , tmpListPersonal.PersonalServiceListId
-                 , -1 * COALESCE (tmpMIContainer.Amount, 0) AS SummCardSecondRecalc -- т.к. в проводках долг с минусом
+                 , -1 * COALESCE (tmpMIContainer.Amount, 0) - COALESCE (tmpSummCard.Amount, 0) AS SummCardSecondRecalc -- т.к. в проводках долг с минусом
             FROM tmpListPersonal
                  LEFT JOIN tmpMIContainer ON tmpMIContainer.PersonalId  = tmpListPersonal.PersonalId
                                          AND tmpMIContainer.UnitId      = tmpListPersonal.UnitId
                                          AND tmpMIContainer.PositionId  = tmpListPersonal.PositionId
                                          AND tmpMIContainer.InfoMoneyId = tmpListPersonal.InfoMoneyId
+                 LEFT JOIN tmpSummCard ON tmpSummCard.PersonalId  = tmpListPersonal.PersonalId
+                                      AND tmpSummCard.UnitId      = tmpListPersonal.UnitId
+                                      AND tmpSummCard.PositionId  = tmpListPersonal.PositionId
+                                      AND tmpSummCard.InfoMoneyId = tmpListPersonal.InfoMoneyId
             WHERE tmpListPersonal.MovementItemId > 0 
-               OR tmpMIContainer.Amount          < 0 -- !!! т.е. если есть долг по ЗП
+               OR -1 * COALESCE (tmpMIContainer.Amount, 0) - COALESCE (tmpSummCard.Amount, 0) < 0 -- !!! т.е. если есть долг по ЗП
           ;
  
      -- сохраняем элементы

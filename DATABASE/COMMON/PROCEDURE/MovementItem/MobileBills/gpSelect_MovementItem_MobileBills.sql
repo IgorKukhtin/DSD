@@ -42,7 +42,7 @@ BEGIN
            , ObjectString_Comment.ValueData     AS MobileEmployeeComment
 
            , MovementItem.Amount                AS Amount
-           , (COALESCE (MovementItem.Amount, 0) - COALESCE (MIFloat_Overlimit.ValueData, 0)) :: TFloat AS Amount_ProfitLoss
+           , (CASE WHEN ObjectDesc.Id = zc_Object_Founder() OR ObjectLink_Unit_Contract.ChildObjectId > 0 THEN 0 ELSE COALESCE (MovementItem.Amount, 0) - COALESCE (MIFloat_Overlimit.ValueData, 0) END) :: TFloat AS Amount_ProfitLoss
 
            , MIFloat_CurrMonthly.ValueData      AS CurrMonthly
            , MIFloat_CurrNavigator.ValueData    AS CurrNavigator
@@ -119,6 +119,7 @@ BEGIN
                                         ON MIFloat_PrevMonthly.MovementItemId = MovementItem.Id
                                        AND MIFloat_PrevMonthly.DescId = zc_MIFloat_PrevMonthly()
 
+            -- Сотрудник/Подразделение/Учредитель
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Employee
                                              ON MILinkObject_Employee.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Employee.DescId = zc_MILinkObject_Employee()
@@ -137,10 +138,32 @@ BEGIN
                                  ON ObjectLink_Personal_Position.ObjectId = Object_Employee.Id
                                 AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
             LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Personal_Position.ChildObjectId
+
+            -- нашли Физ лицо
+            LEFT JOIN ObjectLink AS ObjectLink_Personal_Member ON ObjectLink_Personal_Member.ObjectId = MILinkObject_Employee.ObjectId
+                                                              AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+            -- если у Физ лица установлено - На кого "переносятся" затраты в "Налоги с ЗП" или в "Мобильная связь"
+            LEFT JOIN ObjectLink AS ObjectLink_Member_ObjectTo ON ObjectLink_Member_ObjectTo.ObjectId = ObjectLink_Personal_Member.ChildObjectId
+                                                              AND ObjectLink_Member_ObjectTo.DescId = zc_ObjectLink_Member_ObjectTo()
+            LEFT JOIN Object AS Object_ObjectTo ON Object_ObjectTo.Id = ObjectLink_Member_ObjectTo.ChildObjectId
+
             LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
-                                 ON ObjectLink_Personal_Unit.ObjectId = Object_Employee.Id
+                                 ON ObjectLink_Personal_Unit.ObjectId = COALESCE (Object_ObjectTo.Id, MILinkObject_Employee.ObjectId)
                                 AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Contract ON ObjectLink_Unit_Contract.ObjectId = CASE -- если На кого "переносятся" затраты = Подразделение
+                                                                                                         WHEN Object_ObjectTo.DescId = zc_Object_Unit()
+                                                                                                              THEN Object_ObjectTo.Id
+                                                                                                         -- если нашли Сотрудника или Телефон привязан к подразделению
+                                                                                                         WHEN ObjectLink_Personal_Unit.ChildObjectId > 0 OR Object_Employee.DescId = zc_Object_Unit()
+                                                                                                              THEN COALESCE (ObjectLink_Personal_Unit.ChildObjectId, Object_Employee.Id)
+                                                                                                         -- иначе захардкодим - Подразделение "Административный"
+                                                                                                         ELSE 8383
+                                                                                                    END
+                                                             AND ObjectLink_Unit_Contract.DescId   = zc_ObjectLink_Unit_Contract()
+
+
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
                                  ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
                                 AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()

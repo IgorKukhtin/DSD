@@ -14,7 +14,7 @@ BEGIN
      -- Проверка
      IF EXISTS (SELECT SUM (OperSumm + COALESCE (OperSumm_Diff, 0)) FROM _tmpItem /*WHERE MovementDescId = zc_Movement_ProfitLossService()*/ HAVING SUM (OperSumm + COALESCE (OperSumm_Diff, 0)) <> 0)
      THEN
-         RAISE EXCEPTION 'Ошибка.В проводке отличаются сумма <Дебет> и сумма <Кредит> : (%) (%)', (SELECT SUM (OperSumm) FROM _tmpItem WHERE IsMaster = TRUE), (SELECT SUM (OperSumm) FROM _tmpItem WHERE IsMaster = FALSE);
+         RAISE EXCEPTION 'Ошибка.В проводке отличаются сумма <Дебет> и сумма <Кредит> : (%) (%) = (%)', (SELECT SUM (OperSumm) FROM _tmpItem WHERE IsMaster = TRUE), (SELECT SUM (OperSumm) FROM _tmpItem WHERE IsMaster = FALSE), (SELECT SUM (OperSumm) FROM _tmpItem);
      END IF;
 
 

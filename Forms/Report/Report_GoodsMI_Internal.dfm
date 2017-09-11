@@ -5,8 +5,9 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -286
   ExplicitWidth = 1092
-  ExplicitHeight = 390
+  ExplicitHeight = 387
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -88,6 +89,11 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
               Format = ',0.####'
               Kind = skSum
               Column = Summ_ProfitLoss
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Send_pl
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -149,6 +155,11 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
               Format = ',0.####'
               Kind = skSum
               Column = Summ_ProfitLoss
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Send_pl
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -307,6 +318,16 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
           object AmountOut_Sh: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1064#1090'. ('#1088#1072#1089#1093'.)'
             DataBinding.FieldName = 'AmountOut_Sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Amount_Send_pl: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1054#1055#1080#1059' ('#1079#1072#1090#1088#1072#1090#1099')'
+            DataBinding.FieldName = 'Amount_Send_pl'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'

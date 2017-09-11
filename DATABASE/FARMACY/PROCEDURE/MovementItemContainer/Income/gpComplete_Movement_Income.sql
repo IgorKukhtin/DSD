@@ -70,13 +70,17 @@ BEGIN
                        AND COALESCE(MovementItem.Amount,0) <> COALESCE(MIFloat_AmountManual.ValueData,0)
                      LIMIT 1);
      IF COALESCE (vbGoodsName, '') <> ''
+       AND vbUserId NOT IN (375661, 2301972) -- Зерин Юрий Геннадиевич
      THEN
          RAISE EXCEPTION 'Ошибка. Проверьте кол-во факт по одному <%> или более товарам.', vbGoodsName;
      END IF;
 
 
-     -- Проверили что установлены все связи
-     PERFORM lpCheckComplete_Movement_Income (inMovementId);
+     IF vbUserId NOT IN (375661, 2301972) -- Зерин Юрий Геннадиевич
+     THEN
+         -- Проверили что установлены все связи
+         PERFORM lpCheckComplete_Movement_Income (inMovementId);
+     END IF;
 
     -- Проверить, что бы не было переучета позже даты документа
     SELECT

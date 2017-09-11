@@ -105,6 +105,7 @@ BEGIN
                    , MovementLinkObject_Unit.ObjectId           AS UnitId
                    , MovementString_CommentError.ValueData      AS CommentError
                    , MovementString_InvNumberSP.ValueData       AS InvNumberSP
+                   , MovementLinkObject_CheckMember.ObjectId    AS MemberId
               FROM Movement
                    INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
 
@@ -118,12 +119,19 @@ BEGIN
                                                 ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()    
                                                                          
+                   LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckMember
+                                                ON MovementLinkObject_CheckMember.MovementId = Movement.Id
+                                               AND MovementLinkObject_CheckMember.DescId = zc_MovementLinkObject_CheckMember()
+
               WHERE Movement.OperDate >= DATE_TRUNC ('DAY', inStartDate) 
                 AND Movement.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
                 AND Movement.DescId = zc_Movement_Check()
                 AND (MovementLinkObject_Unit.ObjectId = inUnitId 
-                     OR ((MovementString_CommentError.ValueData <> '' OR MovementString_InvNumberSP.ValueData <> '') AND inUnitId = 0))    
-                AND (vbRetailId = vbObjectId)
+                     OR (inUnitId = 0
+                     AND (MovementString_CommentError.ValueData <> '' OR MovementString_InvNumberSP.ValueData <> '' OR MovementLinkObject_CheckMember.ObjectId > 0
+                         )
+                    ))
+                AND vbRetailId = vbObjectId
            ) AS Movement_Check 
              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Check.StatusId
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Movement_Check.UnitId
@@ -184,10 +192,7 @@ BEGIN
                                          AND MovementLinkObject_PaidType.DescId = zc_MovementLinkObject_PaidType()
              LEFT JOIN Object AS Object_PaidType ON Object_PaidType.Id = MovementLinkObject_PaidType.ObjectId								  
 
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckMember
-                                          ON MovementLinkObject_CheckMember.MovementId = Movement_Check.Id
-                                         AND MovementLinkObject_CheckMember.DescId = zc_MovementLinkObject_CheckMember()
- 	     LEFT JOIN Object AS Object_CashMember ON Object_CashMember.Id = MovementLinkObject_CheckMember.ObjectId
+ 	     LEFT JOIN Object AS Object_CashMember ON Object_CashMember.Id = Movement_Check.MemberId
 
              LEFT JOIN MovementLinkObject AS MovementLinkObject_DiscountCard
                                           ON MovementLinkObject_DiscountCard.MovementId = Movement_Check.Id

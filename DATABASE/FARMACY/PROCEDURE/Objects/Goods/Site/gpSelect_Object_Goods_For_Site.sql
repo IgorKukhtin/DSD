@@ -1,4 +1,6 @@
-﻿DROP FUNCTION IF EXISTS gpSelect_Object_Goods_For_Site(Boolean,Boolean,Integer,Integer,TVarChar);
+﻿-- Function: gpSelect_Object_Goods_For_Site()
+
+DROP FUNCTION IF EXISTS gpSelect_Object_Goods_For_Site (Boolean, Boolean, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_For_Site(
     IN inPublished     Boolean,       -- опубликован
@@ -92,18 +94,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Goods_For_Site(Boolean,Boolean,Integer,Integer,TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
  27.10.15                                                         *
- 
 */
 
 -- тест
- --SELECT * FROM gpSelect_Object_Goods_Count(TRUE,FALSE);
-
-
+-- SELECT * FROM gpSelect_Object_Goods_For_Site (TRUE,FALSE);

@@ -90,6 +90,7 @@ type
     Summ_ProfitLoss: TcxGridDBColumn;
     actPrintArticleLoss: TdsdPrintAction;
     bbPrintArticleLoss: TdxBarButton;
+    Amount_Send_pl: TcxGridDBColumn;
   private
     { Private declarations }
   public

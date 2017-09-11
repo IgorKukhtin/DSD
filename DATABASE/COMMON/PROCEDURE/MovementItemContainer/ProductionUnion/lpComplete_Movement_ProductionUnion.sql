@@ -469,7 +469,9 @@ BEGIN
                                                WHEN vbIsPartionDate_Unit_To      = TRUE
                                                 AND (vbIsPartionGoodsKind_Unit_To = TRUE
                                                      -- ИЛИ это группа - ЦЕХ колбаса+дел-сы
-                                                     OR  EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = vbUnitId_From AND OL.ChildObjectId = 8446 AND OL.DescId = zc_ObjectLink_Unit_Parent())
+                                                     OR (EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = vbUnitId_From AND OL.ChildObjectId = 8446 AND OL.DescId = zc_ObjectLink_Unit_Parent())
+                                                     AND _tmpItem_pr.InfoMoneyId = zc_Enum_InfoMoney_10102()  -- Основное сырье + Мясное сырье + Свинина - !!!надо для ШКУРА СВ замоч. Чапли!!!!
+                                                        )
                                                     )
                                                 AND vbIsPeresort = FALSE
                                                 AND _tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()  -- Основное сырье + Мясное сырье
