@@ -6,8 +6,10 @@ CREATE OR REPLACE FUNCTION zfCalc_OverDayCount (IN inContainerId integer, IN inO
 $BODY$
    DECLARE vbAmount TFloat;
    DECLARE vbRec RECORD;
+   DECLARE vbOverDayCount Integer;
 BEGIN
       vbAmount:= COALESCE (inOverSum, 0.0)::TFloat;
+      vbOverDayCount:= 0;
 
       IF vbAmount > 0.0
       THEN
@@ -26,12 +28,24 @@ BEGIN
 
                 IF vbAmount <= 0.0 
                 THEN
-                     RETURN DATE_PART ('day', inDate - vbRec.OperDate)::Integer;
+                     vbOverDayCount:= DATE_PART ('day', inDate - vbRec.OperDate)::Integer;
+
+                     IF vbOverDayCount > 0 AND vbOverDayCount <= 7 THEN
+                       vbOverDayCount:= 7;
+                     ELSIF vbOverDayCount > 7 AND vbOverDayCount <= 14 THEN
+                       vbOverDayCount:= 14;
+                     ELSIF vbOverDayCount > 14 AND vbOverDayCount <= 21 THEN
+                       vbOverDayCount:= 21;  
+                     ELSIF vbOverDayCount > 21 AND vbOverDayCount <= 28 THEN
+                       vbOverDayCount:= 28;  
+                     END IF;
+
+                     RETURN vbOverDayCount;
                 END IF;  
            END LOOP;
       END IF;
 
-      RETURN 0;
+      RETURN vbOverDayCount;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
