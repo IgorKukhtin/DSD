@@ -26,7 +26,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
 --     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Income());
      vbUserId:= inSession;
-     
+
      -- поиск <Торговой сети>
      vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
@@ -35,7 +35,7 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Документ уже проведен.';
      END IF;
-     
+
      -- дата аптеки
      outOperDate_Branch := (SELECT MD_Branch.ValueData
                          FROM MovementDate AS MD_Branch
@@ -49,17 +49,17 @@ BEGIN
          outOperDate_Branch:= CURRENT_DATE;
          -- МЕНЯЕМ ДАТУ АПТЕКИ НА ТЕКУЩУЮ
          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Branch(), inMovementId, outOperDate_Branch);
-     ELSE 
+     ELSE
          IF (outOperDate_Branch <> CURRENT_DATE) AND (inIsCurrentData = FALSE)
          THEN
             -- проверка прав на проведение задним числом
             vbUserId:= lpCheckRight (inSession, zc_Enum_Process_CompleteDate_Income());
          END IF;
      END IF;
-     
+
 
      -- !!!Проверка чтоб была заполнена колонка Факт кол-во!!!
-     vbGoodsName := (SELECT Object_Goods.ValueData 
+     vbGoodsName := (SELECT Object_Goods.ValueData
                      FROM MovementItem
                       LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
                              ON MIFloat_AmountManual.MovementItemId = MovementItem.ID
@@ -95,7 +95,7 @@ BEGIN
                                      AND Movement_Unit.DescId = zc_MovementLinkObject_Unit()
 
     WHERE Movement.Id = inMovementId;
-    
+
     /*IF EXISTS(SELECT 1
               FROM Movement AS Movement_Inventory
                   INNER JOIN MovementItem AS MI_Inventory
@@ -112,7 +112,7 @@ BEGIN
                                          AND MI_Send.IsErased = FALSE
                                          AND MI_Send.Amount > 0
                                          AND MI_Send.MovementId = inMovementId
-                                         
+
               WHERE
                   Movement_Inventory.DescId = zc_Movement_Inventory()
                   AND
@@ -130,12 +130,16 @@ BEGIN
     SELECT MLO_From.ObjectId  AS JuridicalId
          , MLO_To.ObjectId    AS ToId
            INTO vbJuridicalId, vbToId
-    FROM MovementLinkObject AS MLO_From 
+    FROM MovementLinkObject AS MLO_From
          LEFT JOIN MovementLinkObject AS MLO_To
                                       ON MLO_To.MovementId = inMovementId
                                      AND MLO_To.DescId = zc_MovementLinkObject_To()
-    WHERE MLO_From.MovementId = inMovementId 
+    WHERE MLO_From.MovementId = inMovementId
       AND MLO_From.DescId = zc_MovementLinkObject_From();
+
+
+     IF vbUserId NOT IN (375661, 2301972) -- Зерин Юрий Геннадиевич
+     THEN
 
     -- Тут устанавливаем связь между товарами покупателей и главным товаром
     PERFORM gpInsertUpdate_Object_LinkGoods(0                                 -- ключ объекта <Условия договора>
@@ -196,6 +200,8 @@ BEGIN
            WHERE tmpGoodsJuridical.Id IS NULL
           ) AS DD;
 
+         END IF;
+
 
       -- пересчитали Итоговые суммы
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
@@ -204,7 +210,7 @@ BEGIN
 
      -- собственно проводки
      PERFORM lpComplete_Movement_Income(inMovementId, -- ключ Документа
-                                        vbUserId);    -- Пользователь                          
+                                        vbUserId);    -- Пользователь
 
      UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
@@ -212,18 +218,18 @@ BEGIN
  -- пока убираем, будет в приходе при нажатии кнопки Пересчитать расходную цену в накладной
 /*
      -- при проведении прихода - Снять заказ из отложенных
-        SELECT MLM.MovementChildId 
+        SELECT MLM.MovementChildId
              , COALESCE (MB_Deferred.ValueData, False) AS isDeferred
       INTO vbOrderId, outisDeferred
-        FROM MovementLinkMovement AS MLM 
+        FROM MovementLinkMovement AS MLM
              LEFT JOIN MovementBoolean AS MB_Deferred
                     ON MB_Deferred.MovementId = MLM.MovementChildId
                    AND MB_Deferred.DescId = zc_MovementBoolean_Deferred()
         WHERE MLM.descid = zc_MovementLinkMovement_Order()
-          AND MLM.MovementId = inMovementId; 
-    
+          AND MLM.MovementId = inMovementId;
+
      -- в найденной заявке меняем статус Отложенн на НЕ отложен
-     IF COALESCE (vbOrderId, 0) <> 0 AND outisDeferred = TRUE 
+     IF COALESCE (vbOrderId, 0) <> 0 AND outisDeferred = TRUE
      THEN
          outisDeferred = FALSE;
          -- Cохранили свойство <Отложен> НЕТ
@@ -231,7 +237,7 @@ BEGIN
          -- сохранили протокол
          PERFORM lpInsert_MovementProtocol (vbOrderId, vbUserId, FALSE);
      END IF;
-     
+
      --после проведения прихода на точку - снимается ОТЛОЖЕН у ВСЕХ заявок с этой точки до даты прихода
      PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Deferred(), Movement.Id, FALSE)            -- сохранили свойство Отложен  НЕТ
            , lpInsert_MovementProtocol (Movement.Id, vbUserId, FALSE)                                     -- сохранили протокол
@@ -262,10 +268,10 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 28.07.17         * 
+ 28.07.17         *
  25.07.17         * проверка даты аптеки
  01.02.17         * при проведении прихода - Снять заказ из отложенных
- 05.02.15                         * 
+ 05.02.15                         *
 
 */
 

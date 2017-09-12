@@ -182,7 +182,7 @@ BEGIN
                                       AND tmpSummCard.PositionId  = tmpListPersonal.PositionId
                                       AND tmpSummCard.InfoMoneyId = tmpListPersonal.InfoMoneyId
             WHERE tmpListPersonal.MovementItemId > 0 
-               OR -1 * COALESCE (tmpMIContainer.Amount, 0) - COALESCE (tmpSummCard.Amount, 0) < 0 -- !!! т.е. если есть долг по ЗП
+               OR -1 * COALESCE (tmpMIContainer.Amount, 0) - COALESCE (tmpSummCard.Amount, 0) > 0 -- !!! т.е. если есть долг по ЗП
           ;
  
      -- сохраняем элементы
