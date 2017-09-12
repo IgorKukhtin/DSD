@@ -86,6 +86,8 @@ type
     ChildDS: TDataSource;
     dsdDBViewAddOn1: TdsdDBViewAddOn;
     Color_Best: TcxGridDBColumn;
+    actGridToExcel1: TdsdGridToExcel;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

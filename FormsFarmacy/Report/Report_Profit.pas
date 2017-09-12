@@ -95,6 +95,8 @@ type
     ChildCDS: TClientDataSet;
     ChildDS: TDataSource;
     dsdDBViewAddOn1: TdsdDBViewAddOn;
+    actGridToExcel1: TdsdGridToExcel;
+    bbGridToExcel1: TdxBarButton;
   private
     { Private declarations }
   public

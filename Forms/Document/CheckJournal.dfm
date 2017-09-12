@@ -330,6 +330,22 @@ inherited CheckJournalForm: TCheckJournalForm
       Top = 29
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
+    object edIsSP: TcxCheckBox
+      Left = 406
+      Top = 5
+      Action = actRefresh
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1057#1055' '#1095#1077#1082#1080
+      TabOrder = 6
+      Width = 155
+    end
+    object edIsVip: TcxCheckBox
+      Left = 406
+      Top = 29
+      Action = actRefresh
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1042#1048#1055' '#1095#1077#1082#1080
+      TabOrder = 7
+      Width = 171
+    end
   end
   inherited ActionList: TActionList
     inherited actInsert: TdsdInsertUpdateAction
@@ -605,6 +621,22 @@ inherited CheckJournalForm: TCheckJournalForm
         Name = 'inIsErased'
         Value = False
         Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsSP'
+        Value = Null
+        Component = edIsSP
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsVip'
+        Value = Null
+        Component = edIsVip
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -10,10 +10,10 @@ uses
 
 const
   cURL = 'http://medicard.in.ua/api/api.php';
-  CardCount = 10;
+  CardCount = 11;
   CardList: array[1..CardCount] of String[16] = ('MD00030026441', 'MD00030026593', 'MD00071023724',
     'MD00071053713', 'MD00072032404', 'MD00072032847', 'MD00072059497', 'MD00072059505',
-    'MD00072059744', 'MD00072060385');
+    'MD00072059744', 'MD00072060385', 'MD00100000001');
 
 type
   TfrmMain = class(TForm)

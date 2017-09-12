@@ -511,6 +511,7 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckGrowthAndFallingForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckGrowthAndFallingForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckGrowthAndFallingDialogForm'));
@@ -526,7 +527,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OverOrderDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OverOrderDialogForm');
   exit;
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_AssortmentForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_AssortmentdForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_AssortmentDialogForm'));
@@ -679,6 +680,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitDialogForm');
+
+  // средний чек
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckMiddleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckMiddleForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckMiddleDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckMiddleDialogForm');
   {
   //Отчет Ценовая интервенция
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceInterventionForm'));
@@ -688,13 +695,7 @@ begin
   //Отчет Ценовая интервенция2
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceIntervention2Form'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PriceIntervention2Form');
-   }
-  // средний чек
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckMiddleForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckMiddleForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckMiddleDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckMiddleDialogForm');
-  {
+
   // отчет распределение остатков
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsForm');

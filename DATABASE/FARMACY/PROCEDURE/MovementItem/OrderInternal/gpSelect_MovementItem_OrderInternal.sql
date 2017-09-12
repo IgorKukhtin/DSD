@@ -963,25 +963,63 @@ BEGIN
 
                      ) 
 
-      , tmpGoods AS (SELECT Object_Goods.Id                              AS GoodsId
-                          , Object_Goods.GoodsCodeInt                    AS GoodsCode
-                          , Object_Goods.GoodsName                       AS GoodsName
-                          , Object_Goods.MinimumLot                      AS Multiplicity
-                          , COALESCE (Object_Goods.isTOP, False)         AS Goods_isTOP
-                          , COALESCE (GoodsPrice.isTop, False)           AS Price_isTOP
-                          , Object_Goods.GoodsGroupId                    AS GoodsGroupId
-                          , Object_Goods.NDSKindId                       AS NDSKindId
-                          , Object_Goods.NDSKindName                     AS NDSKindName
-                          , Object_Goods.NDS                             AS NDS
-                          , Object_Goods.isClose                         AS isClose
-                          , Object_Goods.isFirst                         AS isFirst
-                          , Object_Goods.isSecond                        AS isSecond
-                     FROM Object_Goods_View AS Object_Goods
+      , tmpGoods AS (SELECT ObjectLink_Goods_Object.ObjectId                 AS GoodsId
+                          , Object_Goods.ObjectCode                          AS GoodsCode
+                          , Object_Goods.ValueData                           AS GoodsName
+                          , ObjectLink_Goods_GoodsGroup.ChildObjectId        AS GoodsGroupId
+                          , ObjectLink_Goods_NDSKind.ChildObjectId           AS NDSKindId
+                          , Object_NDSKind.ValueData                         AS NDSKindName
+                          , ObjectFloat_NDSKind_NDS.ValueData                AS NDS
+                          , ObjectFloat_Goods_MinimumLot.ValueData           AS Multiplicity
+               
+                          , COALESCE(ObjectBoolean_Goods_Close.ValueData, false)   AS isClose
+                          , COALESCE(ObjectBoolean_Goods_TOP.ValueData, false)     AS Goods_isTOP
+                          , COALESCE (GoodsPrice.isTop, False)                     AS Price_isTOP
+                          , COALESCE(ObjectBoolean_First.ValueData, False)         AS isFirst
+                          , COALESCE(ObjectBoolean_Second.ValueData, False)        AS isSecond
+
+                     FROM ObjectLink AS ObjectLink_Goods_Object
+                          INNER JOIN Object AS Object_Goods 
+                                            ON Object_Goods.Id = ObjectLink_Goods_Object.ObjectId 
+                                           AND Object_Goods.isErased = FALSE
                           LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = Object_Goods.Id
+
+                          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                               ON ObjectLink_Goods_GoodsGroup.ObjectId = ObjectLink_Goods_Object.ObjectId
+                                              AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+
+                          LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
+                                               ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
+                                              AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
+                          LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
+                  
+                          LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                                ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId 
+                                               AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   
+                  
+                          LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Close
+                                                  ON ObjectBoolean_Goods_Close.ObjectId = ObjectLink_Goods_Object.ObjectId 
+                                                 AND ObjectBoolean_Goods_Close.DescId = zc_ObjectBoolean_Goods_Close()   
+                  
+                          LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                                  ON ObjectBoolean_Goods_TOP.ObjectId = ObjectLink_Goods_Object.ObjectId 
+                                                 AND ObjectBoolean_Goods_TOP.DescId = zc_ObjectBoolean_Goods_TOP()  
+                  
+                          LEFT JOIN ObjectBoolean AS ObjectBoolean_First
+                                                  ON ObjectBoolean_First.ObjectId = ObjectLink_Goods_Object.ObjectId 
+                                                 AND ObjectBoolean_First.DescId = zc_ObjectBoolean_Goods_First() 
+                          LEFT JOIN ObjectBoolean AS ObjectBoolean_Second
+                                                  ON ObjectBoolean_Second.ObjectId = ObjectLink_Goods_Object.ObjectId 
+                                                 AND ObjectBoolean_Second.DescId = zc_ObjectBoolean_Goods_Second() 
+                         
+                          LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_MinimumLot
+                                                 ON ObjectFloat_Goods_MinimumLot.ObjectId = ObjectLink_Goods_Object.ObjectId 
+                                                AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()   
                      WHERE inShowAll = TRUE
-                       AND Object_Goods.ObjectId = vbObjectId
-                       AND Object_Goods.isErased = FALSE
-                     )
+                       AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                       AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
+
+                    )
 
       , tmpMI_All AS (SELECT MovementItem.*
                       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -1007,12 +1045,6 @@ BEGIN
                               , COALESCE (GoodsPrice.isTOP, False)                                           AS Price_isTOP
             
                          FROM tmpMI_All AS tmpMI
-                               -- условия хранения
-                               LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
-                                                    ON ObjectLink_Goods_ConditionsKeep.ObjectId = tmpMI.ObjectId
-                                                   AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
-                               LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId         
-           
                                --LEFT JOIN tmpGoodsMain ON tmpGoodsMain.GoodsId = tmpMI.ObjectId
                                LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = tmpMI.ObjectId
        
@@ -1066,23 +1098,6 @@ BEGIN
                         WHERE tmpMIF.DescId = zc_MIFloat_AmountManual() 
                                 )
                                 
-     /* , tmpMIF_Summ AS (SELECT MIFloat_Summ.*
-                        FROM MovementItemFloat AS MIFloat_Summ
-                        WHERE MIFloat_Summ.DescId = zc_MIFloat_Summ()
-                          AND MIFloat_Summ.MovementItemId IN (SELECT tmpMI_Master.Id FROM tmpMI_Master)
-                        )
-      , tmpMIF_AmountSecond AS (SELECT MIFloat_AmountSecond.*
-                                FROM MovementItemFloat AS MIFloat_AmountSecond
-                                WHERE MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()  
-                                  AND MIFloat_AmountSecond.MovementItemId IN (SELECT tmpMI_Master.Id FROM tmpMI_Master)
-                                )
-     
-      , tmpMIF_AmountManual AS (SELECT MIFloat_AmountManual.*
-                                FROM MovementItemFloat AS MIFloat_AmountManual
-                                 WHERE MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual() 
-                                   AND MIFloat_AmountManual.MovementItemId IN (SELECT tmpMI_Master.Id FROM tmpMI_Master)
-                                )
-*/
 
       , tmpMILinkObject_Juridical AS (SELECT MILinkObject_Juridical.*
                                       FROM tmpMI_Master

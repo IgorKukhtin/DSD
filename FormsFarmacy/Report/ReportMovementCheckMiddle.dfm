@@ -1602,6 +1602,15 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
       end>
   end
   inherited ActionList: TActionList
+    object actGridToExcel1: TdsdGridToExcel [1]
+      Category = 'DSDLib'
+      MoveParams = <>
+      Grid = cxGrid1
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel '#1048#1090#1086#1075#1080
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel '#1048#1090#1086#1075#1080
+      ImageIndex = 6
+      ShortCut = 16472
+    end
     object actGet_UserUnit: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1913,6 +1922,14 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object dxBarButton1: TdxBarButton
@@ -1933,6 +1950,10 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
       Visible = ivAlways
       ImageIndex = 3
       ShortCut = 16464
+    end
+    object bb: TdxBarButton
+      Action = actGridToExcel1
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

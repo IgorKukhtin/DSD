@@ -276,7 +276,7 @@ BEGIN
                                  END                                                                      AS PersentProfitWithSP
                                
                                , (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0) + COALESCE (tmpData.SummSale_1303, 0))        AS SummaSaleAll
-                               , (tmpData.Summa + COALESCE (tmpData.SummPrimeCost_1303, 0))                                           AS SummaAll
+                               , (COALESCE (tmpData.Summa, 0) + COALESCE (tmpData.SummPrimeCost_1303, 0))                             AS SummaAll
                                , (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0) + COALESCE (tmpData.SummSale_1303, 0) - tmpData.Summa - COALESCE (tmpData.SummPrimeCost_1303, 0))  AS SummaProfitAll
                                , CASE WHEN (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0) + COALESCE (tmpData.SummSale_1303, 0)) <> 0 
                                       THEN ( (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0) + COALESCE (tmpData.SummSale_1303, 0) - tmpData.Summa - COALESCE (tmpData.SummPrimeCost_1303, 0)) 
@@ -340,6 +340,7 @@ BEGIN
            , tmp.PersentProfitWithSP   :: TFloat
            
            , tmp.SummaSaleAll          :: TFloat
+           , tmp.SummaAll              :: TFloat
            , tmp.SummaProfitAll        :: TFloat
            , tmp.PersentProfitAll      :: TFloat
            
