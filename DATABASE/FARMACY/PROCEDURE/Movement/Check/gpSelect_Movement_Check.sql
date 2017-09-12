@@ -262,4 +262,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Check (inStartDate:= '01.08.2017', inEndDate:= '01.08.2017', inIsErased := FALSE, inUnitId:= 1, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Check (inStartDate:= '01.08.2017', inEndDate:= '01.08.2017', inIsErased := FALSE, inIsSP := FALSE, inIsVip := FALSE, inUnitId:= 1, inSession:= '2')
