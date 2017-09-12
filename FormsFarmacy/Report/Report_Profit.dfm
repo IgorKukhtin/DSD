@@ -4,7 +4,6 @@ inherited Report_ProfitForm: TReport_ProfitForm
   ClientWidth = 1198
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -219
   ExplicitWidth = 1214
   ExplicitHeight = 706
   PixelsPerInch = 96
@@ -1038,6 +1037,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
             DataBinding.FieldName = 'OperDate'
             PropertiesClassName = 'TcxDateEditProperties'
             Properties.DisplayFormat = 'MMMM.YYYY'
+            Properties.EditFormat = 'MMMM.YYYY'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 153
@@ -1414,6 +1414,14 @@ inherited Report_ProfitForm: TReport_ProfitForm
   inherited ActionList: TActionList
     Left = 159
     Top = 255
+    object actGridToExcel1: TdsdGridToExcel [1]
+      Category = 'DSDLib'
+      MoveParams = <>
+      Grid = cxGrid1
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel '#1048#1090#1086#1075#1080
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel '#1048#1090#1086#1075#1080
+      ImageIndex = 6
+    end
     object actGet_UserUnit: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1673,6 +1681,14 @@ inherited Report_ProfitForm: TReport_ProfitForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object dxBarControlContainerItem1: TdxBarControlContainerItem
@@ -1727,6 +1743,10 @@ inherited Report_ProfitForm: TReport_ProfitForm
     end
     object bbactPrint: TdxBarButton
       Action = actPrint
+      Category = 0
+    end
+    object bbGridToExcel1: TdxBarButton
+      Action = actGridToExcel1
       Category = 0
     end
   end

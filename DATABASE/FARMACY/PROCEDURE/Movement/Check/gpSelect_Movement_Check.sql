@@ -2,12 +2,15 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Check (TDateTime, TDateTime, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_Check (TDateTime, TDateTime, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Check (TDateTime, TDateTime, Boolean, Boolean, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Check(
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
     IN inIsErased      Boolean ,
-    IN inUnitId        Integer,  --Подразделение
+    IN inIsSP          Boolean ,   -- Показать только СПчеки
+    IN inIsVip         Boolean ,   -- Показать только ВИПчеки
+    IN inUnitId        Integer,    -- Подразделение
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer
@@ -127,10 +130,14 @@ BEGIN
                 AND Movement.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
                 AND Movement.DescId = zc_Movement_Check()
                 AND (MovementLinkObject_Unit.ObjectId = inUnitId 
-                     OR (inUnitId = 0
-                     AND (MovementString_CommentError.ValueData <> '' OR MovementString_InvNumberSP.ValueData <> '' OR MovementLinkObject_CheckMember.ObjectId > 0
+                     OR (inUnitId = 0 AND inIsSP = FALSE AND inIsVip = FALSE AND (MovementString_CommentError.ValueData <> '' 
+                                                                               OR MovementString_InvNumberSP.ValueData <> '' 
+                                                                               OR MovementLinkObject_CheckMember.ObjectId > 0
+                                                                                  )
                          )
-                    ))
+                     OR (inUnitId = 0 AND inIsSP = TRUE  AND MovementString_InvNumberSP.ValueData <> '')
+                     OR (inUnitId = 0 AND inIsVip = TRUE AND MovementLinkObject_CheckMember.ObjectId > 0)
+                     )
                 AND vbRetailId = vbObjectId
            ) AS Movement_Check 
              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Check.StatusId
@@ -238,11 +245,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Check (TDateTime, TDateTime, Boolean, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Movement_Check (TDateTime, TDateTime, Boolean, Integer, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 11.09.17         *
  04.08.17         * без вьюхи
  18.04.17         * add Movement_Invoice
  06.10.16         * add InsertName, InsertDate
