@@ -28,6 +28,22 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_...());
     vbUserId := lpGetUserBySession (inSession);
 
+    -- проверка соответствия ФИО врача и медцентра
+    IF NOT EXISTS (SELECT Object_MedicSP.Id                 AS Id
+                   FROM Object AS Object_MedicSP
+                       INNER JOIN ObjectLink AS ObjectLink_MedicSP_PartnerMedical
+                                            ON ObjectLink_MedicSP_PartnerMedical.ObjectId = Object_MedicSP.Id
+                                           AND ObjectLink_MedicSP_PartnerMedical.DescId = zc_ObjectLink_MedicSP_PartnerMedical()
+                                           AND ObjectLink_MedicSP_PartnerMedical.ChildObjectId = inPartnerMedicalId
+                   WHERE Object_MedicSP.DescId = zc_Object_MedicSP()
+                     AND UPPER(Object_MedicSP.ValueData) LIKE UPPER ('%' || inMedicSP || '%')     --('%КукушКино%')   --
+                   )
+    THEN
+        RAISE EXCEPTION 'Ошибка.ФИО врача <%> не соответствует выбранному мед.учреждению.', inMedicSP;
+    END IF;
+    
+    
+    
     vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inId);
 
     -- сохранили связь с <>
@@ -64,6 +80,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 13.09.17         *
  23.05.17         * add inSPKindId
  26.04.17         * add inPartnerMedicalId
  21.04.17         *

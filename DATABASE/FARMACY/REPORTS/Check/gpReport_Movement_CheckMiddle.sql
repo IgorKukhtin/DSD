@@ -85,17 +85,6 @@ BEGIN
                          -- или inUnitId=0,
                          -- делаем доп.ограничение подразделениями текущей торг.сети
                          INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
-                         -- 
-                  /*       LEFT JOIN MovementLinkObject AS MovementLinkObject_SPKind
-                                                      ON MovementLinkObject_SPKind.MovementId = Movement_Check.Id
-                                                     AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
-                                                    -- AND MovementLinkObject_SPKind.ObjectId = zc_Enum_SPKind_1303()
-
-                         -- ИТОГО сумма скидки
-                         LEFT JOIN MovementFloat AS MovementFloat_TotalSummChangePercent
-                                     ON MovementFloat_TotalSummChangePercent.MovementId =  Movement_Check.Id
-                                    AND MovementFloat_TotalSummChangePercent.DescId = zc_MovementFloat_TotalSummChangePercent()
-                  */
                     WHERE Movement_Check.DescId = zc_Movement_Check()
                       AND DATE_TRUNC('day', Movement_Check.OperDate) BETWEEN inDateStart AND inDateEnd
                       AND Movement_Check.StatusId = zc_Enum_Status_Complete()
@@ -104,6 +93,14 @@ BEGIN
                            , CASE WHEN inisDAy = True THEN DATE_TRUNC('day', Movement_Check.OperDate) ELSE NULL END
                    )
                    
+        -- док. соц проекта, если заполнен № рецепта
+        , tmpMovSP AS (SELECT DISTINCT MovementString_InvNumberSP.MovementId
+                       FROM MovementString AS MovementString_InvNumberSP
+                       WHERE MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP()
+                         AND MovementString_InvNumberSP.ValueData <> ''
+                         AND MovementString_InvNumberSP.MovementId IN (SELECT DISTINCT tmpMovementCheck.Id FROM tmpMovementCheck)
+                       )
+                                
         , tmpMLO_SPKind AS (SELECT MovementLinkObject_SPKind.*
                             FROM MovementLinkObject AS MovementLinkObject_SPKind
                             WHERE MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
@@ -119,7 +116,7 @@ BEGIN
         , tmpCheck AS (SELECT Movement_Check.UnitId
                             , Movement_Check.Id
                             , Movement_Check.OperDate
-                            , SUM (COALESCE (MovementFloat_TotalSummChangePercent.ValueData, 0))                           AS SummChangePercent_SP
+                            , SUM (CASE WHEN COALESCE (tmpMovSP.MovementId, 0) <> 0 THEN COALESCE (MovementFloat_TotalSummChangePercent.ValueData, 0) ELSE 0 END) AS SummChangePercent_SP
                             , SUM (CASE WHEN MovementLinkObject_SPKind.ObjectId = zc_Enum_SPKind_1303() 
                                         THEN COALESCE (MovementFloat_TotalSummChangePercent.ValueData, 0) 
                                         ELSE 0 
@@ -128,7 +125,8 @@ BEGIN
                        FROM tmpMovementCheck AS Movement_Check
                             LEFT JOIN tmpMLO_SPKind AS MovementLinkObject_SPKind
                                                     ON MovementLinkObject_SPKind.MovementId = Movement_Check.Id
-   
+                            -- док. соц. проекта                        
+                            LEFT JOIN tmpMovSP ON tmpMovSP.MovementId = Movement_Check.Id
                             -- ИТОГО сумма скидки
                             LEFT JOIN tmpMF_TotalSummChangePercent AS MovementFloat_TotalSummChangePercent
                                                                    ON MovementFloat_TotalSummChangePercent.MovementId =  Movement_Check.Id
@@ -441,32 +439,61 @@ BEGIN
                         WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                           AND inUnitHistoryId = 0
                        )
+        , tmpMovementCheck AS (SELECT Movement_Check.Id
+                                    , DATE_TRUNC('Month', Movement_Check.OperDate)   AS OperDate
+                               FROM Movement AS Movement_Check
+                                    INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                                  ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
+                                                                 AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                    INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
+           
+                               WHERE Movement_Check.DescId = zc_Movement_Check()
+                                 AND Movement_Check.OperDate >= vbDateStart AND Movement_Check.OperDate < vbDateEnd
+                                 AND Movement_Check.StatusId = zc_Enum_Status_Complete()
+                               GROUP BY Movement_Check.Id
+                                      , DATE_TRUNC('Month', Movement_Check.OperDate) 
+                              )
+        -- док. соц проекта, если заполнен № рецепта
+        , tmpMovSP AS (SELECT DISTINCT MovementString_InvNumberSP.MovementId
+                       FROM MovementString AS MovementString_InvNumberSP
+                       WHERE MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP()
+                         AND MovementString_InvNumberSP.ValueData <> ''
+                         AND MovementString_InvNumberSP.MovementId IN (SELECT DISTINCT tmpMovementCheck.Id FROM tmpMovementCheck)
+                       )
+                                
+        , tmpMLO_SPKind AS (SELECT MovementLinkObject_SPKind.*
+                            FROM MovementLinkObject AS MovementLinkObject_SPKind
+                            WHERE MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
+                              AND MovementLinkObject_SPKind.MovementId IN (SELECT tmpMovementCheck.Id FROM tmpMovementCheck)
+                            )
+        -- ИТОГО сумма скидки
+        , tmpMF_TotalSummChangePercent AS (SELECT MovementFloat_TotalSummChangePercent.*
+                                           FROM MovementFloat AS MovementFloat_TotalSummChangePercent
+                                           WHERE MovementFloat_TotalSummChangePercent.DescId = zc_MovementFloat_TotalSummChangePercent()
+                                             AND MovementFloat_TotalSummChangePercent.MovementId IN (SELECT tmpMovementCheck.Id FROM tmpMovementCheck)
+                                          )
+                                       
         , tmpCheck AS (SELECT Movement_Check.Id
                             , DATE_TRUNC('Month', Movement_Check.OperDate)                                                                  AS OperDate
                             , SUM (COALESCE (MovementFloat_TotalSummChangePercent.ValueData, 0))                                            AS SummChangePercent_SP
                             , SUM (CASE WHEN MovementLinkObject_SPKind.ObjectId = zc_Enum_SPKind_1303() THEN COALESCE (MovementFloat_TotalSummChangePercent.ValueData, 0) ELSE 0 END) AS SummSale_1303
                             , SUM (CASE WHEN MovementLinkObject_SPKind.ObjectId = zc_Enum_SPKind_1303() THEN 1 ELSE 0 END)                  AS Count_1303
-                       FROM Movement AS Movement_Check
-                            INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                          ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
-                                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                            INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
-                            -- 
-                            LEFT JOIN MovementLinkObject AS MovementLinkObject_SPKind
-                                                         ON MovementLinkObject_SPKind.MovementId = Movement_Check.Id
-                                                        AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
-                                                       -- AND MovementLinkObject_SPKind.ObjectId = zc_Enum_SPKind_1303()
+                       FROM tmpMovementCheck AS Movement_Check
+                            LEFT JOIN tmpMLO_SPKind AS MovementLinkObject_SPKind
+                                                    ON MovementLinkObject_SPKind.MovementId = Movement_Check.Id
+                            
+                            LEFT JOIN tmpMovSP ON tmpMovSP.MovementId = Movement_Check.Id
+                            
                             -- ИТОГО сумма скидки
-                            LEFT JOIN MovementFloat AS MovementFloat_TotalSummChangePercent
-                                        ON MovementFloat_TotalSummChangePercent.MovementId =  Movement_Check.Id
-                                       AND MovementFloat_TotalSummChangePercent.DescId = zc_MovementFloat_TotalSummChangePercent()
+                            LEFT JOIN tmpMF_TotalSummChangePercent AS MovementFloat_TotalSummChangePercent
+                                                                   ON MovementFloat_TotalSummChangePercent.MovementId =  Movement_Check.Id
    
-                       WHERE Movement_Check.DescId = zc_Movement_Check()
-                         AND Movement_Check.OperDate >= vbDateStart AND Movement_Check.OperDate < vbDateEnd
-                         AND Movement_Check.StatusId = zc_Enum_Status_Complete()
                        GROUP BY Movement_Check.Id
                               , DATE_TRUNC('Month', Movement_Check.OperDate) 
                       )
+                      
+                      
+                      
 
         , tmpMI AS (SELECT Movement_Check.OperDate
                          , SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount) * COALESCE (MIFloat_Price.ValueData, 0))   AS SummaSale

@@ -7,7 +7,7 @@ inherited SPDialogForm: TSPDialogForm
   ClientWidth = 571
   Position = poDesktopCenter
   ExplicitWidth = 577
-  ExplicitHeight = 191
+  ExplicitHeight = 194
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel [0]
@@ -107,8 +107,7 @@ inherited SPDialogForm: TSPDialogForm
         Default = True
         Kind = bkEllipsis
       end>
-    Properties.Nullstring = '<'#1044#1083#1103' '#1074#1099#1073#1086#1088#1072' '#1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1075#1086' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1103' '#1085#1072#1078#1084#1080#1090#1077' [Ctrl+Enter]>'
-    Properties.ReadOnly = False
+    Properties.ReadOnly = True
     Properties.UseNullString = True
     TabOrder = 9
     Text = '<'#1044#1083#1103' '#1074#1099#1073#1086#1088#1072' '#1060#1048#1054' '#1074#1088#1072#1095#1072' [Ctrl+Enter]>'
@@ -218,9 +217,26 @@ inherited SPDialogForm: TSPDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerMedicalId'
+        Value = Null
+        Component = PartnerMedicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerMedicalName'
+        Value = Null
+        Component = PartnerMedicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 168
-    Top = 56
+    Left = 232
+    Top = 48
   end
   object SPKindGuides: TdsdGuides
     KeyField = 'Id'

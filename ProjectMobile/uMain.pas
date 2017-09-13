@@ -2054,7 +2054,7 @@ procedure TfrmMain.lwJuridicalCollationItemClick(const Sender: TObject; const AI
 begin
   lDocData.Text := DM.cdsJuridicalCollationDocType.AsString + ' №' + DM.cdsJuridicalCollationDocNum.AsString +
     ' от ' + FormatDateTime('dd.mm.yyyy', DM.cdsJuridicalCollationDocDate.AsDateTime);
-  lDocPartnerName.Text := FJuridicalList[FJuridicalIndex].Name;
+  lDocPartnerName.Text := FJuridicalList[FJuridicalIndex].Name + ' (' + FPartnerList[FPartnerIndex].Name + ')';
   lDocInfo.Text := DM.cdsJuridicalCollationPaidKindShow.AsString;
 
   DM.tblObject_Contract.Open;
@@ -4373,8 +4373,6 @@ end;
 
 procedure TfrmMain.bSyncReturnInClick(Sender: TObject);
 begin
-  {TDialogService.MessageDialog(FormatFloat('0.##', pReturnInTotals.Height), TMsgDlgType.mtInformation,
-    [TMsgDlgBtn.mbOk], TMsgDlgBtn.mbOk, 0, nil);}
   DM.SyncReturnIn(DM.cdsReturnInId.AsInteger);
 end;
 

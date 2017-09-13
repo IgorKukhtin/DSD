@@ -203,8 +203,8 @@ BEGIN
                       0::TFloat
                END AS AmountGrowthInPercent
              , CASE
-                    WHEN (tmpDataAll.Amount - tmpDataAll.AmountBefore) < 0 AND tmpDataAll.Amount <> 0 THEN
-                      ((tmpDataAll.AmountBefore - tmpDataAll.Amount) / tmpDataAll.Amount * 100.0)::TFloat
+                    WHEN (tmpDataAll.Amount - tmpDataAll.AmountBefore) < 0 AND tmpDataAll.AmountBefore <> 0 THEN
+                      ((tmpDataAll.AmountBefore - tmpDataAll.Amount) / tmpDataAll.AmountBefore * 100.0)::TFloat
                     ELSE  
                       0::TFloat
                END AS AmountFallingInPercent
@@ -217,8 +217,8 @@ BEGIN
                       0::TFloat
                END AS SummaGrowthInPercent
              , CASE
-                    WHEN (tmpDataAll.Summa - tmpDataAll.SummaBefore) < 0 AND tmpDataAll.Summa <> 0 THEN
-                      ((tmpDataAll.SummaBefore - tmpDataAll.Summa) / tmpDataAll.Summa * 100.0)::TFloat
+                    WHEN (tmpDataAll.Summa - tmpDataAll.SummaBefore) < 0 AND tmpDataAll.SummaBefore <> 0 THEN
+                      ((tmpDataAll.SummaBefore - tmpDataAll.Summa) / tmpDataAll.SummaBefore * 100.0)::TFloat
                     ELSE  
                       0::TFloat
                END AS SummaFallingInPercent

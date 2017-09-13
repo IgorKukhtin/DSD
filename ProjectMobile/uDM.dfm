@@ -1789,7 +1789,7 @@ object DM: TDM
   end
   object cdsJuridicalCollation: TClientDataSet
     Aggregates = <>
-    IndexFieldNames = 'DocType;DocDate'
+    IndexFieldNames = 'DocType;DocDate;DocNum'
     Params = <>
     Left = 40
     Top = 624
