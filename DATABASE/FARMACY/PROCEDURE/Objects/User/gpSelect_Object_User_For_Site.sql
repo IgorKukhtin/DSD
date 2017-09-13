@@ -6,13 +6,16 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_User_For_Site(
     IN inUnitId        Integer,       -- Аптека
     IN inSession       TVarChar       -- сессия пользователя    
 )
-RETURNS TABLE (Id         Integer    -- Ключ пользователя
-             , Name       TVarChar   -- ФИО
-             , Foto       TVarChar   -- Фото
-             , DateIn     TDateTime  -- Дата с которого числа работает
-             , DateAction TDateTime  -- Дата/ время последней активности
-             , UnitId     Integer    -- Ключ Аптеки
-             , UnitName   TVarChar   -- Аптека
+RETURNS TABLE (Id             Integer    -- Ключ пользователя
+             , Name           TVarChar   -- ФИО
+             , Foto           TVarChar   -- Фото
+             , DateIn         TDateTime  -- Дата с которого числа работает
+             , DateAction     TDateTime  -- Дата/ время последней активности
+             , DateAction_1   TDateTime  -- Дата/ время последней активности
+             , DateAction_2   TDateTime  -- Дата/ время последней активности
+             , UnitId         Integer    -- Ключ Аптеки
+             , UnitName       TVarChar   -- Аптека
+             , PositionName   TVarChar   -- должность
               )
 AS
 $BODY$
@@ -25,10 +28,12 @@ BEGIN
      -- Результат
      RETURN QUERY
        WITH tmpUser AS (SELECT Object_User.Id AS UserId
-                             , COALESCE (Object_Member.ValueData, Object_User.ValueData) AS Name
+                             -- , COALESCE (Object_Member.ValueData, Object_User.ValueData) AS Name
+                             , Object_User.ValueData AS Name
                              , ObjectString_Foto.ValueData AS Foto
                              , Object_Member.Id AS MemberId
                              , zfConvert_StringToNumber (DefaultValue.DefaultValue) AS UnitId
+                             , ObjectDate_Personal_In.ValueData AS DateIn
                         FROM DefaultKeys
                              INNER JOIN DefaultValue ON DefaultValue.DefaultKeyId = DefaultKeys.Id
                                                     AND (DefaultValue.DefaultValue = inUnitId :: TVarChar
@@ -38,7 +43,10 @@ BEGIN
                                                              AND Object_User.isErased = FALSE
                              LEFT JOIN ObjectString AS ObjectString_Foto
                                                     ON ObjectString_Foto.ObjectId  = Object_User.Id
-                                                   AND ObjectString_Foto.DescId    = 1
+                                                   AND ObjectString_Foto.DescId    = zc_ObjectString_User_Foto()
+                             LEFT JOIN ObjectDate AS ObjectDate_Personal_In
+                                                  ON ObjectDate_Personal_In.ObjectId  = Object_User.Id
+                                                 AND ObjectDate_Personal_In.DescId    = zc_ObjectDate_Personal_In()
                 
                              LEFT JOIN ObjectLink AS ObjectLink_User_Member
                                                   ON ObjectLink_User_Member.ObjectId = Object_User.Id
@@ -50,24 +58,49 @@ BEGIN
           , tmpPersonal AS (SELECT View_Personal.MemberId
                                  , View_Personal.UnitId
                                  , View_Personal.PositionId
-                                 , View_Personal.DateIn
+                                 -- , View_Personal.DateIn
                                    --  № п/п
                                  , ROW_NUMBER() OVER (PARTITION BY View_Personal.MemberId ORDER BY View_Personal.PersonalId ASC) AS Ord
                             FROM Object_Personal_View AS View_Personal
                             WHERE View_Personal.isErased = FALSE
                            )
-
+       , tmpCashSession AS (SELECT CashSession.UserId
+                                 , MAX (CashSession.LastConnect) AS LastConnect
+                            FROM CashSession
+                            GROUP BY CashSession.UserId
+                           )
+          , tmpProtocol AS (SELECT tmpUser.UserId
+                                 , MAX (MovementProtocol.OperDate) AS OperDate
+                            FROM tmpUser
+                                 INNER JOIN MovementProtocol ON MovementProtocol.UserId = tmpUser.UserId
+                                                            AND MovementProtocol.OperDate >= CURRENT_DATE - INTERVAL '30 DAY'
+                            GROUP BY tmpUser.UserId
+                           )
         SELECT
              tmpUser.UserId AS Id
            , tmpUser.Name :: TVarChar AS Name
            , tmpUser.Foto          
-           , tmpPersonal.DateIn
-           , tmpPersonal.DateIn    AS DateAction
-           , Object_Unit.Id        AS UnitId
-           , Object_Unit.ValueData AS UnitName
+           , tmpUser.DateIn
+           , CASE WHEN COALESCE (tmpProtocol.OperDate, zc_DateStart()) > COALESCE (tmpCashSession.LastConnect, zc_DateStart())
+                       THEN tmpProtocol.OperDate
+                  WHEN COALESCE (tmpCashSession.LastConnect, zc_DateStart()) > zc_DateStart()
+                       THEN tmpCashSession.LastConnect
+                  ELSE COALESCE (tmpUser.DateIn, zc_DateStart())
+             END :: TDateTime AS DateAction
+           , tmpProtocol.OperDate       :: TDateTime AS DateAction_1
+           , tmpCashSession.LastConnect :: TDateTime AS DateAction_2
+           , Object_Unit.Id            AS UnitId
+           , Object_Unit.ValueData     AS UnitName
+           , Object_Position.ValueData AS PositionName
+           
         FROM tmpUser
              LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = tmpUser.MemberId
-             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUser.UnitId
+
+             LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id     = tmpUser.UnitId
+             LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
+
+             LEFT JOIN tmpCashSession ON tmpCashSession.UserId = tmpUser.UserId
+             LEFT JOIN tmpProtocol    ON tmpProtocol.UserId    = tmpUser.UserId
         WHERE tmpUser.UnitId > 0
        ;
   
