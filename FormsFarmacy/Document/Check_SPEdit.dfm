@@ -252,6 +252,22 @@ object Check_SPEditForm: TCheck_SPEditForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MedicSPId'
+        Component = MedicSPGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MedicSPName'
+        Value = ''
+        Component = MedicSPGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 176
     Top = 177
@@ -259,6 +275,7 @@ object Check_SPEditForm: TCheck_SPEditForm
   object MedicSPGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edMedicSP
+    Key = '0'
     FormNameParam.Value = 'TMedicSPForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -295,6 +312,23 @@ object Check_SPEditForm: TCheck_SPEditForm
         Component = PartnerMedicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerMedicalId'
+        Value = Null
+        Component = PartnerMedicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerMedicalName'
+        Value = Null
+        Component = PartnerMedicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 168
