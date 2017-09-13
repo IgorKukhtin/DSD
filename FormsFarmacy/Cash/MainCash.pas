@@ -216,7 +216,7 @@ type
     actSelectLocalVIPCheck: TAction;
     actCheckConnection: TAction;
     N2: TMenuItem;
-    N11: TMenuItem;
+    miCheckConnection: TMenuItem;
     spUpdate_UnitForFarmacyCash: TdsdStoredProc;
     CheckGridColPriceSale: TcxGridDBColumn;
     CheckGridColChangePercent: TcxGridDBColumn;
@@ -227,7 +227,7 @@ type
     lblDiscountExternalName: TLabel;
     Label5: TLabel;
     lblDiscountCardNumber: TLabel;
-    VIP2: TMenuItem;
+    miSetDiscountExternal: TMenuItem;
     actSetDiscountExternal: TAction;
     TimerBlinkBtn: TTimer;
     spGet_BlinkVIP: TdsdStoredProc;
@@ -264,7 +264,7 @@ type
     lblPartnerMedicalName: TLabel;
     Label7: TLabel;
     lblMedicSP: TLabel;
-    N15: TMenuItem;
+    miSetSP: TMenuItem;
     MainColPriceSaleSP: TcxGridDBColumn;
     DiffSP1: TcxGridDBColumn;
     DiffSP2: TcxGridDBColumn;
@@ -275,7 +275,7 @@ type
     edPrice: TcxCurrencyEdit;
     spGet_JuridicalList: TdsdStoredProc;
     actGetJuridicalList: TAction;
-    N16: TMenuItem;
+    miGetJuridicalList: TMenuItem;
     lblAmount: TLabel;
     edAmount: TcxCurrencyEdit;
     BarCode: TcxGridDBColumn;
@@ -1613,8 +1613,8 @@ begin
     exit;
   end;
   //
-  if SoldRegim = TRUE
-  then
+  if SoldRegim = TRUE then
+  begin
       if  (Self.FormParams.ParamByName('InvNumberSP').Value <> '')
        and(Self.FormParams.ParamByName('SPTax').Value = 0)
        and(SourceClientDataSet.FieldByName('isSP').asBoolean = FALSE)
@@ -1622,6 +1622,14 @@ begin
         ShowMessage('Ошибка.Выбранный код товара не участвует в Соц.проекте!');
         exit;
       end;
+      //
+      if  (Self.FormParams.ParamByName('InvNumberSP').Value <> '')
+       and(CheckCDS.RecordCount >= 1)
+      then begin
+        ShowMessage('Ошибка.В чеке для Соц.проекта уже есть <'+IntToStr(CheckCDS.RecordCount)+'> Товар.Запрещено больше чем <1>.');
+        exit;
+      end;
+  end;
   //
   // потому что криво, надо правильно определить ТОВАР + цена БЕЗ скидки
   if SoldRegim = TRUE
