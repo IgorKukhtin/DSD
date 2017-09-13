@@ -110,12 +110,13 @@ inherited SPDialogForm: TSPDialogForm
     Properties.ReadOnly = True
     Properties.UseNullString = True
     TabOrder = 9
-    Text = '<'#1044#1083#1103' '#1074#1099#1073#1086#1088#1072' '#1060#1048#1054' '#1074#1088#1072#1095#1072' [Ctrl+Enter]>'
+    Text = '<'#1044#1083#1103' '#1074#1099#1073#1086#1088#1072' '#1060#1048#1054' '#1074#1088#1072#1095#1072' '#1085#1072#1078#1084#1080#1090#1077' [Ctrl+Enter]>'
     Width = 265
   end
   object edSPKind: TcxButtonEdit [13]
     Left = 433
     Top = 27
+    ParentColor = True
     Properties.Buttons = <
       item
         Default = True
@@ -173,6 +174,23 @@ inherited SPDialogForm: TSPDialogForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MedicSPId'
+        Value = '0'
+        Component = MedicSPGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MedicSPName'
+        Value = ''
+        Component = MedicSPGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 120
     Top = 16
@@ -180,6 +198,7 @@ inherited SPDialogForm: TSPDialogForm
   object MedicSPGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edMedicSP
+    Key = '0'
     FormNameParam.Value = 'TMedicSPForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','

@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_PartnerMedical(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar 
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , MedicFIO TVarChar
+             , MedicSPId Integer, MedicSPName TVarChar
              , isErased boolean
              ) AS
 $BODY$BEGIN
@@ -20,11 +21,14 @@ $BODY$BEGIN
            , Object_PartnerMedical.ObjectCode  AS Code
            , Object_PartnerMedical.ValueData   AS Name
            
-           , Object_Juridical.Id          AS JuridicalId
-           , Object_Juridical.ObjectCode  AS JuridicalCode
-           , Object_Juridical.ValueData   AS JuridicalName
+           , Object_Juridical.Id               AS JuridicalId
+           , Object_Juridical.ObjectCode       AS JuridicalCode
+           , Object_Juridical.ValueData        AS JuridicalName
            , ObjectString_PartnerMedical_FIO.ValueData  AS MedicFIO
           
+           , 0                                 AS MedicSPId
+           , '' :: TVarChar                    AS MedicSPName
+           
            , Object_PartnerMedical.isErased AS isErased
            
        FROM Object AS Object_PartnerMedical
