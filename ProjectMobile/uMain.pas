@@ -4373,8 +4373,6 @@ end;
 
 procedure TfrmMain.bSyncReturnInClick(Sender: TObject);
 begin
-  {TDialogService.MessageDialog(FormatFloat('0.##', pReturnInTotals.Height), TMsgDlgType.mtInformation,
-    [TMsgDlgBtn.mbOk], TMsgDlgBtn.mbOk, 0, nil);}
   DM.SyncReturnIn(DM.cdsReturnInId.AsInteger);
 end;
 
