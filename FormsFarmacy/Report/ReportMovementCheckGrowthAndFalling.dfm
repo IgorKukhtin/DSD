@@ -13,17 +13,17 @@ inherited ReportMovementCheckGrowthAndFallingForm: TReportMovementCheckGrowthAnd
     Height = 381
     TabOrder = 3
     ExplicitTop = 99
-    ExplicitWidth = 1251
+    ExplicitWidth = 1023
     ExplicitHeight = 381
     ClientRectBottom = 381
     ClientRectRight = 1023
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1251
+      ExplicitWidth = 1023
       ExplicitHeight = 381
       inherited cxGrid: TcxGrid
         Width = 1023
         Height = 381
-        ExplicitWidth = 1251
+        ExplicitWidth = 1023
         ExplicitHeight = 381
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -255,28 +255,34 @@ inherited ReportMovementCheckGrowthAndFallingForm: TReportMovementCheckGrowthAnd
   inherited Panel: TPanel
     Width = 1023
     Height = 73
-    ExplicitWidth = 1251
+    ExplicitWidth = 1023
     ExplicitHeight = 73
     inherited deStart: TcxDateEdit
-      Left = 29
-      ExplicitLeft = 29
+      Left = 183
+      Top = 6
+      ExplicitLeft = 183
+      ExplicitTop = 6
     end
     inherited deEnd: TcxDateEdit
-      Left = 29
-      Top = 35
-      ExplicitLeft = 29
-      ExplicitTop = 35
+      Left = 183
+      Top = 36
+      ExplicitLeft = 183
+      ExplicitTop = 36
     end
     inherited cxLabel1: TcxLabel
+      Left = 164
+      Top = 7
       Caption = #1057':'
+      ExplicitLeft = 164
+      ExplicitTop = 7
       ExplicitWidth = 15
     end
     inherited cxLabel2: TcxLabel
-      Left = 7
-      Top = 36
+      Left = 162
+      Top = 37
       Caption = #1087#1086':'
-      ExplicitLeft = 7
-      ExplicitTop = 36
+      ExplicitLeft = 162
+      ExplicitTop = 37
       ExplicitWidth = 20
     end
     object cxLabel3: TcxLabel
@@ -332,18 +338,18 @@ inherited ReportMovementCheckGrowthAndFallingForm: TReportMovementCheckGrowthAnd
     end
     object cbList: TcxCheckBox
       Left = 274
-      Top = 36
+      Top = 37
       Action = actRefreshList
       TabOrder = 10
       Width = 137
     end
     object cxLabel5: TcxLabel
-      Left = 122
-      Top = 6
-      Caption = #1057' '#1087#1077#1088#1077#1076':'
+      Left = 4
+      Top = 7
+      Caption = #1055#1088#1077#1076' '#1076#1072#1090#1072' '#1089':'
     end
     object deStartBefore: TcxDateEdit
-      Left = 173
+      Left = 76
       Top = 5
       EditValue = 42370d
       Properties.ShowTime = False
@@ -351,12 +357,12 @@ inherited ReportMovementCheckGrowthAndFallingForm: TReportMovementCheckGrowthAnd
       Width = 85
     end
     object cxLabel6: TcxLabel
-      Left = 119
-      Top = 36
-      Caption = #1087#1086' '#1087#1077#1088#1077#1076':'
+      Left = 2
+      Top = 37
+      Caption = #1055#1088#1077#1076' '#1076#1072#1090#1072' '#1087#1086':'
     end
     object deEndBefore: TcxDateEdit
-      Left = 173
+      Left = 76
       Top = 35
       EditValue = 42370d
       Properties.ShowTime = False
