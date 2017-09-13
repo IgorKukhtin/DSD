@@ -84,7 +84,7 @@ BEGIN
            , MovementString_Bayer.ValueData                     AS Bayer
            , MovementString_FiscalCheckNumber.ValueData         AS FiscalCheckNumber
            , COALESCE(MovementBoolean_NotMCS.ValueData,FALSE)   AS NotMCS
-           , COALESCE(MovementBoolean_Deferred.ValueData,False) AS IsDeferred
+           , Movement_Check.IsDeferred                          AS IsDeferred
            , Object_DiscountCard.ValueData                      AS DiscountCardName
            , Object_DiscountExternal.ValueData                  AS DiscountExternalName
            , MovementString_BayerPhone.ValueData                AS BayerPhone
@@ -105,10 +105,11 @@ BEGIN
            , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice_Full 
 
         FROM (SELECT Movement.*
-                   , MovementLinkObject_Unit.ObjectId           AS UnitId
-                   , MovementString_CommentError.ValueData      AS CommentError
-                   , MovementString_InvNumberSP.ValueData       AS InvNumberSP
-                   , MovementLinkObject_CheckMember.ObjectId    AS MemberId
+                   , MovementLinkObject_Unit.ObjectId                    AS UnitId
+                   , MovementString_CommentError.ValueData               AS CommentError
+                   , MovementString_InvNumberSP.ValueData                AS InvNumberSP
+                   , MovementLinkObject_CheckMember.ObjectId             AS MemberId
+                   , COALESCE(MovementBoolean_Deferred.ValueData, False) AS IsDeferred
               FROM Movement
                    INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
 
@@ -125,7 +126,10 @@ BEGIN
                    LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckMember
                                                 ON MovementLinkObject_CheckMember.MovementId = Movement.Id
                                                AND MovementLinkObject_CheckMember.DescId = zc_MovementLinkObject_CheckMember()
-
+                   LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                             ON MovementBoolean_Deferred.MovementId = Movement.Id
+                                            AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+   		                      
               WHERE Movement.OperDate >= DATE_TRUNC ('DAY', inStartDate) 
                 AND Movement.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
                 AND Movement.DescId = zc_Movement_Check()
@@ -136,7 +140,7 @@ BEGIN
                                                                                   )
                          )
                      OR (inUnitId = 0 AND inIsSP = TRUE  AND MovementString_InvNumberSP.ValueData <> '')
-                     OR (inUnitId = 0 AND inIsVip = TRUE AND MovementLinkObject_CheckMember.ObjectId > 0)
+                     OR (inUnitId = 0 AND inIsVip = TRUE AND (MovementLinkObject_CheckMember.ObjectId > 0 OR COALESCE(MovementBoolean_Deferred.ValueData, False) = TRUE))
                      )
                 AND vbRetailId = vbObjectId
            ) AS Movement_Check 
@@ -185,10 +189,10 @@ BEGIN
              LEFT JOIN MovementBoolean AS MovementBoolean_NotMCS
                                        ON MovementBoolean_NotMCS.MovementId = Movement_Check.Id
                                       AND MovementBoolean_NotMCS.DescId = zc_MovementBoolean_NotMCS()
-	     LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+	    /* LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
                                        ON MovementBoolean_Deferred.MovementId = Movement_Check.Id
                                       AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
-
+            */
              LEFT JOIN MovementLinkObject AS MovementLinkObject_CashRegister
                                           ON MovementLinkObject_CashRegister.MovementId = Movement_Check.Id
                                          AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()

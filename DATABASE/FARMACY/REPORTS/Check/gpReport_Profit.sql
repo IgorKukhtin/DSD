@@ -232,17 +232,17 @@ BEGIN
                                      , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical2Id THEN tmpData.SummaSale-tmpData.Summa ELSE 0 END) AS SummaProfit2
                                      , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical2Id THEN tmpData.SummaWithVAT ELSE 0 END)     AS SummaWithVAT2
                                  
-                                     , tmpSP.SummChangePercent_SP  AS SummSale_SP
-                                     , tmpSale_1303.SummSale_1303
-                                     , tmpSale_1303.TotalSummPrimeCost AS SummPrimeCost_1303
+                                     , COALESCE (tmpSP.SummChangePercent_SP, 0)               AS SummSale_SP
+                                     , COALESCE (tmpSale_1303.SummSale_1303, 0)               AS SummSale_1303
+                                     , COALESCE (tmpSale_1303.TotalSummPrimeCost, 0)          AS SummPrimeCost_1303
                    
                                 FROM tmpData
                                      LEFT JOIN tmpSale_1303 ON tmpSale_1303.UnitId = tmpData.UnitId
                                      LEFT JOIN tmpSP        ON tmpSP.UnitId        = tmpData.UnitId
                                 GROUP BY tmpData.UnitId
-                                     , tmpSale_1303.SummSale_1303
-                                     , tmpSale_1303.TotalSummPrimeCost
-                                     , tmpSP.SummChangePercent_SP
+                                       , COALESCE (tmpSP.SummChangePercent_SP, 0)
+                                       , COALESCE (tmpSale_1303.SummSale_1303, 0)
+                                       , COALESCE (tmpSale_1303.TotalSummPrimeCost, 0)
                                )
 
        , tmpData_Full AS (SELECT tmpData.UnitId
@@ -406,14 +406,11 @@ BEGIN
                                          AND MIFloat_SummChangePercent.MovementItemId IN (SELECT DISTINCT tmpData_Container.MI_Id FROM tmpData_Container)
                                       )
         -- док. соц проекта, если заполнен № рецепта
-        , tmpMS_InvNumberSP AS (SELECT tmp.MovementId
-                                FROM (SELECT DISTINCT tmpData_Container.MovementId
-                                      FROM tmpData_Container
-                                      ) AS tmp
-                                      INNER JOIN MovementString AS MovementString_InvNumberSP
-                                                                ON MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP()
-                                                               AND MovementString_InvNumberSP.MovementId = tmp.MovementId
-                                                               AND MovementString_InvNumberSP.ValueData <> ''
+        , tmpMS_InvNumberSP AS (SELECT MovementString_InvNumberSP.MovementId
+                                FROM MovementString AS MovementString_InvNumberSP
+                                WHERE MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP()
+                                  AND MovementString_InvNumberSP.ValueData <> ''
+                                  AND MovementString_InvNumberSP.MovementId IN (SELECT DISTINCT tmpData_Container.MovementId FROM tmpData_Container) 
                                 )
                                 
         , tmpSP AS (SELECT tmpData_Container.OperDate
@@ -444,7 +441,7 @@ BEGIN
                                           AND COALESCE (MovementString_InvNumberSP.ValueData,'') <> ''
 
                                WHERE Movement_Sale.DescId = zc_Movement_Sale()
-                                 AND Movement_Sale.OperDate >= inStartDate AND Movement_Sale.OperDate < inEndDate + INTERVAL '1 DAY'
+                                 AND Movement_Sale.OperDate >= vbStartDate AND Movement_Sale.OperDate < vbEndDate
                                  AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
                                )
         , tmpMF_TotalSummPrimeCost AS (SELECT MovementFloat_TotalSummPrimeCost.*
