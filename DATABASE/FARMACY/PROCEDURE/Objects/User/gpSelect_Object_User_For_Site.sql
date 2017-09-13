@@ -73,7 +73,8 @@ BEGIN
                                  , MAX (MovementProtocol.OperDate) AS OperDate
                             FROM tmpUser
                                  INNER JOIN MovementProtocol ON MovementProtocol.UserId = tmpUser.UserId
-                                                            AND MovementProtocol.OperDate >= CURRENT_DATE - INTERVAL '30 DAY'
+                                                            -- AND MovementProtocol.OperDate >= CURRENT_DATE - INTERVAL '30 DAY'
+                                                            AND MovementProtocol.OperDate = NULL
                             GROUP BY tmpUser.UserId
                            )
         SELECT
