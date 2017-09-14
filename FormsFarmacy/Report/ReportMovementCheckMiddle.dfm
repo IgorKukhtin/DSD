@@ -3,6 +3,7 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
   ClientHeight = 588
   ClientWidth = 1251
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -182
   ExplicitWidth = 1267
   ExplicitHeight = 626
   PixelsPerInch = 96
@@ -180,6 +181,31 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountPeriod
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaSalePeriod
+            end
+            item
+              Format = ',0.##'
+              Kind = skAverage
+              Column = SummaMiddleAll
+            end
+            item
+              Format = ',0.##'
+              Kind = skAverage
+              Column = SummaMiddle
+            end
+            item
+              Format = ',0.##'
+              Kind = skAverage
+              Column = SummaMiddlePeriod
+            end
+            item
+              Format = ',0.##'
+              Kind = skAverage
+              Column = SummaMiddleWithSP
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -338,6 +364,31 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountPeriod
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaSalePeriod
+            end
+            item
+              Format = ',0.##'
+              Kind = skAverage
+              Column = SummaMiddleAll
+            end
+            item
+              Format = ',0.##'
+              Kind = skAverage
+              Column = SummaMiddle
+            end
+            item
+              Format = ',0.##'
+              Kind = skAverage
+              Column = SummaMiddlePeriod
+            end
+            item
+              Format = ',0.##'
+              Kind = skAverage
+              Column = SummaMiddleWithSP
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -888,6 +939,8 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 3
+        ExplicitLeft = -368
+        ExplicitTop = 497
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS

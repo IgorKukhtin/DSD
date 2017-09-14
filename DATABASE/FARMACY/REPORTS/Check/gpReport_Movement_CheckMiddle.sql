@@ -30,6 +30,8 @@ $BODY$
    DECLARE vbDateStart TDateTime;  
    DECLARE vbDateEnd   TDateTime;
    
+   DECLARE vbDays Integer;
+   
    DECLARE Cursor1 refcursor;
    DECLARE Cursor2 refcursor;
 BEGIN
@@ -55,6 +57,9 @@ BEGIN
         -- теперь следуюющий
         vbIndex := vbIndex + 1;
     END LOOP;
+    
+    -- кол-во дней периода
+    vbDays := (SELECT DATE_PART('DAY', (inDateEnd - inDateStart )) + 1);
     
     -- 
     OPEN Cursor1 FOR
@@ -142,33 +147,13 @@ BEGIN
                              , (COALESCE (Movement_Check.SummChangePercent_SP, 0))   AS SummChangePercent_SP
                              , (COALESCE (Movement_Check.SummSale_1303, 0))          AS SummSale_1303
                              , (COALESCE (Movement_Check.Count_1303, 0))             AS Count_1303
-                             
                              , MI_Check.Id             AS MI_Id
                              , MI_Check.Amount
-                            /* , SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount) * COALESCE (MIFloat_Price.ValueData, 0))   AS SummaSale
-
-                             */
                         FROM tmpCheck AS Movement_Check
                              INNER JOIN MovementItem AS MI_Check
                                                      ON MI_Check.MovementId = Movement_Check.Id
                                                     AND MI_Check.DescId = zc_MI_Master()
                                                     AND MI_Check.isErased = FALSE
-                            /* LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                         ON MIFloat_Price.MovementItemId = MI_Check.Id
-                                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                      
-                             LEFT JOIN MovementItemContainer AS MIContainer
-                                                             ON MIContainer.MovementItemId = MI_Check.Id
-                                                            AND MIContainer.DescId = zc_MIContainer_Count() 
-                            
-                        GROUP BY Movement_Check.UnitId
-                               , Movement_Check.OperDate
-                               , Movement_Check.Id
-                               , (COALESCE (Movement_Check.SummChangePercent_SP, 0))
-                               , (COALESCE (Movement_Check.SummSale_1303, 0))
-                               , (COALESCE (Movement_Check.Count_1303, 0))
-                        HAVING SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount)) <> 0
-                        */
                        )
         , tmpMIF_Price AS (SELECT MIFloat_Price.*
                            FROM MovementItemFloat AS MIFloat_Price
@@ -183,7 +168,7 @@ BEGIN
                                     
         , tmpMI AS (SELECT MI_Check.UnitId
                          , MI_Check.OperDate
-                         , COALESCE (MI_Check.SummChangePercent_SP, 0)   AS SummChangePercent_SP
+                         , COALESCE (MI_Check.SummChangePercent_SP, 0)    AS SummChangePercent_SP
                          , COALESCE (MI_Check.SummSale_1303, 0)           AS SummSale_1303
                          , COALESCE (MI_Check.Count_1303, 0)              AS Count_1303
                          , SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount) * COALESCE (MIFloat_Price.ValueData, 0))   AS SummaSale
@@ -193,7 +178,6 @@ BEGIN
                                   
                          LEFT JOIN tmpMIContainer AS MIContainer
                                                   ON MIContainer.MovementItemId = MI_Check.MI_Id
-                        
                     GROUP BY MI_Check.UnitId
                            , MI_Check.OperDate
                            , MI_Check.Id
@@ -201,7 +185,6 @@ BEGIN
                            , (COALESCE (MI_Check.SummSale_1303, 0))
                            , (COALESCE (MI_Check.Count_1303, 0))
                     HAVING SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount)) <> 0 
-                    
                    )                                                               
         -- выбираем продажи по товарам соц.проекта 1303
         
@@ -218,44 +201,15 @@ BEGIN
                                     -- доп. огрн. по подразд. сети
                                     INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
                                     
-                                 /*   LEFT JOIN MovementLinkObject AS MovementLinkObject_PartnerMedical
-                                           ON MovementLinkObject_PartnerMedical.MovementId = Movement_Sale.Id
-                                          AND MovementLinkObject_PartnerMedical.DescId = zc_MovementLinkObject_PartnerMedical()
-                                  */                               
                                     LEFT JOIN MovementString AS MovementString_InvNumberSP
                                            ON MovementString_InvNumberSP.MovementId = Movement_Sale.Id
                                           AND MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP()
       
-                                  /*  LEFT JOIN MovementLinkObject AS MovementLinkObject_MedicSP
-                                           ON MovementLinkObject_MedicSP.MovementId = Movement_Sale.Id
-                                          AND MovementLinkObject_MedicSP.DescId = zc_MovementLinkObject_MedicSP()
-                                    
-                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_MemberSP
-                                           ON MovementLinkObject_MemberSP.MovementId = Movement_Sale.Id
-                                          AND MovementLinkObject_MemberSP.DescId = zc_MovementLinkObject_MemberSP()
-                                    
-                                    LEFT JOIN MovementDate AS MovementDate_OperDateSP
-                                         ON MovementDate_OperDateSP.MovementId = Movement_Sale.Id
-                                        AND MovementDate_OperDateSP.DescId = zc_MovementDate_OperDateSP()
-      
-                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_GroupMemberSP
-                                           ON MovementLinkObject_GroupMemberSP.MovementId = Movement_Sale.Id
-                                          AND MovementLinkObject_GroupMemberSP.DescId = zc_MovementLinkObject_GroupMemberSP()
-*/
                                WHERE Movement_Sale.DescId = zc_Movement_Sale()
                                  AND Movement_Sale.OperDate >= inDateStart AND Movement_Sale.OperDate < inDateEnd + INTERVAL '1 DAY'
                                  AND ( COALESCE (MovementString_InvNumberSP.ValueData,'') <> ''
                                      )
-                                
                                  AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
-                                 
-                               /*AND ( COALESCE (MovementLinkObject_PartnerMedical.ObjectId,0) <> 0 OR
-                                       COALESCE (MovementLinkObject_GroupMemberSP.ObjectId ,0) <> 0 OR
-                                       COALESCE (MovementString_InvNumberSP.ValueData,'') <> '' OR
-                                       COALESCE (MovementLinkObject_MedicSP.ObjectId,0) <> 0 OR
-                                       COALESCE (MovementLinkObject_MemberSP.ObjectId,0) <> 0
-                                     )*/
-                                     
                                )
 
         , tmpSale_1303 AS (SELECT Movement_Sale.OperDate      AS OperDate
@@ -325,7 +279,7 @@ BEGIN
                                    , COALESCE (tmpMI.SummSale_1303, 0) + COALESCE (tmpSale_1303.SummSale_1303, 0)  AS SummSale_1303
                                    , COALESCE (tmpSale_1303.Count_1303, 0)        AS Count_1303        -- COALESCE (tmpMI.Count_1303, 0) +
                               FROM tmpMI
-                                   FULL JOIN tmpSale_1303 ON tmpSale_1303.Unitid   = tmpMI.Unitid
+                                   FULL JOIN tmpSale_1303 ON tmpSale_1303.Unitid = tmpMI.Unitid
                                                          AND COALESCE (tmpSale_1303.OperDate, Null) = COALESCE (tmpMI.OperDate, Null)
                               ) AS tmpMI
                         GROUP BY tmpMI.Unitid
@@ -352,13 +306,14 @@ BEGIN
         SELECT tmpData.OperDate  ::TDateTime
              , Object_Unit.ValueData                 AS UnitName
             
-            , tmpData.Amount               :: TFloat AS Amount
-            , tmpPeriod.AmountPeriod       :: TFloat AS AmountPeriod
+            , CASE WHEN inisDay = FALSE AND vbDays <> 0 THEN tmpPeriod.AmountPeriod / vbDays ELSE tmpData.Amount END             :: TFloat AS Amount
+            --, tmpData.Amount                :: TFloat AS Amount
+            , tmpPeriod.AmountPeriod        :: TFloat AS AmountPeriod
             
-            , tmpData.SummaSale            :: TFloat AS SummaSale
+            , tmpData.SummaSale             :: TFloat AS SummaSale
             , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaSale / tmpData.Amount ELSE 0 END   :: TFloat AS SummaMiddle
 
-            , tmpPeriod.SummaSalePeriod    :: TFloat AS SummaSalePeriod
+            , tmpPeriod.SummaSalePeriod     :: TFloat AS SummaSalePeriod
             , CASE WHEN tmpPeriod.AmountPeriod <> 0 THEN tmpPeriod.SummaSalePeriod / tmpPeriod.AmountPeriod ELSE 0 END   :: TFloat AS SummaMiddlePeriod
 
             , tmpData.Amount1               :: TFloat AS Amount1
@@ -416,7 +371,8 @@ BEGIN
              
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpData.UnitId 
              
-             LEFT JOIN tmpBestBad ON tmpBestBad.UnitId   = tmpData.UnitId
+             LEFT JOIN tmpBestBad ON tmpBestBad.UnitId = tmpData.UnitId
+                                 AND (CASE WHEN inisDay = TRUE THEN COALESCE (tmpBestBad.OperDate, Null) = COALESCE (tmpData.OperDate, Null) ELSE 1 = 1 END)
 
         ORDER BY 2, 1 ;
     RETURN NEXT Cursor1;
@@ -535,42 +491,14 @@ BEGIN
                                       -- доп. огрн. по подразд. сети
                                       INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
                                       
-                                    /*  LEFT JOIN MovementLinkObject AS MovementLinkObject_PartnerMedical
-                                             ON MovementLinkObject_PartnerMedical.MovementId = Movement_Sale.Id
-                                            AND MovementLinkObject_PartnerMedical.DescId = zc_MovementLinkObject_PartnerMedical()
-                                     */                              
                                       LEFT JOIN MovementString AS MovementString_InvNumberSP
                                              ON MovementString_InvNumberSP.MovementId = Movement_Sale.Id
                                             AND MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP()
-                                    /*
-                                      LEFT JOIN MovementLinkObject AS MovementLinkObject_MedicSP
-                                             ON MovementLinkObject_MedicSP.MovementId = Movement_Sale.Id
-                                            AND MovementLinkObject_MedicSP.DescId = zc_MovementLinkObject_MedicSP()
-                                      
-                                      LEFT JOIN MovementLinkObject AS MovementLinkObject_MemberSP
-                                             ON MovementLinkObject_MemberSP.MovementId = Movement_Sale.Id
-                                            AND MovementLinkObject_MemberSP.DescId = zc_MovementLinkObject_MemberSP()
-                                      
-                                      LEFT JOIN MovementDate AS MovementDate_OperDateSP
-                                           ON MovementDate_OperDateSP.MovementId = Movement_Sale.Id
-                                          AND MovementDate_OperDateSP.DescId = zc_MovementDate_OperDateSP()
-        
-                                      LEFT JOIN MovementLinkObject AS MovementLinkObject_GroupMemberSP
-                                             ON MovementLinkObject_GroupMemberSP.MovementId = Movement_Sale.Id
-                                            AND MovementLinkObject_GroupMemberSP.DescId = zc_MovementLinkObject_GroupMemberSP()
-*/
+
                                  WHERE Movement_Sale.DescId = zc_Movement_Sale()
                                    AND Movement_Sale.OperDate >= vbDateStart AND Movement_Sale.OperDate < vbDateEnd
                                    AND (COALESCE (MovementString_InvNumberSP.ValueData,'') <> '')
                                    AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
-                                   /*
-                                    AND ( COALESCE (MovementLinkObject_PartnerMedical.ObjectId,0) <> 0 OR
-                                         COALESCE (MovementLinkObject_GroupMemberSP.ObjectId ,0) <> 0 OR
-                                         COALESCE (MovementString_InvNumberSP.ValueData,'') <> '' OR
-                                         COALESCE (MovementLinkObject_MedicSP.ObjectId,0) <> 0 OR
-                                         COALESCE (MovementLinkObject_MemberSP.ObjectId,0) <> 0
-                                       )
-                                   */
                                  ) AS Movement_Sale
                                  INNER JOIN MovementItem AS MI_Sale
                                                          ON MI_Sale.MovementId = Movement_Sale.Id
