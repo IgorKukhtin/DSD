@@ -2116,6 +2116,8 @@ end;
 function TWaitThread.LoadJuridicalCollationDocItems: string;
 var
   GetStoredProc : TdsdStoredProc;
+  ContractNumber, ContractTagName: string;
+  isPriceWithVAT: Boolean;
   TotalCountKg, TotalSummPVAT, TotalSumm, ChangePercent: Currency;
 begin
   Result := '';
@@ -2136,6 +2138,9 @@ begin
 
       with GetStoredProc.DataSets[0].DataSet do
       begin
+        ContractNumber := FieldByName('ContractNumber').AsString;
+        ContractTagName := FieldByName('ContractTagName').AsString;
+        isPriceWithVAT := FieldByName('isPriceWithVAT').AsBoolean;
         TotalCountKg := FieldByName('TotalCountKg').AsCurrency;
         TotalSummPVAT := FieldByName('TotalSummPVAT').AsCurrency;
         TotalSumm := FieldByName('TotalSumm').AsCurrency;
@@ -2183,6 +2188,8 @@ begin
 
       Synchronize(procedure
           begin
+            frmMain.lDocContract.Text := Format(sContract, [ContractNumber, ContractTagName]);
+            frmMain.lDocInfo.Text := frmMain.lDocInfo.Text + '; ' + IfThen(isPriceWithVAT, sPriceWithVAT, sPriceWithoutVAT);
             frmMain.lTotalPriceDoc.Text := Format('%s : ', [sTotalCostWithVAT]) +
               FormatFloat(',0.00', TotalSummPVAT);
             frmMain.lPriceWithPercentDoc.Text := Format('%s (', [sCostWithDiscount]) +

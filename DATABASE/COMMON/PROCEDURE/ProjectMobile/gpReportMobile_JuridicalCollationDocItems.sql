@@ -21,11 +21,25 @@ BEGIN
         SELECT Movement.Id
              , Movement.InvNumber
              , Movement.OperDate
+             , COALESCE (Object_Contract.ValueData, '')::TVarChar          AS ContractNumber
+             , COALESCE (Object_ContractTag.ValueData, '')::TVarChar       AS ContractTagName
+             , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)    AS isPriceWithVAT
              , COALESCE (MovementFloat_TotalCountKg.ValueData, 0)::TFloat  AS TotalCountKg
              , COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0)::TFloat AS TotalSummPVAT
              , COALESCE (MovementFloat_TotalSumm.ValueData, 0)::TFloat     AS TotalSumm
              , COALESCE (MovementFloat_ChangePercent.ValueData, 0)::TFloat AS ChangePercent
         FROM Movement
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId                            
+             LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractTag
+                                  ON ObjectLink_Contract_ContractTag.ObjectId = Object_Contract.Id
+                                 AND ObjectLink_Contract_ContractTag.DescId = zc_ObjectLink_Contract_ContractTag()
+             LEFT JOIN Object AS Object_ContractTag ON Object_ContractTag.Id = ObjectLink_Contract_ContractTag.ChildObjectId
+             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                       ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
+                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
              LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
                                      ON MovementFloat_TotalCountKg.MovementId = Movement.Id
                                     AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()

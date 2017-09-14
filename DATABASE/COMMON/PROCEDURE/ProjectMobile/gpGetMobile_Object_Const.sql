@@ -158,11 +158,16 @@ BEGIN
                         THEN REPLACE (LOWER (Object_ConnectParam.ValueData), '//integer-srv.alan.dp.ua','//integer-srv2.alan.dp.ua/projectmobile/index.php')
                    WHEN STRPOS (Object_ConnectParam.ValueData, 'integer-srv2.alan.dp.ua') > 0 AND inSession = '5' -- AND 1=0 -- AND inSession = '1000168' -- Молдован Е.А.
                         THEN REPLACE (LOWER (Object_ConnectParam.ValueData), '//integer-srv2.alan.dp.ua','//integer-srv2.alan.dp.ua/projectmobile/index.php')
+                   WHEN Object_ConnectParam.ValueData = ''
+                        THEN 'http://project-vds.vds.colocall.com/projectmobile/index.php'
                    ELSE REPLACE (REPLACE (LOWER (Object_ConnectParam.ValueData), '/project/', '/projectmobile/'), '//integer-srv.alan.dp.ua', '//project-vds.vds.colocall.com/projectmobile/index.php')
                    -- ELSE 'http://integer-srv.alan.dp.ua/projectmobile/index.php'
               END :: TVarChar AS WebService
 
-            , REPLACE (REPLACE (LOWER (Object_ConnectParam.ValueData), '/project/', '/projectmobile/'), '//integer-srv.alan.dp.ua', '//project-vds.vds.colocall.com/projectmobile/index.php') :: TVarChar AS WebService_two
+            , CASE WHEN Object_ConnectParam.ValueData = ''
+                        THEN 'http://project-vds.vds.colocall.com/projectmobile/index.php' 
+                   ELSE REPLACE (REPLACE (LOWER (Object_ConnectParam.ValueData), '/project/', '/projectmobile/'), '//integer-srv.alan.dp.ua', '//project-vds.vds.colocall.com/projectmobile/index.php') 
+              END :: TVarChar AS WebService_two
 
             -- AS LastDateIn
             -- AS LastDateOut
