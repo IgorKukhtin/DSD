@@ -293,14 +293,6 @@
 				<Form>OrderInternalJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\User.pas">
-				<Form>UserForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\UserEdit.pas">
-				<Form>UserEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Role.pas">
 				<Form>RoleForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -393,10 +385,6 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\UnitsTest.pas"/>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\UnitTree.pas">
-				<Form>UnitTreeForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsEdit.pas">
 				<Form>GoodsEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1759,6 +1747,18 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\ReportMovementCheckLight.pas">
 				<Form>ReportMovementCheckLightForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\UnitTree.pas">
+				<Form>UnitTreeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\User.pas">
+				<Form>UserForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\UserEdit.pas">
+				<Form>UserEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
