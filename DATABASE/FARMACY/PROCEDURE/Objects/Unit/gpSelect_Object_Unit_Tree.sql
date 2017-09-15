@@ -31,7 +31,7 @@ END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Unit(TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_Unit(TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

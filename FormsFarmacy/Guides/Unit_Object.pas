@@ -20,7 +20,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  cxButtonEdit, cxCalendar;
 
 type
   TUnit_ObjectForm = class(TAncestorEnumForm)
@@ -52,6 +53,15 @@ type
     spUpdate_Unit_isReport: TdsdStoredProc;
     actUpdateisReport: TdsdExecStoredProc;
     bbUpdateisReport: TdxBarButton;
+    actShowAll: TBooleanStoredProcAction;
+    bb: TdxBarButton;
+    Address: TcxGridDBColumn;
+    CreateDate: TcxGridDBColumn;
+    CloseDate: TcxGridDBColumn;
+    UserManagerName: TcxGridDBColumn;
+    actOpenUserForm: TOpenChoiceForm;
+    spUpdate_Unit_Params: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

@@ -1,23 +1,23 @@
 inherited Unit_ObjectForm: TUnit_ObjectForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
   ClientHeight = 420
-  ClientWidth = 809
-  ExplicitWidth = 825
+  ClientWidth = 926
+  ExplicitWidth = 942
   ExplicitHeight = 458
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 809
+    Width = 926
     Height = 394
     ExplicitWidth = 809
     ExplicitHeight = 394
     ClientRectBottom = 394
-    ClientRectRight = 809
+    ClientRectRight = 926
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 809
       ExplicitHeight = 394
       inherited cxGrid: TcxGrid
-        Width = 809
+        Width = 926
         Height = 394
         ExplicitWidth = 809
         ExplicitHeight = 394
@@ -25,7 +25,6 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsSelection.MultiSelect = True
           OptionsView.Footer = False
           Styles.Content = nil
@@ -38,6 +37,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             DataBinding.FieldName = 'ParentName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object Code: TcxGridDBColumn
@@ -45,6 +45,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             DataBinding.FieldName = 'Code'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 35
           end
           object Name: TcxGridDBColumn
@@ -52,13 +53,31 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             DataBinding.FieldName = 'Name'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 133
+          end
+          object Address: TcxGridDBColumn
+            Caption = #1040#1076#1088#1077#1089
+            DataBinding.FieldName = 'Address'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object ProvinceCityName: TcxGridDBColumn
+            Caption = #1056#1072#1081#1086#1085
+            DataBinding.FieldName = 'ProvinceCityName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 87
           end
           object TaxService: TcxGridDBColumn
@@ -68,6 +87,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 57
           end
           object TaxServiceNigth: TcxGridDBColumn
@@ -77,6 +97,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 56
           end
           object isRepriceAuto: TcxGridDBColumn
@@ -104,12 +125,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 40
           end
           object Id: TcxGridDBColumn
             Caption = 'UnitId'
             DataBinding.FieldName = 'Id'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Width = 30
           end
@@ -147,6 +170,39 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderHint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1086#1090#1095#1077#1090#1077
             Options.Editing = False
             Width = 72
+          end
+          object CreateDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076'. '#1087#1086#1076#1088'.'
+            DataBinding.FieldName = 'CreateDate'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 71
+          end
+          object CloseDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1079#1072#1082#1088'. '#1087#1086#1076#1088'.'
+            DataBinding.FieldName = 'CloseDate'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object UserManagerName: TcxGridDBColumn
+            Caption = #1052#1077#1085#1077#1076#1078#1077#1088
+            DataBinding.FieldName = 'UserManagerName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actOpenUserForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
         end
       end
@@ -322,6 +378,64 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' - '#1044#1072
       ImageIndex = 52
     end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
+    object actOpenUserForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TUserForm'
+      FormName = 'TUserForm'
+      FormNameParam.Value = 'TUserForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UserManagerId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UserManagerName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_Params
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_Params
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = MasterDS
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -333,6 +447,15 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Unit'
+    Params = <
+      item
+        Name = 'inisShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     Left = 88
     Top = 80
   end
@@ -346,6 +469,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       0)
     inherited Bar: TdxBar
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
+        end
         item
           Visible = True
           ItemName = 'dxBarStatic'
@@ -457,6 +588,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
     object bbUpdateisReport: TdxBarButton
       Action = actUpdateisReport
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = actShowAll
       Category = 0
     end
   end
@@ -663,5 +798,48 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 648
     Top = 267
+  end
+  object spUpdate_Unit_Params: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_Params'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCreateDate'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'CreateDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCloseDate'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'CloseDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserManagerId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UserManagerId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 344
+    Top = 307
   end
 end

@@ -1,19 +1,23 @@
 -- Function: gpSelect_Object_Unit()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Unit(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Unit(Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Unit(
+    IN inisShowAll   Boolean,
     IN inSession     TVarChar       -- ñåññèÿ ïîëüçîâàòåëÿ
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Address TVarChar
              , ProvinceCityId Integer, ProvinceCityName TVarChar
              , ParentId Integer, ParentName TVarChar
+             , UserManagerId Integer, UserManagerName TVarChar
              , JuridicalName TVarChar, MarginCategoryName TVarChar, isLeaf boolean, isErased boolean
              , RouteId integer, RouteName TVarChar
              , RouteSortingId integer, RouteSortingName TVarChar
              , TaxService TFloat, TaxServiceNigth TFloat
              , StartServiceNigth TDateTime, EndServiceNigth TDateTime
+             , CreateDate TDateTime, CloseDate TDateTime
              , isRepriceAuto Boolean
              , isOver Boolean
              , isUploadBadm Boolean
@@ -36,26 +40,29 @@ BEGIN
                     AND ObjectBoolean_UploadBadm.ValueData = TRUE)
 
     SELECT 
-        Object_Unit.Id                                     AS Id
-      , Object_Unit.ObjectCode                             AS Code
-      , Object_Unit.ValueData                              AS Name
-      , ObjectString_Unit_Address.ValueData                AS Address
-
-      , Object_ProvinceCity.Id                             AS ProvinceCityId
-      , Object_ProvinceCity.ValueData                      AS ProvinceCityName
-
-      , COALESCE(ObjectLink_Unit_Parent.ChildObjectId,0)   AS ParentId
-      , Object_Parent.ValueData                            AS ParentName
-
-      , Object_Juridical.ValueData                         AS JuridicalName
-      , Object_MarginCategory.ValueData                    AS MarginCategoryName
-      , ObjectBoolean_isLeaf.ValueData                     AS isLeaf
-      , Object_Unit.isErased                               AS isErased
-
-      , 0                                                  AS RouteId
-      , ''::TVarChar                                       AS RouteName
-      , 0                                                  AS RouteSortingId
-      , ''::TVarChar                                       AS RouteSortingName
+        Object_Unit.Id                                       AS Id
+      , Object_Unit.ObjectCode                               AS Code
+      , Object_Unit.ValueData                                AS Name
+      , ObjectString_Unit_Address.ValueData                  AS Address
+                                                            
+      , Object_ProvinceCity.Id                               AS ProvinceCityId
+      , Object_ProvinceCity.ValueData                        AS ProvinceCityName
+                                                            
+      , COALESCE(ObjectLink_Unit_Parent.ChildObjectId,0)     AS ParentId
+      , Object_Parent.ValueData                              AS ParentName
+                                                            
+      , COALESCE (Object_UserManager.Id, 0)                  AS UserManagerId
+      , Object_UserManager.ValueData                         AS UserManagerName
+                                                            
+      , Object_Juridical.ValueData                           AS JuridicalName
+      , Object_MarginCategory.ValueData                      AS MarginCategoryName
+      , ObjectBoolean_isLeaf.ValueData                       AS isLeaf
+      , Object_Unit.isErased                                 AS isErased
+                                                            
+      , 0                                                    AS RouteId
+      , ''::TVarChar                                         AS RouteName
+      , 0                                                    AS RouteSortingId
+      , ''::TVarChar                                         AS RouteSortingName
 
       , ObjectFloat_TaxService.ValueData                     AS TaxService
       , ObjectFloat_TaxServiceNigth.ValueData                AS TaxServiceNigth
@@ -63,6 +70,9 @@ BEGIN
       , ObjectDate_StartServiceNigth.ValueData               AS StartServiceNigth
       , ObjectDate_EndServiceNigth.ValueData                 AS EndServiceNigth
 
+      , ObjectDate_Create.ValueData                          AS CreateDate
+      , ObjectDate_Close.ValueData                           AS CloseDate
+      
       , COALESCE(ObjectBoolean_RepriceAuto.ValueData, FALSE) AS isRepriceAuto
       , COALESCE(ObjectBoolean_Over.ValueData, FALSE)        AS isOver
       , COALESCE(ObjectBoolean_UploadBadm.ValueData, FALSE)  AS isUploadBadm
@@ -90,6 +100,11 @@ BEGIN
                              ON ObjectLink_Unit_ProvinceCity.ObjectId = Object_Unit.Id
                             AND ObjectLink_Unit_ProvinceCity.DescId = zc_ObjectLink_Unit_ProvinceCity()
         LEFT JOIN Object AS Object_ProvinceCity ON Object_ProvinceCity.Id = ObjectLink_Unit_ProvinceCity.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_UserManager
+                             ON ObjectLink_Unit_UserManager.ObjectId = Object_Unit.Id
+                            AND ObjectLink_Unit_UserManager.DescId = zc_ObjectLink_Unit_UserManager()
+        LEFT JOIN Object AS Object_UserManager ON Object_UserManager.Id = ObjectLink_Unit_UserManager.ChildObjectId
         
         LEFT JOIN ObjectBoolean AS ObjectBoolean_isLeaf 
                                 ON ObjectBoolean_isLeaf.ObjectId = Object_Unit.Id
@@ -131,20 +146,29 @@ BEGIN
                              ON ObjectDate_EndServiceNigth.ObjectId = Object_Unit.Id
                             AND ObjectDate_EndServiceNigth.DescId = zc_ObjectDate_Unit_EndServiceNigth()
 
+        LEFT JOIN ObjectDate AS ObjectDate_Create
+                             ON ObjectDate_Create.ObjectId = Object_Unit.Id
+                            AND ObjectDate_Create.DescId = zc_ObjectDate_Unit_Create()
+        LEFT JOIN ObjectDate AS ObjectDate_Close
+                             ON ObjectDate_Close.ObjectId = Object_Unit.Id
+                            AND ObjectDate_Close.DescId = zc_ObjectDate_Unit_Close()
+                            
         LEFT JOIN tmpByBadm ON tmpByBadm.UnitId = Object_Unit.Id
 
-    WHERE Object_Unit.DescId = zc_Object_Unit();
+    WHERE Object_Unit.DescId = zc_Object_Unit()
+      AND (inisShowAll = True OR Object_Unit.isErased = False);
   
 END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Unit(TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_Unit(TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 15.09.17         * add inisShowAll
  09.08.17         * add isReport
  08.08.17         * add ProvinceCity
  06.03.17         * add Address
@@ -160,4 +184,4 @@ ALTER FUNCTION gpSelect_Object_Unit(TVarChar) OWNER TO postgres;
 */
 
 -- òåñò
--- SELECT * FROM gpSelect_Object_Unit ('2')
+-- SELECT * FROM gpSelect_Object_Unit (False, '2')

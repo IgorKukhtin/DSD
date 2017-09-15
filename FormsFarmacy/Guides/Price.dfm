@@ -14,7 +14,6 @@ inherited PriceForm: TPriceForm
     Height = 57
     Align = alTop
     TabOrder = 6
-    ExplicitWidth = 766
     object deOperDate: TcxDateEdit
       Left = 662
       Top = 32
@@ -77,17 +76,17 @@ inherited PriceForm: TPriceForm
     Width = 789
     Height = 330
     ExplicitTop = 83
-    ExplicitWidth = 766
+    ExplicitWidth = 789
     ExplicitHeight = 330
     ClientRectBottom = 330
     ClientRectRight = 789
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 766
+      ExplicitWidth = 789
       ExplicitHeight = 330
       inherited cxGrid: TcxGrid
         Width = 789
         Height = 330
-        ExplicitWidth = 766
+        ExplicitWidth = 789
         ExplicitHeight = 330
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
