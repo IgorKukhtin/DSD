@@ -164,7 +164,7 @@ type
     procedure SetTaskName(AName : string);
 
     function LoadJuridicalCollation: string;
-    function LoadJuridicalCollationDocItems: string;
+    function LoadJuridicalCollationDoc: string;
     function UpdateProgram: string;
     function ShowAllPartnerOnMap: string;
   protected
@@ -2113,9 +2113,9 @@ begin
   end;
 end;
 
-function TWaitThread.LoadJuridicalCollationDocItems: string;
+function TWaitThread.LoadJuridicalCollationDoc: string;
 var
-  GetStoredProc : TdsdStoredProc;
+  HeaderProc, ItemsProc: TdsdStoredProc;
   ContractNumber, ContractTagName: string;
   isPriceWithVAT: Boolean;
   TotalCountKg, TotalSummPVAT, TotalSumm, ChangePercent: Currency;
@@ -2124,19 +2124,17 @@ begin
 
   DM.cdsJuridicalCollationDocItems.DisableControls;
 
-  GetStoredProc := TdsdStoredProc.Create(nil);
+  HeaderProc := TdsdStoredProc.Create(nil);
   try
-    GetStoredProc.StoredProcName := 'gpReportMobile_JuridicalCollationDocItems';
-    GetStoredProc.OutputType := otMultiDataSet;
-    GetStoredProc.DataSets.Add.DataSet := TClientDataSet.Create(nil);
-    GetStoredProc.DataSets.Add.DataSet := TClientDataSet.Create(nil);
-
-    GetStoredProc.Params.AddParam('inMovementId', ftInteger, ptInput, DocId);
+    HeaderProc.StoredProcName := 'gpReportMobile_JuridicalCollationDocHeader';
+    HeaderProc.OutputType := otDataSet;
+    HeaderProc.DataSet := TClientDataSet.Create(nil);
+    HeaderProc.Params.AddParam('inMovementId', ftInteger, ptInput, DocId);
 
     try
-      GetStoredProc.Execute(False, False, True);
+      HeaderProc.Execute(False, False, True);
 
-      with GetStoredProc.DataSets[0].DataSet do
+      with HeaderProc.DataSet do
       begin
         ContractNumber := FieldByName('ContractNumber').AsString;
         ContractTagName := FieldByName('ContractTagName').AsString;
@@ -2147,7 +2145,14 @@ begin
         ChangePercent := FieldByName('ChangePercent').AsCurrency;
       end;
 
-      with GetStoredProc.DataSets[1].DataSet do
+      ItemsProc := TdsdStoredProc.Create(nil);
+      ItemsProc.StoredProcName := 'gpReportMobile_JuridicalCollationDocItems';
+      ItemsProc.OutputType := otDataSet;
+      ItemsProc.DataSet := TClientDataSet.Create(nil);
+      ItemsProc.Params.AddParam('inMovementId', ftInteger, ptInput, DocId);
+      ItemsProc.Execute(False, False, True);
+
+      with ItemsProc.DataSet do
       begin
         First;
 
@@ -2199,13 +2204,14 @@ begin
             frmMain.lwJuridicalCollationItems.ScrollViewPos := 0;
           end);
     except
-      on E : Exception do
+      on E: Exception do
       begin
         Result := E.Message;
       end;
     end;
   finally
-    FreeAndNil(GetStoredProc);
+    FreeAndNil(ItemsProc);
+    FreeAndNil(HeaderProc);
     DM.cdsJuridicalCollationDocItems.EnableControls;
   end;
 end;
@@ -2354,7 +2360,7 @@ begin
     if TaskName = 'JuridicalCollationDocItems' then
     begin
       SetTaskName('Получение позиций по документу');
-      Res := LoadJuridicalCollationDocItems;
+      Res := LoadJuridicalCollationDoc;
     end
     else
     if TaskName = 'UpdateProgram' then
