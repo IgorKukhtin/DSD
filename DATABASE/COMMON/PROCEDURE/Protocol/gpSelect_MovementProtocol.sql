@@ -10,9 +10,11 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementProtocol(
     IN inMovementId      Integer,    -- объект
     IN inSession         TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (OperDate TDateTime, ProtocolData Text, UserName TVarChar, 
-               InvNumber TVarChar, MovementOperDate TDateTime, MovementDescName TVarChar,
-               isInsert Boolean)
+RETURNS TABLE (OperDate TDateTime, ProtocolData Text, UserName TVarChar 
+             , UnitCode Integer, UnitName TVarChar
+             , PositionName TVarChar
+             , InvNumber TVarChar, MovementOperDate TDateTime, MovementDescName TVarChar
+             , isInsert Boolean)
 AS
 $BODY$
 BEGIN
@@ -28,11 +30,23 @@ BEGIN
   IF inMovementId <> 0 AND EXISTS (SELECT Id FROM Movement WHERE Id = inMovementId AND DescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_ProfitLossService(), zc_Movement_Service()))
   THEN
   RETURN QUERY 
+   WITH tmpPersonal AS (SELECT View_Personal.MemberId
+                             , MAX (View_Personal.UnitId) AS UnitId
+                             , MAX (View_Personal.PositionId) AS PositionId
+                        FROM Object_Personal_View AS View_Personal
+                        WHERE View_Personal.isErased = FALSE
+                        GROUP BY View_Personal.MemberId
+                       )
   -- real-1
   SELECT 
      MovementProtocol.OperDate,
      MovementProtocol.ProtocolData::Text,
      Object_User.ValueData,
+     
+     Object_Unit.ObjectCode    AS UnitCode,
+     Object_Unit.ValueData     AS UnitName,
+     Object_Position.ValueData AS PositionName,
+       
      Movement.InvNumber, 
      Movement.OperDate, 
      MovementDesc.ItemName AS MovementDescName,
@@ -41,85 +55,159 @@ BEGIN
   JOIN Object AS Object_User ON Object_User.Id = MovementProtocol.UserId
   JOIN Movement ON Movement.Id = MovementProtocol.MovementId AND Movement.Id = inMovementId
   JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+  
+  LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                       ON ObjectLink_User_Member.ObjectId = Object_User.Id
+                      AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+  LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
+  LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
+  LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
+  
  UNION ALL
   -- real-2
   SELECT 
      MovementItemProtocol.OperDate,
      MovementItemProtocol.ProtocolData::Text,
      Object_User.ValueData,
+     
+     Object_Unit.ObjectCode    AS UnitCode,
+     Object_Unit.ValueData     AS UnitName,
+     Object_Position.ValueData AS PositionName,
+     
      Movement.InvNumber, 
      Movement.OperDate, 
      MovementItemDesc.ItemName AS MovementDescName,
      MovementItemProtocol.isInsert
   FROM MovementItemProtocol
-  JOIN Object AS Object_User ON Object_User.Id = MovementItemProtocol.UserId
-  JOIN MovementItem ON MovementItem.Id = MovementItemProtocol.MovementItemId AND MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master()
-  JOIN MovementItemDesc ON MovementItemDesc.Id = MovementItem.DescId
-  JOIN Movement ON Movement.Id = MovementItem.MovementId
-
+       JOIN Object AS Object_User ON Object_User.Id = MovementItemProtocol.UserId
+       JOIN MovementItem ON MovementItem.Id = MovementItemProtocol.MovementItemId AND MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master()
+       JOIN MovementItemDesc ON MovementItemDesc.Id = MovementItem.DescId
+       JOIN Movement ON Movement.Id = MovementItem.MovementId
+       
+       LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                            ON ObjectLink_User_Member.ObjectId = Object_User.Id
+                           AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+       LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
+       LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
+       LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
+  
  UNION ALL
   -- arc-1
   SELECT 
      MovementProtocol.OperDate,
      MovementProtocol.ProtocolData::Text,
      Object_User.ValueData,
+
+     Object_Unit.ObjectCode    AS UnitCode,
+     Object_Unit.ValueData     AS UnitName,
+     Object_Position.ValueData AS PositionName,
+     
      Movement.InvNumber, 
      Movement.OperDate, 
      MovementDesc.ItemName AS MovementDescName,
      MovementProtocol.isInsert
   FROM MovementProtocol_arc AS MovementProtocol 
-  JOIN Object AS Object_User ON Object_User.Id = MovementProtocol.UserId
-  JOIN Movement ON Movement.Id = MovementProtocol.MovementId AND Movement.Id = inMovementId
-  JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+       JOIN Object AS Object_User ON Object_User.Id = MovementProtocol.UserId
+       JOIN Movement ON Movement.Id = MovementProtocol.MovementId AND Movement.Id = inMovementId
+       JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+       
+       LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                            ON ObjectLink_User_Member.ObjectId = Object_User.Id
+                           AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+       LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
+       LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
+       LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
  UNION ALL
   -- arc-2
   SELECT 
      MovementItemProtocol.OperDate,
      MovementItemProtocol.ProtocolData::Text,
      Object_User.ValueData,
+
+     Object_Unit.ObjectCode    AS UnitCode,
+     Object_Unit.ValueData     AS UnitName,
+     Object_Position.ValueData AS PositionName,
+
      Movement.InvNumber, 
      Movement.OperDate, 
      MovementItemDesc.ItemName AS MovementDescName,
      MovementItemProtocol.isInsert
   FROM MovementItemProtocol_arc AS MovementItemProtocol
-  JOIN Object AS Object_User ON Object_User.Id = MovementItemProtocol.UserId
-  JOIN MovementItem ON MovementItem.Id = MovementItemProtocol.MovementItemId AND MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master()
-  JOIN MovementItemDesc ON MovementItemDesc.Id = MovementItem.DescId
-  JOIN Movement ON Movement.Id = MovementItem.MovementId;
+       JOIN Object AS Object_User ON Object_User.Id = MovementItemProtocol.UserId
+       JOIN MovementItem ON MovementItem.Id = MovementItemProtocol.MovementItemId AND MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master()
+       JOIN MovementItemDesc ON MovementItemDesc.Id = MovementItem.DescId
+       JOIN Movement ON Movement.Id = MovementItem.MovementId
 
+       LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                            ON ObjectLink_User_Member.ObjectId = Object_User.Id
+                           AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+       LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
+       LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
+       LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId;
   ELSE
 
   IF inMovementId <> 0 
   THEN
   -- real-1
   RETURN QUERY 
+   WITH tmpPersonal AS (SELECT View_Personal.MemberId
+                             , MAX (View_Personal.UnitId) AS UnitId
+                             , MAX (View_Personal.PositionId) AS PositionId
+                        FROM Object_Personal_View AS View_Personal
+                        WHERE View_Personal.isErased = FALSE
+                        GROUP BY View_Personal.MemberId
+                       )
+                       
   SELECT 
      MovementProtocol.OperDate,
      MovementProtocol.ProtocolData::Text,
      Object_User.ValueData,
+
+     Object_Unit.ObjectCode    AS UnitCode,
+     Object_Unit.ValueData     AS UnitName,
+     Object_Position.ValueData AS PositionName,
+     
      Movement.InvNumber, 
      Movement.OperDate, 
      MovementDesc.ItemName AS MovementDescName,
      MovementProtocol.isInsert
   FROM MovementProtocol 
-  JOIN Object AS Object_User ON Object_User.Id = MovementProtocol.UserId
-  JOIN Movement ON Movement.Id = MovementProtocol.MovementId AND Movement.Id = inMovementId
-  JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+       JOIN Object AS Object_User ON Object_User.Id = MovementProtocol.UserId
+       JOIN Movement ON Movement.Id = MovementProtocol.MovementId AND Movement.Id = inMovementId
+       JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+  
+       LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                            ON ObjectLink_User_Member.ObjectId = Object_User.Id
+                           AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+       LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
+       LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
+       LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
  UNION ALL
   -- arc-1
   SELECT 
      MovementProtocol.OperDate,
      MovementProtocol.ProtocolData::Text,
      Object_User.ValueData,
+
+     Object_Unit.ObjectCode    AS UnitCode,
+     Object_Unit.ValueData     AS UnitName,
+     Object_Position.ValueData AS PositionName,
+     
      Movement.InvNumber, 
      Movement.OperDate, 
      MovementDesc.ItemName AS MovementDescName,
      MovementProtocol.isInsert
   FROM MovementProtocol_arc AS MovementProtocol
-  JOIN Object AS Object_User ON Object_User.Id = MovementProtocol.UserId
-  JOIN Movement ON Movement.Id = MovementProtocol.MovementId AND Movement.Id = inMovementId
-  JOIN MovementDesc ON MovementDesc.Id = Movement.DescId;
+       JOIN Object AS Object_User ON Object_User.Id = MovementProtocol.UserId
+       JOIN Movement ON Movement.Id = MovementProtocol.MovementId AND Movement.Id = inMovementId
+       JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 
+       LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                            ON ObjectLink_User_Member.ObjectId = Object_User.Id
+                           AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+       LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
+       LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
+       LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId;
   ELSE
      RAISE EXCEPTION 'Ошибка.Просмотр протокола недоступен.';
 
@@ -134,6 +222,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.09.17         *
  27.01.15         *
  14.02.14                         *  
 

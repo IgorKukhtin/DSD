@@ -38,6 +38,9 @@ const
   // размер шрифта по умолчанию
   DefaultSize = 11;
 
+  sContract = 'Договор %s - %s';
+  sPriceWithVAT = 'Цены с НДС';
+  sPriceWithoutVAT = 'Цены без НДС';
   sCostWithExtraCharge = 'Стоимость с наценкой';
   sCostWithDiscount = 'Стоимость со скидкой';
   sTotalCostWithVAT = 'Общая стоимость (с НДС)';
@@ -816,6 +819,8 @@ type
     lTotalPriceDoc: TLabel;
     lPriceWithPercentDoc: TLabel;
     lTotalWeightDoc: TLabel;
+    lDocBranch: TLabel;
+    lDocContract: TLabel;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -2056,6 +2061,7 @@ begin
     ' от ' + FormatDateTime('dd.mm.yyyy', DM.cdsJuridicalCollationDocDate.AsDateTime);
   lDocPartnerName.Text := FJuridicalList[FJuridicalIndex].Name + ' (' + FPartnerList[FPartnerIndex].Name + ')';
   lDocInfo.Text := DM.cdsJuridicalCollationPaidKindShow.AsString;
+  lDocBranch.Text := DM.cdsJuridicalCollationFromToName.AsString;
 
   DM.tblObject_Contract.Open;
   if DM.tblObject_Contract.Locate('Id', FContractIdList[cbContracts.ItemIndex], []) then

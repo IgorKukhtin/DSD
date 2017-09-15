@@ -4,8 +4,8 @@ inherited MovementProtocolForm: TMovementProtocolForm
   ClientWidth = 782
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 790
-  ExplicitHeight = 357
+  ExplicitWidth = 798
+  ExplicitHeight = 361
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -19,10 +19,13 @@ inherited MovementProtocolForm: TMovementProtocolForm
     ClientRectRight = 782
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 782
+      ExplicitHeight = 241
       inherited cxGrid: TcxGrid
         Width = 477
+        Height = 241
         Align = alLeft
         ExplicitWidth = 477
+        ExplicitHeight = 241
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsView.CellAutoHeight = True
           Styles.Content = nil
@@ -63,6 +66,22 @@ inherited MovementProtocolForm: TMovementProtocolForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 144
+          end
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 61
+          end
+          object PositionName: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+            DataBinding.FieldName = 'PositionName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 61
           end
         end
       end
@@ -212,6 +231,7 @@ inherited MovementProtocolForm: TMovementProtocolForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -219,6 +239,7 @@ inherited MovementProtocolForm: TMovementProtocolForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUserId'
@@ -226,6 +247,7 @@ inherited MovementProtocolForm: TMovementProtocolForm
         Component = UserGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementDescId'
@@ -233,6 +255,7 @@ inherited MovementProtocolForm: TMovementProtocolForm
         Component = MovementDescGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -240,6 +263,7 @@ inherited MovementProtocolForm: TMovementProtocolForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 143
@@ -284,6 +308,7 @@ inherited MovementProtocolForm: TMovementProtocolForm
     LookupControl = edUser
     FormNameParam.Value = 'TUserForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUserForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -292,6 +317,7 @@ inherited MovementProtocolForm: TMovementProtocolForm
         Value = ''
         Component = UserGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -299,6 +325,7 @@ inherited MovementProtocolForm: TMovementProtocolForm
         Component = UserGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 152
     Top = 24
@@ -308,6 +335,7 @@ inherited MovementProtocolForm: TMovementProtocolForm
     LookupControl = edMovementDesc
     FormNameParam.Value = 'TMovementDescFormsForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TMovementDescFormsForm'
     PositionDataSet = 'MainDataCDS'
     Params = <
@@ -316,6 +344,7 @@ inherited MovementProtocolForm: TMovementProtocolForm
         Value = ''
         Component = MovementDescGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -323,6 +352,7 @@ inherited MovementProtocolForm: TMovementProtocolForm
         Component = MovementDescGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 384
     Top = 24
@@ -333,6 +363,7 @@ inherited MovementProtocolForm: TMovementProtocolForm
         Name = 'Id'
         Value = Null
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
@@ -340,6 +371,7 @@ inherited MovementProtocolForm: TMovementProtocolForm
         Component = edObject
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 352
     Top = 152

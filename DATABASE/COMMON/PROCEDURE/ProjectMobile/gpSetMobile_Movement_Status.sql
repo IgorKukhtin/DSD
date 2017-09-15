@@ -33,7 +33,6 @@ BEGIN
       WHERE MovementString_GUID.DescId = zc_MovementString_GUID() 
         AND MovementString_GUID.ValueData = inMovementGUID;
 
-
       -- если документ нашелс€
       IF COALESCE (vbId, 0) <> 0
       THEN
@@ -107,6 +106,8 @@ BEGIN
 
                 END IF;
            END IF;
+      ELSE
+           RAISE EXCEPTION 'ƒокумент по глобальному идентификатору % не найден', inMovementGUID;
       END IF;
       
 END;

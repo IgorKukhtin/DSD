@@ -11,7 +11,12 @@ CREATE OR REPLACE FUNCTION gpSelect_Protocol(
     IN inObjectId      Integer,    -- объект
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (OperDate TDateTime, ProtocolData TBlob, UserName TVarChar, ObjectName TVarChar, ObjectTypeName TVarChar, isInsert Boolean)
+RETURNS TABLE (OperDate TDateTime, ProtocolData TBlob
+             , UserName TVarChar
+             , UnitCode Integer, UnitName TVarChar
+             , PositionName TVarChar             
+             , ObjectName TVarChar, ObjectTypeName TVarChar
+             , isInsert Boolean)
 AS
 $BODY$
 BEGIN
@@ -29,33 +34,75 @@ BEGIN
   THEN
 
   RETURN QUERY 
+   WITH tmpPersonal AS (SELECT View_Personal.MemberId
+                             , MAX (View_Personal.UnitId) AS UnitId
+                             , MAX (View_Personal.PositionId) AS PositionId
+                        FROM Object_Personal_View AS View_Personal
+                        WHERE View_Personal.isErased = FALSE
+                        GROUP BY View_Personal.MemberId
+                       )
+                       
   SELECT 
-     ObjectProtocol.OperDate,
-     ObjectProtocol.ProtocolData,
-     Object_User.ValueData AS UserName,
-     Object.ValueData AS ObjectName, 
-     ObjectDesc.ItemName AS ObjectTypeName,
-     ObjectProtocol.isInsert
+     ObjectProtocol.OperDate      AS OperDate,
+     ObjectProtocol.ProtocolData  AS ProtocolData,
+     Object_User.ValueData        AS UserName,
+
+     Object_Unit.ObjectCode       AS UnitCode,
+     Object_Unit.ValueData        AS UnitName,
+     Object_Position.ValueData    AS PositionName,
+
+     Object.ValueData             AS ObjectName, 
+     ObjectDesc.ItemName          AS ObjectTypeName,
+     ObjectProtocol.isInsert      AS isInsert
   FROM ObjectProtocol 
        LEFT JOIN Object AS Object_User ON Object_User.Id = ObjectProtocol.UserId 
        LEFT JOIN Object ON Object.Id = ObjectProtocol.ObjectId 
        LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object.DescId
+
+       LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                            ON ObjectLink_User_Member.ObjectId = Object_User.Id
+                           AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+       LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
+       LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
+       LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
+       
  WHERE Object.Id = inObjectId;
 
   ELSE
 
   RETURN QUERY 
+   WITH tmpPersonal AS (SELECT View_Personal.MemberId
+                             , MAX (View_Personal.UnitId) AS UnitId
+                             , MAX (View_Personal.PositionId) AS PositionId
+                        FROM Object_Personal_View AS View_Personal
+                        WHERE View_Personal.isErased = FALSE
+                        GROUP BY View_Personal.MemberId
+                       )
+                       
   SELECT 
-     ObjectProtocol.OperDate,
-     ObjectProtocol.ProtocolData,
-     Object_User.ValueData AS UserName,
-     Object.ValueData AS ObjectName, 
-     ObjectDesc.ItemName AS ObjectTypeName,
-     ObjectProtocol.isInsert
+     ObjectProtocol.OperDate      AS OperDate,
+     ObjectProtocol.ProtocolData  AS ProtocolData,
+     Object_User.ValueData        AS UserName,
+
+     Object_Unit.ObjectCode       AS UnitCode,
+     Object_Unit.ValueData        AS UnitName,
+     Object_Position.ValueData    AS PositionName,
+     
+     Object.ValueData             AS ObjectName, 
+     ObjectDesc.ItemName          AS ObjectTypeName,
+     ObjectProtocol.isInsert      AS isInsert
   FROM ObjectProtocol 
        LEFT JOIN Object AS Object_User ON Object_User.Id = ObjectProtocol.UserId 
        LEFT JOIN Object ON Object.Id = ObjectProtocol.ObjectId 
        LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object.DescId
+
+       LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                            ON ObjectLink_User_Member.ObjectId = Object_User.Id
+                           AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+       LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
+       LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
+       LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
+       
  WHERE ObjectProtocol.OperDate BETWEEN inStartDate AND inEndDate
    AND (ObjectProtocol.UserId = inUserId OR 0 = inUserId)
    AND (Object.Id = inObjectId OR 0 = inObjectId)
@@ -74,6 +121,7 @@ ALTER FUNCTION gpSelect_Protocol (TDateTime, TDateTime, Integer, Integer, Intege
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.09.17         *
  04.11.13                        *  add inObjectId
  01.11.13                        * 
 */

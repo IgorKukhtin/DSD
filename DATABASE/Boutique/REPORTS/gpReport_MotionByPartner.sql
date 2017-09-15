@@ -88,7 +88,7 @@ BEGIN
                                       END)                                                 AS AmountReturnIn
                            -- Сумма оплаты в продаже
                               , SUM (CASE WHEN Container.DescId = zc_Container_Summ() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                            AND MIContainer.isActive = FALSE AND MIContainer.MovementDescId = zc_Movement_Sale() 
+                                            AND MIContainer.isActive = FALSE AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) 
                                            THEN (-1) * COALESCE (MIContainer.Amount, 0) 
                                            ELSE 0 
                                       END)                                                 AS SumPay

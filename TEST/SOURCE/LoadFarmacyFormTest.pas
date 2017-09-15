@@ -674,13 +674,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_WageForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WageDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WageDialogForm');
-   }
+
   //отчет доходности
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitDialogForm');
-
+   }
   // средний чек
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckMiddleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckMiddleForm');

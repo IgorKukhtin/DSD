@@ -4,26 +4,28 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
   ClientWidth = 785
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 793
-  ExplicitHeight = 327
+  ExplicitWidth = 801
+  ExplicitHeight = 331
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
     Width = 785
     Height = 210
-    ExplicitTop = 59
-    ExplicitWidth = 751
+    ExplicitTop = 83
+    ExplicitWidth = 785
+    ExplicitHeight = 210
     ClientRectBottom = 210
     ClientRectRight = 785
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 751
-      ExplicitHeight = 282
+      ExplicitWidth = 785
+      ExplicitHeight = 210
       inherited cxGrid: TcxGrid
         Width = 481
         Height = 210
         Align = alLeft
         ExplicitWidth = 481
+        ExplicitHeight = 210
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
           Styles.Inactive = nil
@@ -51,6 +53,22 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
             Options.Editing = False
             Width = 169
           end
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 61
+          end
+          object PositionName: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+            DataBinding.FieldName = 'PositionName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 61
+          end
         end
       end
       object cxGridProtocolData: TcxGrid
@@ -61,8 +79,6 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 270
-        ExplicitHeight = 282
         object cxGridViewProtocolData: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ProtocolDataDS
@@ -113,7 +129,6 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
     Height = 57
     Align = alTop
     TabOrder = 5
-    ExplicitWidth = 898
     object deStart: TcxDateEdit
       Left = 100
       Top = 5
@@ -191,6 +206,7 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -198,6 +214,7 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUserId'
@@ -205,6 +222,7 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
         Component = UserGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementItemId'
@@ -212,6 +230,7 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 88
     Top = 96
@@ -235,6 +254,7 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
         Name = 'Id'
         Value = Null
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsName'
@@ -242,6 +262,7 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
         Component = edObject
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 312
     Top = 128
@@ -252,6 +273,7 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
     Key = '0'
     FormNameParam.Value = 'TUserForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUserForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -260,6 +282,7 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
         Value = ''
         Component = UserGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -267,6 +290,7 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
         Component = UserGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 176
     Top = 32

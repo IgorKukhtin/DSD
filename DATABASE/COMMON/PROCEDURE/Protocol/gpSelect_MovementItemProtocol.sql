@@ -11,7 +11,11 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItemProtocol(
     IN inMovementItemId      Integer,    -- Документ  
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (OperDate TDateTime, ProtocolData Text, UserName TVarChar, MovementItemId Integer)
+RETURNS TABLE (OperDate TDateTime, ProtocolData Text
+             , UserName TVarChar
+             , UnitCode Integer, UnitName TVarChar
+             , PositionName TVarChar
+             , MovementItemId Integer)
 AS
 $BODY$
 BEGIN
@@ -28,14 +32,34 @@ BEGIN
   THEN
 
   RETURN QUERY 
+   WITH tmpPersonal AS (SELECT View_Personal.MemberId
+                             , MAX (View_Personal.UnitId) AS UnitId
+                             , MAX (View_Personal.PositionId) AS PositionId
+                        FROM Object_Personal_View AS View_Personal
+                        WHERE View_Personal.isErased = FALSE
+                        GROUP BY View_Personal.MemberId
+                       )
   -- real-1
   SELECT 
      MovementItemProtocol.OperDate,
      MovementItemProtocol.ProtocolData::Text,
-     Object_User.ValueData AS UserName,
+     Object_User.ValueData     AS UserName,
+
+     Object_Unit.ObjectCode    AS UnitCode,
+     Object_Unit.ValueData     AS UnitName,
+     Object_Position.ValueData AS PositionName,
+
      MovementItemProtocol.MovementItemId
   FROM MovementItemProtocol
        JOIN Object AS Object_User ON Object_User.Id = MovementItemProtocol.UserId
+       
+       LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                            ON ObjectLink_User_Member.ObjectId = Object_User.Id
+                           AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+       LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
+       LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
+       LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
+       
   WHERE MovementItemProtocol.MovementItemId = inMovementItemId
 
  UNION ALL
@@ -43,10 +67,23 @@ BEGIN
   SELECT 
      MovementItemProtocol.OperDate,
      MovementItemProtocol.ProtocolData::Text,
-     Object_User.ValueData AS UserName,
+     Object_User.ValueData     AS UserName,
+
+     Object_Unit.ObjectCode    AS UnitCode,
+     Object_Unit.ValueData     AS UnitName,
+     Object_Position.ValueData AS PositionName,
+
      MovementItemProtocol.MovementItemId
   FROM MovementItemProtocol_arc AS MovementItemProtocol
        JOIN Object AS Object_User ON Object_User.Id = MovementItemProtocol.UserId
+
+       LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                            ON ObjectLink_User_Member.ObjectId = Object_User.Id
+                           AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+       LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
+       LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
+       LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
+  
   WHERE MovementItemProtocol.MovementItemId = inMovementItemId;
 
   ELSE
@@ -61,6 +98,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.09.17         *
  28.01.15         *              
  14.02.14                         *  
 */
