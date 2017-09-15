@@ -818,7 +818,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserSettingsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserSettingsForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserForm');
 
@@ -832,8 +832,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStatusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStatusForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProtocolForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TObjectDescForm'));
   TdsdFormStorageFactory.GetStorage.Load('TObjectDescForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TObjectForm'));
@@ -849,10 +851,12 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserProtocolForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementProtocolForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementItemProtocolForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPeriodCloseForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPeriodCloseForm');
   exit;
@@ -872,6 +876,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMovement_DateDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_PeriodDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovement_PeriodDialogForm');
+  }
 end;
 
 procedure TLoadFormTest.LoadSignInternalFormTest;
