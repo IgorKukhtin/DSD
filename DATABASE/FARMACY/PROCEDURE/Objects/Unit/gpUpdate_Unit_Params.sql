@@ -12,7 +12,10 @@ CREATE OR REPLACE FUNCTION gpUpdate_Unit_Params(
 RETURNS VOID
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId     Integer;
+   DECLARE vbCreateDate TDateTime;
+   DECLARE vbCloseDate  TDateTime;
+   
 BEGIN
 
    IF COALESCE(inId, 0) = 0 THEN
@@ -23,16 +26,26 @@ BEGIN
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Object_Unit_Params());
    --vbUserId := lpGetUserBySession (inSession);
 
+   -- находим предыдущее значение если есть
+   vbCreateDate := (SELECT ObjectDate_Create.ValueData
+                    FROM ObjectDate AS ObjectDate_Create
+                    WHERE ObjectDate_Create.DescId = zc_ObjectDate_Unit_Create()
+                      AND ObjectDate_Create.ObjectId = inId);
+   vbCloseDate := (SELECT ObjectDate_Close.ValueData
+                    FROM ObjectDate AS ObjectDate_Close
+                    WHERE ObjectDate_Close.DescId = zc_ObjectDate_Unit_Close()
+                      AND ObjectDate_Close.ObjectId = inId);
+
    -- сохранили связь с <менеджер>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_UserManager(), inId, inUserManagerId);
    
-   IF inCreateDate is not NULL
+   IF (inCreateDate is not NULL) OR (vbCreateDate is not NULL)
    THEN
        -- сохранили свойство <>
        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_Create(), inId, inCreateDate);
    END IF;
 
-   IF inCloseDate is not NULL
+   IF (inCloseDate is not NULL) OR (vbCloseDate is not NULL)
    THEN   
        -- сохранили свойство <>
        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_Close(), inId, inCloseDate);
