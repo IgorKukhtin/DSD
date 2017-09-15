@@ -9,17 +9,17 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   inherited PageControl: TcxPageControl
     Width = 926
     Height = 394
-    ExplicitWidth = 809
+    ExplicitWidth = 926
     ExplicitHeight = 394
     ClientRectBottom = 394
     ClientRectRight = 926
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 809
+      ExplicitWidth = 926
       ExplicitHeight = 394
       inherited cxGrid: TcxGrid
         Width = 926
         Height = 394
-        ExplicitWidth = 809
+        ExplicitWidth = 926
         ExplicitHeight = 394
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
