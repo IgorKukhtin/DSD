@@ -68,6 +68,22 @@ inherited ProtocolForm: TProtocolForm
             Options.Editing = False
             Width = 118
           end
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 61
+          end
+          object PositionName: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+            DataBinding.FieldName = 'PositionName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 61
+          end
         end
       end
       object cxSplitter: TcxSplitter
@@ -198,10 +214,12 @@ inherited ProtocolForm: TProtocolForm
     Top = 216
   end
   inherited MasterDS: TDataSource
-    Top = 55
+    Left = 64
+    Top = 39
   end
   inherited MasterCDS: TClientDataSet
-    Top = 55
+    Left = 16
+    Top = 31
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Protocol'
@@ -212,6 +230,7 @@ inherited ProtocolForm: TProtocolForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -219,6 +238,7 @@ inherited ProtocolForm: TProtocolForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUserId'
@@ -226,6 +246,7 @@ inherited ProtocolForm: TProtocolForm
         Component = UserGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inObjectDescId'
@@ -233,6 +254,7 @@ inherited ProtocolForm: TProtocolForm
         Component = ObjectDescGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inObjectId'
@@ -240,11 +262,14 @@ inherited ProtocolForm: TProtocolForm
         Component = ObjectGuides
         ComponentItem = 'Key'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
-    Top = 63
+    Left = 96
+    Top = 39
   end
   inherited BarManager: TdxBarManager
-    Top = 55
+    Left = 160
+    Top = 31
     DockControlHeights = (
       0
       0
@@ -287,6 +312,7 @@ inherited ProtocolForm: TProtocolForm
     LookupControl = edUser
     FormNameParam.Value = 'TUserForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUserForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -295,6 +321,7 @@ inherited ProtocolForm: TProtocolForm
         Value = ''
         Component = UserGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -302,15 +329,17 @@ inherited ProtocolForm: TProtocolForm
         Component = UserGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 160
-    Top = 32
+    Left = 200
+    Top = 24
   end
   object ObjectDescGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edObjectDesc
     FormNameParam.Value = 'TObjectDescForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TObjectDescForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -319,6 +348,7 @@ inherited ProtocolForm: TProtocolForm
         Value = ''
         Component = ObjectDescGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -326,6 +356,7 @@ inherited ProtocolForm: TProtocolForm
         Component = ObjectDescGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 384
     Top = 24
@@ -335,6 +366,7 @@ inherited ProtocolForm: TProtocolForm
     LookupControl = edObject
     FormNameParam.Value = 'TObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -343,6 +375,7 @@ inherited ProtocolForm: TProtocolForm
         Value = ''
         Component = ObjectGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -350,12 +383,14 @@ inherited ProtocolForm: TProtocolForm
         Component = ObjectGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ObjectDescId'
         Value = ''
         Component = ObjectDescGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end>
     Left = 616
     Top = 16
@@ -395,6 +430,7 @@ inherited ProtocolForm: TProtocolForm
         Component = ObjectGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -402,6 +438,7 @@ inherited ProtocolForm: TProtocolForm
         Component = ObjectGuides
         ComponentItem = 'TextValue'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 320
     Top = 136
