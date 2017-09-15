@@ -101,7 +101,7 @@ begin
     //Если все хорошо создаем главную форму Application.CreateForm();
 
    //  Выбор формы для запуска
-     case 2 of   // 1 для MainCash;  2 для MainCash2
+     case 1 of   // 1 для MainCash;  2 для MainCash2
      1: begin
           AllowLocalConnect := False;  //от режима зависит создание файла 'users.local' и переход приложения в автономный режим при обрыве звязи
           MForm := True;

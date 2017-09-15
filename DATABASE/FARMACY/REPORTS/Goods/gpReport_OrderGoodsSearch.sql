@@ -47,7 +47,7 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PriceList());
     vbUserId:= lpGetUserBySession (inSession);
-    vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
+    vbUnitKey := COALESCE(lpGet_DefaultValue('-zc_Object_Unit', vbUserId), '');
     IF vbUnitKey = '' OR vbUserId = 3 THEN
       vbUnitKey := '0';
     END IF;   

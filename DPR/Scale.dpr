@@ -90,6 +90,7 @@ uses
 
 begin
   Application.Initialize;
+  Logger.Enabled := FindCmdLineSwitch('log');
 
   TdsdApplication.Create;
   //

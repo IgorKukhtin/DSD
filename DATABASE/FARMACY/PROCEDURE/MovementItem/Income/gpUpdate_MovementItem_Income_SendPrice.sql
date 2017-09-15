@@ -121,6 +121,7 @@ BEGIN
                                       AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
                                 LEFT JOIN ObjectFloat       AS Price_Value
                                        ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                      AND Price_Value.DescId   = zc_ObjectFloat_Price_Value()
                                 LEFT JOIN ObjectBoolean     AS Price_Fix
                                         ON Price_Fix.ObjectId = ObjectLink_Price_Unit.ObjectId
                                        AND Price_Fix.DescId = zc_ObjectBoolean_Price_Fix()
