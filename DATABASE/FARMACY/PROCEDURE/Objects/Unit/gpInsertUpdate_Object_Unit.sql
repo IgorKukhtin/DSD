@@ -7,7 +7,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, T
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
