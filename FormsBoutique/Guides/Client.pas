@@ -22,7 +22,8 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCurrencyEdit, cxCalendar;
+  cxCurrencyEdit, cxCalendar, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit,
+  cxButtonEdit, cxLabel, Vcl.ExtCtrls;
 
 type
   TClientForm = class(TParentForm)
@@ -82,6 +83,13 @@ type
     DiscountKindName: TcxGridDBColumn;
     spUnErased: TdsdStoredProc;
     LastUserName: TcxGridDBColumn;
+    Panel: TPanel;
+    cxLabel6: TcxLabel;
+    edUnit: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
+    FormParams: TdsdFormParams;
+    DebtSumm: TcxGridDBColumn;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public
