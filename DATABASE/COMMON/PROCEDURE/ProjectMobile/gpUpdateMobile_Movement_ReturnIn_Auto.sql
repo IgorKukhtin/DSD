@@ -1,16 +1,16 @@
 -- Function: gpUpdateMobile_Movement_ReturnIn_Auto
 
-DROP FUNCTION IF EXISTS gpUpdateMobile_Movement_ReturnIn_Auto ();
+DROP FUNCTION IF EXISTS gpUpdateMobile_Movement_ReturnIn_Auto (TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdateMobile_Movement_ReturnIn_Auto (
     IN inMovementGUID TVarChar , -- глобальный идентификатор документа
     IN inSession      TVarChar   -- сессия пользователя
 )
-RETURNS VOID
+RETURNS TBlob
 AS $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbId Integer;
-  DECLARE vbMessageText Text;
+  DECLARE vbMessageText Text:= '';
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...);
@@ -34,6 +34,8 @@ BEGIN
                                                           , inUserId        := vbUserId
                                                            );
       END IF;
+
+      RETURN vbMessageText::TBlob;
 
 END; $BODY$
   LANGUAGE plpgsql VOLATILE;
