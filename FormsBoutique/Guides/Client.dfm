@@ -27,8 +27,6 @@ object ClientForm: TClientForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 26
-    ExplicitHeight = 366
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -85,9 +83,22 @@ object ClientForm: TClientForm
       object DebtSumm: TcxGridDBColumn
         Caption = #1044#1086#1083#1075' '#1087#1086#1082#1091#1087'. '#1087#1086' '#1084#1072#1075'.'
         DataBinding.FieldName = 'DebtSumm'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1076#1086#1083#1075' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
+        HeaderHint = #1044#1086#1083#1075' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
+        Options.Editing = False
+        Width = 82
+      end
+      object DebtSumm_All: TcxGridDBColumn
+        Caption = #1048#1090#1086#1075#1086' '#1076#1086#1083#1075' '#1087#1086#1082#1091#1087'.'
+        DataBinding.FieldName = 'DebtSumm_All'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1076#1086#1083#1075' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
         Options.Editing = False
         Width = 82
       end
@@ -284,7 +295,6 @@ object ClientForm: TClientForm
     Height = 35
     Align = alTop
     TabOrder = 5
-    ExplicitTop = -6
     object cxLabel6: TcxLabel
       Left = 41
       Top = 7

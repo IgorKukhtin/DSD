@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , DiscountCard TVarChar, DiscountTax TFloat, DiscountTaxTwo TFloat
              , TotalCount TFloat, TotalSumm TFloat, TotalSummDiscount TFloat, TotalSummPay TFloat
              , LastCount TFloat, LastSumm TFloat, LastSummDiscount TFloat
-             , DebtSumm TFloat
+             , DebtSumm TFloat, DebtSumm_All TFloat
              , LastDate TDateTime
              , Address TVarChar, HappyDate TDateTime, PhoneMobile TVarChar, Phone TVarChar
              , Mail TVarChar, Comment TVarChar, CityName TVarChar
@@ -32,20 +32,19 @@ BEGIN
      -- Результат
      RETURN QUERY 
      WITH     
-     tmpContainer AS (SELECT Container.WhereObjectId              AS UnitId
-                           , CLO_Client.ObjectId                  AS ClientId
-                           , SUM (COALESCE (Container.Amount, 0)) AS Summa
+     tmpContainer AS (SELECT CLO_Client.ObjectId                  AS ClientId
+                           , SUM (COALESCE (Container.Amount, 0)) AS Summa_All
+                           , SUM (CASE WHEN COALESCE (inUnitId, 0) <> 0 AND Container.WhereObjectId = inUnitId THEN COALESCE (Container.Amount, 0) ELSE 0 END) AS Summa
                       FROM Container
                            INNER JOIN ContainerLinkObject AS CLO_Client
                                                           ON CLO_Client.ContainerId = Container.Id
                                                          AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
-                                                         --AND CLO_Client.ObjectId    = inPartnerId
                       WHERE (Container.WhereObjectId = inUnitId OR inUnitId = 0)
                          AND Container.ObjectId <> zc_Enum_Account_20102()
                          AND Container.DescId = zc_Container_Summ()
-                      GROUP BY Container.WhereObjectId 
-                             , CLO_Client.ObjectId
+                      GROUP BY CLO_Client.ObjectId
                       HAVING SUM (COALESCE (Container.Amount, 0)) <> 0
+                          OR SUM (CASE WHEN COALESCE (inUnitId, 0) <> 0 AND Container.WhereObjectId = inUnitId THEN COALESCE (Container.Amount, 0) ELSE 0 END)
                      )
        SELECT 
              Object_Client.Id                        AS Id
@@ -61,7 +60,8 @@ BEGIN
            , ObjectFloat_LastCount.ValueData         AS LastCount
            , ObjectFloat_LastSumm.ValueData          AS LastSumm
            , ObjectFloat_LastSummDiscount.ValueData  AS LastSummDiscount
-           , tmpContainer.Summa                      AS DebtSumm
+           , tmpContainer.Summa         ::TFloat     AS DebtSumm
+           , tmpContainer.Summa_All     ::TFloat     AS DebtSumm_All
            , ObjectDate_LastDate.ValueData           AS LastDate
            , ObjectString_Address.ValueData          AS Address
            , ObjectDate_HappyDate.ValueData          AS HappyDate
@@ -162,7 +162,6 @@ BEGIN
             
      WHERE Object_Client.DescId = zc_Object_Client()
               AND (Object_Client.isErased = FALSE OR inIsShowAll = TRUE)
-
     ;
 
 END;
