@@ -793,6 +793,8 @@ type
     cdsJuridicalCollationDocItemsGoodsCode: TIntegerField;
     cdsJuridicalCollationDocItemsPriceText: TStringField;
     cdsJuridicalCollationDocItemsAmountText: TStringField;
+    tblMovementItem_ReturnInisRecalcPrice: TBooleanField;
+    cdsReturnInItemsRecalcPriceName: TStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
     procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);
@@ -5921,12 +5923,14 @@ begin
                            '  , Amount = :inAmount ' +
                            '  , Price = :inPrice ' +
                            '  , ChangePercent = :inChangePercent ' +
+                           '  , isRecalcPrice = (Price <> :inRecalcPrice) ' +
                            'where GUID = :inGUID', [
                              ReturnInItemProc.DataSet.FieldByName('GoodsId').AsInteger,
                              ReturnInItemProc.DataSet.FieldByName('GoodsKindId').AsInteger,
                              ReturnInItemProc.DataSet.FieldByName('Amount').AsFloat,
                              ReturnInItemProc.DataSet.FieldByName('Price').AsFloat,
                              ReturnInItemProc.DataSet.FieldByName('ChangePercent').AsFloat,
+                             ReturnInItemProc.DataSet.FieldByName('Price').AsFloat,
                              ReturnInItemProc.DataSet.FieldByName('GUID').AsString]);
 
         ReturnInItemProc.DataSet.Next;
