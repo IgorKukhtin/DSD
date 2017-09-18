@@ -55,6 +55,12 @@ $BODY$
   DECLARE vbBusinessId_To Integer;
 */
 BEGIN
+IF inUserId = 5
+THEN
+    PERFORM lpComplete_Movement_SendOnPrice_NEW (inMovementId, inUserId);
+    RETURN;
+END IF;
+
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
      DELETE FROM _tmpMIReport_insert;
