@@ -1333,8 +1333,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnionDescForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnionDescForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserKeyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserKeyForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditForm'));
@@ -1365,7 +1367,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMovementProtocolForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementItemProtocolForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportExportLinkForm'));
   TdsdFormStorageFactory.GetStorage.Load('TImportExportLinkForm');
   exit;
@@ -1382,7 +1384,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_PeriodDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovement_PeriodDialogForm');
 
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStatusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStatusForm');
 

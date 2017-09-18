@@ -556,7 +556,18 @@ inherited MainForm: TMainForm
       FormNameParam.Value = 'TClientForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'MasterUnitId'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterUnitName'
+          Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
       isShowModal = False
     end
     object actLabel: TdsdOpenForm

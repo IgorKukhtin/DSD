@@ -93,8 +93,6 @@ uses
   OrderExternalJournal in '..\..\FormsFarmacy\Document\OrderExternalJournal.pas' {OrderExternalJournalForm: TParentForm},
   OrderInternalLite in '..\..\FormsFarmacy\Document\OrderInternalLite.pas' {OrderInternalLiteForm: TParentForm},
   OrderInternalJournal in '..\..\FormsFarmacy\Document\OrderInternalJournal.pas' {OrderInternalJournalForm: TParentForm},
-  User in '..\..\Forms\User.pas' {UserForm: TParentForm},
-  UserEdit in '..\..\Forms\UserEdit.pas' {UserEditForm: TParentForm},
   Role in '..\..\Forms\Role.pas' {RoleForm: TParentForm},
   RoleEdit in '..\..\Forms\RoleEdit.pas' {RoleEditForm: TParentForm},
   RoleTest in '..\SOURCE\Objects\All\RoleTest.pas',
@@ -130,7 +128,6 @@ uses
   CommonObjectProcedureTest in '..\SOURCE\Objects\CommonObjectProcedureTest.pas',
   Goods in '..\..\FormsFarmacy\Guides\Goods.pas' {GoodsForm: TParentForm},
   UnitsTest in '..\SOURCE\Objects\All\Farmacy\UnitsTest.pas',
-  UnitTree in '..\..\FormsFarmacy\Guides\UnitTree.pas' {UnitTreeForm: TParentForm},
   GoodsEdit in '..\..\FormsFarmacy\Guides\GoodsEdit.pas' {GoodsEditForm: TParentForm},
   GoodsMain in '..\..\FormsFarmacy\Guides\GoodsMain.pas' {GoodsMainForm: TParentForm},
   GoodsPartnerCode in '..\..\FormsFarmacy\Guides\GoodsPartnerCode.pas' {GoodsPartnerCodeForm: TParentForm},
@@ -533,7 +530,10 @@ uses
   Report_Check_Rating in '..\..\FormsFarmacy\Report\Report_Check_Rating.pas' {Report_Check_RatingForm: TParentForm},
   Report_Check_RatingDialog in '..\..\FormsFarmacy\Report\Report_Check_RatingDialog.pas' {Report_Check_RatingDialogForm: TParentForm},
   Report_MovementCheckLightDialog in '..\..\FormsFarmacy\Report\Report_MovementCheckLightDialog.pas' {Report_MovementChecLightDialogForm: TParentForm},
-  ReportMovementCheckLight in '..\..\FormsFarmacy\Report\ReportMovementCheckLight.pas' {ReportMovementCheckLightForm: TParentForm};
+  ReportMovementCheckLight in '..\..\FormsFarmacy\Report\ReportMovementCheckLight.pas' {ReportMovementCheckLightForm: TParentForm},
+  UnitTree in '..\..\FormsFarmacy\Guides\UnitTree.pas' {UnitTreeForm: TParentForm},
+  User in '..\..\FormsFarmacy\Guides\User.pas' {UserForm: TParentForm},
+  UserEdit in '..\..\FormsFarmacy\Guides\UserEdit.pas' {UserEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

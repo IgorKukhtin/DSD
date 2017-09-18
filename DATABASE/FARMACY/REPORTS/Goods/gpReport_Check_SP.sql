@@ -205,7 +205,7 @@ BEGIN
                                                    AND ObjectDate_InsertSP.DescId = zc_ObjectDate_Protocol_InsertSP()
      
                           WHERE ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
-                            AND ObjectBoolean_Goods_SP.ValueData = TRUE
+                          --  AND ObjectBoolean_Goods_SP.ValueData = TRUE
                          )
            -- связываем главные товары с товарами сети
            , tmpGoods AS (SELECT ObjectLink_Child.ChildObjectId AS GoodsId
@@ -269,7 +269,7 @@ BEGIN
                                                      AND MI_Check.Amount <> 0
                                                      AND MI_Check.isErased = FALSE
 
-                              INNER JOIN tmpGoods ON tmpGoods.GoodsId = MI_Check.ObjectId
+                              LEFT JOIN tmpGoods ON tmpGoods.GoodsId = MI_Check.ObjectId
                               --Сумма Скидки
                               LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
                                                           ON MIFloat_SummChangePercent.MovementItemId = MI_Check.Id

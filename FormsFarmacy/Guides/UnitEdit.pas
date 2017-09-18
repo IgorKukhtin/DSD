@@ -60,6 +60,13 @@ type
     cxLabel10: TcxLabel;
     ceProvinceCity: TcxButtonEdit;
     GuidesProvinceCity: TdsdGuides;
+    cxLabel11: TcxLabel;
+    edCreateDate: TcxDateEdit;
+    edCloseDate: TcxDateEdit;
+    cxLabel12: TcxLabel;
+    cxLabel13: TcxLabel;
+    edUserManager: TcxButtonEdit;
+    GuidesUserManager: TdsdGuides;
   private
     { Private declarations }
   public

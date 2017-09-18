@@ -10,11 +10,13 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                Address TVarChar, 
                ProvinceCityId Integer, ProvinceCityName TVarChar,
                ParentId Integer, ParentName TVarChar,
+               UserManagerId Integer, UserManagerName TVarChar,
                JuridicalId Integer, JuridicalName TVarChar, 
                MarginCategoryId Integer, MarginCategoryName TVarChar,
                isLeaf boolean, 
                TaxService TFloat, TaxServiceNigth TFloat,
                StartServiceNigth TDateTime, EndServiceNigth TDateTime,
+               CreateDate TDateTime, CloseDate TDateTime,
                isRepriceAuto Boolean
                ) AS
 $BODY$
@@ -36,6 +38,9 @@ BEGIN
            
            , CAST (0 as Integer)   AS ParentId
            , CAST ('' as TVarChar) AS ParentName 
+           
+           , CAST (0 as Integer)   AS UserManagerId
+           , CAST ('' as TVarChar) AS UserManagerName
 
            , CAST (0 as Integer)   AS JuridicalId
            , CAST ('' as TVarChar) AS JuridicalName
@@ -48,6 +53,9 @@ BEGIN
            
            , CAST (Null as TDateTime) AS StartServiceNigth
            , CAST (Null as TDateTime) AS EndServiceNigth
+
+           , CAST ((CURRENT_DATE + INTERVAL '1 DAY') as TDateTime) AS CreateDate
+           , CAST ((CURRENT_DATE + INTERVAL '1 DAY') as TDateTime) AS CloseDate
 
            , False                 AS isRepriceAuto
 ;
@@ -66,6 +74,9 @@ BEGIN
       , Object_Parent.Id                                   AS ParentId
       , Object_Parent.ValueData                            AS ParentName
 
+      , COALESCE (Object_UserManager.Id, 0)                  AS UserManagerId
+      , Object_UserManager.ValueData                         AS UserManagerName
+
       , Object_Juridical.Id                                AS JuridicalId
       , Object_Juridical.ValueData                         AS JuridicalName
 
@@ -80,6 +91,9 @@ BEGIN
       , CASE WHEN COALESCE(ObjectDate_EndServiceNigth.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_EndServiceNigth.ValueData ELSE Null END ::TDateTime  AS EndServiceNigth
       --, ObjectDate_EndServiceNigth.ValueData                 AS EndServiceNigth
 
+      , COALESCE (ObjectDate_Create.ValueData, (CURRENT_DATE + INTERVAL '1 DAY')) ::TDateTime  AS CreateDate
+      , COALESCE (ObjectDate_Close.ValueData, (CURRENT_DATE + INTERVAL '1 DAY'))  ::TDateTime  AS CloseDate
+      
       , COALESCE(ObjectBoolean_RepriceAuto.ValueData, False) AS isRepriceAuto
 
     FROM Object AS Object_Unit
@@ -103,6 +117,11 @@ BEGIN
                             AND ObjectLink_Unit_ProvinceCity.DescId = zc_ObjectLink_Unit_ProvinceCity()
         LEFT JOIN Object AS Object_ProvinceCity ON Object_ProvinceCity.Id = ObjectLink_Unit_ProvinceCity.ChildObjectId
         
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_UserManager
+                             ON ObjectLink_Unit_UserManager.ObjectId = Object_Unit.Id
+                            AND ObjectLink_Unit_UserManager.DescId = zc_ObjectLink_Unit_UserManager()
+        LEFT JOIN Object AS Object_UserManager ON Object_UserManager.Id = ObjectLink_Unit_UserManager.ChildObjectId
+                
         LEFT JOIN ObjectBoolean AS ObjectBoolean_isLeaf 
                                 ON ObjectBoolean_isLeaf.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_isLeaf.DescId = zc_ObjectBoolean_isLeaf()
@@ -131,6 +150,13 @@ BEGIN
                              ON ObjectDate_EndServiceNigth.ObjectId = Object_Unit.Id
                             AND ObjectDate_EndServiceNigth.DescId = zc_ObjectDate_Unit_EndServiceNigth()
 
+        LEFT JOIN ObjectDate AS ObjectDate_Create
+                             ON ObjectDate_Create.ObjectId = Object_Unit.Id
+                            AND ObjectDate_Create.DescId = zc_ObjectDate_Unit_Create()
+        LEFT JOIN ObjectDate AS ObjectDate_Close
+                             ON ObjectDate_Close.ObjectId = Object_Unit.Id
+                            AND ObjectDate_Close.DescId = zc_ObjectDate_Unit_Close()
+                            
     WHERE Object_Unit.Id = inId;
 
    END IF;

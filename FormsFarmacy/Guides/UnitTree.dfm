@@ -190,6 +190,34 @@ object UnitTreeForm: TUnitTreeForm
         Options.Editing = False
         Width = 70
       end
+      object CreateDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076'. '#1087#1086#1076#1088'.'
+        DataBinding.FieldName = 'CreateDate'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.ReadOnly = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 71
+      end
+      object CloseDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1079#1072#1082#1088'. '#1087#1086#1076#1088'.'
+        DataBinding.FieldName = 'CloseDate'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.ReadOnly = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object UserManagerName: TcxGridDBColumn
+        Caption = #1052#1077#1085#1077#1076#1078#1077#1088
+        DataBinding.FieldName = 'UserManagerName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -561,7 +589,14 @@ object UnitTreeForm: TUnitTreeForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inisShowAll'
+        Value = 'False'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 416
     Top = 160

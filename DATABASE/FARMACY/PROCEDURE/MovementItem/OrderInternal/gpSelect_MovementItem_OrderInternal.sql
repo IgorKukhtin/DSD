@@ -1004,35 +1004,6 @@ BEGIN
                                --LEFT JOIN tmpGoodsMain ON tmpGoodsMain.GoodsId = tmpMI.ObjectId
                                LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = tmpMI.ObjectId
        
-                               /*LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.ObjectId
-                             
-                               LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Close
-                                                       ON ObjectBoolean_Goods_Close.ObjectId = tmpMI.ObjectId
-                                                      AND ObjectBoolean_Goods_Close.DescId = zc_ObjectBoolean_Goods_Close()   
-                               LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
-                                                       ON ObjectBoolean_Goods_TOP.ObjectId = tmpMI.ObjectId
-                                                      AND ObjectBoolean_Goods_TOP.DescId = zc_ObjectBoolean_Goods_TOP()  
-                       
-                               LEFT JOIN ObjectBoolean AS ObjectBoolean_First
-                                                       ON ObjectBoolean_First.ObjectId = tmpMI.ObjectId
-                                                      AND ObjectBoolean_First.DescId = zc_ObjectBoolean_Goods_First() 
-                               LEFT JOIN ObjectBoolean AS ObjectBoolean_Second
-                                                       ON ObjectBoolean_Second.ObjectId = tmpMI.ObjectId
-                                                      AND ObjectBoolean_Second.DescId = zc_ObjectBoolean_Goods_Second() 
-       
-                               LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
-                                                    ON ObjectLink_Goods_NDSKind.ObjectId = tmpMI.ObjectId
-                                                   AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
-                               LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
-                       
-                               LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                                    ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpMI.ObjectId
-                                                   AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-
-                               LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
-                                                     ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId 
-                                                    AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
-                               */
                                LEFT JOIN tmpOF_Goods_MinimumLot AS ObjectFloat_Goods_MinimumLot
                                                                 ON ObjectFloat_Goods_MinimumLot.ObjectId = tmpMI.ObjectId
                                                               -- AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
@@ -1302,7 +1273,7 @@ BEGIN
                          , NULLIF(COALESCE(tmpMI.AmountManual,tmpMI.CalcAmountAll),0)      AS CalcAmountAll
                          , tmpMI.Price * COALESCE(tmpMI.AmountManual,tmpMI.CalcAmountAll)  AS SummAll
                     FROM tmpGoods
-                         FULL JOIN tmpMI ON tmpMI.GoodsId = tmpGoods.GoodsId --and 1=0
+                         FULL JOIN tmpMI ON tmpMI.GoodsId = tmpGoods.GoodsId 
                    )
 
       , tmpOB_SP AS (SELECT *

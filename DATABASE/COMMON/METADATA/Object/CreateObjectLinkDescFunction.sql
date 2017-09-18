@@ -1634,6 +1634,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_ProvinceCity() RETURNS Integer AS 
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Unit_ProvinceCity', 'Ссылка на Район', zc_Object_Unit(), zc_Object_ProvinceCity() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_ProvinceCity');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_UserManager() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_UserManager'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Unit_UserManager', 'Ссылка на Пользователя', zc_Object_Unit(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_UserManager');
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_OverSettings_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OverSettings_Unit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_OverSettings_Unit', 'Подразделение', zc_Object_OverSettings(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OverSettings_Unit');

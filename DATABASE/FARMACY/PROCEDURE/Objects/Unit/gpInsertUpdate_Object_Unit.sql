@@ -7,6 +7,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, T
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
@@ -17,20 +18,25 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inTaxServiceNigth         TFloat    ,    -- % от выручки в ночную смену
     IN inStartServiceNigth       TDateTime ,
     IN inEndServiceNigth         TDateTime ,
+    IN inCreateDate              TDateTime ,    -- дата создания точки
+    IN inCloseDate               TDateTime ,    -- дата закрытия точки
     IN inisRepriceAuto           Boolean   ,    -- участвует в автопереоценке
     IN inParentId                Integer   ,    -- ссылка на подразделение
     IN inJuridicalId             Integer   ,    -- ссылка на Юридические лицо
     IN inMarginCategoryId        Integer   ,    -- ссылка на категорию наценок
     IN inProvinceCityId          Integer   ,    -- ссылка на Район
+    IN inUserManagerId           Integer   ,    -- ссылка на менеджер
     IN inSession                 TVarChar       -- сессия пользователя
 )
 RETURNS Integer
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbCode_calc Integer;  
-   DECLARE vbOldId Integer;
-   DECLARE vbOldParentId integer;
+   DECLARE vbUserId       Integer;
+   DECLARE vbCode_calc    Integer;  
+   DECLARE vbOldId        Integer;
+   DECLARE vbOldParentId  Integer;
+   DECLARE vbCreateDate  TDateTime;
+   DECLARE vbCloseDate   TDateTime;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Unit());
@@ -104,6 +110,28 @@ BEGIN
    IF COALESCE (vbOldParentId, 0) <> 0 THEN
       PERFORM lpUpdate_isLeaf (vbOldParentId, zc_ObjectLink_Unit_Parent());
    END IF;
+   
+   -- сохранили связь с <менеджер>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_UserManager(), ioId, inUserManagerId);
+   
+   IF inCreateDate <> (CURRENT_DATE + INTERVAL '1 DAY')
+   THEN
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_Create(), ioId, inCreateDate);
+   ELSE 
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_Create(), ioId, NULL);
+   END IF;
+
+   IF inCloseDate <> (CURRENT_DATE + INTERVAL '1 DAY')
+   THEN   
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_Close(), ioId, inCloseDate);
+   ELSE 
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_Close(), ioId, NULL);
+   END IF;
+   
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -118,6 +146,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.09.17         * 
  08.08.17         * add ProvinceCity
  06.03.17         * add Address
  08.04.16         *

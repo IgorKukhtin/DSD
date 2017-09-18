@@ -213,6 +213,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_Unit_FarmacyCash() RETURNS Integer AS $
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectDate_Unit_FarmacyCash', 'Дата/время последнего сеанса с FarmacyCash' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_FarmacyCash');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Unit_Create() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_Create'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectDate_Unit_Create', 'дата создания точки' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_Create');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Unit_Close() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_Close'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectDate_Unit_Close', 'дата закрытия точки' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_Close');
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectDate_Price_TOPDateChange() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Price_TOPDateChange'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_Price(), 'zc_ObjectDate_Price_TOPDateChange', 'Дата изменения ТОП-позиция' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Price_TOPDateChange');
@@ -246,8 +255,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_User_UpdateMobileTo() RETURNS Integer A
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_User(), 'zc_ObjectDate_User_UpdateMobileTo', 'Дата/время успешной синхронизации на Мобильное устройство' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_User_UpdateMobileTo');
 
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_User_FarmacyCash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_User_FarmacyCash'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_User(), 'zc_ObjectDate_User_FarmacyCash', 'дата/время когда в последний раз работал и проводи документ Чек' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_User_FarmacyCash');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_User_In() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_User_In'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_User(), 'zc_ObjectDate_User_In', 'Дата принятия на работу' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_User_In');
+
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 15.09.17         * zc_ObjectDate_Unit_Create
+                    zc_ObjectDate_Unit_Close
  16.08.17         * zc_ObjectDate_Goods_LastPriceOld
  09.06.17         * zc_ObjectDate_Price_StartDateMCSAuto
                     zc_ObjectDate_Price_EndDateMCSAuto
