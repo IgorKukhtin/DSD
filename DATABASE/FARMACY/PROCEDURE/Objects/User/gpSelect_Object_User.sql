@@ -127,7 +127,7 @@ END IF;
 
         LEFT JOIN ObjectDate AS ObjectDate_User_In
                              ON ObjectDate_User_In.ObjectId = Object_User.Id
-                            AND ObjectDate_User_In.DescId = zc_ObjectDate_Personal_In()   -- ???
+                            AND ObjectDate_User_In.DescId = zc_ObjectDate_User_In()  
         LEFT JOIN ObjectDate AS ObjectDate_User_FarmacyCash
                              ON ObjectDate_User_FarmacyCash.ObjectId = Object_User.Id
                             AND ObjectDate_User_FarmacyCash.DescId = zc_ObjectDate_User_FarmacyCash()

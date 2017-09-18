@@ -54,8 +54,8 @@ BEGIN
            , CAST (Null as TDateTime) AS StartServiceNigth
            , CAST (Null as TDateTime) AS EndServiceNigth
 
-           , CAST (Null as TDateTime) AS CreateDate
-           , CAST (Null as TDateTime) AS CloseDate
+           , CAST ((CURRENT_DATE + INTERVAL '1 DAY') as TDateTime) AS CreateDate
+           , CAST ((CURRENT_DATE + INTERVAL '1 DAY') as TDateTime) AS CloseDate
 
            , False                 AS isRepriceAuto
 ;
@@ -91,8 +91,8 @@ BEGIN
       , CASE WHEN COALESCE(ObjectDate_EndServiceNigth.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_EndServiceNigth.ValueData ELSE Null END ::TDateTime  AS EndServiceNigth
       --, ObjectDate_EndServiceNigth.ValueData                 AS EndServiceNigth
 
-      , COALESCE (ObjectDate_Create.ValueData, NULL) ::TDateTime  AS CreateDate
-      , COALESCE (ObjectDate_Close.ValueData, NULL)  ::TDateTime  AS CloseDate
+      , COALESCE (ObjectDate_Create.ValueData, (CURRENT_DATE + INTERVAL '1 DAY')) ::TDateTime  AS CreateDate
+      , COALESCE (ObjectDate_Close.ValueData, (CURRENT_DATE + INTERVAL '1 DAY'))  ::TDateTime  AS CloseDate
       
       , COALESCE(ObjectBoolean_RepriceAuto.ValueData, False) AS isRepriceAuto
 

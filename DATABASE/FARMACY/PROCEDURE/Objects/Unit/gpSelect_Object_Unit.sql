@@ -70,8 +70,8 @@ BEGIN
       , ObjectDate_StartServiceNigth.ValueData               AS StartServiceNigth
       , ObjectDate_EndServiceNigth.ValueData                 AS EndServiceNigth
 
-      , ObjectDate_Create.ValueData                          AS CreateDate
-      , ObjectDate_Close.ValueData                           AS CloseDate
+      , COALESCE( ObjectDate_Create.ValueData, NULL) :: TDateTime  AS CreateDate
+      , COALESCE(ObjectDate_Close.ValueData, NULL)   :: TDateTime  AS CloseDate
       
       , COALESCE(ObjectBoolean_RepriceAuto.ValueData, FALSE) AS isRepriceAuto
       , COALESCE(ObjectBoolean_Over.ValueData, FALSE)        AS isOver

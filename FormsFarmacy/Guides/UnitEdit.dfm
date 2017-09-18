@@ -212,7 +212,7 @@
     Left = 15
     Top = 269
     EditValue = 42993d
-    Properties.ReadOnly = True
+    Properties.ReadOnly = False
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 26
@@ -222,7 +222,7 @@
     Left = 134
     Top = 269
     EditValue = 42993d
-    Properties.ReadOnly = True
+    Properties.ReadOnly = False
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 27
@@ -361,7 +361,7 @@
         Value = 'NULL'
         Component = edCreateDate
         DataType = ftDateTime
-        ParamType = ptUnknown
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -369,7 +369,7 @@
         Value = 'NULL'
         Component = edCloseDate
         DataType = ftDateTime
-        ParamType = ptUnknown
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -417,7 +417,7 @@
         Value = Null
         Component = GuidesUserManager
         ComponentItem = 'Key'
-        ParamType = ptUnknown
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -565,12 +565,14 @@
       end
       item
         Name = 'CreateDate'
+        Value = 'NULL'
         Component = edCreateDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'CloseDate'
+        Value = 'NULL'
         Component = edCloseDate
         DataType = ftDateTime
         MultiSelectSeparator = ','

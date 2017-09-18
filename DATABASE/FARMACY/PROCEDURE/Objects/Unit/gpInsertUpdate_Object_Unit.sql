@@ -7,7 +7,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, T
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, TVarChar);
---DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
@@ -18,14 +18,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inTaxServiceNigth         TFloat    ,    -- % от выручки в ночную смену
     IN inStartServiceNigth       TDateTime ,
     IN inEndServiceNigth         TDateTime ,
-    --IN inCreateDate              TDateTime ,    -- дата создания точки
-    --IN inCloseDate               TDateTime ,    -- дата закрытия точки
+    IN inCreateDate              TDateTime ,    -- дата создания точки
+    IN inCloseDate               TDateTime ,    -- дата закрытия точки
     IN inisRepriceAuto           Boolean   ,    -- участвует в автопереоценке
     IN inParentId                Integer   ,    -- ссылка на подразделение
     IN inJuridicalId             Integer   ,    -- ссылка на Юридические лицо
     IN inMarginCategoryId        Integer   ,    -- ссылка на категорию наценок
     IN inProvinceCityId          Integer   ,    -- ссылка на Район
-    --IN inUserManagerId           Integer   ,    -- ссылка на менеджер
+    IN inUserManagerId           Integer   ,    -- ссылка на менеджер
     IN inSession                 TVarChar       -- сессия пользователя
 )
 RETURNS Integer
@@ -111,22 +111,27 @@ BEGIN
       PERFORM lpUpdate_isLeaf (vbOldParentId, zc_ObjectLink_Unit_Parent());
    END IF;
    
-   /*
    -- сохранили связь с <менеджер>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_UserManager(), ioId, inUserManagerId);
    
-   IF (inCreateDate is not NULL) OR (vbCreateDate is not NULL)
+   IF inCreateDate <> (CURRENT_DATE + INTERVAL '1 DAY')
    THEN
        -- сохранили свойство <>
        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_Create(), ioId, inCreateDate);
+   ELSE 
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_Create(), ioId, NULL);
    END IF;
 
-   IF (inCloseDate is not NULL) OR (vbCloseDate is not NULL)
+   IF inCloseDate <> (CURRENT_DATE + INTERVAL '1 DAY')
    THEN   
        -- сохранили свойство <>
        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_Close(), ioId, inCloseDate);
+   ELSE 
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_Close(), ioId, NULL);
    END IF;
-   */
+   
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
