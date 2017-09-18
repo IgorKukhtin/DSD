@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Inventory(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSumm TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , GoodsGroupId Integer, GoodsGroupName TVarChar, isGoodsGroupIn Boolean, isGoodsGroupExc Boolean
              )
 AS
 $BODY$
@@ -50,6 +51,12 @@ BEGIN
            , Object_To.Id                               AS ToId
            , Object_To.ValueData                        AS ToName
 
+           , Object_GoodsGroup.Id                       AS GoodsGroupId
+           , Object_GoodsGroup.ValueData                AS GoodsGroupName
+
+           , COALESCE (MovementBoolean_GoodsGroupIn.ValueData, FALSE)  :: Boolean AS isGoodsGroupIn
+           , COALESCE (MovementBoolean_GoodsGroupExc.ValueData, FALSE) :: Boolean AS isGoodsGroupExc
+
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate AND Movement.DescId = zc_Movement_Inventory() AND Movement.StatusId = tmpStatus.StatusId
@@ -59,13 +66,21 @@ BEGIN
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                    ON MovementFloat_TotalCount.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalCount.MovementId = Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_GoodsGroupIn
+                                      ON MovementBoolean_GoodsGroupIn.MovementId = Movement.Id
+                                     AND MovementBoolean_GoodsGroupIn.DescId = zc_MovementBoolean_GoodsGroupIn()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_GoodsGroupExc
+                                      ON MovementBoolean_GoodsGroupExc.MovementId = Movement.Id
+                                     AND MovementBoolean_GoodsGroupExc.DescId = zc_MovementBoolean_GoodsGroupExc()
+                                           
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -75,6 +90,11 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+            
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_GoodsGroup
+                                         ON MovementLinkObject_GoodsGroup.MovementId = Movement.Id
+                                        AND MovementLinkObject_GoodsGroup.DescId = zc_MovementLinkObject_GoodsGroup()
+            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = MovementLinkObject_GoodsGroup.ObjectId
     ;
 
 END;
@@ -85,6 +105,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.A.
+ 18.09.17         *
  05.10.16         * add inJuridicalBasisId
  01.09.14                                                       *
  27.01.14                                        * all

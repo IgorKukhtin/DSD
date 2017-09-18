@@ -2,10 +2,9 @@ inherited InventoryForm: TInventoryForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103'>'
   ClientHeight = 668
   ClientWidth = 1020
-  ExplicitLeft = -293
-  ExplicitTop = -214
+  ExplicitLeft = 6
   ExplicitWidth = 1036
-  ExplicitHeight = 707
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -342,22 +341,22 @@ inherited InventoryForm: TInventoryForm
     inherited edInvNumber: TcxTextEdit
       Left = 8
       ExplicitLeft = 8
-      ExplicitWidth = 74
-      Width = 74
+      ExplicitWidth = 109
+      Width = 109
     end
     inherited cxLabel1: TcxLabel
       Left = 8
       ExplicitLeft = 8
     end
     inherited edOperDate: TcxDateEdit
-      Left = 89
+      Left = 126
       Properties.SaveTime = False
       Properties.ShowTime = False
-      ExplicitLeft = 89
+      ExplicitLeft = 126
     end
     inherited cxLabel2: TcxLabel
-      Left = 89
-      ExplicitLeft = 89
+      Left = 126
+      ExplicitLeft = 126
     end
     inherited cxLabel15: TcxLabel
       Top = 45
@@ -371,12 +370,12 @@ inherited InventoryForm: TInventoryForm
       Width = 218
     end
     object cxLabel3: TcxLabel
-      Left = 195
+      Left = 232
       Top = 5
       Caption = #1054#1090' '#1082#1086#1075#1086
     end
     object edFrom: TcxButtonEdit
-      Left = 195
+      Left = 232
       Top = 23
       Properties.Buttons = <
         item
@@ -387,7 +386,7 @@ inherited InventoryForm: TInventoryForm
       Width = 270
     end
     object edTo: TcxButtonEdit
-      Left = 477
+      Left = 514
       Top = 23
       Properties.Buttons = <
         item
@@ -398,9 +397,43 @@ inherited InventoryForm: TInventoryForm
       Width = 270
     end
     object cxLabel4: TcxLabel
-      Left = 477
+      Left = 514
       Top = 5
       Caption = #1050#1086#1084#1091
+    end
+    object cxLabel5: TcxLabel
+      Left = 232
+      Top = 45
+      Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074
+    end
+    object edGoodsGroup: TcxButtonEdit
+      Left = 232
+      Top = 64
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 11
+      Width = 270
+    end
+    object cbisGoodsGroupIn: TcxCheckBox
+      Left = 515
+      Top = 63
+      Caption = #1058#1086#1083#1100#1082#1086' '#1074#1099#1073#1088'. '#1075#1088#1091#1087#1087#1072
+      Properties.ReadOnly = False
+      State = cbsChecked
+      TabOrder = 12
+      Width = 134
+    end
+    object cbisGoodsGroupExc: TcxCheckBox
+      Left = 655
+      Top = 63
+      Caption = #1050#1088#1086#1084#1077' '#1074#1099#1073#1088'. '#1075#1088#1091#1087#1087#1099
+      Properties.ReadOnly = False
+      TabOrder = 13
+      Width = 129
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1170,15 +1203,18 @@ inherited InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'GoodsGroupId'
         Value = 0d
-        DataType = ftDateTime
-        ParamType = ptUnknown
+        Component = GuidesGoodsGroup
+        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
+        Name = 'GoodsGroupName'
         Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
+        Component = GuidesGoodsGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -1319,14 +1355,31 @@ inherited InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsGroupId'
         Value = 0d
-        DataType = ftDateTime
-        ParamType = ptUnknown
+        Component = GuidesGoodsGroup
+        ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioisGoodsGroupIn'
         Value = 'False'
+        Component = cbisGoodsGroupIn
         DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioisGoodsGroupExc'
+        Value = 0.000000000000000000
+        Component = cbisGoodsGroupExc
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = ''
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
@@ -1342,17 +1395,6 @@ inherited InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end
       item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
@@ -1384,6 +1426,10 @@ inherited InventoryForm: TInventoryForm
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
         MultiSelectSeparator = ','
       end>
     Left = 154
@@ -1421,10 +1467,13 @@ inherited InventoryForm: TInventoryForm
         Control = edTo
       end
       item
+        Control = cbisGoodsGroupExc
       end
       item
+        Control = cbisGoodsGroupIn
       end
       item
+        Control = edGoodsGroup
       end
       item
       end
@@ -1916,5 +1965,35 @@ inherited InventoryForm: TInventoryForm
     PackSize = 1
     Left = 631
     Top = 208
+  end
+  object GuidesGoodsGroup: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsGroup
+    FormNameParam.Value = 'TGoodsGroup_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsGroup_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoodsGroup
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoodsGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 376
+    Top = 56
   end
 end

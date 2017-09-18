@@ -36,6 +36,10 @@ $BODY$
 
   DECLARE vbProfitLossGroupId Integer;
   DECLARE vbProfitLossDirectionId Integer;
+  
+  DECLARE vbGoodsGroupId    Integer;
+  DECLARE vbisGoodsGroupIn  Boolean;
+  DECLARE vbisGoodsGroupExc Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      IF inSession = zc_Enum_Process_Auto_PrimeCost() :: TVarChar
@@ -74,9 +78,9 @@ BEGIN
           , COALESCE (ObjectBoolean_PartionGoodsKind_From.ValueData, TRUE)  AS isPartionGoodsKind_Unit
 
           , COALESCE (ObjectLink_ObjectFrom_Juridical.ChildObjectId, zc_Juridical_Basis()) AS JuridicalId_Basis
-          , COALESCE (ObjectLink_ObjectFrom_Business.ChildObjectId, 0)  AS BusinessId
+          , COALESCE (ObjectLink_ObjectFrom_Business.ChildObjectId, 0)      AS BusinessId
 
-          , COALESCE (ObjectLink_CarFrom_Unit.ChildObjectId, 0) AS UnitId_Car
+          , COALESCE (ObjectLink_CarFrom_Unit.ChildObjectId, 0)             AS UnitId_Car
 
           , CASE WHEN COALESCE (ObjectLink_ObjectFrom_Branch.ChildObjectId, zc_Branch_Basis()) <> zc_Branch_Basis()
                   AND Object_From.DescId = zc_Object_Unit()
@@ -84,10 +88,15 @@ BEGIN
                  ELSE 0
             END AS PriceListId
 
+          , MovementLinkObject_GoodsGroup.ObjectId                               AS GoodsGroupId
+          , COALESCE (MovementBoolean_GoodsGroupIn.ValueData, FALSE)  :: Boolean AS isGoodsGroupIn
+          , COALESCE (MovementBoolean_GoodsGroupExc.ValueData, FALSE) :: Boolean AS isGoodsGroupExc
+          
             INTO vbMovementDescId, vbStatusId, vbOperDate
                , vbUnitId, vbCarId, vbMemberId, vbBranchId, vbAccountDirectionId, vbIsPartionDate_Unit, vbIsPartionGoodsKind_Unit, vbJuridicalId_Basis, vbBusinessId
                , vbUnitId_Car
                , vbPriceListId
+               , vbGoodsGroupId, vbisGoodsGroupIn, vbisGoodsGroupExc
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id
@@ -110,6 +119,14 @@ BEGIN
                                  AND ObjectBoolean_PartionGoodsKind_From.DescId = zc_ObjectBoolean_Unit_PartionGoodsKind()
                                  AND Object_From.DescId = zc_Object_Unit()
 
+          LEFT JOIN MovementBoolean AS MovementBoolean_GoodsGroupIn
+                                    ON MovementBoolean_GoodsGroupIn.MovementId = Movement.Id
+                                   AND MovementBoolean_GoodsGroupIn.DescId = zc_MovementBoolean_GoodsGroupIn()
+
+          LEFT JOIN MovementBoolean AS MovementBoolean_GoodsGroupExc
+                                    ON MovementBoolean_GoodsGroupExc.MovementId = Movement.Id
+                                   AND MovementBoolean_GoodsGroupExc.DescId = zc_MovementBoolean_GoodsGroupExc()
+                                   
           LEFT JOIN ObjectLink AS ObjectLink_CarFrom_Unit
                                ON ObjectLink_CarFrom_Unit.ObjectId = MovementLinkObject_From.ObjectId
                               AND ObjectLink_CarFrom_Unit.DescId = zc_ObjectLink_Car_Unit()
@@ -125,6 +142,10 @@ BEGIN
                                ON ObjectLink_ObjectFrom_Business.ObjectId = COALESCE (ObjectLink_CarFrom_Unit.ChildObjectId, MovementLinkObject_From.ObjectId)
                               AND ObjectLink_ObjectFrom_Business.DescId = zc_ObjectLink_Unit_Business()
 
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_GoodsGroup
+                                       ON MovementLinkObject_GoodsGroup.MovementId = Movement.Id
+                                      AND MovementLinkObject_GoodsGroup.DescId = zc_MovementLinkObject_GoodsGroup()
+          
      WHERE Movement.Id = inMovementId
        AND Movement.DescId = zc_Movement_Inventory()
        AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
