@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , DiscountCard TVarChar, DiscountTax TFloat, DiscountTaxTwo TFloat
              , TotalCount TFloat, TotalSumm TFloat, TotalSummDiscount TFloat, TotalSummPay TFloat
              , LastCount TFloat, LastSumm TFloat, LastSummDiscount TFloat
-             , DebtSumm TFloat, DebtSumm_All TFloat
+             , TotalDebtSumm TFloat, TotalDebtSumm_All TFloat
              , LastDate TDateTime
              , Address TVarChar, HappyDate TDateTime, PhoneMobile TVarChar, Phone TVarChar
              , Mail TVarChar, Comment TVarChar, CityName TVarChar
@@ -39,12 +39,11 @@ BEGIN
                            INNER JOIN ContainerLinkObject AS CLO_Client
                                                           ON CLO_Client.ContainerId = Container.Id
                                                          AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
-                      WHERE (Container.WhereObjectId = inUnitId OR inUnitId = 0)
-                         AND Container.ObjectId <> zc_Enum_Account_20102()
-                         AND Container.DescId = zc_Container_Summ()
+                      WHERE Container.ObjectId <> zc_Enum_Account_20102()
+                        AND Container.DescId = zc_Container_Summ()
                       GROUP BY CLO_Client.ObjectId
                       HAVING SUM (COALESCE (Container.Amount, 0)) <> 0
-                          OR SUM (CASE WHEN COALESCE (inUnitId, 0) <> 0 AND Container.WhereObjectId = inUnitId THEN COALESCE (Container.Amount, 0) ELSE 0 END)
+                          OR SUM (CASE WHEN COALESCE (inUnitId, 0) <> 0 AND Container.WhereObjectId = inUnitId THEN COALESCE (Container.Amount, 0) ELSE 0 END) <> 0
                      )
        SELECT 
              Object_Client.Id                        AS Id
@@ -60,8 +59,8 @@ BEGIN
            , ObjectFloat_LastCount.ValueData         AS LastCount
            , ObjectFloat_LastSumm.ValueData          AS LastSumm
            , ObjectFloat_LastSummDiscount.ValueData  AS LastSummDiscount
-           , tmpContainer.Summa         ::TFloat     AS DebtSumm
-           , tmpContainer.Summa_All     ::TFloat     AS DebtSumm_All
+           , tmpContainer.Summa         ::TFloat     AS TotalDebtSumm
+           , tmpContainer.Summa_All     ::TFloat     AS TotalDebtSumm_All
            , ObjectDate_LastDate.ValueData           AS LastDate
            , ObjectString_Address.ValueData          AS Address
            , ObjectDate_HappyDate.ValueData          AS HappyDate
