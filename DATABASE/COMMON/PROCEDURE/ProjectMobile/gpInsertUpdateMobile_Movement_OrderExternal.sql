@@ -152,7 +152,7 @@ BEGIN
                                                   , inPersonalId      := vbPersonalId
                                                   , inPriceListId     := inPriceListId
                                                   , inPartnerId       := NULL
-                                                  , inUserId:= vbUserId
+                                                  , inUserId          := vbUserId
                                                    );
 
       -- сохранили свойство <Глобальный уникальный идентификатор>                       
@@ -162,6 +162,9 @@ BEGIN
 
       -- сохранили свойство <Дата/время создания заказа на мобильном устройстве>
       PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_InsertMobile(), vbId, inInsertDate);
+
+      -- сохранили протокол
+      PERFORM lpInsert_MovementProtocol (vbId, vbUserId, FALSE);
 
       RETURN vbId;                                                                      
 END;                                                                                    

@@ -108,6 +108,9 @@ type
     function GetMovementCountItems(AGUID: string): Integer;
     function UpdateMovementReturnInAuto(AGUID: string): string;
     procedure FeedbackMovementReturnIn(AGUID: string);
+    procedure SetMovementErased(AStoredProcName, AGUID: string);
+    procedure SetMovementErasedOrderExternal(AGUID: string);
+    procedure SetMovementErasedReturnIn(AGUID: string);
   public
     procedure SaveSyncDataOut(ADate: TDateTime);
     procedure SyncStoreReal(AGUID: string);
@@ -864,7 +867,7 @@ type
     procedure GenerateOrderExtrenalItemsList;
 
     function SaveReturnIn(OperDate: TDate; PaidKindId: integer; Comment : string;
-      TotalPrice, TotalWeight: Currency; DelItems : string; Complete: boolean; var ErrorMessage : string) : boolean;
+      TotalPrice, TotalWeight: Currency; DelItems : string; Complete: boolean; var ErrorMessage : string; NowSync: Boolean = False) : boolean;
     procedure NewReturnIn;
     procedure LoadReturnIn;
     procedure LoadAllReturnIn(AStartDate, AEndDate: TDate);
@@ -4630,7 +4633,8 @@ end;
 
 { сохранение возвратов в БД }
 function TDM.SaveReturnIn(OperDate: TDate; PaidKindId: integer; Comment : string;
-  TotalPrice, TotalWeight: Currency; DelItems : string; Complete: boolean; var ErrorMessage : string) : boolean;
+  TotalPrice, TotalWeight: Currency; DelItems : string; Complete: boolean; var ErrorMessage : string;
+  NowSync: Boolean = False) : boolean;
 var
   GlobalId: TGUID;
   DocGUID: string;
@@ -4845,70 +4849,34 @@ begin
     end;
     //=========
 
-    (*if Complete then
+    if Complete and NowSync then
     begin
-      try
-        SyncData.SyncReturnIn(DocGUID);
+      SyncData.SyncReturnIn(DocGUID);
 
-        tblMovement_ReturnIn.Open;
-        if tblMovement_ReturnIn.Locate('Id', MovementId) then
-        begin
-          TotalPrice := tblMovement_ReturnInTotalSummPVAT.AsCurrency;
-          TotalWeight := tblMovement_ReturnInTotalCountKg.AsCurrency;
-        end;
-        tblMovement_ReturnIn.Close;
-
-        //обновляем данные в локальном хранилище
-        cdsReturnIn.DisableControls;
-        if cdsReturnIn.Locate('Id', MovementId, []) then
-        begin
-          cdsReturnIn.Edit;
-          cdsReturnInPrice.AsString := 'Стоимость: ' + FormatFloat(',0.00', TotalPrice);
-          cdsReturnInWeight.AsString := 'Вес: ' + FormatFloat(',0.00', TotalWeight);
-          cdsReturnInisSync.AsBoolean := True;
-          cdsReturnIn.Post;
-        end;
-        cdsReturnIn.EnableControls;
-
-        b := cdsReturnIn.Bookmark;
-        cdsReturnIn.First;
-        cdsReturnIn.GotoBookmark(b);
-      except
-        conMain.StartTransaction;
-        tblMovement_ReturnIn.Open;
-        if tblMovement_ReturnIn.Locate('Id', MovementId) then
-        begin
-          tblMovement_ReturnIn.Edit;
-          tblMovement_ReturnInStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
-          tblMovement_ReturnInisSync.AsBoolean := False;
-          tblMovement_ReturnIn.Post;
-        end;
-        tblMovement_ReturnIn.Close;
-        conMain.Commit;
-
-        //обновляем данные в локальном хранилище
-        cdsReturnIn.DisableControls;
-        if cdsReturnIn.Locate('Id', MovementId, []) then
-        begin
-          cdsReturnIn.Edit;
-          cdsReturnInStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
-          cdsReturnInStatus.AsString := tblObject_ConstStatusName_UnComplete.AsString;
-          cdsReturnInisSync.AsBoolean := False;
-          cdsReturnIn.Post;
-        end;
-        cdsReturnIn.EnableControls;
-
-        b := cdsReturnIn.Bookmark;
-        cdsReturnIn.First;
-        cdsReturnIn.GotoBookmark(b);
-
-        ErrorMessage := 'Сохранение возврата прошло успешно, но синхронизация не прошла.' +
-          sLineBreak + 'Документ останется пока не проведенным.' +
-          sLineBreak + 'Повторите сохранение позднее.';
-
-        Exit;
+      tblMovement_ReturnIn.Open;
+      if tblMovement_ReturnIn.Locate('Id', MovementId) then
+      begin
+        TotalPrice := tblMovement_ReturnInTotalSummPVAT.AsCurrency;
+        TotalWeight := tblMovement_ReturnInTotalCountKg.AsCurrency;
       end;
-    end;*)
+      tblMovement_ReturnIn.Close;
+
+      //обновляем данные в локальном хранилище
+      cdsReturnIn.DisableControls;
+      if cdsReturnIn.Locate('Id', MovementId, []) then
+      begin
+        cdsReturnIn.Edit;
+        cdsReturnInPrice.AsString := 'Стоимость: ' + FormatFloat(',0.00', TotalPrice);
+        cdsReturnInWeight.AsString := 'Вес: ' + FormatFloat(',0.00', TotalWeight);
+        cdsReturnInisSync.AsBoolean := True;
+        cdsReturnIn.Post;
+      end;
+      cdsReturnIn.EnableControls;
+
+      b := cdsReturnIn.Bookmark;
+      cdsReturnIn.First;
+      cdsReturnIn.GotoBookmark(b);
+    end;
 
     Result := True;
   except
@@ -5178,17 +5146,18 @@ begin
   ArrValue := AGoods.Split([';']); //Id;GoodsId;GoodsKindID;название товара;вид товара;цена;единица измерения;вес;количество по умолчанию
 
   cdsReturnInItems.Append;
-  cdsReturnInItemsId.AsString := ArrValue[0];
-  cdsReturnInItemsGoodsId.AsString := ArrValue[1];       // GoodsId
-  cdsReturnInItemsKindID.AsString := ArrValue[2];        // GoodsKindID
-  cdsReturnInItemsGoodsName.AsString := ArrValue[3];     // название товара
-  cdsReturnInItemsKindName.AsString := ArrValue[4];      // вид товара
-  cdsReturnInItemsPrice.AsString := ArrValue[5];         // цена
-  cdsReturnInItemsMeasure.AsString := ' ' + ArrValue[6]; // единица измерения
-  cdsReturnInItemsWeight.AsString := ArrValue[7];        // вес
-  cdsReturnInItemsTradeMarkName.AsString := ArrValue[8]; // торговая марка
 
-  cdsReturnInItemsCount.AsString := ArrValue[9];         // количество по умолчанию
+  cdsReturnInItemsId.AsString := ArrValue[0];
+  cdsReturnInItemsGoodsId.AsString := ArrValue[1];          // GoodsId
+  cdsReturnInItemsKindID.AsString := ArrValue[2];           // GoodsKindID
+  cdsReturnInItemsGoodsName.AsString := ArrValue[3];        // название товара
+  cdsReturnInItemsKindName.AsString := ArrValue[4];         // вид товара
+  cdsReturnInItemsPrice.AsString := ArrValue[5];            // цена
+  cdsReturnInItemsMeasure.AsString := ' ' + ArrValue[6];    // единица измерения
+  cdsReturnInItemsWeight.AsString := ArrValue[7];           // вес
+  cdsReturnInItemsTradeMarkName.AsString := ArrValue[8];    // торговая марка
+  cdsReturnInItemsCount.AsString := ArrValue[9];            // количество по умолчанию
+  cdsReturnInItemsRecalcPriceName.AsString := ArrValue[10]; // цены пересчитаны или нет
 
   cdsReturnInItems.Post;
 end;
@@ -5224,7 +5193,7 @@ begin
      + '       ''-1;'' || Object_Goods.Id || '';'' || IFNULL(Object_GoodsKind.Id, 0) || '';'' || '
      + '       CAST(Object_Goods.ObjectCode as varchar)  || '' '' || Object_Goods.ValueData || '';'' || IFNULL(Object_GoodsKind.ValueData, ''-'') || '';'' || '
      + '       IFNULL(Object_PriceListItems.ReturnPrice, 0) || '';'' || IFNULL(Object_Measure.ValueData, ''-'') || '';'' || Object_Goods.Weight || '';'' || '
-     + '       IFNULL(Object_TradeMark.ValueData, '''') || '';0'' '
+     + '       IFNULL(Object_TradeMark.ValueData, '''') || '';0;-'' '
      + ' FROM  Object_GoodsListSale  '
      + '       JOIN Object_Goods               ON Object_GoodsListSale.GoodsId      = Object_Goods.Id '
      + '       LEFT JOIN Object_GoodsKind      ON Object_GoodsKind.Id               = Object_GoodsListSale.GoodsKindId '
@@ -5287,7 +5256,8 @@ begin
      + '       MovementItem_ReturnIn.Id || '';'' || Object_Goods.Id || '';'' || IFNULL(Object_GoodsKind.Id, 0) || '';'' || '
      + '       CAST(Object_Goods.ObjectCode as varchar)  || '' '' || Object_Goods.ValueData || '';'' || IFNULL(Object_GoodsKind.ValueData, ''-'') || '';'' || '
      + '       IFNULL(Object_PriceListItems.ReturnPrice, 0) || '';'' || IFNULL(Object_Measure.ValueData, ''-'') || '';'' || Object_Goods.Weight || '';'' || '
-     + '       IFNULL(Object_TradeMark.ValueData, '''') || '';'' || MovementItem_ReturnIn.Amount '
+     + '       IFNULL(Object_TradeMark.ValueData, '''') || '';'' || MovementItem_ReturnIn.Amount || '';'' || '
+     + '       CASE WHEN MovementItem_ReturnIn.isRecalcPrice THEN ''Пересчитано'' ELSE ''-'' END '
      + ' FROM  MovementItem_ReturnIn  '
      + '       JOIN Object_Goods               ON Object_Goods.Id                   = MovementItem_ReturnIn.GoodsId '
      + '       LEFT JOIN Object_GoodsKind      ON Object_GoodsKind.Id               = MovementItem_ReturnIn.GoodsKindId '
@@ -5990,6 +5960,36 @@ begin
   end;
 end;
 
+procedure TSyncData.SetMovementErased(AStoredProcName, AGUID: string);
+var
+  StoredProc : TdsdStoredProc;
+begin
+  StoredProc := TdsdStoredProc.Create(nil);
+
+  with StoredProc, Params do
+  begin
+    OutputType := otResult;
+    StoredProcName := AStoredProcName;
+    AddParam('inMovementGUID', ftString, ptInput, AGUID);
+  end;
+
+  try
+    StoredProc.Execute(False, False, False);
+  finally
+    FreeAndNil(StoredProc);
+  end;
+end;
+
+procedure TSyncData.SetMovementErasedOrderExternal(AGUID: string);
+begin
+  SetMovementErased('gpSetMobileErased_Movement_OrderExternal', AGUID);
+end;
+
+procedure TSyncData.SetMovementErasedReturnIn(AGUID: string);
+begin
+  SetMovementErased('gpSetMobileErased_Movement_ReturnIn', AGUID);
+end;
+
 procedure TSyncData.SyncOrderExternal(AGUID: string);
 var
   SqlText: string;
@@ -6067,6 +6067,8 @@ begin
         SendCount := GetMovementCountItems(FieldByName('GUID').AsString);
         if ItemsCount = SendCount then
         begin
+          SetMovementErasedOrderExternal(FieldByName('GUID').AsString);
+
           Edit;
           FieldByName('IsSync').AsBoolean := True;
           Post;
@@ -6170,6 +6172,8 @@ begin
         SendCount := GetMovementCountItems(FieldByName('GUID').AsString);
         if ItemsCount = SendCount then
         begin
+          SetMovementErasedReturnIn(FieldByName('GUID').AsString);
+
           Edit;
           FieldByName('IsSync').AsBoolean := True;
           Post;

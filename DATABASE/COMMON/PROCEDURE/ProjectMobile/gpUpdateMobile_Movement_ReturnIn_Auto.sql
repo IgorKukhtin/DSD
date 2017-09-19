@@ -36,8 +36,11 @@ BEGIN
 
       IF COALESCE (vbId, 0) <> 0
       THEN
-           -- сначала распроводим документ
-           PERFORM gpSetMobile_Movement_Status (inMovementGUID:= inMovementGUID, inStatusId:= zc_Enum_Status_UnComplete(), inSession:= inSession);
+           IF vbStatusId <> zc_Enum_Status_UnComplete() 
+           THEN 
+                -- сначала распроводим документ
+                PERFORM lpUnComplete_Movement (inMovementId:= vbId, inUserId:= vbUserId);
+           END IF;
 
            -- автоматом сформировалась строчная часть - zc_MI_Child
            vbMessageText:= lpUpdate_Movement_ReturnIn_Auto (inStartDateSale := NULL
@@ -46,8 +49,8 @@ BEGIN
                                                           , inUserId        := vbUserId
                                                            );
 
-           -- возвращаем старый статус
-           PERFORM gpSetMobile_Movement_Status (inMovementGUID:= inMovementGUID, inStatusId:= vbStatusId, inSession:= inSession);
+           -- удаляем
+           PERFORM lpSetErased_Movement (inMovementId := vbId, inUserId:= vbUserId);
 
       END IF;
 
