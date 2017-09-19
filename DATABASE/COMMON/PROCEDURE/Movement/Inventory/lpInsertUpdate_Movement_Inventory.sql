@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_Movement_Inventory()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Boolean, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Inventory(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -8,6 +9,9 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Inventory(
     IN inOperDate            TDateTime , -- Дата документа
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
+    IN inGoodsGroupId        Integer   , -- Группа товара
+    IN inIsGoodsGroupIn      Boolean   , -- Только выбр. группа
+    IN inIsGoodsGroupExc     Boolean   , -- Кроме выбр. группы
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer AS
@@ -35,6 +39,14 @@ BEGIN
      -- сохранили связь с <Кому (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
 
+     -- сохранили связь с <Группа товара>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_GoodsGroup(), ioId, inGoodsGroupId);
+  
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_GoodsGroupIn(), ioId, inIsGoodsGroupIn);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_GoodsGroupExc(), ioId, inIsGoodsGroupExc);
+     
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
@@ -48,6 +60,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 18.09.17         *               
  29.05.15                                        *
  13.11.14                                        * add vbAccessKeyId
  06.09.14                                        * add lpInsert_MovementProtocol

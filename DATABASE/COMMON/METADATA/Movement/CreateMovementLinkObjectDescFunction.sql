@@ -271,6 +271,10 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_ReestrKind() RETURNS Integer AS
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_ReestrKind', 'Состояние по реестру' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_ReestrKind');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_GoodsGroup() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_GoodsGroup'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_GoodsGroup', 'Группа товара' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_GoodsGroup');
+
 
   
 --!!!!!!!!!!!  Аптека
@@ -340,6 +344,7 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 18.09.17         * zc_MovementLinkObject_GoodsGroup
  08.06.17         * zc_MovementLinkObject_MemberIncomeCheck
  09.02.17         * zc_MovementLinkObject_GroupMemberSP
  22.12.16         * zc_MovementLinkObject_PartnerMedical

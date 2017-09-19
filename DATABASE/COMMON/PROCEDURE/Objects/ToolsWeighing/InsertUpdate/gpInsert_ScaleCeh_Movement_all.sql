@@ -407,6 +407,9 @@ BEGIN
                                                   , inOperDate              := inOperDate - INTERVAL '1 DAY'
                                                   , inFromId                := FromId
                                                   , inToId                  := ToId
+                                                  , inGoodsGroupId          := 0
+                                                  , inisGoodsGroupIn        := FALSE
+                                                  , inisGoodsGroupExc       := FALSE
                                                   , inUserId                := vbUserId
                                                    )
 

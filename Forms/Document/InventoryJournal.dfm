@@ -4,10 +4,8 @@ inherited InventoryJournalForm: TInventoryJournalForm
   ClientWidth = 847
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -120
-  ExplicitTop = -81
   ExplicitWidth = 863
-  ExplicitHeight = 574
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -177,6 +175,31 @@ inherited InventoryJournalForm: TInventoryJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object GoodsGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsGroupName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 167
+          end
+          object isGoodsGroupIn: TcxGridDBColumn
+            Caption = #1058#1086#1083#1100#1082#1086' '#1074#1099#1073#1088'. '#1075#1088#1091#1087#1087#1072
+            DataBinding.FieldName = 'isGoodsGroupIn'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1074#1082#1083#1102#1095#1072#1077#1090' '#1074#1099#1073#1088#1072#1085#1085#1091#1102' '#1075#1088#1091#1087#1087#1091' '#1090#1086#1074#1072#1088#1086#1074
+            Options.Editing = False
+            Width = 90
+          end
+          object isGoodsGroupExc: TcxGridDBColumn
+            Caption = #1050#1088#1086#1084#1077' '#1074#1099#1073#1088'. '#1075#1088#1091#1087#1087#1099
+            DataBinding.FieldName = 'isGoodsGroupExc'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1080#1089#1082#1083#1102#1095#1072#1077#1090' '#1074#1099#1073#1088#1072#1085#1085#1091#1102' '#1075#1088#1091#1087#1087#1091' '#1090#1086#1074#1072#1088#1086#1074
+            Width = 92
           end
         end
       end
@@ -796,8 +819,8 @@ inherited InventoryJournalForm: TInventoryJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 704
-    Top = 72
+    Left = 768
+    Top = 176
   end
   object spSelectPrintSticker: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Income_PrintSticker'

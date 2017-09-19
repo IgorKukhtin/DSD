@@ -88,7 +88,7 @@ type
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
     FormParams: TdsdFormParams;
-    DebtSumm: TcxGridDBColumn;
+    TotalDebtSumm: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }

@@ -10,6 +10,7 @@ RETURNS TBlob
 AS $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbId Integer;
+  DECLARE vbStatusId Integer;
   DECLARE vbMessageText Text:= '';
 BEGIN
       -- проверка прав пользователя на вызов процедуры
@@ -18,21 +19,39 @@ BEGIN
       
       -- определение идентификатора документа по глобальному уникальному идентификатору
       SELECT MovementString_GUID.MovementId 
+           , Movement.StatusId 
       INTO vbId 
+         , vbStatusId
       FROM MovementString AS MovementString_GUID
            JOIN Movement ON Movement.Id = MovementString_GUID.MovementId
                         AND Movement.DescId = zc_Movement_ReturnIn() 
       WHERE MovementString_GUID.DescId = zc_MovementString_GUID() 
         AND MovementString_GUID.ValueData = inMovementGUID;
 
+      -- проверка на проведенный документ
+      IF vbStatusId = zc_Enum_Status_Complete() 
+      THEN
+           RAISE EXCEPTION 'Возврат уже проведен, пересчет цен заблокирован.';
+      END IF;
+
       IF COALESCE (vbId, 0) <> 0
       THEN
+           IF vbStatusId <> zc_Enum_Status_UnComplete() 
+           THEN 
+                -- сначала распроводим документ
+                PERFORM lpUnComplete_Movement (inMovementId:= vbId, inUserId:= vbUserId);
+           END IF;
+
            -- автоматом сформировалась строчная часть - zc_MI_Child
            vbMessageText:= lpUpdate_Movement_ReturnIn_Auto (inStartDateSale := NULL
                                                           , inEndDateSale   := NULL
                                                           , inMovementId    := vbId
                                                           , inUserId        := vbUserId
                                                            );
+
+           -- удаляем
+           PERFORM lpSetErased_Movement (inMovementId := vbId, inUserId:= vbUserId);
+
       END IF;
 
       RETURN vbMessageText::TBlob;

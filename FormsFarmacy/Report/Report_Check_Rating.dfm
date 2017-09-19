@@ -3,7 +3,6 @@ inherited Report_Check_RatingForm: TReport_Check_RatingForm
   ClientHeight = 361
   ClientWidth = 919
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -9
   ExplicitWidth = 935
   ExplicitHeight = 399
   PixelsPerInch = 96
@@ -14,18 +13,18 @@ inherited Report_Check_RatingForm: TReport_Check_RatingForm
     Height = 302
     TabOrder = 3
     ExplicitTop = 59
-    ExplicitWidth = 1051
-    ExplicitHeight = 421
+    ExplicitWidth = 919
+    ExplicitHeight = 302
     ClientRectBottom = 302
     ClientRectRight = 919
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1051
-      ExplicitHeight = 421
+      ExplicitWidth = 919
+      ExplicitHeight = 302
       inherited cxGrid: TcxGrid
         Width = 919
         Height = 302
-        ExplicitWidth = 1051
-        ExplicitHeight = 421
+        ExplicitWidth = 919
+        ExplicitHeight = 302
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -156,6 +155,24 @@ inherited Report_Check_RatingForm: TReport_Check_RatingForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            SortIndex = 0
+            SortOrder = soAscending
+            Width = 163
+          end
+          object Address: TcxGridDBColumn
+            Caption = #1040#1076#1088#1077#1089' '#1087#1086#1076#1088'.'
+            DataBinding.FieldName = 'Address'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 115
+          end
           object UserCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1092#1072#1088#1084'.'
             DataBinding.FieldName = 'UserCode'
@@ -197,6 +214,8 @@ inherited Report_Check_RatingForm: TReport_Check_RatingForm
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsCode'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0;-,0; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
@@ -320,7 +339,7 @@ inherited Report_Check_RatingForm: TReport_Check_RatingForm
   inherited Panel: TPanel
     Width = 919
     Height = 33
-    ExplicitWidth = 1051
+    ExplicitWidth = 919
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 29

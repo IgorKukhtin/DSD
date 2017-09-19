@@ -2832,6 +2832,13 @@ object ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'TotalDebtSumm'
+        Value = Null
+        Component = edTotalDebt
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'MasterUnitId'
         Value = Null
         Component = GuidesTo

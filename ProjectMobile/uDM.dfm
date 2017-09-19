@@ -1545,6 +1545,9 @@ object DM: TDM
     object tblMovementItem_ReturnInChangePercent: TFloatField
       FieldName = 'ChangePercent'
     end
+    object tblMovementItem_ReturnInisRecalcPrice: TBooleanField
+      FieldName = 'isRecalcPrice'
+    end
   end
   object cdsReturnIn: TClientDataSet
     Aggregates = <>
@@ -1659,6 +1662,9 @@ object DM: TDM
     end
     object cdsReturnInItemsKindId: TIntegerField
       FieldName = 'KindId'
+    end
+    object cdsReturnInItemsRecalcPriceName: TStringField
+      FieldName = 'RecalcPriceName'
     end
   end
   object qryPromoPartners: TFDQuery

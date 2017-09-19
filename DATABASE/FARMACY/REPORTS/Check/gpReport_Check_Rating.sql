@@ -14,6 +14,8 @@ RETURNS TABLE (
   UserCode              Integer,
   UserName              TVarChar,
   JuridicalName         TVarChar,
+  UnitName              TVarChar,
+  Address               TVarChar,
   GoodsId               Integer, 
   GoodsCode             Integer, 
   GoodsName             TVarChar,
@@ -52,10 +54,25 @@ BEGIN
                                           AND (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
                 WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                 )
-             
+    
+  , tmpUser AS (SELECT DISTINCT ObjectLink_User_Member.ObjectId    AS UserId
+                     , ObjectLink_Personal_Unit.ChildObjectId      AS UnitId
+                FROM ObjectLink AS ObjectLink_Personal_Member
+                     LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                          ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                         AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+                     INNER JOIN tmpUnit ON tmpUnit.UnitId = ObjectLink_Personal_Unit.ChildObjectId
+                     
+                     INNER JOIN ObjectLink AS ObjectLink_User_Member
+                                           ON ObjectLink_User_Member.ChildObjectId = ObjectLink_Personal_Member.ChildObjectId
+                                          AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+    
+                WHERE ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+               )         
   , tmpData_Container AS (SELECT COALESCE (MIContainer.AnalyzerId,0)         AS MovementItemId_Income
                                , MIContainer.MovementId                      AS MovementId_Check
                                , MIContainer.ObjectId_analyzer               AS GoodsId
+                               , MIContainer.WhereObjectId_analyzer          AS UnitId
                                , SUM (COALESCE (-1 * MIContainer.Amount, 0)) AS Amount
                                , SUM (COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0)) AS SummaSale
                           FROM MovementItemContainer AS MIContainer
@@ -67,6 +84,7 @@ BEGIN
                           GROUP BY COALESCE (MIContainer.AnalyzerId,0)
                                  , MIContainer.ObjectId_analyzer 
                                  , MIContainer.MovementId
+                                 , MIContainer.WhereObjectId_analyzer
                           HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
                           )
                           
@@ -74,6 +92,7 @@ BEGIN
                          , COALESCE (MI_Income_find.Id,         MI_Income.Id)         :: Integer AS MovementItemId
                          , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId) :: Integer AS MovementId
                          , tmpData_Container.GoodsId                                             AS GoodsId
+                         , tmpData_Container.UnitId                                              AS UnitId
                          , SUM (COALESCE (tmpData_Container.Amount, 0))                          AS Amount
                          , SUM (COALESCE (tmpData_Container.SummaSale, 0))                       AS SummaSale
                     FROM tmpData_Container
@@ -94,11 +113,13 @@ BEGIN
                           , MI_Income_find.MovementId  
                           , tmpData_Container.GoodsId
                           , tmpData_Container.MovementId_Check
+                          , tmpData_Container.UnitId
                    )
 
            , tmpData AS (SELECT tmpData_all.MovementId_Check                                               AS MovementId_Check
                               , MovementLinkObject_From_Income.ObjectId                                    AS JuridicalId_Income
                               , tmpData_all.GoodsId                                                        AS GoodsId
+                              , tmpData_all.UnitId                                                         AS UnitId
                               , SUM (tmpData_all.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0))  AS Summa
                               , SUM (tmpData_all.Amount * COALESCE (MIFloat_PriceWithOutVAT.ValueData, 0)) AS SummaWithOutVAT
                               , SUM (tmpData_all.Amount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))    AS SummaWithVAT
@@ -124,30 +145,47 @@ BEGIN
                          GROUP BY MovementLinkObject_From_Income.ObjectId
                                 , tmpData_all.GoodsId
                                 , tmpData_all.MovementId_Check
+                                , tmpData_all.UnitId
                         )
 
-   , tmpDataRez AS (SELECT MLO_Insert.ObjectId           AS UserId
-                         , STRING_AGG (Object_From_Income.ValueData, ', ')  AS JuridicalName
-                         , tmpData.GoodsId
-                         , SUM (tmpData.Summa)           AS Summa
-                         , SUM (tmpData.SummaWithOutVAT) AS SummaWithOutVAT
-                         , SUM (tmpData.SummaWithVAT)    AS SummaWithVAT
-                         , SUM (tmpData.Amount)          AS Amount
-                         , SUM (tmpData.SummaSale)       AS SummaSale
-                    FROM tmpData
-                         LEFT JOIN MovementLinkObject AS MLO_Insert
-                                                      ON MLO_Insert.MovementId = tmpData.MovementId_Check
-                                                     AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
-                         LEFT JOIN Object AS Object_From_Income ON Object_From_Income.Id = tmpData.JuridicalId_Income
-                    GROUP BY MLO_Insert.ObjectId
-                           , tmpData.GoodsId
-                    )
+   , tmpDataRez_ AS (SELECT MLO_Insert.ObjectId           AS UserId
+                          , STRING_AGG (Object_From_Income.ValueData, ', ')  AS JuridicalName
+                          , tmpData.GoodsId
+                          , tmpData.UnitId
+                          , SUM (tmpData.Summa)           AS Summa
+                          , SUM (tmpData.SummaWithOutVAT) AS SummaWithOutVAT
+                          , SUM (tmpData.SummaWithVAT)    AS SummaWithVAT
+                          , SUM (tmpData.Amount)          AS Amount
+                          , SUM (tmpData.SummaSale)       AS SummaSale
+                     FROM tmpData
+                          LEFT JOIN MovementLinkObject AS MLO_Insert
+                                                       ON MLO_Insert.MovementId = tmpData.MovementId_Check
+                                                      AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+                          LEFT JOIN Object AS Object_From_Income ON Object_From_Income.Id = tmpData.JuridicalId_Income
+                     GROUP BY MLO_Insert.ObjectId
+                            , tmpData.GoodsId
+                            , tmpData.UnitId
+                     )
+   , tmpDataRez AS (SELECT COALESCE (tmpDataRez_.UserId, tmpUser.UserId)     AS UserId
+                         , COALESCE (tmpDataRez_.JuridicalName, '')          AS JuridicalName
+                         , COALESCE (tmpDataRez_.GoodsId, inGoodsId)         AS GoodsId
+                         , COALESCE (tmpDataRez_.UnitId, tmpUser.UnitId)     AS UnitId
+                         , COALESCE (tmpDataRez_.Summa, 0)                   AS Summa
+                         , COALESCE (tmpDataRez_.SummaWithOutVAT, 0)         AS SummaWithOutVAT
+                         , COALESCE (tmpDataRez_.SummaWithVAT, 0)            AS SummaWithVAT
+                         , COALESCE (tmpDataRez_.Amount, 0)                  AS Amount
+                         , COALESCE (tmpDataRez_.SummaSale, 0)               AS SummaSale
+                   FROM tmpDataRez_
+                        FULL JOIN tmpUser ON tmpUser.UserId = tmpDataRez_.UserId
+                                         AND tmpUser.UnitId = tmpDataRez_.UnitId)
 
 
         -- результат
         SELECT Object_User.ObjectCode                                            AS UserCode
              , Object_User.ValueData                                             AS UserName
              , tmpData.JuridicalName                                 :: TVarchar AS JuridicalName
+             , Object_Unit.ValueData                                             AS UnitName
+             , ObjectString_Unit_Address.ValueData                   :: TVarchar AS Address
              , Object_Goods.Id                                                   AS GoodsId
              , Object_Goods.ObjectCode                                           AS GoodsCode
              , Object_Goods.ValueData                                            AS GoodsName
@@ -171,7 +209,12 @@ BEGIN
         FROM tmpDataRez AS tmpData
              LEFT JOIN Object AS Object_User  ON Object_User.Id  = tmpData.UserId
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
+             LEFT JOIN Object AS Object_Unit  ON Object_Unit.Id  = tmpData.UnitId
 
+             LEFT JOIN ObjectString AS ObjectString_Unit_Address
+                                    ON ObjectString_Unit_Address.ObjectId = Object_Unit.Id
+                                   AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
+                              
              LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                   ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()

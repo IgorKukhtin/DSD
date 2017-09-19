@@ -80,9 +80,9 @@ object ClientForm: TClientForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 226
       end
-      object DebtSumm: TcxGridDBColumn
+      object TotalDebtSumm: TcxGridDBColumn
         Caption = #1044#1086#1083#1075' '#1087#1086#1082#1091#1087'. '#1087#1086' '#1084#1072#1075'.'
-        DataBinding.FieldName = 'DebtSumm'
+        DataBinding.FieldName = 'TotalDebtSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
@@ -91,9 +91,9 @@ object ClientForm: TClientForm
         Options.Editing = False
         Width = 82
       end
-      object DebtSumm_All: TcxGridDBColumn
+      object TotalDebtSumm_All: TcxGridDBColumn
         Caption = #1048#1090#1086#1075#1086' '#1076#1086#1083#1075' '#1087#1086#1082#1091#1087'.'
-        DataBinding.FieldName = 'DebtSumm_All'
+        DataBinding.FieldName = 'TotalDebtSumm_All'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
@@ -172,7 +172,7 @@ object ClientForm: TClientForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 65
+        Width = 72
       end
       object TotalSummPay: TcxGridDBColumn
         Caption = #1048#1090#1086#1075#1086' '#1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099
@@ -668,6 +668,14 @@ object ClientForm: TClientForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'TotalSummPay'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TotalDebtSumm'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'TotalDebtSumm'
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>

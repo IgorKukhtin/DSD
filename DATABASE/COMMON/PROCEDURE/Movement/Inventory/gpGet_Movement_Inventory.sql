@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Inventory(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSumm TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , GoodsGroupId Integer, GoodsGroupName TVarChar, isGoodsGroupIn Boolean, isGoodsGroupExc Boolean
              )
 AS
 $BODY$
@@ -35,26 +36,38 @@ BEGIN
              , CAST ('' as TVarChar)            AS FromName
              , 0                                AS ToId
              , CAST ('' as TVarChar)            AS ToName
+             
+             , 0                                AS GoodsGroupId
+             , CAST ('' as TVarChar)            AS GoodsGroupName
+  
+             , CAST (FALSE as Boolean)          AS isGoodsGroupIn
+             , CAST (FALSE as Boolean)          AS isGoodsGroupExc
+             
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
        RETURN QUERY
        SELECT
-             Movement.Id
-           , Movement.InvNumber
-           , Movement.OperDate
-           , Object_Status.ObjectCode   AS StatusCode
-           , Object_Status.ValueData    AS StatusName
+             Movement.Id                         AS Id
+           , Movement.InvNumber                  AS InvNumber
+           , Movement.OperDate                   AS OperDate
+           , Object_Status.ObjectCode            AS StatusCode
+           , Object_Status.ValueData             AS StatusName
 
            , MovementFloat_TotalCount.ValueData  AS TotalCount
 
            , MovementFloat_TotalSumm.ValueData   AS TotalSumm
 
-           , Object_From.Id                    AS FromId
-           , Object_From.ValueData             AS FromName
-           , Object_To.Id                      AS ToId
-           , Object_To.ValueData               AS ToName
+           , Object_From.Id                      AS FromId
+           , Object_From.ValueData               AS FromName
+           , Object_To.Id                        AS ToId
+           , Object_To.ValueData                 AS ToName
 
+           , Object_GoodsGroup.Id                AS GoodsGroupId
+           , Object_GoodsGroup.ValueData         AS GoodsGroupName
+ 
+           , COALESCE (MovementBoolean_GoodsGroupIn.ValueData, FALSE)  :: Boolean AS isGoodsGroupIn
+           , COALESCE (MovementBoolean_GoodsGroupExc.ValueData, FALSE) :: Boolean AS isGoodsGroupExc                        
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -66,6 +79,14 @@ BEGIN
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_GoodsGroupIn
+                                      ON MovementBoolean_GoodsGroupIn.MovementId =  Movement.Id
+                                     AND MovementBoolean_GoodsGroupIn.DescId = zc_MovementBoolean_GoodsGroupIn()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_GoodsGroupExc
+                                      ON MovementBoolean_GoodsGroupExc.MovementId =  Movement.Id
+                                     AND MovementBoolean_GoodsGroupExc.DescId = zc_MovementBoolean_GoodsGroupExc()
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -76,7 +97,12 @@ BEGIN
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
-         WHERE Movement.Id =  inMovementId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_GoodsGroup
+                                         ON MovementLinkObject_GoodsGroup.MovementId = Movement.Id
+                                        AND MovementLinkObject_GoodsGroup.DescId = zc_MovementLinkObject_GoodsGroup()
+            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = MovementLinkObject_GoodsGroup.ObjectId
+
+         WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_Inventory();
 
    END IF;

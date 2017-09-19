@@ -33,6 +33,9 @@ BEGIN
       WHERE MovementString_GUID.DescId = zc_MovementString_GUID() 
         AND MovementString_GUID.ValueData = inMovementGUID;
 
+      vbDescId:= COALESCE (vbDescId, 0);
+      vbStatusId:= COALESCE (vbStatusId, 0);
+
       -- если документ нашелся
       IF COALESCE (vbId, 0) <> 0
       THEN
