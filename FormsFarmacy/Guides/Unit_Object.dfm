@@ -813,21 +813,21 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCreateDate'
+        Name = 'ioCreateDate'
         Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'CreateDate'
         DataType = ftDateTime
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCloseDate'
+        Name = 'ioCloseDate'
         Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'CloseDate'
         DataType = ftDateTime
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
