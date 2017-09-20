@@ -21,6 +21,7 @@ RETURNS TABLE (
   PriceSale             TFloat,
   SummaSale             TFloat,
   CountUnit             TFloat,
+  MCS_Value             TFloat,
   UnitName              Tblob,
   
   IsClose Boolean, UpdateDate TDateTime,
@@ -99,7 +100,7 @@ BEGIN
                            WHERE tmpData_Container.UnitId = inUnitId
                            )
   -- товары, остаток <> 0, текущей аптеки 
-  , tmpRemains AS (SELECT tmp.GoodsId
+  , tmpRemains AS (SELECT tmp.GoodsId         AS GoodsId
                         , SUM (tmp.Amount)    AS Amount
                    FROM (SELECT Container.Objectid      AS GoodsId
                               , Container.Amount - SUM (COALESCE (MIContainer.Amount, 0))  AS Amount
@@ -209,6 +210,7 @@ BEGIN
            , tmpData.SummaSale                                     :: TFloat   AS SummaSale
 
            , tmpData.CountUnit                                     :: TFloat   AS CountUnit
+           , 0                                                     :: TFloat   AS MCS_Value
            , tmpData.UnitName                                      :: Tblob    AS UnitName
 
            , COALESCE(ObjectBoolean_Goods_Close.ValueData, False)  :: Boolean  AS isClose

@@ -3,7 +3,6 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
   ClientHeight = 480
   ClientWidth = 1251
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -208
   ExplicitWidth = 1267
   ExplicitHeight = 518
   PixelsPerInch = 96
@@ -136,7 +135,6 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -174,6 +172,7 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 27
           end
           object GoodsCode: TcxGridDBColumn
@@ -181,6 +180,7 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
           object GoodsName: TcxGridDBColumn
@@ -188,11 +188,22 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 151
           end
           object NDSKindName: TcxGridDBColumn
             Caption = #1053#1044#1057
             DataBinding.FieldName = 'NDSKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object MCS_Value: TcxGridDBColumn
+            Caption = #1053#1058#1047' ('#1074#1074#1086#1076')'
+            DataBinding.FieldName = 'MCS_Value'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
@@ -205,6 +216,7 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
           object PriceSale: TcxGridDBColumn
@@ -214,6 +226,7 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 58
           end
           object SummaSale: TcxGridDBColumn
@@ -223,6 +236,7 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object ConditionsKeepName: TcxGridDBColumn
@@ -248,6 +262,7 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
             DataBinding.FieldName = 'MCSNotRecalc'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 59
           end
           object UpdateDate: TcxGridDBColumn
@@ -263,6 +278,7 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
             DataBinding.FieldName = 'MCSIsClose'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
           object MCSIsCloseDateChange: TcxGridDBColumn
@@ -316,6 +332,7 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 60
           end
         end
@@ -579,6 +596,43 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
     end
+    object actUpdate_Price_MCS: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Price_MCS
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Price_MCS
+        end>
+      Caption = 'actUpdate_Price_MCS'
+      ImageIndex = 27
+    end
+    object macUpdate_Price_MCS_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Price_MCS
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1053#1058#1047
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1053#1058#1047
+      ImageIndex = 27
+    end
+    object macUpdate_Price_MCS: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_Price_MCS_list
+        end>
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1103' '#1053#1058#1047'?'
+      InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1077' '#1053#1058#1047' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1086
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1053#1058#1047
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1053#1058#1047
+      ImageIndex = 27
+    end
   end
   inherited MasterDS: TDataSource
     Left = 48
@@ -658,6 +712,14 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_Price_MCS'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -682,6 +744,10 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
     end
     object bbPrint: TdxBarButton
       Action = actPrint
+      Category = 0
+    end
+    object bbUpdate_Price_MCS: TdxBarButton
+      Action = macUpdate_Price_MCS
       Category = 0
     end
   end
@@ -769,5 +835,55 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
     PackSize = 1
     Left = 376
     Top = 208
+  end
+  object spUpdate_Price_MCS: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Price_MCS_byReport'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMCSValue'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MCS_Value'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDays'
+        Value = Null
+        Component = ceDays
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMCSAuto'
+        Value = Null
+        Component = cbisMCSAuto
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 296
+    Top = 328
   end
 end
