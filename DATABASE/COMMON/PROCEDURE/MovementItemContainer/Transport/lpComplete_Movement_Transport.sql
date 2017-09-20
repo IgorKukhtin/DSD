@@ -345,10 +345,17 @@ BEGIN
                             , _tmpItem_Transport.ProfitLossDirectionId
               FROM _tmpItem_Transport
              ) AS _tmpItem
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver_check
+                                          ON MovementLinkObject_PersonalDriver_check.MovementId = inMovementId
+                                         AND MovementLinkObject_PersonalDriver_check.DescId     = zc_MovementLinkObject_PersonalDriver()
+                                         AND MovementLinkObject_PersonalDriver_check.ObjectId   > 0 
              LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
                                           ON MovementLinkObject_PersonalDriver.MovementId = inMovementId
                                          AND MovementLinkObject_PersonalDriver.DescId     IN (zc_MovementLinkObject_PersonalDriver(), zc_MovementLinkObject_PersonalDriverMore())
                                          AND MovementLinkObject_PersonalDriver.ObjectId   > 0 
+                                         AND (MovementLinkObject_PersonalDriver.ObjectId   <> COALESCE (MovementLinkObject_PersonalDriver_check.ObjectId ,0)
+                                           OR MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
+                                             )
              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_60101() -- Заработная плата
 
              LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit

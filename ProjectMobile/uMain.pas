@@ -2961,6 +2961,7 @@ begin
 
   pSaveReturnIn.Visible := FCanEditDocument;
   bAddReturnInItem.Visible := FCanEditDocument;
+  bSyncReturnIn.Visible := FCanEditDocument;
   eReturnComment.ReadOnly := not FCanEditDocument;
   deReturnDate.ReadOnly := not FCanEditDocument;
   swPaidKindR.Enabled := FCanEditDocument;
@@ -4378,8 +4379,36 @@ begin
 end;
 
 procedure TfrmMain.bSyncReturnInClick(Sender: TObject);
+var
+  i: integer;
+  ErrMes: string;
+  DelItems: string;
+  PaidKindId: integer;
 begin
-  DM.SyncReturnIn(DM.cdsReturnInId.AsInteger);
+  DelItems := '';
+  if FDeletedRI.Count > 0 then
+  begin
+    DelItems := IntToStr(FDeletedRI[0]);
+    for i := 1 to FDeletedRI.Count - 1 do
+      DelItems := ',' + IntToStr(FDeletedRI[i]);
+  end;
+
+  if not swPaidKindR.IsChecked then
+    PaidKindId := DM.tblObject_ConstPaidKindId_First.AsInteger
+  else
+    PaidKindId := DM.tblObject_ConstPaidKindId_Second.AsInteger;
+
+  if DM.SaveReturnIn(deReturnDate.Date, PaidKindId, eReturnComment.Text,
+    FReturnInTotalPrice, FReturnInTotalCountKg, DelItems, True, ErrMes, True) then
+  begin
+    if FEditDocuments then
+      ChangeReturnInDoc;
+
+    ShowMessage('Сохранение возврата прошло успешно.');
+
+    ReturnPriorForm;
+  end else
+    TDialogService.MessageDialog(ErrMes, TMsgDlgType.mtError, [TMsgDlgBtn.mbOK], TMsgDlgBtn.mbOK, 0, nil);
 end;
 
 // выход с формы фотографирования без сохранения

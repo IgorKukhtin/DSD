@@ -50,6 +50,7 @@ BEGIN
          -- проверка: если вводитс€ кол склад надо сообщить что оно расчетное, вводить нельз€
          IF ioId <> 0 AND EXISTS (SELECT 1 FROM MovementItemFloat AS MIFloat WHERE MIFloat.MovementItemId = ioId AND MIFloat.DescId = zc_MIFloat_AmountPartner() AND MIFloat.ValueData = ioAmountPartner)
                       AND NOT EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.Id = ioId AND MI.DescId = zc_MI_Master() AND MI.Amount = ioAmount)
+                      AND vbMeasureId = zc_Measure_Kg()
          THEN
              RAISE EXCEPTION 'ќшибка.¬вод запрещен, т.к. < ол-во склад> €вл€етс€ расчетным если установлен признак <—кидка скан. упак.>.';
          END IF;
@@ -72,13 +73,22 @@ BEGIN
                              ELSE 0
                         END;
 
-         -- !!!только в этом слуаче расчет "кол-во склад"!!!
-         ioAmount:= ioAmountPartner + CAST (outCountPack * COALESCE (outWeightPack, 0) AS NUMERIC (16, 4));
-         -- !!!обнуление "других" скидок!!!
-         ioChangePercentAmount:= 0;
-         inIsChangePercentAmount:= FALSE;
-         -- !!!расчет!!! -  оличество c учетом % скидки
-         outAmountChangePercent:= ioAmountPartner;
+         IF vbMeasureId = zc_Measure_Kg()
+         THEN
+             -- !!!только в этом случае расчет "кол-во склад"!!!
+             ioAmount:= ioAmountPartner + CAST (outCountPack * COALESCE (outWeightPack, 0) AS NUMERIC (16, 4));
+             -- !!!обнуление "других" скидок!!!
+             ioChangePercentAmount:= 0;
+             inIsChangePercentAmount:= FALSE;
+             -- !!!расчет!!! -  оличество c учетом % скидки
+             outAmountChangePercent:= ioAmountPartner;
+         ELSE
+             -- !!!обнуление "других" скидок!!!
+             ioChangePercentAmount:= 0;
+             inIsChangePercentAmount:= FALSE;
+             -- !!!расчет!!! -  оличество c учетом % скидки
+             outAmountChangePercent:= ioAmount;
+         END IF;
 
      ELSE
      -- !!!из контрола!!! - % скидки дл€ кол-ва

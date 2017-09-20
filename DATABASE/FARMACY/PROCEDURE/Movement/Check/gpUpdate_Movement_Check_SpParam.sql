@@ -38,6 +38,8 @@ BEGIN
                    WHERE Object_MedicSP.DescId = zc_Object_MedicSP()
                      AND UPPER(Object_MedicSP.ValueData) LIKE UPPER ('%' || inMedicSP || '%')     --('% укуш ино%')   --
                    )
+       ANd (inPartnerMedicalId > 0
+         OR inMedicSP <> '')
     THEN
         RAISE EXCEPTION 'ќшибка.‘»ќ врача <%> не соответствует выбранному мед.учреждению.', inMedicSP;
     END IF;

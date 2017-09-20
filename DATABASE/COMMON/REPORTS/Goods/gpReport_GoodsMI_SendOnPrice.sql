@@ -455,7 +455,16 @@ BEGIN
                                                       AND MIContainer.WhereObjectId_analyzer = _tmpUnit.UnitId
                                                       AND MIContainer.ObjectExtId_Analyzer   = _tmpUnit.UnitId_by
                                                       AND (MIContainer.isActive = FALSE
-                                                        OR (MIContainer.isActive = TRUE AND MIContainer.AccountId IN (zc_Enum_Account_110101()))
+                                                        OR (MIContainer.isActive = TRUE AND MIContainer.AccountId IN (zc_Enum_Account_110101(), zc_Enum_Account_110102()
+                                                                                                                    , zc_Enum_Account_110111(), zc_Enum_Account_110112()
+                                                                                                                    , zc_Enum_Account_110121(), zc_Enum_Account_110122()
+                                                                                                                    , zc_Enum_Account_110131(), zc_Enum_Account_110132()
+
+                                                                                                                    , zc_Enum_Account_110151(), zc_Enum_Account_110152(), zc_Enum_Account_110153()
+                                                                                                                    , zc_Enum_Account_110161(), zc_Enum_Account_110162()
+                                                                                                                    , zc_Enum_Account_110171(), zc_Enum_Account_110172(), zc_Enum_Account_110173()
+                                                                                                                    , zc_Enum_Account_110181(), zc_Enum_Account_110182()
+                                                                                                                     ))
                                                         OR MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SummOut_80401(), zc_Enum_AnalyzerId_SummOut_110101())
                                                           )
                                                       AND COALESCE (MIContainer.AccountId, 0) <>  zc_Enum_Account_100301() -- Прибыль текущего периода
