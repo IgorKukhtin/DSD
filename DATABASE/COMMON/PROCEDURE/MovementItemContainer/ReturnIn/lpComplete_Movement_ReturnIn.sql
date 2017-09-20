@@ -1114,7 +1114,7 @@ BEGIN
      -- определили
      vbObjectExtId_Analyzer:= CASE WHEN vbPartnerId_From <> 0 THEN vbPartnerId_From WHEN vbMemberId_From <> 0 THEN vbMemberId_From END;
      -- определили
-     vbAccountId_GoodsTransit:= CASE WHEN vbOperDate <> vbOperDatePartner AND vbMemberId_From = 0 AND vbMemberId_To = 0 THEN zc_Enum_Account_110101() ELSE 0 END;
+     vbAccountId_GoodsTransit:= CASE WHEN vbOperDate <> vbOperDatePartner AND vbMemberId_From = 0 AND vbMemberId_To = 0 THEN zc_Enum_Account_110111() ELSE 0 END;
 
 
      -- 1.1.1. определяется ContainerId_GoodsPartner для !!!НЕ забалансовой!!! проводки по количественному учету - долги Покупателя или Физ.лица

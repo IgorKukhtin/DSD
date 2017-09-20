@@ -10,10 +10,18 @@ AS
 $BODY$
 BEGIN
 
+   IF inSession = '14610'
+   THEN
+   RETURN QUERY
+    SELECT  'ftpex.edi.su'::TVarChar AS Host
+          , 'uatovalanftp'::TVarChar   AS UserName
+          , 'ftp349067'::TVarChar      AS Password;
+   ELSE
    RETURN QUERY
     SELECT  'ruftpex.edi.su'::TVarChar AS Host
           , 'uatovalanftp'::TVarChar   AS UserName
           , 'ftp349067'::TVarChar      AS Password;
+   END IF;
     
 END;
 $BODY$
