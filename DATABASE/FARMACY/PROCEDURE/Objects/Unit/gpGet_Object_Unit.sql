@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                UserManagerId Integer, UserManagerName TVarChar,
                JuridicalId Integer, JuridicalName TVarChar, 
                MarginCategoryId Integer, MarginCategoryName TVarChar,
+               AreaId Integer, AreaName TVarChar,
                isLeaf boolean, 
                TaxService TFloat, TaxServiceNigth TFloat,
                StartServiceNigth TDateTime, EndServiceNigth TDateTime,
@@ -47,6 +48,10 @@ BEGIN
            
            , CAST (0 as Integer)   AS MarginCategoryId
            , CAST ('' as TVarChar) AS MarginCategoryName
+
+           , CAST (0 as Integer)   AS AreaId
+           , CAST ('' as TVarChar) AS AreaName
+           
            , false                 AS isLeaf
            , CAST (0 as TFloat)    AS TaxService
            , CAST (0 as TFloat)    AS TaxServiceNigth
@@ -74,14 +79,18 @@ BEGIN
       , Object_Parent.Id                                   AS ParentId
       , Object_Parent.ValueData                            AS ParentName
 
-      , COALESCE (Object_UserManager.Id, 0)                  AS UserManagerId
-      , Object_UserManager.ValueData                         AS UserManagerName
+      , COALESCE (Object_UserManager.Id, 0)                AS UserManagerId
+      , Object_UserManager.ValueData                       AS UserManagerName
 
       , Object_Juridical.Id                                AS JuridicalId
       , Object_Juridical.ValueData                         AS JuridicalName
 
       , Object_MarginCategory.Id                           AS MarginCategoryId
       , Object_MarginCategory.ValueData                    AS MarginCategoryName
+      
+      , Object_Area.Id                                     AS AreaId
+      , Object_Area.ValueData                              AS AreaName
+      
       , ObjectBoolean_isLeaf.ValueData                     AS isLeaf
 
       , ObjectFloat_TaxService.ValueData                   AS TaxService
@@ -121,6 +130,11 @@ BEGIN
                              ON ObjectLink_Unit_UserManager.ObjectId = Object_Unit.Id
                             AND ObjectLink_Unit_UserManager.DescId = zc_ObjectLink_Unit_UserManager()
         LEFT JOIN Object AS Object_UserManager ON Object_UserManager.Id = ObjectLink_Unit_UserManager.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_Area
+                             ON ObjectLink_Unit_Area.ObjectId = Object_Unit.Id 
+                            AND ObjectLink_Unit_Area.DescId = zc_ObjectLink_Unit_Area()
+        LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Unit_Area.ChildObjectId
                 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_isLeaf 
                                 ON ObjectBoolean_isLeaf.ObjectId = Object_Unit.Id

@@ -21,6 +21,7 @@ RETURNS TABLE (
   PriceSale             TFloat,
   SummaSale             TFloat,
   CountUnit             TFloat,
+  MCS_Value             TFloat,
   UnitName              Tblob,
   
   IsClose Boolean, UpdateDate TDateTime,
@@ -98,16 +99,22 @@ BEGIN
                            FROM tmpData_Container
                            WHERE tmpData_Container.UnitId = inUnitId
                            )
-  -- товары, остаток = 0, текущей аптеки 
-  , tmpRemains AS (SELECT DISTINCT Container.Objectid      AS GoodsId
-                   FROM Container 
-                        LEFT JOIN MovementItemContainer AS MIContainer
-                                                        ON MIContainer.ContainerId = Container.Id
-                                                       AND MIContainer.OperDate >= inDateStart
-                   WHERE Container.WhereObjectId = inUnitId
-                     AND Container.DescId = zc_Container_Count()
-                   GROUP BY Container.Objectid, Container.Amount
-                   HAVING  Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) = 0
+  -- товары, остаток <> 0, текущей аптеки 
+  , tmpRemains AS (SELECT tmp.GoodsId         AS GoodsId
+                        , SUM (tmp.Amount)    AS Amount
+                   FROM (SELECT Container.Objectid      AS GoodsId
+                              , Container.Amount - SUM (COALESCE (MIContainer.Amount, 0))  AS Amount
+                         FROM Container 
+                              LEFT JOIN MovementItemContainer AS MIContainer
+                                                              ON MIContainer.ContainerId = Container.Id
+                                                             AND MIContainer.OperDate >= inDateFinal --inDateStart
+                         WHERE Container.WhereObjectId = inUnitId
+                           AND Container.DescId = zc_Container_Count()
+                         GROUP BY Container.Objectid, Container.Amount
+                         HAVING Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
+                         ) AS tmp
+                   GROUP BY tmp.GoodsId
+                   HAVING SUM (tmp.Amount) <> 0
                   )
   -- НТЗ , Спецконтроль кода текущей аптеки
   , tmpPrice AS (SELECT Price_Goods.ChildObjectId                AS GoodsId
@@ -126,24 +133,29 @@ BEGIN
                                            AND MCS_NotRecalc.DescId = zc_ObjectBoolean_Price_MCSNotRecalc()
                  WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                    AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
+                   --AND COALESCE(MCS_Value.ValueData,0) = 0
                  )
-  -- ассортимент товаров текущей аптеки, которые нужно исключить из выборки
+ /* -- ассортимент товаров текущей аптеки, которые нужно исключить из выборки
   , tmpAssortment AS (SELECT tmpAssortmentCheck.GoodsId
                       FROM tmpAssortmentCheck
-                           LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpAssortmentCheck.GoodsId
-                           LEFT JOIN (SELECT DISTINCT tmpPrice.GoodsId FROM tmpPrice WHERE tmpPrice.MCS_Value = 0) AS tmpMCS ON tmpMCS.GoodsId = tmpAssortmentCheck.GoodsId
-                      WHERE tmpRemains.GoodsId IS NULL
-                        AND tmpMCS.GoodsId IS NULL
-                      )                                         
+                           
+                      WHERE tmpRemains.GoodsId IS NOT NULL
+                         OR COALESCE (tmpMCS.MCS_Value, 0) <> 0
+                      ) 
+*/                                        
   -- данные продаж для отчета                        
    , tmpData AS (SELECT tmpData_Container.UnitId
                       , tmpData_Container.GoodsId
                       , SUM (COALESCE (tmpData_Container.Amount, 0))    AS Amount
                       , SUM (COALESCE (tmpData_Container.SummaSale, 0)) AS SummaSale
                  FROM tmpData_Container
-                      LEFT JOIN tmpAssortment ON tmpAssortment.GoodsId = tmpData_Container.GoodsId
+                      --LEFT JOIN tmpAssortment ON tmpAssortment.GoodsId = tmpData_Container.GoodsId
+                      LEFT JOIN tmpRemains    ON tmpRemains.GoodsId    = tmpData_Container.GoodsId
+                      LEFT JOIN tmpPrice      ON tmpPrice.GoodsId      = tmpData_Container.GoodsId
                  WHERE tmpData_Container.UnitId <> inUnitId
-                   AND tmpAssortment.GoodsId IS NULL
+                   AND tmpData_Container.GoodsId NOT IN (SELECT tmpAssortmentCheck.GoodsId FROM tmpAssortmentCheck)
+                   AND COALESCE (tmpRemains.Amount, 0) = 0
+                   AND COALESCE (tmpPrice.MCS_Value, 0) = 0
                  GROUP BY tmpData_Container.GoodsId
                         , tmpData_Container.UnitId
                 )
@@ -198,6 +210,7 @@ BEGIN
            , tmpData.SummaSale                                     :: TFloat   AS SummaSale
 
            , tmpData.CountUnit                                     :: TFloat   AS CountUnit
+           , 0                                                     :: TFloat   AS MCS_Value
            , tmpData.UnitName                                      :: Tblob    AS UnitName
 
            , COALESCE(ObjectBoolean_Goods_Close.ValueData, False)  :: Boolean  AS isClose

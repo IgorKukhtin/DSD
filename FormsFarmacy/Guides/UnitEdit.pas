@@ -67,6 +67,9 @@ type
     cxLabel13: TcxLabel;
     edUserManager: TcxButtonEdit;
     GuidesUserManager: TdsdGuides;
+    cxLabel14: TcxLabel;
+    edArea: TcxButtonEdit;
+    GuidesArea: TdsdGuides;
   private
     { Private declarations }
   public

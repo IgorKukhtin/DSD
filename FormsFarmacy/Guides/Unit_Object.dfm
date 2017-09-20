@@ -72,6 +72,21 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Options.Editing = False
             Width = 70
           end
+          object AreaName: TcxGridDBColumn
+            Caption = #1056#1077#1075#1080#1086#1085
+            DataBinding.FieldName = 'AreaName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actOpenAreaForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
           object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
@@ -396,6 +411,33 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndexTrue = 62
       ImageIndexFalse = 63
+    end
+    object actOpenAreaForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TAreaForm'
+      FormName = 'TAreaForm'
+      FormNameParam.Value = 'TAreaForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AreaId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AreaName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
     object actOpenUserForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -813,21 +855,21 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCreateDate'
+        Name = 'ioCreateDate'
         Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'CreateDate'
         DataType = ftDateTime
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCloseDate'
+        Name = 'ioCloseDate'
         Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'CloseDate'
         DataType = ftDateTime
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -835,6 +877,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'UserManagerId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAreaId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AreaId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

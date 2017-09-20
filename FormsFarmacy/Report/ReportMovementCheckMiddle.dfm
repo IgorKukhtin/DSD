@@ -3,7 +3,6 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
   ClientHeight = 588
   ClientWidth = 1251
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -182
   ExplicitWidth = 1267
   ExplicitHeight = 626
   PixelsPerInch = 96
@@ -531,7 +530,7 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
             DataBinding.FieldName = 'AmountWith_1303'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1095#1077#1082#1086#1074'  '#1079#1072' '#1087#1077#1088#1080#1086#1076
@@ -939,8 +938,6 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 3
-        ExplicitLeft = -368
-        ExplicitTop = 497
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -1394,7 +1391,7 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
             DataBinding.FieldName = 'AmountWith_1303'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1095#1077#1082#1086#1074'  '#1079#1072' '#1087#1077#1088#1080#1086#1076

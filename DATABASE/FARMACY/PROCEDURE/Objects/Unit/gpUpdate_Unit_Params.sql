@@ -1,15 +1,17 @@
 -- Function: gpUpdate_Object_Goods_IsUpload()
 
 DROP FUNCTION IF EXISTS gpUpdate_Unit_Params(Integer, TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Unit_Params(Integer, TDateTime, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Unit_Params(
     IN inId                  Integer   ,    -- ключ объекта <Подразделение>
-    IN inCreateDate          TDateTime ,    -- дата создания точки
-    IN inCloseDate           TDateTime ,    -- дата закрытия точки
+ INOUT ioCreateDate          TDateTime ,    -- дата создания точки
+ INOUT ioCloseDate           TDateTime ,    -- дата закрытия точки
     IN inUserManagerId       Integer   ,    -- ссылка на менеджер
+    IN inAreaId              Integer   ,    -- регион
     IN inSession             TVarChar       -- текущий пользователь
 )
-RETURNS VOID
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId     Integer;
@@ -38,18 +40,36 @@ BEGIN
 
    -- сохранили связь с <менеджер>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_UserManager(), inId, inUserManagerId);
+   -- сохранили связь с <Регион>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Area(), inId, inAreaId);
    
-   IF (inCreateDate is not NULL) OR (vbCreateDate is not NULL)
+   IF (ioCreateDate is not NULL) OR (vbCreateDate is not NULL)
    THEN
        -- сохранили свойство <>
-       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_Create(), inId, inCreateDate);
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_Create(), inId, ioCreateDate);
    END IF;
 
-   IF (inCloseDate is not NULL) OR (vbCloseDate is not NULL)
+   IF (ioCloseDate is not NULL) OR (vbCloseDate is not NULL)
    THEN   
        -- сохранили свойство <>
-       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_Close(), inId, inCloseDate);
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_Close(), inId, ioCloseDate);
    END IF;
+
+   -- если дата = завтра тогда обнуляем значение
+   IF ioCreateDate = (CURRENT_DATE + INTERVAL '1 DAY')
+   THEN
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_Create(), inId, NULL);
+       ioCreateDate := Null ::TDatetime;
+   END IF;
+
+   IF ioCloseDate = (CURRENT_DATE + INTERVAL '1 DAY')
+   THEN   
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_Close(), inId, NULL);
+       ioCloseDate := Null ::TDatetime;
+   END IF;
+   
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
@@ -61,6 +81,6 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+ 20.09.17         *
  15.09.17         *
-
 */

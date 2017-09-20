@@ -382,6 +382,8 @@ type
     miReportMovementCheckGrowthAndFalling: TMenuItem;
     actUnit_Object: TdsdOpenForm;
     N149: TMenuItem;
+    actArea: TdsdOpenForm;
+    N150: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

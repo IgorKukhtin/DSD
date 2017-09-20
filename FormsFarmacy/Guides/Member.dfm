@@ -630,8 +630,8 @@ object MemberForm: TMemberForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 288
-    Top = 208
+    Left = 240
+    Top = 224
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

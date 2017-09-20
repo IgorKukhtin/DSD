@@ -62,6 +62,8 @@ type
     actOpenUserForm: TOpenChoiceForm;
     spUpdate_Unit_Params: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
+    AreaName: TcxGridDBColumn;
+    actOpenAreaForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

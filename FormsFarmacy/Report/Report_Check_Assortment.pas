@@ -56,6 +56,16 @@ type
     actRefreshList: TdsdDataSetRefresh;
     CountUnit: TcxGridDBColumn;
     MCSNotRecalc: TcxGridDBColumn;
+    cxLabel4: TcxLabel;
+    cbisMCSAuto: TcxCheckBox;
+    cxLabel8: TcxLabel;
+    ceDays: TcxCurrencyEdit;
+    MCS_Value: TcxGridDBColumn;
+    spUpdate_Price_MCS: TdsdStoredProc;
+    actUpdate_Price_MCS: TdsdExecStoredProc;
+    macUpdate_Price_MCS_list: TMultiAction;
+    macUpdate_Price_MCS: TMultiAction;
+    bbUpdate_Price_MCS: TdxBarButton;
   private
     { Private declarations }
   public
