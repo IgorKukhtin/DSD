@@ -3,6 +3,7 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
   ClientHeight = 480
   ClientWidth = 1251
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -208
   ExplicitWidth = 1267
   ExplicitHeight = 518
   PixelsPerInch = 96
@@ -23,8 +24,6 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
       inherited cxGrid: TcxGrid
         Width = 1251
         Height = 421
-        ExplicitLeft = 29
-        ExplicitTop = 40
         ExplicitWidth = 1251
         ExplicitHeight = 421
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -374,6 +373,32 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
       Action = actRefreshList
       TabOrder = 6
       Width = 131
+    end
+    object cxLabel4: TcxLabel
+      Left = 713
+      Top = 6
+      Caption = #1053#1058#1047' '#1076#1083#1103' '#1087#1077#1088#1080#1086#1076#1072
+    end
+    object cbisMCSAuto: TcxCheckBox
+      Left = 804
+      Top = 5
+      Properties.ReadOnly = False
+      TabOrder = 8
+      Width = 22
+    end
+    object cxLabel8: TcxLabel
+      Left = 838
+      Top = 6
+      Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1087#1077#1088#1080#1086#1076#1072
+    end
+    object ceDays: TcxCurrencyEdit
+      Left = 953
+      Top = 5
+      EditValue = 7.000000000000000000
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      TabOrder = 10
+      Width = 64
     end
   end
   inherited ActionList: TActionList

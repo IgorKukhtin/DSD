@@ -533,7 +533,9 @@ uses
   ReportMovementCheckLight in '..\..\FormsFarmacy\Report\ReportMovementCheckLight.pas' {ReportMovementCheckLightForm: TParentForm},
   UnitTree in '..\..\FormsFarmacy\Guides\UnitTree.pas' {UnitTreeForm: TParentForm},
   User in '..\..\FormsFarmacy\Guides\User.pas' {UserForm: TParentForm},
-  UserEdit in '..\..\FormsFarmacy\Guides\UserEdit.pas' {UserEditForm: TParentForm};
+  UserEdit in '..\..\FormsFarmacy\Guides\UserEdit.pas' {UserEditForm: TParentForm},
+  Area in '..\..\FormsFarmacy\Guides\Area.pas' {AreaForm: TParentForm},
+  AreaEdit in '..\..\FormsFarmacy\Guides\AreaEdit.pas' {AreaEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

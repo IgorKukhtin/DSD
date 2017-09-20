@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , JuridicalName TVarChar, MarginCategoryName TVarChar, isLeaf boolean, isErased boolean
              , RouteId integer, RouteName TVarChar
              , RouteSortingId integer, RouteSortingName TVarChar
+             , AreaId Integer, AreaName TVarChar
              , TaxService TFloat, TaxServiceNigth TFloat
              , StartServiceNigth TDateTime, EndServiceNigth TDateTime
              , CreateDate TDateTime, CloseDate TDateTime
@@ -64,6 +65,9 @@ BEGIN
       , 0                                                    AS RouteSortingId
       , ''::TVarChar                                         AS RouteSortingName
 
+      , Object_Area.Id                                       AS AreaId
+      , Object_Area.ValueData                                AS AreaName
+           
       , ObjectFloat_TaxService.ValueData                     AS TaxService
       , ObjectFloat_TaxServiceNigth.ValueData                AS TaxServiceNigth
 
@@ -105,7 +109,12 @@ BEGIN
                              ON ObjectLink_Unit_UserManager.ObjectId = Object_Unit.Id
                             AND ObjectLink_Unit_UserManager.DescId = zc_ObjectLink_Unit_UserManager()
         LEFT JOIN Object AS Object_UserManager ON Object_UserManager.Id = ObjectLink_Unit_UserManager.ChildObjectId
-        
+
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_Area
+                             ON ObjectLink_Unit_Area.ObjectId = Object_Unit.Id 
+                            AND ObjectLink_Unit_Area.DescId = zc_ObjectLink_Unit_Area()
+        LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Unit_Area.ChildObjectId
+                
         LEFT JOIN ObjectBoolean AS ObjectBoolean_isLeaf 
                                 ON ObjectBoolean_isLeaf.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_isLeaf.DescId = zc_ObjectBoolean_isLeaf()

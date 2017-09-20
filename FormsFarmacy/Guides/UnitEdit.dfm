@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
-  ClientHeight = 342
+  ClientHeight = 389
   ClientWidth = 488
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 72
-    Top = 306
+    Top = 356
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -38,7 +38,7 @@
   end
   object cxButton2: TcxButton
     Left = 266
-    Top = 306
+    Top = 356
     Width = 75
     Height = 25
     Action = FormClose
@@ -185,16 +185,16 @@
     Left = 15
     Top = 220
     TabOrder = 22
-    Width = 209
+    Width = 449
   end
   object cxLabel10: TcxLabel
     Left = 255
-    Top = 203
+    Top = 249
     Caption = #1056#1072#1081#1086#1085
   end
   object ceProvinceCity: TcxButtonEdit
     Left = 255
-    Top = 220
+    Top = 266
     Properties.Buttons = <
       item
         Default = True
@@ -205,12 +205,12 @@
   end
   object cxLabel11: TcxLabel
     Left = 15
-    Top = 249
+    Top = 299
     Caption = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1089
   end
   object edCreateDate: TcxDateEdit
     Left = 15
-    Top = 269
+    Top = 319
     EditValue = 42993d
     Properties.ReadOnly = False
     Properties.SaveTime = False
@@ -220,7 +220,7 @@
   end
   object edCloseDate: TcxDateEdit
     Left = 134
-    Top = 269
+    Top = 319
     EditValue = 42993d
     Properties.ReadOnly = False
     Properties.SaveTime = False
@@ -230,17 +230,17 @@
   end
   object cxLabel12: TcxLabel
     Left = 134
-    Top = 249
+    Top = 299
     Caption = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086
   end
   object cxLabel13: TcxLabel
     Left = 255
-    Top = 249
+    Top = 299
     Caption = #1052#1077#1085#1077#1076#1078#1077#1088
   end
   object edUserManager: TcxButtonEdit
     Left = 255
-    Top = 269
+    Top = 319
     Properties.Buttons = <
       item
         Default = True
@@ -251,9 +251,26 @@
     TabOrder = 30
     Width = 209
   end
+  object cxLabel14: TcxLabel
+    Left = 16
+    Top = 250
+    Caption = #1056#1077#1075#1080#1086#1085
+  end
+  object edArea: TcxButtonEdit
+    Left = 15
+    Top = 266
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 32
+    Width = 209
+  end
   object ActionList: TActionList
     Left = 396
-    Top = 284
+    Top = 334
     object DataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -381,6 +398,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAreaId'
+        Value = Null
+        Component = GuidesArea
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inParentId'
         Value = ''
         Component = ParentGuides
@@ -422,7 +447,7 @@
       end>
     PackSize = 1
     Left = 180
-    Top = 292
+    Top = 342
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -433,7 +458,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 452
-    Top = 292
+    Top = 342
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Unit'
@@ -591,10 +616,25 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AreaId'
+        Value = Null
+        Component = GuidesArea
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AreaName'
+        Value = Null
+        Component = GuidesArea
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 20
-    Top = 300
+    Top = 350
   end
   object ParentGuides: TdsdGuides
     KeyField = 'Id'
@@ -710,7 +750,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 336
-    Top = 208
+    Top = 254
   end
   object GuidesUserManager: TdsdGuides
     KeyField = 'Id'
@@ -739,6 +779,35 @@
         MultiSelectSeparator = ','
       end>
     Left = 368
+    Top = 306
+  end
+  object GuidesArea: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edArea
+    FormNameParam.Value = 'TAreaForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TAreaForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesArea
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesArea
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 104
     Top = 256
   end
 end

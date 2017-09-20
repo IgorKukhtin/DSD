@@ -72,6 +72,7 @@ type
     bbProtocolOpenForm: TdxBarButton;
     Address: TcxGridDBColumn;
     ProvinceCityName: TcxGridDBColumn;
+    AreaName: TcxGridDBColumn;
   private
     { Private declarations }
   public

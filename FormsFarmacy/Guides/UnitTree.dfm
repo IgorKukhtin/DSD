@@ -190,6 +190,12 @@ object UnitTreeForm: TUnitTreeForm
         Options.Editing = False
         Width = 70
       end
+      object AreaName: TcxGridDBColumn
+        Caption = #1056#1077#1075#1080#1086#1085
+        DataBinding.FieldName = 'AreaName'
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
       object CreateDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076'. '#1087#1086#1076#1088'.'
         DataBinding.FieldName = 'CreateDate'

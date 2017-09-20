@@ -8,6 +8,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, T
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
@@ -21,6 +22,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inCreateDate              TDateTime ,    -- дата создания точки
     IN inCloseDate               TDateTime ,    -- дата закрытия точки
     IN inisRepriceAuto           Boolean   ,    -- участвует в автопереоценке
+    IN inAreaId                  Integer   ,    -- регион
     IN inParentId                Integer   ,    -- ссылка на подразделение
     IN inJuridicalId             Integer   ,    -- ссылка на Юридические лицо
     IN inMarginCategoryId        Integer   ,    -- ссылка на категорию наценок
@@ -114,6 +116,10 @@ BEGIN
    -- сохранили связь с <менеджер>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_UserManager(), ioId, inUserManagerId);
    
+   -- сохранили связь с <Регион>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Area(), ioId, inAreaId);
+   
+   
    IF inCreateDate <> (CURRENT_DATE + INTERVAL '1 DAY')
    THEN
        -- сохранили свойство <>
@@ -146,6 +152,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.09.17         * add area
  15.09.17         * 
  08.08.17         * add ProvinceCity
  06.03.17         * add Address

@@ -56,6 +56,10 @@ type
     actRefreshList: TdsdDataSetRefresh;
     CountUnit: TcxGridDBColumn;
     MCSNotRecalc: TcxGridDBColumn;
+    cxLabel4: TcxLabel;
+    cbisMCSAuto: TcxCheckBox;
+    cxLabel8: TcxLabel;
+    ceDays: TcxCurrencyEdit;
   private
     { Private declarations }
   public
