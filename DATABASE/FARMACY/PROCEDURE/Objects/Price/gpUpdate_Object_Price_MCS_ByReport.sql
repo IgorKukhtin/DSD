@@ -17,7 +17,6 @@ $BODY$
         vbUserId       Integer;
         vbMCSValue     TFloat;
         vbMCSValueOld  TFloat;
-        vbMCSIsClose   Boolean;
         vbMCSNotRecalc Boolean;
         vbDate               TDateTime;
         vbEndDateMCSAuto     TDateTime;
