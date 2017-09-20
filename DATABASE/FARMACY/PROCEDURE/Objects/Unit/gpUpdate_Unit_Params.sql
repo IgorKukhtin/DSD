@@ -1,12 +1,14 @@
 -- Function: gpUpdate_Object_Goods_IsUpload()
 
 DROP FUNCTION IF EXISTS gpUpdate_Unit_Params(Integer, TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Unit_Params(Integer, TDateTime, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Unit_Params(
     IN inId                  Integer   ,    -- ключ объекта <Подразделение>
  INOUT ioCreateDate          TDateTime ,    -- дата создания точки
  INOUT ioCloseDate           TDateTime ,    -- дата закрытия точки
     IN inUserManagerId       Integer   ,    -- ссылка на менеджер
+    IN inAreaId              Integer   ,    -- регион
     IN inSession             TVarChar       -- текущий пользователь
 )
 RETURNS RECORD
@@ -38,6 +40,8 @@ BEGIN
 
    -- сохранили связь с <менеджер>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_UserManager(), inId, inUserManagerId);
+   -- сохранили связь с <Регион>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Area(), inId, inAreaId);
    
    IF (ioCreateDate is not NULL) OR (vbCreateDate is not NULL)
    THEN
@@ -77,5 +81,6 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+ 20.09.17         *
  15.09.17         *
 */
