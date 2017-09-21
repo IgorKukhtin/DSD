@@ -34,12 +34,10 @@ BEGIN
   THEN
 
   RETURN QUERY 
-   WITH tmpPersonal AS (SELECT View_Personal.MemberId
-                             , MAX (View_Personal.UnitId) AS UnitId
-                             , MAX (View_Personal.PositionId) AS PositionId
-                        FROM Object_Personal_View AS View_Personal
-                        WHERE View_Personal.isErased = FALSE
-                        GROUP BY View_Personal.MemberId
+   WITH tmpPersonal AS (SELECT lfSelect.MemberId
+                             , lfSelect.UnitId
+                             , lfSelect.PositionId
+                        FROM lfSelect_Object_Member_findPersonal(inSession) AS lfSelect
                        )
                        
   SELECT 
@@ -71,12 +69,10 @@ BEGIN
   ELSE
 
   RETURN QUERY 
-   WITH tmpPersonal AS (SELECT View_Personal.MemberId
-                             , MAX (View_Personal.UnitId) AS UnitId
-                             , MAX (View_Personal.PositionId) AS PositionId
-                        FROM Object_Personal_View AS View_Personal
-                        WHERE View_Personal.isErased = FALSE
-                        GROUP BY View_Personal.MemberId
+   WITH tmpPersonal AS (SELECT lfSelect.MemberId
+                             , lfSelect.UnitId
+                             , lfSelect.PositionId
+                        FROM lfSelect_Object_Member_findPersonal(inSession) AS lfSelect
                        )
                        
   SELECT 
@@ -113,10 +109,8 @@ BEGIN
 
 END;
 $BODY$
-
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_Protocol (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
@@ -127,5 +121,4 @@ ALTER FUNCTION gpSelect_Protocol (TDateTime, TDateTime, Integer, Integer, Intege
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpReport_Fuel (inStartDate:= '01.01.2013', inEndDate:= '01.02.2013', inFuelId:= null, inCarId:= null, inSession:= '2'); 
-                                                                
+-- SELECT * FROM gpSelect_Protocol (inStartDate:= '01.01.2013', inEndDate:= '01.02.2013', inUserId:= null, inObjectDescId:= null, inObjectId:= 1, inSession:= '2'); 

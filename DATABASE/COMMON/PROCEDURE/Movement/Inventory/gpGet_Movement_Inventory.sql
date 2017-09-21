@@ -120,4 +120,4 @@ ALTER FUNCTION gpGet_Movement_Inventory (Integer, TDateTime, TVarChar) OWNER TO 
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_Inventory (inMovementId:= 1, inSession:= '2')
+-- SELECT * FROM gpGet_Movement_Inventory (inMovementId:= 1, inOperDate:= NULL, inSession:= '2')

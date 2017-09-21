@@ -2,9 +2,8 @@ inherited InventoryForm: TInventoryForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103'>'
   ClientHeight = 668
   ClientWidth = 1020
-  ExplicitLeft = 6
   ExplicitWidth = 1036
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -441,8 +440,17 @@ inherited InventoryForm: TInventoryForm
     Top = 552
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 40
-    Top = 640
+    Components = <
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
+    Left = 32
+    Top = 216
   end
   inherited ActionList: TActionList
     Left = 55
@@ -1218,93 +1226,18 @@ inherited InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'isGoodsGroupIn'
         Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = 'False'
+        Component = cbisGoodsGroupIn
         DataType = ftBoolean
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
+        Name = 'isGoodsGroupExc'
+        Value = 0.000000000000000000
+        Component = cbisGoodsGroupExc
+        DataType = ftBoolean
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
@@ -1452,13 +1385,7 @@ inherited InventoryForm: TInventoryForm
         Control = edInvNumber
       end
       item
-      end
-      item
-      end
-      item
         Control = edOperDate
-      end
-      item
       end
       item
         Control = edFrom
@@ -1474,16 +1401,6 @@ inherited InventoryForm: TInventoryForm
       end
       item
         Control = edGoodsGroup
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
       end
       item
       end>

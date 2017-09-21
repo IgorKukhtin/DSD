@@ -115,7 +115,7 @@ end if;*/
      END IF;
 
      -- проверка - Количество вложение
-     IF vbMovementDescId = zc_Movement_Sale() AND inSession = '5'
+     IF vbMovementDescId = zc_Movement_Sale() -- AND inSession = '5'
      THEN
          WITH -- GoodsProperty
               tmpGoodsProperty AS (SELECT zfCalc_GoodsPropertyId ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())

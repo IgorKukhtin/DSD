@@ -32,12 +32,10 @@ BEGIN
   THEN
 
   RETURN QUERY 
-   WITH tmpPersonal AS (SELECT View_Personal.MemberId
-                             , MAX (View_Personal.UnitId) AS UnitId
-                             , MAX (View_Personal.PositionId) AS PositionId
-                        FROM Object_Personal_View AS View_Personal
-                        WHERE View_Personal.isErased = FALSE
-                        GROUP BY View_Personal.MemberId
+   WITH tmpPersonal AS (SELECT lfSelect.MemberId
+                             , lfSelect.UnitId
+                             , lfSelect.PositionId
+                        FROM lfSelect_Object_Member_findPersonal(inSession) AS lfSelect
                        )
   -- real-1
   SELECT 
