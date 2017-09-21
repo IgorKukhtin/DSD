@@ -3,7 +3,7 @@ inherited InventoryForm: TInventoryForm
   ClientHeight = 668
   ClientWidth = 1020
   ExplicitWidth = 1036
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -455,10 +455,24 @@ inherited InventoryForm: TInventoryForm
   inherited ActionList: TActionList
     Left = 55
     Top = 303
+    object actRefreshGet: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spInsertUpdateMovement
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMovement
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
+    end
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
-    object actPrint1: TdsdPrintAction [7]
+    object actPrint1: TdsdPrintAction [8]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <
@@ -537,7 +551,7 @@ inherited InventoryForm: TInventoryForm
         item
         end>
     end
-    object actStorageChoice: TOpenChoiceForm [14]
+    object actStorageChoice: TOpenChoiceForm [15]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -564,7 +578,7 @@ inherited InventoryForm: TInventoryForm
         end>
       isShowModal = True
     end
-    object actAssetChoice: TOpenChoiceForm [15]
+    object actAssetChoice: TOpenChoiceForm [16]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -591,7 +605,7 @@ inherited InventoryForm: TInventoryForm
         end>
       isShowModal = True
     end
-    object actInsertUpdateMIAmount: TdsdExecStoredProc [16]
+    object actInsertUpdateMIAmount: TdsdExecStoredProc [17]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -611,7 +625,7 @@ inherited InventoryForm: TInventoryForm
         #1085#1072' '#1076#1072#1090#1091'?'
       InfoAfterExecute = '<'#1050#1086#1083'-'#1074#1086'> '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1086#1089#1090#1072#1090#1082#1091' '#1085#1072' '#1076#1072#1090#1091' '#1079#1072#1087#1086#1083#1085#1077#1085#1086' '#1091#1089#1087#1077#1096#1085#1086'.'
     end
-    object actUnitChoice: TOpenChoiceForm [17]
+    object actUnitChoice: TOpenChoiceForm [18]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -638,7 +652,7 @@ inherited InventoryForm: TInventoryForm
         end>
       isShowModal = True
     end
-    object actGoodsKindChoice: TOpenChoiceForm [18]
+    object actGoodsKindChoice: TOpenChoiceForm [19]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1118,6 +1132,22 @@ inherited InventoryForm: TInventoryForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isGoodsGroupIn'
+        Value = Null
+        Component = cbisGoodsGroupIn
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isGoodsGroupExc'
+        Value = Null
+        Component = cbisGoodsGroupExc
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 280
     Top = 552
@@ -1230,7 +1260,6 @@ inherited InventoryForm: TInventoryForm
         Value = 0.000000000000000000
         Component = cbisGoodsGroupIn
         DataType = ftBoolean
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -1238,7 +1267,6 @@ inherited InventoryForm: TInventoryForm
         Value = 0.000000000000000000
         Component = cbisGoodsGroupExc
         DataType = ftBoolean
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -1414,8 +1442,8 @@ inherited InventoryForm: TInventoryForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Inventory_SetErased'
-    Left = 718
-    Top = 512
+    Left = 598
+    Top = 480
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Inventory_SetUnErased'
@@ -1912,5 +1940,29 @@ inherited InventoryForm: TInventoryForm
       end>
     Left = 376
     Top = 56
+  end
+  object HeaderChanger: THeaderChanger
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    ChangerList = <
+      item
+        Control = cbisGoodsGroupExc
+      end
+      item
+        Control = cbisGoodsGroupIn
+      end
+      item
+      end
+      item
+      end
+      item
+      end
+      item
+      end
+      item
+      end>
+    Action = actRefreshGet
+    Left = 736
+    Top = 333
   end
 end
