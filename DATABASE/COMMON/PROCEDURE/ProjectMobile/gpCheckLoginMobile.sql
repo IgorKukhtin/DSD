@@ -30,8 +30,19 @@ BEGIN
     -- Проверка
     IF NOT FOUND
     THEN
-       outMessage:= 'Неправильный логин или пароль';
-       -- RAISE EXCEPTION 'Неправильный логин или пароль';
+        outMessage:= 'Неправильный логин или пароль';
+
+    ELSIF NOT EXISTS (SELECT ObjectLink_UserRole_Role.ChildObjectId
+                      FROM ObjectLink AS ObjectLink_UserRole_User
+                           JOIN ObjectLink AS ObjectLink_UserRole_Role
+                                           ON ObjectLink_UserRole_Role.ObjectId = ObjectLink_UserRole_User.ObjectId
+                                          AND ObjectLink_UserRole_Role.DescId = zc_ObjectLink_UserRole_Role() 
+                      WHERE ObjectLink_UserRole_User.DescId = zc_ObjectLink_UserRole_User()
+                        AND ObjectLink_UserRole_User.ChildObjectId = vbUserId
+                     )
+    THEN
+        outMessage:= 'Пользователь добавлен некорректно, без роли, обратитесь к администратору';
+
     ELSE
         -- запишем что Пользователь "Подключился"
         PERFORM lpInsert_LoginProtocol (inUserLogin  := inUserLogin
@@ -76,9 +87,12 @@ END;$BODY$
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.
+ 22.09.17                                                       * проверка на наличие ролей
  17.02.17                                        *
 */
 
 -- тест
 -- SELECT * FROM LoginProtocol order by 1 desc
+-- SELECT * FROM gpCheckLoginMobile(inUserLogin:= 'Молдован Е.А.', inUserPassword:= 'mld132578', inSerialNumber:= '', ioSession:= '');
+-- SELECT * FROM gpCheckLoginMobile(inUserLogin:= 'Мурзаева Е.В.', inUserPassword:= 'mrv130879', inSerialNumber:= '', ioSession:= '');
