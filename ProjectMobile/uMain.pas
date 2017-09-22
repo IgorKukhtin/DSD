@@ -4964,33 +4964,35 @@ begin
   for i := 1 to 8 do
    DaysCount[i] := 0;
 
-  with DM.qryPartner do
+  with DM.tblObject_Partner do
   begin
-//or    SQL.Text := BasePartnerQuery + ' GROUP BY P.Id';
-    SQL.Text := BasePartnerQuery + ' GROUP BY Object_Partner.Id';
-    ParamByName('DefaultPriceList').AsInteger := DM.tblObject_ConstPriceListId_def.AsInteger;
+    Filter := 'isErased = 0';
+    Filtered := True;
     Open;
 
     First;
-    while not EOF do
+    while not Eof do
     begin
-      Schedule := FieldbyName('Schedule').AsString;
+      Schedule := FieldByName('Schedule').AsString;
       if Schedule.Length <> 13 then
       begin
         ShowMessage('Ошибка в структуре поля Schedule');
-        exit;
+        Exit;
       end
       else
       begin
         for i := 1 to 7 do
           if Schedule[2 * i - 2 + Low(string)] = 't' then
-            inc(DaysCount[i]);
+            Inc(DaysCount[i]);
       end;
-      inc(DaysCount[8]);
+      Inc(DaysCount[8]);
 
       Next;
     end;
+
     Close;
+    Filtered := False;
+    Filter := '';
   end;
 
   Num := 1;
@@ -5128,7 +5130,17 @@ end;
 procedure TfrmMain.ShowPartners(Day : integer; Caption : string);
 var
   sQuery, CurGPSN, CurGPSE : string;
+  I: Integer;
+  lDay: TLabel;
 begin
+  for I := 0 to Pred(ComponentCount) do
+    if (Components[I] is TLabel) then
+    begin
+      lDay := Components[I] as TLabel;
+      if (lDay.Tag = Day) and (lDay.Text = '0') then
+        Exit;
+    end;
+
   ClearListSearch(lwPartner);
 
   GetCurrentCoordinates;
