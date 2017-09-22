@@ -177,6 +177,14 @@ inherited OrderExternalForm: TOrderExternalForm
             Options.Editing = False
             Width = 92
           end
+          object CommonCode: TcxGridDBColumn
+            Caption = #1082#1086#1076' '#1052#1086#1088#1080#1086#1085
+            DataBinding.FieldName = 'CommonCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object Calc_Color: TcxGridDBColumn
             DataBinding.FieldName = 'Calc_Color'
             Visible = False
@@ -679,8 +687,8 @@ inherited OrderExternalForm: TOrderExternalForm
     Top = 248
   end
   inherited BarManager: TdxBarManager
-    Left = 80
-    Top = 207
+    Left = 88
+    Top = 223
     DockControlHeights = (
       0
       0
@@ -1491,8 +1499,8 @@ inherited OrderExternalForm: TOrderExternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 80
-    Top = 160
+    Left = 8
+    Top = 248
   end
   object spSelectExport: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_OrderExternal_Export'
