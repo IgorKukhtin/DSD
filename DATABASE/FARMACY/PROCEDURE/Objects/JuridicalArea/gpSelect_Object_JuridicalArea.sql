@@ -32,16 +32,16 @@ $BODY$BEGIN
            , Object_JuridicalArea.isErased AS isErased
            
        FROM Object AS Object_JuridicalArea
-           INNER JOIN ObjectLink AS ObjectLink_JuridicalArea_Juridical
-                                ON ObjectLink_JuridicalArea_Juridical.ObjectId = Object_JuridicalArea.Id 
-                               AND ObjectLink_JuridicalArea_Juridical.DescId = zc_ObjectLink_JuridicalArea_Juridical()
-                               AND (ObjectLink_JuridicalArea_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
-           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_JuridicalArea_Juridical.ChildObjectId       
-           
-           LEFT JOIN ObjectLink AS ObjectLink_JuridicalArea_Area
-                                ON ObjectLink_JuridicalArea_Area.ObjectId = Object_JuridicalArea.Id 
-                               AND ObjectLink_JuridicalArea_Area.DescId = zc_ObjectLink_JuridicalArea_Area()
-           LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_JuridicalArea_Area.ChildObjectId                     
+            INNER JOIN ObjectLink AS ObjectLink_JuridicalArea_Juridical
+                                  ON ObjectLink_JuridicalArea_Juridical.ObjectId = Object_JuridicalArea.Id 
+                                 AND ObjectLink_JuridicalArea_Juridical.DescId = zc_ObjectLink_JuridicalArea_Juridical()
+                                 AND (ObjectLink_JuridicalArea_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_JuridicalArea_Juridical.ChildObjectId       
+            
+            LEFT JOIN ObjectLink AS ObjectLink_JuridicalArea_Area
+                                 ON ObjectLink_JuridicalArea_Area.ObjectId = Object_JuridicalArea.Id 
+                                AND ObjectLink_JuridicalArea_Area.DescId = zc_ObjectLink_JuridicalArea_Area()
+            LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_JuridicalArea_Area.ChildObjectId                     
 
      WHERE Object_JuridicalArea.DescId = zc_Object_JuridicalArea()
          ;
