@@ -37,6 +37,8 @@ type
     edCode: TcxCurrencyEdit;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    cxLabel5: TcxLabel;
+    edEmail: TcxTextEdit;
   private
     { Private declarations }
   public
