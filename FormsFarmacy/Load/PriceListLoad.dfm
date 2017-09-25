@@ -4,7 +4,7 @@ inherited PriceListLoadForm: TPriceListLoadForm
   ClientWidth = 788
   AddOnFormData.Params = FormParams
   ExplicitWidth = 804
-  ExplicitHeight = 438
+  ExplicitHeight = 437
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -45,6 +45,14 @@ inherited PriceListLoadForm: TPriceListLoadForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 116
+          end
+          object AreaName: TcxGridDBColumn
+            Caption = #1056#1077#1075#1080#1086#1085
+            DataBinding.FieldName = 'AreaName'
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1077#1075#1080#1086#1085' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            Options.Editing = False
+            Width = 71
           end
           object JuridicalName: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082

@@ -7,7 +7,11 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_LoadPriceList(
     IN inMovementId        Integer  , -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, OperDate TDateTime, JuridicalId Integer, JuridicalName TVarChar, ContractId Integer)
+RETURNS TABLE (Id Integer, OperDate TDateTime
+             , JuridicalId Integer, JuridicalName TVarChar
+             , ContractId Integer
+             , AreaId Integer, AreaName TVarChar
+             )
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -24,9 +28,20 @@ BEGIN
            , Object_Juridical.Id         AS JuridicalId
            , Object_Juridical.ValueData  AS JuridicalName
            , LoadPriceList.ContractId
+           , Object_Area.Id              AS AreaId
+           , Object_Area.ValueData       AS AreaName
        FROM LoadPriceList
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = LoadPriceList.JuridicalId
-       WHERE LoadPriceList.Id =  inMovementId;
+
+            LEFT JOIN ObjectLink AS ObjectLink_JuridicalArea_Juridical
+                                 ON ObjectLink_JuridicalArea_Juridical.ChildObjectId = Object_Juridical.Id 
+                                AND ObjectLink_JuridicalArea_Juridical.DescId = zc_ObjectLink_JuridicalArea_Juridical()
+            LEFT JOIN ObjectLink AS ObjectLink_JuridicalArea_Area
+                                 ON ObjectLink_JuridicalArea_Area.ObjectId = ObjectLink_JuridicalArea_Juridical.ObjectId
+                                AND ObjectLink_JuridicalArea_Area.DescId = zc_ObjectLink_JuridicalArea_Area()
+            LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_JuridicalArea_Area.ChildObjectId 
+            
+       WHERE LoadPriceList.Id = inMovementId;
 
 END;
 $BODY$
@@ -37,6 +52,7 @@ ALTER FUNCTION gpGet_Movement_LoadPriceList (Integer, TVarChar) OWNER TO postgre
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.09.17         *
  26.08.16         * add ContractId
  01.07.14                                                        *
 */

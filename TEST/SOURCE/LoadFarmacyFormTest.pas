@@ -481,12 +481,12 @@ end;
 procedure TLoadFormTest.LoadLoadFormTest;
 begin
 //exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListLoadForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListLoadForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItemsLoadForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListItemsLoadForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementLoadForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovenentLoadForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemsLoadForm'));
@@ -500,10 +500,11 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TColorForm'));
   TdsdFormStorageFactory.GetStorage.Load('TColorForm');
-  }
+
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsBarCodeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsBarCodeForm');
+  }
 end;
 
 procedure TLoadFormTest.LoadLossDebtFormTest;

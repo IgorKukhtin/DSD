@@ -39,6 +39,7 @@ type
     spGetMovement: TdsdStoredProc;
     actGetMovement: TdsdExecStoredProc;
     bbGetMovement: TdxBarButton;
+    AreaName: TcxGridDBColumn;
   private
     { Private declarations }
   public

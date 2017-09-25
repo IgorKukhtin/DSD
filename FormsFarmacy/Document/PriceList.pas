@@ -59,6 +59,9 @@ type
     actUpdatePrice: TdsdExecStoredProc;
     bb: TdxBarButton;
     edPercent1: TcxCurrencyEdit;
+    cxLabel5: TcxLabel;
+    edArea: TcxButtonEdit;
+    GuidesArea: TdsdGuides;
   private
     { Private declarations }
   public
