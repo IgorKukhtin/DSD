@@ -535,7 +535,9 @@ uses
   User in '..\..\FormsFarmacy\Guides\User.pas' {UserForm: TParentForm},
   UserEdit in '..\..\FormsFarmacy\Guides\UserEdit.pas' {UserEditForm: TParentForm},
   Area in '..\..\FormsFarmacy\Guides\Area.pas' {AreaForm: TParentForm},
-  AreaEdit in '..\..\FormsFarmacy\Guides\AreaEdit.pas' {AreaEditForm: TParentForm};
+  AreaEdit in '..\..\FormsFarmacy\Guides\AreaEdit.pas' {AreaEditForm: TParentForm},
+  JuridicalAreaEdit in '..\..\FormsFarmacy\Guides\JuridicalAreaEdit.pas' {JuridicalAreaEditForm: TParentForm},
+  JuridicalArea in '..\..\FormsFarmacy\Guides\JuridicalArea.pas' {JuridicalAreaForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

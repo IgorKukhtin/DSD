@@ -1689,6 +1689,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_MedicSP_PartnerMedical() RETURNS Intege
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_MedicSP_PartnerMedical', 'Связь с Мед.учрежд.', zc_Object_MedicSP(), zc_Object_PartnerMedical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MedicSP_PartnerMedical');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_JuridicalArea_Juridical() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalArea_Juridical'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_JuridicalArea_Juridical', 'Юридическое лицо', zc_Object_JuridicalArea(), zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalArea_Juridical');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_JuridicalArea_Area() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalArea_Area'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_JuridicalArea_Area', 'Регион', zc_Object_JuridicalArea(), zc_Object_Area() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalArea_Area');
+
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1769,6 +1777,8 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 25.09.17         * zc_ObjectLink_JuridicalArea_Juridical
+                    zc_ObjectLink_JuridicalArea_Area               
  13.07.17         * zc_ObjectLink_Personal_PersonalServiceListCardSecond
  30.06.17         * zc_ObjectLink_Contract_JuridicalInvoice
  19.06.17         * zc_ObjectLink_Partner_PersonalMerch

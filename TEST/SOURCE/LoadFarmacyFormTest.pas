@@ -54,6 +54,7 @@ type
     procedure LoadInventoryFormTest;
     procedure LoadInvoiceFormTest;
     procedure LoadJuridicalFormTest;
+    procedure LoadJuridicalAreaFormTest;
     procedure LoadLoadFormTest;
     procedure LoadLossDebtFormTest;
     procedure LoadLossFormTest;
@@ -208,6 +209,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAreaEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAreaEditForm');
 end;
+
 
 procedure TLoadFormTest.LoadBankStatementFormTest;
 begin
@@ -790,6 +792,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TJuridical_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerCodeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerCodeForm');
+end;
+
+procedure TLoadFormTest.LoadJuridicalAreaFormTest;
+begin
+  // Регионы поставщиков
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalAreaForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJuridicalAreaForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalAreaEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJuridicalAreaEditForm');
 end;
 
 procedure TLoadFormTest.LoadImportTypeFormTest;
