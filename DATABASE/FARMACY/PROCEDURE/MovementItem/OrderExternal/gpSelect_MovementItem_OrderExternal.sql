@@ -18,13 +18,21 @@ RETURNS TABLE (Id Integer
               )
 AS
 $BODY$
-  DECLARE vbUserId Integer;
+  DECLARE vbUserId    Integer;
+  DECLARE vbPartnerId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_OrderExternal());
      vbUserId := inSession;
-
+     
+     --Код Мориона нужен только для Венты
+     vbPartnerId := (SELECT MovementLinkObject_From.ObjectId
+                     FROM MovementLinkObject AS MovementLinkObject_From
+                     WHERE MovementLinkObject_From.MovementId = inMovementId
+                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                    );
+           
      RETURN QUERY
        SELECT
              tmpMI.Id            AS Id
@@ -79,10 +87,11 @@ BEGIN
 
                 LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
                                          ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
-
                                         AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()  
+                                        
                 LEFT JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsmainId = ObjectLink_Main.ChildObjectId
                                                AND Object_LinkGoods_View.ObjectId = zc_Enum_GlobalConst_Marion()
+                                               AND vbPartnerId = 59612 -- Вента
 ;
 
 END;
@@ -94,6 +103,7 @@ ALTER FUNCTION gpSelect_MovementItem_OrderExternal (Integer, Boolean, Boolean, T
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.09.17         *
  06.04.17         * add isSp
  12.12.14                         *
  06.11.14                         *
