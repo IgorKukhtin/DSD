@@ -27,8 +27,6 @@ object JuridicalAreaForm: TJuridicalAreaForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 598
-    ExplicitHeight = 256
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -81,6 +79,13 @@ object JuridicalAreaForm: TJuridicalAreaForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 53
+      end
+      object EMail: TcxGridDBColumn
+        Caption = 'E-Mail'
+        DataBinding.FieldName = 'EMail'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 150
       end
       object Name: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077

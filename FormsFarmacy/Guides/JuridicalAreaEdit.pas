@@ -36,6 +36,8 @@ type
     cxLabel2: TcxLabel;
     edArea: TcxButtonEdit;
     GuidesArea: TdsdGuides;
+    cxLabel5: TcxLabel;
+    edEmail: TcxTextEdit;
   private
     { Private declarations }
   public

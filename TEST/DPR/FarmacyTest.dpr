@@ -100,7 +100,6 @@ uses
   JuridicalTest in '..\SOURCE\Objects\All\Farmacy\JuridicalTest.pas',
   CommonObjectHistoryProcedureTest in '..\SOURCE\ObjectHistory\CommonObjectHistoryProcedureTest.pas',
   MovementItemsLoad in '..\..\FormsFarmacy\Load\MovementItemsLoad.pas' {MovementItemsLoadForm: TParentForm},
-  ImportGroup in '..\..\Forms\Import\ImportGroup.pas' {ImportGroupForm: TParentForm},
   FileTypeKind in '..\..\Forms\Kind\FileTypeKind.pas' {FileTypeKindForm: TParentForm},
   PriceListItemsLoad in '..\..\FormsFarmacy\Load\PriceListItemsLoad.pas' {PriceListItemsLoadForm: TParentForm},
   PriceListLoad in '..\..\FormsFarmacy\Load\PriceListLoad.pas' {PriceListLoadForm: TParentForm},
@@ -537,7 +536,8 @@ uses
   Area in '..\..\FormsFarmacy\Guides\Area.pas' {AreaForm: TParentForm},
   AreaEdit in '..\..\FormsFarmacy\Guides\AreaEdit.pas' {AreaEditForm: TParentForm},
   JuridicalAreaEdit in '..\..\FormsFarmacy\Guides\JuridicalAreaEdit.pas' {JuridicalAreaEditForm: TParentForm},
-  JuridicalArea in '..\..\FormsFarmacy\Guides\JuridicalArea.pas' {JuridicalAreaForm: TParentForm};
+  JuridicalArea in '..\..\FormsFarmacy\Guides\JuridicalArea.pas' {JuridicalAreaForm: TParentForm},
+  ImportGroup in '..\..\FormsFarmacy\Import\ImportGroup.pas' {ImportGroupForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_JuridicalArea(
 RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar 
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , AreaId Integer, AreaCode Integer, AreaName TVarChar
+             , Email TVarChar
              , isErased boolean
              ) AS
 $BODY$
@@ -33,6 +34,8 @@ BEGIN
            , CAST (0 as Integer)    AS AreaCode
            , CAST ('' as TVarChar)  AS AreaName
 
+           ,  CAST ('' as TVarChar) AS Email
+
            , CAST (NULL AS Boolean) AS isErased
 
        FROM Object AS Object_JuridicalArea
@@ -51,8 +54,10 @@ BEGIN
            , Object_Area.Id                   AS AreaId
            , Object_Area.ObjectCode           AS AreaCode
            , Object_Area.ValueData            AS AreaName
+           
+           , ObjectString_JuridicalArea_Email.ValueData  AS Email
 
-           , Object_JuridicalArea.isErased AS isErased
+           , Object_JuridicalArea.isErased    AS isErased
            
        FROM Object AS Object_JuridicalArea
        
@@ -65,7 +70,11 @@ BEGIN
                                 ON ObjectLink_JuridicalArea_Area.ObjectId = Object_JuridicalArea.Id 
                                AND ObjectLink_JuridicalArea_Area.DescId = zc_ObjectLink_JuridicalArea_Area()
            LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_JuridicalArea_Area.ChildObjectId        
-
+   
+           LEFT JOIN ObjectString AS ObjectString_JuridicalArea_Email
+                                  ON ObjectString_JuridicalArea_Email.ObjectId = Object_JuridicalArea.Id 
+                                 AND ObjectString_JuridicalArea_Email.DescId = zc_ObjectString_JuridicalArea_Email()
+                                 
        WHERE Object_JuridicalArea.Id = inId;
       
    END IF;

@@ -312,10 +312,6 @@
 				<Form>MovementItemsLoadForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Import\ImportGroup.pas">
-				<Form>ImportGroupForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Kind\FileTypeKind.pas">
 				<Form>FileTypeKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1775,6 +1771,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalArea.pas">
 				<Form>JuridicalAreaForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Import\ImportGroup.pas">
+				<Form>ImportGroupForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

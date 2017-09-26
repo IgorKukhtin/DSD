@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1053#1086#1074#1099#1081' '#1056#1077#1075#1080#1086#1085' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
-  ClientHeight = 248
+  ClientHeight = 293
   ClientWidth = 344
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,18 +18,18 @@
   TextHeight = 13
   object edName: TcxTextEdit
     Left = 17
-    Top = 171
+    Top = 219
     TabOrder = 0
     Width = 296
   end
   object cxLabel1: TcxLabel
     Left = 17
-    Top = 151
+    Top = 199
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 51
-    Top = 209
+    Top = 260
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 201
-    Top = 209
+    Top = 260
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -91,6 +91,17 @@
         Kind = bkEllipsis
       end>
     TabOrder = 9
+    Width = 296
+  end
+  object cxLabel5: TcxLabel
+    Left = 17
+    Top = 151
+    Caption = 'E-mail'
+  end
+  object edEmail: TcxTextEdit
+    Left = 17
+    Top = 171
+    TabOrder = 11
     Width = 296
   end
   object ActionList: TActionList
@@ -147,14 +158,6 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inComment'
-        Value = ''
-        Component = edName
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inJuridicalId'
         Value = ''
         Component = GuidesJuridical
@@ -167,6 +170,22 @@
         Value = Null
         Component = GuidesArea
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = ''
+        Component = edName
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEmail'
+        Value = Null
+        Component = edEmail
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -238,6 +257,13 @@
         Value = Null
         Component = GuidesArea
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Email'
+        Value = Null
+        Component = edEmail
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -319,7 +345,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 137
-    Top = 127
+    Left = 145
+    Top = 115
   end
 end
