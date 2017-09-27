@@ -12,8 +12,18 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, cxButtonEdit, cxSplitter, Vcl.StdActns, cxDropDownEdit,
   ExternalLoad, cxBlobEdit, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCheckBox, cxContainer, dsdGuides,
-  cxTextEdit, cxMaskEdit, cxLabel;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  cxContainer, cxLabel, cxTextEdit, cxMaskEdit, dsdGuides;
 
 type
   TImportGroupForm = class(TAncestorDBGridForm)
@@ -56,17 +66,9 @@ type
     spRefreshMovementItemLastPriceList_View: TdsdStoredProc;
     actRefreshMovementItemLastPriceList_View: TdsdExecStoredProc;
     macGUILoadPrice: TMultiAction;
-    cxLabel3: TcxLabel;
-    cxGrid2: TcxGrid;
-    cxGridDBTableView2: TcxGridDBTableView;
-    Code: TcxGridDBColumn;
-    JuridicalName: TcxGridDBColumn;
-    AreaName: TcxGridDBColumn;
-    isErased: TcxGridDBColumn;
-    Name: TcxGridDBColumn;
-    cxGridLevel2: TcxGridLevel;
-    edArea: TcxButtonEdit;
     GuidesArea: TdsdGuides;
+    edArea: TcxButtonEdit;
+    cxLabel3: TcxLabel;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
     dxBarControlContainerItem2: TdxBarControlContainerItem;
   private

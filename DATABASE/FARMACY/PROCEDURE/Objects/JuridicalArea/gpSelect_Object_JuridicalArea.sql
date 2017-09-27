@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , AreaId Integer, AreaCode Integer, AreaName TVarChar
              , Email TVarChar
+             , isDefault Boolean
              , isErased boolean
              ) AS
 $BODY$BEGIN
@@ -31,6 +32,7 @@ $BODY$BEGIN
            , Object_Area.ValueData            AS AreaName
 
            , ObjectString_JuridicalArea_Email.ValueData  AS Email
+           , COALESCE (ObjectBoolean_JuridicalArea_Default.ValueData, FALSE)  AS isDefault
            
            , Object_JuridicalArea.isErased AS isErased
            
@@ -46,9 +48,13 @@ $BODY$BEGIN
                                 AND ObjectLink_JuridicalArea_Area.DescId = zc_ObjectLink_JuridicalArea_Area()
             LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_JuridicalArea_Area.ChildObjectId                     
    
-           LEFT JOIN ObjectString AS ObjectString_JuridicalArea_Email
-                                  ON ObjectString_JuridicalArea_Email.ObjectId = Object_JuridicalArea.Id 
-                                 AND ObjectString_JuridicalArea_Email.DescId = zc_ObjectString_JuridicalArea_Email()
+            LEFT JOIN ObjectString AS ObjectString_JuridicalArea_Email
+                                   ON ObjectString_JuridicalArea_Email.ObjectId = Object_JuridicalArea.Id 
+                                  AND ObjectString_JuridicalArea_Email.DescId = zc_ObjectString_JuridicalArea_Email()
+                                 
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_JuridicalArea_Default
+                                    ON ObjectBoolean_JuridicalArea_Default.ObjectId = Object_JuridicalArea.Id
+                                   AND ObjectBoolean_JuridicalArea_Default.DescId = zc_ObjectBoolean_JuridicalArea_Default()
      WHERE Object_JuridicalArea.DescId = zc_Object_JuridicalArea()
          ;
   

@@ -25,8 +25,8 @@ BEGIN
    END IF;
    
    -- проверка прав пользователя на вызов процедуры
-   vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Object_Unit_Params());
-   --vbUserId := lpGetUserBySession (inSession);
+   --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Object_Unit_Params());
+   vbUserId := lpGetUserBySession (inSession);
 
    -- находим предыдущее значение если есть
    vbCreateDate := (SELECT ObjectDate_Create.ValueData

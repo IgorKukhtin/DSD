@@ -37,7 +37,7 @@ object JuridicalAreaForm: TJuridicalAreaForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = Name
+      OptionsBehavior.IncSearchItem = Comment
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -55,21 +55,21 @@ object JuridicalAreaForm: TJuridicalAreaForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 44
+        Width = 34
       end
       object JuridicalName: TcxGridDBColumn
         Caption = #1070#1088'.'#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 240
+        Width = 184
       end
       object AreaName: TcxGridDBColumn
         Caption = #1056#1077#1075#1080#1086#1085
         DataBinding.FieldName = 'AreaName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 158
+        Width = 122
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -80,19 +80,28 @@ object JuridicalAreaForm: TJuridicalAreaForm
         HeaderAlignmentVert = vaCenter
         Width = 53
       end
+      object IsDefault: TcxGridDBColumn
+        Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
+        DataBinding.FieldName = 'isDefault'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
+        Options.Editing = False
+        Width = 38
+      end
       object EMail: TcxGridDBColumn
         Caption = 'E-Mail'
         DataBinding.FieldName = 'EMail'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 150
+        Width = 112
       end
-      object Name: TcxGridDBColumn
+      object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 188
+        Width = 140
       end
     end
     object cxGridLevel: TcxGridLevel

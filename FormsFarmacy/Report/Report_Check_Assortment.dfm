@@ -3,6 +3,7 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
   ClientHeight = 480
   ClientWidth = 1251
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -208
   ExplicitWidth = 1267
   ExplicitHeight = 518
   PixelsPerInch = 96
@@ -392,31 +393,45 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
       Width = 131
     end
     object cxLabel4: TcxLabel
-      Left = 713
+      Left = 687
       Top = 6
       Caption = #1053#1058#1047' '#1076#1083#1103' '#1087#1077#1088#1080#1086#1076#1072
     end
     object cbisMCSAuto: TcxCheckBox
-      Left = 804
+      Left = 778
       Top = 5
       Properties.ReadOnly = False
       TabOrder = 8
       Width = 22
     end
     object cxLabel8: TcxLabel
-      Left = 838
+      Left = 812
       Top = 6
       Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1087#1077#1088#1080#1086#1076#1072
     end
     object ceDays: TcxCurrencyEdit
-      Left = 953
+      Left = 927
       Top = 5
       EditValue = 7.000000000000000000
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####'
       TabOrder = 10
-      Width = 64
+      Width = 31
     end
+  end
+  object cxLabel5: TcxLabel [2]
+    Left = 1028
+    Top = 6
+    Caption = #1050#1086#1083'-'#1074#1086' '#1053#1058#1047
+  end
+  object ceValueMSC: TcxCurrencyEdit [3]
+    Left = 1095
+    Top = 5
+    EditValue = 0.000000000000000000
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 7
+    Width = 31
   end
   inherited ActionList: TActionList
     object actGet_UserUnit: TdsdExecStoredProc
@@ -809,8 +824,8 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 336
-    Top = 88
+    Left = 320
+    Top = 168
   end
   object spGet_UserUnit: TdsdStoredProc
     StoredProcName = 'gpGet_UserUnit'

@@ -66,6 +66,8 @@ type
     macUpdate_Price_MCS_list: TMultiAction;
     macUpdate_Price_MCS: TMultiAction;
     bbUpdate_Price_MCS: TdxBarButton;
+    cxLabel5: TcxLabel;
+    ceValueMSC: TcxCurrencyEdit;
   private
     { Private declarations }
   public

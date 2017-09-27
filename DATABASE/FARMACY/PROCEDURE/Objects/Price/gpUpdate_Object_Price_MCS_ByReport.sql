@@ -171,6 +171,12 @@ BEGIN
         END IF;
     END IF;
 
+        IF (COALESCE(vbMCSNotRecalc,False) <> TRUE)
+        THEN
+          PERFORM lpInsertUpdate_objectBoolean(zc_ObjectBoolean_Price_MCSNotRecalc(), vbPriceId, TRUE);
+          PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_MCSNotRecalcDateChange(), vbPriceId, CURRENT_DATE);
+        END IF;
+        
     -- сохранили историю
     IF (inMCSValue is not null) AND (inMCSValue <> COALESCE(vbMCSValue,0))
        

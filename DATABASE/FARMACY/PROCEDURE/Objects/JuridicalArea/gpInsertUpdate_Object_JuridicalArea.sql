@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalArea (Integer,Integer,TVarChar, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalArea (Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalArea (Integer, Integer, Integer, Integer, TVarChar, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_JuridicalArea(
  INOUT ioId                Integer   ,    -- ключ объекта <>
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_JuridicalArea(
     IN inAreaId            Integer   ,    -- РЕгион
     IN inComment           TVarChar  ,    -- примечание
     IN inEMail             TVarChar  ,    -- E-Mail
+    IN inisDefault         Boolean   ,    -- по умолчанию
     IN inSession           TVarChar       -- сессия пользователя
 )
  RETURNS Integer AS
@@ -37,6 +39,10 @@ BEGIN
    
    -- сохранили E-Mail
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_JuridicalArea_EMail(), ioId, inEMail);
+   
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_JuridicalArea_Default(), ioId, inisDefault);
+   
    
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

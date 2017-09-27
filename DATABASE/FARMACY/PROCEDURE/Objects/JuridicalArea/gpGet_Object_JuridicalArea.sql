@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , AreaId Integer, AreaCode Integer, AreaName TVarChar
              , Email TVarChar
+             , isDefault Boolean
              , isErased boolean
              ) AS
 $BODY$
@@ -34,7 +35,8 @@ BEGIN
            , CAST (0 as Integer)    AS AreaCode
            , CAST ('' as TVarChar)  AS AreaName
 
-           ,  CAST ('' as TVarChar) AS Email
+           , CAST ('' as TVarChar)  AS Email
+           , FALSE     ::Boolean    AS isDefault
 
            , CAST (NULL AS Boolean) AS isErased
 
@@ -56,6 +58,7 @@ BEGIN
            , Object_Area.ValueData            AS AreaName
            
            , ObjectString_JuridicalArea_Email.ValueData  AS Email
+           , COALESCE (ObjectBoolean_JuridicalArea_Default.ValueData, FALSE)  AS isDefault
 
            , Object_JuridicalArea.isErased    AS isErased
            
@@ -74,7 +77,11 @@ BEGIN
            LEFT JOIN ObjectString AS ObjectString_JuridicalArea_Email
                                   ON ObjectString_JuridicalArea_Email.ObjectId = Object_JuridicalArea.Id 
                                  AND ObjectString_JuridicalArea_Email.DescId = zc_ObjectString_JuridicalArea_Email()
-                                 
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_JuridicalArea_Default
+                                   ON ObjectBoolean_JuridicalArea_Default.ObjectId = Object_JuridicalArea.Id
+                                  AND ObjectBoolean_JuridicalArea_Default.DescId = zc_ObjectBoolean_JuridicalArea_Default()
+                                                                    
        WHERE Object_JuridicalArea.Id = inId;
       
    END IF;
@@ -83,7 +90,6 @@ END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_JuridicalArea(integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

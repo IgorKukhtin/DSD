@@ -59,7 +59,7 @@
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 296
+    Width = 109
   end
   object cxLabel4: TcxLabel
     Left = 17
@@ -103,6 +103,13 @@
     Top = 171
     TabOrder = 11
     Width = 296
+  end
+  object cbisDefault: TcxCheckBox
+    Left = 216
+    Top = 26
+    Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
+    TabOrder = 12
+    Width = 97
   end
   object ActionList: TActionList
     Left = 249
@@ -188,6 +195,14 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDefault'
+        Value = Null
+        Component = cbisDefault
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 321
@@ -266,14 +281,21 @@
         Component = edEmail
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDefault'
+        Value = Null
+        Component = cbisDefault
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 321
     Top = 16
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 185
-    Top = 7
+    Left = 193
+    Top = 47
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <

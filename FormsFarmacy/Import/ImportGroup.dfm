@@ -1,26 +1,26 @@
 inherited ImportGroupForm: TImportGroupForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1080#1084#1087#1086#1088#1090#1072'>'
-  ClientHeight = 315
-  ClientWidth = 608
+  ClientHeight = 345
+  ClientWidth = 605
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 624
-  ExplicitHeight = 353
+  ExplicitWidth = 621
+  ExplicitHeight = 383
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 608
-    Height = 289
-    ExplicitWidth = 608
+    Width = 605
+    Height = 319
+    ExplicitWidth = 583
     ExplicitHeight = 319
-    ClientRectBottom = 289
-    ClientRectRight = 608
+    ClientRectBottom = 319
+    ClientRectRight = 605
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 608
+      ExplicitWidth = 583
       ExplicitHeight = 319
       inherited cxGrid: TcxGrid
         Width = 273
-        Height = 289
+        Height = 319
         Align = alLeft
         ExplicitWidth = 273
         ExplicitHeight = 319
@@ -50,12 +50,12 @@ inherited ImportGroupForm: TImportGroupForm
       object cxGrid1: TcxGrid
         Left = 276
         Top = 0
-        Width = 332
-        Height = 289
+        Width = 329
+        Height = 319
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitHeight = 319
+        ExplicitWidth = 307
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -108,107 +108,31 @@ inherited ImportGroupForm: TImportGroupForm
         Left = 273
         Top = 0
         Width = 3
-        Height = 289
+        Height = 319
         AutoPosition = False
         Control = cxGrid
-        ExplicitHeight = 319
       end
       object cxLabel3: TcxLabel
         Left = 307
         Top = 100
         Caption = #1056#1077#1075#1080#1086#1085':'
       end
-      object cxGrid2: TcxGrid
-        Left = 276
-        Top = 0
-        Width = 332
-        Height = 289
-        Align = alClient
-        TabOrder = 4
-        LookAndFeel.Kind = lfStandard
-        LookAndFeel.NativeStyle = False
-        LookAndFeel.SkinName = ''
-        ExplicitHeight = 319
-        object cxGridDBTableView2: TcxGridDBTableView
-          Navigator.Buttons.CustomButtons = <>
-          DataController.Filter.Options = [fcoCaseInsensitive]
-          DataController.Filter.Active = True
-          DataController.Summary.DefaultGroupSummaryItems = <>
-          DataController.Summary.FooterSummaryItems = <>
-          DataController.Summary.SummaryGroups = <>
-          Images = dmMain.SortImageList
-          OptionsBehavior.IncSearch = True
-          OptionsBehavior.IncSearchItem = Name
-          OptionsCustomize.ColumnHiding = True
-          OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsData.Deleting = False
-          OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
-          OptionsData.Inserting = False
-          OptionsSelection.InvertSelect = False
-          OptionsView.ColumnAutoWidth = True
-          OptionsView.GroupByBox = False
-          OptionsView.HeaderHeight = 40
-          OptionsView.Indicator = True
-          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object Code: TcxGridDBColumn
-            Caption = #1050#1086#1076
-            DataBinding.FieldName = 'Code'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 44
-          end
-          object JuridicalName: TcxGridDBColumn
-            Caption = #1070#1088'.'#1083#1080#1094#1086
-            DataBinding.FieldName = 'JuridicalName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 240
-          end
-          object AreaName: TcxGridDBColumn
-            Caption = #1056#1077#1075#1080#1086#1085
-            DataBinding.FieldName = 'AreaName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 158
-          end
-          object isErased: TcxGridDBColumn
-            Caption = #1059#1076#1072#1083#1077#1085
-            DataBinding.FieldName = 'isErased'
-            PropertiesClassName = 'TcxCheckBoxProperties'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 53
-          end
-          object Name: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-            DataBinding.FieldName = 'Comment'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 188
-          end
-        end
-        object cxGridLevel2: TcxGridLevel
-          GridView = cxGridDBTableView2
-        end
-      end
-      object edArea: TcxButtonEdit
-        Left = 339
-        Top = 99
-        Properties.Buttons = <
-          item
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.Nullstring = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
-        Properties.ReadOnly = True
-        Properties.UseNullString = True
-        TabOrder = 5
-        Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1088#1077#1075#1080#1086#1085'>'
-        Width = 234
-      end
     end
+  end
+  object edArea: TcxButtonEdit [1]
+    Left = 315
+    Top = 155
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.Nullstring = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
+    Properties.ReadOnly = True
+    Properties.UseNullString = True
+    TabOrder = 5
+    Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1088#1077#1075#1080#1086#1085'>'
+    Width = 234
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 67
@@ -226,8 +150,6 @@ inherited ImportGroupForm: TImportGroupForm
         Properties.Strings = (
           'Width')
       end>
-    Left = 40
-    Top = 248
   end
   inherited ActionList: TActionList
     inherited actRefresh: TdsdDataSetRefresh
@@ -765,6 +687,6 @@ inherited ImportGroupForm: TImportGroupForm
         MultiSelectSeparator = ','
       end>
     Left = 528
-    Top = 112
+    Top = 120
   end
 end
