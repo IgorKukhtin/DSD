@@ -1,29 +1,29 @@
 inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
   Caption = #1040#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090' '#1089#1077#1090#1080
-  ClientHeight = 480
+  ClientHeight = 477
   ClientWidth = 1251
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -208
+  ExplicitLeft = -250
   ExplicitWidth = 1267
-  ExplicitHeight = 518
+  ExplicitHeight = 515
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
     Width = 1251
-    Height = 421
+    Height = 418
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 1251
     ExplicitHeight = 421
-    ClientRectBottom = 421
+    ClientRectBottom = 418
     ClientRectRight = 1251
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1251
       ExplicitHeight = 421
       inherited cxGrid: TcxGrid
         Width = 1251
-        Height = 421
+        Height = 418
         ExplicitWidth = 1251
         ExplicitHeight = 421
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -386,31 +386,31 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
       Width = 188
     end
     object cbList: TcxCheckBox
-      Left = 526
+      Left = 521
       Top = 5
       Action = actRefreshList
       TabOrder = 6
-      Width = 131
+      Width = 129
     end
     object cxLabel4: TcxLabel
-      Left = 687
+      Left = 662
       Top = 6
       Caption = #1053#1058#1047' '#1076#1083#1103' '#1087#1077#1088#1080#1086#1076#1072
     end
     object cbisMCSAuto: TcxCheckBox
-      Left = 778
+      Left = 753
       Top = 5
       Properties.ReadOnly = False
       TabOrder = 8
       Width = 22
     end
     object cxLabel8: TcxLabel
-      Left = 812
+      Left = 787
       Top = 6
       Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1087#1077#1088#1080#1086#1076#1072
     end
     object ceDays: TcxCurrencyEdit
-      Left = 927
+      Left = 899
       Top = 5
       EditValue = 7.000000000000000000
       Properties.DecimalPlaces = 4
@@ -418,20 +418,20 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
       TabOrder = 10
       Width = 31
     end
+    object ceMCSValue: TcxCurrencyEdit
+      Left = 1025
+      Top = 5
+      EditValue = 0.000000000000000000
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      TabOrder = 11
+      Width = 27
+    end
   end
   object cxLabel5: TcxLabel [2]
-    Left = 1028
+    Left = 962
     Top = 6
     Caption = #1050#1086#1083'-'#1074#1086' '#1053#1058#1047
-  end
-  object ceValueMSC: TcxCurrencyEdit [3]
-    Left = 1095
-    Top = 5
-    EditValue = 0.000000000000000000
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    TabOrder = 7
-    Width = 31
   end
   inherited ActionList: TActionList
     object actGet_UserUnit: TdsdExecStoredProc
@@ -611,6 +611,43 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
     end
+    object actInsert_MCS: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_MCS_byReport
+      StoredProcList = <
+        item
+          StoredProc = spInsert_MCS_byReport
+        end>
+      Caption = 'actInsert_MCS'
+      ImageIndex = 74
+    end
+    object macInsert_MCS_List: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsert_MCS
+        end>
+      View = cxGridDBTableView
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1053#1058#1047' '#1074' '#1090#1072#1073#1083#1080#1094#1091
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1053#1058#1047' '#1074' '#1090#1072#1073#1083#1080#1094#1091
+      ImageIndex = 74
+    end
+    object macInsert_MCS: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macInsert_MCS_List
+        end>
+      QuestionBeforeExecute = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1053#1058#1047' '#1074' '#1090#1072#1073#1083#1080#1094#1091'?'
+      InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1077' '#1053#1058#1047' '#1087#1077#1088#1077#1085#1077#1089#1077#1085#1086' '#1074' '#1090#1072#1073#1083#1080#1094#1091
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1053#1058#1047' '#1074' '#1090#1072#1073#1083#1080#1094#1091
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1053#1058#1047' '#1074' '#1090#1072#1073#1083#1080#1094#1091
+      ImageIndex = 74
+    end
     object actUpdate_Price_MCS: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -727,6 +764,14 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
         end
         item
           Visible = True
+          ItemName = 'bbInsert_MCS'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdate_Price_MCS'
         end
         item
@@ -765,6 +810,10 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
       Action = macUpdate_Price_MCS
       Category = 0
     end
+    object bbInsert_MCS: TdxBarButton
+      Action = macInsert_MCS
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 496
@@ -784,8 +833,8 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
       end
       item
       end>
-    Left = 432
-    Top = 216
+    Left = 464
+    Top = 208
   end
   object rdUnit: TRefreshDispatcher
     IdParam.Value = Null
@@ -900,5 +949,39 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
     PackSize = 1
     Left = 296
     Top = 328
+  end
+  object spInsert_MCS_byReport: TdsdStoredProc
+    StoredProcName = 'gpInsert_MCS_byReport'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMCSValue'
+        Value = 7.000000000000000000
+        Component = ceMCSValue
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMCSValue'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MCS_Value'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 408
+    Top = 336
+  end
+  object HeaderChanger: THeaderChanger
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    ChangerList = <
+      item
+      end>
+    Left = 704
+    Top = 200
   end
 end
