@@ -27,11 +27,10 @@ RETURNS TABLE (UnitId                 Integer
              , JuridicalName          TVarChar
              , RetailId_Juridical     Integer
              , RetailName_Juridical   TVarChar
+             , isCorporate_Juridical  Boolean
              , AreaId_Juridical       Integer
              , AreaName_Juridical     TVarChar
-             , isCorporate_Juridical  Boolean
              , isDefault_JuridicalArea Boolean
-             
 ) AS     
 $BODY$   
 BEGIN    
@@ -52,7 +51,6 @@ BEGIN
                      , COALESCE (Object_UserManager.Id, 0)                  AS UserManagerId
                      , Object_UserManager.ValueData                         AS UserManagerName
                      , Object_Juridical.ValueData                           AS JuridicalName
-                     --, ObjectBoolean_isLeaf.ValueData                       AS isLeaf
                      , Object_Unit.isErased                                 AS isErased
                      , Object_Area.Id                                       AS AreaId
                      , Object_Area.ValueData                                AS AreaName
@@ -99,11 +97,31 @@ BEGIN
                        LEFT JOIN ObjectDate AS ObjectDate_Close
                                             ON ObjectDate_Close.ObjectId = Object_Unit.Id
                                            AND ObjectDate_Close.DescId = zc_ObjectDate_Unit_Close()
-                                           
                 WHERE Object_Unit.DescId = zc_Object_Unit()
                   AND (inisShowAll = True OR Object_Unit.isErased = False)
                 )
-                
+             
+                                    
+  , tmpJuridical AS (SELECT Object_Juridical.Id                 AS Id
+                          , Object_Juridical.ObjectCode         AS Code
+                          , Object_Juridical.ValueData          AS Name
+                          , Object_Retail.Id                    AS RetailId
+                          , Object_Retail.ValueData             AS RetailName 
+                          , ObjectBoolean_isCorporate.ValueData AS isCorporate
+                      FROM Object AS Object_Juridical
+                          LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                               ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
+                                              AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+               
+                          LEFT JOIN ObjectBoolean AS ObjectBoolean_isCorporate 
+                                                  ON ObjectBoolean_isCorporate.ObjectId = Object_Juridical.Id
+                                                 AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
+                      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+                        AND Object_Juridical.isErased = FALSE
+                        AND COALESCE (ObjectBoolean_isCorporate.ValueData, FALSE) = FALSE
+                     )
+                        
   , tmpJuridicalArea AS (SELECT ObjectLink_JuridicalArea_Juridical.ChildObjectId                 AS JuridicalId
                               , ObjectLink_JuridicalArea_Area.ChildObjectId                      AS AreaId
                               , Object_Area.ValueData                                            AS AreaName
@@ -125,78 +143,66 @@ BEGIN
                          WHERE Object_JuridicalArea.DescId = zc_Object_JuridicalArea()
                            AND Object_JuridicalArea.isErased = FALSE
                          )    
-                                  
-  , tmpJuridical_All AS (SELECT Object_Juridical.Id                 AS Id
-                          , Object_Juridical.ObjectCode         AS Code
-                          , Object_Juridical.ValueData          AS Name
-                          , Object_Retail.Id                    AS RetailId
-                          , Object_Retail.ValueData             AS RetailName 
-                          , ObjectBoolean_isCorporate.ValueData AS isCorporate
-                      FROM Object AS Object_Juridical
-                          LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                               ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
-                                              AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
-               
-                          LEFT JOIN ObjectBoolean AS ObjectBoolean_isCorporate 
-                                                  ON ObjectBoolean_isCorporate.ObjectId = Object_Juridical.Id
-                                                 AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
-                      WHERE Object_Juridical.DescId = zc_Object_Juridical()
-                        AND Object_Juridical.isErased = FALSE
-                        AND COALESCE (ObjectBoolean_isCorporate.ValueData, FALSE) = FALSE
-                     )
-  , tmpJuridical AS (SELECT tmpJuridical_All.*
-                          , tmpJuridicalArea.AreaId             AS AreaId
-                          , tmpJuridicalArea.AreaName           AS AreaName
-                          , tmpDefault.AreaId                   AS AreaId_Default
-                          , tmpDefault.AreaName                 AS AreaName_Default
-                          , COALESCE (tmpJuridicalArea.isDefault, FALSE)  AS isDefault
-                     FROM tmpJuridical_All
-                          LEFT JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = tmpJuridical_All.Id
-                          
-                          LEFT JOIN (SELECT tmpJuridical_All.Id
-                                          , tmpDefault.AreaId    
-                                          , tmpDefault.AreaName     
-                                          , TRUE  AS isDefault
-                                     FROM tmpJuridical_All
-                                          INNER JOIN tmpJuridicalArea AS tmpDefault 
-                                                                      ON tmpDefault.JuridicalId = tmpJuridical_All.Id
-                                                                     AND tmpDefault.isDefault = TRUE   
-                                     ) AS tmpDefault ON tmpDefault.Id = tmpJuridical_All.Id
-                    )
-                     
-                        
-    SELECT tmpUnit.Id                 AS UnitId
-         , tmpUnit.Code               AS UnitCode
-         , tmpUnit.Name               AS UnitName
-         , tmpUnit.Address            AS UnitAddress
-         , tmpUnit.ProvinceCityId     AS ProvinceCityId_Unit
-         , tmpUnit.ProvinceCityName   AS ProvinceCityName_Unit
-         , tmpUnit.ParentId           AS ParentId_Unit
-         , tmpUnit.ParentName         AS ParentName_Unit
-         , tmpUnit.UserManagerId      AS UserManagerId_Unit
-         , tmpUnit.UserManagerName    AS UserManagerName_Unit
-         , tmpUnit.JuridicalName      AS JuridicalName_Unit
-         , tmpUnit.isErased           AS isErased_Unit
-         , tmpUnit.AreaId             AS AreaId_Unit
-         , tmpUnit.AreaName           AS AreaName_Unit
-         , tmpUnit.CreateDate         AS CreateDate_Unit
-         , tmpUnit.CloseDate          AS CloseDate_Unit
-         
-         , COALESCE (tmpJuridical.Id, tmpJuridical_Default.Id)                   AS JuridicalId
-         , COALESCE (tmpJuridical.Code, tmpJuridical_Default.Code)               AS JuridicalCode
-         , COALESCE (tmpJuridical.Name, tmpJuridical_Default.Name)               AS JuridicalName
-         , COALESCE (tmpJuridical.RetailId, tmpJuridical_Default.RetailId)       AS RetailId_Juridical
-         , COALESCE (tmpJuridical.RetailName, tmpJuridical_Default.RetailName)   AS RetailName_Juridical
-         , COALESCE (tmpJuridical.AreaId, tmpJuridical_Default.AreaId)           AS AreaId_Juridical
-         , COALESCE (tmpJuridical.AreaName, tmpJuridical_Default.AreaName)       AS AreaName_Juridical
 
-         , COALESCE (tmpJuridical.isCorporate, tmpJuridical_Default.isCorporate) AS isCorporate_Juridical
-         , COALESCE (tmpJuridical.isDefault, tmpJuridical_Default.isDefault)     AS isDefault_JuridicalArea
+   , tmpUnitJuridical AS (SELECT tmpUnit.Id                 AS UnitId
+                               , tmpUnit.Code               AS UnitCode
+                               , tmpUnit.Name               AS UnitName
+                               , tmpUnit.Address            AS UnitAddress
+                               , tmpUnit.ProvinceCityId     AS ProvinceCityId_Unit
+                               , tmpUnit.ProvinceCityName   AS ProvinceCityName_Unit
+                               , tmpUnit.ParentId           AS ParentId_Unit
+                               , tmpUnit.ParentName         AS ParentName_Unit
+                               , tmpUnit.UserManagerId      AS UserManagerId_Unit
+                               , tmpUnit.UserManagerName    AS UserManagerName_Unit
+                               , tmpUnit.JuridicalName      AS JuridicalName_Unit
+                               , tmpUnit.isErased           AS isErased_Unit
+                               , tmpUnit.AreaId             AS AreaId_Unit
+                               , tmpUnit.AreaName           AS AreaName_Unit
+                               , tmpUnit.CreateDate         AS CreateDate_Unit
+                               , tmpUnit.CloseDate          AS CloseDate_Unit
+                               
+                               , tmpJuridical.Id            AS JuridicalId
+                               , tmpJuridical.Code          AS JuridicalCode
+                               , tmpJuridical.Name          AS JuridicalName
+                               , tmpJuridical.RetailId      AS RetailId_Juridical
+                               , tmpJuridical.RetailName    AS RetailName_Juridical
+                               , tmpJuridical.isCorporate   AS isCorporate_Juridical
+                          FROM tmpUnit
+                               CROSS JOIN tmpJuridical
+                          )
+                           
+    SELECT tmpUnitJuridical.UnitId
+         , tmpUnitJuridical.UnitCode
+         , tmpUnitJuridical.UnitName
+         , tmpUnitJuridical.UnitAddress
+         , tmpUnitJuridical.ProvinceCityId_Unit
+         , tmpUnitJuridical.ProvinceCityName_Unit
+         , tmpUnitJuridical.ParentId_Unit
+         , tmpUnitJuridical.ParentName_Unit
+         , tmpUnitJuridical.UserManagerId_Unit
+         , tmpUnitJuridical.UserManagerName_Unit
+         , tmpUnitJuridical.JuridicalName_Unit
+         , tmpUnitJuridical.isErased_Unit
+         , tmpUnitJuridical.AreaId_Unit
+         , tmpUnitJuridical.AreaName_Unit
+         , tmpUnitJuridical.CreateDate_Unit
+         , tmpUnitJuridical.CloseDate_Unit
          
-    FROM tmpUnit
-         LEFT JOIN tmpJuridical ON (tmpJuridical.AreaId = tmpUnit.AreaId OR COALESCE (tmpJuridical.AreaId, 0) = 0 OR tmpJuridical.isDefault = TRUE) 
-
+         , tmpUnitJuridical.JuridicalId
+         , tmpUnitJuridical.JuridicalCode
+         , tmpUnitJuridical.JuridicalName
+         , tmpUnitJuridical.RetailId_Juridical
+         , tmpUnitJuridical.RetailName_Juridical
+         , tmpUnitJuridical.isCorporate_Juridical
+         
+         , COALESCE (tmp1.AreaId, COALESCE (tmp2.AreaId, COALESCE (tmp3.AreaId, 0)))                           AS AreaId_Juridical
+         , COALESCE (tmp1.AreaName, COALESCE (tmp2.AreaName, COALESCE (tmp3.AreaName, '')))       :: TVarChar  AS AreaName_Juridical
+         , COALESCE (tmp1.isDefault, COALESCE (tmp2.isDefault, COALESCE (tmp3.isDefault, FALSE))) ::Boolean    AS isDefault_JuridicalArea
+         
+    From tmpUnitJuridical
+         LEFT JOIN tmpJuridicalArea AS tmp1 ON tmp1.juridicalId = tmpUnitJuridical.JuridicalId AND tmp1.areaId = tmpUnitJuridical.AreaId_Unit 
+         LEFT JOIN tmpJuridicalArea AS tmp2 ON tmp2.juridicalId = tmpUnitJuridical.JuridicalId AND tmp2.isDefault = TRUE
+         LEFT JOIN tmpJuridicalArea AS tmp3 ON tmp3.juridicalId = tmpUnitJuridical.JuridicalId AND tmp3.AreaId = 5803492 -- עוסעמגאÿ 3692911 -- נאבמקאÿ 5803492 ÄÍÅÏÐ 
    ;
   
 END;

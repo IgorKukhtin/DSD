@@ -15,11 +15,11 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := inSession;
 
- /*   IF COALESCE (inMCSValue, 0 ) = 0
+    IF COALESCE (inMCSValue, 0 ) = 0
     THEN
         RAISE EXCEPTION 'Ошибка. Значение НТЗ должно быть больше 0';
     END IF;
-    */
+    
     outMCSValue := inMCSValue;
     
 END;
