@@ -5,10 +5,8 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -361
-  ExplicitTop = -42
   ExplicitWidth = 1036
-  ExplicitHeight = 512
+  ExplicitHeight = 511
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -846,6 +844,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'goodsname_two;goodskindname'
         end>
       Params = <
         item

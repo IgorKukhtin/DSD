@@ -1,11 +1,13 @@
 -- Function: gpInsertUpdate_Object_Area()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Area(Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Area(Integer, Integer, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Area(
  INOUT ioId             Integer   ,     -- ключ объекта <Регионы> 
     IN inCode           Integer   ,     -- Код объекта  
     IN inName           TVarChar  ,     -- Название объекта 
+    IN inEMail          TVarChar,      -- E-Mail
     IN inSession        TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -30,20 +32,22 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Area(), vbCode_calc, inName);
    
+   -- сохранили E-Mail
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Area_EMail(), ioId, inEMail);
+   
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Area (Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.09.17         *
  14.11.13         *
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_Area(ioId:=null, inCode:=null, inName:='Регион 1', inSession:='2')
+-- SELECT * FROM gpInsertUpdate_Object_Area(ioId:=null, inCode:=null, inName:='Регион 1'::TVarChar, inEMail:= '' ::TVarChar, inSession:='2'::TVarChar)

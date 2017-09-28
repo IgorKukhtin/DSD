@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_PriceList(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , ContractId Integer, ContractName TVarChar
+             , AreaId Integer, AreaName TVarChar
              , PriceListId Integer
               )
 AS
@@ -35,6 +36,9 @@ BEGIN
              , CAST ('' AS TVarChar) 		                AS JuridicalName
              , 0                     		                AS ContractId
              , CAST ('' AS TVarChar) 			        AS ContractName
+             , 0                     		                AS AreaId
+             , CAST ('' AS TVarChar) 			        AS AreaName
+           
              , 0                                                AS PriceListId
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
@@ -52,7 +56,8 @@ BEGIN
            , Object_Juridical.ValueData                         AS JuridicalName
            , Object_Contract.Id                                 AS ContractId
            , Object_Contract.ValueData                          AS ContractName
-
+           , Object_Area.Id                                     AS AreaId
+           , Object_Area.ValueData                              AS AreaName
            , LoadPriceList.Id                                   AS PriceListId
 
        FROM Movement
@@ -70,8 +75,16 @@ BEGIN
 
             LEFT JOIN LoadPriceList ON LoadPriceList.JuridicalId = Object_Juridical.Id
                                    AND LoadPriceList.ContractId  = Object_Contract.Id
-
-       WHERE Movement.Id =  inMovementId
+                                   
+            LEFT JOIN ObjectLink AS ObjectLink_JuridicalArea_Juridical
+                                 ON ObjectLink_JuridicalArea_Juridical.ChildObjectId = Object_Juridical.Id 
+                                AND ObjectLink_JuridicalArea_Juridical.DescId = zc_ObjectLink_JuridicalArea_Juridical()
+            LEFT JOIN ObjectLink AS ObjectLink_JuridicalArea_Area
+                                 ON ObjectLink_JuridicalArea_Area.ObjectId = ObjectLink_JuridicalArea_Juridical.ObjectId
+                                AND ObjectLink_JuridicalArea_Area.DescId = zc_ObjectLink_JuridicalArea_Area() 
+            LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_JuridicalArea_Area.ChildObjectId 
+            
+       WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_PriceList();
 
        END IF;
@@ -85,6 +98,7 @@ ALTER FUNCTION gpGet_Movement_PriceList (Integer, TDateTime, TVarChar) OWNER TO 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 25.09.17         * add AreaName
  01.07.14                                                        *
 */
 

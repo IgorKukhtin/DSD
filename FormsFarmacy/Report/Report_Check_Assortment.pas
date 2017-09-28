@@ -66,6 +66,14 @@ type
     macUpdate_Price_MCS_list: TMultiAction;
     macUpdate_Price_MCS: TMultiAction;
     bbUpdate_Price_MCS: TdxBarButton;
+    cxLabel5: TcxLabel;
+    spInsert_MCS_byReport: TdsdStoredProc;
+    actInsert_MCS: TdsdExecStoredProc;
+    macInsert_MCS_List: TMultiAction;
+    macInsert_MCS: TMultiAction;
+    bbInsert_MCS: TdxBarButton;
+    HeaderChanger: THeaderChanger;
+    ceMCSValue: TcxCurrencyEdit;
   private
     { Private declarations }
   public

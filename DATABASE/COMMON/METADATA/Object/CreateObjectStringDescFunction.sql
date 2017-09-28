@@ -633,10 +633,21 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Contract_OrderTime() RETURNS Integer 
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Contract_OrderTime', zc_Object_Contract(), 'информативно - максимальное время отправки' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Contract_OrderTime');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Area_Email() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Area_Email'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Area_Email', zc_Object_Area(), 'На какой адрес приходит инфа по прайсам для этого региона' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Area_Email');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_JuridicalArea_Email() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_JuridicalArea_Email'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_JuridicalArea_Email', zc_Object_JuridicalArea(), 'На какой адрес ПОСТАВЩИКА мы отправляем инфу по заказам для этого региона' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_JuridicalArea_Email');
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 26.09.17         * zc_ObjectString_JuridicalArea_Email
+ 25.09.17         * zc_ObjectString_Area_Email
  08.08.17         * zc_ObjectString_Contract_OrderSumm
                     zc_ObjectString_Contract_OrderTime
  05.07.17         * zc_ObjectString_ArticleLoss_Comment

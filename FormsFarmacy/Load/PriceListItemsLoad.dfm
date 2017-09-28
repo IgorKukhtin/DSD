@@ -4,7 +4,7 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
   ClientWidth = 908
   AddOnFormData.Params = FormParams
   ExplicitWidth = 924
-  ExplicitHeight = 449
+  ExplicitHeight = 448
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -170,6 +170,24 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
       Properties.ReadOnly = True
       TabOrder = 3
       Width = 270
+    end
+    object cxLabel5: TcxLabel
+      Left = 388
+      Top = 4
+      Caption = #1056#1077#1075#1080#1086#1085
+    end
+    object edArea: TcxButtonEdit
+      Left = 388
+      Top = 22
+      Enabled = False
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      TabOrder = 5
+      Width = 164
     end
   end
   inherited ActionList: TActionList
@@ -466,6 +484,21 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
         Component = FormParams
         ComponentItem = 'ContractId'
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AreaId'
+        Value = Null
+        Component = GuidesArea
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AreaName'
+        Value = Null
+        Component = GuidesArea
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 240
@@ -560,5 +593,34 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
     PackSize = 1
     Left = 432
     Top = 152
+  end
+  object GuidesArea: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edArea
+    FormNameParam.Value = 'TAreaForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TAreaForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesArea
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesArea
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 464
+    Top = 24
   end
 end

@@ -37,12 +37,13 @@ BEGIN
                                     ON MovementBoolean_GoodsGroupExc.MovementId = Movement.Id
                                    AND MovementBoolean_GoodsGroupExc.DescId = zc_MovementBoolean_GoodsGroupExc()
      WHERE Movement.Id = ioId;
+     
      --
-     IF ioisGoodsGroupIn <> vbisGoodsGroupIn
+     IF ioisGoodsGroupIn <> vbisGoodsGroupIn AND ioisGoodsGroupIn = TRUE
      THEN
           ioisGoodsGroupExc := NOT ioisGoodsGroupIn;
      END IF;
-     IF ioisGoodsGroupExc <> vbisGoodsGroupExc
+     IF ioisGoodsGroupExc <> vbisGoodsGroupExc AND ioisGoodsGroupIn = TRUE
      THEN
           ioisGoodsGroupIn := NOT ioisGoodsGroupExc;
      END IF; 

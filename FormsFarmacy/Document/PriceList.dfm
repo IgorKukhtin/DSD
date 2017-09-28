@@ -1,25 +1,25 @@
 inherited PriceListForm: TPriceListForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090'>'
   ClientHeight = 668
-  ClientWidth = 820
-  ExplicitWidth = 836
+  ClientWidth = 868
+  ExplicitWidth = 884
   ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 820
+    Width = 868
     Height = 585
     ExplicitTop = 83
     ExplicitWidth = 820
     ExplicitHeight = 585
     ClientRectBottom = 585
-    ClientRectRight = 820
+    ClientRectRight = 868
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 820
       ExplicitHeight = 561
       inherited cxGrid: TcxGrid
-        Width = 820
+        Width = 868
         Height = 561
         ExplicitWidth = 820
         ExplicitHeight = 561
@@ -152,7 +152,7 @@ inherited PriceListForm: TPriceListForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 820
+    Width = 868
     Height = 57
     TabOrder = 3
     ExplicitWidth = 820
@@ -172,49 +172,52 @@ inherited PriceListForm: TPriceListForm
       Properties.SaveTime = False
       Properties.ShowTime = False
       ExplicitLeft = 89
+      ExplicitWidth = 80
+      Width = 80
     end
     inherited cxLabel2: TcxLabel
       Left = 89
       ExplicitLeft = 89
     end
     inherited cxLabel15: TcxLabel
-      Left = 441
-      Top = 4
+      Left = 433
+      Top = 27
       Visible = False
-      ExplicitLeft = 441
-      ExplicitTop = 4
+      ExplicitLeft = 433
+      ExplicitTop = 27
     end
     inherited ceStatus: TcxButtonEdit
       Left = 472
       Visible = False
       ExplicitLeft = 472
-      ExplicitWidth = 169
+      ExplicitWidth = 153
       ExplicitHeight = 22
-      Width = 169
+      Width = 153
     end
     object edJuridical: TcxButtonEdit
-      Left = 198
+      Left = 174
       Top = 23
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 6
       Width = 228
     end
     object cxLabel4: TcxLabel
-      Left = 198
+      Left = 174
       Top = 5
       Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
     end
     object cxLabel6: TcxLabel
-      Left = 689
+      Left = 639
       Top = 5
       Caption = '% '#1089#1082#1080#1076#1082#1080
     end
     object edPercent1: TcxCurrencyEdit
-      Left = 689
+      Left = 639
       Top = 23
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####'
@@ -224,20 +227,39 @@ inherited PriceListForm: TPriceListForm
     end
   end
   object cxLabel3: TcxLabel [2]
-    Left = 436
+    Left = 407
     Top = 5
     Caption = #1050#1086#1085#1090#1088#1072#1082#1090
   end
   object edContract: TcxButtonEdit [3]
-    Left = 435
+    Left = 407
     Top = 23
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 7
-    Width = 245
+    Width = 222
+  end
+  object cxLabel5: TcxLabel [4]
+    Left = 702
+    Top = 5
+    Caption = #1056#1077#1075#1080#1086#1085
+  end
+  object edArea: TcxButtonEdit [5]
+    Left = 702
+    Top = 23
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 9
+    Width = 164
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -770,6 +792,21 @@ inherited PriceListForm: TPriceListForm
         Component = FormParams
         ComponentItem = 'PriceListId'
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AreaId'
+        Value = Null
+        Component = GuidesArea
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AreaName'
+        Value = Null
+        Component = GuidesArea
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1065,8 +1102,8 @@ inherited PriceListForm: TPriceListForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 360
-    Top = 16
+    Left = 312
+    Top = 24
   end
   object GuidesContract: TdsdGuides
     KeyField = 'Id'
@@ -1146,5 +1183,34 @@ inherited PriceListForm: TPriceListForm
     PackSize = 1
     Left = 664
     Top = 155
+  end
+  object GuidesArea: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edArea
+    FormNameParam.Value = 'TAreaForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TAreaForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesArea
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesArea
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 776
+    Top = 16
   end
 end

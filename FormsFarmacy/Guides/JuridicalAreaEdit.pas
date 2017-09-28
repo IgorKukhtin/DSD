@@ -1,14 +1,17 @@
-unit AreaEdit;
+unit JuridicalAreaEdit;
 
 interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxPropertiesStore,
-  cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
-  cxEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit, Vcl.ActnList,
-  Vcl.StdActns, ParentForm, dsdDB, dsdAction, cxCurrencyEdit, dsdAddOn,
-  dxSkinsCore, dxSkinsDefaultPainters, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, ParentForm, cxGraphics, cxControls,
+  cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, dxSkinsCore,
+  Vcl.Menus, dsdGuides, Data.DB,
+  Datasnap.DBClient, cxMaskEdit, cxDropDownEdit, cxLookupEdit, cxDBLookupEdit,
+  cxDBLookupComboBox, cxPropertiesStore, dsdAddOn, dsdDB, dsdAction,
+  Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit,
+  cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar,
+  dxSkinsDefaultPainters, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
   dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
   dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
   dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
@@ -18,27 +21,35 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  cxCheckBox;
 
 type
-  TAreaEditForm = class(TParentForm)
+  TJuridicalAreaEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
     cxButton2: TcxButton;
+    Код: TcxLabel;
+    ceCode: TcxCurrencyEdit;
     ActionList: TActionList;
-    spInsertUpdate: TdsdStoredProc;
-    dsdFormParams: TdsdFormParams;
-    spGet: TdsdStoredProc;
     dsdDataSetRefresh: TdsdDataSetRefresh;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
     dsdFormClose: TdsdFormClose;
-    cxLabel2: TcxLabel;
-    edCode: TcxCurrencyEdit;
-    cxPropertiesStore: TcxPropertiesStore;
+    spInsertUpdate: TdsdStoredProc;
+    dsdFormParams: TdsdFormParams;
+    spGet: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    cxPropertiesStore: TcxPropertiesStore;
+    cxLabel4: TcxLabel;
+    GuidesJuridical: TdsdGuides;
+    edJuridical: TcxButtonEdit;
+    cxLabel2: TcxLabel;
+    edArea: TcxButtonEdit;
+    GuidesArea: TdsdGuides;
     cxLabel5: TcxLabel;
     edEmail: TcxTextEdit;
+    cbisDefault: TcxCheckBox;
   private
     { Private declarations }
   public
@@ -48,8 +59,7 @@ type
 implementation
 
 {$R *.dfm}
-
 initialization
-  RegisterClass(TAreaEditForm);
+  RegisterClass(TJuridicalAreaEditForm);
 
 end.

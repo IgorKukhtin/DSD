@@ -47,6 +47,9 @@ type
     actOpenMovementPriceList: TdsdInsertUpdateAction;
     MacGetMovement: TMultiAction;
     bbGetMovement: TdxBarButton;
+    cxLabel5: TcxLabel;
+    edArea: TcxButtonEdit;
+    GuidesArea: TdsdGuides;
   private
     { Private declarations }
   public

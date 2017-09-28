@@ -54,6 +54,7 @@ type
     procedure LoadInventoryFormTest;
     procedure LoadInvoiceFormTest;
     procedure LoadJuridicalFormTest;
+    procedure LoadJuridicalAreaFormTest;
     procedure LoadLoadFormTest;
     procedure LoadLossDebtFormTest;
     procedure LoadLossFormTest;
@@ -208,6 +209,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAreaEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAreaEditForm');
 end;
+
 
 procedure TLoadFormTest.LoadBankStatementFormTest;
 begin
@@ -479,12 +481,12 @@ end;
 procedure TLoadFormTest.LoadLoadFormTest;
 begin
 //exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListLoadForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListLoadForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItemsLoadForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListItemsLoadForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementLoadForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovenentLoadForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemsLoadForm'));
@@ -498,10 +500,11 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TColorForm'));
   TdsdFormStorageFactory.GetStorage.Load('TColorForm');
-  }
+
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsBarCodeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsBarCodeForm');
+  }
 end;
 
 procedure TLoadFormTest.LoadLossDebtFormTest;
@@ -792,6 +795,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPartnerCodeForm');
 end;
 
+procedure TLoadFormTest.LoadJuridicalAreaFormTest;
+begin
+  // Регионы поставщиков
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalAreaForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJuridicalAreaForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalAreaEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJuridicalAreaEditForm');
+end;
+
 procedure TLoadFormTest.LoadImportTypeFormTest;
 begin
   //Типы импорта
@@ -818,6 +830,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_ObjectForm');
 
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_JuridicalAreaForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnit_JuridicalAreaForm');
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitForFarmacyCashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitForFarmacyCashForm');
 end;

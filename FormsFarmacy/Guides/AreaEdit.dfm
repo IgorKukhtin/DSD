@@ -2,7 +2,7 @@ object AreaEditForm: TAreaEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1056#1077#1075#1080#1086#1085'>'
-  ClientHeight = 139
+  ClientHeight = 196
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,18 +18,18 @@ object AreaEditForm: TAreaEditForm
   TextHeight = 13
   object edName: TcxTextEdit
     Left = 10
-    Top = 72
+    Top = 74
     TabOrder = 0
     Width = 273
   end
   object cxLabel1: TcxLabel
     Left = 10
-    Top = 49
+    Top = 55
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 41
-    Top = 100
+    Top = 163
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@ object AreaEditForm: TAreaEditForm
   end
   object cxButton2: TcxButton
     Left = 185
-    Top = 100
+    Top = 163
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -53,15 +53,26 @@ object AreaEditForm: TAreaEditForm
   end
   object edCode: TcxCurrencyEdit
     Left = 10
-    Top = 30
+    Top = 29
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
     Width = 273
   end
+  object cxLabel5: TcxLabel
+    Left = 10
+    Top = 101
+    Caption = 'E-mail'
+  end
+  object edEmail: TcxTextEdit
+    Left = 10
+    Top = 121
+    TabOrder = 7
+    Width = 273
+  end
   object ActionList: TActionList
-    Left = 152
-    Top = 56
+    Left = 208
+    Top = 88
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -118,10 +129,18 @@ object AreaEditForm: TAreaEditForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEmail'
+        Value = Null
+        Component = edEmail
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 104
-    Top = 56
+    Left = 88
+    Top = 80
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -159,10 +178,17 @@ object AreaEditForm: TAreaEditForm
         Component = edName
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Email'
+        Value = Null
+        Component = edEmail
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 184
-    Top = 16
+    Left = 144
+    Top = 56
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -176,11 +202,11 @@ object AreaEditForm: TAreaEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 160
-    Top = 104
+    Left = 144
+    Top = 143
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 8
-    Top = 48
+    Left = 248
+    Top = 16
   end
 end

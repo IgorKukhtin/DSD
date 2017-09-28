@@ -312,10 +312,6 @@
 				<Form>MovementItemsLoadForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Import\ImportGroup.pas">
-				<Form>ImportGroupForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Kind\FileTypeKind.pas">
 				<Form>FileTypeKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1767,6 +1763,22 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\AreaEdit.pas">
 				<Form>AreaEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalAreaEdit.pas">
+				<Form>JuridicalAreaEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalArea.pas">
+				<Form>JuridicalAreaForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Import\ImportGroup.pas">
+				<Form>ImportGroupForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Unit_JuridicalArea.pas">
+				<Form>Unit_JuridicalAreaForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_LoadPriceList(
 )
 RETURNS TABLE (Id Integer, OperDate TDateTime
              , JuridicalId Integer, JuridicalName TVarChar
+             , AreaId Integer, AreaName TVarChar
              , ContractId Integer, ContractName TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
@@ -23,12 +24,14 @@ BEGIN
 
      RETURN QUERY
        SELECT
-             LoadPriceList.Id
-           , LoadPriceList.OperDate	 -- Дата документа
-           , Object_Juridical.Id         AS JuridicalId
-           , Object_Juridical.ValueData  AS JuridicalName
-           , Object_Contract.Id          AS ContractId
-           , Object_Contract.ValueData   AS ContractName
+             LoadPriceList.Id               AS Id
+           , LoadPriceList.OperDate	    AS OperDate -- Дата документа
+           , Object_Juridical.Id            AS JuridicalId
+           , Object_Juridical.ValueData     AS JuridicalName
+           , Object_Area.Id                 AS AreaId
+           , Object_Area.ValueData          AS AreaName
+           , Object_Contract.Id             AS ContractId
+           , Object_Contract.ValueData      AS ContractName
            
            , Object_User_Insert.ValueData   AS InsertName
            , LoadPriceList.Date_Insert      AS InsertDate
@@ -41,10 +44,21 @@ BEGIN
            , COALESCE (LoadPriceList.isMoved, FALSE) :: Boolean AS isMoved
        FROM LoadPriceList
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = LoadPriceList.JuridicalId
+            
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = LoadPriceList.ContractId
 
             LEFT JOIN Object AS Object_User_Insert ON Object_User_Insert.Id = LoadPriceList.UserId_Insert
-            LEFT JOIN Object AS Object_User_Update ON Object_User_Update.Id = LoadPriceList.UserId_Update;
+            LEFT JOIN Object AS Object_User_Update ON Object_User_Update.Id = LoadPriceList.UserId_Update
+            
+            LEFT JOIN ObjectLink AS ObjectLink_JuridicalArea_Juridical
+                                 ON ObjectLink_JuridicalArea_Juridical.ChildObjectId = Object_Juridical.Id 
+                                AND ObjectLink_JuridicalArea_Juridical.DescId = zc_ObjectLink_JuridicalArea_Juridical()
+            LEFT JOIN ObjectLink AS ObjectLink_JuridicalArea_Area
+                                 ON ObjectLink_JuridicalArea_Area.ObjectId = ObjectLink_JuridicalArea_Juridical.ObjectId
+                                AND ObjectLink_JuridicalArea_Area.DescId = zc_ObjectLink_JuridicalArea_Area()
+            LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_JuridicalArea_Area.ChildObjectId  
+            
+            ;
 
 END;
 $BODY$
@@ -55,6 +69,7 @@ ALTER FUNCTION gpSelect_Movement_LoadPriceList (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.09.17         * add AreaName
  01.07.14                        *
 
 */

@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PriceList(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , ContractId Integer, ContractName TVarChar
+             , AreaId Integer, AreaName TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , PriceListId Integer
               )
@@ -34,16 +35,17 @@ BEGIN
                        )
 
        SELECT
-             Movement.Id                                        AS Id
-           , Movement.InvNumber                                 AS InvNumber
-           , Movement.OperDate                                  AS OperDate
-           , Object_Status.ObjectCode                           AS StatusCode
-           , Object_Status.ValueData                            AS StatusName
-           , Object_Juridical.Id                                AS JuridicalId
-           , Object_Juridical.ValueData                         AS JuridicalName
-           , Object_Contract.Id                                 AS ContractId
-           , Object_Contract.ValueData                          AS ContractName
-
+             Movement.Id                          AS Id
+           , Movement.InvNumber                   AS InvNumber
+           , Movement.OperDate                    AS OperDate
+           , Object_Status.ObjectCode             AS StatusCode
+           , Object_Status.ValueData              AS StatusName
+           , Object_Juridical.Id                  AS JuridicalId
+           , Object_Juridical.ValueData           AS JuridicalName
+           , Object_Contract.Id                   AS ContractId
+           , Object_Contract.ValueData            AS ContractName
+           , Object_Area.Id                       AS AreaId
+           , Object_Area.ValueData                AS AreaName
            , Object_Insert.ValueData              AS InsertName
            , MovementDate_Insert.ValueData        AS InsertDate
    
@@ -76,6 +78,14 @@ BEGIN
             LEFT JOIN LoadPriceList ON LoadPriceList.JuridicalId = Object_Juridical.Id
                                    AND LoadPriceList.ContractId  = Object_Contract.Id
 
+            LEFT JOIN ObjectLink AS ObjectLink_JuridicalArea_Juridical
+                                 ON ObjectLink_JuridicalArea_Juridical.ChildObjectId = Object_Juridical.Id 
+                                AND ObjectLink_JuridicalArea_Juridical.DescId = zc_ObjectLink_JuridicalArea_Juridical()
+            LEFT JOIN ObjectLink AS ObjectLink_JuridicalArea_Area
+                                 ON ObjectLink_JuridicalArea_Area.ObjectId = ObjectLink_JuridicalArea_Juridical.ObjectId
+                                AND ObjectLink_JuridicalArea_Area.DescId = zc_ObjectLink_JuridicalArea_Area()
+            LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_JuridicalArea_Area.ChildObjectId 
+            
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_PriceList();
 
 END;

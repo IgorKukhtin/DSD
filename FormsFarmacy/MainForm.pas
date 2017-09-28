@@ -384,6 +384,10 @@ type
     N149: TMenuItem;
     actArea: TdsdOpenForm;
     N150: TMenuItem;
+    actJuridicalArea: TdsdOpenForm;
+    N151: TMenuItem;
+    actUnit_JuridicalArea: TdsdOpenForm;
+    N152: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
