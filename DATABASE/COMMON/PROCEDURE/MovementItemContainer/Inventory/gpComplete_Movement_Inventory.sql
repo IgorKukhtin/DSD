@@ -172,17 +172,34 @@ BEGIN
 
 
      -- !!!Ограничения по товарам!!!
-     IF EXISTS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect_Object_Unit_byGroup WHERE UnitId = vbUnitId) -- ЦЕХ колбаса+дел-сы
+     IF vbGoodsGroupId > 0 AND vbisGoodsGroupExc = TRUE
+     THEN
+         vbIsGoodsGroup:= TRUE;
+         -- 
+         INSERT INTO _tmpGoods_Complete_Inventory (GoodsId)
+            WITH tmpGoods AS (SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (vbGoodsGroupId) AS lfSelect)
+            SELECT Object.Id AS GoodsId FROM Object LEFT JOIN tmpGoods ON tmpGoods.GoodsId = Object.Id WHERE Object.DescId = zc_Object_Goods() AND tmpGoods.GoodsId IS NULL
+           ;
+     -- !!!Ограничения по товарам!!!
+     ELSEIF vbGoodsGroupId > 0 AND vbisGoodsGroupIn = TRUE
+     THEN
+         vbIsGoodsGroup:= TRUE;
+         -- 
+         INSERT INTO _tmpGoods_Complete_Inventory (GoodsId)
+            SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (vbGoodsGroupId) AS lfSelect
+           ;
+     ELSEIF EXISTS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect_Object_Unit_byGroup WHERE UnitId = vbUnitId) -- ЦЕХ колбаса+дел-сы
        AND 1 <> EXTRACT (DAY FROM (vbOperDate :: Date + 1))
      THEN
          vbIsGoodsGroup:= TRUE;
          -- 
          INSERT INTO _tmpGoods_Complete_Inventory (GoodsId)
-            SELECT GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (1945) -- СО-ОБЩАЯ
+            SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (1945) AS lfSelect -- СО-ОБЩАЯ
            UNION
-            SELECT GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (1942) -- СО-ЭМУЛЬСИИ
+            SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (1942) AS lfSelect -- СО-ЭМУЛЬСИИ
            ;
-     ELSE
+     
+     ELSE 
          vbIsGoodsGroup:= FALSE;
      END IF;
 

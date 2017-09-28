@@ -81,22 +81,45 @@ WITH tmpUnit AS (SELECT Object_Unit.Id AS UnitId
                                     AND Movement_PriceList.StatusId <> zc_Enum_Status_Erased()
                                  )
    , tmpMovementPriceList AS (SELECT MovementId FROM tmpMovementPriceListLast WHERE RowNum = 1)
-   , tmpPriceList AS (SELECT MI_PriceList.ObjectId             AS GoodsId
+   , tmpPriceList AS (SELECT ObjectLink_Goods_Object.ObjectId  AS GoodsId
                            , MIN (MI_PriceList.Amount)::TFloat AS Price
                       FROM tmpMovementPriceList
                            JOIN MovementItem AS MI_PriceList
                                              ON MI_PriceList.DescId = zc_MI_Master()
                                             AND MI_PriceList.MovementId = tmpMovementPriceList.MovementId  
-                      GROUP BY MI_PriceList.ObjectId
+                           JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                                       ON MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+                                                      AND MILinkObject_Goods.MovementItemId = MI_PriceList.Id
+                           JOIN ObjectLink AS ObjectLink_LinkGoods_Goods_Jur
+                                           ON ObjectLink_LinkGoods_Goods_Jur.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                          AND ObjectLink_LinkGoods_Goods_Jur.ChildObjectId = MILinkObject_Goods.ObjectId
+                           JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain_Jur
+                                           ON ObjectLink_LinkGoods_GoodsMain_Jur.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                                          AND ObjectLink_LinkGoods_GoodsMain_Jur.ObjectId = ObjectLink_LinkGoods_Goods_Jur.ObjectId
+                           JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
+                                           ON ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                                          AND ObjectLink_LinkGoods_GoodsMain.ChildObjectId = ObjectLink_LinkGoods_GoodsMain_Jur.ChildObjectId
+                           JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                                           ON ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                          AND ObjectLink_LinkGoods_Goods.ObjectId = ObjectLink_LinkGoods_GoodsMain.ObjectId
+                           JOIN ObjectLink AS ObjectLink_Goods_Object
+                                           ON ObjectLink_Goods_Object.ObjectId = ObjectLink_LinkGoods_Goods.ChildObjectId
+                                          AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                          AND ObjectLink_Goods_Object.ChildObjectId = 4 -- !!!NeBoley!!!
+                      GROUP BY ObjectLink_Goods_Object.ObjectId
                      )
    , tmpAll AS (SELECT tmpRemains.GoodsId
-                     , tmpRemains.Price   AS RemainsPrice
-                     , tmpPriceList.Price AS PriceListPrice
+                     , tmpRemains.Price
                 FROM tmpRemains
-                     JOIN tmpPriceList ON tmpRemains.GoodsId = tmpPriceList.GoodsId
+                UNION
+                SELECT tmpPriceList.GoodsId
+                     , tmpPriceList.Price
+                FROM tmpPriceList
                )
-SELECT tmpAll.* FROM tmpAll
-
+SELECT tmpAll.GoodsId
+     , MIN (tmpAll.Price)::TFloat AS Price
+FROM tmpAll
+GROUP BY tmpAll.GoodsId
 
 END; $BODY$
   LANGUAGE plpgsql VOLATILE;
