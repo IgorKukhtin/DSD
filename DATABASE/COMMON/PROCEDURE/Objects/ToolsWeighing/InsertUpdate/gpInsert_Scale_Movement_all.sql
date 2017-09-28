@@ -127,7 +127,8 @@ end if;*/
             , tmpMI AS (SELECT MovementItem.Id                               AS MovementItemId
                              , MovementItem.ObjectId                         AS GoodsId
                              , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                             , MovementItem.Amount
+                             , MovementItem.Amount                           AS Amount
+                             , COALESCE (MIFloat_AmountPartner.ValueData, 0) AS AmountPartner
                         FROM MovementItem
                              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -136,6 +137,9 @@ end if;*/
                                                             ON MIBoolean_BarCode.MovementItemId = MovementItem.Id
                                                            AND MIBoolean_BarCode.DescId         = zc_MIBoolean_BarCode()
                                                            AND MIBoolean_BarCode.ValueData      = TRUE
+                             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                         ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_AmountPartner.DescId         = zc_MIFloat_AmountPartner()
                         WHERE MovementItem.MovementId = inMovementId
                           AND MovementItem.DescId     = zc_MI_Master()
                           AND MovementItem.isErased   = FALSe
@@ -148,7 +152,8 @@ end if;*/
                                     , ObjectFloat_AmountDoc.ValueData * (1 + tmpGoodsProperty.TaxDoc / 100) AS AmountEnd
                                     , ObjectFloat_AmountDoc.ValueData                                       AS AmountDoc
                                     , tmpGoodsProperty.TaxDoc                                               AS TaxDoc
-                                    , tmpMI.Amount                                                          AS Amount
+                                    --, tmpMI.Amount                                                        AS Amount
+                                    , tmpMI.AmountPartner                                                   AS AmountPartner
                                FROM (SELECT OFl.ObjectId AS GoodsPropertyId, OFl.ValueData AS TaxDoc
                                      FROM tmpGoodsProperty
                                           INNER JOIN ObjectFloat AS OFl

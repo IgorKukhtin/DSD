@@ -230,7 +230,7 @@ BEGIN
            , COALESCE (tmpMI.isBarCode, FALSE) :: Boolean AS isBarCode
            , CASE WHEN tmpMI.MovementId_Promo > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPromo
 
-           , CASE WHEN tmpAmountDoc.AmountStart > 0 AND tmpMI.isErased = FALSE AND NOT (tmpMI.Amount BETWEEN tmpAmountDoc.AmountStart AND tmpAmountDoc.AmountEnd)
+           , CASE WHEN tmpAmountDoc.AmountStart > 0 AND tmpMI.isErased = FALSE AND NOT (tmpMI.AmountPartner BETWEEN tmpAmountDoc.AmountStart AND tmpAmountDoc.AmountEnd)
                        THEN 16711680 -- clBlue
                   ELSE 0 -- clBlack
              END :: Integer AS Color_calc
