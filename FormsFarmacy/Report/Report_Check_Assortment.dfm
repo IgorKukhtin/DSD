@@ -3,7 +3,6 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
   ClientHeight = 477
   ClientWidth = 1251
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -250
   ExplicitWidth = 1267
   ExplicitHeight = 515
   PixelsPerInch = 96
@@ -15,17 +14,17 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 1251
-    ExplicitHeight = 421
+    ExplicitHeight = 418
     ClientRectBottom = 418
     ClientRectRight = 1251
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1251
-      ExplicitHeight = 421
+      ExplicitHeight = 418
       inherited cxGrid: TcxGrid
         Width = 1251
         Height = 418
         ExplicitWidth = 1251
-        ExplicitHeight = 421
+        ExplicitHeight = 418
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -346,32 +345,38 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
     ExplicitWidth = 1251
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
-      Left = 29
+      Left = 21
       EditValue = 42979d
-      ExplicitLeft = 29
+      ExplicitLeft = 21
+      ExplicitWidth = 78
+      Width = 78
     end
     inherited deEnd: TcxDateEdit
-      Left = 144
+      Left = 126
       EditValue = 42979d
-      ExplicitLeft = 144
+      ExplicitLeft = 126
+      ExplicitWidth = 79
+      Width = 79
     end
     inherited cxLabel1: TcxLabel
+      Left = 2
       Caption = #1057':'
+      ExplicitLeft = 2
       ExplicitWidth = 15
     end
     inherited cxLabel2: TcxLabel
-      Left = 123
+      Left = 105
       Caption = #1087#1086':'
-      ExplicitLeft = 123
+      ExplicitLeft = 105
       ExplicitWidth = 20
     end
     object cxLabel3: TcxLabel
-      Left = 245
+      Left = 212
       Top = 6
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object ceUnit: TcxButtonEdit
-      Left = 332
+      Left = 299
       Top = 5
       Properties.Buttons = <
         item
@@ -386,50 +391,50 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
       Width = 188
     end
     object cbList: TcxCheckBox
-      Left = 521
+      Left = 488
       Top = 5
       Action = actRefreshList
       TabOrder = 6
       Width = 129
     end
     object cxLabel4: TcxLabel
-      Left = 662
+      Left = 628
       Top = 6
       Caption = #1053#1058#1047' '#1076#1083#1103' '#1087#1077#1088#1080#1086#1076#1072
     end
     object cbisMCSAuto: TcxCheckBox
-      Left = 753
+      Left = 718
       Top = 5
       Properties.ReadOnly = False
       TabOrder = 8
       Width = 22
     end
     object cxLabel8: TcxLabel
-      Left = 787
+      Left = 746
       Top = 6
       Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1087#1077#1088#1080#1086#1076#1072
     end
     object ceDays: TcxCurrencyEdit
-      Left = 899
+      Left = 858
       Top = 5
       EditValue = 7.000000000000000000
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####'
       TabOrder = 10
-      Width = 31
+      Width = 26
     end
     object ceMCSValue: TcxCurrencyEdit
-      Left = 1025
+      Left = 959
       Top = 5
       EditValue = 0.000000000000000000
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####'
       TabOrder = 11
-      Width = 27
+      Width = 23
     end
   end
   object cxLabel5: TcxLabel [2]
-    Left = 962
+    Left = 897
     Top = 6
     Caption = #1050#1086#1083'-'#1074#1086' '#1053#1058#1047
   end
