@@ -912,7 +912,7 @@ implementation
 uses
   System.IOUtils, CursorUtils, CommonData, Authentication, Storage, ZLib,
   System.StrUtils,
-  uMain, uExec;
+  uMain, uExec, uIntf;
 
 {%CLASSGROUP 'FMX.Controls.TControl'}
 
@@ -1888,6 +1888,11 @@ begin
     { получение данных из центра }
     if LoadData then
     begin
+      Synchronize(procedure
+                  begin
+                    DataSetCache.Clear;
+                  end);
+
       Synchronize(GetSyncDates);
 
       DM.conMain.TxOptions.AutoCommit := false;
@@ -4559,6 +4564,7 @@ end;
 procedure TDM.GenerateOrderExtrenalItemsList;
 var
   PriceField, PromoPriceField : string;
+  Params: TParams;
 begin
   if cdsOrderExternalisOperDateOrder.AsBoolean then
     PriceField := 'OrderPrice'
@@ -4569,66 +4575,59 @@ begin
     PromoPriceField := 'PriceWithVAT'
   else
     PromoPriceField := 'PriceWithOutVAT';
-//or
-//  qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.OBJECTCODE, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, ' +
-//    'IFNULL(' + PromoPriceField + ' || '''', ''-'') PromoPrice, T.VALUEDATA TradeMarkName, ' +
-//    'GLK.REMAINS, PI.' + PriceField + ' PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || ' +
-//    'G.OBJECTCODE || '' '' || G.VALUEDATA || '';'' || IFNULL(GK.VALUEDATA, ''-'') || '';'' || 0 || '';'' || 0 || '';'' || ' +
-//    'IFNULL(PI.' + PriceField + ', ''0'') || '';'' || IFNULL(M.VALUEDATA, ''-'') || '';'' || G.WEIGHT || '';'' || ' +
-//    'IFNULL(' + PromoPriceField + ', -1) || '';'' || IFNULL(P.ISCHANGEPERCENT, 1) || '';'' || ' +
-//    'IFNULL(T.VALUEDATA, '''') || '';0'' FullInfo, ' +
-//    'G.VALUEDATA || CASE WHEN ' + PromoPriceField + ' IS NULL THEN '';0'' ELSE '';1'' END SearchName ' +
-//    'from OBJECT_GOODS G ' +
-//    'LEFT JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID ' +
-//    'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID ' +
-//    'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
-//    'LEFT JOIN OBJECT_TRADEMARK T ON T.ID = G.TRADEMARKID ' +
-//    'LEFT JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
-//    'LEFT JOIN MOVEMENTITEM_PROMOPARTNER PP ON PP.PARTNERID = :PARTNERID  and (PP.CONTRACTID = :CONTRACTID or PP.CONTRACTID = 0) ' +
-//    'LEFT JOIN MOVEMENTITEM_PROMOGOODS PG ON PG.MOVEMENTID = PP.MOVEMENTID and PG.GOODSID = G.ID and (PG.GOODSKINDID = GK.ID or PG.GOODSKINDID = 0) ' +
-//    'LEFT JOIN MOVEMENT_PROMO P ON P.ID = PP.MOVEMENTID ' +
-//    'WHERE G.ISERASED = 0 order by GoodsName';
-//or
-  qryGoodsItems.SQL.Text :=
-       ' SELECT '
-     + '         Object_Goods.ID                                     AS GoodsID '
-     + '       , Object_GoodsKind.ID                                 AS KindID '
-     + '       , Object_Goods.ObjectCode '
-     + '       , Object_Goods.ValueData                              AS GoodsName '
-     + '       , Object_GoodsKind.ValueData                          AS KindName '
-     + '       , IFNULL(' + PromoPriceField + ' || '''', ''-'')      AS PromoPrice '
-     + '       , Object_TradeMark.ValueData                          AS TradeMarkName '
-     + '       , Object_GoodsByGoodsKind.Remains '
-     + '       , Object_PriceListItems.' + PriceField + '            AS Price '
-     + '       , Object_Measure.ValueData                            AS Measure '
-     + '       , ''-1;'' || Object_Goods.ID || '';'' || IFNULL(Object_GoodsKind.ID, 0) || '';'' || '
-     + '         Object_Goods.ObjectCode || '' '' || Object_Goods.ValueData || '';'' || IFNULL(Object_GoodsKind.ValueData, ''-'') || '';'' || 0 || '';'' || 0 || '';'' || '
-     + '         IFNULL(Object_PriceListItems.' + PriceField + ', ''0'') || '';'' || IFNULL(Object_Measure.ValueData, ''-'') || '';'' || Object_Goods.Weight || '';'' || '
-     + '         IFNULL(' + PromoPriceField + ', -1) || '';'' || IFNULL(Movement_Promo.isChangePercent, 1) || '';'' || '
-     + '         IFNULL(Object_TradeMark.ValueData, '''') || '';0''  AS FullInfo '
-     + '       , Object_Goods.ValueData || CASE WHEN ' + PromoPriceField + ' IS NULL THEN '';0'' ELSE '';1'' END  AS SearchName '
-     + ' FROM  Object_GoodsByGoodsKind '
-     + '       LEFT JOIN Object_Goods               ON Object_GoodsByGoodsKind.GoodsId        = Object_Goods.ID '
-     + '       LEFT JOIN Object_GoodsKind           ON Object_GoodsKind.ID                    = Object_GoodsByGoodsKind.GoodsKindId '
-     + '       LEFT JOIN Object_Measure             ON Object_Measure.ID                      = Object_Goods.MeasureId '
-     + '       LEFT JOIN Object_TradeMark           ON Object_TradeMark.ID                    = Object_Goods.TradeMarkId '
-     + '       LEFT JOIN Object_PriceListItems      ON Object_PriceListItems.GoodsId          = Object_Goods.ID  '
-     + '                                           AND Object_PriceListItems.PriceListId      = :PRICELISTID '
-     + '       LEFT JOIN MovementItem_PromoPartner  ON MovementItem_PromoPartner.PartnerId    = :PARTNERID  '
-     + '                                           AND (MovementItem_PromoPartner.ContractId  = :CONTRACTID  '
-     + '                                              OR MovementItem_PromoPartner.ContractId = 0) '
-     + '       LEFT JOIN MovementItem_PromoGoods    ON MovementItem_PromoGoods.MovementId     = MovementItem_PromoPartner.MovementId  '
-     + '                                           AND MovementItem_PromoGoods.GoodsId        = Object_Goods.ID  '
-     + '                                           AND (MovementItem_PromoGoods.GoodsKindId   = Object_GoodsKind.ID '
-     + '                                              OR MovementItem_PromoGoods.GoodsKindId  = 0) '
-     + '       LEFT JOIN Movement_Promo             ON Movement_Promo.ID                      = MovementItem_PromoPartner.MovementId '
-     + ' WHERE Object_GoodsByGoodsKind.isErased = 0 '
-     + ' ORDER BY GoodsName ';
 
-  qryGoodsItems.ParamByName('PARTNERID').AsInteger := cdsOrderExternalPartnerId.AsInteger;
-  qryGoodsItems.ParamByName('CONTRACTID').AsInteger := cdsOrderExternalCONTRACTID.AsInteger;
-  qryGoodsItems.ParamByName('PRICELISTID').AsInteger := cdsOrderExternalPRICELISTID.AsInteger;
-  qryGoodsItems.Open;
+  Params := TParams.Create(nil);
+  Params.CreateParam(ftString, 'PriceField', ptInput).Value := PriceField;
+  Params.CreateParam(ftString, 'PromoPriceField', ptInput).Value := PromoPriceField;
+  Params.CreateParam(cdsOrderExternalPartnerId.DataType, 'PARTNERID', ptInput).Value := cdsOrderExternalPartnerId.AsInteger;
+  Params.CreateParam(cdsOrderExternalContractId.DataType, 'CONTRACTID', ptInput).Value := cdsOrderExternalContractId.AsInteger;
+  Params.CreateParam(cdsOrderExternalPriceListId.DataType, 'PRICELISTID', ptInput).Value := cdsOrderExternalPriceListId.AsInteger;
+
+  if DataSetCache.Find('OrderExtrenalItemsList', Params) = nil then
+  begin
+    qryGoodsItems.SQL.Text :=
+         ' SELECT '
+       + '         Object_Goods.ID                                     AS GoodsID '
+       + '       , Object_GoodsKind.ID                                 AS KindID '
+       + '       , Object_Goods.ObjectCode '
+       + '       , Object_Goods.ValueData                              AS GoodsName '
+       + '       , Object_GoodsKind.ValueData                          AS KindName '
+       + '       , IFNULL(' + PromoPriceField + ' || '''', ''-'')      AS PromoPrice '
+       + '       , Object_TradeMark.ValueData                          AS TradeMarkName '
+       + '       , Object_GoodsByGoodsKind.Remains '
+       + '       , Object_PriceListItems.' + PriceField + '            AS Price '
+       + '       , Object_Measure.ValueData                            AS Measure '
+       + '       , ''-1;'' || Object_Goods.ID || '';'' || IFNULL(Object_GoodsKind.ID, 0) || '';'' || '
+       + '         Object_Goods.ObjectCode || '' '' || Object_Goods.ValueData || '';'' || IFNULL(Object_GoodsKind.ValueData, ''-'') || '';'' || 0 || '';'' || 0 || '';'' || '
+       + '         IFNULL(Object_PriceListItems.' + PriceField + ', ''0'') || '';'' || IFNULL(Object_Measure.ValueData, ''-'') || '';'' || Object_Goods.Weight || '';'' || '
+       + '         IFNULL(' + PromoPriceField + ', -1) || '';'' || IFNULL(Movement_Promo.isChangePercent, 1) || '';'' || '
+       + '         IFNULL(Object_TradeMark.ValueData, '''') || '';0''  AS FullInfo '
+       + '       , Object_Goods.ValueData || CASE WHEN ' + PromoPriceField + ' IS NULL THEN '';0'' ELSE '';1'' END  AS SearchName '
+       + ' FROM  Object_GoodsByGoodsKind '
+       + '       LEFT JOIN Object_Goods               ON Object_GoodsByGoodsKind.GoodsId        = Object_Goods.ID '
+       + '       LEFT JOIN Object_GoodsKind           ON Object_GoodsKind.ID                    = Object_GoodsByGoodsKind.GoodsKindId '
+       + '       LEFT JOIN Object_Measure             ON Object_Measure.ID                      = Object_Goods.MeasureId '
+       + '       LEFT JOIN Object_TradeMark           ON Object_TradeMark.ID                    = Object_Goods.TradeMarkId '
+       + '       LEFT JOIN Object_PriceListItems      ON Object_PriceListItems.GoodsId          = Object_Goods.ID  '
+       + '                                           AND Object_PriceListItems.PriceListId      = :PRICELISTID '
+       + '       LEFT JOIN MovementItem_PromoPartner  ON MovementItem_PromoPartner.PartnerId    = :PARTNERID  '
+       + '                                           AND (MovementItem_PromoPartner.ContractId  = :CONTRACTID  '
+       + '                                              OR MovementItem_PromoPartner.ContractId = 0) '
+       + '       LEFT JOIN MovementItem_PromoGoods    ON MovementItem_PromoGoods.MovementId     = MovementItem_PromoPartner.MovementId  '
+       + '                                           AND MovementItem_PromoGoods.GoodsId        = Object_Goods.ID  '
+       + '                                           AND (MovementItem_PromoGoods.GoodsKindId   = Object_GoodsKind.ID '
+       + '                                              OR MovementItem_PromoGoods.GoodsKindId  = 0) '
+       + '       LEFT JOIN Movement_Promo             ON Movement_Promo.ID                      = MovementItem_PromoPartner.MovementId '
+       + ' WHERE Object_GoodsByGoodsKind.isErased = 0 '
+       + ' ORDER BY GoodsName ';
+
+    qryGoodsItems.ParamByName('PARTNERID').AsInteger := Params.ParamByName('PARTNERID').AsInteger;
+    qryGoodsItems.ParamByName('CONTRACTID').AsInteger := Params.ParamByName('CONTRACTID').AsInteger;
+    qryGoodsItems.ParamByName('PRICELISTID').AsInteger := Params.ParamByName('PRICELISTID').AsInteger;
+    qryGoodsItems.Open;
+
+    DataSetCache.Add('OrderExtrenalItemsList', Params, qryGoodsItems);
+  end;
 end;
 
 { сохранение возвратов в БД }

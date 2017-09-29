@@ -1206,7 +1206,7 @@ implementation
 
 uses
   uConstants, System.IOUtils, Authentication, Storage, CommonData, uDM, CursorUtils,
-  uNetwork, System.StrUtils;
+  uNetwork, System.StrUtils, uIntf;
 
 {$R *.fmx}
 
@@ -3174,7 +3174,7 @@ begin
   lPromoPrice.Visible := true;
   pShowOnlyPromo.Visible := true;
 
-  SwitchToForm(tiGoodsItems, DM.qryGoodsItems);
+  SwitchToForm(tiGoodsItems, DataSetCache.ActiveDataSet);
 end;
 
 // переход на форму выбора товаров для возврата
