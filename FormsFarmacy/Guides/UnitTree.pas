@@ -73,6 +73,7 @@ type
     Address: TcxGridDBColumn;
     ProvinceCityName: TcxGridDBColumn;
     AreaName: TcxGridDBColumn;
+    MemberName: TcxGridDBColumn;
   private
     { Private declarations }
   public

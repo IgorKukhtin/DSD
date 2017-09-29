@@ -769,7 +769,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TextValue'
+        Name = 'MemberName'
         Value = ''
         Component = GuidesUserManager
         ComponentItem = 'TextValue'
