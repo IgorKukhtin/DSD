@@ -3174,7 +3174,9 @@ begin
   lPromoPrice.Visible := true;
   pShowOnlyPromo.Visible := true;
 
-  SwitchToForm(tiGoodsItems, DataSetCache.ActiveDataSet);
+  bsGoodsItems.DataSet := DataSetCache.ActiveDataSet;
+
+  SwitchToForm(tiGoodsItems, DM.qryGoodsItems);
 end;
 
 // переход на форму выбора товаров для возврата
@@ -3184,6 +3186,8 @@ begin
 
   lPromoPrice.Visible := false;
   pShowOnlyPromo.Visible := false;
+
+  bsGoodsItems.DataSet := DataSetCache.ActiveDataSet;
 
   SwitchToForm(tiGoodsItems, DM.qryGoodsItems);
 end;
@@ -3195,6 +3199,8 @@ begin
 
   lPromoPrice.Visible := false;
   pShowOnlyPromo.Visible := false;
+
+  bsGoodsItems.DataSet := DataSetCache.ActiveDataSet;
 
   SwitchToForm(tiGoodsItems, DM.qryGoodsItems);
 end;
@@ -6126,6 +6132,9 @@ begin
     DM.cdsOrderItems.Close;
   end;
 
+  if tcMain.ActiveTab = tiGoodsItems then
+    bsGoodsItems.DataSet := DM.qryGoodsItems;
+
   if FFormsStack.Count > 0 then
     begin
       Item:= FFormsStack.Pop;
@@ -6140,7 +6149,7 @@ begin
 
       try
         if Item.Data <> nil then
-          TFDQuery(Item.Data).Close;
+          (Item.Data as TDataSet).Close;
       except
       end;
     end

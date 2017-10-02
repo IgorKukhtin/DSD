@@ -101,6 +101,7 @@ procedure TDataSetCacheItem.SetDataSet(ASource: TDataSet);
 var
   I: Integer;
   FieldDef: TFieldDef;
+  FieldType: TFieldType;
 begin
   if Assigned(FDataSet) then
     FreeAndNil(FDataSet);
@@ -115,7 +116,12 @@ begin
     for I := 0 to Pred(ASource.FieldDefs.Count) do
     begin
       FieldDef := ASource.FieldDefs[I];
-      FDataSet.FieldDefs.Add(FieldDef.Name, FieldDef.DataType, FieldDef.Size);
+      FieldType := FieldDef.DataType;
+
+      if FieldType = ftWideString then
+        FieldType := ftString;
+
+      FDataSet.FieldDefs.Add(FieldDef.Name, FieldType, FieldDef.Size);
     end;
 
     (FDataSet as TClientDataSet).CreateDataSet;
@@ -231,4 +237,6 @@ end;
 
 initialization
   TDataSetCache.Create.GetInterface(IDataSetCache, DataSetCache);
+finalization
+  DataSetCache := nil;
 end.

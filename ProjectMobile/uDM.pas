@@ -701,7 +701,6 @@ type
     qryPromoGoodsFullGoodsName: TStringField;
     qryGoodsItemsObjectCode: TIntegerField;
     qryGoodsItemsTradeMark: TStringField;
-    qryGoodsItemsFullGoodsName: TStringField;
     cdsOrderItemsTradeMarkName: TStringField;
     cdsStoreRealItemsTradeMarkName: TStringField;
     cdsReturnInItemsTradeMarkName: TStringField;
@@ -798,13 +797,13 @@ type
     cdsJuridicalCollationDocItemsAmountText: TStringField;
     tblMovementItem_ReturnInisRecalcPrice: TBooleanField;
     cdsReturnInItemsRecalcPriceName: TStringField;
+    qryGoodsItemsFullGoodsName: TWideStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
     procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);
     procedure qryPhotoGroupDocsCalcFields(DataSet: TDataSet);
     procedure qryPartnerCalcFields(DataSet: TDataSet);
     procedure qryPromoGoodsCalcFields(DataSet: TDataSet);
-    procedure qryGoodsItemsCalcFields(DataSet: TDataSet);
     procedure qryCashCalcFields(DataSet: TDataSet);
     procedure qryCashDocsCalcFields(DataSet: TDataSet);
     procedure qryGoodsFullForPriceListCalcFields(DataSet: TDataSet);
@@ -2987,12 +2986,6 @@ begin
     DataSet.FieldByName('GoodsName').AsString;
 end;
 
-procedure TDM.qryGoodsItemsCalcFields(DataSet: TDataSet);
-begin
-  DataSet.FieldByName('FullGoodsName').AsString := DataSet.FieldByName('ObjectCode').AsString + ' ' +
-    DataSet.FieldByName('GoodsName').AsString;
-end;
-
 procedure TDM.qryPartnerCalcFields(DataSet: TDataSet);
 var
   ContractInfo: string;
@@ -3830,51 +3823,48 @@ end;
 
 { начитка новых товаров по которым можно ввести остатки }
 procedure TDM.GenerateStoreRealItemsList;
+var
+  Params: TParams;
 begin
-//or
-//  qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.OBJECTCODE, G.VALUEDATA GoodsName, ' +
-//    'GK.VALUEDATA KindName, ''-'' PromoPrice, T.VALUEDATA TradeMarkName, ' +
-//    'GLK.REMAINS, PI.ORDERPRICE PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || ' +
-//    'G.OBJECTCODE || '' '' || G.VALUEDATA || '';'' || IFNULL(GK.VALUEDATA, ''-'') || '';'' || ' +
-//    'IFNULL(M.VALUEDATA, ''-'') || '';'' || IFNULL(T.VALUEDATA, ''-'') || '';0'' FullInfo, ' +
-//    'G.VALUEDATA || '';0'' SearchName ' +
-//    'from OBJECT_GOODS G ' +
-//    'LEFT JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID ' +
-//    'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID ' +
-//    'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
-//    'LEFT JOIN OBJECT_TRADEMARK T ON T.ID = G.TRADEMARKID ' +
-//    'LEFT JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
-//    'WHERE G.ISERASED = 0 order by GoodsName';
-//or
+  Params := TParams.Create(nil);
+  Params.CreateParam(cdsReturnInPRICELISTID.DataType, 'PRICELISTID', ptInput).Value := cdsReturnInPRICELISTID.AsInteger;
 
-  qryGoodsItems.SQL.Text :=
-       ' SELECT '
-     + '         Object_Goods.ID                  AS GoodsID '
-     + '       , Object_GoodsKind.ID              AS KindID '
-     + '       , Object_Goods.ObjectCode '
-     + '       , Object_Goods.ValueData           AS GoodsName '
-     + '       , Object_GoodsKind.ValueData       AS KindName '
-     + '       , ''-''                            AS PromoPrice '
-     + '       , Object_TradeMark.ValueData       AS TradeMarkName '
-     + '       , Object_GoodsByGoodsKind.Remains '
-     + '       , Object_PriceListItems.OrderPrice AS Price '
-     + '       , Object_Measure.ValueData         AS Measure '
-     + '       , ''-1;'' || Object_Goods.ID || '';'' || IFNULL(Object_GoodsKind.ID, 0) || '';'' ||  '
-     + '         Object_Goods.ObjectCode || '' '' || Object_Goods.ValueData || '';'' || IFNULL(Object_GoodsKind.ValueData, ''-'') || '';'' ||  '
-     + '         IFNULL(Object_Measure.ValueData, ''-'') || '';'' || IFNULL(Object_TradeMark.ValueData, ''-'') || '';0'' AS FullInfo '
-     + '       , Object_Goods.ValueData || '';0'' AS SearchName '
-     + ' FROM  Object_GoodsByGoodsKind '
-     + '       LEFT JOIN Object_Goods ON Object_GoodsByGoodsKind.GoodsId   = Object_Goods.ID '
-     + '       LEFT JOIN Object_GoodsKind        ON Object_GoodsKind.ID               = Object_GoodsByGoodsKind.GoodsKindId '
-     + '       LEFT JOIN Object_Measure          ON Object_Measure.ID                 = Object_Goods.MeasureId '
-     + '       LEFT JOIN Object_TradeMark        ON Object_TradeMark.ID               = Object_Goods.TradeMarkId '
-     + '       LEFT JOIN Object_PriceListItems   ON Object_PriceListItems.GoodsId     = Object_Goods.ID  '
-     + '                                        AND Object_PriceListItems.PriceListId = :PRICELISTID '
-     + ' WHERE Object_GoodsByGoodsKind.isErased = 0  '
-     + ' ORDER BY GoodsName ';
+  if DataSetCache.Find('StoreRealItemsList', Params) = nil then
+  begin
+    qryGoodsItems.SQL.Text :=
+         ' SELECT '
+       + '         Object_Goods.ID                  AS GoodsID '
+       + '       , Object_GoodsKind.ID              AS KindID '
+       + '       , Object_Goods.ObjectCode '
+       + '       , Object_Goods.ValueData           AS GoodsName '
+       + '       , Object_GoodsKind.ValueData       AS KindName '
+       + '       , ''-''                            AS PromoPrice '
+       + '       , Object_TradeMark.ValueData       AS TradeMarkName '
+       + '       , Object_GoodsByGoodsKind.Remains '
+       + '       , Object_PriceListItems.OrderPrice AS Price '
+       + '       , Object_Measure.ValueData         AS Measure '
+       + '       , ''-1;'' || Object_Goods.ID || '';'' || IFNULL(Object_GoodsKind.ID, 0) || '';'' ||  '
+       + '         Object_Goods.ObjectCode || '' '' || Object_Goods.ValueData || '';'' || IFNULL(Object_GoodsKind.ValueData, ''-'') || '';'' ||  '
+       + '         IFNULL(Object_Measure.ValueData, ''-'') || '';'' || IFNULL(Object_TradeMark.ValueData, ''-'') || '';0'' AS FullInfo '
+       + '       , Object_Goods.ValueData || '';0'' AS SearchName '
+       + '       , Object_Goods.ObjectCode || '' '' || Object_Goods.ValueData AS FullGoodsName '
+       + ' FROM  Object_GoodsByGoodsKind '
+       + '       LEFT JOIN Object_Goods ON Object_GoodsByGoodsKind.GoodsId   = Object_Goods.ID '
+       + '       LEFT JOIN Object_GoodsKind        ON Object_GoodsKind.ID               = Object_GoodsByGoodsKind.GoodsKindId '
+       + '       LEFT JOIN Object_Measure          ON Object_Measure.ID                 = Object_Goods.MeasureId '
+       + '       LEFT JOIN Object_TradeMark        ON Object_TradeMark.ID               = Object_Goods.TradeMarkId '
+       + '       LEFT JOIN Object_PriceListItems   ON Object_PriceListItems.GoodsId     = Object_Goods.ID  '
+       + '                                        AND Object_PriceListItems.PriceListId = :PRICELISTID '
+       + ' WHERE Object_GoodsByGoodsKind.isErased = 0  '
+       + ' ORDER BY GoodsName ';
 
-  qryGoodsItems.ParamByName('PRICELISTID').AsInteger := cdsStoreRealsPriceListId.AsInteger;
-  qryGoodsItems.Open;
+    qryGoodsItems.ParamByName('PRICELISTID').AsInteger := Params.ParamByName('PRICELISTID').AsInteger;
+    qryGoodsItems.Open;
+
+    DataSetCache.Add('StoreRealItemsList', Params, qryGoodsItems);
+  end;
+
+  Params.Free;
 end;
 
 { сохранение заявки на товары в БД }
@@ -4603,6 +4593,7 @@ begin
        + '         IFNULL(' + PromoPriceField + ', -1) || '';'' || IFNULL(Movement_Promo.isChangePercent, 1) || '';'' || '
        + '         IFNULL(Object_TradeMark.ValueData, '''') || '';0''  AS FullInfo '
        + '       , Object_Goods.ValueData || CASE WHEN ' + PromoPriceField + ' IS NULL THEN '';0'' ELSE '';1'' END  AS SearchName '
+       + '       , Object_Goods.ObjectCode || '' '' || Object_Goods.ValueData AS FullGoodsName '
        + ' FROM  Object_GoodsByGoodsKind '
        + '       LEFT JOIN Object_Goods               ON Object_GoodsByGoodsKind.GoodsId        = Object_Goods.ID '
        + '       LEFT JOIN Object_GoodsKind           ON Object_GoodsKind.ID                    = Object_GoodsByGoodsKind.GoodsKindId '
@@ -4628,6 +4619,8 @@ begin
 
     DataSetCache.Add('OrderExtrenalItemsList', Params, qryGoodsItems);
   end;
+
+  Params.Free;
 end;
 
 { сохранение возвратов в БД }
@@ -5288,52 +5281,49 @@ end;
 
 { начитка новых товаров, которые можно вернуть }
 procedure TDM.GenerateReturnInItemsList;
+var
+  Params: TParams;
 begin
-//or
-//  qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.OBJECTCODE, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, ' +
-//    '''-'' PromoPrice, T.VALUEDATA TradeMarkName, ' +
-//    'GLK.REMAINS, PI.OrderPrice PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || ' +
-//    'G.OBJECTCODE || '' '' || G.VALUEDATA || '';'' || IFNULL(GK.VALUEDATA, ''-'') || '';'' || ' +
-//    'IFNULL(PI.OrderPrice, 0) || '';'' || IFNULL(M.VALUEDATA, ''-'') || '';'' || ' +
-//    'G.WEIGHT || '';'' || IFNULL(T.VALUEDATA, '''') || '';0'' FullInfo, ' +
-//    'G.VALUEDATA || '';0'' SearchName ' +
-//    'from OBJECT_GOODS G ' +
-//    'LEFT JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID ' +
-//    'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID ' +
-//    'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
-//    'LEFT JOIN OBJECT_TRADEMARK T ON T.ID = G.TRADEMARKID ' +
-//    'LEFT JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
-//    'WHERE G.ISERASED = 0 order by GoodsName';
-//or
-  qryGoodsItems.SQL.Text :=
-       ' SELECT '
-     + '         Object_Goods.ID                   AS GoodsID '
-     + '       , Object_GoodsKind.ID               AS KindID '
-     + '       , Object_Goods.ObjectCode '
-     + '       , Object_Goods.ValueData            AS GoodsName '
-     + '       , Object_GoodsKind.ValueData        AS KindName '
-     + '       , ''-''                             AS PromoPrice '
-     + '       , Object_TradeMark.ValueData        AS TradeMarkName '
-     + '       , Object_GoodsByGoodsKind.Remains '
-     + '       , Object_PriceListItems.ReturnPrice  AS PRICE '
-     + '       , Object_Measure.ValueData          AS MEASURE '
-     + '       , ''-1;'' || Object_Goods.ID || '';'' || IFNULL(Object_GoodsKind.ID, 0) || '';'' || '
-     + '         Object_Goods.ObjectCode || '' '' || Object_Goods.ValueData || '';'' || IFNULL(Object_GoodsKind.ValueData, ''-'') || '';'' || '
-     + '         IFNULL(Object_PriceListItems.OrderPrice, 0) || '';'' || IFNULL(Object_Measure.ValueData, ''-'') || '';'' || '
-     + '         Object_Goods.Weight || '';'' || IFNULL(Object_TradeMark.ValueData, '''') || '';0'' AS FullInfo '
-     + '       , Object_Goods.ValueData || '';0''  AS SearchName '
-     + ' FROM  Object_GoodsByGoodsKind '
-     + '       LEFT JOIN Object_Goods            ON Object_GoodsByGoodsKind.GoodsId   = Object_Goods.ID '
-     + '       LEFT JOIN Object_GoodsKind        ON Object_GoodsKind.ID               = Object_GoodsByGoodsKind.GoodsKindId '
-     + '       LEFT JOIN Object_Measure          ON Object_Measure.ID                 = Object_Goods.MeasureId '
-     + '       LEFT JOIN Object_TradeMark        ON Object_TradeMark.ID               = Object_Goods.TradeMarkId '
-     + '       LEFT JOIN Object_PriceListItems   ON Object_PriceListItems.GoodsId     = Object_Goods.ID '
-     + '                                        AND Object_PriceListItems.PriceListId = :PRICELISTID '
-     + ' WHERE Object_GoodsByGoodsKind.isErased = 0 '
-     + ' ORDER BY GoodsName ';
+  Params := TParams.Create(nil);
+  Params.CreateParam(cdsReturnInPRICELISTID.DataType, 'PRICELISTID', ptInput).Value := cdsReturnInPRICELISTID.AsInteger;
 
-  qryGoodsItems.ParamByName('PRICELISTID').AsInteger := cdsReturnInPRICELISTID.AsInteger;
-  qryGoodsItems.Open;
+  if DataSetCache.Find('ReturnInItemsList', Params) = nil then
+  begin
+    qryGoodsItems.SQL.Text :=
+         ' SELECT '
+       + '         Object_Goods.ID                   AS GoodsID '
+       + '       , Object_GoodsKind.ID               AS KindID '
+       + '       , Object_Goods.ObjectCode '
+       + '       , Object_Goods.ValueData            AS GoodsName '
+       + '       , Object_GoodsKind.ValueData        AS KindName '
+       + '       , ''-''                             AS PromoPrice '
+       + '       , Object_TradeMark.ValueData        AS TradeMarkName '
+       + '       , Object_GoodsByGoodsKind.Remains '
+       + '       , Object_PriceListItems.ReturnPrice  AS PRICE '
+       + '       , Object_Measure.ValueData          AS MEASURE '
+       + '       , ''-1;'' || Object_Goods.ID || '';'' || IFNULL(Object_GoodsKind.ID, 0) || '';'' || '
+       + '         Object_Goods.ObjectCode || '' '' || Object_Goods.ValueData || '';'' || IFNULL(Object_GoodsKind.ValueData, ''-'') || '';'' || '
+       + '         IFNULL(Object_PriceListItems.OrderPrice, 0) || '';'' || IFNULL(Object_Measure.ValueData, ''-'') || '';'' || '
+       + '         Object_Goods.Weight || '';'' || IFNULL(Object_TradeMark.ValueData, '''') || '';0'' AS FullInfo '
+       + '       , Object_Goods.ValueData || '';0''  AS SearchName '
+       + '       , Object_Goods.ObjectCode || '' '' || Object_Goods.ValueData AS FullGoodsName '
+       + ' FROM  Object_GoodsByGoodsKind '
+       + '       LEFT JOIN Object_Goods            ON Object_GoodsByGoodsKind.GoodsId   = Object_Goods.ID '
+       + '       LEFT JOIN Object_GoodsKind        ON Object_GoodsKind.ID               = Object_GoodsByGoodsKind.GoodsKindId '
+       + '       LEFT JOIN Object_Measure          ON Object_Measure.ID                 = Object_Goods.MeasureId '
+       + '       LEFT JOIN Object_TradeMark        ON Object_TradeMark.ID               = Object_Goods.TradeMarkId '
+       + '       LEFT JOIN Object_PriceListItems   ON Object_PriceListItems.GoodsId     = Object_Goods.ID '
+       + '                                        AND Object_PriceListItems.PriceListId = :PRICELISTID '
+       + ' WHERE Object_GoodsByGoodsKind.isErased = 0 '
+       + ' ORDER BY GoodsName ';
+
+    qryGoodsItems.ParamByName('PRICELISTID').AsInteger := Params.ParamByName('PRICELISTID').AsInteger;
+    qryGoodsItems.Open;
+
+    DataSetCache.Add('ReturnInItemsList', Params, qryGoodsItems);
+  end;
+
+  Params.Free;
 end;
 
 { сохранение группы фотографий в БД }
