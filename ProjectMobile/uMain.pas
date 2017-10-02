@@ -1206,7 +1206,7 @@ implementation
 
 uses
   uConstants, System.IOUtils, Authentication, Storage, CommonData, uDM, CursorUtils,
-  uNetwork, System.StrUtils;
+  uNetwork, System.StrUtils, uIntf;
 
 {$R *.fmx}
 
@@ -3174,6 +3174,8 @@ begin
   lPromoPrice.Visible := true;
   pShowOnlyPromo.Visible := true;
 
+  bsGoodsItems.DataSet := DataSetCache.ActiveDataSet;
+
   SwitchToForm(tiGoodsItems, DM.qryGoodsItems);
 end;
 
@@ -3185,6 +3187,8 @@ begin
   lPromoPrice.Visible := false;
   pShowOnlyPromo.Visible := false;
 
+  bsGoodsItems.DataSet := DataSetCache.ActiveDataSet;
+
   SwitchToForm(tiGoodsItems, DM.qryGoodsItems);
 end;
 
@@ -3195,6 +3199,8 @@ begin
 
   lPromoPrice.Visible := false;
   pShowOnlyPromo.Visible := false;
+
+  bsGoodsItems.DataSet := DataSetCache.ActiveDataSet;
 
   SwitchToForm(tiGoodsItems, DM.qryGoodsItems);
 end;
@@ -6126,6 +6132,9 @@ begin
     DM.cdsOrderItems.Close;
   end;
 
+  if tcMain.ActiveTab = tiGoodsItems then
+    bsGoodsItems.DataSet := DM.qryGoodsItems;
+
   if FFormsStack.Count > 0 then
     begin
       Item:= FFormsStack.Pop;
@@ -6140,7 +6149,7 @@ begin
 
       try
         if Item.Data <> nil then
-          TFDQuery(Item.Data).Close;
+          (Item.Data as TDataSet).Close;
       except
       end;
     end
