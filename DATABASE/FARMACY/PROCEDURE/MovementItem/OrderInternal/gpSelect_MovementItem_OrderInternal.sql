@@ -205,7 +205,7 @@ BEGIN
                                   AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
                        WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                          AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
-                  )
+                       )
 
       , tmpMI_Child AS (SELECT MI_Child.ParentId AS MIMasterId
                              , MI_Child.Id       AS MIId
@@ -404,7 +404,7 @@ BEGIN
                             GROUP BY tmpGoodsNotLink.GoodsId
                             ) 
              
-                               
+                                               
        -- Результат 1
        SELECT
              tmpMI.MovementItemId                                   AS Id
@@ -646,7 +646,15 @@ BEGIN
              
                           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI_Child.ObjectId
                     )
-
+                    
+      , tmpJuridicalArea AS (SELECT DISTINCT 
+                                    tmp.UnitId                 
+                                  , tmp.JuridicalId      
+                                  , tmp.AreaId_Juridical
+                                  , tmp.AreaName_Juridical
+                                  , tmp.isDefault_JuridicalArea
+                             FROM lpSelect_Object_JuridicalArea_byUnit (vbUnitId, 0) AS tmp
+                            )
 
         SELECT tmpMI.MovementItemId                           AS MovementItemId
              , MI_Child.Id 
@@ -686,7 +694,11 @@ BEGIN
               , COALESCE(GoodsPromo.InvNumberPromo, '')    :: TVarChar   AS InvNumberPromo -- ***
               , COALESCE(GoodsPromo.ChangePercent, 0)      :: TFLoat     AS ChangePercentPromo
               , COALESCE(tmpGoods.ConditionsKeepName, '')  :: TVarChar   AS ConditionsKeepName
-
+              
+              , tmpJuridicalArea.AreaId_Juridical                                      AS AreaId
+              , COALESCE (tmpJuridicalArea.AreaName_Juridical, '')         :: TVarChar AS AreaName
+              , COALESCE (tmpJuridicalArea.isDefault_JuridicalArea, FALSE) :: Boolean  AS isDefault
+              
         FROM _tmpOrderInternal_MI AS tmpMI
              INNER JOIN tmpMI_Child AS MI_Child ON MI_Child.ParentId = tmpMI.MovementItemId
              LEFT JOIN tmpGoods                 ON tmpGoods.GoodsId  = MI_Child.ObjectId
@@ -713,6 +725,7 @@ BEGIN
             LEFT JOIN MovementItemLastPriceList_View ON MovementItemLastPriceList_View.MovementItemId = MIFloat_MovementItemId.ValueData ::integer
             */
              --LEFT JOIN Movement AS MovementPromo ON MovementPromo.Id = GoodsPromo.MovementId
+             LEFT JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = tmpJuridical.JuridicalId
           ;
 
      RETURN NEXT Cursor2;
@@ -1091,18 +1104,18 @@ BEGIN
                                                   ON MILinkObject_Juridical.DescId = zc_MILinkObject_Juridical()
                                                  AND MILinkObject_Juridical.MovementItemId = tmpMI_Master.Id
                                      ) 
-       , tmpMILinkObject_Contract AS (SELECT MILinkObject_Contract.*                                     
-                                      FROM tmpMI_Master
-                                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract 
-                                                  ON MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-                                                 AND MILinkObject_Contract.MovementItemId = tmpMI_Master.Id 
-                                     ) 
-       , tmpMILinkObject_Goods AS (SELECT MILinkObject_Goods.*
-                                   FROM tmpMI_Master
-                                        LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods 
-                                               ON MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-                                              AND MILinkObject_Goods.MovementItemId = tmpMI_Master.Id
-                                  )
+      , tmpMILinkObject_Contract AS (SELECT MILinkObject_Contract.*                                     
+                                     FROM tmpMI_Master
+                                          LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract 
+                                                 ON MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                                                AND MILinkObject_Contract.MovementItemId = tmpMI_Master.Id 
+                                    ) 
+      , tmpMILinkObject_Goods AS (SELECT MILinkObject_Goods.*
+                                  FROM tmpMI_Master
+                                       LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods 
+                                              ON MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+                                             AND MILinkObject_Goods.MovementItemId = tmpMI_Master.Id
+                                 )
                                                        
       , tmpMIString_Comment AS (SELECT MIString_Comment.*
                                 FROM MovementItemString AS MIString_Comment 
@@ -1403,7 +1416,7 @@ BEGIN
                             GROUP BY tmpGoodsNotLink.GoodsId
                             )
 
-                     
+                           
        -- Результат 1
        SELECT
              tmpMI.Id                                                AS Id
@@ -1568,6 +1581,15 @@ BEGIN
                                        LEFT JOIN Movement AS MovementPromo ON MovementPromo.Id = tmp.MovementId
                      )
 
+      , tmpJuridicalArea AS (SELECT DISTINCT 
+                                    tmp.UnitId                 
+                                  , tmp.JuridicalId      
+                                  , tmp.AreaId_Juridical
+                                  , tmp.AreaName_Juridical
+                                  , tmp.isDefault_JuridicalArea
+                             FROM lpSelect_Object_JuridicalArea_byUnit (vbUnitId, 0) AS tmp
+                            )
+
         SELECT *
               , CASE WHEN PartionGoodsDate < vbDate180 THEN zc_Color_Blue() --456
                      ELSE 0
@@ -1582,6 +1604,10 @@ BEGIN
    
               , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar     AS ConditionsKeepName
 
+              , tmpJuridicalArea.AreaId_Juridical                                      AS AreaId
+              , COALESCE (tmpJuridicalArea.AreaName_Juridical, '')         :: TVarChar AS AreaName
+              , COALESCE (tmpJuridicalArea.isDefault_JuridicalArea, FALSE) :: Boolean  AS isDefault
+              
         FROM _tmpMI
              LEFT JOIN ObjectFloat AS ObjectFloat_Goods_MinimumLot
                                    ON ObjectFloat_Goods_MinimumLot.ObjectId = _tmpMI.GoodsId 
@@ -1597,6 +1623,8 @@ BEGIN
                                   ON ObjectLink_Goods_ConditionsKeep.ObjectId = _tmpMI.GoodsId 
                                  AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
              LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
+             
+             LEFT JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = _tmpMI.JuridicalId
 ;
    RETURN NEXT Cursor2;
 
@@ -1610,6 +1638,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.10.17         * add area
  12.09.17         *
  04.08.17         *
  09.04.17         * оптимизация
@@ -1666,4 +1695,4 @@ where Movement.DescId = zc_Movement_OrderInternal()
 -- SELECT * FROM gpSelect_MovementItem_OrderInternal (inMovementId:= 3954371, inShowAll:= TRUE, inIsErased:= FALSE, inIsLink:= FALSE, inSession:= '3'); 
 --     FETCH ALL "<unnamed portal 143>";
 
---- последнее
+--- последнее 

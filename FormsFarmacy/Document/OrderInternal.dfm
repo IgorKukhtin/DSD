@@ -546,16 +546,36 @@ inherited OrderInternalForm: TOrderInternalForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object AreaName: TcxGridDBColumn
+            Caption = #1056#1077#1075#1080#1086#1085' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
+            DataBinding.FieldName = 'AreaName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 81
+          end
+          object isDefault: TcxGridDBColumn
+            Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
+            DataBinding.FieldName = 'isDefault'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1077#1075#1080#1086#1085' '#1087#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
+            Options.Editing = False
+            Width = 50
+          end
           object colJuridicalName: TcxGridDBColumn
             Caption = #1070#1088' '#1083#1080#1094#1086' '#1087#1086#1089#1090'-'#1082
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 155
           end
           object colMakerName: TcxGridDBColumn
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'MakerName'
+            HeaderAlignmentVert = vaCenter
             Width = 80
           end
           object colBonus: TcxGridDBColumn
@@ -681,6 +701,8 @@ inherited OrderInternalForm: TOrderInternalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 75
+          end
+          object cxGridDBTableView1Column1: TcxGridDBColumn
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -1108,6 +1130,7 @@ inherited OrderInternalForm: TOrderInternalForm
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1089' '#1087#1088#1086#1074#1077#1088#1082#1086#1081' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1082' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1089' '#1087#1088#1086#1074#1077#1088#1082#1086#1081' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1082' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
       ImageIndex = 50
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
   end
@@ -1562,8 +1585,8 @@ inherited OrderInternalForm: TOrderInternalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 162
-    Top = 312
+    Left = 218
+    Top = 368
   end
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <

@@ -1,11 +1,10 @@
 -- Function: gpSelect_Object_Unit_JuridicalArea()
 
-DROP FUNCTION IF EXISTS lpSelect_Object_JuridicalArea_byUnit(Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS lpSelect_Object_JuridicalArea_byUnit(Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpSelect_Object_JuridicalArea_byUnit(
     IN inUnitId           Integer,
-    IN inJuridicalId      Integer,
-    IN inSession          TVarChar       -- сессия пользователя
+    IN inJuridicalId      Integer
 )
 RETURNS TABLE (UnitId                 Integer
              , UnitCode               Integer
