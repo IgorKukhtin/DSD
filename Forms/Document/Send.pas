@@ -66,6 +66,8 @@ type
     GuidesDocumentKind: TdsdGuides;
     edIsAuto: TcxCheckBox;
     actGoodsKindCompleteChoice: TOpenChoiceForm;
+    cxLabel22: TcxLabel;
+    ceComment: TcxTextEdit;
   private
     { Private declarations }
   public

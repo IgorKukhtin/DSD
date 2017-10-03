@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCount TFloat
              , FromId Integer, FromName TVarChar, ItemName_from TVarChar, ToId Integer, ToName TVarChar, ItemName_to TVarChar
              , DocumentKindId Integer, DocumentKindName TVarChar
+             , Comment TVarChar
              , isAuto Boolean
               )
 
@@ -55,6 +56,8 @@ BEGIN
            , Object_DocumentKind.Id             AS DocumentKindId
            , Object_DocumentKind.ValueData      AS DocumentKindName
 
+           , MovementString_Comment.ValueData   AS Comment
+
            , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
 
        FROM (SELECT Movement.id
@@ -74,6 +77,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
                                       ON MovementBoolean_isAuto.MovementId = Movement.Id
                                      AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
+
+            LEFT JOIN MovementString AS MovementString_Comment 
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -102,6 +109,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 03.10.17         add Comment
  05.10.16         * add inJuridicalBasisId
  14.07.16         *
  17.06.16         *

@@ -374,6 +374,7 @@ BEGIN
                                                   , inFromId                := FromId
                                                   , inToId                  := ToId
                                                   , inDocumentKindId        := vbDocumentKindId
+                                                  , inComment               := '' :: TvarChar
                                                   , inUserId                := vbUserId
                                                    )
                                           WHEN vbMovementDescId = zc_Movement_ProductionUnion()

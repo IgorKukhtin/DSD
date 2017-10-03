@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCount TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , DocumentKindId Integer, DocumentKindName TVarChar
+             , Comment TVarChar
              , isAuto Boolean
               )
 AS
@@ -41,6 +42,8 @@ BEGIN
              , CAST ('' AS TVarChar) 		                AS ToName
              , 0                                                AS DocumentKindId
              , CAST ('' AS TVarChar) 		                AS DocumentKindName
+             
+             , CAST ('' as TVarChar) 		                AS Comment
 
              , FALSE                                            AS isAuto
 
@@ -62,6 +65,7 @@ BEGIN
            , Object_To.ValueData                                AS ToName
            , Object_DocumentKind.Id                             AS DocumentKindId
            , Object_DocumentKind.ValueData                      AS DocumentKindName
+           , MovementString_Comment.ValueData                   AS Comment
 
            , COALESCE(MovementBoolean_isAuto.ValueData, False) ::Boolean  AS isAuto
 
@@ -76,6 +80,10 @@ BEGIN
                                       ON MovementBoolean_isAuto.MovementId = Movement.Id
                                      AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
 
+            LEFT JOIN MovementString AS MovementString_Comment 
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
+                                    
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -105,6 +113,7 @@ ALTER FUNCTION gpGet_Movement_Send (Integer, TDateTime, TVarChar) OWNER TO postg
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 03.10.17         * add Comment
  14.07.16         *
  17.06.16         *
  22.05.14                                                        *

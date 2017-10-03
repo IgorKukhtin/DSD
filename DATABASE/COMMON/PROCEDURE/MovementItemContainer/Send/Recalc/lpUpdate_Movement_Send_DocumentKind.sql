@@ -210,6 +210,7 @@ BEGIN
                                               , inFromId                := tmp.FromId
                                               , inToId                  := tmp.ToId
                                               , inDocumentKindId        := tmp.DocumentKindId
+                                              , inComment               := '' :: TvarChar
                                               , inUserId                := inUserId
                                                ) AS MovementId
            FROM (SELECT DISTINCT _tmpResult.OperDate, _tmpResult.FromId, _tmpResult.ToId, _tmpResult.DocumentKindId
