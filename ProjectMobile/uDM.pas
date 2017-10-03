@@ -798,6 +798,7 @@ type
     tblMovementItem_ReturnInisRecalcPrice: TBooleanField;
     cdsReturnInItemsRecalcPriceName: TStringField;
     qryGoodsItemsFullGoodsName: TWideStringField;
+    tblObject_ConstWebService_two: TStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
     procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);
