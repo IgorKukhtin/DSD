@@ -516,6 +516,24 @@ inherited OrderInternalForm: TOrderInternalForm
             VisibleForCustomization = False
             Width = 30
           end
+          object clAreaName: TcxGridDBColumn
+            Caption = #1056#1077#1075#1080#1086#1085' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
+            DataBinding.FieldName = 'AreaName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 81
+          end
+          object clisDefault: TcxGridDBColumn
+            Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
+            DataBinding.FieldName = 'isDefault'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1077#1075#1080#1086#1085' '#1087#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
+            Options.Editing = False
+            Width = 50
+          end
         end
       end
       object cxGrid1: TcxGrid
