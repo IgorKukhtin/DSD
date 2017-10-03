@@ -4938,7 +4938,16 @@ begin
   if (DM.tblObject_Const.RecordCount > 0) and (DM.tblObject_ConstWebService.AsString <> '') then
   begin
     gc_User := TUser.Create(DM.tblObject_ConstUserLogin.AsString, DM.tblObject_ConstUserPassword.AsString);
-    gc_WebServers := DM.tblObject_ConstWebService.AsString.Split([';']);
+    SetLength(gc_WebServers, 1);
+
+    if DM.tblObject_ConstWebService_two.AsString <> '' then
+      SetLength(gc_WebServers, 2);
+
+    gc_WebServers[0] := DM.tblObject_ConstWebService.AsString;
+
+    if DM.tblObject_ConstWebService_two.AsString <> '' then
+      gc_WebServers[1] := DM.tblObject_ConstWebService_two.AsString;
+
     gc_WebService := gc_WebServers[0];
 
     if FTemporaryServer = '' then

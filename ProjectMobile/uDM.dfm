@@ -120,6 +120,10 @@ object DM: TDM
       FieldName = 'WebService'
       Size = 255
     end
+    object tblObject_ConstWebService_two: TStringField
+      FieldName = 'WebService_two'
+      Size = 255
+    end
     object tblObject_ConstSyncDateIn: TDateTimeField
       FieldName = 'SyncDateIn'
     end
