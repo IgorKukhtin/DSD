@@ -3,10 +3,8 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
   ClientHeight = 480
   ClientWidth = 1077
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -409
-  ExplicitTop = -26
   ExplicitWidth = 1093
-  ExplicitHeight = 519
+  ExplicitHeight = 518
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -623,38 +621,42 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
     ExplicitWidth = 1077
     ExplicitHeight = 65
     inherited deStart: TcxDateEdit
-      Left = 34
+      Left = 23
       EditValue = 42736d
-      ExplicitLeft = 34
+      ExplicitLeft = 23
+      ExplicitWidth = 79
+      Width = 79
     end
     inherited deEnd: TcxDateEdit
-      Left = 34
+      Left = 23
       Top = 32
       EditValue = 42736d
-      ExplicitLeft = 34
+      ExplicitLeft = 23
       ExplicitTop = 32
+      ExplicitWidth = 79
+      Width = 79
     end
     inherited cxLabel1: TcxLabel
-      Left = 15
+      Left = 4
       Caption = #1057':'
-      ExplicitLeft = 15
+      ExplicitLeft = 4
       ExplicitWidth = 15
     end
     inherited cxLabel2: TcxLabel
-      Left = 13
+      Left = 2
       Top = 33
       Caption = #1087#1086':'
-      ExplicitLeft = 13
+      ExplicitLeft = 2
       ExplicitTop = 33
       ExplicitWidth = 20
     end
     object cxLabel3: TcxLabel
-      Left = 416
+      Left = 390
       Top = 6
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object ceUnit: TcxButtonEdit
-      Left = 505
+      Left = 477
       Top = 5
       Properties.Buttons = <
         item
@@ -669,12 +671,12 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       Width = 225
     end
     object cxLabel4: TcxLabel
-      Left = 128
+      Left = 106
       Top = 6
       Caption = #1070#1088'. '#1083#1080#1094#1086' ('#1085#1072#1096#1077'):'
     end
     object edJuridical: TcxButtonEdit
-      Left = 220
+      Left = 198
       Top = 5
       Properties.Buttons = <
         item
@@ -686,19 +688,19 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       Width = 186
     end
     object cbGroupMemberSP: TcxCheckBox
-      Left = 736
+      Left = 705
       Top = 32
       Action = actRefresh1
       TabOrder = 8
       Width = 169
     end
     object cxLabel7: TcxLabel
-      Left = 973
+      Left = 904
       Top = 33
       Caption = #1086#1090
     end
     object edDateInvoice: TcxDateEdit
-      Left = 989
+      Left = 920
       Top = 32
       EditValue = 42736d
       Properties.ShowTime = False
@@ -706,23 +708,23 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       Width = 79
     end
     object cxLabel8: TcxLabel
-      Left = 944
+      Left = 875
       Top = 6
       Caption = #1057#1095#1077#1090' '#8470
     end
     object edInvoice: TcxTextEdit
-      Left = 989
+      Left = 920
       Top = 5
       TabOrder = 12
       Width = 79
     end
     object cxLabel11: TcxLabel
-      Left = 736
+      Left = 705
       Top = 6
       Caption = '% '#1089#1082#1080#1076#1082#1080':'
     end
     object cePercentSP: TcxCurrencyEdit
-      Left = 794
+      Left = 763
       Top = 5
       Properties.DisplayFormat = ',0.##'
       TabOrder = 14
@@ -730,12 +732,12 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
     end
   end
   object cxLabel5: TcxLabel [2]
-    Left = 135
+    Left = 113
     Top = 33
     Caption = #1055#1088#1077#1076#1087#1088'-'#1090#1080#1077' '#1054#1047':'
   end
   object ceHospital: TcxButtonEdit [3]
-    Left = 220
+    Left = 198
     Top = 32
     Properties.Buttons = <
       item
@@ -747,12 +749,12 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
     Width = 186
   end
   object cxLabel6: TcxLabel [4]
-    Left = 414
+    Left = 390
     Top = 32
     Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1087#1072#1094#1080#1077#1085#1090#1072':'
   end
   object edGroupMemberSP: TcxButtonEdit [5]
-    Left = 533
+    Left = 502
     Top = 32
     Properties.Buttons = <
       item
