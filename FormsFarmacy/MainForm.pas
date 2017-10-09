@@ -388,6 +388,8 @@ type
     N151: TMenuItem;
     actUnit_JuridicalArea: TdsdOpenForm;
     N152: TMenuItem;
+    actReport_CheckMiddle_Detail: TdsdOpenForm;
+    N153: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

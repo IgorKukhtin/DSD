@@ -695,6 +695,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitDialogForm');
    }
+  // средний чек за период
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckMiddle_DetailForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckMiddle_DetailForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckMiddle_DetailDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckMiddle_DetailDialogForm');
   // средний чек
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckMiddleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckMiddleForm');
