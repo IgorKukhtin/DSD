@@ -1377,8 +1377,8 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
     Connection = ZConnection1
     SQL.Strings = (
       
-        'SELECT Name, Num_byReportBadm FROM gpSelect_Object_Unit ('#39'3'#39') AS' +
-        ' tmp WHERE Num_byReportBadm > 0 ORDER BY Num_byReportBadm')
+        'SELECT Name, Num_byReportBadm FROM gpSelect_Object_Unit (FALSE, ' +
+        #39'3'#39') AS tmp WHERE Num_byReportBadm > 0 ORDER BY Num_byReportBadm')
     Params = <>
     Left = 408
     Top = 248
