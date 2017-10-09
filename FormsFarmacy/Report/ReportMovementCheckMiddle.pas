@@ -88,6 +88,14 @@ type
     Color_Best: TcxGridDBColumn;
     actGridToExcel1: TdsdGridToExcel;
     bb: TdxBarButton;
+    grChart2: TcxGrid;
+    cxGridDBChartView1: TcxGridDBChartView;
+    cxGridDBChartDataGroup2: TcxGridDBChartDataGroup;
+    cxGridLevel2: TcxGridLevel;
+    cxSplitter3: TcxSplitter;
+    cxLabel5: TcxLabel;
+    ceMonth: TcxCurrencyEdit;
+    chPersentMiddle: TcxGridDBColumn;
   private
     { Private declarations }
   public

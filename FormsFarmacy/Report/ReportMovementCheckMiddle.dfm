@@ -22,10 +22,10 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
       ExplicitHeight = 497
       inherited cxGrid: TcxGrid
         Width = 1251
-        Height = 289
+        Height = 225
         Align = alTop
         ExplicitWidth = 1251
-        ExplicitHeight = 289
+        ExplicitHeight = 225
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -789,9 +789,9 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
       end
       object grChart: TcxGrid
         Left = 0
-        Top = 391
+        Top = 416
         Width = 1251
-        Height = 106
+        Height = 81
         Align = alBottom
         TabOrder = 1
         object grChartDBChartView1: TcxGridDBChartView
@@ -922,19 +922,19 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 383
+        Top = 329
         Width = 1251
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         AutoSnap = True
-        Control = grChart
+        Control = grChart2
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 297
+        Top = 233
         Width = 1251
-        Height = 86
+        Height = 96
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 3
@@ -1084,6 +1084,11 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
               Format = ',0.####'
               Kind = skSum
               Column = chAmountPeriod
+            end
+            item
+              Format = ',0.##'
+              Kind = skAverage
+              Column = chSummaMiddleAll
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -1231,6 +1236,11 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
               Format = ',0.####'
               Kind = skSum
               Column = chAmountPeriod
+            end
+            item
+              Format = ',0.##'
+              Kind = skAverage
+              Column = chSummaMiddleAll
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1254,12 +1264,12 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
             PropertiesClassName = 'TcxDateEditProperties'
-            Properties.DisplayFormat = 'MMMM.YYYY'
-            Properties.EditFormat = 'MMMM.YYYY'
+            Properties.DisplayFormat = 'MM.YYYY'
+            Properties.EditFormat = 'MM.YYYY'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 191
+            Width = 165
           end
           object chAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1095#1077#1082#1086#1074' '#1079#1072' '#1076#1077#1085#1100
@@ -1419,6 +1429,14 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
             HeaderHint = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1089#1088#1077#1076#1085#1077#1075#1086' '#1095#1077#1082#1072' '
             Width = 200
           end
+          object chPersentMiddle: TcxGridDBColumn
+            Caption = '%'
+            DataBinding.FieldName = 'PersentMiddle'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103
+            Width = 50
+          end
         end
         object cxGridLevel1: TcxGridLevel
           GridView = cxGridDBTableView1
@@ -1426,12 +1444,56 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
       end
       object cxSplitter2: TcxSplitter
         Left = 0
-        Top = 289
+        Top = 225
         Width = 1251
         Height = 8
         AlignSplitter = salTop
         AutoSnap = True
         Control = cxGrid
+      end
+      object grChart2: TcxGrid
+        Left = 0
+        Top = 337
+        Width = 1251
+        Height = 71
+        Hint = #1044#1080#1085#1072#1084#1080#1082#1072
+        Align = alBottom
+        TabOrder = 5
+        object cxGridDBChartView1: TcxGridDBChartView
+          DataController.DataSource = ChildDS
+          DiagramColumn.Active = True
+          ToolBox.CustomizeButton = True
+          ToolBox.DiagramSelector = True
+          object cxGridDBChartDataGroup2: TcxGridDBChartDataGroup
+            DataBinding.FieldName = 'OperDate'
+            DisplayText = #1044#1072#1090#1072
+          end
+          object cxGridDBChartSeries7: TcxGridDBChartSeries
+            DataBinding.FieldName = 'AmountWith_1303'
+            DisplayText = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1095#1077#1082#1086#1074'  '#1079#1072' '#1087#1077#1088#1080#1086#1076
+          end
+          object cxGridDBChartSeries8: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaSaleAll'
+            DisplayText = #1048#1090#1086#1075#1086' '#1087#1088#1086#1076#1072#1078#1080' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+          end
+          object cxGridDBChartSeries9: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaMiddleAll'
+            DisplayText = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1089#1088#1077#1076#1085#1077#1075#1086' '#1095#1077#1082#1072' '
+          end
+        end
+        object cxGridLevel2: TcxGridLevel
+          GridView = cxGridDBChartView1
+        end
+      end
+      object cxSplitter3: TcxSplitter
+        Left = 0
+        Top = 408
+        Width = 1251
+        Height = 8
+        HotZoneClassName = 'TcxMediaPlayer8Style'
+        AlignSplitter = salBottom
+        AutoSnap = True
+        Control = grChart
       end
     end
   end
@@ -1451,7 +1513,7 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####'
       TabOrder = 3
-      Width = 80
+      Width = 40
     end
     object ceValue2: TcxCurrencyEdit [2]
       Left = 183
@@ -1461,46 +1523,46 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
       Properties.DisplayFormat = ',0.####'
       Style.Color = clWindow
       TabOrder = 4
-      Width = 80
+      Width = 40
     end
     object ceValue3: TcxCurrencyEdit [3]
-      Left = 324
+      Left = 288
       Top = 5
       EditValue = 100.000000000000000000
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####'
       TabOrder = 5
-      Width = 80
+      Width = 40
     end
     object ceValue4: TcxCurrencyEdit [4]
-      Left = 324
+      Left = 288
       Top = 31
       EditValue = 200.000000000000000000
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####'
       TabOrder = 6
-      Width = 80
+      Width = 40
     end
     object ceValue5: TcxCurrencyEdit [5]
-      Left = 467
+      Left = 391
       Top = 5
       EditValue = 300.000000000000000000
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####'
       TabOrder = 7
-      Width = 80
+      Width = 40
     end
     object ceValue6: TcxCurrencyEdit [6]
-      Left = 467
+      Left = 391
       Top = 31
       EditValue = 1000.000000000000000000
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####'
       TabOrder = 8
-      Width = 80
+      Width = 40
     end
     object ceUnit: TcxButtonEdit [7]
-      Left = 646
+      Left = 532
       Top = 5
       Properties.Buttons = <
         item
@@ -1534,7 +1596,7 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
       ExplicitWidth = 20
     end
     object cxLabel3: TcxLabel
-      Left = 557
+      Left = 443
       Top = 6
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
@@ -1549,32 +1611,32 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
       Caption = #1055#1088#1077#1076#1077#1083' 2'
     end
     object cxLabel10: TcxLabel
-      Left = 269
+      Left = 233
       Top = 6
       Caption = #1055#1088#1077#1076#1077#1083' 3'
     end
     object cxLabel11: TcxLabel
-      Left = 269
+      Left = 233
       Top = 32
       Caption = #1055#1088#1077#1076#1077#1083' 4'
     end
     object cxLabel6: TcxLabel
-      Left = 412
+      Left = 336
       Top = 8
       Caption = #1055#1088#1077#1076#1077#1083' 5'
     end
     object cxLabel12: TcxLabel
-      Left = 412
+      Left = 336
       Top = 32
       Caption = #1055#1088#1077#1076#1077#1083' 6'
     end
     object cxLabel4: TcxLabel
-      Left = 557
+      Left = 443
       Top = 32
-      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1076#1083#1103' '#1080#1089#1090#1086#1088#1080#1080':'
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1076#1080#1085#1072#1084#1080#1082#1072'):'
     end
     object edUnitHistory: TcxButtonEdit
-      Left = 712
+      Left = 598
       Top = 31
       Properties.Buttons = <
         item
@@ -1588,13 +1650,28 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
       Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
       Width = 313
     end
+    object cxLabel5: TcxLabel
+      Left = 922
+      Top = 32
+      Caption = #1052#1077#1089#1103#1094#1077#1074
+    end
+    object ceMonth: TcxCurrencyEdit
+      Left = 970
+      Top = 31
+      EditValue = 5.000000000000000000
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Style.Color = clWindow
+      TabOrder = 21
+      Width = 23
+    end
   end
   object cbisDay: TcxCheckBox [2]
-    Left = 1031
+    Left = 920
     Top = 5
     Action = actRefreshOnDay
     TabOrder = 6
-    Width = 79
+    Width = 66
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1805,6 +1882,14 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMonth'
+          Value = Null
+          Component = ceMonth
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1928,6 +2013,14 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
         Name = 'inValue6'
         Value = Null
         Component = ceValue6
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMonth'
+        Value = Null
+        Component = ceMonth
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2166,8 +2259,8 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
     Top = 8
   end
   inherited RefreshDispatcher: TRefreshDispatcher
-    Left = 1144
-    Top = 32
+    Left = 824
+    Top = 88
   end
   object rdUnit: TRefreshDispatcher
     IdParam.Value = Null
@@ -2177,8 +2270,8 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
       item
         Component = UnitGuides
       end>
-    Left = 1096
-    Top = 8
+    Left = 968
+    Top = 64
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -2231,8 +2324,8 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1064
-    Top = 40
+    Left = 1024
+    Top = 64
   end
   object GuidesUnitHistory: TdsdGuides
     KeyField = 'Id'

@@ -58,6 +58,9 @@ type
     cxLabel4: TcxLabel;
     edUnitHistory: TcxButtonEdit;
     GuidesUnitHistory: TdsdGuides;
+    cxLabel5: TcxLabel;
+    ceMonth: TcxCurrencyEdit;
+    cxLabel2: TcxLabel;
   private
     { Private declarations }
   public
