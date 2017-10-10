@@ -50,13 +50,7 @@ BEGIN
             LEFT JOIN Object AS Object_User_Insert ON Object_User_Insert.Id = LoadPriceList.UserId_Insert
             LEFT JOIN Object AS Object_User_Update ON Object_User_Update.Id = LoadPriceList.UserId_Update
             
-            LEFT JOIN ObjectLink AS ObjectLink_JuridicalArea_Juridical
-                                 ON ObjectLink_JuridicalArea_Juridical.ChildObjectId = Object_Juridical.Id 
-                                AND ObjectLink_JuridicalArea_Juridical.DescId = zc_ObjectLink_JuridicalArea_Juridical()
-            LEFT JOIN ObjectLink AS ObjectLink_JuridicalArea_Area
-                                 ON ObjectLink_JuridicalArea_Area.ObjectId = ObjectLink_JuridicalArea_Juridical.ObjectId
-                                AND ObjectLink_JuridicalArea_Area.DescId = zc_ObjectLink_JuridicalArea_Area()
-            LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_JuridicalArea_Area.ChildObjectId  
+            LEFT JOIN Object AS Object_Area ON Object_Area.Id = LoadPriceList.AreaId  
             
             ;
 
@@ -69,6 +63,7 @@ ALTER FUNCTION gpSelect_Movement_LoadPriceList (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.10.17         * LoadPriceList.AreaId
  25.09.17         * add AreaName
  01.07.14                        *
 

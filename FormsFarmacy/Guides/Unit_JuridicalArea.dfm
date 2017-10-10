@@ -32,6 +32,7 @@ inherited Unit_JuridicalAreaForm: TUnit_JuridicalAreaForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           OptionsSelection.MultiSelect = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -91,6 +92,7 @@ inherited Unit_JuridicalAreaForm: TUnit_JuridicalAreaForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object JuridicalName_Unit: TcxGridDBColumn
@@ -125,6 +127,7 @@ inherited Unit_JuridicalAreaForm: TUnit_JuridicalAreaForm
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 71
           end
           object CloseDate_Unit: TcxGridDBColumn
@@ -134,6 +137,7 @@ inherited Unit_JuridicalAreaForm: TUnit_JuridicalAreaForm
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object UserManagerName_Unit: TcxGridDBColumn
@@ -150,6 +154,7 @@ inherited Unit_JuridicalAreaForm: TUnit_JuridicalAreaForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object JuridicalName: TcxGridDBColumn
@@ -159,6 +164,7 @@ inherited Unit_JuridicalAreaForm: TUnit_JuridicalAreaForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 84
           end
           object RetailName_Juridical: TcxGridDBColumn
@@ -168,6 +174,7 @@ inherited Unit_JuridicalAreaForm: TUnit_JuridicalAreaForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 70
           end
           object AreaName_Juridical: TcxGridDBColumn
@@ -177,6 +184,7 @@ inherited Unit_JuridicalAreaForm: TUnit_JuridicalAreaForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 70
           end
           object isDefault_JuridicalArea: TcxGridDBColumn
@@ -350,14 +358,6 @@ inherited Unit_JuridicalAreaForm: TUnit_JuridicalAreaForm
         item
           Visible = True
           ItemName = 'bbChoice'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbProtocolOpenForm'
         end
         item
           Visible = True

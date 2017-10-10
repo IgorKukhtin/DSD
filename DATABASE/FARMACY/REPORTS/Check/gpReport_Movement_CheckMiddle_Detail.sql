@@ -1,10 +1,12 @@
 -- Function:  gpReport_CheckMiddle_Detail()
 
 DROP FUNCTION IF EXISTS gpReport_CheckMiddle_Detail (Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_CheckMiddle_Detail (Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION  gpReport_CheckMiddle_Detail(
     IN inUnitId           Integer,
+    IN inRetailId         Integer,
     IN inDateStart        TDateTime,  -- Дата начала
     IN inDateEnd          TDateTime,  -- Дата окончания
     IN inisDay            Boolean,    -- по дням
@@ -15,7 +17,7 @@ RETURNS SETOF refcursor
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbObjectId Integer;
+   --DECLARE vbObjectId Integer;
    DECLARE vbDateStart TDateTime;  
    DECLARE vbDateEnd   TDateTime;
    DECLARE vbDays Integer;
@@ -27,7 +29,7 @@ BEGIN
     vbUserId:= lpGetUserBySession (inSession);
 
     -- определяется <Торговая сеть>
-    vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
+    --vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
 
     -- кол-во дней периода
     vbDays := (SELECT DATE_PART('DAY', (inDateEnd - inDateStart )) + 1);
@@ -44,7 +46,7 @@ BEGIN
                            INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                                  ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
                                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                                AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
+                                                AND (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)   --vbObjectId
                         WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                           AND inUnitId = 0
                        )
@@ -286,7 +288,8 @@ BEGIN
         -- результат      
         SELECT tmpData.OperDate            ::TDateTime AS OperDate
              , Object_Unit.ValueData                   AS UnitName
-             
+             , Object_Retail.ValueData                 AS RetailName 
+             , Object_Juridical.ValueData              AS JuridicalName
              , tmpData.Amount                :: TFloat AS Amount
              , tmpData.AmountPeriod          :: TFloat AS AmountPeriod
              
@@ -315,7 +318,17 @@ BEGIN
                                    OR (inisMonth = FALSE AND inisDay = FALSE))
 
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpData.UnitId 
-
+             
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                  ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
+                                 AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
+             
+             LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                  ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
+                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+             LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+                     
         ORDER BY 2, 1 ;
 
     RETURN NEXT Cursor1;
@@ -332,7 +345,7 @@ $BODY$
 */
 
 -- тест
---select * from gpReport_CheckMiddle_Detail(inUnitId := 183292, inDateStart := ('01.01.2016')::TDateTime , inDateEnd := ('31.03.2016')::TDateTime , inisDay := 'FALSE' ::boolean , inisMonth:= 'TRUE' ::boolean , inSession := '3' ::TVarChar);
+--select * from gpReport_CheckMiddle_Detail(inUnitId := 183292, inRetailId:=0, inDateStart := ('01.01.2016')::TDateTime , inDateEnd := ('31.03.2016')::TDateTime , inisDay := 'FALSE' ::boolean , inisMonth:= 'TRUE' ::boolean , inSession := '3' ::TVarChar);
 -- FETCH ALL "<unnamed portal 18>";
 
 --183292
