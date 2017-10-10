@@ -210,6 +210,12 @@ BEGIN
                                    AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
                                    AND (Price_Goods.ChildObjectId = inGoodsId OR inGoodsId = 0)
 
+                            -- ограничение по торговой сети
+                            INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                  ON ObjectLink_Goods_Object.ObjectId = Price_Goods.ChildObjectId
+                                                 AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                                 AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
+
                             LEFT JOIN ObjectFloat       AS Price_Value
                                    ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
                                   AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
@@ -621,6 +627,12 @@ BEGIN
                                       AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
                                       AND (Price_Goods.ChildObjectId = inGoodsId OR inGoodsId = 0)
    
+                               -- ограничение по торговой сети
+                               INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                     ON ObjectLink_Goods_Object.ObjectId = Price_Goods.ChildObjectId
+                                                    AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                                    AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
+
                                LEFT JOIN ObjectFloat       AS Price_Value
                                       ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
                                      AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
