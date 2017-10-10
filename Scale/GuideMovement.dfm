@@ -26,7 +26,6 @@ object GuideMovementForm: TGuideMovementForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitHeight = 531
     object ButtonPanel: TPanel
       Left = 0
       Top = 0
@@ -94,7 +93,7 @@ object GuideMovementForm: TGuideMovementForm
         Top = 3
         Width = 31
         Height = 29
-        Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082#1072'> '#1087#1086' '#8470' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+        Action = actChangeMember
         Glyph.Data = {
           F6000000424DF600000000000000760000002800000010000000100000000100
           0400000000008000000000000000000000001000000000000000000000000000
@@ -106,7 +105,6 @@ object GuideMovementForm: TGuideMovementForm
           9188888999998889818888889998889888888888898888888888}
         ParentShowHint = False
         ShowHint = True
-        OnClick = bbChangeMemberClick
       end
       object bbPrint: TSpeedButton
         Left = 428
@@ -374,8 +372,8 @@ object GuideMovementForm: TGuideMovementForm
       Width = 1091
       Height = 336
       Align = alClient
+      PopupMenu = PopupMenu
       TabOrder = 1
-      ExplicitHeight = 498
       object cxDBGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DS
@@ -1094,6 +1092,7 @@ object GuideMovementForm: TGuideMovementForm
     object actRefresh: TAction
       Category = 'ScaleLib'
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 16500
       OnExecute = actRefreshExecute
     end
     object actChoice: TAction
@@ -1134,6 +1133,12 @@ object GuideMovementForm: TGuideMovementForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
+    object actChangeMember: TAction
+      Category = 'ScaleLib'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082#1072'> '#1087#1086' '#8470' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+      ShortCut = 16462
+      OnExecute = actChangeMemberExecute
+    end
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1145,5 +1150,18 @@ object GuideMovementForm: TGuideMovementForm
       end>
     Left = 112
     Top = 184
+  end
+  object PopupMenu: TPopupMenu
+    Images = dmMain.ImageList
+    Left = 96
+    Top = 256
+    object miRefresh: TMenuItem
+      Action = actRefresh
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+    end
+    object miChangeMember: TMenuItem
+      Action = actChangeMember
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082#1072'> '#1087#1086' '#8470' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+    end
   end
 end

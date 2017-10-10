@@ -12,7 +12,7 @@ uses
   dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage, cxDBData,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridLevel,
   cxClasses, cxGridCustomView, cxGrid, cxImageComboBox, dsdAddOn, Vcl.ActnList
- ,DataModul, dsdAction;
+ ,DataModul, dsdAction, Vcl.Menus;
 
 type
   TGuideMovementForm = class(TForm)
@@ -110,6 +110,10 @@ type
     OperDate_Reestr: TcxGridDBColumn;
     ReestrKindName: TcxGridDBColumn;
     bbPrint_ReestrKind: TSpeedButton;
+    PopupMenu: TPopupMenu;
+    miRefresh: TMenuItem;
+    miChangeMember: TMenuItem;
+    actChangeMember: TAction;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -121,7 +125,6 @@ type
     procedure actExitExecute(Sender: TObject);
     procedure deStartPropertiesChange(Sender: TObject);
     procedure deEndPropertiesChange(Sender: TObject);
-    procedure bbChangeMemberClick(Sender: TObject);
     procedure bbPrintClick(Sender: TObject);
     procedure bbViewMIClick(Sender: TObject);
     procedure cbPrintTransportClick(Sender: TObject);
@@ -138,6 +141,7 @@ type
     procedure bbSale_Order_diffClick(Sender: TObject);
     procedure bbPrint_diffClick(Sender: TObject);
     procedure bbPrint_ReestrKindClick(Sender: TObject);
+    procedure actChangeMemberExecute(Sender: TObject);
   private
     fStartWrite:Boolean;
 
@@ -401,7 +405,7 @@ begin
         CDS.Locate('Id',MovementId,[loCaseInsensitive]);
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideMovementForm.bbChangeMemberClick(Sender: TObject);
+procedure TGuideMovementForm.actChangeMemberExecute(Sender: TObject);
 var execParams:TParams;
 begin
     Create_ParamsPersonalComplete(execParams);
@@ -452,6 +456,7 @@ begin
     //
     execParams.Free;
 end;
+
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.bbViewMIClick(Sender: TObject);
 begin
@@ -580,7 +585,8 @@ end;
 procedure TGuideMovementForm.bbPrint_diffClick(Sender: TObject);
 begin
      Print_MovementDiff (CDS.FieldByName('MovementDescId').AsInteger
-                       , CDS.FieldByName('Id').AsInteger               // MovementId
+                       //, CDS.FieldByName('Id').AsInteger               // MovementId
+                       , CDS.FieldByName('MovementId_parent').AsInteger  // MovementId
                         );
 end;
 {------------------------------------------------------------------------------}
