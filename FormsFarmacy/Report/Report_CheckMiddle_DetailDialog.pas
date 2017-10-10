@@ -43,6 +43,7 @@ type
     cbisDay: TcxCheckBox;
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
+    cbisMonth: TcxCheckBox;
   private
     { Private declarations }
   public

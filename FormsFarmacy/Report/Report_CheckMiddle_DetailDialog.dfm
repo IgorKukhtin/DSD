@@ -68,8 +68,8 @@ object Report_CheckMiddle_DetailDialogForm: TReport_CheckMiddle_DetailDialogForm
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
   object cbisDay: TcxCheckBox
-    Left = 234
-    Top = 27
+    Left = 233
+    Top = 8
     Caption = #1087#1086' '#1044#1085#1103#1084
     TabOrder = 7
     Width = 79
@@ -88,6 +88,13 @@ object Report_CheckMiddle_DetailDialogForm: TReport_CheckMiddle_DetailDialogForm
     TabOrder = 8
     Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
     Width = 303
+  end
+  object cbisMonth: TcxCheckBox
+    Left = 233
+    Top = 35
+    Caption = #1087#1086' '#1052#1077#1089#1103#1094#1072#1084
+    TabOrder = 9
+    Width = 83
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -139,6 +146,14 @@ object Report_CheckMiddle_DetailDialogForm: TReport_CheckMiddle_DetailDialogForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'isMonth'
+        Value = Null
+        Component = cbisMonth
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'UnitId'
         Value = Null
         Component = GuidesUnit
@@ -155,8 +170,8 @@ object Report_CheckMiddle_DetailDialogForm: TReport_CheckMiddle_DetailDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 262
-    Top = 33
+    Left = 278
+    Top = 81
   end
   object ActionList: TActionList
     Left = 107

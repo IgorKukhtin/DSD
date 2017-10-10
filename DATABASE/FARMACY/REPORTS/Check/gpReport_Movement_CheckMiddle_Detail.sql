@@ -1,6 +1,5 @@
 -- Function:  gpReport_CheckMiddle_Detail()
 
-DROP FUNCTION IF EXISTS gpReport_CheckMiddle_Detail (Integer, TDateTime, TDateTime, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_CheckMiddle_Detail (Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
 

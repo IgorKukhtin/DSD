@@ -562,14 +562,6 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'isDay'
-          Value = Null
-          Component = cbisMonth
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'UnitId'
           Value = Null
           Component = UnitGuides
@@ -583,6 +575,22 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
           Component = UnitGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMonth'
+          Value = Null
+          Component = cbisMonth
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDay'
+          Value = Null
+          Component = cbisDay
+          DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
