@@ -244,50 +244,98 @@ BEGIN
                         GROUP BY tmpMI.Unitid
                         )
                           
-        , tmpData AS (SELECT tmpMI.Unitid
-                           , tmpMI.OperDate
+        , tmpData_Case AS (SELECT tmpMI.Unitid
+                                , tmpMI.OperDate
+     
+                                , SUM (1 ) AS Amount
+                                , SUM (tmpMI.SummaSale) AS SummaSale
+                                
+                                , SUM (tmpMI.SummChangePercent_SP) AS SummSale_SP
+                                , SUM (tmpMI.SummSale_1303)        AS SummSale_1303
+                               -- , SUM (tmpMI.Count_1303)           AS Count_1303
+                                
+                                , SUM (CASE WHEN COALESCE (tmpMI.SummaSale, 0)<inValue1 THEN 1 ELSE 0 END ) AS Amount1
+                                , SUM (CASE WHEN COALESCE (tmpMI.SummaSale, 0)<inValue1 THEN tmpMI.SummaSale ELSE 0 END ) AS SummaSale1
+                                
+                                , SUM (CASE WHEN COALESCE (tmpMI.SummaSale, 0)>=inValue1 and COALESCE (tmpMI.SummaSale, 0)<inValue2 THEN 1 ELSE 0 END ) AS Amount2
+                                , SUM (CASE WHEN COALESCE (tmpMI.SummaSale, 0)>=inValue1 and COALESCE (tmpMI.SummaSale, 0)<inValue2 THEN tmpMI.SummaSale ELSE 0 END ) AS SummaSale2
+                                
+                                , SUM (CASE WHEN COALESCE (tmpMI.SummaSale, 0)>=inValue2 and COALESCE (tmpMI.SummaSale, 0)<inValue3 THEN 1 ELSE 0 END ) AS Amount3
+                                , SUM (CASE WHEN COALESCE (tmpMI.SummaSale, 0)>=inValue2 and COALESCE (tmpMI.SummaSale, 0)<inValue3 THEN tmpMI.SummaSale ELSE 0 END ) AS SummaSale3
+                                
+                                , SUM (CASE WHEN COALESCE (tmpMI.SummaSale, 0)>=inValue3 and COALESCE (tmpMI.SummaSale, 0)<inValue4 THEN 1 ELSE 0 END ) AS Amount4
+                                , SUM (CASE WHEN COALESCE (tmpMI.SummaSale, 0)>=inValue3 and COALESCE (tmpMI.SummaSale, 0)<inValue4 THEN tmpMI.SummaSale ELSE 0 END ) AS SummaSale4
+                                
+                                , SUM (CASE WHEN COALESCE (tmpMI.SummaSale, 0)>=inValue4 and COALESCE (tmpMI.SummaSale, 0)<inValue5 THEN 1 ELSE 0 END ) AS Amount5
+                                , SUM (CASE WHEN COALESCE (tmpMI.SummaSale, 0)>=inValue4 and COALESCE (tmpMI.SummaSale, 0)<inValue5 THEN tmpMI.SummaSale ELSE 0 END ) AS SummaSale5
+                                
+                                , SUM (CASE WHEN COALESCE (tmpMI.SummaSale, 0)>=inValue5 and COALESCE (tmpMI.SummaSale, 0)<inValue6 THEN 1 ELSE 0 END ) AS Amount6
+                                , SUM (CASE WHEN COALESCE (tmpMI.SummaSale, 0)>=inValue5 and COALESCE (tmpMI.SummaSale, 0)<inValue6 THEN tmpMI.SummaSale ELSE 0 END ) AS SummaSale6
+                                
+                                , SUM (CASE WHEN COALESCE (tmpMI.SummaSale, 0)>=inValue6 THEN 1 ELSE 0 END ) AS Amount7
+                                , SUM (CASE WHEN COALESCE (tmpMI.SummaSale, 0)>=inValue6 THEN tmpMI.SummaSale ELSE 0 END ) AS SummaSale7
+     
+                             FROM tmpMI
+                             GROUP BY tmpMI.Unitid
+                                    , tmpMI.OperDate     
+                            )
+        , tmpData AS (SELECT tmpData_Case.Unitid
+                           , tmpData_Case.OperDate
 
-                           , SUM (1 ) AS Amount
-                           , SUM (tmpMI.SummaSale) AS SummaSale
+                           , SUM (tmpData_Case.Amount)        AS Amount
+                           , SUM (tmpData_Case.SummaSale)     AS SummaSale
                            
-                           , SUM (tmpMI.SummChangePercent_SP) AS SummSale_SP
-                           , SUM (tmpMI.SummSale_1303)        AS SummSale_1303
-                           , SUM (tmpMI.Count_1303)           AS Count_1303
+                           , SUM (tmpData_Case.SummSale_SP)   AS SummSale_SP
+                           , SUM (tmpData_Case.SummSale_1303) AS SummSale_1303
+                           , SUM (tmpData_Case.Count_1303)    AS Count_1303
                            
-                           , SUM (CASE WHEN COALESCE (tmpMI.SummaSale, 0)<inValue1 THEN 1 ELSE 0 END ) AS Amount1
-                           , SUM (CASE WHEN COALESCE (tmpMI.SummaSale, 0)<inValue1 THEN tmpMI.SummaSale ELSE 0 END ) AS SummaSale1
-                           
-                           , SUM (CASE WHEN COALESCE (tmpMI.SummaSale, 0)>=inValue1 and COALESCE (tmpMI.SummaSale, 0)<inValue2 THEN 1 ELSE 0 END ) AS Amount2
-                           , SUM (CASE WHEN COALESCE (tmpMI.SummaSale, 0)>=inValue1 and COALESCE (tmpMI.SummaSale, 0)<inValue2 THEN tmpMI.SummaSale ELSE 0 END ) AS SummaSale2
-                           
-                           , SUM (CASE WHEN COALESCE (tmpMI.SummaSale, 0)>=inValue2 and COALESCE (tmpMI.SummaSale, 0)<inValue3 THEN 1 ELSE 0 END ) AS Amount3
-                           , SUM (CASE WHEN COALESCE (tmpMI.SummaSale, 0)>=inValue2 and COALESCE (tmpMI.SummaSale, 0)<inValue3 THEN tmpMI.SummaSale ELSE 0 END ) AS SummaSale3
-                           
-                           , SUM (CASE WHEN COALESCE (tmpMI.SummaSale, 0)>=inValue3 and COALESCE (tmpMI.SummaSale, 0)<inValue4 THEN 1 ELSE 0 END ) AS Amount4
-                           , SUM (CASE WHEN COALESCE (tmpMI.SummaSale, 0)>=inValue3 and COALESCE (tmpMI.SummaSale, 0)<inValue4 THEN tmpMI.SummaSale ELSE 0 END ) AS SummaSale4
-                           
-                           , SUM (CASE WHEN COALESCE (tmpMI.SummaSale, 0)>=inValue4 and COALESCE (tmpMI.SummaSale, 0)<inValue5 THEN 1 ELSE 0 END ) AS Amount5
-                           , SUM (CASE WHEN COALESCE (tmpMI.SummaSale, 0)>=inValue4 and COALESCE (tmpMI.SummaSale, 0)<inValue5 THEN tmpMI.SummaSale ELSE 0 END ) AS SummaSale5
-                           
-                           , SUM (CASE WHEN COALESCE (tmpMI.SummaSale, 0)>=inValue5 and COALESCE (tmpMI.SummaSale, 0)<inValue6 THEN 1 ELSE 0 END ) AS Amount6
-                           , SUM (CASE WHEN COALESCE (tmpMI.SummaSale, 0)>=inValue5 and COALESCE (tmpMI.SummaSale, 0)<inValue6 THEN tmpMI.SummaSale ELSE 0 END ) AS SummaSale6
-                           
-                           , SUM (CASE WHEN COALESCE (tmpMI.SummaSale, 0)>=inValue6 THEN 1 ELSE 0 END ) AS Amount7
-                           , SUM (CASE WHEN COALESCE (tmpMI.SummaSale, 0)>=inValue6 THEN tmpMI.SummaSale ELSE 0 END ) AS SummaSale7
-
-                        FROM (SELECT COALESCE (tmpMI.Unitid, tmpSale_1303.Unitid)     AS UnitId
-                                   , COALESCE (tmpMI.OperDate, tmpSale_1303.OperDate) AS OperDate
-                                   , COALESCE (tmpMI.SummChangePercent_SP, 0)         AS SummChangePercent_SP
-                                   , COALESCE (tmpMI.SummaSale,0)                     AS SummaSale
-                                   , COALESCE (tmpMI.SummSale_1303, 0) + COALESCE (tmpSale_1303.SummSale_1303, 0)  AS SummSale_1303
-                                   , COALESCE (tmpSale_1303.Count_1303, 0)            AS Count_1303        -- COALESCE (tmpMI.Count_1303, 0) +
-                              FROM tmpMI
-                                   FULL JOIN tmpSale_1303 ON tmpSale_1303.Unitid = tmpMI.Unitid
-                                                         AND COALESCE (tmpSale_1303.OperDate, Null) = COALESCE (tmpMI.OperDate, Null)
-                              ) AS tmpMI
-                        GROUP BY tmpMI.Unitid
-                               , tmpMI.OperDate     
-                       )
+                           , SUM (tmpData_Case.Amount1)       AS Amount1
+                           , SUM (tmpData_Case.SummaSale1)    AS SummaSale1
+                           , SUM (tmpData_Case.Amount2)       AS Amount2
+                           , SUM (tmpData_Case.SummaSale2)    AS SummaSale2
+                           , SUM (tmpData_Case.Amount3)       AS Amount3
+                           , SUM (tmpData_Case.SummaSale3)    AS SummaSale3
+                           , SUM (tmpData_Case.Amount4)       AS Amount4
+                           , SUM (tmpData_Case.SummaSale4)    AS SummaSale4
+                           , SUM (tmpData_Case.Amount5)       AS Amount5
+                           , SUM (tmpData_Case.SummaSale5)    AS SummaSale5
+                           , SUM (tmpData_Case.Amount6)       AS Amount6
+                           , SUM (tmpData_Case.SummaSale6)    AS SummaSale6                            
+                           , SUM (tmpData_Case.Amount7)       AS Amount7
+                           , SUM (tmpData_Case.SummaSale7)    AS SummaSale7    
+     
+                      FROM (SELECT COALESCE (tmpData_Case.Unitid, tmpSale_1303.Unitid)     AS UnitId
+                                 , COALESCE (tmpData_Case.OperDate, tmpSale_1303.OperDate) AS OperDate
+                                 , COALESCE (tmpData_Case.Amount, 0)                       AS Amount
+                                 , COALESCE (tmpData_Case.SummSale_SP, 0)                  AS SummSale_SP
+                                 , COALESCE (tmpData_Case.SummaSale,0)                     AS SummaSale
+                                 , COALESCE (tmpData_Case.SummSale_1303, 0) + COALESCE (tmpSale_1303.SummSale_1303, 0)  AS SummSale_1303
+                                 , COALESCE (tmpSale_1303.Count_1303, 0)                   AS Count_1303        -- COALESCE (tmpMI.Count_1303, 0) +
+                                 
+                                 , COALESCE (tmpData_Case.Amount1, 0)    AS Amount1
+                                 , COALESCE (tmpData_Case.SummaSale1, 0) AS SummaSale1
+                                 , COALESCE (tmpData_Case.Amount2, 0)    AS Amount2
+                                 , COALESCE (tmpData_Case.SummaSale2, 0) AS SummaSale2
+                                 , COALESCE (tmpData_Case.Amount3, 0)    AS Amount3
+                                 , COALESCE (tmpData_Case.SummaSale3, 0) AS SummaSale3
+                                 , COALESCE (tmpData_Case.Amount4, 0)    AS Amount4
+                                 , COALESCE (tmpData_Case.SummaSale4, 0) AS SummaSale4
+                                 , COALESCE (tmpData_Case.Amount5, 0)    AS Amount5
+                                 , COALESCE (tmpData_Case.SummaSale5, 0) AS SummaSale5
+                                 , COALESCE (tmpData_Case.Amount6, 0)    AS Amount6
+                                 , COALESCE (tmpData_Case.SummaSale6, 0) AS SummaSale6                            
+                                 , COALESCE (tmpData_Case.Amount7, 0)    AS Amount7
+                                 , COALESCE (tmpData_Case.SummaSale7, 0) AS SummaSale7                                        
+                            FROM tmpData_Case 
+                                 FULL JOIN tmpSale_1303 ON tmpSale_1303.Unitid = tmpData_Case.Unitid
+                                                       AND COALESCE (tmpSale_1303.OperDate, Null) = COALESCE (tmpData_Case.OperDate, Null)
+                            ) AS tmpData_Case
+                      GROUP BY tmpData_Case.Unitid
+                             , tmpData_Case.OperDate     
+                     )                      
+                            
+                       
+                       
         -- определяем лучшую и худшую аптеки по ср.чеку
         , tmpBestBad AS (SELECT tmp.*
                          FROM (SELECT tmp.*
