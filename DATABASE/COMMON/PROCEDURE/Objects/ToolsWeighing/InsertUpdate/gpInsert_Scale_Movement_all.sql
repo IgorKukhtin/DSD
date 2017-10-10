@@ -127,8 +127,8 @@ end if;*/
             , tmpMI AS (SELECT MovementItem.Id                               AS MovementItemId
                              , MovementItem.ObjectId                         AS GoodsId
                              , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                             , MovementItem.Amount                           AS Amount
-                             , COALESCE (MIFloat_AmountPartner.ValueData, 0) AS AmountPartner
+                             -- , MovementItem.Amount                        AS Amount
+                             , COALESCE (MIFloat_AmountPartner.ValueData, 0) AS Amount
                         FROM MovementItem
                              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -152,8 +152,8 @@ end if;*/
                                     , ObjectFloat_AmountDoc.ValueData * (1 + tmpGoodsProperty.TaxDoc / 100) AS AmountEnd
                                     , ObjectFloat_AmountDoc.ValueData                                       AS AmountDoc
                                     , tmpGoodsProperty.TaxDoc                                               AS TaxDoc
-                                    --, tmpMI.Amount                                                        AS Amount
-                                    , tmpMI.AmountPartner                                                   AS AmountPartner
+                                    , tmpMI.Amount                                                          AS Amount
+                                    -- , tmpMI.AmountPartner                                                AS AmountPartner
                                FROM (SELECT OFl.ObjectId AS GoodsPropertyId, OFl.ValueData AS TaxDoc
                                      FROM tmpGoodsProperty
                                           INNER JOIN ObjectFloat AS OFl

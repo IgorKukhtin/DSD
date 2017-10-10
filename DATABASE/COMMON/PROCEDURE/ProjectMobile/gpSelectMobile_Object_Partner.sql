@@ -10,7 +10,7 @@ RETURNS TABLE (Id               Integer
              , ObjectCode       Integer  -- Код
              , ValueData        TVarChar -- Название
              , GUID             TVarChar -- Глобальный уникальный идентификатор. Для синхронизации с Главной БД
-             , ShortName        TVarChar -- Условное обозначение 
+             , ShortName        TVarChar -- Условное обозначение
              , Address          TVarChar -- Адрес точки доставки
              , ShortAddress     TVarChar -- Адрес точки доставки для представления на карте
              , GPSN             TFloat   -- GPS координаты точки доставки (широта)
@@ -50,17 +50,22 @@ BEGIN
       IF vbPersonalId IS NOT NULL
       THEN
            RETURN QUERY
-             WITH tmpPartner AS (SELECT lfSelect.Id AS PartnerId
-                                      , lfSelect.JuridicalId 
+             WITH tmpPartner AS (SELECT lfSelect.Id          AS PartnerId
+                                      , lfSelect.JuridicalId AS JuridicalId
                                  FROM lfSelectMobile_Object_Partner (FALSE, inSession) AS lfSelect
                                 )
-                , tmpContract AS (SELECT tmpPartner.PartnerId
+                , tmpContract AS (SELECT tmpPartner.PartnerId                        AS PartnerId
                                        , ObjectLink_Contract_Juridical.ObjectId      AS ContractId
-                                       , tmpPartner.JuridicalId
+                                       , tmpPartner.JuridicalId                      AS JuridicalId
+                                       , ObjectLink_Contract_PriceList.ChildObjectId AS PriceListId
                                   FROM tmpPartner
                                        JOIN ObjectLink AS ObjectLink_Contract_Juridical
                                                        ON ObjectLink_Contract_Juridical.ChildObjectId = tmpPartner.JuridicalId
                                                       AND ObjectLink_Contract_Juridical.DescId        = zc_ObjectLink_Contract_Juridical()
+                                       -- нашли прайс
+                                       LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
+                                                            ON ObjectLink_Contract_PriceList.ObjectId = ObjectLink_Contract_Juridical.ObjectId
+                                                           AND ObjectLink_Contract_PriceList.DescId   = zc_ObjectLink_Contract_PriceList()
                                        -- убрали Удаленные
                                        JOIN Object AS Object_Contract
                                                    ON Object_Contract.Id       = ObjectLink_Contract_Juridical.ObjectId
@@ -153,6 +158,7 @@ BEGIN
                                       , tmpContainer.Amount                                                 AS DebtSum
                                       , (tmpContainer.Amount - COALESCE (tmpMIContainer.Summ, 0.0)::TFloat) AS OverSum
                                       , (zfCalc_OverDayCount (tmpContainer.ContainerId, tmpContainer.Amount - COALESCE (tmpMIContainer.Summ, 0.0)::TFloat, tmpContainer.ContractDate)) AS OverDays
+                                      , (zfCalc_OverDayCount2 (tmpContainer.ContainerId, tmpContainer.Amount, tmpContainer.ContractDate)) AS OverDays2
                                       , SUM (tmpContainer.Amount) OVER (PARTITION BY tmpContainer.PartnerId, ABS (tmpContainer.Amount)) AS ResortSum
                                  FROM tmpContainer
                                       LEFT JOIN tmpMIContainer ON tmpContainer.ContainerId = tmpMIContainer.ContainerId
@@ -163,6 +169,7 @@ BEGIN
                                    , SUM (tmpDebtAll.DebtSum)::TFloat AS DebtSum
                                    , SUM (tmpDebtAll.OverSum)::TFloat AS OverSum
                                    , MAX (tmpDebtAll.OverDays)        AS OverDays
+                                   , MAX (tmpDebtAll.OverDays2)       AS OverDays2
                               FROM tmpDebtAll
                               WHERE tmpDebtAll.ResortSum <> 0.0
                               GROUP BY tmpDebtAll.PartnerId
@@ -189,7 +196,7 @@ BEGIN
                   , Object_Partner.ObjectCode
                   , Object_Partner.ValueData
                   , ObjectString_Partner_GUID.ValueData      AS GUID
-                  , ObjectString_Partner_ShortName.ValueData AS ShortName  
+                  , ObjectString_Partner_ShortName.ValueData AS ShortName
                   , ObjectString_Partner_Address.ValueData   AS Address
                   , ObjectString_Partner_Address.ValueData   AS ShortAddress
                   , ObjectFloat_Partner_GPSN.ValueData       AS GPSN
@@ -200,7 +207,7 @@ BEGIN
                   , zfReCalc_ScheduleOrDelivery (ObjectString_Partner_Schedule.ValueData, ObjectString_Partner_Delivery.ValueData, TRUE)  AS Delivery
                   , COALESCE (tmpDebt.DebtSum, 0.0)::TFloat  AS DebtSum
                   , COALESCE (tmpDebt.OverSum, 0.0)::TFloat  AS OverSum
-                  , CASE WHEN COALESCE (tmpDebt.OverSum, 0.0) > 0.0 THEN COALESCE (tmpDebt.OverDays, 0)::Integer ELSE 0::Integer END AS OverDays
+                  , CASE WHEN COALESCE (tmpDebt.OverSum, 0.0) > 0.0 THEN COALESCE (tmpDebt.OverDays, 0)::Integer ELSE COALESCE (tmpDebt.OverDays2, 0)::Integer END AS OverDays
                   , COALESCE (ObjectFloat_Partner_PrepareDayCount.ValueData, 0.0)::TFloat  AS PrepareDayCount
                   , COALESCE (ObjectFloat_Partner_DocumentDayCount.ValueData, 0.0)::TFloat AS DocumentDayCount
                   , CASE WHEN tmpStoreRealDoc.OperDate IS NULL THEN 0.0::TFloat ELSE DATE_PART ('day', CURRENT_DATE::TDateTime - tmpStoreRealDoc.OperDate)::TFloat END AS CalcDayCount
@@ -209,9 +216,17 @@ BEGIN
                   , tmpContract.JuridicalId
                   , ObjectLink_Partner_Route.ChildObjectId   AS RouteId
                   , tmpContract.ContractId
-                  , COALESCE (tmpDebt.PaidKindId, ObjectLink_Contract_PaidKind.ChildObjectId) :: Integer AS PaidKindId 
-                  , COALESCE (ObjectLink_Partner_PriceList.ChildObjectId, zc_PriceList_Basis()) AS PriceListId
-                  , COALESCE (ObjectLink_Partner_PriceListPrior.ChildObjectId, zc_PriceList_Basis() /*zc_PriceList_BasisPrior()*/) AS PriceListId_ret
+                  , COALESCE (tmpDebt.PaidKindId, ObjectLink_Contract_PaidKind.ChildObjectId) :: Integer AS PaidKindId
+
+                    -- в следующем порядке: 1.1) ---акционный у контрагента 1.2) ---акционный у договора 1.3) ---акционный у юр.лица 2.1) обычный у контрагента 2.2) обычный у договора 2.3) обычный у юр.лица 3) zc_PriceList_Basis
+                  , COALESCE (ObjectLink_Partner_PriceList.ChildObjectId
+                  , COALESCE (tmpContract.PriceListId
+                  , COALESCE (ObjectLink_Juridical_PriceList.ChildObjectId
+                            , zc_PriceList_Basis()))) AS PriceListId
+
+                    -- так для возвратов ГП по "старым ценам" - 1) обычный у контрагента 2) обычный у юр.лица 3) zc_PriceList_BasisPrior
+                  , COALESCE (ObjectLink_Partner_PriceListPrior.ChildObjectId, COALESCE (ObjectLink_Juridical_PriceListPrior.ChildObjectId, zc_PriceList_Basis() /*zc_PriceList_BasisPrior()*/)) AS PriceListId_ret
+
                   , Object_Partner.isErased
                   , TRUE :: Boolean AS isSync
              FROM Object AS Object_Partner
@@ -256,9 +271,17 @@ BEGIN
                   LEFT JOIN ObjectFloat AS ObjectFloat_Partner_GPSE
                                         ON ObjectFloat_Partner_GPSE.ObjectId = Object_Partner.Id
                                        AND ObjectFloat_Partner_GPSE.DescId = zc_ObjectFloat_Partner_GPSE()
+
                   LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                        ON ObjectLink_Juridical_Retail.ObjectId = tmpContract.JuridicalId
-                                      AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                      AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
+                  LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList
+                                       ON ObjectLink_Juridical_PriceList.ObjectId = tmpContract.JuridicalId
+                                      AND ObjectLink_Juridical_PriceList.DescId   = zc_ObjectLink_Juridical_PriceList()
+                  LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceListPrior
+                                       ON ObjectLink_Juridical_PriceListPrior.ObjectId = tmpContract.JuridicalId
+                                      AND ObjectLink_Juridical_PriceListPrior.DescId   = zc_ObjectLink_Juridical_PriceListPrior()
+
                   LEFT JOIN ObjectBoolean AS ObjectBoolean_Retail_OperDateOrder
                                           ON ObjectBoolean_Retail_OperDateOrder.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
                                          AND ObjectBoolean_Retail_OperDateOrder.DescId = zc_ObjectBoolean_Retail_OperDateOrder()

@@ -1,0 +1,4 @@
+ SELECT * FROM gpGet_Movement_IncomeFuel (inMovementId := 7088559 , inOperDate:= NULL, inSession:= zfCalc_UserAdmin())
+ SELECT * FROM gpInsert_Scale_Movement_all (Integer, Integer, TDateTime, TVarChar);
+ SELECT * FROM gpSelect_Scale_MI (inMovementId:= 25173, inSession:= '2')
+ SELECT * FROM PrintForms_View 
