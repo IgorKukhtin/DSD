@@ -123,6 +123,9 @@ type
     spSelect_Link: TdsdStoredProc;
     bbSelect_Link: TdxBarButton;
     actRefresh_Link: TdsdDataSetRefresh;
+    cxGridDBTableView1Column1: TcxGridDBColumn;
+    AreaName: TcxGridDBColumn;
+    isDefault: TcxGridDBColumn;
   private
     { Private declarations }
   public

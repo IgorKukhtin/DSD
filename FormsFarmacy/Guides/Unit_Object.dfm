@@ -217,6 +217,20 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 76
+          end
+          object MemberName: TcxGridDBColumn
+            Caption = #1060#1048#1054' '#1052#1077#1085#1077#1076#1078#1077#1088
+            DataBinding.FieldName = 'MemberName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actOpenUserForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 80
           end
         end
@@ -461,6 +475,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'UserManagerName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

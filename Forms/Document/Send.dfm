@@ -1,30 +1,28 @@
 inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 602
-  ClientWidth = 861
-  ExplicitWidth = 877
+  ClientWidth = 863
+  ExplicitWidth = 879
   ExplicitHeight = 640
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 861
+    Width = 863
     Height = 476
     ExplicitTop = 126
-    ExplicitWidth = 861
-    ExplicitHeight = 491
+    ExplicitWidth = 863
+    ExplicitHeight = 476
     ClientRectBottom = 476
-    ClientRectRight = 861
+    ClientRectRight = 863
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 861
-      ExplicitHeight = 467
+      ExplicitWidth = 863
+      ExplicitHeight = 452
       inherited cxGrid: TcxGrid
-        Width = 861
+        Width = 863
         Height = 452
-        ExplicitLeft = -24
-        ExplicitTop = -59
-        ExplicitWidth = 861
-        ExplicitHeight = 467
+        ExplicitWidth = 863
+        ExplicitHeight = 452
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -337,10 +335,10 @@ inherited SendForm: TSendForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 861
+    Width = 863
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 861
+    ExplicitWidth = 863
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -357,6 +355,8 @@ inherited SendForm: TSendForm
       Properties.SaveTime = False
       Properties.ShowTime = False
       ExplicitLeft = 89
+      ExplicitWidth = 84
+      Width = 84
     end
     inherited cxLabel2: TcxLabel
       Left = 89
@@ -371,17 +371,17 @@ inherited SendForm: TSendForm
     inherited ceStatus: TcxButtonEdit
       Top = 63
       ExplicitTop = 63
-      ExplicitWidth = 218
+      ExplicitWidth = 165
       ExplicitHeight = 22
-      Width = 218
+      Width = 165
     end
     object cxLabel3: TcxLabel
-      Left = 195
+      Left = 179
       Top = 5
       Caption = #1054#1090' '#1082#1086#1075#1086
     end
     object edFrom: TcxButtonEdit
-      Left = 195
+      Left = 179
       Top = 23
       Properties.Buttons = <
         item
@@ -389,10 +389,10 @@ inherited SendForm: TSendForm
           Kind = bkEllipsis
         end>
       TabOrder = 7
-      Width = 270
+      Width = 238
     end
     object edTo: TcxButtonEdit
-      Left = 477
+      Left = 423
       Top = 23
       Properties.Buttons = <
         item
@@ -400,22 +400,33 @@ inherited SendForm: TSendForm
           Kind = bkEllipsis
         end>
       TabOrder = 8
-      Width = 270
+      Width = 220
     end
     object cxLabel4: TcxLabel
-      Left = 477
+      Left = 423
       Top = 5
       Caption = #1050#1086#1084#1091
     end
+    object cxLabel22: TcxLabel
+      Left = 423
+      Top = 45
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+    end
+    object ceComment: TcxTextEdit
+      Left = 423
+      Top = 63
+      TabOrder = 11
+      Width = 436
+    end
   end
   object cxLabel6: TcxLabel [2]
-    Left = 477
-    Top = 45
+    Left = 649
+    Top = 5
     Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   end
   object edDocumentKind: TcxButtonEdit [3]
-    Left = 477
-    Top = 63
+    Left = 649
+    Top = 23
     Properties.Buttons = <
       item
         Default = True
@@ -423,10 +434,10 @@ inherited SendForm: TSendForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 270
+    Width = 210
   end
   object edIsAuto: TcxCheckBox [4]
-    Left = 245
+    Left = 195
     Top = 63
     Caption = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' ('#1076#1072'/'#1085#1077#1090')'
     Properties.ReadOnly = True
@@ -1051,88 +1062,10 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'Comment'
         Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
+        Component = ceComment
         DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -1190,65 +1123,11 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inComment'
         Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
+        Component = ceComment
         DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 162
@@ -1289,6 +1168,7 @@ inherited SendForm: TSendForm
         Control = edDocumentKind
       end
       item
+        Control = ceComment
       end
       item
       end
@@ -1653,8 +1533,8 @@ inherited SendForm: TSendForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 600
-    Top = 8
+    Left = 536
+    Top = 16
   end
   object GuidesDocumentKind: TdsdGuides
     KeyField = 'Id'
@@ -1682,7 +1562,7 @@ inherited SendForm: TSendForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 664
-    Top = 48
+    Left = 752
+    Top = 8
   end
 end

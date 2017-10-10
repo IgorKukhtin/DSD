@@ -80,8 +80,8 @@ BEGIN
       , Object_Parent.ValueData                            AS ParentName
 
       , COALESCE (Object_UserManager.Id, 0)                AS UserManagerId
-      , Object_UserManager.ValueData                       AS UserManagerName
-
+      , COALESCE (Object_Member.ValueData, Object_UserManager.ValueData) AS UserManagerName
+      
       , Object_Juridical.Id                                AS JuridicalId
       , Object_Juridical.ValueData                         AS JuridicalName
 
@@ -130,6 +130,11 @@ BEGIN
                              ON ObjectLink_Unit_UserManager.ObjectId = Object_Unit.Id
                             AND ObjectLink_Unit_UserManager.DescId = zc_ObjectLink_Unit_UserManager()
         LEFT JOIN Object AS Object_UserManager ON Object_UserManager.Id = ObjectLink_Unit_UserManager.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                             ON ObjectLink_User_Member.ObjectId = Object_UserManager.Id
+                            AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+        LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
 
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Area
                              ON ObjectLink_Unit_Area.ObjectId = Object_Unit.Id 

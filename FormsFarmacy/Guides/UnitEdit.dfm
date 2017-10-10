@@ -244,7 +244,6 @@
     Properties.Buttons = <
       item
         Default = True
-        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
@@ -770,7 +769,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TextValue'
+        Name = 'MemberName'
         Value = ''
         Component = GuidesUserManager
         ComponentItem = 'TextValue'

@@ -219,9 +219,17 @@ object UnitTreeForm: TUnitTreeForm
       object UserManagerName: TcxGridDBColumn
         Caption = #1052#1077#1085#1077#1076#1078#1077#1088
         DataBinding.FieldName = 'UserManagerName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        Width = 80
+      end
+      object MemberName: TcxGridDBColumn
+        Caption = #1060#1048#1054' '#1052#1077#1085#1077#1076#1078#1077#1088
+        DataBinding.FieldName = 'MemberName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 80
       end
     end

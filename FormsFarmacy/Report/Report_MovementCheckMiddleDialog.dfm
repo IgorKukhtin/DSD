@@ -3,7 +3,7 @@ object Report_MovementCheckMiddleDialogForm: TReport_MovementCheckMiddleDialogFo
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1057#1088#1077#1076#1085#1080#1081' '#1095#1077#1082'>'
-  ClientHeight = 312
+  ClientHeight = 327
   ClientWidth = 320
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_MovementCheckMiddleDialogForm: TReport_MovementCheckMiddleDialogFo
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 43
-    Top = 274
+    Top = 291
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_MovementCheckMiddleDialogForm: TReport_MovementCheckMiddleDialogFo
   end
   object cxButton2: TcxButton
     Left = 217
-    Top = 274
+    Top = 291
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -81,17 +81,17 @@ object Report_MovementCheckMiddleDialogForm: TReport_MovementCheckMiddleDialogFo
   end
   object cxLabel8: TcxLabel
     Left = 10
-    Top = 176
+    Top = 193
     Caption = #1055#1088#1077#1076#1077#1083' 1'
   end
   object cxLabel9: TcxLabel
     Left = 10
-    Top = 204
+    Top = 221
     Caption = #1055#1088#1077#1076#1077#1083' 2'
   end
   object ceValue1: TcxCurrencyEdit
     Left = 67
-    Top = 175
+    Top = 192
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 10
@@ -99,7 +99,7 @@ object Report_MovementCheckMiddleDialogForm: TReport_MovementCheckMiddleDialogFo
   end
   object ceValue2: TcxCurrencyEdit
     Left = 67
-    Top = 203
+    Top = 220
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 11
@@ -107,17 +107,17 @@ object Report_MovementCheckMiddleDialogForm: TReport_MovementCheckMiddleDialogFo
   end
   object cxLabel10: TcxLabel
     Left = 10
-    Top = 231
+    Top = 248
     Caption = #1055#1088#1077#1076#1077#1083' 3'
   end
   object cxLabel11: TcxLabel
     Left = 175
-    Top = 176
+    Top = 193
     Caption = #1055#1088#1077#1076#1077#1083' 4'
   end
   object ceValue3: TcxCurrencyEdit
     Left = 67
-    Top = 230
+    Top = 247
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 14
@@ -125,7 +125,7 @@ object Report_MovementCheckMiddleDialogForm: TReport_MovementCheckMiddleDialogFo
   end
   object ceValue4: TcxCurrencyEdit
     Left = 232
-    Top = 175
+    Top = 192
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 15
@@ -133,17 +133,17 @@ object Report_MovementCheckMiddleDialogForm: TReport_MovementCheckMiddleDialogFo
   end
   object cxLabel1: TcxLabel
     Left = 175
-    Top = 204
+    Top = 221
     Caption = #1055#1088#1077#1076#1077#1083' 5'
   end
   object cxLabel12: TcxLabel
     Left = 175
-    Top = 231
+    Top = 248
     Caption = #1055#1088#1077#1076#1077#1083' 6'
   end
   object ceValue5: TcxCurrencyEdit
     Left = 232
-    Top = 203
+    Top = 220
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 18
@@ -151,7 +151,7 @@ object Report_MovementCheckMiddleDialogForm: TReport_MovementCheckMiddleDialogFo
   end
   object ceValue6: TcxCurrencyEdit
     Left = 232
-    Top = 230
+    Top = 247
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 19
@@ -167,7 +167,7 @@ object Report_MovementCheckMiddleDialogForm: TReport_MovementCheckMiddleDialogFo
   object cxLabel4: TcxLabel
     Left = 10
     Top = 112
-    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1076#1083#1103' '#1080#1089#1090#1086#1088#1080#1080':'
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1076#1080#1085#1072#1084#1080#1082#1072'):'
   end
   object edUnitHistory: TcxButtonEdit
     Left = 10
@@ -184,11 +184,31 @@ object Report_MovementCheckMiddleDialogForm: TReport_MovementCheckMiddleDialogFo
     Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
     Width = 303
   end
+  object cxLabel5: TcxLabel
+    Left = 10
+    Top = 160
+    Caption = #1044#1080#1085#1072#1084#1080#1082#1072' '#1079#1072' '
+  end
+  object ceMonth: TcxCurrencyEdit
+    Left = 81
+    Top = 159
+    EditValue = 5.000000000000000000
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    Style.Color = clWindow
+    TabOrder = 24
+    Width = 23
+  end
+  object cxLabel2: TcxLabel
+    Left = 108
+    Top = 160
+    Caption = #1084#1077#1089#1103#1094#1077#1074
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
     Left = 170
-    Top = 259
+    Top = 276
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 190
@@ -205,7 +225,7 @@ object Report_MovementCheckMiddleDialogForm: TReport_MovementCheckMiddleDialogFo
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 250
-    Top = 231
+    Top = 248
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -315,6 +335,14 @@ object Report_MovementCheckMiddleDialogForm: TReport_MovementCheckMiddleDialogFo
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMonth'
+        Value = Null
+        Component = ceMonth
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 270
     Top = 9
@@ -352,7 +380,7 @@ object Report_MovementCheckMiddleDialogForm: TReport_MovementCheckMiddleDialogFo
   end
   object ActionList: TActionList
     Left = 155
-    Top = 167
+    Top = 184
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -412,7 +440,7 @@ object Report_MovementCheckMiddleDialogForm: TReport_MovementCheckMiddleDialogFo
       end>
     PackSize = 1
     Left = 106
-    Top = 251
+    Top = 268
   end
   object GuidesUnitHistory: TdsdGuides
     KeyField = 'Id'

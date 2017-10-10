@@ -94,8 +94,8 @@ object MainForm: TMainForm
     Connection = ZConnection
     SQL.Strings = (
       
-        'SELECT DISTINCT * FROM gpSelect_GoodsOnUnit_ForSite_NeBoley (zfC' +
-        'alc_UserSite())')
+        'SELECT DISTINCT * FROM gpSelect_GoodsOnUnit_ForSite_NeBoley (0, ' +
+        'zfCalc_UserSite())')
     Params = <>
     Left = 148
     Top = 108

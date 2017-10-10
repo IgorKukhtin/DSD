@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpReport_Movement_CheckMiddle (Integer, TDateTime, TDate
 DROP FUNCTION IF EXISTS gpReport_Movement_CheckMiddle (Integer, TDateTime, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Movement_CheckMiddle (TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Movement_CheckMiddle (TVarChar, Integer, TDateTime, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Movement_CheckMiddle (TVarChar, Integer, TDateTime, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION  gpReport_Movement_CheckMiddle(
@@ -18,6 +19,7 @@ CREATE OR REPLACE FUNCTION  gpReport_Movement_CheckMiddle(
     IN inValue4           TFloat ,
     IN inValue5           TFloat ,
     IN inValue6           TFloat ,
+    IN inMonth            TFloat ,
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -42,7 +44,8 @@ BEGIN
     -- определяется <Торговая сеть>
     vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
 
-    vbDateStart:= DATE_TRUNC('month', inDateStart) -  Interval '5 MONTH';
+    --vbDateStart:= DATE_TRUNC('month', inDateStart) -  Interval '5 MONTH';
+    vbDateStart:= DATE_TRUNC('month', inDateStart) - ( (''|| inMonth ||' MONTH') :: Interval );
     vbDateEnd:= DATE_TRUNC('month', inDateStart);                         --  Interval '1 Day';
 
 
@@ -431,8 +434,7 @@ BEGIN
                                        
         , tmpCheck AS (SELECT Movement_Check.Id
                             , DATE_TRUNC('Month', Movement_Check.OperDate)                                                                  AS OperDate
-                            --, SUM (COALESCE (MovementFloat_TotalSummChangePercent.ValueData, 0))                                            AS SummChangePercent_SP
-                            , SUM (CASE WHEN COALESCE (tmpMovSP.MovementId, 0) <> 0 THEN COALESCE (MovementFloat_TotalSummChangePercent.ValueData, 0) ELSE 0 END) AS SummChangePercent_SP
+                            , SUM (CASE WHEN COALESCE (tmpMovSP.MovementId, 0) <> 0 THEN COALESCE (MovementFloat_TotalSummChangePercent.ValueData, 0) ELSE 0 END)                     AS SummChangePercent_SP
                             , SUM (CASE WHEN MovementLinkObject_SPKind.ObjectId = zc_Enum_SPKind_1303() THEN COALESCE (MovementFloat_TotalSummChangePercent.ValueData, 0) ELSE 0 END) AS SummSale_1303
                             , SUM (CASE WHEN MovementLinkObject_SPKind.ObjectId = zc_Enum_SPKind_1303() THEN 1 ELSE 0 END)                  AS Count_1303
                        FROM tmpMovementCheck AS Movement_Check
@@ -465,8 +467,8 @@ BEGIN
                    
         -- выбираем продажи по товарам соц.проекта 1303
         , tmpSale_1303 AS (SELECT Movement_Sale.OperDate             AS OperDate
-                                , SUM (COALESCE (-1 * MIContainer.Amount, MI_Sale.Amount) * COALESCE (MIFloat_PriceSale.ValueData, 0)) AS SummSale_1303
-                                , Count (DISTINCT Movement_Sale.Id)  AS Count_1303    --SUM (Movement_Sale.Count_1303)  AS Count_1303
+                                , SUM (COALESCE (MI_Sale.Amount, 0) * COALESCE (MIFloat_PriceSale.ValueData, 0)) AS SummSale_1303
+                                , Count (DISTINCT Movement_Sale.Id)  AS Count_1303   
                            FROM (SELECT DATE_TRUNC('Month', Movement_Sale.OperDate)  AS OperDate
                                       , MovementLinkObject_Unit.ObjectId             AS UnitId
                                       , Movement_Sale.Id                             AS Id
@@ -475,7 +477,7 @@ BEGIN
                                       INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                               ON MovementLinkObject_Unit.MovementId = Movement_Sale.Id
                                              AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                      INNER JOIN _tmpUnit_List ON (_tmpUnit_List.UnitId = MovementLinkObject_Unit.ObjectId OR COALESCE(inUnitId,'0') = '0')
+                                      --INNER JOIN _tmpUnit_List ON (_tmpUnit_List.UnitId = MovementLinkObject_Unit.ObjectId OR COALESCE(inUnitId,'0') = '0')
                                       -- доп. огрн. по подразд. сети
                                       INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
                                       
@@ -497,10 +499,6 @@ BEGIN
                                                              ON MIFloat_PriceSale.MovementItemId = MI_Sale.Id
                                                             AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
    
-                                 LEFT JOIN MovementItemContainer AS MIContainer
-                                                                 ON MIContainer.MovementItemId = MI_Sale.Id
-                                                                AND MIContainer.DescId = zc_MIContainer_Count() 
-                                                                and 1=0
                            GROUP BY Movement_Sale.OperDate
                            ) 
                        
@@ -537,36 +535,65 @@ BEGIN
                                  ) AS tmpMI
                            GROUP BY tmpMI.OperDate     
                           )
+                          
+          , DataResult AS (SELECT tmpData.OperDate
+                                
+                                , tmpData.Amount                AS Amount
+                                , tmpPeriod.AmountPeriod        AS AmountPeriod
+                                
+                                , tmpData.SummaSale             AS SummaSale
+                                , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaSale / tmpData.Amount ELSE 0 END  AS SummaMiddle
+                    
+                                , tmpPeriod.SummaSalePeriod     AS SummaSalePeriod
+                                , CASE WHEN tmpPeriod.AmountPeriod <> 0 THEN tmpPeriod.SummaSalePeriod / tmpPeriod.AmountPeriod ELSE 0 END  AS SummaMiddlePeriod
+                    
+                                , tmpData.SummSale_SP           AS SummSale_SP
+                                , tmpData.SummSale_1303         AS SummSale_1303
+                                , tmpData.Count_1303            AS Count_1303
+                                
+                                , (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0))                                                                  AS SummaSaleWithSP
+                                , CASE WHEN tmpPeriod.AmountPeriod <> 0 THEN (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0)) / tmpPeriod.AmountPeriod  ELSE 0 END  AS SummaMiddleWithSP
+                                
+                                , (tmpPeriod.AmountPeriod + COALESCE (tmpData.Count_1303, 0))                                                              AS AmountWith_1303
+                                 
+                                , (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0) + COALESCE (tmpData.SummSale_1303, 0))                            AS SummaSaleAll
+                                , CASE WHEN (tmpPeriod.AmountPeriod + COALESCE (tmpData.Count_1303, 0)) <> 0 
+                                       THEN (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0) + COALESCE (tmpData.SummSale_1303, 0)) / (tmpPeriod.AmountPeriod + COALESCE (tmpData.Count_1303, 0))
+                                       ELSE 0 
+                                  END          AS SummaMiddleAll
+                             
+                           FROM tmpData
+                                LEFT JOIN tmpPeriod On tmpPeriod.OperDate = tmpData.OperDate
+                           ) 
 
         -- результат      
         SELECT tmpData.OperDate  ::TDateTime
              
              , tmpData.Amount               :: TFloat AS Amount
-             , tmpPeriod.AmountPeriod       :: TFloat AS AmountPeriod
+             , tmpData.AmountPeriod         :: TFloat AS AmountPeriod
              
              , tmpData.SummaSale            :: TFloat AS SummaSale
-             , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaSale / tmpData.Amount ELSE 0 END   :: TFloat AS SummaMiddle
+             , tmpData.SummaMiddle          :: TFloat AS SummaMiddle
  
-             , tmpPeriod.SummaSalePeriod    :: TFloat AS SummaSalePeriod
-             , CASE WHEN tmpPeriod.AmountPeriod <> 0 THEN tmpPeriod.SummaSalePeriod / tmpPeriod.AmountPeriod ELSE 0 END   :: TFloat AS SummaMiddlePeriod
+             , tmpData.SummaSalePeriod      :: TFloat AS SummaSalePeriod
+             , tmpData.SummaMiddlePeriod    :: TFloat AS SummaMiddlePeriod
  
-             , tmpData.SummSale_SP           :: TFloat AS SummSale_SP
-             , tmpData.SummSale_1303         :: TFloat AS SummSale_1303
-             , tmpData.Count_1303            :: TFloat AS Count_1303
+             , tmpData.SummSale_SP          :: TFloat AS SummSale_SP
+             , tmpData.SummSale_1303        :: TFloat AS SummSale_1303
+             , tmpData.Count_1303           :: TFloat AS Count_1303
              
-             , (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0))                                                                  :: TFloat AS SummaSaleWithSP
-             , CASE WHEN tmpPeriod.AmountPeriod <> 0 THEN (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0)) / tmpPeriod.AmountPeriod  ELSE 0 END   :: TFloat AS SummaMiddleWithSP
+             , tmpData.SummaSaleWithSP      :: TFloat AS SummaSaleWithSP
+             , tmpData.SummaMiddleWithSP    :: TFloat AS SummaMiddleWithSP
              
-             , (tmpPeriod.AmountPeriod + COALESCE (tmpData.Count_1303, 0))                                                              :: TFloat AS AmountWith_1303
+             , tmpData.AmountWith_1303      :: TFloat AS AmountWith_1303
               
-             , (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0) + COALESCE (tmpData.SummSale_1303, 0))                            :: TFloat AS SummaSaleAll
-             , CASE WHEN (tmpPeriod.AmountPeriod + COALESCE (tmpData.Count_1303, 0)) <> 0 
-                    THEN (tmpData.SummaSale + COALESCE (tmpData.SummSale_SP, 0) + COALESCE (tmpData.SummSale_1303, 0)) / (tmpPeriod.AmountPeriod + COALESCE (tmpData.Count_1303, 0))
-                    ELSE 0 
-               END       :: TFloat   AS SummaMiddleAll
+             , tmpData.SummaSaleAll         :: TFloat AS SummaSaleAll
+             , tmpData.SummaMiddleAll       :: TFloat AS SummaMiddleAll
+             
+             , CAST (CASE WHEN tmpData.SummaMiddleAll <> 0 THEN (tmpData.SummaMiddleAll * 100 / DataResult.SummaMiddleAll) - 100  ELSE 0 END AS NUMERIC (16,1)) AS  PersentMiddle
           
-        FROM tmpData
-             LEFT JOIN tmpPeriod On tmpPeriod.OperDate = tmpData.OperDate 
+        FROM DataResult AS tmpData
+             LEFT JOIN DataResult ON DataResult.OperDate + interval '1 month' = tmpData.OperDate
         ORDER BY 1 ;
     RETURN NEXT Cursor2;
              
@@ -574,10 +601,11 @@ END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
-  
+   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 09.10.17         *
  01.09.17         *
  25.04.17         * 
  21.04.16         *

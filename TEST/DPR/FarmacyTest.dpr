@@ -538,7 +538,9 @@ uses
   JuridicalAreaEdit in '..\..\FormsFarmacy\Guides\JuridicalAreaEdit.pas' {JuridicalAreaEditForm: TParentForm},
   JuridicalArea in '..\..\FormsFarmacy\Guides\JuridicalArea.pas' {JuridicalAreaForm: TParentForm},
   ImportGroup in '..\..\FormsFarmacy\Import\ImportGroup.pas' {ImportGroupForm: TParentForm},
-  Unit_JuridicalArea in '..\..\FormsFarmacy\Guides\Unit_JuridicalArea.pas' {Unit_JuridicalAreaForm: TParentForm};
+  Unit_JuridicalArea in '..\..\FormsFarmacy\Guides\Unit_JuridicalArea.pas' {Unit_JuridicalAreaForm: TParentForm},
+  Report_CheckMiddle_Detail in '..\..\FormsFarmacy\Report\Report_CheckMiddle_Detail.pas' {Report_CheckMiddle_DetailForm: TParentForm},
+  Report_CheckMiddle_DetailDialog in '..\..\FormsFarmacy\Report\Report_CheckMiddle_DetailDialog.pas' {Report_CheckMiddle_DetailDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -1,4 +1,4 @@
-unit ReportMovementCheckMiddle;
+unit Report_CheckMiddle_Detail;
 
 interface
 
@@ -28,7 +28,7 @@ uses
   dxSkinXmas2008Blue;
 
 type
-  TReportMovementCheckMiddleForm = class(TAncestorReportForm)
+  TReport_CheckMiddle_DetailForm = class(TAncestorReportForm)
     cxLabel3: TcxLabel;
     ceUnit: TcxButtonEdit;
     rdUnit: TRefreshDispatcher;
@@ -40,62 +40,22 @@ type
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     bbPrint: TdxBarButton;
-    cxLabel8: TcxLabel;
-    cxLabel9: TcxLabel;
-    cxLabel10: TcxLabel;
-    cxLabel11: TcxLabel;
-    cxLabel6: TcxLabel;
-    cxLabel12: TcxLabel;
-    cbisDay: TcxCheckBox;
+    cbisMonth: TcxCheckBox;
     actRefreshOnDay: TdsdDataSetRefresh;
-    grChart: TcxGrid;
-    grChartDBChartView1: TcxGridDBChartView;
-    dgUnit: TcxGridDBChartDataGroup;
-    dgOperDate: TcxGridDBChartDataGroup;
-    serSummaSale: TcxGridDBChartSeries;
-    serAmount: TcxGridDBChartSeries;
-    serAmountPeriod: TcxGridDBChartSeries;
-    serSummaSalePeriod: TcxGridDBChartSeries;
-    serSummaMiddle: TcxGridDBChartSeries;
-    grChartLevel1: TcxGridLevel;
     cxSplitter1: TcxSplitter;
-    serSummaMiddlePeriod: TcxGridDBChartSeries;
-    cxLabel4: TcxLabel;
-    edUnitHistory: TcxButtonEdit;
-    GuidesUnitHistory: TdsdGuides;
-    cxGrid1: TcxGrid;
-    cxGridDBTableView1: TcxGridDBTableView;
-    chOperDate: TcxGridDBColumn;
-    chAmount: TcxGridDBColumn;
-    chAmountPeriod: TcxGridDBColumn;
-    chSummaSale: TcxGridDBColumn;
-    chSummaSalePeriod: TcxGridDBColumn;
-    chSummaMiddle: TcxGridDBColumn;
-    chSummaMiddlePeriod: TcxGridDBColumn;
-    chSummSale_SP: TcxGridDBColumn;
-    chSummaSaleWithSP: TcxGridDBColumn;
-    chSummaMiddleWithSP: TcxGridDBColumn;
-    chCount_1303: TcxGridDBColumn;
-    chSummSale_1303: TcxGridDBColumn;
-    chAmountWith_1303: TcxGridDBColumn;
-    chSummaSaleAll: TcxGridDBColumn;
-    chSummaMiddleAll: TcxGridDBColumn;
-    cxGridLevel1: TcxGridLevel;
     cxSplitter2: TcxSplitter;
     ChildCDS: TClientDataSet;
     ChildDS: TDataSource;
     dsdDBViewAddOn1: TdsdDBViewAddOn;
-    Color_Best: TcxGridDBColumn;
     actGridToExcel1: TdsdGridToExcel;
     bb: TdxBarButton;
     grChart2: TcxGrid;
     cxGridDBChartView1: TcxGridDBChartView;
     cxGridDBChartDataGroup2: TcxGridDBChartDataGroup;
     cxGridLevel2: TcxGridLevel;
-    cxSplitter3: TcxSplitter;
-    cxLabel5: TcxLabel;
-    ceMonth: TcxCurrencyEdit;
-    chPersentMiddle: TcxGridDBColumn;
+    cbisDay: TcxCheckBox;
+    actRefreshOnMonth: TdsdDataSetRefresh;
+    UnitName: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -103,7 +63,7 @@ type
   end;
 
 var
-  ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm;
+  Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm;
 
 implementation
 
@@ -111,5 +71,5 @@ implementation
 
 initialization
 
-  RegisterClass(TReportMovementCheckMiddleForm)
+  RegisterClass(TReport_CheckMiddle_DetailForm)
 end.

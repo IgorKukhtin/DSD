@@ -51,9 +51,15 @@ BEGIN
                 RAISE EXCEPTION 'Задан неверный статус документа = <%>', inStatusId;
            END IF;
 
-
            IF vbStatusId <> inStatusId
            THEN 
+                -- если заявка или возврат уже проведены, а их пытаются удалить, то ничего не делаем
+                IF vbDescId IN (zc_Movement_OrderExternal(), zc_Movement_ReturnIn()) 
+                   AND vbStatusId = zc_Enum_Status_Complete() AND inStatusId = zc_Enum_Status_Erased()
+                THEN
+                     RETURN;  
+                END IF;
+
                 IF vbStatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_Erased())
                 THEN 
                      IF vbDescId = zc_Movement_OrderExternal()

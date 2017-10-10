@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Address TVarChar
              , ProvinceCityId Integer, ProvinceCityName TVarChar
              , ParentId Integer, ParentName TVarChar
-             , UserManagerId Integer, UserManagerName TVarChar
+             , UserManagerId Integer, UserManagerName TVarChar, MemberName TVarChar
              , JuridicalName TVarChar, MarginCategoryName TVarChar, isLeaf boolean, isErased boolean
              , RouteId integer, RouteName TVarChar
              , RouteSortingId integer, RouteSortingName TVarChar
@@ -54,6 +54,7 @@ BEGIN
                                                             
       , COALESCE (Object_UserManager.Id, 0)                  AS UserManagerId
       , Object_UserManager.ValueData                         AS UserManagerName
+      , Object_Member.ValueData                              AS MemberName
                                                             
       , Object_Juridical.ValueData                           AS JuridicalName
       , Object_MarginCategory.ValueData                      AS MarginCategoryName
@@ -110,6 +111,11 @@ BEGIN
                             AND ObjectLink_Unit_UserManager.DescId = zc_ObjectLink_Unit_UserManager()
         LEFT JOIN Object AS Object_UserManager ON Object_UserManager.Id = ObjectLink_Unit_UserManager.ChildObjectId
 
+        LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                             ON ObjectLink_User_Member.ObjectId = Object_UserManager.Id
+                            AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+        LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
+        
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Area
                              ON ObjectLink_Unit_Area.ObjectId = Object_Unit.Id 
                             AND ObjectLink_Unit_Area.DescId = zc_ObjectLink_Unit_Area()

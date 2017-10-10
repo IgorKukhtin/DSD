@@ -120,6 +120,10 @@ object DM: TDM
       FieldName = 'WebService'
       Size = 255
     end
+    object tblObject_ConstWebService_two: TStringField
+      FieldName = 'WebService_two'
+      Size = 255
+    end
     object tblObject_ConstSyncDateIn: TDateTimeField
       FieldName = 'SyncDateIn'
     end
@@ -887,12 +891,11 @@ object DM: TDM
     end
   end
   object qryGoodsItems: TFDQuery
-    OnCalcFields = qryGoodsItemsCalcFields
     FilterOptions = [foCaseInsensitive]
     Connection = conMain
     SQL.Strings = (
       '')
-    Left = 40
+    Left = 36
     Top = 280
     object qryGoodsItemsGoodsID: TIntegerField
       FieldName = 'GoodsID'
@@ -937,11 +940,9 @@ object DM: TDM
       FieldName = 'TradeMarkName'
       Size = 255
     end
-    object qryGoodsItemsFullGoodsName: TStringField
-      FieldKind = fkCalculated
+    object qryGoodsItemsFullGoodsName: TWideStringField
       FieldName = 'FullGoodsName'
       Size = 400
-      Calculated = True
     end
   end
   object tblMovement_Visit: TFDTable

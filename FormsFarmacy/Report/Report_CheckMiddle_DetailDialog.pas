@@ -1,4 +1,4 @@
-unit Report_MovementCheckMiddleDialog;
+unit Report_CheckMiddle_DetailDialog;
 
 interface
 
@@ -23,7 +23,7 @@ uses
   dxSkinXmas2008Blue;
 
 type
-  TReport_MovementCheckMiddleDialogForm = class(TParentForm)
+  TReport_CheckMiddle_DetailDialogForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     deEnd: TcxDateEdit;
@@ -32,35 +32,18 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
     FormParams: TdsdFormParams;
-    edUnit: TcxButtonEdit;
     cxLabel3: TcxLabel;
     cxLabel6: TcxLabel;
     cxLabel7: TcxLabel;
-    UnitGuides: TdsdGuides;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
     actGet_UserUnit: TdsdExecStoredProc;
     spGet_UserUnit: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
-    cxLabel8: TcxLabel;
-    cxLabel9: TcxLabel;
-    ceValue1: TcxCurrencyEdit;
-    ceValue2: TcxCurrencyEdit;
-    cxLabel10: TcxLabel;
-    cxLabel11: TcxLabel;
-    ceValue3: TcxCurrencyEdit;
-    ceValue4: TcxCurrencyEdit;
-    cxLabel1: TcxLabel;
-    cxLabel12: TcxLabel;
-    ceValue5: TcxCurrencyEdit;
-    ceValue6: TcxCurrencyEdit;
     cbisDay: TcxCheckBox;
-    cxLabel4: TcxLabel;
-    edUnitHistory: TcxButtonEdit;
-    GuidesUnitHistory: TdsdGuides;
-    cxLabel5: TcxLabel;
-    ceMonth: TcxCurrencyEdit;
-    cxLabel2: TcxLabel;
+    edUnit: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
+    cbisMonth: TcxCheckBox;
   private
     { Private declarations }
   public
@@ -72,6 +55,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_MovementCheckMiddleDialogForm);
+  RegisterClass(TReport_CheckMiddle_DetailDialogForm);
 
 end.

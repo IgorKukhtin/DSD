@@ -620,6 +620,7 @@ end if;*/
                                                   , inFromId                := FromId
                                                   , inToId                  := ToId
                                                   , inDocumentKindId        := 0
+                                                  , inComment               := '' :: TvarChar
                                                   , inUserId                := vbUserId
                                                    )
                                           WHEN vbMovementDescId = zc_Movement_ProductionUnion()

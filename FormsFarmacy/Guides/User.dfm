@@ -351,8 +351,8 @@ object UserForm: TUserForm
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 40
-    Top = 88
+    Left = 24
+    Top = 128
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -386,8 +386,8 @@ object UserForm: TUserForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 240
-    Top = 56
+    Left = 232
+    Top = 120
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -406,8 +406,8 @@ object UserForm: TUserForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 176
-    Top = 64
+    Left = 152
+    Top = 144
     DockControlHeights = (
       0
       0
@@ -697,6 +697,14 @@ object UserForm: TUserForm
           ComponentItem = 'PositionName'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MemberName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -885,8 +893,8 @@ object UserForm: TUserForm
       end>
     Params = <>
     PackSize = 1
-    Left = 56
-    Top = 104
+    Left = 64
+    Top = 128
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -931,7 +939,7 @@ object UserForm: TUserForm
       end>
     PackSize = 1
     Left = 72
-    Top = 120
+    Top = 136
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 272

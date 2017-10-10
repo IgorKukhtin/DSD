@@ -146,11 +146,12 @@ BEGIN
                                                  AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
                      WHERE Object_Goods_View.ObjectId = vbObjectId
                )
-
+               
   , tmpPrice_View AS (SELECT ObjectLink_Price_Unit.ObjectId          AS Id
                            , ObjectLink_Price_Unit.ChildObjectId     AS UnitId
                            , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
                            , Price_Goods.ChildObjectId               AS GoodsId
+                           , ObjectLink_Main.ChildObjectId           AS GoodsMainId
                            , COALESCE(Price_Fix.ValueData,False)     AS Fix 
                            , COALESCE(Price_Top.ValueData,False)     AS isTop   
                       FROM ObjectLink AS ObjectLink_Price_Unit
@@ -159,13 +160,24 @@ BEGIN
                                  AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
                            LEFT JOIN ObjectFloat AS Price_Value
                                   ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                 AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
                            LEFT JOIN ObjectBoolean AS Price_Fix
                                   ON Price_Fix.ObjectId = ObjectLink_Price_Unit.ObjectId
                                  AND Price_Fix.DescId = zc_ObjectBoolean_Price_Fix()
                            LEFT JOIN ObjectBoolean AS Price_Top
                                   ON Price_Top.ObjectId = ObjectLink_Price_Unit.ObjectId
                                  AND Price_Top.DescId = zc_ObjectBoolean_Price_Top()
+                                 
+                           -- получаем GoodsMainId
+                           LEFT JOIN  ObjectLink AS ObjectLink_Child 
+                                                 ON ObjectLink_Child.ChildObjectId = Price_Goods.ChildObjectId
+                                                AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+                           LEFT JOIN  ObjectLink AS ObjectLink_Main 
+                                                 ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                                                  
                       WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                        AND ObjectLink_Price_Unit.ChildObjectId IN (inUnitId_to, inUnitId)
                       )
 
   , ResultSet AS
@@ -226,12 +238,15 @@ BEGIN
 
             LEFT OUTER JOIN RemainsTo ON RemainsTo.GoodsId = SelectMinPrice_AllGoods.GoodsId
 
-            LEFT OUTER JOIN tmpPrice_View AS Object_Price_to
-                                          ON Object_Price_to.GoodsId = SelectMinPrice_AllGoods.GoodsId_retail
-                                         AND Object_Price_to.UnitId = CASE WHEN inUnitId_to = 0 THEN NULL ELSE inUnitId_to END
+
             LEFT OUTER JOIN tmpPrice_View AS Object_Price
                                           ON Object_Price.GoodsId = SelectMinPrice_AllGoods.GoodsId_retail
                                          AND Object_Price.UnitId = inUnitId
+
+            LEFT OUTER JOIN tmpPrice_View AS Object_Price_to
+                                          ON Object_Price_to.GoodsMainId = Object_Price.GoodsMainId --SelectMinPrice_AllGoods.GoodsId_retail
+                                         AND Object_Price_to.UnitId = CASE WHEN inUnitId_to = 0 THEN NULL ELSE inUnitId_to END
+                                         
             LEFT OUTER JOIN tmpGoodsView AS Object_Goods
                                          -- !!!берем из сети!!!
                                          ON Object_Goods.Id = SelectMinPrice_AllGoods.GoodsId_retail -- SelectMinPrice_AllGoods.GoodsId
