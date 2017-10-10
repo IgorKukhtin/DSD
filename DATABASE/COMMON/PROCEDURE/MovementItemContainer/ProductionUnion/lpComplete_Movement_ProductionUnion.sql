@@ -333,7 +333,7 @@ BEGIN
      -- !!!Важно: перед заполннением таблицы - количественные Child(расход)-элементы документа!!!
      IF vbIsPartionDate_Unit_From = TRUE AND vbIsPartionDate_Unit_To = FALSE AND vbOperDate >= '01.07.2015' AND (vbUnitId_To = 8458 -- Склад База ГП
      OR          ( vbUnitId_From =  981821 -- ЦЕХ шприц. мясо
-             AND vbUnitId_To =  951601 -- ЦЕХ упаковки мясо
+             AND vbUnitId_To =  951601 ЦЕХ упаковки мясо
              ))
 
      THEN -- Расход партий П/Ф (ГП) по Рецептуре

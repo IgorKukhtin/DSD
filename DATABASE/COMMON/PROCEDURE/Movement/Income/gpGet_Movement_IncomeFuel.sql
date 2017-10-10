@@ -100,6 +100,11 @@ BEGIN
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
        RETURN QUERY 
+         WITH MIContainer AS (SELECT MIContainer_Count.*
+                              FROM MovementItemContainer AS MIContainer_Count 
+                              WHERE MIContainer_Count.MovementId     = inMovementId 
+                                AND MIContainer_Count.DescId         = zc_MIContainer_Count()
+                             )
          SELECT
                Movement.Id
              , Movement.InvNumber
@@ -234,9 +239,11 @@ BEGIN
                                   AND MovementItem.DescId = zc_MI_Master()
                                   AND MovementItem.isErased = FALSE
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
-            LEFT JOIN MovementItemContainer AS MIContainer_Count ON MIContainer_Count.MovementItemId = MovementItem.Id
-                                                                AND MIContainer_Count.DescId = zc_MIContainer_Count()
-                                                                AND MIContainer_Count.isActive = TRUE
+            LEFT JOIN MIContainer AS MIContainer_Count ON MIContainer_Count.MovementId     = MovementItem.MovementId 
+                                                      AND MIContainer_Count.DescId         = zc_MIContainer_Count()
+                                                      AND MIContainer_Count.MovementItemId = MovementItem.Id
+                                                      AND MIContainer_Count.isActive       = TRUE
+                                                                                                                                
             LEFT JOIN Container AS Container_Count ON Container_Count.Id = MIContainer_Count.ContainerId
             LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = Container_Count.ObjectId
             
