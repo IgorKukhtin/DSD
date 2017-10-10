@@ -54,6 +54,8 @@ BEGIN
                      , Object_Unit.isErased                                 AS isErased
                      , Object_Area.Id                                       AS AreaId
                      , Object_Area.ValueData                                AS AreaName
+                     , Object_Retail.Id                                     AS RetailId
+                     , Object_Retail.ValueData                              AS RetailName 
                      , COALESCE( ObjectDate_Create.ValueData, NULL) :: TDateTime  AS CreateDate
                      , COALESCE(ObjectDate_Close.ValueData, NULL)   :: TDateTime  AS CloseDate
                 FROM Object AS Object_Unit
@@ -67,7 +69,12 @@ BEGIN
                                             ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
                                            AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
-             
+
+                       LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                            ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
+                                           AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                       LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+                       
                        LEFT JOIN ObjectLink AS ObjectLink_Unit_ProvinceCity
                                             ON ObjectLink_Unit_ProvinceCity.ObjectId = Object_Unit.Id
                                            AND ObjectLink_Unit_ProvinceCity.DescId = zc_ObjectLink_Unit_ProvinceCity()
@@ -105,15 +112,8 @@ BEGIN
   , tmpJuridical AS (SELECT Object_Juridical.Id                 AS Id
                           , Object_Juridical.ObjectCode         AS Code
                           , Object_Juridical.ValueData          AS Name
-                          , Object_Retail.Id                    AS RetailId
-                          , Object_Retail.ValueData             AS RetailName 
                           , ObjectBoolean_isCorporate.ValueData AS isCorporate
                       FROM Object AS Object_Juridical
-                          LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                               ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
-                                              AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
-               
                           LEFT JOIN ObjectBoolean AS ObjectBoolean_isCorporate 
                                                   ON ObjectBoolean_isCorporate.ObjectId = Object_Juridical.Id
                                                  AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
@@ -160,12 +160,11 @@ BEGIN
                                , tmpUnit.AreaName           AS AreaName_Unit
                                , tmpUnit.CreateDate         AS CreateDate_Unit
                                , tmpUnit.CloseDate          AS CloseDate_Unit
-                               
+                               , tmpUnit.RetailId           AS RetailId_Juridical
+                               , tmpUnit.RetailName         AS RetailName_Juridical
                                , tmpJuridical.Id            AS JuridicalId
                                , tmpJuridical.Code          AS JuridicalCode
                                , tmpJuridical.Name          AS JuridicalName
-                               , tmpJuridical.RetailId      AS RetailId_Juridical
-                               , tmpJuridical.RetailName    AS RetailName_Juridical
                                , tmpJuridical.isCorporate   AS isCorporate_Juridical
                           FROM tmpUnit
                                CROSS JOIN tmpJuridical
