@@ -8,25 +8,25 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 61
+    Top = 81
     Width = 989
-    Height = 408
+    Height = 388
     TabOrder = 3
-    ExplicitTop = 61
+    ExplicitTop = 81
     ExplicitWidth = 989
-    ExplicitHeight = 408
-    ClientRectBottom = 408
+    ExplicitHeight = 388
+    ClientRectBottom = 388
     ClientRectRight = 989
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 989
-      ExplicitHeight = 408
+      ExplicitHeight = 388
       inherited cxGrid: TcxGrid
         Top = 8
         Width = 989
-        Height = 248
+        Height = 228
         ExplicitTop = 8
         ExplicitWidth = 989
-        ExplicitHeight = 248
+        ExplicitHeight = 228
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -177,6 +177,22 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object RetailName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+            DataBinding.FieldName = 'RetailName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object JuridicalName: TcxGridDBColumn
+            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 142
+          end
           object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
@@ -359,7 +375,7 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 256
+        Top = 236
         Width = 989
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
@@ -378,7 +394,7 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
       end
       object grChart2: TcxGrid
         Left = 0
-        Top = 264
+        Top = 244
         Width = 989
         Height = 144
         Hint = #1044#1080#1085#1072#1084#1080#1082#1072
@@ -418,16 +434,16 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
   end
   inherited Panel: TPanel
     Width = 989
-    Height = 35
+    Height = 55
     ExplicitWidth = 989
-    ExplicitHeight = 35
+    ExplicitHeight = 55
     inherited deStart: TcxDateEdit
-      Left = 29
+      Left = 26
       EditValue = 43009d
-      ExplicitLeft = 29
+      ExplicitLeft = 26
     end
     object ceUnit: TcxButtonEdit [1]
-      Left = 325
+      Left = 316
       Top = 5
       Properties.Buttons = <
         item
@@ -439,7 +455,7 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
       Properties.UseNullString = True
       TabOrder = 3
       Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
-      Width = 379
+      Width = 314
     end
     inherited deEnd: TcxDateEdit
       Left = 141
@@ -458,21 +474,38 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
       ExplicitWidth = 20
     end
     object cxLabel3: TcxLabel
-      Left = 236
+      Left = 229
       Top = 6
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object cbisDay: TcxCheckBox
-      Left = 710
-      Top = 5
+      Left = 29
+      Top = 30
       Action = actRefreshOnDay
       TabOrder = 6
       Width = 66
     end
+    object cxLabel19: TcxLabel
+      Left = 229
+      Top = 31
+      Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100':'
+    end
+    object ceRetail: TcxButtonEdit
+      Left = 316
+      Top = 30
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 8
+      Width = 314
+    end
   end
   object cbisMonth: TcxCheckBox [2]
-    Left = 782
-    Top = 5
+    Left = 114
+    Top = 30
     Action = actRefreshOnMonth
     TabOrder = 6
     Width = 86
@@ -490,7 +523,7 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
           'Date')
       end
       item
-        Component = UnitGuides
+        Component = GuidesUnit
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -498,7 +531,7 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
   end
   inherited ActionList: TActionList
     Left = 135
-    Top = 239
+    Top = 231
     object actGridToExcel1: TdsdGridToExcel [1]
       Category = 'DSDLib'
       MoveParams = <>
@@ -564,7 +597,7 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
         item
           Name = 'UnitId'
           Value = Null
-          Component = UnitGuides
+          Component = GuidesUnit
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -572,7 +605,7 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
         item
           Name = 'UnitName'
           Value = Null
-          Component = UnitGuides
+          Component = GuidesUnit
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -591,6 +624,23 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
           Value = Null
           Component = cbisDay
           DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'RetailId'
+          Value = Null
+          Component = GuidesRetail
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'RetailName'
+          Value = Null
+          Component = GuidesRetail
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -640,7 +690,15 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
       item
         Name = 'inUnitId'
         Value = Null
-        Component = UnitGuides
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetailId'
+        Value = Null
+        Component = GuidesRetail
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -753,9 +811,19 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 80
-    Top = 24
+    Top = 168
   end
   inherited RefreshDispatcher: TRefreshDispatcher
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = GuidesRetail
+      end
+      item
+        Component = GuidesUnit
+      end>
     Left = 456
     Top = 72
   end
@@ -765,12 +833,12 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
     RefreshAction = actRefresh
     ComponentList = <
       item
-        Component = UnitGuides
+        Component = GuidesUnit
       end>
     Left = 600
     Top = 48
   end
-  object UnitGuides: TdsdGuides
+  object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
@@ -782,7 +850,7 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
       item
         Name = 'Key'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -791,7 +859,7 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -807,14 +875,14 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
       item
         Name = 'UnitId'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -847,5 +915,34 @@ inherited Report_CheckMiddle_DetailForm: TReport_CheckMiddle_DetailForm
     SummaryItemList = <>
     Left = 248
     Top = 480
+  end
+  object GuidesRetail: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceRetail
+    FormNameParam.Value = 'TRetailForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TRetailForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 512
   end
 end

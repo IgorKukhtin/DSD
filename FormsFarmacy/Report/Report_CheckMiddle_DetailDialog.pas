@@ -44,6 +44,9 @@ type
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
     cbisMonth: TcxCheckBox;
+    cxLabel19: TcxLabel;
+    ceRetail: TcxButtonEdit;
+    GuidesRetail: TdsdGuides;
   private
     { Private declarations }
   public
