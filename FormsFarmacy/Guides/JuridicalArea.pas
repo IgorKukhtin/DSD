@@ -64,6 +64,8 @@ type
     dxBarControlContainerItem2: TdxBarControlContainerItem;
     AreaName: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public
