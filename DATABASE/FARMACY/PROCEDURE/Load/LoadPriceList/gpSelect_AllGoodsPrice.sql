@@ -338,15 +338,19 @@ BEGIN
                   THEN FALSE
              WHEN COALESCE (inUnitId_to, 0) = 0
                   THEN TRUE
-             WHEN inUnitId_to <> 0 
-              AND ResultSet.MinExpirationDate < (CURRENT_DATE + Interval '6 month') 
-              AND ResultSet.MinExpirationDate_to < (CURRENT_DATE + Interval '6 month')
-              AND ResultSet.isIncome = TRUE
+
+             WHEN inUnitId_to <> 0 AND (ResultSet.MinExpirationDate < (CURRENT_DATE + Interval '6 month') 
+                                    OR  ResultSet.MinExpirationDate_to < (CURRENT_DATE + Interval '6 month')
+                                    OR  ResultSet.isIncome = TRUE)
                   THEN FALSE
-             WHEN inUnitId_to <> 0 AND ResultSet.LastPrice_to > 0 AND 0 <> CAST (CASE WHEN COALESCE (ResultSet.LastPrice,0) = 0 THEN 0.0
-                                                                                      ELSE (ResultSet.LastPrice_to / ResultSet.LastPrice) * 100 - 100
-                                                                                 END AS NUMERIC (16, 1))
+
+             WHEN inUnitId_to <> 0 
+              AND ResultSet.LastPrice_to > 0 
+              AND 0 <> CAST (CASE WHEN COALESCE (ResultSet.LastPrice,0) = 0 THEN 0.0
+                                  ELSE (ResultSet.LastPrice_to / ResultSet.LastPrice) * 100 - 100
+                             END AS NUMERIC (16, 1))
                   THEN TRUE
+                
              ELSE FALSE
         END  AS Reprice
     FROM 
