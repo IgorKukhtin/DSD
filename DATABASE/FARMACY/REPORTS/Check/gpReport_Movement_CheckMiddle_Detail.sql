@@ -164,7 +164,7 @@ BEGIN
         
         , tmpMovement_Sale AS (SELECT CASE WHEN inisDAy = True THEN DATE_TRUNC('day', Movement_Sale.OperDate)
                                            WHEN inisMonth = TRUE THEN DATE_TRUNC('Month', Movement_Sale.OperDate)
-                                           ELSE NULL END ::TDateTime  AS OperDate
+                                           ELSE NULL END              ::TDateTime  AS OperDate
                                     , MovementLinkObject_Unit.ObjectId             AS UnitId
                                     , Movement_Sale.Id                             AS Id
                                     , 1                                            AS Count_1303
@@ -219,7 +219,7 @@ BEGIN
         , tmpData AS (SELECT tmpMI.Unitid
                            , tmpMI.OperDate
 
-                           , SUM (1 ) AS Amount
+                           , SUM (tmpMI.Amount) AS Amount
                            , SUM (tmpMI.SummaSale) AS SummaSale
                            
                            , SUM (tmpMI.SummChangePercent_SP) AS SummSale_SP
@@ -228,17 +228,28 @@ BEGIN
                            
                       FROM (SELECT COALESCE (tmpMI.Unitid, tmpSale_1303.Unitid)     AS UnitId
                                    , COALESCE (tmpMI.OperDate, tmpSale_1303.OperDate) AS OperDate
+                                   , COALESCE (tmpMI.Amount, 0)                       AS Amount
                                    , COALESCE (tmpMI.SummChangePercent_SP, 0)         AS SummChangePercent_SP
                                    , COALESCE (tmpMI.SummaSale,0)                     AS SummaSale
                                    , COALESCE (tmpMI.SummSale_1303, 0) + COALESCE (tmpSale_1303.SummSale_1303, 0)  AS SummSale_1303
-                                   , COALESCE (tmpSale_1303.Count_1303, 0)            AS Count_1303        -- COALESCE (tmpMI.Count_1303, 0) +
-                              FROM tmpMI
+                                   , COALESCE (tmpSale_1303.Count_1303, 0)            AS Count_1303      
+                            FROM
+                                (SELECT tmpMI.Unitid
+                                      , tmpMI.OperDate
+                                      , SUM (1 )                         AS Amount
+                                      , SUM (tmpMI.SummaSale)            AS SummaSale
+                                      , SUM (tmpMI.SummSale_1303)        AS SummSale_1303
+                                      , SUM (tmpMI.SummChangePercent_SP) AS SummChangePercent_SP
+                                 FROM tmpMI
+                                 GROUP BY tmpMI.Unitid
+                                        , tmpMI.OperDate 
+                                 ) AS tmpMI
                                    FULL JOIN tmpSale_1303 ON tmpSale_1303.Unitid = tmpMI.Unitid
-                                                         AND COALESCE (tmpSale_1303.OperDate, Null) = COALESCE (tmpMI.OperDate, Null)
-                              ) AS tmpMI
-                        GROUP BY tmpMI.Unitid
-                               , tmpMI.OperDate     
-                       )
+                                                        AND (COALESCE (tmpSale_1303.OperDate, Null) = COALESCE (tmpMI.OperDate, Null) OR (inisMonth = FALSE AND inisDay = FALSE))
+                            ) AS tmpMI
+                            GROUP BY tmpMI.Unitid
+                                   , tmpMI.OperDate 
+                      )
     
         , DataResult AS(SELECT tmpData.OperDate
                              , tmpData.UnitId
