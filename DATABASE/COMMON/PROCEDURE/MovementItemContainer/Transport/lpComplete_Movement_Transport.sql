@@ -266,7 +266,7 @@ BEGIN
                                        )
         SELECT _tmpItem.MovementItemId_parent            AS MovementItemId
              , MIFloat_RateSumma.ValueData               AS OperSumm_Add
-             , COALESCE (MIFloat_RatePrice.ValueData, 0) /** (COALESCE(MovementItem.Amount,0)+COALESCE(MIFloat_DistanceFuelChild.ValueData,0))*/  AS OperSumm_AddLong
+             , COALESCE (MIFloat_RatePrice.ValueData, 0) * (COALESCE(MovementItem.Amount,0)+COALESCE(MIFloat_DistanceFuelChild.ValueData,0))  AS OperSumm_AddLong
              , CASE WHEN MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriverMore() THEN COALESCE (MIFloat_TaxiMore.ValueData, 0) ELSE COALESCE (MIFloat_Taxi.ValueData, 0) END AS OperSumm_Taxi
 
                -- для Сотрудника (ЗП)

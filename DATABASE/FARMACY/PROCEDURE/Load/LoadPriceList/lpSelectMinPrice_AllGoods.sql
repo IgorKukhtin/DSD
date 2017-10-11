@@ -285,6 +285,7 @@ BEGIN
              -- Прайс-лист (поставщика) - Movement
             JOIN LastPriceList_View ON LastPriceList_View.MovementId = PriceList.MovementId
 
+
              -- Срок партии товара (или Срок годности?) в Прайс-лист (поставщика)
             LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                        ON MIDate_PartionGoods.MovementItemId =  PriceList.Id

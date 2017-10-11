@@ -52,11 +52,11 @@ AS
                         Movement.DescId = zc_Movement_PriceList()
                     AND Movement.StatusId = zc_Enum_Status_UnComplete()
                 ) AS PriceList
-            WHERE PriceList.Max_Date = PriceList.OperDate
+            WHERE PriceList.Max_Date = PriceList.OperDate 
         ) AS LastMovement
         INNER JOIN MovementItem ON MovementItem.MovementId = LastMovement.MovementId
                                AND MovementItem.DescId = zc_MI_Master()
-        LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods -- С‚РѕРІР°СЂС‹ РІ РїСЂР°Р№СЃ-Р»РёСЃС‚Рµ
+        LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods -- товары в прайс-листе
                                          ON MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
                                         AND MILinkObject_Goods.MovementItemId = MovementItem.Id
         LEFT OUTER JOIN Object AS Object_Goods
@@ -77,13 +77,13 @@ CREATE INDEX MovementItemLastPriceList_GoodsId
     ON MovementItemLastPriceList_View (GoodsId);
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.  Р’РѕСЂРѕР±РєР°Р»Рѕ Рђ.Рђ.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
  24.05.16                                                        *
  */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM MovementItemLastPriceList_View
 
--- РћР±РЅРѕРІР»РµРЅРёРµ 
+-- Обновление 
 -- REFRESH MATERIALIZED VIEW MovementItemLastPriceList_View

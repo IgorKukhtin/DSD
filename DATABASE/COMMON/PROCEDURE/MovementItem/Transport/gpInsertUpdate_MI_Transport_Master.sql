@@ -180,7 +180,7 @@ BEGIN
    END IF;
 
    
-   outRatePrice_Calc:= COALESCE (inRatePrice,0) /** (COALESCE (inAmount,0) + COALESCE (inDistanceFuelChild,0))*/;
+   outRatePrice_Calc:= COALESCE (inRatePrice,0) * (COALESCE (inAmount,0) + COALESCE (inDistanceFuelChild,0));
    
    -- сохранили свойство <Комментарий>
    PERFORM lpInsertUpdate_MovementItemString(zc_MIString_Comment(), ioId, inComment);
