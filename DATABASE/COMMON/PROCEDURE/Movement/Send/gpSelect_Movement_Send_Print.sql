@@ -134,6 +134,7 @@ BEGIN
            , tmpMI.Count
            , tmpMI.CountPack
            , tmpMI.HeadCount
+           , CAST ((tmpMI.Amount * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat) AS Amount_Weight
            , tmpMI.PartionGoodsDate
            , tmpMI.PartionGoods
            , Object_GoodsKind.Id                AS GoodsKindId
@@ -200,6 +201,11 @@ BEGIN
                     , MILinkObject_PartionGoods.ObjectId
             ) AS tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
+            
+            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                  ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
+                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                                 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -249,6 +255,7 @@ ALTER FUNCTION gpSelect_Movement_Send_Print (Integer, Integer, TVarChar) OWNER T
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 11.10.17         *
  12.06.15         *
 */
 

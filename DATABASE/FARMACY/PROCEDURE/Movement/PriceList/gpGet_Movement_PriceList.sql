@@ -76,13 +76,7 @@ BEGIN
             LEFT JOIN LoadPriceList ON LoadPriceList.JuridicalId = Object_Juridical.Id
                                    AND LoadPriceList.ContractId  = Object_Contract.Id
                                    
-            LEFT JOIN ObjectLink AS ObjectLink_JuridicalArea_Juridical
-                                 ON ObjectLink_JuridicalArea_Juridical.ChildObjectId = Object_Juridical.Id 
-                                AND ObjectLink_JuridicalArea_Juridical.DescId = zc_ObjectLink_JuridicalArea_Juridical()
-            LEFT JOIN ObjectLink AS ObjectLink_JuridicalArea_Area
-                                 ON ObjectLink_JuridicalArea_Area.ObjectId = ObjectLink_JuridicalArea_Juridical.ObjectId
-                                AND ObjectLink_JuridicalArea_Area.DescId = zc_ObjectLink_JuridicalArea_Area() 
-            LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_JuridicalArea_Area.ChildObjectId 
+            LEFT JOIN Object AS Object_Area ON Object_Area.Id = LoadPriceList.AreaId 
             
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_PriceList();
