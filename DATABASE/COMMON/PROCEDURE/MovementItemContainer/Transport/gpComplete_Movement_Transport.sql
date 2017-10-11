@@ -5,76 +5,56 @@ DROP FUNCTION IF EXISTS gpComplete_Movement_Transport (Integer, TVarChar);
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Transport(
     IN inMovementId        Integer               , -- ключ Документа
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
-)                              
+)
 RETURNS VOID
 AS
 $BODY$
   DECLARE vbUserId Integer;
- 
-  DECLARE vbId Integer; 
-  DECLARE vbRouteId Integer;
-  DECLARE vbRateSumma TFloat;
-  DECLARE vbRatePrice TFloat;
-  DECLARE vbTimePrice TFloat;
-  DECLARE vbHours TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Transport());
+
      -- Проверка закрытия периодов
      -- PERFORM lpCheckPeriodClose(vbUserId, inMovementId);
 
-     -- сохраняем свойства командировочные и дальнобойные
-     -- получаем маршрут
-     SELECT MovementItem.Id AS Id
-          , MovementItem.ObjectId AS RouteId
-        INTO vbId, vbRouteId
-     FROM  MovementItem 
-     WHERE MovementItem.MovementId = inMovementId
-       AND MovementItem.DescId     = zc_MI_Master()
-       AND MovementItem.isErased   = FALSE
-     LIMIT 1;
-     
-     IF COALESCE(vbId, 0) <> 0 
+
+     -- сохраняем
+     IF 1=0
      THEN
-          -- данные из маршрута сумма командировочных. Ставка грн/ч (комманд.), сумма дальнобойные
-          SELECT COALESCE (ObjectFloat_RateSumma.ValueData, 0) AS RateSumma
-               , COALESCE (ObjectFloat_RatePrice.ValueData, 0) AS RatePrice
-               , COALESCE (ObjectFloat_TimePrice.ValueData, 0) AS TimePrice
-              INTO vbRateSumma, vbRatePrice, vbTimePrice
-          FROM Object AS Object_Route
-             LEFT JOIN ObjectFloat AS ObjectFloat_RateSumma
-                                   ON ObjectFloat_RateSumma.ObjectId = Object_Route.Id
-                                  AND ObjectFloat_RateSumma.DescId = zc_ObjectFloat_Route_RateSumma()
-             LEFT JOIN ObjectFloat AS ObjectFloat_RatePrice
-                                   ON ObjectFloat_RatePrice.ObjectId = Object_Route.Id
-                                  AND ObjectFloat_RatePrice.DescId = zc_ObjectFloat_Route_RatePrice()
-             LEFT JOIN ObjectFloat AS ObjectFloat_TimePrice
-                                   ON ObjectFloat_TimePrice.ObjectId = Object_Route.Id
-                                  AND ObjectFloat_TimePrice.DescId = zc_ObjectFloat_Route_TimePrice()
-          WHERE  Object_Route.Id = vbRouteId
-             AND Object_Route.DescId = zc_Object_Route();
-             
-          IF COALESCE (vbTimePrice, 0) <> 0
-          THEN
-              vbHours := (SELECT CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat) AS Hours_All
-                          FROM MovementFloat AS MovementFloat_HoursWork
-                              LEFT JOIN MovementFloat AS MovementFloat_HoursAdd
-                                                      ON MovementFloat_HoursAdd.MovementId = MovementFloat_HoursWork.MovementId
-                                                     AND MovementFloat_HoursAdd.DescId = zc_MovementFloat_HoursAdd()
-                          WHERE MovementFloat_HoursWork.DescId = zc_MovementFloat_HoursWork()
-                            AND MovementFloat_HoursWork.MovementId = inMovementId);
-              IF COALESCE (vbHours, 0) <> 0
-                 THEN
-                     vbRateSumma := COALESCE (vbHours, 0) * vbTimePrice;
-              END IF;
-          END IF;
-     
-          -- пересохранили свойство <командировочные>
-          PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_RateSumma(), vbId, vbRateSumma);  
-          -- сохранили свойство <дальнобойные>
-          PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_RatePrice(), vbId, vbRatePrice); 
-     END IF;     
-          
+                  -- пересохранили свойство <Ставка грн/ч коммандировочных>
+          PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TimePrice(), MovementItem.Id, COALESCE (ObjectFloat_TimePrice.ValueData, 0))
+                  -- сохранили свойство <Ставка грн/км (дальнобойные)>
+                , lpInsertUpdate_MovementItemFloat (zc_MIFloat_RatePrice(), MovementItem.Id, COALESCE (ObjectFloat_RatePrice.ValueData, 0))
+                  -- пересохранили свойство <Сумма коммандировочных>
+                , lpInsertUpdate_MovementItemFloat (zc_MIFloat_RateSumma(), MovementItem.Id, CASE WHEN ObjectFloat_TimePrice.ValueData > 0
+                                                                                                       THEN ObjectFloat_TimePrice.ValueData
+                                                                                                          * CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat)
+                                                                                                  ELSE COALESCE (ObjectFloat_RateSumma.ValueData, 0)
+                                                                                             END)
+
+          FROM MovementItem
+               LEFT JOIN MovementFloat AS MovementFloat_HoursWork
+                                       ON MovementFloat_HoursWork.MovementId = inMovementId
+                                      AND MovementFloat_HoursWork.DescId     = zc_MovementFloat_HoursWork()
+               LEFT JOIN MovementFloat AS MovementFloat_HoursAdd
+                                       ON MovementFloat_HoursAdd.MovementId = inMovementId
+                                      AND MovementFloat_HoursAdd.DescId     = zc_MovementFloat_HoursAdd()
+               LEFT JOIN ObjectFloat AS ObjectFloat_RateSumma
+                                     ON ObjectFloat_RateSumma.ObjectId = MovementItem.ObjectId
+                                    AND ObjectFloat_RateSumma.DescId   = zc_ObjectFloat_Route_RateSumma()
+               LEFT JOIN ObjectFloat AS ObjectFloat_RatePrice
+                                     ON ObjectFloat_RatePrice.ObjectId = MovementItem.ObjectId
+                                    AND ObjectFloat_RatePrice.DescId   = zc_ObjectFloat_Route_RatePrice()
+               LEFT JOIN ObjectFloat AS ObjectFloat_TimePrice
+                                     ON ObjectFloat_TimePrice.ObjectId = MovementItem.ObjectId
+                                    AND ObjectFloat_TimePrice.DescId   = zc_ObjectFloat_Route_TimePrice()
+          WHERE MovementItem.MovementId = inMovementId
+            AND MovementItem.DescId     = zc_MI_Master()
+            AND MovementItem.isErased   = FALSE;
+
+     END IF;
+
+
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_Transport_CreateTemp();
      -- Проводим Документ
@@ -92,7 +72,7 @@ $BODY$
  17.08.14                                        * add MovementDescId
  05.04.14                                        * add !!!ДЛЯ ОПТИМИЗАЦИИ!!! : _tmp1___ and _tmp2___
  25.03.14                                        * таблица - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
- 25.02.13                        * lpCheckPeriodClose                
+ 25.02.13                        * lpCheckPeriodClose
  03.11.13                                        * add RouteId_ProfitLoss
  02.11.13                                        * add BranchId_ProfitLoss, UnitId_Route, BranchId_Route
  26.10.13                                        * add CREATE TEMP TABLE...

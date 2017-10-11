@@ -38,10 +38,10 @@ BEGIN
             , MIFloat_EndOdometre.ValueData             AS EndOdometre
             , MIFloat_RateSumma.ValueData               AS RateSumma
             , MIFloat_RatePrice.ValueData               AS RatePrice
-            , COALESCE (MIFloat_RatePrice.ValueData, 0) * (COALESCE(MovementItem.Amount,0)+COALESCE(MIFloat_DistanceFuelChild.ValueData,0))  AS RatePrice_Calc
+            , COALESCE (MIFloat_RatePrice.ValueData, 0) * (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_DistanceFuelChild.ValueData, 0))  AS RatePrice_Calc
             , COALESCE (MIFloat_TimePrice.ValueData, 0) AS TimePrice
             , MIFloat_Taxi.ValueData                    AS Taxi
-            , COALESCE (MIFloat_TaxiMore.ValueData,0) :: Tfloat AS TaxiMore
+            , COALESCE (MIFloat_TaxiMore.ValueData, 0) :: TFloat AS TaxiMore
            
             , Object_Freight.Id           AS FreightId
             , Object_Freight.ValueData    AS FreightName
