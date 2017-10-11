@@ -158,7 +158,7 @@ BEGIN
                                       , tmpContainer.Amount                                                 AS DebtSum
                                       , (tmpContainer.Amount - COALESCE (tmpMIContainer.Summ, 0.0)::TFloat) AS OverSum
                                       , (zfCalc_OverDayCount (tmpContainer.ContainerId, tmpContainer.Amount - COALESCE (tmpMIContainer.Summ, 0.0)::TFloat, tmpContainer.ContractDate)) AS OverDays
-                                      , (zfCalc_OverDayCount2 (tmpContainer.ContainerId, tmpContainer.Amount, tmpContainer.ContractDate)) AS OverDays2
+                                      -- , (zfCalc_OverDayCount2 (tmpContainer.ContainerId, tmpContainer.Amount, tmpContainer.ContractDate)) AS OverDays2
                                       , SUM (tmpContainer.Amount) OVER (PARTITION BY tmpContainer.PartnerId, ABS (tmpContainer.Amount)) AS ResortSum
                                  FROM tmpContainer
                                       LEFT JOIN tmpMIContainer ON tmpContainer.ContainerId = tmpMIContainer.ContainerId
@@ -169,7 +169,7 @@ BEGIN
                                    , SUM (tmpDebtAll.DebtSum)::TFloat AS DebtSum
                                    , SUM (tmpDebtAll.OverSum)::TFloat AS OverSum
                                    , MAX (tmpDebtAll.OverDays)        AS OverDays
-                                   , MAX (tmpDebtAll.OverDays2)       AS OverDays2
+                                   -- , MAX (tmpDebtAll.OverDays2)       AS OverDays2
                               FROM tmpDebtAll
                               WHERE tmpDebtAll.ResortSum <> 0.0
                               GROUP BY tmpDebtAll.PartnerId
@@ -207,7 +207,7 @@ BEGIN
                   , zfReCalc_ScheduleOrDelivery (ObjectString_Partner_Schedule.ValueData, ObjectString_Partner_Delivery.ValueData, TRUE)  AS Delivery
                   , COALESCE (tmpDebt.DebtSum, 0.0)::TFloat  AS DebtSum
                   , COALESCE (tmpDebt.OverSum, 0.0)::TFloat  AS OverSum
-                  , CASE WHEN COALESCE (tmpDebt.OverSum, 0.0) > 0.0 THEN COALESCE (tmpDebt.OverDays, 0)::Integer ELSE COALESCE (tmpDebt.OverDays2, 0)::Integer END AS OverDays
+                  , CASE WHEN COALESCE (tmpDebt.OverSum, 0.0) > 0.0 THEN COALESCE (tmpDebt.OverDays, 0)::Integer ELSE 0::Integer END AS OverDays
                   , COALESCE (ObjectFloat_Partner_PrepareDayCount.ValueData, 0.0)::TFloat  AS PrepareDayCount
                   , COALESCE (ObjectFloat_Partner_DocumentDayCount.ValueData, 0.0)::TFloat AS DocumentDayCount
                   , CASE WHEN tmpStoreRealDoc.OperDate IS NULL THEN 0.0::TFloat ELSE DATE_PART ('day', CURRENT_DATE::TDateTime - tmpStoreRealDoc.OperDate)::TFloat END AS CalcDayCount
