@@ -1,12 +1,5 @@
 -- Function: gpInsertUpdate_MI_Transport_Master()
 
-DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat,Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat,Integer, Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,Integer, Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,Integer, Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,Integer, Integer, Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,  TFloat,Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Transport_Master(
@@ -31,9 +24,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Transport_Master(
     IN inRouteKindId               Integer   , -- Типы маршрутов
  INOUT ioUnitId                    Integer   , -- Подразделение
    OUT outUnitName                 TVarChar  , -- Подразделение
-    IN inComment                   TVarChar  , -- Комментарий	
+    IN inComment                   TVarChar  , -- Комментарий
     IN inSession                   TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS RECORD
 AS
 $BODY$
@@ -61,15 +54,15 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.<Путевой лист> не сохранен.';
    END IF;
 
-   -- проверка 
+   -- проверка
    IF inAmount < 0
-   THEN 
+   THEN
        RAISE EXCEPTION 'Ошибка.Неверное значение <Пробег, км (основной вид топлива)>.';
    END IF;
 
    -- проверка
    IF inDistanceFuelChild < 0
-   THEN 
+   THEN
        RAISE EXCEPTION 'Ошибка.Неверное значение <Пробег, км (дополнительный вид топлива)>.';
    END IF;
 
@@ -82,7 +75,7 @@ BEGIN
                                                                                               AND ObjectLink_Car_FuelChild.ChildObjectId IS NOT NULL
                                               WHERE MovementLinkObject_Car.MovementId = inMovementId
                                                 AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car())
-   THEN 
+   THEN
        RAISE EXCEPTION 'Ошибка.Неверное значение <Пробег, км (дополнительный вид топлива)>, т.к. у <Автомобиля> не установлен <Дополнительный вид топлива>.';
    END IF;
 
@@ -93,10 +86,10 @@ BEGIN
 
    -- сохранили <Элемент документа>
    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inRouteId, inMovementId, inAmount, NULL);
-  
+
    -- сохранили связь с <Название груза>
    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Freight(), ioId, inFreightId);
-   
+
    -- сохранили связь с <Типы маршрутов(груз)>
    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_RouteKindFreight(), ioId, inRouteKindId_Freight);
 
@@ -112,7 +105,7 @@ BEGIN
                                 WHEN ObjectLink_UnitRoute_Branch.ChildObjectId  = COALESCE (ObjectLink_Route_Branch.ChildObjectId, 0)
                                      THEN COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0) -- если "собственный" маршрут, тогда затраты по принадлежности маршрута к подразделению, т.е. это филиалы
                                 ELSE (SELECT MLO.ObjectId AS MLO FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_UnitForwarding()) -- иначе Подразделение (Место отправки), т.е. везут на филиалы но затраты к ним не падают
-                           END 
+                           END
                     FROM Object AS Object_Route
                          LEFT JOIN ObjectLink AS ObjectLink_Route_Branch
                                               ON ObjectLink_Route_Branch.ObjectId = Object_Route.Id
@@ -140,7 +133,7 @@ BEGIN
 
    -- сохранили свойство <Пробег, км (с грузом,перевезено)>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_DistanceWeightTransport(), ioId, inDistanceWeightTransport);
-   
+
    -- сохранили свойство <Вес груза>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Weight(), ioId, inWeight);
    -- сохранили свойство <Вес груза>
@@ -163,7 +156,7 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TimePrice(), ioId, inTimePrice);
 
-   IF COALESCE (inTimePrice,0) <> 0 OR 1=1 -- !!!временно - что б всегда!!!
+   IF COALESCE (inTimePrice,0) <> 0 -- OR 1=1 -- !!!временно - что б всегда!!!
    THEN
        vbHours := (SELECT CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat) AS Hours_All
                    FROM MovementFloat AS MovementFloat_HoursWork
@@ -172,16 +165,16 @@ BEGIN
                                               AND MovementFloat_HoursAdd.DescId = zc_MovementFloat_HoursAdd()
                    WHERE MovementFloat_HoursWork.DescId = zc_MovementFloat_HoursWork()
                      AND MovementFloat_HoursWork.MovementId = inMovementId);
-       
+
        iоRateSumma:= COALESCE (vbHours,0) * inTimePrice;
        -- пересохранили свойство <>
        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_RateSumma(), ioId, iоRateSumma);
-       
+
    END IF;
 
-   
+
    outRatePrice_Calc:= COALESCE (inRatePrice,0) * (COALESCE (inAmount,0) + COALESCE (inDistanceFuelChild,0));
-   
+
    -- сохранили свойство <Комментарий>
    PERFORM lpInsertUpdate_MovementItemString(zc_MIString_Comment(), ioId, inComment);
 
@@ -196,12 +189,11 @@ END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
-
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  02.02.17         *
- 17.04.16         * 
+ 17.04.16         *
  03.06.15         * add UnitID
  10.12.13         * add DistanceWeightTransport
  09.12.13         * add WeightTransport
@@ -212,8 +204,8 @@ $BODY$
  12.10.13                                        * add zc_ObjectFloat_Fuel_Ratio
  12.10.13                                        * add lpInsertUpdate_MI_Transport_Child
  07.10.13                                        * add inDistanceFuelChild and inIsMasterFuel
- 29.09.13                                        * 
- 25.09.13         * 
+ 29.09.13                                        *
+ 25.09.13         *
 */
 
 -- тест

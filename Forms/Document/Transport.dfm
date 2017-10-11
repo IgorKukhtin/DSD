@@ -2364,11 +2364,6 @@
       StoredProcList = <
         item
           StoredProc = spChangeStatus
-        end
-        item
-        end
-        item
-          StoredProc = spSelectMiReport
         end>
       Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
@@ -2385,6 +2380,7 @@
           StoredProc = spChangeStatus
         end
         item
+          StoredProc = spSelectMI
         end
         item
           StoredProc = spSelectMiReport
@@ -2402,11 +2398,6 @@
       StoredProcList = <
         item
           StoredProc = spChangeStatus
-        end
-        item
-        end
-        item
-          StoredProc = spSelectMiReport
         end>
       Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
