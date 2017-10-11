@@ -1616,6 +1616,7 @@ BEGIN
              LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
              
              LEFT JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = _tmpMI.JuridicalId
+                                       AND tmpJuridicalArea.AreaId      = _tmpMI.AreaId
 ;
    RETURN NEXT Cursor2;
 

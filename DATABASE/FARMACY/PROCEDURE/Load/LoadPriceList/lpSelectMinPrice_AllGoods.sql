@@ -24,6 +24,8 @@ RETURNS TABLE (
     ContractId         Integer,
     JuridicalId        Integer,
     JuridicalName      TVarChar,
+    AreaId             Integer,   
+    AreaName           TVarChar,
     Price              TFloat, 
     SuperFinalPrice    TFloat,
     isTop              Boolean,
@@ -189,6 +191,15 @@ BEGIN
                                   AND ObjectFloat_PercentMarkup.DescId = zc_ObjectFloat_Price_PercentMarkup()
         WHERE ObjectBoolean_Top.ValueData = TRUE OR ObjectFloat_PercentMarkup.ValueData <> 0
        )
+       
+  , tmpJuridicalArea AS (SELECT DISTINCT 
+                                tmp.UnitId                   AS UnitId            
+                              , tmp.JuridicalId              AS JuridicalId
+                              , tmp.AreaId_Juridical         AS AreaId
+                              , tmp.AreaName_Juridical       AS AreaName
+                         FROM lpSelect_Object_JuridicalArea_byUnit (inUnitId, 0) AS tmp
+                         )
+                         
     -- почти финальный список
   , FinalList AS
        (SELECT 
@@ -208,6 +219,8 @@ BEGIN
       , ddd.ContractId
       , ddd.JuridicalId
       , ddd.JuridicalName 
+      , ddd.AreaId
+      , ddd.AreaName 
       , ddd.Deferment
       , ddd.PriceListMovementItemId
 /* * /  
@@ -274,6 +287,8 @@ BEGIN
           , COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), COALESCE (ObjectBoolean_Goods_TOP.ValueData, FALSE) /*Goods.isTOP*/) AS isTOP
           , COALESCE (GoodsPrice.PercentMarkup, 0) AS PercentMarkup
         
+          , tmpJuridicalArea.AreaId            AS AreaId
+          , tmpJuridicalArea.AreaName          AS AreaName
         FROM -- Остатки + коды ...
              _tmpMinPrice_RemainsList 
              -- товары в прайс-листе (поставщика)
@@ -284,7 +299,9 @@ BEGIN
             JOIN MovementItem AS PriceList ON PriceList.Id = MILinkObject_Goods.MovementItemId
              -- Прайс-лист (поставщика) - Movement
             JOIN LastPriceList_View ON LastPriceList_View.MovementId = PriceList.MovementId
-
+            
+            JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = LastPriceList_View.JuridicalId 
+                                 AND tmpJuridicalArea.AreaId      = LastPriceList_View.AreaId 
 
              -- Срок партии товара (или Срок годности?) в Прайс-лист (поставщика)
             LEFT JOIN MovementItemDate AS MIDate_PartionGoods
@@ -354,6 +371,8 @@ BEGIN
         MinPriceList.ContractId,
         MinPriceList.JuridicalId,
         MinPriceList.JuridicalName,
+        MinPriceList.AreaId,
+        MinPriceList.AreaName,
         MinPriceList.Price,
         MinPriceList.SuperFinalPrice,
         MinPriceList.isTop :: Boolean AS isTop,
@@ -371,6 +390,7 @@ ALTER FUNCTION lpSelectMinPrice_AllGoods (Integer, Integer, Integer) OWNER TO po
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 11.10.17         * add area
  16.02.16         * add isOneJuridical
  03.12.15                                                                          * 
 */
