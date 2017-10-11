@@ -254,6 +254,7 @@ inherited PriceListForm: TPriceListForm
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
@@ -880,6 +881,7 @@ inherited PriceListForm: TPriceListForm
         Control = edInvNumber
       end
       item
+        Control = edArea
       end
       item
       end
