@@ -47,18 +47,18 @@ BEGIN
 
      RETURN QUERY
        SELECT
-             Movement.Id                                        AS Id
-           , Movement.InvNumber                                 AS InvNumber
-           , Movement.OperDate                                  AS OperDate
-           , Object_Status.ObjectCode                           AS StatusCode
-           , Object_Status.ValueData                            AS StatusName
-           , Object_Juridical.Id                                AS JuridicalId
-           , Object_Juridical.ValueData                         AS JuridicalName
-           , Object_Contract.Id                                 AS ContractId
-           , Object_Contract.ValueData                          AS ContractName
-           , Object_Area.Id                                     AS AreaId
-           , Object_Area.ValueData                              AS AreaName
-           , LoadPriceList.Id                                   AS PriceListId
+             Movement.Id                          AS Id
+           , Movement.InvNumber                   AS InvNumber
+           , Movement.OperDate                    AS OperDate
+           , Object_Status.ObjectCode             AS StatusCode
+           , Object_Status.ValueData              AS StatusName
+           , Object_Juridical.Id                  AS JuridicalId
+           , Object_Juridical.ValueData           AS JuridicalName
+           , Object_Contract.Id                   AS ContractId
+           , Object_Contract.ValueData            AS ContractName
+           , Object_Area.Id                       AS AreaId
+           , Object_Area.ValueData                AS AreaName
+           , LoadPriceList.Id                     AS PriceListId
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -76,7 +76,11 @@ BEGIN
             LEFT JOIN LoadPriceList ON LoadPriceList.JuridicalId = Object_Juridical.Id
                                    AND LoadPriceList.ContractId  = Object_Contract.Id
                                    
-            LEFT JOIN Object AS Object_Area ON Object_Area.Id = LoadPriceList.AreaId 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Area
+                                         ON MovementLinkObject_Area.MovementId = Movement.Id
+                                        AND MovementLinkObject_Area.DescId = zc_MovementLinkObject_Area()
+            LEFT JOIN Object AS Object_Area ON Object_Area.Id = MovementLinkObject_Area.ObjectId
+            --LEFT JOIN Object AS Object_Area ON Object_Area.Id = LoadPriceList.AreaId 
             
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_PriceList();

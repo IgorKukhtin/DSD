@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PriceList (Integer, TVarChar, TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PriceList (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PriceList (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PriceList(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PriceList(
     IN inOperDate            TDateTime , -- Дата документа
     IN inJuridicalId         Integer   , -- Юридические лица
     IN inContractId          Integer   , -- Договор
+    IN inAreaId              Integer   , -- Регион
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -33,6 +35,9 @@ BEGIN
      -- сохранили связь с <Договор>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
 
+     -- сохранили связь с <Регион>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Area(), ioId, inAreaId);
+
      -- !!!протокол через свойства конкретного объекта!!!
      IF vbIsInsert = TRUE
      THEN
@@ -52,6 +57,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 11.10.17         * add inAreaId
  01.07.14                                                        *
 */
 
