@@ -9,8 +9,10 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Income(
     IN inIsErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, /*IdBarCode TVarChar,*/ GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+RETURNS TABLE (Id Integer /*IdBarCode TVarChar,*/
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , PartnerGoodsCode TVarChar, PartnerGoodsName TVarChar
+             , RetailName TVarChar
              , Amount TFloat
              , Price TFloat
              , PriceWithVAT TFloat
@@ -125,9 +127,10 @@ BEGIN
                        SELECT inIsErased AS isErased WHERE inIsErased = TRUE
                       )
                         
-      , tmpGoods AS (SELECT Object_Goods.Id           AS GoodsId
-                          , Object_Goods.GoodsCodeInt AS GoodsCode
-                          , Object_Goods.GoodsName    AS GoodsName
+      , tmpGoods AS (SELECT Object_Goods.Id               AS GoodsId
+                          , Object_Goods.GoodsCodeInt     AS GoodsCode
+                          , Object_Goods.GoodsName        AS GoodsName
+                          , Object_Goods.ObjectId         AS ObjectId
                           , Object_Goods.isTop            AS Goods_isTop
                           , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
                           , Object_Goods.PercentMarkup    AS Goods_PercentMarkup
@@ -345,6 +348,7 @@ BEGIN
               , tmpGoods.GoodsName         AS GoodsName
               , ''::TVarChar               AS PartnerGoodsCode
               , ''::TVarChar               AS PartnerGoodsName
+              , Object_Retail.ValueData    AS RetailName
               , CAST (NULL AS TFloat)      AS Amount
               , CAST (NULL AS TFloat)      AS Price
               , CAST (NULL AS TFloat)      AS PriceWithVAT
@@ -403,6 +407,7 @@ BEGIN
             FROM tmpGoods
                 LEFT JOIN tmpMI ON tmpMI.GoodsId = tmpGoods.GoodsId
                 LEFT OUTER JOIN tmpPrice ON tmpPrice.GoodsId = tmpGoods.GoodsId
+                LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = tmpGoods.ObjectId
             WHERE tmpMI.GoodsId IS NULL
 
             UNION ALL
@@ -414,6 +419,7 @@ BEGIN
               , Object_Goods.ValueData             AS GoodsName
               , Object_PartnerGoods.GoodsCode      AS PartnerGoodsCode
               , Object_PartnerGoods.GoodsName      AS PartnerGoodsName
+              , Object_Retail.ValueData            AS RetailName
               , MovementItem.Amount
               , MovementItem.Price
               , MovementItem.PriceWithVAT
@@ -514,6 +520,11 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_Goods_Price
                                   ON ObjectFloat_Goods_Price.ObjectId = MovementItem.GoodsId
                                  AND ObjectFloat_Goods_Price.DescId = zc_ObjectFloat_Goods_Price() 
+                                 
+            LEFT JOIN  ObjectLink AS ObjectLink_Object 
+                                  ON ObjectLink_Object.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Object.DescId = zc_ObjectLink_Goods_Object()            
+            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Object.ChildObjectId
 
             -- получаем GoodsMainId
             LEFT JOIN  ObjectLink AS ObjectLink_Child 
@@ -530,6 +541,7 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceOptSP
                                   ON ObjectFloat_Goods_PriceOptSP.ObjectId = ObjectLink_Main.ChildObjectId 
                                  AND ObjectFloat_Goods_PriceOptSP.DescId = zc_ObjectFloat_Goods_PriceOptSP()
+                                 
 
             ;
     ELSE
@@ -724,6 +736,7 @@ BEGIN
               , Object_Goods.ValueData             AS GoodsName
               , ObjectString_Code.ValueData        AS PartnerGoodsCode
               , Object_PartnerGoods.ValueData      AS PartnerGoodsName
+              , Object_Retail.ValueData            AS RetailName
               , MovementItem.Amount
               , MovementItem.Price
               , MovementItem.PriceWithVAT
@@ -807,12 +820,12 @@ BEGIN
                 LEFT OUTER JOIN tmpPrice ON tmpPrice.GoodsId = MovementItem.GoodsId
                                                 
                 LEFT JOIN Object AS Object_PartnerGoods ON Object_PartnerGoods.Id = MovementItem.PartnerGoodsId 
-                   LEFT JOIN ObjectString AS ObjectString_Code
-                                          ON ObjectString_Code.ObjectId = Object_PartnerGoods.Id
-                                         AND ObjectString_Code.DescId = zc_ObjectString_Goods_Code()
-                   LEFT JOIN ObjectString AS ObjectString_Goods_Maker
-                                          ON ObjectString_Goods_Maker.ObjectId = Object_PartnerGoods.Id
-                                         AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()
+                LEFT JOIN ObjectString AS ObjectString_Code
+                                       ON ObjectString_Code.ObjectId = Object_PartnerGoods.Id
+                                      AND ObjectString_Code.DescId = zc_ObjectString_Goods_Code()
+                LEFT JOIN ObjectString AS ObjectString_Goods_Maker
+                                       ON ObjectString_Goods_Maker.ObjectId = Object_PartnerGoods.Id
+                                      AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()
 
                 LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
                                         ON ObjectBoolean_Goods_TOP.ObjectId = MovementItem.GoodsId
@@ -823,6 +836,11 @@ BEGIN
                 LEFT JOIN ObjectFloat AS ObjectFloat_Goods_Price
                                       ON ObjectFloat_Goods_Price.ObjectId = MovementItem.GoodsId
                                      AND ObjectFloat_Goods_Price.DescId = zc_ObjectFloat_Goods_Price() 
+
+                LEFT JOIN  ObjectLink AS ObjectLink_Object 
+                                      ON ObjectLink_Object.ObjectId = Object_Goods.Id
+                                     AND ObjectLink_Object.DescId = zc_ObjectLink_Goods_Object()            
+                LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Object.ChildObjectId
 
                 -- получаем GoodsMainId
                 LEFT JOIN  ObjectLink AS ObjectLink_Child 

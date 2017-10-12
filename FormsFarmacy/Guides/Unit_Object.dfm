@@ -32,6 +32,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object Id: TcxGridDBColumn
+            Caption = #1050#1054#1044' '#1089#1074#1103#1079#1080' '#1076#1083#1103' '#1057#1072#1081#1090#1072
+            DataBinding.FieldName = 'Id'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 64
+          end
           object ParentName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'ParentName'
@@ -142,14 +150,6 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 40
-          end
-          object Id: TcxGridDBColumn
-            Caption = 'UnitId'
-            DataBinding.FieldName = 'Id'
-            Visible = False
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 30
           end
           object isUploadBadm: TcxGridDBColumn
             Caption = #1042#1099#1075#1088#1091#1078#1072#1090#1100' '#1074' '#1086#1090#1095#1077#1090#1077' '#1076#1083#1103' '#1087#1086#1089#1090'. '#1041#1040#1044#1052

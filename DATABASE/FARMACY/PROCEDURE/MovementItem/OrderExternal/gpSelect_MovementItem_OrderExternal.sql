@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer
              , CommonCode Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , PartnerGoodsId Integer, PartnerGoodsCode TVarChar
+             , RetailName TVarChar
              , Amount TFloat, Price TFloat, Summ TFloat, PartionGoodsDate TDateTime
              , Comment TVarChar, isErased Boolean
              , isSP Boolean
@@ -42,6 +43,7 @@ BEGIN
            , COALESCE(tmpMI.GoodsName, tmpGoods.GoodsName) AS GoodsName
            , tmpMI.PartnerGoodsId       AS PartnerGoodsId 
            , tmpMI.PartnerGoodsCode     AS PartnerGoodsCode
+           , Object_Retail.ValueData    AS RetailName
            , tmpMI.Amount               AS Amount
            , tmpMI.Price                AS Price
            , tmpMI.Summ::TFloat         AS Summ
@@ -76,7 +78,12 @@ BEGIN
                                               ON MovementItem.MovementId = inMovementId
                                              AND MovementItem.isErased   = tmpIsErased.isErased
                       ) AS tmpMI ON tmpMI.GoodsId = tmpGoods.GoodsId
-
+                -- торговая сеть
+                LEFT JOIN  ObjectLink AS ObjectLink_Object 
+                                      ON ObjectLink_Object.ObjectId = COALESCE(tmpMI.GoodsId, tmpGoods.GoodsId)
+                                     AND ObjectLink_Object.DescId = zc_ObjectLink_Goods_Object()            
+                LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Object.ChildObjectId
+                
                 -- получаем GoodsMainId
                 LEFT JOIN  ObjectLink AS ObjectLink_Child 
                                       ON ObjectLink_Child.ChildObjectId = COALESCE(tmpMI.GoodsId, tmpGoods.GoodsId)

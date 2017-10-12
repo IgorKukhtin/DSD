@@ -157,6 +157,7 @@ type
     macCalculateSalePrice: TMultiAction;
     actUpdate_OrderExternal_Deferred: TdsdExecStoredProc;
     spUpdate_OrderExternal_Deferred: TdsdStoredProc;
+    RetailName: TcxGridDBColumn;
   private
     { Private declarations }
   public
