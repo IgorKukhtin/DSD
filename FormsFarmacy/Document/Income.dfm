@@ -531,6 +531,15 @@
             Options.Editing = False
             Width = 60
           end
+          object RetailName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1089#1077#1090#1080
+            DataBinding.FieldName = 'RetailName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1072#1079#1074#1072#1085#1080#1077' '#1089#1077#1090#1080
+            Options.Editing = False
+            Width = 42
+          end
           object InsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076#1072#1083
             DataBinding.FieldName = 'InsertName'

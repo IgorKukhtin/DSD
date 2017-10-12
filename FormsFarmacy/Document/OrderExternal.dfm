@@ -107,7 +107,7 @@ inherited OrderExternalForm: TOrderExternalForm
             DataBinding.FieldName = 'PartnerGoodsCode'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 96
+            Width = 76
           end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
@@ -115,7 +115,7 @@ inherited OrderExternalForm: TOrderExternalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 53
+            Width = 42
           end
           object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
@@ -123,7 +123,7 @@ inherited OrderExternalForm: TOrderExternalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 266
+            Width = 210
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -133,7 +133,7 @@ inherited OrderExternalForm: TOrderExternalForm
             Properties.DisplayFormat = ',0.###;-,0.###; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 52
+            Width = 42
           end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -142,7 +142,7 @@ inherited OrderExternalForm: TOrderExternalForm
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 55
           end
           object Summ: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1079#1072#1082#1072#1079#1072
@@ -153,13 +153,13 @@ inherited OrderExternalForm: TOrderExternalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 114
+            Width = 88
           end
           object PartionGoodsDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
             DataBinding.FieldName = 'PartionGoodsDate'
             HeaderAlignmentVert = vaCenter
-            Width = 87
+            Width = 69
           end
           object isSp: TcxGridDBColumn
             Caption = #1057#1086#1094'. '#1087#1088#1086#1077#1082#1090
@@ -168,14 +168,14 @@ inherited OrderExternalForm: TOrderExternalForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042' '#1089#1087#1080#1089#1082#1077' '#1087#1088#1086#1077#1082#1090#1072' '#171#1044#1086#1089#1090#1091#1087#1085#1099#1077' '#1083#1077#1082#1072#1088#1089#1090#1074#1072#187
             Options.Editing = False
-            Width = 60
+            Width = 47
           end
           object Comment: TcxGridDBColumn
             Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 92
+            Width = 73
           end
           object CommonCode: TcxGridDBColumn
             Caption = #1082#1086#1076' '#1052#1086#1088#1080#1086#1085
@@ -183,13 +183,22 @@ inherited OrderExternalForm: TOrderExternalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 62
           end
           object Calc_Color: TcxGridDBColumn
             DataBinding.FieldName = 'Calc_Color'
             Visible = False
             VisibleForCustomization = False
             Width = 60
+          end
+          object RetailName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1089#1077#1090#1080
+            DataBinding.FieldName = 'RetailName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1072#1079#1074#1072#1085#1080#1077' '#1089#1077#1090#1080
+            Options.Editing = False
+            Width = 42
           end
         end
       end

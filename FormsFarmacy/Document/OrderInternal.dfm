@@ -412,16 +412,16 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 80
           end
-          object InvNumberPromo: TcxGridDBColumn [39]
+          inherited colIsErased: TcxGridDBColumn
+            VisibleForCustomization = False
+          end
+          object InvNumberPromo: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1073#1086#1085#1091#1089#1085'. '#1082#1086#1085#1090#1088#1072#1082#1090#1072
             DataBinding.FieldName = 'InvNumberPromo'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
-          end
-          inherited colIsErased: TcxGridDBColumn
-            VisibleForCustomization = False
           end
           object isSp: TcxGridDBColumn
             Caption = #1057#1086#1094'. '#1087#1088#1086#1077#1082#1090
@@ -475,6 +475,16 @@ inherited OrderInternalForm: TOrderInternalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 75
+          end
+          object RetailName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1089#1077#1090#1080
+            DataBinding.FieldName = 'RetailName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1053#1072#1079#1074#1072#1085#1080#1077' '#1089#1077#1090#1080
+            Options.Editing = False
+            Width = 42
           end
           object isMarketToday: TcxGridDBColumn
             Caption = #1045#1089#1090#1100' '#1085#1072' '#1088#1099#1085#1082#1077' '#1089#1077#1075#1086#1076#1085#1103

@@ -11,17 +11,17 @@ inherited PriceListForm: TPriceListForm
     Width = 868
     Height = 585
     ExplicitTop = 83
-    ExplicitWidth = 820
+    ExplicitWidth = 868
     ExplicitHeight = 585
     ClientRectBottom = 585
     ClientRectRight = 868
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 820
+      ExplicitWidth = 868
       ExplicitHeight = 561
       inherited cxGrid: TcxGrid
         Width = 868
         Height = 561
-        ExplicitWidth = 820
+        ExplicitWidth = 868
         ExplicitHeight = 561
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -155,7 +155,7 @@ inherited PriceListForm: TPriceListForm
     Width = 868
     Height = 57
     TabOrder = 3
-    ExplicitWidth = 820
+    ExplicitWidth = 868
     ExplicitHeight = 57
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -808,8 +808,8 @@ inherited PriceListForm: TPriceListForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 216
-    Top = 248
+    Left = 208
+    Top = 256
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_PriceList'
@@ -853,6 +853,14 @@ inherited PriceListForm: TPriceListForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAreaId'
+        Value = Null
+        Component = GuidesArea
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 162
     Top = 312
@@ -873,6 +881,7 @@ inherited PriceListForm: TPriceListForm
         Control = edInvNumber
       end
       item
+        Control = edArea
       end
       item
       end

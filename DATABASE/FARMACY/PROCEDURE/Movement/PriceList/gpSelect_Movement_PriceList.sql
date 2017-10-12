@@ -77,7 +77,13 @@ BEGIN
 
             LEFT JOIN LoadPriceList ON LoadPriceList.JuridicalId = Object_Juridical.Id
                                    AND LoadPriceList.ContractId  = Object_Contract.Id
-            LEFT JOIN Object AS Object_Area ON Object_Area.Id = LoadPriceList.AreaId 
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Area
+                                         ON MovementLinkObject_Area.MovementId = Movement.Id
+                                        AND MovementLinkObject_Area.DescId = zc_MovementLinkObject_Area()
+            LEFT JOIN Object AS Object_Area ON Object_Area.Id = MovementLinkObject_Area.ObjectId
+            
+            --LEFT JOIN Object AS Object_Area ON Object_Area.Id = LoadPriceList.AreaId 
             
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_PriceList();
 
@@ -90,7 +96,7 @@ ALTER FUNCTION gpSelect_Movement_PriceList (TDateTime, TDateTime, Boolean, TVarC
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 10.10.17         * LoadPriceList.AreaId
+ 10.10.17         * 
  02.03.16         *
  01.07.14                                                        *
 

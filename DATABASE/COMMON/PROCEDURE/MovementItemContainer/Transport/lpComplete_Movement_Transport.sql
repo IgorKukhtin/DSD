@@ -48,6 +48,44 @@ BEGIN
        AND MovementItem.DescId = zc_MI_Master();*/
 
 
+     -- пересохраняем
+     IF 1=1
+     THEN
+                  -- пересохранили свойство <Ставка грн/ч коммандировочных>
+          PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TimePrice(), MovementItem.Id, COALESCE (ObjectFloat_TimePrice.ValueData, 0))
+                  -- сохранили свойство <Ставка грн/км (дальнобойные)>
+                , lpInsertUpdate_MovementItemFloat (zc_MIFloat_RatePrice(), MovementItem.Id, COALESCE (ObjectFloat_RatePrice.ValueData, 0))
+                  -- пересохранили свойство <Сумма коммандировочных>
+                , lpInsertUpdate_MovementItemFloat (zc_MIFloat_RateSumma(), MovementItem.Id, CASE WHEN ObjectFloat_TimePrice.ValueData > 0
+                                                                                                       THEN ObjectFloat_TimePrice.ValueData
+                                                                                                          * CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat)
+                                                                                                  ELSE COALESCE (ObjectFloat_RateSumma.ValueData, 0)
+                                                                                             END)
+
+          FROM MovementItem
+               LEFT JOIN MovementFloat AS MovementFloat_HoursWork
+                                       ON MovementFloat_HoursWork.MovementId = inMovementId
+                                      AND MovementFloat_HoursWork.DescId     = zc_MovementFloat_HoursWork()
+               LEFT JOIN MovementFloat AS MovementFloat_HoursAdd
+                                       ON MovementFloat_HoursAdd.MovementId = inMovementId
+                                      AND MovementFloat_HoursAdd.DescId     = zc_MovementFloat_HoursAdd()
+               LEFT JOIN ObjectFloat AS ObjectFloat_RateSumma
+                                     ON ObjectFloat_RateSumma.ObjectId = MovementItem.ObjectId
+                                    AND ObjectFloat_RateSumma.DescId   = zc_ObjectFloat_Route_RateSumma()
+               LEFT JOIN ObjectFloat AS ObjectFloat_RatePrice
+                                     ON ObjectFloat_RatePrice.ObjectId = MovementItem.ObjectId
+                                    AND ObjectFloat_RatePrice.DescId   = zc_ObjectFloat_Route_RatePrice()
+               LEFT JOIN ObjectFloat AS ObjectFloat_TimePrice
+                                     ON ObjectFloat_TimePrice.ObjectId = MovementItem.ObjectId
+                                    AND ObjectFloat_TimePrice.DescId   = zc_ObjectFloat_Route_TimePrice()
+          WHERE MovementItem.MovementId = inMovementId
+            AND MovementItem.DescId     = zc_MI_Master()
+            AND MovementItem.isErased   = FALSE;
+
+     END IF;
+
+
+
      -- Эти параметры нужны для формирования Аналитик в проводках
      SELECT _tmp.MovementDescId
           , _tmp.OperDate
@@ -266,7 +304,7 @@ BEGIN
                                        )
         SELECT _tmpItem.MovementItemId_parent            AS MovementItemId
              , MIFloat_RateSumma.ValueData               AS OperSumm_Add
-             , COALESCE (MIFloat_RatePrice.ValueData, 0) /** (COALESCE(MovementItem.Amount,0)+COALESCE(MIFloat_DistanceFuelChild.ValueData,0))*/  AS OperSumm_AddLong
+             , COALESCE (MIFloat_RatePrice.ValueData, 0) * (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_DistanceFuelChild.ValueData, 0)) AS OperSumm_AddLong
              , CASE WHEN MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriverMore() THEN COALESCE (MIFloat_TaxiMore.ValueData, 0) ELSE COALESCE (MIFloat_Taxi.ValueData, 0) END AS OperSumm_Taxi
 
                -- для Сотрудника (ЗП)
@@ -371,6 +409,13 @@ BEGIN
                                   ON ObjectLink_Unit_Branch.ObjectId = ObjectLink_Personal_Unit.ChildObjectId
                                  AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
 
+             LEFT JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                   AND MovementItem.DescId     = zc_MI_Master()
+                                   AND MovementItem.Id         = _tmpItem.MovementItemId_parent
+
+             LEFT JOIN MovementItemFloat AS MIFloat_DistanceFuelChild
+                                         ON MIFloat_DistanceFuelChild.MovementItemId = _tmpItem.MovementItemId_parent
+                                        AND MIFloat_DistanceFuelChild.DescId         = zc_MIFloat_DistanceFuelChild()
              LEFT JOIN MovementItemFloat AS MIFloat_RateSumma
                                          ON MIFloat_RateSumma.MovementItemId = _tmpItem.MovementItemId_parent
                                         AND MIFloat_RateSumma.DescId = zc_MIFloat_RateSumma()
@@ -700,10 +745,10 @@ BEGIN
 
 
      -- !!!4. формируются свойства в элементах документа из данных для проводок!!!
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), tmp.MovementItemId, tmp.UnitId_ProfitLoss)
-           , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), tmp.MovementItemId, tmp.BranchId_ProfitLoss)
-           , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Route(), tmp.MovementItemId, tmp.RouteId_ProfitLoss)
-           , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_UnitRoute(), tmp.MovementItemId, tmp.UnitId_Route)
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(),        tmp.MovementItemId, tmp.UnitId_ProfitLoss)
+           , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(),      tmp.MovementItemId, tmp.BranchId_ProfitLoss)
+           , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Route(),       tmp.MovementItemId, tmp.RouteId_ProfitLoss)
+           , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_UnitRoute(),   tmp.MovementItemId, tmp.UnitId_Route)
            , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_BranchRoute(), tmp.MovementItemId, tmp.BranchId_Route)
      FROM (SELECT DISTINCT _tmpItem_Transport.MovementItemId, _tmpItem_Transport.UnitId_ProfitLoss, _tmpItem_Transport.BranchId_ProfitLoss, _tmpItem_Transport.RouteId_ProfitLoss, _tmpItem_Transport.UnitId_Route, _tmpItem_Transport.BranchId_Route
            FROM _tmpItem_Transport
@@ -752,109 +797,3 @@ $BODY$
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 103, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM lpComplete_Movement_Transport (inMovementId:= 103, inUserId:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 103, inSession:= zfCalc_UserAdmin())
-
-/*
-
-update MovementItemContainer set AccountId = case when Container.DescId = zc_Container_Summ() then Container.ObjectId else null end
-                        , AnalyzerId  = zc_Enum_AnalyzerId_ProfitLoss()
-                        , ObjectId_Analyzer = MovementItem.ObjectId
-                        , WhereObjectId_Analyzer = MovementLinkObject_Car.ObjectId
-                        , ContainerId_Analyzer = case when MovementItem Report.ActiveAccountId = zc_Enum_Account_100301 () then MovementItem Report.ActiveContainerId else MovementItem Report.PassiveContainerId end
-                        , ObjectIntId_Analyzer = MI_Unit.ObjectId
-                        , ObjectExtId_Analyzer = MI_Branch.ObjectId
-from MovementItemContainer as MIContainer
-join MovementItem on MovementItem.Id = MIContainer.MovementItemId
-join Container on Container.Id = MIContainer.ContainerId
-left join MovementItem Report on MovementItem Report.MovementItemId = MIContainer.MovementItemId
-                LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
-                                             ON MovementLinkObject_Car.MovementId = MIContainer.MovementId
-                                            AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
-                LEFT JOIN MovementItemLinkObject AS MI_Unit
-                                             ON MI_Unit.MovementItemId = MIContainer.MovementItemId
-                                            AND MI_Unit.DescId = zc_MILinkObject_Unit()
-                LEFT JOIN MovementItemLinkObject AS MI_Branch
-                                             ON MI_Branch.MovementItemId = MIContainer.MovementItemId
-                                            AND MI_Branch.DescId = zc_MILinkObject_Branch()
-where MovementItemContainer.MovementDescId = zc_Movement_Transport()
-  and MovementItemContainer.OperDate between '01.08.2015' and '31.08.2015'
-  and MovementItem.Id > 0
-  and MovementItemContainer.AnalyzerId is null
-  and MIContainer.Id = MovementItemContainer.Id;
-
-
-update MovementItemContainer set AccountId = zc_Enum_Account_100301()
-                        , ObjectId_Analyzer = MovementItem.ObjectId
-                        , WhereObjectId_Analyzer = MovementLinkObject_Car.ObjectId
-                        , ObjectIntId_Analyzer = MI_Unit.ObjectId
-                        , ObjectExtId_Analyzer = MI_Branch.ObjectId
-from MovementItemContainer as MIContainer
-left join MovementItem Report on MovementItem Report.MovementId = MIContainer.MovementId
-                            and MovementItem Report.Amount = abs (MIContainer.Amount)
-join MovementItem on MovementItem.Id = MovementItem Report.MovementItemId
-                LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
-                                             ON MovementLinkObject_Car.MovementId = MIContainer.MovementId
-                                            AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
-                LEFT JOIN MovementItemLinkObject AS MI_Unit
-                                             ON MI_Unit.MovementItemId = MovementItem Report.MovementItemId
-                                            AND MI_Unit.DescId = zc_MILinkObject_Unit()
-                LEFT JOIN MovementItemLinkObject AS MI_Branch
-                                             ON MI_Branch.MovementItemId = MovementItem Report.MovementItemId
-                                            AND MI_Branch.DescId = zc_MILinkObject_Branch()
-where MovementItemContainer.MovementDescId = zc_Movement_Transport()
-  and MovementItemContainer.OperDate between '01.08.2015' and '31.08.2015'
-  and MovementItemContainer.MovementItemId is null
-  and MovementItemContainer.AccountId is null
-  and MIContainer.Id = MovementItemContainer.Id;
-*/
-/*
- select a.*
-  , gpReComplete_Movement_Transport (a.Id, false, zc_Enum_Process_Auto_PrimeCost() :: TVarChar)
-
-from (
- select distinct Movement.*
---  select Movement.*
-/ * , lpInsertUpdate_MovementItemFloat (zc_MIFloat_RateSumma(), MovementItem.Id, ObjectFloat.ValueData * (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0)))
-  , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TimePrice(), MovementItem.Id, ObjectFloat.ValueData)
-  , lpInsertUpdate_MovementItemFloat (zc_MIFloat_RatePrice(), MovementItem.Id, ObjectFloat2.ValueData)
- , (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0))* /
-
-        FROM Movement
-                       LEFT JOIN MovementFloat AS MovementFloat_HoursWork
-                                               ON MovementFloat_HoursWork.MovementId = Movement.Id
-                                              AND MovementFloat_HoursWork.DescId = zc_MovementFloat_HoursWork()
-                       LEFT JOIN MovementFloat AS MovementFloat_HoursAdd
-                                               ON MovementFloat_HoursAdd.MovementId = Movement.Id
-                                              AND MovementFloat_HoursAdd.DescId = zc_MovementFloat_HoursAdd()
-
-             JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                              AND MovementItem.DescId     = zc_MI_Master()
-                              
-             left JOIN MovementItemFloat AS MIFloat_RateSumma
-                                         ON MIFloat_RateSumma.MovementItemId =  MovementItem.Id
-                                        AND MIFloat_RateSumma.DescId = zc_MIFloat_RateSumma()
-
-             left  JOIN MovementItemFloat AS MIFloat_TimePrice
-                                         ON MIFloat_TimePrice.MovementItemId =  MovementItem.Id
-                                        AND MIFloat_TimePrice.DescId = zc_MIFloat_TimePrice()
-                                        
-
-             left JOIN ObjectFloat
-                                         ON ObjectFloat.ObjectId =  MovementItem.ObjectId
-                                        AND ObjectFloat.DescId = zc_ObjectFloat_Route_TimePrice()
-                                        
-             left JOIN ObjectFloat as ObjectFloat2
-                                         ON ObjectFloat2.ObjectId =  MovementItem.ObjectId
-                                        AND ObjectFloat2.DescId = zc_ObjectFloat_Route_RatePrice()
-
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
-                                          ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
-                                         AND MovementLinkObject_PersonalDriver.DescId      = zc_MovementLinkObject_PersonalDriverMore()
-
-where Movement.DescId = zc_Movement_Transport ()
-  and Movement.OperDate between '15.04.2016' and '26.05.2016'
-  AND coalesce (ObjectFloat.ValueData, 0) <> 0
-  AND (MIFloat_RateSumma.ValueData <> 0 OR MIFloat_TimePrice.ValueData <> 0)
-  -- AND MovementLinkObject_PersonalDriver.ObjectId   > 0 
-) as a
-where StatusId = zc_Enum_Status_Complete()
-*/

@@ -977,9 +977,6 @@
     object cxTabSheetIncome: TcxTabSheet
       Caption = #1047#1072#1087#1088#1072#1074#1082#1072
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridIncome: TcxGrid
         Left = 0
         Top = 0
@@ -1294,9 +1291,6 @@
     object cxTabSheetReport: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridReport: TcxGrid
         Left = 0
         Top = 0
@@ -2370,11 +2364,6 @@
       StoredProcList = <
         item
           StoredProc = spChangeStatus
-        end
-        item
-        end
-        item
-          StoredProc = spSelectMiReport
         end>
       Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
@@ -2391,6 +2380,7 @@
           StoredProc = spChangeStatus
         end
         item
+          StoredProc = spSelectMI
         end
         item
           StoredProc = spSelectMiReport
@@ -2408,11 +2398,6 @@
       StoredProcList = <
         item
           StoredProc = spChangeStatus
-        end
-        item
-        end
-        item
-          StoredProc = spSelectMiReport
         end>
       Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
@@ -3167,7 +3152,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 786
-    Top = 75
+    Top = 59
   end
   object GuidesBranchForwarding: TdsdGuides
     KeyField = 'Id'
