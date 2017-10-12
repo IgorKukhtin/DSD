@@ -80,3 +80,42 @@
 --      AND Object_Goods.ObjectCode = 2287
         and Object_Retail.Id <> Object_Object.Id
    order by 3, 1
+
+
+
+
+
+    -- !!!УДАЛЕНИЕ!!!
+    SELECT DISTINCT
+           Object_Goods.*
+         , Object_Unit.*
+         , Object_Object.*
+         , Object_Retail.*
+    FROM Container 
+         inner join Object  AS Object_Goods on Object_Goods .Id = Container .ObjectId
+         -- связь с Юридические лица или Торговая сеть или ...
+         LEFT JOIN ObjectLink AS ObjectLink_Goods_Object
+                              ON ObjectLink_Goods_Object.ObjectId = Object_Goods.Id
+                             AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+         LEFT JOIN Object  AS Object_Object ON Object_Object.Id = ObjectLink_Goods_Object.ChildObjectId
+
+           LEFT JOIN Object  AS Object_Unit ON Object_Unit.Id = Container .WhereObjectId
+           LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
+                               AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+           LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                               AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+           LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+
+           -- LEFT JOIN MovementItemContainer on MovementItemContainer.ContainerId = Container.Id
+           INNER JOIN MovementItemContainer on MovementItemContainer.ContainerId = Container.Id
+
+    WHERE Container .DescId = 1
+      and Container .Amount <> 0
+      and Object_Retail.Id <> Object_Object.Id
+      -- and Object_Goods.Id in (8818, 3034137)
+      -- and Object_Goods.ObjectCode in (8818, 3034137)
+      -- and MovementItemContainer.ContainerId is null
+    order by 3
+

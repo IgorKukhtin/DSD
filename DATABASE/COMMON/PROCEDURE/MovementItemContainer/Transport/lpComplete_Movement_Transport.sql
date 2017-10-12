@@ -48,6 +48,44 @@ BEGIN
        AND MovementItem.DescId = zc_MI_Master();*/
 
 
+     -- пересохраняем
+     IF 1=1
+     THEN
+                  -- пересохранили свойство <Ставка грн/ч коммандировочных>
+          PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TimePrice(), MovementItem.Id, COALESCE (ObjectFloat_TimePrice.ValueData, 0))
+                  -- сохранили свойство <Ставка грн/км (дальнобойные)>
+                , lpInsertUpdate_MovementItemFloat (zc_MIFloat_RatePrice(), MovementItem.Id, COALESCE (ObjectFloat_RatePrice.ValueData, 0))
+                  -- пересохранили свойство <Сумма коммандировочных>
+                , lpInsertUpdate_MovementItemFloat (zc_MIFloat_RateSumma(), MovementItem.Id, CASE WHEN ObjectFloat_TimePrice.ValueData > 0
+                                                                                                       THEN ObjectFloat_TimePrice.ValueData
+                                                                                                          * CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat)
+                                                                                                  ELSE COALESCE (ObjectFloat_RateSumma.ValueData, 0)
+                                                                                             END)
+
+          FROM MovementItem
+               LEFT JOIN MovementFloat AS MovementFloat_HoursWork
+                                       ON MovementFloat_HoursWork.MovementId = inMovementId
+                                      AND MovementFloat_HoursWork.DescId     = zc_MovementFloat_HoursWork()
+               LEFT JOIN MovementFloat AS MovementFloat_HoursAdd
+                                       ON MovementFloat_HoursAdd.MovementId = inMovementId
+                                      AND MovementFloat_HoursAdd.DescId     = zc_MovementFloat_HoursAdd()
+               LEFT JOIN ObjectFloat AS ObjectFloat_RateSumma
+                                     ON ObjectFloat_RateSumma.ObjectId = MovementItem.ObjectId
+                                    AND ObjectFloat_RateSumma.DescId   = zc_ObjectFloat_Route_RateSumma()
+               LEFT JOIN ObjectFloat AS ObjectFloat_RatePrice
+                                     ON ObjectFloat_RatePrice.ObjectId = MovementItem.ObjectId
+                                    AND ObjectFloat_RatePrice.DescId   = zc_ObjectFloat_Route_RatePrice()
+               LEFT JOIN ObjectFloat AS ObjectFloat_TimePrice
+                                     ON ObjectFloat_TimePrice.ObjectId = MovementItem.ObjectId
+                                    AND ObjectFloat_TimePrice.DescId   = zc_ObjectFloat_Route_TimePrice()
+          WHERE MovementItem.MovementId = inMovementId
+            AND MovementItem.DescId     = zc_MI_Master()
+            AND MovementItem.isErased   = FALSE;
+
+     END IF;
+
+
+
      -- Эти параметры нужны для формирования Аналитик в проводках
      SELECT _tmp.MovementDescId
           , _tmp.OperDate
