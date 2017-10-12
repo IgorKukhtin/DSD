@@ -80,6 +80,21 @@ type
     GuidesRetail: TdsdGuides;
     actOpenReportForm: TdsdOpenForm;
     bbOpenReportForm: TdxBarButton;
+    cxSplitter2: TcxSplitter;
+    cxGrid2: TcxGrid;
+    cxGridDBTableView2: TcxGridDBTableView;
+    clJuridicalCode: TcxGridDBColumn;
+    clJuridicalName: TcxGridDBColumn;
+    clIsErased: TcxGridDBColumn;
+    cxGridLevel2: TcxGridLevel;
+    PartnerDCS: TClientDataSet;
+    PartnerDS: TDataSource;
+    dsdDBViewAddOn2: TdsdDBViewAddOn;
+    spSelectPromoPartner: TdsdStoredProc;
+    clComment: TcxGridDBColumn;
+    PartnerChoiceForm: TOpenChoiceForm;
+    InsertRecordPartner: TInsertRecord;
+    bbInsertRecordPartner: TdxBarButton;
   private
     { Private declarations }
   public
