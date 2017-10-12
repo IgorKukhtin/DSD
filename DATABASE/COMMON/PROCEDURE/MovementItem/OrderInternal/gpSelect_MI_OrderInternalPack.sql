@@ -183,6 +183,10 @@ BEGIN
                                                                  AND _tmpMI_child.GoodsKindId = tmpMI_master.GoodsKindId_detail
                                      GROUP BY tmpMI_master.MovementItemId
                                     )
+            -- хардкодим - ЦЕХ колбаса+дел-сы
+          , tmpUnitFrom AS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect_Object_Unit_byGroup)
+            -- хардкодим - Склады База + Реализации
+          , tmpUnitTo   AS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8457) AS lfSelect_Object_Unit_byGroup)
           , tmpMI_Send AS (SELECT tmpMI.GoodsId                          AS GoodsId
                                 , COALESCE (CLO_GoodsKindId.ObjectId, 0) AS GoodsKindId
                                 , SUM (tmpMI.Amount)                     AS Amount
@@ -197,10 +201,25 @@ BEGIN
                                    AND MIContainer.isActive = FALSE
                                  GROUP BY MIContainer.ObjectId_Analyzer
                                         , MIContainer.ContainerId
+                                UNION ALL
+                                 SELECT MIContainer.ObjectId_Analyzer AS GoodsId
+                                      , MIContainer.ContainerId
+                                      , 1 * SUM (MIContainer.Amount) AS Amount
+                                 FROM MovementItemContainer AS MIContainer
+                                      -- ЦЕХ колбаса+дел-сы
+                                      INNER JOIN tmpUnitFrom ON tmpUnitFrom.UnitId = MIContainer.WhereObjectId_Analyzer
+                                      -- Склады База + Реализации
+                                      INNER JOIN tmpUnitTo   ON tmpUnitTo.UnitId   = MIContainer.AnalyzerId
+                                 WHERE MIContainer.OperDate   = vbOperDate
+                                   AND MIContainer.DescId     = zc_MIContainer_Count()
+                                   AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                                   AND MIContainer.isActive = FALSE
+                                 GROUP BY MIContainer.ObjectId_Analyzer
+                                        , MIContainer.ContainerId
                                 ) AS tmpMI
                                 LEFT JOIN ContainerLinkObject AS CLO_GoodsKindId
-                                                             ON CLO_GoodsKindId.ContainerId = tmpMI.ContainerId
-                                                            AND CLO_GoodsKindId.DescId = zc_ContainerLinkObject_GoodsKind()
+                                                              ON CLO_GoodsKindId.ContainerId = tmpMI.ContainerId
+                                                             AND CLO_GoodsKindId.DescId      = zc_ContainerLinkObject_GoodsKind()
                             GROUP BY tmpMI.GoodsId
                                    , CLO_GoodsKindId.ObjectId
                           )
