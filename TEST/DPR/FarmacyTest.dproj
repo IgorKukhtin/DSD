@@ -1789,6 +1789,14 @@
 				<Form>Report_CheckMiddle_DetailDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MovementIncome_byPromoDialog.pas">
+				<Form>Report_MovementIncome_byPromoDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MovementIncome_byPromo.pas">
+				<Form>Report_MovementIncome_byPromoForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

@@ -74,7 +74,12 @@ type
     cxLabel9: TcxLabel;
     edChangePercent: TcxCurrencyEdit;
     InsertRecordChild: TInsertRecord;
-    bb: TdxBarButton;
+    bbInsertRecordChild: TdxBarButton;
+    cxLabel19: TcxLabel;
+    ceRetail: TcxButtonEdit;
+    GuidesRetail: TdsdGuides;
+    actOpenReportForm: TdsdOpenForm;
+    bbOpenReportForm: TdxBarButton;
   private
     { Private declarations }
   public

@@ -524,6 +524,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncome_byPromoDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('Report_MovementIncome_byPromoDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncome_byPromoForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncome_byPromoForm');
+  exit;
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckGrowthAndFallingForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckGrowthAndFallingForm');
@@ -574,7 +579,6 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PromoDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PromoDialogForm');
-
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_PromoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_PromoForm');
 

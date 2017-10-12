@@ -540,7 +540,9 @@ uses
   ImportGroup in '..\..\FormsFarmacy\Import\ImportGroup.pas' {ImportGroupForm: TParentForm},
   Unit_JuridicalArea in '..\..\FormsFarmacy\Guides\Unit_JuridicalArea.pas' {Unit_JuridicalAreaForm: TParentForm},
   Report_CheckMiddle_Detail in '..\..\FormsFarmacy\Report\Report_CheckMiddle_Detail.pas' {Report_CheckMiddle_DetailForm: TParentForm},
-  Report_CheckMiddle_DetailDialog in '..\..\FormsFarmacy\Report\Report_CheckMiddle_DetailDialog.pas' {Report_CheckMiddle_DetailDialogForm: TParentForm};
+  Report_CheckMiddle_DetailDialog in '..\..\FormsFarmacy\Report\Report_CheckMiddle_DetailDialog.pas' {Report_CheckMiddle_DetailDialogForm: TParentForm},
+  Report_MovementIncome_byPromoDialog in '..\..\FormsFarmacy\Report\Report_MovementIncome_byPromoDialog.pas' {Report_MovementIncome_byPromoDialogForm: TParentForm},
+  Report_MovementIncome_byPromo in '..\..\FormsFarmacy\Report\Report_MovementIncome_byPromo.pas' {Report_MovementIncome_byPromoForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
