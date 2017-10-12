@@ -123,6 +123,8 @@ type
     isPercent_diff: TcxGridDBColumn;
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
+    AmountBaza_sh: TcxGridDBColumn;
+    AmountBaza_Weight: TcxGridDBColumn;
   private
     { Private declarations }
   public

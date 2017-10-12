@@ -187,12 +187,16 @@ BEGIN
           , tmpUnitFrom AS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect_Object_Unit_byGroup)
             -- хардкодим - Склады База + Реализации
           , tmpUnitTo   AS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8457) AS lfSelect_Object_Unit_byGroup)
-          , tmpMI_Send AS (SELECT tmpMI.GoodsId                          AS GoodsId
+          , tmpMI_Send AS (SELECT 
+                                  tmpMI.GoodsId                          AS GoodsId
                                 , COALESCE (CLO_GoodsKindId.ObjectId, 0) AS GoodsKindId
                                 , SUM (tmpMI.Amount)                     AS Amount
+                                , SUM (tmpMI.Amount_baza)                AS Amount_baza
+
                            FROM (SELECT MIContainer.ObjectId_Analyzer AS GoodsId
-                                      , MIContainer.ContainerId
+                                      , MIContainer.ContainerId       AS ContainerId
                                       , -1 * SUM (MIContainer.Amount) AS Amount
+                                      , 0                             AS Amount_baza
                                  FROM MovementItemContainer AS MIContainer
                                  WHERE MIContainer.OperDate   = vbOperDate
                                    AND MIContainer.DescId     = zc_MIContainer_Count()
@@ -203,17 +207,18 @@ BEGIN
                                         , MIContainer.ContainerId
                                 UNION ALL
                                  SELECT MIContainer.ObjectId_Analyzer AS GoodsId
-                                      , MIContainer.ContainerId
-                                      , 1 * SUM (MIContainer.Amount) AS Amount
+                                      , MIContainer.ContainerId       AS ContainerId
+                                      , 0                             AS Amount
+                                      , 1 * SUM (MIContainer.Amount)  AS Amount_baza
                                  FROM MovementItemContainer AS MIContainer
                                       -- ЦЕХ колбаса+дел-сы
-                                      INNER JOIN tmpUnitFrom ON tmpUnitFrom.UnitId = MIContainer.WhereObjectId_Analyzer
+                                      INNER JOIN tmpUnitFrom ON tmpUnitFrom.UnitId = MIContainer.ObjectExtId_Analyzer -- AnalyzerId
                                       -- Склады База + Реализации
-                                      INNER JOIN tmpUnitTo   ON tmpUnitTo.UnitId   = MIContainer.AnalyzerId
-                                 WHERE MIContainer.OperDate   = vbOperDate
-                                   AND MIContainer.DescId     = zc_MIContainer_Count()
+                                      INNER JOIN tmpUnitTo   ON tmpUnitTo.UnitId   = MIContainer.WhereObjectId_Analyzer
+                                 WHERE MIContainer.OperDate       = vbOperDate
+                                   AND MIContainer.DescId         = zc_MIContainer_Count()
                                    AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
-                                   AND MIContainer.isActive = FALSE
+                                   AND MIContainer.isActive       = TRUE
                                  GROUP BY MIContainer.ObjectId_Analyzer
                                         , MIContainer.ContainerId
                                 ) AS tmpMI
@@ -276,6 +281,10 @@ BEGIN
 
            , CASE WHEN ObjectLink_Goods_Measure_detail.ChildObjectId = zc_Measure_Sh() THEN tmpMI_Send.Amount ELSE 0 END AS AmountSend_sh
            , tmpMI_Send.Amount * CASE WHEN ObjectLink_Goods_Measure_detail.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight_detail.ValueData, 0) ELSE 1 END AS AmountSend_Weight
+
+           , CASE WHEN ObjectLink_Goods_Measure_detail.ChildObjectId = zc_Measure_Sh() THEN tmpMI_Send.Amount_baza ELSE 0 END AS AmountBaza_sh
+           , tmpMI_Send.Amount_baza * CASE WHEN ObjectLink_Goods_Measure_detail.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight_detail.ValueData, 0) ELSE 1 END AS AmountBaza_Weight
+
            , CASE WHEN tmpMI_Send.Amount > 0 AND (tmpMI.Amount + tmpMI.AmountSecond) = 0
                        THEN -100
                   WHEN COALESCE (tmpMI_Send.Amount, 0) = 0 AND (tmpMI.Amount + tmpMI.AmountSecond) <> 0
