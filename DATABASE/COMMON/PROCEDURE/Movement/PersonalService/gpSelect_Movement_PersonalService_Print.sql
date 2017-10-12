@@ -243,7 +243,7 @@ BEGIN
                            , COALESCE (MIFloat_SummChild.ValueData, 0)        AS SummChild
                            , COALESCE (MIFloat_SummMinusExt.ValueData, 0)     AS SummMinusExt
 
-                           , COALESCE (MIFloat_SummTransportAdd.ValueData, 0) AS SummTransportAdd
+                           , COALESCE (MIFloat_SummTransportAdd.ValueData, 0) + COALESCE (MIFloat_SummTransportAddLong.ValueData, 0) AS SummTransportAdd
                            , COALESCE (MIFloat_SummTransport.ValueData, 0)    AS SummTransport
                            , COALESCE (MIFloat_SummPhone.ValueData, 0)        AS SummPhone
 
@@ -305,6 +305,9 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_SummTransportAdd
                                                        ON MIFloat_SummTransportAdd.MovementItemId = MovementItem.Id
                                                       AND MIFloat_SummTransportAdd.DescId = zc_MIFloat_SummTransportAdd()
+                           LEFT JOIN MovementItemFloat AS MIFloat_SummTransportAddLong
+                                                       ON MIFloat_SummTransportAddLong.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_SummTransportAddLong.DescId = zc_MIFloat_SummTransportAddLong()
                            LEFT JOIN MovementItemFloat AS MIFloat_SummTransport
                                                        ON MIFloat_SummTransport.MovementItemId = MovementItem.Id
                                                       AND MIFloat_SummTransport.DescId = zc_MIFloat_SummTransport()
