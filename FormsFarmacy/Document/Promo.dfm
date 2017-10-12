@@ -279,23 +279,6 @@ inherited PromoForm: TPromoForm
       TabOrder = 15
       Width = 287
     end
-    object cxLabel19: TcxLabel
-      Left = 843
-      Top = 5
-      Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100' ('#1086#1090#1095#1077#1090'):'
-    end
-    object ceRetail: TcxButtonEdit
-      Left = 843
-      Top = 23
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 17
-      Width = 118
-    end
   end
   object edStartPromo: TcxDateEdit [2]
     Left = 223
@@ -392,10 +375,10 @@ inherited PromoForm: TPromoForm
       object clJuridicalCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'JuridicalCode'
-        Width = 30
+        Width = 49
       end
       object clJuridicalName: TcxGridDBColumn
-        Caption = #1070#1088'. '#1083#1080#1094#1086' '#1076#1083#1103' '#1086#1090#1095#1077#1090#1072
+        Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082' ('#1076#1083#1103' '#1086#1090#1095#1077#1090#1072')'
         DataBinding.FieldName = 'JuridicalName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -407,21 +390,22 @@ inherited PromoForm: TPromoForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 296
+        Width = 495
       end
       object clComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 200
+        Width = 324
       end
       object clIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'IsErased'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 60
+        Options.Editing = False
+        Width = 97
       end
     end
     object cxGridLevel2: TcxGridLevel
@@ -449,7 +433,22 @@ inherited PromoForm: TPromoForm
           StoredProc = spSelectPromoPartner
         end>
     end
-    object actMISetErasedChild: TdsdUpdateErased [2]
+    object actSetErasedPromoPartner: TdsdUpdateErased [2]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSetErasedPromoPartner
+      StoredProcList = <
+        item
+          StoredProc = spSetErasedPromoPartner
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
+      ImageIndex = 2
+      ErasedFieldName = 'isErased'
+      DataSource = PartnerDS
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
+    end
+    object actMISetErasedChild: TdsdUpdateErased [3]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spErasedMIChild
@@ -468,7 +467,22 @@ inherited PromoForm: TPromoForm
       DataSource = DetailDS
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
     end
-    object actMISetUnErasedChild: TdsdUpdateErased [4]
+    object actSetUnErasedPromoPartner: TdsdUpdateErased [5]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUnCompletePromoPartner
+      StoredProcList = <
+        item
+          StoredProc = spUnCompletePromoPartner
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = PartnerDS
+    end
+    object actMISetUnErasedChild: TdsdUpdateErased [6]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spUnErasedMIChild
@@ -487,7 +501,16 @@ inherited PromoForm: TPromoForm
       isSetErased = False
       DataSource = DetailDS
     end
-    object InsertRecordPartner: TInsertRecord [8]
+    inherited actShowErased: TBooleanStoredProcAction
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectPromoPartner
+        end>
+    end
+    object InsertRecordPartner: TInsertRecord [10]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -496,11 +519,11 @@ inherited PromoForm: TPromoForm
       View = cxGridDBTableView2
       Action = PartnerChoiceForm
       Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1070#1088'. '#1083#1080#1094#1086' '#1076#1083#1103' '#1086#1090#1095#1077#1090#1072'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1070#1088'. '#1083#1080#1094#1086' '#1076#1083#1103' '#1086#1090#1095#1077#1090#1072'>'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
       ImageIndex = 0
     end
-    object InsertRecordChild: TInsertRecord [9]
+    object InsertRecordChild: TInsertRecord [11]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -523,7 +546,19 @@ inherited PromoForm: TPromoForm
           StoredProc = spSelect_MovementItem_PromoChild
         end>
     end
-    object actUpdateChildDS: TdsdUpdateDataSet [11]
+    object dsdUpdatePartnerDS: TdsdUpdateDataSet [13]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdatePromoPartner
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdatePromoPartner
+        end>
+      Caption = 'actUpdatePartnerDS'
+      DataSource = PartnerDS
+    end
+    object actUpdateChildDS: TdsdUpdateDataSet [14]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -538,7 +573,7 @@ inherited PromoForm: TPromoForm
       Caption = 'actUpdateChildDS'
       DataSource = DetailDS
     end
-    object actDoLoad: TExecuteImportSettingsAction [12]
+    object actDoLoad: TExecuteImportSettingsAction [15]
       Category = 'Load'
       MoveParams = <>
       ImportSettingsId.Value = '0'
@@ -770,6 +805,14 @@ inherited PromoForm: TPromoForm
         end
         item
           Visible = True
+          ItemName = 'bbSetErasedPromoPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErasedPromoPartner'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -846,6 +889,14 @@ inherited PromoForm: TPromoForm
     end
     object bbInsertRecordPartner: TdxBarButton
       Action = InsertRecordPartner
+      Category = 0
+    end
+    object bbSetErasedPromoPartner: TdxBarButton
+      Action = actSetErasedPromoPartner
+      Category = 0
+    end
+    object bbSetUnErasedPromoPartner: TdxBarButton
+      Action = actSetUnErasedPromoPartner
       Category = 0
     end
   end
@@ -1583,36 +1634,6 @@ inherited PromoForm: TPromoForm
     Left = 784
     Top = 160
   end
-  object GuidesRetail: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = ceRetail
-    FormNameParam.Value = 'TRetailForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TRetailForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesRetail
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesRetail
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 888
-    Top = 16
-  end
   object PartnerDCS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
@@ -1627,7 +1648,7 @@ inherited PromoForm: TPromoForm
   end
   object dsdDBViewAddOn2: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = cxGridDBTableView1
+    View = cxGridDBTableView2
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
@@ -1674,6 +1695,84 @@ inherited PromoForm: TPromoForm
       end>
     PackSize = 1
     Left = 192
+    Top = 496
+  end
+  object spInsertUpdatePromoPartner: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_PromoPartner'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = PartnerDCS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = PartnerDCS
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = PartnerDCS
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 424
+    Top = 504
+  end
+  object spSetErasedPromoPartner: TdsdStoredProc
+    StoredProcName = 'gpSetErased_Movement_Promo'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = PartnerDCS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 548
+    Top = 480
+  end
+  object spUnCompletePromoPartner: TdsdStoredProc
+    StoredProcName = 'gpUnComplete_Movement_Promo'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = PartnerDCS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 624
     Top = 496
   end
 end

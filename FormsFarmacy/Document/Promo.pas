@@ -75,9 +75,6 @@ type
     edChangePercent: TcxCurrencyEdit;
     InsertRecordChild: TInsertRecord;
     bbInsertRecordChild: TdxBarButton;
-    cxLabel19: TcxLabel;
-    ceRetail: TcxButtonEdit;
-    GuidesRetail: TdsdGuides;
     actOpenReportForm: TdsdOpenForm;
     bbOpenReportForm: TdxBarButton;
     cxSplitter2: TcxSplitter;
@@ -95,6 +92,14 @@ type
     PartnerChoiceForm: TOpenChoiceForm;
     InsertRecordPartner: TInsertRecord;
     bbInsertRecordPartner: TdxBarButton;
+    spInsertUpdatePromoPartner: TdsdStoredProc;
+    dsdUpdatePartnerDS: TdsdUpdateDataSet;
+    spSetErasedPromoPartner: TdsdStoredProc;
+    spUnCompletePromoPartner: TdsdStoredProc;
+    actSetErasedPromoPartner: TdsdUpdateErased;
+    actSetUnErasedPromoPartner: TdsdUpdateErased;
+    bbSetErasedPromoPartner: TdxBarButton;
+    bbSetUnErasedPromoPartner: TdxBarButton;
   private
     { Private declarations }
   public
