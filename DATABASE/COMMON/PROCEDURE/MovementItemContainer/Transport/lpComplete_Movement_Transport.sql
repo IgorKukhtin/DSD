@@ -49,7 +49,7 @@ BEGIN
 
 
      -- пересохран€ем
-     IF 1=1
+     IF 1=0
      THEN
                   -- пересохранили свойство <—тавка грн/ч коммандировочных>
           PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TimePrice(), MovementItem.Id, COALESCE (ObjectFloat_TimePrice.ValueData, 0))

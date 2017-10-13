@@ -91,6 +91,7 @@
          , Object_Unit.*
          , Object_Object.*
          , Object_Retail.*
+         , Movement.*
     FROM Container 
          inner join Object  AS Object_Goods on Object_Goods .Id = Container .ObjectId
          -- связь с Юридические лица или Торговая сеть или ...
@@ -110,6 +111,7 @@
 
            -- LEFT JOIN MovementItemContainer on MovementItemContainer.ContainerId = Container.Id
            INNER JOIN MovementItemContainer on MovementItemContainer.ContainerId = Container.Id
+           left JOIN Movement on Movement.Id = MovementItemContainer.MovementId
 
     WHERE Container .DescId = 1
       and Container .Amount <> 0

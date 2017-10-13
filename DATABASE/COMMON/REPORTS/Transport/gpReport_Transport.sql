@@ -106,7 +106,7 @@ BEGIN
                                                                     ELSE 4
                                                                END
                                                      ) = 1
-                                             THEN COALESCE (MIFloat_RatePrice.ValueData, 0) /** (COALESCE(MovementItem.Amount,0)+COALESCE(MIFloat_DistanceFuelChild.ValueData,0))*/ ELSE 0 END AS SumTransportAddLong
+                                             THEN COALESCE (MIFloat_RatePrice.ValueData, 0) * (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_DistanceFuelChild.ValueData, 0)) ELSE 0 END AS SumTransportAddLong
                                  , CASE WHEN ROW_NUMBER() OVER (PARTITION BY MovementItem.Id
                                                       ORDER BY CASE WHEN MIBoolean_MasterFuel.ValueData = TRUE AND MIContainer.Amount <> 0
                                                                          THEN 1
@@ -316,7 +316,7 @@ BEGIN
                                                                     ELSE 4
                                                                END
                                                      ) = 1
-                                             THEN COALESCE (MIFloat_RatePrice.ValueData, 0) /** (COALESCE(MovementItem.Amount,0)+COALESCE(MIFloat_DistanceFuelChild.ValueData,0))*/ ELSE 0 END AS SumTransportAddLong
+                                             THEN COALESCE (MIFloat_RatePrice.ValueData, 0) * (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_DistanceFuelChild.ValueData, 0)) ELSE 0 END AS SumTransportAddLong
                                  , CASE WHEN ROW_NUMBER() OVER (PARTITION BY MovementItem.Id
                                                       ORDER BY CASE WHEN MIBoolean_MasterFuel.ValueData = TRUE AND MIContainer.Amount <> 0
                                                                          THEN 1
