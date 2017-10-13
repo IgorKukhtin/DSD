@@ -74,7 +74,32 @@ type
     cxLabel9: TcxLabel;
     edChangePercent: TcxCurrencyEdit;
     InsertRecordChild: TInsertRecord;
-    bb: TdxBarButton;
+    bbInsertRecordChild: TdxBarButton;
+    actOpenReportForm: TdsdOpenForm;
+    bbOpenReportForm: TdxBarButton;
+    cxSplitter2: TcxSplitter;
+    cxGrid2: TcxGrid;
+    cxGridDBTableView2: TcxGridDBTableView;
+    clJuridicalCode: TcxGridDBColumn;
+    clJuridicalName: TcxGridDBColumn;
+    clIsErased: TcxGridDBColumn;
+    cxGridLevel2: TcxGridLevel;
+    PartnerDCS: TClientDataSet;
+    PartnerDS: TDataSource;
+    dsdDBViewAddOn2: TdsdDBViewAddOn;
+    spSelectPromoPartner: TdsdStoredProc;
+    clComment: TcxGridDBColumn;
+    PartnerChoiceForm: TOpenChoiceForm;
+    InsertRecordPartner: TInsertRecord;
+    bbInsertRecordPartner: TdxBarButton;
+    spInsertUpdatePromoPartner: TdsdStoredProc;
+    dsdUpdatePartnerDS: TdsdUpdateDataSet;
+    spSetErasedPromoPartner: TdsdStoredProc;
+    spUnCompletePromoPartner: TdsdStoredProc;
+    actSetErasedPromoPartner: TdsdUpdateErased;
+    actSetUnErasedPromoPartner: TdsdUpdateErased;
+    bbSetErasedPromoPartner: TdxBarButton;
+    bbSetUnErasedPromoPartner: TdxBarButton;
   private
     { Private declarations }
   public

@@ -27,6 +27,8 @@ type
     ExecuteDialog: TExecuteDialog;
     StartPromo: TcxGridDBColumn;
     EndPromo: TcxGridDBColumn;
+    actOpenReportForm: TdsdOpenForm;
+    bbOpenReportForm: TdxBarButton;
   private
     { Private declarations }
   public

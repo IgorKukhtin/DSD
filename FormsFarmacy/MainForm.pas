@@ -390,6 +390,8 @@ type
     N152: TMenuItem;
     actReport_CheckMiddle_Detail: TdsdOpenForm;
     N153: TMenuItem;
+    actReport_GoodsRemains_AnotherRetail: TdsdOpenForm;
+    ID1: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
