@@ -542,7 +542,9 @@ uses
   Report_CheckMiddle_Detail in '..\..\FormsFarmacy\Report\Report_CheckMiddle_Detail.pas' {Report_CheckMiddle_DetailForm: TParentForm},
   Report_CheckMiddle_DetailDialog in '..\..\FormsFarmacy\Report\Report_CheckMiddle_DetailDialog.pas' {Report_CheckMiddle_DetailDialogForm: TParentForm},
   Report_MovementIncome_byPromoDialog in '..\..\FormsFarmacy\Report\Report_MovementIncome_byPromoDialog.pas' {Report_MovementIncome_byPromoDialogForm: TParentForm},
-  Report_MovementIncome_byPromo in '..\..\FormsFarmacy\Report\Report_MovementIncome_byPromo.pas' {Report_MovementIncome_byPromoForm: TParentForm};
+  Report_MovementIncome_byPromo in '..\..\FormsFarmacy\Report\Report_MovementIncome_byPromo.pas' {Report_MovementIncome_byPromoForm: TParentForm},
+  Report_GoodsRemains_AnotherRetail in '..\..\FormsFarmacy\Report\Report_GoodsRemains_AnotherRetail.pas' {Report_GoodsRemains_AnotherRetailForm: TParentForm},
+  Report_Movement_AnotherRetail in '..\..\FormsFarmacy\Report\Report_Movement_AnotherRetail.pas' {Report_Movement_AnotherRetailForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

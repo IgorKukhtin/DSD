@@ -1797,6 +1797,14 @@
 				<Form>Report_MovementIncome_byPromoForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsRemains_AnotherRetail.pas">
+				<Form>Report_GoodsRemains_AnotherRetailForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Movement_AnotherRetail.pas">
+				<Form>Report_Movement_AnotherRetailForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
