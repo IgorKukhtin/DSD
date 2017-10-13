@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Email (Integer, Integer, TVarChar, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Email (Integer, Integer, TVarChar, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Email (Integer, Integer, TVarChar, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Email(
  INOUT ioId                            Integer   , -- ключ объекта
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Email(
     IN inName                          TVarChar  , -- значение
     IN inErrorTo                       TVarChar  , -- Кому отправлять сообщение об ошибке при загрузке данных с п/я
     IN inEmailKindId                   Integer   , -- Тип почтового ящика
+    IN inAreaId                        Integer   , -- регион
     IN inSession                       TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -30,6 +32,9 @@ BEGIN
    -- сохранили связь с <
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Email_EmailKind(), ioId, inEmailKindId);
    
+   -- сохранили связь с <Регион>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Email_Area(), ioId, inAreaId);
+   
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Email_ErrorTo(), ioId, inErrorTo);
  
@@ -45,8 +50,10 @@ $BODY$
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.10.17         * )))
+ 13.10.16         *
  27.06.16         *
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_Email (ioId:=0, inCode:=0, inValue:='КУКУ', inEmailKindId:=0, inSession:='2')
+-- SELECT * FROM gpInsertUpdate_Object_Email (ioId:=0, inCode:=0, inValue:='КУКУ', inEmailKindId:=0, inAreaId:=0, inSession:='2')

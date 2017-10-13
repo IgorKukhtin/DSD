@@ -13,8 +13,11 @@ CREATE OR REPLACE FUNCTION gpSelect_GoodsSearch(
 RETURNS TABLE (Id Integer, CommonCode Integer, BarCode TVarChar, 
                GoodsCode TVarChar, GoodsName TVarChar, GoodsNDS TVarChar, 
                GoodsId Integer, Code Integer, Name TVarChar, 
-               Price TFloat, PriceWithNDS TFloat, ProducerName TVarChar, JuridicalName TVarChar,
-               ContractName TVarChar, ExpirationDate TDateTime, 
+               Price TFloat, PriceWithNDS TFloat, ProducerName TVarChar, 
+               JuridicalName TVarChar,
+               ContractName TVarChar,
+               AreaName TVarChar,
+               ExpirationDate TDateTime, 
                MinimumLot TFloat, NDS TFloat, LinkGoodsId Integer, 
                MarginPercent TFloat, NewPrice TFloat)
 
@@ -68,28 +71,29 @@ BEGIN
                 AND (ObjectBoolean_Top.ValueData = TRUE OR ObjectFloat_PercentMarkup.ValueData <> 0)
              )
    SELECT
-         LoadPriceListItem.Id, 
-         LoadPriceListItem.CommonCode, 
-         LoadPriceListItem.BarCode, 
-         LoadPriceListItem.GoodsCode, 
-         LoadPriceListItem.GoodsName, 
-         LoadPriceListItem.GoodsNDS, 
-         LoadPriceListItem.GoodsId,
-         Object_Goods.GoodsCode AS Code,
-         Object_Goods.GoodsName  AS Name, 
-         LoadPriceListItem.Price, 
+         LoadPriceListItem.Id                AS Id,
+         LoadPriceListItem.CommonCode        AS CommonCode,
+         LoadPriceListItem.BarCode           AS BarCode,
+         LoadPriceListItem.GoodsCode         AS GoodsCode,
+         LoadPriceListItem.GoodsName         AS GoodsName,
+         LoadPriceListItem.GoodsNDS          AS GoodsNDS,
+         LoadPriceListItem.GoodsId           AS GoodsId,
+         Object_Goods.GoodsCode              AS Code,
+         Object_Goods.GoodsName              AS Name,
+         LoadPriceListItem.Price             AS Price,
          (LoadPriceListItem.Price * (100 + Object_Goods.NDS)/100)::TFloat AS PriceWithNDS, 
          LoadPriceListItem.ProducerName, 
-         Object_Juridical.ValueData AS JuridicalName,
-         Object_Contract.ValueData  AS ContractName,
-         LoadPriceListItem.ExpirationDate,
-         PartnerGoods.MinimumLot,
-         Object_Goods.NDS,
-         LinkGoods.Id AS LinkGoodsId 
+         Object_Juridical.ValueData          AS JuridicalName,
+         Object_Contract.ValueData           AS ContractName,
+         Object_Area.ValueData               AS AreaName,
+         LoadPriceListItem.ExpirationDate    AS ExpirationDate,
+         PartnerGoods.MinimumLot             AS MinimumLot,
+         Object_Goods.NDS                    AS NDS,
+         LinkGoods.Id                        AS LinkGoodsId
        , CASE WHEN COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), ObjectGoodsView.isTop) = TRUE
                    THEN COALESCE (NULLIF (GoodsPrice.PercentMarkup, 0), COALESCE (ObjectGoodsView.PercentMarkup, 0)) -- - COALESCE(ObjectFloat_Juridical_Percent.valuedata, 0)
               ELSE COALESCE (MarginCondition.MarginPercent, 0) + COALESCE (ObjectFloat_Juridical_Percent.valuedata, 0)
-         END :: TFloat AS MarginPercent
+         END                       :: TFloat AS MarginPercent
          --(MarginCondition.MarginPercent + COALESCE(ObjectFloat_Juridical_Percent.valuedata, 0))::TFloat,
        , zfCalc_SalePrice((LoadPriceListItem.Price * (100 + Object_Goods.NDS)/100),                         -- Цена С НДС
                            CASE WHEN COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) <> 0 
@@ -100,7 +104,7 @@ BEGIN
                            COALESCE (NULLIF (GoodsPrice.PercentMarkup, 0), ObjectGoodsView.PercentMarkup),  -- % наценки у товара
                            0.0, --ObjectFloat_Juridical_Percent.valuedata,                                  -- % корректировки у Юр Лица для ТОПа
                            ObjectGoodsView.Price                                                            -- Цена у товара (фиксированная)
-                         ) :: TFloat AS NewPrice
+                         )         :: TFloat AS NewPrice
 
        FROM LoadPriceListItem 
 
@@ -126,8 +130,11 @@ BEGIN
             LEFT JOIN MarginCondition ON MarginCondition.MarginCategoryId = Object_MarginCategoryLink.MarginCategoryId
                                      AND (LoadPriceListItem.Price * (100 + Object_Goods.NDS)/100)::TFloat 
                                      BETWEEN MarginCondition.MinPrice AND MarginCondition.MaxPrice
+                                     
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = LoadPriceList.JuridicalId
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = LoadPriceList.ContractId
+            LEFT JOIN Object AS Object_Area ON Object_Area.Id = LoadPriceList.AreaId
+            
             LEFT JOIN Object_Goods_View AS PartnerGoods ON PartnerGoods.ObjectId  = LoadPriceList.JuridicalId 
                                                        AND PartnerGoods.GoodsCode = LoadPriceListItem.GoodsCode
             LEFT JOIN Object_LinkGoods_View AS LinkGoods ON LinkGoods.GoodsMainId = Object_Goods.Id 
@@ -162,6 +169,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 13.10.17         *
  13.06.16         *
  18.08.15                                                                        * inProducerSearch
  27.04.15                        *

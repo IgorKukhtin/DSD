@@ -32,12 +32,14 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
             DataBinding.FieldName = 'CommonCode'
             PropertiesClassName = 'TcxTextEditProperties'
             Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
           end
           object colBarCode: TcxGridDBColumn
             Caption = #1064#1090#1088#1080#1093'-'#1082#1086#1076
             DataBinding.FieldName = 'BarCode'
             PropertiesClassName = 'TcxTextEditProperties'
             Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
             Width = 77
           end
           object colGoodsCode: TcxGridDBColumn
@@ -45,6 +47,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
             DataBinding.FieldName = 'GoodsCode'
             PropertiesClassName = 'TcxTextEditProperties'
             Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
             Width = 83
           end
           object colGoodsName: TcxGridDBColumn
@@ -52,6 +55,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxTextEditProperties'
             Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
             Width = 97
           end
           object colCode: TcxGridDBColumn
@@ -65,6 +69,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
             Width = 39
           end
           object colName: TcxGridDBColumn
@@ -72,6 +77,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
             DataBinding.FieldName = 'Name'
             PropertiesClassName = 'TcxTextEditProperties'
             Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
             Width = 154
           end
           object colPrice: TcxGridDBColumn
@@ -80,6 +86,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
             Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
             Width = 62
           end
           object colPriceWithNDS: TcxGridDBColumn
@@ -88,6 +95,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
             Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
             Width = 62
           end
           object colGoodsNDS: TcxGridDBColumn
@@ -95,6 +103,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
             DataBinding.FieldName = 'GoodsNDS'
             PropertiesClassName = 'TcxTextEditProperties'
             Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
             Width = 66
           end
           object colNDS: TcxGridDBColumn
@@ -104,6 +113,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
             Properties.DecimalPlaces = 0
             Properties.DisplayFormat = ',0 %; ; ;'
             Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object colMargin: TcxGridDBColumn
@@ -112,6 +122,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.## %'
             Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object colCashPrice: TcxGridDBColumn
@@ -120,6 +131,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
             Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
             Width = 98
           end
           object colJuridicalName: TcxGridDBColumn
@@ -127,6 +139,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
             DataBinding.FieldName = 'JuridicalName'
             PropertiesClassName = 'TcxTextEditProperties'
             Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
             Width = 113
           end
           object colContractName: TcxGridDBColumn
@@ -134,6 +147,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
             DataBinding.FieldName = 'ContractName'
             PropertiesClassName = 'TcxTextEditProperties'
             Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
             Width = 75
           end
           object colProducerName: TcxGridDBColumn
@@ -141,6 +155,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
             DataBinding.FieldName = 'ProducerName'
             PropertiesClassName = 'TcxTextEditProperties'
             Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
             Width = 105
           end
           object colExpirationDate: TcxGridDBColumn
@@ -148,6 +163,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
             DataBinding.FieldName = 'ExpirationDate'
             PropertiesClassName = 'TcxTextEditProperties'
             Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
             Width = 73
           end
           object colMinimumLot: TcxGridDBColumn
@@ -155,7 +171,14 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
             DataBinding.FieldName = 'MinimumLot'
             PropertiesClassName = 'TcxTextEditProperties'
             Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
             Width = 92
+          end
+          object AreaName: TcxGridDBColumn
+            Caption = #1056#1077#1075#1080#1086#1085
+            DataBinding.FieldName = 'AreaName'
+            HeaderAlignmentVert = vaCenter
+            Width = 60
           end
         end
       end

@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Email(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , EmailKindId Integer, EmailKindName TVarChar
              , ErrorTo TVarChar
+             , AreaId Integer, AreaName TVarChar
 )
 AS
 $BODY$
@@ -28,18 +29,24 @@ BEGIN
            , CAST (0 AS Integer)    AS EmailKindId
            , CAST ('' AS TVarChar)  AS EmailKindName
            , CAST ('' AS TVarChar)  AS ErrorTo
+           
+           , CAST (0 AS Integer)    AS AreaId
+           , CAST ('' AS TVarChar)  AS AreaName
 ;
    ELSE
        RETURN QUERY
        SELECT
-             Object_Email.Id         AS Id
-           , Object_Email.ObjectCode AS Code
-           , Object_Email.ValueData  AS Name
+             Object_Email.Id             AS Id
+           , Object_Email.ObjectCode     AS Code
+           , Object_Email.ValueData      AS Name
 
            , Object_EmailKind.Id         AS EmailKindId
            , Object_EmailKind.ValueData  AS EmailKindName
 
            , ObjectString_ErrorTo.ValueData  AS ErrorTo
+
+           , Object_Area.Id              AS AreaId
+           , Object_Area.ValueData       AS AreaName
 
        FROM Object AS Object_Email
            LEFT JOIN ObjectLink AS ObjectLink_Email_EmailKind
@@ -51,6 +58,11 @@ BEGIN
                                   ON ObjectString_ErrorTo.ObjectId = Object_Email.Id 
                                  AND ObjectString_ErrorTo.DescId = zc_ObjectString_Email_ErrorTo()
 
+           LEFT JOIN ObjectLink AS ObjectLink_Email_Area
+                                ON ObjectLink_Email_Area.ObjectId = Object_Email.Id 
+                               AND ObjectLink_Email_Area.DescId = zc_ObjectLink_Email_Area()
+           LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Email_Area.ChildObjectId
+           
        WHERE Object_Email.Id = inId;
    END IF;
 
@@ -62,6 +74,7 @@ ALTER FUNCTION gpGet_Object_Email (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 13.10.16         *
  27.06.16         * 
 */
 

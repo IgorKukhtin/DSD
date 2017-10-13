@@ -71,15 +71,15 @@ BEGIN
                              )
 
      -- выбираем все строки документов прихода с маркет. товарами
-    , tmpMovMIComplete AS (SELECT Movement.Id                     AS MovementId
-                                , MovementDesc.ItemName        :: TVarChar AS ItemName
-                                , Status.ValueData                         AS STatusName
-                                , Movement.OperDate                        AS OperDate
-                                , Movement.InvNumber                       AS InvNumber
-                                , MIContainer.MovementItemId AS MovementItemId
-                                , MIContainer.ObjectId_analyzer   AS GoodsId
-                                , MIFloat_Price.ValueData                 ::TFloat  AS Price  
-                                , COALESCE (MIFloat_PriceSale.ValueData,0)::TFloat  AS PriceSale
+    , tmpMovMIComplete AS (SELECT Movement.Id                                         AS MovementId
+                                , MovementDesc.ItemName                   :: TVarChar AS ItemName
+                                , Status.ValueData                                    AS STatusName
+                                , Movement.OperDate                                   AS OperDate
+                                , Movement.InvNumber                                  AS InvNumber
+                                , MIContainer.MovementItemId                          AS MovementItemId
+                                , MIContainer.ObjectId_analyzer                       AS GoodsId
+                                , MIFloat_Price.ValueData                 ::TFloat    AS Price  
+                                , COALESCE (MIFloat_PriceSale.ValueData,0)::TFloat    AS PriceSale
                                 , COALESCE (MIFloat_AmountManual.ValueData,MIContainer.Amount)  AS Amount
                            FROM Movement 
                               INNER JOIN Object AS Status ON Status.Id = Movement.StatusId 
@@ -110,7 +110,7 @@ BEGIN
                              AND Movement.OperDate >= inStartDate AND Movement.OperDate < inEndDate 
                              AND COALESCE (inMakerId,0) <> 0
                          )
-         , tmpMovMI_UnComplete AS (SELECT Movement.Id                      AS MovementId
+         , tmpMovMI_UnComplete AS (SELECT Movement.Id                              AS MovementId
                                         , MovementDesc.ItemName        :: TVarChar AS ItemName
                                         , Status.ValueData                         AS STatusName
                                         , Movement.OperDate                        AS OperDate

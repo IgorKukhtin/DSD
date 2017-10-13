@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' '#1055#1086#1095#1090#1086#1074#1099#1081' '#1103#1097#1080#1082
-  ClientHeight = 252
-  ClientWidth = 388
+  ClientHeight = 297
+  ClientWidth = 370
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 79
-    Top = 207
+    Top = 257
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 229
-    Top = 207
+    Top = 257
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -92,6 +92,23 @@
     Left = 40
     Top = 167
     TabOrder = 10
+    Width = 296
+  end
+  object cxLabel14: TcxLabel
+    Left = 41
+    Top = 200
+    Caption = #1056#1077#1075#1080#1086#1085
+  end
+  object edArea: TcxButtonEdit
+    Left = 40
+    Top = 218
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 12
     Width = 296
   end
   object ActionList: TActionList
@@ -170,6 +187,14 @@
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAreaId'
+        Value = Null
+        Component = GuidesArea
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 328
@@ -233,6 +258,21 @@
         Component = ceErrorTo
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AreaId'
+        Value = Null
+        Component = GuidesArea
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AreaName'
+        Value = Null
+        Component = GuidesArea
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 320
@@ -286,5 +326,34 @@
       end>
     Left = 121
     Top = 99
+  end
+  object GuidesArea: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edArea
+    FormNameParam.Value = 'TAreaForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TAreaForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesArea
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesArea
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 176
+    Top = 216
   end
 end
