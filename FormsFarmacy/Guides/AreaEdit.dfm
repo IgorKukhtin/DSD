@@ -62,7 +62,7 @@ object AreaEditForm: TAreaEditForm
   object cxLabel5: TcxLabel
     Left = 10
     Top = 101
-    Caption = 'E-mail'
+    Caption = #1053#1040#1064' E-Mail '#1085#1072' '#1082#1086#1090#1086#1088#1099#1081' '#1087#1088#1080#1093#1086#1076#1080#1090' '#1055#1056#1040#1049#1057
   end
   object edEmail: TcxTextEdit
     Left = 10

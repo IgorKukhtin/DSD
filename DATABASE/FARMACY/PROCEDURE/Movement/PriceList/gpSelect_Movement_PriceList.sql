@@ -75,15 +75,14 @@ BEGIN
                                         AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
 
-            LEFT JOIN LoadPriceList ON LoadPriceList.JuridicalId = Object_Juridical.Id
-                                   AND LoadPriceList.ContractId  = Object_Contract.Id
-
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Area
                                          ON MovementLinkObject_Area.MovementId = Movement.Id
                                         AND MovementLinkObject_Area.DescId = zc_MovementLinkObject_Area()
             LEFT JOIN Object AS Object_Area ON Object_Area.Id = MovementLinkObject_Area.ObjectId
             
-            --LEFT JOIN Object AS Object_Area ON Object_Area.Id = LoadPriceList.AreaId 
+            LEFT JOIN LoadPriceList ON LoadPriceList.JuridicalId          = Object_Juridical.Id
+                                   AND LoadPriceList.ContractId           = Object_Contract.Id
+                                   AND COALESCE (LoadPriceList.AreaId, 0) = COALESCE (Object_Area.Id, 0)
             
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_PriceList();
 

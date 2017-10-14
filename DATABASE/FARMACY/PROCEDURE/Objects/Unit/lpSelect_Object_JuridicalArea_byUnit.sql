@@ -205,7 +205,7 @@ BEGIN
     From tmpUnitJuridical
          LEFT JOIN tmpJuridicalArea AS tmp1 ON tmp1.juridicalId = tmpUnitJuridical.JuridicalId AND tmp1.areaId = tmpUnitJuridical.AreaId_Unit 
          LEFT JOIN tmpJuridicalArea AS tmp2 ON tmp2.juridicalId = tmpUnitJuridical.JuridicalId AND tmp2.isDefault = TRUE
-         LEFT JOIN tmpJuridicalArea AS tmp3 ON tmp3.juridicalId = tmpUnitJuridical.JuridicalId AND tmp3.AreaId = 3692911 --5803492 -- עוסעמגאÿ 3692911 -- נאבמקאÿ 5803492 ÄÍÅÏÐ 
+         LEFT JOIN tmpJuridicalArea AS tmp3 ON tmp3.juridicalId = tmpUnitJuridical.JuridicalId AND tmp3.AreaId = zc_Area_Basis() -- ÄÍÅÏÐ 
    ;
   
 END;

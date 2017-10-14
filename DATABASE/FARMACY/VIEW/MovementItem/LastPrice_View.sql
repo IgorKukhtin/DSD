@@ -10,7 +10,8 @@ SELECT MainGoods.GoodsCode,
        Juridical.ValueData AS JuridicalName, 
        Contract.ValueData AS ContractName,
        JuridicalGoods.goodscode AS JuridicalGoodsCode,
-       JuridicalGoods.goodsName AS JuridicalGoodsName
+       JuridicalGoods.goodsName AS JuridicalGoodsName,
+       Object_Area.ValueData AS AreaName
 
 FROM LastPriceList_View
 
@@ -18,6 +19,7 @@ FROM LastPriceList_View
    JOIN object_goods_Main_view AS MainGoods ON MainGoods.Id = PriceList.ObjectId
    JOIN OBJECT AS Juridical ON Juridical.Id = LastPriceList_View.JuridicalId
    LEFT JOIN OBJECT AS Contract ON Contract.Id = LastPriceList_View.ContractId
+   LEFT JOIN Object AS Object_Area ON Object_Area.Id = LastPriceList_View.AreaId
    LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
                                     ON MILinkObject_Goods.MovementItemId = PriceList.Id
                                    AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
@@ -35,4 +37,4 @@ ALTER TABLE LastPrice_View
 */
 
 -- тест
--- SELECT * FROM Movement_Income_View where id = 805
+-- SELECT * FROM LastPrice_View where AreaName <> ''

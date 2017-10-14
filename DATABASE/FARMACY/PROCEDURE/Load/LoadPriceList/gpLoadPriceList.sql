@@ -8,21 +8,24 @@ CREATE OR REPLACE FUNCTION gpLoadPriceList(
 )                              
 RETURNS Void AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbPriceListId Integer;
-   DECLARE vbJuridicalId Integer;
-   DECLARE vbContractId Integer;
-   DECLARE vbOperDate TDateTime;
+   DECLARE vbUserId       Integer;
+
+   DECLARE vbPriceListId  Integer;
+   DECLARE vbJuridicalId  Integer;
+   DECLARE vbContractId   Integer;
+   DECLARE vbAreaId       Integer;
+   DECLARE vbOperDate     TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_LoadSaleFrom1C());
      vbUserId := lpGetUserBySession (inSession);
 
      -- Получаем параметры прайсЛиста
-     SELECT 
-           LoadPriceList.OperDate	 
-         , LoadPriceList.JuridicalId 
-         , COALESCE(LoadPriceList.ContractId, 0) INTO vbOperDate, vbJuridicalId, vbContractId
+     SELECT LoadPriceList.OperDate	 
+          , LoadPriceList.JuridicalId 
+          , COALESCE (LoadPriceList.ContractId, 0)
+          , COALESCE (LoadPriceList.AreaId, 0)
+            INTO vbOperDate, vbJuridicalId, vbContractId, vbAreaId
       FROM LoadPriceList WHERE LoadPriceList.Id = inId;
 
      UPDATE LoadPriceList SET isMoved = true, UserId_Update = vbUserId, Date_Update = CURRENT_TIMESTAMP WHERE Id = inId;
@@ -37,12 +40,17 @@ BEGIN
             JOIN MovementLinkObject AS MovementLinkObject_Contract
                                     ON MovementLinkObject_Contract.MovementId = Movement.Id
                                    AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Area
+                                         ON MovementLinkObject_Area.MovementId = Movement.Id
+                                        AND MovementLinkObject_Area.DescId     = zc_MovementLinkObject_Area()
       WHERE Movement.OperDate = vbOperDate AND Movement.DescId = zc_Movement_PriceList()
         AND MovementLinkObject_Juridical.ObjectId = vbJuridicalId 
-        AND COALESCE(MovementLinkObject_Contract.ObjectId, 0) = vbContractId;
+        AND COALESCE (MovementLinkObject_Contract.ObjectId, 0) = vbContractId
+        AND COALESCE (MovementLinkObject_Area.ObjectId, 0)     = vbAreaId
+       ;
 
-      IF COALESCE(vbPriceListId, 0) = 0 THEN 
-         vbPriceListId := gpInsertUpdate_Movement_PriceList(0, '', vbOperDate, vbJuridicalId, vbContractId, inSession);
+      IF COALESCE (vbPriceListId, 0) = 0 THEN 
+         vbPriceListId := gpInsertUpdate_Movement_PriceList (0, '', vbOperDate, vbJuridicalId, vbContractId, vbAreaId, inSession);
       END IF;
 
 

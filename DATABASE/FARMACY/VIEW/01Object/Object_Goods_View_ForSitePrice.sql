@@ -36,7 +36,8 @@ CREATE OR REPLACE VIEW Object_Goods_View_ForSitePrice AS
                                                 AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
         -- [15:32] Александр: конкретно для данного случая делать расчет минимальной цены не нужно , нужно отдавать цену для доставки по Украине от поставщика БАДМ отсрочка
         LEFT JOIN LoadPriceListItem ON LoadPriceListItem.GoodsId         = ObjectLink_Main.ChildObjectId
-                                   AND LoadPriceListItem.LoadPriceListId = (SELECT LoadPriceList.Id FROM LoadPriceList WHERE LoadPriceList.JuridicalId = 59610 AND LoadPriceList.ContractId = 183257)
+                                   AND LoadPriceListItem.LoadPriceListId = -- БаДМ + Бадм отсрочка + Днепр
+                                                                           (SELECT LoadPriceList.Id FROM LoadPriceList WHERE LoadPriceList.JuridicalId = 59610 AND LoadPriceList.ContractId = 183257 AND COALESCE (LoadPriceList.AreaId, 0) IN (0, 5803492))
         LEFT JOIN (WITH MarginCategory_all AS (SELECT DISTINCT
                                                       ObjectFloat_MarginPercent.ValueData AS MarginPercent
                                                     , ObjectFloat_MinPrice.ValueData      AS MinPrice

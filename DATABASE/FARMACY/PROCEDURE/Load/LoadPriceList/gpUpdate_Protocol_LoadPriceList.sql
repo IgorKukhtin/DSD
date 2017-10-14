@@ -1,8 +1,11 @@
+-- Function: gpUpdate_Protocol_LoadPriceList()
 
-DROP FUNCTION IF EXISTS gpUpdate_Protocol_LoadPriceList (Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpUpdate_Protocol_LoadPriceList (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Protocol_LoadPriceList (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Protocol_LoadPriceList(
     IN inImportSettingsId    Integer   , -- 
+    IN inAreaId              Integer   , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID AS
@@ -31,6 +34,7 @@ BEGIN
                                                 AND (LoadPriceList.ContractId  = Object_ImportSettings_View.ContractId
                                                   OR COALESCE (Object_ImportSettings_View.ContractId, 0) = 0
                                                     )
+                                                AND COALESCE (LoadPriceList.AreaId, 0)  = COALESCE (inAreaId, 0)
                      WHERE Object_ImportSettings_View.id = inImportSettingsId)
        ;
   END IF;

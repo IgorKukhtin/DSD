@@ -5,12 +5,15 @@ DROP VIEW IF EXISTS LastPriceList_View;
 CREATE OR REPLACE VIEW LastPriceList_View AS 
 
   SELECT JuridicalId, ContractId, MovementId, AreaId
-  FROM (SELECT max (Movement.OperDate) OVER (PARTITION BY MovementLinkObject_Juridical.ObjectId, COALESCE (MovementLinkObject_Contract.ObjectId, 0)) AS Max_Date
+  FROM (SELECT MAX (Movement.OperDate) OVER (PARTITION BY MovementLinkObject_Juridical.ObjectId
+                                                        , COALESCE (MovementLinkObject_Contract.ObjectId, 0)
+                                                        , COALESCE (MovementLinkObject_Area.ObjectId, 0)
+                                            ) AS Max_Date
               , Movement.OperDate
               , Movement.Id AS MovementId
-              , MovementLinkObject_Juridical.ObjectId             AS JuridicalId 
-              , COALESCE(MovementLinkObject_Contract.ObjectId, 0) AS ContractId
-              , COALESCE(MovementLinkObject_Area.ObjectId, 0)     AS AreaId
+              , MovementLinkObject_Juridical.ObjectId              AS JuridicalId 
+              , COALESCE (MovementLinkObject_Contract.ObjectId, 0) AS ContractId
+              , COALESCE (MovementLinkObject_Area.ObjectId, 0)     AS AreaId
         FROM Movement
              LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                           ON MovementLinkObject_Juridical.MovementId = Movement.Id

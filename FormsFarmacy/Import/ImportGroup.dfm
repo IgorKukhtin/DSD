@@ -5,18 +5,18 @@ inherited ImportGroupForm: TImportGroupForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 621
-  ExplicitHeight = 383
+  ExplicitHeight = 380
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 605
     Height = 319
-    ExplicitWidth = 583
+    ExplicitWidth = 605
     ExplicitHeight = 319
     ClientRectBottom = 319
     ClientRectRight = 605
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 583
+      ExplicitWidth = 605
       ExplicitHeight = 319
       inherited cxGrid: TcxGrid
         Width = 273
@@ -55,7 +55,6 @@ inherited ImportGroupForm: TImportGroupForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 307
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -314,7 +313,14 @@ inherited ImportGroupForm: TImportGroupForm
       ImportSettingsId.Component = ChildCDS
       ImportSettingsId.ComponentItem = 'ImportSettingsId'
       ImportSettingsId.MultiSelectSeparator = ','
-      ExternalParams = <>
+      ExternalParams = <
+        item
+          Name = 'inAreaId'
+          Value = Null
+          Component = GuidesArea
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end>
     end
     object macGUILoadPrice: TMultiAction
       Category = 'Load'
@@ -644,6 +650,14 @@ inherited ImportGroupForm: TImportGroupForm
         Value = Null
         Component = ChildCDS
         ComponentItem = 'ImportSettingsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAreaId'
+        Value = Null
+        Component = GuidesArea
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

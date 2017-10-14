@@ -81,8 +81,9 @@ BEGIN
             LEFT JOIN tmpContractSettings ON tmpContractSettings.MainJuridicalId = Object_MainJuridical.Id
                                          AND tmpContractSettings.ContractId = Contract.Id
             --   
-            LEFT JOIN LoadPriceList ON LoadPriceList.ContractId = LastPriceList_View.ContractId
-                                   AND LoadPriceList.JuridicalId = LastPriceList_View.JuridicalId
+            LEFT JOIN LoadPriceList ON LoadPriceList.ContractId           = LastPriceList_View.ContractId
+                                   AND LoadPriceList.JuridicalId          = LastPriceList_View.JuridicalId
+                                   AND COALESCE (LoadPriceList.AreaId, 0) = LastPriceList_View.AreaId
             LEFT JOIN Object AS Object_User_Insert ON Object_User_Insert.Id = LoadPriceList.UserId_Insert
             LEFT JOIN Object AS Object_User_Update ON Object_User_Update.Id = LoadPriceList.UserId_Update  
             

@@ -1,27 +1,29 @@
 -- Function: lpInsertUpdate_Movement_LoadPriceList_Contract()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_LoadPriceList_Contract
-          (Integer, Integer, Integer,
-           TVarChar, TVarChar, TVarChar, TVarChar,
-           TFloat, TFloat,
-           TDateTime,
-           TVarChar, TVarChar,
-           Boolean,
-           Integer);
+/*
+select * 
+, gpInsertUpdate_Object_ImportSettingsItems (ioId := Id, inName := '%EXTERNALPARAM%' , inImportSettingsId := ImportSettingsId, inImportTypeItemsId := ImportTypeItemsId , inDefaultValue := '' ,  inSession := '3')
+from gpSelect_Object_ImportSettingsItems(inImportSettingsId := 0 ,  inSession := '3')
+where ParamName = 'inAreaId'
+*/
+
+-- DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_LoadPriceList_Contract (Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TVarChar, TVarChar, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_LoadPriceList_Contract (Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TVarChar, TVarChar, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_LoadPriceList_Contract(
     IN inJuridicalId         Integer   , -- Юридические лица
     IN inContractId          Integer   , -- Договор
-    IN inCommonCode          Integer   , 
-    IN inBarCode             TVarChar  , 
-    IN inGoodsCode           TVarChar  , 
-    IN inGoodsName           TVarChar  , 
-    IN inGoodsNDS            TVarChar  , 
-    IN inPrice               TFloat    ,  
-    IN inRemains             TFloat    ,  
+    IN inAreaId              Integer   , -- Регион
+    IN inCommonCode          Integer   ,
+    IN inBarCode             TVarChar  ,
+    IN inGoodsCode           TVarChar  ,
+    IN inGoodsName           TVarChar  ,
+    IN inGoodsNDS            TVarChar  ,
+    IN inPrice               TFloat    ,
+    IN inRemains             TFloat    ,
     IN inExpirationDate      TDateTime , -- Срок годности
-    IN inPackCount           TVarChar  ,  
-    IN inProducerName        TVarChar  , 
+    IN inPackCount           TVarChar  ,
+    IN inProducerName        TVarChar  ,
     IN inNDSinPrice          Boolean   ,
     IN inUserId              Integer     -- сессия пользователя
 )
@@ -36,29 +38,84 @@ $BODY$
     DECLARE vbIsSpecCondition Boolean;
 BEGIN
     -- такое не загружаем
-    IF COALESCE (inPrice, 0) = 0 THEN 
+    IF COALESCE (inPrice, 0) = 0 THEN
         RETURN;
     END IF;
 
-  
-    -- Проверка что передано таки Договор а не Юр лицо 
-    IF COALESCE (inContractId, 0) <> 0 THEN 
+
+    -- Проверка что передано таки Договор а не Юр лицо
+    IF COALESCE (inContractId, 0) <> 0 THEN
        IF (SELECT DescId FROM Object WHERE Id = inContractId) <> zc_Object_Contract() THEN
           RAISE EXCEPTION 'Не правильно передается значение параметра Договор (ContractId)';
        END IF;
     END IF;
-  
+
+
+    -- Проверка что передано таки Регион а не другое ...
+    IF COALESCE (inAreaId, 0) <> 0 THEN
+       IF (SELECT DescId FROM Object WHERE Id = inAreaId) <> zc_Object_Area() THEN
+          RAISE EXCEPTION 'Не правильно передается значение параметра Регион (AreaId)';
+       END IF;
+    END IF;
+
+    -- Проверка что Регион соответствует Юр лицу
+    IF (COALESCE (inAreaId, 0) = 0 AND EXISTS (SELECT 1
+                                               FROM ObjectLink AS ObjectLink_JuridicalArea_Juridical
+                                                    INNER JOIN Object AS Object_JuridicalArea ON Object_JuridicalArea.Id       = ObjectLink_JuridicalArea_Juridical.ObjectId
+                                                                                             AND Object_JuridicalArea.isErased = FALSE
+                                                    -- INNER JOIN ObjectLink AS ObjectLink_JuridicalArea_Area
+                                                    --                       ON ObjectLink_JuridicalArea_Area.ObjectId      = Object_JuridicalArea.Id 
+                                                    --                      AND ObjectLink_JuridicalArea_Area.DescId        = zc_ObjectLink_JuridicalArea_Area()
+                                                    --                      AND ObjectLink_JuridicalArea_Area.ChildObjectId > 0
+                                                                         
+                                               WHERE ObjectLink_JuridicalArea_Juridical.ChildObjectId = inJuridicalId
+                                                 AND ObjectLink_JuridicalArea_Juridical.DescId        = zc_ObjectLink_JuridicalArea_Juridical()
+                                              ))
+              OR (inAreaId > 0 AND NOT EXISTS (SELECT 1
+                                               FROM ObjectLink AS ObjectLink_JuridicalArea_Juridical
+                                                    INNER JOIN Object AS Object_JuridicalArea ON Object_JuridicalArea.Id       = ObjectLink_JuridicalArea_Juridical.ObjectId
+                                                                                             AND Object_JuridicalArea.isErased = FALSE
+                                                    INNER JOIN ObjectLink AS ObjectLink_JuridicalArea_Area
+                                                                          ON ObjectLink_JuridicalArea_Area.ObjectId      = Object_JuridicalArea.Id 
+                                                                         AND ObjectLink_JuridicalArea_Area.DescId        = zc_ObjectLink_JuridicalArea_Area()
+                                                                         AND ObjectLink_JuridicalArea_Area.ChildObjectId = inAreaId
+                                                                         
+                                               WHERE ObjectLink_JuridicalArea_Juridical.ChildObjectId = inJuridicalId
+                                                 AND ObjectLink_JuridicalArea_Juridical.DescId        = zc_ObjectLink_JuridicalArea_Juridical()
+                                              ))
+    THEN
+        RAISE EXCEPTION 'Ошибка.Для <%>%не правильно передается значение параметра Регион = <%>%Значение должно быть из списка: <%>'
+                      , lfGet_Object_ValueData (inJuridicalId)
+                      , CHR (13)
+                      , lfGet_Object_ValueData (inAreaId)
+                      , CHR (13)
+                      , (SELECT STRING_AGG (tmp.AreaName, ';')
+                         FROM (SELECT COALESCE (Object_Area.ValueData, '') AS AreaName
+                               FROM ObjectLink AS ObjectLink_JuridicalArea_Juridical
+                                    INNER JOIN Object AS Object_JuridicalArea ON Object_JuridicalArea.Id       = ObjectLink_JuridicalArea_Juridical.ObjectId
+                                                                             AND Object_JuridicalArea.isErased = FALSE
+                                    LEFT JOIN ObjectLink AS ObjectLink_JuridicalArea_Area
+                                                         ON ObjectLink_JuridicalArea_Area.ObjectId      = Object_JuridicalArea.Id 
+                                                        AND ObjectLink_JuridicalArea_Area.DescId        = zc_ObjectLink_JuridicalArea_Area()
+                                    LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_JuridicalArea_Area.ChildObjectId
+                               WHERE ObjectLink_JuridicalArea_Juridical.ChildObjectId = inJuridicalId
+                                 AND ObjectLink_JuridicalArea_Juridical.DescId        = zc_ObjectLink_JuridicalArea_Juridical()
+                              ) AS tmp
+                        )
+                       ;
+    END IF;
+
 
     -- Поиск "шапки" за "сегодня"
     SELECT Id INTO vbLoadPriceListId
     FROM LoadPriceList
-    WHERE JuridicalId = inJuridicalId AND OperDate = CURRENT_DATE AND COALESCE (ContractId, 0) = inContractId;
+    WHERE JuridicalId = inJuridicalId AND OperDate = CURRENT_DATE AND COALESCE (ContractId, 0) = inContractId AND COALESCE (AreaId, 0) = COALESCE (inAreaId, 0);
 
     -- если нет "шапки" - создадим
-    IF COALESCE (vbLoadPriceListId, 0) = 0 
+    IF COALESCE (vbLoadPriceListId, 0) = 0
     THEN
-         INSERT INTO LoadPriceList (JuridicalId, ContractId, OperDate, NDSinPrice/*, UserId_Insert*/, Date_Insert)
-         VALUES (inJuridicalId, inContractId, CURRENT_DATE, inNDSinPrice/*, inUserId*/, CURRENT_TIMESTAMP)
+         INSERT INTO LoadPriceList (JuridicalId, ContractId, AreaId, OperDate, NDSinPrice/*, UserId_Insert*/, Date_Insert)
+         VALUES (inJuridicalId, inContractId, inAreaId, CURRENT_DATE, inNDSinPrice/*, inUserId*/, CURRENT_TIMESTAMP)
          RETURNING Id INTO vbLoadPriceListId;
     ELSE
          -- иначе запишем что его надо перенести
@@ -67,11 +124,12 @@ BEGIN
          UPDATE LoadPriceList SET UserId_Insert = inUserId, Date_Insert = CURRENT_TIMESTAMP WHERE Id = vbLoadPriceListId;*/
     END IF;
 
+
     -- Поиск "элемента"
     SELECT Id INTO vbLoadPriceListItemsId FROM LoadPriceListItem  WHERE LoadPriceListId = vbLoadPriceListId AND GoodsCode = inGoodsCode;
 
 
-    -- Ищем по общему коду 
+    -- Ищем по общему коду
     IF COALESCE (vbGoodsId, 0) = 0 AND inCommonCode > 0
     THEN
       SELECT ObjectLink_LinkGoods_GoodsMain.ChildObjectId AS GoodsId
@@ -108,8 +166,8 @@ BEGIN
         AND Object_Goods.DescId = zc_Object_Goods();
 
     END IF;
-   
-    -- Ищем по штрих-коду 
+
+    -- Ищем по штрих-коду
     IF COALESCE (vbGoodsId, 0) = 0 AND inBarCode <> ''
     THEN
       SELECT ObjectLink_LinkGoods_GoodsMain.ChildObjectId AS GoodsId
@@ -159,9 +217,9 @@ BEGIN
 
     -- !!!замена параметра!!!
     IF inExpirationDate IS NULL OR inExpirationDate = CURRENT_DATE
-    THEN 
+    THEN
         inExpirationDate := zc_DateEnd();
-    END IF;	
+    END IF;
 
     --!!!проверка!!!
     IF 1 < (SELECT COUNT (*) FROM (SELECT DISTINCT CASE WHEN vbIsSpecCondition = TRUE
@@ -170,8 +228,8 @@ BEGIN
                             ELSE tmp.Price
                        END
                 FROM (SELECT inPrice AS Price) AS tmp
-                     LEFT JOIN ObjectFloat AS ObjectFloat_ConditionalPercent 
-                                           ON ObjectFloat_ConditionalPercent.ObjectId = inJuridicalId 
+                     LEFT JOIN ObjectFloat AS ObjectFloat_ConditionalPercent
+                                           ON ObjectFloat_ConditionalPercent.ObjectId = inJuridicalId
                                           AND ObjectFloat_ConditionalPercent.DescId = zc_ObjectFloat_Juridical_ConditionalPercent()
                ) AS tmp)
     THEN
@@ -187,8 +245,8 @@ BEGIN
                             ELSE tmp.Price
                        END
                 FROM (SELECT inPrice AS Price) AS tmp
-                     LEFT JOIN ObjectFloat AS ObjectFloat_ConditionalPercent 
-                                           ON ObjectFloat_ConditionalPercent.ObjectId = inJuridicalId 
+                     LEFT JOIN ObjectFloat AS ObjectFloat_ConditionalPercent
+                                           ON ObjectFloat_ConditionalPercent.ObjectId = inJuridicalId
                                           AND ObjectFloat_ConditionalPercent.DescId = zc_ObjectFloat_Juridical_ConditionalPercent()
                );
 
@@ -199,12 +257,12 @@ BEGIN
             INSERT INTO LoadPriceListItem (LoadPriceListId, CommonCode, BarCode, GoodsCode, GoodsName, GoodsNDS, GoodsId, Price, PriceOriginal, ExpirationDate, PackCount, ProducerName)
                                    VALUES (vbLoadPriceListId, inCommonCode, inBarCode, inGoodsCode, inGoodsName, inGoodsNDS, vbGoodsId, inPrice, vbPriceOriginal, inExpirationDate, inPackCount, inProducerName);
         ELSE
-            UPDATE LoadPriceListItem 
-             SET GoodsName = inGoodsName, CommonCode = inCommonCode, BarCode = inBarCode, GoodsNDS = inGoodsNDS, GoodsId = vbGoodsId, 
+            UPDATE LoadPriceListItem
+             SET GoodsName = inGoodsName, CommonCode = inCommonCode, BarCode = inBarCode, GoodsNDS = inGoodsNDS, GoodsId = vbGoodsId,
                  Price = inPrice, PriceOriginal = vbPriceOriginal, ExpirationDate = inExpirationDate, PackCount = inPackCount, ProducerName = inProducerName
             WHERE Id = vbLoadPriceListItemsId;
         END IF;
-    END IF; 
+    END IF;
 
 
 END;

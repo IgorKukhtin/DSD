@@ -14,6 +14,8 @@ uses
 type
   // элемент "почтовый ящик"
   TMailItem = record
+    AreaId        : Integer;
+    AreaName      : string;
     Host          : string;
     Port          : Integer;
     Mail          : string;
@@ -27,6 +29,10 @@ type
   // элемент "поставщик и параметры загрузки информации"
   TImportSettingsItem = record
     UserName      : string;
+    AreaId        : Integer;
+    AreaName      : string;
+    AreaId_load   : Integer;
+    AreaName_load : string;
     Id            : Integer;
     Code          : Integer;
     Name          : string;
@@ -45,6 +51,8 @@ type
 
     zc_Enum_EmailKind_InPrice    : integer;
     zc_Enum_EmailKind_IncomeMMO  : integer;
+    zc_Area_Basis                : integer;
+
     EmailKindId                  : integer;
     EmailKindname                : string;
   end;
@@ -100,10 +108,10 @@ type
     vbArrayMail :TArrayMail; // массив почтовых ящиков
     vbArrayImportSettings :TArrayImportSettings; // массив поставщиков и параметров загрузки информации
 
-    function GetArrayList_Index_byUserName(ArrayList:TArrayMail;UserName:String):Integer;//находит Индекс в массиве по значению Host
-    function GetArrayList_Index_byJuridicalMail(ArrayList:TArrayImportSettings;UserName,JuridicalMail:String):Integer;//находит Индекс в массиве по значению Host + MailJuridical
+    function GetArrayList_Index_byUserName (ArrayList : TArrayMail; UserName : String; AreaId : Integer):Integer;//находит Индекс в массиве по значению Host
+    function GetArrayList_Index_byJuridicalMail (ArrayList : TArrayImportSettings; UserName,JuridicalMail : String; AreaId :Integer ):Integer;//находит Индекс в массиве по значению Host + MailJuridical + AreaId
 
-    function fGet_LoadPriceList (inJuridicalId, inContractId :Integer) : Integer;
+    function fGet_LoadPriceList (inJuridicalId, inContractId, inAreaId  :Integer) : Integer;
 
     function fError_SendEmail (inImportSettingsId, inContactPersonId:Integer; inByDate :TDateTime; inByMail, inByFileName : String) : Boolean;
 
@@ -111,6 +119,7 @@ type
     function fInitArray : Boolean; // получает данные с сервера и на основании этих данных заполняет массивы
     function fBeginMail : Boolean; // обработка всей почты
     function fBeginXLS  : Boolean; // обработка всех XLS
+    function fBeginXLS_ONE  (inUserName : String; inImportSettingsId, inAreaId : Integer) : Boolean; // обработка XLS - ОДНОГО ImportSettingsId
     function fBeginMMO (inUserName:String;inImportSettingsId:Integer;msgDate:TDateTime)  : Boolean; // обработка MMO
     function fBeginMove : Boolean; // перенос цен
     function fRefreshMovementItemLastPriceList_View : Boolean; // оптимизация если была загрузка XLS
@@ -157,17 +166,17 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 //находит Индекс в массиве по значению UserName
-function TMainForm.GetArrayList_Index_byUserName(ArrayList:TArrayMail;UserName:String):Integer;
+function TMainForm.GetArrayList_Index_byUserName (ArrayList : TArrayMail; UserName : String; AreaId : Integer):Integer;
 var i: Integer;
 begin
      //находит Индекс в массиве по значению Host
     Result:=-1;
     for i := 0 to Length(ArrayList)-1 do
-      if (ArrayList[i].UserName = UserName) then begin Result:=i;break;end;
+      if (ArrayList[i].UserName = UserName) and (ArrayList[i].AreaId = AreaId) then begin Result:=i;break;end;
 end;
 {------------------------------------------------------------------------}
 //находит Индекс в массиве по значению UserName + MailJuridical + время
-function TMainForm.GetArrayList_Index_byJuridicalMail(ArrayList:TArrayImportSettings;UserName,JuridicalMail:String):Integer;
+function TMainForm.GetArrayList_Index_byJuridicalMail (ArrayList : TArrayImportSettings; UserName,JuridicalMail : String; AreaId :Integer ) : Integer;
 var i: Integer;
     Year, Month, Day: Word;
     Second, MSec: word;
@@ -178,6 +187,7 @@ begin
     Result:=-1;
     for i := 0 to Length(ArrayList)-1 do
       if (ArrayList[i].UserName = UserName) and (System.Pos(AnsiUpperCase(JuridicalMail), AnsiUpperCase(ArrayList[i].JuridicalMail)) > 0)
+         and (ArrayList[i].AreaId   = AreaId)
       then begin Result:=i;break;end;
     //
     // проверка - текущее время
@@ -266,6 +276,12 @@ begin
        while not DataSet.EOF do begin
           //заполнили каждого поставщика
           vbArrayImportSettings[i].UserName     :=DataSet.FieldByName('UserName').asString;
+
+          vbArrayImportSettings[i].AreaId       :=DataSet.FieldByName('AreaId').asInteger;
+          vbArrayImportSettings[i].AreaName     :=DataSet.FieldByName('AreaName').asString;
+          vbArrayImportSettings[i].AreaId_load  :=DataSet.FieldByName('AreaId_load').asInteger;
+          vbArrayImportSettings[i].AreaName_load:=DataSet.FieldByName('AreaName_load').asString;
+
           vbArrayImportSettings[i].Id           :=DataSet.FieldByName('Id').asInteger;
           vbArrayImportSettings[i].Code         :=DataSet.FieldByName('Code').asInteger;
           vbArrayImportSettings[i].Name         :=DataSet.FieldByName('Name').asString;
@@ -281,6 +297,8 @@ begin
 
           vbArrayImportSettings[i].zc_Enum_EmailKind_InPrice   := DataSet.FieldByName('zc_Enum_EmailKind_InPrice').asInteger;
           vbArrayImportSettings[i].zc_Enum_EmailKind_IncomeMMO := DataSet.FieldByName('zc_Enum_EmailKind_IncomeMMO').asInteger;
+          vbArrayImportSettings[i].zc_Area_Basis               := DataSet.FieldByName('zc_Area_Basis').asInteger;
+
           vbArrayImportSettings[i].EmailKindId   := DataSet.FieldByName('EmailKindId').asInteger;
           vbArrayImportSettings[i].EmailKindname := DataSet.FieldByName('EmailKindname').asString;
 
@@ -292,8 +310,8 @@ begin
           vbArrayImportSettings[i].EndTime      :=DataSet.FieldByName('EndTime').AsDateTime;
 
           //временно сохранили список UserName
-          if not (UserNameStringList.IndexOf(DataSet.FieldByName('UserName').asString) >= 0)
-          then begin UserNameStringList.Add(DataSet.FieldByName('UserName').asString);UserNameStringList.Sort;end;
+          if not (UserNameStringList.IndexOf(DataSet.FieldByName('UserName').asString+'_'+IntToStr(DataSet.FieldByName('AreaId').asInteger)) >= 0)
+          then begin UserNameStringList.Add(DataSet.FieldByName('UserName').asString+'_'+IntToStr(DataSet.FieldByName('AreaId').asInteger));UserNameStringList.Sort;end;
 
           //перешли к следующему
           DataSet.Next;
@@ -308,9 +326,11 @@ begin
        SetLength(vbArrayMail,UserNameStringList.Count);//длина масива соответствует кол-ву UserName-ов
        while not DataSet.EOF do
        begin
-          nn:= GetArrayList_Index_byUserName(vbArrayMail, DataSet.FieldByName('UserName').asString);
+          nn:= GetArrayList_Index_byUserName(vbArrayMail, DataSet.FieldByName('UserName').asString, DataSet.FieldByName('AreaId').asInteger);
           if nn = -1 then
           begin
+                vbArrayMail[i].AreaId   :=DataSet.FieldByName('AreaId').asInteger;
+                vbArrayMail[i].AreaName :=DataSet.FieldByName('AreaName').asString;
                 //сохранили новый Host + UserName
                 vbArrayMail[i].Host:=DataSet.FieldByName('Host').asString;
                 vbArrayMail[i].Port:=DataSet.FieldByName('Port').asInteger;
@@ -457,8 +477,6 @@ begin
                       end;
                  end;
 
-
-
                  PanelHost.Caption:= 'Start Mail (3.1) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
                  IdIMAP4.SelectMailBox('INBOX');//only IMAP
                  PanelHost.Caption:= 'Start Mail (3.2) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
@@ -488,11 +506,11 @@ begin
                         //IdMessage.CharSet := 'UTF-8';
 
                         //находим поставщика, который отправил на этот UserName + есть в нашем списке + время
-                        JurPos:=GetArrayList_Index_byJuridicalMail(vbArrayImportSettings, vbArrayMail[ii].UserName, IdMessage.From.Address);
+                        JurPos:=GetArrayList_Index_byJuridicalMail(vbArrayImportSettings, vbArrayMail[ii].UserName, IdMessage.From.Address, vbArrayMail[ii].AreaId);
                         //
                         if JurPos >=0
-                        then PanelMailFrom.Caption:= 'Mail From : '+FormatDateTime('dd.mm.yyyy hh:mm:ss',IdMessage.Date) + ' (' +  IntToStr(vbArrayImportSettings[JurPos].Id) + ') ' + vbArrayImportSettings[JurPos].Name
-                        else PanelMailFrom.Caption:= 'Mail From : '+FormatDateTime('dd.mm.yyyy hh:mm:ss',IdMessage.Date) + ' ' + IdMessage.From.Address + ' - ???';
+                        then PanelMailFrom.Caption:= 'Mail From : '+FormatDateTime('dd.mm.yyyy hh:mm:ss',IdMessage.Date) + ' (' +  IntToStr(vbArrayImportSettings[JurPos].Id) + ') ' + vbArrayImportSettings[JurPos].AreaName + ' * ' + vbArrayImportSettings[JurPos].Name
+                        else PanelMailFrom.Caption:= 'Mail From : '+FormatDateTime('dd.mm.yyyy hh:mm:ss',IdMessage.Date) + ' ' + vbArrayImportSettings[JurPos].AreaName + ' * ' + IdMessage.From.Address + ' - ???';
                         Application.ProcessMessages;
                         //если нашли поставщика, тогда это письмо надо загружать
                         if JurPos >= 0 then
@@ -536,7 +554,7 @@ begin
                             ForceDirectories(vbArrayImportSettings[JurPos].Directory);
 
                             // ТОЛЬКО если "сегодня" не было загрузки JurPos или это ПРИХОД
-                            if (fGet_LoadPriceList (vbArrayImportSettings[JurPos].JuridicalId, vbArrayImportSettings[JurPos].ContractId) = 0)
+                            if (fGet_LoadPriceList (vbArrayImportSettings[JurPos].JuridicalId, vbArrayImportSettings[JurPos].ContractId, vbArrayImportSettings[JurPos].AreaId_load) = 0)
                              or(vbArrayImportSettings[JurPos].isMultiLoad = TRUE)
                              or(vbArrayImportSettings[JurPos].EmailKindId = vbArrayImportSettings[JurPos].zc_Enum_EmailKind_IncomeMMO)
                             then
@@ -650,10 +668,6 @@ begin
                    end
                    else ShowMessage('not read :' + IntToStr(i));
 
-                   //а теперь только для ММО - обработка
-                   if (JurPos >= 0) and (fMMO = TRUE) and (vbArrayImportSettings[JurPos].EmailKindId = vbArrayImportSettings[JurPos].zc_Enum_EmailKind_IncomeMMO)
-                   then fBeginMMO (vbArrayMail[ii].UserName, vbArrayImportSettings[JurPos].Id,msgDate_save);
-
                    //удаление письма
                    //***if flag then IdPOP3.Delete(i);   //POP3
                    PanelHost.Caption:= 'Start Mail (5.4.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
@@ -667,6 +681,15 @@ begin
                    end;
                    PanelHost.Caption:= 'Start Mail (5.5.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
                    //
+
+                   //а теперь только для ММО - обработка
+                   if (JurPos >= 0) and (fMMO = TRUE) and (vbArrayImportSettings[JurPos].EmailKindId = vbArrayImportSettings[JurPos].zc_Enum_EmailKind_IncomeMMO)
+                   then fBeginMMO (vbArrayMail[ii].UserName, vbArrayImportSettings[JurPos].Id,msgDate_save);
+
+                   //а теперь только для ММО - обработка
+                   if (JurPos >= 0) and (fMMO = TRUE) and (vbArrayImportSettings[JurPos].EmailKindId = vbArrayImportSettings[JurPos].zc_Enum_EmailKind_IncomeMMO)
+                   then fBeginMMO (vbArrayMail[ii].UserName, vbArrayImportSettings[JurPos].Id,msgDate_save);
+
 
                    //все, идем дальше
                    Sleep(500);
@@ -721,6 +744,9 @@ function TMainForm.fBeginXLS : Boolean;
 var
  searchResult, searchResult_save : TSearchRec;
 begin
+     //
+     exit;
+     //
      if vbIsBegin = true then exit;
      // запущена обработка
      vbIsBegin:= true;
@@ -785,6 +811,85 @@ begin
            Application.ProcessMessages;
         end;
      end;
+
+     // завершена обработка
+     vbIsBegin:= false;
+
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+// обработка XLS - ОДНОГО ImportSettingsId
+function TMainForm.fBeginXLS_ONE (inUserName : String; inImportSettingsId, inAreaId : Integer) : Boolean;
+var
+ searchResult, searchResult_save : TSearchRec;
+begin
+     if vbIsBegin = true then exit;
+     // запущена обработка
+     vbIsBegin:= true;
+     // если НЕ было загрузка прайса - НЕ надо потом запускать оптимизацию
+     fIsOptimizeLastPriceList_View:= false;
+
+     with ClientDataSet do begin
+        GaugeLoadXLS.Progress:=0;
+        GaugeLoadXLS.MaxValue:= 2;
+        Application.ProcessMessages;
+        //
+        First;
+        while not EOF do begin
+           //1.только для zc_Enum_EmailKind_InPrice!!!
+           if (FieldByName('EmailKindId').asInteger = FieldByName('zc_Enum_EmailKind_InPrice').asInteger)
+              and (FieldByName('Id').asInteger = inImportSettingsId)
+              and (FieldByName('AreaId').asInteger = inAreaId)
+              and (FieldByName('UserName').asString = inUserName)
+           then begin
+                 PanelLoadXLS.Caption:= 'Load XLS : ('+FieldByName('Id').AsString + ') ' + FieldByName('Name').AsString + ' - ' + FieldByName('ContactPersonName').AsString;
+                 Sleep(500);
+                 Application.ProcessMessages;
+                 //Загружаем если есть откуда
+                 if FieldByName('DirectoryImport').asString <> ''
+                 then try
+                          //поиск файла xls
+                          if System.SysUtils.FindFirst(FieldByName('DirectoryImport').asString + '\*.xls', faAnyFile, searchResult) = 0 then
+                          begin
+                               searchResult_save:=searchResult;
+                               if System.SysUtils.FindNext(searchResult) <> 0
+                               then begin
+                                   // выполняется загрузка
+                                   actExecuteImportSettings.ExternalParams.ParamByName('inAreaId').Value:= FieldByName('AreaId_load').asInteger;
+                                   actExecuteImportSettings.ExternalParams.ParamByName('Directory_add').Value:= FieldByName('AreaName').asString;
+                                   // выполняется загрузка
+                                   mactExecuteImportSettings.Execute;
+                                   // если была загрузка прайса - надо потом запустить оптимизацию
+                                   fIsOptimizeLastPriceList_View:= true;
+                               end
+                               else
+                                   //ошибка - найден НЕ ОДИН файл xls для загрузки
+                                   fError_SendEmail(FieldByName('Id').AsInteger
+                                                  , FieldByName('ContactPersonId').AsInteger
+                                                  , NOW
+                                                  //, FieldByName('JuridicalMail').AsString
+                                                  , FieldByName('DirectoryImport').asString
+                                                  , '2');
+                          end
+                          else;
+                              //ошибка - не найден файл xls для загрузки
+                              //та не, все нормально :)
+                      except fError_SendEmail(FieldByName('Id').AsInteger
+                                            , FieldByName('ContactPersonId').AsInteger
+                                            , searchResult_save.TimeStamp
+                                            , FieldByName('JuridicalMail').AsString
+                                            , searchResult_save.Name);
+                      end;
+           end;//1.if ... !!!только для zc_Enum_EmailKind_InPrice!!!
+
+           Next;
+           //
+           GaugeLoadXLS.Progress:=GaugeLoadXLS.Progress + 1;
+           Application.ProcessMessages;
+        end;
+     end;
+
+     // завершена обработка
+     Sleep(500);
 
      // завершена обработка
      vbIsBegin:= false;
@@ -898,6 +1003,7 @@ end;
 function TMainForm.fBeginMove : Boolean;
 var StartTime:TDateTime;
 begin
+//exit;
      if vbIsBegin = true then exit;
      // запущена обработка
      vbIsBegin:= true;
@@ -979,12 +1085,14 @@ begin
      fBeginAll;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-function TMainForm.fGet_LoadPriceList (inJuridicalId, inContractId :Integer) : Integer;
+function TMainForm.fGet_LoadPriceList (inJuridicalId, inContractId, inAreaId :Integer) : Integer;
 begin
+     //gpGet_LoadPriceList
      with spGet_LoadPriceList do
      begin
        ParamByName('inJuridicalId').Value:=inJuridicalId;
        ParamByName('inContractId').Value:=inContractId;
+       ParamByName('inAreaId').Value:=inAreaId;
        Execute;
        Result:=ParamByName('outId').Value;
      end;

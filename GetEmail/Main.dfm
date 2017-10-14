@@ -198,6 +198,17 @@ object MainForm: TMainForm
       ImportSettingsId.MultiSelectSeparator = ','
       ExternalParams = <
         item
+          Name = 'inAreaId'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Directory_add'
+          Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'isNext_aftErr'
           Value = True
           DataType = ftBoolean

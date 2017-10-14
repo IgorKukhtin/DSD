@@ -3,7 +3,7 @@ object JuridicalAreaForm: TJuridicalAreaForm
   Top = 0
   Caption = #1056#1077#1075#1080#1086#1085' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
   ClientHeight = 349
-  ClientWidth = 646
+  ClientWidth = 790
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,14 @@ object JuridicalAreaForm: TJuridicalAreaForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 646
+    Width = 790
     Height = 323
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 646
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -45,7 +46,6 @@ object JuridicalAreaForm: TJuridicalAreaForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -87,14 +87,14 @@ object JuridicalAreaForm: TJuridicalAreaForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
         Options.Editing = False
-        Width = 38
+        Width = 85
       end
       object EMail: TcxGridDBColumn
-        Caption = 'E-Mail'
+        Caption = 'E-mail '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1085#1072' '#1082#1086#1090#1086#1088#1099#1081' '#1086#1090#1087#1088#1072#1074#1083#1103#1077#1090#1089#1103' '#1047#1040#1050#1040#1047
         DataBinding.FieldName = 'EMail'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 112
+        Width = 300
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077

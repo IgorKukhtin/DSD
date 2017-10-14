@@ -33,7 +33,7 @@ var ObjectTest: TImportSettingsObjectTest;
     ImportSettings: TImportSettings;
 begin
   ObjectTest := TImportSettingsObjectTest.Create;
-  ImportSettings := TImportSettingsFactory.GetImportSettings(ObjectTest.GetDataSet.FieldByName('Id').asInteger);
+  ImportSettings := TImportSettingsFactory.GetImportSettings(ObjectTest.GetDataSet.FieldByName('Id').asInteger,'');
 end;
 
 procedure TImportSettingsTest.ProcedureLoad;

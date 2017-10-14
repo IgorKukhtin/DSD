@@ -199,7 +199,7 @@ BEGIN
         */
                    
                     LEFT JOIN JuridicalSettings ON JuridicalSettings.JuridicalId = MovementItemLastPriceList_View.JuridicalId 
-                                               AND JuridicalSettings.ContractId = MovementItemLastPriceList_View.ContractId
+                                               AND JuridicalSettings.ContractId  = MovementItemLastPriceList_View.ContractId
                                                              
                     -- товар "поставщика", если он есть в прайсах !!!а он есть!!!
                              --LEFT JOIN Object AS Object_JuridicalGoods ON Object_JuridicalGoods.Id = MILinkObject_Goods.ObjectId

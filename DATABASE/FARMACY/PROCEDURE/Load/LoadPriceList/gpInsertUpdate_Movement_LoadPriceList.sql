@@ -1,26 +1,12 @@
 -- Function: gpInsertUpdate_Movement_LoadPriceList()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LoadPriceList 
-          (Integer, Integer, Integer, 
-           TVarChar, TVarChar, TVarChar, TVarChar,
-           TFloat, TFloat,
-           TDateTime,
-           TVarChar, TVarChar, 
-           Boolean,
-           TVarChar);
-
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LoadPriceList 
-          (Integer, Integer, Integer, 
-           TVarChar, TVarChar, TVarChar,
-           TFloat, TFloat,
-           TDateTime,
-           TVarChar, TVarChar, 
-           Boolean,
-           TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LoadPriceList  (Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TVarChar, TVarChar,  Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LoadPriceList  (Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TVarChar, TVarChar,  Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_LoadPriceList(
     IN inJuridicalId         Integer   , -- Юридические лица
     IN inContractId          Integer   , -- Договор
+    IN inAreaId              Integer   , -- Регион
     IN inCommonCode          Integer   , 
     IN inBarCode             TVarChar  , 
     IN inGoodsCode           TVarChar  , 
@@ -38,10 +24,6 @@ RETURNS VOID
 AS
 $BODY$
    DECLARE vbUserId Integer;
-
-   DECLARE vbLoadPriceListId Integer;
-   DECLARE vbLoadPriceListItemsId Integer;
-   DECLARE vbGoodsId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
@@ -67,17 +49,24 @@ BEGIN
   
    -- !!!Удаление!!! предыдущих данных - элементы
    DELETE FROM LoadPriceListItem WHERE LoadPriceListId IN
-     (SELECT Id FROM LoadPriceList WHERE JuridicalId = inJuridicalId AND COALESCE (ContractId, 0) = inContractId
-                                     AND OperDate < CURRENT_DATE);
+     (SELECT Id FROM LoadPriceList WHERE JuridicalId = inJuridicalId
+                                     AND COALESCE (ContractId, 0) = inContractId
+                                     AND OperDate < CURRENT_DATE
+                                     AND COALESCE (AreaId, 0)  = COALESCE (inAreaId, 0)
+     );
    -- !!!Удаление!!! предыдущих данных - шапка
    DELETE FROM LoadPriceList WHERE Id IN
-     (SELECT Id FROM LoadPriceList WHERE JuridicalId = inJuridicalId AND COALESCE (ContractId, 0) = inContractId
-                                     AND OperDate < CURRENT_DATE);
+     (SELECT Id FROM LoadPriceList WHERE JuridicalId = inJuridicalId
+                                     AND COALESCE (ContractId, 0) = inContractId
+                                     AND OperDate < CURRENT_DATE
+                                     AND COALESCE (AreaId, 0)  = COALESCE (inAreaId, 0)
+     );
 
    
     -- сохранили - inContractId and inPrice
     PERFORM lpInsertUpdate_Movement_LoadPriceList_Contract (inJuridicalId   := inJuridicalId
                                                           , inContractId    := inContractId
+                                                          , inAreaId        := inAreaId
                                                           , inCommonCode    := inCommonCode
                                                           , inBarCode       := inBarCode
                                                           , inGoodsCode     := inGoodsCode

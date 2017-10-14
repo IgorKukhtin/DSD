@@ -93,9 +93,9 @@ type
   TImportSettingsFactory = class
   private
     class function GetDefaultByFieldType(FieldType: TFieldType): OleVariant;
-    class function CreateImportSettings(Id: integer): TImportSettings;
+    class function CreateImportSettings(Id: integer; Directory_add :String): TImportSettings;
   public
-    class function GetImportSettings(Id: integer): TImportSettings;
+    class function GetImportSettings(Id: integer; Directory_add :String): TImportSettings;
   end;
 
   TExecuteProcedureFromExternalDataSet = class
@@ -774,8 +774,7 @@ end;
 
 { TImportSettingsFactory }
 
-class function TImportSettingsFactory.CreateImportSettings(
-  Id: integer): TImportSettings;
+class function TImportSettingsFactory.CreateImportSettings(Id: integer; Directory_add :String): TImportSettings;
 var
   GetStoredProc: TdsdStoredProc;
   FieldType: TFieldType;
@@ -799,7 +798,9 @@ begin
   {Заполняем параметрами процедуру}
   Result := TImportSettings.Create(TImportSettingsItems);
   Result.StartRow := GetStoredProc.Params.ParamByName('StartRow').Value;
-  Result.Directory := GetStoredProc.Params.ParamByName('Directory').Value;
+  if Directory_add <> ''
+  then Result.Directory := GetStoredProc.Params.ParamByName('Directory').Value+Directory_add+'\'
+  else Result.Directory := GetStoredProc.Params.ParamByName('Directory').Value;
   Result.FileType := GetFileType(GetStoredProc.Params.ParamByName('FileTypeName').Value);
   Result.JuridicalId := StrToIntDef(GetStoredProc.Params.ParamByName('JuridicalId').AsString, 0);
   Result.ContractId := StrToIntDef(GetStoredProc.Params.ParamByName('ContractId').AsString, 0);
@@ -857,9 +858,9 @@ begin
 end;
 
 class function TImportSettingsFactory.GetImportSettings(
-  Id: integer): TImportSettings;
+  Id: integer; Directory_add :String): TImportSettings;
 begin
-  result := CreateImportSettings(Id);
+  result := CreateImportSettings(Id, Directory_add);
 end;
 
 { TExecuteImportSettingsAction }
@@ -879,8 +880,18 @@ begin
 end;
 
 function TExecuteImportSettingsAction.LocalExecute: boolean;
+var lDirectory_add:String;
+    i:Integer;
 begin
-  TExecuteImportSettings.Execute(TImportSettingsFactory.CreateImportSettings(ImportSettingsId.Value),FExternalParams);
+  //
+  lDirectory_add:='';
+  if Assigned (FExternalParams) then
+    for i := 0 to FExternalParams.Count - 1 do
+        if AnsiUpperCase(FExternalParams[i].Name) =  AnsiUpperCase('Directory_add')
+        then
+           lDirectory_add:=FExternalParams[i].Value;
+  //
+  TExecuteImportSettings.Execute(TImportSettingsFactory.CreateImportSettings(ImportSettingsId.Value, lDirectory_add),FExternalParams);
   result := true;
 end;
 
