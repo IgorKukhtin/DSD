@@ -65,6 +65,7 @@ type
     mactGoodsLinkDeleteList: TMultiAction;
     macGoodsLinkDeleteSimpl: TMultiAction;
     N4: TMenuItem;
+    AreaName: TcxGridDBColumn;
   private
     { Private declarations }
   public

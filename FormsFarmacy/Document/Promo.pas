@@ -100,6 +100,11 @@ type
     actSetUnErasedPromoPartner: TdsdUpdateErased;
     bbSetErasedPromoPartner: TdxBarButton;
     bbSetUnErasedPromoPartner: TdxBarButton;
+    spInsertPromoPartner: TdsdStoredProc;
+    actInsertPromoPartner: TdsdExecStoredProc;
+    macInsertPromoPartner: TMultiAction;
+    actRefreshPromoPartner: TdsdDataSetRefresh;
+    bbInsertPromoPartner: TdxBarButton;
   private
     { Private declarations }
   public

@@ -13,17 +13,17 @@ inherited PromoForm: TPromoForm
     Height = 341
     ExplicitTop = 123
     ExplicitWidth = 979
-    ExplicitHeight = 356
+    ExplicitHeight = 341
     ClientRectBottom = 341
     ClientRectRight = 979
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 979
-      ExplicitHeight = 332
+      ExplicitHeight = 317
       inherited cxGrid: TcxGrid
         Width = 979
         Height = 208
         ExplicitWidth = 979
-        ExplicitHeight = 176
+        ExplicitHeight = 208
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -172,7 +172,6 @@ inherited PromoForm: TPromoForm
         Touch.TabletOptions = [toPressAndHold]
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitTop = 176
       end
     end
   end
@@ -339,7 +338,6 @@ inherited PromoForm: TPromoForm
     Touch.TabletOptions = [toPressAndHold]
     AlignSplitter = salBottom
     Control = cxGrid2
-    ExplicitTop = 176
   end
   object cxGrid2: TcxGrid [11]
     Left = 0
@@ -415,6 +413,20 @@ inherited PromoForm: TPromoForm
   inherited ActionList: TActionList
     Left = 199
     Top = 303
+    object actRefreshPromoPartner: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPromoPartner
+      StoredProcList = <
+        item
+          StoredProc = spSelectPromoPartner
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
         item
@@ -433,7 +445,7 @@ inherited PromoForm: TPromoForm
           StoredProc = spSelectPromoPartner
         end>
     end
-    object actSetErasedPromoPartner: TdsdUpdateErased [2]
+    object actSetErasedPromoPartner: TdsdUpdateErased [3]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSetErasedPromoPartner
@@ -444,11 +456,12 @@ inherited PromoForm: TPromoForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = PartnerDS
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
     end
-    object actMISetErasedChild: TdsdUpdateErased [3]
+    object actMISetErasedChild: TdsdUpdateErased [4]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spErasedMIChild
@@ -467,7 +480,7 @@ inherited PromoForm: TPromoForm
       DataSource = DetailDS
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
     end
-    object actSetUnErasedPromoPartner: TdsdUpdateErased [5]
+    object actSetUnErasedPromoPartner: TdsdUpdateErased [6]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spUnCompletePromoPartner
@@ -478,11 +491,12 @@ inherited PromoForm: TPromoForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = PartnerDS
     end
-    object actMISetUnErasedChild: TdsdUpdateErased [6]
+    object actMISetUnErasedChild: TdsdUpdateErased [7]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spUnErasedMIChild
@@ -510,7 +524,7 @@ inherited PromoForm: TPromoForm
           StoredProc = spSelectPromoPartner
         end>
     end
-    object InsertRecordPartner: TInsertRecord [10]
+    object InsertRecordPartner: TInsertRecord [11]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -523,7 +537,7 @@ inherited PromoForm: TPromoForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
       ImageIndex = 0
     end
-    object InsertRecordChild: TInsertRecord [11]
+    object InsertRecordChild: TInsertRecord [12]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -546,7 +560,7 @@ inherited PromoForm: TPromoForm
           StoredProc = spSelect_MovementItem_PromoChild
         end>
     end
-    object dsdUpdatePartnerDS: TdsdUpdateDataSet [13]
+    object dsdUpdatePartnerDS: TdsdUpdateDataSet [14]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -558,7 +572,7 @@ inherited PromoForm: TPromoForm
       Caption = 'actUpdatePartnerDS'
       DataSource = PartnerDS
     end
-    object actUpdateChildDS: TdsdUpdateDataSet [14]
+    object actUpdateChildDS: TdsdUpdateDataSet [15]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -573,7 +587,7 @@ inherited PromoForm: TPromoForm
       Caption = 'actUpdateChildDS'
       DataSource = DetailDS
     end
-    object actDoLoad: TExecuteImportSettingsAction [15]
+    object actDoLoad: TExecuteImportSettingsAction [16]
       Category = 'Load'
       MoveParams = <>
       ImportSettingsId.Value = '0'
@@ -634,6 +648,44 @@ inherited PromoForm: TPromoForm
         end>
       isShowModal = False
     end
+    object actOpenReportForm: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1094#1077#1085#1072#1084' '#1087#1088#1080#1093#1086#1076#1072'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1055#1086' '#1094#1077#1085#1072#1084' '#1087#1088#1080#1093#1086#1076#1072' '#1090#1086#1074#1072#1088#1086#1074' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072'>'
+      ImageIndex = 25
+      FormName = 'TReport_MovementIncome_byPromoForm'
+      FormNameParam.Value = 'TReport_MovementIncome_byPromoForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInvNumber'
+          Value = ''
+          Component = edInvNumber
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object JuridicalChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -660,6 +712,22 @@ inherited PromoForm: TPromoForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object macInsertPromoPartner: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertPromoPartner
+        end
+        item
+          Action = actRefreshPromoPartner
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084#1080' '#1087#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102'?'
+      InfoAfterExecute = #1055#1086#1089#1090#1072#1074#1097#1080#1082#1080' '#1087#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' '#1079#1072#1087#1086#1083#1085#1077#1085#1099
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084#1080' '#1087#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084#1080' '#1087#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
+      ImageIndex = 27
     end
     object actInsertUpdate_MovementItem_Promo_Set_Zero: TdsdExecStoredProc
       Category = 'Load'
@@ -704,43 +772,19 @@ inherited PromoForm: TPromoForm
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100
       ImageIndex = 41
     end
-    object actOpenReportForm: TdsdOpenForm
+    object actInsertPromoPartner: TdsdExecStoredProc
       Category = 'DSDLib'
-      TabSheet = tsMain
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1094#1077#1085#1072#1084' '#1087#1088#1080#1093#1086#1076#1072'>'
-      Hint = #1054#1090#1095#1077#1090' <'#1055#1086' '#1094#1077#1085#1072#1084' '#1087#1088#1080#1093#1086#1076#1072' '#1090#1086#1074#1072#1088#1086#1074' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072'>'
-      ImageIndex = 25
-      FormName = 'TReport_MovementIncome_byPromoForm'
-      FormNameParam.Value = 'TReport_MovementIncome_byPromoForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      StoredProc = spInsertPromoPartner
+      StoredProcList = <
         item
-          Name = 'inMovementId'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inInvNumber'
-          Value = ''
-          Component = edInvNumber
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 42132d
-          Component = edOperDate
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
+          StoredProc = spInsertPromoPartner
         end>
-      isShowModal = False
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084#1080' '#1087#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084#1080' '#1087#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
+      ImageIndex = 27
     end
   end
   inherited spSelect: TdsdStoredProc
@@ -810,6 +854,14 @@ inherited PromoForm: TPromoForm
         item
           Visible = True
           ItemName = 'bbSetUnErasedPromoPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertPromoPartner'
         end
         item
           Visible = True
@@ -897,6 +949,10 @@ inherited PromoForm: TPromoForm
     end
     object bbSetUnErasedPromoPartner: TdxBarButton
       Action = actSetUnErasedPromoPartner
+      Category = 0
+    end
+    object bbInsertPromoPartner: TdxBarButton
+      Action = macInsertPromoPartner
       Category = 0
     end
   end
@@ -1773,6 +1829,25 @@ inherited PromoForm: TPromoForm
       end>
     PackSize = 1
     Left = 624
+    Top = 496
+  end
+  object spInsertPromoPartner: TdsdStoredProc
+    StoredProcName = 'gpInsert_Movement_PromoPartner'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 352
     Top = 496
   end
 end

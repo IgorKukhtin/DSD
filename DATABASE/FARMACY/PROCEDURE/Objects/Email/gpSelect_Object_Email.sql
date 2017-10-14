@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Email(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , EmailKindId Integer, EmailKindName TVarChar
              , ErrorTo TVarChar
+             , AreaId Integer, AreaName TVarChar
                ) AS
 $BODY$
 BEGIN
@@ -21,6 +22,8 @@ BEGIN
         , Object_EmailKind.Id         AS EmailKindId
         , Object_EmailKind.ValueData  AS EmailKindName
         , ObjectString_ErrorTo.ValueData  AS ErrorTo
+        , Object_Area.Id              AS AreaId
+        , Object_Area.ValueData       AS AreaName
    FROM Object AS Object_Email
       LEFT JOIN ObjectLink AS ObjectLink_EmailKind
                            ON ObjectLink_EmailKind.ObjectId = Object_Email.Id
@@ -31,6 +34,11 @@ BEGIN
                              ON ObjectString_ErrorTo.ObjectId = Object_Email.Id 
                             AND ObjectString_ErrorTo.DescId = zc_ObjectString_Email_ErrorTo()
 
+      LEFT JOIN ObjectLink AS ObjectLink_Email_Area
+                           ON ObjectLink_Email_Area.ObjectId = Object_Email.Id 
+                          AND ObjectLink_Email_Area.DescId = zc_ObjectLink_Email_Area()
+      LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Email_Area.ChildObjectId
+        
    WHERE Object_Email.DescId = zc_Object_Email()
   ;
   
@@ -42,6 +50,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 13.10.16         *
  27.06.16         *
 */
 

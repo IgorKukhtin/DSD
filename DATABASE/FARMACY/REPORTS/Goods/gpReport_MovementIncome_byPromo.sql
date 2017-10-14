@@ -61,6 +61,27 @@ BEGIN
     END IF;
 
     inEndDate := inEndDate+interval '1 day';
+    
+     --если заполнены поставщики в документе, то отчет строим по ним
+     CREATE TEMP TABLE tmpJuridical (JuridicalId Integer) ON COMMIT DROP; 
+     INSERT INTO tmpJuridical (JuridicalId)
+            SELECT MovementLinkObject_Juridical.ObjectId    AS JuridicalId
+            FROM Movement 
+                 JOIN MovementLinkObject AS MovementLinkObject_Juridical
+                                         ON MovementLinkObject_Juridical.MovementId = Movement.Id
+                                        AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+            WHERE Movement.ParentId = inMovementId
+              AND Movement.DescId = zc_Movement_PromoPartner()
+              AND Movement.StatusId <> zc_Enum_Status_Erased();
+              
+     -- если поставщики не выбраны, заполняем таблицу всеми поставщиками
+     IF NOT EXISTS (SELECT JuridicalId FROM tmpJuridical) 
+     THEN 
+         INSERT INTO tmpJuridical (JuridicalId)
+            SELECT Object.Id AS JuridicalId
+            FROM Object
+            WHERE Object.DescId = zc_Object_Juridical();
+     END IF;
 
     RETURN QUERY
     WITH 
@@ -82,7 +103,7 @@ BEGIN
                             AND MI_Goods.isErased = FALSE
                            )
 
-     -- выбираем приходы с маркет. товарами
+      -- выбираем приходы с маркет. товарами
     , tmpMovMI AS (SELECT Movement.Id                       AS MovementId
                         , MovementDate_Branch.ValueData     AS BranchDate
                         , MI_Master.ObjectId                AS GoodsId
@@ -98,7 +119,12 @@ BEGIN
                                                      ON MovementLinkObject_To.MovementId = Movement.Id
                                                     AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                         INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_To.ObjectId
-
+                        
+                        LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                     ON MovementLinkObject_From.MovementId = Movement.Id
+                                                    AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                        INNER JOIN tmpJuridical ON tmpJuridical.JuridicalId = MovementLinkObject_From.ObjectId
+                                                
                         INNER JOIN MovementItem AS MI_Master 
                                                 ON MI_Master.MovementId = Movement.Id
                                                AND MI_Master.DescId = zc_MI_Master()
@@ -113,7 +139,6 @@ BEGIN
                    WHERE Movement.DescId = zc_Movement_Income()
                      AND Movement.StatusId = zc_Enum_Status_Complete()
                    )
-                 
  
     -- получаем свойства Документов прихода для расчета цены с НДС
     , tmpMov AS (SELECT  tmpMovMI.MovementId           
