@@ -481,12 +481,14 @@ end;
 procedure TLoadFormTest.LoadLoadFormTest;
 begin
 //exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListLoadForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListLoadForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItemsLoadForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListItemsLoadForm');
-
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementLoadForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovenentLoadForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemsLoadForm'));
