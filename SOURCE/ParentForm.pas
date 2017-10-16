@@ -383,6 +383,7 @@ initialization
   RegisterClass (TdsdFormClose);
   RegisterClass (TdsdFormParams);
   RegisterClass (TdsdGridToExcel);
+  RegisterClass (TdsdGridToLibre);
   RegisterClass (TdsdGuides);
   RegisterClass (TdsdInsertUpdateAction);
   RegisterClass (TdsdInsertUpdateGuides);

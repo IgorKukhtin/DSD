@@ -3,7 +3,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
   ClientWidth = 850
   AddOnFormData.isSingle = False
   ExplicitWidth = 866
-  ExplicitHeight = 710
+  ExplicitHeight = 714
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -587,6 +587,10 @@ inherited AncestorJournalForm: TAncestorJournalForm
         item
           Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToLibre'
         end
         item
           Visible = True

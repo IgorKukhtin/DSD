@@ -11,6 +11,12 @@ type
     procedure GetValues(Proc: TGetStrProc); override;
   end;
 
+  // Выбираем только гриды
+  TLibreGridProperty = class(TComponentProperty)
+  public
+    procedure GetValues(Proc: TGetStrProc); override;
+  end;
+
   // Редактор компонент позволяет отображать только используемые
   TdsdParamComponentProperty = class(TComponentProperty)
   public
@@ -51,6 +57,7 @@ begin
    RegisterCustomModule(TParentForm, TCustomModule);
    RegisterPropertyEditor(TypeInfo(boolean),TExecuteDialog,'isShowModal',nil);
    RegisterPropertyEditor(TypeInfo(TcxControl), TdsdGridToExcel,    'Grid',          TExcelGridProperty);
+   RegisterPropertyEditor(TypeInfo(TcxControl), TdsdGridToLibre,    'Grid',          TLibreGridProperty);
    RegisterPropertyEditor(TypeInfo(TComponent), TdsdParam,          'Component',     TdsdParamComponentProperty);
    RegisterPropertyEditor(TypeInfo(TComponent), TComponentListItem, 'Component',     TdsdParamComponentProperty);
    RegisterPropertyEditor(TypeInfo(TFieldType), TdsdParam,          'DataType',      TDataTypeProperty);
@@ -201,6 +208,14 @@ begin
   // Отображаем только те компоненты, с которыми умеет работать TdsdGuides
   Designer.GetComponentNames(GetTypeData(TypeInfo(TcxGrid)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TcxCustomPivotGrid)), Proc);
+end;
+
+{ TLibroGridProperty }
+
+procedure TLibreGridProperty.GetValues(Proc: TGetStrProc);
+begin
+  // Отображаем только те компоненты, с которыми умеет работать TdsdGuides
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TcxGrid)), Proc);
 end;
 
 end.

@@ -35,6 +35,8 @@ type
     PopupMenu: TPopupMenu;
     Excel1: TMenuItem;
     N1: TMenuItem;
+    actGridToLibre: TdsdGridToLibre;
+    bbGridToLibre: TdxBarButton;
   private
     { Private declarations }
   public
