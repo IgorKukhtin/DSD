@@ -23,7 +23,7 @@ CREATE OR REPLACE VIEW View_LoadPriceListItem_ForSite AS
 
     FROM LoadPriceListItem
         INNER JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
-                                AND COALESCE (LoadPriceList.AreaId, 0) IN (0, 5803492)) -- Днепр
+                                AND COALESCE (LoadPriceList.AreaId, 0) IN (0, zc_Area_Basis()) -- Днепр
         LEFT JOIN (SELECT DISTINCT JuridicalId, ContractId, isPriceClose
                    FROM lpSelect_Object_JuridicalSettingsRetail (lpGet_DefaultValue('zc_Object_Retail', zfCalc_UserSite() :: Integer)  :: Integer)
                   ) AS JuridicalSettings

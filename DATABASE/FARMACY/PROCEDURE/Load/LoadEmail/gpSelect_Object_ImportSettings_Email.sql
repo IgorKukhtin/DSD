@@ -141,7 +141,7 @@ BEGIN
                                                          ON ObjectLink_ContactPerson_Object.ObjectId = Object_ContactPerson.Id
                                                         AND ObjectLink_ContactPerson_Object.DescId   = zc_ObjectLink_ContactPerson_Object()
                                    LEFT JOIN ObjectString AS ObjectString_Mail
-                                                          ON ObjectString_Mail.ObjectId = Object_ContactPerson.Id 
+                                                          ON ObjectString_Mail.ObjectId = Object_ContactPerson.Id
                                                          AND ObjectString_Mail.DescId = zc_ObjectString_ContactPerson_Mail()
                                    INNER JOIN ObjectLink AS ObjectLink_ContactPerson_Email
                                                          ON ObjectLink_ContactPerson_Email.ObjectId = Object_ContactPerson.Id
@@ -173,7 +173,7 @@ BEGIN
           , Object_Area.ValueData      AS AreaName      -- !!!только для Прайса!!!
           , Object_Area_load.Id        AS AreaId_load   -- Не всегда загрузка будет в регион Днепр
           , Object_Area_load.ValueData AS AreaName_load -- иногда загрузка будет в "без Региона"
-          
+
           , gpGet_Host.EmailId
           , gpGet_Host.EmailName
           , gpGet_Host.EmailKindId
@@ -208,8 +208,16 @@ BEGIN
           , gpGet_Mail.Value      AS Mail
           , gpGet_User.Value      AS UserName
           , gpGet_Password.Value  AS PasswordValue
+          , gpGet_Directory.Value AS DirectoryMail*/
+/*
+          , 'imap.ukr.net'    :: TVarChar AS Host
+          , '993'             :: TVarChar AS Port
+          , 'Ashtu@ukr.net'   :: TVarChar AS Mail
+          , 'Ashtu@ukr.net'   :: TVarChar AS UserName
+          , 'qazqazw1'        :: TVarChar AS PasswordValue
+          -- , '\inbox'          :: TVarChar AS DirectoryMail
           , gpGet_Directory.Value AS DirectoryMail
-
+*/
 /*            'imap.mail.ru'           :: TVarChar AS Host
           , '993'                    :: TVarChar AS Port -- 143
 --            'pop.mail.ru'            :: TVarChar AS Host

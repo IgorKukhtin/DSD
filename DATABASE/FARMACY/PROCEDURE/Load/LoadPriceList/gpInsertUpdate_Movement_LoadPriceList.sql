@@ -62,6 +62,23 @@ BEGIN
                                      AND COALESCE (AreaId, 0)  = COALESCE (inAreaId, 0)
      );
 
+
+   -- !!!Удаление-2!!! предыдущих данных - элементы
+   DELETE FROM LoadPriceListItem WHERE LoadPriceListId IN
+     (SELECT Id FROM LoadPriceList WHERE JuridicalId = inJuridicalId
+                                     AND COALESCE (ContractId, 0) = inContractId
+                                     AND OperDate < CURRENT_DATE
+                                     AND COALESCE (AreaId, 0)  = 0
+                                     AND inAreaId > 0
+     );
+   -- !!!Удаление-2!!! предыдущих данных - шапка
+   DELETE FROM LoadPriceList WHERE Id IN
+     (SELECT Id FROM LoadPriceList WHERE JuridicalId = inJuridicalId
+                                     AND COALESCE (ContractId, 0) = inContractId
+                                     AND OperDate < CURRENT_DATE
+                                     AND COALESCE (AreaId, 0)  = 0
+                                     AND inAreaId > 0
+     );
    
     -- сохранили - inContractId and inPrice
     PERFORM lpInsertUpdate_Movement_LoadPriceList_Contract (inJuridicalId   := inJuridicalId

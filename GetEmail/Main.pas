@@ -406,13 +406,12 @@ var
   fOK,fMMO:Boolean;
   msgDate_save:TDateTime;
 begin
-//fBeginMMO ('price_shapiro@mail.ru', 397826,now); // Приход ММО
-//fBeginMMO ('asnb_documentation@mail.ru', 397826,now); // Приход ММО
-//fBeginMMO ('asnb_documentation@mail.ru', 2367578 ,now); // Приход ММО Фармпланета - 'sender@pharmplanet.com.ua'
-//exit;
+     //
      if vbIsBegin = true then exit;
      // запущена обработка
      vbIsBegin:= true;
+     // если НЕ было загрузка прайса - НЕ надо потом запускать оптимизацию
+     fIsOptimizeLastPriceList_View:= false;
 
 
      //сессия - в эту папку будем сохранять файлики - она определяется временем запуска обработки
@@ -510,7 +509,7 @@ begin
                         //
                         if JurPos >=0
                         then PanelMailFrom.Caption:= 'Mail From : '+FormatDateTime('dd.mm.yyyy hh:mm:ss',IdMessage.Date) + ' (' +  IntToStr(vbArrayImportSettings[JurPos].Id) + ') ' + vbArrayImportSettings[JurPos].AreaName + ' * ' + vbArrayImportSettings[JurPos].Name
-                        else PanelMailFrom.Caption:= 'Mail From : '+FormatDateTime('dd.mm.yyyy hh:mm:ss',IdMessage.Date) + ' ' + vbArrayImportSettings[JurPos].AreaName + ' * ' + IdMessage.From.Address + ' - ???';
+                        else PanelMailFrom.Caption:= 'Mail From : '+FormatDateTime('dd.mm.yyyy hh:mm:ss',IdMessage.Date) + ' ' + vbArrayMail[ii].AreaName + ' * ' + IdMessage.From.Address + ' - ???';
                         Application.ProcessMessages;
                         //если нашли поставщика, тогда это письмо надо загружать
                         if JurPos >= 0 then
@@ -682,9 +681,9 @@ begin
                    PanelHost.Caption:= 'Start Mail (5.5.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
                    //
 
-                   //а теперь только для ММО - обработка
-                   if (JurPos >= 0) and (fMMO = TRUE) and (vbArrayImportSettings[JurPos].EmailKindId = vbArrayImportSettings[JurPos].zc_Enum_EmailKind_IncomeMMO)
-                   then fBeginMMO (vbArrayMail[ii].UserName, vbArrayImportSettings[JurPos].Id,msgDate_save);
+                   //а теперь только для ПРАЙСА - обработка
+                   if (JurPos >= 0) and (fMMO = FALSE) and (vbArrayImportSettings[JurPos].EmailKindId = vbArrayImportSettings[JurPos].zc_Enum_EmailKind_InPrice)
+                   then fBeginXLS_ONE (vbArrayMail[ii].UserName, vbArrayImportSettings[JurPos].Id,vbArrayImportSettings[JurPos].AreaId);
 
                    //а теперь только для ММО - обработка
                    if (JurPos >= 0) and (fMMO = TRUE) and (vbArrayImportSettings[JurPos].EmailKindId = vbArrayImportSettings[JurPos].zc_Enum_EmailKind_IncomeMMO)
@@ -822,15 +821,12 @@ function TMainForm.fBeginXLS_ONE (inUserName : String; inImportSettingsId, inAre
 var
  searchResult, searchResult_save : TSearchRec;
 begin
-     if vbIsBegin = true then exit;
-     // запущена обработка
-     vbIsBegin:= true;
      // если НЕ было загрузка прайса - НЕ надо потом запускать оптимизацию
-     fIsOptimizeLastPriceList_View:= false;
+     //fIsOptimizeLastPriceList_View:= false;
 
      with ClientDataSet do begin
         GaugeLoadXLS.Progress:=0;
-        GaugeLoadXLS.MaxValue:= 2;
+        GaugeLoadXLS.MaxValue:= RecordCount;
         Application.ProcessMessages;
         //
         First;
@@ -891,8 +887,6 @@ begin
      // завершена обработка
      Sleep(500);
 
-     // завершена обработка
-     vbIsBegin:= false;
 
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1003,7 +997,7 @@ end;
 function TMainForm.fBeginMove : Boolean;
 var StartTime:TDateTime;
 begin
-//exit;
+exit;
      if vbIsBegin = true then exit;
      // запущена обработка
      vbIsBegin:= true;

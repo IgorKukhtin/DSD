@@ -407,6 +407,12 @@ object MainForm: TMainForm
         Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAreaId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 216
