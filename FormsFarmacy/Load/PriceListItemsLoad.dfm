@@ -589,6 +589,14 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
         ComponentItem = 'ContractId'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAreaId'
+        Value = Null
+        Component = GuidesArea
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 432

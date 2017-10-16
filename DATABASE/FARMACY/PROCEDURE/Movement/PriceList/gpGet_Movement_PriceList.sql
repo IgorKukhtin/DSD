@@ -73,13 +73,15 @@ BEGIN
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
 
-            LEFT JOIN LoadPriceList ON LoadPriceList.JuridicalId = Object_Juridical.Id
-                                   AND LoadPriceList.ContractId  = Object_Contract.Id
-                                   
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Area
                                          ON MovementLinkObject_Area.MovementId = Movement.Id
                                         AND MovementLinkObject_Area.DescId = zc_MovementLinkObject_Area()
             LEFT JOIN Object AS Object_Area ON Object_Area.Id = MovementLinkObject_Area.ObjectId
+
+            LEFT JOIN LoadPriceList ON LoadPriceList.JuridicalId = Object_Juridical.Id
+                                   AND LoadPriceList.ContractId  = Object_Contract.Id
+                                   AND COALESCE (LoadPriceList.AreaId, 0) = COALESCE (Object_Area.Id,0)
+                                   
             --LEFT JOIN Object AS Object_Area ON Object_Area.Id = LoadPriceList.AreaId 
             
        WHERE Movement.Id = inMovementId
@@ -102,3 +104,4 @@ ALTER FUNCTION gpGet_Movement_PriceList (Integer, TDateTime, TVarChar) OWNER TO 
 
 -- тест
 -- SELECT * FROM gpGet_Movement_PriceList (inMovementId:= 1, inSession:= '9818')
+-- select * from gpGet_Movement_PriceList(inMovementId := 3824151 , inOperDate := ('12.10.2017')::TDateTime ,  inSession := '3');

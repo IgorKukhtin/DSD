@@ -117,6 +117,23 @@ inherited PriceListLoadForm: TPriceListLoadForm
           end
         end
       end
+      object cxLabel5: TcxLabel
+        Left = 548
+        Top = 60
+        Caption = #1056#1077#1075#1080#1086#1085
+      end
+      object edArea: TcxButtonEdit
+        Left = 548
+        Top = 78
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 2
+        Width = 164
+      end
     end
   end
   inherited ActionList: TActionList
@@ -345,6 +362,18 @@ inherited PriceListLoadForm: TPriceListLoadForm
         end
         item
           Visible = True
+          ItemName = 'bbText'
+        end
+        item
+          Visible = True
+          ItemName = 'bbedArea'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbLoadPriceList'
         end
         item
@@ -375,6 +404,20 @@ inherited PriceListLoadForm: TPriceListLoadForm
     object bbGetMovement: TdxBarButton
       Action = MacGetMovement
       Category = 0
+    end
+    object bbText: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cxLabel5
+    end
+    object bbedArea: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = edArea
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -476,9 +519,46 @@ inherited PriceListLoadForm: TPriceListLoadForm
         ComponentItem = 'ContractId'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAreaId'
+        Value = Null
+        Component = GuidesArea
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 424
     Top = 72
+  end
+  object GuidesArea: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edArea
+    FormNameParam.Value = 'TAreaForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TAreaForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesArea
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesArea
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 616
+    Top = 104
   end
 end

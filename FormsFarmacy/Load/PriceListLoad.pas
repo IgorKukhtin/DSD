@@ -11,7 +11,8 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter;
+  dxSkinsdxBarPainter, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit,
+  cxButtonEdit, cxLabel;
 
 type
   TPriceListLoadForm = class(TAncestorDBGridForm)
@@ -40,6 +41,11 @@ type
     actGetMovement: TdsdExecStoredProc;
     bbGetMovement: TdxBarButton;
     AreaName: TcxGridDBColumn;
+    cxLabel5: TcxLabel;
+    edArea: TcxButtonEdit;
+    GuidesArea: TdsdGuides;
+    bbText: TdxBarControlContainerItem;
+    bbedArea: TdxBarControlContainerItem;
   private
     { Private declarations }
   public
