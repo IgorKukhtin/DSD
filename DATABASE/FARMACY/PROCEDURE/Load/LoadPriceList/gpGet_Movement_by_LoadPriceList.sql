@@ -34,7 +34,7 @@ BEGIN
                                                                      
                           WHERE Movement.DescId = zc_Movement_PriceList()
                             AND Movement.StatusId <> zc_Enum_Status_Erased()
-                            AND (MovementLinkObject_Area.ObjectId = inAreaId OR inAreaId = 0)
+                            AND COALESCE (MovementLinkObject_Area.ObjectId, 0) = COALESCE (inAreaId, 0)
                           LIMIT 1) AS tmp
                    ), 0);
 

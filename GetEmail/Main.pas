@@ -997,7 +997,7 @@ end;
 function TMainForm.fBeginMove : Boolean;
 var StartTime:TDateTime;
 begin
-exit;
+// exit;
      if vbIsBegin = true then exit;
      // запущена обработка
      vbIsBegin:= true;

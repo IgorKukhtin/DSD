@@ -51,7 +51,7 @@ BEGIN
                                         AND MovementLinkObject_Area.DescId = zc_MovementLinkObject_Area()                             
             
             JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = MovementLinkObject_Juridical.ObjectId
-                                 AND tmpJuridicalArea.AreaId      = MovementLinkObject_Area.ObjectId 
+                                 AND tmpJuridicalArea.AreaId      = COALESCE(MovementLinkObject_Area.ObjectId, 0)
                                  
        WHERE Movement.DescId = zc_Movement_PriceList()
          AND Movement.OperDate <= inOperDate
