@@ -132,6 +132,8 @@ type
     cdsResultContract_Percent: TFloatField;
     colJuridical_Percent: TcxGridDBColumn;
     colContract_Percent: TcxGridDBColumn;
+    cdsResultAreaName: TStringField;
+    colAreaName: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure btnRepriceClick(Sender: TObject);
     procedure btnSelectNewPriceClick(Sender: TObject);
@@ -430,6 +432,7 @@ begin
           cdsResult.FieldByName('MidPriceSale').AsCurrency := AllGoodsPriceCDS.FieldByName('MidPriceSale').AsCurrency;
           cdsResult.FieldByName('Juridical_Percent').AsCurrency := AllGoodsPriceCDS.FieldByName('Juridical_Percent').AsCurrency;
           cdsResult.FieldByName('Contract_Percent').AsCurrency := AllGoodsPriceCDS.FieldByName('Contract_Percent').AsCurrency;
+          cdsResult.FieldByName('AreaName').AsString := AllGoodsPriceCDS.FieldByName('AreaName').AsString;
           cdsResult.Post;
           AllGoodsPriceCDS.Next;
         end;

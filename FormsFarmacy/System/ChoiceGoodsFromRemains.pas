@@ -39,6 +39,7 @@ type
     cxLabel2: TcxLabel;
     edGoodsSearch: TcxTextEdit;
     cxLabel4: TcxLabel;
+    AreaName: TcxGridDBColumn;
   private
     { Private declarations }
   public
