@@ -1,4 +1,4 @@
--- Function: gpSelect_Movement_PriceList()
+ -- Function: gpSelect_Movement_PriceList()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_LoadPriceList (TVarChar);
 

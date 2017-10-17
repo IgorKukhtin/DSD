@@ -798,9 +798,6 @@ BEGIN
     ;
 
      -- 1.1.3. формируютс€ ѕроводки дл€ количественного учета - ќт кого, здесь -- !!!количество ушло!!!
-     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
-                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
-                                       , ParentId, Amount, OperDate, isActive)
         WITH tmpMIContainer AS
             (SELECT MovementItemId
                   , ContainerId_GoodsFrom
@@ -862,7 +859,10 @@ BEGIN
              WHERE OperCount_calc <> 0  -- !!!нулевые не нужны!!!
                AND Ord = 1              -- !!!т.е. "желательно" с кол-вом "ушло"!!!
             )
-       -- результат
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
+                                       , ParentId, Amount, OperDate, isActive)
+       -- это обычна€ проводка
        SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId, MovementItemId
             , _tmpItem.ContainerId_GoodsFrom          AS ContainerId
             , 0                                       AS AccountId              -- нет счета
@@ -1437,10 +1437,6 @@ BEGIN
 
 
      -- 1.4. формируютс€ ѕроводки дл€ суммового учета - ќт кого (c/c остаток) + !!!есть MovementItemId!!!
-     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
-                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
-                                       , ParentId, Amount, OperDate, isActive
-                                        )
         WITH tmpAccount_60000 AS (SELECT Object_Account_View.AccountId FROM Object_Account_View WHERE Object_Account_View.AccountGroupId = zc_Enum_AccountGroup_60000()) -- ѕрибыль будущих периодов
            , tmpMIContainer AS
             (SELECT _tmpItemSumm.MovementItemId
@@ -1581,7 +1577,11 @@ BEGIN
              WHERE OperSumm_calc <> 0 -- !!!нулевые не нужны!!!
                AND Ord = 1            -- !!!т.е. "желательно" с кол-вом "ушло"!!!
             )
-       -- результат
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
+                                       , ParentId, Amount, OperDate, isActive
+                                        )
+       -- это обычна€ проводка
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem.MovementItemId
             , _tmpItemSumm.ContainerId_From           AS ContainerId
             , _tmpItemSumm.AccountId_From             AS AccountId              -- счет есть всегда
@@ -1601,6 +1601,7 @@ BEGIN
          AND _tmpItem.isLossMaterials     = FALSE -- !!!если Ќ≈ списание!!!
 
       UNION ALL
+       -- это списание
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem.MovementItemId
             , _tmpItemSumm.ContainerId_From           AS ContainerId
             , _tmpItemSumm.AccountId_From             AS AccountId              -- счет есть всегда

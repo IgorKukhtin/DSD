@@ -55,17 +55,17 @@ $BODY$
   DECLARE vbBusinessId_To Integer;
 */
 BEGIN
-/*
-IF inUserId in (zfCalc_UserAdmin() :: Integer, zc_Enum_Process_Auto_PrimeCost(), 9459)
- OR ('01.09.2017' <= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
+
+IF inUserId in (zfCalc_UserAdmin() :: Integer/*, zc_Enum_Process_Auto_PrimeCost()*/, 9459)
+ OR ('01.10.2017' <= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
      AND
-     '01.09.2017' <= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
+     '01.10.2017' <= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
     )
 THEN
     PERFORM lpComplete_Movement_SendOnPrice_NEW (inMovementId, inUserId);
     RETURN;
 END IF;
-*/
+
 
 
      -- !!!обязательно!!! очистили таблицу проводок
