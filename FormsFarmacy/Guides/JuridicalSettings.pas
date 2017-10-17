@@ -48,6 +48,7 @@ type
     isBonusVirtual: TcxGridDBColumn;
     actProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpen: TdxBarButton;
+    AreaName: TcxGridDBColumn;
   private
     { Private declarations }
   public
