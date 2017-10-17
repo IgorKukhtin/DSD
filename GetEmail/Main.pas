@@ -1023,8 +1023,8 @@ begin
            try
               if DataSet.FieldByName('isMoved').AsBoolean = FALSE
               then actMovePriceList.Execute;
-           except fError_SendEmail(Dataset.FieldByName('Id').AsInteger
-                                 , Dataset.FieldByName('ContactPersonId').AsInteger
+           except fError_SendEmail(0 //Dataset.FieldByName('Id').AsInteger
+                                 , 0 // Dataset.FieldByName('ContactPersonId').AsInteger
                                  , NOW
                                  , Dataset.FieldByName('JuridicalName').AsString
                                  , '-1');
