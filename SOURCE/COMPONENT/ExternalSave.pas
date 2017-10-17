@@ -2,7 +2,9 @@ unit ExternalSave;
 
 interface
 
-uses dsdAction, dsdDb, Classes, DB, ExternalData;
+uses
+  dsdAction, dsdDb, Classes, Forms, DB, ExternalData, System.Win.ComObj,
+  cxGrid, cxGridDBTableView;
 
 type
 
@@ -22,6 +24,30 @@ type
     function Execute(var AFileName: string): boolean;
     procedure Open(FileName: string; CreateFile: boolean);
     property InitializeFile: string read FInitializeFile write FInitializeFile;
+  end;
+
+  TExportGridToLibre = class
+  private
+    FFileName: string;
+    FView: TcxGridDBTableView;
+    FDataSet: TDataSet;
+    FLibre: Variant;
+    FDesktop: Variant;
+    FCalc: Variant;
+    FSheet: Variant;
+    function LibreConnect: Boolean;
+    procedure LibreDisconnect;
+    procedure CheckDesktop;
+    function MakePropertyValue(APropertyName: string; APropertyValue: Variant): Variant;
+    function CreateCalc: Boolean;
+    procedure OpenCalc;
+    procedure SaveCalc;
+    procedure CloseCalc;
+    procedure CheckSheet;
+  public
+    constructor Create(const AFileName: string; AGrid: TcxGrid);
+    procedure BeforeDestruction; override;
+    procedure Execute;
   end;
 
   TExternalSaveAction = class(TdsdCustomAction)
@@ -65,7 +91,9 @@ type
 
 implementation
 
-uses VCL.ActnList, Dialogs, VKDBFDataSet, SysUtils, ADODB, Math;
+uses
+  Vcl.ActnList, Vcl.Dialogs, VKDBFDataSet, System.SysUtils, ADODB, Math, System.StrUtils,
+  System.Variants;
 
 procedure Register;
 begin
@@ -219,6 +247,170 @@ begin
     Query.Free;
   end;
   result := true;
+end;
+
+{ TExportGridToLibre }
+
+procedure TExportGridToLibre.BeforeDestruction;
+begin
+  LibreDisconnect;
+  inherited BeforeDestruction;
+end;
+
+procedure TExportGridToLibre.CheckDesktop;
+begin
+  if VarIsEmpty(FDesktop) or VarIsNull(FDesktop) then
+    FDesktop := FLibre.createInstance('com.sun.star.frame.Desktop');
+end;
+
+procedure TExportGridToLibre.CheckSheet;
+begin
+  if VarIsEmpty(FSheet) or VarIsNull(FSheet) then
+    FSheet := FCalc.GetSheets.getByIndex(0);
+end;
+
+procedure TExportGridToLibre.CloseCalc;
+begin
+  FCalc.Close(False);
+end;
+
+constructor TExportGridToLibre.Create(const AFileName: string; AGrid: TcxGrid);
+var
+  FilePath: string;
+begin
+  inherited Create;
+  FilePath := ExtractFilePath(AFileName);
+
+  if Trim(FilePath) = '' then
+    FilePath := ExtractFilePath(Application.ExeName);
+
+  FFileName := 'file:///' + AnsiReplaceText(FilePath + ExtractFileName(AFileName), '\', '/');
+  FView := AGrid.ActiveView as TcxGridDBTableView;
+  FDataSet := FView.DataController.DataSource.DataSet;
+  if not LibreConnect then
+    raise Exception.Create('Connect to LibreOffice is failed.');
+end;
+
+function TExportGridToLibre.CreateCalc: Boolean;
+var
+  VariantArray: Variant;
+begin
+  CheckDesktop;
+  VariantArray := VarArrayCreate([0, 0], varVariant);
+  VariantArray[0] := MakePropertyValue('Hidden', True);
+  FCalc := FDesktop.LoadComponentFromURL('private:factory/scalc', '_blank', 0, VariantArray);
+  Result := not (VarIsEmpty(FCalc) or VarIsNull(FCalc));
+end;
+
+procedure TExportGridToLibre.Execute;
+const
+  RusBoolStrs: array[Boolean] of string = ('Нет', 'Да');
+var
+  Field: TField;
+  BM: TBookmark;
+  I, J, N: Integer;
+  Cell: Variant;
+begin
+  if CreateCalc then
+  begin
+    CheckSheet;
+
+    with FDataSet do
+    begin
+      DisableControls;
+      BM := Bookmark;
+      N := -1;
+
+      for J := 0 to Pred(FView.ColumnCount) do
+        if FView.Columns[J].Visible then
+        begin
+          Inc(N);
+          Cell := FSheet.getCellByPosition(N, 0);
+          Cell.getColumns.getByIndex(0).Width := FView.Columns[J].Width * 30;
+          Cell.charWeight := 150;
+          Cell.setString(FView.Columns[J].Caption);
+        end;
+
+      I := 0;
+      First;
+
+      while not Eof do
+      begin
+        Inc(I);
+        N := -1;
+
+        for J := 0 to Pred(FView.ColumnCount) do
+          if FView.Columns[J].Visible then
+          begin
+            Inc(N);
+            Field := FView.Columns[J].DataBinding.Field;
+            Cell := FSheet.getCellByPosition(N, I);
+
+            if Field.DataType in [ftSmallint, ftInteger, ftWord] then
+              Cell.SetValue(Field.AsInteger)
+            else if Field.DataType in [ftFloat, ftCurrency, ftLargeint] then
+              Cell.SetValue(Field.AsFloat)
+            else if Field.DataType = ftBoolean then
+              Cell.SetString(RusBoolStrs[Field.AsBoolean])
+            else
+              Cell.SetString(Field.AsString);
+          end;
+
+        Next;
+      end;
+
+      if BookmarkValid(BM) then
+        Bookmark := BM;
+
+      EnableControls;
+    end;
+
+    SaveCalc;
+    CloseCalc;
+    //OpenCalc;
+  end;
+end;
+
+function TExportGridToLibre.LibreConnect: Boolean;
+begin
+  if VarIsEmpty(FLibre) then
+    FLibre := CreateOleObject('com.sun.star.ServiceManager');
+
+  Result := not (VarIsEmpty(FLibre) or VarIsNull(FLibre));
+end;
+
+procedure TExportGridToLibre.LibreDisconnect;
+begin
+  FSheet := Unassigned;
+  FCalc := Unassigned;
+  FDesktop := Unassigned;
+  FLibre := Unassigned;
+end;
+
+function TExportGridToLibre.MakePropertyValue(APropertyName: string;
+  APropertyValue: Variant): Variant;
+begin
+  Result := FLibre.Bridge_GetStruct('com.sun.star.beans.PropertyValue');
+  Result.Name := APropertyName;
+  Result.Value := APropertyValue;
+end;
+
+procedure TExportGridToLibre.OpenCalc;
+var
+  VariantArray: Variant;
+begin
+  CheckDesktop;
+  VariantArray := VarArrayCreate([0, 0], varVariant);
+  FDesktop.LoadComponentFromURL(FFileName, '_blank', 0, VariantArray);
+end;
+
+procedure TExportGridToLibre.SaveCalc;
+var
+  VariantArray: Variant;
+begin
+  VariantArray := VarArrayCreate([0, 1], varVariant);
+  VariantArray[1] := MakePropertyValue('Overwrite', True);
+  FCalc.StoreToURL(FFileName, VariantArray);
 end;
 
 initialization

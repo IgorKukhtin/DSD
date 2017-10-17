@@ -11,7 +11,9 @@ CREATE OR REPLACE FUNCTION gpSelect_GoodsSearchRemains(
 RETURNS TABLE (Id integer, GoodsCode Integer, GoodsName TVarChar
              , NDSkindName TVarChar
              , GoodsGroupName TVarChar
-             , UnitName TVarChar, Phone TVarChar
+             , UnitName TVarChar
+             , AreaName TVarChar
+             , Phone TVarChar
              , Amount TFloat, AmountIncome TFloat, AmountAll TFloat
              , PriceSale  TFloat
              , SummaSale TFloat
@@ -43,91 +45,91 @@ BEGIN
                        OR (upper(Object.ValueData) LIKE UPPER('%'||inGoodsSearch||'%')  AND inGoodsSearch <> '' AND inCodeSearch = '')
                      )
 
-           , containerCount AS (SELECT Container.Id                AS ContainerId
-                                     , Container.Amount
-                                     , Container.ObjectID          AS GoodsId
-                                     , Container.WhereObjectId     AS UnitId
-                                FROM tmpGoods
-                                   LEFT JOIN Container ON Container.ObjectID = tmpGoods.Id
-                                WHERE Container.descid = zc_container_count()
-                                )
+      , containerCount AS (SELECT Container.Id                AS ContainerId
+                                , Container.Amount
+                                , Container.ObjectID          AS GoodsId
+                                , Container.WhereObjectId     AS UnitId
+                           FROM tmpGoods
+                              LEFT JOIN Container ON Container.ObjectID = tmpGoods.Id
+                           WHERE Container.descid = zc_container_count()
+                           )
 
-         , tmpcontainerCount AS (SELECT ContainerCount.Amount - COALESCE(SUM(MIContainer.Amount), 0) AS Amount
-                                      , ContainerCount.GoodsId 
-                                      , ContainerCount.UnitId 
-                                      , ContainerCount.ContainerId
-                                 FROM ContainerCount
-                                     LEFT JOIN MovementItemContainer AS MIContainer 
-                                                                     ON MIContainer.ContainerId = ContainerCount.ContainerId
-                                                                    AND MIContainer.OperDate >= vbRemainsDate
-                                 GROUP BY ContainerCount.ContainerId, ContainerCount.Amount, ContainerCount.GoodsId , ContainerCount.UnitId 
-                                )
+      , tmpcontainerCount AS (SELECT ContainerCount.Amount - COALESCE(SUM(MIContainer.Amount), 0) AS Amount
+                                   , ContainerCount.GoodsId 
+                                   , ContainerCount.UnitId 
+                                   , ContainerCount.ContainerId
+                              FROM ContainerCount
+                                  LEFT JOIN MovementItemContainer AS MIContainer 
+                                                                  ON MIContainer.ContainerId = ContainerCount.ContainerId
+                                                                 AND MIContainer.OperDate >= vbRemainsDate
+                              GROUP BY ContainerCount.ContainerId, ContainerCount.Amount, ContainerCount.GoodsId , ContainerCount.UnitId 
+                             )
 
 
-           , tmpData AS (SELECT tmpData_all.UnitId
-                              , tmpData_all.GoodsId
-                              , SUM (tmpData_all.Amount)   AS Amount
-                              , min (tmpData_all.MinExpirationDate) AS MinExpirationDate
-                         FROM (  SELECT SUM(tmpcontainerCount.Amount)    AS Amount
-                                      , tmpcontainerCount.GoodsId 
-                                      , tmpcontainerCount.UnitId 
-                                      , min (COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate -- Срок годности 
-                                 FROM tmpcontainerCount
-                                    
-                                     -- находим партию для определения срока годности остатка
-                                     LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
-                                                                   ON ContainerLinkObject_MovementItem.Containerid =  tmpcontainerCount.ContainerId 
-                                                                  AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
-                                     LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
-                                     -- элемент прихода
-                                     LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
-                                     -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
-                                     LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
-                                                                 ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
-                                                                AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
-                                     -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
-                                     LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
-                             
-                                     LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
-                                                                       ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
-                                                                      AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
-                                                                                                                                           
-                                 GROUP BY tmpcontainerCount.GoodsId, tmpcontainerCount.UnitId 
-                                 ) AS tmpData_all
-                         GROUP BY tmpData_all.GoodsId
-                                , tmpData_all.UnitId
-                         HAVING (SUM (tmpData_all.Amount) <> 0)                                
-                          )
+      , tmpData AS (SELECT tmpData_all.UnitId
+                         , tmpData_all.GoodsId
+                         , SUM (tmpData_all.Amount)   AS Amount
+                         , min (tmpData_all.MinExpirationDate) AS MinExpirationDate
+                    FROM (  SELECT SUM(tmpcontainerCount.Amount)    AS Amount
+                                 , tmpcontainerCount.GoodsId 
+                                 , tmpcontainerCount.UnitId 
+                                 , min (COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate -- Срок годности 
+                            FROM tmpcontainerCount
+                               
+                                -- находим партию для определения срока годности остатка
+                                LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                                              ON ContainerLinkObject_MovementItem.Containerid =  tmpcontainerCount.ContainerId 
+                                                             AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                                -- элемент прихода
+                                LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                                -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                            ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                           AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                                LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+                        
+                                LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
+                                                                  ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
+                                                                 AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+                                                                                                                                      
+                            GROUP BY tmpcontainerCount.GoodsId, tmpcontainerCount.UnitId 
+                            ) AS tmpData_all
+                    GROUP BY tmpData_all.GoodsId
+                           , tmpData_all.UnitId
+                    HAVING (SUM (tmpData_all.Amount) <> 0)                                
+                     )
 
-               ,  tmpIncome AS (SELECT MovementLinkObject_To.ObjectId          AS UnitId
-                                     , MI_Income.ObjectId                      AS GoosdId
-                                     , SUM(COALESCE (MI_Income.Amount, 0))     AS AmountIncome  
-                                     , SUM(COALESCE (MI_Income.Amount, 0) * COALESCE(MIFloat_PriceSale.ValueData,0))  AS SummSale    
-                                FROM Movement AS Movement_Income
-                                     INNER JOIN MovementDate AS MovementDate_Branch
-                                                             ON MovementDate_Branch.MovementId = Movement_Income.Id
-                                                            AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
-                                                            AND date_trunc('day', MovementDate_Branch.ValueData) between date_trunc('day', CURRENT_TIMESTAMP)-interval '1 day' AND date_trunc('day', CURRENT_TIMESTAMP)
-                                      
-                                     LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                                                   ON MovementLinkObject_To.MovementId = Movement_Income.Id
-                                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+      , tmpIncome AS (SELECT MovementLinkObject_To.ObjectId          AS UnitId
+                           , MI_Income.ObjectId                      AS GoosdId
+                           , SUM(COALESCE (MI_Income.Amount, 0))     AS AmountIncome  
+                           , SUM(COALESCE (MI_Income.Amount, 0) * COALESCE(MIFloat_PriceSale.ValueData,0))  AS SummSale    
+                      FROM Movement AS Movement_Income
+                           INNER JOIN MovementDate AS MovementDate_Branch
+                                                   ON MovementDate_Branch.MovementId = Movement_Income.Id
+                                                  AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
+                                                  AND date_trunc('day', MovementDate_Branch.ValueData) between date_trunc('day', CURRENT_TIMESTAMP)-interval '1 day' AND date_trunc('day', CURRENT_TIMESTAMP)
+                            
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                         ON MovementLinkObject_To.MovementId = Movement_Income.Id
+                                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
 
-                                     LEFT JOIN MovementItem AS MI_Income 
-                                                            ON MI_Income.MovementId = Movement_Income.Id
-                                                           AND MI_Income.isErased   = False
+                           LEFT JOIN MovementItem AS MI_Income 
+                                                  ON MI_Income.MovementId = Movement_Income.Id
+                                                 AND MI_Income.isErased   = False
 
-                                     LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
-                                                                 ON MIFloat_PriceSale.MovementItemId = MI_Income.Id
-                                                                AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+                           LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
+                                                       ON MIFloat_PriceSale.MovementItemId = MI_Income.Id
+                                                      AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
 
-                                     -- left join  Object ON Object.id = MI_Income.ObjectId
-                                     -- left join  Object AS Object1 ON Object1.id = MovementLinkObject_To.ObjectId                  
-                                 WHERE Movement_Income.DescId = zc_Movement_Income()
-                                   AND Movement_Income.StatusId = zc_Enum_Status_UnComplete() 
-                                 GROUP BY MI_Income.ObjectId
-                                        , MovementLinkObject_To.ObjectId 
-                              )                          
+                           -- left join  Object ON Object.id = MI_Income.ObjectId
+                           -- left join  Object AS Object1 ON Object1.id = MovementLinkObject_To.ObjectId                  
+                       WHERE Movement_Income.DescId = zc_Movement_Income()
+                         AND Movement_Income.StatusId = zc_Enum_Status_UnComplete() 
+                       GROUP BY MI_Income.ObjectId
+                              , MovementLinkObject_To.ObjectId 
+                    )                          
 
 
         SELECT Object_Goods_View.Id                         as Id
@@ -136,6 +138,7 @@ BEGIN
              , Object_Goods_View.NDSkindName                as NDSkindName
              , Object_Goods_View.GoodsGroupName             AS GoodsGroupName
              , Object_Unit.ValueData                        AS UnitName
+             , Object_Area.ValueData                        AS AreaName
              , ObjectString_Phone.ValueData                 AS Phone
              , COALESCE(tmpData.Amount,0)         :: TFloat AS Amount
              , COALESCE(tmpIncome.AmountIncome,0)                                  :: TFloat AS AmountIncome
@@ -148,6 +151,11 @@ BEGIN
             LEFT JOIN Object AS Object_Unit ON Object_Unit.DescId = zc_Object_Unit()
             LEFT JOIN tmpData ON tmpData.GoodsId = tmpGoods.Id
                              AND tmpData.UnitId  = Object_Unit.Id
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Area
+                                 ON ObjectLink_Unit_Area.ObjectId = Object_Unit.Id 
+                                AND ObjectLink_Unit_Area.DescId = zc_ObjectLink_Unit_Area()
+            LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Unit_Area.ChildObjectId
 
             LEFT JOIN tmpIncome ON tmpIncome.GoosdId = tmpGoods.Id
                                AND tmpIncome.UnitId  = Object_Unit.Id

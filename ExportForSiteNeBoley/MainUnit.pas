@@ -124,6 +124,7 @@ end;
 procedure TMainForm.ExportSave;
 var
   OldDecimalSeparator: Char;
+  CSVFile: TStringList;
 begin
   Saving := True;
   AddToLog('Выгрузка отчета ...');
@@ -139,6 +140,10 @@ begin
     OldDecimalSeparator := FormatSettings.DecimalSeparator;
     FormatSettings.DecimalSeparator := '.';
     ExportGridToText(FilePath, ExportGrid, True, True, ';', '', '', 'CSV');
+    CSVFile := TStringList.Create;
+    CSVFile.LoadFromFile(FilePath);
+    CSVFile.SaveToFile(FilePath, TEncoding.ANSI);
+    CSVFile.Free;
     SaveToXML;
     FormatSettings.DecimalSeparator := OldDecimalSeparator;
     Saving := False;

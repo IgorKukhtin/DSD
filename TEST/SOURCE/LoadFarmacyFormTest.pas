@@ -480,7 +480,8 @@ end;
 
 procedure TLoadFormTest.LoadLoadFormTest;
 begin
-//  exit;
+ //exit;
+ {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListLoadForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListLoadForm');
 
@@ -494,10 +495,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceGoodsFromPriceListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChoiceGoodsFromPriceListForm');
-  {
+  }
   // отчет поиск товара по всей сети
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceGoodsFromRemainsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChoiceGoodsFromRemainsForm');
+  {
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TColorForm'));
   TdsdFormStorageFactory.GetStorage.Load('TColorForm');

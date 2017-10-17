@@ -18,8 +18,6 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
       Caption = 'tsMain'
       ImageIndex = 0
       TabVisible = False
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -67,6 +65,17 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object actGridToLibre: TdsdGridToLibre
+      Category = 'DSDLib'
+      MoveParams = <>
+      ExportType = cxegExportToLibre
+      Grid = cxGrid
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' LibreCalc'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' LibreCalc'
+      ImageIndex = 30
+      ShortCut = 16460
+      DefaultFileName = 'LibreCalcFile'
+    end
   end
   inherited MasterCDS: TClientDataSet
     FilterOptions = [foCaseInsensitive]
@@ -97,11 +106,19 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
         end
         item
           Visible = True
+          ItemName = 'bbGridToLibre'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end>
     end
     object bbGridToExcel: TdxBarButton
       Action = actGridToExcel
+      Category = 0
+    end
+    object bbGridToLibre: TdxBarButton
+      Action = actGridToLibre
       Category = 0
     end
   end

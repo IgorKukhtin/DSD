@@ -34,6 +34,8 @@ RETURNS TABLE (
     ProducerName        TVarChar,   -- производитель
     ContractId          Integer,    -- договор Ид
     ContractName        TVarChar,   -- договор
+    AreaId              Integer,    -- ренгион ИД
+    AreaName            TVarChar,   -- регион
     Juridical_Percent   TFloat,     -- % Корректировки наценки Поставщика
     Contract_Percent    TFloat,     -- % Корректировки наценки Договора
     SumReprice          TFloat,     -- сумма переоценки
@@ -218,6 +220,8 @@ BEGIN
             SelectMinPrice_AllGoods.MakerName                AS ProducerName,
             Object_Contract.Id                               AS ContractId,
             Object_Contract.ValueData                        AS ContractName,
+            Object_Area.Id                                   AS AreaId,
+            Object_Area.ValueData                            AS AreaName,
             SelectMinPrice_AllGoods.MinExpirationDate        AS MinExpirationDate,
             RemainsTo.MinExpirationDate                      AS MinExpirationDate_to,
             SelectMinPrice_AllGoods.MidPriceSale             AS MidPriceSale,
@@ -235,7 +239,8 @@ BEGIN
                                     , inUserId   := vbUserId
                                     ) AS SelectMinPrice_AllGoods
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = SelectMinPrice_AllGoods.ContractId
-
+            LEFT JOIN Object AS Object_Area ON Object_Area.Id = SelectMinPrice_AllGoods.AreaId
+            
             LEFT OUTER JOIN RemainsTo ON RemainsTo.GoodsId = SelectMinPrice_AllGoods.GoodsId
 
 
@@ -311,6 +316,8 @@ BEGIN
         ResultSet.ProducerName           AS ProducerName,
         ResultSet.ContractId,
         ResultSet.ContractName,
+        ResultSet.AreaId,
+        ResultSet.AreaName,
         ObjectFloat_Juridical_Percent.ValueData  ::TFloat AS Juridical_Percent,
         ObjectFloat_Contract_Percent.ValueData   ::TFloat AS Contract_Percent,
 
@@ -401,6 +408,7 @@ ALTER FUNCTION gpSelect_AllGoodsPrice (Integer,  Integer,  TFloat, Boolean, TVar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 17.10.17         * add Area
  18.06.16                                        *
  11.05.16         *
  16.02.16         * add isOneJuridical
