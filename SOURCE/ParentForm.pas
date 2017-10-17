@@ -196,7 +196,7 @@ begin
   //если хелпфайл заполнен, считаем что все уже отработано ранее
   if (Self.HelpFile <> '') or FNoHelpFile then exit;
   if gc_user.Local then exit;
-  
+
   //Вытащили путь к файлу помощи
   sp := TdsdStoredProc.Create(nil);
   try
@@ -383,7 +383,6 @@ initialization
   RegisterClass (TdsdFormClose);
   RegisterClass (TdsdFormParams);
   RegisterClass (TdsdGridToExcel);
-  RegisterClass (TdsdGridToLibre);
   RegisterClass (TdsdGuides);
   RegisterClass (TdsdInsertUpdateAction);
   RegisterClass (TdsdInsertUpdateGuides);

@@ -1534,10 +1534,6 @@ inherited TaxJournalForm: TTaxJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToLibre'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end>
     end

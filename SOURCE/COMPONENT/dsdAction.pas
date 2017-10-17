@@ -523,7 +523,7 @@ type
 
 type
   TcxExport = (cxegExportToHtml, cxegExportToXml, cxegExportToText,
-    cxegExportToExcel, cxegExportToXlsx, cxegExportToDbf, cxegExportToLibre);
+    cxegExportToExcel, cxegExportToXlsx, cxegExportToDbf);
 
   TExportGrid = class(TdsdCustomAction)
   private
@@ -564,11 +564,6 @@ type
   end;
 
   TdsdGridToExcel = class(TExportGrid)
-  public
-    constructor Create(AOwner: TComponent); override;
-  end;
-
-  TdsdGridToLibre = class(TExportGrid)
   public
     constructor Create(AOwner: TComponent); override;
   end;
@@ -820,7 +815,6 @@ begin
   RegisterActions('DSDLib', [TdsdExecStoredProc], TdsdExecStoredProc);
   RegisterActions('DSDLib', [TdsdFormClose], TdsdFormClose);
   RegisterActions('DSDLib', [TdsdGridToExcel], TdsdGridToExcel);
-  RegisterActions('DSDLib', [TdsdGridToLibre], TdsdGridToLibre);
   RegisterActions('DSDLib', [TdsdInsertUpdateAction], TdsdInsertUpdateAction);
   RegisterActions('DSDLib', [TdsdInsertUpdateGuides], TdsdInsertUpdateGuides);
   RegisterActions('DSDLib', [TdsdOpenForm], TdsdOpenForm);
@@ -841,7 +835,6 @@ begin
   RegisterActions('DSDLib', [TdsdPartnerMapAction], TdsdPartnerMapAction);
   RegisterActions('DSDLibExport', [TdsdStoredProcExportToFile], TdsdStoredProcExportToFile);
   RegisterActions('DSDLibExport', [TdsdGridToExcel], TdsdGridToExcel);
-  RegisterActions('DSDLibExport', [TdsdGridToLibre], TdsdGridToLibre);
 
 end;
 
@@ -1560,7 +1553,7 @@ end;
 
 function TExportGrid.LocalExecute: Boolean;
 const
-  ConstFileName = '#$#$#$';
+  ConstFileName = 'ExportFile';
   cFieldName = 'FieldName';
   cDisplayName = 'DisplayName';
 var
@@ -1595,8 +1588,6 @@ begin
         FileName := FileName + '.xlsx';
       cxegExportToDbf:
         FileName := FileName + '.dbf';
-      cxegExportToLibre:
-        FileName := FileName + '.ods';
     end;
   end
   else
@@ -1659,7 +1650,17 @@ begin
       cxegExportToText:
         ExportGridToText(FileName, TcxGrid(FGrid), IsCtrlPressed,true,Separator,'','',ext);
       cxegExportToExcel:
-        ExportGridToExcel(FileName, TcxGrid(FGrid), IsCtrlPressed);
+        begin
+          with TExportGridToLibre.Create(FileName, TcxGrid(FGrid)) do
+            try
+              if Connected then
+                Execute
+              else
+                ExportGridToExcel(FileName, TcxGrid(FGrid), IsCtrlPressed);
+            finally
+              Free;
+            end;
+        end;
       cxegExportToXlsx:
         ExportGridToXLSX(FileName, TcxGrid(FGrid), IsCtrlPressed);
       cxegExportToDbf:
@@ -1672,13 +1673,6 @@ begin
             finally
               Free
             end;
-      cxegExportToLibre:
-        with TExportGridToLibre.Create(FileName, TcxGrid(FGrid)) do
-          try
-            Execute;
-          finally
-            Free;
-          end;
     end;
     if HideHeader AND HeaderVisible then
       if TcxGrid(FGrid).ViewCount > 0 then
@@ -3246,17 +3240,6 @@ end;
 procedure TdsdDataSetRefreshEx.SetColumn(const Value: TcxGridDBColumn);
 begin
   FColumn := Value;
-end;
-
-{ TdsdGridToLibre }
-
-constructor TdsdGridToLibre.Create(AOwner: TComponent);
-begin
-  inherited;
-  Caption := 'Выгрузка в LibreCalc';
-  Hint := 'Выгрузка в LibreCalc';
-  ShortCut := TextToShortCut('Ctrl+X');
-  ExportType := cxegExportToLibre;
 end;
 
 end.

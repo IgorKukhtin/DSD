@@ -590,10 +590,6 @@ inherited AncestorJournalForm: TAncestorJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToLibre'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end>
     end
