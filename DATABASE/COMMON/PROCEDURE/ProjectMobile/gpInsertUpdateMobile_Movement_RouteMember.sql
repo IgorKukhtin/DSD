@@ -72,7 +72,7 @@ BEGIN
       IF vbisInsert = FALSE
       THEN
           -- сохранили свойство < Дата/время когда выполнилась загрузка с моб устр >
-          PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Update(), vbId, CURRENT_TIMESTAMP);
+          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_UpdateMobile(), vbId, CURRENT_TIMESTAMP);
       END IF;
 
       RETURN vbId;
