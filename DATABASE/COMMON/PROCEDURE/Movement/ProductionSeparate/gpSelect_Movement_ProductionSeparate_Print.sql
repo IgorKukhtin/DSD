@@ -433,6 +433,7 @@ $BODY$
  24.03.17         *
  03.04.15         *
 */
+
 -- тест
 --select * from gpSelect_Movement_ProductionSeparate_Print(inMovementId := 7220837 ,  inSession := '5');
 --FETCH ALL "<unnamed portal 4>";
