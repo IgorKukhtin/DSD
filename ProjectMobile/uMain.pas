@@ -45,6 +45,8 @@ const
   sCostWithDiscount = 'Стоимость со скидкой';
   sTotalCostWithVAT = 'Общая стоимость (с НДС)';
   sTotalWeight = 'Общий вес';
+  sPaidKindChangeQuestion = 'Изменить форму оплаты на "%s"?';
+  sPaidKindRepeatQuestion = 'Форма оплаты будет "%s". Продолжить?';
 
 type
   TFormStackItem = record
@@ -1124,9 +1126,12 @@ type
     procedure CreateEditOrderExtrernal(New: boolean);
     procedure CreateEditReturnIn(New: boolean);
     procedure CreateEditMovementCash(New: boolean);
-    procedure ChangePaidKindOrderExtrernal(const AResult: TModalResult);
-    procedure ChangePaidKindReturnIn(const AResult: TModalResult);
-    procedure ChangePaidKindCash(const AResult: TModalResult);
+    procedure ChangePaidKindOrderExtrernal(Sender: TObject; const AResult: TModalResult);
+    procedure ChangePaidKindOrderExtrernalRepeat(const AResult: TModalResult);
+    procedure ChangePaidKindReturnIn(Sender: TObject; const AResult: TModalResult);
+    procedure ChangePaidKindReturnInRepeat(const AResult: TModalResult);
+    procedure ChangePaidKindCash(Sender: TObject; const AResult: TModalResult);
+    procedure ChangePaidKindCashRepeat(const AResult: TModalResult);
     procedure SetPartnerCoordinates(const AResult: TModalResult);
     procedure BackupDB(const AResult: TModalResult);
     procedure RestoreDB(const AResult: TModalResult);
@@ -1265,8 +1270,8 @@ begin
     else
       NewPaidKindName := lPaidKindSO.Text;
 
-    TDialogService.MessageDialog('Изменить форму оплаты на " ' + NewPaidKindName + '"?',
-      TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ChangePaidKindOrderExtrernal);
+    TDialogService.MessageDialog(Format(sPaidKindChangeQuestion, [NewPaidKindName]),
+      TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ChangePaidKindOrderExtrernal, TObject(PChar(NewPaidKindName)));
   end;
 
   if FPaidKindChangedR then
@@ -1278,8 +1283,8 @@ begin
     else
       NewPaidKindName := lPaidKindSR.Text;
 
-    TDialogService.MessageDialog('Изменить форму оплаты на " ' + NewPaidKindName + '"?',
-      TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ChangePaidKindReturnIn);
+    TDialogService.MessageDialog(Format(sPaidKindChangeQuestion, [NewPaidKindName]),
+      TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ChangePaidKindReturnIn, TObject(PChar(NewPaidKindName)));
   end;
 
   if FPaidKindChangedC then
@@ -1291,8 +1296,8 @@ begin
     else
       NewPaidKindName := lPaidKindSC.Text;
 
-    TDialogService.MessageDialog('Изменить форму оплаты на " ' + NewPaidKindName + '"?',
-      TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ChangePaidKindCash);
+    TDialogService.MessageDialog(Format(sPaidKindChangeQuestion, [NewPaidKindName]),
+      TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ChangePaidKindCash, TObject(PChar(NewPaidKindName)));
   end;
 end;
 
@@ -3015,19 +3020,46 @@ begin
   pEnterMovmentCash.Visible := true;
 end;
 
-procedure TfrmMain.ChangePaidKindOrderExtrernal(const AResult: TModalResult);
+procedure TfrmMain.ChangePaidKindOrderExtrernal(Sender: TObject; const AResult: TModalResult);
+begin
+  if AResult = mrYes then
+    TDialogService.MessageDialog(Format(sPaidKindRepeatQuestion, [string(PChar(Sender))]),
+      TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ChangePaidKindOrderExtrernalRepeat)
+  else
+    swPaidKindO.IsChecked := not swPaidKindO.IsChecked;
+end;
+
+procedure TfrmMain.ChangePaidKindOrderExtrernalRepeat(const AResult: TModalResult);
 begin
   if AResult = mrNo then
     swPaidKindO.IsChecked := not swPaidKindO.IsChecked;
 end;
 
-procedure TfrmMain.ChangePaidKindReturnIn(const AResult: TModalResult);
+procedure TfrmMain.ChangePaidKindReturnIn(Sender: TObject; const AResult: TModalResult);
+begin
+  if AResult = mrYes then
+    TDialogService.MessageDialog(Format(sPaidKindRepeatQuestion, [string(PChar(Sender))]),
+      TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ChangePaidKindReturnInRepeat)
+  else
+    swPaidKindR.IsChecked := not swPaidKindR.IsChecked;
+end;
+
+procedure TfrmMain.ChangePaidKindReturnInRepeat(const AResult: TModalResult);
 begin
   if AResult = mrNo then
     swPaidKindR.IsChecked := not swPaidKindR.IsChecked;
 end;
 
-procedure TfrmMain.ChangePaidKindCash(const AResult: TModalResult);
+procedure TfrmMain.ChangePaidKindCash(Sender: TObject; const AResult: TModalResult);
+begin
+  if AResult = mrYes then
+    TDialogService.MessageDialog(Format(sPaidKindRepeatQuestion, [string(PChar(Sender))]),
+      TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ChangePaidKindCashRepeat)
+  else
+    swPaidKindC.IsChecked := not swPaidKindC.IsChecked;
+end;
+
+procedure TfrmMain.ChangePaidKindCashRepeat(const AResult: TModalResult);
 begin
   if AResult = mrNo then
     swPaidKindC.IsChecked := not swPaidKindC.IsChecked;
