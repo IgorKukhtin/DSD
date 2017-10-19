@@ -2344,9 +2344,6 @@ inherited MainForm: TMainForm
       object N77: TMenuItem
         Action = actPersonal
       end
-      object N154: TMenuItem
-        Action = actPersonalList
-      end
       object N76: TMenuItem
         Action = actPersonalGroup
       end
