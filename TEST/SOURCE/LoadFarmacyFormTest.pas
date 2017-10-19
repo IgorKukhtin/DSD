@@ -492,14 +492,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMovenentLoadForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemsLoadForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementItemsLoadForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceGoodsFromPriceListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChoiceGoodsFromPriceListForm');
-  }
+  exit;
+  {
   // отчет поиск товара по всей сети
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceGoodsFromRemainsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChoiceGoodsFromRemainsForm');
-  {
+
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TColorForm'));
   TdsdFormStorageFactory.GetStorage.Load('TColorForm');

@@ -392,6 +392,8 @@ type
     N153: TMenuItem;
     actReport_GoodsRemains_AnotherRetail: TdsdOpenForm;
     ID1: TMenuItem;
+    actPersonalList: TdsdOpenForm;
+    N154: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
