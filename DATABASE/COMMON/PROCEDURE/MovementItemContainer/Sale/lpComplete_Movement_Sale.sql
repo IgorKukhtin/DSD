@@ -89,6 +89,16 @@ $BODY$
   DECLARE vbPaymentDate TDateTime;
 BEGIN
 
+IF inUserId in (zfCalc_UserAdmin() :: Integer/*, zc_Enum_Process_Auto_PrimeCost(), 9459*/)
+/* OR ('01.10.2017' <= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
+     AND
+     '01.10.2017' <= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
+    )*/
+THEN
+    PERFORM lpComplete_Movement_Sale_NEW (inMovementId, inUserId, FALSE);
+    RETURN;
+END IF;
+
      -- !!!временно!!!
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= inMovementId);
 

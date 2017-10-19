@@ -4,7 +4,7 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
   ClientWidth = 1251
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1267
-  ExplicitHeight = 518
+  ExplicitHeight = 515
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -367,10 +367,12 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
     ExplicitHeight = 32
     inherited deStart: TcxDateEdit
       Left = 29
+      EditValue = 42736d
       ExplicitLeft = 29
     end
     inherited deEnd: TcxDateEdit
       Left = 142
+      EditValue = 42736d
       ExplicitLeft = 142
     end
     inherited cxLabel1: TcxLabel
@@ -394,6 +396,7 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
       Properties.Buttons = <
         item
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.Nullstring = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
@@ -712,10 +715,10 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceUnit
-    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.Value = 'TUnitTree___Form'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnitTreeForm'
+    FormName = 'TUnitTree___Form'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
