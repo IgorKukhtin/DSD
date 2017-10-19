@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, Name TVarChar, JuridicalId Integer, JuridicalName TVa
                Bonus TFloat, PriceLimit TFloat, ConditionalPercent TFloat,
                ContractId Integer, ContractName TVarChar, 
                MainJuridicalId Integer, MainJuridicalName TVarChar,
+               ArealId Integer, AreaName TVarChar,
                ContractSettingsId Integer,  isErased boolean,
                StartDate TDateTime, EndDate TDateTime,
                InsertName TVarChar, InsertDate TDateTime,
@@ -29,8 +30,8 @@ BEGIN
 
    RETURN QUERY 
      WITH 
-     tmpContractSettings AS (SELECT Object_ContractSettings.Id
-                                  , Object_ContractSettings.isErased
+     tmpContractSettings AS (SELECT Object_ContractSettings.Id               AS Id
+                                  , Object_ContractSettings.isErased         AS isErased
                                   , ObjectLink_MainJuridical.ChildObjectId   AS MainJuridicalId
                                   , ObjectLink_Contract.ChildObjectId        AS ContractId
                              FROM ObjectLink AS ObjectLink_MainJuridical
@@ -42,20 +43,22 @@ BEGIN
                              ) 
 
        SELECT 
-             JuridicalSettings.JuridicalSettingsId
-           , Object_JuridicalSettings.ValueData AS Name 
-           , Object_Juridical.Id
-           , Object_Juridical.ValueData
+             JuridicalSettings.JuridicalSettingsId              AS Id
+           , Object_JuridicalSettings.ValueData                 AS Name 
+           , Object_Juridical.Id                                AS JuridicalId
+           , Object_Juridical.ValueData                         AS JuridicalName
            , COALESCE(JuridicalSettings.isBonusVirtual, FALSE)  AS isBonusVirtual
            , COALESCE(JuridicalSettings.isPriceClose, TRUE)     AS isPriceClose
            , COALESCE(JuridicalSettings.isSite, FALSE)          AS isSite 
            , JuridicalSettings.Bonus
-           , JuridicalSettings.PriceLimit :: TFloat AS PriceLimit
+           , JuridicalSettings.PriceLimit             :: TFloat AS PriceLimit
            , COALESCE(ObjectFloat_ConditionalPercent.ValueData, 0) :: TFloat AS ConditionalPercent
-           , LastPriceList_View.ContractId AS ContractId
-           , Contract.ValueData AS ContractName
-           , ObjectLink_JuridicalRetail.ObjectId AS MainJuridicalId
-           , Object_MainJuridical.ValueData AS MainJuridicalName 
+           , LastPriceList_View.ContractId                      AS ContractId
+           , Contract.ValueData                                 AS ContractName
+           , ObjectLink_JuridicalRetail.ObjectId                AS MainJuridicalId
+           , Object_MainJuridical.ValueData                     AS MainJuridicalName 
+           , Object_Area.Id                                     AS AreaId
+           , Object_Area.ValueData                              AS AreaName
            --, Contract.isErased
            , COALESCE (tmpContractSettings.Id, 0)                        AS ContractSettingsId
            , COALESCE (tmpContractSettings.isErased, False) ::Boolean    AS isErased
@@ -63,10 +66,10 @@ BEGIN
            , COALESCE (JuridicalSettings.StartDate, Null)   ::TDateTime  AS StartDate
            , COALESCE (JuridicalSettings.EndDate, Null)     ::TDateTime  AS EndDate
 
-           , Object_User_Insert.ValueData   AS InsertName
-           , LoadPriceList.Date_Insert      AS InsertDate
-           , Object_User_Update.ValueData   AS UpdateName
-           , LoadPriceList.Date_Update      AS UpdateDate
+           , Object_User_Insert.ValueData                       AS InsertName
+           , LoadPriceList.Date_Insert                          AS InsertDate
+           , Object_User_Update.ValueData                       AS UpdateName
+           , LoadPriceList.Date_Update                          AS UpdateDate
 
        FROM LastPriceList_View 
             LEFT JOIN ObjectLink AS ObjectLink_JuridicalRetail 
@@ -77,6 +80,8 @@ BEGIN
             JOIN Object AS Object_Juridical ON Object_Juridical.Id = LastPriceList_View.JuridicalId
 
             LEFT JOIN Object AS Contract ON Contract.Id = LastPriceList_View.ContractId
+
+            LEFT JOIN Object AS Object_Area ON Object_Area.Id = LastPriceList_View.AreaId
 
             LEFT JOIN tmpContractSettings ON tmpContractSettings.MainJuridicalId = Object_MainJuridical.Id
                                          AND tmpContractSettings.ContractId = Contract.Id
@@ -103,60 +108,60 @@ BEGIN
 
                  FROM ObjectLink AS ObjectLink_JuridicalSettings_Retail
 
-                 JOIN ObjectLink AS ObjectLink_JuridicalSettings_Juridical 
-                                 ON ObjectLink_JuridicalSettings_Juridical.DescId = zc_ObjectLink_JuridicalSettings_Juridical()                      
-                                AND ObjectLink_JuridicalSettings_Juridical.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId 
+                      JOIN ObjectLink AS ObjectLink_JuridicalSettings_Juridical 
+                                      ON ObjectLink_JuridicalSettings_Juridical.DescId = zc_ObjectLink_JuridicalSettings_Juridical()                      
+                                     AND ObjectLink_JuridicalSettings_Juridical.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId 
+     
+                      JOIN ObjectLink AS ObjectLink_JuridicalSettings_MainJuridical 
+                                      ON ObjectLink_JuridicalSettings_MainJuridical.DescId = zc_ObjectLink_JuridicalSettings_MainJuridical()                      
+                                     AND ObjectLink_JuridicalSettings_MainJuridical.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId 
+     
+                      LEFT JOIN ObjectLink AS ObjectLink_JuridicalSettings_Contract 
+                                           ON ObjectLink_JuridicalSettings_Contract.DescId = zc_ObjectLink_JuridicalSettings_Contract()                      
+                                          AND ObjectLink_JuridicalSettings_Contract.ObjectId = ObjectLink_JuridicalSettings_Juridical.ObjectId 
+     
+                      LEFT JOIN ObjectBoolean AS ObjectBoolean_isPriceClose
+                                              ON ObjectBoolean_isPriceClose.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
+                                             AND ObjectBoolean_isPriceClose.DescId = zc_ObjectBoolean_JuridicalSettings_isPriceClose()
+     
+                      LEFT JOIN ObjectFloat AS ObjectFloat_Bonus 
+                                            ON ObjectFloat_Bonus.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
+                                           AND ObjectFloat_Bonus.DescId = zc_ObjectFloat_JuridicalSettings_Bonus()
+     
+                      LEFT JOIN ObjectFloat AS ObjectFloat_PriceLimit 
+                                            ON ObjectFloat_PriceLimit.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
+                                           AND ObjectFloat_PriceLimit.DescId = zc_ObjectFloat_JuridicalSettings_PriceLimit()
+               
+     
+                      LEFT JOIN ObjectBoolean AS ObjectBoolean_isBonusVirtual
+                                              ON ObjectBoolean_isBonusVirtual.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
+                                             AND ObjectBoolean_isBonusVirtual.DescId = zc_ObjectBoolean_JuridicalSettings_BonusVirtual()
+     
+                      LEFT JOIN ObjectBoolean AS ObjectBoolean_Site 	
+                                              ON ObjectBoolean_Site.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
+                                             AND ObjectBoolean_Site.DescId = zc_ObjectBoolean_JuridicalSettings_Site()
+     
+                      LEFT JOIN ObjectDate AS ObjectDate_StartDate 
+                                           ON ObjectDate_StartDate.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
+                                          AND ObjectDate_StartDate.DescId = zc_ObjectDate_Contract_Start()
+                      LEFT JOIN ObjectDate AS ObjectDate_EndDate 
+                                           ON ObjectDate_EndDate.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
+                                          AND ObjectDate_EndDate.DescId = zc_ObjectDate_Contract_End()
 
-                 JOIN ObjectLink AS ObjectLink_JuridicalSettings_MainJuridical 
-                                 ON ObjectLink_JuridicalSettings_MainJuridical.DescId = zc_ObjectLink_JuridicalSettings_MainJuridical()                      
-                                AND ObjectLink_JuridicalSettings_MainJuridical.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId 
-
-                 LEFT JOIN ObjectLink AS ObjectLink_JuridicalSettings_Contract 
-                                      ON ObjectLink_JuridicalSettings_Contract.DescId = zc_ObjectLink_JuridicalSettings_Contract()                      
-                                     AND ObjectLink_JuridicalSettings_Contract.ObjectId = ObjectLink_JuridicalSettings_Juridical.ObjectId 
-
-                 LEFT JOIN ObjectBoolean AS ObjectBoolean_isPriceClose
-                                         ON ObjectBoolean_isPriceClose.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
-                                        AND ObjectBoolean_isPriceClose.DescId = zc_ObjectBoolean_JuridicalSettings_isPriceClose()
-
-                 LEFT JOIN ObjectFloat AS ObjectFloat_Bonus 
-                                       ON ObjectFloat_Bonus.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
-                                      AND ObjectFloat_Bonus.DescId = zc_ObjectFloat_JuridicalSettings_Bonus()
-
-                 LEFT JOIN ObjectFloat AS ObjectFloat_PriceLimit 
-                                       ON ObjectFloat_PriceLimit.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
-                                      AND ObjectFloat_PriceLimit.DescId = zc_ObjectFloat_JuridicalSettings_PriceLimit()
-          
-
-                 LEFT JOIN ObjectBoolean AS ObjectBoolean_isBonusVirtual
-                                         ON ObjectBoolean_isBonusVirtual.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
-                                        AND ObjectBoolean_isBonusVirtual.DescId = zc_ObjectBoolean_JuridicalSettings_BonusVirtual()
-
-                 LEFT JOIN ObjectBoolean AS ObjectBoolean_Site 	
-                                         ON ObjectBoolean_Site.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
-                                        AND ObjectBoolean_Site.DescId = zc_ObjectBoolean_JuridicalSettings_Site()
-
-                 LEFT JOIN ObjectDate AS ObjectDate_StartDate 
-                                      ON ObjectDate_StartDate.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
-                                     AND ObjectDate_StartDate.DescId = zc_ObjectDate_Contract_Start()
-                 LEFT JOIN ObjectDate AS ObjectDate_EndDate 
-                                      ON ObjectDate_EndDate.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
-                                     AND ObjectDate_EndDate.DescId = zc_ObjectDate_Contract_End()
-
-               WHERE ObjectLink_JuridicalSettings_Retail.DescId = zc_ObjectLink_JuridicalSettings_Retail()
+                 WHERE ObjectLink_JuridicalSettings_Retail.DescId = zc_ObjectLink_JuridicalSettings_Retail()
                  AND ObjectLink_JuridicalSettings_Retail.ChildObjectId = vbObjectId) 
 
                  AS JuridicalSettings ON JuridicalSettings.JuridicalId = LastPriceList_View.JuridicalId
                                      AND JuridicalSettings.MainJuridicalId = ObjectLink_JuridicalRetail.ObjectId
                                      AND JuridicalSettings.ContractId = COALESCE(LastPriceList_View.ContractId, 0)
 
-                LEFT JOIN Object AS Object_JuridicalSettings ON Object_JuridicalSettings.Id = JuridicalSettings.JuridicalSettingsId
+            LEFT JOIN Object AS Object_JuridicalSettings ON Object_JuridicalSettings.Id = JuridicalSettings.JuridicalSettingsId
 
-                LEFT JOIN ObjectFloat AS ObjectFloat_ConditionalPercent 
-                                      ON ObjectFloat_ConditionalPercent.ObjectId = LastPriceList_View.JuridicalId
-                                     AND ObjectFloat_ConditionalPercent.DescId = zc_ObjectFloat_Juridical_ConditionalPercent()
+            LEFT JOIN ObjectFloat AS ObjectFloat_ConditionalPercent 
+                                  ON ObjectFloat_ConditionalPercent.ObjectId = LastPriceList_View.JuridicalId
+                                 AND ObjectFloat_ConditionalPercent.DescId = zc_ObjectFloat_Juridical_ConditionalPercent()
 
-           WHERE (COALESCE (tmpContractSettings.isErased, False) = False OR inIsShowErased = TRUE)
+       WHERE (COALESCE (tmpContractSettings.isErased, False) = False OR inIsShowErased = TRUE)
 --and Contract.Id =183257
 ;  
 END;
@@ -169,6 +174,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 17.10.17         * add Area
  09.11.16         * add inIsShowErased, Insert, Update
  11.02.16         * add PriceLimit Œ„‡ÌË˜ÂÌËÂ "÷ÂÌ‡ ‰Ó"
  17.02.15                         *

@@ -2,9 +2,8 @@
   Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1080' '#1102#1088' '#1083#1080#1094
   ClientHeight = 311
   ClientWidth = 985
-  ExplicitLeft = -241
   ExplicitWidth = 1001
-  ExplicitHeight = 350
+  ExplicitHeight = 349
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -64,6 +63,14 @@
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 158
+          end
+          object AreaName: TcxGridDBColumn
+            Caption = #1056#1077#1075#1080#1086#1085
+            DataBinding.FieldName = 'AreaName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
           end
           object isPriceClose: TcxGridDBColumn
             Caption = #1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090

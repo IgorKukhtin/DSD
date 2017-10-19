@@ -31,11 +31,12 @@ type
     FFileName: string;
     FView: TcxGridDBTableView;
     FDataSet: TDataSet;
+    FConnected: Boolean;
     FLibre: Variant;
     FDesktop: Variant;
     FCalc: Variant;
     FSheet: Variant;
-    function LibreConnect: Boolean;
+    procedure LibreConnect;
     procedure LibreDisconnect;
     procedure CheckDesktop;
     function MakePropertyValue(APropertyName: string; APropertyValue: Variant): Variant;
@@ -48,6 +49,7 @@ type
     constructor Create(const AFileName: string; AGrid: TcxGrid);
     procedure BeforeDestruction; override;
     procedure Execute;
+    property Connected: Boolean read FConnected;
   end;
 
   TExternalSaveAction = class(TdsdCustomAction)
@@ -287,8 +289,8 @@ begin
   FFileName := 'file:///' + AnsiReplaceText(FilePath + ExtractFileName(AFileName), '\', '/');
   FView := AGrid.ActiveView as TcxGridDBTableView;
   FDataSet := FView.DataController.DataSource.DataSet;
-  if not LibreConnect then
-    raise Exception.Create('Connect to LibreOffice is failed.');
+  FConnected := False;
+  LibreConnect;
 end;
 
 function TExportGridToLibre.CreateCalc: Boolean;
@@ -371,12 +373,17 @@ begin
   end;
 end;
 
-function TExportGridToLibre.LibreConnect: Boolean;
+procedure TExportGridToLibre.LibreConnect;
 begin
-  if VarIsEmpty(FLibre) then
-    FLibre := CreateOleObject('com.sun.star.ServiceManager');
+  try
+    if VarIsEmpty(FLibre) then
+      FLibre := CreateOleObject('com.sun.star.ServiceManager');
 
-  Result := not (VarIsEmpty(FLibre) or VarIsNull(FLibre));
+    FConnected := not (VarIsEmpty(FLibre) or VarIsNull(FLibre));
+  except
+    on E: EOleSysError do
+      FConnected := False;
+  end;
 end;
 
 procedure TExportGridToLibre.LibreDisconnect;
@@ -385,6 +392,7 @@ begin
   FCalc := Unassigned;
   FDesktop := Unassigned;
   FLibre := Unassigned;
+  FConnected := False;
 end;
 
 function TExportGridToLibre.MakePropertyValue(APropertyName: string;
@@ -401,6 +409,7 @@ var
 begin
   CheckDesktop;
   VariantArray := VarArrayCreate([0, 0], varVariant);
+  VariantArray[0] := MakePropertyValue('FilterName', 'MS Excel 97');
   FDesktop.LoadComponentFromURL(FFileName, '_blank', 0, VariantArray);
 end;
 
@@ -409,6 +418,7 @@ var
   VariantArray: Variant;
 begin
   VariantArray := VarArrayCreate([0, 1], varVariant);
+  VariantArray[0] := MakePropertyValue('FilterName', 'MS Excel 97');
   VariantArray[1] := MakePropertyValue('Overwrite', True);
   FCalc.StoreToURL(FFileName, VariantArray);
 end;

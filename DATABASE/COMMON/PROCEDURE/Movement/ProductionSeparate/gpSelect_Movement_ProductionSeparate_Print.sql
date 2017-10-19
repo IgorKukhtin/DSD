@@ -98,31 +98,31 @@ BEGIN
                         WHERE Movement.Id = inMovementId
                        )
       -- текущий док. элементы расход: количество + суммы
-    , tmpMIContainer AS (SELECT MIContainer.MovementItemId
-                              , MIContainer.DescId
-                              , MAX (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN MIContainer.ContainerId       ELSE 0 END) AS ContainerId
-                              , MAX (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN MIContainer.ObjectId_analyzer ELSE 0 END) AS GoodsId
-                              , -1 * SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN MIContainer.Amount ELSE 0 END) AS Amount_count
-                              , -1 * SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  THEN MIContainer.Amount ELSE 0 END) AS Amount_summ
-                         FROM MovementItemContainer AS MIContainer
-                         WHERE MIContainer.MovementId = inMovementId
-                           AND MIContainer.isActive = FALSE
-                         GROUP BY MIContainer.MovementItemId
-                                , MIContainer.DescId
-                        )
+     , tmpMIContainer AS (SELECT MIContainer.MovementItemId
+                               , MIContainer.DescId
+                               , MAX (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN MIContainer.ContainerId       ELSE 0 END) AS ContainerId
+                               , MAX (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN MIContainer.ObjectId_analyzer ELSE 0 END) AS GoodsId
+                               , -1 * SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN MIContainer.Amount ELSE 0 END) AS Amount_count
+                               , -1 * SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  THEN MIContainer.Amount ELSE 0 END) AS Amount_summ
+                          FROM MovementItemContainer AS MIContainer
+                          WHERE MIContainer.MovementId = inMovementId
+                            AND MIContainer.isActive = FALSE
+                          GROUP BY MIContainer.MovementItemId
+                                 , MIContainer.DescId
+                         )
         -- текущий док., количество + суммы = в одну строку
-      , tmpMI_group AS (SELECT MAX (tmpMIContainer.GoodsId)                        AS GoodsId
-                             , SUM (tmpMIContainer.Amount_count)                   AS Amount_count
-                             , SUM (COALESCE (tmpMIContainer_Summ.Amount_summ, 0)) AS Amount_summ
-                             , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0))     AS HeadCount
-                        FROM tmpMIContainer
-                             LEFT JOIN tmpMIContainer AS tmpMIContainer_Summ ON tmpMIContainer_Summ.MovementItemId = tmpMIContainer.MovementItemId
-                                                                            AND tmpMIContainer_Summ.DescId = zc_MIContainer_Summ()
-                             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
-                                                         ON MIFloat_HeadCount.MovementItemId = tmpMIContainer.MovementItemId
-                                                        AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
-                        WHERE tmpMIContainer.DescId = zc_MIContainer_Count()
-                       )
+     , tmpMI_group AS (SELECT MAX (tmpMIContainer.GoodsId)                        AS GoodsId
+                            , SUM (tmpMIContainer.Amount_count)                   AS Amount_count
+                            , SUM (COALESCE (tmpMIContainer_Summ.Amount_summ, 0)) AS Amount_summ
+                            , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0))     AS HeadCount
+                       FROM tmpMIContainer
+                            LEFT JOIN tmpMIContainer AS tmpMIContainer_Summ ON tmpMIContainer_Summ.MovementItemId = tmpMIContainer.MovementItemId
+                                                                           AND tmpMIContainer_Summ.DescId = zc_MIContainer_Summ()
+                            LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
+                                                        ON MIFloat_HeadCount.MovementItemId = tmpMIContainer.MovementItemId
+                                                       AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+                       WHERE tmpMIContainer.DescId = zc_MIContainer_Count()
+                      )
        -- список
      , tmpContainer_all AS (SELECT DISTINCT
                                    CLO_PartionGoods.ObjectId AS PartionGoodsId
@@ -130,23 +130,23 @@ BEGIN
                                  INNER JOIN ContainerLinkObject AS CLO_PartionGoods
                                                                 ON CLO_PartionGoods.ContainerId = tmpMIContainer.ContainerId
                                                                AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
-                                                               AND CLO_PartionGoods.ObjectId <> vbPartionGoodsId_null
+                                                               AND CLO_PartionGoods.ObjectId <> 80132 -- vbPartionGoodsId_null
                             WHERE tmpMIContainer.DescId = zc_MIContainer_Count()
                            )
      -- список ContainerId (кол. и сумм.) для PartionGoodsId
-   , tmpContainer AS (SELECT DISTINCT
-                             CLO_PartionGoods.ContainerId
-                           , CLO_PartionGoods.ObjectId AS PartionGoodsId
-                           , Container.DescId
-                      FROM tmpContainer_all AS tmp
-                           INNER JOIN ContainerLinkObject AS CLO_PartionGoods
-                                                          ON CLO_PartionGoods.ObjectId = tmp.PartionGoodsId
-                                                         AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
-                           LEFT JOIN Container ON Container.Id =  CLO_PartionGoods.ContainerId
-                     )
+     , tmpContainer AS (SELECT DISTINCT
+                               CLO_PartionGoods.ContainerId
+                             , CLO_PartionGoods.ObjectId AS PartionGoodsId
+                             , Container.DescId
+                        FROM tmpContainer_all AS tmp
+                             INNER JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                            ON CLO_PartionGoods.ObjectId = tmp.PartionGoodsId
+                                                           AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                             LEFT JOIN Container ON Container.Id =  CLO_PartionGoods.ContainerId
+                       )
 
         -- приход от поставщика : кол. и сумм.
-      , tmpIncome AS (-- находим по партиям из проводкок
+     , tmpIncome AS (-- находим по партиям из проводкок
                       /*SELECT tmpContainer.DescId
                            , tmpContainer.ContainerId
                            , MIContainer.MovementId
@@ -249,7 +249,7 @@ BEGIN
                       )
 
             -- разделение - сумма приход (для расчета цены голов)
-          , tmpSeparateH AS (SELECT SUM (MIContainer.Amount) AS Amount_summ
+     , tmpSeparateH_All AS ( SELECT  MIContainer.*
                              FROM tmpSeparate
                                   INNER JOIN MovementItemContainer AS MIContainer
                                                                    ON MIContainer.MovementId = tmpSeparate.MovementId
@@ -258,17 +258,21 @@ BEGIN
                                    LEFT JOIN tmpGoods ON tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
                              WHERE tmpGoods.GoodsId IS NULL
                             )
+     , tmpSeparateH AS (SELECT SUM (tmpSeparateH_All.Amount) AS Amount_summ
+                        FROM tmpSeparateH_All
+                        )
 
-             -- разделение - кол-во приход товаров (если не головы)
-           , tmpSeparateS AS (SELECT MAX (MIContainer.ObjectId_analyzer)  AS GoodsId
-                                   , SUM (MIContainer.Amount)    AS Amount_count
-                              FROM tmpSeparate
-                                   INNER JOIN MovementItemContainer AS MIContainer
-                                                                    ON MIContainer.MovementId = tmpSeparate.MovementId
-                                                                   AND MIContainer.DescId = zc_MIContainer_Count()
-                                                                   AND MIContainer.isActive = TRUE
-                                   INNER JOIN tmpGoods ON tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
-                             )
+
+      -- разделение - кол-во приход товаров (если не головы)
+     , tmpSeparateS AS (SELECT MAX (MIContainer.ObjectId_analyzer)  AS GoodsId
+                             , SUM (MIContainer.Amount)    AS Amount_count
+                        FROM tmpSeparate
+                             INNER JOIN MovementItemContainer AS MIContainer
+                                                              ON MIContainer.MovementId = tmpSeparate.MovementId
+                                                             AND MIContainer.DescId = zc_MIContainer_Count()
+                                                             AND MIContainer.isActive = TRUE
+                             INNER JOIN tmpGoods ON tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
+                       )
 
       -- Результат
       SELECT tmpMovement.InvNumber
@@ -420,14 +424,16 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_ProductionSeparate_Print (Integer,TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Movement_ProductionSeparate_Print (Integer,TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 18.10.17         *
  24.03.17         *
  03.04.15         *
 */
+
 -- тест
---SELECT * FROM gpSelect_Movement_ProductionSeparate_Print (inMovementId := 3519400, inSession:= zfCalc_UserAdmin());
--- FETCH ALL "<unnamed portal 18>";
+--select * from gpSelect_Movement_ProductionSeparate_Print(inMovementId := 7220837 ,  inSession := '5');
+--FETCH ALL "<unnamed portal 4>";
