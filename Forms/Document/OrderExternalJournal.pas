@@ -80,6 +80,8 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     UpdateMobileDate: TcxGridDBColumn;
     PeriodSecMobile: TcxGridDBColumn;
+    actOpenReportForm: TdsdOpenForm;
+    bbOpenReportForm: TdxBarButton;
   private
     { Private declarations }
   public

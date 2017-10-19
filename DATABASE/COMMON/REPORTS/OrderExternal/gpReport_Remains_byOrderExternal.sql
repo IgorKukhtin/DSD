@@ -7,10 +7,11 @@ CREATE OR REPLACE FUNCTION gpReport_Remains_byOrderExternal(
     IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (FromCode Integer, FromName TVarChar
-             , GoodsCode Integer, GoodsName TVarChar
-             , GoodsKindName  TVarChar
+             , GoodsCode_Main Integer, GoodsName_Main TVarChar, GoodsKindName_Main  TVarChar
+             , GoodsCode Integer, GoodsName TVarChar, GoodsKindName  TVarChar
              , MeasureName TVarChar
              , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
+             , PartionGoods TVarChar
              , Amount             TFloat
              , AmountSecond       TFloat
              , Amount_Prev        TFloat
@@ -38,7 +39,7 @@ BEGIN
 
      RETURN QUERY
      WITH 
-            -- хардкодим - ЦЕХ колбаса+дел-сы
+            -- хардкодим - ЦЕХ колбаса+дел-сы (производство)
             tmpUnit_8446 AS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect_Object_Unit_byGroup)
             -- хардкодим - Склады База + Реализации
           , tmpUnit_8457   AS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8457) AS lfSelect_Object_Unit_byGroup)
@@ -60,6 +61,89 @@ BEGIN
                                AND MovementItem.isErased   = False
                              )
 
+          -- главный товар
+          , tmpReceipt AS (SELECT tmpGoods.GoodsId
+                                , CASE WHEN ObjectLink_Receipt_GoodsKind_Parent_0.ChildObjectId = zc_GoodsKind_WorkProgress()
+                                            THEN ObjectLink_Receipt_Parent_0.ChildObjectId
+                                       WHEN ObjectLink_Receipt_GoodsKind_Parent_1.ChildObjectId = zc_GoodsKind_WorkProgress()
+                                            THEN ObjectLink_Receipt_Parent_1.ChildObjectId
+                                       WHEN ObjectLink_Receipt_GoodsKind_Parent_2.ChildObjectId = zc_GoodsKind_WorkProgress()
+                                            THEN ObjectLink_Receipt_Parent_2.ChildObjectId
+                                       WHEN ObjectLink_Receipt_GoodsKind_Parent_3.ChildObjectId = zc_GoodsKind_WorkProgress()
+                                            THEN ObjectLink_Receipt_Parent_3.ChildObjectId
+                                  END AS ReceiptId_basis
+                                , CASE WHEN ObjectLink_Receipt_GoodsKind_Parent_0.ChildObjectId = zc_GoodsKind_WorkProgress()
+                                            THEN ObjectLink_Receipt_Parent_0.ObjectId
+                                       WHEN ObjectLink_Receipt_GoodsKind_Parent_1.ChildObjectId = zc_GoodsKind_WorkProgress()
+                                            THEN ObjectLink_Receipt_Parent_1.ObjectId
+                                       WHEN ObjectLink_Receipt_GoodsKind_Parent_2.ChildObjectId = zc_GoodsKind_WorkProgress()
+                                            THEN ObjectLink_Receipt_Parent_2.ObjectId
+                                       WHEN ObjectLink_Receipt_GoodsKind_Parent_3.ChildObjectId = zc_GoodsKind_WorkProgress()
+                                            THEN ObjectLink_Receipt_Parent_3.ObjectId
+                                  END AS ReceiptId
+                           FROM _tmpMI_master AS tmpGoods
+                                LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods
+                                                     ON ObjectLink_Receipt_Goods.ChildObjectId = tmpGoods.GoodsId
+                                                    AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
+                                
+                                INNER JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
+                                                      ON ObjectLink_Receipt_GoodsKind.ObjectId = ObjectLink_Receipt_Goods.ObjectId
+                                                     AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
+                                                     AND ObjectLink_Receipt_GoodsKind.ChildObjectId = tmpGoods.GoodsKindId
+                                INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_Receipt_Goods.ObjectId
+                                                                   AND Object_Receipt.isErased = FALSE
+                                INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                         ON ObjectBoolean_Main.ObjectId = Object_Receipt.Id
+                                                        AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
+                                                        AND ObjectBoolean_Main.ValueData = TRUE
+                                LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent_0
+                                                     ON ObjectLink_Receipt_Parent_0.ObjectId = Object_Receipt.Id
+                                                    AND ObjectLink_Receipt_Parent_0.DescId = zc_ObjectLink_Receipt_Parent()
+                                LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind_Parent_0
+                                                     ON ObjectLink_Receipt_GoodsKind_Parent_0.ObjectId = ObjectLink_Receipt_Parent_0.ChildObjectId
+                                                    AND ObjectLink_Receipt_GoodsKind_Parent_0.DescId = zc_ObjectLink_Receipt_GoodsKind()
+  
+                                LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent_1
+                                                     ON ObjectLink_Receipt_Parent_1.ObjectId = ObjectLink_Receipt_Parent_0.ChildObjectId
+                                                    AND ObjectLink_Receipt_Parent_1.DescId = zc_ObjectLink_Receipt_Parent()
+                                LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind_Parent_1
+                                                     ON ObjectLink_Receipt_GoodsKind_Parent_1.ObjectId = ObjectLink_Receipt_Parent_1.ChildObjectId
+                                                    AND ObjectLink_Receipt_GoodsKind_Parent_1.DescId = zc_ObjectLink_Receipt_GoodsKind()
+  
+                                LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent_2
+                                                     ON ObjectLink_Receipt_Parent_2.ObjectId = ObjectLink_Receipt_Parent_1.ChildObjectId
+                                                    AND ObjectLink_Receipt_Parent_2.DescId = zc_ObjectLink_Receipt_Parent()
+                                LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind_Parent_2
+                                                     ON ObjectLink_Receipt_GoodsKind_Parent_2.ObjectId = ObjectLink_Receipt_Parent_2.ChildObjectId
+                                                    AND ObjectLink_Receipt_GoodsKind_Parent_2.DescId = zc_ObjectLink_Receipt_GoodsKind()
+  
+                                LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent_3
+                                                     ON ObjectLink_Receipt_Parent_3.ObjectId = ObjectLink_Receipt_Parent_2.ChildObjectId
+                                                    AND ObjectLink_Receipt_Parent_3.DescId = zc_ObjectLink_Receipt_Parent()
+                                LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind_Parent_3
+                                                     ON ObjectLink_Receipt_GoodsKind_Parent_3.ObjectId = ObjectLink_Receipt_Parent_3.ChildObjectId
+                                                    AND ObjectLink_Receipt_GoodsKind_Parent_3.DescId = zc_ObjectLink_Receipt_GoodsKind()
+                          )
+                          
+          , tmpGoodsBasis AS (SELECT tmp.GoodsId
+                                   , ObjectLink_Receipt_Goods_basis.ChildObjectId AS GoodsBasisId
+                                   , ObjectLink_Receipt_GoodsKind.ChildObjectId   AS GoodsKindId
+                              FROM tmpReceipt AS tmp
+                                   LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods_basis
+                                                        ON ObjectLink_Receipt_Goods_basis.ObjectId = tmp.ReceiptId_basis
+                                                       AND ObjectLink_Receipt_Goods_basis.DescId = zc_ObjectLink_Receipt_Goods()
+           
+                                   LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
+                                                        ON ObjectLink_Receipt_GoodsKind.ObjectId = tmp.ReceiptId_basis
+                                                       AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
+                             )
+                             
+          , tmpGoods AS (SELECT _tmpMI_master.GoodsId AS GoodsId
+                         FROM _tmpMI_master
+                        UNION ALL
+                         SELECT tmpGoodsBasis.GoodsBasisId AS GoodsId
+                         FROM tmpGoodsBasis 
+                         )
             -- Остатки
          /* , tmpContainer_Count AS (SELECT Container.Id          AS ContainerId
                                         , CLO_Unit.ObjectId     AS UnitId
@@ -99,13 +183,14 @@ BEGIN
                                       , tmpContainer_Count.Amount
                               )
                        */    
-         , tmpRemains_All AS (SELECT CLO_Unit.ObjectId     AS UnitId
-                                    , _tmpMI_master.GoodsId AS GoodsId
+          , tmpRemains_All AS (SELECT Container.Id         AS ContainerId
+                                    , CLO_Unit.ObjectId    AS UnitId
+                                    , tmpGoods.GoodsId     AS GoodsId
                                     , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
 --                                    , Container.Amount      AS Amount
                                     , Container.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) AS Amount
-                               FROM _tmpMI_master
-                                    INNER JOIN Container ON Container.ObjectId = _tmpMI_master.GoodsId
+                               FROM tmpGoods
+                                    INNER JOIN Container ON Container.ObjectId = tmpGoods.GoodsId
                                                         AND Container.DescId = zc_Container_Count()
                                                         AND Container.Amount <> 0
                                     INNER JOIN ContainerLinkObject AS CLO_Unit
@@ -121,23 +206,29 @@ BEGIN
                                     LEFT JOIN ContainerLinkObject AS CLO_Account
                                                                   ON CLO_Account.ContainerId = Container.Id
                                                                  AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
-                               WHERE COALESCE (CLO_GoodsKind.ObjectId, 0) = _tmpMI_master.GoodsKindId
-                                 AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
+                               WHERE CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
                                GROUP BY Container.Id
                                       , CLO_Unit.ObjectId 
-                                      , _tmpMI_master.GoodsId, COALESCE (CLO_GoodsKind.ObjectId, 0)
+                                      , tmpGoods.GoodsId, COALESCE (CLO_GoodsKind.ObjectId, 0)
                                       , Container.Amount
                               )
                               
           , tmpRemains_8446 AS (SELECT tmpRemains_All.GoodsId
                                      , tmpRemains_All.GoodsKindId
                                      , tmpRemains_All.UnitId       AS FromId
+                                     , COALESCE (ContainerLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
                                      , SUM (tmpRemains_All.Amount) AS Amount
                                 FROM tmpRemains_All
-                                     INNER JOIN tmpUnit_8446 ON tmpUnit_8446.UnitId = tmpRemains_All.UnitId
+                                     INNER JOIN tmpUnit_8446  ON tmpUnit_8446.UnitId = tmpRemains_All.UnitId
+                                     INNER JOIN tmpGoodsBasis ON tmpGoodsBasis.GoodsBasisId = tmpRemains_All.GoodsId
+                                  
+                                     LEFT JOIN ContainerLinkObject AS ContainerLO_PartionGoods
+                                                                   ON ContainerLO_PartionGoods.ContainerId = tmpRemains_All.ContainerId
+                                                                  AND ContainerLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
                                 GROUP BY tmpRemains_All.GoodsId
-                                     , tmpRemains_All.GoodsKindId
-                                     , tmpRemains_All.UnitId
+                                       , tmpRemains_All.GoodsKindId
+                                       , tmpRemains_All.UnitId
+                                       , COALESCE (ContainerLO_PartionGoods.ObjectId, 0)
                                 )
                                 
           , tmpRemains_8457 AS (SELECT tmpRemains_All.GoodsId
@@ -146,9 +237,11 @@ BEGIN
                                      , SUM (tmpRemains_All.Amount) AS Amount
                                 FROM tmpRemains_All
                                      INNER JOIN tmpUnit_8457 ON tmpUnit_8457.UnitId = tmpRemains_All.UnitId
+                                     INNER JOIN _tmpMI_master ON _tmpMI_master.GoodsId = tmpRemains_All.GoodsId
+                                                             AND _tmpMI_master.GoodsKindId  = tmpRemains_All.GoodsKindId
                                 GROUP BY tmpRemains_All.GoodsId
-                                     , tmpRemains_All.GoodsKindId
-                                     , tmpRemains_All.UnitId
+                                       , tmpRemains_All.GoodsKindId
+                                       , tmpRemains_All.UnitId
                                 )
                                 
           , tmpOrderExternal AS (SELECT MovementLinkObject_From.ObjectId    AS FromId
@@ -204,69 +297,111 @@ BEGIN
                                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                                     )
 
-          , tmpData AS (SELECT tmp.GoodsId         AS GoodsId
-                             , tmp.GoodsKindId     AS GoodsKindId
-                             , tmp.FromId          AS FromId
-                             , tmp.Amount          AS Amount
-                             , tmp.AmountSecond    AS AmountSecond
-                             , 0                   AS Amount_Prev
-                             , 0                   AS AmountSecond_Prev
-                             , 0                   AS Amount_Next
-                             , 0                   AS AmountSecond_Next
-                             , 0                   AS Remains_8457
-                             , 0                   AS Remains_8446
-                        FROM _tmpMI_master AS tmp
-                      UNION 
-                        SELECT tmp.GoodsId           AS GoodsId
-                             , tmp.GoodsKindId       AS GoodsKindId
-                             , tmp.FromId            AS FromId
-                             , 0                     AS Amount
-                             , 0                     AS AmountSecond
-                             , tmp.Amount_Prev       AS Amount_Prev
-                             , tmp.AmountSecond_Prev AS AmountSecond_Prev
-                             , tmp.Amount_Next       AS Amount_Next
-                             , tmp.AmountSecond_Next AS AmountSecond_Next
-                             , 0                     AS Remains_8457
-                             , 0                     AS Remains_8446
-                        FROM tmpOrderExternal_Its AS tmp
-                      UNION 
-                        SELECT tmp.GoodsId           AS GoodsId
-                             , tmp.GoodsKindId       AS GoodsKindId
-                             , tmp.FromId            AS FromId
-                             , 0                     AS Amount
-                             , 0                     AS AmountSecond
-                             , 0                     AS Amount_Prev
-                             , 0                     AS AmountSecond_Prev
-                             , 0                     AS Amount_Next
-                             , 0                     AS AmountSecond_Next
-                             , tmp.Amount            AS Remains_8457
-                             , 0                     AS Remains_8446
-                        FROM tmpRemains_8446 AS tmp
-                      UNION 
-                        SELECT tmp.GoodsId           AS GoodsId
-                             , tmp.GoodsKindId       AS GoodsKindId
-                             , tmp.FromId            AS FromId
-                             , 0                     AS Amount
-                             , 0                     AS AmountSecond
-                             , 0                     AS Amount_Prev
-                             , 0                     AS AmountSecond_Prev
-                             , 0                     AS Amount_Next
-                             , 0                     AS AmountSecond_Next
-                             , 0                     AS Remains_8457
-                             , tmp.Amount            AS Remains_8446
-                        FROM tmpRemains_8446 AS tmp
+          , tmpData AS (SELECT tmp.GoodsId
+                             , tmp.GoodsKindId
+                             , tmp.GoodsId_Main
+                             , tmp.GoodsKindId_Main
+                             , tmp.FromId
+                             , tmp.PartionGoods
+                             , SUM (tmp.Amount)             AS Amount
+                             , SUM (tmp.AmountSecond)       AS AmountSecond
+                             , SUM (tmp.Amount_Prev)        AS Amount_Prev
+                             , SUM (tmp.AmountSecond_Prev)  AS AmountSecond_Prev
+                             , SUM (tmp.Amount_Next)        AS Amount_Next
+                             , SUM (tmp.AmountSecond_Next)  AS AmountSecond_Next
+                             , SUM (tmp.Remains_8457)       AS Remains_8457
+                             , SUM (tmp.Remains_8446)       AS Remains_8446
+                             
+                        FROM (SELECT tmp.GoodsId         AS GoodsId
+                                   , tmp.GoodsKindId     AS GoodsKindId
+                                   , 0                   AS GoodsId_Main
+                                   , 0                   AS GoodsKindId_Main
+                                   , tmp.FromId          AS FromId
+                                   , tmp.Amount          AS Amount
+                                   , tmp.AmountSecond    AS AmountSecond
+                                   , 0                   AS Amount_Prev
+                                   , 0                   AS AmountSecond_Prev
+                                   , 0                   AS Amount_Next
+                                   , 0                   AS AmountSecond_Next
+                                   , 0                   AS Remains_8457
+                                   , 0                   AS Remains_8446
+                                   , NULL ::TVarChar       AS PartionGoods
+                              FROM _tmpMI_master AS tmp
+                            UNION 
+                              SELECT tmp.GoodsId           AS GoodsId
+                                   , tmp.GoodsKindId       AS GoodsKindId
+                                   , 0                     AS GoodsId_Main
+                                   , 0                     AS GoodsKindId_Main
+                                   , tmp.FromId            AS FromId
+                                   , 0                     AS Amount
+                                   , 0                     AS AmountSecond
+                                   , tmp.Amount_Prev       AS Amount_Prev
+                                   , tmp.AmountSecond_Prev AS AmountSecond_Prev
+                                   , tmp.Amount_Next       AS Amount_Next
+                                   , tmp.AmountSecond_Next AS AmountSecond_Next
+                                   , 0                     AS Remains_8457
+                                   , 0                     AS Remains_8446
+                                   , NULL ::TVarChar       AS PartionGoods
+                              FROM tmpOrderExternal_Its AS tmp
+                            UNION 
+                              SELECT tmp.GoodsId           AS GoodsId
+                                   , tmp.GoodsKindId       AS GoodsKindId
+                                   , 0                     AS GoodsId_Main
+                                   , 0                     AS GoodsKindId_Main
+                                   , tmp.FromId            AS FromId
+                                   , 0                     AS Amount
+                                   , 0                     AS AmountSecond
+                                   , 0                     AS Amount_Prev
+                                   , 0                     AS AmountSecond_Prev
+                                   , 0                     AS Amount_Next
+                                   , 0                     AS AmountSecond_Next
+                                   , tmp.Amount            AS Remains_8457
+                                   , 0                     AS Remains_8446
+                                   , NULL ::TVarChar       AS PartionGoods
+                              FROM tmpRemains_8457 AS tmp
+                            UNION 
+                              SELECT tmp.GoodsId           AS GoodsId
+                                   , tmp.GoodsKindId       AS GoodsKindI
+                                   , tmp.GoodsId           AS GoodsId_Main
+                                   , tmp.GoodsKindId       AS GoodsKindId_Main
+                                   , tmp.FromId            AS FromId
+                                   , 0                     AS Amount
+                                   , 0                     AS AmountSecond
+                                   , 0                     AS Amount_Prev
+                                   , 0                     AS AmountSecond_Prev
+                                   , 0                     AS Amount_Next
+                                   , 0                     AS AmountSecond_Next
+                                   , 0                     AS Remains_8457
+                                   , tmp.Amount            AS Remains_8446
+                                   , Object_PartionGoods.ValueData AS PartionGoods
+                              FROM tmpRemains_8446 AS tmp
+                                   LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmp.PartionGoodsId
+                              ) AS tmp
+                        GROUP BY tmp.GoodsId
+                               , tmp.GoodsKindId
+                               , tmp.GoodsId_Main
+                               , tmp.GoodsKindId_Main
+                               , tmp.FromId
+                               , tmp.PartionGoods
                        )
                        
       -- Результат
        SELECT Object_From.ObjectCode                     AS FromCode
             , Object_From.ValueData                      AS FromName
             
+            , Object_GoodsBasis.ObjectCode               AS GoodsCode_Main
+            , Object_GoodsBasis.ValueData                AS GoodsName_Main
+            , Object_GoodsKindBasis.ValueData            AS GoodsKindName_Main
+
             , Object_Goods.ObjectCode                    AS GoodsCode
             , Object_Goods.ValueData                     AS GoodsName
             , Object_GoodsKind.ValueData                 AS GoodsKindName
+            
             , Object_Measure.ValueData                   AS MeasureName
             , Object_GoodsGroup.ValueData                AS GoodsGroupName
             , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
+            
+            , tmpData.PartionGoods             ::TVarChar
  
             , tmpData.Amount                   :: TFloat AS OrderAmount
             , tmpData.AmountSecond             :: TFloat AS OrderAmountSecond
@@ -279,10 +414,14 @@ BEGIN
             , tmpData.Remains_8446             :: TFloat
                                       
        FROM tmpData
+          LEFT JOIN tmpGoodsBasis ON tmpGoodsBasis.GoodsId = tmpData.GoodsId
           LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData.FromId
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpData.GoodsKindId
-
+          
+          LEFT JOIN Object AS Object_GoodsBasis ON Object_GoodsBasis.Id = COALESCE (tmpGoodsBasis.GoodsBasisId, tmpData.GoodsId_Main)
+          LEFT JOIN Object AS Object_GoodsKindBasis ON Object_GoodsKindBasis.Id = COALESCE (tmpGoodsBasis.GoodsKindId, tmpData.GoodsKindId)
+          
           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()

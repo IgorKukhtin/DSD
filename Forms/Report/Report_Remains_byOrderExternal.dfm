@@ -7,20 +7,20 @@ inherited Report_Remains_byOrderExternalForm: TReport_Remains_byOrderExternalFor
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 77
+    Top = 70
     Width = 927
-    Height = 231
+    Height = 238
     ExplicitTop = 77
     ExplicitWidth = 927
     ExplicitHeight = 231
-    ClientRectBottom = 231
+    ClientRectBottom = 238
     ClientRectRight = 927
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 927
       ExplicitHeight = 231
       inherited cxGrid: TcxGrid
         Width = 927
-        Height = 231
+        Height = 238
         ExplicitWidth = 927
         ExplicitHeight = 231
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -179,13 +179,20 @@ inherited Report_Remains_byOrderExternalForm: TReport_Remains_byOrderExternalFor
             Options.Editing = False
             Width = 45
           end
+          object PartionGoods: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1087#1088#1086#1080#1079#1074'.'
+            DataBinding.FieldName = 'PartionGoods'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 65
+          end
           object FromName: TcxGridDBColumn
             Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 106
+            Width = 96
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1079#1072#1103#1074#1082#1077
@@ -243,9 +250,9 @@ inherited Report_Remains_byOrderExternalForm: TReport_Remains_byOrderExternalFor
   end
   inherited Panel: TPanel
     Width = 927
-    Height = 51
+    Height = 44
     ExplicitWidth = 927
-    ExplicitHeight = 51
+    ExplicitHeight = 44
     inherited deStart: TcxDateEdit
       Left = 738
       Top = 23
@@ -280,12 +287,12 @@ inherited Report_Remains_byOrderExternalForm: TReport_Remains_byOrderExternalFor
     end
     object cxLabel25: TcxLabel
       Left = 9
-      Top = 5
+      Top = -1
       Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1047#1072#1103#1074#1082#1080
     end
     object edPromo: TcxButtonEdit
       Left = 9
-      Top = 23
+      Top = 17
       Properties.Buttons = <
         item
           Default = True
@@ -298,12 +305,12 @@ inherited Report_Remains_byOrderExternalForm: TReport_Remains_byOrderExternalFor
     end
     object cxLabel4: TcxLabel
       Left = 224
-      Top = 5
+      Top = -1
       Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
     end
     object deOperdate: TcxDateEdit
       Left = 224
-      Top = 23
+      Top = 17
       EditValue = 41640d
       Properties.ReadOnly = True
       Properties.SaveTime = False

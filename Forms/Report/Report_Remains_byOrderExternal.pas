@@ -30,6 +30,7 @@ type
     deOperdate: TcxDateEdit;
     GuidesOrderExternal: TdsdGuides;
     FromName: TcxGridDBColumn;
+    PartionGoods: TcxGridDBColumn;
   private
     { Private declarations }
   public
