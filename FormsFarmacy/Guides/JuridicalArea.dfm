@@ -27,7 +27,6 @@ object JuridicalAreaForm: TJuridicalAreaForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 646
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -86,6 +85,15 @@ object JuridicalAreaForm: TJuridicalAreaForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
+        Options.Editing = False
+        Width = 85
+      end
+      object IsGoodsCode: TcxGridDBColumn
+        Caption = #1059#1085#1080#1082'. '#1082#1086#1076' '#1087#1086#1089#1090'.'
+        DataBinding.FieldName = 'isGoodsCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1059#1085#1080#1082#1072#1083#1100#1085#1099#1081' '#1082#1086#1076' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1058#1054#1051#1068#1050#1054' '#1076#1083#1103' '#1056#1077#1075#1080#1086#1085#1072
         Options.Editing = False
         Width = 85
       end

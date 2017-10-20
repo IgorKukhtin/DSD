@@ -2,6 +2,8 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_Object_User() RETURNS In
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Get_Object_User() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Get_Object_User' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Select_Object_User() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Select_Object_User' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_User_ScalePSW() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_User_ScalePSW' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
+
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Null() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Null' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 
 DO $$
@@ -24,6 +26,12 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_Object_User()
                                   , inCode:= 3
                                   , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_User())||'> - получение данных.'
                                   , inEnumName:= 'zc_Enum_Process_Select_Object_User');
+                                  
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_User_ScalePSW()
+                                  , inDescId:= zc_Object_Process()
+                                  , inCode:= 4
+                                  , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_User())||'> - сохранение данных.'
+                                  , inEnumName:= 'zc_Enum_Process_Update_Object_User_ScalePSW');
                                   
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Null()
                                   , inDescId:= zc_Object_Process()

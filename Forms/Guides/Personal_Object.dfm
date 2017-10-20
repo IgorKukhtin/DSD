@@ -15,6 +15,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -27,6 +28,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitLeft = 8
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -154,6 +156,14 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
+      object ScalePSW: TcxGridDBColumn
+        Caption = 'Scale PSW'
+        DataBinding.FieldName = 'ScalePSW'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -162,6 +172,13 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 35
+      end
+      object UserId: TcxGridDBColumn
+        DataBinding.FieldName = 'UserId'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 30
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -316,6 +333,14 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'bbUser_UpdateDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -377,6 +402,10 @@ object Personal_ObjectForm: TPersonal_ObjectForm
       Hint = 'New Item'
       Visible = ivAlways
       Control = deEnd
+    end
+    object bbUser_UpdateDialog: TdxBarButton
+      Action = actUser_UpdateDialog
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -513,6 +542,48 @@ object Personal_ObjectForm: TPersonal_ObjectForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object actUser_UpdateDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1072#1088#1086#1083#1100' '#1076#1083#1103' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103' '#1074' Scale'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1072#1088#1086#1083#1100' '#1076#1083#1103' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103' '#1074' Scale'
+      ImageIndex = 43
+      FormName = 'TUser_UpdateDialogForm'
+      FormNameParam.Value = 'TUser_UpdateDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UserId'
+          Value = '0'
+          Component = ClientDataSet
+          ComponentItem = 'UserId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UserName'
+          Value = ''
+          Component = ClientDataSet
+          ComponentItem = 'MemberName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ScalePSW'
+          Value = ''
+          Component = ClientDataSet
+          ComponentItem = 'ScalePSW'
+          DataType = ftFloat
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Personal'
@@ -603,6 +674,11 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         Component = PeriodChoice
       end>
     Left = 536
+    Top = 160
+  end
+  object FormParams: TdsdFormParams
+    Params = <>
+    Left = 376
     Top = 160
   end
 end

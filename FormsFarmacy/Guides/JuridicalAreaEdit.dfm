@@ -105,15 +105,22 @@
     Width = 296
   end
   object cbisDefault: TcxCheckBox
-    Left = 216
-    Top = 26
+    Left = 163
+    Top = 11
     Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
     TabOrder = 12
     Width = 97
   end
+  object cbisGoodsCode: TcxCheckBox
+    Left = 163
+    Top = 38
+    Caption = #1059#1085#1080#1082'. '#1082#1086#1076' '#1087#1086#1089#1090'. '#1076#1083#1103' '#1088#1077#1075#1080#1086#1085#1072
+    TabOrder = 13
+    Width = 172
+  end
   object ActionList: TActionList
-    Left = 249
-    Top = 20
+    Left = 265
+    Top = 148
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -203,10 +210,18 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisGoodsCode'
+        Value = Null
+        Component = cbisGoodsCode
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 321
-    Top = 112
+    Left = 305
+    Top = 104
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -288,14 +303,21 @@
         Component = cbisDefault
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isGoodsCode'
+        Value = Null
+        Component = cbisGoodsCode
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 321
-    Top = 16
+    Left = 305
+    Top = 152
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 193
-    Top = 47
+    Left = 137
+    Top = 191
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
