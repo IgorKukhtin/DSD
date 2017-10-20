@@ -1,4 +1,4 @@
-unit User_UpdateDialog;
+unit UserPswDialog;
 
 interface
 
@@ -12,7 +12,7 @@ uses
   dxSkinsDefaultPainters, cxCheckBox, dsdAction, Vcl.ActnList, cxCurrencyEdit;
 
 type
-  TUser_UpdateDialogForm = class(TParentForm)
+  TUserPswDialogForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
@@ -38,6 +38,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TUser_UpdateDialogForm);
+  RegisterClass(TUserPswDialogForm);
 
 end.

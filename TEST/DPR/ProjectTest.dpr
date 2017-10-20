@@ -955,7 +955,7 @@ uses
   ProductionSeparateItemJournal in '..\..\Forms\Document\ProductionSeparateItemJournal.pas' {ProductionSeparateItemJournalForm: TParentForm},
   IFIN_J1201209 in '..\..\SOURCE\MeDOC\IFIN_J1201209.pas',
   Report_Remains_byOrderExternal in '..\..\Forms\Report\Report_Remains_byOrderExternal.pas' {Report_Remains_byOrderExternalForm: TParentForm},
-  User_UpdateDialog in '..\..\Forms\Guides\User_UpdateDialog.pas' {User_UpdateDialogForm: TParentForm};
+  UserPswDialog in '..\..\Forms\Guides\UserPswDialog.pas' {UserPswDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

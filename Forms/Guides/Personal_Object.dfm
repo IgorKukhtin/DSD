@@ -28,7 +28,6 @@ object Personal_ObjectForm: TPersonal_ObjectForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = 8
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -341,6 +340,14 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -405,6 +412,10 @@ object Personal_ObjectForm: TPersonal_ObjectForm
     end
     object bbUser_UpdateDialog: TdxBarButton
       Action = actUser_UpdateDialog
+      Category = 0
+    end
+    object bbPrint: TdxBarButton
+      Action = actPrint
       Category = 0
     end
   end
@@ -550,8 +561,8 @@ object Personal_ObjectForm: TPersonal_ObjectForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1072#1088#1086#1083#1100' '#1076#1083#1103' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103' '#1074' Scale'
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1072#1088#1086#1083#1100' '#1076#1083#1103' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103' '#1074' Scale'
       ImageIndex = 43
-      FormName = 'TUser_UpdateDialogForm'
-      FormNameParam.Value = 'TUser_UpdateDialogForm'
+      FormName = 'TUserPswDialogForm'
+      FormNameParam.Value = 'TUserPswDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -583,6 +594,52 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         end>
       isShowModal = True
       OpenBeforeShow = True
+    end
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'StorageLineName;MemberName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 41852d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 41852d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchName'
+          Value = ''
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inNumStr'
+          Value = '2'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1072#1088#1086#1083#1080' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103' '#1074' Scale'
+      ReportNameParam.Value = #1055#1072#1088#1086#1083#1080' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103' '#1074' Scale'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
   end
   object dsdStoredProc: TdsdStoredProc

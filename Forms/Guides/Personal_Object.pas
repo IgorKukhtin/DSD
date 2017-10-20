@@ -77,6 +77,8 @@ type
     FormParams: TdsdFormParams;
     ScalePSW: TcxGridDBColumn;
     UserId: TcxGridDBColumn;
+    actPrint: TdsdPrintAction;
+    bbPrint: TdxBarButton;
   private
     { Private declarations }
   public

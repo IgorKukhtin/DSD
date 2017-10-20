@@ -92,6 +92,9 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+
+  LoadReportFromFile('Пароли подтверждения в Scale', ReportPath + '\Справочники\Пароли подтверждения в Scale.fr3');
+  exit;
    {
   LoadReportFromFile('PrintMovement_SaleJuridicalInvoice', ReportPath + '\Товарный Учет\PrintMovement_SaleJuridicalInvoice.fr3');
   exit;

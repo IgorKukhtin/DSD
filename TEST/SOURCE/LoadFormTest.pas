@@ -2511,8 +2511,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonal_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonal_ObjectForm');
   //  Установить пароль для подтверждения в Scale
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUser_UpdateDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TUser_UpdateDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserPswDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUserPswDialogForm');
 
   // группировки сотрудников
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalGroupForm'));

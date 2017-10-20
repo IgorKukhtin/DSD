@@ -1,4 +1,4 @@
-object User_UpdateDialogForm: TUser_UpdateDialogForm
+object UserPswDialogForm: TUserPswDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
