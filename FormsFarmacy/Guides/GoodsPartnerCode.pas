@@ -102,6 +102,7 @@ type
     spUpdate_Goods_isUploadBadm: TdsdStoredProc;
     isUploadTeva: TcxGridDBColumn;
     spUpdate_Goods_isUploadTeva: TdsdStoredProc;
+    AreaName: TcxGridDBColumn;
   private
     { Private declarations }
   public

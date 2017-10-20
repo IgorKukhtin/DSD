@@ -5,7 +5,6 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
   ShowHint = True
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 918
-  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -265,7 +264,6 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
         Properties.Buttons = <
           item
             Default = True
-            Enabled = False
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
@@ -289,6 +287,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object macGoodsLinkDeleteSimpl: TMultiAction [1]
@@ -620,6 +619,14 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
         Value = Null
         Component = edCodeSearch
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAreaId'
+        Value = Null
+        Component = GuidesArea
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

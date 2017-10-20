@@ -3,9 +3,11 @@
 DROP FUNCTION IF EXISTS gpSelect_GoodsSearch (TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_GoodsSearch (TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_GoodsSearch (TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_GoodsSearch (Integer, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_GoodsSearch(
-    IN inGoodsSearch    TVarChar    -- поиск товаров
+    IN inAreaId         Integer     -- Регион
+  , IN inGoodsSearch    TVarChar    -- поиск товаров
   , IN inProducerSearch TVarChar    -- поиск производителя
   , IN inCodeSearch     TVarChar    -- поиск товаров по коду
   , IN inSession        TVarChar    -- сессия пользователя
@@ -159,8 +161,8 @@ BEGIN
             or
             inCodeSearch <> ''
         )
-        AND 
-        COALESCE(JuridicalSettings.isPriceClose, FALSE) <> TRUE; 
+        AND COALESCE(JuridicalSettings.isPriceClose, FALSE) <> TRUE
+        AND (COALESCE (LoadPriceList.AreaId, 0) = inAreaId OR COALESCE(inAreaId, 0) = 0); 
 
 END;
 $BODY$
@@ -169,6 +171,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 21.10.17         *
  13.10.17         *
  13.06.16         *
  18.08.15                                                                        * inProducerSearch

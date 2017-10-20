@@ -57,6 +57,8 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     JuridicalName: TcxGridDBColumn;
     MedicFIO: TcxGridDBColumn;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocol: TdxBarButton;
   private
     { Private declarations }
   public

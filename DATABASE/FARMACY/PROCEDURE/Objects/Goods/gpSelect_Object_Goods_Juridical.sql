@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, CommonCode Integer
              , GoodsId Integer, GoodsCodeInt Integer, GoodsCode TVarChar, GoodsName TVarChar
              , MakerName TVarChar
              , ConditionsKeepId Integer, ConditionsKeepName TVarChar
+             , AreaId Integer, AreaName TVarChar
              , MinimumLot TFloat
              , IsUpload Boolean, IsPromo Boolean, isSpecCondition Boolean, isUploadBadm Boolean, isUploadTeva Boolean
              , UpdateName TVarChar
@@ -41,6 +42,9 @@ BEGIN
 
          , Object_ConditionsKeep.Id                AS ConditionsKeepId
          , Object_ConditionsKeep.ValueData         AS ConditionsKeepName
+
+         , Object_Area.Id                          AS AreaId
+         , Object_Area.ValueData                   AS AreaName
 
          , ObjectFloat_Goods_MinimumLot.ValueData  AS MinimumLot
          , COALESCE(ObjectBoolean_Goods_IsUpload.ValueData,FALSE) AS IsUpload
@@ -90,6 +94,11 @@ BEGIN
                               AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
           LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_Area 
+                               ON ObjectLink_Goods_Area.ObjectId = ObjectLink_Goods_Object.ObjectId
+                              AND ObjectLink_Goods_Area.DescId = zc_ObjectLink_Goods_Area()
+          LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Goods_Area.ChildObjectId
+          
           LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
                                ON ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
                               AND ObjectLink_LinkGoods_Goods.ChildObjectId = Object_Goods.Id
@@ -125,6 +134,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.
+ 21.10.17         * add Area
  30.03.17                                                      * isUploadTeva
  07.01.17         * add ConditionsKeep
  15.09.16         * 
