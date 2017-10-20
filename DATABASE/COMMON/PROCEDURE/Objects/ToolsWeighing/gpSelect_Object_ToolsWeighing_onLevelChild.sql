@@ -89,6 +89,7 @@ BEGIN
        UNION SELECT 'isTransport'            AS Name WHERE inIsCeh = FALSE
        UNION SELECT 'isEnterPrice'           AS Name WHERE inIsCeh = FALSE
        UNION SELECT 'isDriverReturn'         AS Name WHERE inIsCeh = FALSE
+       UNION SELECT 'isCheckDelete'          AS Name WHERE inIsCeh = FALSE
        -- UNION SELECT 'isStorageLine'          AS Name WHERE inIsCeh = TRUE
 
        UNION SELECT 'DayPrior_PriceReturn' AS Name WHERE inIsCeh = FALSE
@@ -191,4 +192,4 @@ $BODY$
 --
 -- SELECT * FROM gpSelect_Object_ToolsWeighing_onLevelChild (FALSE, 1, 'PriceList', zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_Object_ToolsWeighing_onLevelChild (FALSE, 4, 'Default', zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_Object_ToolsWeighing_onLevelChild (FALSE, 1, 'Service', zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ToolsWeighing_onLevelChild (FALSE, 1, 'Service', zfCalc_UserAdmin()) OREDR BY 4

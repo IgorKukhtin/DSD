@@ -2058,9 +2058,9 @@ object MainForm: TMainForm
       TabOrder = 0
     end
     object PanelMovementDesc: TPanel
-      Left = 0
+      Left = 50
       Top = 0
-      Width = 664
+      Width = 614
       Height = 28
       Align = alClient
       BevelOuter = bvNone
@@ -2259,6 +2259,22 @@ object MainForm: TMainForm
           TabOrder = 0
         end
       end
+    end
+    object PanelErasedCount: TPanel
+      Left = 0
+      Top = 0
+      Width = 50
+      Height = 28
+      Align = alLeft
+      BevelOuter = bvNone
+      Caption = 'PanelErasedCount'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clRed
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 3
     end
   end
   object PopupMenu: TPopupMenu

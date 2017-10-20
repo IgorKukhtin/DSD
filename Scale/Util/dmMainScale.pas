@@ -38,6 +38,7 @@ type
     // Scale
     function gpGet_Scale_GoodsRetail(var execParamsMovement:TParams;var execParams:TParams;inBarCode:String): Boolean;
     function gpGet_Scale_Personal(var execParams:TParams;inPersonalCode:Integer): Boolean;
+    function gpGet_Scale_PSW_delete (inPSW: String): String;
     // !!!Scale + ScaleCeh!!!
     function gpUpdate_Scale_Partner_print(PartnerId : Integer; isMovement,isAccount,isTransport,isQuality,isPack,isSpec,isTax : Boolean; CountMovement,CountAccount,CountTransport,CountQuality,CountPack,CountSpec,CountTax : Integer): Boolean;
     //
@@ -899,6 +900,21 @@ begin
          result.Name := '';
          ShowMessage('Ошибка получения - gpGet_Scale_PartnerParams');
        end;}
+    end;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpGet_Scale_PSW_delete (inPSW: String): String;
+begin
+    with spSelect do
+    begin
+       StoredProcName:='gpGet_Scale_PSW_delete';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inPSW', ftBoolean, ptInput, inPSW);
+       //try
+       Execute;
+       //
+       Result:=DataSet.FieldByName('PSW').asString;
     end;
 end;
 {------------------------------------------------------------------------}
