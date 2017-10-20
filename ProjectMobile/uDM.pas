@@ -3725,30 +3725,34 @@ begin
   qryGoodsListSale := TFDQuery.Create(nil);
   try
     qryGoodsListSale.Connection := conMain;
-//or
-//    qryGoodsListSale.SQL.Text := 'select ''-1;'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || ' +
-//      'CAST(G.OBJECTCODE as varchar)  || '' '' || G.VALUEDATA || '';'' || IFNULL(GK.VALUEDATA, ''-'') || '';'' || ' +
-//      'IFNULL(M.VALUEDATA, ''-'') || '';'' || IFNULL(T.VALUEDATA, '''') || '';0'' ' +
-//      'from OBJECT_GOODSLISTSALE GLS ' +
-//      'JOIN OBJECT_GOODS G ON GLS.GOODSID = G.ID ' +
-//      'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = GLS.GOODSKINDID ' +
-//      'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
-//      'LEFT JOIN OBJECT_TRADEMARK T ON T.ID = G.TRADEMARKID ' +
-//      'WHERE GLS.PARTNERID = ' + cdsStoreRealsPartnerId.AsString + ' and GLS.ISERASED = 0 order by G.VALUEDATA ';
-//or
+
     qryGoodsListSale.SQL.Text :=
-       ' SELECT '
-     + '       ''-1;'' || Object_Goods.ID || '';'' || IFNULL(Object_GoodsKind.ID, 0) || '';'' ||  '
-     + '       CAST(Object_Goods.ObjectCode as varchar)  || '' '' || Object_Goods.ValueData || '';'' || IFNULL(Object_GoodsKind.ValueData, ''-'') || '';'' ||  '
-     + '       IFNULL(Object_Measure.ValueData, ''-'') || '';'' || IFNULL(Object_TradeMark.ValueData, '''') || '';0''  '
-     + ' FROM  Object_GoodsListSale '
-     + '       JOIN Object_Goods          ON Object_GoodsListSale.GoodsId = Object_Goods.ID '
-     + '       LEFT JOIN Object_GoodsKind ON Object_GoodsKind.ID          = Object_GoodsListSale.GoodsKindId '
-     + '       LEFT JOIN Object_Measure   ON Object_Measure.ID            = Object_Goods.MeasureId '
-     + '       LEFT JOIN Object_TradeMark ON Object_TradeMark.ID          = Object_Goods.TradeMarkId '
-     + ' WHERE Object_GoodsListSale.PartnerId = ' + cdsStoreRealsPartnerId.AsString
-     + '       AND Object_GoodsListSale.isErased = 0 '
-     + ' ORDER BY Object_Goods.ValueData ' ;
+      ' SELECT ' +
+      '   ''-1;'' || Object_Goods.ID || '';'' || IFNULL(Object_GoodsKind.ID, 0) || '';'' || ' +
+      '   CAST(Object_Goods.ObjectCode as varchar) || '' '' || Object_Goods.ValueData || '';'' || IFNULL(Object_GoodsKind.ValueData, ''-'') || '';'' || ' +
+      '   IFNULL(Object_Measure.ValueData, ''-'') || '';'' || IFNULL(Object_TradeMark.ValueData, '''') || '';0'' AS GoodsInfo ' +
+      ' FROM (SELECT Object_GoodsListSale.GoodsId ' +
+      '            , Object_GoodsListSale.GoodsKindId ' +
+      '       FROM Object_GoodsListSale ' +
+      '       WHERE Object_GoodsListSale.PartnerId = ' + cdsStoreRealsPartnerId.AsString +
+      '         AND Object_GoodsListSale.isErased = 0 ' +
+      '       UNION ' +
+      '       SELECT MovementItem_StoreReal.GoodsId ' +
+      '            , MovementItem_StoreReal.GoodsKindId ' +
+      '       FROM MovementItem_StoreReal ' +
+      '       WHERE MovementItem_StoreReal.MovementId = (SELECT COALESCE ((SELECT Movement_StoreReal.Id ' +
+      '                                                  FROM Movement_StoreReal ' +
+      '                                                  WHERE Movement_StoreReal.OperDate < CURRENT_DATE ' +
+      '                                                    AND Movement_StoreReal.PartnerId = ' + cdsStoreRealsPartnerId.AsString +
+      '                                                  ORDER BY Movement_StoreReal.OperDate DESC ' +
+      '                                                  LIMIT 1), 0) ' +
+      '                                                 ) ' +
+      '      ) AS tmpGoods ' +
+      '      JOIN Object_Goods          ON tmpGoods.GoodsId    = Object_Goods.Id ' +
+      '      LEFT JOIN Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId ' +
+      '      LEFT JOIN Object_Measure   ON Object_Measure.Id   = Object_Goods.MeasureId ' +
+      '      LEFT JOIN Object_TradeMark ON Object_TradeMark.Id = Object_Goods.TradeMarkId ' +
+      ' ORDER BY Object_Goods.ValueData';
 
     qryGoodsListSale.Open;
 
