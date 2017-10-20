@@ -218,6 +218,7 @@ type
     TaxDoc: TcxGridDBColumn;
     TaxDoc_calc: TcxGridDBColumn;
     Color_calc: TcxGridDBColumn;
+    PanelErasedCount: TPanel;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -820,8 +821,7 @@ begin
           LabelStringValue.Caption:='Партия СЫРЬЯ';
           ActiveControl:=StringValueEdit;
           StringValueEdit.Text:=CDS.FieldByName('PartionGoods').AsString;
-          isPartionGoods:=true;
-          if not Execute then begin execParams.Free;exit;end;
+          if not Execute (true, false) then begin execParams.Free;exit;end;
           //
           ParamAddValue(execParams,'inValueData',ftString,StringValueEdit.Text);
           DMMainScaleForm.gpUpdate_Scale_MIString(execParams);
@@ -983,6 +983,7 @@ end;
 procedure TMainForm.CDSAfterOpen(DataSet: TDataSet);
 var bm: TBookmark;
     AmountPartnerWeight,AmountWeight,RealWeight,WeightTare: Double;
+    ErasedCount:Integer;
 begin
   with DataSet do
     try
@@ -993,6 +994,7 @@ begin
        AmountWeight:=0;
        RealWeight:=0;
        WeightTare:=0;
+       ErasedCount:=0;
        while not EOF do begin
           if FieldByName('isErased').AsBoolean=false then
           begin
@@ -1000,6 +1002,7 @@ begin
             AmountWeight:=AmountWeight+FieldByName('AmountWeight').AsFloat;
             RealWeight:=RealWeight+FieldByName('RealWeightWeight').AsFloat;
             WeightTare:=WeightTare+FieldByName('WeightTareTotal').AsFloat;
+            if FieldByName('isErased').AsBoolean = True then ErasedCount:= ErasedCount+1;
           end;
           //
           Next;
@@ -1013,6 +1016,7 @@ begin
     PanelAmountWeight.Caption:=FormatFloat(',0.000#'+' кг.',AmountWeight);
     PanelRealWeight.Caption:=FormatFloat(',0.000#'+' кг.',RealWeight);
     PanelWeightTare.Caption:=FormatFloat(',0.000#'+' кг.',WeightTare);
+    PanelErasedCount.Caption:=IntToStr(ErasedCount);
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.EditBarCodePropertiesChange(Sender: TObject);
@@ -1477,6 +1481,15 @@ begin
                 ,mtConfirmation,mbYesNoCancel,0) <> 6
          then exit
          else begin
+                   if GetArrayList_Value_byName(Default_Array,'isCheckDelete') = AnsiUpperCase('TRUE')
+                   then with DialogStringValueForm do
+                        begin
+                             if not Execute (false, true) then begin ShowMessage ('Действие отменено.');exit;end;
+                             //
+                             if DMMainScaleForm.gpGet_Scale_PSW_delete (StringValueEdit.Text) = ''
+                             then begin ShowMessage ('Пароль неверный.Действие отменено.');exit;end;
+                        end;
+                   //
                    DMMainScaleForm.gpUpdate_Scale_MI_Erased(CDS.FieldByName('MovementItemId').AsInteger,true);
                    RefreshDataSet;
                    WriteParamsMovement;
