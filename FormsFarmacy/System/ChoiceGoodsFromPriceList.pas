@@ -13,7 +13,7 @@ uses
   cxGridTableView, cxGridDBTableView, cxGrid, cxPC, cxContainer, cxTextEdit,
   cxLabel, cxCurrencyEdit, cxButtonEdit, Vcl.DBActns, cxMaskEdit, Vcl.ExtCtrls,
   dxBarBuiltInMenu, cxNavigator, Vcl.StdCtrls, cxButtons, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdGuides;
 
 type
   TChoiceGoodsFromPriceListForm = class(TAncestorEnumForm)
@@ -66,6 +66,13 @@ type
     macGoodsLinkDeleteSimpl: TMultiAction;
     N4: TMenuItem;
     AreaName: TcxGridDBColumn;
+    cxLabel7: TcxLabel;
+    edArea: TcxButtonEdit;
+    GuidesArea: TdsdGuides;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    spGet_Area_byUser: TdsdStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

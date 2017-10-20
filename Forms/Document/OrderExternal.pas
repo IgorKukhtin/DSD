@@ -100,6 +100,8 @@ type
     isPriceEDIDiff: TcxGridDBColumn;
     ChangePercent: TcxGridDBColumn;
     actShowMessage: TShowMessageAction;
+    actOpenReportForm: TdsdOpenForm;
+    bbOpenReportForm: TdxBarButton;
   private
     { Private declarations }
   public

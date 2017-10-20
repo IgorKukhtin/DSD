@@ -3,6 +3,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
   Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1074' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072#1093
   ClientWidth = 902
   ShowHint = True
+  AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 918
   ExplicitHeight = 346
   PixelsPerInch = 96
@@ -253,10 +254,44 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
           Style.TextColor = 6118749
         end
       end
+      object cxLabel7: TcxLabel
+        Left = 652
+        Top = 100
+        Caption = #1056#1077#1075#1080#1086#1085
+      end
+      object edArea: TcxButtonEdit
+        Left = 652
+        Top = 118
+        Properties.Buttons = <
+          item
+            Default = True
+            Enabled = False
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 3
+        Width = 164
+      end
     end
   end
   inherited ActionList: TActionList
-    object macGoodsLinkDeleteSimpl: TMultiAction [0]
+    object actRefreshStart: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_Area_byUser
+      StoredProcList = <
+        item
+          StoredProc = spGet_Area_byUser
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
+    object macGoodsLinkDeleteSimpl: TMultiAction [1]
       Category = 'Delete'
       MoveParams = <
         item
@@ -588,11 +623,11 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 72
+    Left = 88
     Top = 104
   end
   inherited BarManager: TdxBarManager
-    Left = 112
+    Left = 128
     Top = 104
     DockControlHeights = (
       0
@@ -601,6 +636,10 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
       0)
     inherited Bar: TdxBar
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
         item
           Visible = True
           ItemName = 'bbGoodsPriceListLink'
@@ -628,6 +667,18 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object bbDeleteGoodsLink: TdxBarButton
@@ -637,6 +688,20 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
     object bbGoodsPriceListLink: TdxBarButton
       Action = actSetGoodsLink
       Category = 0
+    end
+    object dxBarControlContainerItem1: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cxLabel7
+    end
+    object dxBarControlContainerItem2: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = edArea
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -712,5 +777,58 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
     PackSize = 1
     Left = 376
     Top = 200
+  end
+  object GuidesArea: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edArea
+    FormNameParam.Value = 'TAreaForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TAreaForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesArea
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesArea
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 704
+    Top = 128
+  end
+  object spGet_Area_byUser: TdsdStoredProc
+    StoredProcName = 'gpGet_Area_byUser'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'outAreaId'
+        Value = '0'
+        Component = GuidesArea
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAreaName'
+        Value = Null
+        Component = GuidesArea
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 496
+    Top = 152
   end
 end
