@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalArea (Integer,Integer,TVarChar, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalArea (Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalArea (Integer, Integer, Integer, Integer, TVarChar, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalArea (Integer, Integer, Integer, Integer, TVarChar, TVarChar, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_JuridicalArea(
  INOUT ioId                Integer   ,    -- ключ объекта <>
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_JuridicalArea(
     IN inComment           TVarChar  ,    -- примечание
     IN inEMail             TVarChar  ,    -- E-Mail
     IN inisDefault         Boolean   ,    -- по умолчанию
+    IN inisGoodsCode       Boolean   ,    -- Уникальный код поставщика
     IN inSession           TVarChar       -- сессия пользователя
 )
  RETURNS Integer AS
@@ -42,7 +44,8 @@ BEGIN
    
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_JuridicalArea_Default(), ioId, inisDefault);
-   
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_JuridicalArea_GoodsCode(), ioId, inisGoodsCode);
    
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -55,8 +58,8 @@ $BODY$ LANGUAGE plpgsql;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.10.17         *
  25.09.17         *  
- 
 */
 
 -- тест

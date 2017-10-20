@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
              , AreaId Integer, AreaCode Integer, AreaName TVarChar
              , Email TVarChar
              , isDefault Boolean
+             , isGoodsCode Boolean
              , isErased boolean
              ) AS
 $BODY$
@@ -37,6 +38,7 @@ BEGIN
 
            , CAST ('' as TVarChar)  AS Email
            , FALSE     ::Boolean    AS isDefault
+           , FALSE     ::Boolean    AS isGoodsCode
 
            , CAST (NULL AS Boolean) AS isErased
 
@@ -58,7 +60,8 @@ BEGIN
            , Object_Area.ValueData            AS AreaName
            
            , ObjectString_JuridicalArea_Email.ValueData  AS Email
-           , COALESCE (ObjectBoolean_JuridicalArea_Default.ValueData, FALSE)  AS isDefault
+           , COALESCE (ObjectBoolean_JuridicalArea_Default.ValueData, FALSE)    AS isDefault
+           , COALESCE (ObjectBoolean_JuridicalArea_GoodsCode.ValueData, FALSE)  AS isGoodsCode
 
            , Object_JuridicalArea.isErased    AS isErased
            
@@ -81,6 +84,9 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_JuridicalArea_Default
                                    ON ObjectBoolean_JuridicalArea_Default.ObjectId = Object_JuridicalArea.Id
                                   AND ObjectBoolean_JuridicalArea_Default.DescId = zc_ObjectBoolean_JuridicalArea_Default()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_JuridicalArea_GoodsCode
+                                    ON ObjectBoolean_JuridicalArea_GoodsCode.ObjectId = Object_JuridicalArea.Id
+                                   AND ObjectBoolean_JuridicalArea_GoodsCode.DescId = zc_ObjectBoolean_JuridicalArea_GoodsCode()
                                                                     
        WHERE Object_JuridicalArea.Id = inId;
       
@@ -94,8 +100,8 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 20.10.17         *
  25.09.17         *  
-
 */
 
 -- ÚÂÒÚ

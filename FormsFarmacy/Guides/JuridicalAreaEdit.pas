@@ -50,6 +50,7 @@ type
     cxLabel5: TcxLabel;
     edEmail: TcxTextEdit;
     cbisDefault: TcxCheckBox;
+    cbisGoodsCode: TcxCheckBox;
   private
     { Private declarations }
   public

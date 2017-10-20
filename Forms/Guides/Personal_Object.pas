@@ -72,6 +72,11 @@ type
     DriverCertificate: TcxGridDBColumn;
     PersonalServiceListName: TcxGridDBColumn;
     StorageLineName: TcxGridDBColumn;
+    actUser_UpdateDialog: TExecuteDialog;
+    bbUser_UpdateDialog: TdxBarButton;
+    FormParams: TdsdFormParams;
+    ScalePSW: TcxGridDBColumn;
+    UserId: TcxGridDBColumn;
   private
     { Private declarations }
   public

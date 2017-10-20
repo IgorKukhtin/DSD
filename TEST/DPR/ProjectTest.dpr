@@ -954,7 +954,8 @@ uses
   Report_Promo_ResultDialog in '..\..\Forms\Report\Report_Promo_ResultDialog.pas' {Report_Promo_ResultDialogForm: TParentForm},
   ProductionSeparateItemJournal in '..\..\Forms\Document\ProductionSeparateItemJournal.pas' {ProductionSeparateItemJournalForm: TParentForm},
   IFIN_J1201209 in '..\..\SOURCE\MeDOC\IFIN_J1201209.pas',
-  Report_Remains_byOrderExternal in '..\..\Forms\Report\Report_Remains_byOrderExternal.pas' {Report_Remains_byOrderExternalForm: TParentForm};
+  Report_Remains_byOrderExternal in '..\..\Forms\Report\Report_Remains_byOrderExternal.pas' {Report_Remains_byOrderExternalForm: TParentForm},
+  User_UpdateDialog in '..\..\Forms\Guides\User_UpdateDialog.pas' {User_UpdateDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
