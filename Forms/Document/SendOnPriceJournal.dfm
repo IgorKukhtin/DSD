@@ -1,28 +1,28 @@
 inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077'>'
-  ClientHeight = 473
+  ClientHeight = 455
   ClientWidth = 1020
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1036
-  ExplicitHeight = 511
+  ExplicitHeight = 493
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1020
-    Height = 416
+    Height = 398
     TabOrder = 3
     ExplicitWidth = 1020
     ExplicitHeight = 416
-    ClientRectBottom = 416
+    ClientRectBottom = 398
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 416
       inherited cxGrid: TcxGrid
         Width = 1020
-        Height = 416
+        Height = 398
         ExplicitWidth = 1020
         ExplicitHeight = 416
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1404,6 +1404,103 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
       ImageIndex = 15
     end
+    object actPrint_QualityDoc: TdsdPrintAction
+      Category = 'Print_QualityDoc'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint_Quality
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Quality
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+      Hint = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'QualityCode;GoodsGroupName;GoodsName;GoodsKindName'
+        end
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDMaster2'
+          IndexFieldNames = 'QualityCode;GoodsGroupName;GoodsName;GoodsKindName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Quality'
+      ReportNameParam.Value = 'PrintMovement_Quality'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
+    object actDialog_QualityDoc: TdsdOpenForm
+      Category = 'Print_QualityDoc'
+      MoveParams = <>
+      Caption = 'actDialog_QualityDoc'
+      Hint = 'actDialog_QualityDoc'
+      FormName = 'TQualityDocForm'
+      FormNameParam.Value = 'TQualityDocForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = 0
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_Sale'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object mactPrint_QualityDoc: TMultiAction
+      Category = 'Print_QualityDoc'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actDialog_QualityDoc
+        end
+        item
+          Action = actPrint_QualityDoc
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+      Hint = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+      ImageIndex = 16
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1560,6 +1657,14 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_QualityDoc'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -1629,6 +1734,10 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
     end
     object bbPrint_TTN: TdxBarButton
       Action = mactPrint_TTN
+      Category = 0
+    end
+    object bbPrint_QualityDoc: TdxBarButton
+      Action = mactPrint_QualityDoc
       Category = 0
     end
   end
@@ -2129,5 +2238,29 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
     PackSize = 1
     Left = 624
     Top = 352
+  end
+  object spSelectPrint_Quality: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Quality_Print'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 711
+    Top = 240
   end
 end

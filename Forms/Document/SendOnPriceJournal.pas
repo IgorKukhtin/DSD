@@ -110,6 +110,11 @@ type
     actDialog_TTN: TdsdOpenForm;
     mactPrint_TTN: TMultiAction;
     bbPrint_TTN: TdxBarButton;
+    spSelectPrint_Quality: TdsdStoredProc;
+    actPrint_QualityDoc: TdsdPrintAction;
+    actDialog_QualityDoc: TdsdOpenForm;
+    mactPrint_QualityDoc: TMultiAction;
+    bbPrint_QualityDoc: TdxBarButton;
   private
     { Private declarations }
   public

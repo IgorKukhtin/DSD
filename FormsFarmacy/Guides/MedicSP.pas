@@ -69,6 +69,8 @@ type
     edPartnerMedical: TcxButtonEdit;
     PartnerMedicalGuides: TdsdGuides;
     RefreshDispatcher: TRefreshDispatcher;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocol: TdxBarButton;
   private
     { Private declarations }
   public

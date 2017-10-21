@@ -4,10 +4,8 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
   ClientWidth = 1000
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -273
-  ExplicitTop = -75
   ExplicitWidth = 1016
-  ExplicitHeight = 568
+  ExplicitHeight = 567
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -86,6 +84,13 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 177
+          end
+          object AreaName: TcxGridDBColumn
+            Caption = #1056#1077#1075#1080#1086#1085
+            DataBinding.FieldName = 'AreaName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object MakerName: TcxGridDBColumn
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100

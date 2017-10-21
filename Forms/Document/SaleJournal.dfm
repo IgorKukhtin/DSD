@@ -5,10 +5,8 @@ inherited SaleJournalForm: TSaleJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -515
-  ExplicitTop = -309
   ExplicitWidth = 1258
-  ExplicitHeight = 680
+  ExplicitHeight = 679
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

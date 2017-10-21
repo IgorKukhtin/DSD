@@ -55,6 +55,8 @@ type
     Erased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocol: TdxBarButton;
   private
     { Private declarations }
   public

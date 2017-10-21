@@ -2,7 +2,7 @@ object PartnerMedicalForm: TPartnerMedicalForm
   Left = 0
   Top = 0
   Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1077' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077
-  ClientHeight = 282
+  ClientHeight = 279
   ClientWidth = 598
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,12 +21,13 @@ object PartnerMedicalForm: TPartnerMedicalForm
     Left = 0
     Top = 26
     Width = 598
-    Height = 256
+    Height = 253
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitHeight = 256
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -196,6 +197,14 @@ object PartnerMedicalForm: TPartnerMedicalForm
         end
         item
           Visible = True
+          ItemName = 'bbProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbChoiceGuides'
         end>
       OneOnRow = True
@@ -236,6 +245,10 @@ object PartnerMedicalForm: TPartnerMedicalForm
     end
     object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
+      Category = 0
+    end
+    object bbProtocol: TdxBarButton
+      Action = ProtocolOpenForm
       Category = 0
     end
   end
@@ -381,6 +394,36 @@ object PartnerMedicalForm: TPartnerMedicalForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object ProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_PartnerMedical'
@@ -399,7 +442,7 @@ object PartnerMedicalForm: TPartnerMedicalForm
     Top = 152
   end
   object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
+    StoredProcName = 'gpUpdate_Object_isErased_PartnerMedical'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -412,8 +455,8 @@ object PartnerMedicalForm: TPartnerMedicalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 288
-    Top = 208
+    Left = 488
+    Top = 96
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
