@@ -13,21 +13,29 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpGetUserBySession (inSession); убрал, что б быстрее... :)
+     vbUserId:= lpGetUserBySession (inSession);
 
-     IF EXISTS (SELECT 1)
+     IF   ((zfConvert_StringToNumber (SUBSTR (inPSW, 4, 13 - 4)) > 0 AND CHAR_LENGTH (inPSW) >= 12)
+        OR (zfConvert_StringToNumber (inPSW) > 0 AND CHAR_LENGTH (inPSW) < 12)
+          )
+     AND EXISTS (SELECT 1 FROM ObjectFloat JOIN Object ON Object.Id = ObjectFloat.ObjectId AND Object.isErased = FALSE
+                WHERE ObjectFloat.ValueData = CASE WHEN CHAR_LENGTH (inPSW) >= 12
+                                                   THEN zfConvert_StringToNumber (SUBSTR (inPSW, 4, 13 - 4))
+                                                   ELSE zfConvert_StringToNumber (inPSW)
+                                              END :: TFloat
+                  AND ObjectFloat.DescId = zc_ObjectFloat_User_ScalePSW())
      THEN
          -- Результат
          RETURN QUERY
            SELECT Id, ObjectCode, ValueData, '' :: TVarChar
            FROM Object 
-           WHERE Id = zfCalc_UserAdmin() :: Integer;
+           WHERE Id = vbUserId;
      ELSE 
          -- Результат
          RETURN QUERY
            SELECT Id, ObjectCode, ValueData, 'ERROR' :: TVarChar
            FROM Object 
-           WHERE Id = zfCalc_UserAdmin() :: Integer;
+           WHERE Id = vbUserId;
      END IF;
 
 END;

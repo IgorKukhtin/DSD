@@ -132,8 +132,11 @@ type
     procedure gbWeightValueClick(Sender: TObject);
     procedure EditPriceKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
   private
-    fStartWrite:Boolean;
+    fCloseOK : Boolean;
+    fModeSave : Boolean;
+    fStartWrite : Boolean;
     fEnterGoodsCode:Boolean;
     fEnterGoodsName:Boolean;
     fEnterGoodsKindCode:Boolean;
@@ -147,7 +150,7 @@ type
     procedure InitializePriceList(execParams:TParams);
   public
     //GoodsWeight:Double;
-    function Execute(execParamsMovement:TParams): boolean;
+    function Execute (execParamsMovement : TParams; isModeSave : Boolean) : Boolean;
   end;
 
 var
@@ -157,10 +160,13 @@ implementation
 
 {$R *.dfm}
 
- uses dmMainScale, Main,DialogWeight;
+ uses dmMainScale, Main, DialogWeight, DialogStringValue;
 {------------------------------------------------------------------------------}
-function TGuideGoodsForm.Execute(execParamsMovement:TParams): boolean;
+function TGuideGoodsForm.Execute (execParamsMovement : TParams; isModeSave : Boolean) : Boolean;
 begin
+     fModeSave:= isModeSave;
+     fCloseOK:=false;
+
      fEnterGoodsCode:=false;
      fEnterGoodsName:=false;
      fEnterGoodsKindCode:=false;
@@ -176,6 +182,7 @@ begin
      with spSelect do
      begin
        Self.Caption:='Параметры продукции на основании '+execParamsMovement.ParamByName('OrderExternalName_master').asString;
+       if isModeSave = FALSE then Self.Caption:= 'БЕЗ СОХРАНЕНИЯ' + Self.Caption;
        Params.ParamByName('inOrderExternalId').Value:= execParamsMovement.ParamByName('OrderExternalId').AsInteger;
        Params.ParamByName('inMovementId').Value     := execParamsMovement.ParamByName('MovementId').AsInteger;
        Params.ParamByName('inGoodsCode').Value      := 0;
@@ -187,6 +194,7 @@ begin
      with spSelect do
      begin
        Self.Caption:='Параметры продукции для покупателя <('+execParamsMovement.ParamByName('FromCode').asString + ')' + execParamsMovement.ParamByName('FromName').asString + '>';
+       if isModeSave = FALSE then Self.Caption:= 'БЕЗ СОХРАНЕНИЯ' + Self.Caption;
        Params.ParamByName('inOrderExternalId').Value:= -1 * execParamsMovement.ParamByName('ContractId').AsInteger;
        Params.ParamByName('inMovementId').Value     := -1 * execParamsMovement.ParamByName('FromId').AsInteger;
        Params.ParamByName('inGoodsCode').Value      := 0;
@@ -200,6 +208,7 @@ begin
      with spSelect do
      begin
        Self.Caption:='Параметры продукции для поставщика <('+execParamsMovement.ParamByName('FromCode').asString + ')' + execParamsMovement.ParamByName('FromName').asString + '>';
+       if isModeSave = FALSE then Self.Caption:= 'БЕЗ СОХРАНЕНИЯ' + Self.Caption;
        Params.ParamByName('inOrderExternalId').Value:= -1 * execParamsMovement.ParamByName('ContractId').AsInteger;
        Params.ParamByName('inMovementId').Value     := -1 * execParamsMovement.ParamByName('FromId').AsInteger;
        Params.ParamByName('inGoodsCode').Value      := 0;
@@ -213,12 +222,15 @@ begin
      with spSelect do
      begin
        Self.Caption:='Параметры продукции по заявке на <('+execParamsMovement.ParamByName('FromCode').asString + ')' + execParamsMovement.ParamByName('FromName').asString + '>';
+       if isModeSave = FALSE then Self.Caption:= 'БЕЗ СОХРАНЕНИЯ' + Self.Caption;
        Params.ParamByName('inOrderExternalId').Value:= 0;
        Params.ParamByName('inMovementId').Value     := 0;
        Params.ParamByName('inGoodsCode').Value      := 0;
        Params.ParamByName('inGoodsName').Value      := '';
        Execute;
      end
+     else if isModeSave = FALSE then Self.Caption:= 'БЕЗ СОХРАНЕНИЯ - Параметры продукции'
+     else Self.Caption:= 'Параметры продукции';
      ;
 
   PanelGoodsWieghtValue.Caption:=FloatToStr(ParamsMI.ParamByName('RealWeight_Get').AsFloat);
@@ -418,7 +430,19 @@ begin
     if (Key=27) then
       if cxDBGridDBTableView.DataController.Filter.Active
       then CancelCxFilter
-      else actExitExecute(Self);
+      else if (fModeSave = false) or (GetArrayList_Value_byName(Default_Array,'isCheckDelete') = AnsiUpperCase('FALSE'))
+             or ((ParamsMovement.ParamByName('MovementDescId').AsInteger <> zc_Movement_Sale)
+              and(ParamsMovement.ParamByName('MovementDescId').AsInteger <> zc_Movement_SendOnPrice)
+                )
+           then actExitExecute(Self)
+           else with DialogStringValueForm do
+                begin
+                     if not Execute (false, true) then begin ShowMessage ('Для отмены взвешивания необходимо ввести пароль.'); exit; end;
+                     //
+                     if DMMainScaleForm.gpGet_Scale_PSW_delete (StringValueEdit.Text) <> ''
+                     then begin ShowMessage ('Пароль неверный.Отменить взвешивание нельзя.');exit;end
+                     else begin fCloseOK:= true; actExitExecute(Self); end;
+                end;
 end;
 procedure TGuideGoodsForm.gbWeightValueClick(Sender: TObject);
 begin
@@ -482,7 +506,13 @@ begin
           and(rgPriceList.ItemIndex>=0)
           and(ParamsMI.ParamByName('RealWeight').AsFloat>0.0001)
           ;
-
+     //
+     if fModeSave = FALSE then
+     begin
+          Result:= false;
+          ShowMessage ('Ошибка.Окно открыто в режиме <Только просмотр>.');
+          exit;
+     end;
      //
      if not Result
      then ActiveControl:=EditGoodsCode
@@ -1181,7 +1211,26 @@ begin Close;end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.actSaveExecute(Sender: TObject);
 begin
-     if Checked then begin Close;ModalResult:=mrOK;end;
+     if Checked then begin fCloseOK:=true; Close; ModalResult:= mrOK; end;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.FormCloseQuery(Sender: TObject;  var CanClose: Boolean);
+begin
+     CanClose:=false;
+           if (fModeSave = false) or (GetArrayList_Value_byName(Default_Array,'isCheckDelete') = AnsiUpperCase('FALSE'))
+             or ((ParamsMovement.ParamByName('MovementDescId').AsInteger <> zc_Movement_Sale)
+              and(ParamsMovement.ParamByName('MovementDescId').AsInteger <> zc_Movement_SendOnPrice)
+                )
+             or (fCloseOK = true)
+           then CanClose:=true
+           else with DialogStringValueForm do
+                begin
+                     if not Execute (false, true) then begin ShowMessage ('Для отмены взвешивания необходимо ввести пароль.'); exit; end;
+                     //
+                     if DMMainScaleForm.gpGet_Scale_PSW_delete (StringValueEdit.Text) <> ''
+                     then begin ShowMessage ('Пароль неверный.Отменить взвешивание нельзя.');exit;end
+                     else CanClose:=true;
+                end;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.FormCreate(Sender: TObject);

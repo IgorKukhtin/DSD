@@ -26,6 +26,7 @@ RETURNS TABLE (MovementItemId Integer, GoodsCode Integer, GoodsName TVarChar, Me
              , AmountDoc   TFloat
              , AmountStart TFloat
              , AmountEnd   TFloat
+             , Ord         Integer
              , isErased    Boolean
               )
 AS
@@ -243,6 +244,7 @@ BEGIN
            , tmpAmountDoc.AmountStart :: TFloat AS AmountStart
            , tmpAmountDoc.AmountEnd   :: TFloat AS AmountEnd
 
+           , ROW_NUMBER() OVER (ORDER BY tmpMI.MovementItemId ASC) :: Integer AS Ord
            , tmpMI.isErased
 
        FROM tmpMI

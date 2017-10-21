@@ -21,7 +21,7 @@ RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar, DriverCertif
              , InfoMoneyId Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , SheetWorkTimeId Integer, SheetWorkTimeName TVarChar
              , DateIn TDateTime, DateOut TDateTime, isDateOut Boolean, isMain Boolean, isOfficial Boolean
-             , UserId Integer, ScalePSW TFloat
+             , UserId Integer, ScalePSW TVarChar
              , isErased Boolean
               )
 AS
@@ -56,16 +56,6 @@ BEGIN
 
    -- Результат
    RETURN QUERY
-     WITH tmpUser AS (SELECT ObjectLink_User_Member.ObjectId              AS UserId
-                           , ObjectLink_User_Member.ChildObjectId         AS MemberId
-                           , COALESCE (ObjectFloat_ScalePSW.ValueData, Null) AS ScalePSW
-                      FROM ObjectLink AS ObjectLink_User_Member
-                           LEFT JOIN ObjectFloat AS ObjectFloat_ScalePSW
-                                                 ON ObjectFloat_ScalePSW.ObjectId = ObjectLink_User_Member.ObjectId
-                                                AND ObjectFloat_ScalePSW.DescId = zc_ObjectFloat_User_ScalePSW()
-                      WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-                        AND COALESCE (ObjectLink_User_Member.ChildObjectId, 0) <> 0
-                      )
      SELECT
            Object_Personal_View.PersonalId   AS Id
          , Object_Personal_View.PersonalCode AS MemberCode
@@ -122,10 +112,11 @@ BEGIN
          , Object_Personal_View.isMain
          , Object_Personal_View.isOfficial
          
-         , COALESCE (tmpUser.UserId, 0)               AS UserId
-         , COALESCE (tmpUser.ScalePSW, Null) ::TFloat AS ScalePSW
+         , ObjectLink_User_Member.ObjectId                                                            AS UserId
+         , REPEAT ('*', LENGTH (CASE WHEN ObjectFloat_ScalePSW.ValueData = 0 THEN '' ELSE (ObjectFloat_ScalePSW.ValueData :: Integer) :: TVarChar END)) :: TVarChar AS ScalePSW
 
          , Object_Personal_View.isErased
+
      FROM Object_Personal_View
           LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Object_Personal_View.AccessKeyId
           LEFT JOIN Object_RoleAccessKeyGuide_View AS View_RoleAccessKeyGuide ON View_RoleAccessKeyGuide.UserId = vbUserId AND View_RoleAccessKeyGuide.UnitId_PersonalService = Object_Personal_View.UnitId AND vbIsAllUnit = FALSE
@@ -185,8 +176,13 @@ BEGIN
                               AND ObjectLink_Unit_SheetWorkTime.DescId = zc_ObjectLink_Unit_SheetWorkTime()
           LEFT JOIN Object AS Object_Unit_SheetWorkTime ON Object_Unit_SheetWorkTime.Id = ObjectLink_Unit_SheetWorkTime.ChildObjectId
 
-          LEFT JOIN tmpUser ON tmpUser.MemberId = Object_Personal_View.MemberId
-          
+          LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                               ON ObjectLink_User_Member.ChildObjectId = Object_Personal_View.MemberId
+                              AND ObjectLink_User_Member.DescId        = zc_ObjectLink_User_Member()
+          LEFT JOIN ObjectFloat AS ObjectFloat_ScalePSW
+                                ON ObjectFloat_ScalePSW.ObjectId = ObjectLink_User_Member.ObjectId
+                               AND ObjectFloat_ScalePSW.DescId   = zc_ObjectFloat_User_ScalePSW()
+
      WHERE (tmpRoleAccessKey.AccessKeyId IS NOT NULL
          OR vbAccessKeyAll = TRUE
          OR Object_Personal_View.BranchId = vbObjectId_Constraint
@@ -257,7 +253,7 @@ BEGIN
          , FALSE                    AS isMain
          , FALSE                    AS isOfficial
          , 0                        AS UserId
-         , Null           ::TFloat  AS ScalePSW
+         , CAST ('' as TVarChar)    AS ScalePSW
          , FALSE                    AS isErased
     ;
 

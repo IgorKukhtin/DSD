@@ -87,7 +87,7 @@ object MainForm: TMainForm
         OnClick = bbDeleteItemClick
       end
       object bbExit: TSpeedButton
-        Left = 607
+        Left = 619
         Top = 2
         Width = 31
         Height = 29
@@ -105,7 +105,7 @@ object MainForm: TMainForm
         ShowHint = True
       end
       object bbRefresh: TSpeedButton
-        Left = 471
+        Left = 505
         Top = 2
         Width = 31
         Height = 29
@@ -199,7 +199,7 @@ object MainForm: TMainForm
         Visible = False
       end
       object bbChoice_UnComlete: TSpeedButton
-        Left = 393
+        Left = 434
         Top = 2
         Width = 31
         Height = 29
@@ -227,7 +227,7 @@ object MainForm: TMainForm
         OnClick = bbChoice_UnComleteClick
       end
       object bbView_all: TSpeedButton
-        Left = 422
+        Left = 463
         Top = 2
         Width = 31
         Height = 29
@@ -331,7 +331,7 @@ object MainForm: TMainForm
         OnClick = bbChangePartionGoodsClick
       end
       object bbSale_Order_all: TSpeedButton
-        Left = 517
+        Left = 549
         Top = 2
         Width = 31
         Height = 29
@@ -355,7 +355,7 @@ object MainForm: TMainForm
         OnClick = bbSale_Order_allClick
       end
       object bbSale_Order_diff: TSpeedButton
-        Left = 554
+        Left = 582
         Top = 2
         Width = 31
         Height = 29
@@ -586,6 +586,34 @@ object MainForm: TMainForm
         ParentShowHint = False
         ShowHint = True
         OnClick = bbUpdatePartnerClick
+      end
+      object bbGuideGoodsView: TSpeedButton
+        Left = 393
+        Top = 2
+        Width = 31
+        Height = 29
+        Hint = #1058#1086#1083#1100#1082#1086' '#1088#1077#1078#1080#1084' '#1087#1088#1086#1089#1084#1086#1090#1088#1072' - CTRL + '#1055#1088#1086#1073#1077#1083
+        Glyph.Data = {
+          06020000424D0602000000000000760000002800000019000000190000000100
+          0400000000009001000000000000000000001000000000000000000000000000
+          8000008000000080800080000000800080008080000080808000C0C0C0000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
+          8888888888888000000088888888888888888888888880000000888888888888
+          8888888888888000000088888888888888888888888880000000888888888887
+          7777788888888000000088888888800000377788888880000000888888880999
+          9030777888888000000088888888099990307778888880000000888888809999
+          0333077888888000000088888880999903330778888880000000888888800000
+          0333077888888000000088888888887033330778888880000000888888888000
+          3333077888888000000088888888099033330778888880000000888888809999
+          0333077888888000000088888809999990330778888880000000888880999999
+          9903077888888000000088888000999900030778888880000000888888809999
+          0333078888888000000088888888099990307888888880000000888888880999
+          9030888888888000000088888888800000388888888880000000888888888888
+          8888888888888000000088888888888888888888888880000000888888888888
+          88888888888880000000}
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = bbGuideGoodsViewClick
       end
     end
     object infoPanelTotalSumm: TPanel
@@ -857,6 +885,14 @@ object MainForm: TMainForm
         OptionsView.HeaderAutoHeight = True
         OptionsView.Indicator = True
         Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+        object Ord: TcxGridDBColumn
+          Caption = #8470' '#1087'/'#1087
+          DataBinding.FieldName = 'Ord'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 35
+        end
         object GoodsCode: TcxGridDBColumn
           Caption = #1050#1086#1076
           DataBinding.FieldName = 'GoodsCode'
@@ -2265,6 +2301,7 @@ object MainForm: TMainForm
       Top = 0
       Width = 50
       Height = 28
+      Hint = #1050#1086#1083'-'#1074#1086' '#1059#1076#1072#1083#1077#1085#1085#1099#1093' '#1089#1090#1088#1086#1082
       Align = alLeft
       BevelOuter = bvNone
       Caption = 'PanelErasedCount'
@@ -2274,6 +2311,8 @@ object MainForm: TMainForm
       Font.Name = 'MS Sans Serif'
       Font.Style = [fsBold]
       ParentFont = False
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 3
     end
   end

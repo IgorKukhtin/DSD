@@ -219,6 +219,8 @@ type
     TaxDoc_calc: TcxGridDBColumn;
     Color_calc: TcxGridDBColumn;
     PanelErasedCount: TPanel;
+    Ord: TcxGridDBColumn;
+    bbGuideGoodsView: TSpeedButton;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -250,6 +252,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure TimerProtocol_isProcessTimer(Sender: TObject);
     procedure bbUpdatePartnerClick(Sender: TObject);
+    procedure bbGuideGoodsViewClick(Sender: TObject);
   private
     Scale_BI: TCasBI;
     Scale_DB: TCasDB;
@@ -259,7 +262,7 @@ type
     function Save_Movement_all:Boolean;
     function Print_Movement_afterSave:Boolean;
     function GetParams_MovementDesc(BarCode: String):Boolean;
-    function GetParams_Goods(isRetail:Boolean;BarCode: String):Boolean;
+    function GetParams_Goods (isRetail : Boolean; BarCode : String; isModeSave : Boolean) : Boolean;
     function GetPanelPartnerCaption(execParams:TParams):String;
     procedure Create_Scale;
     procedure Initialize_Scale;
@@ -636,7 +639,12 @@ begin
      myActiveControl;
 end;
 {------------------------------------------------------------------------}
-function TMainForm.GetParams_Goods(isRetail:Boolean;BarCode:String):Boolean;
+procedure TMainForm.bbGuideGoodsViewClick(Sender: TObject);
+begin
+     GetParams_Goods (FALSE, '', FALSE);
+end;
+{------------------------------------------------------------------------}
+function TMainForm.GetParams_Goods (isRetail : Boolean; BarCode : String; isModeSave : Boolean) : Boolean;
 begin
      Result:=false;
      //
@@ -707,7 +715,7 @@ begin
      if ParamsMovement.ParamByName('OrderExternalId').AsInteger<>0
      then
          // Диалог для параметров товара из списка заявки + в нем сохранение MovementItem
-         if GuideGoodsMovementForm.Execute(ParamsMovement) = TRUE
+         if GuideGoodsMovementForm.Execute (ParamsMovement, isModeSave) = TRUE
          then begin
                     Result:=true;
                     RefreshDataSet;
@@ -722,7 +730,7 @@ begin
           or((ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
              and(SettingMain.BranchCode = 301))
          then
-              if GuideGoodsPartnerForm.Execute(ParamsMovement) = TRUE
+              if GuideGoodsPartnerForm.Execute (ParamsMovement, isModeSave) = TRUE
               then begin
                          Result:=true;
                          RefreshDataSet;
@@ -731,7 +739,7 @@ begin
               else
          else
          // Диалог для параметров товара из списка всех товаров + в нем сохранение MovementItem
-         if GuideGoodsForm.Execute(ParamsMovement) = TRUE
+         if GuideGoodsForm.Execute (ParamsMovement, isModeSave) = TRUE
          then begin
                     Result:=true;
                     RefreshDataSet;
@@ -1002,8 +1010,8 @@ begin
             AmountWeight:=AmountWeight+FieldByName('AmountWeight').AsFloat;
             RealWeight:=RealWeight+FieldByName('RealWeightWeight').AsFloat;
             WeightTare:=WeightTare+FieldByName('WeightTareTotal').AsFloat;
-            if FieldByName('isErased').AsBoolean = True then ErasedCount:= ErasedCount+1;
-          end;
+          end
+          else ErasedCount:= ErasedCount+1;
           //
           Next;
        end;
@@ -1034,7 +1042,7 @@ begin
                //если в ШК - Id товара или товар+вид товара
                if Pos(zc_BarCodePref_Object,EditBarCode.Text)=1
                then begin
-                         GetParams_Goods(FALSE,EditBarCode.Text);//isRetail=FALSE
+                         GetParams_Goods (FALSE, EditBarCode.Text, TRUE);//isRetail=FALSE
                          EditBarCode.Text:='';
                     end
                else
@@ -1046,7 +1054,7 @@ begin
                         end
                    else begin
                             //если в ШК - закодированый товар + кол-во, т.е. для Retail
-                             GetParams_Goods(TRUE,EditBarCode.Text);//isRetail=TRUE
+                             GetParams_Goods (TRUE, EditBarCode.Text, TRUE);//isRetail=TRUE
                              EditBarCode.Text:='';
                         end;
      end;
@@ -1223,6 +1231,8 @@ begin
   //
   bbUpdatePartner.Visible:= SettingMain.BranchCode = 301;
   bbUpdateUnit.Visible:= not bbUpdatePartner.Visible;
+  //
+  bbGuideGoodsView.Visible:= GetArrayList_Value_byName(Default_Array,'isCheckDelete') = AnsiUpperCase('TRUE');
   //
   with spSelect do
   begin
@@ -1443,7 +1453,9 @@ begin
 
      if Key = VK_F5 then Save_Movement_all;
      if Key = VK_F2 then GetParams_MovementDesc('');
-     if Key = VK_SPACE then begin Key:= 0; GetParams_Goods(FALSE,''); end;//isRetail=FALSE
+     if (Key = VK_SPACE) and (Shift = []) then begin Key:= 0; GetParams_Goods (FALSE, '', TRUE); end;//isRetail=FALSE
+     if (Key = VK_SPACE) and (Shift = [ssCtrl]) and (GetArrayList_Value_byName(Default_Array,'isCheckDelete') = AnsiUpperCase('TRUE'))
+     then begin Key:= 0; GetParams_Goods (FALSE, '', FALSE); end;//isRetail=FALSE
      //
      if ShortCut(Key, Shift) = 24659 then
      begin
@@ -1486,7 +1498,7 @@ begin
                         begin
                              if not Execute (false, true) then begin ShowMessage ('Действие отменено.');exit;end;
                              //
-                             if DMMainScaleForm.gpGet_Scale_PSW_delete (StringValueEdit.Text) = ''
+                             if DMMainScaleForm.gpGet_Scale_PSW_delete (StringValueEdit.Text) <> ''
                              then begin ShowMessage ('Пароль неверный.Действие отменено.');exit;end;
                         end;
                    //

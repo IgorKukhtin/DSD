@@ -910,7 +910,7 @@ begin
        StoredProcName:='gpGet_Scale_PSW_delete';
        OutputType:=otDataSet;
        Params.Clear;
-       Params.AddParam('inPSW', ftBoolean, ptInput, inPSW);
+       Params.AddParam('inPSW', ftString, ptInput, inPSW);
        //try
        Execute;
        //

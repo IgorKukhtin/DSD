@@ -13,6 +13,7 @@ object GuideGoodsForm: TGuideGoodsForm
   KeyPreview = True
   OldCreateOrder = False
   Position = poScreenCenter
+  OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
