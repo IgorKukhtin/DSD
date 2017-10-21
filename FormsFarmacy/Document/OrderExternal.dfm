@@ -191,6 +191,13 @@ inherited OrderExternalForm: TOrderExternalForm
             VisibleForCustomization = False
             Width = 60
           end
+          object AreaName: TcxGridDBColumn
+            Caption = #1056#1077#1075#1080#1086#1085' ('#1090#1086#1074#1072#1088')'
+            DataBinding.FieldName = 'AreaName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
           object RetailName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1089#1077#1090#1080
             DataBinding.FieldName = 'RetailName'

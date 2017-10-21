@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer /*IdBarCode TVarChar,*/
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , PartnerGoodsCode TVarChar, PartnerGoodsName TVarChar
              , RetailName TVarChar
+             , AreaName TVarChar
              , Amount TFloat
              , Price TFloat
              , PriceWithVAT TFloat
@@ -349,6 +350,7 @@ BEGIN
               , ''::TVarChar               AS PartnerGoodsCode
               , ''::TVarChar               AS PartnerGoodsName
               , Object_Retail.ValueData    AS RetailName
+              , ''::TVarChar               AS AreaName
               , CAST (NULL AS TFloat)      AS Amount
               , CAST (NULL AS TFloat)      AS Price
               , CAST (NULL AS TFloat)      AS PriceWithVAT
@@ -420,6 +422,8 @@ BEGIN
               , Object_PartnerGoods.GoodsCode      AS PartnerGoodsCode
               , Object_PartnerGoods.GoodsName      AS PartnerGoodsName
               , Object_Retail.ValueData            AS RetailName
+              , Object_Area.ValueData              AS AreaName
+              
               , MovementItem.Amount
               , MovementItem.Price
               , MovementItem.PriceWithVAT
@@ -526,6 +530,11 @@ BEGIN
                                  AND ObjectLink_Object.DescId = zc_ObjectLink_Goods_Object()            
             LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Object.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Area 
+                                 ON ObjectLink_Goods_Area.ObjectId = MovementItem.PartnerGoodsId
+                                AND ObjectLink_Goods_Area.DescId = zc_ObjectLink_Goods_Area()
+            LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Goods_Area.ChildObjectId
+            
             -- получаем GoodsMainId
             LEFT JOIN  ObjectLink AS ObjectLink_Child 
                                   ON ObjectLink_Child.ChildObjectId = Object_Goods.Id
@@ -737,6 +746,7 @@ BEGIN
               , ObjectString_Code.ValueData        AS PartnerGoodsCode
               , Object_PartnerGoods.ValueData      AS PartnerGoodsName
               , Object_Retail.ValueData            AS RetailName
+              , Object_Area.ValueData              AS AreaName
               , MovementItem.Amount
               , MovementItem.Price
               , MovementItem.PriceWithVAT
@@ -842,6 +852,11 @@ BEGIN
                                      AND ObjectLink_Object.DescId = zc_ObjectLink_Goods_Object()            
                 LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Object.ChildObjectId
 
+                LEFT JOIN ObjectLink AS ObjectLink_Goods_Area 
+                                     ON ObjectLink_Goods_Area.ObjectId = MovementItem.PartnerGoodsId
+                                    AND ObjectLink_Goods_Area.DescId = zc_ObjectLink_Goods_Area()
+                LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Goods_Area.ChildObjectId
+                
                 -- получаем GoodsMainId
                 LEFT JOIN  ObjectLink AS ObjectLink_Child 
                                       ON ObjectLink_Child.ChildObjectId = Object_Goods.Id
@@ -868,6 +883,7 @@ ALTER FUNCTION gpSelect_MovementItem_Income (Integer, Boolean, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 21.10.17         * add AreaName
  21.04.17         * add PriceOptSP
  06.04.17         *
  01.02.17         * немножко оптимизировала

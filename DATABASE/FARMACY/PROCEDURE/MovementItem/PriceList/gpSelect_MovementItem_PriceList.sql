@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PriceList(
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat, Price TFloat
              , PartionGoodsDate TDateTime, Remains TFloat, GoodsJuridicalName TVarChar
+             , AreaName TVarChar
              , isErased Boolean
               )
 AS
@@ -35,11 +36,12 @@ BEGIN
            , CAST (NULL AS TDateTime)   AS PartionGoodsDate
            , 0.00::TFloat               AS Remains
            , ''::TVarChar               AS GoodsJuridicalName
+           , ''::TVarChar               AS AreaName
            , FALSE                      AS isErased
 
-       FROM (SELECT Object_Goods.Id                                                   AS GoodsId
-                  , Object_Goods.ObjectCode                                           AS GoodsCode
-                  , Object_Goods.ValueData                                            AS GoodsName
+       FROM (SELECT Object_Goods.Id              AS GoodsId
+                  , Object_Goods.ObjectCode      AS GoodsCode
+                  , Object_Goods.ValueData       AS GoodsName
              FROM Object AS Object_Goods
              WHERE Object_Goods.DescId = zc_Object_Goods() AND Object_Goods.isErased = FALSE
             ) AS tmpGoods
@@ -64,6 +66,7 @@ BEGIN
            , MIDate_PartionGoods.ValueData        AS PartionGoodsDate
            , MIFloat_Remains.ValueData            AS Remains
            , Object_JuridicalGoods.ValueData      AS GoodsJuridicalName
+           , Object_Area.ValueData                AS AreaName
            , MovementItem.isErased                AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -87,8 +90,12 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
                                              ON MILinkObject_Goods.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-
             LEFT JOIN Object AS Object_JuridicalGoods ON Object_JuridicalGoods.Id = MILinkObject_Goods.ObjectId
+            
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Area 
+                                 ON ObjectLink_Goods_Area.ObjectId = Object_JuridicalGoods.Id
+                                AND ObjectLink_Goods_Area.DescId = zc_ObjectLink_Goods_Area()
+            LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Goods_Area.ChildObjectId
 
             ;
 
@@ -105,6 +112,7 @@ BEGIN
            , MIDate_PartionGoods.ValueData        AS PartionGoodsDate
            , MIFloat_Remains.ValueData            AS Remains
            , Object_JuridicalGoods.ValueData      AS GoodsJuridicalName
+           , Object_Area.ValueData                AS AreaName
            , MovementItem.isErased                AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -129,9 +137,12 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId =  MovementItem.Id
                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
-
             LEFT JOIN Object AS Object_JuridicalGoods ON Object_JuridicalGoods.Id = MILinkObject_Goods.ObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Area 
+                                 ON ObjectLink_Goods_Area.ObjectId = Object_JuridicalGoods.Id
+                                AND ObjectLink_Goods_Area.DescId = zc_ObjectLink_Goods_Area()
+            LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Goods_Area.ChildObjectId
             ;
 
      END IF;
@@ -145,6 +156,7 @@ ALTER FUNCTION gpSelect_MovementItem_PriceList (Integer, Boolean, Boolean, TVarC
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 21.10.17         * add AreaName
  19.02.16         *
  01.07.14                                                       *
 

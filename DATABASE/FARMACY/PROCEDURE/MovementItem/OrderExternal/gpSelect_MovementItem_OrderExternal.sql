@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer
              , CommonCode Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , PartnerGoodsId Integer, PartnerGoodsCode TVarChar
-             , RetailName TVarChar
+             , RetailName TVarChar, AreaName TVarChar
              , Amount TFloat, Price TFloat, Summ TFloat, PartionGoodsDate TDateTime
              , Comment TVarChar, isErased Boolean
              , isSP Boolean
@@ -44,6 +44,7 @@ BEGIN
            , tmpMI.PartnerGoodsId       AS PartnerGoodsId 
            , tmpMI.PartnerGoodsCode     AS PartnerGoodsCode
            , Object_Retail.ValueData    AS RetailName
+           , Object_Area.ValueData      AS AreaName
            , tmpMI.Amount               AS Amount
            , tmpMI.Price                AS Price
            , tmpMI.Summ::TFloat         AS Summ
@@ -84,6 +85,11 @@ BEGIN
                                      AND ObjectLink_Object.DescId = zc_ObjectLink_Goods_Object()            
                 LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Object.ChildObjectId
                 
+                LEFT JOIN ObjectLink AS ObjectLink_Goods_Area 
+                                     ON ObjectLink_Goods_Area.ObjectId = tmpMI.PartnerGoodsId
+                                    AND ObjectLink_Goods_Area.DescId = zc_ObjectLink_Goods_Area()
+                LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Goods_Area.ChildObjectId
+            
                 -- получаем GoodsMainId
                 LEFT JOIN  ObjectLink AS ObjectLink_Child 
                                       ON ObjectLink_Child.ChildObjectId = COALESCE(tmpMI.GoodsId, tmpGoods.GoodsId)
@@ -110,6 +116,7 @@ ALTER FUNCTION gpSelect_MovementItem_OrderExternal (Integer, Boolean, Boolean, T
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 21.10.17         * add AreaName
  25.09.17         *
  06.04.17         * add isSp
  12.12.14                         *
