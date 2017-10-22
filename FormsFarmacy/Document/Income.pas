@@ -158,6 +158,7 @@ type
     actUpdate_OrderExternal_Deferred: TdsdExecStoredProc;
     spUpdate_OrderExternal_Deferred: TdsdStoredProc;
     RetailName: TcxGridDBColumn;
+    AreaName: TcxGridDBColumn;
   private
     { Private declarations }
   public

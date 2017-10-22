@@ -107,7 +107,7 @@ inherited PriceListForm: TPriceListForm
             DataBinding.FieldName = 'GoodsJuridicalName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 125
+            Width = 110
           end
           object Amount: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -146,6 +146,13 @@ inherited PriceListForm: TPriceListForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 57
+          end
+          object AreaName: TcxGridDBColumn
+            Caption = #1056#1077#1075#1080#1086#1085' ('#1090#1086#1074#1072#1088')'
+            DataBinding.FieldName = 'AreaName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
           end
         end
       end
