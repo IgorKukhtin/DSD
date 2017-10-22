@@ -21,7 +21,7 @@ RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar, DriverCertif
              , InfoMoneyId Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , SheetWorkTimeId Integer, SheetWorkTimeName TVarChar
              , DateIn TDateTime, DateOut TDateTime, isDateOut Boolean, isMain Boolean, isOfficial Boolean
-             , UserId Integer, ScalePSW TVarChar
+             , MemberId Integer, ScalePSW TVarChar, ScalePSW_forPrint TFloat
              , isErased Boolean
               )
 AS
@@ -112,9 +112,9 @@ BEGIN
          , Object_Personal_View.isMain
          , Object_Personal_View.isOfficial
          
-         , ObjectLink_User_Member.ObjectId                                                            AS UserId
+         , Object_Personal_View.MemberId                                                    AS MemberId
          , REPEAT ('*', LENGTH (CASE WHEN ObjectFloat_ScalePSW.ValueData = 0 THEN '' ELSE (ObjectFloat_ScalePSW.ValueData :: Integer) :: TVarChar END)) :: TVarChar AS ScalePSW
-
+         , COALESCE (ObjectFloat_ScalePSW.ValueData, 0) ::TFloat                            AS ScalePSW_forPrint
          , Object_Personal_View.isErased
 
      FROM Object_Personal_View
@@ -176,12 +176,9 @@ BEGIN
                               AND ObjectLink_Unit_SheetWorkTime.DescId = zc_ObjectLink_Unit_SheetWorkTime()
           LEFT JOIN Object AS Object_Unit_SheetWorkTime ON Object_Unit_SheetWorkTime.Id = ObjectLink_Unit_SheetWorkTime.ChildObjectId
 
-          LEFT JOIN ObjectLink AS ObjectLink_User_Member
-                               ON ObjectLink_User_Member.ChildObjectId = Object_Personal_View.MemberId
-                              AND ObjectLink_User_Member.DescId        = zc_ObjectLink_User_Member()
           LEFT JOIN ObjectFloat AS ObjectFloat_ScalePSW
-                                ON ObjectFloat_ScalePSW.ObjectId = ObjectLink_User_Member.ObjectId
-                               AND ObjectFloat_ScalePSW.DescId   = zc_ObjectFloat_User_ScalePSW()
+                                ON ObjectFloat_ScalePSW.ObjectId = Object_Personal_View.MemberId
+                               AND ObjectFloat_ScalePSW.DescId   = zc_ObjectFloat_Member_ScalePSW()
 
      WHERE (tmpRoleAccessKey.AccessKeyId IS NOT NULL
          OR vbAccessKeyAll = TRUE
@@ -252,8 +249,9 @@ BEGIN
          , FALSE                    AS isDateOut
          , FALSE                    AS isMain
          , FALSE                    AS isOfficial
-         , 0                        AS UserId
+         , 0                        AS MemberId
          , CAST ('' as TVarChar)    AS ScalePSW
+         , CAST (Null as TFloat)    AS ScalePSW_forPrint
          , FALSE                    AS isErased
     ;
 
@@ -266,6 +264,7 @@ ALTER FUNCTION gpSelect_Object_Personal (TDateTime, TDateTime, Boolean, Boolean,
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 22.10.17         *
  13.07.17         * add PersonalServiceListCardSecond
  16.11.16         * add SheetWorkTime
  25.03.16         * add Card

@@ -25,10 +25,11 @@ RETURNS TABLE (Id Integer, CommonCode Integer, BarCode TVarChar,
 
 AS
 $BODY$
-  DECLARE vbUserId Integer;
-  DECLARE vbObjectId Integer;
-  DECLARE vbUnitId Integer;
-  DECLARE vbUnitIdStr TVarChar;
+  DECLARE vbUserId     Integer;
+  DECLARE vbObjectId   Integer;
+  DECLARE vbUnitId     Integer;
+  DECLARE vbUnitIdStr  TVarChar;
+  DECLARE vbAreaId     Integer;
 BEGIN
 
      -- проверка прав пользовател€ на вызов процедуры
@@ -42,6 +43,14 @@ BEGIN
      	vbUnitId := 0;
      END IF;	   
 
+     -- провер€ем регион пользовател€
+     vbAreaId:= (SELECT outAreaId FROM gpGet_Area_byUser(inSession));
+     
+     IF (COALESCE (vbAreaId, 0) <> 0) AND (vbAreaId <> inAreaId)
+     THEN
+         RAISE EXCEPTION 'Ќе достаточно прав доступа на изменение региона';
+     END IF;
+      
      RETURN QUERY
      WITH DD AS (SELECT DISTINCT Object_MarginCategoryItem_View.MarginPercent
                                , Object_MarginCategoryItem_View.MinPrice

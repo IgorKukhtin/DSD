@@ -172,10 +172,16 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 35
       end
-      object UserId: TcxGridDBColumn
-        DataBinding.FieldName = 'UserId'
+      object MemberId: TcxGridDBColumn
+        DataBinding.FieldName = 'MemberId'
         Visible = False
         Options.Editing = False
+        VisibleForCustomization = False
+        Width = 30
+      end
+      object ScalePSW_forPrint: TcxGridDBColumn
+        DataBinding.FieldName = 'ScalePSW_forPrint'
+        Visible = False
         VisibleForCustomization = False
         Width = 30
       end
@@ -411,7 +417,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
       Control = deEnd
     end
     object bbUser_UpdateDialog: TdxBarButton
-      Action = actUser_UpdateDialog
+      Action = actMember_UpdateDialog
       Category = 0
     end
     object bbPrint: TdxBarButton
@@ -553,7 +559,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
-    object actUser_UpdateDialog: TExecuteDialog
+    object actMember_UpdateDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -561,21 +567,21 @@ object Personal_ObjectForm: TPersonal_ObjectForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1072#1088#1086#1083#1100' '#1076#1083#1103' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103' '#1074' Scale'
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1072#1088#1086#1083#1100' '#1076#1083#1103' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103' '#1074' Scale'
       ImageIndex = 43
-      FormName = 'TUserPswDialogForm'
-      FormNameParam.Value = 'TUserPswDialogForm'
+      FormName = 'TMemberPswDialogForm'
+      FormNameParam.Value = 'TMemberPswDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'UserId'
+          Name = 'MemberId'
           Value = '0'
           Component = ClientDataSet
-          ComponentItem = 'UserId'
+          ComponentItem = 'MemberId'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'UserName'
+          Name = 'MemberName'
           Value = ''
           Component = ClientDataSet
           ComponentItem = 'MemberName'
@@ -585,10 +591,10 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         end
         item
           Name = 'ScalePSW'
-          Value = ''
+          Value = '***'
           Component = ClientDataSet
           ComponentItem = 'ScalePSW'
-          DataType = ftFloat
+          DataType = ftString
           ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end>

@@ -48,3 +48,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpGet_Area_byUser (inSession:= '3353661')
+-- select * from gpGet_Area_byUser( inSession := '3');

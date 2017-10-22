@@ -1,4 +1,4 @@
-unit UserPswDialog;
+unit MemberPswDialog;
 
 interface
 
@@ -12,7 +12,7 @@ uses
   dxSkinsDefaultPainters, cxCheckBox, dsdAction, Vcl.ActnList, cxCurrencyEdit;
 
 type
-  TUserPswDialogForm = class(TParentForm)
+  TMemberPswDialogForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
@@ -23,10 +23,10 @@ type
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
     dsdFormClose: TdsdFormClose;
     cxLabel2: TcxLabel;
-    ceScalePSW: TcxCurrencyEdit;
     cxLabel1: TcxLabel;
     edUser: TcxButtonEdit;
-    GuidesUser: TdsdGuides;
+    GuidesMember: TdsdGuides;
+    edScalePSW: TcxTextEdit;
   private
     { Private declarations }
   public
@@ -38,6 +38,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TUserPswDialogForm);
+  RegisterClass(TMemberPswDialogForm);
 
 end.

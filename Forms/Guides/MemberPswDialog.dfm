@@ -1,10 +1,10 @@
-object UserPswDialogForm: TUserPswDialogForm
+object MemberPswDialogForm: TMemberPswDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
   Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1072#1088#1086#1083#1100' '#1076#1083#1103' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103' '#1074' Scale'
-  ClientHeight = 179
-  ClientWidth = 313
+  ClientHeight = 164
+  ClientWidth = 320
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,8 +18,8 @@ object UserPswDialogForm: TUserPswDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 45
-    Top = 140
+    Left = 43
+    Top = 128
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -28,8 +28,8 @@ object UserPswDialogForm: TUserPswDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 191
-    Top = 140
+    Left = 189
+    Top = 128
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -41,14 +41,6 @@ object UserPswDialogForm: TUserPswDialogForm
     Top = 10
     Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
   end
-  object ceScalePSW: TcxCurrencyEdit
-    Left = 14
-    Top = 89
-    Properties.DecimalPlaces = 10
-    Properties.DisplayFormat = ',0.####'
-    TabOrder = 3
-    Width = 270
-  end
   object cxLabel1: TcxLabel
     Left = 14
     Top = 66
@@ -57,6 +49,7 @@ object UserPswDialogForm: TUserPswDialogForm
   object edUser: TcxButtonEdit
     Left = 14
     Top = 33
+    Properties.AutoSelect = False
     Properties.Buttons = <
       item
         Default = True
@@ -64,6 +57,12 @@ object UserPswDialogForm: TUserPswDialogForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
+    TabOrder = 4
+    Width = 270
+  end
+  object edScalePSW: TcxTextEdit
+    Left = 14
+    Top = 88
     TabOrder = 5
     Width = 270
   end
@@ -87,27 +86,26 @@ object UserPswDialogForm: TUserPswDialogForm
   object FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'UserName'
+        Name = 'MemberName'
         Value = 0
-        Component = GuidesUser
+        Component = GuidesMember
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'UserId'
+        Name = 'MemberId'
         Value = 42156d
-        Component = GuidesUser
+        Component = GuidesMember
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'ScalePSW'
-        Value = 0
-        Component = ceScalePSW
-        DataType = ftFloat
+        Component = edScalePSW
+        DataType = ftString
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
@@ -115,14 +113,14 @@ object UserPswDialogForm: TUserPswDialogForm
     Top = 8
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_User_ScalePSW'
+    StoredProcName = 'gpUpdate_Object_Member_ScalePSW'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inUserId'
+        Name = 'inMemberId'
         Value = 0.000000000000000000
-        Component = GuidesUser
+        Component = GuidesMember
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -130,8 +128,8 @@ object UserPswDialogForm: TUserPswDialogForm
       item
         Name = 'inScalePSW'
         Value = 0
-        Component = ceScalePSW
-        DataType = ftFloat
+        Component = edScalePSW
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -159,19 +157,19 @@ object UserPswDialogForm: TUserPswDialogForm
       Caption = 'dsdFormClose'
     end
   end
-  object GuidesUser: TdsdGuides
+  object GuidesMember: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUser
-    FormNameParam.Value = 'TUser_ObjectForm'
+    FormNameParam.Value = 'TMember_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUser_ObjectForm'
+    FormName = 'TMember_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesUser
+        Component = GuidesMember
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -180,7 +178,7 @@ object UserPswDialogForm: TUserPswDialogForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesUser
+        Component = GuidesMember
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

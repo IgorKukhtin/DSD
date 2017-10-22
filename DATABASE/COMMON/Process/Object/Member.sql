@@ -3,6 +3,8 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_Get_Object_Member() RETURNS Integer A
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Select_Object_Member() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Select_Object_Member' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Member_Transport() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Member_Transport' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Member_ScalePSW() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Member_ScalePSW' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
+
 DO $$
 BEGIN
 
@@ -29,7 +31,12 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_Member_
                                   , inCode:= 4
                                   , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Member())||'> - изменение данных.'
                                   , inEnumName:= 'zc_Enum_Process_Update_Object_Member_Transport');
-                               
+
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_Member_ScalePSW()
+                                  , inDescId:= zc_Object_Process()
+                                  , inCode:= 4
+                                  , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Member())||'> - сохранение данных.'
+                                  , inEnumName:= 'zc_Enum_Process_Update_Object_Member_ScalePSW');
 
  -- заливка прав - InsertUpdate
  PERFORM gpInsertUpdate_Object_RoleProcess (ioId        := tmpData.RoleRightId

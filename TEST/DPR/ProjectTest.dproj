@@ -3169,8 +3169,8 @@
 				<Form>Report_Remains_byOrderExternalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\UserPswDialog.pas">
-				<Form>UserPswDialogForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\MemberPswDialog.pas">
+				<Form>MemberPswDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

@@ -599,6 +599,15 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
     StoredProcName = 'gpSelect_GoodsSearch'
     Params = <
       item
+        Name = 'inAreaId'
+        Value = Null
+        Component = GuidesArea
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      
+      item
         Name = 'inGoodsSearch'
         Value = Null
         Component = edGoodsSearch
@@ -619,14 +628,6 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
         Value = Null
         Component = edCodeSearch
         DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAreaId'
-        Value = Null
-        Component = GuidesArea
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
