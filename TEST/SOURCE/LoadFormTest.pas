@@ -155,6 +155,7 @@ type
     procedure LoadSignInternalFormTest;
     procedure LoadSheetWorkTimeFormTest;
     procedure LoadStaffListFormTest;
+    procedure LoadStickerFormTest;
     procedure LoadStorageLineFormTest;
     procedure LoadStorage_ObjectFormTest;
     procedure LoadStoreRealFormTest;
@@ -2242,6 +2243,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TStorageLineForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStorageLineEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStorageLineEditForm');
+end;
+
+procedure TLoadFormTest.LoadStickerFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStickerForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStickerEditForm');
 end;
 
 procedure TLoadFormTest.LoadStoreRealFormTest;
