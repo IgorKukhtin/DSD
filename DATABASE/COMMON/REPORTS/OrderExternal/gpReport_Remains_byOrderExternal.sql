@@ -29,12 +29,19 @@ $BODY$
 BEGIN
      -- определяется
      SELECT Movement.OperDate
-          , MovementLinkObject_From.ObjectId
+          , ObjectLink_Juridical_Retail.ChildObjectId --  берем торг.сеть  вместо покупателя  -MovementLinkObject_From.ObjectId
            INTO vbOperDate, vbFromId
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id
                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                               ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId --Object_Partner.Id
+                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+ 
+          LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                               ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                              AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
      WHERE Movement.Id = inMovementId;
 
      RETURN QUERY
@@ -140,7 +147,7 @@ BEGIN
                              
           , tmpGoods AS (SELECT _tmpMI_master.GoodsId AS GoodsId
                          FROM _tmpMI_master
-                        UNION ALL
+                        UNION 
                          SELECT tmpGoodsBasis.GoodsBasisId AS GoodsId
                          FROM tmpGoodsBasis 
                          )
@@ -198,7 +205,7 @@ BEGIN
                                                                   AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                                     LEFT JOIN MovementItemContainer AS MIContainer
                                                                     ON MIContainer.ContainerId = Container.Id
-                                                                   AND MIContainer.OperDate >= '12.12.2016'--vbOperDate
+                                                                   AND MIContainer.OperDate >= vbOperDate
                                                                                      
                                     LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                                                   ON CLO_GoodsKind.ContainerId = Container.Id
@@ -211,6 +218,7 @@ BEGIN
                                       , CLO_Unit.ObjectId 
                                       , tmpGoods.GoodsId, COALESCE (CLO_GoodsKind.ObjectId, 0)
                                       , Container.Amount
+                               HAVING  Container.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) <> 0
                               )
                               
           , tmpRemains_8446 AS (SELECT tmpRemains_All.GoodsId
@@ -248,17 +256,18 @@ BEGIN
                                       , Movement.Id                         AS MovementId
                                       , Movement.OperDate 
                                  FROM Movement
-                                          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                                                       ON MovementLinkObject_From.MovementId = Movement.Id
-                                                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                     WHERE Movement.OperDate >= vbOperDate
-                                       AND Movement.DescId = zc_Movement_OrderExternal()
-                                       AND Movement.Id <> inMovementId
+                                      LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                   ON MovementLinkObject_From.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                 WHERE Movement.OperDate >= vbOperDate - INTERVAL '1 DAY'
+                                   AND Movement.DescId = zc_Movement_OrderExternal()
+                                   AND Movement.Id <> inMovementId
                                  )
           , tmpOrderExternal_MI AS (SELECT Movement.FromId         AS FromId
                                          , Movement.OperDate       AS OperDate
                                          , MovementItem.Id         AS MovementItemId
                                          , MovementItem.ObjectId   AS GoodsId
+                                         , COALESCE (_tmpMI_master.GoodsKindId, 0)  AS GoodsKindId   -- вид товара исходнойц заявки
                                          , MovementItem.Amount     AS Amount
           
                                     FROM tmpOrderExternal AS Movement
@@ -288,10 +297,12 @@ BEGIN
                                           , SUM (CASE WHEN Movement.OperDate >= vbOperDate THEN Movement.Amount ELSE 0 END)                                  AS Amount_Next
                                           , SUM (CASE WHEN Movement.OperDate >= vbOperDate THEN MIFloat_AmountSecond.ValueData ELSE 0 END)                   AS AmountSecond_Next                                          
                                     FROM tmpOrderExternal_MI AS Movement
-                                          LEFT JOIN tmpGoodsKind AS MILinkObject_GoodsKind
-                                                                 ON MILinkObject_GoodsKind.MovementItemId = Movement.MovementItemId
+                                          INNER JOIN tmpGoodsKind AS MILinkObject_GoodsKind
+                                                                  ON MILinkObject_GoodsKind.MovementItemId = Movement.MovementItemId
+                                                                 AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = COALESCE (Movement.GoodsKindId, 0)
                                           LEFT JOIN tmpMIFloat_AmountSecond AS MIFloat_AmountSecond
                                                                             ON MIFloat_AmountSecond.MovementItemId = Movement.MovementItemId
+                                                            
                                     GROUP BY Movement.FromId
                                            , Movement.GoodsId 
                                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
@@ -384,6 +395,38 @@ BEGIN
                                , tmp.FromId
                                , tmp.PartionGoods
                        )
+      , tmpRetail AS (SELECT tmpData.FromId
+                           , COALESCE (ObjectLink_Juridical_Retail.ChildObjectId, tmpData.FromId)     AS RetailId
+                      FROM (SELECT DISTINCT tmpData.FromId FROM tmpData) AS tmpData
+                           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                ON ObjectLink_Partner_Juridical.ObjectId = tmpData.FromId
+                                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                           LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                               AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                      )         
+      , tmpData_Retail AS (SELECT tmpRetail.RetailId                AS FromId
+                                , tmpData.GoodsId                   AS GoodsId
+                                , tmpData.GoodsKindId               AS GoodsKindId
+                                , tmpData.PartionGoods              AS PartionGoods
+                                , tmpData.GoodsId_Main              AS GoodsId_Main
+                     
+                                , SUM (tmpData.Amount)              AS Amount
+                                , SUM (tmpData.AmountSecond)        AS AmountSecond
+                                , SUM (tmpData.Amount_Prev)         AS Amount_Prev
+                                , SUM (tmpData.AmountSecond_Prev)   AS AmountSecond_Prev
+                                , SUM (tmpData.Amount_Next)         AS Amount_Next
+                                , SUM (tmpData.AmountSecond_Next)   AS AmountSecond_Next
+                                , SUM (tmpData.Remains_8457)        AS Remains_8457
+                                , SUM (tmpData.Remains_8446)        AS Remains_8446
+                           FROM tmpData
+                                LEFT JOIN tmpRetail ON tmpRetail.FromId = tmpData.FromId
+                           GROUP By tmpRetail.RetailId
+                                  , tmpData.GoodsId
+                                  , tmpData.GoodsKindId
+                                  , tmpData.PartionGoods
+                                  , tmpData.GoodsId_Main
+                           )
                        
       -- Результат
        SELECT Object_From.ObjectCode                     AS FromCode
@@ -413,7 +456,7 @@ BEGIN
             , tmpData.Remains_8457             :: TFloat
             , tmpData.Remains_8446             :: TFloat
                                       
-       FROM tmpData
+       FROM tmpData_Retail AS tmpData
           LEFT JOIN tmpGoodsBasis ON tmpGoodsBasis.GoodsId = tmpData.GoodsId
           LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData.FromId
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
@@ -435,6 +478,7 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
                                  ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                 AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+                                
           ;
 
 END;
@@ -449,4 +493,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_Remains_byOrderExternal (inMovementId:= 4944965 , inSession:= zfCalc_UserAdmin())
--- select * from gpReport_Remains_byOrderExternal(inMovementId := 4944965 ,  inSession := '5'::TVarChar);
+ --select * from gpReport_Remains_byOrderExternal(inMovementId := 7278777 ,  inSession := '5'::TVarChar);
