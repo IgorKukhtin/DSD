@@ -36,6 +36,7 @@ BEGIN
                 JOIN ObjectFloatDesc ON ObjectFloatDesc.Id = ObjectFloat.DescId
            WHERE ObjectFloat.ObjectId = inObjectId
              AND inIsErased IS NULL
+             AND ObjectFloat.DescId <> zc_ObjectFloat_Member_ScalePSW()
           UNION
            SELECT '<Field FieldName = "' || zfStrToXmlStr(ObjectDateDesc.ItemName) || '" FieldValue = "' || COALESCE (CASE WHEN ObjectDate.DescId IN (zc_ObjectDate_ImportSettings_StartTime(), zc_ObjectDate_ImportSettings_EndTime()) THEN TO_CHAR (ObjectDate.ValueData , 'hh:mm') ELSE DATE (ObjectDate.ValueData) :: TVarChar END, 'NULL') || '"/>' AS FieldXML 
                 , 3 AS GroupId

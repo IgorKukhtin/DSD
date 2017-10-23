@@ -42,7 +42,7 @@ type
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
     dsdGridToExcel: TdsdGridToExcel;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     DateIn: TcxGridDBColumn;
     DateOut: TcxGridDBColumn;
@@ -80,6 +80,9 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     ScalePSW_forPrint: TcxGridDBColumn;
+    spGet_ScalePSW: TdsdStoredProc;
+    mactMember_UpdateDialog: TMultiAction;
+    actGet_ScalePSW: TdsdExecStoredProc;
   private
     { Private declarations }
   public

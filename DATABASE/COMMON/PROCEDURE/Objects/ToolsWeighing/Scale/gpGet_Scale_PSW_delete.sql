@@ -23,7 +23,7 @@ BEGIN
                                                    THEN zfConvert_StringToNumber (SUBSTR (inPSW, 4, 13 - 4))
                                                    ELSE zfConvert_StringToNumber (inPSW)
                                               END :: TFloat
-                  AND ObjectFloat.DescId = zc_ObjectFloat_User_ScalePSW())
+                  AND ObjectFloat.DescId = zc_ObjectFloat_Member_ScalePSW()) -- zc_ObjectFloat_User_ScalePSW
      THEN
          -- Результат
          RETURN QUERY

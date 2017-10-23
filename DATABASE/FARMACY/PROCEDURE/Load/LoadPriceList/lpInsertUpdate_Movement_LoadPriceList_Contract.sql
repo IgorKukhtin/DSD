@@ -32,6 +32,7 @@ AS
 $BODY$
     DECLARE vbLoadPriceListId Integer;
     DECLARE vbLoadPriceListItemsId Integer;
+    DECLARE vbAreaId Integer;
 
     DECLARE vbGoodsId Integer;
     DECLARE vbPriceOriginal TFloat;
@@ -105,6 +106,25 @@ BEGIN
                        ;
     END IF;
 
+
+    vbAreaId:= CASE WHEN EXISTS (SELECT 1
+                                 FROM ObjectLink AS ObjectLink_JuridicalArea_Juridical
+                                      INNER JOIN Object AS Object_JuridicalArea ON Object_JuridicalArea.Id       = ObjectLink_JuridicalArea_Juridical.ObjectId
+                                                                               AND Object_JuridicalArea.isErased = FALSE
+                                      INNER JOIN ObjectLink AS ObjectLink_JuridicalArea_Area
+                                                            ON ObjectLink_JuridicalArea_Area.ObjectId      = Object_JuridicalArea.Id 
+                                                           AND ObjectLink_JuridicalArea_Area.DescId        = zc_ObjectLink_JuridicalArea_Area()
+                                                           AND ObjectLink_JuridicalArea_Area.ChildObjectId = inAreaId
+                                      INNER JOIN ObjeBoolean AS ObjeBoolean_JuridicalArea_GoodsCode
+                                                            ON OObjeBoolean_JuridicalArea_GoodsCode.ObjectId  = Object_JuridicalArea.Id 
+                                                           AND ObjeBoolean_JuridicalArea_GoodsCode.DescId     = zc_ObjectBoolean_JuridicalArea_GoodsCode()
+                                                           AND ObjeBoolean_JuridicalArea_GoodsCode.ValueData  = TRUE
+                                 WHERE ObjectLink_JuridicalArea_Juridical.ChildObjectId = inJuridicalId
+                                   AND ObjectLink_JuridicalArea_Juridical.DescId        = zc_ObjectLink_JuridicalArea_Juridical()
+                                ) 
+                    THEN inAreaId
+                    ELSE 0
+               END
 
     -- Поиск "шапки" за "сегодня"
     SELECT Id INTO vbLoadPriceListId
@@ -210,8 +230,18 @@ BEGIN
              LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SpecCondition
                                      ON ObjectBoolean_Goods_SpecCondition.ObjectId = ObjectString.ObjectId
                                     AND ObjectBoolean_Goods_SpecCondition.DescId = zc_ObjectBoolean_Goods_SpecCondition()
+
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_Area
+                                ON ObjectLink_Goods_AreaObjectLink_Goods_Area.ObjectId = ObjectString.ObjectId
+                               AND ObjectLink_Goods_Area.DescId   = zc_ObjectLink_Goods_Area()
+
       WHERE ObjectString.ValueData = inGoodsCode
-        AND ObjectString.DescId = zc_ObjectString_Goods_Code();
+        AND ObjectString.DescId = zc_ObjectString_Goods_Code()
+        AND (COALESCE (ObjectLink_Goods_Area.ChildObjectId, 0) = COALESCE (vbAreaId, 0)
+          OR (vbAreaId = zc_Area_Basis() AND ObjectLink_Goods_Area.ChildObjectId IS NULL)
+          OR COALESCE (vbAreaId, 0) = 0 AND ObjectLink_Goods_Area.ChildObjectId = zc_Area_Basis())
+            )
+      ;
     END IF;
 
 

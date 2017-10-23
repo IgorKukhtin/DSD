@@ -24,10 +24,20 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.У сотрудника не определено физ.лицо.';
    END IF;
 
-   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Member_ScalePSW(), inMemberId, zfConvert_StringToNumber(inScalePSW));
+   IF zfConvert_StringToNumber (inScalePSW) = 0 AND inScalePSW <> ''
+   THEN
+       RAISE EXCEPTION 'Ошибка.Пароль должен быть числом больше 0.';
+   END IF;
+
+   IF CHAR_LENGTH (inScalePSW) >= 8
+   THEN
+       RAISE EXCEPTION 'Ошибка.Пароль должен быть числом до 8 знаков.';
+   END IF;
+
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Member_ScalePSW(), inMemberId, zfConvert_StringToNumber (inScalePSW));
   
    -- Cохранили протокол
-   PERFORM lpInsert_ObjectProtocol (inMemberId, vbUserId);
+   -- PERFORM lpInsert_ObjectProtocol (inMemberId, vbUserId);
  
 END;
 $BODY$
