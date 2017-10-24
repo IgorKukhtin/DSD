@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Route(
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar 
-             , RateSumma Tfloat, RatePrice  Tfloat, TimePrice  Tfloat
+             , RateSumma Tfloat, RatePrice  Tfloat, TimePrice  Tfloat, RateSummaAdd Tfloat
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , BranchId Integer, BranchCode Integer, BranchName TVarChar
              , RouteKindId Integer, RouteKindCode Integer, RouteKindName TVarChar
@@ -31,9 +31,10 @@ BEGIN
        , Object_Route.ObjectCode AS Code
        , Object_Route.ValueData  AS Name
               
-       , ObjectFloat_RateSumma.ValueData AS RateSumma
-       , ObjectFloat_RatePrice.ValueData AS RatePrice
-       , ObjectFloat_TimePrice.ValueData AS TimePrice
+       , ObjectFloat_RateSumma.ValueData    AS RateSumma
+       , ObjectFloat_RatePrice.ValueData    AS RatePrice
+       , ObjectFloat_TimePrice.ValueData    AS TimePrice
+       , ObjectFloat_RateSummaAdd.ValueData AS RateSummaAdd
 
        , Object_Unit.Id         AS UnitId 
        , Object_Unit.ObjectCode AS UnitCode
@@ -71,6 +72,10 @@ BEGIN
                               ON ObjectFloat_TimePrice.ObjectId = Object_Route.Id
                              AND ObjectFloat_TimePrice.DescId = zc_ObjectFloat_Route_TimePrice()
         
+        LEFT JOIN ObjectFloat AS ObjectFloat_RateSummaAdd
+                              ON ObjectFloat_RateSummaAdd.ObjectId = Object_Route.Id
+                             AND ObjectFloat_RateSummaAdd.DescId = zc_ObjectFloat_Route_RateSummaAdd()
+                             
         LEFT JOIN ObjectLink AS ObjectLink_Route_Unit ON ObjectLink_Route_Unit.ObjectId = Object_Route.Id
                                                      AND ObjectLink_Route_Unit.DescId = zc_ObjectLink_Route_Unit()
         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Route_Unit.ChildObjectId
@@ -103,7 +108,8 @@ BEGIN
            , 0 :: Tfloat AS RateSumma
            , 0 :: Tfloat AS RatePrice
            , 0 :: Tfloat AS TimePrice
-       
+           , 0 :: Tfloat AS RateSummaAdd
+           
            , 0 AS UnitId 
            , 0 AS UnitCode
            , '' :: TVarChar AS UnitName
@@ -136,6 +142,7 @@ ALTER FUNCTION gpSelect_Object_Route (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.10.17         * add RateSummaAdd
  24.05.16         * add TimePrice
  17.04.16         * 
  20.04.15         * RouteGroup             

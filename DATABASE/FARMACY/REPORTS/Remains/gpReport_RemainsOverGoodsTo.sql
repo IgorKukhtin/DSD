@@ -246,7 +246,7 @@ BEGIN
                               , tmp.RemainsStart                                AS RemainsStart_save
                               , tmp.MinExpirationDate
                          FROM tmp
-                              LEFT JOIN tmpSend ON tmpSend.GoodsId = tmp.GoodsId AND tmpSend.UnitId = tmp.UnitId --AND tmpSend.UnitId <> inUnitId
+                              LEFT JOIN tmpSend ON tmpSend.GoodsId = tmp.GoodsId AND tmpSend.UnitId = tmp.UnitId AND tmpSend.UnitId = inUnitId
                         UNION
                          SELECT tmpSend.GoodsId
                               , tmpSend.UnitId
@@ -259,7 +259,7 @@ BEGIN
                               , NULL                         AS MinExpirationDate
                          FROM tmpSend
                               LEFT JOIN tmp ON tmp.GoodsId = tmpSend.GoodsId AND tmp.UnitId = tmpSend.UnitId
-                         --WHERE tmpSend.UnitId <> inUnitId
+                         WHERE tmpSend.UnitId = inUnitId
                            AND tmp.GoodsId IS NULL
                         ;
 
