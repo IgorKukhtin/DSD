@@ -110,7 +110,6 @@ object Personal_ObjectForm: TPersonal_ObjectForm
       object StorageLineName: TcxGridDBColumn
         Caption = #1051#1080#1085#1080#1103' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
         DataBinding.FieldName = 'StorageLineName'
-        GroupIndex = 0
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 120
@@ -156,12 +155,12 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         Width = 80
       end
       object ScalePSW: TcxGridDBColumn
-        Caption = 'Scale PSW'
+        Caption = #1055#1072#1088#1086#1083#1100' '#1076#1083#1103' Scale'
         DataBinding.FieldName = 'ScalePSW'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 60
+        Width = 80
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -201,7 +200,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
   object deStart: TcxDateEdit
     Left = 445
     Top = 26
-    EditValue = 41852d
+    EditValue = 42948d
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 3
@@ -220,7 +219,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
   object deEnd: TcxDateEdit
     Left = 563
     Top = 26
-    EditValue = 41852d
+    EditValue = 42948d
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 8
@@ -417,7 +416,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
       Control = deEnd
     end
     object bbUser_UpdateDialog: TdxBarButton
-      Action = actMember_UpdateDialog
+      Action = mactMember_UpdateDialog
       Category = 0
     end
     object bbPrint: TdxBarButton
@@ -432,10 +431,10 @@ object Personal_ObjectForm: TPersonal_ObjectForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -543,10 +542,10 @@ object Personal_ObjectForm: TPersonal_ObjectForm
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
@@ -566,7 +565,6 @@ object Personal_ObjectForm: TPersonal_ObjectForm
       PostDataSetAfterExecute = True
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1072#1088#1086#1083#1100' '#1076#1083#1103' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103' '#1074' Scale'
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1072#1088#1086#1083#1100' '#1076#1083#1103' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103' '#1074' Scale'
-      ImageIndex = 43
       FormName = 'TMemberPswDialogForm'
       FormNameParam.Value = 'TMemberPswDialogForm'
       FormNameParam.DataType = ftString
@@ -604,7 +602,11 @@ object Personal_ObjectForm: TPersonal_ObjectForm
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProcList = <>
+      StoredProc = spGet_ScalePSW
+      StoredProcList = <
+        item
+          StoredProc = spGet_ScalePSW
+        end>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
@@ -647,8 +649,33 @@ object Personal_ObjectForm: TPersonal_ObjectForm
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
     end
+    object mactMember_UpdateDialog: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_ScalePSW
+        end
+        item
+          Action = actMember_UpdateDialog
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1072#1088#1086#1083#1100' '#1076#1083#1103' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103' '#1074' Scale'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1072#1088#1086#1083#1100' '#1076#1083#1103' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103' '#1074' Scale'
+      ImageIndex = 43
+    end
+    object actGet_ScalePSW: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_ScalePSW
+      StoredProcList = <
+        item
+          StoredProc = spGet_ScalePSW
+        end>
+      Caption = 'actGet_ScalePSW'
+    end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Personal'
     DataSet = ClientDataSet
     DataSets = <
@@ -743,5 +770,22 @@ object Personal_ObjectForm: TPersonal_ObjectForm
     Params = <>
     Left = 376
     Top = 160
+  end
+  object spGet_ScalePSW: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_Member_ScalePSW'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = 42948d
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 168
+    Top = 224
   end
 end

@@ -744,7 +744,7 @@ var
  searchResult, searchResult_save : TSearchRec;
 begin
      //
-     exit;
+     //exit;
      //
      if vbIsBegin = true then exit;
      // запущена обработка
@@ -762,18 +762,21 @@ begin
            //1.только для zc_Enum_EmailKind_InPrice!!!
            if FieldByName('EmailKindId').asInteger = FieldByName('zc_Enum_EmailKind_InPrice').asInteger then
            begin
-                 PanelLoadXLS.Caption:= 'Load XLS : ('+FieldByName('Id').AsString + ') ' + FieldByName('Name').AsString + ' - ' + FieldByName('ContactPersonName').AsString;
+                 PanelLoadXLS.Caption:= 'Load XLS - '+FieldByName('AreaName').asString+'/'+IntToStr(FieldByName('AreaId_load').asInteger)+'  : ('+FieldByName('Id').AsString + ') ' + FieldByName('Name').AsString + ' - ' + FieldByName('ContactPersonName').AsString;
                  Sleep(2000);
                  Application.ProcessMessages;
                  //Загружаем если есть откуда
                  if FieldByName('DirectoryImport').asString <> ''
                  then try
                           //поиск файла xls
-                          if System.SysUtils.FindFirst(FieldByName('DirectoryImport').asString + '\*.xls', faAnyFile, searchResult) = 0 then
+                          if System.SysUtils.FindFirst(FieldByName('DirectoryImport').asString + '*.xls', faAnyFile, searchResult) = 0 then
                           begin
                                searchResult_save:=searchResult;
                                if System.SysUtils.FindNext(searchResult) <> 0
                                then begin
+                                   // выполняется загрузка
+                                   actExecuteImportSettings.ExternalParams.ParamByName('inAreaId').Value:= FieldByName('AreaId_load').asInteger;
+                                   actExecuteImportSettings.ExternalParams.ParamByName('Directory_add').Value:= FieldByName('AreaName').asString;
                                    // выполняется загрузка
                                    mactExecuteImportSettings.Execute;
                                    // если была загрузка прайса - надо потом запустить оптимизацию
@@ -821,6 +824,10 @@ function TMainForm.fBeginXLS_ONE (inUserName : String; inImportSettingsId, inAre
 var
  searchResult, searchResult_save : TSearchRec;
 begin
+     //
+     exit;
+     //
+
      // если НЕ было загрузка прайса - НЕ надо потом запускать оптимизацию
      //fIsOptimizeLastPriceList_View:= false;
 
@@ -844,7 +851,7 @@ begin
                  if FieldByName('DirectoryImport').asString <> ''
                  then try
                           //поиск файла xls
-                          if System.SysUtils.FindFirst(FieldByName('DirectoryImport').asString + '\*.xls', faAnyFile, searchResult) = 0 then
+                          if System.SysUtils.FindFirst(FieldByName('DirectoryImport').asString + '*.xls', faAnyFile, searchResult) = 0 then
                           begin
                                searchResult_save:=searchResult;
                                if System.SysUtils.FindNext(searchResult) <> 0

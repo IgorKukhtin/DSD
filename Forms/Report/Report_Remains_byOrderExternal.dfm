@@ -3,26 +3,25 @@ inherited Report_Remains_byOrderExternalForm: TReport_Remains_byOrderExternalFor
   ClientWidth = 927
   AddOnFormData.Params = FormParams
   ExplicitWidth = 943
-  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 70
     Width = 927
     Height = 238
-    ExplicitTop = 77
+    ExplicitTop = 70
     ExplicitWidth = 927
-    ExplicitHeight = 231
+    ExplicitHeight = 238
     ClientRectBottom = 238
     ClientRectRight = 927
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 927
-      ExplicitHeight = 231
+      ExplicitHeight = 238
       inherited cxGrid: TcxGrid
         Width = 927
         Height = 238
         ExplicitWidth = 927
-        ExplicitHeight = 231
+        ExplicitHeight = 238
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -109,6 +108,7 @@ inherited Report_Remains_byOrderExternalForm: TReport_Remains_byOrderExternalFor
               Column = Remains_8457
             end>
           OptionsData.Editing = False
+          OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil

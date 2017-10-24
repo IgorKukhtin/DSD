@@ -571,16 +571,20 @@ begin
             NodeValue := FieldByName('GoodsName').AsString;
           end;
 
+          //Код товару згідно з УКТ ЗЕД
           with ZVIT.DECLARBODY.RXXXXG4.Add do
           begin
             ROWNUM := IntToStr(i);
-            Nil_ := true;
+            //Nil_ := true;
+            NodeValue := FieldByName('GoodsCodeUKTZED').AsString;
           end;
+          //ChkColumn
           with ZVIT.DECLARBODY.RXXXXG32.Add do
           begin
             ROWNUM := IntToStr(i);
             Nil_ := true;
           end;
+          //DKPPColumn
           with ZVIT.DECLARBODY.RXXXXG33.Add do
           begin
             ROWNUM := IntToStr(i);
@@ -1830,8 +1834,8 @@ begin
           with ZVIT.DECLARBODY.RXXXXG001.Add do begin ROWNUM := I; NodeValue := IntToStr(I); end;
           with ZVIT.DECLARBODY.RXXXXG2S.Add do begin ROWNUM := I; NodeValue := FieldByName('KindName').AsString; end;
           with ZVIT.DECLARBODY.RXXXXG3S.Add do begin ROWNUM := I; NodeValue := FieldByName('GoodsName').AsString; end;
+          with ZVIT.DECLARBODY.RXXXXG4.Add do begin ROWNUM := I; NodeValue := FieldByName('GoodsCodeUKTZED').AsString; end;
 
-          with ZVIT.DECLARBODY.RXXXXG4.Add do begin ROWNUM := I; SetAttributeNS('nil', NS_URI, true); end;
           with ZVIT.DECLARBODY.RXXXXG32.Add do begin ROWNUM := I; SetAttributeNS('nil', NS_URI, true); end;
           with ZVIT.DECLARBODY.RXXXXG33.Add do begin ROWNUM := I; SetAttributeNS('nil', NS_URI, true); end;
 

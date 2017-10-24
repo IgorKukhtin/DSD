@@ -113,7 +113,7 @@ BEGIN
          , Object_Personal_View.isOfficial
          
          , Object_Personal_View.MemberId                                                    AS MemberId
-         , REPEAT ('*', LENGTH (CASE WHEN ObjectFloat_ScalePSW.ValueData = 0 THEN '' ELSE (ObjectFloat_ScalePSW.ValueData :: Integer) :: TVarChar END)) :: TVarChar AS ScalePSW
+         , REPEAT ('*', LENGTH (CASE WHEN COALESCE (ObjectFloat_ScalePSW.ValueData, 0) = 0 THEN '' ELSE '12345' /*(ObjectFloat_ScalePSW.ValueData :: Integer) :: TVarChar*/ END)) :: TVarChar AS ScalePSW
          , COALESCE (ObjectFloat_ScalePSW.ValueData, 0) ::TFloat                            AS ScalePSW_forPrint
          , Object_Personal_View.isErased
 

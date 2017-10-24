@@ -47,29 +47,31 @@ BEGIN
      RETURN QUERY
      WITH 
             -- хардкодим - ЦЕХ колбаса+дел-сы (производство)
-            tmpUnit_8446 AS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect_Object_Unit_byGroup)
+            tmpUnit_CEH AS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect_Object_Unit_byGroup)
             -- хардкодим - Склады База + Реализации
-          , tmpUnit_8457   AS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8457) AS lfSelect_Object_Unit_byGroup)
+          , tmpUnit_SKLAD   AS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8457) AS lfSelect_Object_Unit_byGroup)
+            -- хардкодим - Склады База + Реализации
+          , tmpUnit_all   AS (SELECT UnitId FROM tmpUnit_CEH UNION SELECT UnitId FROM tmpUnit_SKLAD)
 
-          , _tmpMI_master AS(SELECT vbFromId                                      AS FromId
-                                  , MovementItem.ObjectId                         AS GoodsId
-                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                                  , MovementItem.Amount                           AS Amount
-                                  , MIFloat_AmountSecond.ValueData                AS AmountSecond
-                             FROM MovementItem 
-                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                                   ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                                  AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                                  LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
-                                                              ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
-                                                             AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
-                             WHERE MovementItem.MovementId = inMovementId
-                               AND MovementItem.DescId     = zc_MI_Master()
-                               AND MovementItem.isErased   = False
-                             )
-
-          -- главный товар
-          , tmpReceipt AS (SELECT tmpGoods.GoodsId
+            -- данные - наша Заявка
+          , tmpMI AS(SELECT vbFromId                                      AS FromId
+                           , MovementItem.ObjectId                         AS GoodsId
+                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                           , MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) AS Amount
+                      FROM MovementItem
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                           LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                                       ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                      WHERE MovementItem.MovementId = inMovementId
+                        AND MovementItem.DescId     = zc_MI_Master()
+                        AND MovementItem.isErased   = FALSE
+                     )
+            -- поиск рецептур - что из чего делается
+          , tmpReceipt AS (SELECT tmpGoods.GoodsId, tmpGoods.GoodsKindId
+                                  -- нашли Рецепт - Цех (т.е. в приходе ПФ_ГП, в расходе СЫРЬЕ)
                                 , CASE WHEN ObjectLink_Receipt_GoodsKind_Parent_0.ChildObjectId = zc_GoodsKind_WorkProgress()
                                             THEN ObjectLink_Receipt_Parent_0.ChildObjectId
                                        WHEN ObjectLink_Receipt_GoodsKind_Parent_1.ChildObjectId = zc_GoodsKind_WorkProgress()
@@ -79,205 +81,199 @@ BEGIN
                                        WHEN ObjectLink_Receipt_GoodsKind_Parent_3.ChildObjectId = zc_GoodsKind_WorkProgress()
                                             THEN ObjectLink_Receipt_Parent_3.ChildObjectId
                                   END AS ReceiptId_basis
-                                , CASE WHEN ObjectLink_Receipt_GoodsKind_Parent_0.ChildObjectId = zc_GoodsKind_WorkProgress()
-                                            THEN ObjectLink_Receipt_Parent_0.ObjectId
-                                       WHEN ObjectLink_Receipt_GoodsKind_Parent_1.ChildObjectId = zc_GoodsKind_WorkProgress()
-                                            THEN ObjectLink_Receipt_Parent_1.ObjectId
-                                       WHEN ObjectLink_Receipt_GoodsKind_Parent_2.ChildObjectId = zc_GoodsKind_WorkProgress()
-                                            THEN ObjectLink_Receipt_Parent_2.ObjectId
-                                       WHEN ObjectLink_Receipt_GoodsKind_Parent_3.ChildObjectId = zc_GoodsKind_WorkProgress()
-                                            THEN ObjectLink_Receipt_Parent_3.ObjectId
-                                  END AS ReceiptId
-                           FROM _tmpMI_master AS tmpGoods
+
+                                  -- нашли Рецепт - какой товар идет На Упаковку (т.е. в приходе ВЕС, в расходе ПФ_ГП)
+                                , CASE WHEN ObjectLink_Receipt_GoodsKind_Parent_1.ChildObjectId = zc_GoodsKind_WorkProgress()
+                                            THEN ObjectLink_Receipt_Parent_0.ChildObjectId
+                                       ELSE 0 -- т.е. этот товар НЕ идет через упаковку, или уровней больше чем надо
+                                  END AS ReceiptId_pack
+
+                                  -- Главный рецепт - информативно
+                                , Object_Receipt.Id AS ReceiptId
+
+                           FROM tmpMI AS tmpGoods
+                                -- Рецепт для Товара из заявки, т.е. из чего он делается (как правило это Упаковка)
                                 LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods
                                                      ON ObjectLink_Receipt_Goods.ChildObjectId = tmpGoods.GoodsId
-                                                    AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
-                                
+                                                    AND ObjectLink_Receipt_Goods.DescId        = zc_ObjectLink_Receipt_Goods()
                                 INNER JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
-                                                      ON ObjectLink_Receipt_GoodsKind.ObjectId = ObjectLink_Receipt_Goods.ObjectId
-                                                     AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
+                                                      ON ObjectLink_Receipt_GoodsKind.ObjectId      = ObjectLink_Receipt_Goods.ObjectId
+                                                     AND ObjectLink_Receipt_GoodsKind.DescId        = zc_ObjectLink_Receipt_GoodsKind()
                                                      AND ObjectLink_Receipt_GoodsKind.ChildObjectId = tmpGoods.GoodsKindId
-                                INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_Receipt_Goods.ObjectId
+                                INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id       = ObjectLink_Receipt_Goods.ObjectId
                                                                    AND Object_Receipt.isErased = FALSE
+                                -- Только Главный рецепт
                                 INNER JOIN ObjectBoolean AS ObjectBoolean_Main
-                                                         ON ObjectBoolean_Main.ObjectId = Object_Receipt.Id
-                                                        AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
+                                                         ON ObjectBoolean_Main.ObjectId  = Object_Receipt.Id
+                                                        AND ObjectBoolean_Main.DescId    = zc_ObjectBoolean_Receipt_Main()
                                                         AND ObjectBoolean_Main.ValueData = TRUE
+
+                                -- Поднялись на 0 уровень - т.е. из чего делается Товар для Упаковки (как правило это уже ВЕС из ПФ_ГП)
                                 LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent_0
                                                      ON ObjectLink_Receipt_Parent_0.ObjectId = Object_Receipt.Id
-                                                    AND ObjectLink_Receipt_Parent_0.DescId = zc_ObjectLink_Receipt_Parent()
+                                                    AND ObjectLink_Receipt_Parent_0.DescId   = zc_ObjectLink_Receipt_Parent()
                                 LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind_Parent_0
                                                      ON ObjectLink_Receipt_GoodsKind_Parent_0.ObjectId = ObjectLink_Receipt_Parent_0.ChildObjectId
-                                                    AND ObjectLink_Receipt_GoodsKind_Parent_0.DescId = zc_ObjectLink_Receipt_GoodsKind()
+                                                    AND ObjectLink_Receipt_GoodsKind_Parent_0.DescId   = zc_ObjectLink_Receipt_GoodsKind()
   
+                                -- Поднялись на 1 уровень - т.е. из чего делается ПФ_ГП (как правило это ЦЕХ и делается из СЫРЬЯ)
                                 LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent_1
                                                      ON ObjectLink_Receipt_Parent_1.ObjectId = ObjectLink_Receipt_Parent_0.ChildObjectId
-                                                    AND ObjectLink_Receipt_Parent_1.DescId = zc_ObjectLink_Receipt_Parent()
+                                                    AND ObjectLink_Receipt_Parent_1.DescId   = zc_ObjectLink_Receipt_Parent()
                                 LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind_Parent_1
                                                      ON ObjectLink_Receipt_GoodsKind_Parent_1.ObjectId = ObjectLink_Receipt_Parent_1.ChildObjectId
-                                                    AND ObjectLink_Receipt_GoodsKind_Parent_1.DescId = zc_ObjectLink_Receipt_GoodsKind()
+                                                    AND ObjectLink_Receipt_GoodsKind_Parent_1.DescId   = zc_ObjectLink_Receipt_GoodsKind()
   
+                                -- Поднялись на 2 уровень - т.е. если предыдущий это НЕ Цех
                                 LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent_2
                                                      ON ObjectLink_Receipt_Parent_2.ObjectId = ObjectLink_Receipt_Parent_1.ChildObjectId
-                                                    AND ObjectLink_Receipt_Parent_2.DescId = zc_ObjectLink_Receipt_Parent()
+                                                    AND ObjectLink_Receipt_Parent_2.DescId   = zc_ObjectLink_Receipt_Parent()
                                 LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind_Parent_2
                                                      ON ObjectLink_Receipt_GoodsKind_Parent_2.ObjectId = ObjectLink_Receipt_Parent_2.ChildObjectId
-                                                    AND ObjectLink_Receipt_GoodsKind_Parent_2.DescId = zc_ObjectLink_Receipt_GoodsKind()
+                                                    AND ObjectLink_Receipt_GoodsKind_Parent_2.DescId   = zc_ObjectLink_Receipt_GoodsKind()
   
+                                -- Поднялись на 3 уровень - т.е. если предыдущий это НЕ Цех
                                 LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent_3
                                                      ON ObjectLink_Receipt_Parent_3.ObjectId = ObjectLink_Receipt_Parent_2.ChildObjectId
-                                                    AND ObjectLink_Receipt_Parent_3.DescId = zc_ObjectLink_Receipt_Parent()
+                                                    AND ObjectLink_Receipt_Parent_3.DescId   = zc_ObjectLink_Receipt_Parent()
                                 LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind_Parent_3
                                                      ON ObjectLink_Receipt_GoodsKind_Parent_3.ObjectId = ObjectLink_Receipt_Parent_3.ChildObjectId
-                                                    AND ObjectLink_Receipt_GoodsKind_Parent_3.DescId = zc_ObjectLink_Receipt_GoodsKind()
+                                                    AND ObjectLink_Receipt_GoodsKind_Parent_3.DescId   = zc_ObjectLink_Receipt_GoodsKind()
                           )
-                          
-          , tmpGoodsBasis AS (SELECT tmp.GoodsId
-                                   , ObjectLink_Receipt_Goods_basis.ChildObjectId AS GoodsBasisId
-                                   , ObjectLink_Receipt_GoodsKind.ChildObjectId   AS GoodsKindId
-                              FROM tmpReceipt AS tmp
-                                   LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods_basis
-                                                        ON ObjectLink_Receipt_Goods_basis.ObjectId = tmp.ReceiptId_basis
-                                                       AND ObjectLink_Receipt_Goods_basis.DescId = zc_ObjectLink_Receipt_Goods()
-           
+            -- здесь уже товары - что из чего делается
+          , tmpGoodsBasis AS (SELECT tmpReceipt.GoodsId
+                                   , tmpReceipt.GoodsKindId
+                                   , tmpReceipt.ReceiptId
+
+                                   , tmpReceipt.ReceiptId_basis                 AS ReceiptId_basis
+                                   , ObjectLink_Receipt_Goods.ChildObjectId     AS GoodsId_Basis
+                                   , ObjectLink_Receipt_GoodsKind.ChildObjectId AS GoodsKindId_Basis
+
+                                   , tmpReceipt.ReceiptId_pack                       AS ReceiptId_pack
+                                   , ObjectLink_Receipt_Goods_pack.ChildObjectId     AS GoodsKindId_pack
+                                   , ObjectLink_Receipt_GoodsKind_pack.ChildObjectId AS GoodsKindId_pack
+                              FROM tmpReceipt
+                                   LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods
+                                                        ON ObjectLink_Receipt_Goods.ObjectId = tmpReceipt.ReceiptId_basis
+                                                       AND ObjectLink_Receipt_Goods.DescId   = zc_ObjectLink_Receipt_Goods()
                                    LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
-                                                        ON ObjectLink_Receipt_GoodsKind.ObjectId = tmp.ReceiptId_basis
-                                                       AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
+                                                        ON ObjectLink_Receipt_GoodsKind.ObjectId = tmpReceipt.ReceiptId_basis
+                                                       AND ObjectLink_Receipt_GoodsKind.DescId   = zc_ObjectLink_Receipt_GoodsKind()
+                                   LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods_pack
+                                                        ON ObjectLink_Receipt_Goods_pack.ObjectId = tmpReceipt.ReceiptId_pack
+                                                       AND ObjectLink_Receipt_Goods_pack.DescId   = zc_ObjectLink_Receipt_Goods()
+                                   LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind_pack
+                                                        ON ObjectLink_Receipt_GoodsKind_pack.ObjectId = tmpReceipt.ReceiptId_pack
+                                                       AND ObjectLink_Receipt_GoodsKind_pack.DescId   = zc_ObjectLink_Receipt_GoodsKind()
                              )
                              
-          , tmpGoods AS (SELECT _tmpMI_master.GoodsId AS GoodsId
-                         FROM _tmpMI_master
+            -- список товаров - по ним получим Остатки на Складе + в Цехе
+          , tmpGoods AS (SELECT DISTINCT tmpMI.GoodsId                 AS GoodsId FROM tmpMI
                         UNION 
-                         SELECT tmpGoodsBasis.GoodsBasisId AS GoodsId
-                         FROM tmpGoodsBasis 
+                         SELECT DISTINCT tmpGoodsBasis.GoodsBasisId     AS GoodsId FROM tmpGoodsBasis 
+                        UNION 
+                         SELECT DISTINCT tmpGoodsBasis.GoodsKindId_pack AS GoodsId FROM tmpGoodsBasis 
                          )
-            -- Остатки
-         /* , tmpContainer_Count AS (SELECT Container.Id          AS ContainerId
-                                        , CLO_Unit.ObjectId     AS UnitId
-                                        , Container.ObjectId    AS GoodsId
-                                        , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
-                                        , Container.Amount
-                                   FROM _tmpMI_master
-                                        INNER JOIN Container ON Container.ObjectId = _tmpMI_master.GoodsId
-                                                            AND Container.DescId = zc_Container_Count()
-                                                            AND Container.Amount <> 0
-                                        INNER JOIN ContainerLinkObject AS CLO_Unit
-                                                                       ON CLO_Unit.ContainerId = Container.Id
-                                                                      AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
-                                                                     
-                                        LEFT JOIN ContainerLinkObject AS CLO_Account ON CLO_Account.ContainerId = Container.Id
-                                                                                    AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
-    
-                                        LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
-                                                                      ON CLO_GoodsKind.ContainerId = Container.Id
-                                                                     AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
-                                                                     
-                                   WHERE CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
-                                  )
-                              
-          , tmpRemains_All AS (SELECT tmpContainer_Count.UnitId
-                                    , tmpContainer_Count.GoodsId
-                                    , tmpContainer_Count.GoodsKindId
-                                    , tmpContainer_Count.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) AS Amount
-                               FROM tmpContainer_Count
-                                    LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer_Count.ContainerId
-                                                                                  AND MIContainer.OperDate >= vbOperDate
-                                                                                  
-                               GROUP BY tmpContainer_Count.ContainerId
-                                      , tmpContainer_Count.UnitId
-                                      , tmpContainer_Count.GoodsId
-                                      , tmpContainer_Count.GoodsKindId
-                                      , tmpContainer_Count.Amount
-                              )
-                       */    
+            -- остатки на НАЧАЛО ДНЯ - на Складе + в Цехе
           , tmpRemains_All AS (SELECT Container.Id         AS ContainerId
                                     , CLO_Unit.ObjectId    AS UnitId
                                     , tmpGoods.GoodsId     AS GoodsId
-                                    , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
+                                    , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId
 --                                    , Container.Amount      AS Amount
                                     , Container.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) AS Amount
                                FROM tmpGoods
                                     INNER JOIN Container ON Container.ObjectId = tmpGoods.GoodsId
-                                                        AND Container.DescId = zc_Container_Count()
-                                                        AND Container.Amount <> 0
+                                                        AND Container.DescId   = zc_Container_Count()
+                                                        -- AND Container.Amount <> 0
                                     INNER JOIN ContainerLinkObject AS CLO_Unit
                                                                    ON CLO_Unit.ContainerId = Container.Id
-                                                                  AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                                                  AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
+                                    INNER JOIN tmpUnit_all ON tmpUnit_all.UnitId = CLO_Unit.ObjectId
+
                                     LEFT JOIN MovementItemContainer AS MIContainer
                                                                     ON MIContainer.ContainerId = Container.Id
                                                                    AND MIContainer.OperDate >= vbOperDate
                                                                                      
-                                    LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
-                                                                  ON CLO_GoodsKind.ContainerId = Container.Id
-                                                                 AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                                    -- LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                                    --                               ON CLO_GoodsKind.ContainerId = Container.Id
+                                    --                              AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
                                     LEFT JOIN ContainerLinkObject AS CLO_Account
                                                                   ON CLO_Account.ContainerId = Container.Id
                                                                  AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
                                WHERE CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
                                GROUP BY Container.Id
                                       , CLO_Unit.ObjectId 
-                                      , tmpGoods.GoodsId, COALESCE (CLO_GoodsKind.ObjectId, 0)
+                                      , tmpGoods.GoodsId
+                                      , MIContainer.ObjectIntId_Analyzer
                                       , Container.Amount
                                HAVING  Container.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) <> 0
                               )
                               
-          , tmpRemains_8446 AS (SELECT tmpRemains_All.GoodsId
-                                     , tmpRemains_All.GoodsKindId
-                                     , tmpRemains_All.UnitId       AS FromId
-                                     , COALESCE (ContainerLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
-                                     , SUM (tmpRemains_All.Amount) AS Amount
-                                FROM tmpRemains_All
-                                     INNER JOIN tmpUnit_8446  ON tmpUnit_8446.UnitId = tmpRemains_All.UnitId
-                                     INNER JOIN tmpGoodsBasis ON tmpGoodsBasis.GoodsBasisId = tmpRemains_All.GoodsId
-                                  
-                                     LEFT JOIN ContainerLinkObject AS ContainerLO_PartionGoods
-                                                                   ON ContainerLO_PartionGoods.ContainerId = tmpRemains_All.ContainerId
-                                                                  AND ContainerLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
-                                GROUP BY tmpRemains_All.GoodsId
-                                       , tmpRemains_All.GoodsKindId
-                                       , tmpRemains_All.UnitId
-                                       , COALESCE (ContainerLO_PartionGoods.ObjectId, 0)
+            -- остатки на НАЧАЛО ДНЯ - в Цехе
+          , tmpRemains_CEH AS (SELECT tmpRemains_All.GoodsId
+                                    , tmpRemains_All.GoodsKindId
+                                    , tmpRemains_All.UnitId   AS FromId
+                                    , COALESCE (ContainerLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
+                                    , SUM (tmpRemains_All.Amount) AS Amount
+                               FROM tmpRemains_All
+                                    INNER JOIN tmpUnit_CEH  ON tmpUnit_CEH.UnitId = tmpRemains_All.UnitId
+                                    LEFT JOIN ContainerLinkObject AS ContainerLO_PartionGoods
+                                                                  ON ContainerLO_PartionGoods.ContainerId = tmpRemains_All.ContainerId
+                                                                 AND ContainerLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+                               GROUP BY tmpRemains_All.GoodsId
+                                      , tmpRemains_All.GoodsKindId
+                                      , tmpRemains_All.UnitId
+                                      , COALESCE (ContainerLO_PartionGoods.ObjectId, 0)
+                              )
+            -- остатки на НАЧАЛО ДНЯ - на Складе
+          , tmpRemains_SKLAD AS (SELECT tmpRemains_All.GoodsId
+                                      , tmpRemains_All.GoodsKindId
+                                      , tmpRemains_All.UnitId       AS FromId
+                                      , SUM (tmpRemains_All.Amount) AS Amount
+                                 FROM tmpRemains_All
+                                      INNER JOIN tmpUnit_SKLAD ON tmpUnit_SKLAD.UnitId = tmpRemains_All.UnitId
+                                      -- INNER JOIN tmpMI ON tmpMI.GoodsId      = tmpRemains_All.GoodsId
+                                      --                 AND tmpMI.GoodsKindId  = tmpRemains_All.GoodsKindId
+                                 GROUP BY tmpRemains_All.GoodsId
+                                        , tmpRemains_All.GoodsKindId
+                                        , tmpRemains_All.UnitId
                                 )
-                                
-          , tmpRemains_8457 AS (SELECT tmpRemains_All.GoodsId
-                                     , tmpRemains_All.GoodsKindId
-                                     , tmpRemains_All.UnitId       AS FromId
-                                     , SUM (tmpRemains_All.Amount) AS Amount
-                                FROM tmpRemains_All
-                                     INNER JOIN tmpUnit_8457 ON tmpUnit_8457.UnitId = tmpRemains_All.UnitId
-                                     INNER JOIN _tmpMI_master ON _tmpMI_master.GoodsId = tmpRemains_All.GoodsId
-                                                             AND _tmpMI_master.GoodsKindId  = tmpRemains_All.GoodsKindId
-                                GROUP BY tmpRemains_All.GoodsId
-                                       , tmpRemains_All.GoodsKindId
-                                       , tmpRemains_All.UnitId
-                                )
-                                
+            -- ВСЕ Заявки от Покупателя - только Документы
           , tmpOrderExternal AS (SELECT MovementLinkObject_From.ObjectId    AS FromId
                                       , Movement.Id                         AS MovementId
                                       , Movement.OperDate 
                                  FROM Movement
                                       LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                                    ON MovementLinkObject_From.MovementId = Movement.Id
-                                                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                 WHERE Movement.OperDate >= vbOperDate - INTERVAL '1 DAY'
-                                   AND Movement.DescId = zc_Movement_OrderExternal()
-                                   AND Movement.Id <> inMovementId
-                                 )
+                                                                  AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                                 WHERE Movement.OperDate BETWEEN vbOperDate - INTERVAL '1 DAY' AND vbOperDate
+                                   AND Movement.DescId   = zc_Movement_OrderExternal()
+                                   AND Movement.StatusId = zc_Enum_Status_Complete()
+                                   AND Movement.Id       <> inMovementId
+                                )
+            -- ВСЕ Заявки от Покупателя - Товары
           , tmpOrderExternal_MI AS (SELECT Movement.FromId         AS FromId
                                          , Movement.OperDate       AS OperDate
-                                         , MovementItem.Id         AS MovementItemId
+                                         -- , MovementItem.Id         AS MovementItemId
                                          , MovementItem.ObjectId   AS GoodsId
-                                         , COALESCE (_tmpMI_master.GoodsKindId, 0)  AS GoodsKindId   -- вид товара исходнойц заявки
-                                         , MovementItem.Amount     AS Amount
+                                         , COALESCE (MILinkObject_GoodsKind.GoodsKindId, 0) AS GoodsKindId
+                                         , MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) AS Amount
           
                                     FROM tmpOrderExternal AS Movement
                                          INNER JOIN MovementItem ON MovementItem.MovementId = Movement.MovementId
                                                                 AND MovementItem.DescId     = zc_MI_Master()
                                                                 AND MovementItem.isErased   = False
-                                         INNER JOIN _tmpMI_master ON _tmpMI_master.GoodsId = MovementItem.ObjectId
-                                    )
+                                         INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
+
+                                         LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                          ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                         AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                                         LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                                                     ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                                                    AND MIFloat_AmountSecond.DescId         = zc_MIFloat_AmountSecond()
+                                   )
                                     
-          , tmpGoodsKind AS (SELECT MILinkObject_GoodsKind.*
+          /*, tmpGoodsKind AS (SELECT MILinkObject_GoodsKind.*
                              FROM MovementItemLinkObject AS MILinkObject_GoodsKind
                              WHERE MILinkObject_GoodsKind.MovementItemId IN (SELECT DISTINCT tmpOrderExternal_MI.MovementItemId FROM tmpOrderExternal_MI)
                                AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -287,27 +283,25 @@ BEGIN
                              FROM MovementItemFloat AS MIFloat_AmountSecond
                              WHERE MIFloat_AmountSecond.MovementItemId IN (SELECT DISTINCT tmpOrderExternal_MI.MovementItemId FROM tmpOrderExternal_MI)
                                AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
-                             )
+                             )*/
 
+            -- ВСЕ Заявки от Покупателя - собрали по 2-м периодам
           , tmpOrderExternal_Its AS (SELECT Movement.FromId                               AS FromId
                                           , Movement.GoodsId                              AS GoodsId
-                                          , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                                          , SUM (CASE WHEN Movement.OperDate = vbOperDate - INTERVAL '1 DAY' THEN Movement.Amount ELSE 0 END)                AS Amount_Prev
-                                          , SUM (CASE WHEN Movement.OperDate = vbOperDate - INTERVAL '1 DAY' THEN MIFloat_AmountSecond.ValueData ELSE 0 END) AS AmountSecond_Prev
-                                          , SUM (CASE WHEN Movement.OperDate >= vbOperDate THEN Movement.Amount ELSE 0 END)                                  AS Amount_Next
-                                          , SUM (CASE WHEN Movement.OperDate >= vbOperDate THEN MIFloat_AmountSecond.ValueData ELSE 0 END)                   AS AmountSecond_Next                                          
-                                    FROM tmpOrderExternal_MI AS Movement
-                                          INNER JOIN tmpGoodsKind AS MILinkObject_GoodsKind
-                                                                  ON MILinkObject_GoodsKind.MovementItemId = Movement.MovementItemId
-                                                                 AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = COALESCE (Movement.GoodsKindId, 0)
-                                          LEFT JOIN tmpMIFloat_AmountSecond AS MIFloat_AmountSecond
-                                                                            ON MIFloat_AmountSecond.MovementItemId = Movement.MovementItemId
-                                                            
-                                    GROUP BY Movement.FromId
-                                           , Movement.GoodsId 
-                                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                          , Movement.GoodsKindId                          AS GoodsKindId
+                                          , SUM (CASE WHEN Movement.OperDate = vbOperDate - INTERVAL '1 DAY' THEN Movement.Amount ELSE 0 END) AS Amount_Prev
+                                          , SUM (CASE WHEN Movement.OperDate >= vbOperDate THEN Movement.Amount ELSE 0 END)                   AS Amount_Next
+                                     FROM tmpOrderExternal_MI AS Movement
+                                           /*INNER JOIN tmpGoodsKind AS MILinkObject_GoodsKind
+                                                                   ON MILinkObject_GoodsKind.MovementItemId = Movement.MovementItemId
+                                                                  AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = COALESCE (Movement.GoodsKindId, 0)
+                                           LEFT JOIN tmpMIFloat_AmountSecond AS MIFloat_AmountSecond
+                                                                             ON MIFloat_AmountSecond.MovementItemId = Movement.MovementItemId*/
+                                     GROUP BY Movement.FromId
+                                            , Movement.GoodsId 
+                                            , Movement.GoodsKindId
                                     )
-
+            -- ВСЯ ИНФА
           , tmpData AS (SELECT tmp.GoodsId
                              , tmp.GoodsKindId
                              , tmp.GoodsId_Main
@@ -323,7 +317,8 @@ BEGIN
                              , SUM (tmp.Remains_8457)       AS Remains_8457
                              , SUM (tmp.Remains_8446)       AS Remains_8446
                              
-                        FROM (SELECT tmp.GoodsId         AS GoodsId
+                        FROM (-- Текущая заявка
+                              SELECT tmp.GoodsId         AS GoodsId
                                    , tmp.GoodsKindId     AS GoodsKindId
                                    , 0                   AS GoodsId_Main
                                    , 0                   AS GoodsKindId_Main
@@ -337,8 +332,9 @@ BEGIN
                                    , 0                   AS Remains_8457
                                    , 0                   AS Remains_8446
                                    , NULL ::TVarChar       AS PartionGoods
-                              FROM _tmpMI_master AS tmp
+                              FROM tmpMI AS tmp
                             UNION 
+                              -- ВСе заявки
                               SELECT tmp.GoodsId           AS GoodsId
                                    , tmp.GoodsKindId       AS GoodsKindId
                                    , 0                     AS GoodsId_Main
@@ -355,6 +351,7 @@ BEGIN
                                    , NULL ::TVarChar       AS PartionGoods
                               FROM tmpOrderExternal_Its AS tmp
                             UNION 
+                              -- Остаток - Склад
                               SELECT tmp.GoodsId           AS GoodsId
                                    , tmp.GoodsKindId       AS GoodsKindId
                                    , 0                     AS GoodsId_Main
@@ -369,10 +366,11 @@ BEGIN
                                    , tmp.Amount            AS Remains_8457
                                    , 0                     AS Remains_8446
                                    , NULL ::TVarChar       AS PartionGoods
-                              FROM tmpRemains_8457 AS tmp
+                              FROM tmpRemains_SKLAD AS tmp
                             UNION 
+                              -- Остаток - Цех
                               SELECT tmp.GoodsId           AS GoodsId
-                                   , tmp.GoodsKindId       AS GoodsKindI
+                                   , tmp.GoodsKindId       AS GoodsKindId
                                    , tmp.GoodsId           AS GoodsId_Main
                                    , tmp.GoodsKindId       AS GoodsKindId_Main
                                    , tmp.FromId            AS FromId
@@ -385,7 +383,7 @@ BEGIN
                                    , 0                     AS Remains_8457
                                    , tmp.Amount            AS Remains_8446
                                    , Object_PartionGoods.ValueData AS PartionGoods
-                              FROM tmpRemains_8446 AS tmp
+                              FROM tmpRemains_CEH AS tmp
                                    LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmp.PartionGoodsId
                               ) AS tmp
                         GROUP BY tmp.GoodsId
@@ -396,7 +394,7 @@ BEGIN
                                , tmp.PartionGoods
                        )
       , tmpRetail AS (SELECT tmpData.FromId
-                           , COALESCE (ObjectLink_Juridical_Retail.ChildObjectId, tmpData.FromId)     AS RetailId
+                           , COALESCE (ObjectLink_Juridical_Retail.ChildObjectId, 0 /*tmpData.FromId*/)     AS RetailId
                       FROM (SELECT DISTINCT tmpData.FromId FROM tmpData) AS tmpData
                            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                 ON ObjectLink_Partner_Juridical.ObjectId = tmpData.FromId
@@ -430,7 +428,7 @@ BEGIN
                        
       -- Результат
        SELECT Object_From.ObjectCode                     AS FromCode
-            , Object_From.ValueData                      AS FromName
+            , COALESCE (Object_From.ValueData, 'НЕТ Сети') :: TVarChar AS FromName
             
             , Object_GoodsBasis.ObjectCode               AS GoodsCode_Main
             , Object_GoodsBasis.ValueData                AS GoodsName_Main
