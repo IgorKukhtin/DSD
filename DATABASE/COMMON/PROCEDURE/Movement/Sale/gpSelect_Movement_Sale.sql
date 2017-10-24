@@ -53,6 +53,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , Comment TVarChar
              , ReestrKindId Integer, ReestrKindName TVarChar
              , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
+             , InvNumber_Transport_reestr TVarChar, OperDate_Transport_reestr TDateTime
               )
 AS
 $BODY$
@@ -226,7 +227,9 @@ BEGIN
            || zfCalc_PartionMovementName (CASE WHEN MovementBoolean_Peresort.ValueData = TRUE THEN -1 ELSE 1 END * Movement_Production.DescId, MovementDesc_Production.ItemName, Movement_Production.InvNumber, Movement_Production.OperDate)
              ) :: TVarChar AS InvNumber_ProductionFull
 
-
+           , Movement_Transport_Reestr.InvNumber        AS InvNumber_Transport_Reestr
+           , Movement_Transport_Reestr.OperDate         AS OperDate_Transport_Reestr
+           
        FROM (SELECT Movement.Id
                   , tmpRoleAccessKey.AccessKeyId
              FROM tmpStatus
@@ -521,6 +524,20 @@ BEGIN
                                     ON MovementBoolean_Peresort.MovementId =  Movement_Production.Id
                                    AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
 
+          -- инфа из Рееста
+          LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
+                                  ON MovementFloat_MovementItemId.MovementId =  Movement.Id
+                                 AND MovementFloat_MovementItemId.DescId     = zc_MovementFloat_MovementItemId()
+          LEFT JOIN MovementItem AS MI_Reestr 
+                                 ON MI_Reestr.Id       = MovementFloat_MovementItemId.ValueData :: Integer
+                                AND MI_Reestr.isErased = FALSE
+          LEFT JOIN Movement AS Movement_Reestr ON Movement_Reestr.Id = MI_Reestr.MovementId
+          -- инфа из П/л (реестр)
+          LEFT JOIN MovementLinkMovement AS MLM_Transport_Reestr
+                                         ON MLM_Transport_Reestr.MovementId = Movement_Reestr.Id
+                                        AND MLM_Transport_Reestr.DescId     = zc_MovementLinkMovement_Transport()
+          LEFT JOIN Movement AS Movement_Transport_Reestr ON Movement_Transport_Reestr.Id = MLM_Transport_Reestr.MovementChildId
+            
      WHERE /*(vbIsXleb = FALSE OR (View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_30103() -- Хлеб
                                 AND vbIsXleb = TRUE))
         AND */(tmpBranchJuridical.JuridicalId > 0 OR tmpMovement.AccessKeyId > 0)
@@ -534,6 +551,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 24.10.17         * add Movement_Transport_Reestr
  05.10.16         * add inJuridicalBasisId
  21.12.15         * add isPrinted
  25.11.15         * add Promo

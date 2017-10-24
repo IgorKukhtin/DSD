@@ -5,6 +5,7 @@ inherited SaleJournalForm: TSaleJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -253
   ExplicitWidth = 1258
   ExplicitHeight = 679
   PixelsPerInch = 96
@@ -25,6 +26,8 @@ inherited SaleJournalForm: TSaleJournalForm
       inherited cxGrid: TcxGrid
         Width = 1242
         Height = 560
+        ExplicitLeft = -48
+        ExplicitTop = 3
         ExplicitWidth = 1242
         ExplicitHeight = 560
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -280,6 +283,22 @@ inherited SaleJournalForm: TSaleJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object OperDate_Transport_reestr: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1055'.'#1083'. ('#1088#1077#1077#1089#1090#1088')'
+            DataBinding.FieldName = 'OperDate_Transport_reestr'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 83
+          end
+          object InvNumber_Transport_reestr: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1055'.'#1083'. ('#1088#1077#1077#1089#1090#1088')'
+            DataBinding.FieldName = 'InvNumber_Transport_reestr'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
