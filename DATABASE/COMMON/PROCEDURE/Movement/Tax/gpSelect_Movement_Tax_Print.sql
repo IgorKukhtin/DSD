@@ -184,10 +184,10 @@ BEGIN
                        END 
              END                            :: TVarChar AS N10
            , CASE WHEN Object_PersonalSigning.PersonalName <> '' 
-                  THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1, TRUE)
+                  THEN UPPER (zfConvert_FIO (Object_PersonalSigning.PersonalName, 1, TRUE))
                   ELSE CASE WHEN Object_PersonalBookkeeper_View.PersonalName <> '' 
-                            THEN zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1, TRUE)
-                            ELSE 'Н. В. Рудик' 
+                            THEN UPPER (zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1, TRUE))
+                            ELSE UPPER ('Н. В. Рудик' )
                        END 
              END                            :: TVarChar AS N10_ifin
            , 'оплата з поточного рахунка'::TVarChar     AS N9

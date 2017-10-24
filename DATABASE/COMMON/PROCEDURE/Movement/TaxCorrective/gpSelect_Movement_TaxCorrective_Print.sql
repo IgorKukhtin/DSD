@@ -563,10 +563,10 @@ BEGIN
              END                                                :: TVarChar AS N10
            -- , 'А.В. МАРУХНО'::TVarChar                                        AS N10
            , CASE WHEN tmpPersonalSigning.PersonalName <> '' 
-                  THEN zfConvert_FIO (tmpPersonalSigning.PersonalName, 1, TRUE)
+                  THEN UPPER (zfConvert_FIO (tmpPersonalSigning.PersonalName, 1, TRUE))
                   ELSE CASE WHEN tmpPersonalBookkeeper.PersonalName <> '' 
-                            THEN zfConvert_FIO (tmpPersonalBookkeeper.PersonalName, 1, TRUE)
-                            ELSE 'Н. В. Рудик' 
+                            THEN UPPER (zfConvert_FIO (tmpPersonalBookkeeper.PersonalName, 1, TRUE))
+                            ELSE UPPER ('Н. В. Рудик')
                        END 
              END                            :: TVarChar AS N10_ifin
 

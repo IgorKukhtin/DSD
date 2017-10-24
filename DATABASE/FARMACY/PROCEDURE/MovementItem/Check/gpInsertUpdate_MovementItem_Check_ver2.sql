@@ -43,17 +43,34 @@ BEGIN
     IF COALESCE (ioId, 0) = 0
        OR NOT EXISTS (SELECT 1 FROM MovementItem WHERE Id = ioId)
     THEN
-        ioId:= (SELECT MovementItem.Id
-                FROM MovementItem
-                     INNER JOIN MovementItemFloat AS MIFloat_Price
-                                                  ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                 AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                                 AND MIFloat_Price.ValueData = inPrice
-                WHERE MovementItem.MovementId = inMovementId 
-                  AND MovementItem.ObjectId   = inGoodsId 
-                  AND MovementItem.DescId     = zc_MI_Master()
-                  AND MovementItem.isErased   = FALSE
-               );
+        IF COALESCE (inPrice, 0) = 0
+        THEN
+            -- задваивает, зараза, поэтому на этот случай - ТАК
+            ioId:= (SELECT MovementItem.Id
+                    FROM MovementItem
+                         LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                     ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_Price.DescId         = zc_MIFloat_Price()
+                    WHERE MovementItem.MovementId = inMovementId 
+                      AND MovementItem.ObjectId   = inGoodsId 
+                      AND MovementItem.DescId     = zc_MI_Master()
+                      AND MovementItem.isErased   = FALSE
+                      AND COALESCE (MIFloat_Price.ValueData, 0) = inPrice
+                   );
+        ELSE
+            ioId:= (SELECT MovementItem.Id
+                    FROM MovementItem
+                         INNER JOIN MovementItemFloat AS MIFloat_Price
+                                                      ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                                     AND MIFloat_Price.ValueData = inPrice
+                    WHERE MovementItem.MovementId = inMovementId 
+                      AND MovementItem.ObjectId   = inGoodsId 
+                      AND MovementItem.DescId     = zc_MI_Master()
+                      AND MovementItem.isErased   = FALSE
+                   );
+        END IF;
+
     END IF;
 
      -- определяется признак Создание/Корректировка

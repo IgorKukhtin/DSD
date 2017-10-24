@@ -32,7 +32,7 @@ AS
 $BODY$
     DECLARE vbLoadPriceListId Integer;
     DECLARE vbLoadPriceListItemsId Integer;
-    DECLARE vbAreaId Integer;
+    DECLARE vbAreaId_find Integer;
 
     DECLARE vbGoodsId Integer;
     DECLARE vbPriceOriginal TFloat;
@@ -107,7 +107,8 @@ BEGIN
     END IF;
 
 
-    vbAreaId:= CASE WHEN EXISTS (SELECT 1
+    -- определяется AreaId - для поиска товара только для Региона
+    vbAreaId_find:= CASE WHEN EXISTS (SELECT 1
                                  FROM ObjectLink AS ObjectLink_JuridicalArea_Juridical
                                       INNER JOIN Object AS Object_JuridicalArea ON Object_JuridicalArea.Id       = ObjectLink_JuridicalArea_Juridical.ObjectId
                                                                                AND Object_JuridicalArea.isErased = FALSE
@@ -115,16 +116,17 @@ BEGIN
                                                             ON ObjectLink_JuridicalArea_Area.ObjectId      = Object_JuridicalArea.Id 
                                                            AND ObjectLink_JuridicalArea_Area.DescId        = zc_ObjectLink_JuridicalArea_Area()
                                                            AND ObjectLink_JuridicalArea_Area.ChildObjectId = inAreaId
-                                      INNER JOIN ObjeBoolean AS ObjeBoolean_JuridicalArea_GoodsCode
-                                                            ON OObjeBoolean_JuridicalArea_GoodsCode.ObjectId  = Object_JuridicalArea.Id 
-                                                           AND ObjeBoolean_JuridicalArea_GoodsCode.DescId     = zc_ObjectBoolean_JuridicalArea_GoodsCode()
-                                                           AND ObjeBoolean_JuridicalArea_GoodsCode.ValueData  = TRUE
+                                      -- Уникальный код поставщика ТОЛЬКО для Региона
+                                      INNER JOIN ObjectBoolean AS ObjectBoolean_JuridicalArea_GoodsCode
+                                                               ON ObjectBoolean_JuridicalArea_GoodsCode.ObjectId  = Object_JuridicalArea.Id 
+                                                              AND ObjectBoolean_JuridicalArea_GoodsCode.DescId    = zc_ObjectBoolean_JuridicalArea_GoodsCode()
+                                                              AND ObjectBoolean_JuridicalArea_GoodsCode.ValueData = TRUE
                                  WHERE ObjectLink_JuridicalArea_Juridical.ChildObjectId = inJuridicalId
                                    AND ObjectLink_JuridicalArea_Juridical.DescId        = zc_ObjectLink_JuridicalArea_Juridical()
                                 ) 
                     THEN inAreaId
                     ELSE 0
-               END
+               END;
 
     -- Поиск "шапки" за "сегодня"
     SELECT Id INTO vbLoadPriceListId
@@ -232,14 +234,17 @@ BEGIN
                                     AND ObjectBoolean_Goods_SpecCondition.DescId = zc_ObjectBoolean_Goods_SpecCondition()
 
            LEFT JOIN ObjectLink AS ObjectLink_Goods_Area
-                                ON ObjectLink_Goods_AreaObjectLink_Goods_Area.ObjectId = ObjectString.ObjectId
+                                ON ObjectLink_Goods_Area.ObjectId = ObjectString.ObjectId
                                AND ObjectLink_Goods_Area.DescId   = zc_ObjectLink_Goods_Area()
 
       WHERE ObjectString.ValueData = inGoodsCode
         AND ObjectString.DescId = zc_ObjectString_Goods_Code()
-        AND (COALESCE (ObjectLink_Goods_Area.ChildObjectId, 0) = COALESCE (vbAreaId, 0)
-          OR (vbAreaId = zc_Area_Basis() AND ObjectLink_Goods_Area.ChildObjectId IS NULL)
-          OR COALESCE (vbAreaId, 0) = 0 AND ObjectLink_Goods_Area.ChildObjectId = zc_Area_Basis())
+        AND (-- если Регион соответсвует
+             COALESCE (ObjectLink_Goods_Area.ChildObjectId, 0) = vbAreaId_find
+             -- или Это регион zc_Area_Basis - тогда ищем в регионе "пусто"
+          OR (vbAreaId_find = zc_Area_Basis() AND ObjectLink_Goods_Area.ChildObjectId IS NULL)
+             -- или Это регион "пусто" - тогда ищем в регионе zc_Area_Basis
+          OR (vbAreaId_find = 0 AND ObjectLink_Goods_Area.ChildObjectId = zc_Area_Basis())
             )
       ;
     END IF;
