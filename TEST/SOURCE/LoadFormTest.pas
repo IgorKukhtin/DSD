@@ -2251,6 +2251,37 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TStickerForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerEditForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerGroupForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStickerGroupForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerGroupEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStickerGroupEditForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerTypeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStickerTypeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerTypeEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStickerTypeEditForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerTagForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStickerTagForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerTagEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStickerTagEditForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerSortForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStickerSortForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerSortEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStickerSortEditForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerNormForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStickerNormForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerNormEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStickerSortNormForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerFileForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStickerFileForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerFileEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStickerSortFileForm');
+
 end;
 
 procedure TLoadFormTest.LoadStoreRealFormTest;

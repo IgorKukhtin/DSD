@@ -2,7 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Object_StickerNorm(Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_StickerSort(
+CREATE OR REPLACE FUNCTION gpSelect_Object_StickerNorm(
     IN inShowAll     Boolean,  
     IN inSession     TVarChar       -- сессия пользователя
 )
@@ -15,7 +15,7 @@ $BODY$
    DECLARE vbAccessKeyAll Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_StickerSort());
+     -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_StickerNorm());
      vbUserId:= lpGetUserBySession (inSession);
      -- определяется - может ли пользовать видеть весь справочник
      --vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
@@ -25,22 +25,22 @@ BEGIN
        WITH tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inShowAll AS isErased WHERE inShowAll = TRUE)
 
        SELECT 
-             Object_StickerSort.Id          AS Id
-           , Object_StickerSort.ObjectCode  AS Code
-           , Object_StickerSort.ValueData   AS Name
+             Object_StickerNorm.Id          AS Id
+           , Object_StickerNorm.ObjectCode  AS Code
+           , Object_StickerNorm.ValueData   AS Name
 
            , ObjectString_Comment.ValueData AS Comment
 
-           , Object_StickerSort.isErased    AS isErased
+           , Object_StickerNorm.isErased    AS isErased
            
        FROM tmpIsErased
-            INNER JOIN Object AS Object_StickerSort
-                              ON Object_StickerSort.isErased = tmpIsErased.isErased 
-                             AND Object_StickerSort.DescId = zc_Object_StickerSort()
+            INNER JOIN Object AS Object_StickerNorm
+                              ON Object_StickerNorm.isErased = tmpIsErased.isErased 
+                             AND Object_StickerNorm.DescId = zc_Object_StickerNorm()
 
             LEFT JOIN ObjectString AS ObjectString_Comment
-                                   ON ObjectString_Comment.ObjectId = Object_StickerSort.Id
-                                  AND ObjectString_Comment.DescId = zc_ObjectString_StickerSort_Comment()
+                                   ON ObjectString_Comment.ObjectId = Object_StickerNorm.Id
+                                  AND ObjectString_Comment.DescId = zc_ObjectString_StickerNorm_Comment()
     ;
 
 END;

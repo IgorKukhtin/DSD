@@ -793,6 +793,10 @@ CREATE OR REPLACE FUNCTION zc_Object_StickerFile() RETURNS integer AS $BODY$BEGI
 INSERT INTO ObjectDesc(Code, ItemName)
 SELECT 'zc_Object_StickerFile', 'ШАБЛОН' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_StickerFile');
 
+CREATE OR REPLACE FUNCTION zc_Object_Language() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Language'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_Language', 'Язык' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Language');
+
 
 --!!! Аптека
 CREATE OR REPLACE FUNCTION zc_Object_FileTypeKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_FileTypeKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -982,6 +986,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.
  23.10.17         * zc_Object_Sticker ........
+                    zc_Object_Language
  25.09.17         * zc_Object_JuridicalArea
  08.06.17         * zc_Object_MemberIncomeCheck
  25.05.17         * zc_Object_StorageLine

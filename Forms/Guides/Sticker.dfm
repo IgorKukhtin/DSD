@@ -86,7 +86,6 @@ object StickerForm: TStickerForm
       object GoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'GoodsCode'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -98,14 +97,13 @@ object StickerForm: TStickerForm
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = InfoMoneyChoiceForm
+            Action = GoodsChoiceForm
             Default = True
             Kind = bkEllipsis
           end>
-        Visible = False
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 113
       end
       object StickerGroupName: TcxGridDBColumn
@@ -114,23 +112,28 @@ object StickerForm: TStickerForm
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = PaidKindChoiceForm
+            Action = StickerGroupChoiceForm
             Default = True
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 50
+        Width = 90
       end
       object StickerTypeName: TcxGridDBColumn
         Caption = #1057#1087#1086#1089#1086#1073' '#1080#1079#1075#1086#1090#1086#1074#1083#1077#1085#1080#1103' '#1087#1088#1086#1076#1091#1082#1090#1072
         DataBinding.FieldName = 'StickerTypeName'
-        Visible = False
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = StickerTypeChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 110
       end
       object StickerTagName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1087#1088#1086#1076#1091#1082#1090#1072
@@ -138,7 +141,7 @@ object StickerForm: TStickerForm
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = JuridicalInvoiceChoiceForm
+            Action = StickerTagChoiceForm
             Default = True
             Kind = bkEllipsis
           end>
@@ -150,7 +153,13 @@ object StickerForm: TStickerForm
       object StickerSortName: TcxGridDBColumn
         Caption = #1057#1086#1088#1090#1085#1086#1089#1090#1100' '#1087#1088#1086#1076#1091#1082#1090#1072
         DataBinding.FieldName = 'StickerSortName'
-        Visible = False
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = StickerSortChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -162,14 +171,13 @@ object StickerForm: TStickerForm
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = ContractTagChoiceForm
+            Action = StickerNormChoiceForm
             Default = True
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 79
       end
       object StickerFileName: TcxGridDBColumn
@@ -178,7 +186,7 @@ object StickerForm: TStickerForm
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = JuridicalDocumentChoiceForm
+            Action = StickerFileChoiceForm
             Default = True
             Kind = bkEllipsis
           end>
@@ -193,7 +201,7 @@ object StickerForm: TStickerForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 43
+        Width = 63
       end
       object Value1: TcxGridDBColumn
         Caption = #1059#1075#1083#1077#1074#1086#1076#1080' '#1085#1077' '#1073#1086#1083#1100#1096#1077
@@ -203,7 +211,6 @@ object StickerForm: TStickerForm
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 70
       end
       object Value2: TcxGridDBColumn
@@ -214,7 +221,6 @@ object StickerForm: TStickerForm
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 70
       end
       object Value3: TcxGridDBColumn
@@ -225,7 +231,6 @@ object StickerForm: TStickerForm
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 70
       end
       object Value4: TcxGridDBColumn
@@ -236,7 +241,6 @@ object StickerForm: TStickerForm
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 70
       end
       object Value5: TcxGridDBColumn
@@ -247,7 +251,6 @@ object StickerForm: TStickerForm
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 70
       end
       object IsErased: TcxGridDBColumn
@@ -339,7 +342,7 @@ object StickerForm: TStickerForm
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
             item
-              Action = PartnerChoiceForm
+              Caption = 'PartnerChoiceForm'
               Default = True
               Kind = bkEllipsis
             end>
@@ -692,38 +695,29 @@ object StickerForm: TStickerForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object PaidKindChoiceForm: TOpenChoiceForm
+    object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'PaidKindChoiceForm'
-      FormName = 'TPaidKindForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
+      StoredProc = spSelect
+      StoredProcList = <
         item
-          Name = 'Key'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'PaidKindId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'PaidKindName'
-          DataType = ftString
-          MultiSelectSeparator = ','
+          StoredProc = spSelect
         end>
-      isShowModal = True
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
     end
     object InsertRecordCP: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Action = PartnerChoiceForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
@@ -861,33 +855,6 @@ object StickerForm: TStickerForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object ContractKindChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'ContractKindChoiceForm'
-      FormName = 'TContractKindForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'ContractKindId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'ContractKindName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
     object dsdSetErasedPartner: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
@@ -917,6 +884,446 @@ object StickerForm: TStickerForm
       ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DataSource
+    end
+    object dsdSetUnErasedPartner: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErasedPartner
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErasedPartner
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = DSProperty
+    end
+    object dsdSetUnErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = DataSource
+    end
+    object dsdChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      Params = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ImageIndex = 7
+    end
+    object dsdGridToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      MoveParams = <>
+      Grid = cxGrid
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
+    end
+    object dsdUpdateDataSet1: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateStickerProperty
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateStickerProperty
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DSProperty
+    end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
+    end
+    object JuridicalChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'JuridicalChoiceForm'
+      FormName = 'TJuridical_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalCode'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'JuridicalCode'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object StickerGroupChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'StickerGroupChoiceForm'
+      FormName = 'TStickerGroupForm'
+      FormNameParam.Value = 'TStickerGroupForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'StickerGroupId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'StickerGroupName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object StickerTagChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'StickerTagChoiceForm'
+      FormName = 'TStickerTagForm'
+      FormNameParam.Value = 'TStickerTagForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'StickerTagId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'StickerTagName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object StickerNormChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'StickerNormChoiceForm'
+      FormName = 'TStickerNormForm'
+      FormNameParam.Value = 'TStickerNormForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'StickerNormId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'StickerNormName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object StickerFileChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'StickerFileChoiceForm'
+      FormName = 'TStickerFileForm'
+      FormNameParam.Value = 'TStickerFileForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'StickerFileId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'StickerFileName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object GoodsChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsChoiceForm'
+      FormName = 'TGoods_ObjectForm'
+      FormNameParam.Value = 'TGoods_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object StickerTypeChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'StickerTypeChoiceForm'
+      FormName = 'TStickerTypeForm'
+      FormNameParam.Value = 'TStickerTypeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'StickerTypeId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'StickerTypeName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object StickerSortChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'StickerSortChoiceForm'
+      FormName = 'TStickerSortForm'
+      FormNameParam.Value = 'TStickerSortForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'StickerSortId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'StickerSortName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actUpdateVat: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateVat
+      StoredProcList = <
+        item
+          StoredProc = spUpdateVat
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "C'#1090#1072#1074#1082#1072' 0% ('#1090#1072#1084#1086#1078#1085#1103') '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "C'#1090#1072#1074#1082#1072' 0% ('#1090#1072#1084#1086#1078#1085#1103') '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 58
+    end
+    object GoodsKindChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsKindChoiceForm'
+      FormName = 'TGoodsKindForm'
+      FormNameParam.Value = 'TGoodsKindForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object PersonalCollationChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PersonalCollationChoiceForm'
+      FormName = 'TPersonal_ObjectForm'
+      FormNameParam.Value = 'TPersonal_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalCollationId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalCollationName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object ContractSendChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TContractChoiceForm'
+      FormName = 'TContractChoiceForm'
+      FormNameParam.Value = 'TContractChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterJuridicalId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'JuridicalId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterJuridicalName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actContractCondition: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProcList = <
+        item
+        end>
+      Caption = 'actUpdateDataSetCCK'
     end
     object InfoMoneyChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -967,29 +1374,6 @@ object StickerForm: TStickerForm
         end>
       isShowModal = True
     end
-    object InfoMoneyChoiceForm_ContractCondition: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'InfoMoneyChoiceForm'
-      FormName = 'TInfoMoney_ObjectForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
     object GoodsPropertyChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1017,12 +1401,35 @@ object StickerForm: TStickerForm
         end>
       isShowModal = True
     end
-    object JuridicalChoiceForm: TOpenChoiceForm
+    object InfoMoneyChoiceForm_ContractCondition: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'JuridicalChoiceForm'
-      FormName = 'TJuridical_ObjectForm'
+      Caption = 'InfoMoneyChoiceForm'
+      FormName = 'TInfoMoney_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object ContractKindChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'ContractKindChoiceForm'
+      FormName = 'TContractKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
@@ -1031,213 +1438,18 @@ object StickerForm: TStickerForm
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'JuridicalId'
+          ComponentItem = 'ContractKindId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'JuridicalName'
+          ComponentItem = 'ContractKindName'
           DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InfoMoneyId'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'InfoMoneyId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InfoMoneyName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'InfoMoneyName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'OKPO'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'OKPO'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'JuridicalCode'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'JuridicalCode'
           MultiSelectSeparator = ','
         end>
       isShowModal = True
-    end
-    object dsdSetUnErasedPartner: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spErasedUnErasedPartner
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErasedPartner
-        end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 8
-      ShortCut = 46
-      ErasedFieldName = 'isErased'
-      isSetErased = False
-      DataSource = DSProperty
-    end
-    object dsdSetUnErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 8
-      ShortCut = 46
-      ErasedFieldName = 'isErased'
-      isSetErased = False
-      DataSource = DataSource
-    end
-    object ContractTagChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'ContractTagChoiceForm'
-      FormName = 'TContractTagForm'
-      FormNameParam.Value = 'TContractTagForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'ContractTagId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'ContractTagName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object BankAccountChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'BankAccountChoiceForm'
-      FormName = 'TBankAccountForm'
-      FormNameParam.Value = 'TBankAccountForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'BankAccountId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'BankAccountName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object dsdChoiceGuides: TdsdChoiceGuides
-      Category = 'DSDLib'
-      MoveParams = <>
-      Params = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'InvNumber'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'JuridicalName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ImageIndex = 7
-    end
-    object dsdGridToExcel: TdsdGridToExcel
-      Category = 'DSDLib'
-      MoveParams = <>
-      Grid = cxGrid
-      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
-      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
-      ImageIndex = 6
-      ShortCut = 16472
-    end
-    object ContractSendChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'TContractChoiceForm'
-      FormName = 'TContractChoiceForm'
-      FormNameParam.Value = 'TContractChoiceForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MasterJuridicalId'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'JuridicalId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MasterJuridicalName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
     end
     object ContractConditionKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -1261,329 +1473,6 @@ object StickerForm: TStickerForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
-    end
-    object BonusKindChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'BonusKindChoiceForm'
-      FormName = 'TBonusKindForm'
-      FormNameParam.Value = 'TBonusKindForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actContractCondition: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <
-        item
-        end>
-      Caption = 'actUpdateDataSetCCK'
-    end
-    object actUpdateDSGoods: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <
-        item
-        end>
-      Caption = 'actUpdateDSGoods'
-    end
-    object dsdUpdateDataSet1: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdateStickerProperty
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdateStickerProperty
-        end>
-      Caption = 'actUpdateDataSet'
-      DataSource = DSProperty
-    end
-    object actUpdateDataSet: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdate
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdate
-        end>
-      Caption = 'actUpdateDataSet'
-      DataSource = DataSource
-    end
-    object PersonalChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'PersonalChoiceForm'
-      FormName = 'TPersonal_ObjectForm'
-      FormNameParam.Value = 'TPersonal_ObjectForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'PersonalId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'PersonalName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object GoodsChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'GoodsChoiceForm'
-      FormName = 'TGoods_ObjectForm'
-      FormNameParam.Value = 'TGoods_ObjectForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object PersonalTradeChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'PersonalTradeChoiceForm'
-      FormName = 'TPersonal_ObjectForm'
-      FormNameParam.Value = 'TPersonal_ObjectForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'PersonalTradeId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'PersonalTradeName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object GoodsKindChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'GoodsKindChoiceForm'
-      FormName = 'TGoodsKindForm'
-      FormNameParam.Value = 'TGoodsKindForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object PartnerChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'PartnerChoiceForm'
-      FormName = 'TPartner_ObjectForm'
-      FormNameParam.Value = 'TPartner_ObjectForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = CDSProperty
-          ComponentItem = 'PartnerId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = CDSProperty
-          ComponentItem = 'PartnerName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MasterJuridicalId'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'JuridicalId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MasterJuridicalName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'JuridicalName'
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object PersonalCollationChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'PersonalCollationChoiceForm'
-      FormName = 'TPersonal_ObjectForm'
-      FormNameParam.Value = 'TPersonal_ObjectForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'PersonalCollationId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'PersonalCollationName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object JuridicalInvoiceChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'JuridicalDocumentChoiceForm'
-      FormName = 'TJuridical_ObjectForm'
-      FormNameParam.Value = 'TJuridical_ObjectForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'JuridicalInvoiceId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'JuridicalInvoiceName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object JuridicalDocumentChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'JuridicalDocumentChoiceForm'
-      FormName = 'TJuridical_ObjectForm'
-      FormNameParam.Value = 'TJuridical_ObjectForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'JuridicalDocumentId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'JuridicalDocumentName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actUpdateVat: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdateVat
-      StoredProcList = <
-        item
-          StoredProc = spUpdateVat
-        end
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "C'#1090#1072#1074#1082#1072' 0% ('#1090#1072#1084#1086#1078#1085#1103') '#1044#1072'/'#1053#1077#1090'"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "C'#1090#1072#1074#1082#1072' 0% ('#1090#1072#1084#1086#1078#1085#1103') '#1044#1072'/'#1053#1077#1090'"'
-      ImageIndex = 58
-    end
-    object actShowAll: TBooleanStoredProcAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndex = 63
-      Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndexTrue = 62
-      ImageIndexFalse = 63
     end
   end
   object spSelect: TdsdStoredProc
@@ -1656,7 +1545,7 @@ object StickerForm: TStickerForm
     Top = 224
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_Sticker'
+    StoredProcName = 'gpInsertUpdate_Object_Sticker'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1665,70 +1554,146 @@ object StickerForm: TStickerForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPersonalId'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'PersonalId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPersonalTradeId'
+        Name = 'inCode'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'PersonalTradeId'
+        ComponentItem = 'Code'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPersonalCollationId'
+        Name = 'inComment'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'PersonalCollationId'
+        ComponentItem = 'Comment'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inBankAccountId'
+        Name = 'inJuridicalId'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'BankAccountId'
+        ComponentItem = 'JuridicalId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inContractTagId'
+        Name = 'inGoodsId'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'ContractTagId'
+        ComponentItem = 'GoodsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inJuridicalDocumentId'
+        Name = 'inStickerFileId'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'JuridicalDocumentId'
+        ComponentItem = 'StickerFileId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inJuridicalInvoiceId'
+        Name = 'inStickerGroupName'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'JuridicalInvoiceId'
+        ComponentItem = 'StickerGroupName'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsPropertyId'
+        Name = 'inStickerTypeName'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'GoodsPropertyId'
+        ComponentItem = 'StickerTypeName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStickerTagName'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'StickerTagName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStickerSortName'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'StickerSortName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStickerNormName'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'StickerNormName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfo'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Info'
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue1'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Value1'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue2'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Value2'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue3'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Value3'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue4'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Value4'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue5'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Value5'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
