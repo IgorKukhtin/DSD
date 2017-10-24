@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_StickerFile(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , LanguageId Integer, LanguageName TVarChar
              , TradeMarkId Integer, TradeMarkName TVarChar
-             , JuridicalId Integer, JuridicalName TVarChar
+             , JuridicalId Integer, JuridicalName TVarChar, ItemName TVarChar
              , Comment TVarChar
              , isDefault Boolean
              , isErased Boolean
@@ -41,6 +41,7 @@ BEGIN
 
            , Object_Juridical.Id             AS JuridicalId
            , Object_Juridical.ValueData      AS JuridicalName
+           , ObjectDesc.ItemName             AS ItemName
                      
            , ObjectString_Comment.ValueData  AS Comment
 
@@ -74,7 +75,7 @@ BEGIN
                                  ON ObjectLink_StickerFile_Juridical.ObjectId = Object_StickerFile.Id
                                 AND ObjectLink_StickerFile_Juridical.DescId = zc_ObjectLink_StickerFile_Juridical()
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_StickerFile_Juridical.ChildObjectId
-
+            LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Juridical.DescId
     ;
 
 END;

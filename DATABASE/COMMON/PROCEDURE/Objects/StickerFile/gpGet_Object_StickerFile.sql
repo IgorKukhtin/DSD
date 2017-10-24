@@ -38,7 +38,7 @@ BEGIN
            
            , CAST ('' as TVarChar)     AS Comment
 
-           , CAST (NULL AS Boolean)    AS isDefault
+           , CAST (False AS Boolean)   AS isDefault
            ;
    ELSE
        RETURN QUERY 
@@ -58,7 +58,7 @@ BEGIN
            
            , ObjectString_Comment.ValueData AS Comment
            
-           , ObjectBoolean_Default.isErased AS isDefault
+           , ObjectBoolean_Default.ValueData AS isDefault
            
        FROM Object AS Object_StickerFile
             LEFT JOIN ObjectString AS ObjectString_Comment

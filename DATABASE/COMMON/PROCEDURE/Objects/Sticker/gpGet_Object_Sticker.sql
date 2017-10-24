@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
              , StickerSortId Integer, StickerSortName TVarChar
              , StickerNormId Integer, StickerNormName TVarChar
              , StickerFileId Integer, StickerFileName TVarChar
-             , Info TBlob
+             , isInfo TBlob
              , Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat, Value5 TFloat
               )
 AS
@@ -59,7 +59,7 @@ BEGIN
             , CAST (0 as Integer)     AS StickerFileId
             , CAST ('' as TVarChar)   AS StickerFileName
                   
-            , CAST ('' as TBlob)      AS Info
+            , CAST ('' as TBlob)      AS isInfo
                                     
             , CAST (0 as TFloat)      AS Value1
             , CAST (0 as TFloat)      AS Value2
@@ -97,7 +97,7 @@ BEGIN
             , Object_StickerFile.Id             AS StickerFileId
             , Object_StickerFile.ValueData      AS StickerFileName
                   
-            , ObjectBlob_Info.ValueData         AS Info
+            , ObjectBlob_Info.ValueData         AS isInfo
                                     
             , ObjectFloat_Value1.ValueData      AS Value1
             , ObjectFloat_Value2.ValueData      AS Value2

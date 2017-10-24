@@ -2966,7 +2966,7 @@ object ContractForm: TContractForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 648
+    Left = 616
     Top = 392
   end
   object CDSContractGoods: TClientDataSet

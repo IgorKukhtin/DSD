@@ -1,9 +1,9 @@
-object StickerFileForm: TStickerFileForm
+object StickerPackForm: TStickerPackForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1064#1040#1041#1051#1054#1053'>'
-  ClientHeight = 335
-  ClientWidth = 887
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080'>'
+  ClientHeight = 376
+  ClientWidth = 597
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12,6 +12,7 @@ object StickerFileForm: TStickerFileForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   PixelsPerInch = 96
@@ -19,13 +20,11 @@ object StickerFileForm: TStickerFileForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 887
-    Height = 309
+    Width = 597
+    Height = 350
     Align = alClient
     TabOrder = 0
-    LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
-    LookAndFeel.SkinName = ''
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -36,92 +35,49 @@ object StickerFileForm: TStickerFileForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = Name
+      OptionsBehavior.IncSearchItem = clName
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsSelection.InvertSelect = False
+      OptionsView.CellAutoHeight = True
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
-      OptionsView.HeaderHeight = 40
+      OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object Code: TcxGridDBColumn
+      object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
-        GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 72
+        Width = 85
       end
-      object Name: TcxGridDBColumn
+      object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 188
-      end
-      object isDefault: TcxGridDBColumn
-        Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
-        DataBinding.FieldName = 'isDefault'
-        GroupSummaryAlignment = taCenter
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 79
-      end
-      object LanguageName: TcxGridDBColumn
-        Caption = #1071#1079#1099#1082
-        DataBinding.FieldName = 'LanguageName'
-        GroupSummaryAlignment = taCenter
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 120
-      end
-      object TradeMarkName: TcxGridDBColumn
-        Caption = #1058#1086#1088#1075'. '#1084#1072#1088#1082#1072
-        DataBinding.FieldName = 'TradeMarkName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 87
-      end
-      object JuridicalName: TcxGridDBColumn
-        Caption = #1070#1088'. '#1083#1080#1094#1086
-        DataBinding.FieldName = 'JuridicalName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 117
-      end
-      object ItemName: TcxGridDBColumn
-        Caption = #1069#1083#1077#1084#1077#1085#1090
-        DataBinding.FieldName = 'ItemName'
-        GroupSummaryAlignment = taCenter
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 101
+        Width = 181
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 107
+        Width = 111
       end
-      object isErased: TcxGridDBColumn
+      object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
         Visible = False
+        GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 58
+        Width = 59
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -130,17 +86,22 @@ object StickerFileForm: TStickerFileForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 48
-    Top = 96
+    Left = 64
+    Top = 56
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 40
-    Top = 152
+    Left = 72
+    Top = 120
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = clName
+        Properties.Strings = (
+          'Width')
+      end
       item
         Component = Owner
         Properties.Strings = (
@@ -151,7 +112,7 @@ object StickerFileForm: TStickerFileForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 280
+    Left = 320
     Top = 96
   end
   object dxBarManager: TdxBarManager
@@ -171,8 +132,8 @@ object StickerFileForm: TStickerFileForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 160
-    Top = 96
+    Left = 152
+    Top = 88
     DockControlHeights = (
       0
       0
@@ -200,16 +161,16 @@ object StickerFileForm: TStickerFileForm
         end
         item
           Visible = True
-          ItemName = 'bbErased'
+          ItemName = 'bbSetErased'
         end
         item
           Visible = True
-          ItemName = 'bbUnErased'
+          ItemName = 'bbSetUnErased'
         end
         item
           BeginGroup = True
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'dxBarStatic1'
         end
         item
           Visible = True
@@ -217,7 +178,7 @@ object StickerFileForm: TStickerFileForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'dxBarStatic1'
         end
         item
           Visible = True
@@ -225,7 +186,7 @@ object StickerFileForm: TStickerFileForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'dxBarStatic1'
         end
         item
           Visible = True
@@ -233,15 +194,7 @@ object StickerFileForm: TStickerFileForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGridToExcel'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'dxBarStatic1'
         end
         item
           Visible = True
@@ -249,7 +202,15 @@ object StickerFileForm: TStickerFileForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
         end>
       OneOnRow = True
       Row = 0
@@ -269,11 +230,11 @@ object StickerFileForm: TStickerFileForm
       Action = actUpdate
       Category = 0
     end
-    object bbErased: TdxBarButton
+    object bbSetErased: TdxBarButton
       Action = dsdSetErased
       Category = 0
     end
-    object bbUnErased: TdxBarButton
+    object bbSetUnErased: TdxBarButton
       Action = dsdSetUnErased
       Category = 0
     end
@@ -281,10 +242,10 @@ object StickerFileForm: TStickerFileForm
       Action = dsdGridToExcel
       Category = 0
     end
-    object dxBarStatic: TdxBarStatic
-      Caption = '     '
+    object dxBarStatic1: TdxBarStatic
+      Caption = '    '
       Category = 0
-      Hint = '     '
+      Hint = '    '
       Visible = ivAlways
     end
     object bbChoiceGuides: TdxBarButton
@@ -302,8 +263,8 @@ object StickerFileForm: TStickerFileForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 280
-    Top = 152
+    Left = 264
+    Top = 104
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -316,7 +277,7 @@ object StickerFileForm: TStickerFileForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
-      RefreshOnTabSetChanges = True
+      RefreshOnTabSetChanges = False
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -324,8 +285,8 @@ object StickerFileForm: TStickerFileForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TStickerFileEditForm'
-      FormNameParam.Value = 'TStickerFileEditForm'
+      FormName = 'TStickerPackEditForm'
+      FormNameParam.Value = 'TStickerPackEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -334,7 +295,7 @@ object StickerFileForm: TStickerFileForm
           Value = Null
           MultiSelectSeparator = ','
         end>
-      isShowModal = True
+      isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
@@ -345,8 +306,8 @@ object StickerFileForm: TStickerFileForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TStickerFileEditForm'
-      FormNameParam.Value = 'TStickerFileEditForm'
+      FormName = 'TStickerPackEditForm'
+      FormNameParam.Value = 'TStickerPackEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -358,7 +319,7 @@ object StickerFileForm: TStickerFileForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      isShowModal = True
+      isShowModal = False
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
@@ -412,6 +373,7 @@ object StickerFileForm: TStickerFileForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -422,7 +384,6 @@ object StickerFileForm: TStickerFileForm
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
-      Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -479,7 +440,7 @@ object StickerFileForm: TStickerFileForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_StickerFile'
+    StoredProcName = 'gpSelect_Object_StickerPack'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -495,12 +456,12 @@ object StickerFileForm: TStickerFileForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 40
-    Top = 208
+    Left = 240
+    Top = 192
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 160
-    Top = 152
+    Left = 112
+    Top = 168
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
@@ -516,8 +477,8 @@ object StickerFileForm: TStickerFileForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 360
-    Top = 184
+    Left = 184
+    Top = 136
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -544,7 +505,7 @@ object StickerFileForm: TStickerFileForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 368
-    Top = 128
+    Left = 304
+    Top = 152
   end
 end

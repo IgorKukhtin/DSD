@@ -114,7 +114,6 @@
         Default = True
         Kind = bkEllipsis
       end>
-    Properties.ReadOnly = True
     TabOrder = 12
     Width = 296
   end
@@ -390,7 +389,7 @@
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

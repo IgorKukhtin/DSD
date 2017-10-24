@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Sticker(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
-             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
+             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, ItemName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , StickerGroupId Integer, StickerGroupName TVarChar
              , StickerTypeId Integer, StickerTypeName TVarChar
@@ -38,6 +38,7 @@ BEGIN
             , Object_Juridical.Id               AS JuridicalId
             , Object_Juridical.ObjectCode       AS JuridicalCode
             , Object_Juridical.ValueData        AS JuridicalName 
+            , ObjectDesc.ItemName               AS ItemName
 
             , Object_Goods.Id                   AS GoodsId
             , Object_Goods.ObjectCode           AS GoodsCode
@@ -81,6 +82,7 @@ BEGIN
                                   ON ObjectLink_Sticker_Juridical.ObjectId = Object_Sticker.Id
                                  AND ObjectLink_Sticker_Juridical.DescId = zc_ObjectLink_Sticker_Juridical()
              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Sticker_Juridical.ChildObjectId
+             LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Juridical.DescId
 
              LEFT JOIN ObjectLink AS ObjectLink_Sticker_Goods
                                   ON ObjectLink_Sticker_Goods.ObjectId = Object_Sticker.Id

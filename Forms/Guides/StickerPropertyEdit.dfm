@@ -1,9 +1,9 @@
-﻿object StickerEditForm: TStickerEditForm
+﻿object StickerPropertyEditForm: TStickerPropertyEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1069#1090#1080#1082#1077#1090#1082#1091'>'
-  ClientHeight = 395
-  ClientWidth = 687
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1057#1074#1086#1081#1089#1090#1074#1072' '#1101#1090#1080#1082#1077#1090#1082#1080'>'
+  ClientHeight = 433
+  ClientWidth = 349
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,12 +18,12 @@
   TextHeight = 13
   object cxLabel1: TcxLabel
     Left = 19
-    Top = 261
-    Caption = #1059#1075#1083#1077#1074#1086#1076#1080' <='
+    Top = 178
+    Caption = #1042#1086#1083#1086#1075#1110#1089#1090#1100' '#1084#1110#1085
   end
   object cxButton1: TcxButton
-    Left = 403
-    Top = 359
+    Left = 61
+    Top = 399
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -32,8 +32,8 @@
     TabOrder = 1
   end
   object cxButton2: TcxButton
-    Left = 544
-    Top = 359
+    Left = 202
+    Top = 399
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -45,9 +45,9 @@
   object cxLabel5: TcxLabel
     Left = 19
     Top = 46
-    Caption = #1070#1088'. '#1083#1080#1094#1086' /  '#1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100'/ '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+    Caption = #1069#1090#1080#1082#1077#1090#1082#1072
   end
-  object edJuridical: TcxButtonEdit
+  object edSticker: TcxButtonEdit
     Left = 19
     Top = 63
     Properties.Buttons = <
@@ -62,9 +62,9 @@
   object cxLabel6: TcxLabel
     Left = 19
     Top = 89
-    Caption = #1058#1086#1074#1072#1088
+    Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
   end
-  object edGoods: TcxButtonEdit
+  object edGoodsKind: TcxButtonEdit
     Left = 19
     Top = 106
     Properties.Buttons = <
@@ -74,16 +74,16 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 6
-    Width = 312
+    Width = 153
   end
   object cxLabel7: TcxLabel
     Left = 178
-    Top = 218
+    Top = 134
     Caption = #1064#1040#1041#1051#1054#1053
   end
   object edStickerFile: TcxButtonEdit
     Left = 178
-    Top = 235
+    Top = 151
     Properties.Buttons = <
       item
         Default = True
@@ -94,25 +94,25 @@
     Width = 153
   end
   object edComment: TcxTextEdit
-    Left = 17
-    Top = 361
+    Left = 19
+    Top = 364
     TabOrder = 9
     Width = 312
   end
   object cxLabel8: TcxLabel
     Left = 19
-    Top = 345
+    Top = 348
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceValue1: TcxCurrencyEdit
     Left = 19
-    Top = 276
+    Top = 193
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0'
     TabOrder = 11
-    Width = 87
+    Width = 153
   end
   object Код: TcxLabel
     Left = 19
@@ -128,71 +128,71 @@
     Width = 153
   end
   object cxLabel4: TcxLabel
-    Left = 119
-    Top = 261
-    Caption = #1041#1077#1083#1082#1080' >='
+    Left = 178
+    Top = 178
+    Caption = #1042#1086#1083#1086#1075#1110#1089#1090#1100' '#1084#1072#1082#1089
   end
   object ceValue2: TcxCurrencyEdit
-    Left = 119
-    Top = 276
+    Left = 178
+    Top = 193
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0'
     TabOrder = 15
-    Width = 87
+    Width = 153
   end
   object cxLabel9: TcxLabel
-    Left = 216
-    Top = 261
-    Caption = #1046#1080#1088#1099' <='
+    Left = 19
+    Top = 217
+    Caption = #1058' '#1084#1110#1085
   end
   object ceValue3: TcxCurrencyEdit
-    Left = 216
-    Top = 276
+    Left = 19
+    Top = 232
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0'
     TabOrder = 17
-    Width = 87
+    Width = 153
   end
   object cxLabel10: TcxLabel
-    Left = 19
-    Top = 301
-    Caption = #1082#1050#1072#1083#1086#1088
+    Left = 178
+    Top = 218
+    Caption = #1058' '#1084#1072#1082#1089
   end
   object ceValue4: TcxCurrencyEdit
-    Left = 19
-    Top = 316
+    Left = 178
+    Top = 234
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0'
     TabOrder = 19
-    Width = 87
+    Width = 153
   end
   object cxLabel11: TcxLabel
-    Left = 119
-    Top = 301
-    Caption = #1082#1044#1078
+    Left = 19
+    Top = 261
+    Caption = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1076#1110#1073
   end
   object ceValue5: TcxCurrencyEdit
-    Left = 119
-    Top = 316
+    Left = 19
+    Top = 277
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0'
     TabOrder = 21
-    Width = 87
+    Width = 153
   end
   object cxLabel2: TcxLabel
     Left = 19
     Top = 134
-    Caption = #1042#1080#1076' ('#1043#1088#1091#1087#1087#1072')'
+    Caption = #1054#1073#1086#1083#1086#1095#1082#1072
   end
-  object edStickerGroup: TcxButtonEdit
+  object edStickerSkin: TcxButtonEdit
     Left = 19
     Top = 151
     Properties.Buttons = <
@@ -205,12 +205,12 @@
   end
   object cxLabel3: TcxLabel
     Left = 178
-    Top = 134
-    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1087#1088#1086#1076#1091#1082#1090#1072
+    Top = 89
+    Caption = #1042#1080#1076' '#1087#1072#1082#1091#1074#1072#1085#1085#1103
   end
-  object edStickerTag: TcxButtonEdit
+  object edStickerPack: TcxButtonEdit
     Left = 178
-    Top = 151
+    Top = 106
     Properties.Buttons = <
       item
         Default = True
@@ -219,65 +219,42 @@
     TabOrder = 25
     Width = 153
   end
-  object cxLabel12: TcxLabel
-    Left = 19
-    Top = 174
-    Caption = #1057#1086#1088#1090#1085#1086#1089#1090#1100
+  object cbisFix: TcxCheckBox
+    Left = 212
+    Top = 320
+    Caption = #1060#1080#1082#1089'. '#1074#1077#1089
+    TabOrder = 26
+    Width = 74
   end
-  object edStickerSort: TcxButtonEdit
-    Left = 19
-    Top = 192
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    TabOrder = 27
+  object cxLabel12: TcxLabel
+    Left = 178
+    Top = 262
+    Caption = #1042#1077#1089
+  end
+  object ceValue6: TcxCurrencyEdit
+    Left = 178
+    Top = 277
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    TabOrder = 28
     Width = 153
   end
   object cxLabel13: TcxLabel
-    Left = 178
-    Top = 174
-    Caption = #1057#1087#1086#1089#1086#1073' '#1080#1079#1075#1086#1090#1086#1074#1083#1077#1085#1080#1103
-  end
-  object edStickerType: TcxButtonEdit
-    Left = 178
-    Top = 192
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    TabOrder = 29
-    Width = 153
-  end
-  object cxLabel14: TcxLabel
     Left = 19
-    Top = 217
-    Caption = #1058#1059' '#1080#1083#1080' '#1044#1057#1058#1059
+    Top = 304
+    Caption = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103
   end
-  object edStickerNorm: TcxButtonEdit
+  object ceValue7: TcxCurrencyEdit
     Left = 19
-    Top = 235
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    TabOrder = 31
+    Top = 320
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    TabOrder = 30
     Width = 153
-  end
-  object ceInfo: TcxMemo
-    Left = 346
-    Top = 20
-    TabOrder = 32
-    Height = 317
-    Width = 327
-  end
-  object cxLabel15: TcxLabel
-    Left = 346
-    Top = 0
-    Caption = #1057#1086#1089#1090#1072#1074' '#1087#1088#1086#1076#1091#1082#1090#1072
   end
   object ActionList: TActionList
     Left = 305
@@ -312,7 +289,7 @@
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Sticker'
+    StoredProcName = 'gpInsertUpdate_Object_StickerProperty'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -340,17 +317,17 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inJuridicalId'
+        Name = 'inStickerId'
         Value = ''
-        Component = GuidesJuridical
+        Component = GuidesSticker
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsId'
+        Name = 'inGoodsKindId'
         Value = ''
-        Component = GuidesGoods
+        Component = GuidesGoodsKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -364,50 +341,26 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inStickerGroupName'
+        Name = 'inStickerSkinName'
         Value = 0.000000000000000000
-        Component = edStickerGroup
+        Component = edStickerSkin
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inStickerTypeName'
-        Value = 0.000000000000000000
-        Component = edStickerType
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inStickerTagName'
+        Name = 'inStickerPackName'
         Value = Null
-        Component = edStickerTag
+        Component = edStickerPack
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inStickerSortName'
+        Name = 'inisFix'
         Value = Null
-        Component = edStickerSort
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inStickerNormName'
-        Value = Null
-        Component = edStickerNorm
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inInfo'
-        Value = Null
-        Component = ceInfo
-        DataType = ftWideString
+        Component = cbisFix
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -450,10 +403,26 @@
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue6'
+        Value = Null
+        Component = ceValue6
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue7'
+        Value = Null
+        Component = ceValue7
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 304
-    Top = 40
+    Left = 168
+    Top = 312
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -462,12 +431,29 @@
         Value = Null
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StickerId'
+        Value = Null
+        Component = GuidesSticker
+        ComponentItem = 'Key'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StickerName'
+        Value = Null
+        Component = GuidesSticker
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
-    Left = 240
-    Top = 8
+    Left = 280
+    Top = 376
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_Sticker'
+    StoredProcName = 'gpGet_Object_StickerProperty'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -493,31 +479,31 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalId'
+        Name = 'StickerId'
         Value = ''
-        Component = GuidesJuridical
+        Component = GuidesSticker
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalName'
+        Name = 'StickerName'
         Value = ''
-        Component = GuidesJuridical
+        Component = GuidesSticker
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'GoodsId'
+        Name = 'GoodsKindId'
         Value = ''
-        Component = GuidesGoods
+        Component = GuidesGoodsKind
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'GoodsName'
+        Name = 'GoodsKindName'
         Value = ''
-        Component = GuidesGoods
+        Component = GuidesGoodsKind
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -538,76 +524,31 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'StickerGroupId'
+        Name = 'StickerSkinId'
         Value = 0.000000000000000000
-        Component = GuidesStickerGroup
+        Component = GuidesStickerSkin
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'StickerGroupName'
+        Name = 'StickerSkinName'
         Value = Null
-        Component = GuidesStickerGroup
+        Component = GuidesStickerSkin
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'StickerNormId'
+        Name = 'StickerPackId'
         Value = Null
-        Component = GuidesStickerNorm
+        Component = GuidesStickerPack
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'StickerNormName'
+        Name = 'StickerPackName'
         Value = Null
-        Component = GuidesStickerNorm
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'StickerSortId'
-        Value = Null
-        Component = GuidesStickerSort
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'StickerSortName'
-        Value = Null
-        Component = GuidesStickerSort
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'StickerTagId'
-        Value = Null
-        Component = GuidesStickerTag
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'StickerTagName'
-        Value = Null
-        Component = GuidesStickerTag
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'StickerTypeId'
-        Value = Null
-        Component = GuidesStickerType
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'StickerTypeName'
-        Value = Null
-        Component = GuidesStickerType
+        Component = GuidesStickerPack
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -648,15 +589,29 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'isInfo'
+        Name = 'Value6'
         Value = Null
-        Component = ceInfo
+        Component = ceValue6
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Value7'
+        Value = Null
+        Component = ceValue7
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isFix'
+        Value = Null
+        Component = cbisFix
         DataType = ftWideString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 281
-    Top = 96
+    Left = 305
+    Top = 304
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -674,22 +629,22 @@
     Top = 16
   end
   object dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn
-    Left = 304
+    Left = 240
     Top = 8
   end
-  object GuidesJuridical: TdsdGuides
+  object GuidesSticker: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edJuridical
-    FormNameParam.Value = 'TJuridical_ObjectForm'
+    LookupControl = edSticker
+    FormNameParam.Value = 'TStickerForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TJuridical_ObjectForm'
+    FormName = 'TStickerForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesJuridical
+        Component = GuidesSticker
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -698,28 +653,28 @@
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesJuridical
+        Component = GuidesSticker
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 112
-    Top = 71
+    Left = 152
+    Top = 47
   end
-  object GuidesGoods: TdsdGuides
+  object GuidesGoodsKind: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edGoods
-    FormNameParam.Value = 'TGoods_ObjectForm'
+    LookupControl = edGoodsKind
+    FormNameParam.Value = 'TGoodsKindForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoods_ObjectForm'
+    FormName = 'TGoodsKindForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesGoods
+        Component = GuidesGoodsKind
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -728,13 +683,13 @@
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesGoods
+        Component = GuidesGoodsKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 176
+    Left = 104
     Top = 95
   end
   object GuidesStickerFile: TdsdGuides
@@ -765,21 +720,21 @@
         MultiSelectSeparator = ','
       end>
     Left = 271
-    Top = 227
+    Top = 143
   end
-  object GuidesStickerGroup: TdsdGuides
+  object GuidesStickerSkin: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edStickerGroup
-    FormNameParam.Value = 'TStickerGroupForm'
+    LookupControl = edStickerSkin
+    FormNameParam.Value = 'TStickerSkinForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TStickerGroupForm'
+    FormName = 'TStickerSkinForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesStickerGroup
+        Component = GuidesStickerSkin
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -788,7 +743,7 @@
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesStickerGroup
+        Component = GuidesStickerSkin
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -797,19 +752,19 @@
     Left = 88
     Top = 132
   end
-  object GuidesStickerTag: TdsdGuides
+  object GuidesStickerPack: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edStickerTag
-    FormNameParam.Value = 'TStickerTagForm'
+    LookupControl = edStickerPack
+    FormNameParam.Value = 'TStickerPackForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TStickerTagForm'
+    FormName = 'TStickerPackForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesStickerTag
+        Component = GuidesStickerPack
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -818,103 +773,13 @@
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesStickerTag
+        Component = GuidesStickerPack
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 232
-    Top = 144
-  end
-  object GuidesStickerSort: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edStickerSort
-    FormNameParam.Value = 'TStickerSortForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TStickerSortForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesStickerSort
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesStickerSort
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 80
-    Top = 186
-  end
-  object GuidesStickerType: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edStickerType
-    FormNameParam.Value = 'TStickerTypeForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TStickerTypeForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesStickerType
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesStickerType
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 224
-    Top = 178
-  end
-  object GuidesStickerNorm: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edStickerNorm
-    FormNameParam.Value = 'TStickerNormForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TStickerNormForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesStickerNorm
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesStickerNorm
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 96
-    Top = 229
+    Left = 264
+    Top = 91
   end
 end
