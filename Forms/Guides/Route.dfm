@@ -127,7 +127,17 @@ object RouteForm: TRouteForm
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1082#1084' ('#1076#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077')'
         Options.Editing = False
-        Width = 95
+        Width = 104
+      end
+      object RateSummaAdd: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1076#1086#1087#1083#1072#1090#1072' ('#1076#1072#1083#1100#1085#1086#1073'.)'
+        DataBinding.FieldName = 'RateSummaAdd'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 104
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -507,6 +517,14 @@ object RouteForm: TRouteForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'TimePrice'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'RateSummaAdd'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'RateSummaAdd'
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>

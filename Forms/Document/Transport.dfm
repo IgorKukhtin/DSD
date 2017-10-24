@@ -376,6 +376,11 @@
               Format = ',0.####'
               Kind = skSum
               Column = TaxiMore
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RateSummaAdd
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -431,6 +436,11 @@
               Format = ',0.####'
               Kind = skSum
               Column = TaxiMore
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RateSummaAdd
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsBehavior.GoToNextCellOnEnter = True
@@ -452,7 +462,7 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 47
+            Width = 45
           end
           object RouteName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090
@@ -467,7 +477,7 @@
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 102
+            Width = 97
           end
           object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -482,7 +492,7 @@
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 74
+            Width = 71
           end
           object FreightName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1079#1072
@@ -497,21 +507,21 @@
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 62
+            Width = 59
           end
           object Amount: TcxGridDBColumn
             Caption = #1055#1088#1086#1073#1077#1075', '#1082#1084' ('#1086#1089#1085#1086#1074#1085#1086#1081')'
             DataBinding.FieldName = 'Amount'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 54
+            Width = 52
           end
           object DistanceFuelChild: TcxGridDBColumn
             Caption = #1055#1088#1086#1073#1077#1075', '#1082#1084' ('#1076#1086#1087#1086#1083#1085#1080#1090'.)'
             DataBinding.FieldName = 'DistanceFuelChild'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 54
+            Width = 51
           end
           object DistanceWeightTransport: TcxGridDBColumn
             Caption = #1055#1088#1086#1073#1077#1075', '#1082#1084' ('#1089' '#1075#1088#1091#1079#1086#1084', '#1087#1077#1088#1077#1074#1077#1079#1077#1085#1086')'
@@ -526,21 +536,21 @@
             DataBinding.FieldName = 'StartOdometre'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 69
+            Width = 66
           end
           object EndOdometre: TcxGridDBColumn
             Caption = #1057#1087#1080#1076#1086#1084#1077#1090#1088' '#1082#1086#1085#1077#1095'. '#1087#1086#1082#1072#1079#1072#1085#1080#1077', '#1082#1084
             DataBinding.FieldName = 'EndOdometre'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 74
+            Width = 71
           end
           object Weight: TcxGridDBColumn
             Caption = #1042#1077#1089' '#1075#1088#1091#1079#1072', '#1082#1075' ('#1088#1072#1079#1075#1088#1091#1079#1082#1072')'
             DataBinding.FieldName = 'Weight'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 57
+            Width = 54
           end
           object WeightTranspor: TcxGridDBColumn
             Caption = #1042#1077#1089' '#1075#1088#1091#1079#1072', '#1082#1075' ('#1087#1077#1088#1077#1074#1077#1079#1077#1085#1086')'
@@ -563,7 +573,7 @@
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 44
+            Width = 42
           end
           object RouteKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1084#1072#1088#1096#1088#1091#1090#1072
@@ -571,7 +581,7 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 45
+            Width = 43
           end
           object TimePrice: TcxGridDBColumn
             Caption = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1095' '#1082#1086#1084#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1093
@@ -582,7 +592,7 @@
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1082#1086#1084#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1093
-            Width = 62
+            Width = 59
           end
           object RateSumma: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1077', '#1075#1088#1085'.'
@@ -593,7 +603,7 @@
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1082#1086#1084#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1093
-            Width = 56
+            Width = 54
           end
           object RatePrice: TcxGridDBColumn
             Caption = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1082#1084' ('#1076#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077')'
@@ -604,7 +614,7 @@
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             HeaderHint = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1082#1084' ('#1076#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077')'
-            Width = 65
+            Width = 59
           end
           object RatePrice_Calc: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1076#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077',  '#1075#1088#1085
@@ -616,7 +626,18 @@
             HeaderGlyphAlignmentHorz = taCenter
             HeaderHint = #1057#1091#1084#1084#1072',  '#1075#1088#1085' ('#1076#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077')'
             Options.Editing = False
-            Width = 66
+            Width = 61
+          end
+          object RateSummaAdd: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1076#1086#1087#1083#1072#1090#1072' ('#1076#1072#1083#1100#1085#1086#1073'.), '#1075#1088#1085'.'
+            DataBinding.FieldName = 'RateSummaAdd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1082#1086#1084#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1093
+            Width = 67
           end
           object Taxi: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1085#1072' '#1090#1072#1082#1089#1080', '#1075#1088#1085'.'
@@ -627,7 +648,7 @@
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1085#1072' '#1090#1072#1082#1089#1080
-            Width = 64
+            Width = 59
           end
           object TaxiMore: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1085#1072' '#1090#1072#1082#1089#1080' ('#1074#1086#1076#1080#1090'. '#1076#1086#1087'.), '#1075#1088#1085'.'
@@ -638,14 +659,14 @@
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1085#1072' '#1090#1072#1082#1089#1080' ('#1074#1086#1076#1080#1090#1077#1083#1100', '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081'), '#1075#1088#1085'.'
-            Width = 74
+            Width = 69
           end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 117
+            Width = 107
           end
           object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
@@ -1489,7 +1510,7 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 105
+    Left = 137
     Top = 226
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -1929,6 +1950,14 @@
           Value = Null
           Component = MasterCDS
           ComponentItem = 'TimePrice'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'RateSummaAdd'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RateSummaAdd'
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>
@@ -2846,6 +2875,15 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inRateSummaAdd'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'RateSummaAdd'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outRatePrice_Calc'
         Value = Null
         Component = MasterCDS
@@ -2903,8 +2941,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 75
-    Top = 226
+    Left = 83
+    Top = 218
   end
   object ChildCDS: TClientDataSet
     Aggregates = <>
@@ -3694,8 +3732,8 @@
     Top = 267
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 135
-    Top = 190
+    Left = 143
+    Top = 214
   end
   object MasterViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

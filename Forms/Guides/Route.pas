@@ -65,6 +65,7 @@ type
     RouteGroupName: TcxGridDBColumn;
     RateSumma: TcxGridDBColumn;
     RatePrice: TcxGridDBColumn;
+    RateSummaAdd: TcxGridDBColumn;
 
   private
     { Private declarations }

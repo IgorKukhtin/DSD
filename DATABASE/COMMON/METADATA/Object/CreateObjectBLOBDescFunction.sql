@@ -47,9 +47,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectBlob_PhotoMobile_Data() RETURNS integer AS $
 INSERT INTO ObjectBLOBDesc (DescId, Code ,itemname)
    SELECT zc_object_PhotoMobile(), 'zc_ObjectBlob_PhotoMobile_Data','Название товара на сайте' WHERE NOT EXISTS (SELECT * FROM ObjectBlobDesc WHERE Code = 'zc_ObjectBlob_PhotoMobile_Data');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBlob_Sticker_Info() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBlobDesc WHERE Code = 'zc_ObjectBlob_Sticker_Info'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBLOBDesc (DescId, Code ,itemname)
+   SELECT zc_object_Sticker(), 'zc_ObjectBlob_Sticker_Info','Состав продукта' WHERE NOT EXISTS (SELECT * FROM ObjectBlobDesc WHERE Code = 'zc_ObjectBlob_Sticker_Info');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+ 23.10.17         * zc_ObjectBlob_Sticker_Info
  26.03.17         * add zc_ObjectBlob_PhotoMobile_Data
  16.01.16         * add zc_ObjectBlob_RouteMember_Description
  27.10.15                                                         * + zc_objectBlob_Goods_Description

@@ -955,7 +955,21 @@ uses
   ProductionSeparateItemJournal in '..\..\Forms\Document\ProductionSeparateItemJournal.pas' {ProductionSeparateItemJournalForm: TParentForm},
   IFIN_J1201209 in '..\..\SOURCE\MeDOC\IFIN_J1201209.pas',
   Report_Remains_byOrderExternal in '..\..\Forms\Report\Report_Remains_byOrderExternal.pas' {Report_Remains_byOrderExternalForm: TParentForm},
-  MemberPswDialog in '..\..\Forms\Guides\MemberPswDialog.pas' {MemberPswDialogForm: TParentForm};
+  MemberPswDialog in '..\..\Forms\Guides\MemberPswDialog.pas' {MemberPswDialogForm: TParentForm},
+  Sticker in '..\..\Forms\Guides\Sticker.pas' {StickerForm: TParentForm},
+  StickerEdit in '..\..\Forms\Guides\StickerEdit.pas' {StickerEditForm: TParentForm},
+  StickerGroup in '..\..\Forms\Guides\StickerGroup.pas' {StickerGroupForm: TParentForm},
+  StickerGroupEdit in '..\..\Forms\Guides\StickerGroupEdit.pas' {StickerGroupEditForm: TParentForm},
+  StickerTypeEdit in '..\..\Forms\Guides\StickerTypeEdit.pas' {StickerTypeEditForm: TParentForm},
+  StickerTagEdit in '..\..\Forms\Guides\StickerTagEdit.pas' {StickerTagEditForm: TParentForm},
+  StickerTag in '..\..\Forms\Guides\StickerTag.pas' {StickerTagForm: TParentForm},
+  StickerSortEdit in '..\..\Forms\Guides\StickerSortEdit.pas' {StickerSortEditForm: TParentForm},
+  StickerSort in '..\..\Forms\Guides\StickerSort.pas' {StickerSortForm: TParentForm},
+  StickerNormEdit in '..\..\Forms\Guides\StickerNormEdit.pas' {StickerNormEditForm: TParentForm},
+  StickerNorm in '..\..\Forms\Guides\StickerNorm.pas' {StickerNormForm: TParentForm},
+  StickerType in '..\..\Forms\Guides\StickerType.pas' {StickerTypeForm: TParentForm},
+  StickerFile in '..\..\Forms\Guides\StickerFile.pas' {StickerFileForm: TParentForm},
+  StickerFileEdit in '..\..\Forms\Guides\StickerFileEdit.pas' {StickerFileEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

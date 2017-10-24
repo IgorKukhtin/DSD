@@ -1457,6 +1457,51 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_DocumentKind_GoodsKind() RETURNS Intege
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_DocumentKind_GoodsKind', 'Виды Товаров', zc_Object_DocumentKind(), zc_Object_GoodsKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_DocumentKind_GoodsKind');
 
+--Sticker
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Sticker_Juridical() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Sticker_Juridical'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Sticker_Juridical', 'Юридическое лицо', zc_Object_Sticker(), zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Sticker_Juridical');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Sticker_Goods() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Sticker_Goods'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Sticker_Goods', 'Товар', zc_Object_Sticker(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Sticker_Goods');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Sticker_StickerGroup() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Sticker_StickerGroup'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Sticker_StickerGroup', 'Вид продукта (Группа)', zc_Object_Sticker(), zc_Object_StickerGroup() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Sticker_StickerGroup');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Sticker_StickerType() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Sticker_StickerType'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Sticker_StickerType', 'Способ изготовления продукта', zc_Object_Sticker(), zc_Object_StickerType() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Sticker_StickerType');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Sticker_StickerTag() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Sticker_StickerTag'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Sticker_StickerTag', 'Название продукта', zc_Object_Sticker(), zc_Object_StickerTag() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Sticker_StickerTag');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Sticker_StickerSort() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Sticker_StickerSort'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Sticker_StickerSort', 'Сортность продукта', zc_Object_Sticker(), zc_Object_StickerSort() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Sticker_StickerSort');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Sticker_StickerNorm() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Sticker_StickerNorm'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Sticker_StickerNorm', 'ТУ или ДСТУ', zc_Object_Sticker(), zc_Object_StickerNorm() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Sticker_StickerNorm');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Sticker_StickerFile() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Sticker_StickerFile'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Sticker_StickerFile', 'ШАБЛОН', zc_Object_Sticker(), zc_Object_StickerFile() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Sticker_StickerFile');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_StickerFile_Language() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_StickerFile_Language'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_StickerFile_Language', 'Язык', zc_Object_StickerFile(), zc_Object_Language() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_StickerFile_Language');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_StickerFile_TradeMark() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_StickerFile_TradeMark'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_StickerFile_TradeMark', 'Торг.марка', zc_Object_StickerFile(), zc_Object_TradeMark() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_StickerFile_TradeMark');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_StickerFile_Juridical() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_StickerFile_Juridical'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_StickerFile_Juridical', 'Юр.лицо', zc_Object_StickerFile(), zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_StickerFile_Juridical');
+
 
 --!!! АПТЕКА
 
@@ -1782,6 +1827,7 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 23.10.17         * zc_ObjectLink_Sticker_.....
  20.10.17         * zc_ObjectLink_Goods_Area
  25.09.17         * zc_ObjectLink_JuridicalArea_Juridical
                     zc_ObjectLink_JuridicalArea_Area               

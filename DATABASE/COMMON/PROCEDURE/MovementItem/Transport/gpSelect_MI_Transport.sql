@@ -30,19 +30,20 @@ BEGIN
             , Object_Unit.ValueData    AS UnitName
 
             , MovementItem.Amount
-            , MIFloat_DistanceFuelChild.ValueData       AS DistanceFuelChild
-            , MIFloat_DistanceWeightTransport.ValueData AS DistanceWeightTransport
-            , MIFloat_Weight.ValueData                  AS Weight
-            , MIFloat_WeightTransport.ValueData         AS WeightTransport
-            , MIFloat_StartOdometre.ValueData           AS StartOdometre
-            , MIFloat_EndOdometre.ValueData             AS EndOdometre
-            , MIFloat_RateSumma.ValueData               AS RateSumma
-            , MIFloat_RatePrice.ValueData               AS RatePrice
+            , MIFloat_DistanceFuelChild.ValueData                    AS DistanceFuelChild
+            , MIFloat_DistanceWeightTransport.ValueData              AS DistanceWeightTransport
+            , MIFloat_Weight.ValueData                               AS Weight
+            , MIFloat_WeightTransport.ValueData                      AS WeightTransport
+            , MIFloat_StartOdometre.ValueData                        AS StartOdometre
+            , MIFloat_EndOdometre.ValueData                          AS EndOdometre
+            , MIFloat_RateSumma.ValueData                            AS RateSumma
+            , MIFloat_RatePrice.ValueData                            AS RatePrice
             , COALESCE (MIFloat_RatePrice.ValueData, 0) * (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_DistanceFuelChild.ValueData, 0))  AS RatePrice_Calc
-            , COALESCE (MIFloat_TimePrice.ValueData, 0) AS TimePrice
-            , MIFloat_Taxi.ValueData                    AS Taxi
-            , COALESCE (MIFloat_TaxiMore.ValueData, 0) :: TFloat AS TaxiMore
-           
+            , COALESCE (MIFloat_TimePrice.ValueData, 0)              AS TimePrice
+            , MIFloat_Taxi.ValueData                                 AS Taxi
+            , COALESCE (MIFloat_TaxiMore.ValueData, 0)     :: TFloat AS TaxiMore
+            , COALESCE (MIFloat_RateSummaAdd.ValueData, 0) :: TFloat AS RateSummaAdd
+
             , Object_Freight.Id           AS FreightId
             , Object_Freight.ValueData    AS FreightName
             , Object_RouteKind.Id         AS RouteKindId
@@ -99,6 +100,10 @@ BEGIN
                                          ON MIFloat_EndOdometre.MovementItemId = MovementItem.Id
                                         AND MIFloat_EndOdometre.DescId = zc_MIFloat_EndOdometre()
 
+             LEFT JOIN MovementItemFloat AS MIFloat_RateSummaAdd
+                                         ON MIFloat_RateSummaAdd.MovementItemId = MovementItem.Id
+                                        AND MIFloat_RateSummaAdd.DescId = zc_MIFloat_RateSummaAdd()
+                                        
              LEFT JOIN MovementItemString AS MIString_Comment
                                           ON MIString_Comment.MovementItemId = MovementItem.Id 
                                          AND MIString_Comment.DescId = zc_MIString_Comment()
@@ -421,6 +426,7 @@ ALTER FUNCTION gpSelect_MI_Transport (Integer, Boolean, Boolean, TVarChar) OWNER
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 24.10.17         * add RateSummaAdd
  02.02.17         * add TaxiMore
  17.04.16         *
  10.12.13         * add WeightTransport, DistanceWeightTransport              

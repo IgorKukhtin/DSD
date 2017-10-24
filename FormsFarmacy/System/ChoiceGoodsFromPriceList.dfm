@@ -1,15 +1,19 @@
 inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
   ActiveControl = edGoodsSearch
   Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1074' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072#1093
+  ClientHeight = 293
   ClientWidth = 902
   ShowHint = True
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 918
+  ExplicitHeight = 331
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 902
+    Height = 267
     ExplicitWidth = 902
+    ClientRectBottom = 267
     ClientRectRight = 902
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 902
@@ -17,7 +21,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
       inherited cxGrid: TcxGrid
         Top = 27
         Width = 902
-        Height = 255
+        Height = 240
         ExplicitTop = 27
         ExplicitWidth = 902
         ExplicitHeight = 255
@@ -178,6 +182,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
             Caption = #1056#1077#1075#1080#1086#1085
             DataBinding.FieldName = 'AreaName'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
         end
@@ -606,7 +611,6 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
-      
       item
         Name = 'inGoodsSearch'
         Value = Null

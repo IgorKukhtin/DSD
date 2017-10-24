@@ -159,7 +159,7 @@
     Properties.DecimalPlaces = 3
     Properties.DisplayFormat = ',0.###'
     TabOrder = 17
-    Width = 120
+    Width = 135
   end
   object cxLabel6: TcxLabel
     Left = 32
@@ -178,20 +178,36 @@
     Width = 135
   end
   object cxLabel8: TcxLabel
-    Left = 170
+    Left = 173
     Top = 353
     Hint = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1095' ('#1082#1086#1084#1084#1072#1085#1076'.)'
     Caption = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1095' ('#1082#1086#1084#1084#1072#1085#1076'.)'
   end
   object edTimePrice: TcxCurrencyEdit
-    Left = 170
+    Left = 173
     Top = 376
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 3
     Properties.DisplayFormat = ',0.###'
     TabOrder = 21
-    Width = 135
+    Width = 132
+  end
+  object cxLabel9: TcxLabel
+    Left = 173
+    Top = 404
+    Hint = #1057#1091#1084#1084#1072' '#1076#1086#1087#1083#1072#1090#1072' ('#1076#1072#1083#1100#1085#1086#1073'.)'
+    Caption = #1057#1091#1084#1084#1072' '#1076#1086#1087'. ('#1076#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077')'
+  end
+  object edRateSummaAdd: TcxCurrencyEdit
+    Left = 173
+    Top = 427
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 3
+    Properties.DisplayFormat = ',0.###'
+    TabOrder = 23
+    Width = 129
   end
   object ActionList: TActionList
     Left = 328
@@ -273,6 +289,14 @@
         Name = 'inTimePrice'
         Value = Null
         Component = edTimePrice
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRateSummaAdd'
+        Value = Null
+        Component = edRateSummaAdd
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -447,6 +471,13 @@
         Name = 'TimePrice'
         Value = Null
         Component = edTimePrice
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RateSummaAdd'
+        Value = Null
+        Component = edRateSummaAdd
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>

@@ -100,6 +100,24 @@ end;
 
 procedure TdbProcedureTest.CreateObjectProcedure;
 begin
+  ScriptDirectory := ProcedurePath + 'OBJECTS\Sticker\';
+  ProcedureLoad;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\StickerGroup\';
+  ProcedureLoad;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\StickerType\';
+  ProcedureLoad;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\StickerTag\';
+  ProcedureLoad;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\StickerSort\';
+  ProcedureLoad;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\StickerNorm\';
+  ProcedureLoad;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\StickerFile\';
+  ProcedureLoad;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\Language\';
+  ProcedureLoad;
+   exit;
+
   ScriptDirectory := ProcedurePath + 'OBJECTS\_Common\';
   ProcedureLoad;
 
