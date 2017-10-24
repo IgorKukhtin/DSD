@@ -1933,6 +1933,9 @@ end;
 
 procedure TLoadFormTest.LoadUnionFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalRetailPartner_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJuridicalRetailPartner_ObjectForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalUnitFounder_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalUnitFounder_ObjectForm');
 

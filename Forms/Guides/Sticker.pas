@@ -69,7 +69,7 @@ type
     spInsertUpdate: TdsdStoredProc;
     StickerGroupChoiceForm: TOpenChoiceForm;
     actUpdateDataSet: TdsdUpdateDataSet;
-    JuridicalChoiceForm: TOpenChoiceForm;
+    JuridicalUnionChoiceForm: TOpenChoiceForm;
     ContractKindChoiceForm: TOpenChoiceForm;
     StickerSkinChoiceForm: TOpenChoiceForm;
     clCode: TcxGridDBColumn;

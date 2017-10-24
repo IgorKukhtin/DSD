@@ -680,10 +680,10 @@
   object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridical
-    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.Value = 'TJuridicalRetailPartner_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TJuridical_ObjectForm'
+    FormName = 'TJuridicalRetailPartner_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item

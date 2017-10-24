@@ -74,7 +74,7 @@ object StickerForm: TStickerForm
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = JuridicalChoiceForm
+            Action = JuridicalUnionChoiceForm
             Default = True
             Kind = bkEllipsis
           end>
@@ -1155,13 +1155,13 @@ object StickerForm: TStickerForm
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
     end
-    object JuridicalChoiceForm: TOpenChoiceForm
+    object JuridicalUnionChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'JuridicalChoiceForm'
-      FormName = 'TJuridical_ObjectForm'
-      FormNameParam.Value = ''
+      Caption = 'JuridicalUnionChoiceForm'
+      FormName = 'TJuridicalRetailPartner_ObjectForm'
+      FormNameParam.Value = 'TJuridicalRetailPartner_ObjectForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
