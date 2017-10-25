@@ -3,7 +3,7 @@ inherited OrderExternalForm: TOrderExternalForm
   ClientHeight = 411
   ClientWidth = 1362
   ExplicitWidth = 1378
-  ExplicitHeight = 449
+  ExplicitHeight = 446
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -811,8 +811,8 @@ inherited OrderExternalForm: TOrderExternalForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1086#1089#1090#1072#1090#1082#1072#1084'>'
-      Hint = #1054#1090#1095#1077#1090' <'#1055#1086' '#1086#1089#1090#1072#1090#1082#1072#1084'>'
+      Caption = #1054#1090#1095#1077#1090' <'#1042#1067#1055#1054#1051#1053#1045#1053#1048#1045' '#1079#1072#1103#1074#1082#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1042#1067#1055#1054#1051#1053#1045#1053#1048#1045' '#1079#1072#1103#1074#1082#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
       ImageIndex = 25
       FormName = 'TReport_Remains_byOrderExternalForm'
       FormNameParam.Value = 'TReport_Remains_byOrderExternalForm'

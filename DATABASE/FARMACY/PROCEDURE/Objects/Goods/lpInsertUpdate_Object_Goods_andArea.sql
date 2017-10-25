@@ -1,0 +1,53 @@
+-- Function: lpInsertUpdate_Object_Goods_andArea()
+
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods_andArea(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean);
+
+CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Goods_andArea(
+ INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
+    IN inCode                TVarChar  ,    -- Код объекта <Товар>
+    IN inName                TVarChar  ,    -- Название объекта <Товар>
+    IN inGoodsGroupId        Integer   ,    -- группы товаров
+    IN inMeasureId           Integer   ,    -- ссылка на единицу измерения
+    IN inNDSKindId           Integer   ,    -- НДС
+    IN inObjectId            Integer   ,    -- Юр лицо или торговая сеть
+    IN inUserId              Integer   ,    -- 
+    IN inMakerId             Integer   ,    -- Производитель
+    IN inAreaId              Integer   ,    -- 
+    IN inMakerName           TVarChar  ,    -- Производитель
+    IN inCheckName           Boolean
+)
+RETURNS Integer
+AS
+$BODY$
+BEGIN
+   
+   -- сохранили <Объект>
+   ioId := lpInsertUpdate_Object_Goods (ioId                  := ioId
+                                      , inCode                := inCode
+                                      , inName                := inName
+                                      , inGoodsGroupId        := inGoodsGroupId
+                                      , inMeasureId           := inMeasureId
+                                      , inNDSKindId           := inNDSKindId
+                                      , inObjectId            := inObjectId
+                                      , inUserId              := inUserId
+                                      , inMakerId             := inMakerId
+                                      , inMakerName           := inMakerName
+                                      , inCheckName           := inCheckName
+                                       );
+
+  -- сохранили свойство <связи чьи товары>
+  PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Area(), ioId, inAreaId);
+
+
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+  
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.10.17                                        *
+*/
+
+-- тест
+-- SELECT * FROM lpInsertUpdate_Object_Goods_andArea

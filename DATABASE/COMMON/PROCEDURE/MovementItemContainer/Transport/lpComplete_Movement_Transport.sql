@@ -61,7 +61,11 @@ BEGIN
                                                                                                           * CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat)
                                                                                                   ELSE COALESCE (ObjectFloat_RateSumma.ValueData, 0)
                                                                                              END)
-
+                  -- пересохранили свойство <Сумма доплата (дальнобойные)>
+                , lpInsertUpdate_MovementItemFloat (zc_MIFloat_RateSummaAdd(), MovementItem.Id, CASE WHEN ObjectFloat_RatePrice.ValueData > 0
+                                                                                                          THEN 0
+                                                                                                     ELSE COALESCE (ObjectFloat_RateSummaAdd.ValueData, 0)
+                                                                                                END)
           FROM MovementItem
                LEFT JOIN MovementFloat AS MovementFloat_HoursWork
                                        ON MovementFloat_HoursWork.MovementId = inMovementId
@@ -78,6 +82,9 @@ BEGIN
                LEFT JOIN ObjectFloat AS ObjectFloat_TimePrice
                                      ON ObjectFloat_TimePrice.ObjectId = MovementItem.ObjectId
                                     AND ObjectFloat_TimePrice.DescId   = zc_ObjectFloat_Route_TimePrice()
+               LEFT JOIN ObjectFloat AS ObjectFloat_RateSummaAdd
+                                     ON ObjectFloat_RateSummaAdd.ObjectId = MovementItem.ObjectId
+                                    AND ObjectFloat_RateSummaAdd.DescId   = zc_ObjectFloat_Route_RateSummaAdd()
           WHERE MovementItem.MovementId = inMovementId
             AND MovementItem.DescId     = zc_MI_Master()
             AND MovementItem.isErased   = FALSE;
@@ -304,7 +311,8 @@ BEGIN
                                        )
         SELECT _tmpItem.MovementItemId_parent            AS MovementItemId
              , MIFloat_RateSumma.ValueData               AS OperSumm_Add
-             , COALESCE (MIFloat_RatePrice.ValueData, 0) * (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_DistanceFuelChild.ValueData, 0)) AS OperSumm_AddLong
+             , COALESCE (MIFloat_RatePrice.ValueData, 0) * (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_DistanceFuelChild.ValueData, 0))
+             + COALESCE (MIFloat_RateSummaAdd.ValueData, 0) AS OperSumm_AddLong
              , CASE WHEN MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriverMore() THEN COALESCE (MIFloat_TaxiMore.ValueData, 0) ELSE COALESCE (MIFloat_Taxi.ValueData, 0) END AS OperSumm_Taxi
 
                -- для Сотрудника (ЗП)
@@ -422,6 +430,9 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_RatePrice
                                          ON MIFloat_RatePrice.MovementItemId = _tmpItem.MovementItemId_parent
                                         AND MIFloat_RatePrice.DescId = zc_MIFloat_RatePrice()
+             LEFT JOIN MovementItemFloat AS MIFloat_RateSummaAdd
+                                         ON MIFloat_RateSummaAdd.MovementItemId = _tmpItem.MovementItemId_parent
+                                        AND MIFloat_RateSummaAdd.DescId = zc_MIFloat_RateSummaAdd()
              LEFT JOIN MovementItemFloat AS MIFloat_Taxi
                                          ON MIFloat_Taxi.MovementItemId = _tmpItem.MovementItemId_parent
                                         AND MIFloat_Taxi.DescId = zc_MIFloat_Taxi()
@@ -431,6 +442,7 @@ BEGIN
 
         WHERE MIFloat_RateSumma.ValueData <> 0
            OR MIFloat_RatePrice.ValueData <> 0
+           OR MIFloat_RateSummaAdd.ValueData <> 0
            OR CASE WHEN MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriverMore() THEN COALESCE (MIFloat_TaxiMore.ValueData, 0) ELSE COALESCE (MIFloat_Taxi.ValueData, 0) END <> 0
        ;
 

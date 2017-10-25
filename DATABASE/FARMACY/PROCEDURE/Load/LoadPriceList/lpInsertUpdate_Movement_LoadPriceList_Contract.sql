@@ -238,7 +238,7 @@ BEGIN
                                AND ObjectLink_Goods_Area.DescId   = zc_ObjectLink_Goods_Area()
 
       WHERE ObjectString.ValueData = inGoodsCode
-        AND ObjectString.DescId = zc_ObjectString_Goods_Code()
+        AND ObjectString.DescId    = zc_ObjectString_Goods_Code()
         AND (-- если Регион соответсвует
              COALESCE (ObjectLink_Goods_Area.ChildObjectId, 0) = vbAreaId_find
              -- или Это регион zc_Area_Basis - тогда ищем в регионе "пусто"

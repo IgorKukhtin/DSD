@@ -1,4 +1,4 @@
--- View: Object_Goods_View
+-- View: Object_Goods_Main_View
 
 DROP VIEW IF EXISTS Object_Goods_Main_View CASCADE;
 
@@ -60,4 +60,4 @@ ALTER TABLE Object_Goods_Main_View  OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM Object_Goods_View
+-- SELECT * FROM Object_Goods_Main_View
