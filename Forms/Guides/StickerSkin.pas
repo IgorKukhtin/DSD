@@ -1,4 +1,4 @@
-unit StickerFile;
+unit StickerSkin;
 
 interface
 
@@ -20,13 +20,15 @@ uses
   cxDataStorage, cxEdit, Data.DB, cxDBData, dxSkinsdxBarPainter, dsdAddOn,
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox;
+  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
+  DataModul;
 
 type
-  TStickerFileForm = class(TParentForm)
+  TStickerSkinForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    Name: TcxGridDBColumn;
+    clCode: TcxGridDBColumn;
+    clName: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -36,10 +38,10 @@ type
     bbRefresh: TdxBarButton;
     bbInsert: TdxBarButton;
     bbEdit: TdxBarButton;
-    bbErased: TdxBarButton;
-    bbUnErased: TdxBarButton;
+    bbSetErased: TdxBarButton;
+    bbSetUnErased: TdxBarButton;
     bbGridToExcel: TdxBarButton;
-    dxBarStatic: TdxBarStatic;
+    dxBarStatic1: TdxBarStatic;
     bbChoiceGuides: TdxBarButton;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
@@ -50,19 +52,13 @@ type
     dsdGridToExcel: TdsdGridToExcel;
     spSelect: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    dsdChoiceGuides: TdsdChoiceGuides;
-    isErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    Code: TcxGridDBColumn;
-    LanguageName: TcxGridDBColumn;
-    isDefault: TcxGridDBColumn;
-    ItemName: TcxGridDBColumn;
-    JuridicalName: TcxGridDBColumn;
-    TradeMarkName: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
-    ProtocolOpenForm: TdsdOpenForm;
+    dsdChoiceGuides: TdsdChoiceGuides;
+    clErased: TcxGridDBColumn;
     bbProtocolOpenForm: TdxBarButton;
+    ProtocolOpenForm: TdsdOpenForm;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
   private
@@ -75,6 +71,6 @@ type
 implementation
 
 {$R *.dfm}
-initialization
-  RegisterClass(TStickerFileForm);
+ initialization
+  RegisterClass(TStickerSkinForm);
 end.

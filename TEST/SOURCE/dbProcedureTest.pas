@@ -116,6 +116,15 @@ begin
   ProcedureLoad;
   ScriptDirectory := ProcedurePath + 'OBJECTS\Language\';
   ProcedureLoad;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\StickerProperty\';
+  ProcedureLoad;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\StickerPack\';
+  ProcedureLoad;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\StickerSkin\';
+  ProcedureLoad;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\Language\';
+  ProcedureLoad;
+
    exit;
 
   ScriptDirectory := ProcedurePath + 'OBJECTS\_Common\';

@@ -3229,6 +3229,38 @@
 				<Form>StickerFileEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\StickerPropertyEdit.pas">
+				<Form>StickerPropertyEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\StickerPackEdit.pas">
+				<Form>StickerPackEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\StickerPack.pas">
+				<Form>StickerPackForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\LanguageEdit.pas">
+				<Form>LanguageEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Language.pas">
+				<Form>LanguageForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\StickerSkinEdit.pas">
+				<Form>StickerSkinEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\StickerSkin.pas">
+				<Form>StickerSkinForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\JuridicalRetailPartner_Object.pas">
+				<Form>JuridicalRetailPartner_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

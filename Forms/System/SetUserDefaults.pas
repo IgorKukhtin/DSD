@@ -27,6 +27,10 @@ type
     UpdateDataSet: TdsdUpdateDataSet;
     ItemName_user: TcxGridDBColumn;
     ItemName_value: TcxGridDBColumn;
+    spInsertUpdateNull: TdsdStoredProc;
+    actUpdateDefaultValue: TdsdExecStoredProc;
+    bbUpdateDefaultValue: TdxBarButton;
+    macUpdateDefaultValue: TMultiAction;
   private
     { Private declarations }
   public

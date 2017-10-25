@@ -319,12 +319,16 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_StickerFile_Default() RETURNS Intege
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_StickerFile(), 'zc_ObjectBoolean_StickerFile_Default', 'Признак - по умолчанию' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_StickerFile_Default');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_StickerProperty_Fix() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_StickerProperty_Fix'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_StickerProperty(), 'zc_ObjectBoolean_StickerProperty_Fix', 'Признак - по умолчанию' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_StickerProperty_Fix');
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.
  24.10.17         * zc_ObjectBoolean_StickerFile_Default
+                    zc_ObjectBoolean_StickerProperty_Fix
  20.10.17         * zc_ObjectBoolean_JuridicalArea_GoodsCode
  26.09.17         * zc_ObjectBoolean_JuridicalArea_Default
  17.08.17         * zc_ObjectBoolean_Juridical_Deferred

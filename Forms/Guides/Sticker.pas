@@ -69,14 +69,14 @@ type
     spInsertUpdate: TdsdStoredProc;
     StickerGroupChoiceForm: TOpenChoiceForm;
     actUpdateDataSet: TdsdUpdateDataSet;
-    JuridicalChoiceForm: TOpenChoiceForm;
+    JuridicalUnionChoiceForm: TOpenChoiceForm;
     ContractKindChoiceForm: TOpenChoiceForm;
-    InfoMoneyChoiceForm: TOpenChoiceForm;
+    StickerSkinChoiceForm: TOpenChoiceForm;
     clCode: TcxGridDBColumn;
     StickerSortChoiceForm: TOpenChoiceForm;
     InfoMoneyChoiceForm_ContractCondition: TOpenChoiceForm;
     StickerNormName: TcxGridDBColumn;
-    PersonalCollationChoiceForm: TOpenChoiceForm;
+    StickerPackChoiceForm: TOpenChoiceForm;
     StickerTypeChoiceForm: TOpenChoiceForm;
     StickerNormChoiceForm: TOpenChoiceForm;
     StickerTypeName: TcxGridDBColumn;
@@ -95,7 +95,7 @@ type
     spSelectProperty: TdsdStoredProc;
     spInsertUpdateStickerProperty: TdsdStoredProc;
     dsdDBViewAddOnStickerProperty: TdsdDBViewAddOn;
-    InsertRecordCP: TInsertRecord;
+    InsertRecordProperty: TInsertRecord;
     bbRecordCP: TdxBarButton;
     dsdUpdateDataSet1: TdsdUpdateDataSet;
     ProtocolOpenForm: TdsdOpenForm;
@@ -105,7 +105,7 @@ type
     GoodsChoiceForm: TOpenChoiceForm;
     bbRecordGoods: TdxBarButton;
     GoodsKindChoiceForm: TOpenChoiceForm;
-    spErasedUnErasedPartner: TdsdStoredProc;
+    spErasedUnErasedProperty: TdsdStoredProc;
     dsdSetErasedPartner: TdsdUpdateErased;
     bbSetErasedPartner: TdxBarButton;
     bbSetErasedGoods: TdxBarButton;
@@ -118,7 +118,7 @@ type
     bbProtocolOpenFormGoods: TdxBarButton;
     GoodsPropertyChoiceForm: TOpenChoiceForm;
     Value1: TcxGridDBColumn;
-    ContractSendChoiceForm: TOpenChoiceForm;
+    StickerFileChoiceForm1: TOpenChoiceForm;
     spUpdateVat: TdsdStoredProc;
     actUpdateVat: TdsdExecStoredProc;
     bbCustom: TdxBarButton;
@@ -128,14 +128,20 @@ type
     cxGridProperty: TcxGrid;
     cxGridDBTableViewProperty: TcxGridDBTableView;
     colCode: TcxGridDBColumn;
-    isConnected: TcxGridDBColumn;
-    PartnerCode: TcxGridDBColumn;
-    PartnerName: TcxGridDBColumn;
-    clPisErased: TcxGridDBColumn;
+    colisFix: TcxGridDBColumn;
+    colComment: TcxGridDBColumn;
+    colisErased: TcxGridDBColumn;
     cxGridLeveProperty: TcxGridLevel;
     cxLeftSplitter: TcxSplitter;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    colGoodsKindName: TcxGridDBColumn;
+    colStickerPackName: TcxGridDBColumn;
+    colStickerFileName: TcxGridDBColumn;
+    colStickerSkinName: TcxGridDBColumn;
+    actInsertProperty: TdsdInsertUpdateAction;
+    FormParams: TdsdFormParams;
+    Id: TcxGridDBColumn;
 
   private
     { Private declarations }

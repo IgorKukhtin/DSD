@@ -114,7 +114,6 @@
         Default = True
         Kind = bkEllipsis
       end>
-    Properties.ReadOnly = True
     TabOrder = 12
     Width = 296
   end
@@ -210,8 +209,7 @@
       item
         Name = 'inLanguageName'
         Value = ''
-        Component = GuidesLanguage
-        ComponentItem = 'TextValue'
+        Component = edLanguage
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -386,11 +384,11 @@
   object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridical
-    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.Value = 'TJuridicalRetailPartner_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TJuridical_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TJuridicalRetailPartner_ObjectForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

@@ -1,36 +1,32 @@
 -- Function: gpInsertUpdate_Object_StickerProperty()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_StickerProperty(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TBlob, TFloat, TFloat,TFloat,TFloat,TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_StickerProperty(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TBoolean, TFloat, TFloat,TFloat,TFloat,TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_StickerProperty(
- INOUT ioId                  Integer   , -- ключ объекта <Товар>
-    IN inCode                Integer   , -- Код объекта <Товар>
+ INOUT ioId                  Integer   , -- ключ объекта <>
+    IN inCode                Integer   , -- Код объекта <>
     IN inComment             TVarChar  , -- Примечание
-    IN inJuridicalId         Integer   , -- ссылка юр.лицо, ТОрг.сеть, Контрагент
-    IN inGoodsId             Integer   , -- Товар
-    IN inStickerPropertyFileId       Integer   , -- 
-    IN inStickerPropertyGroupName    TVarChar  , -- 
-    IN inStickerPropertyTypeName     TVarChar  , -- 
-    IN inStickerPropertyTagName      TVarChar  , -- 
-    IN inStickerPropertySortName     TVarChar  , -- 
-    IN inStickerPropertyNormName     TVarChar  , -- 
-    IN inInfo                TBlob     , -- 
-    IN inValue1              TFloat    , -- значение цены
-    IN inValue2              TFloat    , -- значение цены
+    IN inStickerId           Integer   , -- ссылка юр.лицо, ТОрг.сеть, Контрагент
+    IN inGoodsKindId         Integer   , -- Товар
+    IN inStickerFileId       Integer   , -- 
+    IN inStickerSkinName     TVarChar  , -- 
+    IN inStickerPackName     TVarChar  , -- 
+    IN inFix                 Boolean     , -- 
+    IN inValue1              TFloat    , -- 
+    IN inValue2              TFloat    , -- 
     IN inValue3              TFloat    , --
     IN inValue4              TFloat    , --
     IN inValue5              TFloat    , --
+    IN inValue6              TFloat    , --
+    IN inValue7              TFloat    , --
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId            Integer;
    DECLARE vbCode              Integer;   
-   DECLARE vbStickerPropertyGroupId    Integer;
-   DECLARE vbStickerPropertyTypeId     Integer;
-   DECLARE vbStickerPropertyTagId      Integer;
-   DECLARE vbStickerPropertySortId     Integer;
-   DECLARE vbStickerPropertyNormId     Integer;
+   DECLARE vbStickerSkinId     Integer;
+   DECLARE vbStickerPackId     Integer;
    DECLARE vbIsUpdate          Boolean;
    
 BEGIN
@@ -52,14 +48,14 @@ BEGIN
    ioId := lpInsertUpdate_Object (ioId, zc_Object_StickerProperty(), vbCode, COALESCE (inComment, ''));
 
    -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_StickerProperty_Juridical(), ioId, inJuridicalId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_StickerProperty_Sticker(), ioId, inStickerId);
    -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_StickerProperty_Goods(), ioId, inGoodsId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_StickerProperty_GoodsKind(), ioId, inGoodsKindId);
    -- сохранили вязь с <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_StickerProperty_StickerPropertyFile(), ioId, inStickerPropertyFileId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_StickerProperty_StickerFile(), ioId, inStickerFileId);
    
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectBlob (zc_ObjectBlob_StickerProperty_Info(), ioId, inInfo);
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_StickerProperty_Fix(), ioId, inFix);
    
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerProperty_Value1(), ioId, inValue1);
@@ -71,89 +67,44 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerProperty_Value4(), ioId, inValue4);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerProperty_Value5(), ioId, inValue5);
-   
-   -- пытаемся найти "Вид продукта (Группа)"
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerProperty_Value6(), ioId, inValue6);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerProperty_Value7(), ioId, inValue7);
+     
+   -- пытаемся найти "Оболочка"
    -- если не находим записывае новый элемент в справочник
-   vbStickerPropertyGroupId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_StickerPropertyGroup() AND UPPER (TRIM(Object.ValueData)) LIKE UPPER (TRIM(inStickerPropertyGroupName)));
-   IF COALESCE (vbStickerPropertyGroupId, 0) = 0 AND COALESCE (inStickerPropertyGroupName, '')<> ''
+   vbStickerSkinId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_StickerSkin() AND UPPER (TRIM(Object.ValueData)) LIKE UPPER (TRIM(inStickerSkinName)));
+   IF COALESCE (vbStickerSkinId, 0) = 0 AND COALESCE (inStickerSkinName, '')<> ''
    THEN
        -- записываем новый элемент
-       vbStickerPropertyGroupId := gpInsertUpdate_Object_StickerPropertyGroup (ioId     := 0
-                                                             , inCode   := lfGet_ObjectCode(0, zc_Object_StickerPropertyGroup()) 
-                                                             , inName   := TRIM(inStickerPropertyGroupName)
-                                                             , inComment:= '' ::TVarChar
-                                                             , inSession:= inSession
-                                                              );
+       vbStickerSkinId := gpInsertUpdate_Object_StickerSkin (ioId     := 0
+                                                           , inCode   := lfGet_ObjectCode(0, zc_Object_StickerSkin()) 
+                                                           , inName   := TRIM(inStickerSkinName)
+                                                           , inComment:= '' ::TVarChar
+                                                           , inSession:= inSession
+                                                            );
    END IF; 
 
-   -- пытаемся найти "Способ изготовления продукта"
+   -- пытаемся найти "вид пакування"
    -- если не находим записывае новый элемент в справочник
-   vbStickerPropertyTypeId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_StickerPropertyType() AND UPPER (TRIM(Object.ValueData)) LIKE UPPER (TRIM(inStickerPropertyTypeName)));
-   IF COALESCE (vbStickerPropertyTypeId, 0) = 0 AND COALESCE (inStickerPropertyTypeName, '')<> ''
+   vbStickerPackId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_StickerPack() AND UPPER (TRIM(Object.ValueData)) LIKE UPPER (TRIM(inStickerPackName)));
+   IF COALESCE (vbStickerPackId, 0) = 0 AND COALESCE (inStickerPackName, '')<> ''
    THEN
        -- записываем новый элемент
-       vbStickerPropertyTypeId := gpInsertUpdate_Object_StickerPropertyType (ioId     := 0
-                                                           , inCode   := lfGet_ObjectCode(0, zc_Object_StickerPropertyType()) 
-                                                           , inName   := TRIM(inStickerPropertyTypeName)
+       vbStickerPackId := gpInsertUpdate_Object_StickerPack (ioId     := 0
+                                                           , inCode   := lfGet_ObjectCode(0, zc_Object_StickerPack()) 
+                                                           , inName   := TRIM(inStickerPackName)
                                                            , inComment:= '' ::TVarChar
                                                            , inSession:= inSession
                                                             );
    END IF;
 
-   -- пытаемся найти "Название продукта"
-   -- если не находим записывае новый элемент в справочник
-   vbStickerPropertyTagId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_StickerPropertyTag() AND UPPER (TRIM(Object.ValueData)) LIKE UPPER (TRIM(inStickerPropertyTagName)));
-   IF COALESCE (vbStickerPropertyTagId, 0) = 0 AND COALESCE (inStickerPropertyTagName, '')<> ''
-   THEN
-       -- записываем новый элемент
-       vbStickerPropertyTagId := gpInsertUpdate_Object_StickerPropertyTag (ioId     := 0
-                                                         , inCode   := lfGet_ObjectCode(0, zc_Object_StickerPropertyTag()) 
-                                                         , inName   := TRIM(inStickerPropertyTagName)
-                                                         , inComment:= '' ::TVarChar
-                                                         , inSession:= inSession
-                                                          );
-   END IF;
-
-   -- пытаемся найти " 	Сортность продукта"
-   -- если не находим записывае новый элемент в справочник
-   vbStickerPropertySortId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_StickerPropertySort() AND UPPER (TRIM(Object.ValueData)) LIKE UPPER (TRIM(inStickerPropertySortName)));
-   IF COALESCE (vbStickerPropertySortId, 0) = 0 AND COALESCE (inStickerPropertySortName, '')<> ''
-   THEN
-       -- записываем новый элемент
-       vbStickerPropertySortId := gpInsertUpdate_Object_StickerPropertySort (ioId     := 0
-                                                           , inCode   := lfGet_ObjectCode(0, zc_Object_StickerPropertySort()) 
-                                                           , inName   := TRIM(inStickerPropertySortName)
-                                                           , inComment:= '' ::TVarChar
-                                                           , inSession:= inSession
-                                                            );
-   END IF;
-
-   -- пытаемся найти "ТУ или ДСТУ"
-   -- если не находим записывае новый элемент в справочник
-   vbStickerPropertyNormId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_StickerPropertyNorm() AND UPPER (TRIM(Object.ValueData)) LIKE UPPER (TRIM(inStickerPropertyNormName)));
-   IF COALESCE (vbStickerPropertyNormId, 0) = 0 AND COALESCE (inStickerPropertyNormName, '')<> ''
-   THEN
-       -- записываем новый элемент
-       vbStickerPropertyNormId := gpInsertUpdate_Object_StickerPropertyNorm (ioId     := 0
-                                                           , inCode   := lfGet_ObjectCode(0, zc_Object_StickerPropertyNorm()) 
-                                                           , inName   := TRIM(inStickerPropertyNormName)
-                                                           , inComment:= '' ::TVarChar
-                                                           , inSession:= inSession
-                                                            );
-   END IF;
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_StickerProperty_StickerSkin(), ioId, vbStickerSkinId);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_StickerProperty_StickerPack(), ioId, vbStickerPackId);
   
-
-   -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_StickerProperty_StickerPropertyGroup(), ioId, vbStickerPropertyGroupId);
-   -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_StickerProperty_StickerPropertyType(), ioId, vbStickerPropertyTypeId);
-   -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_StickerProperty_StickerPropertyTag(), ioId, vbStickerPropertyTagId);
-   -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_StickerProperty_StickerPropertySort(), ioId, vbStickerPropertySortId);
-   -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_StickerProperty_StickerPropertyNorm(), ioId, vbStickerPropertyNormId);
-
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
@@ -164,8 +115,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 23.10.17         *
+ 24.10.17         *
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_StickerProperty (ioId:=0, inCode:=-1, inName:= 'TEST-StickerProperty', ... , inSession:= '2')
+-- 

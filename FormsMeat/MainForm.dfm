@@ -5671,34 +5671,34 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object dsdOpenForm7: TdsdOpenForm
+    object actStickerSkin: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080'\'#1069#1090#1080#1082#1077#1090#1082#1072
       MoveParams = <>
-      Caption = #1069#1090#1080#1082#1077#1090#1082#1072
-      FormName = 'TStickerForm'
-      FormNameParam.Value = 'TStickerForm'
+      Caption = #1054#1073#1086#1083#1086#1095#1082#1072
+      FormName = 'TStickerSkinForm'
+      FormNameParam.Value = 'TStickerSkinForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
-    object dsdOpenForm8: TdsdOpenForm
+    object actStickerPack: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080'\'#1069#1090#1080#1082#1077#1090#1082#1072
       MoveParams = <>
-      Caption = #1069#1090#1080#1082#1077#1090#1082#1072
-      FormName = 'TStickerForm'
-      FormNameParam.Value = 'TStickerForm'
+      Caption = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080
+      FormName = 'TStickerPackForm'
+      FormNameParam.Value = 'TStickerPackForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
-    object dsdOpenForm9: TdsdOpenForm
+    object actLanguage: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080'\'#1069#1090#1080#1082#1077#1090#1082#1072
       MoveParams = <>
-      Caption = #1069#1090#1080#1082#1077#1090#1082#1072
-      FormName = 'TStickerForm'
-      FormNameParam.Value = 'TStickerForm'
+      Caption = #1071#1079#1099#1082
+      FormName = 'TLanguageForm'
+      FormNameParam.Value = 'TLanguageForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -6903,6 +6903,15 @@ inherited MainForm: TMainForm
         end
         object N183: TMenuItem
           Action = actStickerFile
+        end
+        object N186: TMenuItem
+          Action = actLanguage
+        end
+        object N184: TMenuItem
+          Action = actStickerPack
+        end
+        object N185: TMenuItem
+          Action = actStickerSkin
         end
       end
     end

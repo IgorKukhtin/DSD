@@ -969,7 +969,15 @@ uses
   StickerNorm in '..\..\Forms\Guides\StickerNorm.pas' {StickerNormForm: TParentForm},
   StickerType in '..\..\Forms\Guides\StickerType.pas' {StickerTypeForm: TParentForm},
   StickerFile in '..\..\Forms\Guides\StickerFile.pas' {StickerFileForm: TParentForm},
-  StickerFileEdit in '..\..\Forms\Guides\StickerFileEdit.pas' {StickerFileEditForm: TParentForm};
+  StickerFileEdit in '..\..\Forms\Guides\StickerFileEdit.pas' {StickerFileEditForm: TParentForm},
+  StickerPropertyEdit in '..\..\Forms\Guides\StickerPropertyEdit.pas' {StickerPropertyEditForm: TParentForm},
+  StickerPackEdit in '..\..\Forms\Guides\StickerPackEdit.pas' {StickerPackEditForm: TParentForm},
+  StickerPack in '..\..\Forms\Guides\StickerPack.pas' {StickerPackForm: TParentForm},
+  LanguageEdit in '..\..\Forms\Guides\LanguageEdit.pas' {LanguageEditForm: TParentForm},
+  Language in '..\..\Forms\Guides\Language.pas' {LanguageForm: TParentForm},
+  StickerSkinEdit in '..\..\Forms\Guides\StickerSkinEdit.pas' {StickerSkinEditForm: TParentForm},
+  StickerSkin in '..\..\Forms\Guides\StickerSkin.pas' {StickerSkinForm: TParentForm},
+  JuridicalRetailPartner_Object in '..\..\Forms\Guides\JuridicalRetailPartner_Object.pas' {JuridicalRetailPartner_ObjectForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

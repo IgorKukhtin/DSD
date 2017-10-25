@@ -3,7 +3,7 @@ inherited SetUserDefaultsForm: TSetUserDefaultsForm
   ClientHeight = 395
   ClientWidth = 847
   ExplicitWidth = 863
-  ExplicitHeight = 430
+  ExplicitHeight = 433
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -203,6 +203,33 @@ inherited SetUserDefaultsForm: TSetUserDefaultsForm
       Caption = 'UpdateDataSet'
       DataSource = MasterDS
     end
+    object actUpdateDefaultValue: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateNull
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateNull
+        end>
+      Caption = #1054#1073#1085#1091#1083#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077
+      Hint = #1054#1073#1085#1091#1083#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077
+      ImageIndex = 52
+    end
+    object macUpdateDefaultValue: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateDefaultValue
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1054#1073#1085#1091#1083#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077
+      Hint = #1054#1073#1085#1091#1083#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077
+      ImageIndex = 52
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -224,6 +251,41 @@ inherited SetUserDefaultsForm: TSetUserDefaultsForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateDefaultValue'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+    end
+    object bbUpdateDefaultValue: TdxBarButton
+      Action = macUpdateDefaultValue
+      Category = 0
+    end
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_DefaultValue'
@@ -264,7 +326,51 @@ inherited SetUserDefaultsForm: TSetUserDefaultsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 456
+    Left = 392
     Top = 264
+  end
+  object spInsertUpdateNull: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_DefaultValue'
+    DataSet = MasterCDS
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end>
+    OutputType = otBlob
+    Params = <
+      item
+        Name = 'ioid'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'indefaultkeyid'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'KeyId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inuserkey'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UserId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'indefaultvalue'
+        Value = '0'
+        DataType = ftBlob
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 552
+    Top = 144
   end
 end

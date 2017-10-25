@@ -1503,6 +1503,27 @@ INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_StickerFile_Juridical', 'Юр.лицо', zc_Object_StickerFile(), zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_StickerFile_Juridical');
 
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_StickerProperty_Sticker() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_StickerProperty_Sticker'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_StickerProperty_Sticker', 'Этикетка', zc_Object_StickerProperty(), zc_Object_Sticker() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_StickerProperty_Sticker');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_StickerProperty_GoodsKind() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_StickerProperty_GoodsKind'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_StickerProperty_GoodsKind', 'Вид товара', zc_Object_StickerProperty(), zc_Object_GoodsKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_StickerProperty_GoodsKind');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_StickerProperty_StickerSkin() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_StickerProperty_StickerSkin'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_StickerProperty_StickerSkin', 'Оболочка', zc_Object_StickerProperty(), zc_Object_StickerSkin() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_StickerProperty_StickerSkin');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_StickerProperty_StickerPack() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_StickerProperty_StickerPack'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_StickerProperty_StickerPack', 'вид пакування', zc_Object_StickerProperty(), zc_Object_StickerPack() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_StickerProperty_StickerPack');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_StickerProperty_StickerFile() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_StickerProperty_StickerFile'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_StickerProperty_StickerFile', 'ШАБЛОН', zc_Object_StickerProperty(), zc_Object_StickerFile() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_StickerProperty_StickerFile');
+
+
 --!!! АПТЕКА
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_NDSKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_NDSKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -1828,6 +1849,7 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
  23.10.17         * zc_ObjectLink_Sticker_.....
+                    zc_ObjectLink_StickerProperty_......
  20.10.17         * zc_ObjectLink_Goods_Area
  25.09.17         * zc_ObjectLink_JuridicalArea_Juridical
                     zc_ObjectLink_JuridicalArea_Area               
