@@ -1,4 +1,4 @@
--- View: Object_Goods_View                                                            	
+-- View: Object_LinkGoods_View
 
 DROP VIEW IF EXISTS Object_LinkGoods_View;
 
@@ -29,8 +29,7 @@ CREATE OR REPLACE VIEW Object_LinkGoods_View AS
           
      WHERE ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain();
 
-ALTER TABLE Object_Goods_View  OWNER TO postgres;
-
+ALTER TABLE Object_LinkGoods_View  OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -40,4 +39,4 @@ ALTER TABLE Object_Goods_View  OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM Object_Goods_View
+-- SELECT * FROM Object_LinkGoods_View

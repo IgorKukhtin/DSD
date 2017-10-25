@@ -20,7 +20,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Transport_Master(
     IN inTimePrice                 TFloat    , -- Ставка грн/ч коммандировочных
     IN inTaxi                      TFloat    , -- Сумма на такси
     IN inTaxiMore                  TFloat    , -- Сумма на такси(водитель дополнительный)
-    IN inRateSummaAdd              TFloat    , -- Сумма доблаты(дальнобойные)
+ INOUT ioRateSummaAdd              TFloat    , -- Сумма доплаты(дальнобойные)
    OUT outRatePrice_Calc           TFloat    , -- Сумма грн (дальнобойные)
     IN inFreightId                 Integer   , -- Название груза
     IN inRouteKindId_Freight       Integer   , -- Типы маршрутов(груз)
@@ -159,7 +159,7 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TimePrice(), ioId, inTimePrice);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_RateSummaAdd(), ioId, inRateSummaAdd);
+   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_RateSummaAdd(), ioId, ioRateSummaAdd);
 
    IF COALESCE (inTimePrice,0) <> 0 -- OR 1=1 -- !!!временно - что б всегда!!!
    THEN
@@ -178,7 +178,17 @@ BEGIN
    END IF;
 
 
-   outRatePrice_Calc:= COALESCE (inRatePrice,0) * (COALESCE (inAmount,0) + COALESCE (inDistanceFuelChild,0));
+   IF COALESCE (inRatePrice, 0) <> 0 -- OR 1=1 -- !!!временно - что б всегда!!!
+   THEN
+       outRatePrice_Calc:= COALESCE (inRatePrice, 0) * (COALESCE (inAmount, 0) + COALESCE (inDistanceFuelChild, 0));
+       --
+       ioRateSummaAdd:= 0;
+       -- пересохранили свойство <>
+       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_RateSummaAdd(), ioId, ioRateSummaAdd);
+   ELSE
+       outRatePrice_Calc:= ioRateSummaAdd;
+   END IF;
+
 
    -- сохранили свойство <Комментарий>
    PERFORM lpInsertUpdate_MovementItemString(zc_MIString_Comment(), ioId, inComment);

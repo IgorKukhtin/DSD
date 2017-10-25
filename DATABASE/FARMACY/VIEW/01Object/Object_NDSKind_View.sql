@@ -1,4 +1,4 @@
--- View: Object_Goods_View
+-- View: Object_NDSKind_View
 
 DROP VIEW IF EXISTS Object_NDSKind_View CASCADE;
 
@@ -27,4 +27,4 @@ ALTER TABLE Object_NDSKind_View OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM Object_Goods_View
+-- SELECT * FROM Object_NDSKind_View

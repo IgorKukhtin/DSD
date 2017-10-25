@@ -9,6 +9,7 @@ CREATE OR REPLACE VIEW Object_Goods_View AS
            , ObjectString.ValueData                           AS GoodsCode
            , Object_Goods.ValueData                           AS GoodsName
            , Object_Goods.isErased                            AS isErased
+           , ObjectLink_Goods_Area.ChildObjectId              AS AreaId
            , ObjectLink_Goods_Object.ChildObjectId            AS ObjectId
            , ObjectLink_Goods_GoodsGroup.ChildObjectId        AS GoodsGroupId
            , Object_GoodsGroup.ValueData                      AS GoodsGroupName
@@ -34,6 +35,9 @@ CREATE OR REPLACE VIEW Object_Goods_View AS
 
             LEFT JOIN ObjectString ON ObjectString.ObjectId = ObjectLink_Goods_Object.ObjectId
                                   AND ObjectString.DescId = zc_ObjectString_Goods_Code()
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_Area
+                                ON ObjectLink_Goods_Area.ObjectId = ObjectLink_Goods_Object.ObjectId
+                               AND ObjectLink_Goods_Area.DescId   = zc_ObjectLink_Goods_Area()
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = ObjectLink_Goods_Object.ObjectId

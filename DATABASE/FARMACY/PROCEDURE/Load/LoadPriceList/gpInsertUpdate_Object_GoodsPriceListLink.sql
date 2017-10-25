@@ -26,7 +26,8 @@ $BODY$
    DECLARE vbGoodsId Integer;
    DECLARE vbProducerName TVarChar;
    --DECLARE vbPartnerGoodsId Integer;
-   
+
+   DECLARE vbAreaId_find Integer;
 BEGIN
 
    --   PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsGroup());
@@ -38,21 +39,48 @@ BEGIN
       RAISE EXCEPTION 'У пользователя "%" не установлена торговая сеть', vbUserName;
    END IF;
 
-   SELECT CommonCode, BarCode, GoodsName, GoodsCode, GoodsId, JuridicalId, ProducerName
-     
-     INTO vbMarionCode, vbBarCode, vbGoodsName, vbGoodsCode, vbMainGoodsId, vbJuridicalId, vbProducerName
-     
+
+     -- определяются параметры из прайсЛиста
+     WITH tmpArea AS
+             (SELECT ObjectLink_JuridicalArea_Juridical.ChildObjectId AS JuridicalId
+                   , ObjectLink_JuridicalArea_Area.ChildObjectId      AS AreaId
+              FROM ObjectLink AS ObjectLink_JuridicalArea_Juridical
+                   INNER JOIN Object AS Object_JuridicalArea ON Object_JuridicalArea.Id       = ObjectLink_JuridicalArea_Juridical.ObjectId
+                                                            AND Object_JuridicalArea.isErased = FALSE
+                   INNER JOIN ObjectLink AS ObjectLink_JuridicalArea_Area
+                                         ON ObjectLink_JuridicalArea_Area.ObjectId      = Object_JuridicalArea.Id
+                                        AND ObjectLink_JuridicalArea_Area.DescId        = zc_ObjectLink_JuridicalArea_Area()
+                   -- Уникальный код поставщика ТОЛЬКО для Региона
+                   INNER JOIN ObjectBoolean AS ObjectBoolean_JuridicalArea_GoodsCode
+                                            ON ObjectBoolean_JuridicalArea_GoodsCode.ObjectId  = Object_JuridicalArea.Id
+                                           AND ObjectBoolean_JuridicalArea_GoodsCode.DescId    = zc_ObjectBoolean_JuridicalArea_GoodsCode()
+                                           AND ObjectBoolean_JuridicalArea_GoodsCode.ValueData = TRUE
+              WHERE ObjectLink_JuridicalArea_Juridical.DescId        = zc_ObjectLink_JuridicalArea_Juridical()
+             )
+     -- Результат             
+     SELECT CommonCode, BarCode, GoodsName, GoodsCode, GoodsId, LoadPriceList.JuridicalId, ProducerName, tmpArea.AreaId
+          INTO vbMarionCode, vbBarCode, vbGoodsName, vbGoodsCode, vbMainGoodsId, vbJuridicalId, vbProducerName, vbAreaId_find
      FROM LoadPriceListItem 
           JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
-           WHERE LoadPriceListItem.Id = inPriceListItemId;
+          LEFT JOIN tmpArea ON tmpArea.JuridicalId = LoadPriceList.JuridicalId
+                           AND tmpArea.AreaId      = LoadPriceList.AreaId
+     WHERE LoadPriceListItem.Id = inPriceListItemId;
 
- 
-    -- Устанавливаем связь с кодом поставщика
-
-    SELECT Object_Goods_View.Id INTO vbGoodsId
+    
+      -- определяется
+      SELECT Object_Goods_View.Id INTO vbGoodsId
       FROM Object_Goods_View 
-     WHERE ObjectId = vbJuridicalId AND GoodsCode = vbGoodsCode;
+      WHERE ObjectId = vbJuridicalId AND GoodsCode = vbGoodsCode
+        AND (-- если Регион соответсвует
+             COALESCE (Object_Goods_View.AreaId, 0) = vbAreaId_find
+             -- или Это регион zc_Area_Basis - тогда ищем в регионе "пусто"
+          OR (vbAreaId_find = zc_Area_Basis() AND Object_Goods_View.AreaId IS NULL)
+             -- или Это регион "пусто" - тогда ищем в регионе zc_Area_Basis
+          OR (vbAreaId_find = 0 AND Object_Goods_View.AreaId = zc_Area_Basis())
+            )
+       ;
      
+     -- Устанавливаем связь с кодом поставщика
      vbGoodsId:= lpInsertUpdate_Object_Goods(
                            vbGoodsId  ,    -- ключ объекта <Товар>
                          vbGoodsCode  ,    -- Код объекта <Товар>
@@ -65,7 +93,10 @@ BEGIN
                                    0  ,
                        vbProducerName ,     
                                 FALSE );
+     -- еще и Регион
+     PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Area(), vbGoodsId, vbAreaId_find);
     
+
     IF (SELECT COUNT(*) FROM Object_LinkGoods_View
                        WHERE ObjectId = vbJuridicalId AND vbMainGoodsId = GoodsMainId AND vbGoodsId = GoodsId) = 0 THEN
         PERFORM

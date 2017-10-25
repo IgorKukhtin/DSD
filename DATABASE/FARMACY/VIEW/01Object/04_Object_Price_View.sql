@@ -1,4 +1,4 @@
--- View: Object_Goods_View
+-- View: Object_Price_View 
 
 --DROP VIEW IF EXISTS Object_Price_View;
 -- удаление вынесено в каскадное

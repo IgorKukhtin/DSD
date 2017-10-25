@@ -2875,12 +2875,12 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inRateSummaAdd'
+        Name = 'ioRateSummaAdd'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'RateSummaAdd'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item

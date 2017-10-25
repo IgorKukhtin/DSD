@@ -31,6 +31,19 @@ type
     GuidesOrderExternal: TdsdGuides;
     FromName: TcxGridDBColumn;
     PartionGoods: TcxGridDBColumn;
+    GoodsCode_pack: TcxGridDBColumn;
+    GoodsName_pack: TcxGridDBColumn;
+    GoodsKindName_pack: TcxGridDBColumn;
+    ReceiptName: TcxGridDBColumn;
+    ReceiptCode: TcxGridDBColumn;
+    ReceiptName_basis: TcxGridDBColumn;
+    ReceiptCode_basis: TcxGridDBColumn;
+    ReceiptName_pack: TcxGridDBColumn;
+    ReceiptCode_pack: TcxGridDBColumn;
+    Amount_result: TcxGridDBColumn;
+    Remains_CEH_next: TcxGridDBColumn;
+    PartionGoods_start: TcxGridDBColumn;
+    TermProduction: TcxGridDBColumn;
   private
     { Private declarations }
   public

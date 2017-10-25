@@ -1,4 +1,4 @@
--- View: Object_Goods_View
+-- View: Object_PaidType_View
 
 DROP VIEW IF EXISTS Object_PaidType_View;
 

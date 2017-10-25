@@ -48,6 +48,8 @@ $BODY$
    DECLARE vbObjectId Integer;
    DECLARE vbNDSKindId Integer;
    DECLARE vbContractId Integer;
+
+   DECLARE vbAreaId_find Integer;
 BEGIN
      -- определяется <Пользователь>
      vbUserId := lpGetUserBySession (inSession);
@@ -265,23 +267,72 @@ BEGIN
      END IF;
 
 
+    -- определяется AreaId - для поиска товара только для Региона
+    vbAreaId_find:= CASE WHEN EXISTS (SELECT 1
+                                 FROM ObjectLink AS ObjectLink_JuridicalArea_Juridical
+                                      INNER JOIN Object AS Object_JuridicalArea ON Object_JuridicalArea.Id       = ObjectLink_JuridicalArea_Juridical.ObjectId
+                                                                               AND Object_JuridicalArea.isErased = FALSE
+                                      INNER JOIN ObjectLink AS ObjectLink_JuridicalArea_Area
+                                                            ON ObjectLink_JuridicalArea_Area.ObjectId      = Object_JuridicalArea.Id 
+                                                           AND ObjectLink_JuridicalArea_Area.DescId        = zc_ObjectLink_JuridicalArea_Area()
+                                                           AND ObjectLink_JuridicalArea_Area.ChildObjectId = (SELECT ObjectLink_Unit_Area.ChildObjectId
+                                                                                                              FROM ObjectLink AS ObjectLink_Unit_Area
+                                                                                                              WHERE ObjectLink_Unit_Area.ObjectId = vbUnitId
+                                                                                                                AND ObjectLink_Unit_Area.DescId   = zc_ObjectLink_Unit_Area()
+                                                                                                             )
+                                      -- Уникальный код поставщика ТОЛЬКО для Региона
+                                      INNER JOIN ObjectBoolean AS ObjectBoolean_JuridicalArea_GoodsCode
+                                                               ON ObjectBoolean_JuridicalArea_GoodsCode.ObjectId  = Object_JuridicalArea.Id 
+                                                              AND ObjectBoolean_JuridicalArea_GoodsCode.DescId    = zc_ObjectBoolean_JuridicalArea_GoodsCode()
+                                                              AND ObjectBoolean_JuridicalArea_GoodsCode.ValueData = TRUE
+                                 WHERE ObjectLink_JuridicalArea_Juridical.ChildObjectId = inJuridicalId_from
+                                   AND ObjectLink_JuridicalArea_Juridical.DescId        = zc_ObjectLink_JuridicalArea_Juridical()
+                                ) 
+                    THEN -- нужный Регион
+                         (SELECT ObjectLink_Unit_Area.ChildObjectId
+                          FROM ObjectLink AS ObjectLink_Unit_Area
+                          WHERE ObjectLink_Unit_Area.ObjectId = vbUnitId
+                            AND ObjectLink_Unit_Area.DescId   = zc_ObjectLink_Unit_Area()
+                         )
+                    ELSE 0
+               END;
+
+
       -- Ищем товар поставщика
       SELECT ObjectLink_Goods_Object.ObjectId INTO vbPartnerGoodsId
       FROM ObjectLink AS ObjectLink_Goods_Object
-           INNER JOIN ObjectString ON ObjectString.ObjectId = ObjectLink_Goods_Object.ObjectId
-                                  AND ObjectString.DescId = zc_ObjectString_Goods_Code()
+           INNER JOIN ObjectString ON ObjectString.ObjectId  = ObjectLink_Goods_Object.ObjectId
+                                  AND ObjectString.DescId    = zc_ObjectString_Goods_Code()
                                   AND ObjectString.ValueData = inGoodsCode
-      WHERE ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-        AND ObjectLink_Goods_Object.ChildObjectId = inJuridicalId_from ;
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_Area
+                                ON ObjectLink_Goods_Area.ObjectId = ObjectString.ObjectId
+                               AND ObjectLink_Goods_Area.DescId   = zc_ObjectLink_Goods_Area()
+
+      WHERE ObjectLink_Goods_Object.DescId        = zc_ObjectLink_Goods_Object()
+        AND ObjectLink_Goods_Object.ChildObjectId = inJuridicalId_from
+        AND (-- если Регион соответсвует
+             COALESCE (ObjectLink_Goods_Area.ChildObjectId, 0) = vbAreaId_find
+             -- или Это регион zc_Area_Basis - тогда ищем в регионе "пусто"
+          OR (vbAreaId_find = zc_Area_Basis() AND ObjectLink_Goods_Area.ChildObjectId IS NULL)
+             -- или Это регион "пусто" - тогда ищем в регионе zc_Area_Basis
+          OR (vbAreaId_find = 0 AND ObjectLink_Goods_Area.ChildObjectId = zc_Area_Basis())
+            )
+        ;
   
      -- Если вдруг такого нет, то мы его ОБЯЗАТЕЛЬНО добавляем. БЕЗ проверки на уникальность
      IF COALESCE(vbPartnerGoodsId, 0) = 0 THEN
-        vbPartnerGoodsId := lpInsertUpdate_Object_Goods(0, inGoodsCode, inGoodsName, NULL, NULL, NULL, inJuridicalId_from, vbUserId, NULL, inMakerName, false);    
+        --
+        vbPartnerGoodsId := lpInsertUpdate_Object_Goods (0, inGoodsCode, inGoodsName, NULL, NULL, NULL, inJuridicalId_from, vbUserId, NULL, inMakerName, FALSE);
+        -- еще и Регион
+        IF vbAreaId_find > 0
+        THEN
+           PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Area(), vbPartnerGoodsId, vbAreaId_find);
+        END IF;
      END IF;
  
       -- Ищем товар для накладной. 
       SELECT Goods_Retail.GoodsId, ObjectLink_Goods_NDSKind.ChildObjectId  -- Object_Goods_View.NDSKindId 
-     INTO vbGoodsId, vbNDSKindId
+             INTO vbGoodsId, vbNDSKindId
       FROM Object_LinkGoods_View AS Goods_Juridical
         LEFT JOIN Object_LinkGoods_View AS Goods_Retail
                                         ON Goods_Retail.GoodsMainId = Goods_Juridical.GoodsMainId
