@@ -1,9 +1,11 @@
 -- Function: gpGet_Object_StickerProperty()
 
 DROP FUNCTION IF EXISTS gpGet_Object_StickerProperty (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_StickerProperty (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_StickerProperty(
     IN inId          Integer,       -- Товар 
+    IN inMaskId      Integer,       -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
@@ -24,7 +26,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_StickerProperty());
     
-   IF COALESCE (inId, 0) = 0
+   IF (COALESCE (inId, 0) = 0 AND COALESCE (inMaskId, 0) = 0)
    THEN
        RETURN QUERY 
 
@@ -60,11 +62,12 @@ BEGIN
    ELSE
        RETURN QUERY 
        SELECT Object_StickerProperty.Id          AS Id
-            , Object_StickerProperty.ObjectCode  AS Code
+            --, Object_StickerProperty.ObjectCode  AS Code
+            , CASE WHEN  COALESCE (inId, 0) = 0 THEN lfGet_ObjectCode (0, zc_Object_StickerProperty()) ELSE Object_StickerProperty.ObjectCode END AS Code
             , Object_StickerProperty.ValueData   AS Comment
                                                  
             , Object_Sticker.Id                  AS StickerId
-            , Object_Sticker.ValueData           AS StickerName
+            , (Object_Juridical.ValueData||' / '||Object_Goods.ValueData||' / '||Object_Sticker.ValueData) ::TVarChar AS StickerName
                                                  
             , Object_GoodsKind.Id                AS GoodsKindId
             , Object_GoodsKind.ValueData         AS GoodsKindName
@@ -147,7 +150,17 @@ BEGIN
                                      ON ObjectBoolean_Fix.ObjectId = Object_StickerProperty.Id 
                                     AND ObjectBoolean_Fix.DescId = zc_ObjectBoolean_StickerProperty_Fix()
 
-       WHERE Object_StickerProperty.Id = inId;
+             LEFT JOIN ObjectLink AS ObjectLink_Sticker_Juridical
+                                  ON ObjectLink_Sticker_Juridical.ObjectId = Object_Sticker.Id
+                                 AND ObjectLink_Sticker_Juridical.DescId = zc_ObjectLink_Sticker_Juridical()
+             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Sticker_Juridical.ChildObjectId
+
+             LEFT JOIN ObjectLink AS ObjectLink_Sticker_Goods
+                                  ON ObjectLink_Sticker_Goods.ObjectId = Object_Sticker.Id
+                                 AND ObjectLink_Sticker_Goods.DescId = zc_ObjectLink_Sticker_Goods()
+             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Sticker_Goods.ChildObjectId
+             
+       WHERE Object_StickerProperty.Id = CASE WHEN COALESCE (inId, 0) = 0 THEN inMaskId ELSE inId END;
 
    END IF;
   
@@ -155,24 +168,11 @@ END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_StickerProperty (Integer, TVarChar) OWNER TO postgres;
-
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 24.11.14         * add inStickerPackAnalystId               
- 15.09.14         * add zc_ObjectLink_StickerProperty_StickerSkin()
- 04.09.14         * 
- 29.09.13                                        * add zc_ObjectLink_StickerProperty_Fuel
- 06.09.13                          *              
- 02.07.13         * + TradeMark             
- 02.07.13                                        * 1251Cyr
- 21.06.13         *              
- 11.06.13         *
- 11.05.13                                        
-
+ 24.10.17         *
 */
 
 -- тест

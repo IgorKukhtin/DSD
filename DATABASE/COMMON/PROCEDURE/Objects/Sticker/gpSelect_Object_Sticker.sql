@@ -6,15 +6,15 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Sticker(
     IN inShowAll     Boolean,   
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
+RETURNS TABLE (Id Integer, Code Integer, StickerName TVarChar, Comment TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, ItemName TVarChar
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, TradeMarkName_Goods TVarChar
              , StickerGroupId Integer, StickerGroupName TVarChar
              , StickerTypeId Integer, StickerTypeName TVarChar
              , StickerTagId Integer, StickerTagName TVarChar
              , StickerSortId Integer, StickerSortName TVarChar
              , StickerNormId Integer, StickerNormName TVarChar
-             , StickerFileId Integer, StickerFileName TVarChar
+             , StickerFileId Integer, StickerFileName TVarChar, TradeMarkName_StickerFile TVarChar
              , Info TBlob
              , Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat, Value5 TFloat
              , isErased Boolean
@@ -33,8 +33,9 @@ BEGIN
 
        SELECT Object_Sticker.Id                 AS Id
             , Object_Sticker.ObjectCode         AS Code
+            , (Object_Juridical.ValueData||' / '||Object_Goods.ValueData||' / '||Object_Sticker.ValueData) ::TVarChar AS StickerName
             , Object_Sticker.ValueData          AS Comment
-
+            
             , Object_Juridical.Id               AS JuridicalId
             , Object_Juridical.ObjectCode       AS JuridicalCode
             , Object_Juridical.ValueData        AS JuridicalName 
@@ -43,6 +44,7 @@ BEGIN
             , Object_Goods.Id                   AS GoodsId
             , Object_Goods.ObjectCode           AS GoodsCode
             , Object_Goods.ValueData            AS GoodsName
+            , Object_TradeMark_Goods.ValueData  AS TradeMarkName_Goods
             
             , Object_StickerGroup.Id            AS StickerGroupId
             , Object_StickerGroup.ValueData     AS StickerGroupName 
@@ -61,6 +63,7 @@ BEGIN
             
             , Object_StickerFile.Id             AS StickerFileId
             , Object_StickerFile.ValueData      AS StickerFileName
+            , Object_TradeMark_StickerFile.ValueData  AS TradeMarkName_StickerFile
                   
             , ObjectBlob_Info.ValueData         AS Info
                                     
@@ -142,6 +145,16 @@ BEGIN
              LEFT JOIN ObjectBlob AS ObjectBlob_Info
                                   ON ObjectBlob_Info.ObjectId = Object_Sticker.Id 
                                  AND ObjectBlob_Info.DescId = zc_ObjectBlob_Sticker_Info()
+
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                  ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id 
+                                 AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+             LEFT JOIN Object AS Object_TradeMark_Goods ON Object_TradeMark_Goods.Id = ObjectLink_Goods_TradeMark.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_StickerFile_TradeMark
+                                 ON ObjectLink_StickerFile_TradeMark.ObjectId = Object_StickerFile.Id
+                                AND ObjectLink_StickerFile_TradeMark.DescId = zc_ObjectLink_StickerFile_TradeMark()
+            LEFT JOIN Object AS Object_TradeMark_StickerFile ON Object_TradeMark_StickerFile.Id = ObjectLink_StickerFile_TradeMark.ChildObjectId
       ;
   
 END;

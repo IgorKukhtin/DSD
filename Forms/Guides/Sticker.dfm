@@ -116,6 +116,15 @@ object StickerForm: TStickerForm
         HeaderAlignmentVert = vaCenter
         Width = 113
       end
+      object TradeMarkName_Goods: TcxGridDBColumn
+        Caption = #1058#1086#1088#1075'. '#1084#1072#1088#1082#1072' ('#1090#1086#1074#1072#1088')'
+        DataBinding.FieldName = 'TradeMarkName_Goods'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072' ('#1090#1086#1074#1072#1088')'
+        Options.Editing = False
+        Width = 84
+      end
       object StickerGroupName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1087#1088#1086#1076#1091#1082#1090#1072' ('#1043#1088#1091#1087#1087#1072')'
         DataBinding.FieldName = 'StickerGroupName'
@@ -203,6 +212,15 @@ object StickerForm: TStickerForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 100
+      end
+      object TradeMarkName_StickerFile: TcxGridDBColumn
+        Caption = #1058#1086#1088#1075'. '#1084#1072#1088#1082#1072' ('#1096#1072#1073#1083#1086#1085')'
+        DataBinding.FieldName = 'TradeMarkName_StickerFile'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072' ('#1096#1072#1073#1083#1086#1085')'
+        Options.Editing = False
+        Width = 82
       end
       object Info: TcxGridDBColumn
         Caption = #1057#1086#1089#1090#1072#1074' '#1087#1088#1086#1076#1091#1082#1090#1072
@@ -401,6 +419,15 @@ object StickerForm: TStickerForm
           HeaderAlignmentVert = vaCenter
           Width = 70
         end
+        object colTradeMarkName_StickerFile: TcxGridDBColumn
+          Caption = #1058#1086#1088#1075'. '#1084#1072#1088#1082#1072' ('#1096#1072#1073#1083#1086#1085')'
+          DataBinding.FieldName = 'TradeMarkName_StickerFile'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072' ('#1096#1072#1073#1083#1086#1085')'
+          Options.Editing = False
+          Width = 87
+        end
         object colStickerSkinName: TcxGridDBColumn
           Caption = #1054#1073#1086#1083#1086#1095#1082#1072
           DataBinding.FieldName = 'StickerSkinName'
@@ -418,9 +445,13 @@ object StickerForm: TStickerForm
         object colValue1: TcxGridDBColumn
           Caption = #1042#1086#1083#1086#1075#1110#1089#1090#1100' '#1084#1110#1085
           DataBinding.FieldName = 'Value1'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.##;-,0.##; ;'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Action = StickerProperty_ValueChoiceForm
+              Default = True
+              Kind = bkEllipsis
+            end>
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 70
@@ -576,6 +607,10 @@ object StickerForm: TStickerForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertMask'
+        end
+        item
+          Visible = True
           ItemName = 'bbEdit'
         end
         item
@@ -608,11 +643,15 @@ object StickerForm: TStickerForm
         end
         item
           Visible = True
-          ItemName = 'bbSetErasedPartner'
+          ItemName = 'bbInsertPropertyMask'
         end
         item
           Visible = True
-          ItemName = 'bbSetUnErasedPartner'
+          ItemName = 'bbSetErasedProperty'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErasedProperty'
         end
         item
           Visible = True
@@ -702,43 +741,6 @@ object StickerForm: TStickerForm
       Action = dsdChoiceGuides
       Category = 0
     end
-    object bbInsertRecCCK: TdxBarButton
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072'>'
-      Category = 0
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072'>'
-      Visible = ivAlways
-      ImageIndex = 0
-    end
-    object bbIsPeriod: TdxBarControlContainerItem
-      Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      Category = 0
-      Hint = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      Visible = ivAlways
-    end
-    object bbStartDate: TdxBarControlContainerItem
-      Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1087#1077#1088#1080#1086#1076#1072
-      Category = 0
-      Hint = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1087#1077#1088#1080#1086#1076#1072
-      Visible = ivAlways
-    end
-    object bbEnd: TdxBarControlContainerItem
-      Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072
-      Category = 0
-      Hint = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072
-      Visible = ivAlways
-    end
-    object bbEndDate: TdxBarControlContainerItem
-      Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1087#1077#1088#1080#1086#1076#1072
-      Category = 0
-      Hint = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1087#1077#1088#1080#1086#1076#1072
-      Visible = ivAlways
-    end
-    object bbIsEndDate: TdxBarControlContainerItem
-      Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1086' '#1076#1072#1090#1091' '#1086#1082#1086#1085#1095#1072#1085#1080#1103
-      Category = 0
-      Hint = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1086' '#1076#1072#1090#1091' '#1086#1082#1086#1085#1095#1072#1085#1080#1103
-      Visible = ivAlways
-    end
     object bbRecordCP: TdxBarButton
       Action = InsertRecordProperty
       Category = 0
@@ -747,61 +749,29 @@ object StickerForm: TStickerForm
       Action = ProtocolOpenForm
       Category = 0
     end
-    object bbRecordGoods: TdxBarButton
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      Category = 0
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      Visible = ivAlways
-      ImageIndex = 0
-    end
-    object bbSetErasedPartner: TdxBarButton
-      Action = dsdSetErasedPartner
-      Category = 0
-    end
-    object bbSetErasedGoods: TdxBarButton
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1090#1086#1074#1072#1088
-      Category = 0
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091
-      Visible = ivAlways
-      ImageIndex = 2
-      ShortCut = 46
-    end
-    object bbSetUnErasedPartner: TdxBarButton
-      Action = dsdSetUnErasedPartner
-      Category = 0
-    end
-    object bbSetUnErasedGoods: TdxBarButton
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Category = 0
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      Visible = ivAlways
-      ImageIndex = 8
-      ShortCut = 46
-    end
-    object bbProtocolOpenFormCondition: TdxBarButton
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072'>'
-      Category = 0
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072'>'
-      Visible = ivAlways
-      ImageIndex = 34
-    end
     object bbProtocolOpenFormPartner: TdxBarButton
-      Action = ProtocolOpenFormPartner
-      Category = 0
-    end
-    object bbProtocolOpenFormGoods: TdxBarButton
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072'>'
-      Category = 0
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1058#1086#1074#1072#1088'>'
-      Visible = ivAlways
-      ImageIndex = 34
-    end
-    object bbCustom: TdxBarButton
-      Action = actUpdateVat
+      Action = ProtocolOpenFormProperty
       Category = 0
     end
     object bbShowAll: TdxBarButton
       Action = actShowAll
+      Category = 0
+    end
+    object bbInsertMask: TdxBarButton
+      Action = actInsertMask
+      Category = 0
+    end
+    object bbInsertPropertyMask: TdxBarButton
+      Action = actInsertPropertyMask
+      Category = 0
+    end
+    object bbSetErasedProperty: TdxBarButton
+      Action = actSetErasedProperty
+      Category = 0
+    end
+    object bbSetUnErasedProperty: TdxBarButton
+      Action = actSetUnErasedProperty
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1074#1086#1081#1089#1090#1074#1086' '#1101#1090#1080#1082#1077#1090#1082#1080
       Category = 0
     end
   end
@@ -859,12 +829,12 @@ object StickerForm: TStickerForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1057#1074#1086#1081#1089#1090#1074#1072' '#1101#1090#1080#1082#1077#1090#1082#1080'>'
       ImageIndex = 0
     end
-    object actInsertProperty: TdsdInsertUpdateAction
+    object actInsertPropertyMask: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1057#1074#1086#1081#1089#1090#1074#1072' '#1101#1090#1080#1082#1077#1090#1082#1080'>'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077' <'#1057#1074#1086#1081#1089#1090#1074#1072' '#1101#1090#1080#1082#1077#1090#1082#1080'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1057#1074#1086#1081#1089#1090#1074#1072' '#1101#1090#1080#1082#1077#1090#1082#1080'>'
-      ImageIndex = 0
+      ImageIndex = 54
       FormName = 'TStickerPropertyEditForm'
       FormNameParam.Value = 'TStickerPropertyEditForm'
       FormNameParam.DataType = ftString
@@ -876,9 +846,9 @@ object StickerForm: TStickerForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'StickerId'
+          Name = 'inMaskId'
           Value = 0
-          Component = ClientDataSet
+          Component = CDSProperty
           ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -914,14 +884,8 @@ object StickerForm: TStickerForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'JuridicalId'
-          Value = 0
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'JuridicalName'
+          Name = 'inMaskId'
           Value = ''
-          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -929,11 +893,40 @@ object StickerForm: TStickerForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object ProtocolOpenFormPartner: TdsdOpenForm
+    object actInsertMask: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077' <'#1069#1090#1080#1082#1077#1090#1082#1091'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      ImageIndex = 54
+      FormName = 'TStickerEditForm'
+      FormNameParam.Value = 'TStickerEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InMaskId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object ProtocolOpenFormProperty: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1057#1074#1086#1081#1089#1090#1074#1072' '#1101#1090#1080#1082#1077#1090#1082#1080'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1057#1074#1086#1081#1089#1090#1074#1072' '#1101#1090#1080#1082#1077#1090#1082#1080'>'
       ImageIndex = 34
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
@@ -1009,18 +1002,9 @@ object StickerForm: TStickerForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'JuridicalId'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'JuridicalId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'JuridicalName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
+          Name = 'inMaskId'
+          Value = '0'
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -1029,7 +1013,7 @@ object StickerForm: TStickerForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object dsdSetErasedPartner: TdsdUpdateErased
+    object actSetErasedProperty: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spErasedUnErasedProperty
@@ -1037,8 +1021,8 @@ object StickerForm: TStickerForm
         item
           StoredProc = spErasedUnErasedProperty
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1089#1074#1086#1081#1089#1090#1074#1086' '#1101#1090#1080#1082#1077#1090#1082#1080
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1089#1074#1086#1081#1089#1090#1074#1086' '#1101#1090#1080#1082#1077#1090#1082#1080
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -1059,7 +1043,7 @@ object StickerForm: TStickerForm
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
-    object dsdSetUnErasedPartner: TdsdUpdateErased
+    object actSetUnErasedProperty: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spErasedUnErasedProperty
@@ -1106,7 +1090,7 @@ object StickerForm: TStickerForm
           Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'InvNumber'
+          ComponentItem = 'Comment'
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -1425,14 +1409,14 @@ object StickerForm: TStickerForm
         item
           Name = 'Key'
           Value = Null
-          Component = ClientDataSet
+          Component = CDSProperty
           ComponentItem = 'StickerPackId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = ClientDataSet
+          Component = CDSProperty
           ComponentItem = 'StickerPackName'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -1497,10 +1481,8 @@ object StickerForm: TStickerForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdateVat
       StoredProcList = <
         item
-          StoredProc = spUpdateVat
         end
         item
           StoredProc = spSelect
@@ -1509,38 +1491,70 @@ object StickerForm: TStickerForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "C'#1090#1072#1074#1082#1072' 0% ('#1090#1072#1084#1086#1078#1085#1103') '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 58
     end
-    object actContractCondition: TdsdUpdateDataSet
+    object StickerProperty_ValueChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProcList = <
-        item
-        end>
-      Caption = 'actUpdateDataSetCCK'
-    end
-    object GoodsPropertyChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'GoodsPropertyForm'
-      FormName = 'TGoodsPropertyForm'
-      FormNameParam.Value = 'TGoodsPropertyForm'
+      Caption = 'StickerProperty_ValueyForm'
+      FormName = 'TStickerProperty_ValueForm'
+      FormNameParam.Value = 'TStickerProperty_ValueForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'Key'
+          Name = 'Value1'
           Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'GoodsPropertyId'
+          Component = CDSProperty
+          ComponentItem = 'Value1'
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end
         item
-          Name = 'TextValue'
+          Name = 'Value2'
           Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'GoodsPropertyName'
-          DataType = ftString
+          Component = CDSProperty
+          ComponentItem = 'Value2'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value3'
+          Value = Null
+          Component = CDSProperty
+          ComponentItem = 'Value3'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value4'
+          Value = Null
+          Component = CDSProperty
+          ComponentItem = 'Value4'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value5'
+          Value = Null
+          Component = CDSProperty
+          ComponentItem = 'Value5'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value6'
+          Value = Null
+          Component = CDSProperty
+          ComponentItem = 'Value6'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value7'
+          Value = Null
+          Component = CDSProperty
+          ComponentItem = 'Value7'
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -1617,6 +1631,75 @@ object StickerForm: TStickerForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actPrint_Sticker: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1086#1081
+      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1086#1081
+      DataSets = <
+        item
+          UserName = 'frxDBDHeader'
+        end
+        item
+          UserName = 'frxDBDMaster'
+        end
+        item
+          UserName = 'frxDBDSverka'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Name = #1057#1095#1077#1090
+      ReportNameParam.Value = ''
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameTransport'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint_Sticker_ReportName: TdsdExecStoredProc
+      Category = 'Print'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReportNameSticker
+      StoredProcList = <
+        item
+          StoredProc = spGetReportNameSticker
+        end>
+      Caption = 'actPrint_Sticker_ReportName'
+    end
+    object mactPrint_Sticker: TMultiAction
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actPrint_Sticker_ReportName
+        end
+        item
+          Action = actPrint_Sticker
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1086#1081
+      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1086#1081
+      ImageIndex = 20
     end
   end
   object spSelect: TdsdStoredProc
@@ -2088,32 +2171,6 @@ object StickerForm: TStickerForm
     Left = 192
     Top = 464
   end
-  object spUpdateVat: TdsdStoredProc
-    StoredProcName = 'gpUpdateObject_Contract_isVat'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'ioId '
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisVat'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'isVat'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 328
-    Top = 259
-  end
   object FormParams: TdsdFormParams
     Params = <
       item
@@ -2135,5 +2192,30 @@ object StickerForm: TStickerForm
       end>
     Left = 576
     Top = 248
+  end
+  object spGetReportNameSticker: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_Sticker_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_Movement_Transport_ReportName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameTransport'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 720
+    Top = 152
   end
 end

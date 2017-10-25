@@ -448,6 +448,12 @@
         DataType = ftString
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMaskId'
+        Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 280
     Top = 376
@@ -462,6 +468,14 @@
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMaskId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMaskId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -635,11 +649,11 @@
   object GuidesSticker: TdsdGuides
     KeyField = 'Id'
     LookupControl = edSticker
-    FormNameParam.Value = 'TStickerForm'
+    FormNameParam.Value = 'TSticker_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TStickerForm'
-    PositionDataSet = 'MasterCDS'
+    FormName = 'TSticker_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -749,8 +763,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 88
-    Top = 132
+    Left = 64
+    Top = 164
   end
   object GuidesStickerPack: TdsdGuides
     KeyField = 'Id'

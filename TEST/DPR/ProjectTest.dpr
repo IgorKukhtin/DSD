@@ -977,7 +977,9 @@ uses
   Language in '..\..\Forms\Guides\Language.pas' {LanguageForm: TParentForm},
   StickerSkinEdit in '..\..\Forms\Guides\StickerSkinEdit.pas' {StickerSkinEditForm: TParentForm},
   StickerSkin in '..\..\Forms\Guides\StickerSkin.pas' {StickerSkinForm: TParentForm},
-  JuridicalRetailPartner_Object in '..\..\Forms\Guides\JuridicalRetailPartner_Object.pas' {JuridicalRetailPartner_ObjectForm: TParentForm};
+  JuridicalRetailPartner_Object in '..\..\Forms\Guides\JuridicalRetailPartner_Object.pas' {JuridicalRetailPartner_ObjectForm: TParentForm},
+  Sticker_Object in '..\..\Forms\Guides\Sticker_Object.pas' {Sticker_ObjectForm: TParentForm},
+  StickerProperty_Value in '..\..\Forms\Guides\StickerProperty_Value.pas' {StickerProperty_ValueForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

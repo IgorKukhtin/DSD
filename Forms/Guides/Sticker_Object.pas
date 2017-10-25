@@ -1,4 +1,4 @@
-unit Sticker;
+unit Sticker_Object;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   dxSkinXmas2008Blue;
 
 type
-  TStickerForm = class(TParentForm)
+  TSticker_ObjectForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     Comment: TcxGridDBColumn;
@@ -46,10 +46,6 @@ type
     bbChoiceGuides: TdxBarButton;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
-    actInsert: TdsdInsertUpdateAction;
-    actUpdate: TdsdInsertUpdateAction;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
     dsdGridToExcel: TdsdGridToExcel;
     spSelect: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
@@ -63,81 +59,31 @@ type
     GoodsName: TcxGridDBColumn;
     IsErased: TcxGridDBColumn;
     StickerGroupName: TcxGridDBColumn;
-    ContractConditionKindChoiceForm: TOpenChoiceForm;
     spInsertUpdate: TdsdStoredProc;
-    StickerGroupChoiceForm: TOpenChoiceForm;
-    actUpdateDataSet: TdsdUpdateDataSet;
-    JuridicalUnionChoiceForm: TOpenChoiceForm;
-    ContractKindChoiceForm: TOpenChoiceForm;
-    StickerSkinChoiceForm: TOpenChoiceForm;
     clCode: TcxGridDBColumn;
-    StickerSortChoiceForm: TOpenChoiceForm;
-    InfoMoneyChoiceForm_ContractCondition: TOpenChoiceForm;
     StickerNormName: TcxGridDBColumn;
-    StickerPackChoiceForm: TOpenChoiceForm;
-    StickerTypeChoiceForm: TOpenChoiceForm;
-    StickerNormChoiceForm: TOpenChoiceForm;
     StickerTypeName: TcxGridDBColumn;
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
     StickerSortName: TcxGridDBColumn;
-    StickerFileChoiceForm: TOpenChoiceForm;
     StickerFileName: TcxGridDBColumn;
-    CDSProperty: TClientDataSet;
-    DSProperty: TDataSource;
-    spSelectProperty: TdsdStoredProc;
-    spInsertUpdateStickerProperty: TdsdStoredProc;
-    dsdDBViewAddOnStickerProperty: TdsdDBViewAddOn;
-    InsertRecordProperty: TInsertRecord;
     bbRecordCP: TdxBarButton;
-    dsdUpdateDataSet1: TdsdUpdateDataSet;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocol: TdxBarButton;
     cxTopSplitter: TcxSplitter;
     cxRightSplitter: TcxSplitter;
-    GoodsChoiceForm: TOpenChoiceForm;
-    GoodsKindChoiceForm: TOpenChoiceForm;
-    spErasedUnErasedProperty: TdsdStoredProc;
-    actSetErasedProperty: TdsdUpdateErased;
-    actSetUnErasedProperty: TdsdUpdateErased;
-    ProtocolOpenFormProperty: TdsdOpenForm;
     bbProtocolOpenFormPartner: TdxBarButton;
-    StickerProperty_ValueChoiceForm: TOpenChoiceForm;
     Value1: TcxGridDBColumn;
-    StickerFileChoiceForm1: TOpenChoiceForm;
-    actUpdateVat: TdsdExecStoredProc;
+    spUpdateVat: TdsdStoredProc;
     StickerTagName: TcxGridDBColumn;
-    StickerTagChoiceForm: TOpenChoiceForm;
-    Panel: TPanel;
-    cxGridProperty: TcxGrid;
-    cxGridDBTableViewProperty: TcxGridDBTableView;
-    colCode: TcxGridDBColumn;
-    colisFix: TcxGridDBColumn;
-    colComment: TcxGridDBColumn;
-    colisErased: TcxGridDBColumn;
-    cxGridLeveProperty: TcxGridLevel;
-    cxLeftSplitter: TcxSplitter;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    colGoodsKindName: TcxGridDBColumn;
-    colStickerPackName: TcxGridDBColumn;
-    colStickerFileName: TcxGridDBColumn;
-    colStickerSkinName: TcxGridDBColumn;
-    actInsertPropertyMask: TdsdInsertUpdateAction;
     FormParams: TdsdFormParams;
     Id: TcxGridDBColumn;
-    actInsertMask: TdsdInsertUpdateAction;
     bbInsertMask: TdxBarButton;
-    bbInsertPropertyMask: TdxBarButton;
-    colTradeMarkName_StickerFile: TcxGridDBColumn;
+    bb: TdxBarButton;
     TradeMarkName_StickerFile: TcxGridDBColumn;
     TradeMarkName_Goods: TcxGridDBColumn;
-    bbSetErasedProperty: TdxBarButton;
-    bbSetUnErasedProperty: TdxBarButton;
-    actPrint_Sticker: TdsdPrintAction;
-    actPrint_Sticker_ReportName: TdsdExecStoredProc;
-    mactPrint_Sticker: TMultiAction;
-    spGetReportNameSticker: TdsdStoredProc;
 
   private
     { Private declarations }
@@ -150,6 +96,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TStickerForm);
+  RegisterClass(TSticker_ObjectForm);
 
 end.

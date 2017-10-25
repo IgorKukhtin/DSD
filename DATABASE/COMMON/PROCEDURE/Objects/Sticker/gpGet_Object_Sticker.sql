@@ -1,9 +1,11 @@
 -- Function: gpGet_Object_Sticker()
 
 DROP FUNCTION IF EXISTS gpGet_Object_Sticker (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_Sticker (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Sticker(
     IN inId          Integer,       -- Товар 
+    IN inMaskId      Integer,       -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
@@ -27,7 +29,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_Sticker());
     
-   IF COALESCE (inId, 0) = 0
+   IF (COALESCE (inId, 0) = 0 AND COALESCE (inMaskId, 0) = 0)
    THEN
        RETURN QUERY 
 
@@ -70,7 +72,8 @@ BEGIN
    ELSE
        RETURN QUERY 
        SELECT Object_Sticker.Id                 AS Id
-            , Object_Sticker.ObjectCode         AS Code
+            --, Object_Sticker.ObjectCode         AS Code
+            , CASE WHEN  COALESCE (inId, 0) = 0 THEN lfGet_ObjectCode (0, zc_Object_Sticker()) ELSE Object_Sticker.ObjectCode END AS Code
             , Object_Sticker.ValueData          AS Comment
 
             , Object_Juridical.Id               AS JuridicalId
@@ -171,7 +174,7 @@ BEGIN
                                   ON ObjectBlob_Info.ObjectId = Object_Sticker.Id 
                                  AND ObjectBlob_Info.DescId = zc_ObjectBlob_Sticker_Info()
 
-       WHERE Object_Sticker.Id = inId;
+       WHERE Object_Sticker.Id = CASE WHEN COALESCE (inId, 0) = 0 THEN inMaskId ELSE inId END;
 
    END IF;
   
@@ -179,24 +182,11 @@ END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_Sticker (Integer, TVarChar) OWNER TO postgres;
-
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 24.11.14         * add inStickerGroupAnalystId               
- 15.09.14         * add zc_ObjectLink_Sticker_StickerTag()
- 04.09.14         * 
- 29.09.13                                        * add zc_ObjectLink_Sticker_Fuel
- 06.09.13                          *              
- 02.07.13         * + TradeMark             
- 02.07.13                                        * 1251Cyr
- 21.06.13         *              
- 11.06.13         *
- 11.05.13                                        
-
+ 23.10.17         *
 */
 
 -- тест

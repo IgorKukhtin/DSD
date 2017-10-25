@@ -10,7 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
              , StickerId Integer
              , GoodsKindId Integer, GoodsKindName TVarChar
              , StickerPackId Integer, StickerPackName TVarChar
-             , StickerFileId Integer, StickerFileName TVarChar
+             , StickerFileId Integer, StickerFileName TVarChar, TradeMarkName_StickerFile TVarChar
              , StickerSkinId Integer, StickerSkinName TVarChar
              , isFix Boolean
              , Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat, Value5 TFloat, Value6 TFloat, Value7 TFloat
@@ -42,6 +42,7 @@ BEGIN
                                                  
             , Object_StickerFile.Id              AS StickerFileId
             , Object_StickerFile.ValueData       AS StickerFileName
+            , Object_TradeMark_StickerFile.ValueData  AS TradeMarkName_StickerFile
                                                  
             , Object_StickerSkin.Id              AS StickerSkinId
             , Object_StickerSkin.ValueData       AS StickerSkinName
@@ -119,7 +120,12 @@ BEGIN
              LEFT JOIN ObjectBoolean AS ObjectBoolean_Fix
                                      ON ObjectBoolean_Fix.ObjectId = Object_StickerProperty.Id 
                                     AND ObjectBoolean_Fix.DescId = zc_ObjectBoolean_StickerProperty_Fix()
-      ;
+                                    
+             LEFT JOIN ObjectLink AS ObjectLink_StickerFile_TradeMark
+                                  ON ObjectLink_StickerFile_TradeMark.ObjectId = Object_StickerFile.Id
+                                 AND ObjectLink_StickerFile_TradeMark.DescId = zc_ObjectLink_StickerFile_TradeMark()
+             LEFT JOIN Object AS Object_TradeMark_StickerFile ON Object_TradeMark_StickerFile.Id = ObjectLink_StickerFile_TradeMark.ChildObjectId
+                  ;
   
 END;
 $BODY$
