@@ -1650,17 +1650,17 @@ begin
       cxegExportToText:
         ExportGridToText(FileName, TcxGrid(FGrid), IsCtrlPressed,true,Separator,'','',ext);
       cxegExportToExcel:
-        begin
+        {begin
           with TExportGridToLibre.Create(FileName, TcxGrid(FGrid)) do
             try
               if Connected then
                 Execute
-              else
+              else}
                 ExportGridToExcel(FileName, TcxGrid(FGrid), IsCtrlPressed);
-            finally
+            {finally
               Free;
             end;
-        end;
+        end;}
       cxegExportToXlsx:
         ExportGridToXLSX(FileName, TcxGrid(FGrid), IsCtrlPressed);
       cxegExportToDbf:
