@@ -921,8 +921,7 @@ begin
           LabelStringValue.Caption:='Партия СЫРЬЯ';
           ActiveControl:=StringValueEdit;
           StringValueEdit.Text:=CDS.FieldByName('PartionGoods').AsString;
-          isPartionGoods:=true;
-          if not Execute then begin execParams.Free;exit;end;
+          if not Execute (true, false) then begin execParams.Free;exit;end;
           //
           //Проверка - только для Обв.
           if SettingMain.isGoodsComplete = FALSE
