@@ -529,6 +529,9 @@ BEGIN
         
            , tmpJuridicalArea.AreaId                                      AS AreaId
            , COALESCE (tmpJuridicalArea.AreaName, '')      :: TVarChar    AS AreaName
+           
+           , Object_Area.ValueData                         :: TVarChar    AS AreaName_Goods
+           
            , COALESCE (tmpJuridicalArea.isDefault, FALSE)  :: Boolean     AS isDefault
            
        FROM tmpMI        --_tmpOrderInternal_MI AS
@@ -537,7 +540,7 @@ BEGIN
                        GROUP BY tmpMI.MIMasterId
                       ) AS tmpOneJuridical ON tmpOneJuridical.MIMasterId = tmpMI.MovementItemId           
 
-            LEFT JOIN Object AS Object_PartnerGoods ON Object_PartnerGoods.Id = tmpMI.PartnerGoodsId      
+            LEFT JOIN Object AS Object_PartnerGoods ON Object_PartnerGoods.Id = tmpMI.PartnerGoodsId
             LEFT JOIN GoodsPromo ON GoodsPromo.JuridicalId = tmpMI.JuridicalId
                                 AND GoodsPromo.GoodsId = tmpMI.GoodsId                                    
 
@@ -561,6 +564,11 @@ BEGIN
             LEFT JOIN tmpRepeat          ON tmpRepeat.GoodsId            = tmpMI.GoodsId
             
             LEFT JOIN tmpJuridicalArea   ON tmpJuridicalArea.JuridicalId = tmpMI.JuridicalId
+            
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Area 
+                                 ON ObjectLink_Goods_Area.ObjectId = tmpMI.PartnerGoodsId
+                                AND ObjectLink_Goods_Area.DescId = zc_ObjectLink_Goods_Area()
+            LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Goods_Area.ChildObjectId
            ;
 
      RETURN NEXT Cursor1;
@@ -714,6 +722,9 @@ BEGIN
               
               , tmpJuridicalArea.AreaId                                   AS AreaId
               , COALESCE (tmpJuridicalArea.AreaName, '')      :: TVarChar AS AreaName
+              
+              , Object_Area.ValueData                         :: TVarChar AS AreaName_Goods
+              
               , COALESCE (tmpJuridicalArea.isDefault, FALSE)  :: Boolean  AS isDefault
               
         FROM _tmpOrderInternal_MI AS tmpMI
@@ -743,6 +754,12 @@ BEGIN
             */
              --LEFT JOIN Movement AS MovementPromo ON MovementPromo.Id = GoodsPromo.MovementId
              LEFT JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = tmpJuridical.JuridicalId
+             
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Area 
+                                 ON ObjectLink_Goods_Area.ObjectId = tmpMI.PartnerGoodsId
+                                AND ObjectLink_Goods_Area.DescId = zc_ObjectLink_Goods_Area()
+            LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Goods_Area.ChildObjectId
+            
           ;
 
      RETURN NEXT Cursor2;
@@ -1536,6 +1553,8 @@ BEGIN
            
            , tmpJuridicalArea.AreaId                                      AS AreaId
            , COALESCE (tmpJuridicalArea.AreaName, '')      :: TVarChar    AS AreaName
+           , Object_Area.ValueData                         :: TVarChar    AS AreaName_Goods
+           
            , COALESCE (tmpJuridicalArea.isDefault, FALSE)  :: Boolean     AS isDefault
        FROM tmpData AS tmpMI
             LEFT JOIN tmpPriceView AS Object_Price_View ON tmpMI.GoodsId                    = Object_Price_View.GoodsId
@@ -1566,7 +1585,12 @@ BEGIN
             LEFT JOIN  ObjectLink AS ObjectLink_Object 
                                   ON ObjectLink_Object.ObjectId = tmpMI.GoodsId
                                  AND ObjectLink_Object.DescId = zc_ObjectLink_Goods_Object()            
-            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Object.ChildObjectId            
+            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Object.ChildObjectId    
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Area 
+                                 ON ObjectLink_Goods_Area.ObjectId = tmpMI.PartnerGoodsId
+                                AND ObjectLink_Goods_Area.DescId = zc_ObjectLink_Goods_Area()
+            LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Goods_Area.ChildObjectId        
            ;
 
      RETURN NEXT Cursor1;
@@ -1615,6 +1639,7 @@ BEGIN
 
               , tmpJuridicalArea.AreaId                                      AS AreaId
               , COALESCE (tmpJuridicalArea.AreaName, '')      :: TVarChar    AS AreaName
+              , Object_Area.ValueData                         :: TVarChar    AS AreaName_Goods
               , COALESCE (tmpJuridicalArea.isDefault, FALSE)  :: Boolean     AS isDefault
               
         FROM _tmpMI
@@ -1635,6 +1660,11 @@ BEGIN
              
              LEFT JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = _tmpMI.JuridicalId
                                        AND tmpJuridicalArea.AreaId      = _tmpMI.AreaId
+
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Area 
+                                  ON ObjectLink_Goods_Area.ObjectId = _tmpMI.GoodsId
+                                 AND ObjectLink_Goods_Area.DescId = zc_ObjectLink_Goods_Area()
+             LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Goods_Area.ChildObjectId
 ;
    RETURN NEXT Cursor2;
 

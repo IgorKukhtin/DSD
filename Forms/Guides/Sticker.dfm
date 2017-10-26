@@ -2151,12 +2151,6 @@ object StickerForm: TStickerForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Id'
-        Value = Null
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     Left = 536
     Top = 248
@@ -2169,7 +2163,7 @@ object StickerForm: TStickerForm
       item
         Name = 'inObjectId'
         Value = Null
-        Component = ClientDataSet
+        Component = CDSProperty
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
