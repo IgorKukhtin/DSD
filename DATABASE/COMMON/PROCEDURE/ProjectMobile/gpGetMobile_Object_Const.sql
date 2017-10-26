@@ -162,13 +162,15 @@ BEGIN
                         THEN 'http://project-vds.vds.colocall.com/projectmobile/index.php'*/
                    WHEN Object_ConnectParam.ValueData = ''
                         THEN 'http://integer-srv2.alan.dp.ua/projectmobile/index.php'
-                   ELSE REPLACE (REPLACE (LOWER (Object_ConnectParam.ValueData), '/project/', '/projectmobile/'), '//integer-srv.alan.dp.ua', '//project-vds.vds.colocall.com/projectmobile/index.php')
+                   ELSE REPLACE (LOWER (Object_ConnectParam.ValueData), '/project/', '/projectmobile/')
+                   -- ELSE REPLACE (REPLACE (LOWER (Object_ConnectParam.ValueData), '/project/', '/projectmobile/'), '//integer-srv.alan.dp.ua', '//project-vds.vds.colocall.com/projectmobile/index.php')
                    -- ELSE 'http://integer-srv.alan.dp.ua/projectmobile/index.php'
               END :: TVarChar AS WebService
 
             , CASE WHEN Object_ConnectParam.ValueData = ''
-                        THEN 'http://project-vds.vds.colocall.com/projectmobile/index.php' 
-                   ELSE REPLACE (REPLACE (LOWER (Object_ConnectParam.ValueData), '/project/', '/projectmobile/'), '//integer-srv.alan.dp.ua', '//project-vds.vds.colocall.com/projectmobile/index.php') 
+                        THEN 'http://integer-srv.alan.dp.ua/projectmobile/index.php' 
+                   ELSE REPLACE (LOWER (Object_ConnectParam.ValueData), '/project/', '/projectmobile/') 
+                   -- ELSE REPLACE (REPLACE (LOWER (Object_ConnectParam.ValueData), '/project/', '/projectmobile/'), '//integer-srv.alan.dp.ua', '//project-vds.vds.colocall.com/projectmobile/index.php') 
               END :: TVarChar AS WebService_two
 
             -- AS LastDateIn
