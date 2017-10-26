@@ -38,7 +38,7 @@ BEGIN
              )
       SELECT LoadPriceList.OperDate	 
            , LoadPriceList.JuridicalId
-           , tmpArea.AreaId
+           , COALESCE (tmpArea.AreaId, 0)
              INTO vbOperDate, vbJuridicalId, vbAreaId_find
       FROM LoadPriceList
            LEFT JOIN tmpArea ON tmpArea.JuridicalId = LoadPriceList.JuridicalId

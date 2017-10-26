@@ -403,17 +403,26 @@ BEGIN
                                 )
             -- ВСЕ Заявки от Покупателя - только Документы
           , tmpOrderExternal AS (SELECT MovementLinkObject_From.ObjectId    AS FromId
+                                      /*, CASE WHEN COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) < vbOperDate
+                                              AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) = Movement.OperDate
+                                                  THEN NULL
+                                             ELSE Movement.Id
+                                        END AS MovementId*/
                                       , CASE WHEN MovementDate_OperDatePartner.ValueData < vbOperDate THEN NULL ELSE Movement.Id END AS MovementId
                                       , Movement.OperDate
-                                      , MovementDate_OperDatePartner.ValueData AS OperDatePartner
+                                      , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AS OperDatePartner
                                  FROM Movement
                                       LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                                    ON MovementLinkObject_From.MovementId = Movement.Id
                                                                   AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                                      INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                    ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                   AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                      INNER JOIN tmpUnit_SKLAD ON tmpUnit_SKLAD.UnitId = MovementLinkObject_To.ObjectId
                                       LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                                              ON MovementDate_OperDatePartner.MovementId = Movement.Id
                                                             AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
-                                 WHERE Movement.OperDate BETWEEN vbOperDate - INTERVAL '1 DAY' AND vbOperDate + INTERVAL '1 DAY'
+                                 WHERE Movement.OperDate BETWEEN vbOperDate - INTERVAL '1 DAY' AND vbOperDate + INTERVAL '0 DAY'
                                    AND Movement.DescId   = zc_Movement_OrderExternal()
                                    AND Movement.StatusId = zc_Enum_Status_Complete()
                                    AND Movement.Id       <> inMovementId
@@ -459,6 +468,8 @@ BEGIN
                                           , Movement.GoodsKindId                          AS GoodsKindId
                                           , SUM (CASE WHEN Movement.OperDate = vbOperDate - INTERVAL '1 DAY' THEN Movement.Amount ELSE 0 END) AS Amount_Prev
                                           , SUM (CASE WHEN Movement.OperDate >= vbOperDate THEN Movement.Amount ELSE 0 END)                   AS Amount_Next
+                                          -- , SUM (CASE WHEN Movement.OperDate = vbOperDate - INTERVAL '1 DAY' AND Movement.OperDate <> Movement.OperDatePartner THEN Movement.Amount ELSE 0 END) AS Amount_Prev
+                                          -- , SUM (CASE WHEN Movement.OperDate = vbOperDate - INTERVAL '1 DAY' AND Movement.OperDate <> Movement.OperDatePartner THEN 0 ELSE Movement.Amount END) AS Amount_Next
                                           -- , SUM (CASE WHEN Movement.OperDate < vbOperDate AND Movement.OperDatePartner = vbOperDate THEN Movement.Amount ELSE 0 END) AS Amount_Prev
                                           -- , SUM (CASE WHEN Movement.OperDate >= vbOperDate OR Movement.OperDatePartner > vbOperDate THEN Movement.Amount ELSE 0 END)                   AS Amount_Next
                                      FROM tmpOrderExternal_MI AS Movement

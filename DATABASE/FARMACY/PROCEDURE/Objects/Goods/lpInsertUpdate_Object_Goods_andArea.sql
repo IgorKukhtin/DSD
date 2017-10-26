@@ -21,6 +21,8 @@ AS
 $BODY$
 BEGIN
    
+-- RAISE EXCEPTION '<%>', inAreaId;
+
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object_Goods (ioId                  := ioId
                                       , inCode                := inCode
@@ -33,7 +35,9 @@ BEGIN
                                       , inMakerId             := inMakerId
                                       , inMakerName           := inMakerName
                                       , inCheckName           := inCheckName
+                                      , inAreaId              := COALESCE (inAreaId, 0)
                                        );
+
 
   -- сохранили свойство <связи чьи товары>
   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Area(), ioId, inAreaId);

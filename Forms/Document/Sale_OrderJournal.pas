@@ -44,7 +44,6 @@ type
     ContractName: TcxGridDBColumn;
     InvNumberOrder: TcxGridDBColumn;
     Checked: TcxGridDBColumn;
-    RouteSortingName: TcxGridDBColumn;
     edIsPartnerDate: TcxCheckBox;
     InfoMoneyGroupName: TcxGridDBColumn;
     InfoMoneyDestinationName: TcxGridDBColumn;

@@ -17,7 +17,8 @@ CREATE OR REPLACE VIEW Object_LinkGoods_View AS
          , Object_Goods.MakerName                        AS MakerName
 
          , Object_Goods.ObjectId                         AS ObjectId
-         , false                                         AS isErased
+         , Object_Goods.AreaId                           AS AreaId
+         , FALSE                                         AS isErased
          
      FROM ObjectLink AS ObjectLink_LinkGoods_GoodsMain
           LEFT JOIN Object AS Object_MainGoods ON Object_MainGoods.Id = ObjectLink_LinkGoods_GoodsMain.ChildObjectId

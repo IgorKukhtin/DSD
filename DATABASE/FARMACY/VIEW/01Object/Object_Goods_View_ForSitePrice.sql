@@ -4,33 +4,37 @@ DROP VIEW IF EXISTS Object_Goods_View_ForSitePrice;
 
 CREATE OR REPLACE VIEW Object_Goods_View_ForSitePrice AS
     SELECT
-         Object_Goods.Id                                         as id
-       , Object_Goods.GoodsCodeInt                               as article
+         ObjectLink_Goods_Object.ObjectId                        as id
+       , Object_Goods.ObjectCode                                 as article
        , ObjectFloat_Goods_Site.ValueData :: Integer             as Id_Site
        , ObjectBlob_Site.ValueData                               as Name_Site
-       , Object_Goods.GoodsName                                  as name
+       , Object_Goods.ValueData                                  as name
        , ROUND (LoadPriceListItem.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100) * (1 + COALESCE (MarginCategory_site.MarginPercent, 0) / 100), 2) :: TFloat  AS PriceBADM
        , CASE WHEN Object_Goods.isErased=TRUE THEN 1::Integer ELSE 0::Integer END                                   AS deleted
-       , Object_Goods.ObjectId                                   AS ObjectId
+       , ObjectLink_Goods_Object.ChildObjectId                   AS ObjectId
        , ObjectFloat_NDSKind_NDS.ValueData                       AS NDS
        , MarginCategory_site.MarginPercent                       AS MarginPercent
-    FROM Object_Goods_View AS Object_Goods
+
+    -- FROM Object_Goods_View AS Object_Goods
+    FROM ObjectLink AS ObjectLink_Goods_Object
+            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_Object.ObjectId
+
         LEFT OUTER JOIN ObjectFloat AS ObjectFloat_Goods_Site
-                                    ON ObjectFloat_Goods_Site.ObjectId = Object_Goods.Id
+                                    ON ObjectFloat_Goods_Site.ObjectId = ObjectLink_Goods_Object.ObjectId
                                    AND ObjectFloat_Goods_Site.DescId = zc_ObjectFloat_Goods_Site()
 
         LEFT OUTER JOIN ObjectBlob AS ObjectBlob_Site
-                                   ON ObjectBlob_Site.ObjectId = Object_Goods.Id
+                                   ON ObjectBlob_Site.ObjectId = ObjectLink_Goods_Object.ObjectId
                                   AND ObjectBlob_Site.DescId = zc_objectBlob_Goods_Site()
 
         LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
-                             ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
+                             ON ObjectLink_Goods_NDSKind.ObjectId = ObjectLink_Goods_Object.ObjectId
                             AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
         LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
                               ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId
                              AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
                              
-        LEFT JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = Object_Goods.Id
+        LEFT JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = ObjectLink_Goods_Object.ObjectId
                                                  AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
         LEFT JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
                                                 AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
@@ -68,7 +72,7 @@ CREATE OR REPLACE VIEW Object_Goods_View_ForSitePrice AS
                                           AND LoadPriceListItem.Price < MarginCategory_site.MaxPrice
 
 
-    WHERE Object_Goods.ObjectId = 4 -- !!!бпелеммн!!!
+    WHERE ObjectLink_Goods_Object.ChildObjectId = 4 -- !!!бпелеммн!!!
       -- AND (ObjectBoolean_Goods_Published.ValueData = TRUE OR ObjectBoolean_Goods_Published.ValueData IS NULL)
     --ORDER BY ObjectBlob_Site.ValueData
    ;

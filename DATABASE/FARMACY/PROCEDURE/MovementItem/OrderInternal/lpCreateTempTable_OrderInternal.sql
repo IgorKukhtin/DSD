@@ -13,14 +13,18 @@ AS
 $BODY$
   DECLARE vbMainJuridicalId Integer;
   DECLARE vbUnitId Integer;
+  DECLARE vbAreaId_find Integer;
 BEGIN
 
-     SELECT Object_Unit_View.JuridicalId, MovementLinkObject.ObjectId
-            INTO vbMainJuridicalId, vbUnitId
-         FROM Object_Unit_View 
-               JOIN  MovementLinkObject ON MovementLinkObject.ObjectId = Object_Unit_View.Id 
-                AND  MovementLinkObject.MovementId = inMovementId 
-                AND  MovementLinkObject.DescId = zc_MovementLinkObject_Unit();
+     SELECT Object_Unit_View.JuridicalId, MovementLinkObject.ObjectId, COALESCE (ObjectLink_Unit_Area.ChildObjectId, zc_Area_Basis())
+            INTO vbMainJuridicalId, vbUnitId, vbAreaId_find
+         FROM MovementLinkObject
+              INNER JOIN Object_Unit_View ON Object_Unit_View.Id = MovementLinkObject.ObjectId
+              LEFT JOIN ObjectLink AS ObjectLink_Unit_Area
+                                   ON ObjectLink_Unit_Area.ObjectId = Object_Unit_View.Id
+                                  AND ObjectLink_Unit_Area.DescId   = zc_ObjectLink_Unit_Area()
+     WHERE MovementLinkObject.MovementId = inMovementId 
+       AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit();
 
      CREATE TEMP TABLE _tmpMI (Id integer
              , MovementItemId Integer
@@ -52,14 +56,31 @@ BEGIN
               , PriceSettingsTOP AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsTOPInterval (inUserId::TVarChar))
 
               , JuridicalSettings AS (SELECT * FROM lpSelect_Object_JuridicalSettingsRetail (inObjectId) AS T WHERE T.MainJuridicalId = vbMainJuridicalId)
+              , JuridicalArea AS (SELECT DISTINCT ObjectLink_JuridicalArea_Juridical.ChildObjectId AS JuridicalId
+                                  FROM ObjectLink AS ObjectLink_JuridicalArea_Juridical
+                                       INNER JOIN Object AS Object_JuridicalArea ON Object_JuridicalArea.Id       = ObjectLink_JuridicalArea_Juridical.ObjectId
+                                                                                AND Object_JuridicalArea.isErased = FALSE
+                                       INNER JOIN ObjectLink AS ObjectLink_JuridicalArea_Area
+                                                             ON ObjectLink_JuridicalArea_Area.ObjectId      = Object_JuridicalArea.Id
+                                                            AND ObjectLink_JuridicalArea_Area.DescId        = zc_ObjectLink_JuridicalArea_Area()
+                                                            AND ObjectLink_JuridicalArea_Area.ChildObjectId = vbAreaId_find
+                                       -- Уникальный код поставщика ТОЛЬКО для Региона
+                                       INNER JOIN ObjectBoolean AS ObjectBoolean_JuridicalArea_GoodsCode
+                                                                ON ObjectBoolean_JuridicalArea_GoodsCode.ObjectId  = Object_JuridicalArea.Id 
+                                                               AND ObjectBoolean_JuridicalArea_GoodsCode.DescId    = zc_ObjectBoolean_JuridicalArea_GoodsCode()
+                                                               AND ObjectBoolean_JuridicalArea_GoodsCode.ValueData = TRUE
+                                  WHERE ObjectLink_JuridicalArea_Juridical.DescId        = zc_ObjectLink_JuridicalArea_Juridical()
+                                 ) 
               , MovementItemOrder AS (SELECT MovementItem.*, Object_LinkGoods_View.GoodsMainId, PriceList_GoodsLink.GoodsId
                                       FROM MovementItem    
                                            INNER JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = MovementItem.ObjectId -- Связь товара сети с общим
                                            LEFT JOIN Object_LinkGoods_View AS PriceList_GoodsLink -- связь товара в прайсе с главным товаром
                                                                            ON PriceList_GoodsLink.GoodsMainId = Object_LinkGoods_View.GoodsMainId
+                                           LEFT JOIN JuridicalArea ON JuridicalArea.JuridicalId = PriceList_GoodsLink.ObjectId
                                       WHERE MovementItem.MovementId = inMovementId
                                         AND MovementItem.DescId     = zc_MI_Master()
                                         AND ((inGoodsId = 0) OR (inGoodsId = MovementItem.ObjectId))
+                                        AND (PriceList_GoodsLink.AreaId = vbAreaId_find OR JuridicalArea.JuridicalId IS NULL)
                                   )
                 -- Маркетинговый контракт
               , tmpOperDate AS (SELECT date_trunc ('day', Movement.OperDate) AS OperDate FROM Movement WHERE Movement.Id = inMovementId)

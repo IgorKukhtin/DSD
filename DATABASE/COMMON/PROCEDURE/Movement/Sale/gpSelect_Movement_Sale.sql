@@ -27,7 +27,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
              , JuridicalName_To TVarChar, OKPO_To TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
-             , RouteSortingId Integer, RouteSortingName TVarChar, RouteGroupName TVarChar, RouteName TVarChar, PersonalName TVarChar
+             , RouteGroupName TVarChar, RouteName TVarChar, PersonalName TVarChar
              , RetailName_order TVarChar
              , PartnerName_order TVarChar
              , PriceListName TVarChar
@@ -151,8 +151,6 @@ BEGIN
            , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode
            , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
 
-           , Object_RouteSorting.Id                         AS RouteSortingId
-           , Object_RouteSorting.ValueData                  AS RouteSortingName
            , Object_RouteGroup.ValueData                    AS RouteGroupName
            , Object_Route.ValueData                         AS RouteName
            , Object_Personal.ValueData                      AS PersonalName
@@ -176,11 +174,11 @@ BEGIN
            , Movement_Transport.Id                     AS MovementId_Transport
            , Movement_Transport.InvNumber              AS InvNumber_Transport
            , Movement_Transport.OperDate               AS OperDate_Transport
-           , ('№ ' || Movement_Transport.InvNumber || ' от ' || Movement_Transport.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Transport_Full 
+           , ('№ ' || Movement_Transport.InvNumber || ' от ' || Movement_Transport.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Transport_Full
            , Object_Car.ValueData                      AS CarName
            , Object_CarModel.ValueData                 AS CarModelName
-           , View_PersonalDriver.PersonalName          AS PersonalDriverName
- 
+           , Object_PersonalDriver.ValueData           AS PersonalDriverName
+
            , COALESCE (MovementLinkMovement_Sale.MovementChildId, 0) <> 0 AS isEDI
            , COALESCE (MovementBoolean_Electron.ValueData, FALSE)         AS isElectron
            , COALESCE (MovementBoolean_Medoc.ValueData, FALSE)            AS isMedoc
@@ -229,7 +227,7 @@ BEGIN
 
            , Movement_Transport_Reestr.InvNumber        AS InvNumber_Transport_Reestr
            , Movement_Transport_Reestr.OperDate         AS OperDate_Transport_Reestr
-           
+
        FROM (SELECT Movement.Id
                   , tmpRoleAccessKey.AccessKeyId
              FROM tmpStatus
@@ -293,7 +291,7 @@ BEGIN
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
-            LEFT JOIN MovementString AS MovementString_Comment 
+            LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
@@ -421,21 +419,6 @@ BEGIN
                                         AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
             LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
-                                         ON MovementLinkObject_Car.MovementId = Movement_Transport.Id
-                                        AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
-            LEFT JOIN Object AS Object_Car ON Object_Car.Id = MovementLinkObject_Car.ObjectId
-
-            LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
-                                                           AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
-            LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
-            
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
-                                         ON MovementLinkObject_PersonalDriver.MovementId = Movement_Transport.Id
-                                        AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
-            LEFT JOIN Object_Personal_View AS View_PersonalDriver ON View_PersonalDriver.PersonalId = MovementLinkObject_PersonalDriver.ObjectId
---
-
             LEFT JOIN MovementBoolean AS MovementBoolean_Electron
                                       ON MovementBoolean_Electron.MovementId = MovementLinkMovement_Master.MovementChildId
                                      AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
@@ -459,22 +442,17 @@ BEGIN
                                                      AND Movement_DocumentMaster.StatusId = zc_Enum_Status_Complete() -- <> zc_Enum_Status_Erased()
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
-                                           ON MovementLinkMovement_Sale.MovementId = Movement.Id 
+                                           ON MovementLinkMovement_Sale.MovementId = Movement.Id
                                           AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Sale()
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
-                                           ON MovementLinkMovement_Order.MovementId = Movement.Id 
+                                           ON MovementLinkMovement_Order.MovementId = Movement.Id
                                           AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
                                          ON MovementLinkObject_Route.MovementId = MovementLinkMovement_Order.MovementChildId
                                         AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
             LEFT JOIN Object AS Object_Route ON Object_Route.Id = MovementLinkObject_Route.ObjectId
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteSorting
-                                         ON MovementLinkObject_RouteSorting.MovementId = MovementLinkMovement_Order.MovementChildId
-                                        AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
-            LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = MovementLinkObject_RouteSorting.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
                                          ON MovementLinkObject_Personal.MovementId = MovementLinkMovement_Order.MovementChildId
@@ -528,7 +506,7 @@ BEGIN
           LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
                                   ON MovementFloat_MovementItemId.MovementId =  Movement.Id
                                  AND MovementFloat_MovementItemId.DescId     = zc_MovementFloat_MovementItemId()
-          LEFT JOIN MovementItem AS MI_Reestr 
+          LEFT JOIN MovementItem AS MI_Reestr
                                  ON MI_Reestr.Id       = MovementFloat_MovementItemId.ValueData :: Integer
                                 AND MI_Reestr.isErased = FALSE
           LEFT JOIN Movement AS Movement_Reestr ON Movement_Reestr.Id = MI_Reestr.MovementId
@@ -537,7 +515,28 @@ BEGIN
                                          ON MLM_Transport_Reestr.MovementId = Movement_Reestr.Id
                                         AND MLM_Transport_Reestr.DescId     = zc_MovementLinkMovement_Transport()
           LEFT JOIN Movement AS Movement_Transport_Reestr ON Movement_Transport_Reestr.Id = MLM_Transport_Reestr.MovementChildId
-            
+
+          LEFT JOIN MovementItem AS MI_TransportService ON MI_TransportService.MovementId = Movement_Transport_Reestr.Id
+                                                       AND MI_TransportService.DescId     = zc_MI_Master()
+                                                       AND Movement_Transport_Reestr.DescId     = zc_Movement_TransportService()
+          LEFT JOIN MovementItemLinkObject AS MILO_Car
+                                           ON MILO_Car.MovementItemId = MI_TransportService.Id
+                                          AND MILO_Car.DescId         = zc_MILinkObject_Car()
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
+                                       ON MovementLinkObject_Car.MovementId = COALESCE (Movement_Transport.Id, Movement_Transport_Reestr.Id)
+                                      AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
+          LEFT JOIN Object AS Object_Car ON Object_Car.Id = COALESCE (MovementLinkObject_Car.ObjectId, MILO_Car.ObjectId)
+
+          LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
+                                                         AND ObjectLink_Car_CarModel.DescId   = zc_ObjectLink_Car_CarModel()
+          LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
+                                       ON MovementLinkObject_PersonalDriver.MovementId = COALESCE (Movement_Transport.Id, Movement_Transport_Reestr.Id)
+                                      AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
+          LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = COALESCE (MovementLinkObject_PersonalDriver.ObjectId, MI_TransportService.ObjectId)
+
      WHERE /*(vbIsXleb = FALSE OR (View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_30103() -- Хлеб
                                 AND vbIsXleb = TRUE))
         AND */(tmpBranchJuridical.JuridicalId > 0 OR tmpMovement.AccessKeyId > 0)
@@ -561,7 +560,7 @@ $BODY$
  24.07.14         * add zc_MovementFloat_CurrencyValue
                         zc_MovementLinkObject_CurrencyDocument
                         zc_MovementLinkObject_CurrencyPartner
- 29.05.14                        * add isCOMDOC 
+ 29.05.14                        * add isCOMDOC
  17.05.14                                        * add MS_InvNumberPartner_Master - всегда
  03.05.14                                        * add ContractTagName
  24.04.14                                        * ... Movement_DocumentMaster.Id
