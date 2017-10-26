@@ -63,16 +63,13 @@ type
     GoodsName: TcxGridDBColumn;
     IsErased: TcxGridDBColumn;
     StickerGroupName: TcxGridDBColumn;
-    ContractConditionKindChoiceForm: TOpenChoiceForm;
     spInsertUpdate: TdsdStoredProc;
     StickerGroupChoiceForm: TOpenChoiceForm;
     actUpdateDataSet: TdsdUpdateDataSet;
     JuridicalUnionChoiceForm: TOpenChoiceForm;
-    ContractKindChoiceForm: TOpenChoiceForm;
     StickerSkinChoiceForm: TOpenChoiceForm;
     clCode: TcxGridDBColumn;
     StickerSortChoiceForm: TOpenChoiceForm;
-    InfoMoneyChoiceForm_ContractCondition: TOpenChoiceForm;
     StickerNormName: TcxGridDBColumn;
     StickerPackChoiceForm: TOpenChoiceForm;
     StickerTypeChoiceForm: TOpenChoiceForm;
@@ -134,10 +131,16 @@ type
     TradeMarkName_Goods: TcxGridDBColumn;
     bbSetErasedProperty: TdxBarButton;
     bbSetUnErasedProperty: TdxBarButton;
-    actPrint_Sticker: TdsdPrintAction;
-    actPrint_Sticker_ReportName: TdsdExecStoredProc;
-    mactPrint_Sticker: TMultiAction;
     spGetReportNameSticker: TdsdStoredProc;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    spSelectPrint: TdsdStoredProc;
+    spInsertReportName: TdsdStoredProc;
+    bbPrint_Sticker: TdxBarButton;
+    macPrint: TMultiAction;
+    actPrint: TdsdPrintAction;
+    actGetReportName: TdsdExecStoredProc;
+    actInsertReportName: TdsdExecStoredProc;
 
   private
     { Private declarations }

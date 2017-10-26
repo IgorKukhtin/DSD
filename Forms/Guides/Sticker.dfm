@@ -25,6 +25,8 @@ object StickerForm: TStickerForm
     Align = alTop
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = -10
+    ExplicitTop = 25
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -332,6 +334,8 @@ object StickerForm: TStickerForm
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
+      ExplicitLeft = 181
+      ExplicitTop = 48
       object cxGridDBTableViewProperty: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DSProperty
@@ -695,6 +699,14 @@ object StickerForm: TStickerForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Sticker'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -774,6 +786,10 @@ object StickerForm: TStickerForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1074#1086#1081#1089#1090#1074#1086' '#1101#1090#1080#1082#1077#1090#1082#1080
       Category = 0
     end
+    object bbPrint_Sticker: TdxBarButton
+      Action = macPrint
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -817,6 +833,17 @@ object StickerForm: TStickerForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndexTrue = 62
       ImageIndexFalse = 63
+    end
+    object actInsertReportName: TdsdExecStoredProc
+      Category = 'Print'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertReportName
+      StoredProcList = <
+        item
+          StoredProc = spInsertReportName
+        end>
+      Caption = 'actInsertReportName'
     end
     object InsertRecordProperty: TInsertRecord
       Category = 'DSDLib'
@@ -1477,20 +1504,6 @@ object StickerForm: TStickerForm
         end>
       isShowModal = True
     end
-    object actUpdateVat: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <
-        item
-        end
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "C'#1090#1072#1074#1082#1072' 0% ('#1090#1072#1084#1086#1078#1085#1103') '#1044#1072'/'#1053#1077#1090'"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "C'#1090#1072#1074#1082#1072' 0% ('#1090#1072#1084#1086#1078#1085#1103') '#1044#1072'/'#1053#1077#1090'"'
-      ImageIndex = 58
-    end
     object StickerProperty_ValueChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1559,124 +1572,21 @@ object StickerForm: TStickerForm
         end>
       isShowModal = True
     end
-    object InfoMoneyChoiceForm_ContractCondition: TOpenChoiceForm
+    object actUpdateVat: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'InfoMoneyChoiceForm'
-      FormName = 'TInfoMoney_ObjectForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object ContractKindChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'ContractKindChoiceForm'
-      FormName = 'TContractKindForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'ContractKindId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'ContractKindName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object ContractConditionKindChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'ContractConditionKindChoiceForm'
-      FormName = 'TContractConditionKindForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actPrint_Sticker: TdsdPrintAction
-      Category = 'Print'
-      MoveParams = <>
-      StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1086#1081
-      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1086#1081
-      DataSets = <
-        item
-          UserName = 'frxDBDHeader'
-        end
-        item
-          UserName = 'frxDBDMaster'
-        end
-        item
-          UserName = 'frxDBDSverka'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = '0'
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'NULL'
-      ReportNameParam.Name = #1057#1095#1077#1090
-      ReportNameParam.Value = ''
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameTransport'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-    end
-    object actPrint_Sticker_ReportName: TdsdExecStoredProc
-      Category = 'Print'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGetReportNameSticker
       StoredProcList = <
         item
-          StoredProc = spGetReportNameSticker
+        end
+        item
+          StoredProc = spSelect
         end>
-      Caption = 'actPrint_Sticker_ReportName'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "C'#1090#1072#1074#1082#1072' 0% ('#1090#1072#1084#1086#1078#1085#1103') '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "C'#1090#1072#1074#1082#1072' 0% ('#1090#1072#1084#1086#1078#1085#1103') '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 58
     end
-    object mactPrint_Sticker: TMultiAction
+    object macPrint: TMultiAction
       Category = 'Print'
       MoveParams = <
         item
@@ -1692,14 +1602,59 @@ object StickerForm: TStickerForm
         end>
       ActionList = <
         item
-          Action = actPrint_Sticker_ReportName
+          Action = actGetReportName
         end
         item
-          Action = actPrint_Sticker
+          Action = actInsertReportName
+        end
+        item
+          Action = actPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1086#1081
-      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1086#1081
-      ImageIndex = 20
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+      ShortCut = 16464
+    end
+    object actPrint: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Value = Null
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end>
+      Params = <>
+      ReportName = 'NULL'
+      ReportNameParam.Value = ''
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameSticker'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
+    object actGetReportName: TdsdExecStoredProc
+      Category = 'Print'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReportNameSticker
+      StoredProcList = <
+        item
+          StoredProc = spGetReportNameSticker
+        end>
+      Caption = 'actGetReportName'
     end
   end
   object spSelect: TdsdStoredProc
@@ -1768,8 +1723,8 @@ object StickerForm: TStickerForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 800
-    Top = 224
+    Left = 648
+    Top = 256
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_Sticker'
@@ -1925,8 +1880,8 @@ object StickerForm: TStickerForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 432
-    Top = 176
+    Left = 320
+    Top = 216
   end
   object PeriodChoice: TPeriodChoice
     Left = 480
@@ -2189,8 +2144,21 @@ object StickerForm: TStickerForm
         DataType = ftString
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReportNameSticker'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Id'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 576
+    Left = 536
     Top = 248
   end
   object spGetReportNameSticker: TdsdStoredProc
@@ -2199,23 +2167,73 @@ object StickerForm: TStickerForm
     OutputType = otResult
     Params = <
       item
-        Name = 'inMovementId'
+        Name = 'inObjectId'
         Value = Null
-        Component = FormParams
+        Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'gpGet_Movement_Transport_ReportName'
+        Name = 'gpGet_Object_Sticker_ReportName'
         Value = Null
         Component = FormParams
-        ComponentItem = 'ReportNameTransport'
+        ComponentItem = 'ReportNameSticker'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 720
     Top = 152
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 836
+    Top = 137
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 836
+    Top = 182
+  end
+  object spSelectPrint: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_StickerProperty_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = CDSProperty
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 623
+    Top = 128
+  end
+  object spInsertReportName: TdsdStoredProc
+    StoredProcName = 'gpInsert_Object_Sticker_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inReportName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameSticker'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 616
+    Top = 184
   end
 end

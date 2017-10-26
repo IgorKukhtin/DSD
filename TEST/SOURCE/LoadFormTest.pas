@@ -2252,6 +2252,7 @@ procedure TLoadFormTest.LoadStickerFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerEditForm');
   //

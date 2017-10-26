@@ -594,7 +594,20 @@ AS
        AND OH_JuridicalDetails.OKPO IN ('36387249', '36387233', '38916558')        
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
 
+      UNION
+      -- Справочник Этикетка
+      SELECT
+             zc_Object_Sticker()
+           , CAST ('Sticker' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (0 AS INTEGER)
+           , CAST (0 AS INTEGER)
+           , CAST ('PrintObject_Sticker' AS TVarChar)
+
+
 --   ORDER BY 1,2,4
+
 
        ;
 
@@ -604,6 +617,7 @@ ALTER TABLE PrintForms_View OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.10.17         * add PrintObject_Sticker
  19.06.17         * add PrintMovement_Sale2902403938
  15.03.17         * add Tax0317, TaxCorrective0317
  01.02.16         * add PrintMovement_Transport

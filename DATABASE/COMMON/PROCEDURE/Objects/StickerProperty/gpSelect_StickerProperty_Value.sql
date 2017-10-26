@@ -20,7 +20,7 @@ BEGIN
      -- Результат
      RETURN QUERY 
        SELECT DISTINCT
-            , ObjectFloat_Value1.ValueData       AS Value1
+              ObjectFloat_Value1.ValueData       AS Value1
             , ObjectFloat_Value2.ValueData       AS Value2
             , ObjectFloat_Value3.ValueData       AS Value3
             , ObjectFloat_Value4.ValueData       AS Value4
@@ -28,8 +28,8 @@ BEGIN
             , ObjectFloat_Value6.ValueData       AS Value6
             , ObjectFloat_Value7.ValueData       AS Value7
             
-            , 0           AS Id
-            , '' TVarChar AS Name
+            , 0               AS Id
+            , '' :: TVarChar  AS Name
 
        FROM Object AS Object_StickerProperty
             LEFT JOIN ObjectFloat AS ObjectFloat_Value1
