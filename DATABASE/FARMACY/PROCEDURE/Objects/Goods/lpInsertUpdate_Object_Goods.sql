@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Goods(
  INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
@@ -14,7 +15,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Goods(
     IN inUserId              Integer   ,    -- 
     IN inMakerId             Integer   ,    -- Производитель
     IN inMakerName           TVarChar  ,    -- Производитель
-    IN inCheckName           Boolean  DEFAULT true
+    IN inCheckName           Boolean  DEFAULT true ,
+    IN inAreaId              Integer  DEFAULT 0    -- 
 )
 RETURNS Integer
 AS
@@ -24,10 +26,18 @@ BEGIN
    -- !!!проверка уникальности <Наименование> для "любого" inObjectId
    IF inCheckName = TRUE
    THEN
-      IF EXISTS (SELECT GoodsName FROM Object_Goods_View 
+      IF EXISTS (SELECT GoodsName
+                 FROM Object_Goods_View 
                  WHERE GoodsName = inName AND Id <> COALESCE(ioId, 0)
                    AND ((ObjectId IS NULL AND inObjectId = 0)
                      OR (ObjectId = inObjectId AND inObjectId <> 0))
+                   AND (-- если Регион соответсвует
+                        COALESCE (Object_Goods_View.AreaId, 0) = inAreaId
+                        -- или Это регион zc_Area_Basis - тогда ищем в регионе "пусто"
+                     OR (inAreaId = zc_Area_Basis() AND Object_Goods_View.AreaId IS NULL)
+                        -- или Это регион "пусто" - тогда ищем в регионе zc_Area_Basis
+                     OR (inAreaId = 0 AND Object_Goods_View.AreaId = zc_Area_Basis())
+                       )
                 )
       THEN
           RAISE EXCEPTION 'Значение <(%)%>%не уникально для справочника %.', inCode, inName
@@ -52,6 +62,13 @@ BEGIN
       IF EXISTS (SELECT GoodsName FROM Object_Goods_View 
                  WHERE GoodsCode = inCode AND Id <> COALESCE (ioId, 0)
                    AND ObjectId = inObjectId 
+                   AND (-- если Регион соответсвует
+                        COALESCE (Object_Goods_View.AreaId, 0) = inAreaId
+                        -- или Это регион zc_Area_Basis - тогда ищем в регионе "пусто"
+                     OR (inAreaId = zc_Area_Basis() AND Object_Goods_View.AreaId IS NULL)
+                        -- или Это регион "пусто" - тогда ищем в регионе zc_Area_Basis
+                     OR (inAreaId = 0 AND Object_Goods_View.AreaId = zc_Area_Basis())
+                       )
                 )
       THEN
          RAISE EXCEPTION 'Код "%" не уникально для справочника "Товары"', inCode;
@@ -107,7 +124,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean) OWNER TO postgres;
+ALTER FUNCTION lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, Integer) OWNER TO postgres;
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

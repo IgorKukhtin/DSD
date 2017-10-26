@@ -58,7 +58,7 @@ BEGIN
               WHERE ObjectLink_JuridicalArea_Juridical.DescId        = zc_ObjectLink_JuridicalArea_Juridical()
              )
      -- Результат             
-     SELECT CommonCode, BarCode, GoodsName, GoodsCode, GoodsId, LoadPriceList.JuridicalId, ProducerName, tmpArea.AreaId
+     SELECT CommonCode, BarCode, GoodsName, GoodsCode, GoodsId, LoadPriceList.JuridicalId, ProducerName, COALESCE (tmpArea.AreaId, 0)
           INTO vbMarionCode, vbBarCode, vbGoodsName, vbGoodsCode, vbMainGoodsId, vbJuridicalId, vbProducerName, vbAreaId_find
      FROM LoadPriceListItem 
           JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId

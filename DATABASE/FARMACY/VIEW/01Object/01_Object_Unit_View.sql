@@ -21,6 +21,7 @@ CREATE OR REPLACE VIEW Object_Unit_View AS
       , Object_Unit.isErased                               AS isErased
       , ObjectBoolean_isLeaf.ValueData                     AS isLeaf
       , 0                                                  AS BranchId
+      , ObjectLink_Unit_Area.ChildObjectId                 AS AreaId
       
       , ObjectLink_Unit_MarginCategory.ChildObjectId       AS MarginCategoryId
       , Object_MarginCategory.ObjectCode                   AS MarginCategoryCode
@@ -48,6 +49,10 @@ CREATE OR REPLACE VIEW Object_Unit_View AS
         LEFT JOIN ObjectBoolean AS ObjectBoolean_isLeaf 
                                 ON ObjectBoolean_isLeaf.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_isLeaf.DescId = zc_ObjectBoolean_isLeaf()
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_Area
+                             ON ObjectLink_Unit_Area.ObjectId = Object_Unit.Id
+                            AND ObjectLink_Unit_Area.DescId   = zc_ObjectLink_Unit_Area()
+
     WHERE 
         Object_Unit.DescId = zc_Object_Unit();
 
