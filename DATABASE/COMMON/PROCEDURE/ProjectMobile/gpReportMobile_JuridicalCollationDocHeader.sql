@@ -11,6 +11,7 @@ RETURNS TABLE (Id              Integer
              , OperDate        TDateTime
              , ContractNumber  TVarChar
              , ContractTagName TVarChar
+             , PartnerName     TVarChar 
              , isPriceWithVAT  Boolean
              , TotalCountKg    TFloat
              , TotalSummPVAT   TFloat
@@ -31,6 +32,11 @@ BEGIN
              , Movement.OperDate
              , COALESCE (Object_Contract.ValueData, '')::TVarChar          AS ContractNumber
              , COALESCE (Object_ContractTag.ValueData, '')::TVarChar       AS ContractTagName
+             , CASE Movement.DescId
+                    WHEN zc_Movement_Sale() THEN Object_To.ValueData
+                    WHEN zc_Movement_ReturnIn() THEN Object_From.ValueData
+                    ELSE ''::TVarChar
+               END AS PartnerName
              , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)    AS isPriceWithVAT
              , COALESCE (MovementFloat_TotalCountKg.ValueData, 0)::TFloat  AS TotalCountKg
              , COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0)::TFloat AS TotalSummPVAT
@@ -60,6 +66,14 @@ BEGIN
              LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                      ON MovementFloat_ChangePercent.MovementId = Movement.Id
                                     AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                          ON MovementLinkObject_From.MovementId = Movement.Id
+                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                          ON MovementLinkObject_To.MovementId = Movement.Id
+                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
         WHERE Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
           AND Movement.Id = inMovementId;
 

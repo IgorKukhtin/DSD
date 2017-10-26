@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_StickerProperty()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_StickerProperty(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TBoolean, TFloat, TFloat,TFloat,TFloat,TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_StickerProperty(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar, Boolean, TFloat, TFloat,TFloat,TFloat,TFloat,TFloat,TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_StickerProperty(
  INOUT ioId                  Integer   , -- ключ объекта <>

@@ -2252,8 +2252,15 @@ procedure TLoadFormTest.LoadStickerFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerEditForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSticker_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSticker_ObjectForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerProperty_ValueForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStickerProperty_ValueForm');
   //Property
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerPropertyEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerPropertyEditForm');

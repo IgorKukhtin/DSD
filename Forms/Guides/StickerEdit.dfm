@@ -462,6 +462,12 @@
         Value = Null
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMaskId'
+        Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 240
     Top = 8
@@ -476,6 +482,14 @@
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMaskId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMaskId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

@@ -324,6 +324,7 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMaskId'
@@ -331,12 +332,14 @@
         Component = dsdFormParams
         ComponentItem = 'inMaskId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inReceiptCode'
@@ -344,6 +347,7 @@
         Component = edReceiptCode
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -351,6 +355,7 @@
         Component = edComment
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inValue'
@@ -358,6 +363,7 @@
         Component = ceValue
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inValueCost'
@@ -365,6 +371,7 @@
         Component = ceValueCost
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inTaxExit'
@@ -372,6 +379,7 @@
         Component = ceTaxExit
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionValue'
@@ -379,6 +387,7 @@
         Component = cePartionValue
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionCount'
@@ -386,6 +395,7 @@
         Component = cePartionCount
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inWeightPackage'
@@ -393,20 +403,23 @@
         Component = ceWeightPackage
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStartDate'
-        Value = Null
+        Value = 'NULL'
         Component = edStartDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
-        Value = Null
+        Value = 'NULL'
         Component = edEndDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsMain'
@@ -414,6 +427,7 @@
         Component = cbIsMain
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -421,6 +435,7 @@
         Component = GoodsGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindId'
@@ -428,6 +443,7 @@
         Component = GoodsKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindCompleteId'
@@ -435,6 +451,7 @@
         Component = GoodsKindCompleteGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inReceiptCostId'
@@ -442,6 +459,7 @@
         Component = ReceiptCostGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inReceiptKindId'
@@ -449,6 +467,7 @@
         Component = ReceiptKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 320
@@ -460,11 +479,13 @@
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMaskId'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 336
     Top = 73
@@ -480,6 +501,7 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMaskId'
@@ -487,113 +509,132 @@
         Component = dsdFormParams
         ComponentItem = 'inMaskId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edName
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReceiptCode'
         Value = Null
         Component = edReceiptCode
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Comment'
         Value = ''
         Component = edComment
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Value'
         Value = ''
         Component = ceValue
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ValueCost'
         Value = ''
         Component = ceValueCost
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TaxExit'
         Value = ''
         Component = ceTaxExit
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartionValue'
         Value = ''
         Component = cePartionValue
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartionCount'
         Value = ''
         Component = cePartionCount
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'WeightPackage'
         Value = ''
         Component = ceWeightPackage
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StartDate'
         Value = 0d
         Component = edStartDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
         Value = ''
         Component = edEndDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'IsMain'
         Value = ''
         Component = cbIsMain
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsId'
         Value = 'Null'
         Component = GoodsGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsName'
         Value = ''
         Component = GoodsGuides
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsKindId'
         Value = Null
         Component = GoodsKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsKindName'
         Value = 0
         Component = GoodsKindGuides
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsKindCompleteId'
         Value = Null
         Component = GoodsKindCompleteGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsKindCompleteName'
@@ -601,12 +642,14 @@
         Component = GoodsKindCompleteGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReceiptCostId'
         Value = Null
         Component = ReceiptCostGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReceiptCostName'
@@ -614,18 +657,21 @@
         Component = ReceiptCostGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReceiptKindId'
         Value = Null
         Component = ReceiptKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReceiptKindName'
         Value = Null
         Component = ReceiptKindGuides
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Top = 64
@@ -653,6 +699,7 @@
     LookupControl = ceReceiptCost
     FormNameParam.Value = 'TGoods_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoods_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -663,6 +710,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -671,6 +719,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 151
     Top = 282
@@ -680,6 +729,7 @@
     LookupControl = ceReceiptKind
     FormNameParam.Value = 'TReceiptKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TReceiptKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -690,6 +740,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -698,6 +749,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 223
     Top = 322
@@ -708,6 +760,7 @@
     Key = 'Null'
     FormNameParam.Value = 'TGoods_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoods_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -717,6 +770,7 @@
         Component = GoodsGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -725,6 +779,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 132
     Top = 206
@@ -735,6 +790,7 @@
     Key = '0'
     FormNameParam.Value = 'TGoodsKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsKindForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -744,6 +800,7 @@
         Component = GoodsKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -752,6 +809,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 68
     Top = 246
@@ -761,6 +819,7 @@
     LookupControl = ceGoodsKindComplete
     FormNameParam.Value = 'TGoodsKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsKindForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -770,6 +829,7 @@
         Component = GoodsKindCompleteGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -778,6 +838,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 244
     Top = 238

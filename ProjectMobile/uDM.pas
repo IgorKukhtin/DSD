@@ -2126,7 +2126,7 @@ end;
 function TWaitThread.LoadJuridicalCollationDoc: string;
 var
   HeaderProc, ItemsProc: TdsdStoredProc;
-  ContractNumber, ContractTagName: string;
+  ContractNumber, ContractTagName, PartnerName: string;
   isPriceWithVAT: Boolean;
   TotalCountKg, TotalSummPVAT, TotalSumm, ChangePercent: Currency;
 begin
@@ -2148,6 +2148,7 @@ begin
       begin
         ContractNumber := FieldByName('ContractNumber').AsString;
         ContractTagName := FieldByName('ContractTagName').AsString;
+        PartnerName := FieldByName('PartnerName').AsString;
         isPriceWithVAT := FieldByName('isPriceWithVAT').AsBoolean;
         TotalCountKg := FieldByName('TotalCountKg').AsCurrency;
         TotalSummPVAT := FieldByName('TotalSummPVAT').AsCurrency;
@@ -2204,6 +2205,7 @@ begin
       Synchronize(procedure
           begin
             frmMain.lDocContract.Text := Format(sContract, [ContractNumber, ContractTagName]);
+            frmMain.lDocPartnerName.Text := PartnerName;
             frmMain.lDocInfo.Text := frmMain.lDocInfo.Text + '; ' + IfThen(isPriceWithVAT, sPriceWithVAT, sPriceWithoutVAT);
             frmMain.lTotalPriceDoc.Text := Format('%s : ', [sTotalCostWithVAT]) +
               FormatFloat(',0.00', TotalSummPVAT);
@@ -3726,7 +3728,7 @@ begin
   try
     qryGoodsListSale.Connection := conMain;
 
-    qryGoodsListSale.SQL.Text :=
+    {qryGoodsListSale.SQL.Text :=
       ' SELECT ' +
       '   ''-1;'' || Object_Goods.ID || '';'' || IFNULL(Object_GoodsKind.ID, 0) || '';'' || ' +
       '   CAST(Object_Goods.ObjectCode as varchar) || '' '' || Object_Goods.ValueData || '';'' || IFNULL(Object_GoodsKind.ValueData, ''-'') || '';'' || ' +
@@ -3752,7 +3754,21 @@ begin
       '      LEFT JOIN Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId ' +
       '      LEFT JOIN Object_Measure   ON Object_Measure.Id   = Object_Goods.MeasureId ' +
       '      LEFT JOIN Object_TradeMark ON Object_TradeMark.Id = Object_Goods.TradeMarkId ' +
-      ' ORDER BY Object_Goods.ValueData';
+      ' ORDER BY Object_Goods.ValueData';}
+
+    qryGoodsListSale.SQL.Text :=
+       ' SELECT '
+     + '       ''-1;'' || Object_Goods.ID || '';'' || IFNULL(Object_GoodsKind.ID, 0) || '';'' ||  '
+     + '       CAST(Object_Goods.ObjectCode as varchar)  || '' '' || Object_Goods.ValueData || '';'' || IFNULL(Object_GoodsKind.ValueData, ''-'') || '';'' ||  '
+     + '       IFNULL(Object_Measure.ValueData, ''-'') || '';'' || IFNULL(Object_TradeMark.ValueData, '''') || '';0''  '
+     + ' FROM  Object_GoodsListSale '
+     + '       JOIN Object_Goods          ON Object_GoodsListSale.GoodsId = Object_Goods.ID '
+     + '       LEFT JOIN Object_GoodsKind ON Object_GoodsKind.ID          = Object_GoodsListSale.GoodsKindId '
+     + '       LEFT JOIN Object_Measure   ON Object_Measure.ID            = Object_Goods.MeasureId '
+     + '       LEFT JOIN Object_TradeMark ON Object_TradeMark.ID          = Object_Goods.TradeMarkId '
+     + ' WHERE Object_GoodsListSale.PartnerId = ' + cdsStoreRealsPartnerId.AsString
+     + '       AND Object_GoodsListSale.isErased = 0 '
+     + ' ORDER BY Object_Goods.ValueData ';
 
     qryGoodsListSale.Open;
 

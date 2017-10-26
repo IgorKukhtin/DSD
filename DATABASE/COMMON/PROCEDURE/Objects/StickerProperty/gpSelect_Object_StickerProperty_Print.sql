@@ -1,33 +1,45 @@
--- Function: gpSelect_Object_Goods()
+-- Function: gpSelect_Object_Sticker_Print()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_StickerProperty (Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_StickerProperty_Print (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_StickerProperty(
-    IN inShowAll     Boolean,   
-    IN inSession     TVarChar       -- сессия пользователя
+CREATE OR REPLACE FUNCTION gpSelect_Object_StickerProperty_Print(
+    IN inObjectId          Integer  , -- ключ Этикетки
+    IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
-             , StickerId Integer
-             , GoodsKindId Integer, GoodsKindName TVarChar
-             , StickerPackId Integer, StickerPackName TVarChar
-             , StickerFileId Integer, StickerFileName TVarChar, TradeMarkName_StickerFile TVarChar
-             , StickerSkinId Integer, StickerSkinName TVarChar
-             , isFix Boolean
-             , Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat, Value5 TFloat, Value6 TFloat, Value7 TFloat
-             , isErased Boolean
-              )
+RETURNS SETOF refcursor
 AS
 $BODY$
-  DECLARE vbUserId Integer;
+    DECLARE vbUserId Integer;
+    DECLARE vbStickerFileId Integer;
+    
+    DECLARE Cursor1 refcursor;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Object_StickerProperty());
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- Результат
-     RETURN QUERY 
-       WITH tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inShowAll AS isErased WHERE inShowAll = TRUE)
+     vbStickerFileId := (SELECT COALESCE (ObjectLink_StickerProperty_StickerFile.ChildObjectId, ObjectLink_Sticker_StickerFile.ChildObjectId)      AS StickerFileId
+                         FROM Object AS Object_StickerProperty 
+                              LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_Sticker
+                                                   ON ObjectLink_StickerProperty_Sticker.ObjectId = Object_StickerProperty.Id
+                                                  AND ObjectLink_StickerProperty_Sticker.DescId = zc_ObjectLink_StickerProperty_Sticker()
 
+                              LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_StickerFile
+                                                   ON ObjectLink_StickerProperty_StickerFile.ObjectId = Object_StickerProperty.Id 
+                                                  AND ObjectLink_StickerProperty_StickerFile.DescId = zc_ObjectLink_StickerProperty_StickerFile()
+
+                              LEFT JOIN ObjectLink AS ObjectLink_Sticker_StickerFile
+                                                   ON ObjectLink_Sticker_StickerFile.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
+                                                  AND ObjectLink_Sticker_StickerFile.DescId = zc_ObjectLink_Sticker_StickerFile()
+                         WHERE Object_StickerProperty.Id = inObjectId
+                        );
+
+     IF COALESCE (vbStickerFileId, 0) = 0 
+     THEN 
+          RAISE EXCEPTION 'Ошибка.Шаблон не установлен';
+     END IF;
+     
+    --
+    OPEN Cursor1 FOR
        SELECT Object_StickerProperty.Id          AS Id
             , Object_StickerProperty.ObjectCode  AS Code
             , Object_StickerProperty.ValueData   AS Comment
@@ -56,16 +68,11 @@ BEGIN
             , ObjectFloat_Value5.ValueData       AS Value5
             , ObjectFloat_Value6.ValueData       AS Value6
             , ObjectFloat_Value7.ValueData       AS Value7
-            
-            , Object_StickerProperty.isErased    AS isErased
 
-       FROM (SELECT Object_StickerProperty.* 
-             FROM Object AS Object_StickerProperty 
-	         INNER JOIN tmpIsErased on tmpIsErased.isErased = Object_StickerProperty.isErased
-             WHERE Object_StickerProperty.DescId = zc_Object_StickerProperty()
-            ) AS Object_StickerProperty
-            
-              LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_Sticker
+       FROM Object AS Object_StickerProperty 
+             LEFT JOIN Object AS Object_StickerFile ON Object_StickerFile.Id = vbStickerFileId
+
+             LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_Sticker
                                   ON ObjectLink_StickerProperty_Sticker.ObjectId = Object_StickerProperty.Id
                                  AND ObjectLink_StickerProperty_Sticker.DescId = zc_ObjectLink_StickerProperty_Sticker()
              
@@ -78,11 +85,6 @@ BEGIN
                                   ON ObjectLink_StickerProperty_StickerPack.ObjectId = Object_StickerProperty.Id
                                  AND ObjectLink_StickerProperty_StickerPack.DescId = zc_ObjectLink_StickerProperty_StickerPack()
              LEFT JOIN Object AS Object_StickerPack ON Object_StickerPack.Id = ObjectLink_StickerProperty_StickerPack.ChildObjectId
-
-             LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_StickerFile
-                                  ON ObjectLink_StickerProperty_StickerFile.ObjectId = Object_StickerProperty.Id 
-                                 AND ObjectLink_StickerProperty_StickerFile.DescId = zc_ObjectLink_StickerProperty_StickerFile()
-             LEFT JOIN Object AS Object_StickerFile ON Object_StickerFile.Id = ObjectLink_StickerProperty_StickerFile.ChildObjectId
 
              LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_StickerSkin
                                   ON ObjectLink_StickerProperty_StickerSkin.ObjectId = Object_StickerProperty.Id
@@ -125,18 +127,20 @@ BEGIN
                                   ON ObjectLink_StickerFile_TradeMark.ObjectId = Object_StickerFile.Id
                                  AND ObjectLink_StickerFile_TradeMark.DescId = zc_ObjectLink_StickerFile_TradeMark()
              LEFT JOIN Object AS Object_TradeMark_StickerFile ON Object_TradeMark_StickerFile.Id = ObjectLink_StickerFile_TradeMark.ChildObjectId
-                  ;
-  
+          WHERE Object_StickerProperty.Id = inObjectId
+            AND Object_StickerProperty.DescId = zc_Object_StickerProperty()
+             
+      ;
+    RETURN NEXT Cursor1;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
-/*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 24.10.17         *
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.10.17         *
 */
-
 -- тест
--- SELECT * FROM gpSelect_Object_StickerProperty (FALSE, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_StickerProperty_Print (inObjectId:= 1005846 , inSession:= zfCalc_UserAdmin()); FETCH ALL "<unnamed portal 1>";

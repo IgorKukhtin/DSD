@@ -19,7 +19,7 @@ BEGIN
                WHERE ContainerId = inContainerId
                  AND (MovementDescId = zc_Movement_Sale()
                   OR (MovementDescId = zc_Movement_TransferDebtOut() AND isActive))
-                 AND OperDate < inDate
+                 AND OperDate <= inDate
                GROUP BY OperDate
                ORDER BY OperDate DESC
            LOOP
@@ -27,7 +27,7 @@ BEGIN
 
                 IF vbAmount <= 0.0 
                 THEN
-                     vbOverDayCount:= DATE_PART ('day', inDate - vbRec.OperDate)::Integer;
+                     vbOverDayCount:= DATE_PART ('day', inDate - vbRec.OperDate)::Integer + 1;
 
                      RETURN vbOverDayCount;
                 END IF;  
