@@ -81,7 +81,11 @@ BEGIN
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-            
+  
+            LEFT JOIN MovementBoolean AS MovementBoolean_Remains
+                                      ON MovementBoolean_Remains.MovementId =  Movement.Id
+                                     AND MovementBoolean_Remains.DescId = zc_MovementBoolean_Remains()
+                                               
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
@@ -118,8 +122,10 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+            
          WHERE (Object_From.Id = inFromId or inFromId=0)
            AND (Object_To.Id = inToId or inToId=0)
+           AND (COALESCE (MovementBoolean_Remains.ValueData, FALSE) = inIsRemains)
             ;
 
 END;

@@ -153,6 +153,26 @@ type
     ceComment: TcxTextEdit;
     Color_production_old: TcxGridDBColumn;
     Color_production_next: TcxGridDBColumn;
+    TabSheet1: TcxTabSheet;
+    cxGrid2: TcxGrid;
+    cxGridDBTableView2: TcxGridDBTableView;
+    cxGridDBColumn64: TcxGridDBColumn;
+    cxGridDBColumn65: TcxGridDBColumn;
+    cxGridDBColumn66: TcxGridDBColumn;
+    cxGridDBColumn67: TcxGridDBColumn;
+    cxGridDBColumn68: TcxGridDBColumn;
+    cxGridDBColumn69: TcxGridDBColumn;
+    cxGridDBColumn70: TcxGridDBColumn;
+    cxGridDBColumn71: TcxGridDBColumn;
+    cxGridDBColumn72: TcxGridDBColumn;
+    cxGridDBColumn73: TcxGridDBColumn;
+    cxGridDBColumn74: TcxGridDBColumn;
+    cxGridDBColumn75: TcxGridDBColumn;
+    cxGridDBColumn76: TcxGridDBColumn;
+    cxGridLevel2: TcxGridLevel;
+    ClientDataSet1: TClientDataSet;
+    DataSource1: TDataSource;
+    dsdDBViewAddOn1: TdsdDBViewAddOn;
   private
     { Private declarations }
   public

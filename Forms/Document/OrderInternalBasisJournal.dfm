@@ -23,7 +23,6 @@ inherited OrderInternalBasisJournalForm: TOrderInternalBasisJournalForm
       inherited cxGrid: TcxGrid
         Width = 1073
         Height = 478
-        ExplicitLeft = -3
         ExplicitWidth = 1073
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -440,6 +439,7 @@ inherited OrderInternalBasisJournalForm: TOrderInternalBasisJournalForm
         Value = Null
         Component = FormParams
         ComponentItem = 'isRemains'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -467,7 +467,7 @@ inherited OrderInternalBasisJournalForm: TOrderInternalBasisJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 136
+    Left = 128
     Top = 163
   end
   inherited BarManager: TdxBarManager
