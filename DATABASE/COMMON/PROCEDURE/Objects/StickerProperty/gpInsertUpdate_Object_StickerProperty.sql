@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_StickerProperty()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_StickerProperty(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar, Boolean, TFloat, TFloat,TFloat,TFloat,TFloat,TFloat,TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_StickerProperty(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, Boolean, TFloat, TFloat,TFloat,TFloat,TFloat,TFloat,TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_StickerProperty(
  INOUT ioId                  Integer   , -- ключ объекта <>
@@ -11,7 +12,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_StickerProperty(
     IN inStickerFileId       Integer   , -- 
     IN inStickerSkinName     TVarChar  , -- 
     IN inStickerPackName     TVarChar  , -- 
-    IN inFix                 Boolean     , -- 
+    IN inBarCode             TVarChar  , --
+    IN inFix                 Boolean   , -- 
     IN inValue1              TFloat    , -- 
     IN inValue2              TFloat    , -- 
     IN inValue3              TFloat    , --
@@ -53,6 +55,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_StickerProperty_GoodsKind(), ioId, inGoodsKindId);
    -- сохранили вязь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_StickerProperty_StickerFile(), ioId, inStickerFileId);
+   
+   -- сохранили св-во <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_StickerProperty_BarCode(), ioId, inBarCode);
    
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_StickerProperty_Fix(), ioId, inFix);

@@ -25,6 +25,8 @@ object StickerForm: TStickerForm
     Align = alTop
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = 216
+    ExplicitTop = 25
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -365,6 +367,13 @@ object StickerForm: TStickerForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 80
+        end
+        object BarCode: TcxGridDBColumn
+          Caption = #1064#1090#1088#1080#1093#1082#1086#1076
+          DataBinding.FieldName = 'BarCode'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 69
         end
         object colisFix: TcxGridDBColumn
           Caption = #1060#1080#1082#1089'. '#1074#1077#1089
@@ -2059,6 +2068,15 @@ object StickerForm: TStickerForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inBarCode'
+        Value = Null
+        Component = CDSProperty
+        ComponentItem = 'BarCode'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisFix'
         Value = Null
         Component = CDSProperty
@@ -2297,7 +2315,7 @@ object StickerForm: TStickerForm
     Params = <
       item
         Name = 'inDefaultKey'
-        Value = 'TGoodsSPForm;zc_Object_ImportSetting_GoodsSP'
+        Value = 'TStickerForm;zc_Object_ImportSetting_Sticker'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

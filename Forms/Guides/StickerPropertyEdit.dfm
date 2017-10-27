@@ -256,6 +256,17 @@
     TabOrder = 30
     Width = 153
   end
+  object cxLabel14: TcxLabel
+    Left = 178
+    Top = 4
+    Caption = #1064#1090#1088#1080#1093#1082#1086#1076
+  end
+  object edBarCode: TcxTextEdit
+    Left = 178
+    Top = 20
+    TabOrder = 32
+    Width = 153
+  end
   object ActionList: TActionList
     Left = 305
     Top = 40
@@ -352,6 +363,14 @@
         Name = 'inStickerPackName'
         Value = Null
         Component = edStickerPack
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBarCode'
+        Value = Null
+        Component = edBarCode
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -622,6 +641,13 @@
         Component = cbisFix
         DataType = ftWideString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BarCode'
+        Value = Null
+        Component = edBarCode
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 305
@@ -643,8 +669,8 @@
     Top = 16
   end
   object dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn
-    Left = 240
-    Top = 8
+    Left = 200
+    Top = 80
   end
   object GuidesSticker: TdsdGuides
     KeyField = 'Id'

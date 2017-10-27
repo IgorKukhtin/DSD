@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
              , StickerPackId Integer, StickerPackName TVarChar
              , StickerFileId Integer, StickerFileName TVarChar, TradeMarkName_StickerFile TVarChar
              , StickerSkinId Integer, StickerSkinName TVarChar
+             , BarCode TVarChar
              , isFix Boolean
              , Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat, Value5 TFloat, Value6 TFloat, Value7 TFloat
              , isErased Boolean
@@ -47,6 +48,7 @@ BEGIN
             , Object_StickerSkin.Id              AS StickerSkinId
             , Object_StickerSkin.ValueData       AS StickerSkinName
 
+            , ObjectString_BarCode.ValueData     AS BarCode
             , ObjectBoolean_Fix.ValueData        AS isFix
                                     
             , ObjectFloat_Value1.ValueData       AS Value1
@@ -120,7 +122,11 @@ BEGIN
              LEFT JOIN ObjectBoolean AS ObjectBoolean_Fix
                                      ON ObjectBoolean_Fix.ObjectId = Object_StickerProperty.Id 
                                     AND ObjectBoolean_Fix.DescId = zc_ObjectBoolean_StickerProperty_Fix()
-                                    
+
+             LEFT JOIN ObjectString AS ObjectString_BarCode
+                                    ON ObjectString_BarCode.ObjectId = Object_StickerProperty.Id 
+                                   AND ObjectString_BarCode.DescId = zc_ObjectString_StickerProperty_BarCode()
+                                  
              LEFT JOIN ObjectLink AS ObjectLink_StickerFile_TradeMark
                                   ON ObjectLink_StickerFile_TradeMark.ObjectId = Object_StickerFile.Id
                                  AND ObjectLink_StickerFile_TradeMark.DescId = zc_ObjectLink_StickerFile_TradeMark()

@@ -712,8 +712,8 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
         item
           Name = 'inUnitId'
           Value = '0'
-          Component = FormParams
-          ComponentItem = 'UnitId'
+          Component = GuidesUnit
+          ComponentItem = 'Key'
           MultiSelectSeparator = ','
         end>
     end

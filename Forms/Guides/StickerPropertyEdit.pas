@@ -67,6 +67,8 @@ type
     ceValue6: TcxCurrencyEdit;
     cxLabel13: TcxLabel;
     ceValue7: TcxCurrencyEdit;
+    cxLabel14: TcxLabel;
+    edBarCode: TcxTextEdit;
 
   private
     { Private declarations }

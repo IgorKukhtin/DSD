@@ -146,6 +146,7 @@ type
     actDoLoad: TExecuteImportSettingsAction;
     macStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
+    BarCode: TcxGridDBColumn;
 
   private
     { Private declarations }
