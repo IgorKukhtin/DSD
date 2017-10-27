@@ -561,8 +561,6 @@ BEGIN
        ;
        RETURN NEXT Cursor2;
        
-       IF vbIsRemains = TRUE
-       THEN      
        OPEN Cursor3 FOR
         WITH tmpGoods_params AS (SELECT _tmpMI_master.GoodsId_basis, MIN (_tmpMI_master.TermProduction) AS TermProduction, MAX (_tmpMI_master.KoeffLoss) AS KoeffLoss, MAX (_tmpMI_master.TaxLoss) AS TaxLoss
                                  FROM _tmpMI_master
@@ -602,9 +600,10 @@ BEGIN
                                   ON ObjectLink_Goods_Measure.ObjectId = _tmpMI_child.GoodsId
                                  AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
              LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+       WHERE vbIsRemains = TRUE
        ;
        RETURN NEXT Cursor3;
-       END IF;
+
 
 
 END;
