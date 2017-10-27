@@ -1,5 +1,5 @@
-inherited OrderInternalBasisJournalForm: TOrderInternalBasisJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1057#1099#1088#1100#1077')>'
+inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalForm
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1086#1089#1090#1072#1090#1082#1080')>'
   ClientHeight = 535
   ClientWidth = 1073
   AddOnFormData.RefreshAction = actRefreshStart
@@ -23,7 +23,6 @@ inherited OrderInternalBasisJournalForm: TOrderInternalBasisJournalForm
       inherited cxGrid: TcxGrid
         Width = 1073
         Height = 478
-        ExplicitLeft = -3
         ExplicitWidth = 1073
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -194,43 +193,41 @@ inherited OrderInternalBasisJournalForm: TOrderInternalBasisJournalForm
     Width = 1073
     ExplicitWidth = 1073
     inherited deStart: TcxDateEdit
-      EditValue = 42370d
+      EditValue = 42005d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42370d
+      EditValue = 42005d
     end
   end
-  object edJuridicalBasis: TcxButtonEdit [2]
+  object cxLabel27: TcxLabel [2]
+    Left = 722
+    Top = 6
+    Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
+  end
+  object edJuridicalBasis: TcxButtonEdit [3]
     Left = 800
-    Top = 7
+    Top = 5
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 6
+    TabOrder = 7
     Width = 150
-  end
-  object cxLabel27: TcxLabel [3]
-    Left = 722
-    Top = 8
-    Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 40
-    Top = 243
+    Top = 203
   end
   inherited ActionList: TActionList
-    Left = 471
-    inherited actInsertMask: TdsdInsertUpdateAction [2]
-    end
-    inherited actInsert: TdsdInsertUpdateAction [3]
-      FormName = 'TOrderInternalBasisForm'
-      FormNameParam.Value = 'TOrderInternalBasisForm'
+    Left = 47
+    Top = 250
+    inherited actInsert: TdsdInsertUpdateAction
+      FormName = 'TOrderInternalPackRemainsForm'
+      FormNameParam.Value = 'TOrderInternalPackRemainsForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -266,8 +263,8 @@ inherited OrderInternalBasisJournalForm: TOrderInternalBasisJournalForm
         end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TOrderInternalBasisForm'
-      FormNameParam.Value = 'TOrderInternalBasisForm'
+      FormName = 'TOrderInternalPackRemainsForm'
+      FormNameParam.Value = 'TOrderInternalPackRemainsForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -347,8 +344,8 @@ inherited OrderInternalBasisJournalForm: TOrderInternalBasisJournalForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1089#1099#1088#1100#1077
-      ReportNameParam.Value = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1089#1099#1088#1100#1077
+      ReportName = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      ReportNameParam.Value = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -440,6 +437,7 @@ inherited OrderInternalBasisJournalForm: TOrderInternalBasisJournalForm
         Value = Null
         Component = FormParams
         ComponentItem = 'isRemains'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -467,7 +465,7 @@ inherited OrderInternalBasisJournalForm: TOrderInternalBasisJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 136
+    Left = 144
     Top = 163
   end
   inherited BarManager: TdxBarManager
@@ -670,7 +668,7 @@ inherited OrderInternalBasisJournalForm: TOrderInternalBasisJournalForm
     Top = 270
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_OrderInternalBasis_Print'
+    StoredProcName = 'gpSelect_Movement_OrderInternal_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -720,7 +718,8 @@ inherited OrderInternalBasisJournalForm: TOrderInternalBasisJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 943
+    Left = 895
+    Top = 8
   end
   object spGet_UserJuridicalBasis: TdsdStoredProc
     StoredProcName = 'gpGet_User_JuridicalBasis'

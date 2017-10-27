@@ -6,11 +6,13 @@ DROP FUNCTION IF EXISTS gpSelect_Movement_OrderInternal (TDateTime, TDateTime, T
 DROP FUNCTION IF EXISTS gpSelect_Movement_OrderInternal (TDateTime, TDateTime, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_OrderInternal (TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_OrderInternal (TDateTime, TDateTime, Boolean, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_OrderInternal (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderInternal(
     IN inStartDate         TDateTime , --
     IN inEndDate           TDateTime , --
     IN inIsErased          Boolean ,
+    IN inisRemains         Boolean ,
     IN inFromId            Integer ,   -- от кого
     IN inToId              Integer ,   -- кому
     IN inJuridicalBasisId  Integer ,

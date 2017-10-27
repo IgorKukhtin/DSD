@@ -3448,50 +3448,6 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actOrderInternal: TdsdOpenForm
-      Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
-      MoveParams = <>
-      Caption = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1062#1077#1093')'
-      Hint = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1062#1077#1093')'
-      FormName = 'TOrderInternalJournalForm'
-      FormNameParam.Value = 'TOrderInternalJournalForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inFromId'
-          Value = '8457'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inToId'
-          Value = '8446'
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actOrderInternalPack: TdsdOpenForm
-      Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
-      MoveParams = <>
-      Caption = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1062#1077#1093' '#1091#1087#1072#1082#1086#1074#1082#1080')'
-      Hint = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1062#1077#1093' '#1091#1087#1072#1082#1086#1074#1082#1080')'
-      FormName = 'TOrderInternalPackJournalForm'
-      FormNameParam.Value = 'TOrderInternalPackJournalForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inFromId'
-          Value = '8457'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inToId'
-          Value = '8451'
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
     object actLoss: TdsdOpenForm
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
@@ -5152,6 +5108,62 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actOrderInternal: TdsdOpenForm
+      Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      MoveParams = <>
+      Caption = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1062#1077#1093')'
+      Hint = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1062#1077#1093')'
+      FormName = 'TOrderInternalJournalForm'
+      FormNameParam.Value = 'TOrderInternalJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inFromId'
+          Value = '8457'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inToId'
+          Value = '8446'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isRemains'
+          Value = 'FALSE'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOrderInternalPack: TdsdOpenForm
+      Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      MoveParams = <>
+      Caption = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1062#1077#1093' '#1091#1087#1072#1082#1086#1074#1082#1080')'
+      Hint = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1062#1077#1093' '#1091#1087#1072#1082#1086#1074#1082#1080')'
+      FormName = 'TOrderInternalPackJournalForm'
+      FormNameParam.Value = 'TOrderInternalPackJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inFromId'
+          Value = '8457'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inToId'
+          Value = '8451'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isRemains'
+          Value = 'FALSE'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actGlobalConst: TdsdOpenForm
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
@@ -5384,6 +5396,12 @@ inherited MainForm: TMainForm
           Name = 'inToid'
           Value = '0'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isRemains'
+          Value = 'FALSE'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -5417,6 +5435,12 @@ inherited MainForm: TMainForm
         item
           Name = 'inToid'
           Value = '0'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isRemains'
+          Value = 'FALSE'
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -5623,6 +5647,40 @@ inherited MainForm: TMainForm
         item
           Name = 'inToid'
           Value = '0'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isRemains'
+          Value = 'FALSE'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOrderInternalPackRemains: TdsdOpenForm
+      Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      MoveParams = <>
+      Caption = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1086#1089#1090#1072#1090#1082#1080')'
+      Hint = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1086#1089#1090#1072#1090#1082#1080')'
+      FormName = 'TOrderInternalPackRemainsJournalForm'
+      FormNameParam.Value = 'TOrderInternalPackRemainsJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inFromId'
+          Value = '8457'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inToId'
+          Value = '8451'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isRemains'
+          Value = 'TRUE'
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -5944,6 +6002,9 @@ inherited MainForm: TMainForm
       end
       object miOrderInternalBasisCK: TMenuItem
         Action = actOrderInternalBasisCK
+      end
+      object N187: TMenuItem
+        Action = actOrderInternalPackRemains
       end
       object miOrderType: TMenuItem
         Action = actOrderType
