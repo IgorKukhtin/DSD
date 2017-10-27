@@ -25,8 +25,6 @@ object StickerForm: TStickerForm
     Align = alTop
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = -10
-    ExplicitTop = 25
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -334,8 +332,6 @@ object StickerForm: TStickerForm
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
-      ExplicitLeft = 181
-      ExplicitTop = 48
       object cxGridDBTableViewProperty: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DSProperty
@@ -699,6 +695,14 @@ object StickerForm: TStickerForm
         end
         item
           Visible = True
+          ItemName = 'bbStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint_Sticker'
         end
         item
@@ -788,6 +792,10 @@ object StickerForm: TStickerForm
     end
     object bbPrint_Sticker: TdxBarButton
       Action = macPrint
+      Category = 0
+    end
+    object bbStartLoad: TdxBarButton
+      Action = macStartLoad
       Category = 0
     end
   end
@@ -1656,6 +1664,51 @@ object StickerForm: TStickerForm
         end>
       Caption = 'actGetReportName'
     end
+    object actGetImportSetting: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId
+        end>
+      Caption = 'actGetImportSetting'
+    end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = '0'
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inObjectId'
+          Value = '0'
+          ComponentItem = 'ObjectId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
+    object macStartLoad: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1044#1072#1085#1085#1099#1093' '#1069#1090#1080#1082#1077#1090#1082#1080'?'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1072#1085#1085#1099#1077' '#1069#1090#1080#1082#1077#1090#1082#1080
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1072#1085#1085#1099#1077' '#1069#1090#1080#1082#1077#1090#1082#1080
+      ImageIndex = 41
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Sticker'
@@ -2151,6 +2204,11 @@ object StickerForm: TStickerForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ImportSettingId'
+        Value = Null
+        MultiSelectSeparator = ','
       end>
     Left = 536
     Top = 248
@@ -2229,5 +2287,37 @@ object StickerForm: TStickerForm
     PackSize = 1
     Left = 616
     Top = 184
+  end
+  object spGetImportSettingId: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TGoodsSPForm;zc_Object_ImportSetting_GoodsSP'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 56
+    Top = 400
   end
 end

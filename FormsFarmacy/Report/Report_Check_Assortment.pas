@@ -24,7 +24,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  ExternalLoad;
 
 type
   TReport_Check_AssortmentForm = class(TAncestorReportForm)
@@ -74,6 +75,12 @@ type
     bbInsert_MCS: TdxBarButton;
     HeaderChanger: THeaderChanger;
     ceMCSValue: TcxCurrencyEdit;
+    bbStartLoad: TdxBarButton;
+    FormParams: TdsdFormParams;
+    spGetImportSetting_MCS: TdsdStoredProc;
+    actGetImportSetting_MCS: TdsdExecStoredProc;
+    actDoLoadMCS: TExecuteImportSettingsAction;
+    actStartLoadMCS: TMultiAction;
   private
     { Private declarations }
   public
