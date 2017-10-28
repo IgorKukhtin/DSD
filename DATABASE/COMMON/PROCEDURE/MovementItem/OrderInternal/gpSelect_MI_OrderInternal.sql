@@ -15,12 +15,14 @@ $BODY$
 
    DECLARE Cursor1 refcursor;
    DECLARE Cursor2 refcursor;
+   DECLARE Cursor3 refcursor;
 
    DECLARE vbOperDate TDateTime;
    DECLARE vbFromId Integer;
    DECLARE vbToId Integer;
    DECLARE vbDayCount Integer;
    DECLARE vbMonth Integer;
+   DECLARE vbIsRemains Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_OrderInternal());
@@ -33,7 +35,8 @@ BEGIN
           , EXTRACT (MONTH FROM (Movement.OperDate + INTERVAL '1 DAY'))
           , MovementLinkObject_From.ObjectId
           , MovementLinkObject_To.ObjectId
-            INTO vbOperDate, vbDayCount, vbMonth, vbFromId, vbToId
+          , COALESCE (MovementBoolean_Remains.ValueData, FALSE) AS IsRemains
+            INTO vbOperDate, vbDayCount, vbMonth, vbFromId, vbToId, vbIsRemains
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id
@@ -47,6 +50,9 @@ BEGIN
           LEFT JOIN MovementDate AS MovementDate_OperDateEnd
                                  ON MovementDate_OperDateEnd.MovementId =  Movement.Id
                                 AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
+          LEFT JOIN MovementBoolean AS MovementBoolean_Remains
+                                    ON MovementBoolean_Remains.MovementId =  Movement.Id
+                                   AND MovementBoolean_Remains.DescId = zc_MovementBoolean_Remains()
      WHERE Movement.Id = inMovementId;
 
 
@@ -554,6 +560,50 @@ BEGIN
              LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
        ;
        RETURN NEXT Cursor2;
+       
+       OPEN Cursor3 FOR
+        WITH tmpGoods_params AS (SELECT _tmpMI_master.GoodsId_basis, MIN (_tmpMI_master.TermProduction) AS TermProduction, MAX (_tmpMI_master.KoeffLoss) AS KoeffLoss, MAX (_tmpMI_master.TaxLoss) AS TaxLoss
+                                 FROM _tmpMI_master
+                                 GROUP BY _tmpMI_master.GoodsId_basis
+                                )
+       SELECT
+             _tmpMI_child.MovementItemId         AS Id
+           , CASE WHEN inShowAll = TRUE THEN 0 ELSE Object_Goods.Id END AS GoodsId
+           , Object_Goods.ObjectCode             AS GoodsCode
+           , Object_Goods.ValueData              AS GoodsName
+           , Object_GoodsKind.ValueData          AS GoodsKindName
+           , CASE WHEN inShowAll = TRUE THEN 0 ELSE Object_GoodsKindComplete.Id END AS GoodsKindId_complete
+           , Object_GoodsKindComplete.ValueData  AS GoodsKindName_complete
+           , Object_Measure.ValueData            AS MeasureName
+           , _tmpMI_child.PartionGoodsDate
+           , CASE WHEN ABS (_tmpMI_child.Amount) < 1 THEN _tmpMI_child.Amount ELSE CAST (_tmpMI_child.Amount AS NUMERIC (16, 1)) END :: TFloat AS Amount
+           , CAST (_tmpMI_child.Amount * tmpGoods_params.KoeffLoss AS NUMERIC (16, 1)) :: TFloat AS Amount_calc
+           , CAST (tmpGoods_params.TaxLoss AS NUMERIC (16, 1))                         :: TFloat AS TaxLoss
+           , CASE WHEN _tmpMI_child.PartionGoodsDate <= (vbOperDate :: Date - tmpGoods_params.TermProduction :: Integer)
+                       THEN CAST (_tmpMI_child.Amount * tmpGoods_params.KoeffLoss AS NUMERIC (16, 1))
+                  ELSE 0
+             END :: TFloat AS Amount_old
+           , CASE WHEN _tmpMI_child.PartionGoodsDate > (vbOperDate :: Date - tmpGoods_params.TermProduction :: Integer)
+                       THEN CAST (_tmpMI_child.Amount * tmpGoods_params.KoeffLoss AS NUMERIC (16, 1))
+                  ELSE 0
+             END :: TFloat AS Amount_next
+           , _tmpMI_child.ContainerId
+           , FALSE AS isErased
+       FROM _tmpMI_child
+             LEFT JOIN tmpGoods_params ON tmpGoods_params.GoodsId_basis = _tmpMI_child.GoodsId
+
+             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = _tmpMI_child.GoodsId
+             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = _tmpMI_child.GoodsKindId
+             LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = _tmpMI_child.GoodsKindId_complete
+
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                  ON ObjectLink_Goods_Measure.ObjectId = _tmpMI_child.GoodsId
+                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+       WHERE vbIsRemains = TRUE
+       ;
+       RETURN NEXT Cursor3;
+
 
 
 END;

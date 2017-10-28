@@ -180,7 +180,6 @@ uses
   IncomeTest in '..\SOURCE\Movement\All\Farmacy\IncomeTest.pas',
   IncomeMovementItemTest in '..\SOURCE\MovementItem\All\Farmacy\IncomeMovementItemTest.pas',
   ChoiceGoodsFromPriceList in '..\..\FormsFarmacy\System\ChoiceGoodsFromPriceList.pas' {ChoiceGoodsFromPriceListForm: TParentForm},
-  OrderInternal in '..\..\FormsFarmacy\Document\OrderInternal.pas' {OrderInternalForm: TParentForm},
   OrderKindTest in '..\SOURCE\Objects\All\OrderKindTest.pas',
   ContactPerson in '..\..\Forms\Guides\ContactPerson.pas' {ContactPersonForm: TParentForm},
   OrderKindEdit in '..\..\Forms\Kind\OrderKindEdit.pas' {OrderKindEditForm: TParentForm},
@@ -544,7 +543,8 @@ uses
   Report_MovementIncome_byPromoDialog in '..\..\FormsFarmacy\Report\Report_MovementIncome_byPromoDialog.pas' {Report_MovementIncome_byPromoDialogForm: TParentForm},
   Report_MovementIncome_byPromo in '..\..\FormsFarmacy\Report\Report_MovementIncome_byPromo.pas' {Report_MovementIncome_byPromoForm: TParentForm},
   Report_GoodsRemains_AnotherRetail in '..\..\FormsFarmacy\Report\Report_GoodsRemains_AnotherRetail.pas' {Report_GoodsRemains_AnotherRetailForm: TParentForm},
-  Report_Movement_AnotherRetail in '..\..\FormsFarmacy\Report\Report_Movement_AnotherRetail.pas' {Report_Movement_AnotherRetailForm: TParentForm};
+  Report_Movement_AnotherRetail in '..\..\FormsFarmacy\Report\Report_Movement_AnotherRetail.pas' {Report_Movement_AnotherRetailForm: TParentForm},
+  OrderInternal in '..\..\FormsFarmacy\Document\OrderInternal.pas' {OrderInternalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -501,10 +501,6 @@
 				<Form>ChoiceGoodsFromPriceListForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Document\OrderInternal.pas">
-				<Form>OrderInternalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\OrderKindTest.pas"/>
 			<DCCReference Include="..\..\Forms\Guides\ContactPerson.pas">
 				<Form>ContactPersonForm</Form>
@@ -1803,6 +1799,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Movement_AnotherRetail.pas">
 				<Form>Report_Movement_AnotherRetailForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\OrderInternal.pas">
+				<Form>OrderInternalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

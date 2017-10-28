@@ -5,10 +5,8 @@ inherited OrderInternalBasisJournalForm: TOrderInternalBasisJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -70
-  ExplicitTop = -55
   ExplicitWidth = 1089
-  ExplicitHeight = 574
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -437,6 +435,15 @@ inherited OrderInternalBasisJournalForm: TOrderInternalBasisJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisRemains'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isRemains'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inFromId'
         Value = 'False'
         Component = FormParams
@@ -460,7 +467,7 @@ inherited OrderInternalBasisJournalForm: TOrderInternalBasisJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 136
+    Left = 128
     Top = 163
   end
   inherited BarManager: TdxBarManager
@@ -637,6 +644,13 @@ inherited OrderInternalBasisJournalForm: TOrderInternalBasisJournalForm
       item
         Name = 'inToId'
         Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isRemains'
+        Value = Null
+        DataType = ftBoolean
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>

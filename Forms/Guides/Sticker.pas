@@ -23,7 +23,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, ExternalLoad;
 
 type
   TStickerForm = class(TParentForm)
@@ -141,6 +141,12 @@ type
     actPrint: TdsdPrintAction;
     actGetReportName: TdsdExecStoredProc;
     actInsertReportName: TdsdExecStoredProc;
+    spGetImportSettingId: TdsdStoredProc;
+    actGetImportSetting: TdsdExecStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    macStartLoad: TMultiAction;
+    bbStartLoad: TdxBarButton;
+    BarCode: TcxGridDBColumn;
 
   private
     { Private declarations }

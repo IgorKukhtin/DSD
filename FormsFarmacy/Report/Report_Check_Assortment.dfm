@@ -690,6 +690,51 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1053#1058#1047
       ImageIndex = 27
     end
+    object actGetImportSetting_MCS: TdsdExecStoredProc
+      Category = 'LoadMCS'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSetting_MCS
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSetting_MCS
+        end>
+      Caption = 'actGetImportSetting_MCS'
+    end
+    object actDoLoadMCS: TExecuteImportSettingsAction
+      Category = 'LoadMCS'
+      MoveParams = <>
+      ImportSettingsId.Value = '0'
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId_MCS'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inUnitId'
+          Value = '0'
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end>
+    end
+    object actStartLoadMCS: TMultiAction
+      Category = 'LoadMCS'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_MCS
+        end
+        item
+          Action = actDoLoadMCS
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1053#1058#1047' '#1085#1072' '#1074#1099#1073#1088#1072#1085#1085#1086#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'?'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1053#1058#1047
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1053#1058#1047
+      ImageIndex = 41
+    end
   end
   inherited MasterDS: TDataSource
     Left = 48
@@ -785,6 +830,14 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
         end
         item
           Visible = True
+          ItemName = 'bbStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -819,6 +872,10 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
       Action = macInsert_MCS
       Category = 0
     end
+    object bbStartLoad: TdxBarButton
+      Action = actStartLoadMCS
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 496
@@ -826,7 +883,7 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 224
-    Top = 72
+    Top = 128
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -988,5 +1045,47 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
       end>
     Left = 704
     Top = 200
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'ImportSettingId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
+    Left = 544
+    Top = 240
+  end
+  object spGetImportSetting_MCS: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TPriceForm;zc_Object_ImportSetting_MCS'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId_MCS'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 184
+    Top = 320
   end
 end

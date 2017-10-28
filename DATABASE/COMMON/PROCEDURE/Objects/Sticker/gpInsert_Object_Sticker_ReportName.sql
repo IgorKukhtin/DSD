@@ -23,7 +23,10 @@ BEGIN
        vbId:= lpInsertUpdate_Object (0, zc_Object_Form(), 0, inReportName);
        
        INSERT INTO ObjectBlob (DescId, ObjectId, ValueData )
-              SELECT zc_objectBlob_form_Data(), vbId , '' ;
+              SELECT zc_objectBlob_form_Data(), vbId , ObjectBlob.ValueData
+              FROM Object join ObjectBlob on ObjectId = Object.id
+              where Object.DescId = zc_Object_Form()
+              and Object.ValueData = 'PrintObject_Sticker';
    END IF;
     
 END;

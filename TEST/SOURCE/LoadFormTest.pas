@@ -735,6 +735,11 @@ end;
 
 procedure TLoadFormTest.LoadOrderInternalFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalPackRemainsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderInternalPackRemainsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalPackRemainsJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderInternalPackRemainsJournalForm');
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalJournalForm'));
@@ -2252,7 +2257,7 @@ procedure TLoadFormTest.LoadStickerFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerForm');
-  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerEditForm');
   //

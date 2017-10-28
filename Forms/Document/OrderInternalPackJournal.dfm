@@ -5,9 +5,8 @@ inherited OrderInternalPackJournalForm: TOrderInternalPackJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitTop = -55
   ExplicitWidth = 1089
-  ExplicitHeight = 574
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -436,6 +435,15 @@ inherited OrderInternalPackJournalForm: TOrderInternalPackJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisRemains'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isRemains'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inFromId'
         Value = 'False'
         Component = FormParams
@@ -636,6 +644,13 @@ inherited OrderInternalPackJournalForm: TOrderInternalPackJournalForm
       item
         Name = 'inToId'
         Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isRemains'
+        Value = Null
+        DataType = ftBoolean
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>

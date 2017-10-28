@@ -1,5 +1,5 @@
-inherited OrderInternalJournalForm: TOrderInternalJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1062#1077#1093')>'
+inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalForm
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1086#1089#1090#1072#1090#1082#1080')>'
   ClientHeight = 535
   ClientWidth = 1073
   AddOnFormData.RefreshAction = actRefreshStart
@@ -226,7 +226,8 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     Left = 47
     Top = 250
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TOrderInternalForm'
+      FormName = 'TOrderInternalPackRemainsForm'
+      FormNameParam.Value = 'TOrderInternalPackRemainsForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -262,7 +263,8 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
         end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TOrderInternalForm'
+      FormName = 'TOrderInternalPackRemainsForm'
+      FormNameParam.Value = 'TOrderInternalPackRemainsForm'
       GuiParams = <
         item
           Name = 'Id'
