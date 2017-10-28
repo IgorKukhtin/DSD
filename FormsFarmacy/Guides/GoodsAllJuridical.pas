@@ -60,6 +60,7 @@ type
     bbProtocol3OpenForm: TdxBarButton;
     isUploadBadm_1: TcxGridDBColumn;
     isUploadTeva_1: TcxGridDBColumn;
+    AreaName_1: TcxGridDBColumn;
   private
     { Private declarations }
   public

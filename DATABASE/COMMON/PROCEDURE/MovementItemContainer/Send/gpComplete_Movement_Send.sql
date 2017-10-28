@@ -405,9 +405,18 @@ BEGIN
      END IF;
 
 
+
      -- формируются Партии товара, ЕСЛИ надо ...
      UPDATE _tmpItem SET PartionGoodsId_From = CASE WHEN _tmpItem.ObjectDescId     = zc_Object_Asset()
                                                       OR _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+                                                      OR ((_tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+                                                          )
+                                                         AND _tmpItem.MemberId_From > 0
+                                                         )
+
                                                          THEN (SELECT CLO_PartionGoods.ObjectId -- ObjectLink_Goods.ObjectId
                                                                FROM ObjectLink AS ObjectLink_Goods
                                                                     INNER JOIN ObjectLink AS ObjectLink_Unit
@@ -421,13 +430,22 @@ BEGIN
                                                                     LEFT JOIN ContainerLinkObject AS CLO_Unit
                                                                                                   ON CLO_Unit.ContainerId = Container.Id
                                                                                                  AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
+                                                                    LEFT JOIN ContainerLinkObject AS CLO_Member
+                                                                                                  ON CLO_Member.ContainerId = Container.Id
+                                                                                                 AND CLO_Member.DescId      = zc_ContainerLinkObject_Member()
                                                                     LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
                                                                                                   ON CLO_PartionGoods.ContainerId = Container.Id
                                                                                                  AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
                                                                WHERE ObjectLink_Goods.DescId        = zc_ObjectLink_PartionGoods_Goods()
                                                                  AND ObjectLink_Goods.ChildObjectId = _tmpItem.GoodsId
-                                                               ORDER BY CASE WHEN CLO_PartionGoods.ObjectId = ObjectLink_Goods.ObjectId AND CLO_Unit.ObjectId = _tmpItem.UnitId_From AND Container.Amount > 0 THEN 1
-                                                                             WHEN CLO_Unit.ObjectId = _tmpItem.UnitId_From THEN 2
+                                                               ORDER BY CASE WHEN CLO_PartionGoods.ObjectId = ObjectLink_Goods.ObjectId
+                                                                              AND COALESCE (CLO_Unit.ObjectId, 0)   = _tmpItem.UnitId_From
+                                                                              AND COALESCE (CLO_Member.ObjectId, 0) = _tmpItem.MemberId_From
+                                                                              AND Container.Amount > 0
+                                                                                  THEN 1
+                                                                             WHEN COALESCE (CLO_Unit.ObjectId, 0)   = _tmpItem.UnitId_From
+                                                                              AND COALESCE (CLO_Member.ObjectId, 0) = _tmpItem.MemberId_From
+                                                                                  THEN 2
                                                                              ELSE 3
                                                                         END ASC
                                                                       , Container.Amount DESC
@@ -457,6 +475,13 @@ BEGIN
                                                END
                          , PartionGoodsId_To = CASE WHEN _tmpItem.ObjectDescId     = zc_Object_Asset()
                                                       OR _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+                                                      OR ((_tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+                                                          )
+                                                         AND _tmpItem.MemberId_From > 0
+                                                         )
                                                          THEN (SELECT CLO_PartionGoods.ObjectId -- ObjectLink_Goods.ObjectId
                                                                FROM ObjectLink AS ObjectLink_Goods
                                                                     INNER JOIN ObjectLink AS ObjectLink_Unit
@@ -470,13 +495,22 @@ BEGIN
                                                                     LEFT JOIN ContainerLinkObject AS CLO_Unit
                                                                                                   ON CLO_Unit.ContainerId = Container.Id
                                                                                                  AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
+                                                                    LEFT JOIN ContainerLinkObject AS CLO_Member
+                                                                                                  ON CLO_Member.ContainerId = Container.Id
+                                                                                                 AND CLO_Member.DescId      = zc_ContainerLinkObject_Member()
                                                                     LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
                                                                                                   ON CLO_PartionGoods.ContainerId = Container.Id
                                                                                                  AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
                                                                WHERE ObjectLink_Goods.DescId        = zc_ObjectLink_PartionGoods_Goods()
                                                                  AND ObjectLink_Goods.ChildObjectId = _tmpItem.GoodsId
-                                                               ORDER BY CASE WHEN CLO_PartionGoods.ObjectId = ObjectLink_Goods.ObjectId AND CLO_Unit.ObjectId = _tmpItem.UnitId_From AND Container.Amount > 0 THEN 1
-                                                                             WHEN CLO_Unit.ObjectId = _tmpItem.UnitId_From THEN 2
+                                                               ORDER BY CASE WHEN CLO_PartionGoods.ObjectId = ObjectLink_Goods.ObjectId
+                                                                              AND COALESCE (CLO_Unit.ObjectId, 0)   = _tmpItem.UnitId_From
+                                                                              AND COALESCE (CLO_Member.ObjectId, 0) = _tmpItem.MemberId_From
+                                                                              AND Container.Amount > 0
+                                                                                  THEN 1
+                                                                             WHEN COALESCE (CLO_Unit.ObjectId, 0)   = _tmpItem.UnitId_From
+                                                                              AND COALESCE (CLO_Member.ObjectId, 0) = _tmpItem.MemberId_From
+                                                                                  THEN 2
                                                                              ELSE 3
                                                                         END ASC
                                                                       , Container.Amount DESC
@@ -534,7 +568,12 @@ BEGIN
         OR _tmpItem.ObjectDescId           = zc_Object_Asset()
     ;
 
-
+-- if inMovementId = 7259158 
+-- then
+--    RAISE EXCEPTION '<%>  %', (select distinct _tmpItem.PartionGoodsId_from from _tmpItem where _tmpItem.GoodsId = 1105050)
+--    , (select count(*) from _tmpItem where _tmpItem.GoodsId = 1105050);
+--
+-- end if;
      -- определили
      vbWhereObjectId_Analyzer_From:= CASE WHEN (SELECT DISTINCT UnitId_From   FROM _tmpItem)   <> 0 THEN (SELECT DISTINCT UnitId_From   FROM _tmpItem)
                                           WHEN (SELECT DISTINCT MemberId_From FROM _tmpItem) <> 0 THEN (SELECT DISTINCT MemberId_From FROM _tmpItem) END;

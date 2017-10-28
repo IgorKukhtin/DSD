@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer, CodeStr TVarChar, Name TVarChar, isEras
                ObjectDescId Integer, ObjectDescName TVarChar, ObjectName TVarChar,
                MakerName TVarChar, MakerLinkName TVarChar,
                ConditionsKeepName TVarChar,
+               AreaName TVarChar,
                CodeMarion Integer, CodeMarionStr TVarChar, NameMarion TVarChar, OrdMarion Integer,
                CodeBar Integer, NameBar TVarChar, OrdBar Integer
               ) AS
@@ -111,6 +112,7 @@ BEGIN
            , ObjectString_Goods_Maker.ValueData AS MakerName
            , Object_Maker.ValueData             AS MakerLinkName
            , Object_ConditionsKeep.ValueData    AS ConditionsKeepName
+           , Object_Area.ValueData              AS AreaName
 
            , tmpMarion.GoodsCode       AS CodeMarion
            , tmpMarion.GoodsCodeStr    AS CodeMarionStr
@@ -224,15 +226,21 @@ BEGIN
                               AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
           LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_Area
+                               ON ObjectLink_Goods_Area.ObjectId = Object_Goods.Id
+                              AND ObjectLink_Goods_Area.DescId = zc_ObjectLink_Goods_Area()
+          LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Goods_Area.ChildObjectId
+
           LEFT JOIN tmpMarion ON tmpMarion.GoodsMainId = ObjectLink_Main.ChildObjectId
-                             -- AND tmpMarion.Ord         = 1
+                              AND tmpMarion.Ord         = 1
           LEFT JOIN tmpBarCode ON tmpBarCode.GoodsMainId = ObjectLink_Main.ChildObjectId
-                             -- AND tmpBarCode.Ord         = 1
+                              AND tmpBarCode.Ord         = 1
 
     WHERE Object_Goods.DescId = zc_Object_Goods()
       AND ObjectBoolean_Goods_isMain.ObjectId IS NULL
       -- AND COALESCE (Object_GoodsObject.DescId, 0) NOT IN (zc_Object_Juridical(), zc_Object_GlobalConst(), zc_object_User(), zc_Object_Contract())
       AND COALESCE (Object_GoodsObject.DescId, 0) IN (0, zc_Object_Retail()/*, zc_object_User(), zc_Object_Contract()*/)
+      AND COALESCE (Object_GoodsObject.Id, 0) IN (0, 4) -- Не болей
    ;
 
 END;

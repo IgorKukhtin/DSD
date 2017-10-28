@@ -36,6 +36,14 @@ inherited GoodsAllForm: TGoodsAllForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object AreaName_1: TcxGridDBColumn
+            Caption = #1056#1077#1075#1080#1086#1085
+            DataBinding.FieldName = 'AreaName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
           object GoodsMainId_1: TcxGridDBColumn
             Caption = 'MainId'
             DataBinding.FieldName = 'GoodsMainId'
@@ -400,6 +408,14 @@ inherited GoodsAllForm: TGoodsAllForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object AreaName_2: TcxGridDBColumn
+            Caption = #1056#1077#1075#1080#1086#1085
+            DataBinding.FieldName = 'AreaName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
           object GoodsMainId_2: TcxGridDBColumn
             Caption = 'MainId'
             DataBinding.FieldName = 'GoodsMainId'
@@ -784,6 +800,14 @@ inherited GoodsAllForm: TGoodsAllForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object AreaName_3: TcxGridDBColumn
+            Caption = #1056#1077#1075#1080#1086#1085
+            DataBinding.FieldName = 'AreaName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
           object GoodsMainId_3: TcxGridDBColumn
             Caption = 'MainId'
             DataBinding.FieldName = 'GoodsMainId'

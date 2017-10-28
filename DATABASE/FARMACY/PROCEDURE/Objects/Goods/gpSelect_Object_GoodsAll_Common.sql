@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer, CodeStr TVarChar, Name TVarChar, isEras
                ObjectDescName TVarChar, ObjectName TVarChar,
                MakerName TVarChar, MakerLinkName TVarChar,
                ConditionsKeepName TVarChar,
+               AreaName TVarChar,
                CodeMarion Integer, CodeMarionStr TVarChar, NameMarion TVarChar, OrdMarion Integer,
                CodeBar Integer, NameBar TVarChar, OrdBar Integer
               ) AS
@@ -109,6 +110,7 @@ BEGIN
            , ObjectString_Goods_Maker.ValueData AS MakerName
            , Object_Maker.ValueData             AS MakerLinkName
            , Object_ConditionsKeep.ValueData    AS ConditionsKeepName
+           , Object_Area.ValueData              AS AreaName
 
            , tmpMarion.GoodsCode       AS CodeMarion
            , tmpMarion.GoodsCodeStr    AS CodeMarionStr
@@ -221,6 +223,11 @@ BEGIN
                                ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods.Id
                               AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
           LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_Area
+                               ON ObjectLink_Goods_Area.ObjectId = Object_Goods.Id
+                              AND ObjectLink_Goods_Area.DescId = zc_ObjectLink_Goods_Area()
+          LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Goods_Area.ChildObjectId
 
           LEFT JOIN tmpMarion ON tmpMarion.GoodsMainId = Object_Goods.Id
                              -- AND tmpMarion.Ord         = 1

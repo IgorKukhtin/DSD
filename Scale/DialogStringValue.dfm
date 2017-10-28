@@ -4,6 +4,7 @@ inherited DialogStringValueForm: TDialogStringValueForm
   ClientWidth = 237
   OldCreateOrder = True
   Position = poScreenCenter
+  OnCloseQuery = FormCloseQuery
   ExplicitWidth = 253
   ExplicitHeight = 125
   PixelsPerInch = 96
