@@ -67,35 +67,35 @@ BEGIN
                           LEFT JOIN ObjectLink AS ObjectLink_Sticker_StickerGroup
                                                ON ObjectLink_Sticker_StickerGroup.ObjectId = ObjectLink_Sticker_Goods.ObjectId
                                               AND ObjectLink_Sticker_StickerGroup.DescId = zc_ObjectLink_Sticker_StickerGroup()
-                          INNER JOIN Object AS Object_StickerGroup ON Object_StickerGroup.Id = ObjectLink_Sticker_StickerGroup.ChildObjectId
-                                                                  AND UPPER (TRIM(Object_StickerGroup.ValueData)) = UPPER (TRIM(inStickerGroupName))
+                          LEFT JOIN Object AS Object_StickerGroup ON Object_StickerGroup.Id = ObjectLink_Sticker_StickerGroup.ChildObjectId
              
                           LEFT JOIN ObjectLink AS ObjectLink_Sticker_StickerType
                                                ON ObjectLink_Sticker_StickerType.ObjectId = ObjectLink_Sticker_Goods.ObjectId 
                                               AND ObjectLink_Sticker_StickerType.DescId = zc_ObjectLink_Sticker_StickerType()
-                          INNER JOIN Object AS Object_StickerType ON Object_StickerType.Id = ObjectLink_Sticker_StickerType.ChildObjectId
-                                                                 AND UPPER (TRIM(Object_StickerType.ValueData)) = UPPER (TRIM(inStickerTypeName))
+                          LEFT JOIN Object AS Object_StickerType ON Object_StickerType.Id = ObjectLink_Sticker_StickerType.ChildObjectId
              
                           LEFT JOIN ObjectLink AS ObjectLink_Sticker_StickerTag
                                                ON ObjectLink_Sticker_StickerTag.ObjectId = ObjectLink_Sticker_Goods.ObjectId
                                               AND ObjectLink_Sticker_StickerTag.DescId = zc_ObjectLink_Sticker_StickerTag()
-                          INNER JOIN Object AS Object_StickerTag ON Object_StickerTag.Id = ObjectLink_Sticker_StickerTag.ChildObjectId
-                                                                AND UPPER (TRIM(Object_StickerTag.ValueData)) = UPPER (TRIM(inStickerTagName))
+                          LEFT JOIN Object AS Object_StickerTag ON Object_StickerTag.Id = ObjectLink_Sticker_StickerTag.ChildObjectId
              
                           LEFT JOIN ObjectLink AS ObjectLink_Sticker_StickerSort
                                                ON ObjectLink_Sticker_StickerSort.ObjectId = ObjectLink_Sticker_Goods.ObjectId 
                                               AND ObjectLink_Sticker_StickerSort.DescId = zc_ObjectLink_Sticker_StickerSort()
-                          INNER JOIN Object AS Object_StickerSort ON Object_StickerSort.Id = ObjectLink_Sticker_StickerSort.ChildObjectId
-                                                                 AND UPPER (TRIM(Object_StickerSort.ValueData)) = UPPER (TRIM(inStickerSortName))
-             
+                          LEFT JOIN Object AS Object_StickerSort ON Object_StickerSort.Id = ObjectLink_Sticker_StickerSort.ChildObjectId
+            
                           LEFT JOIN ObjectLink AS ObjectLink_Sticker_StickerNorm
                                                ON ObjectLink_Sticker_StickerNorm.ObjectId = ObjectLink_Sticker_Goods.ObjectId 
                                               AND ObjectLink_Sticker_StickerNorm.DescId = zc_ObjectLink_Sticker_StickerNorm()
-                          INNER JOIN Object AS Object_StickerNorm ON Object_StickerNorm.Id = ObjectLink_Sticker_StickerNorm.ChildObjectId
-                                                                 AND UPPER (TRIM(Object_StickerNorm.ValueData)) = UPPER (TRIM(inStickerNormName))
+                          LEFT JOIN Object AS Object_StickerNorm ON Object_StickerNorm.Id = ObjectLink_Sticker_StickerNorm.ChildObjectId
              
                      WHERE ObjectLink_Sticker_Goods.DescId = zc_ObjectLink_Sticker_Goods()
                        AND ObjectLink_Sticker_Goods.ChildObjectId = vbGoodsId
+                       AND UPPER (TRIM(Object_StickerGroup.ValueData)) = UPPER (TRIM(inStickerGroupName))
+                       AND UPPER (TRIM(Object_StickerType.ValueData)) = UPPER (TRIM(inStickerTypeName))
+                       AND UPPER (TRIM(Object_StickerTag.ValueData)) = UPPER (TRIM(inStickerTagName))
+                       AND UPPER (TRIM(Object_StickerSort.ValueData)) = UPPER (TRIM(inStickerSortName))
+                       AND UPPER (TRIM(Object_StickerNorm.ValueData)) = UPPER (TRIM(inStickerNormName)) 
                      );
               
      IF COALESCE (vbStickerId, 0) = 0 THEN
@@ -127,52 +127,54 @@ BEGIN
                                   LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_StickerPack
                                                        ON ObjectLink_StickerProperty_StickerPack.ObjectId = ObjectLink_StickerProperty_Sticker.ObjectId
                                                       AND ObjectLink_StickerProperty_StickerPack.DescId = zc_ObjectLink_StickerProperty_StickerPack()
-                                  INNER JOIN Object AS Object_StickerPack ON Object_StickerPack.Id = ObjectLink_StickerProperty_StickerPack.ChildObjectId
-                                                                         AND UPPER (TRIM(Object_StickerPack.ValueData)) = UPPER (TRIM(inStickerPackName))
+                                  LEFT JOIN Object AS Object_StickerPack ON Object_StickerPack.Id = ObjectLink_StickerProperty_StickerPack.ChildObjectId
                      
                                   LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_StickerSkin
                                                        ON ObjectLink_StickerProperty_StickerSkin.ObjectId = ObjectLink_StickerProperty_Sticker.ObjectId
                                                       AND ObjectLink_StickerProperty_StickerSkin.DescId = zc_ObjectLink_StickerProperty_StickerSkin()
-                                  INNER JOIN Object AS Object_StickerSkin ON Object_StickerSkin.Id = ObjectLink_StickerProperty_StickerSkin.ChildObjectId
-                                                                      AND UPPER (TRIM(Object_StickerSkin.ValueData)) = UPPER (TRIM(inStickerSkinName))
+                                  LEFT JOIN Object AS Object_StickerSkin ON Object_StickerSkin.Id = ObjectLink_StickerProperty_StickerSkin.ChildObjectId
                      
-                                  INNER JOIN ObjectFloat AS ObjectFloat_Value1
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_Value1
                                                          ON ObjectFloat_Value1.ObjectId = ObjectLink_StickerProperty_Sticker.ObjectId 
                                                         AND ObjectFloat_Value1.DescId = zc_ObjectFloat_StickerProperty_Value1()
-                                                        AND COALESCE (ObjectFloat_Value1.ValueData, 0) = inValue1_pr
-                     
-                                  INNER JOIN ObjectFloat AS ObjectFloat_Value2
+                                                        
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_Value2
                                                          ON ObjectFloat_Value2.ObjectId = ObjectLink_StickerProperty_Sticker.ObjectId 
                                                         AND ObjectFloat_Value2.DescId = zc_ObjectFloat_StickerProperty_Value2()
-                                                        AND COALESCE (ObjectFloat_Value2.ValueData, 0) = inValue2_pr
                      
-                                  INNER JOIN ObjectFloat AS ObjectFloat_Value3
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_Value3
                                                          ON ObjectFloat_Value3.ObjectId = ObjectLink_StickerProperty_Sticker.ObjectId 
                                                         AND ObjectFloat_Value3.DescId = zc_ObjectFloat_StickerProperty_Value3()
-                                                        AND COALESCE (ObjectFloat_Value3.ValueData, 0) = inValue3_pr
                      
-                                  INNER JOIN ObjectFloat AS ObjectFloat_Value4
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_Value4
                                                          ON ObjectFloat_Value4.ObjectId = ObjectLink_StickerProperty_Sticker.ObjectId 
                                                         AND ObjectFloat_Value4.DescId = zc_ObjectFloat_StickerProperty_Value4()
-                                                        AND COALESCE (ObjectFloat_Value4.ValueData, 0) = inValue4_pr
                      
-                                  INNER JOIN ObjectFloat AS ObjectFloat_Value5
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_Value5
                                                          ON ObjectFloat_Value5.ObjectId = ObjectLink_StickerProperty_Sticker.ObjectId 
                                                         AND ObjectFloat_Value5.DescId = zc_ObjectFloat_StickerProperty_Value5()
-                                                        AND COALESCE (ObjectFloat_Value5.ValueData, 0) = inValue5_pr
                      
-                                  INNER JOIN ObjectFloat AS ObjectFloat_Value6
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_Value6
                                                          ON ObjectFloat_Value6.ObjectId = ObjectLink_StickerProperty_Sticker.ObjectId 
                                                         AND ObjectFloat_Value6.DescId = zc_ObjectFloat_StickerProperty_Value6()
                                                         AND COALESCE (ObjectFloat_Value6.ValueData, 0) = inValue6_pr
                      
-                                  INNER JOIN ObjectString AS ObjectString_BarCode
+                                  LEFT JOIN ObjectString AS ObjectString_BarCode
                                                           ON ObjectString_BarCode.ObjectId = ObjectLink_StickerProperty_Sticker.ObjectId 
                                                          AND ObjectString_BarCode.DescId = zc_ObjectString_StickerProperty_BarCode()
-                                                         AND TRIM (COALESCE (ObjectString_BarCode.ValueData, '')) = TRIM (inBarCode)
                         
                              WHERE ObjectLink_StickerProperty_Sticker.DescId = zc_ObjectLink_StickerProperty_Sticker()
-                               AND ObjectLink_StickerProperty_Sticker.ChildObjectId = vbStickerId);
+                               AND ObjectLink_StickerProperty_Sticker.ChildObjectId = vbStickerId
+                               AND UPPER (TRIM(Object_StickerPack.ValueData)) = UPPER (TRIM(inStickerPackName))
+                               AND UPPER (TRIM(Object_StickerSkin.ValueData)) = UPPER (TRIM(inStickerSkinName))
+                               AND COALESCE (ObjectFloat_Value1.ValueData, 0) = inValue1_pr
+                               AND COALESCE (ObjectFloat_Value2.ValueData, 0) = inValue2_pr
+                               AND COALESCE (ObjectFloat_Value3.ValueData, 0) = inValue3_pr
+                               AND COALESCE (ObjectFloat_Value4.ValueData, 0) = inValue4_pr
+                               AND COALESCE (ObjectFloat_Value5.ValueData, 0) = inValue5_pr
+                               AND TRIM (COALESCE (ObjectString_BarCode.ValueData, '')) = TRIM (inBarCode)
+                               
+                               );
                                
      IF COALESCE (vbStickerPropertyId, 0) = 0 THEN
         -- записываем новое свойство этикетки

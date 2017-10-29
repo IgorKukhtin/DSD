@@ -1,11 +1,11 @@
  -- Function: gpInsertUpdate_Object_StickerFile()
 
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_StickerFile (Integer, Integer, TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_StickerFile (Integer, Integer, Integer, Integer, TVarChar, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_StickerFile(
    INOUT ioId                       Integer,     -- ид
       IN incode                     Integer,     -- код 
-      IN inName                     TVarChar,    -- наименование 
       IN inJuridicalId              Integer,     --
       IN inTradeMarkId              Integer,     --
       IN inLanguageName             TVarChar,    --
@@ -18,6 +18,7 @@ $BODY$
    DECLARE vbUserId     Integer;
    DECLARE vbCode_calc  Integer;
    DECLARE vbLanguageId Integer;
+   DECLARE vbName       TVarChar;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_StickerFile());
@@ -29,13 +30,15 @@ BEGIN
    -- Если код не установлен, определяем его как последний+1
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_StickerFile()); 
    
+   vbName := TRIM (TRIM (inComment)||' '||TRIM (inLanguageName)||' '|| TRIM (COALESCE ((SELECT Object.ValueData FROM Object where Object.Id = inTradeMarkId), ''))||' '||TRIM (COALESCE ((SELECT Object.ValueData FROM Object where Object.Id = inJuridicalId), ''))) ; 
+   
    -- проверка прав уникальности для свойства <Наименование>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_StickerFile(), inName);
+   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_StickerFile(), vbName);
    -- проверка прав уникальности для свойства <Код >
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_StickerFile(), vbCode_calc);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_StickerFile(), vbCode_calc, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_StickerFile(), vbCode_calc, vbName);
    
    -- сохранили св-во <Примечание>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_StickerFile_Comment(), ioId, inComment);
