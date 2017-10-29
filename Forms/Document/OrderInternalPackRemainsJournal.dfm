@@ -6,7 +6,7 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1089
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -193,10 +193,10 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
     Width = 1073
     ExplicitWidth = 1073
     inherited deStart: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42736d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42736d
     end
   end
   object cxLabel27: TcxLabel [2]

@@ -2,10 +2,10 @@
 
 -- DROP FUNCTION gpSelect_Movement_OrderInternal (TDateTime, TDateTime, TVarChar);
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_OrderInternal (TDateTime, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_OrderInternal (TDateTime, TDateTime, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_OrderInternal (TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_OrderInternal (TDateTime, TDateTime, Boolean, Integer, Integer, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Movement_OrderInternal (TDateTime, TDateTime, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Movement_OrderInternal (TDateTime, TDateTime, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Movement_OrderInternal (TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Movement_OrderInternal (TDateTime, TDateTime, Boolean, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_OrderInternal (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderInternal(
@@ -131,8 +131,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
---ALTER FUNCTION gpSelect_Movement_OrderInternal (TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar) OWNER TO postgres;
-
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
@@ -144,4 +142,4 @@ $BODY$
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Movement_OrderInternal (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_OrderInternal (inStartDate:= '30.10.2017', inEndDate:= '30.10.2017', inIsErased:= FALSE, inisRemains:= FALSE, inFromId:= 0, inToId:= 0, inJuridicalBasisId:= 0, inSession:= '2')

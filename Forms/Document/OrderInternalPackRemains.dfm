@@ -1,26 +1,26 @@
 inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1086#1089#1090#1072#1090#1082#1080')>'
-  ClientHeight = 668
+  ClientHeight = 645
   ClientWidth = 1020
   ExplicitWidth = 1036
-  ExplicitHeight = 706
+  ExplicitHeight = 680
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
     Width = 1020
-    Height = 542
+    Height = 519
     ExplicitTop = 126
     ExplicitWidth = 1020
     ExplicitHeight = 542
-    ClientRectBottom = 542
+    ClientRectBottom = 519
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
         Width = 1020
-        Height = 365
+        Height = 342
         ExplicitWidth = 1020
         ExplicitHeight = 365
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -917,11 +917,12 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
       end
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 370
+        Top = 347
         Width = 1020
         Height = 148
         Align = alBottom
         TabOrder = 1
+        ExplicitTop = 370
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -1142,29 +1143,29 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
       end
       object cxBottomSplitter: TcxSplitter
         Left = 0
-        Top = 365
+        Top = 342
         Width = 1020
         Height = 5
         AlignSplitter = salBottom
         Control = cxGridChild
+        ExplicitTop = 365
       end
     end
-    object TabSheet1: TcxTabSheet
-      Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100'2'
+    object tsTotal: TcxTabSheet
+      Caption = #1048#1090#1086#1075#1086' '#1087#1086' '#1091#1087#1072#1082#1086#1074#1082#1077
       ImageIndex = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
-      object cxGrid2: TcxGrid
+      ExplicitHeight = 518
+      object cxGridChildTotal: TcxGrid
         Left = 0
         Top = 0
         Width = 1020
-        Height = 518
+        Height = 495
         Align = alClient
         TabOrder = 0
-        object cxGridDBTableView2: TcxGridDBTableView
+        ExplicitHeight = 518
+        object cxGridDBTableViewChildTotal: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = DataSource1
+          DataController.DataSource = ChildTotalDS
           DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -1233,7 +1234,6 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
           OptionsData.DeletingConfirmation = False
           OptionsData.Inserting = False
           OptionsView.Footer = True
-          OptionsView.GroupByBox = False
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
@@ -1376,8 +1376,8 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             Width = 60
           end
         end
-        object cxGridLevel2: TcxGridLevel
-          GridView = cxGridDBTableView2
+        object cxGridLevelChildTotal: TcxGridLevel
+          GridView = cxGridDBTableViewChildTotal
         end
       end
     end
@@ -1754,7 +1754,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
     Top = 392
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_MI_OrderInternal'
+    StoredProcName = 'gpSelect_MI_OrderInternalPackRemains'
     DataSets = <
       item
         DataSet = MasterCDS
@@ -1763,7 +1763,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
         DataSet = ChildCDS
       end
       item
-        DataSet = ClientDataSet1
+        DataSet = ChildTotalCDS
       end>
     OutputType = otMultiDataSet
     Params = <
@@ -2325,6 +2325,13 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inIsRemains'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = ceComment
@@ -2600,7 +2607,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
     Top = 8
   end
   object spUpdateAmountRemains: TdsdStoredProc
-    StoredProcName = 'gpUpdateMI_OrderInternal_AmountRemains'
+    StoredProcName = 'gpUpdateMI_OrderInternal_AmountRemainsPack'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2641,7 +2648,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
     Top = 248
   end
   object spUpdateAmountPartner: TdsdStoredProc
-    StoredProcName = 'gpUpdateMI_OrderInternal_AmountPartner'
+    StoredProcName = 'gpUpdateMI_OrderInternal_AmountPartnerPromo'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2674,7 +2681,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
     Top = 264
   end
   object spUpdateAmountForecast: TdsdStoredProc
-    StoredProcName = 'gpUpdateMI_OrderInternal_AmountForecast'
+    StoredProcName = 'gpUpdateMI_OrderInternal_AmountForecastPromo'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2743,21 +2750,21 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
     Left = 358
     Top = 569
   end
-  object ClientDataSet1: TClientDataSet
+  object ChildTotalCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
     Left = 504
     Top = 585
   end
-  object DataSource1: TDataSource
-    DataSet = ClientDataSet1
+  object ChildTotalDS: TDataSource
+    DataSet = ChildTotalCDS
     Left = 596
     Top = 586
   end
-  object dsdDBViewAddOn1: TdsdDBViewAddOn
+  object ChildTotalDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = cxGridDBTableView2
+    View = cxGridDBTableViewChildTotal
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
