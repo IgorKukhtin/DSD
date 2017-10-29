@@ -61,12 +61,14 @@ BEGIN
                                     , ReceiptId Integer, ReceiptId_basis Integer
                                     , Amount TFloat, AmountSecond TFloat, AmountRemains TFloat, AmountPartnerPrior TFloat, AmountPartner TFloat
                                     , AmountForecast TFloat, AmountForecastOrder TFloat
+                                    , AmountPartnerPriorPromo TFloat, AmountPartnerPromo TFloat, AmountForecastPromo TFloat, AmountForecastOrderPromo TFloat
                                     , KoeffLoss TFloat, TaxLoss TFloat, CuterCount TFloat, CuterCountSecond TFloat, Koeff TFloat, TermProduction TFloat, NormInDays TFloat, StartProductionInDays TFloat
                                     , isErased Boolean) ON COMMIT DROP;
      INSERT INTO _tmpMI_master (MovementItemId, GoodsId_detail, GoodsKindId_detail, GoodsId, GoodsId_basis, GoodsKindId_complete
                               , ReceiptId , ReceiptId_basis
                               , Amount, AmountSecond, AmountRemains, AmountPartnerPrior, AmountPartner
                               , AmountForecast, AmountForecastOrder
+                              , AmountPartnerPriorPromo, AmountPartnerPromo, AmountForecastPromo, AmountForecastOrderPromo
                               , KoeffLoss, TaxLoss, CuterCount, CuterCountSecond, Koeff, TermProduction, NormInDays, StartProductionInDays
                               , isErased)
                               SELECT MovementItem.Id                                       AS MovementItemId
@@ -97,6 +99,12 @@ BEGIN
                                    , COALESCE (MIFloat_AmountPartner.ValueData, 0)         AS AmountPartner
                                    , COALESCE (MIFloat_AmountForecast.ValueData, 0)        AS AmountForecast
                                    , COALESCE (MIFloat_AmountForecastOrder.ValueData, 0)   AS AmountForecastOrder
+                                    
+                                   , COALESCE (MIFloat_AmountPartnerPriorPromo.ValueData, 0)    AS AmountPartnerPriorPromo
+                                   , COALESCE (MIFloat_AmountPartnerPromo.ValueData, 0)         AS AmountPartnerPromo
+                                   , COALESCE (MIFloat_AmountForecastPromo.ValueData, 0)        AS AmountForecastPromo
+                                   , COALESCE (MIFloat_AmountForecastOrderPromo.ValueData, 0)   AS AmountForecastOrderPromo
+                                   
                                    , CASE WHEN ObjectFloat_TaxLoss.ValueData > 0 THEN 1 - ObjectFloat_TaxLoss.ValueData / 100 ELSE 0 END AS KoeffLoss
                                    , CASE WHEN ObjectFloat_TaxLoss.ValueData > 0 THEN ObjectFloat_TaxLoss.ValueData           ELSE 0 END AS TaxLoss
                                    , COALESCE (MIFloat_CuterCount.ValueData, 0)            AS CuterCount
@@ -135,6 +143,21 @@ BEGIN
                                    LEFT JOIN MovementItemFloat AS MIFloat_AmountForecastOrder
                                                                ON MIFloat_AmountForecastOrder.MovementItemId = MovementItem.Id
                                                               AND MIFloat_AmountForecastOrder.DescId = zc_MIFloat_AmountForecastOrder()
+ 
+                                   --
+                                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartnerPromo
+                                                               ON MIFloat_AmountPartnerPromo.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_AmountPartnerPromo.DescId = zc_MIFloat_AmountPartnerPromo()
+                                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartnerPriorPromo
+                                                               ON MIFloat_AmountPartnerPriorPromo.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_AmountPartnerPriorPromo.DescId = zc_MIFloat_AmountPartnerPriorPromo()
+                                   LEFT JOIN MovementItemFloat AS MIFloat_AmountForecastPromo
+                                                               ON MIFloat_AmountForecastPromo.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_AmountForecastPromo.DescId = zc_MIFloat_AmountForecastPromo()
+                                   LEFT JOIN MovementItemFloat AS MIFloat_AmountForecastOrderPromo
+                                                               ON MIFloat_AmountForecastOrderPromo.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_AmountForecastOrderPromo.DescId = zc_MIFloat_AmountForecastOrderPromo()
+                                   --                                                              
  
                                    LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
                                                                ON MIFloat_CuterCount.MovementItemId = MovementItem.Id 
@@ -340,6 +363,11 @@ BEGIN
            , CASE WHEN ABS (tmpMI.AmountForecast) < 1      THEN tmpMI.AmountForecast      ELSE CAST (tmpMI.AmountForecast AS NUMERIC (16, 1))      END :: TFloat AS AmountForecast      -- Прогноз по прод.
            , CASE WHEN ABS (tmpMI.AmountForecastOrder) < 1 THEN tmpMI.AmountForecastOrder ELSE CAST (tmpMI.AmountForecastOrder AS NUMERIC (16, 1)) END :: TFloat AS AmountForecastOrder -- Прогноз по заяв.
 
+           , CAST (tmpMI.AmountPartnerPriorPromo  AS NUMERIC (16, 2)) :: TFloat AS AmountPartnerPriorPromo  -- неотгуж. заявка (Акция)
+           , CAST (tmpMI.AmountPartnerPromo       AS NUMERIC (16, 2)) :: TFloat AS AmountPartnerPromo       -- сегодня заявка (акция)
+           , CASE WHEN ABS (tmpMI.AmountForecastPromo) < 1      THEN tmpMI.AmountForecastPromo      ELSE CAST (tmpMI.AmountForecastPromo AS NUMERIC (16, 1))      END :: TFloat AS AmountForecastPromo      -- Прогноз по прод. (Акция)
+           , CASE WHEN ABS (tmpMI.AmountForecastOrderPromo) < 1 THEN tmpMI.AmountForecastOrderPromo ELSE CAST (tmpMI.AmountForecastOrderPromo AS NUMERIC (16, 1)) END :: TFloat AS AmountForecastOrderPromo -- Прогноз по заяв. (Акция)
+
            , CAST (tmpMI.CountForecast AS NUMERIC (16, 1))      :: TFloat AS CountForecast                     -- Норм 1д (по пр.) без К
            , CAST (tmpMI.CountForecastOrder AS NUMERIC (16, 1)) :: TFloat AS CountForecastOrder                -- Норм 1д (по зв.) без К
            , CAST (tmpMI.CountForecast * tmpMI.Koeff AS NUMERIC (16, 1))      :: TFloat AS CountForecastK      -- Норм 1д (по пр.)
@@ -416,17 +444,22 @@ BEGIN
        FROM (SELECT CASE WHEN inShowAll = TRUE THEN tmpMI_master.MovementItemId ELSE 0 END AS MovementItemId
                   , tmpMI_master.GoodsId_detail
                   , tmpMI_master.GoodsKindId_detail
-                  , SUM (tmpMI_master.Amount)           AS Amount
-                  , SUM (tmpMI_master.AmountSecond)     AS AmountSecond
-                  , SUM (tmpMI_master.CuterCount)       AS CuterCount
-                  , SUM (tmpMI_master.CuterCountSecond) AS CuterCountSecond
+                  , SUM (tmpMI_master.Amount)                   AS Amount
+                  , SUM (tmpMI_master.AmountSecond)             AS AmountSecond
+                  , SUM (tmpMI_master.CuterCount)               AS CuterCount
+                  , SUM (tmpMI_master.CuterCountSecond)         AS CuterCountSecond
 
-                  , SUM (tmpMI_master.AmountRemains)       AS AmountRemains
-                  , SUM (tmpMI_master.AmountPartnerPrior)  AS AmountPartnerPrior
-                  , SUM (tmpMI_master.AmountPartner)       AS AmountPartner
-                  , SUM (tmpMI_master.AmountForecast)      AS AmountForecast
-                  , SUM (tmpMI_master.AmountForecastOrder) AS AmountForecastOrder
+                  , SUM (tmpMI_master.AmountRemains)            AS AmountRemains
+                  , SUM (tmpMI_master.AmountPartnerPrior)       AS AmountPartnerPrior
+                  , SUM (tmpMI_master.AmountPartner)            AS AmountPartner
+                  , SUM (tmpMI_master.AmountForecast)           AS AmountForecast
+                  , SUM (tmpMI_master.AmountForecastOrder)      AS AmountForecastOrder
 
+                  , SUM (tmpMI_master.AmountPartnerPriorPromo)  AS AmountPartnerPriorPromo
+                  , SUM (tmpMI_master.AmountPartnerPromo)       AS AmountPartnerPromo
+                  , SUM (tmpMI_master.AmountForecastPromo)      AS AmountForecastPromo
+                  , SUM (tmpMI_master.AmountForecastOrderPromo) AS AmountForecastOrderPromo
+                  
                   , CASE WHEN vbDayCount <> 0 THEN SUM (tmpMI_master.AmountForecast) / vbDayCount      ELSE 0 END AS CountForecast
                   , CASE WHEN vbDayCount <> 0 THEN SUM (tmpMI_master.AmountForecastOrder) / vbDayCount ELSE 0 END AS CountForecastOrder
 
@@ -436,16 +469,16 @@ BEGIN
                   , tmpMI_master.StartProductionInDays
                   , tmpMI_master.ReceiptId
                   , tmpMI_master.ReceiptId_basis
-                  , COALESCE (tmpMI_master.GoodsId, tmpMIPartion_master.GoodsId_basis) AS GoodsId
-                  , COALESCE (tmpMI_master.GoodsId_basis, tmpMIPartion_master.GoodsId_basis) AS GoodsId_basis
+                  , COALESCE (tmpMI_master.GoodsId, tmpMIPartion_master.GoodsId_basis)                     AS GoodsId
+                  , COALESCE (tmpMI_master.GoodsId_basis, tmpMIPartion_master.GoodsId_basis)               AS GoodsId_basis
                   , COALESCE (tmpMI_master.GoodsKindId_complete, tmpMIPartion_master.GoodsKindId_complete) AS GoodsKindId_complete
 
                   , MIN (COALESCE (tmpMIPartion_master.StartDate_old,  zc_DateEnd()))   AS StartDate_old
                   , MAX (COALESCE (tmpMIPartion_master.EndDate_old,    zc_DateStart())) AS EndDate_old
                   , MIN (COALESCE (tmpMIPartion_master.StartDate_next, zc_DateEnd()))   AS StartDate_next
                   , MAX (COALESCE (tmpMIPartion_master.EndDate_next,   zc_DateStart())) AS EndDate_next
-                  , SUM (COALESCE (tmpMIPartion_master.AmountProduction_old, 0))  AS AmountProduction_old
-                  , SUM (COALESCE (tmpMIPartion_master.AmountProduction_next, 0)) AS AmountProduction_next
+                  , SUM (COALESCE (tmpMIPartion_master.AmountProduction_old, 0))        AS AmountProduction_old
+                  , SUM (COALESCE (tmpMIPartion_master.AmountProduction_next, 0))       AS AmountProduction_next
 
                   , tmpMI_master.isErased
              FROM _tmpMI_master AS tmpMI_master
@@ -614,6 +647,7 @@ ALTER FUNCTION gpSelect_MI_OrderInternal (Integer, Boolean, Boolean, TVarChar) O
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 29.10.17         * 
  19.06.15                                        * all
  31.03.15         * add GoodsGroupNameFull
  02.03.14         * add AmountRemains, AmountPartner, AmountForecast, AmountForecastOrder

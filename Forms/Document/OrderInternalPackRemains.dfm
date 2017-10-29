@@ -451,7 +451,30 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             Options.Editing = False
             Width = 50
           end
-          object AmountForecastOrder: TcxGridDBColumn [19]
+          object AmountForecastOrderPromo: TcxGridDBColumn [19]
+            Caption = #1055#1088#1086#1075#1085#1086#1079' '#1087#1086' '#1079#1072#1103#1074'. ('#1040#1082#1094#1080#1080')'
+            DataBinding.FieldName = 'AmountForecastOrderPromo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
+          object AmountForecastPromo: TcxGridDBColumn [20]
+            Caption = #1055#1088#1086#1075#1085#1086#1079' '#1087#1086' '#1087#1088#1086#1076'. ('#1040#1082#1094#1080#1080')'
+            DataBinding.FieldName = 'AmountForecastPromo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object AmountForecastOrder: TcxGridDBColumn [21]
             Caption = #1055#1088#1086#1075#1085#1086#1079' '#1087#1086' '#1079#1072#1103#1074'.'
             DataBinding.FieldName = 'AmountForecastOrder'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -462,7 +485,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
-          object AmountForecast: TcxGridDBColumn [20]
+          object AmountForecast: TcxGridDBColumn [22]
             Caption = #1055#1088#1086#1075#1085#1086#1079' '#1087#1086' '#1087#1088#1086#1076'.'
             DataBinding.FieldName = 'AmountForecast'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -474,7 +497,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             Options.Editing = False
             Width = 70
           end
-          object CountForecastOrder: TcxGridDBColumn [21]
+          object CountForecastOrder: TcxGridDBColumn [23]
             Caption = #1055#1088#1086#1075#1085' 1'#1076' ('#1087#1086' '#1079#1074'.) '#1073#1077#1079' '#1050
             DataBinding.FieldName = 'CountForecastOrder'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -486,7 +509,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             Options.Editing = False
             Width = 60
           end
-          object CountForecast: TcxGridDBColumn [22]
+          object CountForecast: TcxGridDBColumn [24]
             Caption = #1055#1088#1086#1075#1085' 1'#1076' ('#1087#1086' '#1087#1088'.) '#1073#1077#1079' '#1050
             DataBinding.FieldName = 'CountForecast'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -498,7 +521,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             Options.Editing = False
             Width = 60
           end
-          object CountForecastOrderK: TcxGridDBColumn [23]
+          object CountForecastOrderK: TcxGridDBColumn [25]
             Caption = #1055#1088#1086#1075#1085' 1'#1076' ('#1087#1086' '#1079#1074'.)'
             DataBinding.FieldName = 'CountForecastOrderK'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -509,7 +532,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             Options.Editing = False
             Width = 60
           end
-          object CountForecastK: TcxGridDBColumn [24]
+          object CountForecastK: TcxGridDBColumn [26]
             Caption = #1055#1088#1086#1075#1085' 1'#1076' ('#1087#1086' '#1087#1088'.)'
             DataBinding.FieldName = 'CountForecastK'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -521,7 +544,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             Options.Editing = False
             Width = 60
           end
-          object DayCountForecastOrder: TcxGridDBColumn [25]
+          object DayCountForecastOrder: TcxGridDBColumn [27]
             Caption = #1054#1089#1090'. '#1074' '#1076#1085#1103#1093' ('#1087#1086' '#1079#1074'.) '
             DataBinding.FieldName = 'DayCountForecastOrder'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -532,7 +555,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             Options.Editing = False
             Width = 55
           end
-          object DayCountForecast: TcxGridDBColumn [26]
+          object DayCountForecast: TcxGridDBColumn [28]
             Caption = #1054#1089#1090'. '#1074' '#1076#1085#1103#1093' ('#1087#1086' '#1087#1088'.) '
             DataBinding.FieldName = 'DayCountForecast'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -544,7 +567,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             Options.Editing = False
             Width = 55
           end
-          object AmountRemains: TcxGridDBColumn [27]
+          object AmountRemains: TcxGridDBColumn [29]
             Caption = #1054#1089#1090'. '#1085#1072#1095#1072#1083#1100#1085'.'
             DataBinding.FieldName = 'AmountRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -555,7 +578,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             Options.Editing = False
             Width = 70
           end
-          object AmountPartnerPrior: TcxGridDBColumn [28]
+          object AmountPartnerPrior: TcxGridDBColumn [30]
             Caption = #1085#1077#1086#1090#1075#1088#1091#1078'. '#1079#1072#1103#1074#1082#1072
             DataBinding.FieldName = 'AmountPartnerPrior'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -566,7 +589,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             Options.Editing = False
             Width = 70
           end
-          object AmountPartner: TcxGridDBColumn [29]
+          object AmountPartner: TcxGridDBColumn [31]
             Caption = #1089#1077#1075#1086#1076#1085#1103' '#1079#1072#1103#1074#1082#1072
             DataBinding.FieldName = 'AmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -577,7 +600,29 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             Options.Editing = False
             Width = 60
           end
-          object StartDate_old: TcxGridDBColumn [30]
+          object AmountPartnerPriorPromo: TcxGridDBColumn [32]
+            Caption = #1085#1077#1086#1090#1075#1088#1091#1078'. '#1079#1072#1103#1074#1082#1072' ('#1040#1082#1094#1080#1080')'
+            DataBinding.FieldName = 'AmountPartnerPriorPromo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object AmountPartnerPromo: TcxGridDBColumn [33]
+            Caption = #1089#1077#1075#1086#1076#1085#1103' '#1079#1072#1103#1074#1082#1072' ('#1040#1082#1094#1080#1080')'
+            DataBinding.FieldName = 'AmountPartnerPromo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object StartDate_old: TcxGridDBColumn [34]
             Caption = #1055#1072#1088#1090#1080#1103'-1 '#1089#1077#1075#1086#1076#1085#1103
             DataBinding.FieldName = 'StartDate_old'
             HeaderAlignmentHorz = taCenter
@@ -585,7 +630,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             Options.Editing = False
             Width = 70
           end
-          object EndDate_old: TcxGridDBColumn [31]
+          object EndDate_old: TcxGridDBColumn [35]
             Caption = #1055#1072#1088#1090#1080#1103'-2 '#1089#1077#1075#1086#1076#1085#1103
             DataBinding.FieldName = 'EndDate_old'
             Visible = False
@@ -594,7 +639,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             Options.Editing = False
             Width = 70
           end
-          object AmountProduction_old: TcxGridDBColumn [32]
+          object AmountProduction_old: TcxGridDBColumn [36]
             Caption = #1055#1088#1086#1080#1079#1074'. '#1089#1077#1075#1086#1076#1085#1103
             DataBinding.FieldName = 'AmountProduction_old'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -605,7 +650,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             Options.Editing = False
             Width = 60
           end
-          object AmountProduction_next: TcxGridDBColumn [33]
+          object AmountProduction_next: TcxGridDBColumn [37]
             Caption = #1055#1088#1086#1080#1079#1074'. '#1076#1072#1083#1077#1077
             DataBinding.FieldName = 'AmountProduction_next'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -616,7 +661,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             Options.Editing = False
             Width = 60
           end
-          object StartDate_next: TcxGridDBColumn [34]
+          object StartDate_next: TcxGridDBColumn [38]
             Caption = #1055#1072#1088#1090#1080#1103'-1 '#1076#1072#1083#1077#1077
             DataBinding.FieldName = 'StartDate_next'
             Visible = False
@@ -625,7 +670,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             Options.Editing = False
             Width = 70
           end
-          object EndDate_next: TcxGridDBColumn [35]
+          object EndDate_next: TcxGridDBColumn [39]
             Caption = #1055#1072#1088#1090#1080#1103'-2 '#1076#1072#1083#1077#1077
             DataBinding.FieldName = 'EndDate_next'
             Visible = False
@@ -634,7 +679,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             Options.Editing = False
             Width = 70
           end
-          object AmountRemains_calc: TcxGridDBColumn [36]
+          object AmountRemains_calc: TcxGridDBColumn [40]
             Caption = #1055#1088#1086#1075#1085'. '#1086#1089#1090'.'
             DataBinding.FieldName = 'AmountRemains_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -645,7 +690,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             Options.Editing = False
             Width = 60
           end
-          object AmountRemainsTerm_calc: TcxGridDBColumn [37]
+          object AmountRemainsTerm_calc: TcxGridDBColumn [41]
             Caption = #1055#1088#1086#1075#1085'. '#1086#1089#1090'. '#1085#1072' '#1089#1088#1086#1082
             DataBinding.FieldName = 'AmountRemainsTerm_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -656,7 +701,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             Options.Editing = False
             Width = 70
           end
-          object AmountPrognozOrder_calc: TcxGridDBColumn [38]
+          object AmountPrognozOrder_calc: TcxGridDBColumn [42]
             Caption = #1053#1086#1088#1084#1072' '#1079#1072#1087#1072#1089' ('#1087#1086' '#1079#1074'.)'
             DataBinding.FieldName = 'AmountPrognozOrder_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -667,7 +712,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             Options.Editing = False
             Width = 60
           end
-          object AmountPrognozOrderTerm_calc: TcxGridDBColumn [39]
+          object AmountPrognozOrderTerm_calc: TcxGridDBColumn [43]
             Caption = #1053#1086#1088#1084#1072' '#1079#1072#1087'. '#1085#1072' '#1089#1088#1086#1082' ('#1087#1086' '#1079#1074'.)'
             DataBinding.FieldName = 'AmountPrognozOrderTerm_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -678,7 +723,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             Options.Editing = False
             Width = 75
           end
-          object AmountPrognoz_calc: TcxGridDBColumn [40]
+          object AmountPrognoz_calc: TcxGridDBColumn [44]
             Caption = #1053#1086#1088#1084#1072' '#1079#1072#1087#1072#1089' ('#1087#1086' '#1087#1088'.)'
             DataBinding.FieldName = 'AmountPrognoz_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -690,7 +735,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             Options.Editing = False
             Width = 60
           end
-          object AmountPrognozTerm_calc: TcxGridDBColumn [41]
+          object AmountPrognozTerm_calc: TcxGridDBColumn [45]
             Caption = #1053#1086#1088#1084#1072' '#1079#1072#1087'. '#1085#1072' '#1089#1088#1086#1082' ('#1087#1086' '#1087#1088'.)'
             DataBinding.FieldName = 'AmountPrognozTerm_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -702,7 +747,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             Options.Editing = False
             Width = 60
           end
-          object CuterCount: TcxGridDBColumn [42]
+          object CuterCount: TcxGridDBColumn [46]
             Caption = #1047#1072#1082#1072#1079' '#1082#1091#1090#1090#1077#1088#1086#1074
             DataBinding.FieldName = 'CuterCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -712,7 +757,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object Amount: TcxGridDBColumn [43]
+          object Amount: TcxGridDBColumn [47]
             Caption = #1047#1072#1082#1072#1079' '#1085#1072' '#1087#1088'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -723,7 +768,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             Options.Editing = False
             Width = 60
           end
-          object CuterCountSecond: TcxGridDBColumn [44]
+          object CuterCountSecond: TcxGridDBColumn [48]
             Caption = #1044#1086#1079#1072#1082#1072#1079' '#1082#1091#1090#1090#1077#1088#1086#1074
             DataBinding.FieldName = 'CuterCountSecond'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -733,7 +778,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object AmountSecond: TcxGridDBColumn [45]
+          object AmountSecond: TcxGridDBColumn [49]
             Caption = #1044#1086#1079#1072#1082#1072#1079' '#1085#1072' '#1087#1088'-'#1074#1086
             DataBinding.FieldName = 'AmountSecond'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -744,7 +789,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             Options.Editing = False
             Width = 60
           end
-          object AmountSend_sh: TcxGridDBColumn [46]
+          object AmountSend_sh: TcxGridDBColumn [50]
             Caption = #1055#1088#1080#1093#1086#1076' '#1089' '#1087#1088'. '#1096#1090'.'
             DataBinding.FieldName = 'AmountSend_sh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -755,7 +800,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             Options.Editing = False
             Width = 70
           end
-          object AmountSend_Weight: TcxGridDBColumn [47]
+          object AmountSend_Weight: TcxGridDBColumn [51]
             Caption = #1055#1088#1080#1093#1086#1076' '#1089' '#1087#1088'. '#1074#1077#1089
             DataBinding.FieldName = 'AmountSend_Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -766,7 +811,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             Options.Editing = False
             Width = 70
           end
-          object ReceiptCode_basis: TcxGridDBColumn [48]
+          object ReceiptCode_basis: TcxGridDBColumn [52]
             Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'.'
             DataBinding.FieldName = 'ReceiptCode_basis'
             Visible = False
@@ -775,7 +820,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             Options.Editing = False
             Width = 70
           end
-          object ReceiptName_basis: TcxGridDBColumn [49]
+          object ReceiptName_basis: TcxGridDBColumn [53]
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
             DataBinding.FieldName = 'ReceiptName_basis'
             HeaderAlignmentHorz = taCenter
@@ -783,7 +828,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             Options.Editing = False
             Width = 90
           end
-          object ReceiptCode: TcxGridDBColumn [50]
+          object ReceiptCode: TcxGridDBColumn [54]
             Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'. '#1043#1055
             DataBinding.FieldName = 'ReceiptCode'
             Visible = False
@@ -792,7 +837,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             Options.Editing = False
             Width = 55
           end
-          object ReceiptName: TcxGridDBColumn [51]
+          object ReceiptName: TcxGridDBColumn [55]
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099' '#1043#1055
             DataBinding.FieldName = 'ReceiptName'
             Visible = False
@@ -801,64 +846,64 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
             Options.Editing = False
             Width = 80
           end
-          object Color_remains: TcxGridDBColumn [52]
+          object Color_remains: TcxGridDBColumn [56]
             DataBinding.FieldName = 'Color_remains'
             Visible = False
             Options.Editing = False
             VisibleForCustomization = False
             Width = 55
           end
-          object Color_remains_calc: TcxGridDBColumn [53]
+          object Color_remains_calc: TcxGridDBColumn [57]
             DataBinding.FieldName = 'Color_remains_calc'
             Visible = False
             VisibleForCustomization = False
             Width = 55
           end
-          object Color_remainsTerm_calc: TcxGridDBColumn [54]
+          object Color_remainsTerm_calc: TcxGridDBColumn [58]
             DataBinding.FieldName = 'Color_remainsTerm_calc'
             Visible = False
             VisibleForCustomization = False
             Width = 55
           end
-          object ColorB_const: TcxGridDBColumn [55]
+          object ColorB_const: TcxGridDBColumn [59]
             DataBinding.FieldName = 'ColorB_const'
             Visible = False
             VisibleForCustomization = False
             Width = 55
           end
-          object ColorB_DayCountForecast: TcxGridDBColumn [56]
+          object ColorB_DayCountForecast: TcxGridDBColumn [60]
             DataBinding.FieldName = 'ColorB_DayCountForecast'
             Visible = False
             Options.Editing = False
             VisibleForCustomization = False
             Width = 55
           end
-          object ColorB_AmountPartner: TcxGridDBColumn [57]
+          object ColorB_AmountPartner: TcxGridDBColumn [61]
             DataBinding.FieldName = 'ColorB_AmountPartner'
             Visible = False
             Options.Editing = False
             VisibleForCustomization = False
             Width = 55
           end
-          object ColorB_AmountPrognoz: TcxGridDBColumn [58]
+          object ColorB_AmountPrognoz: TcxGridDBColumn [62]
             DataBinding.FieldName = 'ColorB_AmountPrognoz'
             Visible = False
             VisibleForCustomization = False
             Width = 55
           end
-          object Color_send: TcxGridDBColumn [59]
+          object Color_send: TcxGridDBColumn [63]
             DataBinding.FieldName = 'Color_send'
             Visible = False
             VisibleForCustomization = False
             Width = 55
           end
-          object Color_production_old: TcxGridDBColumn [60]
+          object Color_production_old: TcxGridDBColumn [64]
             DataBinding.FieldName = 'Color_production_old'
             Visible = False
             VisibleForCustomization = False
             Width = 55
           end
-          object Color_production_next: TcxGridDBColumn [61]
+          object Color_production_next: TcxGridDBColumn [65]
             DataBinding.FieldName = 'Color_production_next'
             Visible = False
             VisibleForCustomization = False
@@ -1107,6 +1152,9 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
     object TabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100'2'
       ImageIndex = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -1114,7 +1162,6 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
         Height = 518
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = 3
         object cxGridDBTableView2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource1
@@ -2001,7 +2048,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
     Top = 353
   end
   inherited PopupMenu: TPopupMenu
-    Left = 800
+    Left = 736
     Top = 464
     object N2: TMenuItem
       Action = actMISetErased
