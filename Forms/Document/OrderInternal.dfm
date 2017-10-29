@@ -2,10 +2,8 @@ inherited OrderInternalForm: TOrderInternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1062#1077#1093')>'
   ClientHeight = 668
   ClientWidth = 1020
-  ExplicitLeft = -17
-  ExplicitTop = -188
   ExplicitWidth = 1036
-  ExplicitHeight = 707
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2043,6 +2041,13 @@ inherited OrderInternalForm: TOrderInternalForm
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsRemains'
+        Value = False
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

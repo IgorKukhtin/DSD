@@ -2,8 +2,6 @@ inherited OrderInternalPackForm: TOrderInternalPackForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1062#1077#1093' '#1091#1087#1072#1082#1086#1074#1082#1080')>'
   ClientHeight = 456
   ClientWidth = 1020
-  ExplicitLeft = -247
-  ExplicitTop = -34
   ExplicitWidth = 1036
   ExplicitHeight = 491
   PixelsPerInch = 96
@@ -14,17 +12,17 @@ inherited OrderInternalPackForm: TOrderInternalPackForm
     Height = 325
     ExplicitTop = 126
     ExplicitWidth = 1020
-    ExplicitHeight = 537
+    ExplicitHeight = 325
     ClientRectBottom = 325
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
-      ExplicitHeight = 513
+      ExplicitHeight = 301
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 301
         ExplicitWidth = 1020
-        ExplicitHeight = 513
+        ExplicitHeight = 301
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -896,7 +894,6 @@ inherited OrderInternalPackForm: TOrderInternalPackForm
     Width = 1020
     Height = 5
     AlignSplitter = salBottom
-    ExplicitTop = 663
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 115
@@ -1694,6 +1691,13 @@ inherited OrderInternalPackForm: TOrderInternalPackForm
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsRemains'
+        Value = False
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

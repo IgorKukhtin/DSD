@@ -153,7 +153,7 @@ type
     ceComment: TcxTextEdit;
     Color_production_old: TcxGridDBColumn;
     Color_production_next: TcxGridDBColumn;
-    TabSheet1: TcxTabSheet;
+    tsTotal: TcxTabSheet;
     cxGrid2: TcxGrid;
     cxGridDBTableView2: TcxGridDBTableView;
     cxGridDBColumn64: TcxGridDBColumn;

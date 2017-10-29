@@ -5,7 +5,7 @@ inherited MainForm: TMainForm
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 260
+  ExplicitHeight = 257
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -5660,7 +5660,7 @@ inherited MainForm: TMainForm
     object actOrderInternalPackRemains: TdsdOpenForm
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
-      Caption = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1086#1089#1090#1072#1090#1082#1080')'
+      Caption = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074'. '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' ('#1062#1077#1093' '#1091#1087#1072#1082#1086#1074#1082#1080')'
       Hint = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1086#1089#1090#1072#1090#1082#1080')'
       FormName = 'TOrderInternalPackRemainsJournalForm'
       FormNameParam.Value = 'TOrderInternalPackRemainsJournalForm'
@@ -5994,6 +5994,9 @@ inherited MainForm: TMainForm
       object miOrderInternalPack: TMenuItem
         Action = actOrderInternalPack
       end
+      object miOrderInternalPackRemains: TMenuItem
+        Action = actOrderInternalPackRemains
+      end
       object miOrderInternalBasis: TMenuItem
         Action = actOrderInternalBasis
       end
@@ -6002,9 +6005,6 @@ inherited MainForm: TMainForm
       end
       object miOrderInternalBasisCK: TMenuItem
         Action = actOrderInternalBasisCK
-      end
-      object N187: TMenuItem
-        Action = actOrderInternalPackRemains
       end
       object miOrderType: TMenuItem
         Action = actOrderType

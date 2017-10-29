@@ -3,7 +3,7 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
   ClientHeight = 668
   ClientWidth = 1020
   ExplicitWidth = 1036
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1149,12 +1149,9 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
         Control = cxGridChild
       end
     end
-    object TabSheet1: TcxTabSheet
-      Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100'2'
+    object tsTotal: TcxTabSheet
+      Caption = #1048#1090#1086#1075#1086' '#1087#1086' '#1091#1087#1072#1082#1086#1074#1082#1077
       ImageIndex = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -2321,6 +2318,13 @@ inherited OrderInternalPackRemainsForm: TOrderInternalPackRemainsForm
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsRemains'
+        Value = True
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

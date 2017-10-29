@@ -3,7 +3,7 @@ inherited OrderInternalBasisForm: TOrderInternalBasisForm
   ClientHeight = 459
   ClientWidth = 1025
   ExplicitWidth = 1041
-  ExplicitHeight = 498
+  ExplicitHeight = 494
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1317,6 +1317,13 @@ inherited OrderInternalBasisForm: TOrderInternalBasisForm
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsRemains'
+        Value = False
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
