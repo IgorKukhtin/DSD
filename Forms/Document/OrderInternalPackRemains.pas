@@ -154,8 +154,8 @@ type
     Color_production_old: TcxGridDBColumn;
     Color_production_next: TcxGridDBColumn;
     tsTotal: TcxTabSheet;
-    cxGrid2: TcxGrid;
-    cxGridDBTableView2: TcxGridDBTableView;
+    cxGridChildTotal: TcxGrid;
+    cxGridDBTableViewChildTotal: TcxGridDBTableView;
     cxGridDBColumn64: TcxGridDBColumn;
     cxGridDBColumn65: TcxGridDBColumn;
     cxGridDBColumn66: TcxGridDBColumn;
@@ -169,10 +169,10 @@ type
     cxGridDBColumn74: TcxGridDBColumn;
     cxGridDBColumn75: TcxGridDBColumn;
     cxGridDBColumn76: TcxGridDBColumn;
-    cxGridLevel2: TcxGridLevel;
-    ClientDataSet1: TClientDataSet;
-    DataSource1: TDataSource;
-    dsdDBViewAddOn1: TdsdDBViewAddOn;
+    cxGridLevelChildTotal: TcxGridLevel;
+    ChildTotalCDS: TClientDataSet;
+    ChildTotalDS: TDataSource;
+    ChildTotalDBViewAddOn: TdsdDBViewAddOn;
   private
     { Private declarations }
   public
