@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, StickerName TVarChar, Comment TVarChar
              , StickerTagId Integer, StickerTagName TVarChar
              , StickerSortId Integer, StickerSortName TVarChar
              , StickerNormId Integer, StickerNormName TVarChar
-             , StickerFileId Integer, StickerFileName TVarChar, TradeMarkName_StickerFile TVarChar
+             , StickerFileId Integer, StickerFileName TVarChar, StickerFileName_inf TVarChar, TradeMarkName_StickerFile TVarChar
              , Info TBlob
              , Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat, Value5 TFloat
              , isErased Boolean
@@ -30,6 +30,21 @@ BEGIN
      -- Результат
      RETURN QUERY 
        WITH tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inShowAll AS isErased WHERE inShowAll = TRUE)
+     , tmpStickerFile AS (SELECT Object_StickerFile.ValueData                    AS Name
+                               , ObjectLink_StickerFile_TradeMark.ChildObjectId  AS TradeMarkId
+                          FROM Object AS Object_StickerFile
+                               INNER JOIN ObjectLink AS ObjectLink_StickerFile_TradeMark
+                                                     ON ObjectLink_StickerFile_TradeMark.ObjectId = Object_StickerFile.Id
+                                                    AND ObjectLink_StickerFile_TradeMark.DescId = zc_ObjectLink_StickerFile_TradeMark()
+                               
+                               INNER JOIN ObjectBoolean AS ObjectBoolean_Default
+                                                        ON ObjectBoolean_Default.ObjectId = Object_StickerFile.Id
+                                                       AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_StickerFile_Default()
+                                                       AND ObjectBoolean_Default.ValueData = TRUE
+                    
+                          WHERE Object_StickerFile.DescId = zc_Object_StickerFile()
+                            AND Object_StickerFile.isErased = FALSE
+                          )
 
        SELECT Object_Sticker.Id                 AS Id
             , Object_Sticker.ObjectCode         AS Code
@@ -63,8 +78,9 @@ BEGIN
             
             , Object_StickerFile.Id             AS StickerFileId
             , Object_StickerFile.ValueData      AS StickerFileName
+            , tmpStickerFile.Name               AS StickerFileName_inf
             , Object_TradeMark_StickerFile.ValueData  AS TradeMarkName_StickerFile
-                  
+                              
             , ObjectBlob_Info.ValueData         AS Info
                                     
             , ObjectFloat_Value1.ValueData      AS Value1
@@ -151,10 +167,12 @@ BEGIN
                                  AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
              LEFT JOIN Object AS Object_TradeMark_Goods ON Object_TradeMark_Goods.Id = ObjectLink_Goods_TradeMark.ChildObjectId
 
-            LEFT JOIN ObjectLink AS ObjectLink_StickerFile_TradeMark
-                                 ON ObjectLink_StickerFile_TradeMark.ObjectId = Object_StickerFile.Id
-                                AND ObjectLink_StickerFile_TradeMark.DescId = zc_ObjectLink_StickerFile_TradeMark()
-            LEFT JOIN Object AS Object_TradeMark_StickerFile ON Object_TradeMark_StickerFile.Id = ObjectLink_StickerFile_TradeMark.ChildObjectId
+             LEFT JOIN ObjectLink AS ObjectLink_StickerFile_TradeMark
+                                  ON ObjectLink_StickerFile_TradeMark.ObjectId = Object_StickerFile.Id
+                                 AND ObjectLink_StickerFile_TradeMark.DescId = zc_ObjectLink_StickerFile_TradeMark()
+             LEFT JOIN Object AS Object_TradeMark_StickerFile ON Object_TradeMark_StickerFile.Id = ObjectLink_StickerFile_TradeMark.ChildObjectId
+            
+             LEFT JOIN tmpStickerFile ON tmpStickerFile.TradeMarkId = ObjectLink_Goods_TradeMark.ChildObjectId
       ;
   
 END;

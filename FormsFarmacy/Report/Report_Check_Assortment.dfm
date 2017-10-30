@@ -450,7 +450,20 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
         end>
       Caption = 'actGetImportSetting_MCS'
     end
-    object actDoLoadMCSExcel: TExecuteImportSettingsAction [1]
+    object macDeleteDataExcel: TMultiAction [1]
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actDeleteDataExcel
+        end>
+      QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1053#1058#1047'?'
+      InfoAfterExecute = #1057#1086#1093#1088#1072#1085#1077#1085#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1053#1058#1047' '#1086#1095#1080#1097#1077#1085#1099
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1053#1058#1047
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1053#1058#1047
+      ImageIndex = 46
+    end
+    object actDoLoadMCSExcel: TExecuteImportSettingsAction [2]
       Category = 'LoadMCS'
       MoveParams = <>
       ImportSettingsId.Value = '0'
@@ -466,7 +479,18 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
           MultiSelectSeparator = ','
         end>
     end
-    object macStartLoadMCSExcel: TMultiAction [3]
+    object actDeleteDataExcel: TdsdExecStoredProc [3]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spDeleteDataExcel
+      StoredProcList = <
+        item
+          StoredProc = spDeleteDataExcel
+        end>
+      Caption = 'actDeleteDataExcel'
+    end
+    object macStartLoadMCSExcel: TMultiAction [5]
       Category = 'LoadMCS'
       MoveParams = <>
       ActionList = <
@@ -484,7 +508,7 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1053#1058#1047'  '#1080#1079' Excel '
       ImageIndex = 30
     end
-    object actDoLoadMCS: TExecuteImportSettingsAction [4]
+    object actDoLoadMCS: TExecuteImportSettingsAction [6]
       Category = 'LoadMCS'
       MoveParams = <>
       ImportSettingsId.Value = '0'
@@ -875,7 +899,15 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbStartLoadMCSExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbbdxBarButton2'
         end
         item
           Visible = True
@@ -921,8 +953,12 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
       Action = actStartLoadMCS
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbStartLoadMCSExcel: TdxBarButton
       Action = macStartLoadMCSExcel
+      Category = 0
+    end
+    object bbbdxBarButton2: TdxBarButton
+      Action = macDeleteDataExcel
       Category = 0
     end
   end
@@ -1083,8 +1119,8 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 408
-    Top = 336
+    Left = 456
+    Top = 320
   end
   object HeaderChanger: THeaderChanger
     IdParam.Value = Null
@@ -1173,5 +1209,14 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
     PackSize = 1
     Left = 88
     Top = 368
+  end
+  object spDeleteDataExcel: TdsdStoredProc
+    StoredProcName = 'gpDelete_Object_DataExcel_byUser'
+    DataSets = <>
+    OutputType = otResult
+    Params = <>
+    PackSize = 1
+    Left = 688
+    Top = 328
   end
 end

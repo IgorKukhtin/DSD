@@ -85,7 +85,11 @@ type
     actGetImportSetting_MCSExcel: TdsdExecStoredProc;
     actDoLoadMCSExcel: TExecuteImportSettingsAction;
     macStartLoadMCSExcel: TMultiAction;
-    bb: TdxBarButton;
+    bbStartLoadMCSExcel: TdxBarButton;
+    spDeleteDataExcel: TdsdStoredProc;
+    actDeleteDataExcel: TdsdExecStoredProc;
+    macDeleteDataExcel: TMultiAction;
+    bbbdxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public
