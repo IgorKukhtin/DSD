@@ -2559,6 +2559,7 @@ BEGIN
 END $$;
 
 
+
 --Загрузчик НТЗ в zc_Object_DataExcel
 DO $$
 DECLARE vbImportTypeId Integer;
@@ -2576,11 +2577,11 @@ BEGIN
     -- Создаем Тип загрузки НТЗ
     vbImportTypeId := gpInsertUpdate_Object_ImportType(ioId            := COALESCE(vbImportTypeId,0), 
                                                        inCode          := COALESCE(vbImportTypeCode,0), 
-                                                       inName          := 'Загрузка неснижаемого товарного запаса', 
+                                                       inName          := 'Загрузка неснижаемого товарного запаса (Ассортимент сети)', 
                                                        inProcedureName := 'gpInsertUpdate_Object_DataExcel_MCS_From_Excel', 
                                                        inSession       := vbUserId::TVarChar);
     --Создали Enum
-    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Enum(), vbImportTypeId, 'zc_Enum_ImportType_MCSExcel);
+    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Enum(), vbImportTypeId, 'zc_Enum_ImportType_MCSExcel');
     --Создаём настройку загрузки
     vbImportSettingId := gpInsertUpdate_Object_ImportSettings(ioId           := COALESCE(vbImportSettingId,0),
                                                               inCode         := COALESCE(vbImportSettingCode,0),
@@ -2666,12 +2667,12 @@ DO $$
     DECLARE vbId Integer;
 BEGIN
     vbKey := 'TReport_Check_AssortmentForm;zc_Object_ImportSetting_MCSExcel';
-              TReport_Check_AssortmentForm;zc_Object_ImportSetting_MCSExcel
+
     -- Добавляем ключ дефолта
     SELECT Id INTO vbDefaultKeyId FROM DefaultKeys WHERE Key = vbKey; 
 
     IF COALESCE(vbDefaultKeyId, 0) = 0 THEN 
-        INSERT INTO DefaultKeys(Key, KeyData) VALUES(vbKey, '{"FormClassName":"TPriceForm","DescName":"zc_Object_ImportSettings"}') RETURNING Id INTO vbDefaultKeyId;
+        INSERT INTO DefaultKeys(Key, KeyData) VALUES(vbKey, '{"FormClassName":"TReport_Check_AssortmentForm;","DescName":"zc_Object_ImportSetting"}') RETURNING Id INTO vbDefaultKeyId;
     END IF;
     
     SELECT ID INTO vbId
@@ -2680,7 +2681,6 @@ BEGIN
     
     PERFORM gpInsertUpdate_DefaultValue(ioId := COALESCE(vbId,0), inDefaultKeyId := vbDefaultKeyId, inUserKey := 0, inDefaultValue := zc_Enum_ImportSetting_MCSExcel()::TBlob, inSession := ''::TVarChar);
 END $$;
-
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
