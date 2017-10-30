@@ -10,12 +10,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_DataExcel_MCS_From_Excel(
 )
 RETURNS VOID AS
 $BODY$
-    DECLARE vbName        TVarChar;
     DECLARE vbUserId      Integer;
     DECLARE vbObjectId    Integer;
-    DECLARE vbDataExcelId Integer;
     DECLARE vbGoodsId     Integer;
-    DECLARE vbIndex       Integer;
 BEGIN
     vbUserId := lpGetUserBySession (inSession);
     vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
@@ -46,51 +43,22 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Неснижаемый товарный запас <%> Не может быть меньше нуля.', inMCSValue;
     END IF;
 
-    -- уже сохранненные данные
-    SELECT Object_DataExcel.Id, Object_DataExcel.ValueData 
-           INTO vbDataExcelId, vbName                             --STRING_AGG (Object_Unit.ValueData, '; ') AS UnitName
-    FROM Object AS Object_DataExcel
-         INNER JOIN ObjectLink AS ObjectLink_Insert
-                               ON ObjectLink_Insert.ObjectId = Object_DataExcel.Id
-                              AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
-                              AND ObjectLink_Insert.ChildObjectId = vbUserId
-    WHERE Object_DataExcel.DescId = zc_Object_DataExcel()
-        AND Object_DataExcel.ObjectCode = 1;
-   
-    -- таблица
-    CREATE TEMP TABLE _tmpDataExcel (ValueData TVarChar, UnitId Integer, GoodsId Integer, MCSValue TFloat) ON COMMIT DROP;
-    -- парсим данные, которые уже есть
-    vbIndex := 1;
-    WHILE SPLIT_PART (vbName, ';', vbIndex) <> '' LOOP
-        -- добавляем то что нашли
-        INSERT INTO _tmpDataExcel (ValueData) SELECT SPLIT_PART (vbName, ';', vbIndex) :: TVarChar;
-        -- теперь следуюющий
-        vbIndex := vbIndex + 1;
-    END LOOP;
-    
-    UPDATE _tmpDataExcel
-     SET  UnitId   = CAST (zfCalc_Word_Split (inValue:= _tmpDataExcel.ValueData, inSep:= ',', inIndex:= 1) AS Integer)
-        , GoodsId  = CAST (zfCalc_Word_Split (inValue:= _tmpDataExcel.ValueData, inSep:= ',', inIndex:= 2) AS Integer)
-        , MCSValue = CAST (zfCalc_Word_Split (inValue:= _tmpDataExcel.ValueData, inSep:= ',', inIndex:= 3) AS TFloat);
-        
-    --обновляем значение НТЗ если уже такой товар был сохранен
-    UPDATE _tmpDataExcel
-     SET MCSValue = inMCSValue
-    WHERE _tmpDataExcel.UnitId = inUnitId
-      AND _tmpDataExcel.GoodsId = vbGoodsId;
-      
-    PERFORM lpInsertUpdate_Object_DataExcel(inId       := COALESCE (vbDataExcelId, 0) ::Integer,    -- ключ объекта <Элемент истории прайса>
-                                            inCode     := 1,             -- 
-                                            inName     := STRING_AGG (tmp.ValueData, '; '),
-                                            inUserId   := vbUserId
+    PERFORM lpInsertUpdate_Object_DataExcel(inId       := COALESCE ((SELECT Object_DataExcel.Id 
+                                                                     FROM Object AS Object_DataExcel
+                                                                          INNER JOIN ObjectLink AS ObjectLink_Insert
+                                                                                                ON ObjectLink_Insert.ObjectId = Object_DataExcel.Id
+                                                                                               AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
+                                                                                               AND ObjectLink_Insert.ChildObjectId = vbUserId
+                                                                     WHERE Object_DataExcel.DescId = zc_Object_DataExcel()
+                                                                       AND Object_DataExcel.ObjectCode = 1
+                                                                       AND Object_DataExcel.ValueData LIKE '%'||inUnitId||';'||vbGoodsId||'%')
+                                                                   , 0)  ::Integer
+                                          , inCode     := 1
+                                          , inName     := (inUnitId||';'||vbGoodsId||';'||inMCSValue) :: TVarChar 
+                                          , inUserId   := vbUserId
                                             )
-    FROM (SELECT (tmp.UnitId||','||tmp.GoodsId||','||tmp.MCSValue) :: TVarChar AS ValueData
-          FROM _tmpDataExcel AS tmp
-          WHERE tmp.UnitId = inUnitId
-         UNION 
-          SELECT (inUnitId||','||vbGoodsId||','||inMCSValue) :: TVarChar AS ValueData
-          ) AS tmp;
-
+    ;
+  
 
 END;
 $BODY$
@@ -104,4 +72,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_DataExcel_MCS_From_Excel()
+-- select * from gpInsertUpdate_Object_DataExcel_MCS_From_Excel(inUnitId := 183292 , inGoodsCode := 10660 , inMCSValue := 1 ,  inSession := '3');
