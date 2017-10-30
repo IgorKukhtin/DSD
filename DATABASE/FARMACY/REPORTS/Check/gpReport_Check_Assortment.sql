@@ -31,11 +31,13 @@ RETURNS TABLE (
 )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId      Integer;
    DECLARE vbDateStartPromo TDateTime;
    DECLARE vbDatEndPromo TDateTime;
-   DECLARE vbRetailId Integer;
-   DECLARE vbCountUnit TFloat;
+   DECLARE vbRetailId    Integer;
+   DECLARE vbCountUnit   TFloat;
+   DECLARE vbName        TVarChar;
+   DECLARE vbIndex       Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
@@ -59,6 +61,36 @@ BEGIN
                     WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                     );
     
+    
+    -- уже сохранненные данные По НТЗ из zc_Object_DataExcel
+    SELECT Object_DataExcel.ValueData 
+           INTO vbName
+    FROM Object AS Object_DataExcel
+         INNER JOIN ObjectLink AS ObjectLink_Insert
+                               ON ObjectLink_Insert.ObjectId = Object_DataExcel.Id
+                              AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
+                              AND ObjectLink_Insert.ChildObjectId = vbUserId
+    WHERE Object_DataExcel.DescId = zc_Object_DataExcel()
+        AND Object_DataExcel.ObjectCode = 1;
+   
+    -- таблица
+    CREATE TEMP TABLE _tmpDataExcel (ValueData TVarChar, UnitId Integer, GoodsId Integer, MCSValue TFloat) ON COMMIT DROP;
+    -- парсим данные, которые уже есть
+    vbIndex := 1;
+    WHILE SPLIT_PART (vbName, ';', vbIndex) <> '' LOOP
+        -- добавляем то что нашли
+        INSERT INTO _tmpDataExcel (ValueData) SELECT SPLIT_PART (vbName, ';', vbIndex) :: TVarChar;
+        -- теперь следуюющий
+        vbIndex := vbIndex + 1;
+    END LOOP;
+    
+    UPDATE _tmpDataExcel
+     SET  UnitId   = CAST (zfCalc_Word_Split (inValue:= _tmpDataExcel.ValueData, inSep:= ',', inIndex:= 1) AS Integer)
+        , GoodsId  = CAST (zfCalc_Word_Split (inValue:= _tmpDataExcel.ValueData, inSep:= ',', inIndex:= 2) AS Integer)
+        , MCSValue = CAST (zfCalc_Word_Split (inValue:= _tmpDataExcel.ValueData, inSep:= ',', inIndex:= 3) AS TFloat);
+        
+        
+        
     -- Результат
     RETURN QUERY
     WITH
@@ -210,7 +242,7 @@ BEGIN
            , tmpData.SummaSale                                     :: TFloat   AS SummaSale
 
            , tmpData.CountUnit                                     :: TFloat   AS CountUnit
-           , 0                                                     :: TFloat   AS MCS_Value
+           , COALESCE(_tmpDataExcel.MCSValue, 0)                   :: TFloat   AS MCS_Value
            , tmpData.UnitName                                      :: Tblob    AS UnitName
 
            , COALESCE(ObjectBoolean_Goods_Close.ValueData, False)  :: Boolean  AS isClose
@@ -270,6 +302,9 @@ BEGIN
              LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
                                       ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
                                      AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
+
+             LEFT JOIN _tmpDataExcel ON _tmpDataExcel.GoodsId = tmpData.GoodsId
+                                    AND _tmpDataExcel.UnitId  = inUnitId
                                                                                        
         ORDER BY Object_GoodsGroup.ValueData
                , Object_Goods.ValueData

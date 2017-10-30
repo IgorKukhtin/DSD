@@ -81,6 +81,11 @@ type
     actGetImportSetting_MCS: TdsdExecStoredProc;
     actDoLoadMCS: TExecuteImportSettingsAction;
     actStartLoadMCS: TMultiAction;
+    spGetImportSetting_MCSExcel: TdsdStoredProc;
+    actGetImportSetting_MCSExcel: TdsdExecStoredProc;
+    actDoLoadMCSExcel: TExecuteImportSettingsAction;
+    macStartLoadMCSExcel: TMultiAction;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public
