@@ -1,6 +1,7 @@
 -- Function: gpSelect_Report_TaraMovement()
 
 DROP FUNCTION IF EXISTS gpSelect_Report_Tara_Print (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Report_Tara_Print (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Report_Tara_Print(
     IN inStartDate      TDateTime, --дата начала периода
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Report_Tara_Print(
     IN inWhereObjectId  Integer,   --По одному(группе) из объектов
     IN inGoodsOrGroupId Integer,   --Группа товара / товар
     IN inAccountGroupId Integer,   --Группа счетов
+    IN inisGoods        Boolean,   --по товарам
     IN inSession        TVarChar   --сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -202,21 +204,24 @@ BEGIN
 
              , SUM (tmp.Amount - COALESCE (tmp.MIC_Amount_Start, 0)) AS RemainsStart
              , SUM (tmp.Amount - COALESCE (tmp.MIC_Amount_End, 0))   AS RemainsEnd
-        FROM (SELECT tmpContainer.Amount
-                             , tmpContainer.Id
-                             , SUM (MIContainer.Amount)                        AS MIC_Amount_Start  --Все движение после начала 
-                             , SUM (CASE WHEN MIContainer.OperDate > inEndDate 
-                                         THEN MIContainer.Amount 
-                                         ELSE 0 END)                           AS MIC_Amount_End    --Все движение после окончания
+             
+        FROM (SELECT tmpContainer.Amount                                             AS Amount
+                   , tmpContainer.Id                                                 AS Id
+                   , CASE WHEN inIsGoods = TRUE THEN tmpContainer.GoodsId ELSE 0 END AS GoodsId
+                   , SUM (MIContainer.Amount)                                        AS MIC_Amount_Start  --Все движение после начала 
+                   , SUM (CASE WHEN MIContainer.OperDate > inEndDate 
+                               THEN MIContainer.Amount 
+                               ELSE 0 END)                                           AS MIC_Amount_End    --Все движение после окончания
               FROM _tmpContainer AS tmpContainer
-                            LEFT OUTER JOIN MovementItemContainer AS MIContainer
-                                                                  ON MIContainer.ContainerId = tmpContainer.Id
-                                                                 AND MIContainer.OperDate >= inStartDate
+                   LEFT OUTER JOIN MovementItemContainer AS MIContainer
+                                                         ON MIContainer.ContainerId = tmpContainer.Id
+                                                        AND MIContainer.OperDate >= inStartDate
               GROUP BY tmpContainer.Amount, tmpContainer.Id
+                     , CASE WHEN inIsGoods = TRUE THEN tmpContainer.GoodsId ELSE 0 END
               ) AS tmp 
                LEFT JOIN Object AS Object_UnitOrPartner ON Object_UnitOrPartner.Id = inWhereObjectId
                LEFT JOIN ObjectDesc AS ObjectDesc_UnitOrPartner ON ObjectDesc_UnitOrPartner.Id = Object_UnitOrPartner.DescId
-               LEFT JOIN Object AS Object_GoodsOrGroup ON Object_GoodsOrGroup.Id = inGoodsOrGroupId
+               LEFT JOIN Object AS Object_GoodsOrGroup ON Object_GoodsOrGroup.Id = CASE WHEN inIsGoods = TRUE THEN tmp.GoodsId ELSE inGoodsOrGroupId END 
         GROUP BY Object_UnitOrPartner.ValueData 
                , Object_GoodsOrGroup.ValueData 
                , ObjectDesc_UnitOrPartner.ItemName 
@@ -227,62 +232,87 @@ BEGIN
     
     -- Результат
     OPEN Cursor2 FOR
-        WITH  DDD
-        AS(
-            SELECT
-                DD.Id
-               ,DD.MovementId
-               ,DD.MovementDescId 
-               ,DD.PaidKindId
+        WITH 
+        DDD AS (SELECT DD.Id
+                     , DD.MovementId
+                     , DD.MovementDescId 
+                     , DD.PaidKindId
+                     , DD.GoodsId
+      
+                     , COALESCE (SUM (MIC_Amount_IN), 0)  :: TFloat       AS MIC_Amount_IN
+                     , COALESCE (SUM (MIC_Amount_OUT), 0) :: TFloat       AS MIC_Amount_OUT
+    
+                FROM (SELECT tmpContainer.Id
+                           , MIContainer.MovementId
+                           , MIContainer.MovementDescId 
+                           , tmpContainer.PaidKindId
+                           , CASE WHEN inIsGoods = TRUE THEN tmpContainer.GoodsId ELSE 0 END AS GoodsId  
+                                              
+                           , SUM (CASE WHEN  MIContainer.OperDate <= inEndDate AND MIContainer.IsActive = TRUE 
+                                       THEN MIContainer.Amount
+                                       ELSE 0
+                                  END )::TFloat                                       AS MIC_Amount_IN     --Кол-во приход
+                           , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.IsActive = FALSE
+                                       THEN (-1)* MIContainer.Amount
+                                       ELSE 0
+                                  END) ::TFloat                                       AS MIC_Amount_OUT    --Кол-во расход
+    
+                      FROM _tmpContainer AS tmpContainer
+                           LEFT OUTER JOIN MovementItemContainer AS MIContainer
+                                                                 ON MIContainer.ContainerId = tmpContainer.Id
+                                                                AND MIContainer.OperDate >= inStartDate
+                      GROUP BY tmpContainer.Id
+                             , MIContainer.MovementId
+                             , MIContainer.MovementDescId 
+                             , tmpContainer.PaidKindId
+                             , CASE WHEN inIsGoods = TRUE THEN tmpContainer.GoodsId ELSE 0 END
+                     ) AS DD
+                GROUP BY DD.Id
+                       , DD.MovementId
+                       , DD.MovementDescId 
+                       , DD.PaidKindId
+                       , DD.GoodsId
+                HAVING COALESCE(SUM(MIC_Amount_IN),0) <> 0 OR
+                       COALESCE(SUM(MIC_Amount_OUT),0) <> 0 
+               )
+        
+        --
+      , tmpRemains AS (SELECT tmp.GoodsId                                           AS GoodsId      -- товар
+                            , SUM (tmp.Amount - COALESCE (tmp.MIC_Amount_Start, 0)) AS RemainsStart
+                            , SUM (tmp.Amount - COALESCE (tmp.MIC_Amount_End, 0))   AS RemainsEnd
+                            
+                       FROM (SELECT tmpContainer.Amount                                             AS Amount
+                                  , CASE WHEN inIsGoods = TRUE THEN tmpContainer.GoodsId ELSE 0 END AS GoodsId
+                                  , SUM (MIContainer.Amount)                                        AS MIC_Amount_Start  --Все движение после начала 
+                                  , SUM (CASE WHEN MIContainer.OperDate > inEndDate 
+                                              THEN MIContainer.Amount 
+                                              ELSE 0 END)                                           AS MIC_Amount_End    --Все движение после окончания
+                             FROM _tmpContainer AS tmpContainer
+                                  LEFT OUTER JOIN MovementItemContainer AS MIContainer
+                                                                        ON MIContainer.ContainerId = tmpContainer.Id
+                                                                       AND MIContainer.OperDate >= inStartDate
+                             GROUP BY tmpContainer.Amount, tmpContainer.Id
+                                    , CASE WHEN inIsGoods = TRUE THEN tmpContainer.GoodsId ELSE 0 END
+                             ) AS tmp 
+                             LEFT JOIN Object AS Object_GoodsOrGroup ON Object_GoodsOrGroup.Id = CASE WHEN inIsGoods = TRUE THEN tmp.GoodsId ELSE inGoodsOrGroupId END
+                       GROUP BY tmp.GoodsId 
+                       HAVING COALESCE(SUM (tmp.Amount - COALESCE (tmp.MIC_Amount_Start, 0)), 0) <> 0 OR
+                              COALESCE(SUM (tmp.Amount - COALESCE (tmp.MIC_Amount_End, 0)),0) <> 0
+                      )
 
-               , COALESCE (SUM (MIC_Amount_IN), 0)  :: TFloat       AS MIC_Amount_IN
-               , COALESCE (SUM (MIC_Amount_OUT), 0) :: TFloat       AS MIC_Amount_OUT
-
-            FROM(
-                    SELECT
-                         tmpContainer.Id
-                       , MIContainer.MovementId
-                       , MIContainer.MovementDescId 
-                       , tmpContainer.PaidKindId
-                                            
-                       , SUM (CASE WHEN  MIContainer.OperDate <= inEndDate AND MIContainer.IsActive = TRUE 
-                                   THEN MIContainer.Amount
-                                   ELSE 0
-                              END )::TFloat                                       AS MIC_Amount_IN     --Кол-во приход
-                       , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.IsActive = FALSE
-                                   THEN (-1)* MIContainer.Amount
-                                   ELSE 0
-                              END) ::TFloat                                       AS MIC_Amount_OUT    --Кол-во расход
-
-                    FROM _tmpContainer AS tmpContainer
-                        LEFT OUTER JOIN MovementItemContainer AS MIContainer
-                                                              ON MIContainer.ContainerId = tmpContainer.Id
-                                                             AND MIContainer.OperDate >= inStartDate
-                    GROUP BY
-                         tmpContainer.Id
-                       , MIContainer.MovementId
-                       , MIContainer.MovementDescId 
-                       , tmpContainer.PaidKindId
-                ) AS DD
-            GROUP BY
-                DD.Id
-               ,DD.MovementId
-               ,DD.MovementDescId 
-               ,DD.PaidKindId
-            HAVING
-                COALESCE(SUM(MIC_Amount_IN),0) <> 0 OR
-                COALESCE(SUM(MIC_Amount_OUT),0) <> 0 
-        )
-
-        SELECT
-            COALESCE (MovementDate_OperDatePartner.ValueData,Movement.OperDate)::TDateTime    AS OperDate                                                 --Дата документа 
-           ,Movement.InvNumber                                                    --№ документа
-           ,MovementDesc.ItemName                              AS MovementDescName--тип документа
-           ,Object_Unit.ValueData                              AS UnitName        --подразделение
-           ,Object_PaidKind.ValueData                          AS PaidKindName
-           ,DDD.MIC_Amount_IN   ::TFloat                       AS AmountIn        --Приход
-           ,DDD.MIC_Amount_OUT  ::TFloat                       AS AmountOut       --Расход
-            FROM DDD
+        SELECT COALESCE (MovementDate_OperDatePartner.ValueData,Movement.OperDate)::TDateTime    AS OperDate                                                 --Дата документа 
+             , Movement.InvNumber                                                    --№ документа
+             , MovementDesc.ItemName                              AS MovementDescName--тип документа
+             , Object_Unit.ValueData                              AS UnitName        --подразделение
+             , Object_Goods.ValueData                             AS GoodsName        --Товар
+             , Object_PaidKind.ValueData                          AS PaidKindName
+             , DDD.MIC_Amount_IN   ::TFloat                       AS AmountIn        --Приход
+             , DDD.MIC_Amount_OUT  ::TFloat                       AS AmountOut       --Расход
+             
+             , tmpRemains.RemainsStart ::TFloat
+             , tmpRemains.RemainsEnd   ::TFloat
+        FROM DDD
+        FUll JOIN tmpRemains ON tmpRemains.GoodsId = DDD.GoodsId and inisGoods = TRUE
             LEFT OUTER JOIN Movement ON Movement.Id = DDD.MovementId
             LEFT OUTER JOIN MovementDesc ON MovementDesc.Id = DDD.MovementDescId
 
@@ -296,6 +326,7 @@ BEGIN
                                          ON MLO_Unit.MovementId = Movement.Id
                                         AND MLO_Unit.DescId = CASE WHEN MovementDesc.Id in (zc_Movement_ReturnIn(),zc_Movement_Income()) THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_From()  END 
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MLO_Unit.ObjectId
+            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (DDD.GoodsId, tmpRemains.GoodsId)
     ;
     RETURN NEXT Cursor2;
 
@@ -307,9 +338,11 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
+ 31.10.17         * add inisGoods
  03.11.16         * 
  26.10.16         *
 */
 
 -- тест
--- select * from gpSelect_Report_Tara_Print (inStartDate := ('30.08.2016')::TDateTime , inEndDate := ('31.08.2016')::TDateTime , inWhereObjectId := 630169 , inGoodsOrGroupId := 1865 , inAccountGroup := 0 ,  inSession := '5' ::TVarChar);
+-- select * from gpSelect_Report_Tara_Print(inStartDate := ('01.09.2016')::TDateTime , inEndDate := ('30.09.2016')::TDateTime , inWhereObjectId := 17971 , inGoodsOrGroupId := 1865 , inAccountGroupId := 9015 , inisGoods := 'TRUE' ::Boolean,  inSession := '5'::TVarChar);
+-- FETCH ALL "<unnamed portal 4>";

@@ -3,10 +3,8 @@ inherited Report_TaraForm: TReport_TaraForm
   ClientHeight = 490
   ClientWidth = 975
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -248
-  ExplicitTop = -36
   ExplicitWidth = 991
-  ExplicitHeight = 529
+  ExplicitHeight = 528
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1228,6 +1226,13 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGoods'
+          Value = 'FALSE'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       ReportName = 'A'#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1091' ('#1090#1072#1088#1072')'
       ReportNameParam.Name = 'A'#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1091
@@ -1263,6 +1268,99 @@ inherited Report_TaraForm: TReport_TaraForm
           Value = '0'
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGoods'
+          Value = 'FALSE'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'A'#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1091' ('#1090#1072#1088#1072')'
+      ReportNameParam.Name = 'A'#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1091
+      ReportNameParam.Value = 'A'#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1091' ('#1090#1072#1088#1072')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintJuridicalGoods: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintJuridicalGoods
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintJuridicalGoods
+        end>
+      Caption = 'A'#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1091' '#1087#1086' '#1090#1086#1074#1072#1088#1091
+      Hint = 'A'#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1091' '#1087#1086' '#1090#1086#1074#1072#1088#1091
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+          IndexFieldNames = 'GoodsOrGroupName'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsName;operdate;UnitName;MovementDescName;InvNumber'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGoods'
+          Value = 'TRUE'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'A'#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1091' ('#1090#1072#1088#1072')'
+      ReportNameParam.Name = 'A'#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1091
+      ReportNameParam.Value = 'A'#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1091' ('#1090#1072#1088#1072')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintGoods: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintGoods
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintGoods
+        end>
+      Caption = 'A'#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1091' '#1087#1086' '#1090#1086#1074#1072#1088#1091
+      Hint = 'A'#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1091' '#1087#1086' '#1090#1086#1074#1072#1088#1091
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+          IndexFieldNames = 'GoodsOrGroupName'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsName;operdate;UnitName;MovementDescName;InvNumber'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGoods'
+          Value = 'TRUE'
+          DataType = ftBoolean
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       ReportName = 'A'#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1091' ('#1090#1072#1088#1072')'
@@ -1412,6 +1510,22 @@ inherited Report_TaraForm: TReport_TaraForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1432,6 +1546,16 @@ inherited Report_TaraForm: TReport_TaraForm
       Action = actPrintJuridical
       Category = 0
       ImageIndex = 16
+    end
+    object bbPrint1: TdxBarButton
+      Action = actPrintGoods
+      Category = 0
+      ImageIndex = 19
+    end
+    object bb: TdxBarButton
+      Action = actPrintJuridicalGoods
+      Category = 0
+      ImageIndex = 22
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1534,7 +1658,7 @@ inherited Report_TaraForm: TReport_TaraForm
         MultiSelectSeparator = ','
       end>
     Left = 264
-    Top = 32
+    Top = 8
   end
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'
@@ -1876,10 +2000,17 @@ inherited Report_TaraForm: TReport_TaraForm
         ComponentItem = 'Id'
         ParamType = ptUnknown
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisGoods'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 551
-    Top = 376
+    Left = 439
+    Top = 328
   end
   object spSelectPrintJuridical: TdsdStoredProc
     StoredProcName = 'gpSelect_Report_Tara_Print'
@@ -1940,9 +2071,158 @@ inherited Report_TaraForm: TReport_TaraForm
         ComponentItem = 'Id'
         ParamType = ptUnknown
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisGoods'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 439
     Top = 376
+  end
+  object spSelectPrintGoods: TdsdStoredProc
+    StoredProcName = 'gpSelect_Report_Tara_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 42370d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 42370d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWhereObjectId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ObjectId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsOrGroupId'
+        Value = ''
+        Component = GoodsGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAccountGroup'
+        Value = ''
+        Component = AccountGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisGoods'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 551
+    Top = 328
+  end
+  object spSelectPrintJuridicalGoods: TdsdStoredProc
+    StoredProcName = 'gpSelect_Report_Tara_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 42370d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 42370d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWhereObjectId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsOrGroupId'
+        Value = ''
+        Component = GoodsGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAccountGroup'
+        Value = ''
+        Component = AccountGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisGoods'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 551
+    Top = 384
   end
 end
