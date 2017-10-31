@@ -366,6 +366,11 @@ BEGIN
                                                                                                         -- если след уровень - ПФ_ГП, тогда сейчас товар типа "ВЕС"
                                                                                                         WHEN ObjectLink_Receipt_GoodsKind_Parent_0.ChildObjectId = zc_GoodsKind_WorkProgress()
                                                                                                              THEN NULL -- tmp.GoodsId
+                                                                                                        -- если ЭТО ИРНА
+                                                                                                        WHEN ObjectLink_Receipt_Parent_0.ChildObjectId IS NULL
+                                                                                                         AND tmp.ReceiptId > 0
+                                                                                                         AND tmp.GoodsKindId <> zc_GoodsKind_WorkProgress()
+                                                                                                             THEN tmp.GoodsId
                                                                                                         -- иначе следуюющий товар типа "ВЕС"
                                                                                                         ELSE ObjectLink_Receipt_Goods_Parent_0.ChildObjectId
                                                                                                    END)
@@ -373,6 +378,11 @@ BEGIN
                                                                                                              THEN NULL
                                                                                                         WHEN ObjectLink_Receipt_GoodsKind_Parent_0.ChildObjectId = zc_GoodsKind_WorkProgress()
                                                                                                               THEN NULL -- tmp.GoodsKindId
+                                                                                                        -- если ЭТО ИРНА
+                                                                                                        WHEN ObjectLink_Receipt_Parent_0.ChildObjectId IS NULL
+                                                                                                         AND tmp.ReceiptId > 0
+                                                                                                         AND tmp.GoodsKindId <> zc_GoodsKind_WorkProgress()
+                                                                                                             THEN zc_GoodsKind_Basis()
                                                                                                         ELSE ObjectLink_Receipt_GoodsKind_Parent_0.ChildObjectId
                                                                                                    END)
                  -- Товар <пф-гп>
@@ -394,7 +404,11 @@ BEGIN
                                                                                                         WHEN ObjectLink_Receipt_GoodsKind_Parent_2.ChildObjectId = zc_GoodsKind_WorkProgress()
                                                                                                              THEN ObjectLink_Receipt_Goods_Parent_2.ChildObjectId
                                                                                                    END)
-
+                 -- Срок пр-ва
+               , lpInsertUpdate_MovementItemFloat_byDesc (CASE WHEN tmp.GoodsKindId = zc_GoodsKind_WorkProgress() THEN zc_MIFloat_TermProduction() ELSE NULL END
+                                                        , ioId
+                                                        , COALESCE (ObjectFloat_TermProduction.ValueData, 1)
+                                                         )
          FROM -- Рецепт для Товара, т.е. из чего он делается (как правило это Упаковка)
               (SELECT inGoodsId         AS GoodsId
                     , inGoodsKindId     AS GoodsKindId
@@ -446,6 +460,15 @@ BEGIN
               LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind_Parent_2
                                    ON ObjectLink_Receipt_GoodsKind_Parent_2.ObjectId = ObjectLink_Receipt_Parent_2.ChildObjectId
                                   AND ObjectLink_Receipt_GoodsKind_Parent_2.DescId   = zc_ObjectLink_Receipt_GoodsKind()
+
+              -- Параметры Пр-ва
+              LEFT JOIN ObjectLink AS ObjectLink_OrderType_Goods
+                                   ON ObjectLink_OrderType_Goods.ChildObjectId = tmp.GoodsId
+                                  AND ObjectLink_OrderType_Goods.DescId        = zc_ObjectLink_OrderType_Goods()
+              LEFT JOIN ObjectFloat AS ObjectFloat_TermProduction
+                                    ON ObjectFloat_TermProduction.ObjectId = ObjectLink_OrderType_Goods.ObjectId
+                                   AND ObjectFloat_TermProduction.DescId = zc_ObjectFloat_OrderType_TermProduction()
+                                   AND ObjectFloat_TermProduction.ValueData <> 0
              ;
      END IF;
 
