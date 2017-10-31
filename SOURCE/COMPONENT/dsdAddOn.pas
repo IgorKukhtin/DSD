@@ -8,7 +8,7 @@ uses Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTableView,
      SysUtils, dsdDB, Contnrs, cxGridCustomView, cxGridCustomTableView, dsdGuides,
      VCL.ActnList, cxDBPivotGrid, cxEdit, cxCustomData, Windows, Winapi.Messages,
      GMClasses, GMMap, GMMapVCL, GMGeoCode, GMConstants, SHDocVw, ExtCtrls, Winapi.ShellAPI,
-     System.StrUtils;
+     System.StrUtils, GMDirection, GMDirectionVCL;
 
 const
   WM_SETFLAG = WM_USER + 2;
@@ -568,6 +568,7 @@ type
     FGPSNField: string;
     FGPSEField: string;
     FAddressField: string;
+    FInsertDateField: string;
 
     procedure LoadDefaultWebBrowser;
     procedure DoAfterPageLoaded(Sender: TObject; First: Boolean);
@@ -584,12 +585,14 @@ type
     property GPSNField: string read FGPSNField write FGPSNField;
     property GPSEField: string read FGPSEField write FGPSEField;
     property AddressField: string read FAddressField write FAddressField;
+    property InsertDateField: string read FInsertDateField write FInsertDateField;
   end;
 
   TdsdWebBrowser = class(TWebBrowser)
   private
     FTimer: TTimer;
     FGeoCode: TGMGeoCode;
+    FDirection: TGMDirection;
 
     procedure DoDownloadComplete(Sender: TObject);
     procedure OnTimerNotifyEvent(Sender: TObject);
@@ -2592,23 +2595,29 @@ var
   TitleList: TArray<string>;
   FDataSet: TDataSet;
   FGridView: TcxGridDBTableView;
-  GPSNField, GPSEField, AddressField: string;
+  GPSNField, GPSEField, AddressField, InsertDateField: string;
   AColumn: TcxGridDBColumn;
-  GPSNIndex, GPSEIndex, AddressIndex: integer;
+  GPSNIndex, GPSEIndex, AddressIndex, InsertDateIndex: Integer;
   GPSNValue, GPSEValue: Extended;
-  AddressValue: string;
+  InsertDateValue: TDateTime;
 begin
   FTimer.Enabled := False;
 
   GPSNField := TdsdGMMap(FGeoCode.Map).GPSNField;
   if Trim(GPSNField) = '' then
     GPSNField := 'GPSN';
+
   GPSEField := TdsdGMMap(FGeoCode.Map).GPSEField;
   if Trim(GPSEField) = '' then
     GPSEField := 'GPSE';
+
   AddressField := TdsdGMMap(FGeoCode.Map).AddressField;
   if Trim(AddressField) = '' then
     AddressField := 'Address';
+
+  InsertDateField := TdsdGMMap(FGeoCode.Map).InsertDateField;
+  if Trim(InsertDateField) = '' then
+    InsertDateField := 'InsertMobileDate';
 
   FGridView := TdsdGMMap(FGeoCode.Map).GridView;
   FDataSet := TdsdGMMap(FGeoCode.Map).DataSet;
@@ -2618,16 +2627,23 @@ begin
     GPSNIndex := -1;
     GPSEIndex := -1;
     AddressIndex := -1;
+    InsertDateIndex := -1;
 
     AColumn := FGridView.GetColumnByFieldName(GPSNField);
     if Assigned(AColumn) then
       GPSNIndex := AColumn.Index;
+
     AColumn := FGridView.GetColumnByFieldName(GPSEField);
     if Assigned(AColumn) then
       GPSEIndex := AColumn.Index;
+
     AColumn := FGridView.GetColumnByFieldName(AddressField);
     if Assigned(AColumn) then
       AddressIndex := AColumn.Index;
+
+    AColumn := FGridView.GetColumnByFieldName(InsertDateField);
+    if Assigned(AColumn) then
+      InsertDateIndex := AColumn.Index;
 
     if (GPSNIndex > -1) and (GPSNIndex > -1) then
     begin
@@ -2779,24 +2795,36 @@ end;
 
 procedure TdsdWebBrowser.DoDownloadComplete(Sender: TObject);
 var
-  i: integer;
-  FForm: TForm;
+  I: integer;
+  Form: TForm;
+  Comp: TComponent;
 begin
-  FForm := Owner as TForm;
-  if Assigned(FForm) then
+  Form := Owner as TForm;
+
+  if Assigned(Form) then
   begin
     FGeoCode := nil;
+    FDirection := nil;
 
-    for i := 0 to FForm.ComponentCount - 1 do
-      if FForm.Components[i].ClassType = TGMGeoCode then
-      begin
-        FGeoCode := FForm.Components[i] as TGMGeoCode;
-        break;
-      end;
+    for I := 0 to Form.ComponentCount - 1 do
+    begin
+      Comp := Form.Components[I];
+
+      if (Comp.ClassType = TGMGeoCode) and (FGeoCode = nil) then
+        FGeoCode := Comp as TGMGeoCode;
+
+      if (Comp.ClassType = TGMDirection) and (FDirection = nil) then
+        FDirection := Comp as TGMDirection;
+
+      if (FGeoCode <> nil) and (FDirection <> nil) then
+        Break;
+    end;
 
     if Assigned(FGeoCode) and Assigned(FGeoCode.Map) and (FGeoCode.Map.ClassType = TdsdGMMap) and
-       Assigned(FGeoCode.Marker) and TdsdGMMap(FGeoCode.Map).MapLoad then
+       Assigned(FGeoCode.Marker) and TdsdGMMap(FGeoCode.Map).MapLoad and
+       Assigned(FDirection) and Assigned(FDirection.Map) and (FDirection.Map.ClassType = TdsdGMMap) then
     begin
+      FDirection.ClearWaypoint;
       FGeoCode.Marker.Clear;
       TdsdGMMap(FGeoCode.Map).MapLoad := False;
       TdsdGMMap(FGeoCode.Map).SetDocLoaded;
