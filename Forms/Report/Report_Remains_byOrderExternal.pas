@@ -44,6 +44,7 @@ type
     Remains_CEH_next: TcxGridDBColumn;
     PartionGoods_start: TcxGridDBColumn;
     TermProduction: TcxGridDBColumn;
+    Amount_result_two: TcxGridDBColumn;
   private
     { Private declarations }
   public

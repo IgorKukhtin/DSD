@@ -695,7 +695,19 @@ BEGIN
                                 LEFT JOIN ContainerLinkObject AS CLO_Account
                                                               ON CLO_Account.ContainerId = Container.Id
                                                              AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
-                           WHERE COALESCE (CLO_GoodsKind.ObjectId, 0) = tmpMI_Goods.GoodsKindId
+                                LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                     ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMI_Goods.GoodsId
+                                                    AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+
+                           WHERE tmpMI_Goods.GoodsKindId = CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901() -- Ирна
+                                                                                                                , zc_Enum_InfoMoney_30101() -- Готовая продукция
+                                                                                                                , zc_Enum_InfoMoney_30201() -- Мясное сырье
+                                                                                                                 )
+                                                                     THEN COALESCE (CLO_GoodsKind.ObjectId, 0)
+                                                                WHEN CLO_GoodsKind.ObjectId > 0
+                                                                     THEN CLO_GoodsKind.ObjectId
+                                                                ELSE tmpMI_Goods.GoodsKindId
+                                                           END
                              AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
                              AND vbIsOrderDnepr = FALSE
                           )

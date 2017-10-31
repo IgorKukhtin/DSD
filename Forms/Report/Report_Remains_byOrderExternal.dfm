@@ -2,7 +2,9 @@ inherited Report_Remains_byOrderExternalForm: TReport_Remains_byOrderExternalFor
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' - '#1042#1067#1055#1054#1051#1053#1045#1053#1048#1045' '#1079#1072#1103#1074#1082#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
   ClientWidth = 927
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -190
   ExplicitWidth = 943
+  ExplicitHeight = 343
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -58,6 +60,11 @@ inherited Report_Remains_byOrderExternalForm: TReport_Remains_byOrderExternalFor
               Format = ',0.####'
               Kind = skSum
               Column = Remains_CEH_next
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_result_two
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -99,6 +106,11 @@ inherited Report_Remains_byOrderExternalForm: TReport_Remains_byOrderExternalFor
               Format = ',0.####'
               Kind = skSum
               Column = Remains_CEH_next
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_result_two
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -229,6 +241,16 @@ inherited Report_Remains_byOrderExternalForm: TReport_Remains_byOrderExternalFor
           object Amount_result: TcxGridDBColumn
             Caption = #1056#1045#1047#1059#1051#1068#1058#1040#1058
             DataBinding.FieldName = 'Amount_result'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object Amount_result_two: TcxGridDBColumn
+            Caption = #1056#1045#1047#1059#1051#1068#1058#1040#1058' '#1073#1077#1079' '#1055#1056'-'#1042#1040
+            DataBinding.FieldName = 'Amount_result_two'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'

@@ -22,6 +22,7 @@ RETURNS TABLE (FromCode Integer, FromName TVarChar
              , Remains_CEH        TFloat
              , Remains_CEH_next   TFloat
              , Amount_result      TFloat
+             , Amount_result_two  TFloat
              , ReceiptName TVarChar
              , ReceiptCode TVarChar
              , ReceiptName_basis TVarChar
@@ -63,7 +64,7 @@ BEGIN
             tmpUnit_CEH AS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect_Object_Unit_byGroup)
             -- хардкодим - Склады База + Реализации
           , tmpUnit_SKLAD   AS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8457) AS lfSelect_Object_Unit_byGroup)
-            -- хардкодим - Склады База + Реализации
+            -- хардкодим - ВСЕ
           , tmpUnit_all   AS (SELECT UnitId FROM tmpUnit_CEH UNION SELECT UnitId FROM tmpUnit_SKLAD)
 
             -- данные - наша Заявка
@@ -643,6 +644,8 @@ BEGIN
 
             , CAST ((tmpData.Remains_SKLAD + tmpData.Remains_CEH - tmpData.Amount - tmpData.Amount_Prev - tmpData.Amount_Next)
                    * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS NUMERIC (16, 0)) :: TFloat AS Amount_result
+            , CAST ((tmpData.Remains_SKLAD + 0                 - tmpData.Amount - tmpData.Amount_Prev - tmpData.Amount_Next)
+                   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS NUMERIC (16, 0)) :: TFloat AS Amount_result_two
 
             , Object_Receipt.ValueData           AS ReceiptName
             , ObjectString_Code.ValueData        AS ReceiptCode
