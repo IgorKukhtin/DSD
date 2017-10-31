@@ -29,7 +29,30 @@ BEGIN
                                                      ON ObjectLink_Sticker_StickerFile.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
                                                     AND ObjectLink_Sticker_StickerFile.DescId = zc_ObjectLink_Sticker_StickerFile()
                                                     
-                                LEFT JOIN Object AS Object_StickerFile ON Object_StickerFile.Id = COALESCE (ObjectLink_StickerProperty_StickerFile.ChildObjectId, ObjectLink_Sticker_StickerFile.ChildObjectId)
+                                LEFT JOIN ObjectLink AS ObjectLink_Sticker_Goods
+                                                     ON ObjectLink_Sticker_Goods.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
+                                                    AND ObjectLink_Sticker_Goods.DescId = zc_ObjectLink_Sticker_Goods()
+                                LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                                     ON ObjectLink_Goods_TradeMark.ObjectId = ObjectLink_Sticker_Goods.ChildObjectId
+                                                    AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+                                
+                                LEFT JOIN (SELECT Object_StickerFile.Id                           AS Id
+                                                , ObjectLink_StickerFile_TradeMark.ChildObjectId  AS TradeMarkId
+                                           FROM Object AS Object_StickerFile
+                                                INNER JOIN ObjectLink AS ObjectLink_StickerFile_TradeMark
+                                                                      ON ObjectLink_StickerFile_TradeMark.ObjectId = Object_StickerFile.Id
+                                                                     AND ObjectLink_StickerFile_TradeMark.DescId = zc_ObjectLink_StickerFile_TradeMark()
+                                                
+                                                INNER JOIN ObjectBoolean AS ObjectBoolean_Default
+                                                                         ON ObjectBoolean_Default.ObjectId = Object_StickerFile.Id
+                                                                        AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_StickerFile_Default()
+                                                                        AND ObjectBoolean_Default.ValueData = TRUE
+                                     
+                                           WHERE Object_StickerFile.DescId = zc_Object_StickerFile()
+                                             AND Object_StickerFile.isErased = FALSE
+                                          ) AS tmpDefault ON tmpDefault.TradeMarkId = ObjectLink_Goods_TradeMark.ChildObjectId
+                                                    
+                                LEFT JOIN Object AS Object_StickerFile ON Object_StickerFile.Id = COALESCE (COALESCE (ObjectLink_StickerProperty_StickerFile.ChildObjectId, ObjectLink_Sticker_StickerFile.ChildObjectId), tmpDefault.Id)
                            WHERE Object_StickerProperty.Id = inObjectId
                           );
 

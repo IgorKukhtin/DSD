@@ -19,6 +19,7 @@
   object edName: TcxTextEdit
     Left = 40
     Top = 71
+    Properties.ReadOnly = True
     TabOrder = 0
     Width = 296
   end
@@ -179,14 +180,6 @@
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = ceCode
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inName'
-        Value = ''
-        Component = edName
-        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

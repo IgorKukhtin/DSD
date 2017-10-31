@@ -439,6 +439,91 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
     Caption = #1050#1086#1083'-'#1074#1086' '#1053#1058#1047
   end
   inherited ActionList: TActionList
+    object actGetImportSetting_MCSExcel: TdsdExecStoredProc [0]
+      Category = 'LoadMCS'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSetting_MCSExcel
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSetting_MCSExcel
+        end>
+      Caption = 'actGetImportSetting_MCS'
+    end
+    object macDeleteDataExcel: TMultiAction [1]
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actDeleteDataExcel
+        end>
+      QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1053#1058#1047'?'
+      InfoAfterExecute = #1057#1086#1093#1088#1072#1085#1077#1085#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1053#1058#1047' '#1086#1095#1080#1097#1077#1085#1099
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1053#1058#1047
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1053#1058#1047
+      ImageIndex = 46
+    end
+    object actDoLoadMCSExcel: TExecuteImportSettingsAction [2]
+      Category = 'LoadMCS'
+      MoveParams = <>
+      ImportSettingsId.Value = '0'
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId_MCSExcel'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inUnitId'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end>
+    end
+    object actDeleteDataExcel: TdsdExecStoredProc [3]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spDeleteDataExcel
+      StoredProcList = <
+        item
+          StoredProc = spDeleteDataExcel
+        end>
+      Caption = 'actDeleteDataExcel'
+    end
+    object macStartLoadMCSExcel: TMultiAction [5]
+      Category = 'LoadMCS'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_MCSExcel
+        end
+        item
+          Action = actDoLoadMCSExcel
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1053#1058#1047' '#1080#1079' Excel '#1074' '#1090#1072#1073#1083#1080#1094#1091' '#1086#1090#1095#1077#1090#1072'?'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1053#1058#1047'  '#1080#1079' Excel '
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1053#1058#1047'  '#1080#1079' Excel '
+      ImageIndex = 30
+    end
+    object actDoLoadMCS: TExecuteImportSettingsAction [6]
+      Category = 'LoadMCS'
+      MoveParams = <>
+      ImportSettingsId.Value = '0'
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId_MCS'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inUnitId'
+          Value = '0'
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end>
+    end
     object actGet_UserUnit: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -701,22 +786,6 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
         end>
       Caption = 'actGetImportSetting_MCS'
     end
-    object actDoLoadMCS: TExecuteImportSettingsAction
-      Category = 'LoadMCS'
-      MoveParams = <>
-      ImportSettingsId.Value = '0'
-      ImportSettingsId.Component = FormParams
-      ImportSettingsId.ComponentItem = 'ImportSettingId_MCS'
-      ImportSettingsId.MultiSelectSeparator = ','
-      ExternalParams = <
-        item
-          Name = 'inUnitId'
-          Value = '0'
-          Component = GuidesUnit
-          ComponentItem = 'Key'
-          MultiSelectSeparator = ','
-        end>
-    end
     object actStartLoadMCS: TMultiAction
       Category = 'LoadMCS'
       MoveParams = <>
@@ -780,10 +849,10 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
         MultiSelectSeparator = ','
       end>
     Left = 80
-    Top = 168
+    Top = 200
   end
   inherited BarManager: TdxBarManager
-    Left = 120
+    Left = 144
     Top = 160
     DockControlHeights = (
       0
@@ -830,7 +899,15 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
         end
         item
           Visible = True
-          ItemName = 'bbStartLoad'
+          ItemName = 'bbStartLoadMCSExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbbdxBarButton2'
         end
         item
           Visible = True
@@ -874,6 +951,14 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
     end
     object bbStartLoad: TdxBarButton
       Action = actStartLoadMCS
+      Category = 0
+    end
+    object bbStartLoadMCSExcel: TdxBarButton
+      Action = macStartLoadMCSExcel
+      Category = 0
+    end
+    object bbbdxBarButton2: TdxBarButton
+      Action = macDeleteDataExcel
       Category = 0
     end
   end
@@ -1034,8 +1119,8 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 408
-    Top = 336
+    Left = 456
+    Top = 320
   end
   object HeaderChanger: THeaderChanger
     IdParam.Value = Null
@@ -1050,6 +1135,11 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
     Params = <
       item
         Name = 'ImportSettingId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ImportSettingId_MCSExcel'
         Value = Null
         MultiSelectSeparator = ','
       end>
@@ -1087,5 +1177,46 @@ inherited Report_Check_AssortmentForm: TReport_Check_AssortmentForm
     PackSize = 1
     Left = 184
     Top = 320
+  end
+  object spGetImportSetting_MCSExcel: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TReport_Check_AssortmentForm;zc_Object_ImportSetting_MCSExcel'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId_MCSExcel'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 88
+    Top = 368
+  end
+  object spDeleteDataExcel: TdsdStoredProc
+    StoredProcName = 'gpDelete_Object_DataExcel_byUser'
+    DataSets = <>
+    OutputType = otResult
+    Params = <>
+    PackSize = 1
+    Left = 688
+    Top = 328
   end
 end

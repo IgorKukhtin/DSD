@@ -31,11 +31,13 @@ RETURNS TABLE (
 )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId      Integer;
    DECLARE vbDateStartPromo TDateTime;
    DECLARE vbDatEndPromo TDateTime;
-   DECLARE vbRetailId Integer;
-   DECLARE vbCountUnit TFloat;
+   DECLARE vbRetailId    Integer;
+   DECLARE vbCountUnit   TFloat;
+   DECLARE vbName        TVarChar;
+   DECLARE vbIndex       Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
@@ -58,7 +60,7 @@ BEGIN
                                               AND ObjectLink_Juridical_Retail.ChildObjectId = vbRetailId
                     WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                     );
-    
+   
     -- Результат
     RETURN QUERY
     WITH
@@ -195,7 +197,21 @@ BEGIN
                                                  AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
                                                  AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId*/
                        )
-               
+                       
+      -- уже сохранненные данные По НТЗ из zc_Object_DataExcel
+      , tmpDataExcel AS (SELECT CAST (zfCalc_Word_Split (inValue:= Object_DataExcel.ValueData, inSep:= ';', inIndex:= 2) AS Integer) AS GoodsId
+                              , CAST (zfCalc_Word_Split (inValue:= Object_DataExcel.ValueData, inSep:= ';', inIndex:= 3) AS TFloat)  AS MCSValue
+                         FROM Object AS Object_DataExcel
+                              INNER JOIN ObjectLink AS ObjectLink_Insert
+                                                    ON ObjectLink_Insert.ObjectId = Object_DataExcel.Id
+                                                   AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
+                                                   AND ObjectLink_Insert.ChildObjectId = vbUserId
+                         WHERE Object_DataExcel.DescId = zc_Object_DataExcel()
+                             AND Object_DataExcel.ObjectCode = 1
+                             AND Object_DataExcel.ValueData LIKE '%'|| inUnitId ||'%'
+                         )
+                        
+              
         -- результат
         SELECT
              Object_Goods.Id                                                   AS GoodsId
@@ -210,7 +226,7 @@ BEGIN
            , tmpData.SummaSale                                     :: TFloat   AS SummaSale
 
            , tmpData.CountUnit                                     :: TFloat   AS CountUnit
-           , 0                                                     :: TFloat   AS MCS_Value
+           , COALESCE(tmpDataExcel.MCSValue, 0)                    :: TFloat   AS MCS_Value
            , tmpData.UnitName                                      :: Tblob    AS UnitName
 
            , COALESCE(ObjectBoolean_Goods_Close.ValueData, False)  :: Boolean  AS isClose
@@ -270,6 +286,8 @@ BEGIN
              LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
                                       ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
                                      AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
+
+             LEFT JOIN tmpDataExcel ON tmpDataExcel.GoodsId = tmpData.GoodsId
                                                                                        
         ORDER BY Object_GoodsGroup.ValueData
                , Object_Goods.ValueData

@@ -25,8 +25,6 @@ object StickerForm: TStickerForm
     Align = alTop
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = 216
-    ExplicitTop = 25
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -213,6 +211,15 @@ object StickerForm: TStickerForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
+      object StickerFileName_inf: TcxGridDBColumn
+        Caption = #1064#1040#1041#1051#1054#1053' ('#1087#1086#1080#1089#1082')'
+        DataBinding.FieldName = 'StickerFileName_inf'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1064#1040#1041#1051#1054#1053' ('#1087#1086#1080#1089#1082')'
+        Options.Editing = False
         Width = 100
       end
       object TradeMarkName_StickerFile: TcxGridDBColumn
