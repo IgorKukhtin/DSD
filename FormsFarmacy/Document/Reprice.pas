@@ -39,6 +39,8 @@ type
     cxLabel4: TcxLabel;
     edUnitForwarding: TcxButtonEdit;
     UnitForwardingGuides: TdsdGuides;
+    cxLabel8: TcxLabel;
+    edChangePercent: TcxCurrencyEdit;
   private
     { Private declarations }
   public

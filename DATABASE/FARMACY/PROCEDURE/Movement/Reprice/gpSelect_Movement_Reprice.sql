@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer
              , InvNumber TVarChar
              , OperDate TDateTime
              , TotalSumm TFloat
+             , ChangePercent TFloat
              , UnitId Integer, UnitName TVarChar
              , UnitForwardingId Integer, UnitForwardingName TVarChar
              , GUID TVarChar
@@ -42,7 +43,9 @@ BEGIN
         Movement.Id
       , Movement.InvNumber
       , Movement.OperDate
-      , COALESCE(MovementFloat_TotalSumm.ValueData,0)::TFloat AS TotalSumm
+      , COALESCE(MovementFloat_TotalSumm.ValueData,0)    ::TFloat AS TotalSumm
+      , COALESCE(MovementFloat_ChangePercent.ValueData,0)::TFloat AS ChangePercent
+      
       , MovementLinkObject_Unit.ObjectId                      AS UnitId
       , Object_Unit.ValueData                                 AS UnitName
 
@@ -51,12 +54,17 @@ BEGIN
 
       , MovementString_GUID.ValueData                         AS GUID
 
-      , Object_Insert.ValueData              AS InsertName
-      , MovementDate_Insert.ValueData        AS InsertDate
+      , Object_Insert.ValueData                               AS InsertName
+      , MovementDate_Insert.ValueData                         AS InsertDate
+      
     FROM Movement 
         LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                 ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+        LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                ON MovementFloat_ChangePercent.MovementId = Movement.Id
+                               AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+                               
         LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                      ON MovementLinkObject_Unit.MovementId = Movement.Id
                                     AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
@@ -80,7 +88,7 @@ BEGIN
                                      ON MLO_Insert.MovementId = Movement.Id
                                     AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
         LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
-    
+        
     WHERE Movement.DescId = zc_Movement_Reprice()
       AND DATE_TRUNC ('DAY', Movement.OperDate) BETWEEN inStartDate AND inEndDate
     ORDER BY Movement.InvNumber;
@@ -94,6 +102,7 @@ ALTER FUNCTION gpSelect_Movement_Reprice (TDateTime, TDateTime, TVarChar) OWNER 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 01.11.17         *
  21.02.16         * UnitForwarding
  02.03.16         * без вьюхи + св-ва протокола
  27.11.15                                                                        *
