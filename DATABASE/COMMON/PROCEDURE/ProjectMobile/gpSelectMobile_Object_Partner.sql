@@ -1,5 +1,6 @@
 -- Function: gpSelectMobile_Object_Partner (TDateTime, TVarChar)
 
+DROP FUNCTION IF EXISTS gpSelectMobile_Object_Partner_2 (TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpSelectMobile_Object_Partner (TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelectMobile_Object_Partner (
@@ -148,20 +149,30 @@ BEGIN
                                      WHERE MovementItemContainer.DescId = zc_MIContainer_Summ()
                                        AND (MovementItemContainer.MovementDescId = zc_Movement_Sale()
                                         OR (MovementItemContainer.MovementDescId = zc_Movement_TransferDebtOut() AND MovementItemContainer.isActive))
-                                       AND MovementItemContainer.OperDate >= tmpContainer.ContractDate
+                                       AND MovementItemContainer.OperDate > tmpContainer.ContractDate
+                                       AND MovementItemContainer.OperDate < CURRENT_DATE
                                      GROUP BY MovementItemContainer.ContainerId
                                     )
+                , tmpMIContainerNow AS (SELECT MovementItemContainer.ContainerId
+                                             , SUM (MovementItemContainer.Amount)::TFloat AS Summ
+                                        FROM MovementItemContainer
+                                             JOIN tmpContainer ON tmpContainer.ContainerId = MovementItemContainer.ContainerId
+                                        WHERE MovementItemContainer.DescId = zc_MIContainer_Summ()
+                                          AND MovementItemContainer.OperDate >= CURRENT_DATE
+                                        GROUP BY MovementItemContainer.ContainerId
+                                       )
                 , tmpDebtAll AS (SELECT tmpContainer.ContainerId
                                       , tmpContainer.PartnerId
                                       , tmpContainer.ContractId
                                       , tmpContainer.PaidKindId
-                                      , tmpContainer.Amount                                                 AS DebtSum
-                                      , (tmpContainer.Amount - COALESCE (tmpMIContainer.Summ, 0.0)::TFloat) AS OverSum
-                                      , (zfCalc_OverDayCount (tmpContainer.ContainerId, tmpContainer.Amount - COALESCE (tmpMIContainer.Summ, 0.0)::TFloat, tmpContainer.ContractDate)) AS OverDays
+                                      , (tmpContainer.Amount - COALESCE (tmpMIContainerNow.Summ, 0.0)::TFloat) AS DebtSum
+                                      , (tmpContainer.Amount - COALESCE (tmpMIContainerNow.Summ, 0.0)::TFloat - COALESCE (tmpMIContainer.Summ, 0.0)::TFloat) AS OverSum
+                                      , (zfCalc_OverDayCount (tmpContainer.ContainerId, tmpContainer.Amount - COALESCE (tmpMIContainerNow.Summ, 0.0)::TFloat - COALESCE (tmpMIContainer.Summ, 0.0)::TFloat, tmpContainer.ContractDate)) AS OverDays
                                       -- , (zfCalc_OverDayCount2 (tmpContainer.ContainerId, tmpContainer.Amount, tmpContainer.ContractDate)) AS OverDays2
                                       , SUM (tmpContainer.Amount) OVER (PARTITION BY tmpContainer.PartnerId, ABS (tmpContainer.Amount)) AS ResortSum
                                  FROM tmpContainer
                                       LEFT JOIN tmpMIContainer ON tmpContainer.ContainerId = tmpMIContainer.ContainerId
+                                      LEFT JOIN tmpMIContainerNow ON tmpContainer.ContainerId = tmpMIContainerNow.ContainerId
                                 )
                 , tmpDebt AS (SELECT tmpDebtAll.PartnerId
                                    , tmpDebtAll.ContractId
