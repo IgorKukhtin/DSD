@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer
              , InvNumber TVarChar
              , OperDate TDateTime
              , TotalSumm TFloat
+             , ChangePercent TFloat
              , UnitId Integer, UnitName TVarChar
              , UnitForwardingId Integer, UnitForwardingName TVarChar
              , GUID TVarChar
@@ -27,7 +28,9 @@ BEGIN
         Movement.Id
       , Movement.InvNumber
       , Movement.OperDate
-      , COALESCE(MovementFloat_TotalSumm.ValueData,0)::TFloat AS TotalSumm
+      , COALESCE(MovementFloat_TotalSumm.ValueData,0)    ::TFloat AS TotalSumm
+      , COALESCE(MovementFloat_ChangePercent.ValueData,0)::TFloat AS ChangePercent
+      
       , MovementLinkObject_Unit.ObjectId                      AS UnitId
       , Object_Unit.ValueData                                 AS UnitName
 
@@ -38,8 +41,12 @@ BEGIN
 
     FROM Movement 
         LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                ON MovementFloat_TotalSumm.MovementId = Movement.Id
                                AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+        LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                ON MovementFloat_ChangePercent.MovementId = Movement.Id
+                               AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+                               
         LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                      ON MovementLinkObject_Unit.MovementId = Movement.Id
                                     AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
@@ -66,6 +73,10 @@ ALTER FUNCTION gpGet_Movement_Reprice (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 01.11.17         *
  21.06.16         *
  27.11.15                                                                        *
 */
+
+-- test
+-- select * from gpGet_Movement_Reprice(inMovementId := 3852856 ,  inSession := '3');

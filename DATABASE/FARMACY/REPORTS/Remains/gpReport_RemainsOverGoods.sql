@@ -182,12 +182,16 @@ BEGIN
          INSERT INTO tmpSend  (GoodsId, UnitId, Amount) 
                         SELECT MI_Send.ObjectId                 AS GoodsId
                              , MovementLinkObject_Unit.ObjectId AS UnitId
-                             , SUM (CASE WHEN MovementLinkObject_Unit.DescId = zc_MovementLinkObject_From() AND MovementLinkObject_Unit.ObjectId = inUnitId
-                                         THEN -1 * MI_Send.Amount
-                                         WHEN MovementLinkObject_Unit.DescId = zc_MovementLinkObject_To() AND MovementLinkObject_Unit.ObjectId <> inUnitId
-                                         THEN  1 * MI_Send.Amount
+                             , SUM (CASE WHEN Movement_Send.StatusId = zc_Enum_Status_UnComplete() OR Movement_Send.OperDate >= inStartDate
+                                         THEN
+                                             CASE WHEN MovementLinkObject_Unit.DescId = zc_MovementLinkObject_From() AND MovementLinkObject_Unit.ObjectId = inUnitId
+                                                  THEN -1 * MI_Send.Amount
+                                                  WHEN MovementLinkObject_Unit.DescId = zc_MovementLinkObject_To() AND MovementLinkObject_Unit.ObjectId <> inUnitId
+                                                  THEN  1 * MI_Send.Amount
+                                                  ELSE 0
+                                             END
                                          ELSE 0
-                                    END) ::TFloat  AS Amount--_From
+                                    END)                 ::TFloat  AS Amount--_From
                              --, SUM (CASE WHEN MovementLinkObject_Unit.DescId = zc_MovementLinkObject_To() THEN (MI_Send.Amount) ELSE 0 END) ::TFloat    AS Amount_To
 
                         FROM Movement AS Movement_Send
@@ -203,7 +207,7 @@ BEGIN
                                                        ON MI_Send.MovementId = Movement_Send.Id
                                                       AND MI_Send.DescId = zc_MI_Master()
                                                       AND MI_Send.isErased = FALSE
-                        WHERE Movement_Send.OperDate >= inStartDate AND Movement_Send.OperDate < inStartDate + INTERVAL '1 DAY'
+                        WHERE Movement_Send.OperDate >= inStartDate - INTERVAL '1 DAY' AND Movement_Send.OperDate < inStartDate + INTERVAL '1 DAY'
                           AND Movement_Send.DescId = zc_Movement_Send()
                           AND Movement_Send.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
                         GROUP BY MI_Send.ObjectId 

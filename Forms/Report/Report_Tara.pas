@@ -85,6 +85,12 @@ type
     spSelectPrintJuridical: TdsdStoredProc;
     actPrintJuridical: TdsdPrintAction;
     bbPrintJuridical: TdxBarButton;
+    actPrintGoods: TdsdPrintAction;
+    actPrintJuridicalGoods: TdsdPrintAction;
+    bbPrint1: TdxBarButton;
+    bb: TdxBarButton;
+    spSelectPrintGoods: TdsdStoredProc;
+    spSelectPrintJuridicalGoods: TdsdStoredProc;
   private
     { Private declarations }
   public

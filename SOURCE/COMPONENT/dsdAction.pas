@@ -770,6 +770,7 @@ type
     FGPSNField: string;
     FGPSEField: string;
     FAddressField: string;
+    FInsertDateField: string;
     FGMMap: TGMMap;
 
     procedure SetDataSet(const Value: TDataSet);
@@ -788,6 +789,7 @@ type
     property GPSNField: string read FGPSNField write FGPSNField;
     property GPSEField: string read FGPSEField write FGPSEField;
     property AddressField: string read FAddressField write FAddressField;
+    property InsertDateField: string read FInsertDateField write FInsertDateField;
   end;
 
 procedure Register;
@@ -3125,22 +3127,23 @@ end;
 
 procedure TdsdPartnerMapAction.BeforeExecute(Form: TForm);
 var
-  i: integer;
+  I: Integer;
 begin
   if Assigned(FDataSet) or Assigned(FGridView) then
   begin
     Form.OnClose := OnFormClose;
 
-    for i := 0 to Form.ComponentCount - 1 do
-      if Form.Components[i].ClassType = TdsdGMMap then
+    for I := 0 to Form.ComponentCount - 1 do
+      if Form.Components[I].ClassType = TdsdGMMap then
       begin
-        FGMMap := TGMMap(Form.Components[i]);
-        TdsdGMMap(Form.Components[i]).MapType := FMapType;
-        TdsdGMMap(Form.Components[i]).DataSet := FDataSet;
-        TdsdGMMap(Form.Components[i]).GridView := FGridView;
-        TdsdGMMap(Form.Components[i]).GPSNField := FGPSNField;
-        TdsdGMMap(Form.Components[i]).GPSEField := FGPSEField;
-        TdsdGMMap(Form.Components[i]).AddressField := FAddressField;
+        FGMMap := TGMMap(Form.Components[I]);
+        TdsdGMMap(Form.Components[I]).MapType := FMapType;
+        TdsdGMMap(Form.Components[I]).DataSet := FDataSet;
+        TdsdGMMap(Form.Components[I]).GridView := FGridView;
+        TdsdGMMap(Form.Components[I]).GPSNField := FGPSNField;
+        TdsdGMMap(Form.Components[I]).GPSEField := FGPSEField;
+        TdsdGMMap(Form.Components[I]).AddressField := FAddressField;
+        TdsdGMMap(Form.Components[I]).InsertDateField := FInsertDateField;
         FGMMap.Active := True;
         Break;
       end;

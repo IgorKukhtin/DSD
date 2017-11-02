@@ -13,7 +13,7 @@ uses
   ChoicePeriod, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar,
   Vcl.ExtCtrls, Vcl.Menus, dxBarExtItems, dxBar, cxClasses, dsdDB,
   Datasnap.DBClient, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
-  cxGridCustomView, cxGrid, cxPC;
+  cxGridCustomView, cxGrid, cxPC, cxCalc;
 
 type
   TRepriceJournalForm = class(TAncestorEnumForm)

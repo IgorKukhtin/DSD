@@ -60,7 +60,7 @@ uses
   cxDBEdit, dsdAction, dsdGuides, cxDBVGrid,
   Vcl.DBActns, cxMemo, cxGridDBChartView, ShellAPI, CommonData,
   SHDocVw, GMClasses, GMMap, GMMapVCL, GMLinkedComponents,
-  GMMarker, GMMarkerVCL, GMGeoCode, cxImage{, DataModul};
+  GMMarker, GMMarkerVCL, GMGeoCode, GMDirection, GMDirectionVCL, cxImage{, DataModul};
 
 {$R *.dfm}
 
@@ -368,6 +368,7 @@ initialization
   RegisterClass (TGMMap);
   RegisterClass (TGMMarker);
   RegisterClass (TGMGeoCode);
+  RegisterClass (TGMDirection);
 
   // Собственнтые компоненты
   RegisterClass (TBooleanStoredProcAction);

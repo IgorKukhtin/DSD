@@ -1,18 +1,22 @@
 inherited RepriceForm: TRepriceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1086#1094#1077#1085#1082#1072'>'
   ClientWidth = 1040
-  ExplicitLeft = -355
   ExplicitWidth = 1056
+  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 76
     Width = 1040
+    Height = 340
     ExplicitWidth = 1040
+    ClientRectBottom = 340
     ClientRectRight = 1040
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1040
       inherited cxGrid: TcxGrid
         Width = 1040
+        Height = 316
         ExplicitWidth = 1040
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
@@ -192,20 +196,52 @@ inherited RepriceForm: TRepriceForm
   end
   inherited DataPanel: TPanel
     Width = 1040
+    Height = 50
     TabOrder = 3
     ExplicitWidth = 1040
+    ExplicitHeight = 50
+    inherited edInvNumber: TcxTextEdit
+      Left = 7
+      ExplicitLeft = 7
+    end
+    inherited cxLabel1: TcxLabel
+      Left = 7
+      Top = 4
+      ExplicitLeft = 7
+      ExplicitTop = 4
+    end
     inherited edOperDate: TcxDateEdit
+      Left = 101
       Properties.ReadOnly = True
+      ExplicitLeft = 101
+      ExplicitWidth = 81
+      Width = 81
+    end
+    inherited cxLabel2: TcxLabel
+      Left = 101
+      Top = 4
+      ExplicitLeft = 101
+      ExplicitTop = 4
     end
     inherited cxLabel15: TcxLabel
+      Left = 297
+      Top = 0
       Visible = False
+      ExplicitLeft = 297
+      ExplicitTop = 0
     end
     inherited ceStatus: TcxButtonEdit
+      Left = 343
+      Top = -5
       Visible = False
+      ExplicitLeft = 343
+      ExplicitTop = -5
+      ExplicitWidth = 94
       ExplicitHeight = 22
+      Width = 94
     end
     object edUnit: TcxButtonEdit
-      Left = 384
+      Left = 188
       Top = 23
       Properties.Buttons = <
         item
@@ -215,34 +251,49 @@ inherited RepriceForm: TRepriceForm
         end>
       Properties.ReadOnly = True
       TabOrder = 6
-      Width = 270
+      Width = 277
     end
     object lblUnit: TcxLabel
-      Left = 384
-      Top = 5
+      Left = 188
+      Top = 4
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object cxLabel3: TcxLabel
-      Left = 668
+      Left = 581
       Top = 5
       Caption = #1057#1091#1084#1084#1072
     end
     object edTotalSumm: TcxTextEdit
-      Left = 668
+      Left = 581
       Top = 23
       Properties.Alignment.Horz = taRightJustify
       Properties.ReadOnly = True
       TabOrder = 9
-      Width = 90
+      Width = 103
+    end
+    object cxLabel8: TcxLabel
+      Left = 471
+      Top = 6
+      Hint = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
+      Caption = '(-)% '#1057#1082'. (+)% '#1053#1072#1094'.'
+    end
+    object edChangePercent: TcxCurrencyEdit
+      Left = 471
+      Top = 23
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = True
+      TabOrder = 11
+      Width = 103
     end
   end
   object cxLabel4: TcxLabel [2]
-    Left = 770
-    Top = 5
+    Left = 690
+    Top = 4
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1086#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1088#1072#1074#1077#1085#1089#1090#1074#1072' '#1094#1077#1085')'
   end
   object edUnitForwarding: TcxButtonEdit [3]
-    Left = 770
+    Left = 690
     Top = 23
     Properties.Buttons = <
       item
@@ -252,7 +303,7 @@ inherited RepriceForm: TRepriceForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 270
+    Width = 322
   end
   inherited ActionList: TActionList
     inherited actMISetErased: TdsdUpdateErased
@@ -329,6 +380,66 @@ inherited RepriceForm: TRepriceForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdateMovement'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bbAddMask'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+    end
     inherited bbPrint: TdxBarButton
       Visible = ivNever
     end
@@ -434,6 +545,13 @@ inherited RepriceForm: TRepriceForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ChangePercent'
+        Value = Null
+        Component = edChangePercent
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
@@ -478,7 +596,7 @@ inherited RepriceForm: TRepriceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 440
+    Left = 352
     Top = 16
   end
   object UnitForwardingGuides: TdsdGuides
@@ -507,7 +625,7 @@ inherited RepriceForm: TRepriceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 880
+    Left = 784
     Top = 16
   end
 end

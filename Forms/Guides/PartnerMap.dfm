@@ -53,7 +53,19 @@ object PartnerMapForm: TPartnerMapForm
     Map = gmPartnerMap
     Marker = gmPartnerMarker
     LangCode = lcRUSSIAN
-    Left = 200
-    Top = 8
+    Left = 112
+    Top = 60
+  end
+  object gmPartnerDirection: TGMDirection
+    Language = Russian
+    Map = gmPartnerMap
+    DirectionsRequest.TransitOpt.ArrivalTime = 0.000000011574074074
+    DirectionsRequest.TransitOpt.ArrivalDate = 25569.000000000000000000
+    DirectionsRequest.TransitOpt.DepartureTime = 0.000000011574074074
+    DirectionsRequest.TransitOpt.DepartureDate = 25569.000000000000000000
+    DirectionsRequest.WaypointsList = <>
+    DirectionsRender.PolylineOptions.StrokeOpacity = 0.500000000000000000
+    Left = 112
+    Top = 116
   end
 end
