@@ -68,7 +68,7 @@ BEGIN
                           FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
                                INNER JOIN Object AS Object_Member ON Object_Member.Id = lfSelect.MemberId
                                LEFT  JOIN Object AS Object_Unit   ON Object_Unit.Id   = lfSelect.UnitId
-                          WHERE inBranchCode = 301
+                          WHERE (inBranchCode= 301 /*OR (inBranchCode= 1 AND inIsGoodsComplete = TRUE)*/)
                             AND lfSelect.UnitId NOT IN (954062) -- Отдел Х
                          )
           , tmpInfoMoney AS (-- 1.1.

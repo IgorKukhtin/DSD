@@ -1,6 +1,7 @@
 -- Function: lpUpdate_MI_OrderInternal_Property()
 
 DROP FUNCTION IF EXISTS lpUpdate_MI_OrderInternal_Property (Integer, Integer, Integer, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpUpdate_MI_OrderInternal_Property (Integer, Integer, Integer, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpUpdate_MI_OrderInternal_Property(
     IN ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -13,8 +14,10 @@ CREATE OR REPLACE FUNCTION lpUpdate_MI_OrderInternal_Property(
     IN inDescId_ParamOrder   Integer   ,
     IN inAmount_ParamSecond  TFloat    , --
     IN inDescId_ParamSecond  Integer   ,
-    IN inIsPack              Boolean   , --
-    IN inUserId              Integer     -- пользователь
+    IN inAmount_ParamAdd     TFloat    DEFAULT 0 , --
+    IN inDescId_ParamAdd     Integer   DEFAULT 0 ,
+    IN inIsPack              Boolean   DEFAULT NULL , --
+    IN inUserId              Integer   DEFAULT 0   -- пользователь
 )
 RETURNS VOID
 AS
@@ -356,7 +359,8 @@ BEGIN
 
 
      -- !!!только - для Заявки на упаковку по ОСТАТКАМ!!!
-     IF inIsPack IS NULL AND (vbIsInsert = TRUE OR 1=1) AND inDescId_ParamOrder = zc_MIFloat_ContainerId()
+     IF inIsPack IS NULL AND (vbIsInsert = TRUE OR 1=1)
+        AND (inDescId_ParamOrder = zc_MIFloat_ContainerId() OR inDescId_ParamAdd = zc_MIFloat_AmountPartnerPriorPromo())
      THEN
          -- сохранили связь с <Рецептуры>
          PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Receipt(), ioId, tmp.ReceiptId)
@@ -484,6 +488,11 @@ BEGIN
      IF inDescId_ParamSecond <> 0
      THEN
          PERFORM lpInsertUpdate_MovementItemFloat (inDescId_ParamSecond, ioId, inAmount_ParamSecond);
+     END IF;
+     -- сохранили свойство
+     IF inDescId_ParamAdd <> 0
+     THEN
+         PERFORM lpInsertUpdate_MovementItemFloat (inDescId_ParamAdd, ioId, inAmount_ParamAdd);
      END IF;
 
      -- сохранили протокол

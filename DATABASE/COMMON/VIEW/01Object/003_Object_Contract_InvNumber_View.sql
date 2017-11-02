@@ -21,7 +21,7 @@ AS
        LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
                             ON ObjectLink_Contract_InfoMoney.ObjectId = Object_Contract.Id
                            AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
-       LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_Contract_InfoMoney.ChildObjectId
+       -- LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_Contract_InfoMoney.ChildObjectId
 
        LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractTag
                             ON ObjectLink_Contract_ContractTag.ObjectId = Object_Contract.Id

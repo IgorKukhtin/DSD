@@ -124,10 +124,11 @@ BEGIN
          ) AS tmp
          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId
     WHERE tmp.Amount <> tmp.AmountManual
+      AND zfCalc_AccessKey_SendAll (vbUserId) = FALSE -- !!!ЭТИМ ПОЛЬЗОВАТЕЛЯМ - РАЗРЕШИЛИ!!!
     LIMIT 1
    ;
 
-    IF (COALESCE(vbGoodsName,'') <> '') AND outOperDate <> CURRENT_DATE + INTERVAL '1 MONTH'
+    IF vbGoodsName <> '' AND outOperDate <> CURRENT_DATE + INTERVAL '1 MONTH'
        AND vbUserId NOT IN (375661, 2301972) -- Зерин Юрий Геннадиевич
     THEN
         RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам Кол-во получателя <%> отличается от Факт кол-ва <%>.', vbGoodsName, vbAmount, vbAmountManual;

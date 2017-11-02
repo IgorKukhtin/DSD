@@ -1,13 +1,15 @@
 -- Function: gpInsert_MovementItem_Reprice()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Reprice (Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Reprice (Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Reprice (Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Reprice (Integer, Integer, Integer, Integer, TFloat, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Reprice(
  INOUT ioId                  Integer   , -- Ключ записи
     IN inGoodsId             Integer   , -- Товары
     IN inUnitId              Integer   , -- подразделение
     IN inUnitId_Forwarding   Integer   , -- Подразделения(основание для равенства цен)
+    IN inTax                 TFloat    , -- % +/-
     IN inJuridicalId         Integer   , -- поставщик
     IN inContractId          Integer   , -- Договор
     IN inExpirationDate      TDateTime , -- Срок годности 
@@ -53,14 +55,19 @@ BEGIN
                                                         inUserId    := vbUserId);
         -- сохранили связь с <Подразделения(основание для равенства цен)>
         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_UnitForwarding(), vbMovementId, inUnitId_Forwarding);
+        -- сохранили <(-)% Скидки (+)% Наценки (основание для равенства цен)>
+        PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), vbMovementId, inTax);
+       
 
     ELSE 
         -- сохранили связь с <Подразделения(основание для равенства цен)>
         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_UnitForwarding(), vbMovementId, inUnitId_Forwarding);
+        -- сохранили <(-)% Скидки (+)% Наценки (основание для равенства цен)>
+        PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), vbMovementId, inTax);
 
     END IF;
 
-    --переоценить товар
+    -- переоценить товар
     PERFORM lpInsertUpdate_Object_Price(inGoodsId := inGoodsId,
                                         inUnitId  := inUnitId,
                                         inPrice   := inPriceNew,

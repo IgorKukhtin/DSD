@@ -1,6 +1,8 @@
 -- Function: gpSelect_AllGoodsPrice()
 
-DROP FUNCTION IF EXISTS gpSelect_AllGoodsPrice (Integer, Integer, TFloat, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_AllGoodsPrice (Integer, Integer, TFloat, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_AllGoodsPrice (Integer, Integer, TFloat, Boolean, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_AllGoodsPrice (Integer, Integer, TFloat, Boolean, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_AllGoodsPrice(
     -- IN inGoodsCode     Integer    -- поиск товаров
@@ -8,6 +10,8 @@ CREATE OR REPLACE FUNCTION gpSelect_AllGoodsPrice(
   , IN inUnitId_to     Integer     -- Подразделение (с которым есть сравнение цен)
   , IN inMinPercent    TFloat      -- Минимальный % для подразделений, у которых категория переоценки не установлена
   , IN inVAT20         Boolean     -- Переоценивать товары с 20% НДС
+  , IN inTaxTo         TFloat      -- Минимальный % для подразделений, у которых категория переоценки не установлена
+  , IN inPriceMaxTo    TFloat      -- Минимальный % для подразделений, у которых категория переоценки не установлена
   , IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (
@@ -21,6 +25,7 @@ RETURNS TABLE (
     RemainsCount_to     TFloat,     -- Остаток - Подразделение (с которым есть сравнение цен)
     NDS                 TFloat,     -- ставка НДС
     NewPrice            TFloat,     -- Новая цена
+    NewPrice_to         TFloat,     -- Новая цена
     PriceFix_Goods      TFloat  ,   -- фиксированная цена сети
     MinMarginPercent    TFloat,     -- минимальный % отклонения
     PriceDiff           TFloat,     -- % отклонения
@@ -191,6 +196,7 @@ BEGIN
             SelectMinPrice_AllGoods.GoodsName AS GoodsName,
             Object_Price.Price                AS LastPrice,
             Object_Price_to.Price             AS LastPrice_to,
+            ROUND (Object_Price_to.Price * (1 + CASE WHEN Object_Price_to.Price >= inPriceMaxTo AND inPriceMaxTo > 0 THEN 0 ELSE inTaxTo END / 100), 1) :: TFloat AS NewPrice_to,
             Object_Price.Fix                  AS isPriceFix,
             SelectMinPrice_AllGoods.Remains   AS RemainsCount,
             RemainsTo.Amount                  AS RemainsCount_to,
@@ -298,13 +304,15 @@ BEGIN
         ResultSet.RemainsCount_to,
         ResultSet.NDS,
         ResultSet.NewPrice,
+        ResultSet.NewPrice_to,
         ResultSet.PriceFix_Goods,
         COALESCE(MarginCondition.MarginPercent,inMinPercent)::TFloat AS MinMarginPercent,
         CAST (CASE WHEN COALESCE(ResultSet.LastPrice,0) = 0 THEN 0.0
                    ELSE (ResultSet.NewPrice / ResultSet.LastPrice) * 100 - 100
               END AS NUMERIC (16, 1)) :: TFloat AS PriceDiff,
         CAST (CASE WHEN COALESCE (ResultSet.LastPrice,0) = 0 THEN 0.0
-                   ELSE (ResultSet.LastPrice_to / ResultSet.LastPrice) * 100 - 100
+                   ELSE (ResultSet.NewPrice_to / ResultSet.LastPrice) * 100 - 100
+                   
               END AS NUMERIC (16, 1)) :: TFloat AS PriceDiff_to,
 
         ResultSet.ExpirationDate         AS ExpirationDate,
@@ -321,7 +329,7 @@ BEGIN
         ObjectFloat_Juridical_Percent.ValueData  ::TFloat AS Juridical_Percent,
         ObjectFloat_Contract_Percent.ValueData   ::TFloat AS Contract_Percent,
 
-        ROUND ((CASE WHEN inUnitId_to <> 0 THEN CASE WHEN ResultSet.LastPrice_to > 0 THEN (ResultSet.LastPrice_to - ResultSet.LastPrice) ELSE 0 END ELSE (ResultSet.NewPrice - ResultSet.LastPrice) END
+        ROUND ((CASE WHEN inUnitId_to <> 0 THEN CASE WHEN ResultSet.NewPrice_to > 0 THEN (ResultSet.NewPrice_to - ResultSet.LastPrice) ELSE 0 END ELSE (ResultSet.NewPrice - ResultSet.LastPrice) END
                * ResultSet.RemainsCount
                )
            , 2) :: TFloat AS SumReprice,
@@ -352,9 +360,9 @@ BEGIN
                   THEN FALSE
 
              WHEN inUnitId_to <> 0 
-              AND ResultSet.LastPrice_to > 0 
+              AND ResultSet.NewPrice_to > 0 
               AND 0 <> CAST (CASE WHEN COALESCE (ResultSet.LastPrice,0) = 0 THEN 0.0
-                                  ELSE (ResultSet.LastPrice_to / ResultSet.LastPrice) * 100 - 100
+                                  ELSE (ResultSet.NewPrice_to / ResultSet.LastPrice) * 100 - 100
                              END AS NUMERIC (16, 1))
                   THEN TRUE
                 
@@ -374,8 +382,8 @@ BEGIN
                              AND ObjectFloat_Contract_Percent.DescId = zc_ObjectFloat_Contract_Percent()
 
     WHERE
-       ((inUnitId_to > 0 AND ResultSet.LastPrice_to > 0 AND 0 <> CAST (CASE WHEN COALESCE (ResultSet.LastPrice,0) = 0 THEN 0.0
-                                                                            ELSE (ResultSet.LastPrice_to / ResultSet.LastPrice) * 100 - 100
+       ((inUnitId_to > 0 AND ResultSet.NewPrice_to > 0 AND 0 <> CAST (CASE WHEN COALESCE (ResultSet.LastPrice,0) = 0 THEN 0.0
+                                                                            ELSE (ResultSet.NewPrice_to / ResultSet.LastPrice) * 100 - 100
                                                                        END AS NUMERIC (16, 1))
         )
      -- OR inSession = '3'
@@ -403,11 +411,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_AllGoodsPrice (Integer,  Integer,  TFloat, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_AllGoodsPrice (Integer,  Integer,  TFloat, Boolean, TFloat, TFloat, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 01.11.17                                        * add inTaxTo
  17.10.17         * add Area
  18.06.16                                        *
  11.05.16         *
@@ -419,4 +428,4 @@ ALTER FUNCTION gpSelect_AllGoodsPrice (Integer,  Integer,  TFloat, Boolean, TVar
 */
 
 -- тест
--- SELECT * FROM gpSelect_AllGoodsPrice (183292, 0, 30, True, '3')  -- Аптека_1 пр_Правды_6
+-- SELECT * FROM gpSelect_AllGoodsPrice (183292, 0, 30, True, 0, 0, '3')  -- Аптека_1 пр_Правды_6

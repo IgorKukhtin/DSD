@@ -134,6 +134,12 @@ type
     colContract_Percent: TcxGridDBColumn;
     cdsResultAreaName: TStringField;
     colAreaName: TcxGridDBColumn;
+    cxLabel2: TcxLabel;
+    TaxEdit: TcxCurrencyEdit;
+    colNewPrice_to: TcxGridDBColumn;
+    cxLabel3: TcxLabel;
+    PriceMaxEdit: TcxCurrencyEdit;
+    cdsResultNewPrice_to: TCurrencyField;
     procedure FormCreate(Sender: TObject);
     procedure btnRepriceClick(Sender: TObject);
     procedure btnSelectNewPriceClick(Sender: TObject);
@@ -159,10 +165,33 @@ procedure TRepriceUnitForm.btnRepriceClick(Sender: TObject);
 var i, LastRecordNo, RecIndex: integer;
   GUID: TGUID;
   GUID_Str: String;
+  lTax : Double;
 begin
+    //
+    if edUnit.Text <> ''
+    then
+        try lTax:= TaxEdit.Value;
+        except lTax:= 0;
+        end
+    else lTax:= 0;
+
   if not FStartReprice then
   Begin
-    if MessageDlg('Начать переоценку выбранных товаров?',mtConfirmation,mbYesNo,0) <> mrYes then exit;
+    if (lTax <> 0 )and (edUnit.Text <> '')
+    then
+        if (lTax > 0 )
+        then if MessageDlg('Начать переоценку выбранных товаров на основаниии Прайса <'+edUnit.Text+'> и <+'+FloatToStr(lTax)+' %> ?',mtConfirmation,mbYesNo,0) <> mrYes then exit
+             else
+        else
+            if MessageDlg('Начать переоценку выбранных товаров на основаниии Прайса <'+edUnit.Text+'> и <'+FloatToStr(lTax)+' %> ?',mtConfirmation,mbYesNo,0) <> mrYes then exit
+            else
+    else
+    if (edUnit.Text <> '')
+    then if MessageDlg('Начать переоценку выбранных товаров на основаниии Прайса <'+edUnit.Text+'> ?',mtConfirmation,mbYesNo,0) <> mrYes then exit
+         else
+    else
+        if MessageDlg('Начать переоценку выбранных товаров?',mtConfirmation,mbYesNo,0) <> mrYes then exit;
+
     CreateGUID(GUID);
     GUID_Str := GUIDToString(GUID);
     FStartReprice := True;
@@ -199,11 +228,16 @@ begin
 
           try
           if edUnit.Text <> ''
-          then
+          then begin
               spInsertUpdate_MovementItem_Reprice.ParamByName('inUnitId_Forwarding').Value :=
-                 GuidesUnit.Params.ParamByName('Key').Value
-          else
+                 GuidesUnit.Params.ParamByName('Key').Value;
+              //
+              spInsertUpdate_MovementItem_Reprice.ParamByName('inTax').Value := lTax;
+          end
+          else begin
               spInsertUpdate_MovementItem_Reprice.ParamByName('inUnitId_Forwarding').Value := 0;
+              spInsertUpdate_MovementItem_Reprice.ParamByName('inTax').Value := 0;
+          end;
           except ShowMessage('2.2.');exit;end;
 
           try
@@ -247,7 +281,8 @@ begin
           try
           if edUnit.Text <> ''
           then spInsertUpdate_MovementItem_Reprice.ParamByName('inPriceNew').Value :=
-                  AllGoodsPriceGridTableView.DataController.Values[RecIndex,colLastPrice_to.Index]
+                  AllGoodsPriceGridTableView.DataController.Values[RecIndex,colNewPrice_To.Index]
+                // * (1 + lTax/100)
           else spInsertUpdate_MovementItem_Reprice.ParamByName('inPriceNew').Value :=
                   AllGoodsPriceGridTableView.DataController.Values[RecIndex,colNewPrice.Index];
           except ShowMessage('10');exit;end;
@@ -404,6 +439,7 @@ begin
           if AllGoodsPriceCDS.FieldByName('ExpirationDate').AsDateTime <> 0 then
             cdsResult.FieldByName('ExpirationDate').AsDateTime := AllGoodsPriceCDS.FieldByName('ExpirationDate').AsDateTime;
           cdsResult.FieldByName('NewPrice').AsCurrency := AllGoodsPriceCDS.FieldByName('NewPrice').AsCurrency;
+          cdsResult.FieldByName('NewPrice_to').AsCurrency := AllGoodsPriceCDS.FieldByName('NewPrice_to').AsCurrency;
           cdsResult.FieldByName('PriceFix_Goods').AsCurrency := AllGoodsPriceCDS.FieldByName('PriceFix_Goods').AsCurrency;
           cdsResult.FieldByName('MarginPercent').AsCurrency := AllGoodsPriceCDS.FieldByName('MarginPercent').AsCurrency;
           cdsResult.FieldByName('MinMarginPercent').AsCurrency := AllGoodsPriceCDS.FieldByName('MinMarginPercent').AsCurrency;

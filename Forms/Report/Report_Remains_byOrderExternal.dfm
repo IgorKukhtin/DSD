@@ -2,7 +2,6 @@ inherited Report_Remains_byOrderExternalForm: TReport_Remains_byOrderExternalFor
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' - '#1042#1067#1055#1054#1051#1053#1045#1053#1048#1045' '#1079#1072#1103#1074#1082#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
   ClientWidth = 927
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -190
   ExplicitWidth = 943
   ExplicitHeight = 343
   PixelsPerInch = 96
@@ -232,8 +231,11 @@ inherited Report_Remains_byOrderExternalForm: TReport_Remains_byOrderExternalFor
             Width = 80
           end
           object TermProduction: TcxGridDBColumn
-            Caption = #1057#1088#1086#1082' '#1087#1088#1086#1080#1079#1074'. '#1074' '#1076#1085#1103#1093
+            Caption = #1057#1088#1086#1082' '#1087#1088'. '#1074' '#1076#1085#1103#1093
             DataBinding.FieldName = 'TermProduction'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -306,6 +308,7 @@ inherited Report_Remains_byOrderExternalForm: TReport_Remains_byOrderExternalFor
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1090'. '#1085#1072#1095#1072#1083#1100#1085'. - '#1087#1088#1086#1080#1079#1074'. ('#1057#1045#1043#1054#1044#1053#1071')'
             Width = 80
           end
           object Remains_CEH_next: TcxGridDBColumn
@@ -316,6 +319,7 @@ inherited Report_Remains_byOrderExternalForm: TReport_Remains_byOrderExternalFor
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1090'. '#1085#1072#1095'. ('#1087#1088'-'#1074#1086' '#1055#1054#1047#1046#1045')'
             Width = 80
           end
           object ReceiptCode_basis: TcxGridDBColumn

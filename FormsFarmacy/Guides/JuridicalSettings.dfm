@@ -3,7 +3,7 @@
   ClientHeight = 311
   ClientWidth = 985
   ExplicitWidth = 1001
-  ExplicitHeight = 349
+  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

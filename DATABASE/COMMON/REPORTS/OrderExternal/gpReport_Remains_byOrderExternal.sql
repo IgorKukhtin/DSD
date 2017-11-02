@@ -423,7 +423,8 @@ BEGIN
                                       LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                                              ON MovementDate_OperDatePartner.MovementId = Movement.Id
                                                             AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
-                                 WHERE Movement.OperDate BETWEEN vbOperDate - INTERVAL '1 DAY' AND vbOperDate + INTERVAL '0 DAY'
+                                 WHERE Movement.OperDate BETWEEN vbOperDate - INTERVAL '8 DAY' AND vbOperDate + INTERVAL '0 DAY'
+                                   AND MovementDate_OperDatePartner.ValueData >= vbOperDate
                                    AND Movement.DescId   = zc_Movement_OrderExternal()
                                    AND Movement.StatusId = zc_Enum_Status_Complete()
                                    AND Movement.Id       <> inMovementId
@@ -440,7 +441,7 @@ BEGIN
                                     FROM tmpOrderExternal AS Movement
                                          INNER JOIN MovementItem ON MovementItem.MovementId = Movement.MovementId
                                                                 AND MovementItem.DescId     = zc_MI_Master()
-                                                                AND MovementItem.isErased   = False
+                                                                AND MovementItem.isErased   = FALSE
                                          INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
 
                                          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
@@ -467,8 +468,8 @@ BEGIN
           , tmpOrderExternal_Its AS (SELECT Movement.FromId                               AS FromId
                                           , Movement.GoodsId                              AS GoodsId
                                           , Movement.GoodsKindId                          AS GoodsKindId
-                                          , SUM (CASE WHEN Movement.OperDate = vbOperDate - INTERVAL '1 DAY' THEN Movement.Amount ELSE 0 END) AS Amount_Prev
-                                          , SUM (CASE WHEN Movement.OperDate >= vbOperDate THEN Movement.Amount ELSE 0 END)                   AS Amount_Next
+                                          , SUM (CASE WHEN Movement.OperDate <  vbOperDate THEN Movement.Amount ELSE 0 END) AS Amount_Prev
+                                          , SUM (CASE WHEN Movement.OperDate >= vbOperDate THEN Movement.Amount ELSE 0 END) AS Amount_Next
                                           -- , SUM (CASE WHEN Movement.OperDate = vbOperDate - INTERVAL '1 DAY' AND Movement.OperDate <> Movement.OperDatePartner THEN Movement.Amount ELSE 0 END) AS Amount_Prev
                                           -- , SUM (CASE WHEN Movement.OperDate = vbOperDate - INTERVAL '1 DAY' AND Movement.OperDate <> Movement.OperDatePartner THEN 0 ELSE Movement.Amount END) AS Amount_Next
                                           -- , SUM (CASE WHEN Movement.OperDate < vbOperDate AND Movement.OperDatePartner = vbOperDate THEN Movement.Amount ELSE 0 END) AS Amount_Prev

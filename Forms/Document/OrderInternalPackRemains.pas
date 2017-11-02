@@ -65,7 +65,7 @@ type
     cxLabel19: TcxLabel;
     cxLabel20: TcxLabel;
     edOperDateEnd: TcxDateEdit;
-    AmountRemains: TcxGridDBColumn;
+    Remains: TcxGridDBColumn;
     AmountPartner: TcxGridDBColumn;
     AmountForecast: TcxGridDBColumn;
     AmountForecastOrder: TcxGridDBColumn;
@@ -121,6 +121,15 @@ type
     chtGoodsKindName_pf: TcxGridDBColumn;
     chtGoodsKindCompleteName_pf: TcxGridDBColumn;
     chtPartionDate_pf: TcxGridDBColumn;
+    chtRemains_CEH: TcxGridDBColumn;
+    chtRemains_CEH_Next: TcxGridDBColumn;
+    chtRemains_pack: TcxGridDBColumn;
+    chtPartionGoods_start: TcxGridDBColumn;
+    chtTermProduction: TcxGridDBColumn;
+    Remains_CEH: TcxGridDBColumn;
+    Remains_CEH_Next: TcxGridDBColumn;
+    Income_CEH: TcxGridDBColumn;
+    chtIncome_CEH: TcxGridDBColumn;
   private
     { Private declarations }
   public
