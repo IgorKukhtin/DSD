@@ -2568,6 +2568,48 @@ begin
   FDocLoaded := True;
 end;
 
+{  TGeoMarker  }
+
+type
+  TGeoMarkerData = record
+    Lat: Real;
+    Lng: Real;
+    Title: string;
+    InsertDate: TDateTime;
+  end;
+
+  TGeoMarker = class
+  private
+    FData: TGeoMarkerData;
+    function GetData: TGeoMarkerData;
+  public
+    constructor Create(ALat, ALng: Real; ATitle: string; AInsertDate: TDateTime);
+    property Data: TGeoMarkerData read GetData;
+  end;
+
+  TGeoMarkerList = class(TObjectList)
+  private
+    function GetGeoMarker(Index: Integer): TGeoMarker;
+    procedure SetGeoMarker(Index: Integer; const Value: TGeoMarker);
+  public
+    property Items[Index: Integer]: TGeoMarker read GetGeoMarker write SetGeoMarker; default;
+  end;
+
+function CompareGeoMarkerData(Item1, Item2: Pointer): Integer;
+var
+  Data1, Data2: TGeoMarkerData;
+begin
+  Data1 := TGeoMarker(Item1).Data;
+  Data2 := TGeoMarker(Item2).Data;
+
+  if Data1.InsertDate > Data2.InsertDate then
+    Result := 1
+  else if Data1.InsertDate < Data2.InsertDate then
+    Result := -1
+  else
+    Result := 0;
+end;
+
 {  TdsdWebBrowser  }
 
 constructor TdsdWebBrowser.Create(AOwner: TComponent);
@@ -2590,18 +2632,17 @@ end;
 procedure TdsdWebBrowser.OnTimerNotifyEvent(Sender: TObject);
 var
   i, j: integer;
-  LatList: TArray<Real>;
-  LngList: TArray<Real>;
-  TitleList: TArray<string>;
+  GMList: TGeoMarkerList;
   FDataSet: TDataSet;
   FGridView: TcxGridDBTableView;
   GPSNField, GPSEField, AddressField, InsertDateField: string;
   AColumn: TcxGridDBColumn;
   GPSNIndex, GPSEIndex, AddressIndex, InsertDateIndex: Integer;
-  GPSNValue, GPSEValue: Extended;
+  GPSNValue, GPSEValue: Real;
   InsertDateValue: TDateTime;
 begin
   FTimer.Enabled := False;
+  GMList := TGeoMarkerList.Create;
 
   GPSNField := TdsdGMMap(FGeoCode.Map).GPSNField;
   if Trim(GPSNField) = '' then
@@ -2622,70 +2663,38 @@ begin
   FGridView := TdsdGMMap(FGeoCode.Map).GridView;
   FDataSet := TdsdGMMap(FGeoCode.Map).DataSet;
 
-  if Assigned(FGridView) then
-  begin
-    GPSNIndex := -1;
-    GPSEIndex := -1;
-    AddressIndex := -1;
-    InsertDateIndex := -1;
-
-    AColumn := FGridView.GetColumnByFieldName(GPSNField);
-    if Assigned(AColumn) then
-      GPSNIndex := AColumn.Index;
-
-    AColumn := FGridView.GetColumnByFieldName(GPSEField);
-    if Assigned(AColumn) then
-      GPSEIndex := AColumn.Index;
-
-    AColumn := FGridView.GetColumnByFieldName(AddressField);
-    if Assigned(AColumn) then
-      AddressIndex := AColumn.Index;
-
-    AColumn := FGridView.GetColumnByFieldName(InsertDateField);
-    if Assigned(AColumn) then
-      InsertDateIndex := AColumn.Index;
-
-    if (GPSNIndex > -1) and (GPSNIndex > -1) then
+  try
+    if Assigned(FGridView) then
     begin
-      if TdsdGMMap(FGeoCode.Map).MapType = acShowOne then
+      GPSNIndex := -1;
+      GPSEIndex := -1;
+      AddressIndex := -1;
+      InsertDateIndex := -1;
+
+      AColumn := FGridView.GetColumnByFieldName(GPSNField);
+      if Assigned(AColumn) then
+        GPSNIndex := AColumn.Index;
+
+      AColumn := FGridView.GetColumnByFieldName(GPSEField);
+      if Assigned(AColumn) then
+        GPSEIndex := AColumn.Index;
+
+      AColumn := FGridView.GetColumnByFieldName(AddressField);
+      if Assigned(AColumn) then
+        AddressIndex := AColumn.Index;
+
+      AColumn := FGridView.GetColumnByFieldName(InsertDateField);
+      if Assigned(AColumn) then
+        InsertDateIndex := AColumn.Index;
+
+      if (GPSNIndex > -1) and (GPSNIndex > -1) then
       begin
-        FGeoCode.Map.RequiredProp.Zoom := 18;
-
-        GPSNValue := StrToFloatDef(VarToStrDef(FGridView.DataController.Values[FGridView.DataController.FocusedRecordIndex, GPSNIndex], '0'), 0);
-        GPSEValue := StrToFloatDef(VarToStrDef(FGridView.DataController.Values[FGridView.DataController.FocusedRecordIndex, GPSEIndex], '0'), 0);
-
-        if (GPSNValue <> 0) and (GPSEValue <> 0)
-        then
-          FGeoCode.Geocode(GPSNValue, GPSEValue)
-        else
-        if AddressIndex > -1 then
-          FGeoCode.Geocode(VarToStrDef(FGridView.DataController.Values[FGridView.DataController.FocusedRecordIndex, AddressIndex], ''));
-
-        if (FGeoCode.GeoStatus = gsOK) and (FGeoCode.Count > 0) then
+        if TdsdGMMap(FGeoCode.Map).MapType = acShowOne then
         begin
-          SetLength(LatList, 1);
-          SetLength(LngList, 1);
-          SetLength(TitleList, 1);
+          FGeoCode.Map.RequiredProp.Zoom := 18;
 
-          LatList[0] := FGeoCode.GeoResult[0].Geometry.Location.Lat;
-          LngList[0] := FGeoCode.GeoResult[0].Geometry.Location.Lng;
-          TitleList[0] := FGeoCode.GeoResult[0].FormatedAddr;
-        end;
-      end
-      else
-      begin
-        FGeoCode.Map.RequiredProp.Zoom := 13;
-
-        SetLength(LatList, FGridView.ViewData.RowCount);
-        SetLength(LngList, FGridView.ViewData.RowCount);
-        SetLength(TitleList, FGridView.ViewData.RowCount);
-
-        i := 0;
-
-        for j := 0 to FGridView.ViewData.RowCount - 1 do
-        begin
-          GPSNValue := StrToFloatDef(VarToStrDef(FGridView.DataController.Values[j, GPSNIndex], '0'), 0);
-          GPSEValue := StrToFloatDef(VarToStrDef(FGridView.DataController.Values[j, GPSEIndex], '0'), 0);
+          GPSNValue := StrToFloatDef(VarToStrDef(FGridView.DataController.Values[FGridView.DataController.FocusedRecordIndex, GPSNIndex], '0'), 0);
+          GPSEValue := StrToFloatDef(VarToStrDef(FGridView.DataController.Values[FGridView.DataController.FocusedRecordIndex, GPSEIndex], '0'), 0);
 
           if (GPSNValue <> 0) and (GPSEValue <> 0)
           then
@@ -2694,68 +2703,86 @@ begin
           if AddressIndex > -1 then
             FGeoCode.Geocode(VarToStrDef(FGridView.DataController.Values[FGridView.DataController.FocusedRecordIndex, AddressIndex], ''));
 
-          if (FGeoCode.GeoStatus = gsOK) and (FGeoCode.Count > 0) then
-          begin
-            LatList[i] := FGeoCode.GeoResult[0].Geometry.Location.Lat;
-            LngList[i] := FGeoCode.GeoResult[0].Geometry.Location.Lng;
-            TitleList[i] := FGeoCode.GeoResult[0].FormatedAddr;
-
-            inc(i);
-          end
-          else
-            SetLength(LatList, Length(LatList) - 1);
-        end;
-      end;
-
-      for i := 0 to Length(LatList) - 1 do
-        FGeoCode.Marker.Add(LatList[i], LngList[i], TitleList[i]);
-
-      if FGeoCode.Marker.Count > 0 then
-        FGeoCode.Marker.Items[0].CenterMapTo;
-    end;
-  end
-  else
-  if Assigned(FDataSet) then
-  begin
-    FDataSet.DisableControls;
-    try
-      if (FDataSet.FindField(GPSNField) <> nil) and (FDataSet.FindField(GPSEField) <> nil) then
-      begin
-        if TdsdGMMap(FGeoCode.Map).MapType = acShowOne then
-        begin
-          FGeoCode.Map.RequiredProp.Zoom := 18;
-
-          if (FDataSet.FindField(GPSNField).AsFloat <> 0) and
-             (FDataSet.FindField(GPSEField).AsFloat <> 0)
-          then
-            FGeoCode.Geocode(FDataSet.FindField(GPSNField).AsFloat, FDataSet.FindField(GPSEField).AsFloat)
-          else
-          if FDataSet.FindField(AddressField) <> nil then
-            FGeoCode.Geocode(FDataSet.FindField(AddressField).AsString);
+          InsertDateValue := StrToDateTime('01.01.1900');
+          if InsertDateIndex > -1 then
+            InsertDateValue := StrToDateTime(VarToStrDef(FGridView.DataController.Values[FGridView.DataController.FocusedRecordIndex, InsertDateIndex], '01.01.1900'));
 
           if (FGeoCode.GeoStatus = gsOK) and (FGeoCode.Count > 0) then
-          begin
-            SetLength(LatList, 1);
-            SetLength(LngList, 1);
-            SetLength(TitleList, 1);
-
-            LatList[0] := FGeoCode.GeoResult[0].Geometry.Location.Lat;
-            LngList[0] := FGeoCode.GeoResult[0].Geometry.Location.Lng;
-            TitleList[0] := FGeoCode.GeoResult[0].FormatedAddr;
-          end;
+            GMList.Add(TGeoMarker.Create(
+              FGeoCode.GeoResult[0].Geometry.Location.Lat,
+              FGeoCode.GeoResult[0].Geometry.Location.Lng,
+              FGeoCode.GeoResult[0].FormatedAddr,
+              InsertDateValue));
         end
         else
         begin
           FGeoCode.Map.RequiredProp.Zoom := 13;
 
-          SetLength(LatList, FDataSet.RecordCount);
-          SetLength(LngList, FDataSet.RecordCount);
-          SetLength(TitleList, FDataSet.RecordCount);
-
-          i := 0;
-          FDataSet.First;
-          while not FDataSet.Eof do
+          for j := 0 to FGridView.ViewData.RowCount - 1 do
           begin
+            GPSNValue := StrToFloatDef(VarToStrDef(FGridView.DataController.Values[j, GPSNIndex], '0'), 0);
+            GPSEValue := StrToFloatDef(VarToStrDef(FGridView.DataController.Values[j, GPSEIndex], '0'), 0);
+
+            if (GPSNValue <> 0) and (GPSEValue <> 0)
+            then
+              FGeoCode.Geocode(GPSNValue, GPSEValue)
+            else
+            if AddressIndex > -1 then
+              FGeoCode.Geocode(VarToStrDef(FGridView.DataController.Values[FGridView.DataController.FocusedRecordIndex, AddressIndex], ''));
+
+            InsertDateValue := StrToDateTime('01.01.1900');
+            if InsertDateIndex > -1 then
+              InsertDateValue := StrToDateTime(VarToStrDef(FGridView.DataController.Values[j, InsertDateIndex], '01.01.1900'));
+
+            if (FGeoCode.GeoStatus = gsOK) and (FGeoCode.Count > 0) then
+              GMList.Add(TGeoMarker.Create(
+                FGeoCode.GeoResult[0].Geometry.Location.Lat,
+                FGeoCode.GeoResult[0].Geometry.Location.Lng,
+                FGeoCode.GeoResult[0].FormatedAddr,
+                InsertDateValue));
+          end;
+        end;
+
+        GMList.Sort(CompareGeoMarkerData);
+
+        for i := 0 to Pred(GMList.Count) do
+          FGeoCode.Marker.Add(GMList[i].Data.Lat, GMList[i].Data.Lng, GMList[i].Data.Title);
+
+        if FGeoCode.Marker.Count > 0 then
+          FGeoCode.Marker.Items[0].CenterMapTo;
+
+        if FGeoCode.Marker.Count > 1 then
+        begin
+          FDirection.DirectionsRequest.Origin.LatLng.Lat := FGeoCode.Marker.Items[0].Position.Lat;
+          FDirection.DirectionsRequest.Origin.LatLng.Lng := FGeoCode.Marker.Items[0].Position.Lng;
+          FDirection.DirectionsRequest.Destination.LatLng.Lat := FGeoCode.Marker.Items[Pred(FGeoCode.Marker.Count)].Position.Lat;
+          FDirection.DirectionsRequest.Destination.LatLng.Lng := FGeoCode.Marker.Items[Pred(FGeoCode.Marker.Count)].Position.Lng;
+
+          if FGeoCode.Marker.Count > 2 then
+          begin
+            for i := 1 to FGeoCode.Marker.Count - 2 do
+              with FDirection.AddWaypoint.Location.LatLng do
+              begin
+                Lat := FGeoCode.Marker.Items[i].Position.Lat;
+                Lng := FGeoCode.Marker.Items[i].Position.Lng;
+              end;
+
+            FDirection.Execute;
+          end;
+        end;
+      end;
+    end
+    else
+    if Assigned(FDataSet) then
+    begin
+      FDataSet.DisableControls;
+      try
+        if (FDataSet.FindField(GPSNField) <> nil) and (FDataSet.FindField(GPSEField) <> nil) then
+        begin
+          if TdsdGMMap(FGeoCode.Map).MapType = acShowOne then
+          begin
+            FGeoCode.Map.RequiredProp.Zoom := 18;
+
             if (FDataSet.FindField(GPSNField).AsFloat <> 0) and
                (FDataSet.FindField(GPSEField).AsFloat <> 0)
             then
@@ -2764,32 +2791,83 @@ begin
             if FDataSet.FindField(AddressField) <> nil then
               FGeoCode.Geocode(FDataSet.FindField(AddressField).AsString);
 
+            InsertDateValue := StrToDateTime('01.01.1900');
+            if FDataSet.FindField(InsertDateField) <> nil then
+              InsertDateValue := FDataSet.FieldByName(InsertDateField).AsDateTime;
+
             if (FGeoCode.GeoStatus = gsOK) and (FGeoCode.Count > 0) then
+              GMList.Add(TGeoMarker.Create(
+                FGeoCode.GeoResult[0].Geometry.Location.Lat,
+                FGeoCode.GeoResult[0].Geometry.Location.Lng,
+                FGeoCode.GeoResult[0].FormatedAddr,
+                InsertDateValue));
+          end
+          else
+          begin
+            FGeoCode.Map.RequiredProp.Zoom := 13;
+
+            FDataSet.First;
+            while not FDataSet.Eof do
             begin
-              LatList[i] := FGeoCode.GeoResult[0].Geometry.Location.Lat;
-              LngList[i] := FGeoCode.GeoResult[0].Geometry.Location.Lng;
-              TitleList[i] := FGeoCode.GeoResult[0].FormatedAddr;
+              if (FDataSet.FindField(GPSNField).AsFloat <> 0) and
+                 (FDataSet.FindField(GPSEField).AsFloat <> 0)
+              then
+                FGeoCode.Geocode(FDataSet.FindField(GPSNField).AsFloat, FDataSet.FindField(GPSEField).AsFloat)
+              else
+              if FDataSet.FindField(AddressField) <> nil then
+                FGeoCode.Geocode(FDataSet.FindField(AddressField).AsString);
 
-              inc(i);
-            end
-            else
-              SetLength(LatList, Length(LatList) - 1);
+              InsertDateValue := StrToDateTime('01.01.1900');
+              if FDataSet.FindField(InsertDateField) <> nil then
+                InsertDateValue := FDataSet.FieldByName(InsertDateField).AsDateTime;
 
-            FDataSet.Next;
+              if (FGeoCode.GeoStatus = gsOK) and (FGeoCode.Count > 0) then
+                GMList.Add(TGeoMarker.Create(
+                  FGeoCode.GeoResult[0].Geometry.Location.Lat,
+                  FGeoCode.GeoResult[0].Geometry.Location.Lng,
+                  FGeoCode.GeoResult[0].FormatedAddr,
+                  InsertDateValue));
+
+              FDataSet.Next;
+            end;
+
+            FDataSet.First;
           end;
 
-          FDataSet.First;
+          GMList.Sort(CompareGeoMarkerData);
+
+          for i := 0 to Pred(GMList.Count) do
+            FGeoCode.Marker.Add(GMList[i].Data.Lat, GMList[i].Data.Lng, GMList[i].Data.Title);
+
+          if FGeoCode.Marker.Count > 0 then
+            FGeoCode.Marker.Items[0].CenterMapTo;
+
+          if FGeoCode.Marker.Count > 1 then
+          begin
+            FDirection.DirectionsRequest.Origin.LatLng.Lat := FGeoCode.Marker.Items[0].Position.Lat;
+            FDirection.DirectionsRequest.Origin.LatLng.Lng := FGeoCode.Marker.Items[0].Position.Lng;
+            FDirection.DirectionsRequest.Destination.LatLng.Lat := FGeoCode.Marker.Items[Pred(FGeoCode.Marker.Count)].Position.Lat;
+            FDirection.DirectionsRequest.Destination.LatLng.Lng := FGeoCode.Marker.Items[Pred(FGeoCode.Marker.Count)].Position.Lng;
+
+            if FGeoCode.Marker.Count > 2 then
+            begin
+              for i := 1 to FGeoCode.Marker.Count - 2 do
+                with FDirection.AddWaypoint.Location.LatLng do
+                begin
+                  Lat := FGeoCode.Marker.Items[i].Position.Lat;
+                  Lng := FGeoCode.Marker.Items[i].Position.Lng;
+                end;
+
+              FDirection.Execute;
+            end;
+          end;
         end;
-
-        for i := 0 to Length(LatList) - 1 do
-          FGeoCode.Marker.Add(LatList[i], LngList[i], TitleList[i]);
-
-        if FGeoCode.Marker.Count > 0 then
-          FGeoCode.Marker.Items[0].CenterMapTo;
+      finally
+        FDataSet.EnableControls;
       end;
-    finally
-      FDataSet.EnableControls;
     end;
+  finally
+    GMList.Free;
   end;
 end;
 
@@ -2940,6 +3018,34 @@ begin
       (Sender is TcxDateEdit) or
       (Sender is TcxCheckBox) then
       Action.Execute;
+end;
+
+{ TGeoMarker }
+
+constructor TGeoMarker.Create(ALat, ALng: Real; ATitle: string; AInsertDate: TDateTime);
+begin
+  inherited Create;
+  FData.Lat := ALat;
+  FData.Lng := ALng;
+  FData.Title := ATitle;
+  FData.InsertDate := AInsertDate;
+end;
+
+function TGeoMarker.GetData: TGeoMarkerData;
+begin
+  Result := FData;
+end;
+
+{ TGeoMarkerList }
+
+function TGeoMarkerList.GetGeoMarker(Index: Integer): TGeoMarker;
+begin
+  Result := inherited GetItem(Index) as TGeoMarker;
+end;
+
+procedure TGeoMarkerList.SetGeoMarker(Index: Integer; const Value: TGeoMarker);
+begin
+  inherited SetItem(Index, Value);
 end;
 
 end.
