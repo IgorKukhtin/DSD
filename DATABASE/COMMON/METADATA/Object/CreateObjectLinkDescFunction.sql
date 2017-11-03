@@ -1524,6 +1524,20 @@ INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_StickerProperty_StickerFile', 'ШАБЛОН', zc_Object_StickerProperty(), zc_Object_StickerFile() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_StickerProperty_StickerFile');
 
 
+--- 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsReportSale_Goods() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsReportSale_Goods'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_GoodsReportSale_Goods', 'Товар', zc_Object_GoodsReportSale(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsReportSale_Goods');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsReportSale_GoodsKind() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsReportSale_GoodsKind'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_GoodsReportSale_GoodsKind', 'Вид товара', zc_Object_GoodsReportSale(), zc_Object_GoodsKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsReportSale_GoodsKind');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsReportSale_Unit() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsReportSale_Unit'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_GoodsReportSale_Unit', 'Подразделение', zc_Object_GoodsReportSale(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsReportSale_Unit');
+
+
 --!!! АПТЕКА
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_NDSKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_NDSKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -1848,6 +1862,9 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 02.11.17         * zc_ObjectLink_GoodsReportSale_Goods
+                    zc_ObjectLink_GoodsReportSale_GoodsKind
+                    zc_ObjectLink_GoodsReportSale_Unit
  23.10.17         * zc_ObjectLink_Sticker_.....
                     zc_ObjectLink_StickerProperty_......
  20.10.17         * zc_ObjectLink_Goods_Area

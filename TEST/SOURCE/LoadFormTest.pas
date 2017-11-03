@@ -68,6 +68,7 @@ type
     procedure LoadGoodsKindFormTest;
     procedure LoadGoodsListIncomeFormTest;
     procedure LoadGoodsListSaleFormTest;
+    procedure LoadGoodsReportSaleFormTest;
     procedure LoadGoodsTagFormTest;
     procedure LoadGoodsPlatformFormTest;
     procedure LoadImportSettingsFormTest;
@@ -580,6 +581,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TQualityNumberJournalForm');
 end;
 
+procedure TLoadFormTest.LoadGoodsReportSaleFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsReportSaleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsReportSaleForm');
+end;
 procedure TLoadFormTest.LoadGoodsTagFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsTagForm'));

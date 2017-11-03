@@ -981,7 +981,8 @@ uses
   Sticker_Object in '..\..\Forms\Guides\Sticker_Object.pas' {Sticker_ObjectForm: TParentForm},
   StickerProperty_Value in '..\..\Forms\Guides\StickerProperty_Value.pas' {StickerProperty_ValueForm: TParentForm},
   OrderInternalPackRemainsJournal in '..\..\Forms\Document\OrderInternalPackRemainsJournal.pas' {OrderInternalPackRemainsJournalForm: TParentForm},
-  OrderInternalPackRemains in '..\..\Forms\Document\OrderInternalPackRemains.pas' {OrderInternalPackRemainsForm: TParentForm};
+  OrderInternalPackRemains in '..\..\Forms\Document\OrderInternalPackRemains.pas' {OrderInternalPackRemainsForm: TParentForm},
+  GoodsReportSale in '..\..\Forms\Guides\GoodsReportSale.pas' {GoodsReportSaleForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

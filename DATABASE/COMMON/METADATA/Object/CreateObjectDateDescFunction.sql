@@ -155,6 +155,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_GoodsListIncome_Last() RETURNS Integer 
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_GoodsListIncome(), 'zc_ObjectDate_GoodsListIncome_Last', 'последняя дата изм.' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_GoodsListIncome_Last');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_GoodsReportSaleInf_Start() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_GoodsReportSaleInf_Start'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_GoodsReportSaleInf(), 'zc_ObjectDate_GoodsReportSaleInf_Start', 'Начальная Дата' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_GoodsReportSaleInf_Start');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_GoodsReportSaleInf_End() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_GoodsReportSaleInf_End'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_GoodsReportSaleInf(), 'zc_ObjectDate_GoodsReportSaleInf_End', 'Конечная Дата' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_GoodsReportSaleInf_End');
+
 
 --!!!FARMACY
 
@@ -266,6 +274,8 @@ INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 02.11.17         * zc_ObjectDate_GoodsReportSaleInf_Start
+                    zc_ObjectDate_GoodsReportSaleInf_End
  15.09.17         * zc_ObjectDate_Unit_Create
                     zc_ObjectDate_Unit_Close
  16.08.17         * zc_ObjectDate_Goods_LastPriceOld
