@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Object_MobileEmployee  (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,TVarChar)
+-- Function: lpInsertUpdate_Object_GoodsReportSaleInf  ()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_GoodsReportSaleInf (Integer, TDateTime, TDateTime, TFloat, Integer);
 
