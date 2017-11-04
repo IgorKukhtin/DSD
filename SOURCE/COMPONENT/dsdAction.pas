@@ -765,13 +765,13 @@ type
   TdsdPartnerMapAction = class(TdsdOpenForm, IFormAction)
   private
     FDataSet: TDataSet;
-    FGridView: TcxGridDBTableView;
     FMapType: TMapAcionType;
     FGPSNField: string;
     FGPSEField: string;
     FAddressField: string;
     FInsertDateField: string;
     FGMMap: TGMMap;
+    FIsShowRoute: Boolean;
 
     procedure SetDataSet(const Value: TDataSet);
   protected
@@ -782,14 +782,13 @@ type
   public
     constructor Create(AOwner: TComponent);
   published
-    property MapType: TMapAcionType read FMapType write FMapType
-      default acShowOne;
+    property MapType: TMapAcionType read FMapType write FMapType default acShowOne;
     property DataSet: TDataSet read FDataSet write SetDataSet;
-    property GridView: TcxGridDBTableView read FGridView write FGridView;
     property GPSNField: string read FGPSNField write FGPSNField;
     property GPSEField: string read FGPSEField write FGPSEField;
     property AddressField: string read FAddressField write FAddressField;
     property InsertDateField: string read FInsertDateField write FInsertDateField;
+    property IsShowRoute: Boolean read FIsShowRoute write FIsShowRoute default False;
   end;
 
 procedure Register;
@@ -3123,13 +3122,14 @@ constructor TdsdPartnerMapAction.Create(AOwner: TComponent);
 begin
   inherited;
   FMapType := acShowOne;
+  FIsShowRoute := False;
 end;
 
 procedure TdsdPartnerMapAction.BeforeExecute(Form: TForm);
 var
   I: Integer;
 begin
-  if Assigned(FDataSet) or Assigned(FGridView) then
+  if Assigned(FDataSet) then
   begin
     Form.OnClose := OnFormClose;
 
@@ -3139,11 +3139,11 @@ begin
         FGMMap := TGMMap(Form.Components[I]);
         TdsdGMMap(Form.Components[I]).MapType := FMapType;
         TdsdGMMap(Form.Components[I]).DataSet := FDataSet;
-        TdsdGMMap(Form.Components[I]).GridView := FGridView;
         TdsdGMMap(Form.Components[I]).GPSNField := FGPSNField;
         TdsdGMMap(Form.Components[I]).GPSEField := FGPSEField;
         TdsdGMMap(Form.Components[I]).AddressField := FAddressField;
         TdsdGMMap(Form.Components[I]).InsertDateField := FInsertDateField;
+        TdsdGMMap(Form.Components[I]).IsShowRoute := FIsShowRoute;
         FGMMap.Active := True;
         Break;
       end;
@@ -3153,7 +3153,7 @@ end;
 procedure TdsdPartnerMapAction.OnFormClose(Sender: TObject; var Action: TCloseAction);
 begin
   if Assigned(FGMMap) then
-    FGMMap.Active := false;
+    FGMMap.Active := False;
 end;
 
 procedure TdsdPartnerMapAction.Notification(AComponent: TComponent;
@@ -3163,10 +3163,7 @@ begin
   if csDestroying in ComponentState then
     exit;
   if (Operation = opRemove) and (AComponent = DataSet) then
-    DataSet := nil
-  else
-  if (Operation = opRemove) and (AComponent = GridView) then
-    GridView := nil;
+    DataSet := nil;
 end;
 
 procedure TdsdPartnerMapAction.SetDataSet(const Value: TDataSet);

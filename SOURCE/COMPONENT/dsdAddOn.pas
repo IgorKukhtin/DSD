@@ -563,12 +563,12 @@ type
   private
     FMapType: TMapAcionType;
     FDataSet: TDataSet;
-    FGridView: TcxGridDBTableView;
     FMapLoad: Boolean;
     FGPSNField: string;
     FGPSEField: string;
     FAddressField: string;
     FInsertDateField: string;
+    FIsShowRoute: Boolean;
 
     procedure LoadDefaultWebBrowser;
     procedure DoAfterPageLoaded(Sender: TObject; First: Boolean);
@@ -577,15 +577,14 @@ type
 
     procedure SetDocLoaded;
 
-    property MapType: TMapAcionType read FMapType write FMapType
-      default acShowOne;
+    property MapType: TMapAcionType read FMapType write FMapType default acShowOne;
     property DataSet: TDataSet read FDataSet write FDataSet;
-    property GridView: TcxGridDBTableView read FGridView write FGridView;
     property MapLoad: Boolean read FMapLoad write FMapLoad;
     property GPSNField: string read FGPSNField write FGPSNField;
     property GPSEField: string read FGPSEField write FGPSEField;
     property AddressField: string read FAddressField write FAddressField;
     property InsertDateField: string read FInsertDateField write FInsertDateField;
+    property IsShowRoute: Boolean read FIsShowRoute write FIsShowRoute default False;
   end;
 
   TdsdWebBrowser = class(TWebBrowser)
@@ -2514,13 +2513,12 @@ end;
 
 procedure TdsdGMMap.LoadDefaultWebBrowser;
 var
-  GPSNIndex, GPSEIndex, AddressIndex: Integer;
-  GPSNValue, GPSEValue: Double;
-  Column: TcxGridDBColumn;
+  Field: TField;
+  GPSNValue, GPSEValue: Real;
   OldDecimalSeparator: Char;
   AddressValue, MapURL: string;
 begin
-  if Assigned(GridView) then
+  if Assigned(DataSet) then
   begin
     if Trim(GPSNField) = '' then
       GPSNField := 'GPSN';
@@ -2528,37 +2526,32 @@ begin
     if Trim(GPSEField) = '' then
       GPSEField := 'GPSE';
 
-    GPSNIndex := -1;
-    GPSEIndex := -1;
+    GPSNValue := 0.0;
+    GPSEValue := 0.0;
 
-    Column := FGridView.GetColumnByFieldName(GPSNField);
-    if Assigned(Column) then
-      GPSNIndex := Column.Index;
+    Field := DataSet.FindField(GPSNField);
+    if Assigned(Field) then
+      GPSNValue := Field.AsFloat;
 
-    Column := FGridView.GetColumnByFieldName(GPSEField);
-    if Assigned(Column) then
-      GPSEIndex := Column.Index;
+    Field := DataSet.FindField(GPSEField);
+    if Assigned(Field) then
+      GPSEValue := Field.AsFloat;
 
-    Column := FGridView.GetColumnByFieldName('AddressByGPS');
-    if Assigned(Column) then
-      AddressIndex := Column.Index;
+    Field := DataSet.FindField('AddressByGPS');
+    if Assigned(Field) then
+      AddressValue := Field.AsString;
 
-    if (GPSNIndex > -1) and (GPSNIndex > -1) then
+    if (GPSNValue <> 0.0) and (GPSEValue <> 0.0) then
     begin
-      GPSNValue := StrToFloatDef(VarToStrDef(GridView.DataController.Values[GridView.DataController.FocusedRecordIndex, GPSNIndex], '0'), 0);
-      GPSEValue := StrToFloatDef(VarToStrDef(GridView.DataController.Values[GridView.DataController.FocusedRecordIndex, GPSEIndex], '0'), 0);
-      AddressValue := ReplaceStr(VarToStrDef(GridView.DataController.Values[GridView.DataController.FocusedRecordIndex, AddressIndex], ''), ' ', '+');
+      AddressValue := ReplaceStr(AddressValue, ' ', '+');
 
-      if (GPSNValue <> 0) and (GPSEValue <> 0) then
-      begin
-        OldDecimalSeparator := FormatSettings.DecimalSeparator;
-        if OldDecimalSeparator = ',' then
-          FormatSettings.DecimalSeparator := '.';
+      OldDecimalSeparator := FormatSettings.DecimalSeparator;
+      if OldDecimalSeparator = ',' then
+        FormatSettings.DecimalSeparator := '.';
 
-        MapURL := Format('https://www.google.com.ua/maps/place/%s/@%g,%g,%uz?hl=uk', [AddressValue, GPSNValue, GPSEValue, 17]);
-        FormatSettings.DecimalSeparator := OldDecimalSeparator;
-        ShellExecute(0, 'open', PChar(MapURL), nil, nil, SW_SHOWNORMAL);
-      end;
+      MapURL := Format('https://www.google.com.ua/maps/place/%s/@%g,%g,%uz?hl=uk', [AddressValue, GPSNValue, GPSEValue, 17]);
+      FormatSettings.DecimalSeparator := OldDecimalSeparator;
+      ShellExecute(0, 'open', PChar(MapURL), nil, nil, SW_SHOWNORMAL);
     end;
   end;
 end;
@@ -2634,10 +2627,7 @@ var
   i, j: integer;
   GMList: TGeoMarkerList;
   FDataSet: TDataSet;
-  FGridView: TcxGridDBTableView;
   GPSNField, GPSEField, AddressField, InsertDateField: string;
-  AColumn: TcxGridDBColumn;
-  GPSNIndex, GPSEIndex, AddressIndex, InsertDateIndex: Integer;
   GPSNValue, GPSEValue: Real;
   InsertDateValue: TDateTime;
 begin
@@ -2660,119 +2650,9 @@ begin
   if Trim(InsertDateField) = '' then
     InsertDateField := 'InsertMobileDate';
 
-  FGridView := TdsdGMMap(FGeoCode.Map).GridView;
   FDataSet := TdsdGMMap(FGeoCode.Map).DataSet;
 
   try
-    if Assigned(FGridView) then
-    begin
-      GPSNIndex := -1;
-      GPSEIndex := -1;
-      AddressIndex := -1;
-      InsertDateIndex := -1;
-
-      AColumn := FGridView.GetColumnByFieldName(GPSNField);
-      if Assigned(AColumn) then
-        GPSNIndex := AColumn.Index;
-
-      AColumn := FGridView.GetColumnByFieldName(GPSEField);
-      if Assigned(AColumn) then
-        GPSEIndex := AColumn.Index;
-
-      AColumn := FGridView.GetColumnByFieldName(AddressField);
-      if Assigned(AColumn) then
-        AddressIndex := AColumn.Index;
-
-      AColumn := FGridView.GetColumnByFieldName(InsertDateField);
-      if Assigned(AColumn) then
-        InsertDateIndex := AColumn.Index;
-
-      if (GPSNIndex > -1) and (GPSNIndex > -1) then
-      begin
-        if TdsdGMMap(FGeoCode.Map).MapType = acShowOne then
-        begin
-          FGeoCode.Map.RequiredProp.Zoom := 18;
-
-          GPSNValue := StrToFloatDef(VarToStrDef(FGridView.DataController.Values[FGridView.DataController.FocusedRecordIndex, GPSNIndex], '0'), 0);
-          GPSEValue := StrToFloatDef(VarToStrDef(FGridView.DataController.Values[FGridView.DataController.FocusedRecordIndex, GPSEIndex], '0'), 0);
-
-          if (GPSNValue <> 0) and (GPSEValue <> 0)
-          then
-            FGeoCode.Geocode(GPSNValue, GPSEValue)
-          else
-          if AddressIndex > -1 then
-            FGeoCode.Geocode(VarToStrDef(FGridView.DataController.Values[FGridView.DataController.FocusedRecordIndex, AddressIndex], ''));
-
-          InsertDateValue := StrToDateTime('01.01.1900');
-          if InsertDateIndex > -1 then
-            InsertDateValue := StrToDateTime(VarToStrDef(FGridView.DataController.Values[FGridView.DataController.FocusedRecordIndex, InsertDateIndex], '01.01.1900'));
-
-          if (FGeoCode.GeoStatus = gsOK) and (FGeoCode.Count > 0) then
-            GMList.Add(TGeoMarker.Create(
-              FGeoCode.GeoResult[0].Geometry.Location.Lat,
-              FGeoCode.GeoResult[0].Geometry.Location.Lng,
-              FGeoCode.GeoResult[0].FormatedAddr,
-              InsertDateValue));
-        end
-        else
-        begin
-          FGeoCode.Map.RequiredProp.Zoom := 13;
-
-          for j := 0 to FGridView.ViewData.RowCount - 1 do
-          begin
-            GPSNValue := StrToFloatDef(VarToStrDef(FGridView.DataController.Values[j, GPSNIndex], '0'), 0);
-            GPSEValue := StrToFloatDef(VarToStrDef(FGridView.DataController.Values[j, GPSEIndex], '0'), 0);
-
-            if (GPSNValue <> 0) and (GPSEValue <> 0)
-            then
-              FGeoCode.Geocode(GPSNValue, GPSEValue)
-            else
-            if AddressIndex > -1 then
-              FGeoCode.Geocode(VarToStrDef(FGridView.DataController.Values[FGridView.DataController.FocusedRecordIndex, AddressIndex], ''));
-
-            InsertDateValue := StrToDateTime('01.01.1900');
-            if InsertDateIndex > -1 then
-              InsertDateValue := StrToDateTime(VarToStrDef(FGridView.DataController.Values[j, InsertDateIndex], '01.01.1900'));
-
-            if (FGeoCode.GeoStatus = gsOK) and (FGeoCode.Count > 0) then
-              GMList.Add(TGeoMarker.Create(
-                FGeoCode.GeoResult[0].Geometry.Location.Lat,
-                FGeoCode.GeoResult[0].Geometry.Location.Lng,
-                FGeoCode.GeoResult[0].FormatedAddr,
-                InsertDateValue));
-          end;
-        end;
-
-        GMList.Sort(CompareGeoMarkerData);
-
-        for i := 0 to Pred(GMList.Count) do
-          FGeoCode.Marker.Add(GMList[i].Data.Lat, GMList[i].Data.Lng, GMList[i].Data.Title);
-
-        if FGeoCode.Marker.Count > 0 then
-          FGeoCode.Marker.Items[0].CenterMapTo;
-
-        if FGeoCode.Marker.Count > 1 then
-        begin
-          FDirection.DirectionsRequest.Origin.LatLng.Lat := FGeoCode.Marker.Items[0].Position.Lat;
-          FDirection.DirectionsRequest.Origin.LatLng.Lng := FGeoCode.Marker.Items[0].Position.Lng;
-          FDirection.DirectionsRequest.Destination.LatLng.Lat := FGeoCode.Marker.Items[Pred(FGeoCode.Marker.Count)].Position.Lat;
-          FDirection.DirectionsRequest.Destination.LatLng.Lng := FGeoCode.Marker.Items[Pred(FGeoCode.Marker.Count)].Position.Lng;
-
-          if FGeoCode.Marker.Count > 2 then
-          begin
-            for i := 1 to FGeoCode.Marker.Count - 2 do
-              with FDirection.AddWaypoint.Location.LatLng do
-              begin
-                Lat := FGeoCode.Marker.Items[i].Position.Lat;
-                Lng := FGeoCode.Marker.Items[i].Position.Lng;
-              end;
-
-            FDirection.Execute;
-          end;
-        end;
-      end;
-    end
-    else
     if Assigned(FDataSet) then
     begin
       FDataSet.DisableControls;
@@ -2783,8 +2663,8 @@ begin
           begin
             FGeoCode.Map.RequiredProp.Zoom := 18;
 
-            if (FDataSet.FindField(GPSNField).AsFloat <> 0) and
-               (FDataSet.FindField(GPSEField).AsFloat <> 0)
+            if (FDataSet.FindField(GPSNField).AsFloat <> 0.0) and
+               (FDataSet.FindField(GPSEField).AsFloat <> 0.0)
             then
               FGeoCode.Geocode(FDataSet.FindField(GPSNField).AsFloat, FDataSet.FindField(GPSEField).AsFloat)
             else
