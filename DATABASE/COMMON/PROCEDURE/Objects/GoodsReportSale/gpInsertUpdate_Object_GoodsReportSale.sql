@@ -30,7 +30,7 @@ BEGIN
                                                        );
      --
 -- таблица -
-     CREATE TEMP TABLE tmpAll (NumberDay Integer, UnitId Integer, GoodsId Integer, GoodsKindId Integer, AmountOrder TFloat, AmountOrderPromo TFloat, AmountSale TFloat, AmountSalePromo TFloat, AmountBranch TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE tmpAll (NumberDay Integer, UnitId Integer, GoodsId Integer, GoodsKindId Integer, AmountOrder TFloat, AmountOrderPromo TFloat, AmountOrderBranch TFloat, AmountSale TFloat, AmountSalePromo TFloat, AmountBranch TFloat) ON COMMIT DROP;
     
      -- 
       WITH tmpGoods AS (SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
@@ -61,15 +61,21 @@ BEGIN
          , tmpOrder AS (SELECT Movement.OperDate
                              , Movement.UnitId
                              , MovementItem.ObjectId AS GoodsId
-                             , MovementItem.Amount
+                             , MovementItem.Amount   AS Amount
                              , MovementItem.Id       AS MovementItemId
+                             , Movement.isUnit
                         FROM ( SELECT Movement.Id
                                     , Movement.OperDate
                                     , MovementLinkObject_To.ObjectId AS UnitId
+                                    , CASE WHEN Object_From.DescId = zc_Object_Unit() THEN TRUE ELSE FALSE END AS isUnit 
                                FROM Movement
                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                   ON MovementLinkObject_To.MovementId = Movement.Id
                                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                    INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                  ON MovementLinkObject_From.MovementId = Movement.Id
+                                                                 AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                    LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_To.ObjectId 
                                    
                                WHERE Movement.OperDate BETWEEN vbStartDate AND vbEndDate
                                  AND Movement.DescId = zc_Movement_OrderExternal()
@@ -150,9 +156,9 @@ BEGIN
                  , Movement.GoodsId                                 AS GoodsId
                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)    AS GoodsKindId
 
-                 , SUM (CASE WHEN COALESCE (MIFloat_PromoMovementId.ValueData, 0) = 0 THEN Movement.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountOrder
-                 , SUM (CASE WHEN COALESCE (MIFloat_PromoMovementId.ValueData, 0) > 0 THEN Movement.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountOrderPromo
-                                        
+                 , SUM (CASE WHEN Movement.isUnit = FALSE AND COALESCE (MIFloat_PromoMovementId.ValueData, 0) = 0 THEN Movement.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountOrder
+                 , SUM (CASE WHEN Movement.isUnit = FALSE AND COALESCE (MIFloat_PromoMovementId.ValueData, 0) > 0 THEN Movement.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountOrderPromo
+                 , SUM (CASE WHEN Movement.isUnit = TRUE THEN Movement.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END)                                                          AS AmountOrderBranch                       
                  , 0                                                                        AS AmountSale
                  , 0                                                                        AS AmountSalePromo
                  , 0                                                                        AS AmountBranch
@@ -182,6 +188,7 @@ BEGIN
                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
                  , 0                                                   AS AmountOrder
                  , 0                                                   AS AmountOrderPromo
+                 , 0                                                   AS AmountOrderBranch
                  , SUM (CASE WHEN COALESCE (MIFloat_PromoMovementId.ValueData, 0) = 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) AS AmountSale
                  , SUM (CASE WHEN COALESCE (MIFloat_PromoMovementId.ValueData, 0) > 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) AS AmountSalePromo
                  , 0                                                   AS AmountBranch
@@ -214,6 +221,7 @@ BEGIN
                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
                  , 0                                                   AS AmountOrder
                  , 0                                                   AS AmountOrderPromo
+                 , 0                                                   AS AmountOrderBranch
                  , 0                                                   AS AmountSale
                  , 0                                                   AS AmountSalePromo
                  , SUM (COALESCE (Movement.Amount, 0))             AS AmountBranch
@@ -232,18 +240,38 @@ BEGIN
           
            )
 
-    INSERT INTO tmpAll (NumberDay, UnitId, GoodsId, GoodsKindId, AmountOrder, AmountOrderPromo, AmountSale, AmountSalePromo, AmountBranch)
+    INSERT INTO tmpAll (NumberDay, UnitId, GoodsId, GoodsKindId, AmountOrder, AmountOrderPromo, AmountOrderBranch, AmountSale, AmountSalePromo, AmountBranch)
             SELECT tmpDayOfWeek.Number
                  , tmpMIAll.UnitId
                  , tmpMIAll.GoodsId
                  , tmpMIAll.GoodsKindId
-                 , SUM (tmpMIAll.AmountOrder)      AS AmountOrder
-                 , SUM (tmpMIAll.AmountOrderPromo) AS AmountOrderPromo
-                 , SUM (tmpMIAll.AmountSale)       AS AmountSale
-                 , SUM (tmpMIAll.AmountSalePromo)  AS AmountSalePromo
-                 , SUM (tmpMIAll.AmountBranch)     AS AmountBranch
+                 
+                 /*, SUM (tmpMIAll.AmountOrder       * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS AmountOrder
+                 , SUM (tmpMIAll.AmountOrderPromo  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS AmountOrderPromo
+                 , SUM (tmpMIAll.AmountOrderBranch * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS AmountOrderBranch
+                 , SUM (tmpMIAll.AmountSale        * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS AmountSale
+                 , SUM (tmpMIAll.AmountSalePromo   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS AmountSalePromo
+                 , SUM (tmpMIAll.AmountBranch      * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS AmountBranch
+                 */
+                 , SUM (tmpMIAll.AmountOrder       ) AS AmountOrder
+                 , SUM (tmpMIAll.AmountOrderPromo  ) AS AmountOrderPromo
+                 , SUM (tmpMIAll.AmountOrderBranch ) AS AmountOrderBranch
+                 , SUM (tmpMIAll.AmountSale        ) AS AmountSale
+                 , SUM (tmpMIAll.AmountSalePromo   ) AS AmountSalePromo
+                 , SUM (tmpMIAll.AmountBranch      ) AS AmountBranch
+
+
             FROM tmpMIAll
-            LEFT JOIN zfCalc_DayOfWeekName(tmpMIAll.OperDate) AS tmpDayOfWeek ON 1=1
+                /* LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = tmpMIAll.GoodsId
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            
+                 LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                       ON ObjectFloat_Weight.ObjectId = tmpMIAll.GoodsId
+                                      AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()*/
+                                      
+                 LEFT JOIN zfCalc_DayOfWeekName(tmpMIAll.OperDate) AS tmpDayOfWeek ON 1=1
+                 
             GROUP BY tmpDayOfWeek.Number
                    , tmpMIAll.UnitId
                    , tmpMIAll.GoodsId
@@ -306,13 +334,13 @@ BEGIN
                                                       , inOrderPromo6  :=  tmpAll.OrderPromo6   :: TFloat
                                                       , inOrderPromo7  :=  tmpAll.OrderPromo7   :: TFloat
                                                         
-                                                      , inOrderBranch1 := 0          :: TFloat
-                                                      , inOrderBranch2 := 0          :: TFloat
-                                                      , inOrderBranch3 := 0          :: TFloat
-                                                      , inOrderBranch4 := 0          :: TFloat
-                                                      , inOrderBranch5 := 0          :: TFloat
-                                                      , inOrderBranch6 := 0          :: TFloat
-                                                      , inOrderBranch7 := 0          :: TFloat
+                                                      , inOrderBranch1 := tmpAll.OrderBranch1 :: TFloat
+                                                      , inOrderBranch2 := tmpAll.OrderBranch2 :: TFloat
+                                                      , inOrderBranch3 := tmpAll.OrderBranch3 :: TFloat
+                                                      , inOrderBranch4 := tmpAll.OrderBranch4 :: TFloat
+                                                      , inOrderBranch5 := tmpAll.OrderBranch5 :: TFloat
+                                                      , inOrderBranch6 := tmpAll.OrderBranch6 :: TFloat
+                                                      , inOrderBranch7 := tmpAll.OrderBranch7 :: TFloat
                                                       
                                                       , inUserId       := vbUserId
                                                     )
@@ -360,6 +388,14 @@ BEGIN
                   , SUM (CASE WHEN tmpAll.NumberDay = 6 THEN tmpAll.AmountOrderPromo ELSE 0 END) AS OrderPromo6
                   , SUM (CASE WHEN tmpAll.NumberDay = 7 THEN tmpAll.AmountOrderPromo ELSE 0 END) AS OrderPromo7
 
+                  , SUM (CASE WHEN tmpAll.NumberDay = 1 THEN tmpAll.AmountOrderBranch ELSE 0 END) AS OrderBranch1
+                  , SUM (CASE WHEN tmpAll.NumberDay = 2 THEN tmpAll.AmountOrderBranch ELSE 0 END) AS OrderBranch2
+                  , SUM (CASE WHEN tmpAll.NumberDay = 3 THEN tmpAll.AmountOrderBranch ELSE 0 END) AS OrderBranch3
+                  , SUM (CASE WHEN tmpAll.NumberDay = 4 THEN tmpAll.AmountOrderBranch ELSE 0 END) AS OrderBranch4
+                  , SUM (CASE WHEN tmpAll.NumberDay = 5 THEN tmpAll.AmountOrderBranch ELSE 0 END) AS OrderBranch5
+                  , SUM (CASE WHEN tmpAll.NumberDay = 6 THEN tmpAll.AmountOrderBranch ELSE 0 END) AS OrderBranch6
+                  , SUM (CASE WHEN tmpAll.NumberDay = 7 THEN tmpAll.AmountOrderBranch ELSE 0 END) AS OrderBranch7
+                  
              FROM tmpAll
              GROUP BY tmpAll.UnitId
                     , tmpAll.GoodsId

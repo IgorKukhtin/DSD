@@ -506,6 +506,24 @@ object GoodsReportSaleForm: TGoodsReportSaleForm
         Options.Editing = False
         Width = 84
       end
+      object MeasureName: TcxGridDBColumn
+        Caption = #1045#1076'. '#1080#1079#1084'.'
+        DataBinding.FieldName = 'MeasureName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 50
+      end
+      object Weight: TcxGridDBColumn
+        Caption = #1042#1077#1089
+        DataBinding.FieldName = 'Weight'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.###;-,0.###; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 45
+      end
       object Amount1: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' '#1087#1085'.'
         DataBinding.FieldName = 'Amount1'

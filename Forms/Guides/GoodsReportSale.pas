@@ -82,6 +82,8 @@ type
     spInsertUpdate: TdsdStoredProc;
     actInsertUpdate: TdsdExecStoredProc;
     macInsertUpdate: TMultiAction;
+    MeasureName: TcxGridDBColumn;
+    Weight: TcxGridDBColumn;
   private
     { Private declarations }
   public

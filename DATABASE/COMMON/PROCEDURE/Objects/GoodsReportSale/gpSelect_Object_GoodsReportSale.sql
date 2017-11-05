@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsReportSale(
 RETURNS TABLE (UnitId Integer, UnitName TVarChar, GoodsId Integer
             , GoodsCode Integer, GoodsName TVarChar
             , GoodsKindId Integer, GoodsKindName TVarChar
+            , MeasureName TVarChar, Weight TFloat
             
             , Amount1 TFloat
             , Amount2 TFloat
@@ -72,6 +73,9 @@ BEGIN
             , Object_Goods.ValueData               AS GoodsName
             , Object_GoodsKind.Id                  AS GoodsKindId
             , Object_GoodsKind.ValueData           AS GoodsKindName
+            
+            , Object_Measure.ValueData             AS MeasureName
+            , COALESCE (ObjectFloat_Weight.ValueData, 0) :: TFloat AS Weight
             
             , ObjectFloat_Amount1.ValueData        AS Amount1
             , ObjectFloat_Amount2.ValueData        AS Amount2
@@ -271,6 +275,15 @@ BEGIN
                                  ON ObjectLink_GoodsKind.ObjectId = Object_GoodsReportSale.Id
                                 AND ObjectLink_GoodsKind.DescId = zc_ObjectLink_GoodsReportSale_GoodsKind()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_GoodsKind.ChildObjectId 
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+            
+            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                  ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
+                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
       WHERE Object_GoodsReportSale.DescId = zc_Object_GoodsReportSale()
 ;
