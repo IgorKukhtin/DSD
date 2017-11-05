@@ -565,7 +565,7 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
       GuiParams = <>
       isShowModal = True
       MapType = acShowAll
-      GridView = cxGridDBTableView
+      DataSet = MasterCDS
     end
   end
   inherited MasterDS: TDataSource

@@ -1468,8 +1468,8 @@ inherited IncomeJournalForm: TIncomeJournalForm
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
-    Left = 400
-    Top = 200
+    Left = 408
+    Top = 216
   end
   inherited spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement_Income'
@@ -1579,8 +1579,8 @@ inherited IncomeJournalForm: TIncomeJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 440
-    Top = 152
+    Left = 392
+    Top = 160
   end
   object spUpdateIncome_PartnerData: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Income_PartnerData'

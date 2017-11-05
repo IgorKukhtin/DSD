@@ -914,6 +914,8 @@ type
     N186: TMenuItem;
     actOrderInternalPackRemains: TdsdOpenForm;
     miOrderInternalPackRemains: TMenuItem;
+    actGoodsReportSale: TdsdOpenForm;
+    N187: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

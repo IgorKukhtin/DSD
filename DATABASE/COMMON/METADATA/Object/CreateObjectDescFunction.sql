@@ -809,6 +809,14 @@ CREATE OR REPLACE FUNCTION zc_Object_StickerPack() RETURNS integer AS $BODY$BEGI
 INSERT INTO ObjectDesc(Code, ItemName)
 SELECT 'zc_Object_StickerPack', 'вид пакування' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_StickerPack');
 
+CREATE OR REPLACE FUNCTION zc_Object_GoodsReportSaleInf() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_GoodsReportSaleInf'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_GoodsReportSaleInf', 'Статистика продаж по дням недели (протокол)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_GoodsReportSaleInf');
+
+CREATE OR REPLACE FUNCTION zc_Object_GoodsReportSale() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_GoodsReportSale'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_GoodsReportSale', 'Статистика продаж по дням недели' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_GoodsReportSale');
+
 
 --!!! Аптека
 CREATE OR REPLACE FUNCTION zc_Object_FileTypeKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_FileTypeKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -1002,6 +1010,8 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.
+ 02.11.17         * zc_Object_GoodsReportSaleInf
+                    zc_Object_GoodsReportSale
  30.10.17         * zc_Object_DataExcel
  23.10.17         * zc_Object_Sticker ........
                     zc_Object_StickerProperty
