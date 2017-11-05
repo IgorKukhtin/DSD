@@ -115,6 +115,7 @@ BEGIN
        LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
        LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
+  WHERE 1=0       
  UNION ALL
   -- arc-2
   SELECT 
@@ -141,9 +142,11 @@ BEGIN
                            AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
        LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
        LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
-       LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId;
-  ELSE
+       LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
+  WHERE 1=0;
 
+  ELSE
+  
   IF inMovementId <> 0 
   THEN
   -- real-1
@@ -203,7 +206,9 @@ BEGIN
                            AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
        LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
        LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
-       LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId;
+       LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
+  WHERE 1=0;
+
   ELSE
      RAISE EXCEPTION 'Ошибка.Просмотр протокола недоступен.';
 

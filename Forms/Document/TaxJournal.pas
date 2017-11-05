@@ -138,6 +138,8 @@ type
     mactIFinGrid: TMultiAction;
     bbIFin: TdxBarButton;
     bbIFinALL: TdxBarButton;
+    spGetDirectoryNameIFIN: TdsdStoredProc;
+    actGetDirectoryIFIN: TdsdExecStoredProc;
   private
     { Private declarations }
   public

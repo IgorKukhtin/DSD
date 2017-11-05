@@ -118,6 +118,8 @@ type
     IFinListAction: TMedocCorrectiveAction;
     IFinAction: TMedocCorrectiveAction;
     mactIFinGrid: TMultiAction;
+    spGetDirectoryNameIFIN: TdsdStoredProc;
+    actGetDirectoryIFIN: TdsdExecStoredProc;
   private
     { Private declarations }
   public

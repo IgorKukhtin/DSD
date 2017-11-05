@@ -4,10 +4,10 @@ DROP FUNCTION IF EXISTS gpReport_GoodsGroup (TDateTime, TDateTime, Integer, Inte
 DROP FUNCTION IF EXISTS gpReport_GoodsGroup (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsGroup(
-    IN inStartDate    TDateTime ,  
+    IN inStartDate    TDateTime ,
     IN inEndDate      TDateTime ,
     IN inUnitGroupId  Integer   ,
-    IN inLocationId   Integer   , 
+    IN inLocationId   Integer   ,
     IN inGoodsGroupId Integer   ,
     IN inIsPartner    Boolean   ,
     IN inSession      TVarChar    -- сессия пользователя
@@ -29,7 +29,7 @@ RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Oper
               , Amount_40200 TFloat, Summ_40200_branch TFloat, Summ_40200_zavod TFloat
               , Amount_Loss TFloat, Summ_Loss_branch TFloat, Summ_Loss_zavod TFloat
               , isPage3 Boolean, isExistsPage3 Boolean
-               )  
+               )
 AS
 $BODY$
  DECLARE vbUserId Integer;
@@ -42,12 +42,14 @@ BEGIN
      -- !!!определяется!!!
      vbIsBranch:= 1 = 0 OR EXISTS (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0 GROUP BY BranchId);
 
-     -- таблица - 
-     CREATE TEMP TABLE _tmpGoods (GoodsId Integer, InfoMoneyId Integer, TradeMarkId Integer, MeasureId Integer, Weight TFloat) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmpUnit (UnitId Integer, UnitId_by Integer, isActive Boolean) ON COMMIT DROP;
+     -- таблица -
+     /*CREATE TEMP TABLE _tmpGoods (GoodsId Integer, InfoMoneyId Integer, TradeMarkId Integer, MeasureId Integer, Weight TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpUnit (UnitId Integer, UnitId_by Integer, isActive Boolean) ON COMMIT DROP;*/
 
 
+    -- Результат
     RETURN QUERY
+
     WITH tmpSendOnPrice_out AS (SELECT * FROM gpReport_GoodsMI_SendOnPrice (inStartDate    := inStartDate
                                                                           , inEndDate      := inEndDate
                                                                           , inFromId       := CASE WHEN inLocationId <> 0 THEN inLocationId ELSE inUnitGroupId END
@@ -291,7 +293,7 @@ BEGIN
                             , 0                               AS SummPartnerIn
 
                             , SUM (tmp.AmountStart_Weight)    AS AmountStart
-                            , SUM (tmp.AmountEnd_Weight)      AS AmountEnd 
+                            , SUM (tmp.AmountEnd_Weight)      AS AmountEnd
                             , CASE WHEN vbIsBranch = TRUE THEN SUM (tmp.SummStart_branch) ELSE SUM (tmp.SummStart_zavod) END AS SummStart
                             , CASE WHEN vbIsBranch = TRUE THEN SUM (tmp.SummEnd_branch)   ELSE SUM (tmp.SummEnd_zavod)   END AS SummEnd
                             , SUM (tmp.SummStart_branch)      AS SummStart_branch
@@ -302,10 +304,10 @@ BEGIN
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
                             , 0                               AS Summ_Change_zavod
-                            , 0                               AS Amount_40200 
+                            , 0                               AS Amount_40200
                             , 0                               AS Summ_40200_branch
                             , 0                               AS Summ_40200_zavod
-                            , 0                               AS Amount_Loss 
+                            , 0                               AS Amount_Loss
                             , 0                               AS Summ_Loss_branch
                             , 0                               AS Summ_Loss_zavod
 
@@ -335,9 +337,9 @@ BEGIN
                             , 0                               AS SummPartnerIn
 
                             , 0                               AS AmountStart
-                            , 0                               AS AmountEnd 
+                            , 0                               AS AmountEnd
                             , 0                               AS SummStart
-                            , 0                               AS SummEnd 
+                            , 0                               AS SummEnd
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
                             --***, CASE WHEN vbIsBranch = TRUE THEN SUM (tmp.SummOut_Partner) ELSE SUM (tmp.SummIn_Partner_zavod) END AS Summ
@@ -347,7 +349,7 @@ BEGIN
                             , SUM (tmp.OperCount_Change)      AS Amount_Change
                             , SUM (tmp.SummIn_Change_zavod)   AS Summ_Change_branch
                             , SUM (tmp.SummIn_Change_zavod)   AS Summ_Change_zavod
-                            , SUM (tmp.OperCount_40200)       AS Amount_40200 
+                            , SUM (tmp.OperCount_40200)       AS Amount_40200
                             , SUM (tmp.SummIn_40200_zavod)    AS Summ_40200_branch
                             , SUM (tmp.SummIn_40200_zavod)    AS Summ_40200_zavod
                             , SUM (tmp.OperCount_Loss)        AS Amount_Loss
@@ -381,9 +383,9 @@ BEGIN
                             , SUM (tmp.Summ_pl)               AS SummPartnerIn
 
                             , 0                               AS AmountStart
-                            , 0                               AS AmountEnd 
+                            , 0                               AS AmountEnd
                             , 0                               AS SummStart
-                            , 0                               AS SummEnd 
+                            , 0                               AS SummEnd
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
                             --***, SUM (tmp.SummIn_Partner_zavod)  AS Summ
@@ -396,7 +398,7 @@ BEGIN
                             , SUM (tmp.OperCount_40200)       AS Amount_40200
                             , SUM (tmp.SummIn_40200_zavod)    AS Summ_40200_branch
                             , SUM (tmp.SummIn_40200_zavod)    AS Summ_40200_zavod
-                            , 0                               AS Amount_Loss 
+                            , 0                               AS Amount_Loss
                             , 0                               AS Summ_Loss_branch
                             , 0                               AS Summ_Loss_zavod
 
@@ -435,9 +437,9 @@ BEGIN
                             , 0                               AS SummPartnerIn
 
                             , 0                               AS AmountStart
-                            , 0                               AS AmountEnd 
+                            , 0                               AS AmountEnd
                             , 0                               AS SummStart
-                            , 0                               AS SummEnd 
+                            , 0                               AS SummEnd
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
                             , tmp.SummOut_zavod               AS Summ
@@ -446,10 +448,10 @@ BEGIN
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
                             , 0                               AS Summ_Change_zavod
-                            , 0                               AS Amount_40200 
+                            , 0                               AS Amount_40200
                             , 0                               AS Summ_40200_branch
                             , 0                               AS Summ_40200_zavod
-                            , 0                               AS Amount_Loss 
+                            , 0                               AS Amount_Loss
                             , 0                               AS Summ_Loss_branch
                             , 0                               AS Summ_Loss_zavod
 
@@ -476,9 +478,9 @@ BEGIN
                             , 0                               AS SummPartnerIn
 
                             , 0                               AS AmountStart
-                            , 0                               AS AmountEnd 
+                            , 0                               AS AmountEnd
                             , 0                               AS SummStart
-                            , 0                               AS SummEnd 
+                            , 0                               AS SummEnd
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
                             , tmp.SummOut_zavod               AS Summ
@@ -487,10 +489,10 @@ BEGIN
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
                             , 0                               AS Summ_Change_zavod
-                            , 0                               AS Amount_40200 
+                            , 0                               AS Amount_40200
                             , 0                               AS Summ_40200_branch
                             , 0                               AS Summ_40200_zavod
-                            , 0                               AS Amount_Loss 
+                            , 0                               AS Amount_Loss
                             , 0                               AS Summ_Loss_branch
                             , 0                               AS Summ_Loss_zavod
 
@@ -517,9 +519,9 @@ BEGIN
                             , 0                               AS SummPartnerIn
 
                             , 0                               AS AmountStart
-                            , 0                               AS AmountEnd 
+                            , 0                               AS AmountEnd
                             , 0                               AS SummStart
-                            , 0                               AS SummEnd 
+                            , 0                               AS SummEnd
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
                             , tmp.SummIn_zavod                AS Summ
@@ -528,10 +530,10 @@ BEGIN
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
                             , 0                               AS Summ_Change_zavod
-                            , 0                               AS Amount_40200 
+                            , 0                               AS Amount_40200
                             , 0                               AS Summ_40200_branch
                             , 0                               AS Summ_40200_zavod
-                            , 0                               AS Amount_Loss 
+                            , 0                               AS Amount_Loss
                             , 0                               AS Summ_Loss_branch
                             , 0                               AS Summ_Loss_zavod
 
@@ -558,9 +560,9 @@ BEGIN
                             , 0                               AS SummPartnerIn
 
                             , 0                               AS AmountStart
-                            , 0                               AS AmountEnd 
+                            , 0                               AS AmountEnd
                             , 0                               AS SummStart
-                            , 0                               AS SummEnd 
+                            , 0                               AS SummEnd
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
                             , SUM (tmp.SummIn_Partner_zavod)  AS Summ
@@ -569,10 +571,10 @@ BEGIN
                             , SUM (tmp.OperCount_Change)      AS Amount_Change
                             , SUM (tmp.SummIn_Change_branch)  AS Summ_Change_branch
                             , SUM (tmp.SummIn_Change_zavod)   AS Summ_Change_zavod
-                            , SUM (tmp.OperCount_40200)       AS Amount_40200 
+                            , SUM (tmp.OperCount_40200)       AS Amount_40200
                             , SUM (tmp.SummIn_40200_branch)   AS Summ_40200_branch
                             , SUM (tmp.SummIn_40200_zavod)    AS Summ_40200_zavod
-                            , SUM (tmp.OperCount_Loss)        AS Amount_Loss 
+                            , SUM (tmp.OperCount_Loss)        AS Amount_Loss
                             , SUM (tmp.SummIn_Loss)           AS Summ_Loss_branch
                             , SUM (tmp.SummIn_Loss_zavod)     AS Summ_Loss_zavod
 
@@ -603,9 +605,9 @@ BEGIN
                             , SUM (tmp.SummOut_Partner)       AS SummPartnerIn
 
                             , 0                               AS AmountStart
-                            , 0                               AS AmountEnd 
+                            , 0                               AS AmountEnd
                             , 0                               AS SummStart
-                            , 0                               AS SummEnd 
+                            , 0                               AS SummEnd
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
                             , SUM (tmp.SummIn_Partner_zavod)  AS Summ
@@ -648,9 +650,9 @@ BEGIN
                             , SUM (tmp.Summ)                  AS SummPartnerIn
 
                             , 0                               AS AmountStart
-                            , 0                               AS AmountEnd 
+                            , 0                               AS AmountEnd
                             , 0                               AS SummStart
-                            , 0                               AS SummEnd 
+                            , 0                               AS SummEnd
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
                             , SUM (tmp.Summ - Summ_ProfitLoss) AS Summ
@@ -693,9 +695,9 @@ BEGIN
                             , 0                               AS SummPartnerIn
 
                             , 0                               AS AmountStart
-                            , 0                               AS AmountEnd 
+                            , 0                               AS AmountEnd
                             , 0                               AS SummStart
-                            , 0                               AS SummEnd 
+                            , 0                               AS SummEnd
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
                             , SUM (tmp.Summ - Summ_ProfitLoss) AS Summ
@@ -738,9 +740,9 @@ BEGIN
                             , 0                               AS SummPartnerIn
 
                             , 0                               AS AmountStart
-                            , 0                               AS AmountEnd 
+                            , 0                               AS AmountEnd
                             , 0                               AS SummStart
-                            , 0                               AS SummEnd 
+                            , 0                               AS SummEnd
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
                             , SUM (tmp.Summ_zavod)            AS Summ
@@ -780,9 +782,9 @@ BEGIN
                             , 0                               AS SummPartnerIn
 
                             , 0                               AS AmountStart
-                            , 0                               AS AmountEnd 
+                            , 0                               AS AmountEnd
                             , 0                               AS SummStart
-                            , 0                               AS SummEnd 
+                            , 0                               AS SummEnd
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
                             , SUM (tmp.Summ_zavod)            AS Summ
@@ -823,9 +825,9 @@ BEGIN
                             , 0                               AS SummPartnerIn
 
                             , 0                               AS AmountStart
-                            , 0                               AS AmountEnd 
+                            , 0                               AS AmountEnd
                             , 0                               AS SummStart
-                            , 0                               AS SummEnd 
+                            , 0                               AS SummEnd
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
                             , SUM (tmp.Summ_zavod)            AS Summ
@@ -865,9 +867,9 @@ BEGIN
                             , 0                               AS SummPartnerIn
 
                             , 0                               AS AmountStart
-                            , 0                               AS AmountEnd 
+                            , 0                               AS AmountEnd
                             , 0                               AS SummStart
-                            , 0                               AS SummEnd 
+                            , 0                               AS SummEnd
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
                             , SUM (tmp.Summ_zavod)            AS Summ
@@ -907,9 +909,9 @@ BEGIN
                             , 0                               AS SummPartnerIn
 
                             , 0                               AS AmountStart
-                            , 0                               AS AmountEnd 
+                            , 0                               AS AmountEnd
                             , 0                               AS SummStart
-                            , 0                               AS SummEnd 
+                            , 0                               AS SummEnd
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
                             , SUM (tmp.SummIn_zavod)          AS Summ
@@ -949,9 +951,9 @@ BEGIN
                             , 0                               AS SummPartnerIn
 
                             , 0                               AS AmountStart
-                            , 0                               AS AmountEnd 
+                            , 0                               AS AmountEnd
                             , 0                               AS SummStart
-                            , 0                               AS SummEnd 
+                            , 0                               AS SummEnd
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
                             , -1 * SUM (tmp.SummOut_zavod)    AS Summ
@@ -990,9 +992,9 @@ BEGIN
                             , 0                               AS SummPartnerIn
 
                             , 0                               AS AmountStart
-                            , 0                               AS AmountEnd 
+                            , 0                               AS AmountEnd
                             , 0                               AS SummStart
-                            , 0                               AS SummEnd 
+                            , 0                               AS SummEnd
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
                             , 0                               AS Summ
@@ -1032,9 +1034,9 @@ BEGIN
                             , 0                               AS SummPartnerIn
 
                             , 0                               AS AmountStart
-                            , 0                               AS AmountEnd 
+                            , 0                               AS AmountEnd
                             , 0                               AS SummStart
-                            , 0                               AS SummEnd 
+                            , 0                               AS SummEnd
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
                             , 0                               AS Summ
@@ -1224,8 +1226,7 @@ BEGIN
         LEFT JOIN MovementDesc ON MovementDesc.Id = tmpResult.MovementDescId
         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpResult.PaidKindId
    ;
-    
-        
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -1238,4 +1239,4 @@ ALTER FUNCTION gpReport_GoodsGroup (TDateTime, TDateTime, Integer, Integer, Inte
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsGroup (inStartDate:= '01.02.2016', inEndDate:= '01.02.2016', inUnitGroupId:= 0, inLocationId:= 8459, inGoodsGroupId:= 1832, inIsPartner:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsGroup (inStartDate:= '01.11.2017', inEndDate:= '01.11.2017', inUnitGroupId:= 0, inLocationId:= 8459, inGoodsGroupId:= 1832, inIsPartner:= FALSE, inSession:= zfCalc_UserAdmin());

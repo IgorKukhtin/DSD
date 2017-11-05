@@ -126,7 +126,7 @@ BEGIN
 
 
 
-    -- сохранили zc_MI_Master
+    -- сохранили св-ва для zc_MI_Master
     PERFORM lpUpdate_MI_OrderInternal_Property (ioId                 := tmpAll.MovementItemId
                                               , inMovementId         := inMovementId
                                               , inGoodsId            := tmpAll.GoodsId

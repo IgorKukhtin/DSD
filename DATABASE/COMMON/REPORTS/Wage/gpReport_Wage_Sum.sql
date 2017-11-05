@@ -44,7 +44,7 @@ BEGIN
     vbUserId := inSession::Integer;
 
     -- Таблица - Данные для расчета
-    CREATE TEMP TABLE Setting_Wage_2(
+    /*CREATE TEMP TABLE Setting_Wage_2(
         StaffListId             Integer
        ,UnitId                Integer
        ,UnitName              TVarChar
@@ -60,13 +60,18 @@ BEGIN
        ,StaffListSumm_Value   TFloat
        ,StaffListSummKindId   Integer
        ,StaffListSummKindName TVarChar
-       ) ON COMMIT DROP;
+       ) ON COMMIT DROP;*/
 
-    -- Настройки
-    INSERT INTO Setting_Wage_2 (StaffListId, UnitId,UnitName,PositionId,PositionName, isPositionLevel_all, PositionLevelId, PositionLevelName
-                              , Count_Member,HoursPlan,HoursDay,StaffListSummId,StaffListSumm_Value,StaffListSummKindId,StaffListSummKindName
-                               )
-    SELECT
+
+
+   -- результат
+   RETURN QUERY
+
+    WITH -- Настройки
+         Setting_Wage_2 -- (StaffListId, UnitId,UnitName,PositionId,PositionName, isPositionLevel_all, PositionLevelId, PositionLevelName
+                        --, Count_Member,HoursPlan,HoursDay,StaffListSummId,StaffListSumm_Value,StaffListSummKindId,StaffListSummKindName)
+                        AS
+   (SELECT
         Object_StaffList.Id                                      AS StaffListId
        ,ObjectLink_StaffList_Unit.ChildObjectId                  AS UnitId
        ,Object_Unit.ValueData                                    AS UnitName
@@ -138,12 +143,10 @@ BEGIN
       AND Object_StaffList.isErased = FALSE
       AND (ObjectLink_StaffList_Unit.ChildObjectId = inUnitId OR inUnitId = 0)
       AND (ObjectLink_StaffList_Position.ChildObjectId = inPositionId OR inPositionId = 0)
-   ;
+   )
     
-    -- результат
-    RETURN QUERY
-    WITH -- табель - кто в какие дни работал
-         MI_SheetWorkTime AS
+         -- табель - кто в какие дни работал
+       , MI_SheetWorkTime AS
           (SELECT
                  MI_SheetWorkTime.ObjectId                      AS MemberId
                , Object_Member.ValueData                        AS MemberName
@@ -248,7 +251,6 @@ BEGIN
            , SheetWorkTime.Count_MemberInDay
            , SheetWorkTime.SUM_MemberHours
        )
-
    -- Результат
    SELECT 
         Setting.StaffListId
@@ -309,4 +311,4 @@ $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
 -- тест
--- SELECT * FROM gpSelect_Report_Wage_Sum (inStartDate:= '01.04.2016', inEndDate:= '01.04.2016', inUnitId:= 8439, inMemberId:= 0, inPositionId:= 0, inSession:= '5');
+-- SELECT * FROM gpSelect_Report_Wage_Sum (inStartDate:= '01.11.2017', inEndDate:= '01.11.2017', inUnitId:= 8439, inMemberId:= 0, inPositionId:= 0, inSession:= '5');

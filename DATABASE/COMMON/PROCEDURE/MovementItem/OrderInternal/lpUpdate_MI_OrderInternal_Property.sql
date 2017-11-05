@@ -27,6 +27,9 @@ $BODY$
    DECLARE vbOperDate TDateTime;
    DECLARE vbFromId Integer;
    DECLARE vbAmount_calc TFloat;
+
+   DECLARE vbGoodsId_add     Integer;
+   DECLARE vbGoodsKindId_add Integer;
 BEGIN
      -- определяется
      SELECT EXTRACT (MONTH FROM (Movement.OperDate + INTERVAL '1 DAY'))
@@ -474,6 +477,43 @@ BEGIN
                                    AND ObjectFloat_TermProduction.DescId = zc_ObjectFloat_OrderType_TermProduction()
                                    AND ObjectFloat_TermProduction.ValueData <> 0
              ;
+
+
+         -- !!!Добавили еще!!!
+         vbGoodsId_add    := (SELECT MILO.ObjectId FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = ioId AND MILO.DescId = zc_MILinkObject_Goods());
+         vbGoodsKindId_add:= (SELECT MILO.ObjectId FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = ioId AND MILO.DescId = zc_MILinkObject_GoodsKindComplete());
+
+         -- !!!Добавили еще!!!
+         IF vbGoodsId_add > 0 AND vbGoodsKindId_add > 0 
+            AND NOT EXISTS (SELECT 1
+                            FROM MovementItem
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
+                                                             ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+                            WHERE MovementItem.MovementId = inMovementId
+                              AND MovementItem.ObjectId   = vbGoodsId_add
+                              AND MovementItem.DescId     = zc_MI_Master()
+                              AND MovementItem.isErased   = FALSE
+                              AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = vbGoodsKindId_add
+                              AND COALESCE (MIFloat_ContainerId.ValueData, 0)   = 0
+                           )
+         THEN PERFORM lpUpdate_MI_OrderInternal_Property (ioId                 := NULL
+                                                        , inMovementId         := inMovementId
+                                                        , inGoodsId            := vbGoodsId_add
+                                                        , inGoodsKindId        := vbGoodsKindId_add
+                                                        , inAmount_Param       := 0
+                                                        , inDescId_Param       := zc_MIFloat_AmountRemains()
+                                                        , inAmount_ParamOrder  := 0
+                                                        , inDescId_ParamOrder  := zc_MIFloat_ContainerId()
+                                                        , inAmount_ParamSecond := NULL
+                                                        , inDescId_ParamSecond := NULL
+                                                        , inIsPack             := NULL -- что б не формировать св-ва
+                                                        , inUserId             := inUserId
+                                                         );
+         END IF;
      END IF;
 
 

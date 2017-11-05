@@ -81,11 +81,11 @@ BEGIN
     vbUserId := inSession::Integer;
 
     -- список дней
-    CREATE TEMP TABLE tmpOperDate ON COMMIT DROP
-       AS SELECT generate_series (inStartDate, inEndDate, '1 DAY' :: INTERVAL) AS OperDate;
+    /*CREATE TEMP TABLE tmpOperDate ON COMMIT DROP
+       AS SELECT generate_series (inStartDate, inEndDate, '1 DAY' :: INTERVAL) AS OperDate;*/
 
     -- Таблица - Данные для расчета
-    CREATE TEMP TABLE Setting_Wage_1(
+    /*CREATE TEMP TABLE Setting_Wage_1(
         StaffListId     Integer
        ,DocumentKindId  Integer
        ,UnitId          Integer
@@ -132,18 +132,22 @@ BEGIN
        ,GoodsKind_ToName                 TVarChar
        ,GoodsKindComplete_ToId           Integer
        ,GoodsKindComplete_ToName         TVarChar
-       ) ON COMMIT DROP;
+       ) ON COMMIT DROP;*/
 
 
-    -- получили Настройки
-    INSERT INTO Setting_Wage_1 (StaffListId, DocumentKindId, UnitId,UnitName,PositionId,PositionName, isPositionLevel_all, PositionLevelId, PositionLevelName, Count_Member,HoursPlan,HoursDay, ServiceModelKindId, ServiceModelId,ServiceModelCode
+    -- Результат
+    RETURN QUERY
+
+    WITH tmpOperDate AS (SELECT generate_series (inStartDate, inEndDate, '1 DAY' :: INTERVAL) AS OperDate)
+              -- получили Настройки
+            , Setting_Wage_1 /*(StaffListId, DocumentKindId, UnitId,UnitName,PositionId,PositionName, isPositionLevel_all, PositionLevelId, PositionLevelName, Count_Member,HoursPlan,HoursDay, ServiceModelKindId, ServiceModelId,ServiceModelCode
                               , ServiceModelName,Price,FromId,FromName,ToId,ToName,MovementDescId,MovementDescName, SelectKindId, SelectKindCode, SelectKindName, isActive
                               , Ratio,ModelServiceItemChild_FromId,ModelServiceItemChild_FromDescId,ModelServiceItemChild_FromName,ModelServiceItemChild_ToId,ModelServiceItemChild_ToDescId,ModelServiceItemChild_ToName
                               , StorageLineId_From, StorageLineName_From, StorageLineId_To, StorageLineName_To
                               , GoodsKind_FromId, GoodsKind_FromName, GoodsKindComplete_FromId, GoodsKindComplete_FromName
                               , GoodsKind_ToId, GoodsKind_ToName, GoodsKindComplete_ToId, GoodsKindComplete_ToName
-                               )
-    SELECT
+                               )*/
+AS  (SELECT
         Object_StaffList.Id                                 AS StaffListId            -- Штатное расписание
        ,COALESCE (ObjectLink_ModelServiceItemMaster_DocumentKind.ChildObjectId, 0) AS DocumentKindId
        ,ObjectLink_StaffList_Unit.ChildObjectId             AS UnitId                 -- Поразделение
@@ -358,12 +362,10 @@ BEGIN
         AND (ObjectLink_StaffList_Unit.ChildObjectId = inUnitId OR inUnitId = 0)
         AND (ObjectLink_StaffList_Position.ChildObjectId = inPositionId OR inPositionId = 0)
         AND (ObjectLink_StaffListCost_ModelService.ChildObjectId = inModelServiceId OR inModelServiceId = 0)
-   ;
+   )
 
-    -- Результат
-    RETURN QUERY
-    WITH -- ВСЕ документы для расчета по Расценкам грн./кг. - по MovementId
-         tmpMovement_all AS
+         -- ВСЕ документы для расчета по Расценкам грн./кг. - по MovementId
+       , tmpMovement_all AS
        (SELECT
             MovementItemContainer.OperDate
            ,MovementItemContainer.MovementId
@@ -863,7 +865,6 @@ BEGIN
                     , Movement_Sheet.StorageLineId
             ) AS Movement_Sheet
        )
-
     -- Результат
     SELECT
         Setting.StaffListId
@@ -993,4 +994,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Report_Wage_Model (inStartDate:= '02.06.2017', inEndDate:= '02.06.2017', inUnitId:= 8439, inModelServiceId:= 632844, inMemberId:= 0, inPositionId:= 0, inSession:= '5');
+-- SELECT * FROM gpSelect_Report_Wage_Model (inStartDate:= '02.11.2017', inEndDate:= '02.11.2017', inUnitId:= 8439, inModelServiceId:= 632844, inMemberId:= 0, inPositionId:= 0, inSession:= '5');

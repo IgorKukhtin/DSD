@@ -4,6 +4,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   ClientWidth = 1118
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog1
+  ExplicitLeft = -340
   ExplicitWidth = 1134
   ExplicitHeight = 570
   PixelsPerInch = 96
@@ -1178,7 +1179,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actGetDirectory
+          Action = actGetDirectoryIFIN
         end
         item
           Action = mactIFinGrid
@@ -1240,6 +1241,17 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         end>
       View = cxGridDBTableView
       Caption = 'mactMEDOCGrid'
+    end
+    object actGetDirectoryIFIN: TdsdExecStoredProc
+      Category = 'TaxLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetDirectoryNameIFIN
+      StoredProcList = <
+        item
+          StoredProc = spGetDirectoryNameIFIN
+        end>
+      Caption = 'actGetDirectoryIFIN'
     end
   end
   inherited MasterDS: TDataSource
@@ -2001,5 +2013,21 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     PackSize = 1
     Left = 936
     Top = 48
+  end
+  object spGetDirectoryNameIFIN: TdsdStoredProc
+    StoredProcName = 'gpGetDirectoryNameIFIN'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'Directory'
+        Value = Null
+        Component = IFinListAction
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 512
+    Top = 192
   end
 end
