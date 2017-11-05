@@ -18,8 +18,8 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderInternal());
      
-     vbStartDate := '01.11.2016';--(CURRENT_DATE - INTERVAL '57 DAY') ::TDateTime;
-     vbEndDate   := '01.11.2016';--(CURRENT_DATE - INTERVAL '2 DAY')  ::TDateTime;
+     vbStartDate := (CURRENT_DATE - INTERVAL '57 DAY') ::TDateTime;   --'01.11.2016';--
+     vbEndDate   := (CURRENT_DATE - INTERVAL '2 DAY')  ::TDateTime;   --'01.11.2016';--
      
      -- сохраняем zc_Object_GoodsReportSaleInf
      PERFORM lpInsertUpdate_Object_GoodsReportSaleInf (inId := COALESCE ((SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsReportSaleInf()) , 0) ::Integer
@@ -289,60 +289,60 @@ BEGIN
    -- сохранить новые данные
 
        -- сохранили
-       PERFORM lpInsertUpdate_Object_GoodsReportSaleInf(inId           := 0               ::Integer       -- ключ объекта <> 
-                                                      , inUnitId       := tmpAll.UnitId 
-                                                      , inGoodsId      := tmpAll.GoodsId    
-                                                      , inGoodsKindId  := tmpAll.GoodsKindId
-                                                      
-                                                      , inAmount1      :=  tmpAll.Amount1   :: TFloat
-                                                      , inAmount2      :=  tmpAll.Amount2   :: TFloat
-                                                      , inAmount3      :=  tmpAll.Amount3   :: TFloat
-                                                      , inAmount4      :=  tmpAll.Amount4   :: TFloat
-                                                      , inAmount5      :=  tmpAll.Amount5   :: TFloat
-                                                      , inAmount6      :=  tmpAll.Amount6   :: TFloat
-                                                      , inAmount7      :=  tmpAll.Amount7   :: TFloat
-                                                                                                            
-                                                      , inPromo1       :=  tmpAll.Promo1    :: TFloat
-                                                      , inPromo2       :=  tmpAll.Promo2    :: TFloat    
-                                                      , inPromo3       :=  tmpAll.Promo3    :: TFloat    
-                                                      , inPromo4       :=  tmpAll.Promo4    :: TFloat    
-                                                      , inPromo5       :=  tmpAll.Promo5    :: TFloat    
-                                                      , inPromo6       :=  tmpAll.Promo6    :: TFloat    
-                                                      , inPromo7       :=  tmpAll.Promo7    :: TFloat    
-                                                                                                
-                                                      , inBranch1      :=  tmpAll.AmountBranch1 :: TFloat
-                                                      , inBranch2      :=  tmpAll.AmountBranch2 :: TFloat
-                                                      , inBranch3      :=  tmpAll.AmountBranch3 :: TFloat
-                                                      , inBranch4      :=  tmpAll.AmountBranch4 :: TFloat
-                                                      , inBranch5      :=  tmpAll.AmountBranch5 :: TFloat
-                                                      , inBranch6      :=  tmpAll.AmountBranch6 :: TFloat
-                                                      , inBranch7      :=  tmpAll.AmountBranch7 :: TFloat
-                                                                                                
-                                                      , inOrder1       :=  tmpAll.Order1        :: TFloat
-                                                      , inOrder2       :=  tmpAll.Order2        :: TFloat
-                                                      , inOrder3       :=  tmpAll.Order3        :: TFloat
-                                                      , inOrder4       :=  tmpAll.Order4        :: TFloat
-                                                      , inOrder5       :=  tmpAll.Order5        :: TFloat
-                                                      , inOrder6       :=  tmpAll.Order6        :: TFloat
-                                                      , inOrder7       :=  tmpAll.Order7        :: TFloat
-                                                                                                
-                                                      , inOrderPromo1  :=  tmpAll.OrderPromo1   :: TFloat
-                                                      , inOrderPromo2  :=  tmpAll.OrderPromo2   :: TFloat
-                                                      , inOrderPromo3  :=  tmpAll.OrderPromo3   :: TFloat
-                                                      , inOrderPromo4  :=  tmpAll.OrderPromo4   :: TFloat
-                                                      , inOrderPromo5  :=  tmpAll.OrderPromo5   :: TFloat
-                                                      , inOrderPromo6  :=  tmpAll.OrderPromo6   :: TFloat
-                                                      , inOrderPromo7  :=  tmpAll.OrderPromo7   :: TFloat
-                                                        
-                                                      , inOrderBranch1 := tmpAll.OrderBranch1 :: TFloat
-                                                      , inOrderBranch2 := tmpAll.OrderBranch2 :: TFloat
-                                                      , inOrderBranch3 := tmpAll.OrderBranch3 :: TFloat
-                                                      , inOrderBranch4 := tmpAll.OrderBranch4 :: TFloat
-                                                      , inOrderBranch5 := tmpAll.OrderBranch5 :: TFloat
-                                                      , inOrderBranch6 := tmpAll.OrderBranch6 :: TFloat
-                                                      , inOrderBranch7 := tmpAll.OrderBranch7 :: TFloat
-                                                      
-                                                      , inUserId       := vbUserId
+       PERFORM lpInsertUpdate_Object_GoodsReportSale(inId           := 0               ::Integer       -- ключ объекта <> 
+                                                   , inUnitId       := tmpAll.UnitId 
+                                                   , inGoodsId      := tmpAll.GoodsId    
+                                                   , inGoodsKindId  := tmpAll.GoodsKindId
+                                                   
+                                                   , inAmount1      :=  tmpAll.Amount1   :: TFloat
+                                                   , inAmount2      :=  tmpAll.Amount2   :: TFloat
+                                                   , inAmount3      :=  tmpAll.Amount3   :: TFloat
+                                                   , inAmount4      :=  tmpAll.Amount4   :: TFloat
+                                                   , inAmount5      :=  tmpAll.Amount5   :: TFloat
+                                                   , inAmount6      :=  tmpAll.Amount6   :: TFloat
+                                                   , inAmount7      :=  tmpAll.Amount7   :: TFloat
+                                                                                                         
+                                                   , inPromo1       :=  tmpAll.Promo1    :: TFloat
+                                                   , inPromo2       :=  tmpAll.Promo2    :: TFloat    
+                                                   , inPromo3       :=  tmpAll.Promo3    :: TFloat    
+                                                   , inPromo4       :=  tmpAll.Promo4    :: TFloat    
+                                                   , inPromo5       :=  tmpAll.Promo5    :: TFloat    
+                                                   , inPromo6       :=  tmpAll.Promo6    :: TFloat    
+                                                   , inPromo7       :=  tmpAll.Promo7    :: TFloat    
+                                                                                             
+                                                   , inBranch1      :=  tmpAll.AmountBranch1 :: TFloat
+                                                   , inBranch2      :=  tmpAll.AmountBranch2 :: TFloat
+                                                   , inBranch3      :=  tmpAll.AmountBranch3 :: TFloat
+                                                   , inBranch4      :=  tmpAll.AmountBranch4 :: TFloat
+                                                   , inBranch5      :=  tmpAll.AmountBranch5 :: TFloat
+                                                   , inBranch6      :=  tmpAll.AmountBranch6 :: TFloat
+                                                   , inBranch7      :=  tmpAll.AmountBranch7 :: TFloat
+                                                                                             
+                                                   , inOrder1       :=  tmpAll.Order1        :: TFloat
+                                                   , inOrder2       :=  tmpAll.Order2        :: TFloat
+                                                   , inOrder3       :=  tmpAll.Order3        :: TFloat
+                                                   , inOrder4       :=  tmpAll.Order4        :: TFloat
+                                                   , inOrder5       :=  tmpAll.Order5        :: TFloat
+                                                   , inOrder6       :=  tmpAll.Order6        :: TFloat
+                                                   , inOrder7       :=  tmpAll.Order7        :: TFloat
+                                                                                             
+                                                   , inOrderPromo1  :=  tmpAll.OrderPromo1   :: TFloat
+                                                   , inOrderPromo2  :=  tmpAll.OrderPromo2   :: TFloat
+                                                   , inOrderPromo3  :=  tmpAll.OrderPromo3   :: TFloat
+                                                   , inOrderPromo4  :=  tmpAll.OrderPromo4   :: TFloat
+                                                   , inOrderPromo5  :=  tmpAll.OrderPromo5   :: TFloat
+                                                   , inOrderPromo6  :=  tmpAll.OrderPromo6   :: TFloat
+                                                   , inOrderPromo7  :=  tmpAll.OrderPromo7   :: TFloat
+                                                     
+                                                   , inOrderBranch1 := tmpAll.OrderBranch1 :: TFloat
+                                                   , inOrderBranch2 := tmpAll.OrderBranch2 :: TFloat
+                                                   , inOrderBranch3 := tmpAll.OrderBranch3 :: TFloat
+                                                   , inOrderBranch4 := tmpAll.OrderBranch4 :: TFloat
+                                                   , inOrderBranch5 := tmpAll.OrderBranch5 :: TFloat
+                                                   , inOrderBranch6 := tmpAll.OrderBranch6 :: TFloat
+                                                   , inOrderBranch7 := tmpAll.OrderBranch7 :: TFloat
+                                                   
+                                                   , inUserId       := vbUserId
                                                     )
        FROM (SELECT tmpAll.UnitId
                   , tmpAll.GoodsId
