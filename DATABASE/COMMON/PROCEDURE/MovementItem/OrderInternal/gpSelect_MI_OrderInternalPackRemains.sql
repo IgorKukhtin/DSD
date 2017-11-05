@@ -141,7 +141,7 @@ BEGIN
                             , vbOperDate - (COALESCE (MIFloat_TermProduction.ValueData, 0) :: INteger :: TVarChar || ' DAY') :: INTERVAL AS PartionGoods_start
                             , ObjectDate_Value.ValueData                      AS PartionDate_pf
                             , CLO_GoodsKind.ObjectId                          AS GoodsKindId_pf
-                            , ObjectLink_GoodsKindComplete.ChildObjectId      AS GoodsKindCompleteId_pf
+                            , CASE WHEN MIFloat_ContainerId.ValueData > 0 THEN COALESCE (ObjectLink_GoodsKindComplete.ChildObjectId, zc_GoodsKind_Basis()) END AS GoodsKindCompleteId_pf
                             , CLO_Unit.ObjectId                               AS UnitId_pf
 
                             , MovementItem.isErased                                 AS isErased
@@ -259,10 +259,18 @@ BEGIN
                                 INNER JOIN tmpUnit_CEH   ON tmpUnit_CEH.UnitId   = MIContainer.ObjectExtId_Analyzer
                                 -- Склады База + Реализации
                                 INNER JOIN tmpUnit_SKLAD ON tmpUnit_SKLAD.UnitId = MIContainer.WhereObjectId_Analyzer
+                                -- убрали Тару
+                                INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                      ON ObjectLink_Goods_InfoMoney.ObjectId      = MIContainer.ObjectId_Analyzer
+                                                     AND ObjectLink_Goods_InfoMoney.DescId        = zc_ObjectLink_Goods_InfoMoney()
+                                                     AND ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901() -- Ирна
+                                                                                                    , zc_Enum_InfoMoney_30101() -- Готовая продукция
+                                                                                                    , zc_Enum_InfoMoney_30201() -- Мясное сырье
+                                                                                                     )
                            WHERE MIContainer.OperDate       = vbOperDate
                              AND MIContainer.DescId         = zc_MIContainer_Count()
                              AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
-                             and 1=0
+                             -- AND 1=0
                              AND MIContainer.isActive       = TRUE
                            GROUP BY MIContainer.ObjectId_Analyzer
                                   , MIContainer.ObjectIntId_Analyzer
@@ -323,14 +331,16 @@ BEGIN
        ;
 
 
+-- RAISE EXCEPTION '<%>', (select count(*) from _tmpMI_master where _tmpMI_master.GoodsId = 4965 and _tmpMI_master.GoodsKindId = zc_GoodsKind_Basis() );
+
        --
        OPEN Cursor1 FOR
-       WITH tmpMI AS (SELECT * FROM _tmpMI_master
-                      WHERE _tmpMI_master.Income_CEH       = 0 -- отбросили Приход пр-во (ФАКТ)
-                        AND _tmpMI_master.GoodsId_complete = 0 -- т.е. НЕ упакованный
-                        AND _tmpMI_master.ContainerId      = 0 -- отбросили остатки на ПР-ВЕ
-                        -- AND _tmpMI_master.GoodsId_basis    > 0 -- отбросили Ирну (временно)
-                     )
+       WITH tmpMI_all AS (SELECT * FROM _tmpMI_master
+                          WHERE _tmpMI_master.Income_CEH       = 0 -- отбросили Приход пр-во (ФАКТ)
+                            AND _tmpMI_master.GoodsId_complete = 0 -- т.е. НЕ упакованный
+                            AND _tmpMI_master.ContainerId      = 0 -- отбросили остатки на ПР-ВЕ
+                            -- AND _tmpMI_master.GoodsId_basis    > 0 -- отбросили Ирну (временно)
+                         )
       , tmpIncome AS (SELECT * FROM _tmpMI_master
                       WHERE _tmpMI_master.Income_CEH <> 0
                      )
@@ -342,6 +352,46 @@ BEGIN
                       WHERE _tmpMI_master.Remains_CEH <> 0 OR _tmpMI_master.Remains_CEH_Next <> 0
                       GROUP BY _tmpMI_master.GoodsId
                              , _tmpMI_master.GoodsKindCompleteId_pf
+                     )
+          , tmpMI AS (SELECT tmpMI_all.MovementItemId, tmpMI_all.ContainerId
+                           , tmpMI_all.ReceiptId, tmpMI_all.GoodsId
+                           , tmpMI_all.GoodsKindId
+                           , tmpMI_all.MeasureId
+                           , tmpMI_all.GoodsId_complete, tmpMI_all.GoodsKindId_complete
+                           , tmpMI_all.ReceiptId_basis
+                           , tmpMI_all.GoodsId_basis
+                           , tmpMI_all.Amount, tmpMI_all.AmountSecond
+                           , tmpMI_all.AmountRemains, tmpMI_all.Remains_CEH, tmpMI_all.Remains_CEH_Next, tmpMI_all.Remains, tmpMI_all.Remains_pack
+                           , tmpMI_all.AmountPartnerPrior, tmpMI_all.AmountPartnerPriorPromo, tmpMI_all.AmountPartner, tmpMI_all.AmountPartnerPromo
+                           , tmpMI_all.AmountForecast, tmpMI_all.AmountForecastPromo, tmpMI_all.AmountForecastOrder, tmpMI_all.AmountForecastOrderPromo
+                           , tmpMI_all.CountForecast, tmpMI_all.CountForecastOrder
+                           , tmpMI_all.Income_CEH
+                           , tmpMI_all.TermProduction, tmpMI_all.PartionGoods_start, tmpMI_all.PartionDate_pf, tmpMI_all.GoodsKindId_pf, tmpMI_all.GoodsKindCompleteId_pf, tmpMI_all.UnitId_pf
+                           , tmpMI_all.isErased
+                      FROM tmpMI_all
+                     UNION
+                      SELECT _tmpMI_master.MovementItemId, _tmpMI_master.ContainerId
+                           , _tmpMI_master.ReceiptId, _tmpMI_master.GoodsId
+                           , _tmpMI_master.GoodsKindId
+                           -- , _tmpMI_master.GoodsKindCompleteId_pf AS GoodsKindId
+                           , _tmpMI_master.MeasureId
+                           , _tmpMI_master.GoodsId_complete, _tmpMI_master.GoodsKindId_complete
+                           , _tmpMI_master.ReceiptId_basis
+                           , _tmpMI_master.GoodsId_basis
+                           -- , _tmpMI_master.GoodsId AS GoodsId_basis
+                           , _tmpMI_master.Amount, _tmpMI_master.AmountSecond
+                           , _tmpMI_master.AmountRemains, _tmpMI_master.Remains_CEH, _tmpMI_master.Remains_CEH_Next, _tmpMI_master.Remains, _tmpMI_master.Remains_pack
+                           , _tmpMI_master.AmountPartnerPrior, _tmpMI_master.AmountPartnerPriorPromo, _tmpMI_master.AmountPartner, _tmpMI_master.AmountPartnerPromo
+                           , _tmpMI_master.AmountForecast, _tmpMI_master.AmountForecastPromo, _tmpMI_master.AmountForecastOrder, _tmpMI_master.AmountForecastOrderPromo
+                           , _tmpMI_master.CountForecast, _tmpMI_master.CountForecastOrder
+                           , _tmpMI_master.Income_CEH
+                           , _tmpMI_master.TermProduction, _tmpMI_master.PartionGoods_start, _tmpMI_master.PartionDate_pf, _tmpMI_master.GoodsKindId_pf, _tmpMI_master.GoodsKindCompleteId_pf, _tmpMI_master.UnitId_pf
+                           , _tmpMI_master.isErased
+                      FROM _tmpMI_master
+                           LEFT JOIN tmpMI_all ON tmpMI_all.GoodsId_basis = _tmpMI_master.GoodsId
+                                              AND tmpMI_all.GoodsKindId   = _tmpMI_master.GoodsKindCompleteId_pf
+                      WHERE (_tmpMI_master.Remains_CEH <> 0 OR _tmpMI_master.Remains_CEH_Next  <> 0)
+                        AND tmpMI_all.GoodsId_basis IS NULL
                      )
        -- Результат
        SELECT
@@ -362,10 +412,11 @@ BEGIN
 
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
-           , CASE WHEN tmpMI.GoodsId <> tmpMI.GoodsId_basis THEN TRUE ELSE FALSE END AS isCheck_basis
+           , CASE WHEN tmpMI.GoodsId <> tmpMI.GoodsId_basis AND tmpMI.GoodsId_basis > 0 THEN TRUE ELSE FALSE END AS isCheck_basis
 
-           , tmpMI.Amount           :: TFloat AS Amount           -- Заказ на УПАК
-           , tmpMI.AmountSecond     :: TFloat AS AmountSecond     -- Дозаказ на УПАК
+           , tmpMI.Amount                        :: TFloat AS Amount        -- ***Ост. на УПАК
+           , tmpMI.AmountSecond                  :: TFloat AS AmountSecond  -- ***План ПР-ВО на УПАК
+           , (tmpMI.Amount + tmpMI.AmountSecond) :: TFloat AS AmountTotal   -- ***План ПР-ВО на УПАК
 
              -- Приход пр-во (ФАКТ)
            , tmpIncome.Income_CEH    :: TFloat AS Income_CEH
@@ -373,9 +424,9 @@ BEGIN
              -- Ост. нач. - НЕ упак.
            , tmpMI.Remains
              -- Ост. начальн. - произв. (СЕГОДНЯ)
-           , tmpCEH.Remains_CEH      :: TFloat AS Remains_CEH
+           , CASE WHEN tmpMI.ContainerId > 0 THEN tmpMI.Remains_CEH      ELSE tmpCEH.Remains_CEH      END :: TFloat AS Remains_CEH
              -- Ост. начальн. - произв. (ПОЗЖЕ)
-           , tmpCEH.Remains_CEH_Next :: TFloat AS Remains_CEH_Next
+           , CASE WHEN tmpMI.ContainerId > 0 THEN tmpMI.Remains_CEH_Next ELSE tmpCEH.Remains_CEH_Next END :: TFloat AS Remains_CEH_Next
 
               -- неотгуж. заявка
            , CAST (tmpMI.AmountPartnerPrior       AS NUMERIC (16, 2)) :: TFloat AS AmountPartnerPrior
@@ -442,7 +493,7 @@ BEGIN
 
             LEFT JOIN Object AS Object_Goods_basis ON Object_Goods_basis.Id = tmpMI.GoodsId_basis
             LEFT JOIN Object AS Object_Goods       ON Object_Goods.Id       = COALESCE (tmpMI.GoodsId, tmpIncome.GoodsId)
-            LEFT JOIN Object AS Object_GoodsKind   ON Object_GoodsKind.Id   = tmpMI.GoodsKindId
+            LEFT JOIN Object AS Object_GoodsKind   ON Object_GoodsKind.Id   = COALESCE (tmpMI.GoodsKindId, tmpIncome.GoodsKindId)
 
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = COALESCE (tmpMI.MeasureId, tmpIncome.MeasureId)
 
@@ -582,13 +633,16 @@ BEGIN
 
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
-           , CASE WHEN tmpMI.GoodsId_complete = 0
-                       THEN tmpMI.GoodsId <> tmpMI.GoodsId_basis
-                  ELSE tmpMI.GoodsId_complete <> tmpMI.GoodsId_basis
+           , CASE WHEN tmpMI.GoodsId_complete = 0 AND tmpMI.GoodsId <> tmpMI.GoodsId_basis AND tmpMI.GoodsId_basis > 0
+                       THEN TRUE
+                  WHEN tmpMI.GoodsId_complete <> tmpMI.GoodsId_basis AND tmpMI.GoodsId_basis > 0
+                       THEN TRUE
+                  ELSE FALSE
              END :: Boolean AS isCheck_basis
 
-           , tmpMI.Amount           :: TFloat AS Amount           -- Заказ на УПАК
-           , tmpMI.AmountSecond     :: TFloat AS AmountSecond     -- Дозаказ на УПАК
+           , tmpMI.Amount                        :: TFloat AS Amount        -- ***План выдачи с Ост. на УПАК
+           , tmpMI.AmountSecond                  :: TFloat AS AmountSecond  -- ***План выдачи с Цеха на УПАК
+           , (tmpMI.Amount + tmpMI.AmountSecond) :: TFloat AS AmountTotal   -- ***План выдачи ИТОГО на УПАК
 
              -- Приход пр-во (ФАКТ)
            , tmpMI.Income_CEH    :: TFloat AS Income_CEH

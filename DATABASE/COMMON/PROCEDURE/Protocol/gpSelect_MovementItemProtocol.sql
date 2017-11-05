@@ -82,7 +82,8 @@ BEGIN
        LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
   
-  WHERE MovementItemProtocol.MovementItemId = inMovementItemId;
+  WHERE MovementItemProtocol.MovementItemId = inMovementItemId
+    AND 1=0;
 
   ELSE
      RAISE EXCEPTION 'Ошибка.Просмотр протокола недоступен.';

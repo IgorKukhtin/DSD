@@ -130,6 +130,24 @@ type
     Remains_CEH_Next: TcxGridDBColumn;
     Income_CEH: TcxGridDBColumn;
     chtIncome_CEH: TcxGridDBColumn;
+    spUpdateMIMasterChildTotal: TdsdStoredProc;
+    actUpdateChildTotalDS: TdsdUpdateDataSet;
+    mactUpdateAmount_to: TMultiAction;
+    mactUpdateAmountGrid_to: TMultiAction;
+    actUpdateAmount_to: TdsdExecStoredProc;
+    spUpdateAmount_to: TdsdStoredProc;
+    actUpdateAmountAll_to: TdsdExecStoredProc;
+    spUpdateAmountAll_to: TdsdStoredProc;
+    mactUpdateAmountSecond_to: TMultiAction;
+    mactUpdateAmountSecondGrid_to: TMultiAction;
+    actUpdateAmountSecond_to: TdsdExecStoredProc;
+    actUpdateAmountSecondAll_to: TdsdExecStoredProc;
+    spUpdateAmountSecond_to: TdsdStoredProc;
+    spUpdateAmountSecondAll_to: TdsdStoredProc;
+    bbUpdateAmount_to: TdxBarButton;
+    bbUpdateAmountSecond_to: TdxBarButton;
+    AmountTotal: TcxGridDBColumn;
+    chtAmountTotal: TcxGridDBColumn;
   private
     { Private declarations }
   public

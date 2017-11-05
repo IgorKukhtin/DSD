@@ -43,7 +43,7 @@ BEGIN
       -- определяется уровень доступа
       vbIsBranch:= COALESCE (0 < (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId), FALSE);
 
-     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpgoods')
+     /*IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpgoods')
      THEN
          DELETE FROM _tmpGoods;
          DELETE FROM _tmpUnit;
@@ -51,23 +51,24 @@ BEGIN
          -- таблица -
          CREATE TEMP TABLE _tmpGoods (GoodsId Integer, InfoMoneyId Integer, TradeMarkId Integer, MeasureId Integer, Weight TFloat) ON COMMIT DROP;
          CREATE TEMP TABLE _tmpUnit (UnitId Integer, UnitId_by Integer, isActive Boolean) ON COMMIT DROP;
-     END IF;
+     END IF;*/
 
-    -- Ограничения по товару
-    IF inGoodsGroupId <> 0
-    THEN
-        INSERT INTO _tmpGoods (GoodsId, MeasureId, Weight)
-           SELECT lfSelect.GoodsId, ObjectLink_Goods_Measure.ChildObjectId AS MeasureId, ObjectFloat_Weight.ValueData AS Weight
+
+    -- Результат
+    RETURN QUERY
+
+     WITH -- Ограничения по товару
+          _tmpGoods AS -- (GoodsId, MeasureId, Weight)
+          (SELECT lfSelect.GoodsId, ObjectLink_Goods_Measure.ChildObjectId AS MeasureId, ObjectFloat_Weight.ValueData AS Weight
            FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = lfSelect.GoodsId
                                                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                 LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                       ON ObjectFloat_Weight.ObjectId = lfSelect.GoodsId
                                      AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-          ;
-    ELSE
-        INSERT INTO _tmpGoods (GoodsId, MeasureId, Weight)
-           SELECT Object.Id, ObjectLink_Goods_Measure.ChildObjectId AS MeasureId, ObjectFloat_Weight.ValueData AS Weight
+           WHERE inGoodsGroupId <> 0
+          UNION
+           SELECT Object.Id AS GoodsId, ObjectLink_Goods_Measure.ChildObjectId AS MeasureId, ObjectFloat_Weight.ValueData AS Weight
            FROM Object
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = Object.Id
                                                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -75,14 +76,15 @@ BEGIN
                                       ON ObjectFloat_Weight.ObjectId = Object.Id
                                      AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
            WHERE Object.DescId = zc_Object_Goods()
+             AND COALESCE (inGoodsGroupId, 0) = 0
           UNION
-           SELECT Object.Id, 0 AS MeasureId, 0 AS Weight FROM Object WHERE Object.DescId = zc_Object_Fuel()
-          ;
-    END IF;
+           SELECT Object.Id, 0 AS MeasureId, 0 AS Weight FROM Object
+           WHERE Object.DescId = zc_Object_Fuel()
+             AND COALESCE (inGoodsGroupId, 0) = 0
+          )
 
-
-    -- группа подразделений или подразделение или место учета (МО, Авто)
-    WITH tmpFrom AS (SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (inFromId) AS lfSelect WHERE inFromId > 0
+        -- группа подразделений или подразделение или место учета (МО, Авто)
+      , tmpFrom AS (SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (inFromId) AS lfSelect WHERE inFromId > 0
                     UNION
                      SELECT Id AS UnitId FROM Object WHERE DescId = zc_Object_Unit() AND inFromId = 0 AND vbIsBranch = FALSE -- AND vbIsGroup = TRUE
                     UNION
@@ -98,21 +100,13 @@ BEGIN
                     UNION
                      SELECT Id AS UnitId FROM Object  WHERE DescId = zc_Object_Car() AND (inIsMO_all = TRUE OR Id = inToId) AND inDescId IN (/*zc_Movement_Loss(),*/ zc_Movement_Send())
                    )
-    INSERT INTO _tmpUnit (UnitId, UnitId_by, isActive)
-       SELECT tmpFrom.UnitId, COALESCE (tmpTo.UnitId, 0), FALSE FROM tmpFrom LEFT JOIN tmpTo ON tmpTo.UnitId > 0
-      UNION
-       SELECT tmpTo.UnitId, COALESCE (tmpFrom.UnitId, 0), TRUE FROM tmpTo LEFT JOIN tmpFrom ON tmpFrom.UnitId > 0 WHERE vbIsBranch = FALSE
-      ;
+     , _tmpUnit AS (SELECT tmpFrom.UnitId, COALESCE (tmpTo.UnitId, 0) AS UnitId_by, FALSE AS isActive FROM tmpFrom LEFT JOIN tmpTo ON tmpTo.UnitId > 0
+                   UNION
+                    SELECT tmpTo.UnitId, COALESCE (tmpFrom.UnitId, 0) AS UnitId_by, TRUE  AS isActive FROM tmpTo LEFT JOIN tmpFrom ON tmpFrom.UnitId > 0 WHERE vbIsBranch = FALSE
+                   )
 
-    -- !!!!!!!!!!!!!!!!!!!!!!!
-    ANALYZE _tmpGoods;
-    ANALYZE _tmpUnit;
-
-
-    -- Результат
-    RETURN QUERY
              -- Цены из прайса
-        WITH tmpPriceList AS (SELECT lfSelect.GoodsId    AS GoodsId
+           , tmpPriceList AS (SELECT lfSelect.GoodsId    AS GoodsId
                                    , CASE WHEN TRUE = COALESCE ((SELECT OB.ValueData FROM ObjectBoolean AS OB WHERE OB.ObjectId = inPriceListId AND OB.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT()), FALSE)
                                             OR 0    = COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inPriceListId AND ObjectFloat.DescId = zc_ObjectFloat_PriceList_VATPercent()), 0)
                                                THEN lfSelect.ValuePrice
@@ -153,6 +147,10 @@ BEGIN
                                                          AND MovementItem.MovementId = tmp.MovementId
                                                          AND MovementItem.DescId     = zc_MI_Master()
                              )
+    -- !!!!!!!!!!!!!!!!!!!!!!!
+    -- ANALYZE _tmpGoods;
+    -- ANALYZE _tmpUnit;
+    
     -- Результат
     SELECT Object_GoodsGroup.ValueData                AS GoodsGroupName
          , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
@@ -381,4 +379,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_Internal (inStartDate:= '01.01.2016', inEndDate:= '01.01.2016', inDescId:= zc_Movement_Loss(), inFromId:= 8459, inToId:= 0, inGoodsGroupId:= 1832, inPriceListId:= 0, inIsMO_all:= FALSE, inSession := zfCalc_UserAdmin()); -- Склад Реализации
+-- SELECT * FROM gpReport_GoodsMI_Internal (inStartDate:= '01.11.2017', inEndDate:= '01.11.2017', inDescId:= zc_Movement_Loss(), inFromId:= 8459, inToId:= 0, inGoodsGroupId:= 1832, inPriceListId:= 0, inIsMO_all:= FALSE, inSession := zfCalc_UserAdmin()); -- Склад Реализации

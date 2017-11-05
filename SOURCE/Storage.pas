@@ -348,7 +348,7 @@ begin
   Result := ctMain;
   if FReportList.Count > 0 then
     for S in FReportList do
-      if Pos(S, pData) > 0 then
+      if Pos(S + ' ', pData) > 0 then
       begin
         Result := ctReport;
         Break;

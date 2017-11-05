@@ -62,11 +62,19 @@ $BODY$
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_Account_Print',                inSession:= zfCalc_UserAdmin()); -- +
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_Balance',                      inSession:= zfCalc_UserAdmin()); -- +
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_ProfitLoss',                   inSession:= zfCalc_UserAdmin()); -- +
--- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_Goods',                        inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_Wage',                         inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpSelect_Report_Wage',                  inSession:= zfCalc_UserAdmin()); -- +
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_GoodsMI_SaleReturnIn',         inSession:= zfCalc_UserAdmin()); -- +
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_GoodsMI_SaleReturnInUnit',     inSession:= zfCalc_UserAdmin()); -- +
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_GoodsMI_SaleReturnInUnitNEW',  inSession:= zfCalc_UserAdmin()); -- +
+--
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_Goods',                        inSession:= zfCalc_UserAdmin()); -- +
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_GoodsGroup',                   inSession:= zfCalc_UserAdmin()); -- +
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_GoodsMI_SendOnPrice',          inSession:= zfCalc_UserAdmin()); -- +
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_GoodsMI_Internal',             inSession:= zfCalc_UserAdmin()); -- +
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_GoodsMI',                      inSession:= zfCalc_UserAdmin()); -- +
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_GoodsMI_IncomeByPartner',      inSession:= zfCalc_UserAdmin()); -- +
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_GoodsMI_Production',           inSession:= zfCalc_UserAdmin()); -- +
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_GoodsMI_Inventory',            inSession:= zfCalc_UserAdmin()); -- +
 --
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_Branch_App1',           inSession:= zfCalc_UserAdmin()); -- +
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_Branch_App7',           inSession:= zfCalc_UserAdmin()); -- +

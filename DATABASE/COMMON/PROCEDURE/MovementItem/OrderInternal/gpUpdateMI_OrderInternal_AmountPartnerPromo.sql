@@ -42,7 +42,7 @@ BEGIN
                                        , COALESCE (tmpOrder.AmountPartnerPrior, 0)        AS AmountPartnerPrior
                                        , COALESCE (tmpOrder.AmountPartnerPriorPromo, 0)   AS AmountPartnerPriorPromo
                                  FROM (SELECT MovementItem.ObjectId                                                    AS GoodsId
-                                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)                            AS GoodsKindId
+                                            , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis())         AS GoodsKindId
                                             , SUM (CASE WHEN Movement.OperDate >= inOperDate AND COALESCE (MIFloat_PromoMovementId.ValueData, 0) = 0 THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountPartner
                                             , SUM (CASE WHEN Movement.OperDate >= inOperDate AND COALESCE (MIFloat_PromoMovementId.ValueData, 0) > 0 THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountPartnerPromo
                                             , SUM (CASE WHEN Movement.OperDate < inOperDate
@@ -57,7 +57,7 @@ BEGIN
                                                              THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)
                                                         ELSE 0
                                                    END) AS AmountPartnerPriorPromo
-                                       FROM Movement 
+                                       FROM Movement
                                             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                                                    ON MovementDate_OperDatePartner.MovementId = Movement.Id
                                                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
@@ -93,11 +93,11 @@ BEGIN
                                                    END)  <> 0
                                        ) AS tmpOrder
                                  FULL JOIN
-                                (SELECT MovementItem.Id                               AS MovementItemId 
+                                (SELECT MovementItem.Id                               AS MovementItemId
                                       , MovementItem.ObjectId                         AS GoodsId
                                       , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                                       , MovementItem.Amount
-                                 FROM MovementItem 
+                                 FROM MovementItem
                                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                        ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                       AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -121,11 +121,11 @@ BEGIN
 
                                                  , inAmount_ParamSecond := tmpAll.AmountPartnerPrior      * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
                                                  , inDescId_ParamSecond := zc_MIFloat_AmountPartnerPrior()
-                                                 , inAmount_ParamAdd := tmpAll.AmountPartnerPriorPromo * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
-                                                 , inDescId_ParamAdd := zc_MIFloat_AmountPartnerPriorPromo()
+                                                 , inAmount_ParamAdd    := tmpAll.AmountPartnerPriorPromo * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                 , inDescId_ParamAdd    := zc_MIFloat_AmountPartnerPriorPromo()
                                                  , inIsPack             := NULL
                                                  , inUserId             := vbUserId
-                                                  ) 
+                                                  )
        FROM tmpAll
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpAll.GoodsId

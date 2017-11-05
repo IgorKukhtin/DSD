@@ -4,8 +4,9 @@ inherited TaxJournalForm: TTaxJournalForm
   ClientWidth = 1110
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog1
+  ExplicitLeft = -332
   ExplicitWidth = 1126
-  ExplicitHeight = 574
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -639,19 +640,6 @@ inherited TaxJournalForm: TTaxJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    object actInsertMaskMulti: TMultiAction [9]
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actInsertMask
-        end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1076#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077'? '
-      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077' '#1076#1086#1073#1072#1074#1083#1077#1085
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
-      ImageIndex = 54
-    end
     inherited actInsertMask: TdsdInsertUpdateAction
       ImageIndex = -1
       FormName = 'TTaxForm'
@@ -679,26 +667,18 @@ inherited TaxJournalForm: TTaxJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    object actMovementCheck: TdsdOpenForm [11]
+    object actInsertMaskMulti: TMultiAction [9]
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1054#1096#1080#1073#1082#1080
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1086#1096#1080#1073#1082#1080' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091
-      ImageIndex = 30
-      FormName = 'TMovementCheckForm'
-      FormNameParam.Value = 'TMovementCheckForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
+      ActionList = <
         item
-          Name = 'Id'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
+          Action = actInsertMask
         end>
-      isShowModal = False
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1076#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077'? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077' '#1076#1086#1073#1072#1074#1083#1077#1085
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
+      ImageIndex = 54
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TTaxForm'
@@ -731,6 +711,27 @@ inherited TaxJournalForm: TTaxJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+    end
+    object actMovementCheck: TdsdOpenForm [11]
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1096#1080#1073#1082#1080
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1086#1096#1080#1073#1082#1080' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091
+      ImageIndex = 30
+      FormName = 'TMovementCheckForm'
+      FormNameParam.Value = 'TMovementCheckForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
     inherited actMovementItemContainer: TdsdOpenForm
       Enabled = False
@@ -1251,7 +1252,7 @@ inherited TaxJournalForm: TTaxJournalForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actGetDirectory
+          Action = actGetDirectoryIFIN
         end
         item
           Action = mactIFinGrid
@@ -1268,7 +1269,7 @@ inherited TaxJournalForm: TTaxJournalForm
     object IFinListAction: TMedocAction
       Category = 'TaxLib'
       MoveParams = <>
-      Caption = 'MedocListAction'
+      Caption = 'IFinListAction'
       HeaderDataSet = PrintHeaderCDS
       ItemsDataSet = PrintItemsCDS
       AskFilePath = False
@@ -1297,6 +1298,17 @@ inherited TaxJournalForm: TTaxJournalForm
         end>
       View = cxGridDBTableView
       Caption = 'mactMEDOCList'
+    end
+    object actGetDirectoryIFIN: TdsdExecStoredProc
+      Category = 'TaxLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetDirectoryNameIFIN
+      StoredProcList = <
+        item
+          StoredProc = spGetDirectoryNameIFIN
+        end>
+      Caption = 'actGetDirectoryIFIN'
     end
   end
   inherited MasterDS: TDataSource
@@ -2043,7 +2055,7 @@ inherited TaxJournalForm: TTaxJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 504
+    Left = 432
     Top = 160
   end
   object spMedoc_False: TdsdStoredProc
@@ -2221,5 +2233,22 @@ inherited TaxJournalForm: TTaxJournalForm
     PackSize = 1
     Left = 1008
     Top = 40
+  end
+  object spGetDirectoryNameIFIN: TdsdStoredProc
+    StoredProcName = 'gpGetDirectoryNameIFIN'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'Directory'
+        Value = Null
+        Component = IFinListAction
+        ComponentItem = 'Directory'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 504
+    Top = 160
   end
 end

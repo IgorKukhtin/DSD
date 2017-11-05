@@ -5,8 +5,10 @@ inherited OrderInternalPackJournalForm: TOrderInternalPackJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -300
+  ExplicitTop = -113
   ExplicitWidth = 1089
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -148,7 +150,7 @@ inherited OrderInternalPackJournalForm: TOrderInternalPackJournalForm
             Width = 150
           end
           object TotalCount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1053#1040' '#1091#1087#1072#1082#1086#1074#1082#1091
             DataBinding.FieldName = 'TotalCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -158,7 +160,7 @@ inherited OrderInternalPackJournalForm: TOrderInternalPackJournalForm
             Width = 60
           end
           object TotalCountKg: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086', '#1082#1075
+            Caption = #1048#1090#1086#1075#1086' '#1087#1083#1072#1085' '#1053#1040' '#1091#1087#1072#1082#1086#1074#1082#1091', '#1082#1075
             DataBinding.FieldName = 'TotalCountKg'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -168,7 +170,7 @@ inherited OrderInternalPackJournalForm: TOrderInternalPackJournalForm
             Width = 60
           end
           object TotalCountSh: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086', '#1096#1090
+            Caption = #1048#1090#1086#1075#1086' '#1087#1083#1072#1085' '#1053#1040' '#1091#1087#1072#1082#1086#1074#1082#1091', '#1096#1090
             DataBinding.FieldName = 'TotalCountSh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4

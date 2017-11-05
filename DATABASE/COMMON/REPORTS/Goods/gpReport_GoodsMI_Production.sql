@@ -4,11 +4,11 @@ DROP FUNCTION IF EXISTS gpReport_GoodsMI_Production (TDateTime, TDateTime, Integ
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_Production (TDateTime, TDateTime, Integer, Boolean, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Production (
-    IN inStartDate    TDateTime ,  
+    IN inStartDate    TDateTime ,
     IN inEndDate      TDateTime ,
     IN inDescId       Integer   ,  --производство смешивание (8) , разделение (9)
     IN inIsActive     Boolean   ,  -- приход true/ расход false
-    IN inUnitId       Integer   , 
+    IN inUnitId       Integer   ,
     IN inGoodsGroupId Integer   ,
     IN inSession      TVarChar    -- сессия пользователя
 )
@@ -23,7 +23,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , Summ_zavod TFloat, Summ_branch TFloat, Summ_60000 TFloat
              , Price_zavod TFloat, Price_branch TFloat
              , OperDate TDateTime
-             )   
+             )
 AS
 $BODY$
  DECLARE vbUserId Integer;
@@ -33,31 +33,32 @@ BEGIN
 
       vbIsGroup:= (inSession = '');
 
-     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpgoods')
+     /*IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpgoods')
      THEN
          DELETE FROM _tmpGoods;
          DELETE FROM _tmpUnit;
      ELSE
-         -- таблица - 
+         -- таблица -
          CREATE TEMP TABLE _tmpGoods (GoodsId Integer, InfoMoneyId Integer, TradeMarkId Integer, MeasureId Integer, Weight TFloat) ON COMMIT DROP;
          CREATE TEMP TABLE _tmpUnit (UnitId Integer, UnitId_by Integer, isActive Boolean) ON COMMIT DROP;
-     END IF;
+     END IF;*/
 
-    -- Ограничения по товару
-    IF inGoodsGroupId <> 0 
-    THEN 
-        INSERT INTO _tmpGoods (GoodsId, MeasureId, Weight)
-           SELECT lfSelect.GoodsId, ObjectLink_Goods_Measure.ChildObjectId AS MeasureId, ObjectFloat_Weight.ValueData AS Weight
+
+    -- Результат
+    RETURN QUERY
+
+     WITH -- Ограничения по товару
+          _tmpGoods AS -- (GoodsId, MeasureId, Weight)
+          (SELECT lfSelect.GoodsId, ObjectLink_Goods_Measure.ChildObjectId AS MeasureId, ObjectFloat_Weight.ValueData AS Weight
            FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = lfSelect.GoodsId
                                                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                 LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                       ON ObjectFloat_Weight.ObjectId = lfSelect.GoodsId
                                      AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-          ;
-    ELSE 
-        INSERT INTO _tmpGoods (GoodsId, MeasureId, Weight)
-           SELECT Object.Id, ObjectLink_Goods_Measure.ChildObjectId AS MeasureId, ObjectFloat_Weight.ValueData AS Weight
+           WHERE inGoodsGroupId <> 0
+          UNION
+           SELECT Object.Id AS GoodsId, ObjectLink_Goods_Measure.ChildObjectId AS MeasureId, ObjectFloat_Weight.ValueData AS Weight
            FROM Object
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = Object.Id
                                                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -65,17 +66,14 @@ BEGIN
                                       ON ObjectFloat_Weight.ObjectId = Object.Id
                                      AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
            WHERE Object.DescId = zc_Object_Goods()
-          ;
-    END IF;
-
-     -- подразделение
-     INSERT INTO _tmpUnit (UnitId)
-       SELECT lfSelect.UnitId AS UnitId FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect;
-
-
-   -- Результат
-    RETURN QUERY
-    SELECT Object_GoodsGroup.ValueData                AS GoodsGroupName 
+             AND COALESCE (inGoodsGroupId, 0) = 0
+          )
+    , _tmpUnit AS
+          (-- подразделение
+           SELECT lfSelect.UnitId AS UnitId FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect
+          )
+    -- Результат
+    SELECT Object_GoodsGroup.ValueData                AS GoodsGroupName
          , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
          , Object_Goods.ObjectCode                    AS GoodsCode
          , Object_Goods.ValueData                     AS GoodsName
@@ -118,14 +116,14 @@ BEGIN
            FROM (SELECT CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ContainerId END AS ContainerId
                       , MIContainer.WhereObjectId_analyzer AS UnitId
                       , MIContainer.ObjectExtId_Analyzer   AS UnitId_by
-                      , MIContainer.ObjectId_Analyzer      AS GoodsId       
+                      , MIContainer.ObjectId_Analyzer      AS GoodsId
                       , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ObjectIntId_Analyzer END AS GoodsKindId
                       , CASE WHEN vbIsGroup = TRUE THEN zc_DateStart() ELSE MIContainer.OperDate END AS OperDate
                       , COALESCE (MIContainer.AccountId, 0)  AS AccountId
                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN MIContainer.Amount ELSE 0 END * CASE WHEN MIContainer.isActive = TRUE THEN 1 ELSE -1 END) AS Amount
                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  THEN MIContainer.Amount ELSE 0 END * CASE WHEN MIContainer.isActive = TRUE THEN 1 ELSE -1 END) AS Summ
                  FROM _tmpUnit
-                      INNER JOIN MovementItemContainer AS MIContainer 
+                      INNER JOIN MovementItemContainer AS MIContainer
                                                        ON MIContainer.WhereObjectId_analyzer = _tmpUnit.UnitId
                                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                       AND MIContainer.isActive = inIsActive
@@ -151,7 +149,7 @@ BEGIN
                   , tmpContainer.GoodsKindId
                   , tmpContainer.OperDate
                   , CLO_PartionGoods.ObjectId
-                 
+
           ) AS tmpOperationGroup
 
           LEFT JOIN Object AS Object_Location ON Object_Location.Id = tmpOperationGroup.UnitId
@@ -161,7 +159,7 @@ BEGIN
           LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpOperationGroup.PartionGoodsId
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
-                               ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id 
+                               ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id
                               AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
           LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
 
@@ -170,7 +168,7 @@ BEGIN
                               AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
           LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                                           AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
@@ -179,7 +177,7 @@ BEGIN
                                 AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
   ;
-         
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -189,11 +187,11 @@ ALTER FUNCTION gpReport_GoodsMI_Production (TDateTime, TDateTime, Integer, Boole
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  06.08.15                                        * all
- 21.08.14         * 
+ 21.08.14         *
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_Production (inStartDate:= '01.07.2015', inEndDate:= '01.07.2015', inDescId:= zc_Movement_ProductionSeparate(), inIsActive:= TRUE,  inUnitId:=0, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpReport_GoodsMI_Production (inStartDate:= '01.07.2015', inEndDate:= '01.07.2015', inDescId:= zc_Movement_ProductionSeparate(), inIsActive:= FALSE, inUnitId:=0, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpReport_GoodsMI_Production (inStartDate:= '01.07.2015', inEndDate:= '01.07.2015', inDescId:= zc_Movement_ProductionUnion(),    inIsActive:= TRUE,  inUnitId:=0, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpReport_GoodsMI_Production (inStartDate:= '01.07.2015', inEndDate:= '01.07.2015', inDescId:= zc_Movement_ProductionUnion(),    inIsActive:= FALSE, inUnitId:=0, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_Production (inStartDate:= '01.11.2017', inEndDate:= '01.11.2017', inDescId:= zc_Movement_ProductionSeparate(), inIsActive:= TRUE,  inUnitId:=0, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_Production (inStartDate:= '01.11.2017', inEndDate:= '01.11.2017', inDescId:= zc_Movement_ProductionSeparate(), inIsActive:= FALSE, inUnitId:=0, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_Production (inStartDate:= '01.11.2017', inEndDate:= '01.11.2017', inDescId:= zc_Movement_ProductionUnion(),    inIsActive:= TRUE,  inUnitId:=0, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_Production (inStartDate:= '01.11.2017', inEndDate:= '01.11.2017', inDescId:= zc_Movement_ProductionUnion(),    inIsActive:= FALSE, inUnitId:=0, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
