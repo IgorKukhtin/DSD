@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , Foto TVarChar
              , BillNumberMobile Integer
              , isProjectMobile Boolean
+             , isSite Boolean
              , UpdateMobileFrom TDateTime, UpdateMobileTo TDateTime
              , InDate TDateTime, FarmacyCashDate TDateTime
               )
@@ -67,13 +68,15 @@ END IF;
        , ObjectString_Foto.ValueData                AS Foto
        , ObjectFloat_BillNumberMobile.ValueData :: Integer AS BillNumberMobile
        , COALESCE (ObjectBoolean_ProjectMobile.ValueData, FALSE) :: Boolean  AS isProjectMobile
+       
+       , COALESCE (ObjectBoolean_Site.ValueData, FALSE)          :: Boolean  AS isSite
 
        , ObjectDate_User_UpdateMobileFrom.ValueData AS UpdateMobileFrom
        , ObjectDate_User_UpdateMobileTo.ValueData   AS UpdateMobileTo
        
        , ObjectDate_User_In.ValueData               AS InDate
        , ObjectDate_User_FarmacyCash.ValueData      AS FarmacyCashDate
-       
+        
    FROM Object AS Object_User
         LEFT JOIN ObjectString AS ObjectString_User_
                                ON ObjectString_User_.ObjectId = Object_User.Id
@@ -101,6 +104,11 @@ END IF;
         LEFT JOIN ObjectBoolean AS ObjectBoolean_ProjectMobile
                                 ON ObjectBoolean_ProjectMobile.ObjectId = Object_User.Id
                                AND ObjectBoolean_ProjectMobile.DescId = zc_ObjectBoolean_User_ProjectMobile()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Site
+                                ON ObjectBoolean_Site.ObjectId = Object_User.Id
+                               AND ObjectBoolean_Site.DescId = zc_ObjectBoolean_User_Site()
+
         LEFT JOIN ObjectFloat AS ObjectFloat_BillNumberMobile
                               ON ObjectFloat_BillNumberMobile.ObjectId = Object_User.Id
                              AND ObjectFloat_BillNumberMobile.DescId = zc_ObjectFloat_User_BillNumberMobile()
@@ -142,6 +150,7 @@ ALTER FUNCTION gpSelect_Object_User (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.
+ 06.11.17         *
  02.05.17                                                       * zc_ObjectDate_User_UpdateMobileFrom, zc_ObjectDate_User_UpdateMobileTo
  21.04.17         *
  12.09.16         *
@@ -150,4 +159,4 @@ ALTER FUNCTION gpSelect_Object_User (TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_User ('5')
+-- SELECT * FROM gpSelect_Object_User ('3')

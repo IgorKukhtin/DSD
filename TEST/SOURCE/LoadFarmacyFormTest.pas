@@ -1363,8 +1363,7 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
-
-{
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TFormsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TFormsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TObjectDescForm'));
@@ -1381,14 +1380,15 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnionDescForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnionDescForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserKeyForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TUserKeyForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserEditForm');
+  exit;
+  {
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserKeyForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUserKeyForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLoadObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TLoadObjectForm');

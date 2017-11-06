@@ -106,6 +106,14 @@ object UserForm: TUserForm
         Options.Editing = False
         Width = 61
       end
+      object isSite: TcxGridDBColumn
+        Caption = #1044#1083#1103' '#1089#1072#1081#1090#1072
+        DataBinding.FieldName = 'isSite'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1083#1103' '#1089#1072#1081#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
+        Width = 60
+      end
       object User_: TcxGridDBColumn
         DataBinding.FieldName = 'User_'
         HeaderAlignmentHorz = taCenter
@@ -345,8 +353,8 @@ object UserForm: TUserForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 32
-    Top = 72
+    Left = 16
+    Top = 200
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
@@ -537,8 +545,8 @@ object UserForm: TUserForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 288
-    Top = 64
+    Left = 312
+    Top = 160
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1186,6 +1194,15 @@ object UserForm: TUserForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'isProjectMobile'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSite'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isSite'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

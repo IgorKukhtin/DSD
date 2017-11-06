@@ -59,7 +59,7 @@
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 273
+    Width = 185
   end
   object cxLabel3: TcxLabel
     Left = 13
@@ -142,6 +142,13 @@
     Top = 367
     Caption = #1058#1086#1088#1075'. '#1072#1075#1077#1085#1090
     TabOrder = 18
+    Width = 82
+  end
+  object ceisSite: TcxCheckBox
+    Left = 204
+    Top = 26
+    Caption = #1044#1083#1103' '#1089#1072#1081#1090#1072
+    TabOrder = 19
     Width = 82
   end
   object ActionList: TActionList
@@ -254,6 +261,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisSite'
+        Value = Null
+        Component = ceisSite
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inMemberId'
         Value = ''
         Component = MemberGuides
@@ -273,8 +288,8 @@
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 213
-    Top = 8
+    Left = 133
+    Top = 80
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_User'
@@ -356,6 +371,13 @@
         Name = 'isProjectMobile'
         Value = Null
         Component = ceisProjectMobile
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isSite'
+        Value = Null
+        Component = ceisSite
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

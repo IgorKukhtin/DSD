@@ -102,6 +102,7 @@ type
     Foto: TcxGridDBColumn;
     InDate: TcxGridDBColumn;
     FarmacyCashDate: TcxGridDBColumn;
+    isSite: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -3,7 +3,6 @@ inherited PromoForm: TPromoForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 599
   ClientWidth = 1204
-  ExplicitTop = -92
   ExplicitWidth = 1220
   ExplicitHeight = 637
   PixelsPerInch = 96
@@ -420,8 +419,6 @@ inherited PromoForm: TPromoForm
               Align = alClient
               PopupMenu = pmPartner
               TabOrder = 0
-              ExplicitLeft = -24
-              ExplicitTop = -19
               object cxGridDBTableViewPartner: TcxGridDBTableView
                 Navigator.Buttons.CustomButtons = <>
                 DataController.DataSource = PartnerDS
@@ -1114,6 +1111,8 @@ inherited PromoForm: TPromoForm
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
+        ExplicitLeft = 3
+        ExplicitTop = -24
         object cxGridDBTableViewSign: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = SignDS
