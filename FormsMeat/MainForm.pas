@@ -649,7 +649,7 @@ type
     N710: TMenuItem;
     actReport_Wage: TdsdOpenForm;
     N85: TMenuItem;
-    mniReport_Wage: TMenuItem;
+    miReport_Wage: TMenuItem;
     actReport_Weighing: TdsdOpenForm;
     C1: TMenuItem;
     actReport_Branch_App1: TdsdOpenForm;
@@ -916,6 +916,8 @@ type
     miOrderInternalPackRemains: TMenuItem;
     actGoodsReportSale: TdsdOpenForm;
     N187: TMenuItem;
+    actReport_Wage_Server: TdsdOpenForm;
+    miReport_Wage_Server: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

@@ -752,7 +752,7 @@ uses
   PromoPartner in '..\..\Forms\Guides\PromoPartner.pas' {PromoPartnerForm: TParentForm},
   Report_Branch_App7Dialog in '..\..\Forms\Report\Report_Branch_App7Dialog.pas' {Report_Branch_App7DialogForm: TParentForm},
   Report_Branch_App7 in '..\..\Forms\Report\Report_Branch_App7.pas' {Report_Branch_App7Form: TParentForm},
-  Report_Wage in '..\..\Forms\Report\Report_Wage.pas' {Report_WageForm: TParentForm},
+  Report_Wage_Server in '..\..\Forms\Report\Report_Wage_Server.pas' {Report_Wage_ServerForm: TParentForm},
   Report_Weighing in '..\..\Forms\Report\Report_Weighing.pas' {Report_WeighingForm: TParentForm},
   Report_WeighingDialog in '..\..\Forms\Report\Report_WeighingDialog.pas' {Report_WeighingDialogForm: TParentForm},
   Report_Branch_App1Dialog in '..\..\Forms\Report\Report_Branch_App1Dialog.pas' {Report_Branch_App1DialogForm: TParentForm},
@@ -982,7 +982,8 @@ uses
   StickerProperty_Value in '..\..\Forms\Guides\StickerProperty_Value.pas' {StickerProperty_ValueForm: TParentForm},
   OrderInternalPackRemainsJournal in '..\..\Forms\Document\OrderInternalPackRemainsJournal.pas' {OrderInternalPackRemainsJournalForm: TParentForm},
   OrderInternalPackRemains in '..\..\Forms\Document\OrderInternalPackRemains.pas' {OrderInternalPackRemainsForm: TParentForm},
-  GoodsReportSale in '..\..\Forms\Guides\GoodsReportSale.pas' {GoodsReportSaleForm: TParentForm};
+  GoodsReportSale in '..\..\Forms\Guides\GoodsReportSale.pas' {GoodsReportSaleForm: TParentForm},
+  Report_Wage in '..\..\Forms\Report\Report_Wage.pas' {Report_WageForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

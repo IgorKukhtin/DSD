@@ -2357,8 +2357,8 @@
 				<Form>Report_Branch_App7Form</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_Wage.pas">
-				<Form>Report_WageForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_Wage_Server.pas">
+				<Form>Report_Wage_ServerForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_Weighing.pas">
@@ -3279,6 +3279,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\GoodsReportSale.pas">
 				<Form>GoodsReportSaleForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Wage.pas">
+				<Form>Report_WageForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

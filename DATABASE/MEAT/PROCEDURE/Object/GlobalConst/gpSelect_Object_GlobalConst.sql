@@ -20,21 +20,21 @@ BEGIN
 
 
      -- если Кто - то запустил эти отчеты - отключим его :)
-     IF EXISTS (SELECT 1
+     /*IF EXISTS (SELECT 1
                 FROM gpSelect_Object_ReportExternal (inSession:= zfCalc_UserAdmin()) AS gpSelect
                      JOIN pg_stat_activity AS pg_PROC ON pg_PROC.state = 'active' AND pg_PROC.query_start < CURRENT_TIMESTAMP - INTERVAL '1 MIN'
-                                                     AND LOWER (pg_PROC.query) LIKE LOWER ('%' || gpSelect.Name ||'%')
+                                                     AND LOWER (pg_PROC.query) LIKE LOWER ('%' || gpSelect.Name ||'(%')
                )
         -- AND inSession = zfCalc_UserAdmin()
-
+ 
      THEN -- !!! ОТКЛЮЧИЛИ !!!
           PERFORM pg_cancel_backend (tmp.pId)
           FROM (SELECT pg_PROC.pId
                 FROM gpSelect_Object_ReportExternal (inSession:= zfCalc_UserAdmin()) AS gpSelect
                      JOIN pg_stat_activity AS pg_PROC ON pg_PROC.state = 'active' AND pg_PROC.query_start < CURRENT_TIMESTAMP - INTERVAL '1 MIN'
-                                                     AND LOWER (pg_PROC.query) LIKE LOWER ('%' || gpSelect.Name ||'%')
+                                                     AND LOWER (pg_PROC.query) LIKE LOWER ('%' || gpSelect.Name ||'(%')
                ) AS tmp;
-     END IF;
+     END IF;*/
 
 
      -- если Пользователь "на связи" запишем что он "Работает"

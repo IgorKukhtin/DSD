@@ -115,7 +115,7 @@ BEGIN
        LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
        LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
-  WHERE 1=0       
+  -- WHERE 1=0       
  UNION ALL
   -- arc-2
   SELECT 
@@ -143,7 +143,8 @@ BEGIN
        LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
        LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
-  WHERE 1=0;
+  -- WHERE 1=0
+  ;
 
   ELSE
   
@@ -207,7 +208,8 @@ BEGIN
        LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
        LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
-  WHERE 1=0;
+  -- WHERE 1=0
+  ;
 
   ELSE
      RAISE EXCEPTION 'Ошибка.Просмотр протокола недоступен.';

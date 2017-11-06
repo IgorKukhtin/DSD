@@ -73,7 +73,7 @@ BEGIN
                   FROM lpSelect_Object_JuridicalArea_byUnit (vbUnitId, 0) AS tmp;
   
     -- !!!Только для таких документов!!!
-    IF vbisDocument = TRUE AND vbStatusId = zc_Enum_Status_Complete() -- AND inSession <> '3'
+    IF vbisDocument = TRUE AND vbStatusId = zc_Enum_Status_Complete() AND inSession <> '3'
     THEN
 
      PERFORM lpCreateTempTable_OrderInternal_MI(inMovementId, vbObjectId, 0, vbUserId);
@@ -527,10 +527,10 @@ BEGIN
              END  AS isLast_2days
            , COALESCE (tmpRepeat.isRepeat, FALSE) AS isRepeat  
         
-           , tmpJuridicalArea.AreaId                                      AS AreaId
-           , COALESCE (tmpJuridicalArea.AreaName, '')      :: TVarChar    AS AreaName
+           -- , tmpJuridicalArea.AreaId                                      AS AreaId
+           -- , COALESCE (tmpJuridicalArea.AreaName, '')      :: TVarChar    AS AreaName
            
-           , Object_Area.ValueData                         :: TVarChar    AS AreaName_Goods
+           -- , Object_Area.ValueData                         :: TVarChar    AS AreaName_Goods
            
            , COALESCE (tmpJuridicalArea.isDefault, FALSE)  :: Boolean     AS isDefault
            
@@ -1551,9 +1551,9 @@ BEGIN
              
            , COALESCE (tmpRepeat.isRepeat, FALSE) AS isRepeat
            
-           , tmpJuridicalArea.AreaId                                      AS AreaId
-           , COALESCE (tmpJuridicalArea.AreaName, '')      :: TVarChar    AS AreaName
-           , Object_Area.ValueData                         :: TVarChar    AS AreaName_Goods
+           -- , tmpJuridicalArea.AreaId                                      AS AreaId
+           -- , COALESCE (tmpJuridicalArea.AreaName, '')      :: TVarChar    AS AreaName
+           -- , Object_Area.ValueData                         :: TVarChar    AS AreaName_Goods
            
            , COALESCE (tmpJuridicalArea.isDefault, FALSE)  :: Boolean     AS isDefault
        FROM tmpData AS tmpMI

@@ -5,7 +5,7 @@ inherited MainForm: TMainForm
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 260
+  ExplicitHeight = 257
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -5539,6 +5539,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_Wage_Server: TdsdOpenForm
+      Category = #1055#1077#1088#1089#1086#1085#1072#1083
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1091' '#1079#1072#1088#1072#1073#1086#1090#1085#1086#1081' '#1087#1083#1072#1090#1099' ('#1057#1077#1088#1074#1077#1088')'
+      FormName = 'TReport_Wage_ServerForm'
+      FormNameParam.Value = 'TReport_Wage_ServerForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
     object actReport_SheetWorkTime: TdsdOpenForm
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       MoveParams = <>
@@ -6441,8 +6452,11 @@ inherited MainForm: TMainForm
       object N85: TMenuItem
         Caption = '-'
       end
-      object mniReport_Wage: TMenuItem
+      object miReport_Wage: TMenuItem
         Action = actReport_Wage
+      end
+      object miReport_Wage_Server: TMenuItem
+        Action = actReport_Wage_Server
       end
       object N89: TMenuItem
         Action = actReport_SheetWorkTime
