@@ -142,19 +142,14 @@ BEGIN
              AND Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective())
           )
 
-    , tmpMI AS
+    , tmpMI_All AS
        (SELECT MovementItem.Id                        AS Id
              , MovementItem.MovementId                AS MovementId
              , Movement.InvNumber	              AS InvNumber
              , Movement.OperDate	              AS OperDate
              , MovementItem.ObjectId                  AS GoodsId
              , MovementItem.Amount                    AS Amount
-             , MIFloat_Price.ValueData                AS Price
-             , MIFloat_CountForPrice.ValueData        AS CountForPrice
-             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-             , Object_GoodsKind.ValueData             AS GoodsKindName
              , COALESCE (MIBoolean_isAuto.ValueData, TRUE)   AS isAuto
-             , COALESCE (MIFloat_NPP.ValueData, 0)    AS NPP
              , ObjectLink_GoodsGroup.ChildObjectId    AS GoodsGroupId
              , tmpMovement.isPartner
         FROM tmpMovement
@@ -165,64 +160,91 @@ BEGIN
                                     AND MovementItem.isErased   = FALSE
                                     AND MovementItem.Amount     <> 0
              
-             LEFT JOIN MovementItemFloat AS MIFloat_NPP
-                                         ON MIFloat_NPP.MovementItemId = MovementItem.Id
-                                        AND MIFloat_NPP.DescId = zc_MIFloat_NPP()
              LEFT JOIN MovementItemBoolean AS MIBoolean_isAuto
                                            ON MIBoolean_isAuto.MovementItemId = MovementItem.Id
                                           AND MIBoolean_isAuto.DescId = zc_MIBoolean_isAuto()
-
-             LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                        -- AND MIFloat_Price.ValueData <> 0
-             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId AND Object_GoodsKind.DescId = zc_Object_GoodsKind()
 
              LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
                                   ON ObjectLink_GoodsGroup.ObjectId = MovementItem.ObjectId
                                  AND ObjectLink_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
         )
-  , tmpGoods AS (SELECT tmp.GoodsId                              AS GoodsId
-                      , Object_Goods.ObjectCode                  AS GoodsCode
-                      , Object_Goods.ValueData                   AS GoodsName
-                      , ObjectString_Goods_UKTZED.ValueData      AS Goods_UKTZED
-                      , ObjectString_Goods_TaxImport.ValueData   AS Goods_TaxImport
-                      , ObjectString_Goods_DKPP.ValueData        AS Goods_DKPP
-                      , ObjectString_Goods_TaxAction.ValueData   AS Goods_TaxAction
-                      , Object_Measure.Id                        AS MeasureId
-                      , Object_Measure.ObjectCode                AS MeasureCode
-                      , Object_Measure.ValueData                 AS MeasureName
-                      , ObjectLink_Goods_InfoMoney.ChildObjectId AS InfoMoneyId
-                 FROM (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI
-                     ) AS tmp
-                      LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId
-                      LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
-                                             ON ObjectString_Goods_UKTZED.ObjectId = tmp.GoodsId
-                                            AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
-                      LEFT JOIN ObjectString AS ObjectString_Goods_TaxImport
-                                             ON ObjectString_Goods_TaxImport.ObjectId = tmp.GoodsId
-                                            AND ObjectString_Goods_TaxImport.DescId = zc_ObjectString_Goods_TaxImport()
-                      LEFT JOIN ObjectString AS ObjectString_Goods_DKPP
-                                             ON ObjectString_Goods_DKPP.ObjectId = tmp.GoodsId
-                                            AND ObjectString_Goods_DKPP.DescId = zc_ObjectString_Goods_DKPP()
-                      LEFT JOIN ObjectString AS ObjectString_Goods_TaxAction
-                                             ON ObjectString_Goods_TaxAction.ObjectId = tmp.GoodsId
-                                            AND ObjectString_Goods_TaxAction.DescId = zc_ObjectString_Goods_TaxAction()
-                      LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                           ON ObjectLink_Goods_Measure.ObjectId = tmp.GoodsId
-                                          AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-                      LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = COALESCE (ObjectLink_Goods_Measure.ChildObjectId, zc_Measure_Sh())
-                      
-                      LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                           ON ObjectLink_Goods_InfoMoney.ObjectId = tmp.GoodsId
-                                          AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-                 )
+    , tmpMIFloat AS (SELECT MovementItemFloat.*
+                     FROM MovementItemFloat
+                     WHERE MovementItemFloat.MovementItemId IN (SELECT tmpMI_All.Id FROM tmpMI_All) 
+                     )
+    , tmpGoodsKind AS (SELECT MovementItemLinkObject.*
+                       FROM MovementItemLinkObject
+                       WHERE MovementItemLinkObject.MovementItemId IN (SELECT tmpMI_All.Id FROM tmpMI_All)
+                         AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
+                       ) 
+
+    , tmpMI AS
+       (SELECT tmpMI_All.Id                           AS Id
+             , tmpMI_All.MovementId                   AS MovementId
+             , tmpMI_All.InvNumber	              AS InvNumber
+             , tmpMI_All.OperDate	              AS OperDate
+             , tmpMI_All.GoodsId                      AS GoodsId
+             , tmpMI_All.Amount                       AS Amount
+             , MIFloat_Price.ValueData                AS Price
+             , MIFloat_CountForPrice.ValueData        AS CountForPrice
+             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+             , Object_GoodsKind.ValueData             AS GoodsKindName
+             , tmpMI_All.isAuto                       AS isAuto
+             , COALESCE (MIFloat_NPP.ValueData, 0)    AS NPP
+             , tmpMI_All.GoodsGroupId                 AS GoodsGroupId
+             , tmpMI_All.isPartner                    AS isPartner
+        FROM tmpMI_All
+            LEFT JOIN tmpMIFloat AS MIFloat_NPP
+                                 ON MIFloat_NPP.MovementItemId = tmpMI_All.Id
+                                AND MIFloat_NPP.DescId = zc_MIFloat_NPP()
+            LEFT JOIN tmpMIFloat AS MIFloat_Price
+                                 ON MIFloat_Price.MovementItemId = tmpMI_All.Id
+                                AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                -- AND MIFloat_Price.ValueData <> 0
+            LEFT JOIN tmpMIFloat AS MIFloat_CountForPrice
+                                 ON MIFloat_CountForPrice.MovementItemId = tmpMI_All.Id
+                                AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+            LEFT JOIN tmpGoodsKind AS MILinkObject_GoodsKind
+                                   ON MILinkObject_GoodsKind.MovementItemId = tmpMI_All.Id
+                                  AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind() 
+            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId 
+                                                AND Object_GoodsKind.DescId = zc_Object_GoodsKind()
+        )
+    , tmpGoods AS (SELECT tmp.GoodsId                              AS GoodsId
+                        , Object_Goods.ObjectCode                  AS GoodsCode
+                        , Object_Goods.ValueData                   AS GoodsName
+                        , ObjectString_Goods_UKTZED.ValueData      AS Goods_UKTZED
+                        , ObjectString_Goods_TaxImport.ValueData   AS Goods_TaxImport
+                        , ObjectString_Goods_DKPP.ValueData        AS Goods_DKPP
+                        , ObjectString_Goods_TaxAction.ValueData   AS Goods_TaxAction
+                        , Object_Measure.Id                        AS MeasureId
+                        , Object_Measure.ObjectCode                AS MeasureCode
+                        , Object_Measure.ValueData                 AS MeasureName
+                        , ObjectLink_Goods_InfoMoney.ChildObjectId AS InfoMoneyId
+                   FROM (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI
+                       ) AS tmp
+                        LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId
+                        LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
+                                               ON ObjectString_Goods_UKTZED.ObjectId = tmp.GoodsId
+                                              AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
+                        LEFT JOIN ObjectString AS ObjectString_Goods_TaxImport
+                                               ON ObjectString_Goods_TaxImport.ObjectId = tmp.GoodsId
+                                              AND ObjectString_Goods_TaxImport.DescId = zc_ObjectString_Goods_TaxImport()
+                        LEFT JOIN ObjectString AS ObjectString_Goods_DKPP
+                                               ON ObjectString_Goods_DKPP.ObjectId = tmp.GoodsId
+                                              AND ObjectString_Goods_DKPP.DescId = zc_ObjectString_Goods_DKPP()
+                        LEFT JOIN ObjectString AS ObjectString_Goods_TaxAction
+                                               ON ObjectString_Goods_TaxAction.ObjectId = tmp.GoodsId
+                                              AND ObjectString_Goods_TaxAction.DescId = zc_ObjectString_Goods_TaxAction()
+                        LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                             ON ObjectLink_Goods_Measure.ObjectId = tmp.GoodsId
+                                            AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                        LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = COALESCE (ObjectLink_Goods_Measure.ChildObjectId, zc_Measure_Sh())
+                        
+                        LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                             ON ObjectLink_Goods_InfoMoney.ObjectId = tmp.GoodsId
+                                            AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                   )
 
     , tmpUKTZED    AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED (tmp.GoodsGroupId) AS CodeUKTZED FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
     , tmpTaxImport AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_TaxImport (tmp.GoodsGroupId) AS TaxImport FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
@@ -274,7 +296,7 @@ BEGIN
            OR ObjectString_BarCodeGLN.ValueData    <> ''
            OR ObjectString_ArticleGLN.ValueData    <> ''
        )
-     , tmpObject_GoodsPropertyValueGroup AS
+    , tmpObject_GoodsPropertyValueGroup AS
        (SELECT tmpObject_GoodsPropertyValue.GoodsId
              , tmpObject_GoodsPropertyValue.Article
              , tmpObject_GoodsPropertyValue.ArticleGLN
@@ -282,7 +304,7 @@ BEGIN
              ) AS tmpGoodsProperty_find
              LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
        )
-     , tmpObject_GoodsPropertyValue_basis AS
+    , tmpObject_GoodsPropertyValue_basis AS
        (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId AS GoodsId
              , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
              , Object_GoodsPropertyValue.ValueData  AS Name
@@ -953,25 +975,35 @@ BEGIN
                   , MovementFloat_ChangePercent.ValueData
           )
 
-       , tmpTaxCorrective AS --строчные корректировок
-       (SELECT
-             MovementItem.ObjectId                                          AS GoodsId
-           , MIFloat_Price.ValueData                                        AS Price
-           , SUM (MovementItem.Amount)                                      AS Amount
-       FROM tmpMovementTaxCorrective
-            INNER JOIN Movement ON Movement.Id =  tmpMovementTaxCorrective.Id
-            INNER JOIN MovementItem ON MovementItem.MovementId =  Movement.Id
-                                   AND MovementItem.DescId     = zc_MI_Master()
-                                   AND MovementItem.isErased   = FALSE
-                                   AND MovementItem.Amount <> 0
-            LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                    -- AND MIFloat_Price.ValueData <> 0
-       GROUP BY MovementItem.ObjectId
-              , MIFloat_Price.ValueData
+       , tmpTaxCorrective_MI AS --строчные корректировок
+                              (SELECT MovementItem.Id             AS Id
+                                    , MovementItem.ObjectId       AS GoodsId
+                                    , MovementItem.Amount         AS Amount
+                               FROM tmpMovementTaxCorrective
+                                    INNER JOIN Movement ON Movement.Id =  tmpMovementTaxCorrective.Id
+                                    INNER JOIN MovementItem ON MovementItem.MovementId =  Movement.Id
+                                                           AND MovementItem.DescId     = zc_MI_Master()
+                                                           AND MovementItem.isErased   = FALSE
+                                                           AND MovementItem.Amount <> 0
+                              )
 
-       )
+       , tmpMIFloat_Price AS (SELECT MovementItemFloat.*
+                              FROM MovementItemFloat
+                              WHERE MovementItemFloat.MovementItemId IN (SELECT tmpTaxCorrective_MI.Id FROM tmpTaxCorrective_MI)
+                               AND MovementItemFloat.DescId = zc_MIFloat_Price()
+                              )
+       , tmpTaxCorrective AS --строчные корректировок
+                            (SELECT tmpTaxCorrective_MI.GoodsId            AS GoodsId
+                                  , MIFloat_Price.ValueData                AS Price
+                                  , SUM (tmpTaxCorrective_MI.Amount)       AS Amount
+                             FROM tmpTaxCorrective_MI
+                                  LEFT JOIN tmpMIFloat_Price AS MIFloat_Price
+                                                             ON MIFloat_Price.MovementItemId = tmpTaxCorrective_MI.Id
+                                                          -- AND MIFloat_Price.ValueData <> 0
+                             GROUP BY tmpTaxCorrective_MI.GoodsId
+                                    , MIFloat_Price.ValueData
+                     
+                            )
        -- сам запрос
        SELECT COALESCE (tmp.GoodsId, 1) AS GoodsId
             , CAST (tmpMovementTaxCorrectiveCount.CountTaxId AS Integer) AS CountTaxId
@@ -1033,6 +1065,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.11.17         *
  28.08.17         *
  29.01.16         *
  14.01.15                                                       *
@@ -1058,5 +1091,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 5812683, inisClientCopy:= FALSE, inSession:= zfCalc_UserAdmin()); FETCH ALL "<unnamed portal 2>";
+-- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 7418138, inisClientCopy:= FALSE, inSession:= zfCalc_UserAdmin()); FETCH ALL "<unnamed portal 14>";
 -- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 5812683, inisClientCopy:= FALSE ,inSession:= zfCalc_UserAdmin());  FETCH ALL "<unnamed portal 15>";

@@ -2512,7 +2512,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMobileOrderExternalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileOrderExternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileOrderExternalJournalForm');
-  exit;
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileContract_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileContract_ObjectForm');
@@ -2541,7 +2540,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPhotoMobileForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPhotoMobileEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPhotoMobileEditForm');
-
 end;
 
 procedure TLoadFormTest.LoadModelServiceFormTest;

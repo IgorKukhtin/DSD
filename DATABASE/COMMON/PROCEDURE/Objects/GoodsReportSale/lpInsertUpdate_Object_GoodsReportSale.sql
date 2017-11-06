@@ -1,59 +1,66 @@
 -- Function: lpInsertUpdate_Object_GoodsReportSale  (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,TVarChar)
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_GoodsReportSale (Integer, TDateTime, TDateTime, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_GoodsReportSale (Integer, Integer, Integer, Integer
+                                                             , TFloat , TFloat , TFloat , TFloat , TFloat , TFloat , TFloat 
+                                                             , TFloat , TFloat , TFloat , TFloat , TFloat , TFloat , TFloat 
+                                                             , TFloat , TFloat , TFloat , TFloat , TFloat , TFloat , TFloat         
+                                                             , TFloat , TFloat , TFloat , TFloat , TFloat , TFloat , TFloat 
+                                                             , TFloat , TFloat , TFloat , TFloat , TFloat , TFloat , TFloat
+                                                             , TFloat , TFloat , TFloat , TFloat , TFloat , TFloat , TFloat 
+                                                             , Integer);
 
-CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_GoodsReportSaleInf(
-    IN inId                       Integer       -- ключ объекта <> 
-  , IN inUnitId       Integer 
-  , IN inGoodsId      Integer
-  , IN inGoodsKindId  Integer
-  
-  , IN inAmount1      TFloat
-  , IN inAmount2      TFloat
-  , IN inAmount3      TFloat
-  , IN inAmount4      TFloat
-  , IN inAmount5      TFloat
-  , IN inAmount6      TFloat
-  , IN inAmount7      TFloat
-  
-  , IN inPromo1       TFloat
-  , IN inPromo2       TFloat
-  , IN inPromo3       TFloat
-  , IN inPromo4       TFloat
-  , IN inPromo5       TFloat
-  , IN inPromo6       TFloat
-  , IN inPromo7       TFloat
-  
-  , IN inBranch1      TFloat
-  , IN inBranch2      TFloat
-  , IN inBranch3      TFloat
-  , IN inBranch4      TFloat
-  , IN inBranch5      TFloat
-  , IN inBranch6      TFloat
-  , IN inBranch7      TFloat
-  
-  , IN inOrder1       TFloat
-  , IN inOrder2       TFloat
-  , IN inOrder3       TFloat
-  , IN inOrder4       TFloat
-  , IN inOrder5       TFloat
-  , IN inOrder6       TFloat
-  , IN inOrder7       TFloat
-  
-  , IN inOrderPromo1  TFloat
-  , IN inOrderPromo2  TFloat
-  , IN inOrderPromo3  TFloat
-  , IN inOrderPromo4  TFloat
-  , IN inOrderPromo5  TFloat
-  , IN inOrderPromo6  TFloat
-  , IN inOrderPromo7  TFloat
-    
-  , IN inOrderBranch1 TFloat
-  , IN inOrderBranch2 TFloat
-  , IN inOrderBranch3 TFloat
-  , IN inOrderBranch4 TFloat
-  , IN inOrderBranch5 TFloat
-  , IN inOrderBranch6 TFloat
+CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_GoodsReportSale(
+    IN inId           Integer       -- ключ объекта <>         
+  , IN inUnitId       Integer                                  
+  , IN inGoodsId      Integer                                  
+  , IN inGoodsKindId  Integer                                  
+                                                               
+  , IN inAmount1      TFloat                                   
+  , IN inAmount2      TFloat                                   
+  , IN inAmount3      TFloat                                   
+  , IN inAmount4      TFloat                                   
+  , IN inAmount5      TFloat                                   
+  , IN inAmount6      TFloat                                   
+  , IN inAmount7      TFloat                                   
+                                                               
+  , IN inPromo1       TFloat                                   
+  , IN inPromo2       TFloat                                   
+  , IN inPromo3       TFloat                                   
+  , IN inPromo4       TFloat                                   
+  , IN inPromo5       TFloat                                   
+  , IN inPromo6       TFloat                                   
+  , IN inPromo7       TFloat                                   
+                                                               
+  , IN inBranch1      TFloat                                   
+  , IN inBranch2      TFloat                                   
+  , IN inBranch3      TFloat                                   
+  , IN inBranch4      TFloat                                   
+  , IN inBranch5      TFloat                                   
+  , IN inBranch6      TFloat                                   
+  , IN inBranch7      TFloat                                   
+                                                               
+  , IN inOrder1       TFloat                                   
+  , IN inOrder2       TFloat                                   
+  , IN inOrder3       TFloat                                   
+  , IN inOrder4       TFloat                                   
+  , IN inOrder5       TFloat                                   
+  , IN inOrder6       TFloat                                   
+  , IN inOrder7       TFloat                                   
+                                                               
+  , IN inOrderPromo1  TFloat                                   
+  , IN inOrderPromo2  TFloat                                   
+  , IN inOrderPromo3  TFloat                                   
+  , IN inOrderPromo4  TFloat                                   
+  , IN inOrderPromo5  TFloat                                   
+  , IN inOrderPromo6  TFloat                                   
+  , IN inOrderPromo7  TFloat                                   
+                                                               
+  , IN inOrderBranch1 TFloat                                   
+  , IN inOrderBranch2 TFloat                                   
+  , IN inOrderBranch3 TFloat                                   
+  , IN inOrderBranch4 TFloat                                   
+  , IN inOrderBranch5 TFloat                                   
+  , IN inOrderBranch6 TFloat                                   
   , IN inOrderBranch7 TFloat
   
   , IN inUserId       Integer        -- сессия пользователя
