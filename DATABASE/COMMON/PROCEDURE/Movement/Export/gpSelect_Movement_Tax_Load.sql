@@ -30,6 +30,47 @@ BEGIN
 
      --
      RETURN QUERY
+     WITH 
+     tmpContract AS (SELECT Object_Contract.Id                            AS ContractId
+                          , ObjectLink_Contract_InfoMoney.ChildObjectId   AS InfoMoneyId
+                     FROM Object AS Object_Contract
+                          LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
+                                               ON ObjectLink_Contract_InfoMoney.ObjectId = Object_Contract.Id
+                                              AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+                     WHERE Object_Contract.DescId = zc_Object_Contract()
+                     )
+                     
+   , tmpMovement AS (SELECT Movement.*
+                     FROM Movement
+                          INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                        ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                                       AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                          INNER JOIN tmpContract ON tmpContract.ContractId = MovementLinkObject_Contract.ObjectId
+                                                AND (tmpContract.InfoMoneyId NOT IN (zc_Enum_InfoMoney_30201()) -- Ìÿñíîå ñûðüå
+                                                  OR inInfoMoneyId <> 0
+                                                    )
+                     WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate 
+                       AND ((Movement.DescId = zc_Movement_Tax() AND inIsTaxCorrectiveOnly = FALSE)
+                          OR Movement.DescId = zc_Movement_TaxCorrective()
+                          )
+                       AND Movement.StatusId = zc_Enum_Status_Complete()
+                       AND (tmpContract.InfoMoneyId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
+                     )
+   , tmpMLMovement_Child AS (SELECT MovementLinkMovement_Child.MovementId
+                                  , Movement_DocumentChild.OperDate AS DKOR
+                                  , (MS_InvNumberPartner_DocumentChild.ValueData || CASE WHEN MS_InvNumberBranch_DocumentChild.ValueData <> '' THEN '/' || MS_InvNumberBranch_DocumentChild.ValueData ELSE '' END) AS D1_NUM
+                             FROM MovementLinkMovement AS MovementLinkMovement_Child
+                                  LEFT JOIN Movement AS Movement_DocumentChild ON Movement_DocumentChild.Id = MovementLinkMovement_Child.MovementChildId
+                                  LEFT JOIN MovementString AS MS_InvNumberPartner_DocumentChild ON MS_InvNumberPartner_DocumentChild.MovementId = Movement_DocumentChild.Id
+                                                                                               AND MS_InvNumberPartner_DocumentChild.DescId = zc_MovementString_InvNumberPartner()
+                                  LEFT JOIN MovementString AS MS_InvNumberBranch_DocumentChild
+                                                           ON MS_InvNumberBranch_DocumentChild.MovementId =  Movement_DocumentChild.Id
+                                                          AND MS_InvNumberBranch_DocumentChild.DescId = zc_MovementString_InvNumberBranch()
+                             WHERE MovementLinkMovement_Child.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement WHERE tmpMovement.DescId = zc_Movement_TaxCorrective())
+                               AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
+                            )
+  
+                     
      SELECT
              (row_number() OVER ())::TVarChar
            , (MovementString_InvNumberPartner.ValueData || CASE WHEN MovementString_InvNumberBranch.ValueData <> '' THEN '/' || MovementString_InvNumberBranch.ValueData ELSE '' END) :: TVarChar  AS InvNumber
@@ -72,32 +113,12 @@ BEGIN
                   ELSE ''
              END ::TVarChar AS WMDTYPESTR
 
-           , Movement_DocumentChild.OperDate AS DKOR
-           , (MS_InvNumberPartner_DocumentChild.ValueData || CASE WHEN MS_InvNumberBranch_DocumentChild.ValueData <> '' THEN '/' || MS_InvNumberBranch_DocumentChild.ValueData ELSE '' END) :: TVarChar AS D1_NUM
+           , tmpMLMovement_Child.DKOR               AS DKOR
+           , tmpMLMovement_Child.D1_NUM :: TVarChar AS D1_NUM
 
-       FROM Movement
-            INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-            INNER JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
-                                                                                AND (View_Contract_InvNumber.InfoMoneyId NOT IN (zc_Enum_InfoMoney_30201()) -- Ìÿñíîå ñûðüå
-                                                                                  OR inInfoMoneyId <> 0
-                                                                                    )
-            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child
-                                           ON MovementLinkMovement_Child.MovementId = Movement.Id
-                                          AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
-                                          AND Movement.DescId = zc_Movement_TaxCorrective()
-            LEFT JOIN Movement AS Movement_DocumentChild ON Movement_DocumentChild.Id = MovementLinkMovement_Child.MovementChildId
-            LEFT JOIN MovementString AS MS_InvNumberPartner_DocumentChild ON MS_InvNumberPartner_DocumentChild.MovementId = Movement_DocumentChild.Id
-                                                                         AND MS_InvNumberPartner_DocumentChild.DescId = zc_MovementString_InvNumberPartner()
-            LEFT JOIN MovementString AS MS_InvNumberBranch_DocumentChild
-                                     ON MS_InvNumberBranch_DocumentChild.MovementId =  Movement_DocumentChild.Id
-                                    AND MS_InvNumberBranch_DocumentChild.DescId = zc_MovementString_InvNumberBranch()
-
-
-            LEFT JOIN MovementString AS MovementString_InvNumberBranch
-                                     ON MovementString_InvNumberBranch.MovementId =  Movement.Id
-                                    AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
+       FROM tmpMovement AS Movement
+            
+            LEFT JOIN tmpMLMovement_Child ON tmpMLMovement_Child.MovementId = Movement.Id
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
@@ -113,8 +134,12 @@ BEGIN
                                     ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
 
+            LEFT JOIN MovementString AS MovementString_InvNumberBranch
+                                     ON MovementString_InvNumberBranch.MovementId = Movement.Id
+                                    AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
+
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
-                                     ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                     ON MovementString_InvNumberPartner.MovementId = Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Electron
@@ -131,34 +156,18 @@ BEGIN
             LEFT JOIN ObjectHistory AS ObjectHistory_JuridicalDetails 
                                     ON ObjectHistory_JuridicalDetails.ObjectId = MovementLinkObject_To.ObjectId
                                    AND ObjectHistory_JuridicalDetails.DescId = zc_ObjectHistory_JuridicalDetails()
-                                   AND COALESCE (Movement_DocumentChild.OperDate, Movement.OperDate) >= ObjectHistory_JuridicalDetails.StartDate AND COALESCE (Movement_DocumentChild.OperDate, Movement.OperDate) < ObjectHistory_JuridicalDetails.EndDate  
+                                   AND COALESCE (tmpMLMovement_Child.DKOR, Movement.OperDate) >= ObjectHistory_JuridicalDetails.StartDate AND COALESCE (tmpMLMovement_Child.DKOR, Movement.OperDate) < ObjectHistory_JuridicalDetails.EndDate  
             LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_FullName
                                           ON ObjectHistoryString_JuridicalDetails_FullName.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
                                          AND ObjectHistoryString_JuridicalDetails_FullName.DescId = zc_ObjectHistoryString_JuridicalDetails_FullName()
             LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_INN
                                          ON ObjectHistoryString_JuridicalDetails_INN.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
                                         AND ObjectHistoryString_JuridicalDetails_INN.DescId = zc_ObjectHistoryString_JuridicalDetails_INN()
-            /*LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
-                                         ON MovementLinkObject_PaidKind.MovementId = Movement.Id
-                                        AND MovementLinkObject_PaidKind.DescId = CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
-                                                                                           THEN zc_MovementLinkObject_PaidKind()
-                                                                                      WHEN Movement.DescId IN (zc_Movement_TransferDebtOut())
-                                                                                           THEN zc_MovementLinkObject_PaidKindTo()
-                                                                                      WHEN Movement.DescId IN (zc_Movement_TransferDebtIn())
-                                                                                           THEN zc_MovementLinkObject_PaidKindFrom()
-                                                                                  END*/
 
-      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate 
-        AND ((MovementDate_DateRegistered.ValueData BETWEEN inStartDateReg AND inEndDateReg AND MovementString_InvNumberRegistered.ValueData <> '')
+      WHERE ((MovementDate_DateRegistered.ValueData BETWEEN inStartDateReg AND inEndDateReg AND MovementString_InvNumberRegistered.ValueData <> '')
           OR Movement.DescId = zc_Movement_Tax()
           OR inStartDateReg > inEndDateReg
             )
-        AND ((Movement.DescId = zc_Movement_Tax() AND inIsTaxCorrectiveOnly = FALSE)
-           OR Movement.DescId = zc_Movement_TaxCorrective()
-            )
-        AND Movement.StatusId = zc_Enum_Status_Complete()
-        AND (View_Contract_InvNumber.InfoMoneyId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
-        -- AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
         AND MovementFloat_TotalSummPVAT.ValueData <> 0
         AND COALESCE (MovementString_InvNumberBranch.ValueData, '') <> '2'
      ;
@@ -166,7 +175,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Tax_Load (TDateTime, TDateTime, TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
@@ -180,4 +188,4 @@ ALTER FUNCTION gpSelect_Movement_Tax_Load (TDateTime, TDateTime, TDateTime, TDat
 */
 
 -- òåñò
--- SELECT * FROM gpSelect_Movement_Tax_Load (inStartDate:= '01.06.2016', inEndDate:= '01.06.2016', inStartDateReg:= '16.03.2015', inEndDateReg:= '16.03.2015', inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inIsTaxCorrectiveOnly:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Tax_Load (inStartDate:= '01.10.2017', inEndDate:= '31.10.2017', inStartDateReg:= '01.10.2017', inEndDateReg:= '31.10.2017', inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inIsTaxCorrectiveOnly:= TRUE, inSession:= zfCalc_UserAdmin())
