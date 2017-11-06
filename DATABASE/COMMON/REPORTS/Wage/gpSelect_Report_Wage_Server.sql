@@ -1,8 +1,8 @@
--- Function: gpSelect_Report_Wage ()
+-- Function: gpSelect_Report_Wage_Server ()
 
-DROP FUNCTION IF EXISTS gpSelect_Report_Wage (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Report_Wage_Server (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Report_Wage(
+CREATE OR REPLACE FUNCTION gpSelect_Report_Wage_Server(
     IN inStartDate      TDateTime, --дата начала периода
     IN inEndDate        TDateTime, --дата окончания периода
     IN inUnitId         Integer,   --подразделение
@@ -79,7 +79,7 @@ BEGIN
     vbUserId := inSession::Integer;
 
     -- Таблица - Данные результат
-    /*CREATE TEMP TABLE Res(
+    CREATE TEMP TABLE Res(
           StaffListId                    Integer
         , DocumentKindId                 Integer
         , UnitId                         Integer
@@ -148,22 +148,19 @@ BEGIN
           ServiceModelCode Integer
         , ServiceModelName  TVarChar
         , Ord Integer
-         ) ON COMMIT DROP;*/
+         ) ON COMMIT DROP;
 
-
-    -- Результат
-    RETURN QUERY
 
     -- Report_1 - По штатному расписанию - из Модели + из Табеля - По проводкам кол-во
-    WITH Res AS /* (StaffListId, DocumentKindId, UnitId,UnitName,PositionId,PositionName,PositionLevelId,PositionLevelName,Count_Member,HoursPlan,HoursDay, PersonalGroupId, PersonalGroupName, MemberId, MemberName, SheetWorkTime_Date, SUM_MemberHours, SheetWorkTime_Amount
+    Insert Into Res (StaffListId, DocumentKindId, UnitId,UnitName,PositionId,PositionName,PositionLevelId,PositionLevelName,Count_Member,HoursPlan,HoursDay, PersonalGroupId, PersonalGroupName, MemberId, MemberName, SheetWorkTime_Date, SUM_MemberHours, SheetWorkTime_Amount
                    , ServiceModelCode,ServiceModelName,Price,FromId,FromName,ToId,ToName,MovementDescId,MovementDescName,SelectKindId,SelectKindName,Ratio
                    , ModelServiceItemChild_FromId,ModelServiceItemChild_FromDescId,ModelServiceItemChild_FromName,ModelServiceItemChild_ToId,ModelServiceItemChild_ToDescId,ModelServiceItemChild_ToName
                    , StorageLineId_From, StorageLineName_From, StorageLineId_To, StorageLineName_To
                    , GoodsKind_FromId, GoodsKind_FromName, GoodsKindComplete_FromId, GoodsKindComplete_FromName, GoodsKind_ToId, GoodsKind_ToName, GoodsKindComplete_ToId, GoodsKindComplete_ToName
                    , OperDate, Count_Day, Count_MemberInDay,Gross,GrossOnOneMember,Amount,AmountOnOneMember
                    , ModelServiceId, StaffListSummKindId
-                    )*/
-   (SELECT Report_1.StaffListId, Report_1.DocumentKindId, Report_1.UnitId, Report_1.UnitName,Report_1.PositionId,Report_1.PositionName,Report_1.PositionLevelId,Report_1.PositionLevelName,Report_1.Count_Member,Report_1.HoursPlan,Report_1.HoursDay
+                    )
+    SELECT Report_1.StaffListId, Report_1.DocumentKindId, Report_1.UnitId, Report_1.UnitName,Report_1.PositionId,Report_1.PositionName,Report_1.PositionLevelId,Report_1.PositionLevelName,Report_1.Count_Member,Report_1.HoursPlan,Report_1.HoursDay
          , Report_1.PersonalGroupId, Report_1.PersonalGroupName, Report_1.MemberId,Report_1.MemberName,Report_1.SheetWorkTime_Date, Report_1.SUM_MemberHours, Report_1.SheetWorkTime_Amount, Report_1.ServiceModelCode, Report_1.ServiceModelName, Report_1.Price
          , Report_1.FromId,Report_1.FromName,Report_1.ToId,Report_1.ToName,Report_1.MovementDescId,Report_1.MovementDescName,Report_1.SelectKindId,Report_1.SelectKindName,Report_1.Ratio
          , Report_1.ModelServiceItemChild_FromId,Report_1.ModelServiceItemChild_FromDescId,Report_1.ModelServiceItemChild_FromName,Report_1.ModelServiceItemChild_ToId
@@ -174,98 +171,56 @@ BEGIN
          , Report_1.OperDate, Report_1.Count_Day, Report_1.Count_MemberInDay, Report_1.Gross,Report_1.GrossOnOneMember
          , Report_1.Amount,Report_1.AmountOnOneMember
          , Report_1.ServiceModelId AS ModelServiceId, 0 AS StaffListSummKindId
-    FROM gpSelect_Report_Wage_Model (inStartDate      := inStartDate,
+    FROM gpSelect_Report_Wage_Model_Server (inStartDate      := inStartDate,
                                      inEndDate        := inEndDate, --дата окончания периода
                                      inUnitId         := inUnitId,   --подразделение
                                      inModelServiceId := inModelServiceId,   --модель начисления
                                      inMemberId       := inMemberId,   --сотрудник
                                      inPositionId     := inPositionId,   --должность
                                      inSession        := inSession
-                                    ) AS Report_1
-   UNION ALL
+                                    ) AS Report_1;
+
+
     -- Report_2 - По штатному расписанию - Тип суммы ИЛИ по часам - из Табеля
-    /*INSERT INTO Res (StaffListId, UnitId,UnitName,PositionId,PositionName,PositionLevelId,PositionLevelName,Count_Member,HoursPlan,HoursDay, PersonalGroupId, PersonalGroupName, MemberId, MemberName
+    INSERT INTO Res (StaffListId, UnitId,UnitName,PositionId,PositionName,PositionLevelId,PositionLevelName,Count_Member,HoursPlan,HoursDay, PersonalGroupId, PersonalGroupName, MemberId, MemberName
                    , SUM_MemberHours, SheetWorkTime_Amount, ServiceModelCode, ServiceModelName, Price, AmountOnOneMember
                    , Count_Day
                    , ModelServiceId, StaffListSummKindId
-                    )*/
+                    )
     SELECT
-         Report_2.StaffListId
-       , 0 :: Integer AS DocumentKindId
-       , Report_2.UnitId
-       , Report_2.UnitName
-       , Report_2.PositionId
-       , Report_2.PositionName
-       , Report_2.PositionLevelId
-       , Report_2.PositionLevelName
-       , Report_2.Count_Member
-       , Report_2.HoursPlan
-       , Report_2.HoursDay
-       , Report_2.PersonalGroupId
-       , Report_2.PersonalGroupName
-       , Report_2.MemberId
-       , Report_2.MemberName
-       , NULL :: TDateTime AS SheetWorkTime_Date
-       , Report_2.SUM_MemberHours
-       , Report_2.SheetWorkTime_Amount
-       , Report_2.StaffListSummKindId   AS ServiceModelCode
-       , Report_2.StaffListSummKindName AS ServiceModelName
-       , Report_2.StaffListSumm_Value   AS Price
-       
-       , 0  :: Integer  AS FromId
-       , '' :: TVarChar AS FromName
-       , 0  :: Integer  AS ToId
-       , '' :: TVarChar AS ToName
-       , 0  :: Integer  AS MovementDescId
-       , '' :: TVarChar AS MovementDescName
-       , 0  :: Integer  AS SelectKindId
-       , '' :: TVarChar AS SelectKindName
-       , 0  :: TFloat   AS Ratio
-
-       , 0  :: Integer  AS ModelServiceItemChild_FromId
-       , 0  :: Integer  AS ModelServiceItemChild_FromDescId
-       , '' :: TVarChar AS ModelServiceItemChild_FromName
-       , 0  :: Integer  AS ModelServiceItemChild_ToId
-       , 0  :: Integer  AS ModelServiceItemChild_ToDescId
-       , '' :: TVarChar AS ModelServiceItemChild_ToName
-
-       , 0  :: Integer  AS StorageLineId_From
-       , '' :: TVarChar AS StorageLineName_From
-       , 0  :: Integer  AS StorageLineId_To
-       , '' :: TVarChar AS StorageLineName_To
-
-       , 0  :: Integer  AS GoodsKind_FromId
-       , '' :: TVarChar AS GoodsKind_FromName
-       , 0  :: Integer  AS GoodsKindComplete_FromId
-       , '' :: TVarChar AS GoodsKindComplete_FromName
-       , 0  :: Integer  AS GoodsKind_ToId
-       , '' :: TVarChar AS GoodsKind_ToName
-       , 0  :: Integer  AS GoodsKindComplete_ToId
-       , '' :: TVarChar AS GoodsKindComplete_ToName
-                          
-       , NULL :: TDateTime AS OperDate                       
-       , Report_2.Count_Day
-       , 0 :: Integer AS Count_MemberInDay
-       , 0 :: TFloat AS Gross
-       , 0 :: TFloat AS GrossOnOneMember
-
-       , 0             AS Amount
-       , Report_2.Summ AS AmountOnOneMember
-       , 0             AS ModelServiceId
-       , Report_2.StaffListSummKindId
-
-    FROM gpSelect_Report_Wage_Sum (inStartDate      := inStartDate,
+        Report_2.StaffListId
+       ,Report_2.UnitId
+       ,Report_2.UnitName
+       ,Report_2.PositionId
+       ,Report_2.PositionName
+       ,Report_2.PositionLevelId
+       ,Report_2.PositionLevelName
+       ,Report_2.Count_Member
+       ,Report_2.HoursPlan
+       ,Report_2.HoursDay
+       ,Report_2.PersonalGroupId
+       ,Report_2.PersonalGroupName
+       ,Report_2.MemberId
+       ,Report_2.MemberName
+       ,Report_2.SUM_MemberHours
+       ,Report_2.SheetWorkTime_Amount
+       ,Report_2.StaffListSummKindId   AS ServiceModelCode
+       ,Report_2.StaffListSummKindName AS ServiceModelName
+       ,Report_2.StaffListSumm_Value   AS Price
+       ,Report_2.Summ
+       ,Report_2.Count_Day
+       ,0 AS ModelServiceId, Report_2.StaffListSummKindId
+    FROM gpSelect_Report_Wage_Sum_Server (inStartDate      := inStartDate,
                                    inEndDate        := inEndDate, --дата окончания периода
                                    inUnitId         := inUnitId,   --подразделение
                                    inMemberId       := inMemberId,   --сотрудник
                                    inPositionId     := inPositionId,   --должность
                                    inSession        := inSession
-                                  ) AS Report_2
-   )
+                                  ) AS Report_2;
 
     --
-    , tmpListServiceModel  AS  -- (ServiceModelCode, ServiceModelName, Ord)
-   (SELECT tmp.ServiceModelCode
+    INSERT INTO tmpListServiceModel (ServiceModelCode, ServiceModelName, Ord)
+    SELECT tmp.ServiceModelCode
          , tmp.ServiceModelName
          , (ROW_NUMBER() OVER (ORDER BY tmp.ServiceModelCode)) :: Integer AS Ord
     FROM (SELECT DISTINCT
@@ -273,10 +228,11 @@ BEGIN
                , Res.ServiceModelName
           FROM Res
           WHERE Res.ServiceModelCode IS NOT NULL
-         ) AS tmp
-   )
+         ) AS tmp;
 
-        , tmpPersonal AS (SELECT *
+    -- Результат
+    RETURN QUERY
+        WITH tmpPersonal AS (SELECT *
                                   , ROW_NUMBER(*) OVER (PARTITION BY Object_Personal.MemberId, COALESCE (Object_Personal.PositionId, 0), COALESCE (Object_Personal.PositionLevelId, 0), COALESCE (Object_Personal.UnitId, 0)) AS ORD
                              FROM Object_Personal_View AS Object_Personal
                             )
@@ -596,4 +552,4 @@ $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
 -- тест
--- SELECT * FROM gpSelect_Report_Wage (inStartDate:= '03.11.2017', inEndDate:= '03.11.2017', inUnitId:= 8439, inModelServiceId:= 633116, inMemberId:= 0, inPositionId:= 0, inDetailDay:= TRUE, inDetailModelService:= TRUE, inDetailModelServiceItemMaster:= TRUE, inDetailModelServiceItemChild:= TRUE, inSession:= '5');
+-- SELECT * FROM gpSelect_Report_Wage_Server (inStartDate:= '01.04.2017', inEndDate:= '02.04.2017', inUnitId:= 8439, inModelServiceId:= 633116, inMemberId:= 0, inPositionId:= 0, inDetailDay:= TRUE, inDetailModelService:= TRUE, inDetailModelServiceItemMaster:= TRUE, inDetailModelServiceItemChild:= TRUE, inSession:= '5');

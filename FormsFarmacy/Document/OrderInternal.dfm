@@ -2,8 +2,9 @@ inherited OrderInternalForm: TOrderInternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 529
   ClientWidth = 1229
+  ExplicitLeft = -439
   ExplicitWidth = 1245
-  ExplicitHeight = 567
+  ExplicitHeight = 564
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -12,17 +13,17 @@ inherited OrderInternalForm: TOrderInternalForm
     Height = 454
     ExplicitTop = 75
     ExplicitWidth = 1229
-    ExplicitHeight = 457
+    ExplicitHeight = 454
     ClientRectBottom = 454
     ClientRectRight = 1229
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1229
-      ExplicitHeight = 433
+      ExplicitHeight = 430
       inherited cxGrid: TcxGrid
         Width = 1229
         Height = 200
         ExplicitWidth = 1229
-        ExplicitHeight = 203
+        ExplicitHeight = 200
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -526,22 +527,6 @@ inherited OrderInternalForm: TOrderInternalForm
             VisibleForCustomization = False
             Width = 30
           end
-          object AreaName_Goods: TcxGridDBColumn
-            Caption = #1056#1077#1075#1080#1086#1085' ('#1090#1086#1074#1072#1088')'
-            DataBinding.FieldName = 'AreaName_Goods'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object clAreaName: TcxGridDBColumn
-            Caption = #1056#1077#1075#1080#1086#1085' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
-            DataBinding.FieldName = 'AreaName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 81
-          end
           object clisDefault: TcxGridDBColumn
             Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
             DataBinding.FieldName = 'isDefault'
@@ -562,7 +547,6 @@ inherited OrderInternalForm: TOrderInternalForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitTop = 208
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -759,7 +743,6 @@ inherited OrderInternalForm: TOrderInternalForm
         Height = 5
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitTop = 203
       end
     end
   end

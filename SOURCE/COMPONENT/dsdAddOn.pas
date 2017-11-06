@@ -2690,11 +2690,9 @@ begin
             while not FDataSet.Eof do
             begin
               if (FDataSet.FindField(GPSNField).AsFloat <> 0) and
-                 (FDataSet.FindField(GPSEField).AsFloat <> 0)
-              then
+                 (FDataSet.FindField(GPSEField).AsFloat <> 0) then
                 FGeoCode.Geocode(FDataSet.FindField(GPSNField).AsFloat, FDataSet.FindField(GPSEField).AsFloat)
-              else
-              if FDataSet.FindField(AddressField) <> nil then
+              else if FDataSet.FindField(AddressField) <> nil then
                 FGeoCode.Geocode(FDataSet.FindField(AddressField).AsString);
 
               InsertDateValue := StrToDateTime('01.01.1900');
@@ -2719,9 +2717,6 @@ begin
           for i := 0 to Pred(GMList.Count) do
             FGeoCode.Marker.Add(GMList[i].Data.Lat, GMList[i].Data.Lng, GMList[i].Data.Title);
 
-          if FGeoCode.Marker.Count > 0 then
-            FGeoCode.Marker.Items[0].CenterMapTo;
-
           if FGeoCode.Marker.Count > 1 then
           begin
             FDirection.DirectionsRequest.Origin.LatLng.Lat := FGeoCode.Marker.Items[0].Position.Lat;
@@ -2741,6 +2736,9 @@ begin
               FDirection.Execute;
             end;
           end;
+
+          if FGeoCode.Marker.Count > 0 then
+            FGeoCode.Marker.Items[0].CenterMapTo;
         end;
       finally
         FDataSet.EnableControls;

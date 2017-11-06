@@ -1,8 +1,8 @@
--- Function: gpReport_GoodsBalance()
+-- Function: gpReport_GoodsBalance_OLD()
 
-DROP FUNCTION IF EXISTS gpReport_GoodsBalance (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsBalance_OLD (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_GoodsBalance(
+CREATE OR REPLACE FUNCTION gpReport_GoodsBalance_OLD(
     IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
     IN inAccountGroupId     Integer,    --
@@ -146,25 +146,25 @@ BEGIN
     END IF;
 
     -- таблица -
-    -- CREATE TEMP TABLE _tmpListContainer (LocationId Integer, ContainerDescId Integer, ContainerId_count Integer, ContainerId_begin Integer, GoodsId Integer, AccountId Integer, AccountGroupId Integer, Amount TFloat) ON COMMIT DROP;
-    -- CREATE TEMP TABLE _tmpContainer (ContainerDescId Integer, ContainerId_count Integer, ContainerId_begin Integer, LocationId Integer, GoodsId Integer, GoodsKindId Integer, PartionGoodsId Integer, AssetToId Integer, AccountId Integer, AccountGroupId Integer, Amount TFloat) ON COMMIT DROP;
-    -- CREATE TEMP TABLE _tmpLocation (LocationId Integer, DescId Integer, ContainerDescId Integer) ON COMMIT DROP;
-
-
-    RETURN QUERY
-
+    CREATE TEMP TABLE _tmpListContainer (LocationId Integer, ContainerDescId Integer, ContainerId_count Integer, ContainerId_begin Integer, GoodsId Integer, AccountId Integer, AccountGroupId Integer, Amount TFloat) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpContainer (ContainerDescId Integer, ContainerId_count Integer, ContainerId_begin Integer, LocationId Integer, GoodsId Integer, GoodsKindId Integer, PartionGoodsId Integer, AssetToId Integer, AccountId Integer, AccountGroupId Integer, Amount TFloat) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpLocation (LocationId Integer, DescId Integer, ContainerDescId Integer) ON COMMIT DROP;
 
     -- группа подразделений или подразделение или место учета (МО, Авто)
-     WITH _tmpLocation AS -- (LocationId, DescId, ContainerDescId)
-          (SELECT lfSelect_Object_Unit_byGroup.UnitId AS LocationId
+    IF inUnitGroupId <> 0 AND COALESCE (inLocationId, 0) = 0
+    THEN
+        INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
+           SELECT lfSelect_Object_Unit_byGroup.UnitId AS LocationId
                 , zc_ContainerLinkObject_Unit()       AS DescId
                 , tmpDesc.ContainerDescId
            FROM lfSelect_Object_Unit_byGroup (inUnitGroupId) AS lfSelect_Object_Unit_byGroup
                 -- LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId /*UNION SELECT zc_Container_Summ() AS ContainerDescId*/) AS tmpDesc ON 1 = 1 -- !!!временно без с/с, для скорости!!!
                 LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
-           WHERE inUnitGroupId <> 0 AND COALESCE (inLocationId, 0) = 0
-
-          UNION
+          ;
+    ELSE
+        IF inLocationId <> 0
+        THEN
+            INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
                SELECT Object.Id AS LocationId
                     , CASE WHEN Object.DescId = zc_Object_Unit()   THEN zc_ContainerLinkObject_Unit() 
                            WHEN Object.DescId = zc_Object_Car()    THEN zc_ContainerLinkObject_Car() 
@@ -174,17 +174,15 @@ BEGIN
                FROM Object
                     -- LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId) AS tmpDesc ON 1 = 1 -- !!!временно без с/с, для скорости!!!
                     LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
-               WHERE Object.Id    = inLocationId
-                 AND inLocationId > 0
+               WHERE Object.Id = inLocationId
              /*UNION
                SELECT lfSelect.UnitId               AS LocationId
                     , zc_ContainerLinkObject_Unit() AS DescId
                     , tmpDesc.ContainerDescId
                FROM lfSelect_Object_Unit_byGroup (inLocationId) AS lfSelect
                     -- LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId) AS tmpDesc ON 1 = 1 -- !!!временно без с/с, для скорости!!!
-                    LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
-               WHERE inLocationId > 0*/
-
+                    LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1*/
+              ;
         /*ELSE
               SELECT tmp.LocationId, tmp.DescId, tmpDesc.ContainerDescId
               FROM
@@ -196,11 +194,12 @@ BEGIN
                SELECT Object.Id AS LocationId, zc_ContainerLinkObject_Car() AS DescId  FROM Object WHERE Object.DescId = zc_Object_Car() AND inAccountGroupId = 0 AND inGoodsGroupId = 1941 -- СД-ОБЩАЯ
               ) AS tmp
               LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
-              WHERE COALESCE (inUnitGroupId, 0) = 0 AND COALESCE (inLocationId, 0) = 0
              ;*/
+        END IF;
+    END IF;
 
     -- добавили
-    UNION -- INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
+    INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
        SELECT Object.Id
                     , tmpCLODesc.DescId
                     , tmpDesc.ContainerDescId
@@ -210,17 +209,16 @@ BEGIN
        WHERE Object.DescId IN (zc_Object_Member(), zc_Object_Car())
          AND vbIsSummIn  = TRUE
          AND (inIsAllMO  = TRUE
-           OR inIsAllAuto = TRUE)
-    )
+           OR inIsAllAuto = TRUE);
 
     -- !!!!!!!!!!!!!!!!!!!!!!!
-    -- ANALYZE _tmpLocation;
+    ANALYZE _tmpLocation;
 
 
     -- группа товаров или товар или все товары из проводок
-           , tmpGoods AS (SELECT lfObject_Goods_byGoodsGroup.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup
-                          WHERE inGoodsGroupId > 0
-                          )
+    IF inGoodsGroupId <> 0 AND COALESCE (inGoodsId, 0) = 0
+    THEN
+        WITH tmpGoods AS (SELECT lfObject_Goods_byGoodsGroup.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup)
            , tmpAccount AS (SELECT View_Account.AccountGroupId, View_Account.AccountId
                             FROM (SELECT inAccountGroupId              AS AccountGroupId WHERE inAccountGroupId <> 0
                             UNION SELECT zc_Enum_AccountGroup_10000()  AS AccountGroupId WHERE inAccountGroupId = 0
@@ -230,12 +228,8 @@ BEGIN
                                  ) AS tmp
                                  INNER JOIN Object_Account_View AS View_Account ON View_Account.AccountGroupId = tmp.AccountGroupId
                            )
-             , tmpContainer AS (SELECT CLO_Goods.ContainerId FROM ContainerLinkObject AS CLO_Goods WHERE CLO_Goods.ObjectId = inGoodsId AND CLO_Goods.DescId = zc_ContainerLinkObject_Goods()
-                                 UNION
-                                   SELECT Container.Id FROM Container WHERE Container.ObjectId = inGoodsId AND Container.DescId = zc_Container_Count()
-                                  )
-        , _tmpListContainer_all AS -- (LocationId, ContainerDescId, ContainerId_count, ContainerId_begin, GoodsId, AccountId, AccountGroupId, Amount)
-          (SELECT _tmpLocation.LocationId
+        INSERT INTO _tmpListContainer (LocationId, ContainerDescId, ContainerId_count, ContainerId_begin, GoodsId, AccountId, AccountGroupId, Amount)
+           SELECT _tmpLocation.LocationId
                 , _tmpLocation.ContainerDescId
                 , CASE WHEN _tmpLocation.ContainerDescId = zc_Container_Count()
                             THEN ContainerLinkObject.ContainerId
@@ -265,16 +259,27 @@ BEGIN
                 LEFT JOIN ContainerLinkObject AS CLO_Account ON CLO_Account.ContainerId = Container.Id
                                                             AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
                                                             AND _tmpLocation.ContainerDescId = zc_Container_Count()
-           WHERE ((_tmpLocation.ContainerDescId = zc_Container_Summ() AND tmpAccount.AccountId > 0)
+           WHERE (_tmpLocation.ContainerDescId = zc_Container_Summ() AND tmpAccount.AccountId > 0)
               OR (_tmpLocation.ContainerDescId = zc_Container_Count() AND ((CLO_Account.ContainerId > 0 AND inAccountGroupId = zc_Enum_AccountGroup_110000()) -- Транзит
                                                                         OR (CLO_Account.ContainerId IS NULL AND inAccountGroupId <> zc_Enum_AccountGroup_110000()) -- Транзит
                                                                          ))
-                 )
-                AND inGoodsGroupId > 0 AND COALESCE (inGoodsId, 0) = 0
-
-
-             -- INSERT INTO _tmpListContainer (LocationId, ContainerDescId, ContainerId_count, ContainerId_begin, GoodsId, AccountId, AccountGroupId, Amount)
-              UNION
+          ;
+    ELSE IF inGoodsId <> 0
+         THEN
+             WITH tmpContainer AS (SELECT CLO_Goods.ContainerId FROM ContainerLinkObject AS CLO_Goods WHERE CLO_Goods.ObjectId = inGoodsId AND CLO_Goods.DescId = zc_ContainerLinkObject_Goods()
+                                 UNION
+                                   SELECT Container.Id FROM Container WHERE Container.ObjectId = inGoodsId AND Container.DescId = zc_Container_Count()
+                                  )
+                , tmpAccount AS (SELECT View_Account.AccountGroupId, View_Account.AccountId
+                                 FROM (SELECT inAccountGroupId              AS AccountGroupId WHERE inAccountGroupId <> 0
+                                 UNION SELECT zc_Enum_AccountGroup_10000()  AS AccountGroupId WHERE inAccountGroupId = 0
+                                 UNION SELECT zc_Enum_AccountGroup_20000()  AS AccountGroupId WHERE inAccountGroupId = 0
+                                 UNION SELECT zc_Enum_AccountGroup_60000()  AS AccountGroupId WHERE inAccountGroupId = 0
+                                 UNION SELECT zc_Enum_AccountGroup_110000() AS AccountGroupId WHERE inAccountGroupId = 0
+                                      ) AS tmp
+                                      INNER JOIN Object_Account_View AS View_Account ON View_Account.AccountGroupId = tmp.AccountGroupId
+                                )
+             INSERT INTO _tmpListContainer (LocationId, ContainerDescId, ContainerId_count, ContainerId_begin, GoodsId, AccountId, AccountGroupId, Amount)
                 SELECT _tmpLocation.LocationId
                      , _tmpLocation.ContainerDescId
                      , CASE WHEN _tmpLocation.ContainerDescId = zc_Container_Count()
@@ -302,14 +307,22 @@ BEGIN
                      LEFT JOIN ContainerLinkObject AS CLO_Account ON CLO_Account.ContainerId = Container.Id
                                                                  AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
                                                                  AND _tmpLocation.ContainerDescId = zc_Container_Count()
-                WHERE ((_tmpLocation.ContainerDescId = zc_Container_Summ() AND tmpAccount.AccountId > 0)
+                WHERE (_tmpLocation.ContainerDescId = zc_Container_Summ() AND tmpAccount.AccountId > 0)
                    OR (_tmpLocation.ContainerDescId = zc_Container_Count() AND ((CLO_Account.ContainerId > 0 AND inAccountGroupId = zc_Enum_AccountGroup_110000()) -- Транзит
                                                                              OR (CLO_Account.ContainerId IS NULL AND inAccountGroupId <> zc_Enum_AccountGroup_110000()) -- Транзит
                                                                               ))
-                     )
-                AND inGoodsId > 0
-
-               UNION 
+               ;
+         ELSE
+             WITH tmpAccount AS (SELECT View_Account.AccountGroupId, View_Account.AccountId
+                                 FROM (SELECT inAccountGroupId              AS AccountGroupId WHERE inAccountGroupId <> 0
+                                 UNION SELECT zc_Enum_AccountGroup_10000()  AS AccountGroupId WHERE inAccountGroupId = 0
+                                 UNION SELECT zc_Enum_AccountGroup_20000()  AS AccountGroupId WHERE inAccountGroupId = 0
+                                 UNION SELECT zc_Enum_AccountGroup_60000()  AS AccountGroupId WHERE inAccountGroupId = 0
+                                 UNION SELECT zc_Enum_AccountGroup_110000() AS AccountGroupId WHERE inAccountGroupId = 0
+                                      ) AS tmp
+                                      INNER JOIN Object_Account_View AS View_Account ON View_Account.AccountGroupId = tmp.AccountGroupId
+                                )
+             INSERT INTO _tmpListContainer (LocationId, ContainerDescId, ContainerId_count, ContainerId_begin, GoodsId, AccountId, AccountGroupId, Amount)
                 SELECT _tmpLocation.LocationId
                      , _tmpLocation.ContainerDescId
                      , CASE WHEN _tmpLocation.ContainerDescId = zc_Container_Count()
@@ -339,53 +352,31 @@ BEGIN
                      LEFT JOIN ContainerLinkObject AS CLO_Account ON CLO_Account.ContainerId = Container.Id
                                                                  AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
                                                                  AND _tmpLocation.ContainerDescId = zc_Container_Count()
-                WHERE ((_tmpLocation.ContainerDescId = zc_Container_Summ() AND tmpAccount.AccountId > 0)
+                WHERE (_tmpLocation.ContainerDescId = zc_Container_Summ() AND tmpAccount.AccountId > 0)
                    OR (_tmpLocation.ContainerDescId = zc_Container_Count() AND ((CLO_Account.ContainerId > 0 AND inAccountGroupId = zc_Enum_AccountGroup_110000()) -- Транзит
                                                                              OR (CLO_Account.ContainerId IS NULL AND inAccountGroupId <> zc_Enum_AccountGroup_110000()) -- Транзит
                                                                               ))
-                     )
-                AND COALESCE (inGoodsGroupId, 0) = 0 AND COALESCE (inGoodsId, 0) = 0
-               )
+               ;
+         END IF;
+    END IF;
 
     -- !!!!!!!!!!!!!!!!!!!!!!!
-    -- ANALYZE _tmpListContainer;
-    -- !!!!!!!!!!!!!!!!!!!!!!!
+    ANALYZE _tmpListContainer;
 
     -- пытаемся найти <Счет> для zc_Container_Count
-    -- UPDATE _tmpListContainer SET AccountId = _tmpListContainer_summ.AccountId
-    --                            , AccountGroupId = _tmpListContainer_summ.AccountGroupId
-  , tmpAccount_new AS
-                   (SELECT  _tmpListContainer.ContainerId_count
-                          , _tmpListContainer_summ.AccountId
-                          , _tmpListContainer_summ.AccountGroupId
-                            --  № п/п
-                          , ROW_NUMBER() OVER (PARTITION BY _tmpListContainer.ContainerId_count ORDER BY _tmpListContainer_summ.AccountId ASC) AS Ord
-                    FROM _tmpListContainer_all AS _tmpListContainer
-                         INNER JOIN _tmpListContainer_all AS _tmpListContainer_summ
-                                                          ON _tmpListContainer_summ.ContainerId_count = _tmpListContainer.ContainerId_count
-                                                         AND _tmpListContainer_summ.ContainerDescId   = zc_Container_Summ()
-                                                         AND _tmpListContainer_summ.AccountGroupId    <> zc_Enum_AccountGroup_110000() -- Транзит
-                    WHERE _tmpListContainer.ContainerDescId = zc_Container_Count()
-                      AND _tmpListContainer.AccountId = 0
-                   )
-
-     , _tmpListContainer AS --
-       (SELECT _tmpListContainer.LocationId
-             , _tmpListContainer.ContainerDescId
-             , _tmpListContainer.ContainerId_count
-             , _tmpListContainer.ContainerId_begin
-             , _tmpListContainer.GoodsId
-             , CASE WHEN _tmpListContainer.AccountId      > 0 THEN _tmpListContainer.AccountId      ELSE COALESCE (tmpAccount_new.AccountId, 0)      END AS AccountId
-             , CASE WHEN _tmpListContainer.AccountGroupId > 0 THEN _tmpListContainer.AccountGroupId ELSE COALESCE (tmpAccount_new.AccountGroupId, 0) END AS AccountGroupId
-             , _tmpListContainer.Amount
-        FROM _tmpListContainer_all AS _tmpListContainer
-             LEFT JOIN tmpAccount_new ON tmpAccount_new.ContainerId_count = _tmpListContainer.ContainerId_count
-                                     AND tmpAccount_new.Ord = 1
-       )
+    UPDATE _tmpListContainer SET AccountId = _tmpListContainer_summ.AccountId
+                               , AccountGroupId = _tmpListContainer_summ.AccountGroupId
+    FROM _tmpListContainer AS _tmpListContainer_summ
+    WHERE _tmpListContainer.ContainerId_count = _tmpListContainer_summ.ContainerId_count
+      AND _tmpListContainer.ContainerDescId = zc_Container_Count()
+      AND _tmpListContainer_summ.ContainerDescId = zc_Container_Summ()
+      AND _tmpListContainer.AccountId = 0
+      AND _tmpListContainer_summ.AccountGroupId <> zc_Enum_AccountGroup_110000() -- Транзит
+   ;
 
     -- все ContainerId
-    ,  _tmpContainer AS --  (ContainerDescId, ContainerId_count, ContainerId_begin, LocationId, GoodsId, GoodsKindId, PartionGoodsId, AssetToId, AccountId, AccountGroupId, Amount)
-      (SELECT _tmpListContainer.ContainerDescId
+    INSERT INTO _tmpContainer (ContainerDescId, ContainerId_count, ContainerId_begin, LocationId, GoodsId, GoodsKindId, PartionGoodsId, AssetToId, AccountId, AccountGroupId, Amount)
+       SELECT _tmpListContainer.ContainerDescId
             , _tmpListContainer.ContainerId_count
             , _tmpListContainer.ContainerId_begin
             , _tmpListContainer.LocationId
@@ -403,11 +394,12 @@ BEGIN
                                                              AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
             LEFT JOIN ContainerLinkObject AS CLO_AssetTo ON CLO_AssetTo.ContainerId = _tmpListContainer.ContainerId_begin
                                                         AND CLO_AssetTo.DescId = zc_ContainerLinkObject_AssetTo()
-       )
-
+       ;
 
     -- Результат
-   , tmpObject_GoodsPropertyValue_basis AS
+    RETURN QUERY
+   WITH 
+      tmpObject_GoodsPropertyValue_basis AS
        (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId AS GoodsId
              , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
              , Object_GoodsPropertyValue.ValueData  AS Name
@@ -1323,4 +1315,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * from gpReport_GoodsBalance (inStartDate:= '01.09.2017', inEndDate:= '01.09.2017', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 , inIsInfoMoney:= TRUE, inIsAllMO:= TRUE, inIsAllAuto:= TRUE, inSession := '5');
+-- SELECT * from gpReport_GoodsBalance_OLD (inStartDate:= '01.09.2017', inEndDate:= '01.09.2017', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 , inIsInfoMoney:= TRUE, inIsAllMO:= TRUE, inIsAllAuto:= TRUE, inSession := '5');

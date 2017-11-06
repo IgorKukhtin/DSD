@@ -60,7 +60,7 @@ $BODY$
 BEGIN
 
     -- Ограничения по товарам
-    CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
+    /*CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
     IF inGoodsGroupId <> 0
     THEN
         INSERT INTO _tmpGoods (GoodsId)
@@ -68,15 +68,26 @@ BEGIN
     ELSE
         INSERT INTO _tmpGoods (GoodsId)
            SELECT Object.Id FROM Object WHERE DescId = zc_Object_Goods();
-    END IF;
-
+    END IF;*/
 
     --
     inIsByDoc:= (inStartDate = inEndDate);
 
 
      RETURN QUERY
-     WITH tmpPartnerAddress AS (SELECT * FROM Object_Partner_Address_View)
+     WITH 
+
+     _tmpGoods As --  (GoodsId Integer) ON COMMIT DROP;
+        (SELECT lfSelect.GoodsId
+         FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect
+         WHERE inGoodsGroupId <> 0
+        UNION ALL
+         SELECT Object.Id FROM Object
+         WHERE Object.DescId = zc_Object_Goods()
+           AND COALESCE (inGoodsGroupId, 0) = 0
+        )
+
+     , tmpPartnerAddress AS (SELECT * FROM Object_Partner_Address_View)
      , tmpMovement2 AS (
        SELECT
              CASE WHEN inIsByDoc = TRUE THEN Movement.Id ELSE 0 END   AS MovementId
@@ -86,7 +97,8 @@ BEGIN
            , MovementLinkObject_From.ObjectId                         AS FromId
            , MovementLinkObject_To.ObjectId                           AS ToId
            , MovementLinkObject_Route.ObjectId                        AS RouteId
-           , MovementLinkObject_RouteSorting.ObjectId                 AS RouteSortingId
+           -- , MovementLinkObject_RouteSorting.ObjectId                 AS RouteSortingId
+           , 0                                                        AS RouteSortingId
            , MovementLinkObject_Personal.ObjectId                     AS PersonalId
            , MovementLinkObject_PaidKind.ObjectId                     AS PaidKindId
            , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) AS isPriceWithVAT
@@ -132,9 +144,9 @@ BEGIN
            LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
                                         ON MovementLinkObject_Route.MovementId = Movement.Id
                                        AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
-           LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteSorting
-                                       ON MovementLinkObject_RouteSorting.MovementId = Movement.Id
-                                      AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
+           -- LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteSorting
+           --                             ON MovementLinkObject_RouteSorting.MovementId = Movement.Id
+           --                            AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
                                         ON MovementLinkObject_Personal.MovementId = Movement.Id
                                        AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
@@ -192,7 +204,7 @@ BEGIN
          AND (COALESCE (MovementLinkObject_To.ObjectId,0) = CASE WHEN inToId <> 0 THEN inToId ELSE COALESCE (MovementLinkObject_To.ObjectId,0) END)
          AND (COALESCE (MovementLinkObject_From.ObjectId,0) = CASE WHEN inFromId <> 0 THEN inFromId ELSE COALESCE (MovementLinkObject_From.ObjectId,0) END)
          AND (COALESCE (MovementLinkObject_Route.ObjectId,0) = CASE WHEN inRouteId <> 0 THEN inRouteId ELSE COALESCE (MovementLinkObject_Route.ObjectId,0) END)
-         AND (COALESCE (MovementLinkObject_RouteSorting.ObjectId,0) = CASE WHEN inRouteSortingId <> 0 THEN inRouteSortingId ELSE COALESCE (MovementLinkObject_RouteSorting.ObjectId,0) END)
+         -- AND (COALESCE (MovementLinkObject_RouteSorting.ObjectId,0) = CASE WHEN inRouteSortingId <> 0 THEN inRouteSortingId ELSE COALESCE (MovementLinkObject_RouteSorting.ObjectId,0) END)
          AND (COALESCE (ObjectLink_Partner_Juridical.ChildObjectId,0) = CASE WHEN inJuridicalId <> 0 THEN inJuridicalId ELSE COALESCE (ObjectLink_Partner_Juridical.ChildObjectId,0) END)
          AND (COALESCE (ObjectLink_Juridical_Retail.ChildObjectId,0) = CASE WHEN inRetailId <> 0 THEN inRetailId ELSE COALESCE (ObjectLink_Juridical_Retail.ChildObjectId,0) END)
        GROUP BY
@@ -201,7 +213,7 @@ BEGIN
            , MovementLinkObject_From.ObjectId
            , MovementLinkObject_To.ObjectId
            , MovementLinkObject_Route.ObjectId
-           , MovementLinkObject_RouteSorting.ObjectId
+           -- , MovementLinkObject_RouteSorting.ObjectId
            , MovementLinkObject_Personal.ObjectId
            , MovementLinkObject_PaidKind.ObjectId
            , MovementBoolean_PriceWithVAT.ValueData
@@ -417,4 +429,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_OrderExternal (inStartDate:= '01.10.2015', inEndDate:= '01.10.2015', inFromId := 0, inToId := 0, inRouteId := 0, inRouteSortingId := 0, inGoodsGroupId := 0, inIsByDoc := False, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_OrderExternal (inStartDate:= '01.10.2017', inEndDate:= '01.10.2017', inJuridicalId:=0, inRetailId:= 0, inFromId := 0, inToId := 0, inRouteId := 0, inRouteSortingId := 0, inGoodsGroupId := 0, inIsByDoc := False, inSession:= zfCalc_UserAdmin())
