@@ -6008,7 +6008,7 @@ begin
   with DM.tblMovement_OrderExternal do
   begin
     if AGUID = '' then
-      Filter := 'isSync = 0 and StatusId = ' + DM.tblObject_ConstStatusId_Complete.AsString + ' and PartnerId <> -1'
+      Filter := 'isSync = 0 and StatusId = ' + DM.tblObject_ConstStatusId_Complete.AsString + ' and PartnerId > 0'
     else
       Filter := 'GUID = ''' + AGUID + '''';
 
