@@ -250,7 +250,7 @@ BEGIN
                               , tmp.RemainsStart                                AS RemainsStart_save
                               , tmp.MinExpirationDate
                          FROM tmp
-                              LEFT JOIN tmpSend ON tmpSend.GoodsId = tmp.GoodsId AND tmpSend.UnitId = tmp.UnitId AND tmpSend.UnitId = inUnitId
+                              LEFT JOIN tmpSend ON tmpSend.GoodsId = tmp.GoodsId AND tmpSend.UnitId = tmp.UnitId --AND tmpSend.UnitId = inUnitId
                         UNION
                          SELECT tmpSend.GoodsId
                               , tmpSend.UnitId
@@ -637,7 +637,7 @@ BEGIN
                , tmpChildTo.RemainsMCS_result                   :: TFloat AS RemainsMCS_result
                , (tmpChildTo.RemainsMCS_result * tmpData.Price) :: TFloat AS SummaRemainsMCS_result
 
-               , tmpData.AmountSend            :: TFloat  AS AmountSend
+               , (tmpData.AmountSend *(-1))    :: TFloat  AS AmountSend
  
                , tmpData.GoodsId
                --, Object_Goods.ObjectCode                      AS GoodsCode

@@ -79,7 +79,7 @@ BEGIN
                                     INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                                                   ON MovementLinkObject_From.MovementId = Movement.Id
                                                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                    LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_To.ObjectId 
+                                    LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId 
                                    
                                WHERE Movement.OperDate BETWEEN vbStartDate AND vbEndDate
                                  AND Movement.DescId = zc_Movement_OrderExternal()
