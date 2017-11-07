@@ -466,6 +466,9 @@ begin
       strConn:='Provider=Microsoft.Jet.OLEDB.4.0;Mode=Read;' +
                'Data Source=' + FileName + ';' +
                'Extended Properties="Excel 8.0' + FExtendedProperties + ';IMEX=1;"';
+//      strConn:='Provider=Microsoft.ACE.OLEDB.12.0;Mode=Read;' +
+//               'Data Source=' + FileName + ';' +
+//               'Extended Properties="Excel 12.0' + FExtendedProperties + ';IMEX=1;"';
       if not Assigned(FAdoConnection) then begin
          FAdoConnection := TAdoConnection.Create(nil);
          FAdoConnection.LoginPrompt := false;
@@ -658,9 +661,14 @@ begin
                       end
                       else
                         if VarIsNULL(Field.Value) then
-                           StoredProc.Params.Items[i].Value := ''
+                          StoredProc.Params.Items[i].Value := ''
                         else
-                           StoredProc.Params.Items[i].Value := Trim(AdaptStr(Field.Value));
+                        begin
+                          if Pos('E+', UpperCase(Field.AsString)) > 0 then
+                            StoredProc.Params.Items[i].Value := IntToStr(Trunc(gfStrToFloat(Field.Value)))
+                          else
+                            StoredProc.Params.Items[i].Value := Trim(AdaptStr(Field.Value));
+                        end;
                     end;
                  end;
           end;
