@@ -151,6 +151,10 @@ type
     Amount_result: TcxGridDBColumn;
     Amount_result_two: TcxGridDBColumn;
     chAmountTotal: TcxGridDBColumn;
+    AmountPartnerPriorTotal: TcxGridDBColumn;
+    AmountPartnerTotal: TcxGridDBColumn;
+    chRemains: TcxGridDBColumn;
+    Remains_pack: TcxGridDBColumn;
   private
     { Private declarations }
   public
