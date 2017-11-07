@@ -1,9 +1,9 @@
-п»ї-- Function: gpSelect_Object_ReportExternal()
+-- Function: gpSelect_Object_ReportExternal()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ReportExternal (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ReportExternal(
-    IN inSession     TVarChar            -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inSession     TVarChar            -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
              , Code Integer
@@ -14,7 +14,7 @@ AS
 $BODY$
 BEGIN
 
-      -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+      -- проверка прав пользователя на вызов процедуры
       -- PERFORM lpCheckRight(inSession, zc_Enum_Process_ReportExternal());
 
       RETURN QUERY
@@ -23,19 +23,23 @@ BEGIN
              , Object.ValueData  AS Name
              , Object.isErased
         FROM Object
-        WHERE Object.DescId = zc_Object_ReportExternal();
+        WHERE Object.DescId     = zc_Object_ReportExternal()
+          AND Object.isErased   = FALSE
+          AND Object.ValueData <> ''
+        ORDER BY 3
+       ;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
-
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РЇСЂРѕС€РµРЅРєРѕ Р .Р¤.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Ярошенко Р.Ф.
   28.04.17                                                       *
 */
 
--- С‚РµСЃС‚
--- SELECT * FROM gpSelect_Object_ReportExternal(inSession:= zfCalc_UserAdmin())
+-- тест
+-- update Object set ValueData = '' where Id = 1208446
+-- SELECT * FROM gpSelect_Object_ReportExternal (inSession:= zfCalc_UserAdmin())
