@@ -393,10 +393,11 @@ type
     actReport_GoodsRemains_AnotherRetail: TdsdOpenForm;
     ID1: TMenuItem;
     actPersonalList: TdsdOpenForm;
+    actExportSalesForSuppClick: TAction;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
-    procedure miExportSalesForSuppClick(Sender: TObject);
+    procedure actExportSalesForSuppClickExecute(Sender: TObject);
   private
     { Private declarations }
   public
@@ -413,6 +414,7 @@ implementation
 uses
   UploadUnloadData, Dialogs, Forms, SysUtils, IdGlobal, RepriceUnit, ExportSalesForSupp;
 
+
 procedure TMainForm.actSaveDataExecute(Sender: TObject);
 begin
   with TdmUnloadUploadData.Create(nil) do
@@ -426,7 +428,7 @@ begin
   ShowMessage('Выгрузили');
 end;
 
-procedure TMainForm.miExportSalesForSuppClick(Sender: TObject);
+procedure TMainForm.actExportSalesForSuppClickExecute(Sender: TObject);
 begin
   TExportSalesForSuppForm.Create(Self).Show;
 end;

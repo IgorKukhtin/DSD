@@ -12,14 +12,18 @@ $BODY$
 
    DECLARE vbIsPack  Boolean;
    DECLARE vbIsBasis Boolean;
+   DECLARE vbOperDate  TDateTime;
    DECLARE vbStartDate TDateTime;
-   DECLARE vbEndDate TDateTime;
+   DECLARE vbEndDate   TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderInternal());
      
-     vbStartDate := (CURRENT_DATE - INTERVAL '57 DAY') ::TDateTime;   --'01.11.2016';--
-     vbEndDate   := (CURRENT_DATE - INTERVAL '2 DAY')  ::TDateTime;   --'01.11.2016';--
+     vbOperDate := '02.11.2017';
+     -- vbOperDate := CURRENT_DATE;
+
+     vbStartDate := (vbOperDate - INTERVAL '57 DAY') ::TDateTime;   --'01.11.2016';--
+     vbEndDate   := (vbOperDate - INTERVAL '2 DAY')  ::TDateTime;   --'01.11.2016';--
      
      -- сохраняем zc_Object_GoodsReportSaleInf
      PERFORM lpInsertUpdate_Object_GoodsReportSaleInf (inId := COALESCE ((SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsReportSaleInf()) , 0) ::Integer
