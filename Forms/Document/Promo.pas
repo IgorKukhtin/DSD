@@ -281,6 +281,7 @@ type
     bb: TdxBarButton;
     AmountRetInWeight: TcxGridDBColumn;
     AmountRetIn: TcxGridDBColumn;
+    GoodsKindName_List: TcxGridDBColumn;
   private
     { Private declarations }
   public
