@@ -418,6 +418,9 @@ BEGIN
            , tmpMI.AmountSecond                  :: TFloat AS AmountSecond  -- ***План ПР-ВО на УПАК
            , (tmpMI.Amount + tmpMI.AmountSecond) :: TFloat AS AmountTotal   -- ***План ПР-ВО на УПАК
 
+           , (tmpMI.Remains + tmpMI.Remains_pack - tmpMI.AmountPartnerPrior - tmpMI.AmountPartnerPriorPromo - tmpMI.AmountPartner - tmpMI.AmountPartnerPromo + COALESCE (tmpIncome.Income_CEH, 0)) :: TFloat AS Amount_result
+           , (tmpMI.Remains + tmpMI.Remains_pack - tmpMI.AmountPartnerPrior - tmpMI.AmountPartnerPriorPromo - tmpMI.AmountPartner - tmpMI.AmountPartnerPromo + 0) :: TFloat AS Amount_result_two
+
              -- Приход пр-во (ФАКТ)
            , tmpIncome.Income_CEH    :: TFloat AS Income_CEH
 
@@ -536,8 +539,13 @@ BEGIN
 
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
-           , tmpMI.Amount           :: TFloat AS Amount           -- Заказ на УПАК
-           , tmpMI.AmountSecond     :: TFloat AS AmountSecond     -- Дозаказ на УПАК
+           , tmpMI.Amount                        :: TFloat AS Amount         -- ***План заказ на УПАК (с Ост.)
+           , tmpMI.AmountSecond                  :: TFloat AS AmountSecond   -- ***План заказ на УПАК (с Цеха)
+           , (tmpMI.Amount + tmpMI.AmountSecond) :: TFloat AS AmountTotal    -- ***План заказ на УПАК (ИТОГО)
+           
+           , (tmpMI.Remains + tmpMI.Remains_pack - tmpMI.AmountPartnerPrior - tmpMI.AmountPartnerPriorPromo - tmpMI.AmountPartner - tmpMI.AmountPartnerPromo + 0) :: TFloat AS Amount_result
+           , (tmpMI.Remains + tmpMI.Remains_pack - tmpMI.AmountPartnerPrior - tmpMI.AmountPartnerPriorPromo - tmpMI.AmountPartner - tmpMI.AmountPartnerPromo + 0) :: TFloat AS Amount_result_two
+           
 
              -- Ост. нач. - упакованный
            , tmpMI.Remains_pack
@@ -643,6 +651,9 @@ BEGIN
            , tmpMI.Amount                        :: TFloat AS Amount        -- ***План выдачи с Ост. на УПАК
            , tmpMI.AmountSecond                  :: TFloat AS AmountSecond  -- ***План выдачи с Цеха на УПАК
            , (tmpMI.Amount + tmpMI.AmountSecond) :: TFloat AS AmountTotal   -- ***План выдачи ИТОГО на УПАК
+
+           , (tmpMI.Remains + tmpMI.Remains_pack - tmpMI.AmountPartnerPrior - tmpMI.AmountPartnerPriorPromo - tmpMI.AmountPartner - tmpMI.AmountPartnerPromo + tmpMI.Income_CEH) :: TFloat AS Amount_result
+           , (tmpMI.Remains + tmpMI.Remains_pack - tmpMI.AmountPartnerPrior - tmpMI.AmountPartnerPriorPromo - tmpMI.AmountPartner - tmpMI.AmountPartnerPromo + 0) :: TFloat AS Amount_result_two
 
              -- Приход пр-во (ФАКТ)
            , tmpMI.Income_CEH    :: TFloat AS Income_CEH
