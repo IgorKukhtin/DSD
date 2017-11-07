@@ -3,7 +3,6 @@ inherited Report_Remains_byOrderExternalForm: TReport_Remains_byOrderExternalFor
   ClientWidth = 927
   AddOnFormData.Params = FormParams
   ExplicitWidth = 943
-  ExplicitHeight = 343
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

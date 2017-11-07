@@ -148,6 +148,9 @@ type
     bbUpdateAmountSecond_to: TdxBarButton;
     AmountTotal: TcxGridDBColumn;
     chtAmountTotal: TcxGridDBColumn;
+    Amount_result: TcxGridDBColumn;
+    Amount_result_two: TcxGridDBColumn;
+    chAmountTotal: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -34,14 +34,7 @@ BEGIN
                                                                                              , zc_Enum_InfoMoney_30201() -- Мясное сырье
                                                                                               )
                                                   )
-                                 SELECT tmp.MovementItemId
-                                       , COALESCE (tmp.GoodsId,tmpOrder.GoodsId)          AS GoodsId
-                                       , COALESCE (tmp.GoodsKindId, tmpOrder.GoodsKindId) AS GoodsKindId
-                                       , COALESCE (tmpOrder.AmountPartner, 0)             AS AmountPartner
-                                       , COALESCE (tmpOrder.AmountPartnerPromo, 0)        AS AmountPartnerPromo
-                                       , COALESCE (tmpOrder.AmountPartnerPrior, 0)        AS AmountPartnerPrior
-                                       , COALESCE (tmpOrder.AmountPartnerPriorPromo, 0)   AS AmountPartnerPriorPromo
-                                 FROM (SELECT MovementItem.ObjectId                                                    AS GoodsId
+                    , tmpOrder_all AS (SELECT MovementItem.ObjectId                                                    AS GoodsId
                                             , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis())         AS GoodsKindId
                                             , SUM (CASE WHEN Movement.OperDate >= inOperDate AND COALESCE (MIFloat_PromoMovementId.ValueData, 0) = 0 THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountPartner
                                             , SUM (CASE WHEN Movement.OperDate >= inOperDate AND COALESCE (MIFloat_PromoMovementId.ValueData, 0) > 0 THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountPartnerPromo
@@ -65,11 +58,10 @@ BEGIN
                                                                           ON MovementLinkObject_To.MovementId = Movement.Id
                                                                          AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                                             INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_To.ObjectId
+
                                             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                                    AND MovementItem.DescId     = zc_MI_Master()
                                                                    AND MovementItem.isErased   = FALSE
-                                            INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
-
                                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -79,7 +71,7 @@ BEGIN
                                             LEFT JOIN MovementItemFloat AS MIFloat_PromoMovementId
                                                                         ON MIFloat_PromoMovementId.MovementItemId = MovementItem.Id
                                                                        AND MIFloat_PromoMovementId.DescId         = zc_MIFloat_PromoMovementId()
-                                       WHERE Movement.OperDate BETWEEN (inOperDate - INTERVAL '8 DAY') AND inOperDate + INTERVAL '0 DAY'
+                                       WHERE Movement.OperDate BETWEEN (inOperDate - INTERVAL '3 DAY') AND inOperDate + INTERVAL '0 DAY'
                                          AND MovementDate_OperDatePartner.ValueData >= inOperDate
                                          AND Movement.DescId   = zc_Movement_OrderExternal()
                                          AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -91,22 +83,40 @@ BEGIN
                                                              THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)
                                                         ELSE 0
                                                    END)  <> 0
-                                       ) AS tmpOrder
-                                 FULL JOIN
-                                (SELECT MovementItem.Id                               AS MovementItemId
+                                       )
+                        , tmpOrder AS (SELECT tmpOrder_all.GoodsId
+                                            , tmpOrder_all.GoodsKindId
+                                            , tmpOrder_all.AmountPartner
+                                            , tmpOrder_all.AmountPartnerPromo
+                                            , tmpOrder_all.AmountPartnerPrior
+                                            , tmpOrder_all.AmountPartnerPriorPromo
+                                       FROM tmpOrder_all
+                                            INNER JOIN tmpGoods ON tmpGoods.GoodsId = tmpOrder_all.GoodsId
+                                       )
+                     , tmpMI AS (SELECT MovementItem.Id                               AS MovementItemId
                                       , MovementItem.ObjectId                         AS GoodsId
                                       , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                                       , MovementItem.Amount
-                                 FROM MovementItem
+                                 FROM MovementItem 
                                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                        ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                       AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                                  WHERE MovementItem.MovementId = inMovementId
                                    AND MovementItem.DescId     = zc_MI_Master()
                                    AND MovementItem.isErased   = FALSE
-                                ) AS tmp  ON tmp.GoodsId     = tmpOrder.GoodsId
-                                         AND tmp.GoodsKindId = tmpOrder.GoodsKindId
-                     ;
+                                )
+       -- Результат
+       SELECT tmp.MovementItemId
+             , COALESCE (tmp.GoodsId,tmpOrder.GoodsId)          AS GoodsId
+             , COALESCE (tmp.GoodsKindId, tmpOrder.GoodsKindId) AS GoodsKindId
+             , COALESCE (tmpOrder.AmountPartner, 0)             AS AmountPartner
+             , COALESCE (tmpOrder.AmountPartnerPromo, 0)        AS AmountPartnerPromo
+             , COALESCE (tmpOrder.AmountPartnerPrior, 0)        AS AmountPartnerPrior
+             , COALESCE (tmpOrder.AmountPartnerPriorPromo, 0)   AS AmountPartnerPriorPromo
+       FROM tmpOrder
+            FULL JOIN tmpMI AS tmp ON tmp.GoodsId     = tmpOrder.GoodsId
+                                 AND tmp.GoodsKindId = tmpOrder.GoodsKindId
+      ;
 
        -- сохранили
        PERFORM lpUpdate_MI_OrderInternal_Property (ioId                 := tmpAll.MovementItemId
@@ -148,4 +158,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpUpdateMI_OrderInternal_AmountPartnerPromo (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
+-- SELECT * FROM gpUpdateMI_OrderInternal_AmountPartnerPromo (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= zfCalc_UserAdmin())
