@@ -242,6 +242,46 @@ object GoodsReportSaleForm: TGoodsReportSaleForm
           Format = ',0.####'
           Kind = skSum
           Column = OrderBranch7
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalAmount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalPromo
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalBranch
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalOrder
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalOrderPromo
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalOrderBranch
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalAmountWithPromo
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalOrderWithPromo
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -458,6 +498,46 @@ object GoodsReportSaleForm: TGoodsReportSaleForm
           Format = #1057#1090#1088#1086#1082': ,0'
           Kind = skCount
           Column = GoodsName
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalAmount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalPromo
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalBranch
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalOrder
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalOrderPromo
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalOrderBranch
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalAmountWithPromo
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalOrderWithPromo
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -601,6 +681,17 @@ object GoodsReportSaleForm: TGoodsReportSaleForm
         Options.Editing = False
         Width = 95
       end
+      object TotalAmount: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'.'
+        DataBinding.FieldName = 'TotalAmount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1073#1077#1079' '#1040#1082#1094#1080#1080#1081' '#1079#1072' '#1074#1089'.'
+        Options.Editing = False
+        Width = 95
+      end
       object Promo1: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080' '#1079#1072' '#1087#1085'.'
         DataBinding.FieldName = 'Promo1'
@@ -670,6 +761,28 @@ object GoodsReportSaleForm: TGoodsReportSaleForm
       object Promo7: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080' '#1079#1072' '#1074#1089'.'
         DataBinding.FieldName = 'Promo7'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1090#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080' '#1079#1072' '#1074#1089'.'
+        Options.Editing = False
+        Width = 95
+      end
+      object TotalPromo: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080
+        DataBinding.FieldName = 'TotalPromo'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1090#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080' '#1079#1072' '#1074#1089'.'
+        Options.Editing = False
+        Width = 95
+      end
+      object TotalAmountWithPromo: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. + '#1040#1082#1094#1080#1080
+        DataBinding.FieldName = 'TotalAmountWithPromo'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
@@ -755,6 +868,17 @@ object GoodsReportSaleForm: TGoodsReportSaleForm
         Options.Editing = False
         Width = 95
       end
+      object TotalBranch: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086' '#1087#1077#1088#1077#1084'. '#1087#1086' '#1094#1077#1085#1077'  '#1088#1072#1089#1093'. '#1085#1072' '#1092#1080#1083#1080#1072#1083
+        DataBinding.FieldName = 'TotalBranch'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1080' '#1087#1086' '#1094#1077#1085#1077' '#1090#1086#1083#1100#1082#1086' '#1088#1072#1089#1093#1086#1076' '#1085#1072' '#1092#1080#1083#1080#1072#1083' '#1079#1072' '#1074#1089'.'
+        Options.Editing = False
+        Width = 95
+      end
       object Order1: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082' '#1079#1072' '#1087#1085'.'
         DataBinding.FieldName = 'Order1'
@@ -824,6 +948,17 @@ object GoodsReportSaleForm: TGoodsReportSaleForm
       object Order7: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082' '#1079#1072' '#1074#1089'.'
         DataBinding.FieldName = 'Order7'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074' '#1079#1072#1103#1074#1082#1072#1093' '#1073#1077#1079' '#1040#1082#1094#1080#1080#1081' '#1079#1072' '#1074#1089'.'
+        Options.Editing = False
+        Width = 95
+      end
+      object TotalOrder: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082
+        DataBinding.FieldName = 'TotalOrder'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
@@ -909,6 +1044,28 @@ object GoodsReportSaleForm: TGoodsReportSaleForm
         Options.Editing = False
         Width = 95
       end
+      object TotalOrderPromo: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082' '#1040#1082#1094#1080#1103
+        DataBinding.FieldName = 'TotalOrderPromo'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074' '#1079#1072#1103#1074#1082#1072#1093' '#1090#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080' '#1079#1072' '#1074#1089'.'
+        Options.Editing = False
+        Width = 95
+      end
+      object TotalOrderWithPromo: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082' + '#1040#1082#1094#1080#1080
+        DataBinding.FieldName = 'TotalOrderWithPromo'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074' '#1079#1072#1103#1074#1082#1072#1093' '#1073#1077#1079' '#1040#1082#1094#1080#1080#1081' '#1079#1072' '#1074#1089'.'
+        Options.Editing = False
+        Width = 95
+      end
       object OrderBranch1: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082' '#1060#1080#1083#1080#1072#1083' '#1079#1072' '#1087#1085'.'
         DataBinding.FieldName = 'OrderBranch1'
@@ -986,6 +1143,17 @@ object GoodsReportSaleForm: TGoodsReportSaleForm
         Options.Editing = False
         Width = 95
       end
+      object TotalOrderBranch: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082' '#1060#1080#1083#1080#1072#1083
+        DataBinding.FieldName = 'TotalOrderBranch'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074' '#1079#1072#1103#1074#1082#1072#1093' '#1090#1086#1083#1100#1082#1086' '#1060#1048#1051#1048#1040#1051' '#1079#1072' '#1074#1089'.'
+        Options.Editing = False
+        Width = 95
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -1029,28 +1197,27 @@ object GoodsReportSaleForm: TGoodsReportSaleForm
       Width = 84
     end
     object cxLabel3: TcxLabel
-      Left = 197
+      Left = 195
       Top = 6
       Caption = #1044#1072#1090#1072' '#1082#1086#1088#1088#1077#1082#1090'.'
     end
     object deUpdate: TcxDateEdit
-      Left = 197
+      Left = 195
       Top = 23
       EditValue = 43040d
+      Properties.Kind = ckDateTime
       Properties.ReadOnly = True
-      Properties.SaveTime = False
-      Properties.ShowTime = False
       TabOrder = 5
-      Width = 85
+      Width = 130
     end
     object cxLabel9: TcxLabel
-      Left = 291
+      Left = 334
       Top = 6
       Caption = #1050#1086#1083'-'#1074#1086' '#1085#1077#1076'. '#1074' c'#1090#1072#1090'.'
     end
     object ceWeek: TcxCurrencyEdit
-      Left = 291
-      Top = 24
+      Left = 334
+      Top = 23
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.##'
       Properties.ReadOnly = True
@@ -1059,13 +1226,13 @@ object GoodsReportSaleForm: TGoodsReportSaleForm
     end
   end
   object cxLabel4: TcxLabel
-    Left = 403
+    Left = 447
     Top = 6
     Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072')'
   end
   object edUpdateName: TcxButtonEdit
-    Left = 403
-    Top = 24
+    Left = 447
+    Top = 23
     Properties.Buttons = <
       item
         Default = True

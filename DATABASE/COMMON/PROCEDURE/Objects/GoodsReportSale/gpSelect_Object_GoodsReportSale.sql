@@ -58,6 +58,14 @@ RETURNS TABLE (UnitId Integer, UnitName TVarChar, GoodsId Integer
             , OrderBranch6 TFloat
             , OrderBranch7 TFloat
 
+            , TotalAmount           TFloat
+            , TotalPromo            TFloat
+            , TotalBranch           TFloat
+            , TotalOrder            TFloat
+            , TotalOrderPromo       TFloat
+            , TotalOrderBranch      TFloat
+            , TotalAmountWithPromo  TFloat
+            , TotalOrderWithPromo   TFloat
              ) AS
 $BODY$
 BEGIN
@@ -124,6 +132,84 @@ BEGIN
             , ObjectFloat_OrderBranch5.ValueData   AS OrderBranch5
             , ObjectFloat_OrderBranch6.ValueData   AS OrderBranch6
             , ObjectFloat_OrderBranch7.ValueData   AS OrderBranch7
+
+            , (COALESCE (ObjectFloat_Amount1.ValueData, 0)
+             + COALESCE (ObjectFloat_Amount2.ValueData, 0)
+             + COALESCE (ObjectFloat_Amount3.ValueData, 0)
+             + COALESCE (ObjectFloat_Amount4.ValueData, 0)
+             + COALESCE (ObjectFloat_Amount5.ValueData, 0)
+             + COALESCE (ObjectFloat_Amount6.ValueData, 0)
+             + COALESCE (ObjectFloat_Amount7.ValueData, 0)) ::TFloat AS TotalAmount 
+                  
+            , (COALESCE (ObjectFloat_Promo1.ValueData, 0)
+             + COALESCE (ObjectFloat_Promo2.ValueData, 0)
+             + COALESCE (ObjectFloat_Promo3.ValueData, 0)
+             + COALESCE (ObjectFloat_Promo4.ValueData, 0)
+             + COALESCE (ObjectFloat_Promo5.ValueData, 0)
+             + COALESCE (ObjectFloat_Promo6.ValueData, 0)
+             + COALESCE (ObjectFloat_Promo7.ValueData, 0))  ::TFloat AS TotalPromo
+             
+            , (COALESCE (ObjectFloat_Branch1.ValueData, 0)
+             + COALESCE (ObjectFloat_Branch2.ValueData, 0)
+             + COALESCE (ObjectFloat_Branch3.ValueData, 0)
+             + COALESCE (ObjectFloat_Branch4.ValueData, 0)
+             + COALESCE (ObjectFloat_Branch5.ValueData, 0)
+             + COALESCE (ObjectFloat_Branch6.ValueData, 0)
+             + COALESCE (ObjectFloat_Branch7.ValueData, 0)) ::TFloat AS TotalBranch 
+            
+            , (COALESCE (ObjectFloat_Order1.ValueData, 0)
+             + COALESCE (ObjectFloat_Order2.ValueData, 0)
+             + COALESCE (ObjectFloat_Order3.ValueData, 0)
+             + COALESCE (ObjectFloat_Order4.ValueData, 0)
+             + COALESCE (ObjectFloat_Order5.ValueData, 0)
+             + COALESCE (ObjectFloat_Order6.ValueData, 0)
+             + COALESCE (ObjectFloat_Order7.ValueData, 0)) ::TFloat AS TotalOrder     
+              
+            , (COALESCE (ObjectFloat_OrderPromo1.ValueData, 0)
+             + COALESCE (ObjectFloat_OrderPromo2.ValueData, 0)
+             + COALESCE (ObjectFloat_OrderPromo3.ValueData, 0)
+             + COALESCE (ObjectFloat_OrderPromo4.ValueData, 0)
+             + COALESCE (ObjectFloat_OrderPromo5.ValueData, 0)
+             + COALESCE (ObjectFloat_OrderPromo6.ValueData, 0)
+             + COALESCE (ObjectFloat_OrderPromo7.ValueData, 0)) ::TFloat AS TotalOrderPromo  
+            
+            , (COALESCE (ObjectFloat_OrderBranch1.ValueData, 0)
+             + COALESCE (ObjectFloat_OrderBranch2.ValueData, 0)
+             + COALESCE (ObjectFloat_OrderBranch3.ValueData, 0)
+             + COALESCE (ObjectFloat_OrderBranch4.ValueData, 0)
+             + COALESCE (ObjectFloat_OrderBranch5.ValueData, 0)
+             + COALESCE (ObjectFloat_OrderBranch6.ValueData, 0)
+             + COALESCE (ObjectFloat_OrderBranch7.ValueData, 0)) ::TFloat AS TotalOrderBranch 
+             
+            , (COALESCE (ObjectFloat_Amount1.ValueData, 0)
+             + COALESCE (ObjectFloat_Amount2.ValueData, 0)
+             + COALESCE (ObjectFloat_Amount3.ValueData, 0)
+             + COALESCE (ObjectFloat_Amount4.ValueData, 0)
+             + COALESCE (ObjectFloat_Amount5.ValueData, 0)
+             + COALESCE (ObjectFloat_Amount6.ValueData, 0)
+             + COALESCE (ObjectFloat_Amount7.ValueData, 0)
+             + COALESCE (ObjectFloat_Promo1.ValueData, 0)
+             + COALESCE (ObjectFloat_Promo2.ValueData, 0)
+             + COALESCE (ObjectFloat_Promo3.ValueData, 0)
+             + COALESCE (ObjectFloat_Promo4.ValueData, 0)
+             + COALESCE (ObjectFloat_Promo5.ValueData, 0)
+             + COALESCE (ObjectFloat_Promo6.ValueData, 0)
+             + COALESCE (ObjectFloat_Promo7.ValueData, 0)) ::TFloat AS TotalAmountWithPromo 
+
+            , (COALESCE (ObjectFloat_Order1.ValueData, 0)
+             + COALESCE (ObjectFloat_Order2.ValueData, 0)
+             + COALESCE (ObjectFloat_Order3.ValueData, 0)
+             + COALESCE (ObjectFloat_Order4.ValueData, 0)
+             + COALESCE (ObjectFloat_Order5.ValueData, 0)
+             + COALESCE (ObjectFloat_Order6.ValueData, 0)
+             + COALESCE (ObjectFloat_Order7.ValueData, 0)
+             + COALESCE (ObjectFloat_OrderPromo1.ValueData, 0)
+             + COALESCE (ObjectFloat_OrderPromo2.ValueData, 0)
+             + COALESCE (ObjectFloat_OrderPromo3.ValueData, 0)
+             + COALESCE (ObjectFloat_OrderPromo4.ValueData, 0)
+             + COALESCE (ObjectFloat_OrderPromo5.ValueData, 0)
+             + COALESCE (ObjectFloat_OrderPromo6.ValueData, 0)
+             + COALESCE (ObjectFloat_OrderPromo7.ValueData, 0)) ::TFloat AS TotalOrderWithPromo      
 
        FROM Object AS Object_GoodsReportSale
        
