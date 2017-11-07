@@ -10,6 +10,15 @@ RETURNS TABLE (UnitId Integer, UnitName TVarChar, GoodsId Integer
             , GoodsKindId Integer, GoodsKindName TVarChar
             , MeasureName TVarChar, Weight TFloat
             
+            , GoodsGroupName        TVarChar
+            , GoodsGroupNameFull    TVarChar
+            , TradeMarkName         TVarChar
+            , GoodsTagName          TVarChar
+            , GoodsPlatformName     TVarChar
+            , GoodsGroupAnalystName TVarChar
+            , InfoMoneyCode         Integer
+            , InfoMoneyName         TVarChar
+
             , Amount1 TFloat
             , Amount2 TFloat
             , Amount3 TFloat
@@ -85,53 +94,62 @@ BEGIN
             , Object_Measure.ValueData             AS MeasureName
             , COALESCE (ObjectFloat_Weight.ValueData, 0) :: TFloat AS Weight
             
-            , ObjectFloat_Amount1.ValueData        AS Amount1
-            , ObjectFloat_Amount2.ValueData        AS Amount2
-            , ObjectFloat_Amount3.ValueData        AS Amount3
-            , ObjectFloat_Amount4.ValueData        AS Amount4
-            , ObjectFloat_Amount5.ValueData        AS Amount5
-            , ObjectFloat_Amount6.ValueData        AS Amount6
-            , ObjectFloat_Amount7.ValueData        AS Amount7
+            , Object_GoodsGroup.ValueData          AS GoodsGroupName 
+            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+            , Object_TradeMark.ValueData           AS TradeMarkName
+            , Object_GoodsTag.ValueData            AS GoodsTagName
+            , Object_GoodsPlatform.ValueData       AS GoodsPlatformName
+            , Object_GoodsGroupAnalyst.ValueData   AS GoodsGroupAnalystName
+            , Object_InfoMoney.ObjectCode          AS InfoMoneyCode
+            , Object_InfoMoney.ValueData           AS InfoMoneyName
             
-            , ObjectFloat_Promo1.ValueData         AS Promo1
-            , ObjectFloat_Promo2.ValueData         AS Promo2
-            , ObjectFloat_Promo3.ValueData         AS Promo3
-            , ObjectFloat_Promo4.ValueData         AS Promo4
-            , ObjectFloat_Promo5.ValueData         AS Promo5
-            , ObjectFloat_Promo6.ValueData         AS Promo6
-            , ObjectFloat_Promo7.ValueData         AS Promo7
+            , (ObjectFloat_Amount1.ValueData /8)  ::TFloat       AS Amount1
+            , (ObjectFloat_Amount2.ValueData /8)  ::TFloat       AS Amount2
+            , (ObjectFloat_Amount3.ValueData /8)  ::TFloat       AS Amount3
+            , (ObjectFloat_Amount4.ValueData /8)  ::TFloat       AS Amount4
+            , (ObjectFloat_Amount5.ValueData /8)  ::TFloat       AS Amount5
+            , (ObjectFloat_Amount6.ValueData /8)  ::TFloat       AS Amount6
+            , (ObjectFloat_Amount7.ValueData /8)  ::TFloat       AS Amount7
+            
+            , (ObjectFloat_Promo1.ValueData /8)  ::TFloat        AS Promo1
+            , (ObjectFloat_Promo2.ValueData /8)  ::TFloat        AS Promo2
+            , (ObjectFloat_Promo3.ValueData /8)  ::TFloat        AS Promo3
+            , (ObjectFloat_Promo4.ValueData /8)  ::TFloat        AS Promo4
+            , (ObjectFloat_Promo5.ValueData /8)  ::TFloat        AS Promo5
+            , (ObjectFloat_Promo6.ValueData /8)  ::TFloat        AS Promo6
+            , (ObjectFloat_Promo7.ValueData /8)  ::TFloat        AS Promo7
 
-            , ObjectFloat_Branch1.ValueData        AS Branch1
-            , ObjectFloat_Branch2.ValueData        AS Branch2
-            , ObjectFloat_Branch3.ValueData        AS Branch3
-            , ObjectFloat_Branch4.ValueData        AS Branch4
-            , ObjectFloat_Branch5.ValueData        AS Branch5
-            , ObjectFloat_Branch6.ValueData        AS Branch6
-            , ObjectFloat_Branch7.ValueData        AS Branch7
+            , (ObjectFloat_Branch1.ValueData /8)  ::TFloat       AS Branch1
+            , (ObjectFloat_Branch2.ValueData /8)  ::TFloat       AS Branch2
+            , (ObjectFloat_Branch3.ValueData /8)  ::TFloat       AS Branch3
+            , (ObjectFloat_Branch4.ValueData /8)  ::TFloat       AS Branch4
+            , (ObjectFloat_Branch5.ValueData /8)  ::TFloat       AS Branch5
+            , (ObjectFloat_Branch6.ValueData /8)  ::TFloat       AS Branch6
+            , (ObjectFloat_Branch7.ValueData /8)  ::TFloat       AS Branch7
 
-            , ObjectFloat_Order1.ValueData         AS Order1
-            , ObjectFloat_Order2.ValueData         AS Order2
-            , ObjectFloat_Order3.ValueData         AS Order3
-            , ObjectFloat_Order4.ValueData         AS Order4
-            , ObjectFloat_Order5.ValueData         AS Order5
-            , ObjectFloat_Order6.ValueData         AS Order6
-            , ObjectFloat_Order7.ValueData         AS Order7
+            , (ObjectFloat_Order1.ValueData  /8)  ::TFloat       AS Order1
+            , (ObjectFloat_Order2.ValueData  /8)  ::TFloat       AS Order2
+            , (ObjectFloat_Order3.ValueData  /8)  ::TFloat       AS Order3
+            , (ObjectFloat_Order4.ValueData  /8)  ::TFloat       AS Order4
+            , (ObjectFloat_Order5.ValueData  /8)  ::TFloat       AS Order5
+            , (ObjectFloat_Order6.ValueData  /8)  ::TFloat       AS Order6
+            , (ObjectFloat_Order7.ValueData  /8)  ::TFloat       AS Order7
 
-            , ObjectFloat_OrderPromo1.ValueData    AS OrderPromo1
-            , ObjectFloat_OrderPromo2.ValueData    AS OrderPromo2
-            , ObjectFloat_OrderPromo3.ValueData    AS OrderPromo3
-            , ObjectFloat_OrderPromo4.ValueData    AS OrderPromo4
-            , ObjectFloat_OrderPromo5.ValueData    AS OrderPromo5
-            , ObjectFloat_OrderPromo6.ValueData    AS OrderPromo6
-            , ObjectFloat_OrderPromo7.ValueData    AS OrderPromo7
+            , (ObjectFloat_OrderPromo1.ValueData /8)  ::TFloat   AS OrderPromo1
+            , (ObjectFloat_OrderPromo2.ValueData /8)  ::TFloat   AS OrderPromo2
+            , (ObjectFloat_OrderPromo3.ValueData /8)  ::TFloat   AS OrderPromo3
+            , (ObjectFloat_OrderPromo4.ValueData /8)  ::TFloat   AS OrderPromo4
+            , (ObjectFloat_OrderPromo5.ValueData /8)  ::TFloat   AS OrderPromo5
+            , (ObjectFloat_OrderPromo6.ValueData /8)  ::TFloat   AS OrderPromo6
+            , (ObjectFloat_OrderPromo7.ValueData /8)  ::TFloat   AS OrderPromo7
                                                    
-            , ObjectFloat_OrderBranch1.ValueData   AS OrderBranch1
-            , ObjectFloat_OrderBranch2.ValueData   AS OrderBranch2
-            , ObjectFloat_OrderBranch3.ValueData   AS OrderBranch3
-            , ObjectFloat_OrderBranch4.ValueData   AS OrderBranch4
-            , ObjectFloat_OrderBranch5.ValueData   AS OrderBranch5
-            , ObjectFloat_OrderBranch6.ValueData   AS OrderBranch6
-            , ObjectFloat_OrderBranch7.ValueData   AS OrderBranch7
+            , (ObjectFloat_OrderBranch1.ValueData /8)  ::TFloat  AS OrderBranch1
+            , (ObjectFloat_OrderBranch2.ValueData /8)  ::TFloat  AS OrderBranch2
+            , (ObjectFloat_OrderBranch3.ValueData /8)  ::TFloat  AS OrderBranch3
+            , (ObjectFloat_OrderBranch4.ValueData /8)  ::TFloat  AS OrderBranch4
+            , (ObjectFloat_OrderBranch5.ValueData /8)  ::TFloat  AS OrderBranch5
+            , (ObjectFloat_OrderBranch6.ValueData /8)  ::TFloat  AS OrderBranch6
+            , (ObjectFloat_OrderBranch7.ValueData /8)  ::TFloat  AS OrderBranch7
 
             , (COALESCE (ObjectFloat_Amount1.ValueData, 0)
              + COALESCE (ObjectFloat_Amount2.ValueData, 0)
@@ -371,6 +389,40 @@ BEGIN
                                   ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+                
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupAnalyst
+                                 ON ObjectLink_Goods_GoodsGroupAnalyst.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_GoodsGroupAnalyst.DescId = zc_ObjectLink_Goods_GoodsGroupAnalyst()
+            LEFT JOIN Object AS Object_GoodsGroupAnalyst ON Object_GoodsGroupAnalyst.Id = ObjectLink_Goods_GoodsGroupAnalyst.ChildObjectId             
+                
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsTag
+                                 ON ObjectLink_Goods_GoodsTag.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_GoodsTag.DescId = zc_ObjectLink_Goods_GoodsTag()
+            LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = ObjectLink_Goods_GoodsTag.ChildObjectId
+
+            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                 ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id 
+                                AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+            LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsPlatform
+                                 ON ObjectLink_Goods_GoodsPlatform.ObjectId = Object_Goods.Id 
+                                AND ObjectLink_Goods_GoodsPlatform.DescId = zc_ObjectLink_Goods_GoodsPlatform()
+            LEFT JOIN Object AS Object_GoodsPlatform ON Object_GoodsPlatform.Id = ObjectLink_Goods_GoodsPlatform.ChildObjectId
+            
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
+                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_Goods_InfoMoney.ChildObjectId
+            
       WHERE Object_GoodsReportSale.DescId = zc_Object_GoodsReportSale()
 ;
   
