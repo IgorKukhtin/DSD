@@ -113,20 +113,23 @@ END IF;
 
      -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!
      IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId = zc_Enum_Role_Admin())
-     THEN IF inIsLastComplete = FALSE
+     THEN /*IF inIsLastComplete = FALSE
+             -- OR DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '3 DAY') <= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
           -- !!! нужны еще для Запорожья, понятно что временно!!!
           -- !!! OR 301310 = (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId)
           -- !!! нужны еще для Одесса, понятно что временно!!!
           -- !!! OR 8374 = (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId)
           THEN vbIsHistoryCost:= TRUE;
           ELSE vbIsHistoryCost:= FALSE;
-          END IF;
+          END IF;*/
           vbIsHistoryCost:= TRUE;
      ELSE
          -- !!! для остальных тоже нужны проводки с/с!!!
-         IF 0 < (SELECT 1 FROM Object_RoleAccessKeyGuide_View AS View_RoleAccessKeyGuide WHERE View_RoleAccessKeyGuide.UserId = inUserId AND View_RoleAccessKeyGuide.BranchId <> 0 GROUP BY View_RoleAccessKeyGuide.BranchId LIMIT 1)
+         IF (0 < (SELECT 1 FROM Object_RoleAccessKeyGuide_View AS View_RoleAccessKeyGuide WHERE View_RoleAccessKeyGuide.UserId = inUserId AND View_RoleAccessKeyGuide.BranchId <> 0 GROUP BY View_RoleAccessKeyGuide.BranchId LIMIT 1)
            OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId IN (428382)) -- Кладовщик Днепр
            OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId IN (97837)) -- Бухгалтер ДНЕПР
+            )
+            AND DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '3 DAY') <= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
          THEN vbIsHistoryCost:= FALSE;
          ELSE vbIsHistoryCost:= TRUE;
          END IF;

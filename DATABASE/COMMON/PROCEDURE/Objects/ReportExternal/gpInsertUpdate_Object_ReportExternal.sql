@@ -85,10 +85,10 @@ $BODY$
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_ReceiptProductionOutAnalyze', inSession:= zfCalc_UserAdmin());
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_ReceiptSaleAnalyze',          inSession:= zfCalc_UserAdmin());
 
--- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_OrderExternal',                inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_GoodsBalance',                 inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_OrderExternal',                inSession:= zfCalc_UserAdmin()); -- +
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_GoodsBalance',                 inSession:= zfCalc_UserAdmin()); -- -
 
--- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpSelect_Movement_TaxCorrective_Print', inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpSelect_Movement_Tax_Load',            inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpSelect_Movement_Sale',                inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpSelect_Movement_TaxCorrective_Print', inSession:= zfCalc_UserAdmin()); -- +
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpSelect_Movement_Tax_Load',            inSession:= zfCalc_UserAdmin()); -- +
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpSelect_Movement_Sale',                inSession:= zfCalc_UserAdmin()); -- +
 

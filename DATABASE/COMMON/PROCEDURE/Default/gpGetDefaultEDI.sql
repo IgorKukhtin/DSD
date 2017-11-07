@@ -10,7 +10,8 @@ AS
 $BODY$
 BEGIN
 
-   IF inSession = '14610'
+   -- IF inSession = '14610'
+   IF inSession <> zfCalc_UserAdmin()
    THEN
    RETURN QUERY
     SELECT  'ftpex.edi.su'::TVarChar AS Host
@@ -25,17 +26,14 @@ BEGIN
     
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGetDefaultEDI(TVarChar) OWNER TO postgres;
-
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpGetDefaultEDI (TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  04.06.14                         *
-
 */
 
 -- тест
--- SELECT * FROM gpSelect_Role('2')
+-- SELECT * FROM gpGetDefaultEDI (zfCalc_UserAdmin())
