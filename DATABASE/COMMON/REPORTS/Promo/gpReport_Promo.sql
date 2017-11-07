@@ -53,6 +53,7 @@ RETURNS TABLE(
     ,AmountIn             TFloat    --Кол-во возврат (факт)
     ,AmountInWeight       TFloat    --Кол-во возврат (факт) Вес
     ,GoodsKindName        TVarChar  --Вид упаковки
+    ,GoodsKindName_List   TVarChar  --Вид товара (справочно)
     ,GoodsWeight          TFloat    --Вес
     ,Discount             TBlob     --Скидка, %
     ,PriceWithOutVAT      TFloat    --Отгрузочная акционная цена без учета НДС, грн
@@ -79,8 +80,28 @@ BEGIN
     -- Вставить нормальную проверку на право отображения всех колонок
     vbShowAll:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (112322, 296580, zc_Enum_Role_Admin())); -- Отдел Маркетинг + Просмотр ВСЕ (управленцы)
     
+    -- таблицы для получения Вид товара (справочно) из GoodsListSale
+    CREATE TEMP TABLE _tmpWord_Split_from (WordList TVarChar) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpWord_Split_to (Ord Integer, Word TVarChar, WordList TVarChar) ON COMMIT DROP;
+
+    INSERT INTO _tmpWord_Split_from (WordList) 
+            SELECT DISTINCT ObjectString_GoodsKind.ValueData AS WordList
+            FROM ObjectString AS ObjectString_GoodsKind
+            WHERE ObjectString_GoodsKind.DescId = zc_ObjectString_GoodsListSale_GoodsKind()
+              AND ObjectString_GoodsKind.ValueData <> '';
+    
+    PERFORM zfSelect_Word_Split (inSep:= ',', inUserId:= vbUserId);
+    --
+
+
     -- Результат
     RETURN QUERY
+     WITH tmpGoodsKind AS (SELECT _tmpWord_Split_to.WordList, STRING_AGG (Object.ValueData :: TVarChar, ',')  AS GoodsKindName_list
+                           FROM _tmpWord_Split_to 
+                                LEFT JOIN Object ON Object.Id = _tmpWord_Split_to.Word :: Integer
+                           GROUP BY _tmpWord_Split_to.WordList
+                           )
+                           
         SELECT
             Movement_Promo.Id                --ИД документа акции
           , Movement_Promo.InvNumber          --№ документа акции
@@ -175,6 +196,33 @@ BEGIN
           , MI_PromoGoods.AmountIn            --Кол-во возврат (факт)
           , MI_PromoGoods.AmountInWeight      --Кол-во возврат (факт) Вес
           , MI_PromoGoods.GoodsKindName       --Наименование обьекта <Вид товара>
+          
+          , (SELECT STRING_AGG (DISTINCT tmpGoodsKind.GoodsKindName_List,'; ')
+             FROM Movement AS Movement_PromoPartner
+                INNER JOIN MovementItem AS MI_PromoPartner
+                                        ON MI_PromoPartner.MovementId = Movement_PromoPartner.ID
+                                       AND MI_PromoPartner.DescId     = zc_MI_Master()
+                                       AND MI_PromoPartner.IsErased   = FALSE
+                                       
+                LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_Partner
+                                     ON ObjectLink_GoodsListSale_Partner.ChildObjectId = _tmpPromoPartner.PartnerId
+                                    AND ObjectLink_GoodsListSale_Partner.DescId = zc_ObjectLink_GoodsListSale_Partner()
+                                     
+                INNER JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods
+                                     ON ObjectLink_GoodsListSale_Goods.ObjectId = ObjectLink_GoodsListSale_Partner.ObjectId
+                                    AND ObjectLink_GoodsListSale_Goods.DescId = zc_ObjectLink_GoodsListSale_Goods()
+                                    AND ObjectLink_GoodsListSale_Goods.ChildObjectId = MI_PromoGoods.GoodsId 
+                INNER JOIN ObjectString AS ObjectString_GoodsKind
+                                        ON ObjectString_GoodsKind.ObjectId = ObjectLink_GoodsListSale_Partner.ObjectId
+                                       AND ObjectString_GoodsKind.DescId = zc_ObjectString_GoodsListSale_GoodsKind()
+                                       
+                LEFT JOIN tmpGoodsKind ON tmpGoodsKind.WordList = ObjectString_GoodsKind.ValueData
+
+             WHERE Movement_PromoPartner.ParentId = Movement_Promo.Id
+               AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
+               AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
+            )::TBlob AS GoodsKindName_List
+          
           
           , CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN MI_PromoGoods.GoodsWeight ELSE NULL END :: TFloat AS GoodsWeight
           
