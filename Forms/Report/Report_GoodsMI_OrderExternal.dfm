@@ -5,7 +5,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1203
-  ExplicitHeight = 518
+  ExplicitHeight = 521
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1658,8 +1658,8 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
     Left = 144
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 56
-    Top = 32
+    Left = 80
+    Top = 8
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -1667,10 +1667,8 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
         Component = PeriodChoice
       end
       item
-        Component = deStart
       end
       item
-        Component = deEnd
       end
       item
         Component = GoodsGroupGuides
@@ -1726,8 +1724,8 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1000
-    Top = 8
+    Left = 984
+    Top = 72
   end
   object FormParams: TdsdFormParams
     Params = <>

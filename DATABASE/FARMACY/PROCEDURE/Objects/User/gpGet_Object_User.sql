@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MemberId Integer, MemberName TVarChar
              , ProjectMobile TVarChar
              , isProjectMobile Boolean
+             , isSite Boolean
 ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -38,6 +39,7 @@ BEGIN
            , CAST ('' as TVarChar)  AS MemberName
            , CAST ('' as TVarChar)  AS ProjectMobile
            , FALSE                  AS isProjectMobile
+           , FALSE                  AS isSite
 ;
    ELSE
       RETURN QUERY 
@@ -56,35 +58,41 @@ BEGIN
 
           , ObjectString_ProjectMobile.ValueData  AS ProjectMobile
           , COALESCE (ObjectBoolean_ProjectMobile.ValueData, FALSE) :: Boolean  AS isProjectMobile
+          , COALESCE (ObjectBoolean_Site.ValueData, FALSE)          :: Boolean  AS isSite
 
       FROM Object AS Object_User
-   LEFT JOIN ObjectString AS ObjectString_UserPassword 
-          ON ObjectString_UserPassword.DescId = zc_ObjectString_User_Password() 
-         AND ObjectString_UserPassword.ObjectId = Object_User.Id
-
-   LEFT JOIN ObjectString AS ObjectString_UserSign
-          ON ObjectString_UserSign.DescId = zc_ObjectString_User_Sign() 
-         AND ObjectString_UserSign.ObjectId = Object_User.Id
-
-   LEFT JOIN ObjectString AS ObjectString_UserSeal
-          ON ObjectString_UserSeal.DescId = zc_ObjectString_User_Seal() 
-         AND ObjectString_UserSeal.ObjectId = Object_User.Id
-
-   LEFT JOIN ObjectString AS ObjectString_UserKey 
-          ON ObjectString_UserKey.DescId = zc_ObjectString_User_Key() 
-         AND ObjectString_UserKey.ObjectId = Object_User.Id
-
-   LEFT JOIN ObjectString AS ObjectString_ProjectMobile
-          ON ObjectString_ProjectMobile.ObjectId = Object_User.Id
-         AND ObjectString_ProjectMobile.DescId = zc_ObjectString_User_ProjectMobile()
-   LEFT JOIN ObjectBoolean AS ObjectBoolean_ProjectMobile
-          ON ObjectBoolean_ProjectMobile.ObjectId = Object_User.Id
-         AND ObjectBoolean_ProjectMobile.DescId = zc_ObjectBoolean_User_ProjectMobile()
-
-   LEFT JOIN ObjectLink AS ObjectLink_User_Member
-          ON ObjectLink_User_Member.ObjectId = Object_User.Id
-         AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-   LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
+           LEFT JOIN ObjectString AS ObjectString_UserPassword 
+                  ON ObjectString_UserPassword.DescId = zc_ObjectString_User_Password() 
+                 AND ObjectString_UserPassword.ObjectId = Object_User.Id
+        
+           LEFT JOIN ObjectString AS ObjectString_UserSign
+                  ON ObjectString_UserSign.DescId = zc_ObjectString_User_Sign() 
+                 AND ObjectString_UserSign.ObjectId = Object_User.Id
+        
+           LEFT JOIN ObjectString AS ObjectString_UserSeal
+                  ON ObjectString_UserSeal.DescId = zc_ObjectString_User_Seal() 
+                 AND ObjectString_UserSeal.ObjectId = Object_User.Id
+        
+           LEFT JOIN ObjectString AS ObjectString_UserKey 
+                  ON ObjectString_UserKey.DescId = zc_ObjectString_User_Key() 
+                 AND ObjectString_UserKey.ObjectId = Object_User.Id
+        
+           LEFT JOIN ObjectString AS ObjectString_ProjectMobile
+                  ON ObjectString_ProjectMobile.ObjectId = Object_User.Id
+                 AND ObjectString_ProjectMobile.DescId = zc_ObjectString_User_ProjectMobile()
+                 
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_ProjectMobile
+                  ON ObjectBoolean_ProjectMobile.ObjectId = Object_User.Id
+                 AND ObjectBoolean_ProjectMobile.DescId = zc_ObjectBoolean_User_ProjectMobile()
+           
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_Site
+                  ON ObjectBoolean_Site.ObjectId = Object_User.Id
+                 AND ObjectBoolean_Site.DescId = zc_ObjectBoolean_User_Site()
+                 
+           LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                  ON ObjectLink_User_Member.ObjectId = Object_User.Id
+                 AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+           LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
       WHERE Object_User.Id = inId;
    END IF;
   
@@ -97,6 +105,7 @@ ALTER FUNCTION gpGet_Object_User (Integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 06.11.17         *
  21.04.17         *
  12.09.16         *
  07.06.13                                        * lpCheckRight

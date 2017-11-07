@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_User()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_User(
  INOUT ioId               Integer   ,    -- ключ объекта <Пользователь> 
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_User(
     IN inKey              TVarChar  ,    -- Электроный Ключ 
     IN inProjectMobile    TVarChar  ,    -- Серийный № моб устр-ва
     IN inisProjectMobile  Boolean   ,    -- признак - это Торговый агент
+    IN inisSite           Boolean   ,    -- признак - Для сайта
     IN inMemberId         Integer   ,    -- физ. лицо
     IN inSession          TVarChar       -- сессия пользователя
 )
@@ -40,6 +42,9 @@ BEGIN
 
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_ProjectMobile(), ioId, inProjectMobile);
 
+   -- свойство <Для сайта>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_User_Site(), ioId, inisSite);
+       
    IF inisProjectMobile = TRUE
    THEN
        -- всегда меняем
@@ -65,6 +70,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.11.17         * inisSite
  21.04.17         *
  12.09.16         *
  07.06.13                                        * lpCheckRight

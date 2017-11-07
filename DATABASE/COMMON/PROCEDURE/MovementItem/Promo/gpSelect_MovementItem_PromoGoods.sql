@@ -36,6 +36,7 @@ RETURNS TABLE (
       , AmountInWeight      TFloat --Кол-во возврат (факт) Вес
       , GoodsKindId         Integer --ИД обьекта <Вид товара>
       , GoodsKindName       TVarChar --Наименование обьекта <Вид товара>
+      , GoodsKindName_inf   TVarChar --Наименование обьекта <Вид товара (справочно)>
       , Comment             TVarChar --Комментарий
       , isErased            Boolean  --удален
 )
@@ -48,6 +49,32 @@ BEGIN
     vbUserId:= lpGetUserBySession (inSession);
 
     RETURN QUERY
+        WITH
+        tmpPromoPartner AS (SELECT MI_PromoPartner.ObjectId        AS PartnerId   --ИД объекта <партнер>
+                            FROM Movement AS Movement_PromoPartner
+                                 INNER JOIN MovementItem AS MI_PromoPartner
+                                                         ON MI_PromoPartner.MovementId = Movement_PromoPartner.ID
+                                                        AND MI_PromoPartner.DescId = zc_MI_Master()
+                                                        AND MI_PromoPartner.IsErased = FALSE
+                            WHERE Movement_PromoPartner.ParentId = inMovementId
+                              AND Movement_PromoPartner.DescId = zc_Movement_PromoPartner()
+                            )
+      , tmpGoodsKind_inf AS (SELECT ObjectLink_GoodsListSale_Goods.ChildObjectId AS GoodsId
+                                  , ObjectString_GoodsKind.ValueData
+                             FROM tmpPromoPartner
+                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_Partner
+                                                       ON ObjectLink_GoodsListSale_Partner.ChildObjectId = tmpPromoPartner.PartnerId
+                                                      AND ObjectLink_GoodsListSale_Partner.DescId = zc_ObjectLink_GoodsListSale_Partner()
+                                                      
+                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods
+                                                       ON ObjectLink_GoodsListSale_Goods.ObjectId = ObjectLink_GoodsListSale_Partner.ObjectId
+                                                      AND ObjectLink_GoodsListSale_Goods.DescId = zc_ObjectLink_GoodsListSale_Goods()
+                                  
+                                  LEFT JOIN ObjectString AS ObjectString_GoodsKind
+                                                         ON ObjectString_GoodsKind.ObjectId = Object_GoodsListSale.Id
+                                                        AND ObjectString_GoodsKind.DescId = zc_ObjectString_GoodsListSale_GoodsKind()
+                            )
+             
         SELECT
             MI_PromoGoods.Id                  -- идентификатор
           , MI_PromoGoods.MovementId          -- ИД документа <Акция>
@@ -77,18 +104,12 @@ BEGIN
           , MI_PromoGoods.AmountInWeight      -- Кол-во возврат (факт) Вес
           , MI_PromoGoods.GoodsKindId         -- ИД обьекта <Вид товара>
           , MI_PromoGoods.GoodsKindName       -- Наименование обьекта <Вид товара>
+          , GoodsKindName_inf
           , MI_PromoGoods.Comment             -- Комментарий
           , MI_PromoGoods.isErased            -- удален
-        FROM
-            MovementItem_PromoGoods_View AS MI_PromoGoods
-        WHERE
-            MI_PromoGoods.MovementId = inMovementId
-            AND
-            (
-                MI_PromoGoods.isErased = FALSE
-                OR
-                inIsErased = TRUE
-            );
+        FROM MovementItem_PromoGoods_View AS MI_PromoGoods
+        WHERE MI_PromoGoods.MovementId = inMovementId
+          AND (MI_PromoGoods.isErased = FALSE OR inIsErased = TRUE);
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
