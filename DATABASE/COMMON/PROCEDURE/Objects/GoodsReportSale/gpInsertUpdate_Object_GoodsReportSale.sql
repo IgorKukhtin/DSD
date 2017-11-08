@@ -249,30 +249,30 @@ BEGIN
                  , tmpMIAll.UnitId
                  , tmpMIAll.GoodsId
                  , tmpMIAll.GoodsKindId
-                 
+                 /*
                  , SUM (tmpMIAll.AmountOrder       * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS AmountOrder
                  , SUM (tmpMIAll.AmountOrderPromo  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS AmountOrderPromo
                  , SUM (tmpMIAll.AmountOrderBranch * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS AmountOrderBranch
                  , SUM (tmpMIAll.AmountSale        * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS AmountSale
                  , SUM (tmpMIAll.AmountSalePromo   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS AmountSalePromo
                  , SUM (tmpMIAll.AmountBranch      * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS AmountBranch
-                 /*
+                 */
                  , SUM (tmpMIAll.AmountOrder       ) AS AmountOrder
                  , SUM (tmpMIAll.AmountOrderPromo  ) AS AmountOrderPromo
                  , SUM (tmpMIAll.AmountOrderBranch ) AS AmountOrderBranch
                  , SUM (tmpMIAll.AmountSale        ) AS AmountSale
                  , SUM (tmpMIAll.AmountSalePromo   ) AS AmountSalePromo
                  , SUM (tmpMIAll.AmountBranch      ) AS AmountBranch
-                 */
+                 
 
             FROM tmpMIAll
-                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                 /*LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpMIAll.GoodsId
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             
                  LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                        ON ObjectFloat_Weight.ObjectId = tmpMIAll.GoodsId
-                                      AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                                      AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()*/
                                       
                  LEFT JOIN zfCalc_DayOfWeekName(tmpMIAll.OperDate) AS tmpDayOfWeek ON 1=1
                  

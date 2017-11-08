@@ -91,7 +91,14 @@ type
     actExecuteDialogInsertPrice: TExecuteDialog;
     actInsertPrice: TdsdDataSetRefresh;
     macInsertPrice: TMultiAction;
-    bb: TdxBarButton;
+    bbInsertPrice: TdxBarButton;
+    cbisDeferred: TcxCheckBox;
+    spUpdate_isDeferred_Yes: TdsdStoredProc;
+    spUpdate_isDeferred_No: TdsdStoredProc;
+    spUpdateisDeferredNo: TdsdExecStoredProc;
+    spUpdateisDeferredYes: TdsdExecStoredProc;
+    bbDeferredNo: TdxBarButton;
+    bbDeferredYes: TdxBarButton;
   private
     { Private declarations }
   public

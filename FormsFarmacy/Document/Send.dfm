@@ -12,17 +12,17 @@ inherited SendForm: TSendForm
     Height = 424
     ExplicitTop = 126
     ExplicitWidth = 1015
-    ExplicitHeight = 432
+    ExplicitHeight = 424
     ClientRectBottom = 424
     ClientRectRight = 1015
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1015
-      ExplicitHeight = 408
+      ExplicitHeight = 400
       inherited cxGrid: TcxGrid
         Width = 1015
         Height = 400
         ExplicitWidth = 1015
-        ExplicitHeight = 408
+        ExplicitHeight = 400
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -472,6 +472,14 @@ inherited SendForm: TSendForm
       Top = 24
       Caption = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1095#1077#1090#1072' '#1053#1058#1047
     end
+    object cbisDeferred: TcxCheckBox
+      Left = 701
+      Top = 50
+      Caption = #1054#1090#1083#1086#1078#1077#1085
+      Properties.ReadOnly = True
+      TabOrder = 11
+      Width = 71
+    end
   end
   object cxLabel7: TcxLabel [2]
     Left = 195
@@ -496,7 +504,7 @@ inherited SendForm: TSendForm
   end
   object cxLabel6: TcxLabel [5]
     Left = 787
-    Top = 50
+    Top = 52
     Caption = #1057#1090#1088#1072#1093#1086#1074#1086#1081' '#1079#1072#1087#1072#1089' '#1053#1058#1047' '#1076#1083#1103' '#1061' '#1076#1085#1077#1081
   end
   object edPeriod: TcxCurrencyEdit [6]
@@ -510,7 +518,7 @@ inherited SendForm: TSendForm
   end
   object edDay: TcxCurrencyEdit [7]
     Left = 960
-    Top = 49
+    Top = 51
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = True
@@ -544,6 +552,19 @@ inherited SendForm: TSendForm
     Top = 327
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
+    end
+    object spUpdateisDeferredNo: TdsdExecStoredProc [7]
+      Category = 'Deferred'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isDeferred_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isDeferred_No
+        end>
+      Caption = #1054#1090#1083#1086#1078#1077#1085' - '#1053#1077#1090
+      Hint = #1054#1090#1083#1086#1078#1077#1085' - '#1053#1077#1090
+      ImageIndex = 77
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
@@ -579,7 +600,7 @@ inherited SendForm: TSendForm
         item
         end>
     end
-    object actComplete: TdsdExecStoredProc [10]
+    object actComplete: TdsdExecStoredProc [11]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -610,7 +631,7 @@ inherited SendForm: TSendForm
         #1042#1053#1048#1052#1040#1053#1048#1045'! '#1042' '#1050#1040#1057#1057#1059' '#1041#1059#1044#1059#1058' '#1047#1040#1043#1056#1059#1046#1045#1053#1067' '#1082#1086#1083'-'#1074#1072' '#1080#1079' '#1082#1086#1083#1086#1085#1082#1080' "'#1050#1086#1083'-'#1074#1086' '#1087#1086#1083#1091 +
         #1095#1072#1090#1077#1083#1103'". '#1055#1056#1054#1042#1045#1056#1068#1058#1045' '#1048#1061'.'
     end
-    object actGoodsKindChoice: TOpenChoiceForm [14]
+    object actGoodsKindChoice: TOpenChoiceForm [15]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -637,9 +658,9 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    inherited actNewDocument: TdsdInsertUpdateAction [16]
+    inherited actNewDocument: TdsdInsertUpdateAction [17]
     end
-    inherited MultiAction: TMultiAction [17]
+    inherited MultiAction: TMultiAction [18]
     end
     object actRefreshPrice: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -893,6 +914,19 @@ inherited SendForm: TSendForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1062#1077#1085#1091' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
       ImageIndex = 56
     end
+    object spUpdateisDeferredYes: TdsdExecStoredProc
+      Category = 'Deferred'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isDeferred_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isDeferred_Yes
+        end>
+      Caption = #1054#1090#1083#1086#1078#1077#1085' - '#1044#1072
+      Hint = #1054#1090#1083#1086#1078#1077#1085' - '#1044#1072
+      ImageIndex = 52
+    end
   end
   inherited MasterDS: TDataSource
     Top = 424
@@ -1008,7 +1042,23 @@ inherited SendForm: TSendForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbInsertPrice'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDeferredYes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDeferredNo'
         end
         item
           Visible = True
@@ -1054,8 +1104,16 @@ inherited SendForm: TSendForm
       Action = actComplete
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbInsertPrice: TdxBarButton
       Action = macInsertPrice
+      Category = 0
+    end
+    object bbDeferredNo: TdxBarButton
+      Action = spUpdateisDeferredNo
+      Category = 0
+    end
+    object bbDeferredYes: TdxBarButton
+      Action = spUpdateisDeferredYes
       Category = 0
     end
   end
@@ -2166,5 +2224,67 @@ inherited SendForm: TSendForm
     PackSize = 1
     Left = 274
     Top = 344
+  end
+  object spUpdate_isDeferred_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_isDeferred'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDeferred'
+        Value = 'True'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisDeferred'
+        Value = 'False'
+        Component = cbisDeferred
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 880
+    Top = 219
+  end
+  object spUpdate_isDeferred_No: TdsdStoredProc
+    StoredProcName = 'gpUpdate_isDeferred'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDeferred'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisDeferred'
+        Value = 'False'
+        Component = cbisDeferred
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 880
+    Top = 259
   end
 end

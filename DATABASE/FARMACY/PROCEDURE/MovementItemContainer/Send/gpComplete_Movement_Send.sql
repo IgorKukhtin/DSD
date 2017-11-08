@@ -22,22 +22,25 @@ $BODY$
   
   DECLARE vbTotalSummMVAT TFloat;
   DECLARE vbTotalSummPVAT TFloat;
-  DECLARE vbInvNumber TVarChar;
+  DECLARE vbInvNumber     TVarChar;
+  DECLARE vbisDeferred    Boolean;
 BEGIN
     vbUserId:= inSession;
 
 
     -- параметры документа
     SELECT
-        Movement.OperDate,
-        Movement.InvNumber,
-        Movement_From.ObjectId AS Unit_From,
-        Movement_To.ObjectId AS Unit_To
+        Movement.OperDate           AS OperDate,
+        Movement.InvNumber          AS InvNumber,
+        Movement_From.ObjectId      AS Unit_From,
+        Movement_To.ObjectId        AS Unit_To,
+        COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean  AS isDeferred
     INTO
         outOperDate,
         vbInvNumber,
         vbUnit_From,
-        vbUnit_To
+        vbUnit_To,
+        vbisDeferred
     FROM Movement
         INNER JOIN MovementLinkObject AS Movement_From
                                       ON Movement_From.MovementId = Movement.Id
@@ -45,6 +48,9 @@ BEGIN
         INNER JOIN MovementLinkObject AS Movement_To
                                       ON Movement_To.MovementId = Movement.Id
                                      AND Movement_To.DescId = zc_MovementLinkObject_To()
+        LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                  ON MovementBoolean_Deferred.MovementId = Movement.Id
+                                 AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
     WHERE Movement.Id = inMovementId;
 
     -- дата накладной перемещения должна совпадать с текущей датой.
@@ -192,7 +198,7 @@ BEGIN
     --Рассчитываем и записываем суммы Сумма закупки с усред. ценах с уч. % кор-ки (с НДС)   TotalSummMVAT
     --                                Сумма закупки с усред. ценах (с НДС)                  TotalSummPVAT
        SELECT
-            COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0))),0)                               ::TFloat  AS Summa           --MVat
+             COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0))),0)                               ::TFloat  AS Summa           --MVat
            , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))),0)                                 ::TFloat  AS SummaWithVAT   --PVat
       INTO vbTotalSummMVAT, vbTotalSummPVAT
 
@@ -221,10 +227,14 @@ BEGIN
 
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummMVAT(), inMovementId, vbTotalSummMVAT);
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPVAT(), inMovementId, vbTotalSummPVAT);
---                           
-
-  UPDATE Movement SET StatusId = zc_Enum_Status_Complete() 
-  WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
+     
+     --не меняем статус если документ отложен                           
+     IF vbisDeferred = FALSE 
+     THEN
+         UPDATE Movement 
+         SET StatusId = zc_Enum_Status_Complete() 
+         WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
+     END IF;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
