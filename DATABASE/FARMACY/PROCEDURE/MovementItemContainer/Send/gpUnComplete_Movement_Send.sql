@@ -65,6 +65,7 @@ BEGIN
     THEN
         RAISE EXCEPTION 'Ошибка. По одному или более товарам есть документ переучета позже даты текущего перемещения. Отмена проведения документа запрещена!';
     END IF;*/
+    
     -- Распроводим Документ
     PERFORM lpUnComplete_Movement (inMovementId := inMovementId
                                   , inUserId     := vbUserId);

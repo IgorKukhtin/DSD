@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isAuto Boolean, MCSPeriod TFloat, MCSDay TFloat
              , Checked Boolean
              , isComplete Boolean
+             , isDeferred Boolean
               )
 AS
 $BODY$
@@ -44,6 +45,7 @@ BEGIN
              , CAST (0 AS TFloat)                               AS MCSDay
              , FALSE                                            AS Checked
              , FALSE                                            AS isComplete
+             , FALSE                                            AS isDeferred
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
@@ -61,11 +63,12 @@ BEGIN
            , Object_To.Id                                       AS ToId
            , Object_To.ValueData                                AS ToName
            , COALESCE (MovementString_Comment.ValueData,'')     ::TVarChar AS Comment
-           , COALESCE (MovementBoolean_isAuto.ValueData, False) ::Boolean  AS isAuto
+           , COALESCE (MovementBoolean_isAuto.ValueData, FALSE) ::Boolean  AS isAuto
            , COALESCE (MovementFloat_MCSPeriod.ValueData,0)     ::TFloat   AS MCSPeriod
            , COALESCE (MovementFloat_MCSDay.ValueData,0)        ::TFloat   AS MCSDay
-           , COALESCE (MovementBoolean_Checked.ValueData, false) ::Boolean AS Checked
-           , COALESCE (MovementBoolean_Complete.ValueData, false)::Boolean AS isComplete
+           , COALESCE (MovementBoolean_Checked.ValueData, FALSE) ::Boolean AS Checked
+           , COALESCE (MovementBoolean_Complete.ValueData, FALSE)::Boolean AS isComplete
+           , COALESCE (MovementBoolean_Deferred.ValueData, FALSE)::Boolean AS isDeferred
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -93,10 +96,14 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId =  Movement.Id
                                      AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
-           LEFT JOIN MovementBoolean AS MovementBoolean_Complete
-                                     ON MovementBoolean_Complete.MovementId = Movement.Id
-                                    AND MovementBoolean_Complete.DescId = zc_MovementBoolean_Complete()
-
+            LEFT JOIN MovementBoolean AS MovementBoolean_Complete
+                                      ON MovementBoolean_Complete.MovementId = Movement.Id
+                                     AND MovementBoolean_Complete.DescId = zc_MovementBoolean_Complete()
+ 
+            LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                      ON MovementBoolean_Deferred.MovementId = Movement.Id
+                                     AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+ 
             LEFT JOIN MovementFloat AS MovementFloat_MCSPeriod
                                     ON MovementFloat_MCSPeriod.MovementId =  Movement.Id
                                    AND MovementFloat_MCSPeriod.DescId = zc_MovementFloat_MCSPeriod()
@@ -118,6 +125,7 @@ ALTER FUNCTION gpGet_Movement_Send (Integer, TDateTime, TVarChar) OWNER TO postg
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.  ¬ÓÓ·Í‡ÎÓ ¿.¿.
+ 08.11.17         * Deferred
  15.11.16         * add isComplete
  15.06.16         * CURRENT_DATE::TDateTime 
  14.06.16         *

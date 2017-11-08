@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , Comment TVarChar
              , isAuto Boolean, MCSPeriod TFloat, MCSDay TFloat
              , Checked Boolean, isComplete Boolean
+             , isDeferred Boolean
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              , InsertDateDiff TFloat
@@ -72,11 +73,12 @@ BEGIN
            , Object_To.Id                           AS ToId
            , Object_To.ValueData                    AS ToName
            , COALESCE (MovementString_Comment.ValueData,'')     :: TVarChar AS Comment
-           , COALESCE (MovementBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
+           , COALESCE (MovementBoolean_isAuto.ValueData, FALSE) :: Boolean  AS isAuto
            , MovementFloat_MCSPeriod.ValueData      AS MCSPeriod
            , MovementFloat_MCSDay.ValueData         AS MCSDay
-           , COALESCE (MovementBoolean_Checked.ValueData, false)  ::Boolean  AS Checked
-           , COALESCE (MovementBoolean_Complete.ValueData, false) ::Boolean  AS isComplete
+           , COALESCE (MovementBoolean_Checked.ValueData, FALSE)  ::Boolean  AS Checked
+           , COALESCE (MovementBoolean_Complete.ValueData, FALSE) ::Boolean  AS isComplete
+           , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean  AS isDeferred
 
            , Object_Insert.ValueData              AS InsertName
            , MovementDate_Insert.ValueData        AS InsertDate
@@ -135,22 +137,25 @@ BEGIN
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
-           LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
-                                     ON MovementBoolean_isAuto.MovementId = Movement.Id
-                                    AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
-           LEFT JOIN MovementBoolean AS MovementBoolean_Checked
-                                     ON MovementBoolean_Checked.MovementId =  Movement.Id
-                                    AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
-           LEFT JOIN MovementBoolean AS MovementBoolean_Complete
-                                     ON MovementBoolean_Complete.MovementId = Movement.Id
-                                    AND MovementBoolean_Complete.DescId = zc_MovementBoolean_Complete()
-
-           LEFT JOIN MovementFloat AS MovementFloat_MCSPeriod
-                                   ON MovementFloat_MCSPeriod.MovementId =  Movement.Id
-                                  AND MovementFloat_MCSPeriod.DescId = zc_MovementFloat_MCSPeriod()
-           LEFT JOIN MovementFloat AS MovementFloat_MCSDay
-                                   ON MovementFloat_MCSDay.MovementId =  Movement.Id
-                                  AND MovementFloat_MCSDay.DescId = zc_MovementFloat_MCSDay()
+            LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
+                                      ON MovementBoolean_isAuto.MovementId = Movement.Id
+                                     AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
+            LEFT JOIN MovementBoolean AS MovementBoolean_Checked
+                                      ON MovementBoolean_Checked.MovementId =  Movement.Id
+                                     AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
+            LEFT JOIN MovementBoolean AS MovementBoolean_Complete
+                                      ON MovementBoolean_Complete.MovementId = Movement.Id
+                                     AND MovementBoolean_Complete.DescId = zc_MovementBoolean_Complete()
+            LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                      ON MovementBoolean_Deferred.MovementId = Movement.Id
+                                     AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                     
+            LEFT JOIN MovementFloat AS MovementFloat_MCSPeriod
+                                    ON MovementFloat_MCSPeriod.MovementId =  Movement.Id
+                                   AND MovementFloat_MCSPeriod.DescId = zc_MovementFloat_MCSPeriod()
+            LEFT JOIN MovementFloat AS MovementFloat_MCSDay
+                                    ON MovementFloat_MCSDay.MovementId =  Movement.Id
+                                   AND MovementFloat_MCSDay.DescId = zc_MovementFloat_MCSDay()
 
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id
@@ -181,6 +186,7 @@ ALTER FUNCTION gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, TVarChar) 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.   ¬ÓÓ·Í‡ÎÓ ¿.¿.
+ 08.11.17         * Deferred
  21.03.17         * add zc_MovementFloat_TotalSummFrom
                         zc_MovementFloat_TotalSummTo
  15.11.16         * add isComplete
