@@ -1,25 +1,25 @@
 inherited SendJournalForm: TSendJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 535
-  ClientWidth = 785
+  ClientWidth = 780
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 801
+  ExplicitWidth = 796
   ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 785
+    Width = 780
     Height = 478
     TabOrder = 3
     ExplicitWidth = 785
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 785
+    ClientRectRight = 780
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 785
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 785
+        Width = 780
         Height = 478
         ExplicitWidth = 785
         ExplicitHeight = 478
@@ -371,7 +371,7 @@ inherited SendJournalForm: TSendJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 785
+    Width = 780
     ExplicitWidth = 785
     inherited deStart: TcxDateEdit
       EditValue = 42005d
@@ -406,6 +406,19 @@ inherited SendJournalForm: TSendJournalForm
   inherited ActionList: TActionList
     Left = 31
     Top = 266
+    object macUpdateisDeferredNo: TMultiAction [0]
+      Category = 'Deferred'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUpdateisDeferredNo
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1083#1086#1078#1077#1085' '#1053#1077#1090' '#1042#1057#1045#1052' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'?'
+      Caption = #1054#1090#1083#1086#1078#1077#1085' - '#1053#1077#1090
+      Hint = #1054#1090#1083#1086#1078#1077#1085' - '#1053#1077#1090
+      ImageIndex = 77
+    end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TSendForm'
     end
@@ -439,7 +452,7 @@ inherited SendJournalForm: TSendJournalForm
         #1042#1053#1048#1052#1040#1053#1048#1045'! '#1042' '#1050#1040#1057#1057#1059' '#1041#1059#1044#1059#1058' '#1047#1040#1043#1056#1059#1046#1045#1053#1067' '#1082#1086#1083'-'#1074#1072' '#1080#1079' '#1082#1086#1083#1086#1085#1082#1080' "'#1050#1086#1083'-'#1074#1086' '#1087#1086#1083#1091 +
         #1095#1072#1090#1077#1083#1103'". '#1055#1056#1054#1042#1045#1056#1068#1058#1045' '#1048#1061'.'
     end
-    object actPrint: TdsdPrintAction [16]
+    object actPrint: TdsdPrintAction [17]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -531,6 +544,19 @@ inherited SendJournalForm: TSendJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 67
     end
+    object macUpdateisDeferredYes: TMultiAction
+      Category = 'Deferred'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUpdateisDeferredYes
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1083#1086#1078#1077#1085' '#1044#1072' '#1042#1057#1045#1052' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'?'
+      Caption = #1054#1090#1083#1086#1078#1077#1085' - '#1044#1072
+      Hint = #1054#1090#1083#1086#1078#1077#1085' - '#1044#1072
+      ImageIndex = 52
+    end
     object macUpdate_OperDate: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -561,6 +587,32 @@ inherited SendJournalForm: TSendJournalForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1080' '#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1080' '#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 67
+    end
+    object spUpdateisDeferredYes: TdsdExecStoredProc
+      Category = 'Deferred'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isDeferred_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isDeferred_Yes
+        end>
+      Caption = #1054#1090#1083#1086#1078#1077#1085' - '#1044#1072
+      Hint = #1054#1090#1083#1086#1078#1077#1085' - '#1044#1072
+      ImageIndex = 52
+    end
+    object spUpdateisDeferredNo: TdsdExecStoredProc
+      Category = 'Deferred'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isDeferred_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isDeferred_No
+        end>
+      Caption = #1054#1090#1083#1086#1078#1077#1085' - '#1053#1077#1090
+      Hint = #1054#1090#1083#1086#1078#1077#1085' - '#1053#1077#1090
+      ImageIndex = 77
     end
   end
   inherited MasterDS: TDataSource
@@ -684,6 +736,22 @@ inherited SendJournalForm: TSendJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbDeferredYes'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDeferredNo'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -707,6 +775,14 @@ inherited SendJournalForm: TSendJournalForm
       Action = macUpdate_OperDateList
       Category = 0
     end
+    object bbDeferredYes: TdxBarButton
+      Action = macUpdateisDeferredYes
+      Category = 0
+    end
+    object bbDeferredNo: TdxBarButton
+      Action = macUpdateisDeferredNo
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 320
@@ -728,7 +804,7 @@ inherited SendJournalForm: TSendJournalForm
       item
       end>
     Left = 408
-    Top = 344
+    Top = 256
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_Send'
@@ -897,5 +973,69 @@ inherited SendJournalForm: TSendJournalForm
     PackSize = 1
     Left = 568
     Top = 347
+  end
+  object spUpdate_isDeferred_No: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Send_Deferred'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDeferred'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisDeferred'
+        Value = 'False'
+        Component = MasterCDS
+        ComponentItem = 'isDeferred'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 312
+    Top = 435
+  end
+  object spUpdate_isDeferred_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Send_Deferred'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDeferred'
+        Value = 'True'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisDeferred'
+        Value = 'False'
+        Component = MasterCDS
+        ComponentItem = 'isDeferred'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 416
+    Top = 403
   end
 end

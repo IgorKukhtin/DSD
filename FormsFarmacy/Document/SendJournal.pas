@@ -51,6 +51,14 @@ type
     macUpdate_OperDate: TMultiAction;
     macUpdate_OperDateList: TMultiAction;
     bbUpdate_OperDateList: TdxBarButton;
+    macUpdateisDeferredYes: TMultiAction;
+    spUpdate_isDeferred_No: TdsdStoredProc;
+    spUpdate_isDeferred_Yes: TdsdStoredProc;
+    spUpdateisDeferredYes: TdsdExecStoredProc;
+    spUpdateisDeferredNo: TdsdExecStoredProc;
+    macUpdateisDeferredNo: TMultiAction;
+    bbDeferredYes: TdxBarButton;
+    bbDeferredNo: TdxBarButton;
   private
     { Private declarations }
   public
