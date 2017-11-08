@@ -155,6 +155,7 @@ type
     AmountPartnerTotal: TcxGridDBColumn;
     chRemains: TcxGridDBColumn;
     Remains_pack: TcxGridDBColumn;
+    Income_PACK: TcxGridDBColumn;
   private
     { Private declarations }
   public

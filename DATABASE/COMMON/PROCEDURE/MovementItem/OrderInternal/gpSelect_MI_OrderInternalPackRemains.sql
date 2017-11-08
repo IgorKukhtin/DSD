@@ -61,7 +61,7 @@ BEGIN
                                     , AmountPartnerPrior TFloat, AmountPartnerPriorPromo TFloat, AmountPartner TFloat, AmountPartnerPromo TFloat
                                     , AmountForecast TFloat, AmountForecastPromo TFloat, AmountForecastOrder TFloat, AmountForecastOrderPromo TFloat
                                     , CountForecast TFloat, CountForecastOrder TFloat
-                                    , Income_CEH TFloat
+                                    , Income_CEH TFloat, Income_PACK TFloat
                                     , TermProduction TFloat, PartionGoods_start TDateTime, PartionDate_pf TDateTime, GoodsKindId_pf Integer, GoodsKindCompleteId_pf Integer, UnitId_pf Integer
                                     , isErased Boolean
                                      ) ON COMMIT DROP;
@@ -246,9 +246,38 @@ BEGIN
                                                 AND ObjectLink_GoodsKindComplete.DescId   = zc_ObjectLink_PartionGoods_GoodsKindComplete()
                       )
              -- хардкодим - ЦЕХ колбаса+дел-сы (производство)
-           , tmpUnit_CEH AS (SELECT UnitId, TRUE AS isContainer FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect_Object_Unit_byGroup)
+           , tmpUnit_CEH   AS (SELECT UnitId, TRUE AS isContainer FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect_Object_Unit_byGroup)
              -- хардкодим - Склады База + Реализации
-           , tmpUnit_SKLAD   AS (SELECT UnitId, FALSE AS isContainer FROM lfSelect_Object_Unit_byGroup (8457) AS lfSelect_Object_Unit_byGroup)
+           , tmpUnit_SKLAD AS (SELECT UnitId, FALSE AS isContainer FROM lfSelect_Object_Unit_byGroup (8457) AS lfSelect_Object_Unit_byGroup)
+             -- хардкодим - Цех Упаковки
+           , tmpUnit_PACK  AS (SELECT 8451 AS UnitId)
+             -- Приход - с Цеха Упаковки
+           , tmpPACK AS (SELECT MIContainer.ObjectId_Analyzer                    AS GoodsId
+                                , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId
+                                , -1 * SUM (MIContainer.Amount)                  AS Amount
+                                , MIContainer.WhereObjectId_Analyzer             AS UnitId_pf
+                           FROM MovementItemContainer AS MIContainer
+                                -- Склады База + Реализации
+                                INNER JOIN tmpUnit_SKLAD   ON tmpUnit_SKLAD.UnitId   = MIContainer.ObjectExtId_Analyzer
+                                -- Цех Упаковки
+                                INNER JOIN tmpUnit_PACK ON tmpUnit_PACK.UnitId = MIContainer.WhereObjectId_Analyzer
+                                -- убрали Тару
+                                INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                      ON ObjectLink_Goods_InfoMoney.ObjectId      = MIContainer.ObjectId_Analyzer
+                                                     AND ObjectLink_Goods_InfoMoney.DescId        = zc_ObjectLink_Goods_InfoMoney()
+                                                     AND ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901() -- Ирна
+                                                                                                    , zc_Enum_InfoMoney_30101() -- Готовая продукция
+                                                                                                    , zc_Enum_InfoMoney_30201() -- Мясное сырье
+                                                                                                     )
+                           WHERE MIContainer.OperDate       = vbOperDate
+                             AND MIContainer.DescId         = zc_MIContainer_Count()
+                             AND MIContainer.MovementDescId = zc_Movement_Send()
+                             -- AND 1=0
+                             AND MIContainer.isActive       = FALSE
+                           GROUP BY MIContainer.ObjectId_Analyzer
+                                  , MIContainer.ObjectIntId_Analyzer
+                                  , MIContainer.WhereObjectId_Analyzer
+                          )
              -- Приход пр-во (ФАКТ)
            , tmpIncome AS (SELECT MIContainer.ObjectId_Analyzer                  AS GoodsId
                                 , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId
@@ -276,7 +305,7 @@ BEGIN
                                   , MIContainer.ObjectIntId_Analyzer
                                   , MIContainer.ObjectExtId_Analyzer
                           )
-     --
+     -- Результат
      INSERT INTO _tmpMI_master (MovementItemId, ContainerId
                               , ReceiptId, GoodsId, GoodsKindId, MeasureId
                               , GoodsId_complete, GoodsKindId_complete
@@ -286,10 +315,11 @@ BEGIN
                               , AmountPartnerPrior, AmountPartnerPriorPromo, AmountPartner, AmountPartnerPromo
                               , AmountForecast, AmountForecastPromo, AmountForecastOrder, AmountForecastOrderPromo
                               , CountForecast, CountForecastOrder
-                              , Income_CEH
+                              , Income_CEH, Income_PACK
                               , TermProduction, PartionGoods_start, PartionDate_pf, GoodsKindId_pf, GoodsKindCompleteId_pf, UnitId_pf
                               , isErased
                                )
+        -- Данные MI
         SELECT tmpMI.MovementItemId, tmpMI.ContainerId
              , tmpMI.ReceiptId, tmpMI.GoodsId, tmpMI.GoodsKindId, tmpMI.MeasureId
              , tmpMI.GoodsId_complete, tmpMI.GoodsKindId_complete
@@ -300,10 +330,13 @@ BEGIN
              , tmpMI.AmountForecast, tmpMI.AmountForecastPromo, tmpMI.AmountForecastOrder, tmpMI.AmountForecastOrderPromo
              , tmpMI.CountForecast, tmpMI.CountForecastOrder
              , 0 AS Income_CEH
+             , 0 AS Income_PACK
              , tmpMI.TermProduction, tmpMI.PartionGoods_start, tmpMI.PartionDate_pf, tmpMI.GoodsKindId_pf, tmpMI.GoodsKindCompleteId_pf, tmpMI.UnitId_pf
              , tmpMI.isErased
         FROM tmpMI
+
        UNION ALL
+        -- Приход пр-во (ФАКТ)
         SELECT 0 AS MovementItemId
              , 0 AS ContainerId
              , 0 AS ReceiptId
@@ -318,6 +351,7 @@ BEGIN
              , 0 AS AmountForecast, 0 AS AmountForecastPromo, 0 AS AmountForecastOrder, 0 AS AmountForecastOrderPromo
              , 0 AS CountForecast, 0 AS CountForecastOrder
              , tmpIncome.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS Income_CEH
+             , 0 AS Income_PACK
              , 0 AS TermProduction, NULL :: TDateTime AS PartionGoods_start, NULL :: TDateTime AS PartionDate_pf, 0 AS GoodsKindId_pf, 0 AS GoodsKindCompleteId_pf
              , tmpIncome.UnitId_pf
              , FALSE AS isErased
@@ -328,6 +362,33 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                   ON ObjectLink_Goods_Measure.ObjectId = tmpIncome.GoodsId
                                  AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
+       UNION ALL
+        -- Приход - с Цеха Упаковки
+        SELECT 0 AS MovementItemId
+             , 0 AS ContainerId
+             , 0 AS ReceiptId
+             , tmpPACK.GoodsId
+             , tmpPACK.GoodsKindId
+             , COALESCE (ObjectLink_Goods_Measure.ChildObjectId, 0) AS MeasureId
+             , 0 AS GoodsId_complete, 0 AS GoodsKindId_complete
+             , 0 AS ReceiptId_basis, 0 AS GoodsId_basis
+             , 0 AS Amount, 0 AS AmountSecond
+             , 0 AS AmountRemains, 0 AS Remains_CEH, 0 AS Remains_CEH_Next, 0 AS Remains, 0 AS Remains_pack
+             , 0 AS AmountPartnerPrior, 0 AS AmountPartnerPriorPromo, 0 AS AmountPartner, 0 AS AmountPartnerPromo
+             , 0 AS AmountForecast, 0 AS AmountForecastPromo, 0 AS AmountForecastOrder, 0 AS AmountForecastOrderPromo
+             , 0 AS CountForecast, 0 AS CountForecastOrder
+             , 0 AS Income_CEH
+             , tmpPACK.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS Income_PACK
+             , 0 AS TermProduction, NULL :: TDateTime AS PartionGoods_start, NULL :: TDateTime AS PartionDate_pf, 0 AS GoodsKindId_pf, 0 AS GoodsKindCompleteId_pf
+             , tmpPACK.UnitId_pf
+             , FALSE AS isErased
+        FROM tmpPACK
+             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                   ON ObjectFloat_Weight.ObjectId = tmpPACK.GoodsId
+                                  AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                  ON ObjectLink_Goods_Measure.ObjectId = tmpPACK.GoodsId
+                                 AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
        ;
 
 
@@ -337,13 +398,14 @@ BEGIN
        OPEN Cursor1 FOR
        WITH tmpMI_all AS (SELECT * FROM _tmpMI_master
                           WHERE _tmpMI_master.Income_CEH       = 0 -- отбросили Приход пр-во (ФАКТ)
+                            AND _tmpMI_master.Income_PACK      = 0 -- отбросили Приход с Цеха Упаковки
                             AND _tmpMI_master.GoodsId_complete = 0 -- т.е. НЕ упакованный
                             AND _tmpMI_master.ContainerId      = 0 -- отбросили остатки на ПР-ВЕ
                             -- AND _tmpMI_master.GoodsId_basis    > 0 -- отбросили Ирну (временно)
                          )
-      , tmpIncome AS (SELECT * FROM _tmpMI_master
-                      WHERE _tmpMI_master.Income_CEH <> 0
-                     )
+        -- Приход пр-во (ФАКТ)
+      , tmpIncome AS (SELECT * FROM _tmpMI_master WHERE _tmpMI_master.Income_CEH <> 0)
+           -- Ост. на произв-ве
          , tmpCEH AS (SELECT _tmpMI_master.GoodsId
                            , _tmpMI_master.GoodsKindCompleteId_pf
                            , SUM (_tmpMI_master.Remains_CEH)      AS Remains_CEH
@@ -353,6 +415,7 @@ BEGIN
                       GROUP BY _tmpMI_master.GoodsId
                              , _tmpMI_master.GoodsKindCompleteId_pf
                      )
+         -- Итого по данным из Курсора-2
        , tmpChild AS (SELECT CASE WHEN _tmpMI_master.GoodsId_complete = 0
                                        THEN _tmpMI_master.GoodsId
                                   ELSE _tmpMI_master.GoodsId_complete
@@ -363,6 +426,7 @@ BEGIN
                              END AS GoodsKindId
 
                            , SUM (_tmpMI_master.Remains_pack)             AS Remains_pack
+                           , SUM (_tmpMI_master.Income_PACK)              AS Income_PACK
 
                            , SUM (_tmpMI_master.AmountPartnerPrior)       AS AmountPartnerPrior
                            , SUM (_tmpMI_master.AmountPartnerPriorPromo)  AS AmountPartnerPriorPromo
@@ -460,6 +524,8 @@ BEGIN
 
              -- Приход пр-во (ФАКТ)
            , tmpIncome.Income_CEH    :: TFloat AS Income_CEH
+             -- Приход - с Цеха Упаковки
+           , tmpChild.Income_PACK
 
              -- Ост. нач. - НЕ упак.
            , tmpMI.Remains
@@ -519,13 +585,16 @@ BEGIN
            , tmpMI.isErased
 
        FROM tmpMI
+            -- Приход пр-во (ФАКТ)
             FULL JOIN tmpIncome
                    ON tmpIncome.GoodsId     = tmpMI.GoodsId
                   AND tmpIncome.GoodsKindId = tmpMI.GoodsKindId
 
+            -- Ост. на произв-ве
             LEFT JOIN tmpCEH
                    ON tmpCEH.GoodsId                = tmpMI.GoodsId_basis
                   AND tmpCEH.GoodsKindCompleteId_pf = tmpMI.GoodsKindId
+            -- Итого по данным из Курсора-2
             LEFT JOIN tmpChild
                    ON tmpChild.GoodsId              = COALESCE (tmpMI.GoodsId, tmpIncome.GoodsId)
                   AND tmpChild.GoodsKindId          = COALESCE (tmpMI.GoodsKindId, tmpIncome.GoodsKindId)
@@ -592,6 +661,8 @@ BEGIN
            , CAST (tmpMI.Remains + tmpMI.Remains_pack + tmpMI.Remains_CEH - tmpMI.AmountPartnerPrior - tmpMI.AmountPartnerPriorPromo - tmpMI.AmountPartner - tmpMI.AmountPartnerPromo AS NUMERIC (16, 1)) :: TFloat AS Amount_result
            , CAST (tmpMI.Remains + tmpMI.Remains_pack + 0                 - tmpMI.AmountPartnerPrior - tmpMI.AmountPartnerPriorPromo - tmpMI.AmountPartner - tmpMI.AmountPartnerPromo AS NUMERIC (16, 1)) :: TFloat AS Amount_result_two
 
+             -- Приход - с Цеха Упаковки
+           , tmpMI.Income_PACK
              -- Ост. начальн. - НЕ упакованный
            , tmpMI.Remains
              -- Ост. нач. - упакованный
@@ -708,6 +779,8 @@ BEGIN
 
              -- Приход пр-во (ФАКТ)
            , tmpMI.Income_CEH    :: TFloat AS Income_CEH
+             -- Приход - с Цеха Упаковки
+           , tmpMI.Income_PACK
 
              -- Ост. начальн. - произв. (СЕГОДНЯ)
            , tmpMI.Remains_CEH
