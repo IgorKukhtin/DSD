@@ -37,7 +37,7 @@ BEGIN
                                                   )
                                     , tmpMIAll AS
                                       (SELECT ObjectLink_Goods.ChildObjectId                                           AS GoodsId
-                                            , COALESCE (ObjectLink_GoodsKind.ObjectId, 0)                              AS GoodsKindId
+                                            , COALESCE (ObjectLink_GoodsKind.ChildObjectId, 0)                         AS GoodsKindId
 
                                             , SUM (COALESCE (ObjectFloat_Order1.ValueData, 0)
                                                  + COALESCE (ObjectFloat_Order2.ValueData, 0)
@@ -235,7 +235,7 @@ BEGIN
                                  AND ObjectFloat_OrderBranch7.DescId = zc_ObjectFloat_GoodsReportSale_OrderBranch7()
 
                                        GROUP BY ObjectLink_Goods.ChildObjectId
-                                              , COALESCE (ObjectLink_GoodsKind.ObjectId, 0)
+                                              , ObjectLink_GoodsKind.ChildObjectId
 
                                       /*-- 1.1 Заявки
                                        SELECT MovementItem.ObjectId                                                    AS GoodsId

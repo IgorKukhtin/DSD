@@ -11,7 +11,7 @@ $BODY$
 BEGIN
 
    -- IF inSession = '14610'
-   IF inSession <> zfCalc_UserAdmin()
+   IF 1=1 -- inSession <> zfCalc_UserAdmin()
    THEN
    RETURN QUERY
     SELECT  'ftpex.edi.su'::TVarChar AS Host

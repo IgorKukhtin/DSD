@@ -43,6 +43,28 @@ BEGIN
      WHERE Movement.Id = inMovementId;
 
 
+     -- !!!только - для Заявки на упаковку по ОСТАТКАМ!!!
+     IF COALESCE (ioId, 0) = 0 AND inIsPack IS NULL AND inDescId_ParamOrder = zc_MIFloat_ContainerId() AND COALESCE (inAmount_ParamOrder, 0) = 0
+     THEN
+         -- !!!нашли!!!
+         ioId:= (SELECT MovementItem.Id
+                    FROM MovementItem
+                         LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                          ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                         AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                         LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
+                                                     ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+                    WHERE MovementItem.MovementId = inMovementId
+                      AND MovementItem.ObjectId   = inGoodsId
+                      AND MovementItem.DescId     = zc_MI_Master()
+                      AND MovementItem.isErased   = FALSE
+                      AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = COALESCE (inGoodsKindId, 0)
+                      AND COALESCE (MIFloat_ContainerId.ValueData, 0) = 0
+                    );
+     END IF;
+
+
      -- Расчет ТОЛЬКО для СЫРЬЯ
      IF inDescId_ParamSecond = zc_MIFloat_AmountPartnerSecond()
      /*AND EXISTS (SELECT 1
@@ -500,7 +522,10 @@ BEGIN
                               AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = vbGoodsKindId_add
                               AND COALESCE (MIFloat_ContainerId.ValueData, 0)   = 0
                            )
-         THEN PERFORM lpUpdate_MI_OrderInternal_Property (ioId                 := NULL
+         THEN 
+             -- RAISE EXCEPTION '<%>   <%>', vbGoodsId_add, vbGoodsKindId_add;
+             --
+             PERFORM lpUpdate_MI_OrderInternal_Property (ioId                 := NULL
                                                         , inMovementId         := inMovementId
                                                         , inGoodsId            := vbGoodsId_add
                                                         , inGoodsKindId        := vbGoodsKindId_add

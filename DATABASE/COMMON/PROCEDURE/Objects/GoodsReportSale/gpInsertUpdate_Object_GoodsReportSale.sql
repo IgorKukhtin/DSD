@@ -17,9 +17,10 @@ $BODY$
    DECLARE vbEndDate   TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GoodsReportSale());
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderInternal());
      
-     vbOperDate := '02.11.2017';
+     -- vbOperDate := '02.11.2017';
+     vbOperDate := '08.11.2017';
      -- vbOperDate := CURRENT_DATE;
 
      vbStartDate := (vbOperDate - INTERVAL '57 DAY') ::TDateTime;   --'01.11.2016';--
@@ -158,7 +159,7 @@ BEGIN
             SELECT Movement.OperDate                                AS OperDate
                  , Movement.UnitId                                  AS UnitId
                  , Movement.GoodsId                                 AS GoodsId
-                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)    AS GoodsKindId
+                 , CASE WHEN tmpGoods.isGoodsKind = TRUE THEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) END AS GoodsKindId
 
                  , SUM (CASE WHEN Movement.isUnit = FALSE AND COALESCE (MIFloat_PromoMovementId.ValueData, 0) = 0 THEN Movement.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountOrder
                  , SUM (CASE WHEN Movement.isUnit = FALSE AND COALESCE (MIFloat_PromoMovementId.ValueData, 0) > 0 THEN Movement.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountOrderPromo
@@ -169,8 +170,8 @@ BEGIN
             FROM tmpOrder AS Movement 
                  INNER JOIN tmpGoods ON tmpGoods.GoodsId = Movement.GoodsId
                  LEFT JOIN tmpMILinkObject_GoodsKind AS MILinkObject_GoodsKind
-                                                  ON MILinkObject_GoodsKind.MovementItemId = Movement.MovementItemId
-                                                 AND tmpGoods.isGoodsKind = TRUE
+                                                     ON MILinkObject_GoodsKind.MovementItemId = Movement.MovementItemId
+                                                    AND tmpGoods.isGoodsKind = TRUE
                  LEFT JOIN tmpMIFloat AS MIFloat_AmountSecond
                                              ON MIFloat_AmountSecond.MovementItemId = Movement.MovementItemId
                                             AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
@@ -181,15 +182,17 @@ BEGIN
             GROUP BY Movement.OperDate
                    , Movement.UnitId
                    , Movement.GoodsId 
-                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                   , MILinkObject_GoodsKind.ObjectId
+                   , tmpGoods.isGoodsKind
             HAVING SUM (CASE WHEN COALESCE (MIFloat_PromoMovementId.ValueData, 0) = 0 THEN Movement.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) <> 0
                 OR SUM (CASE WHEN COALESCE (MIFloat_PromoMovementId.ValueData, 0) > 0 THEN Movement.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) <> 0
+
            UNION ALL
             -- 1.2 Продажи
             SELECT Movement.OperDate                                AS OperDate
                  , Movement.UnitId                                  AS UnitId
                  , Movement.GoodsId                                 AS GoodsId
-                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
+                 , CASE WHEN tmpGoods.isGoodsKind = TRUE THEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) END AS GoodsKindId
                  , 0                                                   AS AmountOrder
                  , 0                                                   AS AmountOrderPromo
                  , 0                                                   AS AmountOrderBranch
@@ -200,9 +203,9 @@ BEGIN
                  INNER JOIN tmpGoods ON tmpGoods.GoodsId = Movement.GoodsId
  
                  LEFT JOIN tmpMILinkObject_GoodsKind AS MILinkObject_GoodsKind
-                                                  ON MILinkObject_GoodsKind.MovementItemId = Movement.MovementItemId
-                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                                                 AND tmpGoods.isGoodsKind = TRUE
+                                                     ON MILinkObject_GoodsKind.MovementItemId = Movement.MovementItemId
+                                                    AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                                    AND tmpGoods.isGoodsKind = TRUE
                  LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                              ON MIFloat_AmountPartner.MovementItemId = Movement.MovementItemId
                                             AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
@@ -214,21 +217,23 @@ BEGIN
             GROUP BY Movement.OperDate
                    , Movement.UnitId
                    , Movement.GoodsId 
-                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                   , MILinkObject_GoodsKind.ObjectId
+                   , tmpGoods.isGoodsKind
             HAVING SUM (CASE WHEN COALESCE (MIFloat_PromoMovementId.ValueData, 0) = 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) <> 0  
                 OR SUM (CASE WHEN COALESCE (MIFloat_PromoMovementId.ValueData, 0) > 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) <> 0  
+
            UNION ALL
             -- 1.3 Перемещение на филиал
             SELECT Movement.OperDate                                AS OperDate
                  , Movement.UnitId                                  AS UnitId
                  , Movement.GoodsId                                 AS GoodsId
-                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
-                 , 0                                                   AS AmountOrder
-                 , 0                                                   AS AmountOrderPromo
-                 , 0                                                   AS AmountOrderBranch
-                 , 0                                                   AS AmountSale
-                 , 0                                                   AS AmountSalePromo
-                 , SUM (COALESCE (Movement.Amount, 0))             AS AmountBranch
+                 , CASE WHEN tmpGoods.isGoodsKind = TRUE THEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) END AS GoodsKindId
+                 , 0                                                AS AmountOrder
+                 , 0                                                AS AmountOrderPromo
+                 , 0                                                AS AmountOrderBranch
+                 , 0                                                AS AmountSale
+                 , 0                                                AS AmountSalePromo
+                 , SUM (COALESCE (Movement.Amount, 0))              AS AmountBranch
             FROM tmpSendOnPrice AS Movement
                  INNER JOIN tmpGoods ON tmpGoods.GoodsId = Movement.GoodsId
  
@@ -239,9 +244,9 @@ BEGIN
             GROUP BY Movement.OperDate
                    , Movement.UnitId
                    , Movement.GoodsId 
-                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                   , MILinkObject_GoodsKind.ObjectId
+                   , tmpGoods.isGoodsKind
             HAVING SUM (COALESCE (Movement.Amount, 0)) <> 0   
-          
            )
 
     INSERT INTO tmpAll (NumberDay, UnitId, GoodsId, GoodsKindId, AmountOrder, AmountOrderPromo, AmountOrderBranch, AmountSale, AmountSalePromo, AmountBranch)
@@ -249,33 +254,14 @@ BEGIN
                  , tmpMIAll.UnitId
                  , tmpMIAll.GoodsId
                  , tmpMIAll.GoodsKindId
-                 /*
-                 , SUM (tmpMIAll.AmountOrder       * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS AmountOrder
-                 , SUM (tmpMIAll.AmountOrderPromo  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS AmountOrderPromo
-                 , SUM (tmpMIAll.AmountOrderBranch * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS AmountOrderBranch
-                 , SUM (tmpMIAll.AmountSale        * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS AmountSale
-                 , SUM (tmpMIAll.AmountSalePromo   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS AmountSalePromo
-                 , SUM (tmpMIAll.AmountBranch      * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS AmountBranch
-                 */
                  , SUM (tmpMIAll.AmountOrder       ) AS AmountOrder
                  , SUM (tmpMIAll.AmountOrderPromo  ) AS AmountOrderPromo
                  , SUM (tmpMIAll.AmountOrderBranch ) AS AmountOrderBranch
                  , SUM (tmpMIAll.AmountSale        ) AS AmountSale
                  , SUM (tmpMIAll.AmountSalePromo   ) AS AmountSalePromo
                  , SUM (tmpMIAll.AmountBranch      ) AS AmountBranch
-                 
-
             FROM tmpMIAll
-                 /*LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                 ON ObjectLink_Goods_Measure.ObjectId = tmpMIAll.GoodsId
-                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-            
-                 LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                       ON ObjectFloat_Weight.ObjectId = tmpMIAll.GoodsId
-                                      AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()*/
-                                      
                  LEFT JOIN zfCalc_DayOfWeekName(tmpMIAll.OperDate) AS tmpDayOfWeek ON 1=1
-                 
             GROUP BY tmpDayOfWeek.Number
                    , tmpMIAll.UnitId
                    , tmpMIAll.GoodsId
