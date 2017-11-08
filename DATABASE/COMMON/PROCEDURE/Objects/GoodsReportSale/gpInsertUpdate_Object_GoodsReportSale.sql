@@ -17,7 +17,7 @@ $BODY$
    DECLARE vbEndDate   TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderInternal());
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GoodsReportSale());
      
      -- vbOperDate := '02.11.2017';
      -- vbOperDate := '08.11.2017';
