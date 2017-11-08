@@ -199,10 +199,17 @@ BEGIN
                                                           ON MovementBoolean_isAuto.MovementId = Movement_Send.Id
                                                          AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
                                                          AND MovementBoolean_isAuto.ValueData = TRUE
+                                                     
                                LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                             ON MovementLinkObject_Unit.MovementId = Movement_Send.Id
                                                            AND MovementLinkObject_Unit.DescId in (zc_MovementLinkObject_To(), zc_MovementLinkObject_From())
                                INNER JOIN tmpUnit_list ON tmpUnit_list.UnitId = MovementLinkObject_Unit.ObjectId
+                               
+                               LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                                         ON MovementBoolean_Deferred.MovementId = Movement_Send.Id
+                                                        AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                                        AND MovementLinkObject_Unit.ObjectId = inUnitId 
+                                                        
                                INNER JOIN MovementItem AS MI_Send
                                                        ON MI_Send.MovementId = Movement_Send.Id
                                                       AND MI_Send.DescId = zc_MI_Master()
@@ -210,6 +217,7 @@ BEGIN
                         WHERE Movement_Send.OperDate >= inStartDate - INTERVAL '1 DAY' AND Movement_Send.OperDate < inStartDate + INTERVAL '1 DAY'
                           AND Movement_Send.DescId = zc_Movement_Send()
                           AND Movement_Send.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                          AND COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = FALSE
                         GROUP BY MI_Send.ObjectId 
                                , MovementLinkObject_Unit.ObjectId 
                         HAVING SUM (MI_Send.Amount) <> 0 
