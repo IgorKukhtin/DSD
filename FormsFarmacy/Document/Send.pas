@@ -99,6 +99,7 @@ type
     spUpdateisDeferredYes: TdsdExecStoredProc;
     bbDeferredNo: TdxBarButton;
     bbDeferredYes: TdxBarButton;
+    actCompleteDeff: TdsdExecStoredProc;
   private
     { Private declarations }
   public
