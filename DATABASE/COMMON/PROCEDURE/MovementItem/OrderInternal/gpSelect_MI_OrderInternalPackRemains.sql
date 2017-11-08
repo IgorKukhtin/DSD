@@ -272,8 +272,9 @@ BEGIN
                            WHERE MIContainer.OperDate       = vbOperDate
                              AND MIContainer.DescId         = zc_MIContainer_Count()
                              AND MIContainer.MovementDescId = zc_Movement_Send()
-                             -- AND 1=0
                              AND MIContainer.isActive       = FALSE
+                             AND MIContainer.Amount <> 0
+                             -- AND 1=0
                            GROUP BY MIContainer.ObjectId_Analyzer
                                   , MIContainer.ObjectIntId_Analyzer
                                   , MIContainer.WhereObjectId_Analyzer
@@ -299,8 +300,8 @@ BEGIN
                            WHERE MIContainer.OperDate       = vbOperDate
                              AND MIContainer.DescId         = zc_MIContainer_Count()
                              AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
-                             -- AND 1=0
                              AND MIContainer.isActive       = TRUE
+                             -- AND 1=0
                            GROUP BY MIContainer.ObjectId_Analyzer
                                   , MIContainer.ObjectIntId_Analyzer
                                   , MIContainer.ObjectExtId_Analyzer
@@ -366,12 +367,12 @@ BEGIN
         -- Приход - с Цеха Упаковки
         SELECT 0 AS MovementItemId
              , 0 AS ContainerId
-             , 0 AS ReceiptId
+             , COALESCE (tmp.ReceiptId, 0) AS ReceiptId
              , tmpPACK.GoodsId
              , tmpPACK.GoodsKindId
              , COALESCE (ObjectLink_Goods_Measure.ChildObjectId, 0) AS MeasureId
-             , 0 AS GoodsId_complete, 0 AS GoodsKindId_complete
-             , 0 AS ReceiptId_basis, 0 AS GoodsId_basis
+             , COALESCE (tmp.GoodsId_complete, 0) AS GoodsId_complete, COALESCE (tmp.GoodsKindId_complete, 0) AS GoodsKindId_complete
+             , COALESCE (tmp.ReceiptId_basis, 0) AS ReceiptId_basis, COALESCE (tmp.GoodsId_basis, 0) AS GoodsId_basis
              , 0 AS Amount, 0 AS AmountSecond
              , 0 AS AmountRemains, 0 AS Remains_CEH, 0 AS Remains_CEH_Next, 0 AS Remains, 0 AS Remains_pack
              , 0 AS AmountPartnerPrior, 0 AS AmountPartnerPriorPromo, 0 AS AmountPartner, 0 AS AmountPartnerPromo
@@ -383,6 +384,16 @@ BEGIN
              , tmpPACK.UnitId_pf
              , FALSE AS isErased
         FROM tmpPACK
+             LEFT JOIN (SELECT tmpMI.GoodsId, tmpMI.GoodsKindId
+                             , tmpMI.ReceiptId, tmpMI.GoodsId_complete, tmpMI.GoodsKindId_complete
+                             , tmpMI.ReceiptId_basis, tmpMI.GoodsId_basis
+                               --  № п/п
+                             , ROW_NUMBER() OVER (PARTITION BY tmpMI.GoodsId, tmpMI.GoodsKindId ORDER BY tmpMI.GoodsId_complete DESC) AS Ord
+                        FROM tmpMI
+                        WHERE tmpMI.ContainerId = 0
+                       ) AS tmp ON tmp.GoodsId     = tmpPACK.GoodsId
+                               AND tmp.GoodsKindId = tmpPACK.GoodsKindId
+                               AND tmp.Ord         = 1 -- !!!на всякий случай!!!
              LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                    ON ObjectFloat_Weight.ObjectId = tmpPACK.GoodsId
                                   AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
@@ -398,7 +409,8 @@ BEGIN
        OPEN Cursor1 FOR
        WITH tmpMI_all AS (SELECT * FROM _tmpMI_master
                           WHERE _tmpMI_master.Income_CEH       = 0 -- отбросили Приход пр-во (ФАКТ)
-                            AND _tmpMI_master.Income_PACK      = 0 -- отбросили Приход с Цеха Упаковки
+                            AND (_tmpMI_master.Income_PACK      = 0 -- отбросили Приход с Цеха Упаковки
+                                OR (_tmpMI_master.Income_PACK <> 0 AND _tmpMI_master.ReceiptId = 0 AND _tmpMI_master.GoodsId_complete = 0 AND _tmpMI_master.GoodsId_basis = 0))
                             AND _tmpMI_master.GoodsId_complete = 0 -- т.е. НЕ упакованный
                             AND _tmpMI_master.ContainerId      = 0 -- отбросили остатки на ПР-ВЕ
                             -- AND _tmpMI_master.GoodsId_basis    > 0 -- отбросили Ирну (временно)
@@ -414,6 +426,33 @@ BEGIN
                       WHERE _tmpMI_master.Remains_CEH <> 0 OR _tmpMI_master.Remains_CEH_Next <> 0
                       GROUP BY _tmpMI_master.GoodsId
                              , _tmpMI_master.GoodsKindCompleteId_pf
+                     )
+    -- Поиск хоть одного упакованного, где не хватает
+  , tmpChild_find AS (SELECT DISTINCT
+                             CASE WHEN _tmpMI_master.GoodsId_complete = 0
+                                       THEN _tmpMI_master.GoodsId
+                                  ELSE _tmpMI_master.GoodsId_complete
+                             END AS GoodsId
+                           , CASE WHEN _tmpMI_master.GoodsId_complete = 0
+                                       THEN _tmpMI_master.GoodsKindId
+                                  ELSE _tmpMI_master.GoodsKindId_complete
+                             END AS GoodsKindId
+                           , MIN (_tmpMI_master.Remains + _tmpMI_master.Remains_pack
+                                - _tmpMI_master.AmountPartnerPrior - _tmpMI_master.AmountPartnerPriorPromo
+                                - _tmpMI_master.AmountPartner      - _tmpMI_master.AmountPartnerPromo
+                                 ) AS Amount_res
+                      FROM _tmpMI_master
+                      WHERE 0 > _tmpMI_master.Remains + _tmpMI_master.Remains_pack
+                              - _tmpMI_master.AmountPartnerPrior - _tmpMI_master.AmountPartnerPriorPromo
+                              - _tmpMI_master.AmountPartner      - _tmpMI_master.AmountPartnerPromo
+                      GROUP BY CASE WHEN _tmpMI_master.GoodsId_complete = 0
+                                         THEN _tmpMI_master.GoodsId
+                                    ELSE _tmpMI_master.GoodsId_complete
+                               END
+                             , CASE WHEN _tmpMI_master.GoodsId_complete = 0
+                                         THEN _tmpMI_master.GoodsKindId
+                                    ELSE _tmpMI_master.GoodsKindId_complete
+                               END
                      )
          -- Итого по данным из Курсора-2
        , tmpChild AS (SELECT CASE WHEN _tmpMI_master.GoodsId_complete = 0
@@ -513,6 +552,9 @@ BEGIN
 
            , CASE WHEN tmpMI.GoodsId <> tmpMI.GoodsId_basis AND tmpMI.GoodsId_basis > 0 THEN TRUE ELSE FALSE END AS isCheck_basis
 
+-- , tmpChild_find.Amount_res    :: TFloat AS Amount
+-- , tmpChild.CountForecast      :: TFloat AS Amount
+-- , tmpChild.CountForecastOrder :: TFloat AS Amount
            , tmpMI.Amount                        :: TFloat AS Amount        -- ***Ост. на УПАК
            , tmpMI.AmountSecond                  :: TFloat AS AmountSecond  -- ***План ПР-ВО на УПАК
            , (tmpMI.Amount + tmpMI.AmountSecond) :: TFloat AS AmountTotal   -- ***План ПР-ВО на УПАК
@@ -521,6 +563,49 @@ BEGIN
               - COALESCE (tmpChild.AmountPartnerPrior, 0) - COALESCE (tmpChild.AmountPartnerPriorPromo, 0) - COALESCE (tmpChild.AmountPartner, 0) - COALESCE (tmpChild.AmountPartnerPromo, 0) AS NUMERIC (16, 1))) :: TFloat AS Amount_result
            , (CAST (tmpMI.Remains + COALESCE (tmpChild.Remains_pack, 0) + 0
               - COALESCE (tmpChild.AmountPartnerPrior, 0) - COALESCE (tmpChild.AmountPartnerPriorPromo, 0) - COALESCE (tmpChild.AmountPartner, 0) - COALESCE (tmpChild.AmountPartnerPromo, 0) AS NUMERIC (16, 1))) :: TFloat AS Amount_result_two
+
+           , CASE -- ИТОГО: РЕЗУЛЬТАТ с ПР-ВОМ < 0, т.е. не хватит ВООБЩЕ
+                  WHEN 0 > tmpMI.Remains + COALESCE (tmpChild.Remains_pack, 0) + CASE WHEN tmpMI.ContainerId > 0 THEN tmpMI.Remains_CEH ELSE COALESCE (tmpCEH.Remains_CEH, 0) END
+                         - COALESCE (tmpChild.AmountPartnerPrior, 0) - COALESCE (tmpChild.AmountPartnerPriorPromo, 0) - COALESCE (tmpChild.AmountPartner, 0) - COALESCE (tmpChild.AmountPartnerPromo, 0)
+                       THEN 0
+
+                  -- ИТОГО: РЕЗУЛЬТАТ БЕЗ ПР-ВА < 0, т.е. ждем Приход с пр-ва и его пакуем
+                  WHEN 0 > tmpMI.Remains + COALESCE (tmpChild.Remains_pack, 0) + 0
+                         - COALESCE (tmpChild.AmountPartnerPrior, 0) - COALESCE (tmpChild.AmountPartnerPriorPromo, 0) - COALESCE (tmpChild.AmountPartner, 0) - COALESCE (tmpChild.AmountPartnerPromo, 0)
+                       THEN -1
+
+                  -- упакованой продукции не хватает
+                  WHEN tmpChild_find.GoodsId > 0
+                       THEN -2
+
+                  -- есть остаток и его есть куда паковать (т.е. все нормально со статистикой)
+                  WHEN tmpMI.Remains > 0 AND (tmpChild.CountForecast > 0 OR tmpChild.CountForecastOrder > 0)
+                       THEN 1
+
+                  -- будет приход с пр-ва и его есть куда паковать (т.е. все нормально со статистикой)
+                  WHEN CASE WHEN tmpMI.ContainerId > 0 THEN tmpMI.Remains_CEH ELSE COALESCE (tmpCEH.Remains_CEH, 0) END > 0
+                   AND (tmpChild.CountForecast > 0 OR tmpChild.CountForecastOrder > 0)
+                       THEN 2
+
+                  -- есть Остаток или Приход, но НЕТ статистики
+                  WHEN (tmpMI.Remains > 0 OR tmpChild.Remains_pack > 0
+                     OR CASE WHEN tmpMI.ContainerId > 0 THEN tmpMI.Remains_CEH ELSE COALESCE (tmpCEH.Remains_CEH, 0) END > 0
+                       )
+                   AND COALESCE (tmpChild.CountForecast, 0) = 0 AND COALESCE (tmpChild.CountForecastOrder, 0) = 0
+                       THEN 44
+                  -- НЕТ Остатка или НЕТ Прихода, но ЕСТЬ статистика
+                  WHEN tmpMI.Remains = 0 AND COALESCE (tmpChild.Remains_pack, 0) = 0
+                   AND CASE WHEN tmpMI.ContainerId > 0 THEN tmpMI.Remains_CEH ELSE COALESCE (tmpCEH.Remains_CEH, 0) END = 0
+                   AND (tmpChild.CountForecast > 0 OR tmpChild.CountForecastOrder > 0)
+                       THEN 55
+
+                  -- ВСЕ ОК - есть Остаток УПАКОВАННОЙ и ЕСТЬ статистика
+                  WHEN tmpChild.Remains_pack > 0
+                   AND (tmpChild.CountForecast > 0 OR tmpChild.CountForecastOrder > 0)
+                       THEN 88
+
+                  ELSE 100
+             END  :: Integer AS Num
 
              -- Приход пр-во (ФАКТ)
            , tmpIncome.Income_CEH    :: TFloat AS Income_CEH
@@ -598,6 +683,11 @@ BEGIN
             LEFT JOIN tmpChild
                    ON tmpChild.GoodsId              = COALESCE (tmpMI.GoodsId, tmpIncome.GoodsId)
                   AND tmpChild.GoodsKindId          = COALESCE (tmpMI.GoodsKindId, tmpIncome.GoodsKindId)
+            -- Итого по данным из Курсора-2
+            LEFT JOIN tmpChild_find
+                   ON tmpChild_find.GoodsId         = COALESCE (tmpMI.GoodsId, tmpIncome.GoodsId)
+                  AND tmpChild_find.GoodsKindId     = COALESCE (tmpMI.GoodsKindId, tmpIncome.GoodsKindId)
+
 
             LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = tmpMI.ReceiptId
             LEFT JOIN ObjectString AS ObjectString_Receipt_Code
@@ -637,6 +727,16 @@ BEGIN
        RETURN NEXT Cursor1;
 
        OPEN Cursor2 FOR
+           -- Ост. на произв-ве
+       WITH tmpPACK AS (SELECT _tmpMI_master.GoodsId
+                             , _tmpMI_master.GoodsKindId
+                             , SUM (_tmpMI_master.Income_PACK) AS Income_PACK
+                        FROM _tmpMI_master
+                        WHERE _tmpMI_master.Income_PACK <> 0
+                        GROUP BY _tmpMI_master.GoodsId
+                               , _tmpMI_master.GoodsKindId
+                       )
+         -- Итого по данным из Курсора-2
        SELECT
              tmpMI.MovementItemId   AS Id
            , tmpMI.ContainerId      AS ContainerId
@@ -662,7 +762,7 @@ BEGIN
            , CAST (tmpMI.Remains + tmpMI.Remains_pack + 0                 - tmpMI.AmountPartnerPrior - tmpMI.AmountPartnerPriorPromo - tmpMI.AmountPartner - tmpMI.AmountPartnerPromo AS NUMERIC (16, 1)) :: TFloat AS Amount_result_two
 
              -- Приход - с Цеха Упаковки
-           , tmpMI.Income_PACK
+           , tmpPACK.Income_PACK :: TFloat AS Income_PACK
              -- Ост. начальн. - НЕ упакованный
            , tmpMI.Remains
              -- Ост. нач. - упакованный
@@ -713,6 +813,9 @@ BEGIN
 
        FROM _tmpMI_master AS tmpMI
 
+            LEFT JOIN tmpPACK ON tmpPACK.GoodsId     = tmpMI.GoodsId
+                             AND tmpPACK.GoodsKindId = tmpMI.GoodsKindId
+
             LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = tmpMI.ReceiptId
             LEFT JOIN ObjectString AS ObjectString_Receipt_Code
                                    ON ObjectString_Receipt_Code.ObjectId = Object_Receipt.Id
@@ -730,7 +833,8 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
-        WHERE tmpMI.Income_CEH = 0
+        WHERE tmpMI.Income_CEH  = 0
+          AND tmpMI.Income_PACK = 0
 
        ;
        RETURN NEXT Cursor2;
@@ -887,7 +991,7 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_OrderType_Unit
                                  ON ObjectLink_OrderType_Unit.ObjectId = ObjectLink_OrderType_Goods.ObjectId
                                 AND ObjectLink_OrderType_Unit.DescId   = zc_ObjectLink_OrderType_Unit()
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = CASE WHEN tmpMI.ContainerId > 0 THEN tmpMI.UnitId_pf ELSE ObjectLink_OrderType_Unit.ChildObjectId END
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = CASE WHEN tmpMI.ContainerId > 0 OR tmpMI.UnitId_pf > 0 THEN tmpMI.UnitId_pf ELSE ObjectLink_OrderType_Unit.ChildObjectId END
            ;
 
        RETURN NEXT Cursor3;
