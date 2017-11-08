@@ -49,7 +49,12 @@ BEGIN
                                )
                         )
        -- Результат - остатки товары ГП
-       SELECT CASE WHEN tmpUnit_all.isContainer = TRUE THEN Container.Id ELSE 0 END AS ContainerId
+       SELECT tmp.ContainerId
+            , tmp.GoodsId
+            , tmp.GoodsKindId
+            , SUM (tmp.Amount_start) AS Amount_start
+       FROM
+      (SELECT CASE WHEN tmpUnit_all.isContainer = TRUE THEN Container.Id ELSE 0 END AS ContainerId
             , Container.ObjectId                   AS GoodsId
             , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
             , Container.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) AS Amount_start
@@ -78,6 +83,10 @@ BEGIN
               , COALESCE (CLO_GoodsKind.ObjectId, 0)
               , Container.Amount
        HAVING Container.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) <> 0
+      ) AS tmp
+       GROUP BY tmp.ContainerId
+              , tmp.GoodsId
+              , tmp.GoodsKindId
       ;
 
     --
@@ -124,6 +133,7 @@ BEGIN
                       ) AS tmpMI ON tmpMI.ContainerId = tmpContainer.ContainerId
       ;
 
+--    RAISE EXCEPTION '<%>', (select count(*) from tmpAll where tmpAll.ContainerId = 0 and tmpAll.GoodsId = 593238 and tmpAll.GoodsKindId = 8335);
 
 
     -- сохранили св-ва для zc_MI_Master
@@ -154,4 +164,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpUpdateMI_OrderInternal_AmountRemainsPack (inMovementId:= 7343799, inOperDate:= '31.10.2017', inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpUpdateMI_OrderInternal_AmountRemainsPack (inMovementId:= 7448208, inOperDate:= '31.10.2017', inSession:= zfCalc_UserAdmin());

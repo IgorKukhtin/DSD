@@ -57,74 +57,48 @@ BEGIN
     END IF;
 
 */
-    vbIsGoods:= FALSE;
-    vbIsUnit:= FALSE;
+    vbIsGoods:= inGoodsId <> 0 OR inGoodsGroupId <> 0;
+    vbIsUnit:= inUnitId <> 0;
 
-    -- Ограничения по товарам
-    CREATE TEMP TABLE _tmpGoods (GoodsId Integer, MeasureId Integer, Weight TFloat) ON COMMIT DROP;
-    IF inGoodsId <> 0
-    THEN
-        -- устанавливается признак
-        vbIsGoods:= TRUE;
-        -- заполнение
-        INSERT INTO _tmpGoods (GoodsId, MeasureId, Weight)
-           SELECT Object_Goods.Id, ObjectLink_Goods_Measure.ChildObjectId, COALESCE (ObjectFloat_Weight.ValueData, 0)
+    -- Результат
+    RETURN QUERY
+
+     WITH -- Ограничения по товару
+          _tmpGoods AS -- (GoodsId, MeasureId, Weight)
+          (SELECT Object_Goods.Id AS GoodsId, ObjectLink_Goods_Measure.ChildObjectId AS MeasureId, COALESCE (ObjectFloat_Weight.ValueData, 0) AS Weight
            FROM Object AS Object_Goods
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                 LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                       ON ObjectFloat_Weight.ObjectId = Object_Goods.Id 
                                      AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-           WHERE Object_Goods.Id= inGoodsId;
-    ELSE 
-    IF inGoodsGroupId <> 0
-    THEN
-        -- устанавливается признак
-        vbIsGoods:= TRUE;
-        -- заполнение
-        INSERT INTO _tmpGoods (GoodsId, MeasureId, Weight)
-           SELECT lfObject_Goods_byGoodsGroup.GoodsId, ObjectLink_Goods_Measure.ChildObjectId, COALESCE (ObjectFloat_Weight.ValueData, 0)
+           WHERE Object_Goods.Id = inGoodsId
+          UNION
+           SELECT lfObject_Goods_byGoodsGroup.GoodsId, ObjectLink_Goods_Measure.ChildObjectId AS MeasureId, COALESCE (ObjectFloat_Weight.ValueData, 0) AS Weight
            FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = lfObject_Goods_byGoodsGroup.GoodsId
                                                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                 LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                       ON ObjectFloat_Weight.ObjectId = lfObject_Goods_byGoodsGroup.GoodsId
                                      AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-       ;
-    ELSE 
-        -- устанавливается признак
-        vbIsGoods:= FALSE;
-        -- заполнение
-        INSERT INTO _tmpGoods (GoodsId, MeasureId, Weight)
-           SELECT Object_Goods.Id, ObjectLink_Goods_Measure.ChildObjectId, COALESCE (ObjectFloat_Weight.ValueData, 0)
+           WHERE inGoodsGroupId <> 0 AND COALESCE (inGoodsId, 0) = 0
+          UNION
+           SELECT Object_Goods.Id AS GoodsId, ObjectLink_Goods_Measure.ChildObjectId AS MeasureId, COALESCE (ObjectFloat_Weight.ValueData, 0) AS Weight
            FROM Object AS Object_Goods
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                 LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                       ON ObjectFloat_Weight.ObjectId = Object_Goods.Id 
                                      AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-           WHERE Object_Goods.DescId = zc_Object_Goods();
-    END IF;
-    END IF;
-
-    -- Ограничения по подразделениям
-    CREATE TEMP TABLE _tmpUnit (UnitId Integer) ON COMMIT DROP;
-    IF inUnitId <> 0
-    THEN
-        -- устанавливается признак
-        vbIsUnit:= TRUE;
-        -- заполнение
-        INSERT INTO _tmpUnit (UnitId)
-           SELECT UnitId FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect_Object_Unit_byGroup;
-    /*ELSE
-        INSERT INTO _tmpUnit (UnitId)
-           SELECT Object.Id FROM Object WHERE DescId = zc_Object_Unit();*/
-    END IF;
+           WHERE Object_Goods.DescId = zc_Object_Goods()
+             AND COALESCE (inGoodsGroupId, 0) = 0 AND COALESCE (inGoodsId, 0) = 0
+          )
 
 
-    -- Результат
-    RETURN QUERY
-    WITH tmpListContainerSumm AS
+    , _tmpUnit AS (SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect WHERE inUnitId <> 0)
+
+
+    , tmpListContainerSumm AS
                       (SELECT ContainerLO_Juridical.ObjectId         AS JuridicalId
                             , ContainerLinkObject_InfoMoney.ObjectId AS InfoMoneyId
                             , MIContainer.ObjectExtId_analyzer       AS PartnerId
@@ -367,7 +341,7 @@ BEGIN
                         , tmpListContainerSumm.MeasureId
                         , tmpListContainerSumm.Price
                 )
-
+    -- Результат
     SELECT tmpOperationGroup.ItemName
          , tmpOperationGroup.InvNumber
          , tmpOperationGroup.OperDate
