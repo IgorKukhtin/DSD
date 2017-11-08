@@ -4,7 +4,7 @@ inherited Report_PromoForm: TReport_PromoForm
   ClientWidth = 833
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
   ExplicitWidth = 849
-  ExplicitHeight = 469
+  ExplicitHeight = 472
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -253,6 +253,15 @@ inherited Report_PromoForm: TReport_PromoForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 54
+          end
+          object GoodsKindName_List: TcxGridDBColumn
+            Caption = #1042#1080#1076' ('#1089#1087#1088#1072#1074#1086#1095#1085#1086')'
+            DataBinding.FieldName = 'GoodsKindName_List'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1089#1087#1088#1072#1074#1086#1095#1085#1086')'
+            Options.Editing = False
+            Width = 77
           end
           object GoodsWeight: TcxGridDBColumn
             Caption = #1042#1077#1089
@@ -671,10 +680,10 @@ inherited Report_PromoForm: TReport_PromoForm
     end
   end
   inherited MasterDS: TDataSource
-    Top = 144
+    Top = 208
   end
   inherited MasterCDS: TClientDataSet
-    Top = 144
+    Top = 208
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Report_Promo'
@@ -719,10 +728,12 @@ inherited Report_PromoForm: TReport_PromoForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Top = 144
+    Left = 104
+    Top = 200
   end
   inherited BarManager: TdxBarManager
-    Top = 144
+    Left = 144
+    Top = 256
     DockControlHeights = (
       0
       0
@@ -840,6 +851,7 @@ inherited Report_PromoForm: TReport_PromoForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 420
+    Left = 604
+    Top = 8
   end
 end
