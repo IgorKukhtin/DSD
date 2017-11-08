@@ -23,7 +23,6 @@ $BODY$
   DECLARE vbTotalSummMVAT TFloat;
   DECLARE vbTotalSummPVAT TFloat;
   DECLARE vbInvNumber     TVarChar;
-  DECLARE vbisDeferred    Boolean;
 BEGIN
     vbUserId:= inSession;
 
@@ -34,13 +33,11 @@ BEGIN
         Movement.InvNumber          AS InvNumber,
         Movement_From.ObjectId      AS Unit_From,
         Movement_To.ObjectId        AS Unit_To,
-        COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean  AS isDeferred
     INTO
         outOperDate,
         vbInvNumber,
         vbUnit_From,
         vbUnit_To,
-        vbisDeferred
     FROM Movement
         INNER JOIN MovementLinkObject AS Movement_From
                                       ON Movement_From.MovementId = Movement.Id
@@ -48,9 +45,6 @@ BEGIN
         INNER JOIN MovementLinkObject AS Movement_To
                                       ON Movement_To.MovementId = Movement.Id
                                      AND Movement_To.DescId = zc_MovementLinkObject_To()
-        LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
-                                  ON MovementBoolean_Deferred.MovementId = Movement.Id
-                                 AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
     WHERE Movement.Id = inMovementId;
 
     -- дата накладной перемещения должна совпадать с текущей датой.
@@ -137,6 +131,7 @@ BEGIN
     IF vbGoodsName <> '' AND outOperDate <> CURRENT_DATE + INTERVAL '1 MONTH'
        AND vbUserId NOT IN (375661, 2301972) -- Зерин Юрий Геннадиевич
     THEN
+        IF
         RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам Кол-во получателя <%> отличается от Факт кол-ва <%>.', vbGoodsName, vbAmount, vbAmountManual;
     END IF;
 
@@ -228,13 +223,10 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummMVAT(), inMovementId, vbTotalSummMVAT);
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPVAT(), inMovementId, vbTotalSummPVAT);
      
-     --не меняем статус если документ отложен                           
-     IF vbisDeferred = FALSE 
-     THEN
-         UPDATE Movement 
-         SET StatusId = zc_Enum_Status_Complete() 
-         WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
-     END IF;
+     UPDATE Movement 
+     SET StatusId = zc_Enum_Status_Complete() 
+     WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

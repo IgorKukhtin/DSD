@@ -553,7 +553,16 @@ inherited SendForm: TSendForm
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
-    object spUpdateisDeferredNo: TdsdExecStoredProc [7]
+    object actCompleteDeff: TdsdExecStoredProc [2]
+      Category = 'Deferred'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProcList = <
+        item
+        end>
+      ImageIndex = 12
+    end
+    object spUpdateisDeferredNo: TdsdExecStoredProc [8]
       Category = 'Deferred'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -600,7 +609,7 @@ inherited SendForm: TSendForm
         item
         end>
     end
-    object actComplete: TdsdExecStoredProc [11]
+    object actComplete: TdsdExecStoredProc [12]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -631,7 +640,7 @@ inherited SendForm: TSendForm
         #1042#1053#1048#1052#1040#1053#1048#1045'! '#1042' '#1050#1040#1057#1057#1059' '#1041#1059#1044#1059#1058' '#1047#1040#1043#1056#1059#1046#1045#1053#1067' '#1082#1086#1083'-'#1074#1072' '#1080#1079' '#1082#1086#1083#1086#1085#1082#1080' "'#1050#1086#1083'-'#1074#1086' '#1087#1086#1083#1091 +
         #1095#1072#1090#1077#1083#1103'". '#1055#1056#1054#1042#1045#1056#1068#1058#1045' '#1048#1061'.'
     end
-    object actGoodsKindChoice: TOpenChoiceForm [15]
+    object actGoodsKindChoice: TOpenChoiceForm [16]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -658,9 +667,9 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    inherited actNewDocument: TdsdInsertUpdateAction [17]
+    inherited actNewDocument: TdsdInsertUpdateAction [18]
     end
-    inherited MultiAction: TMultiAction [18]
+    inherited MultiAction: TMultiAction [19]
     end
     object actRefreshPrice: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -1315,6 +1324,13 @@ inherited SendForm: TSendForm
         Name = 'isComplete'
         Value = Null
         Component = edisComplete
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDeferred'
+        Value = Null
+        Component = cbisDeferred
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
@@ -2162,8 +2178,8 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 296
-    Top = 280
+    Left = 264
+    Top = 288
   end
   object spInsert_Object_Price: TdsdStoredProc
     StoredProcName = 'gpInsert_Object_Price_BySend'
@@ -2226,7 +2242,7 @@ inherited SendForm: TSendForm
     Top = 344
   end
   object spUpdate_isDeferred_Yes: TdsdStoredProc
-    StoredProcName = 'gpUpdate_isDeferred'
+    StoredProcName = 'gpUpdate_Movement_Send_Deferred'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2257,7 +2273,7 @@ inherited SendForm: TSendForm
     Top = 219
   end
   object spUpdate_isDeferred_No: TdsdStoredProc
-    StoredProcName = 'gpUpdate_isDeferred'
+    StoredProcName = 'gpUpdate_Movement_Send_Deferred'
     DataSets = <>
     OutputType = otResult
     Params = <
