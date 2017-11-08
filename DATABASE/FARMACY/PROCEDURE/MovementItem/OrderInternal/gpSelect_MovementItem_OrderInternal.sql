@@ -894,6 +894,9 @@ BEGIN
                                                           ON MovementLinkObject_Unit.MovementId = Movement_Send.Id
                                                          AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_To()
                                                          AND MovementLinkObject_Unit.ObjectId = vbUnitId
+                            LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                                      ON MovementBoolean_Deferred.MovementId = Movement_Send.Id
+                                                     AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
                             -- закомментил - пусть будут все перемещения, не только Авто
                             /*INNER JOIN MovementBoolean AS MovementBoolean_isAuto
                                                        ON MovementBoolean_isAuto.MovementId = Movement_Send.Id
@@ -908,7 +911,8 @@ BEGIN
                        AND Movement_Send.OperDate < vbOperDateEnd
                        AND Movement_Send.DescId = zc_Movement_Send()
                        AND Movement_Send.StatusId = zc_Enum_Status_UnComplete()
-                     GROUP BY MI_Send.ObjectId 
+                       AND COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = FALSE
+                     GROUP BY MI_Send.ObjectId
                      HAVING SUM (MI_Send.Amount) <> 0 
                     )
 
