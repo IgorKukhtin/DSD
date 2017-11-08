@@ -21,7 +21,7 @@ BEGIN
      
      -- vbOperDate := '02.11.2017';
      -- vbOperDate := '08.11.2017';
-     -- vbOperDate := CURRENT_DATE;
+     vbOperDate := CURRENT_DATE;
 
      vbStartDate := (vbOperDate - INTERVAL '57 DAY') ::TDateTime;
      vbEndDate   := (vbOperDate - INTERVAL '2 DAY')  ::TDateTime;
@@ -70,10 +70,15 @@ BEGIN
                              , MovementItem.Id       AS MovementItemId
                              , Movement.isUnit
                         FROM ( SELECT Movement.Id
-                                    , Movement.OperDate
+                                    --, Movement.OperDate
+                                    , MD_OperDatePartner.ValueData AS OperDate
                                     , MovementLinkObject_To.ObjectId AS UnitId
                                     , CASE WHEN Object_From.DescId = zc_Object_Unit() THEN TRUE ELSE FALSE END AS isUnit 
-                               FROM Movement
+                               FROM MovementDate AS MD_OperDatePartner
+                                    INNER JOIN Movement ON Movement.Id       = MD_OperDatePartner.MovementId
+                                                       AND Movement.DescId   = zc_Movement_OrderExternal()
+                                                       AND Movement.StatusId = zc_Enum_Status_Complete()
+                               -- FROM Movement
                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                   ON MovementLinkObject_To.MovementId = Movement.Id
                                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -82,9 +87,11 @@ BEGIN
                                                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                                     LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId 
                                    
-                               WHERE Movement.OperDate BETWEEN vbStartDate AND vbEndDate
-                                 AND Movement.DescId = zc_Movement_OrderExternal()
-                                 AND Movement.StatusId = zc_Enum_Status_Complete()
+                               -- WHERE Movement.OperDate BETWEEN vbStartDate AND vbEndDate
+                               --   AND Movement.DescId = zc_Movement_OrderExternal()
+                               --   AND Movement.StatusId = zc_Enum_Status_Complete()
+                               WHERE MD_OperDatePartner.ValueData BETWEEN vbStartDate AND vbEndDate
+                                 AND MD_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                               ) AS Movement
                              INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                     AND MovementItem.DescId     = zc_MI_Master()
