@@ -156,6 +156,10 @@ type
     chRemains: TcxGridDBColumn;
     Remains_pack: TcxGridDBColumn;
     Income_PACK: TcxGridDBColumn;
+    chtId: TcxGridDBColumn;
+    Id: TcxGridDBColumn;
+    chId: TcxGridDBColumn;
+    Num: TcxGridDBColumn;
   private
     { Private declarations }
   public
