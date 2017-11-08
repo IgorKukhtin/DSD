@@ -74,10 +74,50 @@ RETURNS TABLE (UnitId Integer, UnitName TVarChar, GoodsId Integer
             , TotalOrderPromo       TFloat
             , TotalOrderBranch      TFloat
             , TotalAmountWithPromo  TFloat
-            , TotalOrderWithPromo   TFloat
+            , TotalOrderWithPromo   TFloat         
+--
+            , AmountPromoBranch1      TFloat
+            , AmountPromoBranch2      TFloat
+            , AmountPromoBranch3      TFloat
+            , AmountPromoBranch4      TFloat
+            , AmountPromoBranch5      TFloat
+            , AmountPromoBranch6      TFloat
+            , AmountPromoBranch7      TFloat
+            , TotalAmountPromoBranch  TFloat
+             
+            , OrderPromoBranch1       TFloat
+            , OrderPromoBranch2       TFloat
+            , OrderPromoBranch3       TFloat
+            , OrderPromoBranch4       TFloat
+            , OrderPromoBranch5       TFloat
+            , OrderPromoBranch6       TFloat
+            , OrderPromoBranch7       TFloat
+            , TotalOrderPromoBranch   TFloat
+
+            , AnalysisAmount1      TFloat
+            , AnalysisAmount2      TFloat
+            , AnalysisAmount3      TFloat
+            , AnalysisAmount4      TFloat
+            , AnalysisAmount5      TFloat
+            , AnalysisAmount6      TFloat
+            , AnalysisAmount7      TFloat
+            , TotalAnalysisAmount  TFloat
+            
+            , AnalysisOrder1      TFloat
+            , AnalysisOrder2      TFloat
+            , AnalysisOrder3      TFloat
+            , AnalysisOrder4      TFloat
+            , AnalysisOrder5      TFloat
+            , AnalysisOrder6      TFloat
+            , AnalysisOrder7      TFloat
+            , TotalAnalysisOrder  TFloat
+       
+       
              ) AS
 $BODY$
+   DECLARE vbWeek      TFloat;
 BEGIN
+       vbWeek := (SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.DescId = zc_ObjectFloat_GoodsReportSaleInf_Week());
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
@@ -103,53 +143,53 @@ BEGIN
             , Object_InfoMoney.ObjectCode          AS InfoMoneyCode
             , Object_InfoMoney.ValueData           AS InfoMoneyName
             
-            , ((ObjectFloat_Amount1.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)  ::TFloat       AS Amount1
-            , ((ObjectFloat_Amount2.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)  ::TFloat       AS Amount2
-            , ((ObjectFloat_Amount3.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)  ::TFloat       AS Amount3
-            , ((ObjectFloat_Amount4.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)  ::TFloat       AS Amount4
-            , ((ObjectFloat_Amount5.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)  ::TFloat       AS Amount5
-            , ((ObjectFloat_Amount6.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)  ::TFloat       AS Amount6
-            , ((ObjectFloat_Amount7.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)  ::TFloat       AS Amount7
+            , ((ObjectFloat_Amount1.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)  ::TFloat       AS Amount1
+            , ((ObjectFloat_Amount2.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)  ::TFloat       AS Amount2
+            , ((ObjectFloat_Amount3.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)  ::TFloat       AS Amount3
+            , ((ObjectFloat_Amount4.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)  ::TFloat       AS Amount4
+            , ((ObjectFloat_Amount5.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)  ::TFloat       AS Amount5
+            , ((ObjectFloat_Amount6.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)  ::TFloat       AS Amount6
+            , ((ObjectFloat_Amount7.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)  ::TFloat       AS Amount7
             
-            , ((ObjectFloat_Promo1.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)   ::TFloat       AS Promo1
-            , ((ObjectFloat_Promo2.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)   ::TFloat       AS Promo2
-            , ((ObjectFloat_Promo3.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)   ::TFloat       AS Promo3
-            , ((ObjectFloat_Promo4.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)   ::TFloat       AS Promo4
-            , ((ObjectFloat_Promo5.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)   ::TFloat       AS Promo5
-            , ((ObjectFloat_Promo6.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)   ::TFloat       AS Promo6
-            , ((ObjectFloat_Promo7.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)   ::TFloat       AS Promo7
+            , ((ObjectFloat_Promo1.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)   ::TFloat       AS Promo1
+            , ((ObjectFloat_Promo2.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)   ::TFloat       AS Promo2
+            , ((ObjectFloat_Promo3.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)   ::TFloat       AS Promo3
+            , ((ObjectFloat_Promo4.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)   ::TFloat       AS Promo4
+            , ((ObjectFloat_Promo5.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)   ::TFloat       AS Promo5
+            , ((ObjectFloat_Promo6.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)   ::TFloat       AS Promo6
+            , ((ObjectFloat_Promo7.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)   ::TFloat       AS Promo7
 
-            , ((ObjectFloat_Branch1.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)  ::TFloat       AS Branch1
-            , ((ObjectFloat_Branch2.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)  ::TFloat       AS Branch2
-            , ((ObjectFloat_Branch3.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)  ::TFloat       AS Branch3
-            , ((ObjectFloat_Branch4.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)  ::TFloat       AS Branch4
-            , ((ObjectFloat_Branch5.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)  ::TFloat       AS Branch5
-            , ((ObjectFloat_Branch6.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)  ::TFloat       AS Branch6
-            , ((ObjectFloat_Branch7.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)  ::TFloat       AS Branch7
+            , ((ObjectFloat_Branch1.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)  ::TFloat       AS Branch1
+            , ((ObjectFloat_Branch2.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)  ::TFloat       AS Branch2
+            , ((ObjectFloat_Branch3.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)  ::TFloat       AS Branch3
+            , ((ObjectFloat_Branch4.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)  ::TFloat       AS Branch4
+            , ((ObjectFloat_Branch5.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)  ::TFloat       AS Branch5
+            , ((ObjectFloat_Branch6.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)  ::TFloat       AS Branch6
+            , ((ObjectFloat_Branch7.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)  ::TFloat       AS Branch7
 
-            , ((ObjectFloat_Order1.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)   ::TFloat       AS Order1
-            , ((ObjectFloat_Order2.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)   ::TFloat       AS Order2
-            , ((ObjectFloat_Order3.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)   ::TFloat       AS Order3
-            , ((ObjectFloat_Order4.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)   ::TFloat       AS Order4
-            , ((ObjectFloat_Order5.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)   ::TFloat       AS Order5
-            , ((ObjectFloat_Order6.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)   ::TFloat       AS Order6
-            , ((ObjectFloat_Order7.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)   ::TFloat       AS Order7
+            , ((ObjectFloat_Order1.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)   ::TFloat       AS Order1
+            , ((ObjectFloat_Order2.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)   ::TFloat       AS Order2
+            , ((ObjectFloat_Order3.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)   ::TFloat       AS Order3
+            , ((ObjectFloat_Order4.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)   ::TFloat       AS Order4
+            , ((ObjectFloat_Order5.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)   ::TFloat       AS Order5
+            , ((ObjectFloat_Order6.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)   ::TFloat       AS Order6
+            , ((ObjectFloat_Order7.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)   ::TFloat       AS Order7
 
-            , ((ObjectFloat_OrderPromo1.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)   ::TFloat  AS OrderPromo1
-            , ((ObjectFloat_OrderPromo2.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)   ::TFloat  AS OrderPromo2
-            , ((ObjectFloat_OrderPromo3.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)   ::TFloat  AS OrderPromo3
-            , ((ObjectFloat_OrderPromo4.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)   ::TFloat  AS OrderPromo4
-            , ((ObjectFloat_OrderPromo5.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)   ::TFloat  AS OrderPromo5
-            , ((ObjectFloat_OrderPromo6.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)   ::TFloat  AS OrderPromo6
-            , ((ObjectFloat_OrderPromo7.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)   ::TFloat  AS OrderPromo7
+            , ((ObjectFloat_OrderPromo1.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)   ::TFloat  AS OrderPromo1
+            , ((ObjectFloat_OrderPromo2.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)   ::TFloat  AS OrderPromo2
+            , ((ObjectFloat_OrderPromo3.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)   ::TFloat  AS OrderPromo3
+            , ((ObjectFloat_OrderPromo4.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)   ::TFloat  AS OrderPromo4
+            , ((ObjectFloat_OrderPromo5.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)   ::TFloat  AS OrderPromo5
+            , ((ObjectFloat_OrderPromo6.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)   ::TFloat  AS OrderPromo6
+            , ((ObjectFloat_OrderPromo7.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)   ::TFloat  AS OrderPromo7
                                                    
-            , ((ObjectFloat_OrderBranch1.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)  ::TFloat  AS OrderBranch1
-            , ((ObjectFloat_OrderBranch2.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)  ::TFloat  AS OrderBranch2
-            , ((ObjectFloat_OrderBranch3.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)  ::TFloat  AS OrderBranch3
-            , ((ObjectFloat_OrderBranch4.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)  ::TFloat  AS OrderBranch4
-            , ((ObjectFloat_OrderBranch5.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)  ::TFloat  AS OrderBranch5
-            , ((ObjectFloat_OrderBranch6.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)  ::TFloat  AS OrderBranch6
-            , ((ObjectFloat_OrderBranch7.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) /8)  ::TFloat  AS OrderBranch7
+            , ((ObjectFloat_OrderBranch1.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)  ::TFloat  AS OrderBranch1
+            , ((ObjectFloat_OrderBranch2.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)  ::TFloat  AS OrderBranch2
+            , ((ObjectFloat_OrderBranch3.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)  ::TFloat  AS OrderBranch3
+            , ((ObjectFloat_OrderBranch4.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)  ::TFloat  AS OrderBranch4
+            , ((ObjectFloat_OrderBranch5.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)  ::TFloat  AS OrderBranch5
+            , ((ObjectFloat_OrderBranch6.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)  ::TFloat  AS OrderBranch6
+            , ((ObjectFloat_OrderBranch7.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) / vbWeek)  ::TFloat  AS OrderBranch7
 
             ,((COALESCE (ObjectFloat_Amount1.ValueData, 0)
              + COALESCE (ObjectFloat_Amount2.ValueData, 0)
@@ -236,7 +276,79 @@ BEGIN
              + COALESCE (ObjectFloat_OrderPromo6.ValueData, 0)
              + COALESCE (ObjectFloat_OrderPromo7.ValueData, 0))
              * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) ::TFloat AS TotalOrderWithPromo      
+      
+            ---- 1 кол расх (реализ + акции + на филиал)
+            , ((COALESCE (ObjectFloat_Amount1.ValueData, 0) + COALESCE (ObjectFloat_Promo1.ValueData, 0) + COALESCE (ObjectFloat_Branch1.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeek ) ::TFloat AS AmountPromoBranch1
+            , ((COALESCE (ObjectFloat_Amount2.ValueData, 0) + COALESCE (ObjectFloat_Promo2.ValueData, 0) + COALESCE (ObjectFloat_Branch2.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeek ) ::TFloat AS AmountPromoBranch2
+            , ((COALESCE (ObjectFloat_Amount3.ValueData, 0) + COALESCE (ObjectFloat_Promo3.ValueData, 0) + COALESCE (ObjectFloat_Branch3.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeek ) ::TFloat AS AmountPromoBranch3
+            , ((COALESCE (ObjectFloat_Amount4.ValueData, 0) + COALESCE (ObjectFloat_Promo4.ValueData, 0) + COALESCE (ObjectFloat_Branch4.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeek ) ::TFloat AS AmountPromoBranch4
+            , ((COALESCE (ObjectFloat_Amount5.ValueData, 0) + COALESCE (ObjectFloat_Promo5.ValueData, 0) + COALESCE (ObjectFloat_Branch5.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeek ) ::TFloat AS AmountPromoBranch5
+            , ((COALESCE (ObjectFloat_Amount6.ValueData, 0) + COALESCE (ObjectFloat_Promo6.ValueData, 0) + COALESCE (ObjectFloat_Branch6.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeek ) ::TFloat AS AmountPromoBranch6
+            , ((COALESCE (ObjectFloat_Amount7.ValueData, 0) + COALESCE (ObjectFloat_Promo7.ValueData, 0) + COALESCE (ObjectFloat_Branch7.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeek ) ::TFloat AS AmountPromoBranch7
+ 
+            , (COALESCE (ObjectFloat_Amount1.ValueData, 0) + COALESCE (ObjectFloat_Promo1.ValueData, 0) + COALESCE (ObjectFloat_Branch1.ValueData, 0)
+             + COALESCE (ObjectFloat_Amount2.ValueData, 0) + COALESCE (ObjectFloat_Promo2.ValueData, 0) + COALESCE (ObjectFloat_Branch2.ValueData, 0)
+             + COALESCE (ObjectFloat_Amount3.ValueData, 0) + COALESCE (ObjectFloat_Promo3.ValueData, 0) + COALESCE (ObjectFloat_Branch3.ValueData, 0)
+             + COALESCE (ObjectFloat_Amount4.ValueData, 0) + COALESCE (ObjectFloat_Promo4.ValueData, 0) + COALESCE (ObjectFloat_Branch4.ValueData, 0)
+             + COALESCE (ObjectFloat_Amount5.ValueData, 0) + COALESCE (ObjectFloat_Promo5.ValueData, 0) + COALESCE (ObjectFloat_Branch5.ValueData, 0)
+             + COALESCE (ObjectFloat_Amount6.ValueData, 0) + COALESCE (ObjectFloat_Promo6.ValueData, 0) + COALESCE (ObjectFloat_Branch6.ValueData, 0)
+             + COALESCE (ObjectFloat_Amount7.ValueData, 0) + COALESCE (ObjectFloat_Promo7.ValueData, 0) + COALESCE (ObjectFloat_Branch7.ValueData, 0)
+             * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) ::TFloat AS TotalAmountPromoBranch--итого кол расх (реализ + акции + на филиал)
+             
+            ---- 2  кол заявки(заявки + акции +  филиал)
+            , ((COALESCE (ObjectFloat_Order1.ValueData, 0) + COALESCE (ObjectFloat_OrderPromo1.ValueData, 0) + COALESCE (ObjectFloat_OrderBranch1.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeek ) ::TFloat AS OrderPromoBranch1
+            , ((COALESCE (ObjectFloat_Order2.ValueData, 0) + COALESCE (ObjectFloat_OrderPromo2.ValueData, 0) + COALESCE (ObjectFloat_OrderBranch2.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeek ) ::TFloat AS OrderPromoBranch2
+            , ((COALESCE (ObjectFloat_Order3.ValueData, 0) + COALESCE (ObjectFloat_OrderPromo3.ValueData, 0) + COALESCE (ObjectFloat_OrderBranch3.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeek ) ::TFloat AS OrderPromoBranch3
+            , ((COALESCE (ObjectFloat_Order4.ValueData, 0) + COALESCE (ObjectFloat_OrderPromo4.ValueData, 0) + COALESCE (ObjectFloat_OrderBranch4.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeek ) ::TFloat AS OrderPromoBranch4
+            , ((COALESCE (ObjectFloat_Order5.ValueData, 0) + COALESCE (ObjectFloat_OrderPromo5.ValueData, 0) + COALESCE (ObjectFloat_OrderBranch5.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeek ) ::TFloat AS OrderPromoBranch5
+            , ((COALESCE (ObjectFloat_Order6.ValueData, 0) + COALESCE (ObjectFloat_OrderPromo6.ValueData, 0) + COALESCE (ObjectFloat_OrderBranch6.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeek ) ::TFloat AS OrderPromoBranch6
+            , ((COALESCE (ObjectFloat_Order7.ValueData, 0) + COALESCE (ObjectFloat_OrderPromo7.ValueData, 0) + COALESCE (ObjectFloat_OrderBranch7.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeek ) ::TFloat AS OrderPromoBranch7
+ 
+            , (COALESCE (ObjectFloat_Order1.ValueData, 0) + COALESCE (ObjectFloat_OrderPromo1.ValueData, 0) + COALESCE (ObjectFloat_OrderBranch1.ValueData, 0)
+             + COALESCE (ObjectFloat_Order2.ValueData, 0) + COALESCE (ObjectFloat_OrderPromo2.ValueData, 0) + COALESCE (ObjectFloat_OrderBranch2.ValueData, 0)
+             + COALESCE (ObjectFloat_Order3.ValueData, 0) + COALESCE (ObjectFloat_OrderPromo3.ValueData, 0) + COALESCE (ObjectFloat_OrderBranch3.ValueData, 0)
+             + COALESCE (ObjectFloat_Order4.ValueData, 0) + COALESCE (ObjectFloat_OrderPromo4.ValueData, 0) + COALESCE (ObjectFloat_OrderBranch4.ValueData, 0)
+             + COALESCE (ObjectFloat_Order5.ValueData, 0) + COALESCE (ObjectFloat_OrderPromo5.ValueData, 0) + COALESCE (ObjectFloat_OrderBranch5.ValueData, 0)
+             + COALESCE (ObjectFloat_Order6.ValueData, 0) + COALESCE (ObjectFloat_OrderPromo6.ValueData, 0) + COALESCE (ObjectFloat_OrderBranch6.ValueData, 0)
+             + COALESCE (ObjectFloat_Order7.ValueData, 0) + COALESCE (ObjectFloat_OrderPromo7.ValueData, 0) + COALESCE (ObjectFloat_OrderBranch7.ValueData, 0)
+             * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) ::TFloat AS TotalOrderPromoBranch--итого 
 
+            ---- 3 анализ расх (реализ + на филиал) 
+            , ((COALESCE (ObjectFloat_Amount1.ValueData, 0) + COALESCE (ObjectFloat_Branch1.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeek ) ::TFloat AS AnalysisAmount1
+            , ((COALESCE (ObjectFloat_Amount2.ValueData, 0) + COALESCE (ObjectFloat_Branch2.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeek ) ::TFloat AS AnalysisAmount2
+            , ((COALESCE (ObjectFloat_Amount3.ValueData, 0) + COALESCE (ObjectFloat_Branch3.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeek ) ::TFloat AS AnalysisAmount3
+            , ((COALESCE (ObjectFloat_Amount4.ValueData, 0) + COALESCE (ObjectFloat_Branch4.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeek ) ::TFloat AS AnalysisAmount4
+            , ((COALESCE (ObjectFloat_Amount5.ValueData, 0) + COALESCE (ObjectFloat_Branch5.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeek ) ::TFloat AS AnalysisAmount5
+            , ((COALESCE (ObjectFloat_Amount6.ValueData, 0) + COALESCE (ObjectFloat_Branch6.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeek ) ::TFloat AS AnalysisAmount6
+            , ((COALESCE (ObjectFloat_Amount7.ValueData, 0) + COALESCE (ObjectFloat_Branch7.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeek ) ::TFloat AS AnalysisAmount7
+ 
+            , (COALESCE (ObjectFloat_Amount1.ValueData, 0)  + COALESCE (ObjectFloat_Branch1.ValueData, 0)
+             + COALESCE (ObjectFloat_Amount2.ValueData, 0)  + COALESCE (ObjectFloat_Branch2.ValueData, 0)
+             + COALESCE (ObjectFloat_Amount3.ValueData, 0)  + COALESCE (ObjectFloat_Branch3.ValueData, 0)
+             + COALESCE (ObjectFloat_Amount4.ValueData, 0)  + COALESCE (ObjectFloat_Branch4.ValueData, 0)
+             + COALESCE (ObjectFloat_Amount5.ValueData, 0)  + COALESCE (ObjectFloat_Branch5.ValueData, 0)
+             + COALESCE (ObjectFloat_Amount6.ValueData, 0)  + COALESCE (ObjectFloat_Branch6.ValueData, 0)
+             + COALESCE (ObjectFloat_Amount7.ValueData, 0)  + COALESCE (ObjectFloat_Branch7.ValueData, 0)
+             * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) ::TFloat AS TotalAnalysisAmount--итого кол расх (реализ + акции + на филиал)
+
+            ---- 4 итого анализ заявки(заявки + филиал)
+            , ((COALESCE (ObjectFloat_Order1.ValueData, 0) + COALESCE (ObjectFloat_OrderBranch1.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeek ) ::TFloat AS AnalysisOrder1
+            , ((COALESCE (ObjectFloat_Order2.ValueData, 0) + COALESCE (ObjectFloat_OrderBranch2.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeek ) ::TFloat AS AnalysisOrder2
+            , ((COALESCE (ObjectFloat_Order3.ValueData, 0) + COALESCE (ObjectFloat_OrderBranch3.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeek ) ::TFloat AS AnalysisOrder3
+            , ((COALESCE (ObjectFloat_Order4.ValueData, 0) + COALESCE (ObjectFloat_OrderBranch4.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeek ) ::TFloat AS AnalysisOrder4
+            , ((COALESCE (ObjectFloat_Order5.ValueData, 0) + COALESCE (ObjectFloat_OrderBranch5.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeek ) ::TFloat AS AnalysisOrder5
+            , ((COALESCE (ObjectFloat_Order6.ValueData, 0) + COALESCE (ObjectFloat_OrderBranch6.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeek ) ::TFloat AS AnalysisOrder6
+            , ((COALESCE (ObjectFloat_Order7.ValueData, 0) + COALESCE (ObjectFloat_OrderBranch7.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeek ) ::TFloat AS AnalysisOrder7
+ 
+            , (COALESCE (ObjectFloat_Order1.ValueData, 0) + COALESCE (ObjectFloat_OrderBranch1.ValueData, 0)
+             + COALESCE (ObjectFloat_Order2.ValueData, 0) + COALESCE (ObjectFloat_OrderBranch2.ValueData, 0)
+             + COALESCE (ObjectFloat_Order3.ValueData, 0) + COALESCE (ObjectFloat_OrderBranch3.ValueData, 0)
+             + COALESCE (ObjectFloat_Order4.ValueData, 0) + COALESCE (ObjectFloat_OrderBranch4.ValueData, 0)
+             + COALESCE (ObjectFloat_Order5.ValueData, 0) + COALESCE (ObjectFloat_OrderBranch5.ValueData, 0)
+             + COALESCE (ObjectFloat_Order6.ValueData, 0) + COALESCE (ObjectFloat_OrderBranch6.ValueData, 0)
+             + COALESCE (ObjectFloat_Order7.ValueData, 0) + COALESCE (ObjectFloat_OrderBranch7.ValueData, 0)
+             * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) ::TFloat AS TotalAnalysisOrder --итого кол расх (реализ + акции + на филиал)
+             
        FROM Object AS Object_GoodsReportSale
        
             LEFT JOIN ObjectFloat AS ObjectFloat_Amount1

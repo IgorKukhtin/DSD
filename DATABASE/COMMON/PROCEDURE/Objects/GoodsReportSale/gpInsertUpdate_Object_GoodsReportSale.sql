@@ -15,6 +15,7 @@ $BODY$
    DECLARE vbOperDate  TDateTime;
    DECLARE vbStartDate TDateTime;
    DECLARE vbEndDate   TDateTime;
+   DECLARE vbWeek      TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GoodsReportSale());
@@ -25,12 +26,13 @@ BEGIN
 
      vbStartDate := (vbOperDate - INTERVAL '57 DAY') ::TDateTime;
      vbEndDate   := (vbOperDate - INTERVAL '2 DAY')  ::TDateTime;
+     vbWeek      := (ROUND( (date_part('DAY', vbEndDate - vbStartDate) / 7) ::TFloat, 0)) ::TFloat;
      
      -- сохраняем zc_Object_GoodsReportSaleInf
      PERFORM lpInsertUpdate_Object_GoodsReportSaleInf (inId := COALESCE ((SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsReportSaleInf()) , 0) ::Integer
                                                      , inStartDate := vbStartDate
                                                      , inEndDate   := vbEndDate
-                                                     , inWeek      := 8          ::TFloat
+                                                     , inWeek      := vbWeek
                                                      , inUserId    := vbUserId
                                                        );
      --
