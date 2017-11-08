@@ -408,6 +408,23 @@ BEGIN
                                                                AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                                AND MIContainer.AccountId NOT IN (zc_Enum_Account_100301() -- Собственный капитал + Прибыль текущего периода
                                                                                                , zc_Enum_Account_110101() -- Транзит + товар в пути
+                                                                                               , zc_Enum_Account_110102() -- Транзит + товар в пути
+                                                                                               , zc_Enum_Account_110111() -- Транзит + товар в пути
+                                                                                               , zc_Enum_Account_110112() -- Транзит + товар в пути
+                                                                                               , zc_Enum_Account_110121() -- Транзит + товар в пути
+                                                                                               , zc_Enum_Account_110122() -- Транзит + товар в пути
+                                                                                               , zc_Enum_Account_110131() -- Транзит + товар в пути
+                                                                                               , zc_Enum_Account_110132() -- Транзит + товар в пути
+
+                                                                                               , zc_Enum_Account_110151() -- Транзит + Прибыль в пути
+                                                                                               , zc_Enum_Account_110152() -- Транзит + Прибыль в пути
+                                                                                               , zc_Enum_Account_110161() -- Транзит + Прибыль в пути
+                                                                                               , zc_Enum_Account_110162() -- Транзит + Прибыль в пути
+                                                                                               , zc_Enum_Account_110171() -- Транзит + Прибыль в пути
+                                                                                               , zc_Enum_Account_110172() -- Транзит + Прибыль в пути
+                                                                                               , zc_Enum_Account_110181() -- Транзит + Прибыль в пути
+                                                                                               , zc_Enum_Account_110182() -- Транзит + Прибыль в пути
+
                                                                                                , zc_Enum_AnalyzerId_SummIn_110101()
                                                                                                , zc_Enum_AnalyzerId_SummOut_110101()
                                                                                                , zc_Enum_AnalyzerId_SummIn_80401()
