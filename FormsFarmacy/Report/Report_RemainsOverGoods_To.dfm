@@ -2301,8 +2301,8 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
   object ChildCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
-    IndexFieldNames = 'GoodsId'
-    MasterFields = 'GoodsId'
+    IndexFieldNames = 'GoodsMainId'
+    MasterFields = 'GoodsMainId'
     MasterSource = MasterDS
     PacketRecords = 0
     Params = <>

@@ -1023,9 +1023,6 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     object cxTabSheetTotal: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridTotal: TcxGrid
         Left = 0
         Top = 0
@@ -1781,38 +1778,38 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
-item
-        Name = 'isAssortment'
-        Value = Null
-        Component = cbAssortment
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Assortment'
-        Value = Null
-        Component = edAssortment
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isTerm'
-        Value = Null
-        Component = cbTerm
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Term'
-        Value = Null
-        Component = edTerm
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
+        item
+          Name = 'isAssortment'
+          Value = Null
+          Component = cbAssortment
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Assortment'
+          Value = Null
+          Component = edAssortment
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isTerm'
+          Value = Null
+          Component = cbTerm
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Term'
+          Value = Null
+          Component = edTerm
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
@@ -2284,8 +2281,8 @@ item
   object ChildCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
-    IndexFieldNames = 'GoodsId'
-    MasterFields = 'GoodsId'
+    IndexFieldNames = 'GoodsMainId'
+    MasterFields = 'GoodsMainId'
     MasterSource = MasterDS
     PacketRecords = 0
     Params = <>

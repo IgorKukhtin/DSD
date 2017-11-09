@@ -22,6 +22,7 @@ $BODY$
    DECLARE vbMovementItemId Integer;
    DECLARE vbMovementItemChildId Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbGoodsMainId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Over());
@@ -45,13 +46,47 @@ BEGIN
           RAISE EXCEPTION 'Ошибка.Документ не определен.';
       END IF;
 
-      
+      -- получаем GoodsMainId длясвязи товаров из разных сетей
+      vbGoodsMainId := (SELECT ObjectLink_Main.ChildObjectId AS GoodsMainId
+                        FROM ObjectLink AS ObjectLink_Child
+                             LEFT JOIN ObjectLink AS ObjectLink_Main 
+                                    ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                   AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                        WHERE ObjectLink_Child.ChildObjectId = inGoodsId
+                          AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+                        );
+                        
+                        
       -- поиск строки Master (ключ - ид документа, товар)
       vbMovementItemId:= (SELECT MovementItem.Id
                           FROM MovementItem
+                            /*   INNER JOIN (SELECT DISTINCT ObjectLink_Child_NB.ChildObjectId AS GoodsId
+                                           FROM ObjectLink AS ObjectLink_Child
+                                                LEFT JOIN ObjectLink AS ObjectLink_Main 
+                                                       ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                      AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                   
+                                                INNER JOIN ObjectLink AS ObjectLink_Main_NB ON ObjectLink_Main_NB.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                                                  AND ObjectLink_Main_NB.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                                INNER JOIN ObjectLink AS ObjectLink_Child_NB ON ObjectLink_Child_NB.ObjectId = ObjectLink_Main_NB.ObjectId
+                                                                                                   AND ObjectLink_Child_NB.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                                         
+                                                     AND COALESCE (ObjectLink_Child_NB.ChildObjectId, 0) <> 0
+                                           WHERE ObjectLink_Child.ChildObjectId = inGoodsId
+                                             AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                           ) AS tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId 
+                          */
+                               -- получаем GoodsMainId
+                               LEFT JOIN  ObjectLink AS ObjectLink_Child 
+                                                     ON ObjectLink_Child.ChildObjectId = MovementItem.ObjectId
+                                                    AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+                               INNER JOIN  ObjectLink AS ObjectLink_Main 
+                                                      ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                     AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                                                     AND ObjectLink_Main.ChildObjectId = vbGoodsMainId
                           WHERE MovementItem.MovementId = vbMovementId 
                             AND MovementItem.DescId     = zc_MI_Master()
-                            AND MovementItem.ObjectId   = inGoodsId
+--                            AND MovementItem.ObjectId   = inGoodsId
                             AND MovementItem.isErased   = FALSE
                          );
       /*-- проверка

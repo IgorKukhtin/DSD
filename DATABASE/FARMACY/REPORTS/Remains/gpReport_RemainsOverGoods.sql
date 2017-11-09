@@ -75,7 +75,7 @@ BEGIN
 
 
     -- Таблицы
-    CREATE TEMP TABLE tmpGoods_list (GoodsId Integer, UnitId Integer, PriceId Integer, MCSValue TFloat, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpGoods_list (GoodsMainId Integer, GoodsId Integer, UnitId Integer, PriceId Integer, MCSValue TFloat, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpRemains_1 (GoodsId Integer, UnitId Integer, RemainsStart TFloat, ContainerId Integer, PRIMARY KEY (UnitId, GoodsId,ContainerId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpRemains (GoodsId Integer, UnitId Integer, RemainsStart TFloat, RemainsStart_save TFloat, MinExpirationDate TDateTime, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpMCS (GoodsId Integer, UnitId Integer, MCSValue TFloat, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
@@ -86,7 +86,7 @@ BEGIN
     CREATE TEMP TABLE tmpPrice (PriceId Integer, UnitId Integer, GoodsId Integer, MCSValue TFloat) ON COMMIT DROP;
 
     -- Таблица - Результат
-    CREATE TEMP TABLE tmpData (GoodsId Integer, UnitId Integer, MCSValue TFloat
+    CREATE TEMP TABLE tmpData (GoodsMainId Integer, GoodsId Integer, UnitId Integer, MCSValue TFloat
                              , Price TFloat, StartDate TDateTime, EndDate TDateTime, MinExpirationDate TDateTime
                              , RemainsStart TFloat, SummaRemainsStart TFloat
                              , RemainsMCS_from TFloat, SummaRemainsMCS_from TFloat
@@ -95,7 +95,7 @@ BEGIN
                              , PRIMARY KEY (UnitId, GoodsId)
                               ) ON COMMIT DROP;
     -- Таблица - Результат
-    CREATE TEMP TABLE tmpDataTo (GoodsId Integer, UnitId Integer, RemainsMCS_result TFloat, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpDataTo (GoodsId Integer, GoodsMainId Integer, UnitId Integer, RemainsMCS_result TFloat, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
 
 
       -- ищем ИД документа Распределений остатков (ключ - дата, Подразделение) 
@@ -150,7 +150,7 @@ BEGIN
                           UNION
                            SELECT ObjectBoolean_Over.ObjectId  AS UnitId
                            FROM ObjectBoolean AS ObjectBoolean_Over
-
+                                /*
                                    INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                                          ON ObjectLink_Unit_Juridical.ObjectId = ObjectBoolean_Over.ObjectId --Container.WhereObjectId
                                                         AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
@@ -158,7 +158,7 @@ BEGIN
                                                          ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
                                                         AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                                                         AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
-
+                                */
                            WHERE ObjectBoolean_Over.DescId = zc_ObjectBoolean_Unit_Over()
                              AND ObjectBoolean_Over.ValueData = TRUE;
                            
@@ -310,29 +310,35 @@ BEGIN
                                             AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue();
 
        -- Goods_list
-       INSERT INTO tmpGoods_list (GoodsId, UnitId, PriceId, MCSValue)
-               SELECT tmpRemains.GoodsId, tmpRemains.UnitId, 0 AS PriceId, 0 :: TFloat AS MCSValue 
-               FROM tmpRemains
-              UNION 
-               SELECT tmpPrice.GoodsId, tmpPrice.UnitId, 0 AS PriceId, 0 :: TFloat AS MCSValue 
-               FROM tmpPrice
-               WHERE tmpPrice.MCSValue <> 0 AND inisInMCS = TRUE
-              UNION
-               SELECT tmpMCS.GoodsId, tmpMCS.UnitId, 0 AS PriceId, 0 :: TFloat AS MCSValue 
-               FROM tmpMCS
-               WHERE inisInMCS = FALSE
-        ;
-  
-       -- Goods_list - PriceId
-       /*UPDATE tmpGoods_list SET PriceId = Price_Goods.ObjectId
-       FROM ObjectLink AS Price_Goods, ObjectLink AS Price_Unit
-       WHERE Price_Goods.ChildObjectId = tmpGoods_list.GoodsId
-         AND Price_Goods.DescId        = zc_ObjectLink_Price_Goods()
-         AND Price_Unit.ObjectId       = Price_Goods.ObjectId
-         AND Price_Unit.ChildObjectId  = tmpGoods_list.UnitId
-         AND Price_Unit.DescId         = zc_ObjectLink_Price_Unit();
-*/
+       INSERT INTO tmpGoods_list (GoodsMainId, GoodsId, UnitId, PriceId, MCSValue)
+               SELECT DISTINCT
+                      ObjectLink_Main.ChildObjectId AS GoodsMainId
+                    , tmp.GoodsId
+                    , tmp.UnitId
+                    , tmp.PriceId
+                    , tmp.MCSValue 
+               FROM (
+                     SELECT tmpRemains.GoodsId, tmpRemains.UnitId, 0 AS PriceId, 0 :: TFloat AS MCSValue 
+                     FROM tmpRemains
+                    UNION 
+                     SELECT tmpPrice.GoodsId, tmpPrice.UnitId, 0 AS PriceId, 0 :: TFloat AS MCSValue 
+                     FROM tmpPrice
+                     WHERE tmpPrice.MCSValue <> 0 AND inisInMCS = TRUE
+                    UNION
+                     SELECT tmpMCS.GoodsId, tmpMCS.UnitId, 0 AS PriceId, 0 :: TFloat AS MCSValue 
+                     FROM tmpMCS
+                     WHERE inisInMCS = FALSE
+                    ) AS tmp
+                    -- получаем GoodsMainId
+                  LEFT JOIN  ObjectLink AS ObjectLink_Child 
+                                        ON ObjectLink_Child.ChildObjectId = tmp.GoodsId
+                                       AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+                  LEFT JOIN  ObjectLink AS ObjectLink_Main 
+                                        ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                       AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain();
 
+
+       -- Goods_list - PriceId
        UPDATE tmpGoods_list SET PriceId = tmpPrice.PriceId
        FROM tmpPrice
        WHERE tmpPrice.GoodsId = tmpGoods_list.GoodsId
@@ -357,7 +363,7 @@ BEGIN
 
             
         -- Result
-        INSERT INTO tmpData  (GoodsId, UnitId, MCSValue 
+        INSERT INTO tmpData  (GoodsMainId, GoodsId, UnitId, MCSValue 
                             , Price, StartDate, EndDate, MinExpirationDate
                             , RemainsStart, SummaRemainsStart
                             , RemainsMCS_from, SummaRemainsMCS_from
@@ -370,7 +376,8 @@ BEGIN
                                      )
              -- Результат
              SELECT
-                 tmpGoods_list.GoodsId
+                 tmpGoods_list.GoodsMainId
+               , tmpGoods_list.GoodsId
                , tmpGoods_list.UnitId
                , tmpGoods_list.MCSValue
 
@@ -456,32 +463,30 @@ BEGIN
        
 
      -- !!!ResultTO!!!
-  WITH tmpDataFrom AS (SELECT GoodsId, RemainsMCS_from -- количество "излишков" в одной аптеке
+  WITH tmpDataFrom AS (SELECT GoodsMainId, GoodsId, RemainsMCS_from -- количество "излишков" в одной аптеке
                        FROM tmpData
                        WHERE UnitId = inUnitId AND RemainsMCS_from > 0
                       )
-       , tmpDataTo AS (SELECT UnitId, GoodsId, RemainsMCS_to -- количество "не хватает" в остальных аптеках
+       , tmpDataTo AS (SELECT UnitId, GoodsMainId, GoodsId, RemainsMCS_to -- количество "не хватает" в остальных аптеках
                        FROM tmpData
                        WHERE UnitId <> inUnitId AND RemainsMCS_to > 0
                       )
       , tmpDataAll AS (SELECT tmpDataTo.UnitId
+                            , tmpDataTo.GoodsMainId
                             , tmpDataTo.GoodsId
                             , tmpDataTo.RemainsMCS_to
                             , tmpDataFrom.RemainsMCS_from
                               -- "накопительная" сумма "не хватает" = все предыдущие + текущая запись , !!!обязательно сортировка аналогичная с № п/п!!!
-                            , SUM (tmpDataTo.RemainsMCS_to) OVER (PARTITION BY tmpDataTo.GoodsId ORDER BY tmpDataTo.RemainsMCS_to DESC, tmpDataTo.UnitId DESC) AS RemainsMCS_period
+                            , SUM (tmpDataTo.RemainsMCS_to) OVER (PARTITION BY tmpDataTo.GoodsMainId ORDER BY tmpDataTo.RemainsMCS_to DESC, tmpDataTo.UnitId DESC) AS RemainsMCS_period
                               -- № п/п, начинаем с максимального количества "не хватает"
-                            , ROW_NUMBER() OVER (PARTITION BY tmpDataTo.GoodsId ORDER BY tmpDataTo.RemainsMCS_to DESC, tmpDataTo.UnitId DESC) AS Ord
+                            , ROW_NUMBER() OVER (PARTITION BY tmpDataTo.GoodsMainId ORDER BY tmpDataTo.RemainsMCS_to DESC, tmpDataTo.UnitId DESC) AS Ord
                        FROM tmpDataFrom
-                            INNER JOIN tmpDataTo ON tmpDataTo.GoodsId = tmpDataFrom.GoodsId
+                            INNER JOIN tmpDataTo ON tmpDataTo.GoodsMainId = tmpDataFrom.GoodsMainId
                       )
-   INSERT INTO tmpDataTo (GoodsId, UnitId, RemainsMCS_result)
+   INSERT INTO tmpDataTo (GoodsId, GoodsMainId, UnitId, RemainsMCS_result)
    SELECT tmpDataAll.GoodsId
+        , tmpDataAll.GoodsMainId
         , tmpDataAll.UnitId
-        /*, tmpDataAll.RemainsMCS_from
-        , tmpDataAll.RemainsMCS_to
-        , tmpDataAll.RemainsMCS_period
-        , tmpDataAll.Ord*/
         , CASE -- для первого - учитывается ТОЛЬКО "не хватает"
                WHEN Ord = 1 THEN CASE WHEN RemainsMCS_to <= RemainsMCS_from THEN RemainsMCS_to ELSE RemainsMCS_from END
                -- для остальных - учитывается "накопительная" сумма "не хватает" !!!минус!!! то что в текущей записи
@@ -515,19 +520,19 @@ BEGIN
 
      OPEN Cursor1 FOR
      
-     WITH tmpChild AS (SELECT tmpData.GoodsId
+     WITH tmpChild AS (SELECT  tmpData.GoodsMainId  -- tmpData.GoodsId,
                             , SUM (tmpData.RemainsMCS_from) AS RemainsMCS_from, SUM (tmpData.SummaRemainsMCS_from) AS SummaRemainsMCS_from
                             , SUM (tmpData.RemainsMCS_to)   AS RemainsMCS_to,   SUM (tmpData.SummaRemainsMCS_to)   AS SummaRemainsMCS_to
                             , SUM (tmpData.MCSValue)                 AS MCSValue
                             , SUM (tmpData.MCSValue * tmpData.Price) AS SummaMCSValue
                        FROM tmpData
                        WHERE tmpData.UnitId <> inUnitId
-                       GROUP BY tmpData.GoodsId
+                       GROUP BY tmpData.GoodsMainId  --tmpData.GoodsId, 
                       )
-      , tmpChildTo AS (SELECT tmpDataTo.GoodsId
+      , tmpChildTo AS (SELECT tmpDataTo.GoodsMainId   --tmpDataTo.GoodsId, 
                             , SUM (tmpDataTo.RemainsMCS_result) AS RemainsMCS_result
                        FROM tmpDataTo
-                       GROUP BY tmpDataTo.GoodsId
+                       GROUP BY tmpDataTo.GoodsMainId  -- tmpDataTo.GoodsId,
                       )
           SELECT tmpData.StartDate
                , tmpData.EndDate
@@ -556,6 +561,7 @@ BEGIN
                , tmpData.AmountSend            :: TFloat  AS AmountSend
  
                , tmpData.GoodsId
+               , tmpData.GoodsMainId
 
                , Object_Goods.ObjectCode                      AS GoodsCode
                , Object_Goods.ValueData                       AS GoodsName
@@ -580,8 +586,8 @@ BEGIN
                                     AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                 LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId     
 
-                LEFT JOIN tmpChild ON tmpChild.GoodsId = tmpData.GoodsId
-                LEFT JOIN tmpChildTo ON tmpChildTo.GoodsId = tmpData.GoodsId
+                LEFT JOIN tmpChild ON tmpChild.GoodsMainId = tmpData.GoodsMainId
+                LEFT JOIN tmpChildTo ON tmpChildTo.GoodsMainId = tmpData.GoodsMainId
 
                 LEFT JOIN tmpMIMaster ON tmpMIMaster.GoodsId = tmpData.GoodsId
      WHERE tmpData.UnitId = inUnitId;
@@ -596,6 +602,7 @@ BEGIN
        SELECT    Object_Unit.Id        AS UnitId
                , Object_Unit.ValueDAta AS UnitName 
                , tmpData.GoodsId
+               , tmpData.GoodsMainId
                , Object_Goods.ObjectCode AS GoodsCode
                , tmpData.MCSValue
                , (tmpData.MCSValue * tmpData.Price) :: TFloat AS SummaMCSValue
@@ -641,6 +648,7 @@ BEGIN
        SELECT    Object_Unit.Id        AS UnitId
                , Object_Unit.ValueDAta AS UnitName 
                , tmpData.GoodsId
+               , tmpData.GoodsMainId
                , Object_Goods.ObjectCode AS GoodsCode
                , tmpData.MCSValue
                , (tmpData.MCSValue * tmpData.Price) :: TFloat AS SummaMCSValue
@@ -662,10 +670,14 @@ BEGIN
                , tmpData.MinExpirationDate
                   
      FROM tmpData
-          LEFT JOIN Object AS Object_Unit  ON Object_Unit.Id = tmpData.UnitId
-          LEFT JOIN Object AS Object_Goods  ON Object_Goods.Id = tmpData.GoodsId
-          LEFT JOIN tmpDataTo ON tmpDataTo.GoodsId = tmpData.GoodsId AND tmpDataTo.UnitId = tmpData.UnitId
-          LEFT JOIN tmpData AS tmpDataFrom ON tmpDataFrom.GoodsId = tmpData.GoodsId AND tmpDataFrom.UnitId = inUnitId
+          LEFT JOIN Object AS Object_Unit  ON Object_Unit.Id  = tmpData.UnitId
+          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
+          
+          LEFT JOIN tmpDataTo ON tmpDataTo.GoodsId = tmpData.GoodsId 
+                             AND tmpDataTo.UnitId  = tmpData.UnitId
+                             
+          LEFT JOIN tmpData AS tmpDataFrom ON tmpDataFrom.GoodsId = tmpData.GoodsId
+                                          AND tmpDataFrom.UnitId  = inUnitId
      WHERE tmpData.UnitId <> inUnitId
        AND tmpDataTo.RemainsMCS_result > 0
        -- AND (tmpDataTo.RemainsMCS_result > 0 OR tmpDataFrom.RemainsMCS_to > 0)
@@ -676,36 +688,39 @@ BEGIN
      -- Результат 4 итоги
      -- !!!дублируем Cursor2!!!
      OPEN Cursor4 FOR
-      SELECT    Object_Unit.Id        AS UnitId
-               , Object_Unit.ValueDAta AS UnitName 
-               , SUM(tmpData.MCSValue)  :: TFloat  AS MCSValue
-               , SUM(tmpData.MCSValue * tmpData.Price) :: TFloat AS SummaMCSValue
+     SELECT      Object_Unit.Id                                   AS UnitId
+               , Object_Unit.ValueDAta                            AS UnitName 
+               , SUM(tmpData.MCSValue)                 :: TFloat  AS MCSValue
+               , SUM(tmpData.MCSValue * tmpData.Price) :: TFloat  AS SummaMCSValue
 
-               , SUM(tmpData.RemainsStart) :: TFloat  AS  RemainsStart
-               , SUM(tmpData.SummaRemainsStart) :: TFloat  AS SummaRemainsStart
-               , SUM(tmpData.RemainsMCS_from) :: TFloat  AS RemainsMCS_from
-               , SUM(tmpData.SummaRemainsMCS_from) :: TFloat  AS SummaRemainsMCS_from
-               , SUM(tmpData.RemainsMCS_to) :: TFloat  AS RemainsMCS_to
-               , SUM(tmpData.SummaRemainsMCS_to) :: TFloat  AS SummaRemainsMCS_to
+               , SUM(tmpData.RemainsStart)             :: TFloat  AS RemainsStart
+               , SUM(tmpData.SummaRemainsStart)        :: TFloat  AS SummaRemainsStart
+               , SUM(tmpData.RemainsMCS_from)          :: TFloat  AS RemainsMCS_from
+               , SUM(tmpData.SummaRemainsMCS_from)     :: TFloat  AS SummaRemainsMCS_from
+               , SUM(tmpData.RemainsMCS_to)            :: TFloat  AS RemainsMCS_to
+               , SUM(tmpData.SummaRemainsMCS_to)       :: TFloat  AS SummaRemainsMCS_to
 
-               , SUM(tmpDataTo.RemainsMCS_result ) :: TFloat AS RemainsMCS_result
+               , SUM(tmpDataTo.RemainsMCS_result )     :: TFloat  AS RemainsMCS_result
                , SUM(tmpDataTo.RemainsMCS_result * tmpData.Price) :: TFloat AS SummaRemainsMCS_result
 
-               , SUM(COALESCE (tmpMIChild.Amount, 0)) :: TFloat  AS Amount_Over
-               , SUM(COALESCE (tmpMIChild.Summa, 0))  :: TFloat  AS Summa_Over
+               , SUM(COALESCE (tmpMIChild.Amount, 0))  :: TFloat  AS Amount_Over
+               , SUM(COALESCE (tmpMIChild.Summa, 0))   :: TFloat  AS Summa_Over
                , SUM(COALESCE (tmpDataTo.RemainsMCS_result, 0) - COALESCE (tmpMIChild.Amount, 0)) :: TFloat AS Amount_OverDiff
 
                , (CASE WHEN SUM(COALESCE(tmpData.SummaRemainsStart,0)) <>0 THEN (SUM(tmpData.SummaRemainsMCS_to) * 100 / SUM(tmpData.SummaRemainsStart)) ELSE  0 END) :: TFloat  AS Rersent_to
                , (CASE WHEN SUM(COALESCE(tmpData.SummaRemainsStart,0)) <>0 THEN (SUM(tmpData.SummaRemainsMCS_from) * 100 / SUM(tmpData.SummaRemainsStart)) ELSE  0 END)  :: TFloat  AS Rersent_from
      FROM tmpData
           LEFT JOIN Object AS Object_Unit  ON Object_Unit.Id = tmpData.UnitId
-          LEFT JOIN tmpDataTo ON tmpDataTo.GoodsId = tmpData.GoodsId AND tmpDataTo.UnitId = tmpData.UnitId
-          LEFT JOIN tmpData AS tmpDataFrom ON tmpDataFrom.GoodsId = tmpData.GoodsId AND tmpDataFrom.UnitId = inUnitId
+          
+          LEFT JOIN tmpDataTo ON tmpDataTo.GoodsId = tmpData.GoodsId
+                             AND tmpDataTo.UnitId  = tmpData.UnitId
+                             
+          LEFT JOIN tmpData AS tmpDataFrom ON tmpDataFrom.GoodsId = tmpData.GoodsId
+                                          AND tmpDataFrom.UnitId = inUnitId
 
           LEFT JOIN tmpMIChild ON tmpMIChild.GoodsId = tmpData.GoodsId
-                              AND tmpMIChild.UnitId = tmpData.UnitId
-     /*WHERE tmpData.UnitId <> inUnitId
-       AND tmpDataTo.RemainsMCS_result > 0 */   
+                              AND tmpMIChild.UnitId  = tmpData.UnitId
+ 
      GROUP BY Object_Unit.Id, Object_Unit.ValueDAta 
 
        ;
@@ -733,4 +748,5 @@ $BODY$
 
 /*
 SELECT * FROM gpReport_RemainsOverGoods(inUnitId := 183288 , inStartDate := ('23.02.2017')::TDateTime , inPeriod := 30 , inDay := 30 , inAssortment := 1 , inisMCS := 'False' , inisInMCS := 'True' , inisRecal := 'False' , inisAssortment := 'False' ,  inSession := '3')
+FETCH ALL "<unnamed portal 1>";
 */
