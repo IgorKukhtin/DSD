@@ -22,6 +22,12 @@ $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка
+     IF EXISTS (SELECT MIC.Id FROM MovementItemContainer AS MIC WHERE MIC.Movementid = ioId)
+     THEN
+          RAISE EXCEPTION 'Ошибка.Документ отложен, корректировка запрещена!';
+     END IF;
+     
+     -- проверка
      IF inOperDate <> DATE_TRUNC ('DAY', inOperDate)
      THEN
          RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
