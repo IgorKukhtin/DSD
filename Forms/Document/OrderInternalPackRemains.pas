@@ -155,7 +155,7 @@ type
     AmountPartnerTotal: TcxGridDBColumn;
     chRemains: TcxGridDBColumn;
     Remains_pack: TcxGridDBColumn;
-    Income_PACK: TcxGridDBColumn;
+    Income_PACK_from: TcxGridDBColumn;
     chtId: TcxGridDBColumn;
     Id: TcxGridDBColumn;
     chId: TcxGridDBColumn;
@@ -172,6 +172,14 @@ type
     chtRemains_err: TcxGridDBColumn;
     chDayCountForecast_calc: TcxGridDBColumn;
     chtDayCountForecast_calc: TcxGridDBColumn;
+    chtIncome_PACK_to: TcxGridDBColumn;
+    Income_PACK_to: TcxGridDBColumn;
+    spUpdateAmountSecond_toPACK: TdsdStoredProc;
+    spUpdateAmount_toPACK: TdsdStoredProc;
+    actUpdateAmount_toPACK: TdsdExecStoredProc;
+    actUpdateAmountSecond_toPACK: TdsdExecStoredProc;
+    bbUpdateAmount_toPACK: TdxBarButton;
+    bbUpdateAmountSecond_toPACK: TdxBarButton;
   private
     { Private declarations }
   public

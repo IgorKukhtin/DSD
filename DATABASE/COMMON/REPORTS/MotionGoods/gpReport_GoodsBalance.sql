@@ -202,8 +202,8 @@ BEGIN
     -- добавили
     UNION -- INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
        SELECT Object.Id
-                    , tmpCLODesc.DescId
-                    , tmpDesc.ContainerDescId
+            , tmpCLODesc.DescId
+            , tmpDesc.ContainerDescId
        FROM Object
             LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId) AS tmpDesc ON 1 = 1
             LEFT JOIN (SELECT zc_ContainerLinkObject_Car() AS DescId UNION SELECT zc_ContainerLinkObject_Member() AS DescId) AS tmpCLODesc ON 1 = 1
@@ -254,7 +254,7 @@ BEGIN
                 , Container.Amount
            FROM _tmpLocation
                 INNER JOIN ContainerLinkObject ON ContainerLinkObject.ObjectId = _tmpLocation.LocationId
-                                              AND ContainerLinkObject.DescId = _tmpLocation.DescId
+                                              AND ContainerLinkObject.DescId   = _tmpLocation.DescId
                 LEFT JOIN ContainerLinkObject AS CLO_Goods ON CLO_Goods.ContainerId = ContainerLinkObject.ContainerId
                                                           AND CLO_Goods.DescId = zc_ContainerLinkObject_Goods()
                                                           AND _tmpLocation.ContainerDescId = zc_Container_Summ()
@@ -270,11 +270,11 @@ BEGIN
                                                                         OR (CLO_Account.ContainerId IS NULL AND inAccountGroupId <> zc_Enum_AccountGroup_110000()) -- Транзит
                                                                          ))
                  )
-                AND inGoodsGroupId > 0 AND COALESCE (inGoodsId, 0) = 0
+             AND inGoodsGroupId > 0 AND COALESCE (inGoodsId, 0) = 0
 
 
              -- INSERT INTO _tmpListContainer (LocationId, ContainerDescId, ContainerId_count, ContainerId_begin, GoodsId, AccountId, AccountGroupId, Amount)
-              UNION
+              UNION ALL
                 SELECT _tmpLocation.LocationId
                      , _tmpLocation.ContainerDescId
                      , CASE WHEN _tmpLocation.ContainerDescId = zc_Container_Count()
@@ -309,7 +309,7 @@ BEGIN
                      )
                 AND inGoodsId > 0
 
-               UNION 
+               UNION ALL
                 SELECT _tmpLocation.LocationId
                      , _tmpLocation.ContainerDescId
                      , CASE WHEN _tmpLocation.ContainerDescId = zc_Container_Count()

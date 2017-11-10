@@ -1,11 +1,14 @@
 -- Function: gpUpdateMI_OrderInternal_Amount_toPACK()
 
 DROP FUNCTION IF EXISTS gpUpdateMI_OrderInternal_Amount_toPACK (Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdateMI_OrderInternal_Amount_toPACK (Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdateMI_OrderInternal_Amount_toPACK(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inIsClear             Boolean   , --
+    IN inIsPack              Boolean   , --
+    IN inIsPackSecond        Boolean   , --
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -102,14 +105,20 @@ BEGIN
                                 , AmountResult
                                 , AmountSecondResult
                                  )
+            WITH -- то что в Мастере (факт Расход на упаковку) 
+                 tmpMI_master AS (SELECT _tmpMI_master.GoodsId, _tmpMI_master.GoodsKindId, SUM (_tmpMI_master.Amount) AS Amount
+                                  FROM _tmpMI_master
+                                  GROUP BY _tmpMI_master.GoodsId, _tmpMI_master.GoodsKindId
+                                 )
            SELECT MovementItem.Id                                AS MovementItemId
                 , CASE WHEN MILinkObject_GoodsComplete.ObjectId     > 0 THEN MILinkObject_GoodsComplete.ObjectId     ELSE MovementItem.ObjectId                         END AS GoodsId_complete
                 , CASE WHEN MILinkObject_GoodsKindComplete.ObjectId > 0 THEN MILinkObject_GoodsKindComplete.ObjectId ELSE COALESCE (MILinkObject_GoodsKind.ObjectId, 0) END AS GoodsKindId_complete
                 , MovementItem.ObjectId                          AS GoodsId
                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)  AS GoodsKindId
 
-                  -- <Нач остаток> МИНУС <неотгруж. заявка (итого)> МИНУС <сегодня заявка (итого)>
+                  -- <Нач остаток> МИНУС <то что в Мастере (факт Расход на упаковку)> МИНУС <неотгруж. заявка (итого)> МИНУС <сегодня заявка (итого)>
                 , (CASE WHEN MIFloat_AmountRemains.ValueData > 0 THEN MIFloat_AmountRemains.ValueData ELSE 0 END
+                - COALESCE (tmpMI_master.Amount, 0)
                 - COALESCE (MIFloat_AmountPartnerPrior.ValueData, 0) - COALESCE (MIFloat_AmountPartnerPriorPromo.ValueData, 0)
                 - COALESCE (MIFloat_AmountPartner.ValueData, 0)      - COALESCE (MIFloat_AmountPartnerPromo.ValueData, 0)
                   ) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
@@ -123,8 +132,8 @@ BEGIN
                   AS CountForecast
 
                   -- Вот он, РЕЗУЛЬТАТ
-                , 0 AS AmountResult
-                , 0 AS AmountSecondResult
+                , CASE WHEN inIsPack       = TRUE THEN 0 ELSE COALESCE (MIFloat_AmountPack.ValueData, 0)       END AS AmountResult
+                , CASE WHEN inIsPackSecond = TRUE THEN 0 ELSE COALESCE (MIFloat_AmountPackSecond.ValueData, 0) END AS AmountSecondResult
 
            FROM MovementItem
                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
@@ -137,6 +146,9 @@ BEGIN
                                                  ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
                                                 AND MILinkObject_GoodsKindComplete.DescId         = zc_MILinkObject_GoodsKindComplete()
 
+                LEFT JOIN tmpMI_master ON tmpMI_master.GoodsId     = MovementItem.ObjectId
+                                      AND tmpMI_master.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+
                 LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
                                             ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
                                            AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
@@ -144,6 +156,13 @@ BEGIN
                 LEFT JOIN MovementItemFloat AS MIFloat_AmountRemains
                                             ON MIFloat_AmountRemains.MovementItemId = MovementItem.Id
                                            AND MIFloat_AmountRemains.DescId         = zc_MIFloat_AmountRemains()
+
+                LEFT JOIN MovementItemFloat AS MIFloat_AmountPack
+                                            ON MIFloat_AmountPack.MovementItemId = MovementItem.Id
+                                           AND MIFloat_AmountPack.DescId         = zc_MIFloat_AmountPack()
+                LEFT JOIN MovementItemFloat AS MIFloat_AmountPackSecond
+                                            ON MIFloat_AmountPackSecond.MovementItemId = MovementItem.Id
+                                           AND MIFloat_AmountPackSecond.DescId         = zc_MIFloat_AmountPackSecond()
 
                 LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                             ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
@@ -188,72 +207,94 @@ BEGIN
 
 
          -- Первый
-         vbNumber:= 0;
-         WHILE vbNumber <= 100
-         LOOP
-             UPDATE _tmpMI_Child SET AmountResult = _tmpMI_Child.AmountResult + tmpResult.Amount_result
-             FROM (WITH -- сумма - сколько уже распределили
-                        tmpMI_summ AS (SELECT _tmpMI_Child.GoodsId_complete     AS GoodsId_master
-                                            , _tmpMI_Child.GoodsKindId_complete AS GoodsKindId_master
-                                            , SUM (_tmpMI_Child.AmountResult)   AS AmountResult
-                                       FROM _tmpMI_Child
-                                       WHERE _tmpMI_Child.AmountResult <> 0 OR _tmpMI_Child.AmountSecondResult <> 0
-                                       GROUP BY _tmpMI_Child.GoodsId_complete
-                                              , _tmpMI_Child.GoodsKindId_complete
-                                     )
-                        -- объединили Master и Child
-                      , tmpMI_all AS (SELECT _tmpMI_Child.MovementItemId
-                                           , _tmpMI_master.GoodsId     AS GoodsId_master
-                                           , _tmpMI_master.GoodsKindId AS GoodsKindId_master
-                                             -- сколько осталось для распределения
-                                           , _tmpMI_master.Amount - COALESCE (tmpMI_summ.AmountResult, 0) AS Amount_master
-                                             -- сколько надо на vbNumber ДНЕЙ
-                                           , vbNumber * _tmpMI_Child.CountForecast - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult)
-                                              AS Amount_result
-                                      FROM _tmpMI_master
-                                           INNER JOIN _tmpMI_Child ON _tmpMI_Child.GoodsId_complete     = _tmpMI_master.GoodsId
-                                                                  AND _tmpMI_Child.GoodsKindId_complete = _tmpMI_master.GoodsKindId
-                                           LEFT JOIN tmpMI_summ  ON tmpMI_summ.GoodsId_master     = _tmpMI_master.GoodsId
-                                                                AND tmpMI_summ.GoodsKindId_master = _tmpMI_master.GoodsKindId
+         IF inIsPack = TRUE
+         THEN
+             vbNumber:= 0;
+             WHILE vbNumber <= 100
+             LOOP
+                 UPDATE _tmpMI_Child SET AmountResult = _tmpMI_Child.AmountResult + tmpResult.Amount_result
+                 FROM (WITH -- сумма - сколько уже распределили
+                            tmpMI_summ AS (SELECT _tmpMI_Child.GoodsId_complete     AS GoodsId_master
+                                                , _tmpMI_Child.GoodsKindId_complete AS GoodsKindId_master
+                                                , SUM (_tmpMI_Child.AmountResult)   AS AmountResult
+                                           FROM _tmpMI_Child
+                                           WHERE _tmpMI_Child.AmountResult <> 0 OR _tmpMI_Child.AmountSecondResult <> 0
+                                           GROUP BY _tmpMI_Child.GoodsId_complete
+                                                  , _tmpMI_Child.GoodsKindId_complete
+                                         )
+                            -- объединили Master и Child
+                          , tmpMI_all AS (SELECT _tmpMI_Child.MovementItemId
+                                               , _tmpMI_master.GoodsId     AS GoodsId_master
+                                               , _tmpMI_master.GoodsKindId AS GoodsKindId_master
+                                                 -- сколько осталось для распределения
+                                               , _tmpMI_master.Amount - COALESCE (tmpMI_summ.AmountResult, 0) AS Amount_master
+                                                 -- сколько надо на vbNumber ДНЕЙ
+                                               , vbNumber * _tmpMI_Child.CountForecast - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult)
+                                                  AS Amount_result
+                                          FROM _tmpMI_master
+                                               INNER JOIN _tmpMI_Child ON _tmpMI_Child.GoodsId_complete     = _tmpMI_master.GoodsId
+                                                                      AND _tmpMI_Child.GoodsKindId_complete = _tmpMI_master.GoodsKindId
+                                               LEFT JOIN tmpMI_summ  ON tmpMI_summ.GoodsId_master     = _tmpMI_master.GoodsId
+                                                                    AND tmpMI_summ.GoodsKindId_master = _tmpMI_master.GoodsKindId
+        
+                                          WHERE -- если есть что распределять
+                                                _tmpMI_master.Amount - COALESCE (tmpMI_summ.AmountResult, 0) > 0
+                                                -- если на vbNumber ДНЕЙ ЕСТЬ ПОТРЕБНОСТЬ
+                                            AND 0 < vbNumber * _tmpMI_Child.CountForecast - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult)
+                                         )
+                            -- ИТОГО по Child для ПРОПОРЦИИ
+                          , tmpMI_all_summ AS (SELECT tmpMI_all.GoodsId_master
+                                                    , tmpMI_all.GoodsKindId_master
+                                                    , SUM (tmpMI_all.Amount_result) AS Amount_result
+                                               FROM tmpMI_all
+                                               GROUP BY tmpMI_all.GoodsId_master
+                                                      , tmpMI_all.GoodsKindId_master
+                                              )
+                       -- Результат - здесь распределяем, НО ТОЛЬКО ЕСЛИ НАДО
+                       SELECT tmpMI_all.MovementItemId
+                            , CASE -- если в Master больше чем ИТОГО по Child
+                                   WHEN tmpMI_all_summ.Amount_result <= tmpMI_all.Amount_master
+                                        -- тогда сколько надо на vbNumber ДНЕЙ, т.е. НЕ распределяем
+                                        THEN ROUND (tmpMI_all.Amount_result, 1)
+                                   ELSE -- иначе Распределяем
+                                        ROUND (tmpMI_all.Amount_master * tmpMI_all.Amount_result / tmpMI_all_summ.Amount_result, 1)
+                                        -- tmpMI_all.Amount_result
+                                        -- tmpMI_all.Amount_master
+                                        
+                              END AS Amount_result
+                       FROM tmpMI_all
+                            INNER JOIN tmpMI_all_summ ON tmpMI_all_summ.GoodsId_master     = tmpMI_all.GoodsId_master
+                                                     AND tmpMI_all_summ.GoodsKindId_master = tmpMI_all.GoodsKindId_master
+                      ) AS tmpResult
+                 WHERE tmpResult.MovementItemId = _tmpMI_Child.MovementItemId;
     
-                                      WHERE -- если есть что распределять
-                                            _tmpMI_master.Amount - COALESCE (tmpMI_summ.AmountResult, 0) > 0
-                                            -- если на vbNumber ДНЕЙ ЕСТЬ ПОТРЕБНОСТЬ
-                                        AND 0 < vbNumber * _tmpMI_Child.CountForecast - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult)
-                                     )
-                        -- ИТОГО по Child для ПРОПОРЦИИ
-                      , tmpMI_all_summ AS (SELECT tmpMI_all.GoodsId_master
-                                                , tmpMI_all.GoodsKindId_master
-                                                , SUM (tmpMI_all.Amount_result) AS Amount_result
-                                           FROM tmpMI_all
-                                           GROUP BY tmpMI_all.GoodsId_master
-                                                  , tmpMI_all.GoodsKindId_master
-                                          )
-                   -- Результат - здесь распределяем, НО ТОЛЬКО ЕСЛИ НАДО
-                   SELECT tmpMI_all.MovementItemId
-                        , CASE -- если в Master больше чем ИТОГО по Child
-                               WHEN tmpMI_all_summ.Amount_result <= tmpMI_all.Amount_master
-                                    -- тогда сколько надо на vbNumber ДНЕЙ, т.е. НЕ распределяем
-                                    THEN ROUND (tmpMI_all.Amount_result, 1)
-                               ELSE -- иначе Распределяем
-                                    ROUND (tmpMI_all.Amount_master * tmpMI_all.Amount_result / tmpMI_all_summ.Amount_result, 1)
-                                    -- tmpMI_all.Amount_result
-                                    -- tmpMI_all.Amount_master
-                                    
-                          END AS Amount_result
-                   FROM tmpMI_all
-                        INNER JOIN tmpMI_all_summ ON tmpMI_all_summ.GoodsId_master     = tmpMI_all.GoodsId_master
-                                                 AND tmpMI_all_summ.GoodsKindId_master = tmpMI_all.GoodsKindId_master
-                  ) AS tmpResult
-             WHERE tmpResult.MovementItemId = _tmpMI_Child.MovementItemId;
+                 -- теперь следуюющий
+                 vbNumber := vbNumber + 1;
+    
+             END LOOP;
+    
+    
+             -- ОБНУЛИЛИ
+             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPack(),            MovementItem.Id, 0)
+                   , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPack_calc(),       MovementItem.Id, 0)
+             FROM MovementItem
+             WHERE MovementItem.MovementId = inMovementId
+               AND MovementItem.DescId     = zc_MI_Master()
+            ;
+    
+             -- СОХРАНИЛИ
+             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPack(),            _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountResult)
+                   , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPack_calc(),       _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountResult)
+             FROM _tmpMI_Child
+             WHERE _tmpMI_Child.AmountResult <> 0
+            ;
 
-             -- теперь следуюющий
-             vbNumber := vbNumber + 1;
-
-         END LOOP;
+         END IF;
        
 
          -- ВТОРОЙ
+         IF inIsPackSecond = TRUE
+         THEN
          vbNumber:= 0;
          WHILE vbNumber < 100
          LOOP
@@ -320,9 +361,7 @@ BEGIN
 
 
          -- ОБНУЛИЛИ
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPack(),            MovementItem.Id, 0)
-               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPack_calc(),       MovementItem.Id, 0)
-               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackSecond(),      MovementItem.Id, 0)
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackSecond(),      MovementItem.Id, 0)
                , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackSecond_calc(), MovementItem.Id, 0)
          FROM MovementItem
          WHERE MovementItem.MovementId = inMovementId
@@ -330,13 +369,15 @@ BEGIN
         ;
 
          -- СОХРАНИЛИ
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPack(),            _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountResult)
-               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPack_calc(),       _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountResult)
-               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackSecond(),      _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountSecondResult)
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackSecond(),      _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountSecondResult)
                , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackSecond_calc(), _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountSecondResult)
          FROM _tmpMI_Child
-         WHERE _tmpMI_Child.AmountResult <> 0 OR _tmpMI_Child.AmountSecondResult <> 0
+         WHERE _tmpMI_Child.AmountSecondResult <> 0
         ;
+
+         END IF;
+
+
 
     END IF;
 
@@ -351,5 +392,6 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpUpdateMI_OrderInternal_Amount_toPACK (inMovementId:= 7463900, inId:= 0, inIsClear:= FALSE, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpUpdateMI_OrderInternal_Amount_toPACK (inMovementId:= 7463854, inId:= 0, inIsClear:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpUpdateMI_OrderInternal_Amount_toPACK (inMovementId:= 7463900, inId:= 0, inIsClear:= FALSE, inIsPack:= TRUE, inIsPackSecond:= TRUE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpUpdateMI_OrderInternal_Amount_toPACK (inMovementId:= 7463854, inId:= 0, inIsClear:= FALSE, inIsPack:= TRUE, inIsPackSecond:= TRUE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpUpdateMI_OrderInternal_Amount_toPACK (inMovementId:= 7483996, inId:= 0, inIsClear:= FALSE, inIsPack:= TRUE, inIsPackSecond:= TRUE, inSession:= zfCalc_UserAdmin());
