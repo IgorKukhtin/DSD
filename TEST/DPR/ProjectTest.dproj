@@ -3148,10 +3148,6 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\MeDOC\IFIN_J1201009.pas"/>
-			<DCCReference Include="..\..\Forms\Document\Promo.pas">
-				<Form>PromoForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_Promo_Result.pas">
 				<Form>Report_Promo_ResultForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -3283,6 +3279,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_Wage.pas">
 				<Form>Report_WageForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Promo.pas">
+				<Form>PromoForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

@@ -282,6 +282,16 @@ type
     AmountRetInWeight: TcxGridDBColumn;
     AmountRetIn: TcxGridDBColumn;
     GoodsKindName_List: TcxGridDBColumn;
+    cxGridPlan: TcxGrid;
+    cxGridDBTableViewPlan: TcxGridDBTableView;
+    plisErased: TcxGridDBColumn;
+    cxGridLevelPlan: TcxGridLevel;
+    spUpdate_Plan: TdsdStoredProc;
+    PlanCDS: TClientDataSet;
+    PlanDS: TDataSource;
+    spSelectPlan: TdsdStoredProc;
+    dsdUpdateDSPlan: TdsdUpdateDataSet;
+    dsdDBViewAddOnPlan: TdsdDBViewAddOn;
   private
     { Private declarations }
   public
