@@ -22,22 +22,27 @@ $BODY$
   
   DECLARE vbTotalSummMVAT TFloat;
   DECLARE vbTotalSummPVAT TFloat;
-  DECLARE vbInvNumber     TVarChar;
+  DECLARE vbInvNumber TVarChar;
 BEGIN
     vbUserId:= inSession;
 
-
+     -- проверка
+     IF EXISTS (SELECT MIC.Id FROM MovementItemContainer AS MIC WHERE MIC.Movementid = inMovementId)
+     THEN
+          RAISE EXCEPTION 'Ошибка.Документ отложен, проведение запрещено!';
+     END IF;
+     
     -- параметры документа
     SELECT
-        Movement.OperDate           AS OperDate,
-        Movement.InvNumber          AS InvNumber,
-        Movement_From.ObjectId      AS Unit_From,
-        Movement_To.ObjectId        AS Unit_To,
+        Movement.OperDate,
+        Movement.InvNumber,
+        Movement_From.ObjectId AS Unit_From,
+        Movement_To.ObjectId AS Unit_To
     INTO
         outOperDate,
         vbInvNumber,
         vbUnit_From,
-        vbUnit_To,
+        vbUnit_To
     FROM Movement
         INNER JOIN MovementLinkObject AS Movement_From
                                       ON Movement_From.MovementId = Movement.Id
@@ -131,7 +136,6 @@ BEGIN
     IF vbGoodsName <> '' AND outOperDate <> CURRENT_DATE + INTERVAL '1 MONTH'
        AND vbUserId NOT IN (375661, 2301972) -- Зерин Юрий Геннадиевич
     THEN
-        IF
         RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам Кол-во получателя <%> отличается от Факт кол-ва <%>.', vbGoodsName, vbAmount, vbAmountManual;
     END IF;
 
@@ -193,7 +197,7 @@ BEGIN
     --Рассчитываем и записываем суммы Сумма закупки с усред. ценах с уч. % кор-ки (с НДС)   TotalSummMVAT
     --                                Сумма закупки с усред. ценах (с НДС)                  TotalSummPVAT
        SELECT
-             COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0))),0)                               ::TFloat  AS Summa           --MVat
+            COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0))),0)                               ::TFloat  AS Summa           --MVat
            , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))),0)                                 ::TFloat  AS SummaWithVAT   --PVat
       INTO vbTotalSummMVAT, vbTotalSummPVAT
 
@@ -222,11 +226,10 @@ BEGIN
 
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummMVAT(), inMovementId, vbTotalSummMVAT);
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPVAT(), inMovementId, vbTotalSummPVAT);
-     
-     UPDATE Movement 
-     SET StatusId = zc_Enum_Status_Complete() 
-     WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
+--                           
 
+  UPDATE Movement SET StatusId = zc_Enum_Status_Complete() 
+  WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
