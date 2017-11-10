@@ -52,12 +52,13 @@ BEGIN
        SELECT tmp.ContainerId
             , tmp.GoodsId
             , tmp.GoodsKindId
-            , SUM (tmp.Amount_start) AS Amount_start
+            , SUM (tmp.Amount_start + CASE WHEN tmp.ContainerId > 0 THEN tmp.Amount_next ELSE 0 END) AS Amount_start
        FROM
       (SELECT CASE WHEN tmpUnit_all.isContainer = TRUE THEN Container.Id ELSE 0 END AS ContainerId
             , Container.ObjectId                   AS GoodsId
             , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
             , Container.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) AS Amount_start
+            , SUM (CASE WHEN MIContainer.OperDate = inOperDate AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END) AS Amount_next
        FROM tmpGoods
             INNER JOIN Container ON Container.ObjectId = tmpGoods.GoodsId
                                 AND Container.DescId   = zc_Container_Count()
@@ -83,6 +84,7 @@ BEGIN
               , COALESCE (CLO_GoodsKind.ObjectId, 0)
               , Container.Amount
        HAVING Container.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) <> 0
+           OR SUM (CASE WHEN MIContainer.OperDate = inOperDate AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END) <> 0
       ) AS tmp
        GROUP BY tmp.ContainerId
               , tmp.GoodsId

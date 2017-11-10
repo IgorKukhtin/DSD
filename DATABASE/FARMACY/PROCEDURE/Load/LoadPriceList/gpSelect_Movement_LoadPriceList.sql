@@ -51,8 +51,8 @@ BEGIN
             LEFT JOIN Object AS Object_User_Update ON Object_User_Update.Id = LoadPriceList.UserId_Update
             
             LEFT JOIN Object AS Object_Area ON Object_Area.Id = LoadPriceList.AreaId  
-            
-            ;
+       ORDER BY LoadPriceList.Date_Insert DESC, LoadPriceList.Id DESC
+      ;
 
 END;
 $BODY$
@@ -70,4 +70,4 @@ ALTER FUNCTION gpSelect_Movement_LoadPriceList (TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_PriceList (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_LoadPriceList (inSession:= '2') AS tmp WHERE isMoved = FALSE;

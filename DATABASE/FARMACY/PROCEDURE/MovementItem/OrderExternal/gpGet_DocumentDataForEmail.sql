@@ -34,11 +34,15 @@ BEGIN
           INTO vbMail, vbJuridicalId_unit, vbJuridicalName
    FROM (WITH tmpMovement AS (SELECT MLO_From.ObjectId AS FromId, MLO_To.ObjectId AS ToId, ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
                                    , ObjectLink_Unit_Juridical.ChildObjectId AS JuridicalId_unit
+                                   , ObjectLink_Unit_Area AS AreaId
                               FROM MovementLinkObject AS MLO_From
                                    -- !!!только так - определяется <Торговая сеть>!!!
                                    LEFT JOIN MovementLinkObject AS MLO_To
                                                                 ON MLO_To.MovementId = MLO_From.MovementId
                                                                AND MLO_To.DescId     = zc_MovementLinkObject_To()
+                                   LEFT JOIN ObjectLink AS ObjectLink_Unit_Area
+                                                        ON ObjectLink_Unit_Area.ObjectId = MLO_To.ObjectId
+                                                       AND ObjectLink_Unit_Area.DescId   = zc_ObjectLink_Unit_Juridical()
                                    LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                                         ON ObjectLink_Unit_Juridical.ObjectId = MLO_To.ObjectId
                                                        AND ObjectLink_Unit_Juridical.DescId   = zc_ObjectLink_Unit_Juridical()
@@ -59,6 +63,7 @@ BEGIN
               LEFT JOIN Object_ContactPerson_View AS View_ContactPerson_two
                                                   ON View_ContactPerson_two.JuridicalId         = tmpMovement.FromId
                                                  AND View_ContactPerson_two.ContactPersonKindId = zc_Enum_ContactPersonKind_ProcessOrder() -- хотя не понятно чем отличается от zc_Enum_ContactPersonKind_CreateOrder
+                                                 AND View_ContactPerson_two.RetailId            IS NULL
                                                  AND View_ContactPerson.JuridicalId IS NULL
         ) AS tmp;
 

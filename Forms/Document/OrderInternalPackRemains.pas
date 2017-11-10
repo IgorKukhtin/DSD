@@ -150,7 +150,7 @@ type
     chtAmountTotal: TcxGridDBColumn;
     Amount_result: TcxGridDBColumn;
     Amount_result_two: TcxGridDBColumn;
-    chAmountTotal: TcxGridDBColumn;
+    chAmountPackTotal: TcxGridDBColumn;
     AmountPartnerPriorTotal: TcxGridDBColumn;
     AmountPartnerTotal: TcxGridDBColumn;
     chRemains: TcxGridDBColumn;
@@ -160,6 +160,18 @@ type
     Id: TcxGridDBColumn;
     chId: TcxGridDBColumn;
     Num: TcxGridDBColumn;
+    chAmountPack_calc: TcxGridDBColumn;
+    chAmountSecondPack_calc: TcxGridDBColumn;
+    chAmountPackTotal_calc: TcxGridDBColumn;
+    mactUpdateAmountSecondCEH_to: TMultiAction;
+    mactUpdateAmountSecondCEHGrid_to: TMultiAction;
+    actUpdateAmountSecondCEH_to: TdsdExecStoredProc;
+    spUpdateAmountSecondCEH_to: TdsdStoredProc;
+    bbtUpdateAmountSecondCEH_to: TdxBarButton;
+    chtRemains_CEH_err: TcxGridDBColumn;
+    chtRemains_err: TcxGridDBColumn;
+    chDayCountForecast_calc: TcxGridDBColumn;
+    chtDayCountForecast_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

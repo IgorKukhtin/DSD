@@ -14,7 +14,11 @@ $BODY$
    DECLARE vbEndDate   TDateTime;
    DECLARE vbUnitId    Integer;
 BEGIN
-
+/*
+if inUserId = 5 then
+         RAISE EXCEPTION 'Ошибка.';
+end if;
+*/
      -- данные по "новым" контрагентам
      CREATE TEMP TABLE _tmpPartner_new (MovementId Integer, PartnerId Integer, ContractId Integer) ON COMMIT DROP;
      INSERT INTO _tmpPartner_new (MovementId, PartnerId, ContractId)
@@ -115,8 +119,8 @@ BEGIN
                         
   , tmpMI_promo_all AS (SELECT MI_PromoGoods.Id AS MovementItemId
                              , MI_PromoGoods.GoodsId
-                             -- !!!, COALESCE (MI_PromoGoods.GoodsKindId, 0) AS GoodsKindId
-                             , 0 AS GoodsKindId
+                             , COALESCE (MI_PromoGoods.GoodsKindId, 0) AS GoodsKindId
+                             -- , 0 AS GoodsKindId
                              , MI_PromoGoods.isErased
                         FROM MovementItem_PromoGoods_View AS MI_PromoGoods
                         WHERE MI_PromoGoods.MovementId = inMovementId

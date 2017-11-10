@@ -46,44 +46,44 @@ BEGIN
      THEN
           vbMovementItemId:= ioId;
      ELSE
-     -- поиск - 1
-     vbMovementItemId:= (SELECT MovementItem.Id
-                         FROM MovementItem
-                              INNER JOIN MovementItemLinkObject AS MILinkObject_Goods
-                                                                ON MILinkObject_Goods.MovementItemId = MovementItem.Id
-                                                               AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-                                                               AND MILinkObject_Goods.ObjectId = inGoodsId
-                              INNER JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
-                                                                ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
-                                                               AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
-                                                               AND MILinkObject_GoodsKindComplete.ObjectId = inGoodsKindId
-                              LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
-                                                          ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
-                                                         AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
-                         WHERE MovementItem.MovementId = inMovementId
-                           AND MovementItem.DescId     = zc_MI_Master()
-                           AND MovementItem.isErased   = FALSE
-                           AND (MovementItem.Amount <> 0 OR MIFloat_AmountSecond.ValueData <> 0)
-                        );
-     -- поиск - 2
-     IF COALESCE (vbMovementItemId, 0) = 0
-     THEN
-          vbMovementItemId:= (SELECT MovementItem.Id
-                              FROM MovementItem
-                                   INNER JOIN MovementItemLinkObject AS MILinkObject_Goods
-                                                                     ON MILinkObject_Goods.MovementItemId = MovementItem.Id
-                                                                    AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-                                                                    AND MILinkObject_Goods.ObjectId = inGoodsId
-                                   INNER JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
-                                                                     ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
-                                                                    AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
-                                                                    AND MILinkObject_GoodsKindComplete.ObjectId = inGoodsKindId
-                              WHERE MovementItem.MovementId = inMovementId
-                                AND MovementItem.DescId = zc_MI_Master()
-                                AND MovementItem.isErased = FALSE
-                              LIMIT 1
-                             );
-     END IF;
+         -- поиск - 1
+         vbMovementItemId:= (SELECT MovementItem.Id
+                             FROM MovementItem
+                                  INNER JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                                                    ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                                                   AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+                                                                   AND MILinkObject_Goods.ObjectId = inGoodsId
+                                  INNER JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
+                                                                    ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                                                   AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+                                                                   AND MILinkObject_GoodsKindComplete.ObjectId = inGoodsKindId
+                                  LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                                              ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                                             AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                             WHERE MovementItem.MovementId = inMovementId
+                               AND MovementItem.DescId     = zc_MI_Master()
+                               AND MovementItem.isErased   = FALSE
+                               AND (MovementItem.Amount <> 0 OR MIFloat_AmountSecond.ValueData <> 0)
+                            );
+         -- поиск - 2
+         IF COALESCE (vbMovementItemId, 0) = 0
+         THEN
+              vbMovementItemId:= (SELECT MovementItem.Id
+                                  FROM MovementItem
+                                       INNER JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                                                         ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                                                        AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+                                                                        AND MILinkObject_Goods.ObjectId = inGoodsId
+                                       INNER JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
+                                                                         ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                                                        AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+                                                                        AND MILinkObject_GoodsKindComplete.ObjectId = inGoodsKindId
+                                  WHERE MovementItem.MovementId = inMovementId
+                                    AND MovementItem.DescId = zc_MI_Master()
+                                    AND MovementItem.isErased = FALSE
+                                  LIMIT 1
+                                 );
+         END IF;
      END IF;
 
      -- проверка
