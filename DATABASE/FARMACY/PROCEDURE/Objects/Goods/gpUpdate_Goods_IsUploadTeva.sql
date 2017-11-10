@@ -14,8 +14,12 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
 
+
+      
       IF COALESCE(inId, 0) = 0 
       THEN
+           -- определили признак
+           outisUploadTeva:= inisUploadTeva;
            RETURN;
       END IF;
 

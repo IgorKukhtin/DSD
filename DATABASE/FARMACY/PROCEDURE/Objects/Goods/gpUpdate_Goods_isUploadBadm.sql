@@ -15,6 +15,8 @@ $BODY$
 BEGIN
 
    IF COALESCE(inId, 0) = 0 THEN
+      -- определили признак
+      outisUploadBadm:= inisUploadBadm;
       RETURN;
    END IF;
 
@@ -39,3 +41,4 @@ LANGUAGE plpgsql VOLATILE;
 
 */
 --select * from gpUpdate_Goods_isUploadBadm(inId := 1393106 , inisUploadBadm := 'False' ,  inSession := '3');
+--select * from gpUpdate_Goods_isUploadBadm(inId := 0 , inisUploadBadm := 'False' ,  inSession := '3');
