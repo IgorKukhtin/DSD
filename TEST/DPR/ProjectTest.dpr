@@ -983,7 +983,8 @@ uses
   OrderInternalPackRemains in '..\..\Forms\Document\OrderInternalPackRemains.pas' {OrderInternalPackRemainsForm: TParentForm},
   GoodsReportSale in '..\..\Forms\Guides\GoodsReportSale.pas' {GoodsReportSaleForm: TParentForm},
   Report_Wage in '..\..\Forms\Report\Report_Wage.pas' {Report_WageForm: TParentForm},
-  Promo in '..\..\Forms\Document\Promo.pas' {PromoForm: TParentForm};
+  Promo in '..\..\Forms\Document\Promo.pas' {PromoForm: TParentForm},
+  Report_PromoPlan in '..\..\Forms\Report\Report_PromoPlan.pas' {Report_PromoPlanForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
