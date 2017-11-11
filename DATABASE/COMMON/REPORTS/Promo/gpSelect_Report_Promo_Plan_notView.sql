@@ -18,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Report_Promo_Plan(
 )
 RETURNS TABLE(
       MovementId          Integer   --ИД документа акции
+    , MovementItemId      Integer
     , InvNumber           Integer   --№ документа акции
     , UnitName            TVarChar  --Склад
     , DateStartSale       TDateTime --Дата отгрузки по акционным ценам
@@ -170,13 +171,14 @@ BEGIN
                                           
         SELECT
             Movement_Promo.Id  
+          , MI_PromoGoods.MovementItemId
           , Movement_Promo.InvNumber   ::integer
-          , Object_Unit.ValueData AS UnitName 
-          , Movement_Promo.StartSale          --Дата начала отгрузки по акционной цене
-          , Movement_Promo.EndSale            --Дата окончания отгрузки по акционной цене
-          , MovementDate_StartPromo.ValueData           AS StartPromo         --Дата начала акции
-          , MovementDate_EndPromo.ValueData             AS EndPromo           --Дата окончания акции
-          , MovementDate_Month.ValueData                AS MonthPromo         -- месяц акции
+          , Object_Unit.ValueData                  AS UnitName 
+          , Movement_Promo.StartSale                                     --Дата начала отгрузки по акционной цене
+          , Movement_Promo.EndSale                                       --Дата окончания отгрузки по акционной цене
+          , MovementDate_StartPromo.ValueData      AS StartPromo         --Дата начала акции
+          , MovementDate_EndPromo.ValueData        AS EndPromo           --Дата окончания акции
+          , MovementDate_Month.ValueData           AS MonthPromo         -- месяц акции
 
           , Movement_PromoPartner.PartnerName    ::TBlob AS PartnerName
             
@@ -189,7 +191,7 @@ BEGIN
           , Movement_Promo.isPromo
           , Movement_Promo.Checked 
 
-          , MI_PromoGoods.GoodsWeight :: TFloat
+          , MI_PromoGoods.GoodsWeight   :: TFloat
           
           , MI_PromoGoods.AmountPlan1
           , MI_PromoGoods.AmountPlan2

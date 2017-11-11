@@ -24,6 +24,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Report_Promo_Plan(
 )
 RETURNS TABLE(
       MovementId          Integer   --ИД документа акции
+    , MovementItemId      Integer
     , InvNumber           Integer   --№ документа акции
     , UnitName            TVarChar  --Склад
     , DateStartSale       TDateTime --Дата отгрузки по акционным ценам
@@ -131,6 +132,7 @@ BEGIN
                                           
         SELECT
             Movement_Promo.Id                 --ИД документа акции
+          , MI_PromoGoods.MovementItemId
           , Movement_Promo.InvNumber          --№ документа акции
           , Movement_Promo.UnitName           --Склад
           , Movement_Promo.StartSale          --Дата начала отгрузки по акционной цене

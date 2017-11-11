@@ -13,18 +13,24 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
     Height = 351
     TabOrder = 3
     ExplicitTop = 83
-    ExplicitWidth = 833
+    ExplicitWidth = 885
     ExplicitHeight = 351
     ClientRectBottom = 351
     ClientRectRight = 885
+    ClientRectTop = 24
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 833
-      ExplicitHeight = 351
+      Caption = '&1. '#1054#1090#1095#1077#1090
+      TabVisible = True
+      ExplicitTop = 24
+      ExplicitWidth = 885
+      ExplicitHeight = 327
       inherited cxGrid: TcxGrid
         Width = 885
-        Height = 351
-        ExplicitWidth = 833
-        ExplicitHeight = 351
+        Height = 327
+        ExplicitLeft = 72
+        ExplicitTop = 72
+        ExplicitWidth = 885
+        ExplicitHeight = 327
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -54,6 +60,41 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+              Column = AmountPlan1
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+              Column = AmountPlan2
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+              Column = AmountPlan3
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+              Column = AmountPlan4
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+              Column = AmountPlan6
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+              Column = AmountPlan5
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+              Column = AmountPlan7
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -83,6 +124,46 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+              Column = AmountPlan1
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+              Column = AmountPlan2
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+              Column = AmountPlan3
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+              Column = AmountPlan4
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+              Column = AmountPlan6
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+              Column = AmountPlan5
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+              Column = AmountPlan7
+            end
+            item
+              Format = #1057#1090#1088#1086#1082' ,0'
+              Kind = skCount
+              Column = GoodsName
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -307,11 +388,386 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
         end
       end
     end
+    object cxTabSheetPlan: TcxTabSheet
+      Caption = '&2. '#1042#1074#1086#1076' '#1076#1072#1085#1085#1099#1093
+      ImageIndex = 4
+      object cxGridPlan: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 885
+        Height = 327
+        Align = alClient
+        TabOrder = 0
+        LookAndFeel.NativeStyle = False
+        ExplicitLeft = 114
+        ExplicitTop = 72
+        object cxGridDBTableViewPlan: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = MasterDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Filter.Active = True
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = '0,###'
+              Kind = skSum
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+              Column = plAmountPlan1
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+              Column = plAmountPlan2
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+              Column = plAmountPlan3
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+              Column = plAmountPlan4
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+              Column = plAmountPlan5
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+              Column = plAmountPlan6
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+              Column = plAmountPlan7
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = '0,###'
+              Kind = skSum
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+            end
+            item
+              Format = #1057#1090#1088#1086#1082' 0,'
+              Kind = skCount
+              Column = plGoodsName
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+              Column = plAmountPlan1
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+              Column = plAmountPlan2
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+              Column = plAmountPlan3
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+              Column = plAmountPlan4
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+              Column = plAmountPlan5
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+              Column = plAmountPlan6
+            end
+            item
+              Format = '0,###'
+              Kind = skSum
+              Column = plAmountPlan7
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.IncSearch = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.HeaderHeight = 40
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object plInvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'InvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 41
+          end
+          object plUnitName: TcxGridDBColumn
+            Caption = #1057#1082#1083#1072#1076
+            DataBinding.FieldName = 'UnitName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 95
+          end
+          object plDateStartSale: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1086#1090#1075#1088#1091#1079#1082#1080
+            DataBinding.FieldName = 'DateStartSale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object plDeteFinalSale: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1086#1090#1075#1088#1091#1079#1082#1080
+            DataBinding.FieldName = 'DeteFinalSale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object plDateStartPromo: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1072#1082#1094#1080#1080
+            DataBinding.FieldName = 'DateStartPromo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 73
+          end
+          object plDateFinalPromo: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080
+            DataBinding.FieldName = 'DateFinalPromo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 76
+          end
+          object plMonthPromo: TcxGridDBColumn
+            Caption = #1052#1077#1089#1103#1094' '#1072#1082#1094#1080#1080
+            DataBinding.FieldName = 'MonthPromo'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'mmmm yyyy'
+            Properties.ReadOnly = False
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object plPartnerName: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
+            DataBinding.FieldName = 'PartnerName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 114
+          end
+          object plGoodsCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1087#1086#1079#1080#1094#1080#1080
+            DataBinding.FieldName = 'GoodsCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 66
+          end
+          object plGoodsName: TcxGridDBColumn
+            Caption = #1055#1086#1079#1080#1094#1080#1103
+            DataBinding.FieldName = 'GoodsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 123
+          end
+          object plTradeMarkName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
+            DataBinding.FieldName = 'TradeMarkName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object plMeasureName: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 42
+          end
+          object plGoodsKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080
+            DataBinding.FieldName = 'GoodsKindName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 54
+          end
+          object plGoodsWeight: TcxGridDBColumn
+            Caption = #1042#1077#1089
+            DataBinding.FieldName = 'GoodsWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 43
+          end
+          object plAmountPlan1: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1087#1085'.'
+            DataBinding.FieldName = 'AmountPlan1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1079#1072' '#1087#1085'.'
+            Width = 80
+          end
+          object plAmountPlan2: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1074#1090'.'
+            DataBinding.FieldName = 'AmountPlan2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object plAmountPlan3: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1089#1088'.'
+            DataBinding.FieldName = 'AmountPlan3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object plAmountPlan4: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1095#1090'.'
+            DataBinding.FieldName = 'AmountPlan4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object plAmountPlan5: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1087#1090'.'
+            DataBinding.FieldName = 'AmountPlan5'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object plAmountPlan6: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1089#1073'.'
+            DataBinding.FieldName = 'AmountPlan66'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object plAmountPlan7: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1074#1089'.'
+            DataBinding.FieldName = 'AmountPlan7'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object plisErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085
+            DataBinding.FieldName = 'isErased'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 40
+          end
+        end
+        object cxGridLevelPlan: TcxGridLevel
+          GridView = cxGridDBTableViewPlan
+        end
+      end
+    end
   end
   inherited Panel: TPanel
     Width = 885
     Height = 57
-    ExplicitWidth = 833
+    ExplicitWidth = 885
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 114
@@ -369,6 +825,8 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
     end
   end
   inherited ActionList: TActionList
+    Left = 119
+    Top = 255
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -499,9 +957,22 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
         end>
       isShowModal = False
     end
+    object dsdUpdateDSPlan: TdsdUpdateDataSet
+      Category = 'Plan'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Plan
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Plan
+        end>
+      Caption = 'actUpdatePlanDS'
+      DataSource = MasterDS
+    end
   end
   inherited MasterDS: TDataSource
-    Top = 208
+    Left = 32
+    Top = 336
   end
   inherited MasterCDS: TClientDataSet
     Top = 208
@@ -549,12 +1020,12 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 264
-    Top = 208
+    Left = 232
+    Top = 248
   end
   inherited BarManager: TdxBarManager
-    Left = 144
-    Top = 256
+    Left = 176
+    Top = 328
     DockControlHeights = (
       0
       0
@@ -623,6 +1094,10 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
         ShortCut = 13
       end>
   end
+  inherited PopupMenu: TPopupMenu
+    Left = 120
+    Top = 304
+  end
   inherited PeriodChoice: TPeriodChoice
     Left = 176
     Top = 184
@@ -635,7 +1110,8 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
       item
         Component = UnitGuides
       end>
-    Top = 184
+    Left = 208
+    Top = 224
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -666,5 +1142,106 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
       end>
     Left = 604
     Top = 8
+  end
+  object spUpdate_Plan: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_PromoGoods_Plan'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementItemId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountPlan1'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountPlan1'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountPlan2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountPlan2'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountPlan3'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountPlan3'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountPlan4'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountPlan4'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountPlan5'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountPlan5'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountPlan6'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountPlan6'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountPlan7'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountPlan7'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 456
+    Top = 184
+  end
+  object dsdDBViewAddOn1: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewPlan
+    OnDblClickActionList = <
+      item
+        Action = actOpenPromo
+      end>
+    ActionItemList = <
+      item
+        Action = actOpenPromo
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    Left = 712
+    Top = 240
   end
 end
