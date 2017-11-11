@@ -70,7 +70,7 @@ BEGIN
                                                  + COALESCE (ObjectFloat_Order5.ValueData, 0)
                                                  + COALESCE (ObjectFloat_Order6.ValueData, 0)
                                                  + COALESCE (ObjectFloat_Order7.ValueData, 0)
-
+/*
                                                  + COALESCE (ObjectFloat_OrderPromo1.ValueData, 0)
                                                  + COALESCE (ObjectFloat_OrderPromo2.ValueData, 0)
                                                  + COALESCE (ObjectFloat_OrderPromo3.ValueData, 0)
@@ -78,7 +78,7 @@ BEGIN
                                                  + COALESCE (ObjectFloat_OrderPromo5.ValueData, 0)
                                                  + COALESCE (ObjectFloat_OrderPromo6.ValueData, 0)
                                                  + COALESCE (ObjectFloat_OrderPromo7.ValueData, 0)
-
+*/
                                                  + COALESCE (ObjectFloat_OrderBranch1.ValueData, 0)
                                                  + COALESCE (ObjectFloat_OrderBranch2.ValueData, 0)
                                                  + COALESCE (ObjectFloat_OrderBranch3.ValueData, 0)
@@ -95,7 +95,7 @@ BEGIN
                                                  + COALESCE (ObjectFloat_Amount5.ValueData, 0)
                                                  + COALESCE (ObjectFloat_Amount6.ValueData, 0)
                                                  + COALESCE (ObjectFloat_Amount7.ValueData, 0)
-
+/*
                                                  + COALESCE (ObjectFloat_Promo1.ValueData, 0)
                                                  + COALESCE (ObjectFloat_Promo2.ValueData, 0)
                                                  + COALESCE (ObjectFloat_Promo3.ValueData, 0)
@@ -103,7 +103,7 @@ BEGIN
                                                  + COALESCE (ObjectFloat_Promo5.ValueData, 0)
                                                  + COALESCE (ObjectFloat_Promo6.ValueData, 0)
                                                  + COALESCE (ObjectFloat_Promo7.ValueData, 0)
-
+*/
                                                  + COALESCE (ObjectFloat_Branch1.ValueData, 0)
                                                  + COALESCE (ObjectFloat_Branch2.ValueData, 0)
                                                  + COALESCE (ObjectFloat_Branch3.ValueData, 0)

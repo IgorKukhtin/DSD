@@ -124,14 +124,14 @@ BEGIN
                                                  , inGoodsId            := tmpAll.GoodsId
                                                  , inGoodsKindId        := tmpAll.GoodsKindId
 
-                                                 , inAmount_Param       := tmpAll.AmountPartner      * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                 , inAmount_Param       := tmpAll.AmountPartner      -- * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
                                                  , inDescId_Param       := zc_MIFloat_AmountPartner()
-                                                 , inAmount_ParamOrder  := tmpAll.AmountPartnerPromo * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                 , inAmount_ParamOrder  := tmpAll.AmountPartnerPromo -- * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
                                                  , inDescId_ParamOrder  := zc_MIFloat_AmountPartnerPromo()
 
-                                                 , inAmount_ParamSecond := tmpAll.AmountPartnerPrior      * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                 , inAmount_ParamSecond := tmpAll.AmountPartnerPrior      -- * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
                                                  , inDescId_ParamSecond := zc_MIFloat_AmountPartnerPrior()
-                                                 , inAmount_ParamAdd    := tmpAll.AmountPartnerPriorPromo * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                 , inAmount_ParamAdd    := tmpAll.AmountPartnerPriorPromo -- * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
                                                  , inDescId_ParamAdd    := zc_MIFloat_AmountPartnerPriorPromo()
                                                  , inIsPack             := NULL
                                                  , inUserId             := vbUserId

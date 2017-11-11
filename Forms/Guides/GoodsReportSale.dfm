@@ -925,20 +925,6 @@ object GoodsReportSaleForm: TGoodsReportSaleForm
         HeaderAlignmentVert = vaCenter
         Width = 172
       end
-      object InfoMoneyCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1059#1055
-        DataBinding.FieldName = 'InfoMoneyCode'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 55
-      end
-      object InfoMoneyName: TcxGridDBColumn
-        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-        DataBinding.FieldName = 'InfoMoneyName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 100
-      end
       object GoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'GoodsCode'
@@ -982,875 +968,973 @@ object GoodsReportSaleForm: TGoodsReportSaleForm
         Options.Editing = False
         Width = 45
       end
-      object TotalAmountWithPromo: TcxGridDBColumn
-        Caption = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. + '#1040#1082#1094#1080#1080
-        DataBinding.FieldName = 'TotalAmountWithPromo'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object TotalAmount: TcxGridDBColumn
-        Caption = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'.'
-        DataBinding.FieldName = 'TotalAmount'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1073#1077#1079' '#1040#1082#1094#1080#1081
-        Options.Editing = False
-        Width = 95
-      end
-      object TotalPromo: TcxGridDBColumn
-        Caption = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080
-        DataBinding.FieldName = 'TotalPromo'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
-        Options.Editing = False
-        Width = 95
-      end
-      object TotalBranch: TcxGridDBColumn
-        Caption = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1093'. '#1085#1072' '#1092#1080#1083#1080#1072#1083
-        DataBinding.FieldName = 'TotalBranch'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object TotalOrderBranch: TcxGridDBColumn
-        Caption = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082' '#1060#1080#1083#1080#1072#1083
-        DataBinding.FieldName = 'TotalOrderBranch'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object TotalOrderWithPromo: TcxGridDBColumn
-        Caption = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082' + '#1040#1082#1094#1080#1080
-        DataBinding.FieldName = 'TotalOrderWithPromo'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object TotalOrder: TcxGridDBColumn
-        Caption = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082
-        DataBinding.FieldName = 'TotalOrder'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1073#1077#1079' '#1040#1082#1094#1080#1081
-        Options.Editing = False
-        Width = 95
-      end
-      object TotalOrderPromo: TcxGridDBColumn
-        Caption = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082' '#1040#1082#1094#1080#1103
-        DataBinding.FieldName = 'TotalOrderPromo'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
-        Options.Editing = False
-        Width = 95
-      end
-      object TotalAmountPromoBranch: TcxGridDBColumn
-        Caption = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079' . + '#1072#1082#1094#1080#1080' + '#1088#1072#1089#1093'. '#1085#1072' '#1092#1080#1083#1080#1072#1083
-        DataBinding.FieldName = 'TotalAmountPromoBranch'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1048#1090#1086#1075#1086' '#1088#1077#1072#1083#1080#1079' + '#1072#1082#1094#1080#1080' + '#1085#1072' '#1092#1080#1083#1080#1072#1083
-        Options.Editing = False
-        Width = 95
-      end
-      object TotalOrderPromoBranch: TcxGridDBColumn
-        Caption = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1082#1080' + '#1072#1082#1094#1080#1080' + '#1079#1072#1103#1074#1082#1080' '#1092#1080#1083#1080#1072#1083
-        DataBinding.FieldName = 'TotalOrderPromoBranch'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1048#1090#1086#1075#1086' '#1079#1072#1103#1074#1082#1080' + '#1072#1082#1094#1080#1080' + '#1092#1080#1083#1080#1072#1083
-        Options.Editing = False
-        Width = 95
-      end
       object TotalAnalysisAmount: TcxGridDBColumn
-        Caption = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079' + '#1088#1072#1089#1093'. '#1085#1072' '#1092#1080#1083#1080#1072#1083
+        Caption = #1048#1058#1054#1043#1054' '#1057#1058#1040#1058'. '#1088#1077#1072#1083#1080#1079'.'
         DataBinding.FieldName = 'TotalAnalysisAmount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1048#1090#1086#1075#1086' '#1088#1077#1072#1083#1080#1079' + '#1085#1072' '#1092#1080#1083#1080#1072#1083
+        HeaderHint = 
+          #1048#1090#1086#1075#1086' '#1076#1083#1103' '#1057#1058#1040#1058#1048#1057#1058#1048#1050#1048' '#1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' + '#1056#1072#1089#1093#1086#1076' '#1085#1072' '#1060#1080#1083 +
+          #1080#1072#1083
         Options.Editing = False
         Width = 95
       end
       object TotalAnalysisOrder: TcxGridDBColumn
-        Caption = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086'  '#1079#1072#1103#1074#1082#1080' + '#1079#1072#1103#1074#1082#1080' '#1092#1080#1083#1080#1072#1083
+        Caption = #1048#1058#1054#1043#1054' '#1057#1058#1040#1058'. '#1079#1072#1103#1074#1082#1072
         DataBinding.FieldName = 'TotalAnalysisOrder'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1048#1090#1086#1075#1086' '#1079#1072#1103#1074#1082#1080' + '#1092#1080#1083#1080#1072#1083
+        HeaderHint = #1048#1058#1054#1043#1054' '#1076#1083#1103' '#1057#1058#1040#1058#1048#1057#1058#1048#1050#1048' '#1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' + '#1089' '#1060#1080#1083#1080#1072#1083#1072
         Options.Editing = False
         Width = 95
       end
-      object Amount1: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 1'
-        DataBinding.FieldName = 'Amount1'
+      object TotalAmountPromoBranch: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1088#1072#1089#1093#1086#1076
+        DataBinding.FieldName = 'TotalAmountPromoBranch'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1073#1077#1079' '#1040#1082#1094#1080#1081
+        HeaderHint = #1048#1090#1086#1075#1086' '#1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' + '#1040#1082#1094#1080#1080' + '#1056#1072#1089#1093#1086#1076' '#1085#1072' '#1060#1080#1083#1080#1072#1083
         Options.Editing = False
         Width = 95
       end
-      object Amount2: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 2'
-        DataBinding.FieldName = 'Amount2'
+      object TotalOrderPromoBranch: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1079#1072#1103#1074#1082#1072
+        DataBinding.FieldName = 'TotalOrderPromoBranch'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1073#1077#1079' '#1040#1082#1094#1080#1081
+        HeaderHint = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' + '#1040#1082#1094#1080#1080' + '#1089' '#1060#1080#1083#1080#1072#1083#1072
         Options.Editing = False
         Width = 95
       end
-      object Amount3: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 3'
-        DataBinding.FieldName = 'Amount3'
+      object TotalBranch: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1088#1072#1089#1093'. '#1085#1072' '#1060#1080#1083'.'
+        DataBinding.FieldName = 'TotalBranch'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1073#1077#1079' '#1040#1082#1094#1080#1081
+        HeaderHint = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086' '#1056#1072#1089#1093#1086#1076' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1085#1072' '#1060#1080#1083#1080#1072#1083
         Options.Editing = False
         Width = 95
       end
-      object Amount4: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 4'
-        DataBinding.FieldName = 'Amount4'
+      object TotalAmountWithPromo: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1088#1077#1072#1083#1080#1079'. + '#1040#1082#1094#1080#1080
+        DataBinding.FieldName = 'TotalAmountWithPromo'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' + '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 95
+      end
+      object TotalAmount: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1088#1077#1072#1083#1080#1079'.'
+        DataBinding.FieldName = 'TotalAmount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1073#1077#1079' '#1040#1082#1094#1080#1081
+        Options.Editing = False
+        Width = 95
+      end
+      object TotalPromo: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080
+        DataBinding.FieldName = 'TotalPromo'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1090#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 95
+      end
+      object TotalOrderBranch: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1079#1072#1103#1074#1082#1072' '#1089' '#1060#1080#1083'.'
+        DataBinding.FieldName = 'TotalOrderBranch'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1073#1077#1079' '#1040#1082#1094#1080#1081
+        HeaderHint = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1089' '#1060#1080#1083#1080#1072#1083#1072
         Options.Editing = False
         Width = 95
       end
-      object Amount5: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 5'
-        DataBinding.FieldName = 'Amount5'
+      object TotalOrderWithPromo: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1079#1072#1103#1074#1082#1072' '#1087#1086#1082'. + '#1040#1082#1094#1080#1080
+        DataBinding.FieldName = 'TotalOrderWithPromo'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1073#1077#1079' '#1040#1082#1094#1080#1081
+        HeaderHint = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' + '#1040#1082#1094#1080#1080
         Options.Editing = False
         Width = 95
       end
-      object Amount6: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 6'
-        DataBinding.FieldName = 'Amount6'
+      object TotalOrder: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1079#1072#1103#1074#1082#1072' '#1087#1086#1082'.'
+        DataBinding.FieldName = 'TotalOrder'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1073#1077#1079' '#1040#1082#1094#1080#1081
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1073#1077#1079' '#1040#1082#1094#1080#1081
         Options.Editing = False
         Width = 95
       end
-      object Amount7: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 7'
-        DataBinding.FieldName = 'Amount7'
+      object TotalOrderPromo: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1079#1072#1103#1074#1082#1072' '#1087#1086#1082'. '#1040#1082#1094#1080#1080
+        DataBinding.FieldName = 'TotalOrderPromo'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1073#1077#1079' '#1040#1082#1094#1080#1081
-        Options.Editing = False
-        Width = 95
-      end
-      object Promo1: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080' '#1079#1072' 1'
-        DataBinding.FieldName = 'Promo1'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
-        Options.Editing = False
-        Width = 95
-      end
-      object Promo2: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080' '#1079#1072' 2'
-        DataBinding.FieldName = 'Promo2'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
-        Options.Editing = False
-        Width = 95
-      end
-      object Promo3: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080' '#1079#1072' 3'
-        DataBinding.FieldName = 'Promo3'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
-        Options.Editing = False
-        Width = 95
-      end
-      object Promo4: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080' '#1079#1072' 4'
-        DataBinding.FieldName = 'Promo4'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
-        Options.Editing = False
-        Width = 95
-      end
-      object Promo5: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080' '#1079#1072' 5'
-        DataBinding.FieldName = 'Promo5'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
-        Options.Editing = False
-        Width = 95
-      end
-      object Promo6: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080' '#1079#1072' 6'
-        DataBinding.FieldName = 'Promo6'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
-        Options.Editing = False
-        Width = 95
-      end
-      object Promo7: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080' '#1079#1072' 7'
-        DataBinding.FieldName = 'Promo7'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
-        Options.Editing = False
-        Width = 95
-      end
-      object Branch1: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1093'. '#1085#1072' '#1092#1080#1083#1080#1072#1083' '#1079#1072' 1'
-        DataBinding.FieldName = 'Branch1'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object Branch2: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1093'. '#1085#1072' '#1092#1080#1083#1080#1072#1083' '#1079#1072' 2'
-        DataBinding.FieldName = 'Branch2'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object Branch3: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1093'. '#1085#1072' '#1092#1080#1083#1080#1072#1083' '#1079#1072' 3'
-        DataBinding.FieldName = 'Branch3'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object Branch4: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1093'. '#1085#1072' '#1092#1080#1083#1080#1072#1083' '#1079#1072' 4'
-        DataBinding.FieldName = 'Branch4'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object Branch5: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1093'. '#1085#1072' '#1092#1080#1083#1080#1072#1083' '#1079#1072' 5'
-        DataBinding.FieldName = 'Branch5'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object Branch6: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1093'. '#1085#1072' '#1092#1080#1083#1080#1072#1083' '#1079#1072' 6.'
-        DataBinding.FieldName = 'Branch6'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object Branch7: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1093'. '#1085#1072' '#1092#1080#1083#1080#1072#1083' '#1079#1072' 7'
-        DataBinding.FieldName = 'Branch7'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object Order1: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082' '#1079#1072' 1'
-        DataBinding.FieldName = 'Order1'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1073#1077#1079' '#1040#1082#1094#1080#1081
-        Options.Editing = False
-        Width = 95
-      end
-      object Order2: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082' '#1079#1072' 2'
-        DataBinding.FieldName = 'Order2'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1073#1077#1079' '#1040#1082#1094#1080#1081
-        Options.Editing = False
-        Width = 95
-      end
-      object Order3: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082' '#1079#1072' 3'
-        DataBinding.FieldName = 'Order3'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1073#1077#1079' '#1040#1082#1094#1080#1081
-        Options.Editing = False
-        Width = 95
-      end
-      object Order4: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082' '#1079#1072' 4'
-        DataBinding.FieldName = 'Order4'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1073#1077#1079' '#1040#1082#1094#1080#1081
-        Options.Editing = False
-        Width = 95
-      end
-      object Order5: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082' '#1079#1072' 5'
-        DataBinding.FieldName = 'Order5'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1073#1077#1079' '#1040#1082#1094#1080#1081
-        Options.Editing = False
-        Width = 95
-      end
-      object Order6: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082' '#1079#1072' 6'
-        DataBinding.FieldName = 'Order6'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1073#1077#1079' '#1040#1082#1094#1080#1081
-        Options.Editing = False
-        Width = 95
-      end
-      object Order7: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082' '#1079#1072' 7'
-        DataBinding.FieldName = 'Order7'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1073#1077#1079' '#1040#1082#1094#1080#1081
-        Options.Editing = False
-        Width = 95
-      end
-      object OrderPromo1: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082' '#1040#1082#1094#1080#1103' '#1079#1072' 1'
-        DataBinding.FieldName = 'OrderPromo1'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
-        Options.Editing = False
-        Width = 95
-      end
-      object OrderPromo2: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082' '#1040#1082#1094#1080#1103' '#1079#1072' 2'
-        DataBinding.FieldName = 'OrderPromo2'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
-        Options.Editing = False
-        Width = 95
-      end
-      object OrderPromo3: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082' '#1040#1082#1094#1080#1103' '#1079#1072' 3'
-        DataBinding.FieldName = 'OrderPromo3'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
-        Options.Editing = False
-        Width = 95
-      end
-      object OrderPromo4: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082' '#1040#1082#1094#1080#1103' '#1079#1072' 4'
-        DataBinding.FieldName = 'OrderPromo4'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
-        Options.Editing = False
-        Width = 95
-      end
-      object OrderPromo5: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082' '#1040#1082#1094#1080#1103' '#1079#1072' 5'
-        DataBinding.FieldName = 'OrderPromo5'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
-        Options.Editing = False
-        Width = 95
-      end
-      object OrderPromo6: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082' '#1040#1082#1094#1080#1103' '#1079#1072' 6'
-        DataBinding.FieldName = 'OrderPromo6'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
-        Options.Editing = False
-        Width = 95
-      end
-      object OrderPromo7: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082' '#1040#1082#1094#1080#1103' '#1079#1072' 7'
-        DataBinding.FieldName = 'OrderPromo7'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
-        Options.Editing = False
-        Width = 95
-      end
-      object OrderBranch1: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082' '#1060#1080#1083#1080#1072#1083' '#1079#1072' 1'
-        DataBinding.FieldName = 'OrderBranch1'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object OrderBranch2: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082' '#1060#1080#1083#1080#1072#1083' '#1079#1072' 2'
-        DataBinding.FieldName = 'OrderBranch2'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object OrderBranch3: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082' '#1060#1080#1083#1080#1072#1083' '#1079#1072' 3'
-        DataBinding.FieldName = 'OrderBranch3'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object OrderBranch4: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082' '#1060#1080#1083#1080#1072#1083' '#1079#1072' 4'
-        DataBinding.FieldName = 'OrderBranch4'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object OrderBranch5: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082' '#1060#1080#1083#1080#1072#1083' '#1079#1072' 5'
-        DataBinding.FieldName = 'OrderBranch5'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object OrderBranch6: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082' '#1060#1080#1083#1080#1072#1083' '#1079#1072' 6'
-        DataBinding.FieldName = 'OrderBranch6'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object OrderBranch7: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1086#1082' '#1060#1080#1083#1080#1072#1083' '#1079#1072' 7'
-        DataBinding.FieldName = 'OrderBranch7'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object AmountPromoBranch1: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1093'. '#1079#1072' 1'
-        DataBinding.FieldName = 'AmountPromoBranch1'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object AmountPromoBranch2: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1093'. '#1079#1072' 2'
-        DataBinding.FieldName = 'AmountPromoBranch2'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object AmountPromoBranch3: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1093'. '#1079#1072' 3'
-        DataBinding.FieldName = 'AmountPromoBranch3'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object AmountPromoBranch4: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1093'. '#1079#1072' 4'
-        DataBinding.FieldName = 'AmountPromoBranch4'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object AmountPromoBranch5: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1093'. '#1079#1072' 5'
-        DataBinding.FieldName = 'AmountPromoBranch5'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object AmountPromoBranch6: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1093'. '#1079#1072' 6'
-        DataBinding.FieldName = 'AmountPromoBranch6'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object AmountPromoBranch7: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1093'. '#1079#1072' 7'
-        DataBinding.FieldName = 'AmountPromoBranch7'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object OrderPromoBranch1: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1082#1080' ('#1074#1089#1077') '#1079#1072' 1'
-        DataBinding.FieldName = 'OrderPromoBranch1'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object OrderPromoBranch2: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1082#1080' ('#1074#1089#1077') '#1079#1072' 2'
-        DataBinding.FieldName = 'OrderPromoBranch2'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object OrderPromoBranch3: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1082#1080' ('#1074#1089#1077') '#1079#1072' 3'
-        DataBinding.FieldName = 'OrderPromoBranch3'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object OrderPromoBranch4: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1082#1080' ('#1074#1089#1077') '#1079#1072' 4'
-        DataBinding.FieldName = 'OrderPromoBranch4'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object OrderPromoBranch5: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1082#1080' ('#1074#1089#1077') '#1079#1072' 5'
-        DataBinding.FieldName = 'OrderPromoBranch5'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object OrderPromoBranch6: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1082#1080' ('#1074#1089#1077') '#1079#1072' 6'
-        DataBinding.FieldName = 'OrderPromoBranch6'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object OrderPromoBranch7: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1082#1080' ('#1074#1089#1077') '#1079#1072' 7'
-        DataBinding.FieldName = 'OrderPromoBranch7'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1090#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
         Options.Editing = False
         Width = 95
       end
       object AnalysisAmount1: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1072#1085#1072#1083#1080#1079' '#1088#1072#1089#1093'. '#1079#1072' 1'
+        Caption = #1057#1058#1040#1058'. '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 1'
         DataBinding.FieldName = 'AnalysisAmount1'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1073#1077#1079' '#1040#1082#1094#1080#1081
+        HeaderHint = #1076#1083#1103' '#1057#1058#1040#1058#1048#1057#1058#1048#1050#1048' '#1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' + '#1056#1072#1089#1093#1086#1076' '#1085#1072' '#1060#1080#1083#1080#1072#1083
         Options.Editing = False
-        Width = 95
+        Width = 70
       end
       object AnalysisAmount2: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1072#1085#1072#1083#1080#1079' '#1088#1072#1089#1093'. '#1079#1072' 2'
+        Caption = #1057#1058#1040#1058'. '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 2'
         DataBinding.FieldName = 'AnalysisAmount2'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1073#1077#1079' '#1040#1082#1094#1080#1081
+        HeaderHint = #1076#1083#1103' '#1057#1058#1040#1058#1048#1057#1058#1048#1050#1048' '#1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' + '#1056#1072#1089#1093#1086#1076' '#1085#1072' '#1060#1080#1083#1080#1072#1083
         Options.Editing = False
-        Width = 95
+        Width = 70
       end
       object AnalysisAmount3: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1072#1085#1072#1083#1080#1079' '#1088#1072#1089#1093'. '#1079#1072' 3'
+        Caption = #1057#1058#1040#1058'. '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 3'
         DataBinding.FieldName = 'AnalysisAmount3'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1073#1077#1079' '#1040#1082#1094#1080#1081
+        HeaderHint = #1076#1083#1103' '#1057#1058#1040#1058#1048#1057#1058#1048#1050#1048' '#1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' + '#1056#1072#1089#1093#1086#1076' '#1085#1072' '#1060#1080#1083#1080#1072#1083
         Options.Editing = False
-        Width = 95
+        Width = 70
       end
       object AnalysisAmount4: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1072#1085#1072#1083#1080#1079' '#1088#1072#1089#1093'. '#1079#1072' 4'
+        Caption = #1057#1058#1040#1058'. '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 4'
         DataBinding.FieldName = 'AnalysisAmount4'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1073#1077#1079' '#1040#1082#1094#1080#1081
+        HeaderHint = #1076#1083#1103' '#1057#1058#1040#1058#1048#1057#1058#1048#1050#1048' '#1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' + '#1056#1072#1089#1093#1086#1076' '#1085#1072' '#1060#1080#1083#1080#1072#1083
         Options.Editing = False
-        Width = 95
+        Width = 70
       end
       object AnalysisAmount5: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1072#1085#1072#1083#1080#1079' '#1088#1072#1089#1093'. '#1079#1072' 5'
+        Caption = #1057#1058#1040#1058'. '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 5'
         DataBinding.FieldName = 'AnalysisAmount5'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1073#1077#1079' '#1040#1082#1094#1080#1081
+        HeaderHint = #1076#1083#1103' '#1057#1058#1040#1058#1048#1057#1058#1048#1050#1048' '#1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' + '#1056#1072#1089#1093#1086#1076' '#1085#1072' '#1060#1080#1083#1080#1072#1083
         Options.Editing = False
-        Width = 95
+        Width = 70
       end
       object AnalysisAmount6: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1072#1085#1072#1083#1080#1079' '#1088#1072#1089#1093'. '#1079#1072' 6'
+        Caption = #1057#1058#1040#1058'. '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 6'
         DataBinding.FieldName = 'AnalysisAmount6'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1073#1077#1079' '#1040#1082#1094#1080#1081
+        HeaderHint = #1076#1083#1103' '#1057#1058#1040#1058#1048#1057#1058#1048#1050#1048' '#1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' + '#1056#1072#1089#1093#1086#1076' '#1085#1072' '#1060#1080#1083#1080#1072#1083
         Options.Editing = False
-        Width = 95
+        Width = 70
       end
       object AnalysisAmount7: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1072#1085#1072#1083#1080#1079' '#1088#1072#1089#1093'. '#1079#1072' 7'
+        Caption = #1057#1058#1040#1058'. '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 7'
         DataBinding.FieldName = 'AnalysisAmount7'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1073#1077#1079' '#1040#1082#1094#1080#1081
+        HeaderHint = #1076#1083#1103' '#1057#1058#1040#1058#1048#1057#1058#1048#1050#1048' '#1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' + '#1056#1072#1089#1093#1086#1076' '#1085#1072' '#1060#1080#1083#1080#1072#1083
         Options.Editing = False
-        Width = 95
+        Width = 70
       end
       object AnalysisOrder1: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1072#1085#1072#1083#1080#1079' '#1079#1072#1103#1074#1082#1080' '#1079#1072' 1'
+        Caption = #1057#1058#1040#1058'. '#1079#1072#1103#1074#1082#1072' '#1079#1072' 1'
         DataBinding.FieldName = 'AnalysisOrder1'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1073#1077#1079' '#1040#1082#1094#1080#1081
+        HeaderHint = #1076#1083#1103' '#1057#1058#1040#1058#1048#1057#1058#1048#1050#1048' '#1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' + '#1089' '#1060#1080#1083#1080#1072#1083#1072
         Options.Editing = False
-        Width = 95
+        Width = 70
       end
       object AnalysisOrder2: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1072#1085#1072#1083#1080#1079' '#1079#1072#1103#1074#1082#1080' '#1079#1072' 2'
+        Caption = #1057#1058#1040#1058'. '#1079#1072#1103#1074#1082#1072' '#1079#1072' 2'
         DataBinding.FieldName = 'AnalysisOrder2'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1073#1077#1079' '#1040#1082#1094#1080#1081
+        HeaderHint = #1076#1083#1103' '#1057#1058#1040#1058#1048#1057#1058#1048#1050#1048' '#1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' + '#1089' '#1060#1080#1083#1080#1072#1083#1072
         Options.Editing = False
-        Width = 95
+        Width = 70
       end
       object AnalysisOrder3: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1072#1085#1072#1083#1080#1079' '#1079#1072#1103#1074#1082#1080' '#1079#1072' 3'
+        Caption = #1057#1058#1040#1058'. '#1079#1072#1103#1074#1082#1072' '#1079#1072' 3'
         DataBinding.FieldName = 'AnalysisOrder3'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1073#1077#1079' '#1040#1082#1094#1080#1081
+        HeaderHint = #1076#1083#1103' '#1057#1058#1040#1058#1048#1057#1058#1048#1050#1048' '#1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' + '#1089' '#1060#1080#1083#1080#1072#1083#1072
         Options.Editing = False
-        Width = 95
+        Width = 70
       end
       object AnalysisOrder4: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1072#1085#1072#1083#1080#1079' '#1079#1072#1103#1074#1082#1080' '#1079#1072' 4'
+        Caption = #1057#1058#1040#1058'. '#1079#1072#1103#1074#1082#1072' '#1079#1072' 4'
         DataBinding.FieldName = 'AnalysisOrder4'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1073#1077#1079' '#1040#1082#1094#1080#1081
+        HeaderHint = #1076#1083#1103' '#1057#1058#1040#1058#1048#1057#1058#1048#1050#1048' '#1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' + '#1089' '#1060#1080#1083#1080#1072#1083#1072
         Options.Editing = False
-        Width = 95
+        Width = 70
       end
       object AnalysisOrder5: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1072#1085#1072#1083#1080#1079' '#1079#1072#1103#1074#1082#1080' '#1079#1072' 5'
+        Caption = #1057#1058#1040#1058'. '#1079#1072#1103#1074#1082#1072' '#1079#1072' 5'
         DataBinding.FieldName = 'AnalysisOrder5'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1073#1077#1079' '#1040#1082#1094#1080#1081
+        HeaderHint = #1076#1083#1103' '#1057#1058#1040#1058#1048#1057#1058#1048#1050#1048' '#1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' + '#1089' '#1060#1080#1083#1080#1072#1083#1072
         Options.Editing = False
-        Width = 95
+        Width = 70
       end
       object AnalysisOrder6: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1072#1085#1072#1083#1080#1079' '#1079#1072#1103#1074#1082#1080' '#1079#1072' 6'
+        Caption = #1057#1058#1040#1058'. '#1079#1072#1103#1074#1082#1072' '#1079#1072' 6'
         DataBinding.FieldName = 'AnalysisOrder6'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1073#1077#1079' '#1040#1082#1094#1080#1081
+        HeaderHint = #1076#1083#1103' '#1057#1058#1040#1058#1048#1057#1058#1048#1050#1048' '#1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' + '#1089' '#1060#1080#1083#1080#1072#1083#1072
         Options.Editing = False
-        Width = 95
+        Width = 70
       end
       object AnalysisOrder7: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1072#1085#1072#1083#1080#1079' '#1079#1072#1103#1074#1082#1080' '#1079#1072' 7'
+        Caption = #1057#1058#1040#1058'. '#1079#1072#1103#1074#1082#1072' '#1079#1072' 7'
         DataBinding.FieldName = 'AnalysisOrder7'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1073#1077#1079' '#1040#1082#1094#1080#1081
+        HeaderHint = #1076#1083#1103' '#1057#1058#1040#1058#1048#1057#1058#1048#1050#1048' '#1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' + '#1089' '#1060#1080#1083#1080#1072#1083#1072
         Options.Editing = False
-        Width = 95
+        Width = 70
+      end
+      object AmountPromoBranch1: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1088#1072#1089#1093#1086#1076' '#1079#1072' 1'
+        DataBinding.FieldName = 'AmountPromoBranch1'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' + '#1040#1082#1094#1080#1080' + '#1056#1072#1089#1093#1086#1076' '#1085#1072' '#1060#1080#1083#1080#1072#1083
+        Options.Editing = False
+        Width = 70
+      end
+      object AmountPromoBranch2: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1088#1072#1089#1093#1086#1076' '#1079#1072' 2'
+        DataBinding.FieldName = 'AmountPromoBranch2'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' + '#1040#1082#1094#1080#1080' + '#1056#1072#1089#1093#1086#1076' '#1085#1072' '#1060#1080#1083#1080#1072#1083
+        Options.Editing = False
+        Width = 70
+      end
+      object AmountPromoBranch3: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1088#1072#1089#1093#1086#1076' '#1079#1072' 3'
+        DataBinding.FieldName = 'AmountPromoBranch3'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' + '#1040#1082#1094#1080#1080' + '#1056#1072#1089#1093#1086#1076' '#1085#1072' '#1060#1080#1083#1080#1072#1083
+        Options.Editing = False
+        Width = 70
+      end
+      object AmountPromoBranch4: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1088#1072#1089#1093#1086#1076' '#1079#1072' 4'
+        DataBinding.FieldName = 'AmountPromoBranch4'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' + '#1040#1082#1094#1080#1080' + '#1056#1072#1089#1093#1086#1076' '#1085#1072' '#1060#1080#1083#1080#1072#1083
+        Options.Editing = False
+        Width = 70
+      end
+      object AmountPromoBranch5: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1088#1072#1089#1093#1086#1076' '#1079#1072' 5'
+        DataBinding.FieldName = 'AmountPromoBranch5'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' + '#1040#1082#1094#1080#1080' + '#1056#1072#1089#1093#1086#1076' '#1085#1072' '#1060#1080#1083#1080#1072#1083
+        Options.Editing = False
+        Width = 70
+      end
+      object AmountPromoBranch6: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1088#1072#1089#1093#1086#1076' '#1079#1072' 6'
+        DataBinding.FieldName = 'AmountPromoBranch6'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' + '#1040#1082#1094#1080#1080' + '#1056#1072#1089#1093#1086#1076' '#1085#1072' '#1060#1080#1083#1080#1072#1083
+        Options.Editing = False
+        Width = 70
+      end
+      object AmountPromoBranch7: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1088#1072#1089#1093#1086#1076' '#1079#1072' 7'
+        DataBinding.FieldName = 'AmountPromoBranch7'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' + '#1040#1082#1094#1080#1080' + '#1056#1072#1089#1093#1086#1076' '#1085#1072' '#1060#1080#1083#1080#1072#1083
+        Options.Editing = False
+        Width = 70
+      end
+      object OrderPromoBranch1: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1079#1072#1103#1074#1082#1072' '#1079#1072' 1'
+        DataBinding.FieldName = 'OrderPromoBranch1'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' + '#1040#1082#1094#1080#1080' + '#1089' '#1060#1080#1083#1080#1072#1083#1072
+        Options.Editing = False
+        Width = 70
+      end
+      object OrderPromoBranch2: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1079#1072#1103#1074#1082#1072' '#1079#1072' 2'
+        DataBinding.FieldName = 'OrderPromoBranch2'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' + '#1040#1082#1094#1080#1080' + '#1089' '#1060#1080#1083#1080#1072#1083#1072
+        Options.Editing = False
+        Width = 70
+      end
+      object OrderPromoBranch3: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1079#1072#1103#1074#1082#1072' '#1079#1072' 3'
+        DataBinding.FieldName = 'OrderPromoBranch3'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' + '#1040#1082#1094#1080#1080' + '#1089' '#1060#1080#1083#1080#1072#1083#1072
+        Options.Editing = False
+        Width = 70
+      end
+      object OrderPromoBranch4: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1079#1072#1103#1074#1082#1072' '#1079#1072' 4'
+        DataBinding.FieldName = 'OrderPromoBranch4'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' + '#1040#1082#1094#1080#1080' + '#1089' '#1060#1080#1083#1080#1072#1083#1072
+        Options.Editing = False
+        Width = 70
+      end
+      object OrderPromoBranch5: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1079#1072#1103#1074#1082#1072' '#1079#1072' 5'
+        DataBinding.FieldName = 'OrderPromoBranch5'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' + '#1040#1082#1094#1080#1080' + '#1089' '#1060#1080#1083#1080#1072#1083#1072
+        Options.Editing = False
+        Width = 70
+      end
+      object OrderPromoBranch6: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1079#1072#1103#1074#1082#1072' '#1079#1072' 6'
+        DataBinding.FieldName = 'OrderPromoBranch6'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' + '#1040#1082#1094#1080#1080' + '#1089' '#1060#1080#1083#1080#1072#1083#1072
+        Options.Editing = False
+        Width = 70
+      end
+      object OrderPromoBranch7: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1079#1072#1103#1074#1082#1072' '#1079#1072' 7'
+        DataBinding.FieldName = 'OrderPromoBranch7'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' + '#1040#1082#1094#1080#1080' + '#1089' '#1060#1080#1083#1080#1072#1083#1072
+        Options.Editing = False
+        Width = 70
+      end
+      object Amount1: TcxGridDBColumn
+        Caption = #1088#1077#1072#1083#1080#1079'. '#1079#1072' 1'
+        DataBinding.FieldName = 'Amount1'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1073#1077#1079' '#1040#1082#1094#1080#1081
+        Options.Editing = False
+        Width = 60
+      end
+      object Amount2: TcxGridDBColumn
+        Caption = #1088#1077#1072#1083#1080#1079'. '#1079#1072' 2'
+        DataBinding.FieldName = 'Amount2'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1073#1077#1079' '#1040#1082#1094#1080#1081
+        Options.Editing = False
+        Width = 60
+      end
+      object Amount3: TcxGridDBColumn
+        Caption = #1088#1077#1072#1083#1080#1079'. '#1079#1072' 3'
+        DataBinding.FieldName = 'Amount3'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1073#1077#1079' '#1040#1082#1094#1080#1081
+        Options.Editing = False
+        Width = 60
+      end
+      object Amount4: TcxGridDBColumn
+        Caption = #1088#1077#1072#1083#1080#1079'. '#1079#1072' 4'
+        DataBinding.FieldName = 'Amount4'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1073#1077#1079' '#1040#1082#1094#1080#1081
+        Options.Editing = False
+        Width = 60
+      end
+      object Amount5: TcxGridDBColumn
+        Caption = #1088#1077#1072#1083#1080#1079'. '#1079#1072' 5'
+        DataBinding.FieldName = 'Amount5'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1073#1077#1079' '#1040#1082#1094#1080#1081
+        Options.Editing = False
+        Width = 60
+      end
+      object Amount6: TcxGridDBColumn
+        Caption = #1088#1077#1072#1083#1080#1079'. '#1079#1072' 6'
+        DataBinding.FieldName = 'Amount6'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1073#1077#1079' '#1040#1082#1094#1080#1081
+        Options.Editing = False
+        Width = 60
+      end
+      object Amount7: TcxGridDBColumn
+        Caption = #1088#1077#1072#1083#1080#1079'. '#1079#1072' 7'
+        DataBinding.FieldName = 'Amount7'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1073#1077#1079' '#1040#1082#1094#1080#1081
+        Options.Editing = False
+        Width = 60
+      end
+      object Promo1: TcxGridDBColumn
+        Caption = #1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080' '#1079#1072' 1'
+        DataBinding.FieldName = 'Promo1'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object Promo2: TcxGridDBColumn
+        Caption = #1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080' '#1079#1072' 2'
+        DataBinding.FieldName = 'Promo2'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object Promo3: TcxGridDBColumn
+        Caption = #1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080' '#1079#1072' 3'
+        DataBinding.FieldName = 'Promo3'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object Promo4: TcxGridDBColumn
+        Caption = #1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080' '#1079#1072' 4'
+        DataBinding.FieldName = 'Promo4'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object Promo5: TcxGridDBColumn
+        Caption = #1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080' '#1079#1072' 5'
+        DataBinding.FieldName = 'Promo5'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object Promo6: TcxGridDBColumn
+        Caption = #1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080' '#1079#1072' 6'
+        DataBinding.FieldName = 'Promo6'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object Promo7: TcxGridDBColumn
+        Caption = #1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080' '#1079#1072' 7'
+        DataBinding.FieldName = 'Promo7'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object Branch1: TcxGridDBColumn
+        Caption = #1088#1072#1089#1093'. '#1085#1072' '#1060#1080#1083'. '#1079#1072' 1'
+        DataBinding.FieldName = 'Branch1'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1056#1072#1089#1093#1086#1076' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1085#1072' '#1060#1080#1083#1080#1072#1083
+        Options.Editing = False
+        Width = 60
+      end
+      object Branch2: TcxGridDBColumn
+        Caption = #1088#1072#1089#1093'. '#1085#1072' '#1060#1080#1083'. '#1079#1072' 2'
+        DataBinding.FieldName = 'Branch2'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1056#1072#1089#1093#1086#1076' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1085#1072' '#1060#1080#1083#1080#1072#1083
+        Options.Editing = False
+        Width = 60
+      end
+      object Branch3: TcxGridDBColumn
+        Caption = #1088#1072#1089#1093'. '#1085#1072' '#1060#1080#1083'. '#1079#1072' 3'
+        DataBinding.FieldName = 'Branch3'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1056#1072#1089#1093#1086#1076' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1085#1072' '#1060#1080#1083#1080#1072#1083
+        Options.Editing = False
+        Width = 60
+      end
+      object Branch4: TcxGridDBColumn
+        Caption = #1088#1072#1089#1093'. '#1085#1072' '#1060#1080#1083'. '#1079#1072' 4'
+        DataBinding.FieldName = 'Branch4'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1056#1072#1089#1093#1086#1076' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1085#1072' '#1060#1080#1083#1080#1072#1083
+        Options.Editing = False
+        Width = 60
+      end
+      object Branch5: TcxGridDBColumn
+        Caption = #1088#1072#1089#1093'. '#1085#1072' '#1060#1080#1083'. '#1079#1072' 5'
+        DataBinding.FieldName = 'Branch5'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1056#1072#1089#1093#1086#1076' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1085#1072' '#1060#1080#1083#1080#1072#1083
+        Options.Editing = False
+        Width = 60
+      end
+      object Branch6: TcxGridDBColumn
+        Caption = #1088#1072#1089#1093'. '#1085#1072' '#1060#1080#1083'. '#1079#1072' 6.'
+        DataBinding.FieldName = 'Branch6'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1056#1072#1089#1093#1086#1076' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1085#1072' '#1060#1080#1083#1080#1072#1083
+        Options.Editing = False
+        Width = 60
+      end
+      object Branch7: TcxGridDBColumn
+        Caption = #1088#1072#1089#1093'. '#1085#1072' '#1060#1080#1083'. '#1079#1072' 7'
+        DataBinding.FieldName = 'Branch7'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1056#1072#1089#1093#1086#1076' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1085#1072' '#1060#1080#1083#1080#1072#1083
+        Options.Editing = False
+        Width = 60
+      end
+      object Order1: TcxGridDBColumn
+        Caption = #1079#1072#1103#1074#1082#1072' '#1087#1086#1082'. '#1079#1072' 1'
+        DataBinding.FieldName = 'Order1'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1073#1077#1079' '#1040#1082#1094#1080#1081
+        Options.Editing = False
+        Width = 60
+      end
+      object Order2: TcxGridDBColumn
+        Caption = #1079#1072#1103#1074#1082#1072' '#1087#1086#1082'. '#1079#1072' 2'
+        DataBinding.FieldName = 'Order2'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1073#1077#1079' '#1040#1082#1094#1080#1081
+        Options.Editing = False
+        Width = 60
+      end
+      object Order3: TcxGridDBColumn
+        Caption = #1079#1072#1103#1074#1082#1072' '#1087#1086#1082'. '#1079#1072' 3'
+        DataBinding.FieldName = 'Order3'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1073#1077#1079' '#1040#1082#1094#1080#1081
+        Options.Editing = False
+        Width = 60
+      end
+      object Order4: TcxGridDBColumn
+        Caption = #1079#1072#1103#1074#1082#1072' '#1087#1086#1082'. '#1079#1072' 4'
+        DataBinding.FieldName = 'Order4'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1073#1077#1079' '#1040#1082#1094#1080#1081
+        Options.Editing = False
+        Width = 60
+      end
+      object Order5: TcxGridDBColumn
+        Caption = #1079#1072#1103#1074#1082#1072' '#1087#1086#1082'. '#1079#1072' 5'
+        DataBinding.FieldName = 'Order5'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1073#1077#1079' '#1040#1082#1094#1080#1081
+        Options.Editing = False
+        Width = 60
+      end
+      object Order6: TcxGridDBColumn
+        Caption = #1079#1072#1103#1074#1082#1072' '#1087#1086#1082'. '#1079#1072' 6'
+        DataBinding.FieldName = 'Order6'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1073#1077#1079' '#1040#1082#1094#1080#1081
+        Options.Editing = False
+        Width = 60
+      end
+      object Order7: TcxGridDBColumn
+        Caption = #1079#1072#1103#1074#1082#1072' '#1087#1086#1082'. '#1079#1072' 7'
+        DataBinding.FieldName = 'Order7'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1073#1077#1079' '#1040#1082#1094#1080#1081
+        Options.Editing = False
+        Width = 60
+      end
+      object OrderPromo1: TcxGridDBColumn
+        Caption = #1079#1072#1103#1074#1082#1072' '#1087#1086#1082'. '#1040#1082#1094#1080#1080' '#1079#1072' 1'
+        DataBinding.FieldName = 'OrderPromo1'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1090#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object OrderPromo2: TcxGridDBColumn
+        Caption = #1079#1072#1103#1074#1082#1072' '#1087#1086#1082'. '#1040#1082#1094#1080#1080' '#1079#1072' 2'
+        DataBinding.FieldName = 'OrderPromo2'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1090#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object OrderPromo3: TcxGridDBColumn
+        Caption = #1079#1072#1103#1074#1082#1072' '#1087#1086#1082'. '#1040#1082#1094#1080#1080' '#1079#1072' 3'
+        DataBinding.FieldName = 'OrderPromo3'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1090#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object OrderPromo4: TcxGridDBColumn
+        Caption = #1079#1072#1103#1074#1082#1072' '#1087#1086#1082'. '#1040#1082#1094#1080#1080' '#1079#1072' 4'
+        DataBinding.FieldName = 'OrderPromo4'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1090#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object OrderPromo5: TcxGridDBColumn
+        Caption = #1079#1072#1103#1074#1082#1072' '#1087#1086#1082'. '#1040#1082#1094#1080#1080' '#1079#1072' 5'
+        DataBinding.FieldName = 'OrderPromo5'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1090#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object OrderPromo6: TcxGridDBColumn
+        Caption = #1079#1072#1103#1074#1082#1072' '#1087#1086#1082'. '#1040#1082#1094#1080#1080' '#1079#1072' 6'
+        DataBinding.FieldName = 'OrderPromo6'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1090#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object OrderPromo7: TcxGridDBColumn
+        Caption = #1079#1072#1103#1074#1082#1072' '#1087#1086#1082'. '#1040#1082#1094#1080#1080' '#1079#1072' 7'
+        DataBinding.FieldName = 'OrderPromo7'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1090#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object OrderBranch1: TcxGridDBColumn
+        Caption = #1079#1072#1103#1074#1082#1072' '#1089' '#1060#1080#1083'. '#1079#1072' 1'
+        DataBinding.FieldName = 'OrderBranch1'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1089' '#1060#1080#1083#1080#1072#1083#1072
+        Options.Editing = False
+        Width = 60
+      end
+      object OrderBranch2: TcxGridDBColumn
+        Caption = #1079#1072#1103#1074#1082#1072' '#1089' '#1060#1080#1083'. '#1079#1072' 2'
+        DataBinding.FieldName = 'OrderBranch2'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1089' '#1060#1080#1083#1080#1072#1083#1072
+        Options.Editing = False
+        Width = 60
+      end
+      object OrderBranch3: TcxGridDBColumn
+        Caption = #1079#1072#1103#1074#1082#1072' '#1089' '#1060#1080#1083'. '#1079#1072' 3'
+        DataBinding.FieldName = 'OrderBranch3'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1089' '#1060#1080#1083#1080#1072#1083#1072
+        Options.Editing = False
+        Width = 60
+      end
+      object OrderBranch4: TcxGridDBColumn
+        Caption = #1079#1072#1103#1074#1082#1072' '#1089' '#1060#1080#1083'. '#1079#1072' 4'
+        DataBinding.FieldName = 'OrderBranch4'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1089' '#1060#1080#1083#1080#1072#1083#1072
+        Options.Editing = False
+        Width = 60
+      end
+      object OrderBranch5: TcxGridDBColumn
+        Caption = #1079#1072#1103#1074#1082#1072' '#1089' '#1060#1080#1083'. '#1079#1072' 5'
+        DataBinding.FieldName = 'OrderBranch5'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1089' '#1060#1080#1083#1080#1072#1083#1072
+        Options.Editing = False
+        Width = 60
+      end
+      object OrderBranch6: TcxGridDBColumn
+        Caption = #1079#1072#1103#1074#1082#1072' '#1089' '#1060#1080#1083'. '#1079#1072' 6'
+        DataBinding.FieldName = 'OrderBranch6'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1089' '#1060#1080#1083#1080#1072#1083#1072
+        Options.Editing = False
+        Width = 60
+      end
+      object OrderBranch7: TcxGridDBColumn
+        Caption = #1079#1072#1103#1074#1082#1072' '#1089' '#1060#1080#1083'. '#1079#1072' 7'
+        DataBinding.FieldName = 'OrderBranch7'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1089' '#1060#1080#1083#1080#1072#1083#1072
+        Options.Editing = False
+        Width = 60
+      end
+      object InfoMoneyCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1059#1055
+        DataBinding.FieldName = 'InfoMoneyCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object InfoMoneyName: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
       end
     end
     object cxGridLevel: TcxGridLevel

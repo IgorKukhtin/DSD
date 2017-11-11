@@ -180,6 +180,8 @@ type
     actUpdateAmountSecond_toPACK: TdsdExecStoredProc;
     bbUpdateAmount_toPACK: TdxBarButton;
     bbUpdateAmountSecond_toPACK: TdxBarButton;
+    actGridTotalToExcel: TdsdGridToExcel;
+    bbGridTotalToExcel: TdxBarButton;
   private
     { Private declarations }
   public

@@ -54,7 +54,7 @@ BEGIN
                                                  + COALESCE (ObjectFloat_OrderBranch5.ValueData, 0)
                                                  + COALESCE (ObjectFloat_OrderBranch6.ValueData, 0)
                                                  + COALESCE (ObjectFloat_OrderBranch7.ValueData, 0)
-                                                   ) AS AmountOrder
+                                                  ) AS AmountOrder
                                             , SUM (COALESCE (ObjectFloat_OrderPromo1.ValueData, 0)
                                                  + COALESCE (ObjectFloat_OrderPromo2.ValueData, 0)
                                                  + COALESCE (ObjectFloat_OrderPromo3.ValueData, 0)
@@ -62,7 +62,7 @@ BEGIN
                                                  + COALESCE (ObjectFloat_OrderPromo5.ValueData, 0)
                                                  + COALESCE (ObjectFloat_OrderPromo6.ValueData, 0)
                                                  + COALESCE (ObjectFloat_OrderPromo7.ValueData, 0)
-                                                   ) AS AmountOrderPromo
+                                                  ) AS AmountOrderPromo
 
                                             , SUM (COALESCE (ObjectFloat_Amount1.ValueData, 0)
                                                  + COALESCE (ObjectFloat_Amount2.ValueData, 0)
@@ -79,7 +79,7 @@ BEGIN
                                                  + COALESCE (ObjectFloat_Branch5.ValueData, 0)
                                                  + COALESCE (ObjectFloat_Branch6.ValueData, 0)
                                                  + COALESCE (ObjectFloat_Branch7.ValueData, 0)
-                                                   ) AS AmountSale
+                                                  ) AS AmountSale
                                             , SUM (COALESCE (ObjectFloat_Promo1.ValueData, 0)
                                                  + COALESCE (ObjectFloat_Promo2.ValueData, 0)
                                                  + COALESCE (ObjectFloat_Promo3.ValueData, 0)
@@ -87,7 +87,7 @@ BEGIN
                                                  + COALESCE (ObjectFloat_Promo5.ValueData, 0)
                                                  + COALESCE (ObjectFloat_Promo6.ValueData, 0)
                                                  + COALESCE (ObjectFloat_Promo7.ValueData, 0)
-                                                   ) AS AmountSalePromo
+                                                  ) AS AmountSalePromo
 
                                        FROM tmpGoods
                                             INNER JOIN ObjectLink AS ObjectLink_Goods
@@ -377,13 +377,13 @@ BEGIN
                                                  , inMovementId         := inMovementId
                                                  , inGoodsId            := tmpAll.GoodsId
                                                  , inGoodsKindId        := tmpAll.GoodsKindId
-                                                 , inAmount_Param       := tmpAll.AmountForecast * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                 , inAmount_Param       := tmpAll.AmountForecast -- * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
                                                  , inDescId_Param       := zc_MIFloat_AmountForecast()
-                                                 , inAmount_ParamOrder  := tmpAll.AmountForecastPromo * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                 , inAmount_ParamOrder  := tmpAll.AmountForecastPromo -- * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
                                                  , inDescId_ParamOrder  := zc_MIFloat_AmountForecastPromo()
-                                                 , inAmount_ParamSecond := tmpAll.AmountForecastOrder * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                 , inAmount_ParamSecond := tmpAll.AmountForecastOrder -- * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
                                                  , inDescId_ParamSecond := zc_MIFloat_AmountForecastOrder()
-                                                 , inAmount_ParamAdd    := tmpAll.AmountForecastOrderPromo * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                 , inAmount_ParamAdd    := tmpAll.AmountForecastOrderPromo -- * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
                                                  , inDescId_ParamAdd    := zc_MIFloat_AmountForecastOrderPromo()
                                                  , inIsPack             := NULL
                                                  , inUserId             := vbUserId
