@@ -454,10 +454,6 @@
 				<Form>OrderKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\ContactPersonEdit.pas">
-				<Form>ContactPersonEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\ContactPersonTest.pas"/>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\PartnerCode.pas">
 				<Form>PartnerCodeForm</Form>
@@ -502,10 +498,6 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\OrderKindTest.pas"/>
-			<DCCReference Include="..\..\Forms\Guides\ContactPerson.pas">
-				<Form>ContactPersonForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Kind\OrderKindEdit.pas">
 				<Form>OrderKindEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1803,6 +1795,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\OrderInternal.pas">
 				<Form>OrderInternalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\ContactPersonEdit.pas">
+				<Form>ContactPersonEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\ContactPerson.pas">
+				<Form>ContactPersonForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

@@ -158,7 +158,6 @@ uses
   UploadUnloadData in '..\..\FormsFarmacy\ConnectWithOld\UploadUnloadData.pas' {dmUnloadUploadData: TDataModule},
   ContactPersonKind in '..\..\Forms\Kind\ContactPersonKind.pas' {ContactPersonKindForm: TParentForm},
   OrderKind in '..\..\Forms\Kind\OrderKind.pas' {OrderKindForm: TParentForm},
-  ContactPersonEdit in '..\..\Forms\Guides\ContactPersonEdit.pas' {ContactPersonEditForm: TParentForm},
   ContactPersonTest in '..\SOURCE\Objects\All\ContactPersonTest.pas',
   PartnerCode in '..\..\FormsFarmacy\Guides\PartnerCode.pas' {PartnerCodeForm: TParentForm},
   GoodsLite in '..\..\FormsFarmacy\Guides\GoodsLite.pas' {GoodsLiteForm: TParentForm},
@@ -181,7 +180,6 @@ uses
   IncomeMovementItemTest in '..\SOURCE\MovementItem\All\Farmacy\IncomeMovementItemTest.pas',
   ChoiceGoodsFromPriceList in '..\..\FormsFarmacy\System\ChoiceGoodsFromPriceList.pas' {ChoiceGoodsFromPriceListForm: TParentForm},
   OrderKindTest in '..\SOURCE\Objects\All\OrderKindTest.pas',
-  ContactPerson in '..\..\Forms\Guides\ContactPerson.pas' {ContactPersonForm: TParentForm},
   OrderKindEdit in '..\..\Forms\Kind\OrderKindEdit.pas' {OrderKindEditForm: TParentForm},
   ImportExportLinkTest in '..\SOURCE\Objects\All\ImportExportLinkTest.pas',
   SetUserDefaults in '..\..\Forms\System\SetUserDefaults.pas' {SetUserDefaultsForm: TParentForm},
@@ -544,7 +542,9 @@ uses
   Report_MovementIncome_byPromo in '..\..\FormsFarmacy\Report\Report_MovementIncome_byPromo.pas' {Report_MovementIncome_byPromoForm: TParentForm},
   Report_GoodsRemains_AnotherRetail in '..\..\FormsFarmacy\Report\Report_GoodsRemains_AnotherRetail.pas' {Report_GoodsRemains_AnotherRetailForm: TParentForm},
   Report_Movement_AnotherRetail in '..\..\FormsFarmacy\Report\Report_Movement_AnotherRetail.pas' {Report_Movement_AnotherRetailForm: TParentForm},
-  OrderInternal in '..\..\FormsFarmacy\Document\OrderInternal.pas' {OrderInternalForm: TParentForm};
+  OrderInternal in '..\..\FormsFarmacy\Document\OrderInternal.pas' {OrderInternalForm: TParentForm},
+  ContactPersonEdit in '..\..\FormsFarmacy\Guides\ContactPersonEdit.pas' {ContactPersonEditForm: TParentForm},
+  ContactPerson in '..\..\FormsFarmacy\Guides\ContactPerson.pas' {ContactPersonForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
