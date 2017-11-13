@@ -425,25 +425,32 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
         item
           Name = 'InvNumber'
           Value = ''
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
           MultiSelectSeparator = ','
         end
         item
           Name = 'OperDate'
           Value = 42132d
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
           Name = 'FromName'
           Value = ''
-          ComponentItem = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'FromName'
           DataType = ftString
           MultiSelectSeparator = ','
         end
         item
           Name = 'ToName'
           Value = ''
-          ComponentItem = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'ToName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -455,8 +462,8 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
     end
   end
   inherited MasterDS: TDataSource
-    Left = 64
-    Top = 139
+    Left = 88
+    Top = 147
   end
   inherited MasterCDS: TClientDataSet
     Top = 139

@@ -17,6 +17,7 @@
     ClientRectBottom = 513
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
+      ExplicitTop = 0
       ExplicitWidth = 1020
       ExplicitHeight = 489
       inherited cxGrid: TcxGrid
@@ -1509,6 +1510,9 @@
     object tsTotal: TcxTabSheet
       Caption = #1048#1090#1086#1075#1086' '#1087#1086' '#1091#1087#1072#1082#1086#1074#1082#1077
       ImageIndex = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridChildTotal: TcxGrid
         Left = 0
         Top = 0
