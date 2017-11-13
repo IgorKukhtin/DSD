@@ -1935,6 +1935,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_ResultDialogForm');
   //
   }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PromoPlanForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_PromoPlanForm');
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PromoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PromoForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PromoDialogForm'));

@@ -11,6 +11,7 @@ inherited PromoForm: TPromoForm
     Top = 139
     Width = 1204
     Height = 460
+    Properties.ActivePage = cxTabSheetPlan
     ExplicitTop = 139
     ExplicitWidth = 1204
     ExplicitHeight = 460
@@ -1982,10 +1983,14 @@ inherited PromoForm: TPromoForm
       Hint = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 52
     end
+    inherited actGridToExcel: TdsdGridToExcel
+      Enabled = False
+    end
     object InsertRecord: TInsertRecord [8]
       Category = 'Goods'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView
       Action = GoodsChoiceForm
@@ -2011,6 +2016,7 @@ inherited PromoForm: TPromoForm
     inherited actMISetErased: TdsdUpdateErased
       Category = 'Goods'
       TabSheet = tsMain
+      Enabled = False
       StoredProcList = <
         item
           StoredProc = spErasedMIMaster
@@ -2065,6 +2071,7 @@ inherited PromoForm: TPromoForm
     inherited actMISetUnErased: TdsdUpdateErased
       Category = 'Goods'
       TabSheet = tsMain
+      Enabled = False
       StoredProcList = <
         item
           StoredProc = spUnErasedMIMaster
@@ -2091,6 +2098,7 @@ inherited PromoForm: TPromoForm
     end
     inherited actShowErased: TBooleanStoredProcAction
       TabSheet = tsMain
+      Enabled = False
       StoredProcList = <
         item
           StoredProc = spSelect
@@ -2106,6 +2114,7 @@ inherited PromoForm: TPromoForm
       Category = 'Update_MI_Param'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = actInsertUpdate_MI_Param
@@ -2176,11 +2185,13 @@ inherited PromoForm: TPromoForm
     end
     inherited MovementItemProtocolOpenForm: TdsdOpenForm
       TabSheet = tsMain
+      Enabled = False
     end
     object actPartnerProtocolOpenForm: TdsdOpenForm [26]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1055#1072#1088#1090#1085#1077#1088#1099'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1055#1072#1088#1090#1085#1077#1088#1099'>'
       ImageIndex = 34
@@ -2212,6 +2223,7 @@ inherited PromoForm: TPromoForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1044#1086#1087'. '#1089#1082#1080#1076#1082#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1044#1086#1087'. '#1089#1082#1080#1076#1082#1072'>'
       ImageIndex = 34
@@ -2243,6 +2255,7 @@ inherited PromoForm: TPromoForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
       ImageIndex = 34
@@ -2351,6 +2364,7 @@ inherited PromoForm: TPromoForm
       Category = 'Partner'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridDBTableViewPartner
       Action = PromoPartnerChoiceForm
@@ -2363,6 +2377,7 @@ inherited PromoForm: TPromoForm
       Category = 'Partner'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       StoredProc = spErasedMIPartner
       StoredProcList = <
         item
@@ -2382,6 +2397,7 @@ inherited PromoForm: TPromoForm
       Category = 'Partner'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       StoredProc = spUnErasedMIPartner
       StoredProcList = <
         item
@@ -2473,6 +2489,7 @@ inherited PromoForm: TPromoForm
       Category = 'Condition'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       View = grtvConditionPromo
       Action = ConditionPromoChoiceForm
@@ -2485,6 +2502,7 @@ inherited PromoForm: TPromoForm
       Category = 'Condition'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       StoredProc = spErasedMICondition
       StoredProcList = <
         item
@@ -2504,6 +2522,7 @@ inherited PromoForm: TPromoForm
       Category = 'Condition'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       StoredProc = spUnErasedMIPartner
       StoredProcList = <
         item
@@ -2617,6 +2636,7 @@ inherited PromoForm: TPromoForm
       Category = 'Advertising'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       View = grtvAdvertising
       Action = AdvertisingChoiceForm
@@ -2629,6 +2649,7 @@ inherited PromoForm: TPromoForm
       Category = 'Advertising'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       StoredProc = spErasedAdvertising
       StoredProcList = <
         item
@@ -2648,6 +2669,7 @@ inherited PromoForm: TPromoForm
       Category = 'Advertising'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       StoredProc = spUnErasedAdvertising
       StoredProcList = <
         item
@@ -2725,6 +2747,7 @@ inherited PromoForm: TPromoForm
       Category = 'Update_Promo_Data'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = actUpdate_Movement_Promo_Data
@@ -2755,6 +2778,7 @@ inherited PromoForm: TPromoForm
       Category = 'Partner'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = actChoiceRetailForm
