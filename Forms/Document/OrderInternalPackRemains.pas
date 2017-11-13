@@ -49,7 +49,7 @@ type
     PrintItemsCDS: TClientDataSet;
     bbTax: TdxBarButton;
     bbPrintTax_Client: TdxBarButton;
-    bbPrint_Bill: TdxBarButton;
+    bbPrintRemains: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
     AmountSecond: TcxGridDBColumn;
     spUpdateAmountRemains: TdsdStoredProc;
@@ -182,6 +182,8 @@ type
     bbUpdateAmountSecond_toPACK: TdxBarButton;
     actGridTotalToExcel: TdsdGridToExcel;
     bbGridTotalToExcel: TdxBarButton;
+    spSelectPrintRemains: TdsdStoredProc;
+    actPrintRemains: TdsdPrintAction;
   private
     { Private declarations }
   public
