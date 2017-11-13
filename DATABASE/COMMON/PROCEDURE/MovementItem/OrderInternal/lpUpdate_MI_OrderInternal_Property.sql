@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS lpUpdate_MI_OrderInternal_Property (Integer, Integer, Integer, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, Boolean, Integer);
 DROP FUNCTION IF EXISTS lpUpdate_MI_OrderInternal_Property (Integer, Integer, Integer, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpUpdate_MI_OrderInternal_Property (Integer, Integer, Integer, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpUpdate_MI_OrderInternal_Property(
     IN ioId                  Integer   , --  люч объекта <Ёлемент документа>
@@ -16,6 +17,8 @@ CREATE OR REPLACE FUNCTION lpUpdate_MI_OrderInternal_Property(
     IN inDescId_ParamSecond  Integer   ,
     IN inAmount_ParamAdd     TFloat    DEFAULT 0 , --
     IN inDescId_ParamAdd     Integer   DEFAULT 0 ,
+    IN inAmount_ParamNext    TFloat    DEFAULT 0 , --
+    IN inDescId_ParamNext    Integer   DEFAULT 0 ,
     IN inIsPack              Boolean   DEFAULT NULL , --
     IN inUserId              Integer   DEFAULT 0   -- пользователь
 )
@@ -559,6 +562,12 @@ BEGIN
      THEN
          PERFORM lpInsertUpdate_MovementItemFloat (inDescId_ParamAdd, ioId, inAmount_ParamAdd);
      END IF;
+     -- сохранили свойство
+     IF inDescId_ParamNext <> 0
+     THEN
+         PERFORM lpInsertUpdate_MovementItemFloat (inDescId_ParamNext, ioId, inAmount_ParamNext);
+     END IF;
+    
 
      -- сохранили протокол
      -- !!!что б не росла база!!! PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);

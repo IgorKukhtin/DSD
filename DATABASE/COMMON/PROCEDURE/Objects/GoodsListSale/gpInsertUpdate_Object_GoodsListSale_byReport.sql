@@ -253,6 +253,10 @@ BEGIN
     WHERE _tmpList.Id IS NULL OR _tmpList.isErased = TRUE OR _tmpList.GoodsKindId_List <> COALESCE (_tmpResult.GoodsKindId_List, '') OR _tmpList.GoodsKindId_max <> COALESCE (_tmpResult.GoodsKindId_max, 0)
        OR _tmpList.AmountChoice <> COALESCE (_tmpResult.AmountChoice, 0) OR _tmpList.Amount <> COALESCE (_tmpResult.Amount, 0)
    ;
+   
+
+   -- Паровозом еще посчитам ЭТО
+   PERFORM gpInsertUpdate_Object_GoodsReportSale (inSession:= inSession);
 
       
 END;
