@@ -350,7 +350,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
           end
           object AmountPlan6: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072' 6'
-            DataBinding.FieldName = 'AmountPlan66'
+            DataBinding.FieldName = 'AmountPlan6'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
