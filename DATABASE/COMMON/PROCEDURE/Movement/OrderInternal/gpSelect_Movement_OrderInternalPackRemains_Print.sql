@@ -30,7 +30,10 @@ RETURNS TABLE (Id             Integer
              , Income_PACK_to    TFloat
              , Income_PACK_from  TFloat
              
+             , GoodsCode_Child         Integer
              , GoodsName_Child         TVarChar
+             , GoodsKindName_Child     TVarChar
+             , MeasureName_Child       TVarChar
              , AmountPack_Child        TFloat
              , AmountPackSecond_Child  TFloat
              , AmountPackTotal_Child   TFloat
@@ -91,7 +94,10 @@ BEGIN
                 , _Result_Master.Income_PACK_to
                 , _Result_Master.Income_PACK_from
                 
+                , _Result_Child.GoodsCode         AS GoodsCode_Child
                 , _Result_Child.GoodsName         AS GoodsName_Child
+                , _Result_Child.GoodsKindName     AS GoodsKindName_Child
+                , _Result_Child.MeasureName       AS MeasureName_Child
                 , _Result_Child.AmountPack        AS AmountPack_Child
                 , _Result_Child.AmountPackSecond  AS AmountPackSecond_Child
                 , _Result_Child.AmountPackTotal   AS AmountPackTotal_Child
