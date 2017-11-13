@@ -3184,14 +3184,6 @@
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbPrintRemains'
         end
         item
@@ -3780,7 +3772,7 @@
     Top = 392
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
-    Left = 368
+    Left = 328
     Top = 272
   end
   inherited spGetTotalSumm: TdsdStoredProc
