@@ -1420,9 +1420,6 @@
     object tsTotal: TcxTabSheet
       Caption = #1048#1090#1086#1075#1086' '#1087#1086' '#1091#1087#1072#1082#1086#1074#1082#1077
       ImageIndex = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridChildTotal: TcxGrid
         Left = 0
         Top = 0
@@ -1430,10 +1427,6 @@
         Height = 489
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = 8
-        ExplicitTop = 64
-        ExplicitWidth = 972
-        ExplicitHeight = 353
         object cxGridDBTableViewChildTotal: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildTotalDS
@@ -2606,6 +2599,7 @@
         item
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'Num;GoodsName;GoodsName_Child'
         end>
       Params = <
         item
