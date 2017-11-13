@@ -78,7 +78,6 @@ BEGIN
      
       -- получааем  _Result_Master, _Result_Child, _Result_ChildTotal
       PERFORM lpSelect_MI_OrderInternalPackRemains (inMovementId:= inMovementId, inShowAll:= FALSE, inIsErased:= FALSE, inUserId:= vbUserId) ;
-        
 
           RETURN QUERY
            SELECT _Result_Master.Id, _Result_Master.GoodsId, _Result_Master.GoodsCode, _Result_Master.GoodsName   
@@ -107,9 +106,6 @@ BEGIN
            FROM _Result_Master
               LEFT JOIN _Result_Child ON _Result_Child.KeyId = _Result_Master.KeyId
            ;
-  
-
-  
 
 END;
 $BODY$
