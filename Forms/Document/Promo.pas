@@ -290,8 +290,9 @@ type
     PlanCDS: TClientDataSet;
     PlanDS: TDataSource;
     spSelectPlan: TdsdStoredProc;
-    dsdUpdateDSPlan: TdsdUpdateDataSet;
+    actUpdatePlanDS: TdsdUpdateDataSet;
     dsdDBViewAddOnPlan: TdsdDBViewAddOn;
+    plGoodsKindName_List: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -52,7 +52,7 @@ type
     dxBarButton3: TdxBarButton;
     cbPromo: TcxCheckBox;
     cbTender: TcxCheckBox;
-    dsdUpdateDSPlan: TdsdUpdateDataSet;
+    actUpdatePlanDS: TdsdUpdateDataSet;
     spUpdate_Plan: TdsdStoredProc;
     dsdDBViewAddOn1: TdsdDBViewAddOn;
   private

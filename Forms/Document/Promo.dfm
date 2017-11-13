@@ -3,15 +3,15 @@ inherited PromoForm: TPromoForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 599
   ClientWidth = 1204
+  ExplicitLeft = -410
   ExplicitWidth = 1220
-  ExplicitHeight = 637
+  ExplicitHeight = 634
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 139
     Width = 1204
     Height = 460
-    Properties.ActivePage = cxTabSheetPlan
     ExplicitTop = 139
     ExplicitWidth = 1204
     ExplicitHeight = 460
@@ -385,87 +385,94 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 70
           end
-          inherited colIsErased: TcxGridDBColumn
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-          end
-          object clAmountPlan1: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1087#1085'.'
+          object clAmountPlan1: TcxGridDBColumn [26]
+            Caption = #1050#1086#1083'-'#1087#1083#1072#1085' '#1079#1072' 1'
             DataBinding.FieldName = 'AmountPlan1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1079#1072' '#1087#1085'.'
             Options.Editing = False
-            Width = 80
+            Width = 55
           end
-          object clAmountPlan2: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1074#1090'.'
+          object clAmountPlan2: TcxGridDBColumn [27]
+            Caption = #1050#1086#1083'-'#1087#1083#1072#1085' '#1079#1072' 2'
             DataBinding.FieldName = 'AmountPlan2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 55
           end
-          object clAmountPlan3: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1089#1088'.'
+          object clAmountPlan3: TcxGridDBColumn [28]
+            Caption = #1050#1086#1083'-'#1087#1083#1072#1085' '#1079#1072' 3'
             DataBinding.FieldName = 'AmountPlan3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 55
           end
-          object clAmountPlan4: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1095#1090'.'
+          object clAmountPlan4: TcxGridDBColumn [29]
+            Caption = #1050#1086#1083'-'#1087#1083#1072#1085' '#1079#1072' 4'
             DataBinding.FieldName = 'AmountPlan4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 55
           end
-          object clAmountPlan5: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1087#1090'.'
+          object clAmountPlan5: TcxGridDBColumn [30]
+            Caption = #1050#1086#1083'-'#1087#1083#1072#1085' '#1079#1072' 5'
             DataBinding.FieldName = 'AmountPlan5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 55
           end
-          object clAmountPlan6: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1089#1073'.'
+          object clAmountPlan6: TcxGridDBColumn [31]
+            Caption = #1050#1086#1083'-'#1087#1083#1072#1085' '#1079#1072' 6'
             DataBinding.FieldName = 'AmountPlan66'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 55
           end
-          object clAmountPlan7: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1074#1089'.'
+          object clAmountPlan7: TcxGridDBColumn [32]
+            Caption = #1050#1086#1083'-'#1087#1083#1072#1085' '#1079#1072' 7'
             DataBinding.FieldName = 'AmountPlan7'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 55
+          end
+          inherited colIsErased: TcxGridDBColumn
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
           end
         end
       end
@@ -1414,6 +1421,14 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 68
           end
+          object plGoodsKindName_List: TcxGridDBColumn
+            Caption = #1042#1080#1076' ('#1089#1087#1088#1072#1074#1086#1095#1085#1086')'
+            DataBinding.FieldName = 'GoodsKindName_List'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object plMeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
@@ -1423,7 +1438,7 @@ inherited PromoForm: TPromoForm
             Width = 35
           end
           object AmountPlan1: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1087#1085'.'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072' 1'
             DataBinding.FieldName = 'AmountPlan1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -1431,67 +1446,67 @@ inherited PromoForm: TPromoForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1079#1072' '#1087#1085'.'
-            Width = 80
+            Width = 55
           end
           object AmountPlan2: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1074#1090'.'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072' 2'
             DataBinding.FieldName = 'AmountPlan2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 55
           end
           object AmountPlan3: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1089#1088'.'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072' 3'
             DataBinding.FieldName = 'AmountPlan3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 55
           end
           object AmountPlan4: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1095#1090'.'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072' 4'
             DataBinding.FieldName = 'AmountPlan4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 55
           end
           object AmountPlan5: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1087#1090'.'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072' 5'
             DataBinding.FieldName = 'AmountPlan5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 55
           end
           object AmountPlan6: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1089#1073'.'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072' 6'
             DataBinding.FieldName = 'AmountPlan66'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 55
           end
           object AmountPlan7: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1074#1089'.'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072' 7'
             DataBinding.FieldName = 'AmountPlan7'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 55
           end
           object plisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -1922,7 +1937,7 @@ inherited PromoForm: TPromoForm
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 52
     end
-    object dsdUpdateDSPlan: TdsdUpdateDataSet [4]
+    object actUpdatePlanDS: TdsdUpdateDataSet [4]
       Category = 'Plan'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1983,14 +1998,10 @@ inherited PromoForm: TPromoForm
       Hint = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 52
     end
-    inherited actGridToExcel: TdsdGridToExcel
-      Enabled = False
-    end
     object InsertRecord: TInsertRecord [8]
       Category = 'Goods'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView
       Action = GoodsChoiceForm
@@ -2016,7 +2027,6 @@ inherited PromoForm: TPromoForm
     inherited actMISetErased: TdsdUpdateErased
       Category = 'Goods'
       TabSheet = tsMain
-      Enabled = False
       StoredProcList = <
         item
           StoredProc = spErasedMIMaster
@@ -2071,7 +2081,6 @@ inherited PromoForm: TPromoForm
     inherited actMISetUnErased: TdsdUpdateErased
       Category = 'Goods'
       TabSheet = tsMain
-      Enabled = False
       StoredProcList = <
         item
           StoredProc = spUnErasedMIMaster
@@ -2098,7 +2107,6 @@ inherited PromoForm: TPromoForm
     end
     inherited actShowErased: TBooleanStoredProcAction
       TabSheet = tsMain
-      Enabled = False
       StoredProcList = <
         item
           StoredProc = spSelect
@@ -2114,7 +2122,6 @@ inherited PromoForm: TPromoForm
       Category = 'Update_MI_Param'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       ActionList = <
         item
           Action = actInsertUpdate_MI_Param
@@ -2185,13 +2192,11 @@ inherited PromoForm: TPromoForm
     end
     inherited MovementItemProtocolOpenForm: TdsdOpenForm
       TabSheet = tsMain
-      Enabled = False
     end
     object actPartnerProtocolOpenForm: TdsdOpenForm [26]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1055#1072#1088#1090#1085#1077#1088#1099'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1055#1072#1088#1090#1085#1077#1088#1099'>'
       ImageIndex = 34
@@ -2223,7 +2228,6 @@ inherited PromoForm: TPromoForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1044#1086#1087'. '#1089#1082#1080#1076#1082#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1044#1086#1087'. '#1089#1082#1080#1076#1082#1072'>'
       ImageIndex = 34
@@ -2255,7 +2259,6 @@ inherited PromoForm: TPromoForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
       ImageIndex = 34
@@ -2364,7 +2367,6 @@ inherited PromoForm: TPromoForm
       Category = 'Partner'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridDBTableViewPartner
       Action = PromoPartnerChoiceForm
@@ -2377,7 +2379,6 @@ inherited PromoForm: TPromoForm
       Category = 'Partner'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spErasedMIPartner
       StoredProcList = <
         item
@@ -2397,7 +2398,6 @@ inherited PromoForm: TPromoForm
       Category = 'Partner'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spUnErasedMIPartner
       StoredProcList = <
         item
@@ -2489,7 +2489,6 @@ inherited PromoForm: TPromoForm
       Category = 'Condition'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
       View = grtvConditionPromo
       Action = ConditionPromoChoiceForm
@@ -2502,7 +2501,6 @@ inherited PromoForm: TPromoForm
       Category = 'Condition'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spErasedMICondition
       StoredProcList = <
         item
@@ -2522,7 +2520,6 @@ inherited PromoForm: TPromoForm
       Category = 'Condition'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spUnErasedMIPartner
       StoredProcList = <
         item
@@ -2636,7 +2633,6 @@ inherited PromoForm: TPromoForm
       Category = 'Advertising'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
       View = grtvAdvertising
       Action = AdvertisingChoiceForm
@@ -2649,7 +2645,6 @@ inherited PromoForm: TPromoForm
       Category = 'Advertising'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spErasedAdvertising
       StoredProcList = <
         item
@@ -2669,7 +2664,6 @@ inherited PromoForm: TPromoForm
       Category = 'Advertising'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spUnErasedAdvertising
       StoredProcList = <
         item
@@ -2747,7 +2741,6 @@ inherited PromoForm: TPromoForm
       Category = 'Update_Promo_Data'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       ActionList = <
         item
           Action = actUpdate_Movement_Promo_Data
@@ -2778,7 +2771,6 @@ inherited PromoForm: TPromoForm
       Category = 'Partner'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       ActionList = <
         item
           Action = actChoiceRetailForm
@@ -5250,7 +5242,7 @@ inherited PromoForm: TPromoForm
     Top = 478
   end
   object spSelectPlan: TdsdStoredProc
-    StoredProcName = 'gpSelect_MI_PromoGoods_Plan'
+    StoredProcName = 'gpSelect_MovementItem_PromoGoods'
     DataSet = PlanCDS
     DataSets = <
       item
