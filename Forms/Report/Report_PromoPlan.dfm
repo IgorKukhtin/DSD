@@ -1,5 +1,5 @@
 inherited Report_PromoPlanForm: TReport_PromoPlanForm
-  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1072#1082#1094#1080#1103#1084
+  Caption = #1054#1090#1095#1077#1090' '#1055#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1087#1086' '#1072#1082#1094#1080#1103#1084
   ClientHeight = 434
   ClientWidth = 885
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
@@ -216,6 +216,14 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             HeaderAlignmentVert = vaCenter
             Width = 76
           end
+          object PartnerName: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
+            DataBinding.FieldName = 'PartnerName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 114
+          end
           object MonthPromo: TcxGridDBColumn
             Caption = #1052#1077#1089#1103#1094' '#1072#1082#1094#1080#1080
             DataBinding.FieldName = 'MonthPromo'
@@ -228,22 +236,19 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             Options.Editing = False
             Width = 60
           end
-          object PartnerName: TcxGridDBColumn
-            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
-            DataBinding.FieldName = 'PartnerName'
-            Visible = False
+          object TradeMarkName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
+            DataBinding.FieldName = 'TradeMarkName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 114
+            Width = 80
           end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087#1086#1079#1080#1094#1080#1080
             DataBinding.FieldName = 'GoodsCode'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 66
+            Width = 55
           end
           object GoodsName: TcxGridDBColumn
             Caption = #1055#1086#1079#1080#1094#1080#1103
@@ -251,14 +256,6 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 123
-          end
-          object TradeMarkName: TcxGridDBColumn
-            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
-            DataBinding.FieldName = 'TradeMarkName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
           end
           object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -295,6 +292,84 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             Options.Editing = False
             Width = 54
           end
+          object AmountPlan1: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072' 1'
+            DataBinding.FieldName = 'AmountPlan1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1079#1072' '#1087#1085'.'
+            Options.Editing = False
+            Width = 55
+          end
+          object AmountPlan2: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072' 2'
+            DataBinding.FieldName = 'AmountPlan2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object AmountPlan3: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072' 3'
+            DataBinding.FieldName = 'AmountPlan3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object AmountPlan4: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072' 4'
+            DataBinding.FieldName = 'AmountPlan4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object AmountPlan5: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072' 5'
+            DataBinding.FieldName = 'AmountPlan5'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object AmountPlan6: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072' 6'
+            DataBinding.FieldName = 'AmountPlan66'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object AmountPlan7: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072' 7'
+            DataBinding.FieldName = 'AmountPlan7'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object isPromo: TcxGridDBColumn
             Caption = #1040#1082#1094#1080#1103
             DataBinding.FieldName = 'isPromo'
@@ -304,84 +379,6 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             HeaderHint = #1045#1089#1083#1080' '#1044#1072' - '#1101#1090#1086' '#1040#1082#1094#1080#1103', '#1053#1077#1090' - '#1058#1077#1085#1076#1077#1088#1099
             Options.Editing = False
             Width = 45
-          end
-          object AmountPlan1: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1087#1085'.'
-            DataBinding.FieldName = 'AmountPlan1'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1079#1072' '#1087#1085'.'
-            Options.Editing = False
-            Width = 80
-          end
-          object AmountPlan2: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1074#1090'.'
-            DataBinding.FieldName = 'AmountPlan2'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object AmountPlan3: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1089#1088'.'
-            DataBinding.FieldName = 'AmountPlan3'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object AmountPlan4: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1095#1090'.'
-            DataBinding.FieldName = 'AmountPlan4'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object AmountPlan5: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1087#1090'.'
-            DataBinding.FieldName = 'AmountPlan5'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object AmountPlan6: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1089#1073'.'
-            DataBinding.FieldName = 'AmountPlan66'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object AmountPlan7: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1074#1089'.'
-            DataBinding.FieldName = 'AmountPlan7'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
           end
         end
       end
@@ -597,6 +594,14 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             Options.Editing = False
             Width = 76
           end
+          object plPartnerName: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
+            DataBinding.FieldName = 'PartnerName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 114
+          end
           object plMonthPromo: TcxGridDBColumn
             Caption = #1052#1077#1089#1103#1094' '#1072#1082#1094#1080#1080
             DataBinding.FieldName = 'MonthPromo'
@@ -609,23 +614,21 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             Options.Editing = False
             Width = 60
           end
-          object plPartnerName: TcxGridDBColumn
-            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
-            DataBinding.FieldName = 'PartnerName'
-            Visible = False
+          object plTradeMarkName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
+            DataBinding.FieldName = 'TradeMarkName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 114
+            Width = 80
           end
           object plGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087#1086#1079#1080#1094#1080#1080
             DataBinding.FieldName = 'GoodsCode'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 66
+            Width = 55
           end
           object plGoodsName: TcxGridDBColumn
             Caption = #1055#1086#1079#1080#1094#1080#1103
@@ -635,23 +638,6 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             Options.Editing = False
             Width = 123
           end
-          object plTradeMarkName: TcxGridDBColumn
-            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
-            DataBinding.FieldName = 'TradeMarkName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object plMeasureName: TcxGridDBColumn
-            Caption = #1045#1076'. '#1080#1079#1084'.'
-            DataBinding.FieldName = 'MeasureName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 42
-          end
           object plGoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080
             DataBinding.FieldName = 'GoodsKindName'
@@ -660,6 +646,14 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 54
+          end
+          object plMeasureName: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 42
           end
           object plGoodsWeight: TcxGridDBColumn
             Caption = #1042#1077#1089
@@ -674,7 +668,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             Width = 43
           end
           object plAmountPlan1: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1087#1085'.'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072' 1'
             DataBinding.FieldName = 'AmountPlan1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -682,67 +676,67 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1079#1072' '#1087#1085'.'
-            Width = 80
+            Width = 55
           end
           object plAmountPlan2: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1074#1090'.'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072' 2'
             DataBinding.FieldName = 'AmountPlan2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 55
           end
           object plAmountPlan3: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1089#1088'.'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072' 3'
             DataBinding.FieldName = 'AmountPlan3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 55
           end
           object plAmountPlan4: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1095#1090'.'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072' 4'
             DataBinding.FieldName = 'AmountPlan4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 55
           end
           object plAmountPlan5: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1087#1090'.'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072' 5'
             DataBinding.FieldName = 'AmountPlan5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 55
           end
           object plAmountPlan6: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1089#1073'.'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072' 6'
             DataBinding.FieldName = 'AmountPlan66'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 55
           end
           object plAmountPlan7: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088'. '#1079#1072' '#1074#1089'.'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072' 7'
             DataBinding.FieldName = 'AmountPlan7'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 55
           end
           object plisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -953,7 +947,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
         end>
       isShowModal = False
     end
-    object dsdUpdateDSPlan: TdsdUpdateDataSet
+    object actUpdatePlanDS: TdsdUpdateDataSet
       Category = 'Plan'
       MoveParams = <>
       PostDataSetBeforeExecute = False
