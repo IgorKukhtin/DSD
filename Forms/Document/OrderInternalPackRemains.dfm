@@ -3,7 +3,7 @@
   ClientHeight = 639
   ClientWidth = 1020
   ExplicitWidth = 1036
-  ExplicitHeight = 674
+  ExplicitHeight = 677
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1420,6 +1420,9 @@
     object tsTotal: TcxTabSheet
       Caption = #1048#1090#1086#1075#1086' '#1087#1086' '#1091#1087#1072#1082#1086#1074#1082#1077
       ImageIndex = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridChildTotal: TcxGrid
         Left = 0
         Top = 0
@@ -1427,6 +1430,10 @@
         Height = 489
         Align = alClient
         TabOrder = 0
+        ExplicitLeft = 8
+        ExplicitTop = 64
+        ExplicitWidth = 972
+        ExplicitHeight = 353
         object cxGridDBTableViewChildTotal: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildTotalDS
@@ -2584,6 +2591,36 @@
       ImageIndex = 6
       ShortCut = 16472
     end
+    object actPrintRemains: TdsdPrintAction [9]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintRemains
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintRemains
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1047#1072#1103#1074#1082#1080' ('#1086#1089#1090#1072#1090#1082#1080')'
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 16
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1086#1089#1090#1072#1090#1082#1080')'
+      ReportNameParam.Value = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1086#1089#1090#1072#1090#1082#1080')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -2628,7 +2665,7 @@
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [14]
+    object actGoodsKindChoice: TOpenChoiceForm [15]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3132,6 +3169,14 @@
         end
         item
           Visible = True
+          ItemName = 'bbPrintRemains'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdateAmount_to'
         end
         item
@@ -3194,12 +3239,9 @@
     inherited dxBarStatic: TdxBarStatic
       ShowCaption = False
     end
-    object bbPrint_Bill: TdxBarButton [5]
-      Caption = #1057#1095#1077#1090
+    object bbPrintRemains: TdxBarButton [5]
+      Action = actPrintRemains
       Category = 0
-      Hint = #1057#1095#1077#1090
-      Visible = ivAlways
-      ImageIndex = 21
     end
     object bbPrintTax: TdxBarButton [6]
       Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
@@ -3771,8 +3813,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 319
-    Top = 248
+    Left = 375
+    Top = 456
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -4342,5 +4384,25 @@
     PackSize = 1
     Left = 482
     Top = 368
+  end
+  object spSelectPrintRemains: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_OrderInternalPackRemains_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 887
+    Top = 488
   end
 end

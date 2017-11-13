@@ -1,30 +1,19 @@
 -- Function: gpSelect_MI_OrderInternalPackRemains()
 
-DROP FUNCTION IF EXISTS gpSelect_MI_OrderInternalPackRemains (Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS lpSelect_MI_OrderInternalPackRemains (Integer, Boolean, Boolean, Integer);
 
-CREATE OR REPLACE FUNCTION gpSelect_MI_OrderInternalPackRemains(
+CREATE OR REPLACE FUNCTION lpSelect_MI_OrderInternalPackRemains(
     IN inMovementId  Integer      , -- ключ Документа
     IN inShowAll     Boolean      , --
     IN inIsErased    Boolean      , --
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inUserId      Integer       -- сессия пользователя
 )
-RETURNS SETOF REFCURSOR
+RETURNS VOID
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-
-   DECLARE Cursor1 refcursor;
-   DECLARE Cursor2 refcursor;
-   DECLARE Cursor3 refcursor;
-
    DECLARE vbOperDate TDateTime;
    DECLARE vbDayCount Integer;
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_OrderInternal());
-     vbUserId:= lpGetUserBySession (inSession);
-
-
      -- определяется
      SELECT Movement.OperDate
           , 1 + EXTRACT (DAY FROM (MovementDate_OperDateEnd.ValueData - MovementDate_OperDateStart.ValueData))
@@ -451,8 +440,111 @@ BEGIN
 
 -- RAISE EXCEPTION '<%>', (select count(*) from _tmpMI_master where _tmpMI_master.GoodsId = 4965 and _tmpMI_master.GoodsKindId = zc_GoodsKind_Basis() );
 
-       --
-       OPEN Cursor1 FOR
+       -- первый курсор 
+CREATE TEMP TABLE _Result_Master (Id         Integer
+                                , KeyId      TVarChar
+                                , GoodsId    Integer
+                                , GoodsCode  Integer
+                                , GoodsName  TVarChar
+                                , GoodsId_basis    Integer
+                                , GoodsCode_basis  Integer
+                                , GoodsName_basis  TVarChar
+                                , GoodsKindId      Integer
+                                , GoodsKindName    TVarChar
+                                , MeasureName      TVarChar
+                                , MeasureName_basis   TVarChar
+                                , GoodsGroupNameFull  TVarChar
+                                , isCheck_basis             Boolean
+                                , Amount                    TFloat-- ***Ост. на УПАК
+                                , AmountSecond              TFloat-- ***План ПР-ВО на УПАК
+                                , AmountTotal               TFloat-- ***План ПР-ВО на УПАК
+                                , Amount_result             TFloat
+                                , Amount_result_two         TFloat
+                                , Num                       Integer
+                                , Income_CEH                TFloat
+                                , tmpChild.Income_PACK_to   TFloat
+                                , tmpChild.Income_PACK_from TFloat
+                                , tmpMI.Remains             TFloat
+                                , Remains_pack              TFloat
+                                , Remains_CEH               TFloat 
+                                , Remains_CEH_Next          TFloat
+                                , AmountPartnerPrior        TFloat
+                                , AmountPartnerPriorPromo   TFloat
+                                , AmountPartnerPriorTotal   TFloat
+                                , AmountPartner             TFloat
+                                , AmountPartnerPromo        TFloat
+                                , AmountPartnerTotal        TFloat
+                                , AmountForecast            TFloat
+                                , AmountForecastPromo       TFloat
+                                , AmountForecastOrder       TFloat
+                                , AmountForecastOrderPromo  TFloat
+                                , CountForecast             TFloat
+                                , CountForecastOrder        TFloat
+                                , DayCountForecast          TFloat
+                                , DayCountForecastOrder     TFloat
+                                , ReceiptId                 Integer
+                                , ReceiptCode               Integer
+                                , ReceiptName               TVarChar
+                                , ReceiptId_basis           Integer
+                                , ReceiptCode_basis         Integer
+                                , ReceiptName_basis         TVarChar
+                                , UnitId                    Integer
+                                , UnitCode                  Integer
+                                , UnitName                  TVarChar
+                                , isErased                  Boolean) ON COMMIT DROP;
+           
+  INSERT INTO _Result_Master (Id        
+                                , KeyId     
+                                , GoodsId   
+                                , GoodsCode 
+                                , GoodsName 
+                                , GoodsId_basis  
+                                , GoodsCode_basis
+                                , GoodsName_basis
+                                , GoodsKindId    
+                                , GoodsKindName  
+                                , MeasureName    
+                                , MeasureName_basis 
+                                , GoodsGroupNameFull
+                                , isCheck_basis     
+                                , Amount            
+                                , AmountSecond      
+                                , AmountTotal       
+                                , Amount_result     
+                                , Amount_result_two 
+                                , Num               
+                                , Income_CEH        
+                                , tmpChild.Income_PACK_to  
+                                , tmpChild.Income_PACK_from
+                                , tmpMI.Remains            
+                                , Remains_pack             
+                                , Remains_CEH              
+                                , Remains_CEH_Next         
+                                , AmountPartnerPrior       
+                                , AmountPartnerPriorPromo  
+                                , AmountPartnerPriorTotal  
+                                , AmountPartner            
+                                , AmountPartnerPromo       
+                                , AmountPartnerTotal       
+                                , AmountForecast           
+                                , AmountForecastPromo      
+                                , AmountForecastOrder      
+                                , AmountForecastOrderPromo 
+                                , CountForecast            
+                                , CountForecastOrder       
+                                , DayCountForecast         
+                                , DayCountForecastOrder    
+                                , ReceiptId                
+                                , ReceiptCode              
+                                , ReceiptName              
+                                , ReceiptId_basis          
+                                , ReceiptCode_basis        
+                                , ReceiptName_basis        
+                                , UnitId                   
+                                , UnitCode                 
+                                , UnitName                 
+                                , isErased  )
+                                               
        WITH tmpMI_all AS (SELECT * FROM _tmpMI_master
                           WHERE _tmpMI_master.Income_CEH       = 0 -- отбросили Приход пр-во (ФАКТ)
                             AND _tmpMI_master.GoodsId_complete = 0 -- т.е. НЕ упакованный
@@ -602,9 +694,6 @@ BEGIN
 
            , CASE WHEN tmpMI.GoodsId <> tmpMI.GoodsId_basis AND tmpMI.GoodsId_basis > 0 THEN TRUE ELSE FALSE END AS isCheck_basis
 
--- , tmpChild_find.Amount_res    :: TFloat AS Amount
--- , tmpChild.CountForecast      :: TFloat AS Amount
--- , tmpChild.CountForecastOrder :: TFloat AS Amount
            , tmpMI.Amount                        :: TFloat AS Amount        -- ***Ост. на УПАК
            , tmpMI.AmountSecond                  :: TFloat AS AmountSecond  -- ***План ПР-ВО на УПАК
            , (tmpMI.Amount + tmpMI.AmountSecond) :: TFloat AS AmountTotal   -- ***План ПР-ВО на УПАК
@@ -775,10 +864,172 @@ BEGIN
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_OrderType_Unit.ChildObjectId
       ;
 
-       RETURN NEXT Cursor1;
 
 
-       OPEN Cursor2 FOR
+       --OPEN Cursor2 FOR
+        -- первый курсор 
+CREATE TEMP TABLE _Result_Child (Id         Integer
+                                , KeyId      TVarChar
+                                , GoodsId    Integer
+                                , GoodsCode  Integer
+                                , GoodsName  TVarChar
+                                , GoodsId_basis    Integer
+                                , GoodsCode_basis  Integer
+                                , GoodsName_basis  TVarChar
+                                , GoodsKindId      Integer
+                                , GoodsKindName    TVarChar
+                                , MeasureName      TVarChar
+                                , MeasureName_basis   TVarChar
+                                , GoodsGroupNameFull  TVarChar
+                                , isCheck_basis             Boolean
+                                , Amount                    TFloat-- ***Ост. на УПАК
+                                , AmountSecond              TFloat-- ***План ПР-ВО на УПАК
+                                , AmountTotal               TFloat-- ***План ПР-ВО на УПАК
+                                , Amount_result             TFloat
+                                , Amount_result_two         TFloat
+                                , Num                       Integer
+                                , Income_CEH                TFloat
+                                , tmpChild.Income_PACK_to   TFloat
+                                , tmpChild.Income_PACK_from TFloat
+                                , tmpMI.Remains             TFloat
+                                , Remains_pack              TFloat
+                                , Remains_CEH               TFloat 
+                                , Remains_CEH_Next          TFloat
+                                , AmountPartnerPrior        TFloat
+                                , AmountPartnerPriorPromo   TFloat
+                                , AmountPartnerPriorTotal   TFloat
+                                , AmountPartner             TFloat
+                                , AmountPartnerPromo        TFloat
+                                , AmountPartnerTotal        TFloat
+                                , AmountForecast            TFloat
+                                , AmountForecastPromo       TFloat
+                                , AmountForecastOrder       TFloat
+                                , AmountForecastOrderPromo  TFloat
+                                , CountForecast             TFloat
+                                , CountForecastOrder        TFloat
+                                , DayCountForecast          TFloat
+                                , DayCountForecastOrder     TFloat
+                                , ReceiptId                 Integer
+                                , ReceiptCode               Integer
+                                , ReceiptName               TVarChar
+                                , ReceiptId_basis           Integer
+                                , ReceiptCode_basis         Integer
+                                , ReceiptName_basis         TVarChar
+                                , UnitId                    Integer
+                                , UnitCode                  Integer
+                                , UnitName                  TVarChar
+                                , isErased                  Boolean) ON COMMIT DROP;
+           
+  INSERT INTO _Result_Child (Id, ContainerId        
+                                , KeyId     
+                                , GoodsId   
+                                , GoodsCode 
+                                , GoodsName 
+                                , GoodsKindId    
+                                , GoodsKindName  
+                                , MeasureName    
+                                , GoodsGroupNameFull
+                                , Amount            
+                                , AmountSecond      
+                                , AmountTotal       
+                                , Amount_result     
+                                , Amount_result_two 
+                                , Num               
+                                , Income_CEH        
+                                , tmpChild.Income_PACK_to  
+                                , tmpChild.Income_PACK_from
+                                , tmpMI.Remains            
+                                , Remains_pack             
+                                , Remains_CEH              
+                                , Remains_CEH_Next         
+                                , AmountPartnerPrior       
+                                , AmountPartnerPriorPromo  
+                                , AmountPartnerPriorTotal  
+                                , AmountPartner            
+                                , AmountPartnerPromo       
+                                , AmountPartnerTotal       
+                                , AmountForecast           
+                                , AmountForecastPromo      
+                                , AmountForecastOrder      
+                                , AmountForecastOrderPromo 
+                                , CountForecast            
+                                , CountForecastOrder       
+                                , DayCountForecast         
+                                , DayCountForecastOrder    
+                                , ReceiptId                
+                                , ReceiptCode              
+                                , ReceiptName              
+                                , ReceiptId_basis          
+                                , ReceiptCode_basis        
+                                , ReceiptName_basis        
+                                , UnitId                   
+                                , UnitCode                 
+                                , UnitName                 
+                                , isErased  )
+                                
+                                
+                                
+                                
+                                
+                                , tmpMI.AmountPack                            :: TFloat AS AmountPack         -- ***План для упаковки (с остатка, факт)
+           , tmpMI.AmountPackSecond                      :: TFloat AS AmountPackSecond   -- ***План для упаковки (с прихода с пр-ва, факт)
+           , (tmpMI.AmountPack + tmpMI.AmountPackSecond) :: TFloat AS AmountPackTotal    -- ***План для упаковки (ИТОГО, факт)
+           
+           , tmpMI.AmountPack_calc                                 :: TFloat AS AmountPack_calc         -- ***План для упаковки (с остатка, расчет)
+           , tmpMI.AmountPackSecond_calc                           :: TFloat AS AmountSecondPack_calc   -- ***План для упаковки (с прихода с пр-ва, расчет)
+           , (tmpMI.AmountPack_calc + tmpMI.AmountPackSecond_calc) :: TFloat AS AmountPackTotal_calc    -- ***План для упаковки(ИТОГО, расчет)
+
+           -- , CAST (tmpMI.Remains + tmpMI.Remains_pack + tmpMI.Remains_CEH - tmpMI.AmountPartnerPrior - tmpMI.AmountPartnerPriorPromo - tmpMI.AmountPartner - tmpMI.AmountPartnerPromo AS NUMERIC (16, 1)) :: TFloat AS Amount_result
+           , CAST (tmpMI.Remains + tmpMI.Remains_pack + 0                 - tmpMI.AmountPartnerPrior - tmpMI.AmountPartnerPriorPromo - tmpMI.AmountPartner - tmpMI.AmountPartnerPromo AS NUMERIC (16, 1)) :: TFloat AS Amount_result_two
+
+             -- Расход на Цеха Упаковки
+           , tmpPACK.Income_PACK_to   :: TFloat AS Income_PACK_to
+             -- Приход с Цеха Упаковки
+           , tmpPACK.Income_PACK_from :: TFloat AS Income_PACK_from
+             -- Ост. начальн. - НЕ упакованный
+           , (tmpMI.Remains - COALESCE (tmpMI_master.Amount, 0)) :: TFloat AS Remains
+             -- Ост. нач. - упакованный
+           , tmpMI.Remains_pack
+
+              -- неотгуж. заявка
+           , CAST (tmpMI.AmountPartnerPrior       AS NUMERIC (16, 2)) :: TFloat AS AmountPartnerPrior
+           , CAST (tmpMI.AmountPartnerPriorPromo  AS NUMERIC (16, 2)) :: TFloat AS AmountPartnerPriorPromo
+           , CAST (tmpMI.AmountPartnerPrior + tmpMI.AmountPartnerPriorPromo AS NUMERIC (16, 2)) :: TFloat AS AmountPartnerPriorTotal
+            -- сегодня заявка
+           , CAST (tmpMI.AmountPartner            AS NUMERIC (16, 2)) :: TFloat AS AmountPartner
+           , CAST (tmpMI.AmountPartnerPromo       AS NUMERIC (16, 2)) :: TFloat AS AmountPartnerPromo
+           , CAST (tmpMI.AmountPartner + tmpMI.AmountPartnerPromo AS NUMERIC (16, 2)) :: TFloat AS AmountPartnerTotal
+
+            -- Прогноз по прод.
+           , CASE WHEN ABS (tmpMI.AmountForecast) < 1           THEN tmpMI.AmountForecast           ELSE CAST (tmpMI.AmountForecast           AS NUMERIC (16, 1)) END :: TFloat AS AmountForecast
+           , CASE WHEN ABS (tmpMI.AmountForecastPromo) < 1      THEN tmpMI.AmountForecastPromo      ELSE CAST (tmpMI.AmountForecastPromo      AS NUMERIC (16, 1)) END :: TFloat AS AmountForecastPromo
+             -- Прогноз по заяв.
+           , CASE WHEN ABS (tmpMI.AmountForecastOrder) < 1      THEN tmpMI.AmountForecastOrder      ELSE CAST (tmpMI.AmountForecastOrder      AS NUMERIC (16, 1)) END :: TFloat AS AmountForecastOrder
+           , CASE WHEN ABS (tmpMI.AmountForecastOrderPromo) < 1 THEN tmpMI.AmountForecastOrderPromo ELSE CAST (tmpMI.AmountForecastOrderPromo AS NUMERIC (16, 1)) END :: TFloat AS AmountForecastOrderPromo
+
+             -- Норм 1д (по пр.) без К
+           , CAST (tmpMI.CountForecast AS NUMERIC (16, 1))      :: TFloat AS CountForecast
+             -- Норм 1д (по зв.) без К
+           , CAST (tmpMI.CountForecastOrder AS NUMERIC (16, 1)) :: TFloat AS CountForecastOrder
+
+              -- Ост. в днях (по зв.) - без К
+           ,  TFloat AS DayCountForecast
+
+           , DayCountForecastOrder
+           , AS DayCountForecast_calc
+
+           , Object_Receipt.Id                         AS ReceiptId
+           , ObjectString_Receipt_Code.ValueData       AS ReceiptCode
+           , Object_Receipt.ValueData                  AS ReceiptName
+           , Object_Receipt_basis.Id                   AS ReceiptId_basis
+           , ObjectString_Receipt_Code_basis.ValueData AS ReceiptCode_basis
+           , Object_Receipt_basis.ValueData            AS ReceiptName_basis
+
+           , tmpMI.isErased
+           
+           
+           
+                                               
        WITH -- то что в Мастере (факт Расход на упаковку) 
             tmpMI_master AS (SELECT *
                              FROM _tmpMI_master
@@ -1117,7 +1368,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_MI_OrderInternalPackRemains (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION lpSelect_MI_OrderInternalPackRemains (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -1130,5 +1381,5 @@ ALTER FUNCTION gpSelect_MI_OrderInternalPackRemains (Integer, Boolean, Boolean, 
 */
 
 -- тест
--- SELECT * FROM gpSelect_MI_OrderInternalPackRemains (inMovementId:= 1828419, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
--- SELECT * FROM gpSelect_MI_OrderInternalPackRemains (inMovementId:= 1828419, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2') ; FETCH ALL "<unnamed portal 1>";
+-- SELECT * FROM lpSelect_MI_OrderInternalPackRemains (inMovementId:= 1828419, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
+-- SELECT * FROM lpSelect_MI_OrderInternalPackRemains (inMovementId:= 1828419, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2') ; FETCH ALL "<unnamed portal 1>";

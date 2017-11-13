@@ -132,7 +132,7 @@ BEGIN
                                           
         SELECT
             Movement_Promo.Id                 --ИД документа акции
-          , MI_PromoGoods.MovementItemId
+          , MI_PromoGoods.Id                        AS MovementItemId
           , Movement_Promo.InvNumber          --№ документа акции
           , Movement_Promo.UnitName           --Склад
           , Movement_Promo.StartSale          --Дата начала отгрузки по акционной цене
@@ -160,8 +160,8 @@ BEGIN
           , MI_PromoGoods.Measure
           , MI_PromoGoods.GoodsKindName
           , MI_PromoGoods.TradeMark
-          , Movement_Promo.isPromo                                 AS isPromo
-          , Movement_Promo.Checked                                 AS Checked
+          , Movement_Promo.isPromo                 AS isPromo
+          , Movement_Promo.Checked                 AS Checked
 
           , CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN MI_PromoGoods.GoodsWeight ELSE NULL END :: TFloat AS GoodsWeight
           
