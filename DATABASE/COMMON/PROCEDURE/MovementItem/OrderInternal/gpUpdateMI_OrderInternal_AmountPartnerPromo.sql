@@ -20,7 +20,7 @@ BEGIN
       -- таблица -
      CREATE TEMP TABLE tmpAll (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, AmountPartner TFloat, AmountPartnerPromo TFloat, AmountPartnerNextPromo TFloat, AmountPartnerPrior TFloat, AmountPartnerPriorPromo TFloat) ON COMMIT DROP;
      --
-     INSERT INTO tmpAll (MovementItemId, GoodsId, GoodsKindId, AmountPartner, AmountPartnerPromo, AmountPartnerPrior, AmountPartnerPriorPromo)
+     INSERT INTO tmpAll (MovementItemId, GoodsId, GoodsKindId, AmountPartner, AmountPartnerPromo, AmountPartnerNextPromo, AmountPartnerPrior, AmountPartnerPriorPromo)
                                  WITH -- хардкодим - Склады База + Реализации
                                       tmpUnit AS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8457) AS lfSelect_Object_Unit_byGroup)
                                       -- хардкодим - товары ГП

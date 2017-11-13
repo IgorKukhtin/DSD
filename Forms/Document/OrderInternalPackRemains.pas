@@ -184,6 +184,8 @@ type
     bbGridTotalToExcel: TdxBarButton;
     spSelectPrintRemains: TdsdStoredProc;
     actPrintRemains: TdsdPrintAction;
+    Amount_result_pack: TcxGridDBColumn;
+    AmountPartnerNextPromo: TcxGridDBColumn;
   private
     { Private declarations }
   public
