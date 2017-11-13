@@ -19,7 +19,7 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    vbUserId := CASE WHEN inSession = '-12345' THEN inSession :: Integer ELSE lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Promo()) END;
+    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Promo());
 
     -- сохраняем 
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Plan1(), inId, inAmountPlan1);

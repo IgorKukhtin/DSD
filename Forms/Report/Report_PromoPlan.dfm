@@ -4,7 +4,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
   ClientWidth = 885
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
   ExplicitWidth = 901
-  ExplicitHeight = 472
+  ExplicitHeight = 469
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -19,7 +19,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
     ClientRectRight = 885
     ClientRectTop = 24
     inherited tsMain: TcxTabSheet
-      Caption = '&1. '#1054#1090#1095#1077#1090
+      Caption = '&1. '#1055#1088#1086#1089#1084#1086#1090#1088
       TabVisible = True
       ExplicitTop = 24
       ExplicitWidth = 885
@@ -27,8 +27,6 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
       inherited cxGrid: TcxGrid
         Width = 885
         Height = 327
-        ExplicitLeft = 72
-        ExplicitTop = 72
         ExplicitWidth = 885
         ExplicitHeight = 327
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -388,8 +386,8 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
         end
       end
     end
-    object cxTabSheetPlan: TcxTabSheet
-      Caption = '&2. '#1042#1074#1086#1076' '#1076#1072#1085#1085#1099#1093
+    object tsPlan: TcxTabSheet
+      Caption = '&2. '#1042#1074#1086#1076' '#1087#1083#1072#1085
       ImageIndex = 4
       object cxGridPlan: TcxGrid
         Left = 0
@@ -399,8 +397,6 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitLeft = 114
-        ExplicitTop = 72
         object cxGridDBTableViewPlan: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
