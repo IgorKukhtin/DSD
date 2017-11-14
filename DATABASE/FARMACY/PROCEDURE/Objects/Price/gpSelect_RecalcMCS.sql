@@ -66,13 +66,13 @@ BEGIN
                      UNION
                       SELECT ObjectBoolean_Over.ObjectId  AS UnitId
                       FROM ObjectBoolean AS ObjectBoolean_Over    
-                             INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                             /*INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                                    ON ObjectLink_Unit_Juridical.ObjectId = ObjectBoolean_Over.ObjectId
                                                   AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                              INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                                    ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
                                                   AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                                  AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
+                                                  AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId*/
                       WHERE ObjectBoolean_Over.DescId = zc_ObjectBoolean_Unit_Over()
                         AND ObjectBoolean_Over.ValueData = TRUE;
  
