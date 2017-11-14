@@ -243,6 +243,10 @@ BEGIN
                                                 _tmpMI_master.Amount - COALESCE (tmpMI_summ.AmountResult, 0) > 0
                                                 -- если на vbNumber ДНЕЙ ЕСТЬ ПОТРЕБНОСТЬ
                                             AND 0 < vbNumber * _tmpMI_Child.CountForecast - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult)
+                                            -- !!!отбросили НАРЕЗКУ!!!
+                                            AND (vbNumber <= 3
+                                              OR COALESCE (_tmpMI_master.GoodsKindId, 0) <> 8333 -- НАР
+                                                )
                                          )
                             -- ИТОГО по Child для ПРОПОРЦИИ
                           , tmpMI_all_summ AS (SELECT tmpMI_all.GoodsId_master
@@ -329,6 +333,10 @@ BEGIN
                                                 _tmpMI_master.AmountSecond - COALESCE (tmpMI_summ.AmountResult, 0) > 0 -- если есть что распределять
                                                 -- если на vbNumber ДНЕЙ ЕСТЬ ПОТРЕБНОСТЬ
                                             AND 0 < vbNumber * _tmpMI_Child.CountForecast - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult)
+                                            -- !!!отбросили НАРЕЗКУ!!!
+                                            AND (vbNumber <= 3
+                                              OR COALESCE (_tmpMI_master.GoodsKindId, 0) <> 8333 -- НАР
+                                                )
                                          )
                             -- ИТОГО по Child для ПРОПОРЦИИ
                           , tmpMI_all_summ AS (SELECT tmpMI_all.GoodsId_master

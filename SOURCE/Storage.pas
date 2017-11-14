@@ -485,6 +485,8 @@ begin
     // Определяем тип возвращаемого результата
     if Ok then
     Begin
+      Logger.AddToLog(' TStorage.ExecuteProc( ... if Ok then ...');
+
       ResultType := trim(Copy(FReceiveStream.DataString, 1, ResultTypeLenght));
       isArchive := trim(lowercase(Copy(FReceiveStream.DataString, ResultTypeLenght + 1, IsArchiveLenght))) = 't';
       Str := Copy(FReceiveStream.DataString, ResultTypeLenght + IsArchiveLenght + 1, maxint);
@@ -500,8 +502,11 @@ begin
          Result := PrepareStr;
 
       Logger.AddToLog(Result);
-    End;
+    End
+    else
+        Logger.AddToLog(' TStorage.ExecuteProc( ... else ...');
   finally
+    Logger.AddToLog(' TStorage.ExecuteProc( ... finally ...');
     // Выход из критической секции
     FCriticalSection.Leave;
   end;

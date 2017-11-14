@@ -255,8 +255,11 @@ BEGIN
    ;
    
 
-   -- Паровозом еще посчитам ЭТО
-   PERFORM gpInsertUpdate_Object_GoodsReportSale (inSession:= inSession);
+   IF EXTRACT (HOURS FROM CURRENT_TIMESTAMP) < 7
+   THEN
+       -- Паровозом еще посчитам ЭТО
+       PERFORM gpInsertUpdate_Object_GoodsReportSale (inSession:= inSession);
+   END IF;
 
       
 END;
