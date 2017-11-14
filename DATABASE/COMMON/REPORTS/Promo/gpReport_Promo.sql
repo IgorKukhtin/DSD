@@ -284,7 +284,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_Report_Promo(inStartDate := ('01.09.2016')::TDateTime , inEndDate := ('30.06.2017')::TDateTime , inIsPromo := 'True' , inIsTender := 'False' , inUnitId := 0 ,  inSession := '5');
-
-
-
+-- SELECT * FROM gpSelect_Report_Promo (inStartDate:= '01.09.2017', inEndDate:= '01.09.2017', inIsPromo:= True, inIsTender:= False, inUnitId:= 0, inSession:= zfCalc_UserAdmin());

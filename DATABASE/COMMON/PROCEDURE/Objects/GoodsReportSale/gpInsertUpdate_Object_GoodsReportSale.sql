@@ -35,9 +35,10 @@ BEGIN
 
 
      -- Проверка
-     IF vbStartDate + ((vbWeek * 7) :: TVarChar || ' DAY' :: INTERVAL) <> vbEndDate
+     IF (vbStartDate + (((vbWeek * 7 - 1) :: Integer) :: TVarChar || ' DAY') :: INTERVAL) <> vbEndDate
      THEN
-         RAISE EXCEPTION 'Период с <%> по <%> должен быть кратен <%> недель', zfConvert_DateToString (vbStartDate), zfConvert_DateToString (vbEndDate), vbWeek :: Integer;
+         RAISE EXCEPTION 'Период с <%> по <%> должен быть кратен <%> недель. <%> ', zfConvert_DateToString (vbStartDate), zfConvert_DateToString (vbEndDate), vbWeek :: Integer
+                        , zfConvert_DateToString ((vbStartDate + (((vbWeek * 7 - 1) :: Integer) :: TVarChar || ' DAY') :: INTERVAL));
          -- 'Повторите действие через 3 мин.'
      END IF;
 
