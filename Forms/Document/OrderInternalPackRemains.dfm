@@ -2,7 +2,6 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1086#1089#1090#1072#1090#1082#1080')>'
   ClientHeight = 639
   ClientWidth = 1020
-  ExplicitTop = -93
   ExplicitWidth = 1036
   ExplicitHeight = 674
   PixelsPerInch = 96
@@ -17,7 +16,6 @@
     ClientRectBottom = 513
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitTop = 0
       ExplicitWidth = 1020
       ExplicitHeight = 489
       inherited cxGrid: TcxGrid
@@ -2736,7 +2734,7 @@
         item
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'Num;GoodsName;GoodsName_Child'
+          IndexFieldNames = 'Num;GoodsGroupNameFull;GoodsName;GoodsName_Child'
         end>
       Params = <
         item

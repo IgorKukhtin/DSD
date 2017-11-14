@@ -39,6 +39,7 @@ RETURNS TABLE (GoodsGroupNameFull TVarChar
              , MovementId_Promo      Integer
              , isPromo               Boolean
              , isTare                Boolean
+             , tmpDate               TDateTime
               )
 AS
 $BODY$
@@ -374,6 +375,8 @@ BEGIN
             , tmpMI.MovementId_Promo :: Integer AS MovementId_Promo
             , CASE WHEN tmpMI.MovementId_Promo > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPromo
             , CASE WHEN tmpMI.isTare_calc = 1 THEN TRUE ELSE FALSE END :: Boolean AS isTare
+            
+            , CURRENT_DATE :: TDateTime AS tmpDate
 
        FROM (SELECT tmpMI.GoodsId
                   , tmpMI.GoodsKindId
@@ -752,6 +755,9 @@ BEGIN
             , 0                           AS MovementId_Promo
             , FALSE                       AS isPromo
             , FALSE                       AS isTare
+
+            , CURRENT_DATE :: TDateTime   AS tmpDate
+
        FROM tmpGoods
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull

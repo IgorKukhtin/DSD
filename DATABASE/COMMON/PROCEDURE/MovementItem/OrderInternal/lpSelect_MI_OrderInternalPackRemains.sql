@@ -568,10 +568,10 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
                           WHERE _tmpMI_master.Income_CEH       = 0 -- отбросили Приход пр-во (ФАКТ)
                             AND _tmpMI_master.GoodsId_complete = 0 -- т.е. НЕ упакованный
                             AND _tmpMI_master.ContainerId      = 0 -- отбросили остатки на ПР-ВЕ
-                            -- отбросили Расход на Цех Упаковки
+                            -- отбросили Перемещение на Цех Упаковки
                             AND (_tmpMI_master.Income_PACK_to    = 0
                                 OR (_tmpMI_master.Income_PACK_to   <> 0 AND _tmpMI_master.ReceiptId = 0 AND _tmpMI_master.GoodsId_complete = 0 AND _tmpMI_master.GoodsId_basis = 0))
-                             -- отбросили Приход с Цеха Упаковки
+                             -- отбросили Перемещение с Цеха Упаковки
                             AND (_tmpMI_master.Income_PACK_from  = 0
                                 OR (_tmpMI_master.Income_PACK_from <> 0 AND _tmpMI_master.ReceiptId = 0 AND _tmpMI_master.GoodsId_complete = 0 AND _tmpMI_master.GoodsId_basis = 0))
                          )
@@ -778,9 +778,9 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
 
              -- Приход пр-во (ФАКТ)
            , tmpIncome.Income_CEH    :: TFloat AS Income_CEH
-             -- Расход на Цех Упаковки
+             -- ФАКТ - Перемещение на Цех Упаковки
            , tmpChild.Income_PACK_to
-             -- Приход с Цеха Упаковки
+             -- ФАКТ - Перемещение с Цеха Упаковки
            , tmpChild.Income_PACK_from
 
              -- Ост. нач. - НЕ упак.
@@ -1013,7 +1013,7 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
                                AND _tmpMI_master.ContainerId      = 0 -- отбросили остатки на ПР-ВЕ
                                AND _tmpMI_master.Amount           > 0
                             )
-            -- Расход на / Приход с - Цеха Упаковки
+            -- ФАКТ - Перемещение на / с - Цеха Упаковки
           , tmpPACK AS (SELECT _tmpMI_master.GoodsId
                              , _tmpMI_master.GoodsKindId
                              , SUM (_tmpMI_master.Income_PACK_to)   AS Income_PACK_to
@@ -1057,9 +1057,9 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
              -- Amount_result_pack
            , CAST (tmpMI.Remains + tmpMI.Remains_pack + tmpMI.AmountPack + tmpMI.AmountPackSecond - tmpMI.AmountPartnerPrior - tmpMI.AmountPartnerPriorPromo - tmpMI.AmountPartner - tmpMI.AmountPartnerPromo AS NUMERIC (16, 1)) :: TFloat AS Amount_result_pack
 
-             -- Расход на Цеха Упаковки
+             -- ФАКТ - Перемещение на Цех Упаковки
            , tmpPACK.Income_PACK_to   :: TFloat AS Income_PACK_to
-             -- Приход с Цеха Упаковки
+             -- ФАКТ - Перемещение с Цеха Упаковки
            , tmpPACK.Income_PACK_from :: TFloat AS Income_PACK_from
              -- Ост. начальн. - НЕ упакованный
            , (tmpMI.Remains - COALESCE (tmpMI_master.Amount, 0)) :: TFloat AS Remains
@@ -1101,7 +1101,7 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
                    END
              AS NUMERIC (16, 1)) :: TFloat AS DayCountForecastOrder
 
-              -- Ост. в днях (по зв.) - ПОСЛЕ УПАКОВКИ
+             -- Ост. в днях (по пр. !!!ИЛИ!!! по зв.) - ПОСЛЕ УПАКОВКИ
            , CAST (CASE WHEN tmpMI.CountForecast > 0
                              THEN (tmpMI.Remains + tmpMI.Remains_pack + tmpMI.AmountPack + tmpMI.AmountPackSecond
                                  - COALESCE (tmpMI_master.Amount, 0)
@@ -1153,8 +1153,8 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
         WHERE tmpMI.Income_CEH       = 0 -- отбросили Приход пр-во (ФАКТ)
-          AND tmpMI.Income_PACK_to   = 0 -- отбросили Расход на Цех Упаковки
-          AND tmpMI.Income_PACK_from = 0 -- отбросили Приход с Цеха Упаковки
+          AND tmpMI.Income_PACK_to   = 0 -- отбросили Перемещение на Цех Упаковки
+          AND tmpMI.Income_PACK_from = 0 -- отбросили Перемещение с Цеха Упаковки
           AND tmpMI.ContainerId      = 0 -- отбросили остатки на ПР-ВЕ
 
        ;
@@ -1379,9 +1379,9 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
 
              -- Приход пр-во (ФАКТ)
            , tmpMI.Income_CEH    :: TFloat AS Income_CEH
-             -- Расход на Цеха Упаковки
+             -- ФАКТ - Перемещение на Цех Упаковки
            , tmpMI.Income_PACK_to
-             -- Приход - с Цеха Упаковки
+             -- ФАКТ - Перемещение с Цеха Упаковки
            , tmpMI.Income_PACK_from
 
              -- Ост. начальн. - произв. (СЕГОДНЯ)
