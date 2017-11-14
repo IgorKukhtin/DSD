@@ -17,15 +17,30 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbIsInsert Boolean;
+   DECLARE vbAmount TFloat;
+   DECLARE vbReasonDifferencesId Integer;
 BEGIN
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
+     --
+     SELECT MI.Amount 
+          , MILinkObject_ReasonDifferences.ObjectId AS ReasonDifferencesId
+        INTO vbAmount, vbReasonDifferencesId
+     FROM MovementItem AS MI 
+          LEFT JOIN MovementItemLinkObject AS MILinkObject_ReasonDifferences
+                                           ON MILinkObject_ReasonDifferences.MovementItemId = MI.Id
+                                          AND MILinkObject_ReasonDifferences.DescId = zc_MILinkObject_ReasonDifferences()
+                                            
+     WHERE MI.Id = ioId;
+
+
      -- проверка
-     IF EXISTS (SELECT MIC.Id FROM MovementItemContainer AS MIC WHERE MIC.Movementid = inMovementId)
+     IF EXISTS (SELECT MIC.Id FROM MovementItemContainer AS MIC WHERE MIC.Movementid = inMovementId) AND ((inAmount <> vbAmount) OR (inReasonDifferencesId <> vbReasonDifferencesId))
      THEN
           RAISE EXCEPTION 'Ошибка.Документ отложен, корректировка запрещена!';
      END IF;
+     
      
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
