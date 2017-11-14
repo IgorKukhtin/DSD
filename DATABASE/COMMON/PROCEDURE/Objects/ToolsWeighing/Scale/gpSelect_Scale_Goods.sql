@@ -54,6 +54,8 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpGetUserBySession (inSession);
 
+-- if inSession = '5' then return; end if;
+-- if inSession = '5' then inMovementId:= 7505643; end if;
 
    -- товар которого нет как бы в заявке, но его все равно надо провести
    IF (inOrderExternalId > 0 OR inBranchCode = 301) AND inGoodsCode <> 0 THEN vbGoodsId:= (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inGoodsCode AND Object.DescId = zc_Object_Goods() AND Object.isErased = FALSE);

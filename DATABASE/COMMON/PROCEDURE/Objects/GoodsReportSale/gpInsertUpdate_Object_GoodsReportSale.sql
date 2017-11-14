@@ -24,10 +24,24 @@ BEGIN
      -- vbOperDate := '08.11.2017';
      vbOperDate := CURRENT_DATE;
 
-     vbStartDate := (vbOperDate - INTERVAL '57 DAY') ::TDateTime;
+     -- !!!было 8 НЕДЕЛЬ!!!
+     -- vbStartDate := (vbOperDate - INTERVAL '57 DAY') ::TDateTime;
+
+     -- !!!теперь 5 НЕДЕЛЬ!!!
+     vbStartDate := (vbOperDate - ((5 * 7 + 1) :: TVarChar || ' DAY') :: INTERVAL) ::TDateTime;
      vbEndDate   := (vbOperDate - INTERVAL '2 DAY')  ::TDateTime;
-     vbWeek      := (ROUND( (date_part('DAY', vbEndDate - vbStartDate) / 7) ::TFloat, 0)) ::TFloat;
+     vbWeek      := (ROUND( (date_part('DAY', vbEndDate - vbStartDate) / 7) ::TFloat, 0)) :: Integer;
      
+
+
+     -- Проверка
+     IF (vbStartDate + (((vbWeek * 7 - 1) :: Integer) :: TVarChar || ' DAY') :: INTERVAL) <> vbEndDate
+     THEN
+         RAISE EXCEPTION 'Период с <%> по <%> должен быть кратен <%> недель. <%> ', zfConvert_DateToString (vbStartDate), zfConvert_DateToString (vbEndDate), vbWeek :: Integer
+                        , zfConvert_DateToString ((vbStartDate + (((vbWeek * 7 - 1) :: Integer) :: TVarChar || ' DAY') :: INTERVAL));
+         -- 'Повторите действие через 3 мин.'
+     END IF;
+
      -- сохраняем zc_Object_GoodsReportSaleInf
      PERFORM lpInsertUpdate_Object_GoodsReportSaleInf (inId := COALESCE ((SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsReportSaleInf()) , 0) ::Integer
                                                      , inStartDate := vbStartDate

@@ -35,7 +35,7 @@ type
     DeteFinalSale: TcxGridDBColumn;
     DateStartPromo: TcxGridDBColumn;
     DateFinalPromo: TcxGridDBColumn;
-    PartnerName: TcxGridDBColumn;
+    RetailName: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     GoodsCode: TcxGridDBColumn;
     TradeMarkName: TcxGridDBColumn;
@@ -55,6 +55,10 @@ type
     actUpdatePlanDS: TdsdUpdateDataSet;
     spUpdate_Plan: TdsdStoredProc;
     dsdDBViewAddOn1: TdsdDBViewAddOn;
+    plGoodsKindName_List: TcxGridDBColumn;
+    plPersonalTradeName: TcxGridDBColumn;
+    plPersonalName: TcxGridDBColumn;
+    plChecked: TcxGridDBColumn;
   private
     { Private declarations }
   public

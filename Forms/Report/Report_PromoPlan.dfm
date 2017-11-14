@@ -4,7 +4,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
   ClientWidth = 885
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
   ExplicitWidth = 901
-  ExplicitHeight = 472
+  ExplicitHeight = 469
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -179,19 +179,18 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             HeaderAlignmentVert = vaCenter
             Width = 41
           end
-          object UnitName: TcxGridDBColumn
-            Caption = #1057#1082#1083#1072#1076
-            DataBinding.FieldName = 'UnitName'
+          object Checked: TcxGridDBColumn
+            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086
+            DataBinding.FieldName = 'Checked'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 95
+            Width = 54
           end
           object PersonalTradeName: TcxGridDBColumn
             Caption = #1050#1086#1084'. '#1086#1090#1076#1077#1083
             DataBinding.FieldName = 'PersonalTradeName'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 79
@@ -199,6 +198,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
           object PersonalName: TcxGridDBColumn
             Caption = #1052#1072#1088#1082#1077#1090'. '#1086#1090#1076#1077#1083
             DataBinding.FieldName = 'PersonalName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 79
@@ -231,25 +231,13 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             HeaderAlignmentVert = vaCenter
             Width = 76
           end
-          object PartnerName: TcxGridDBColumn
-            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
-            DataBinding.FieldName = 'PartnerName'
+          object RetailName: TcxGridDBColumn
+            Caption = #1057#1077#1090#1100', '#1074' '#1082#1086#1090#1086#1088#1086#1081' '#1087#1088#1086#1093#1086#1076#1080#1090' '#1072#1082#1094#1080#1103
+            DataBinding.FieldName = 'RetailName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 114
-          end
-          object MonthPromo: TcxGridDBColumn
-            Caption = #1052#1077#1089#1103#1094' '#1072#1082#1094#1080#1080
-            DataBinding.FieldName = 'MonthPromo'
-            PropertiesClassName = 'TcxDateEditProperties'
-            Properties.DisplayFormat = 'mmmm yyyy'
-            Properties.ReadOnly = False
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
           end
           object TradeMarkName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
@@ -272,13 +260,6 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             HeaderAlignmentVert = vaCenter
             Width = 123
           end
-          object MeasureName: TcxGridDBColumn
-            Caption = #1045#1076'. '#1080#1079#1084'.'
-            DataBinding.FieldName = 'MeasureName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 42
-          end
           object GoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080
             DataBinding.FieldName = 'GoodsKindName'
@@ -296,25 +277,12 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             Options.Editing = False
             Width = 77
           end
-          object GoodsWeight: TcxGridDBColumn
-            Caption = #1042#1077#1089
-            DataBinding.FieldName = 'GoodsWeight'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
+          object MeasureName: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 43
-          end
-          object Checked: TcxGridDBColumn
-            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086
-            DataBinding.FieldName = 'Checked'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 54
+            Width = 42
           end
           object AmountPlan1: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072' 1'
@@ -467,6 +435,38 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object GoodsWeight: TcxGridDBColumn
+            Caption = #1042#1077#1089
+            DataBinding.FieldName = 'GoodsWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 43
+          end
+          object UnitName: TcxGridDBColumn
+            Caption = #1057#1082#1083#1072#1076
+            DataBinding.FieldName = 'UnitName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 95
+          end
+          object MonthPromo: TcxGridDBColumn
+            Caption = #1052#1077#1089#1103#1094' '#1072#1082#1094#1080#1080
+            DataBinding.FieldName = 'MonthPromo'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'mmmm yyyy'
+            Properties.ReadOnly = False
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -655,14 +655,31 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             Options.Editing = False
             Width = 41
           end
-          object plUnitName: TcxGridDBColumn
-            Caption = #1057#1082#1083#1072#1076
-            DataBinding.FieldName = 'UnitName'
+          object plChecked: TcxGridDBColumn
+            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086
+            DataBinding.FieldName = 'Checked'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 95
+            Width = 55
+          end
+          object plPersonalTradeName: TcxGridDBColumn
+            Caption = #1050#1086#1084'. '#1086#1090#1076#1077#1083
+            DataBinding.FieldName = 'PersonalTradeName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object plPersonalName: TcxGridDBColumn
+            Caption = #1052#1072#1088#1082#1077#1090'. '#1086#1090#1076#1077#1083
+            DataBinding.FieldName = 'PersonalName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object plDateStartSale: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1086#1090#1075#1088#1091#1079#1082#1080
@@ -696,25 +713,13 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             Options.Editing = False
             Width = 76
           end
-          object plPartnerName: TcxGridDBColumn
-            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
-            DataBinding.FieldName = 'PartnerName'
+          object plRetailName: TcxGridDBColumn
+            Caption = #1057#1077#1090#1100', '#1074' '#1082#1086#1090#1086#1088#1086#1081' '#1087#1088#1086#1093#1086#1076#1080#1090' '#1072#1082#1094#1080#1103
+            DataBinding.FieldName = 'RetailName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 114
-          end
-          object plMonthPromo: TcxGridDBColumn
-            Caption = #1052#1077#1089#1103#1094' '#1072#1082#1094#1080#1080
-            DataBinding.FieldName = 'MonthPromo'
-            PropertiesClassName = 'TcxDateEditProperties'
-            Properties.DisplayFormat = 'mmmm yyyy'
-            Properties.ReadOnly = False
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
           end
           object plTradeMarkName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
@@ -749,6 +754,14 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             Options.Editing = False
             Width = 54
           end
+          object plGoodsKindName_List: TcxGridDBColumn
+            Caption = #1042#1080#1076' ('#1089#1087#1088#1072#1074#1086#1095#1085#1086')'
+            DataBinding.FieldName = 'GoodsKindName_List'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object plMeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
@@ -756,18 +769,6 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 42
-          end
-          object plGoodsWeight: TcxGridDBColumn
-            Caption = #1042#1077#1089
-            DataBinding.FieldName = 'GoodsWeight'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 43
           end
           object plAmountPlan1: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072' 1'
@@ -917,6 +918,39 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
+          end
+          object plGoodsWeight: TcxGridDBColumn
+            Caption = #1042#1077#1089
+            DataBinding.FieldName = 'GoodsWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 43
+          end
+          object plMonthPromo: TcxGridDBColumn
+            Caption = #1052#1077#1089#1103#1094' '#1072#1082#1094#1080#1080
+            DataBinding.FieldName = 'MonthPromo'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'mmmm yyyy'
+            Properties.ReadOnly = False
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object plUnitName: TcxGridDBColumn
+            Caption = #1057#1082#1083#1072#1076
+            DataBinding.FieldName = 'UnitName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 95
           end
           object plisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -1096,6 +1130,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
     object actOpenPromo: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
       Hint = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
       ImageIndex = 1
