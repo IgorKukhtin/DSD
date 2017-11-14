@@ -27,6 +27,8 @@ RETURNS TABLE(
     , MovementItemId      Integer
     , InvNumber           Integer   --№ документа акции
     , UnitName            TVarChar  --Склад
+    , PersonalTradeName   TVarChar  --Ответственный представитель коммерческого отдела
+    , PersonalName        TVarChar  --Ответственный представитель маркетингового отдела	
     , DateStartSale       TDateTime --Дата отгрузки по акционным ценам
     , DeteFinalSale       TDateTime --Дата отгрузки по акционным ценам
     , DateStartPromo      TDateTime --Дата проведения акции
@@ -37,6 +39,7 @@ RETURNS TABLE(
     , GoodsCode           Integer   --Код позиции
     , MeasureName         TVarChar  --единица измерения
     , GoodsKindName       TVarChar  --Вид упаковки
+    , GoodsKindName_List  TVarChar  --Вид товара (справочно)
     , TradeMarkName       TVarChar  --Торговая марка
     , isPromo             Boolean   --Акция (да/нет)
     , Checked             Boolean   --Согласовано (да/нет)
@@ -50,6 +53,13 @@ RETURNS TABLE(
     , AmountPlan6         TFloat -- Кол-во план отгрузки за сб.
     , AmountPlan7         TFloat -- Кол-во план отгрузки за вс.
 
+    , AmountPlan1_Wh      TFloat -- 
+    , AmountPlan2_Wh      TFloat -- 
+    , AmountPlan3_Wh      TFloat -- 
+    , AmountPlan4_Wh      TFloat -- 
+    , AmountPlan5_Wh      TFloat -- 
+    , AmountPlan6_Wh      TFloat -- 
+    , AmountPlan7_Wh      TFloat -- 
     )
 AS
 $BODY$
@@ -60,81 +70,34 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
      vbUserId:= lpGetUserBySession (inSession);
 
+    -- таблицы для получения Вид товара (справочно) из GoodsListSale
+    CREATE TEMP TABLE _tmpWord_Split_from (WordList TVarChar) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpWord_Split_to (Ord Integer, Word TVarChar, WordList TVarChar) ON COMMIT DROP;
+
+    INSERT INTO _tmpWord_Split_from (WordList) 
+            SELECT DISTINCT ObjectString_GoodsKind.ValueData AS WordList
+            FROM ObjectString AS ObjectString_GoodsKind
+            WHERE ObjectString_GoodsKind.DescId = zc_ObjectString_GoodsListSale_GoodsKind()
+              AND ObjectString_GoodsKind.ValueData <> '';
+    
+    PERFORM zfSelect_Word_Split (inSep:= ',', inUserId:= vbUserId);
+    --
+    
     -- Результат
     RETURN QUERY
-  /*  WITH 
-    tmpMovement AS (SELECT Movement_Promo.*
-                         , MovementDate_StartSale.ValueData            AS StartSale
-                         , MovementDate_EndSale.ValueData              AS EndSale
-                         , MovementLinkObject_Unit.ObjectId            AS UnitId
-                    FROM Movement AS Movement_Promo 
-                         LEFT JOIN MovementDate AS MovementDate_StartSale
-                                                 ON MovementDate_StartSale.MovementId = Movement_Promo.Id
-                                                AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
-                         LEFT JOIN MovementDate AS MovementDate_EndSale
-                                                 ON MovementDate_EndSale.MovementId = Movement_Promo.Id
-                                                AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
-                         LEFT JOIN MovementBoolean AS MovementBoolean_Checked
-                                                   ON MovementBoolean_Checked.MovementId = Movement_Promo.Id
-                                                  AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
-     
-                         LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                      ON MovementLinkObject_Unit.MovementId = Movement_Promo.Id
-                                                     AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                         LEFT JOIN Object AS Object_Unit 
-                                         ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
-                              
-                    WHERE Movement_Promo.DescId = zc_Movement_Promo()
-                     AND ( ( Movement_Promo.StartSale BETWEEN inStartDate AND inEndDate
-                            OR
-                            inStartDate BETWEEN Movement_Promo.StartSale AND Movement_Promo.EndSale
+     WITH tmpGoodsKind AS (SELECT _tmpWord_Split_to.WordList, Object.ValueData :: TVarChar AS GoodsKindName
+                           FROM _tmpWord_Split_to 
+                                LEFT JOIN Object ON Object.Id = _tmpWord_Split_to.Word :: Integer
+                           GROUP BY _tmpWord_Split_to.WordList, Object.ValueData
                            )
-                       AND (Movement_Promo.UnitId = inUnitId OR inUnitId = 0)
-                       AND Movement_Promo.StatusId = zc_Enum_Status_Complete()
-                       AND (  (Movement_Promo.isPromo = TRUE AND inIsPromo = TRUE) 
-                           OR (COALESCE (Movement_Promo.isPromo, FALSE) = FALSE AND inIsTender = TRUE)
-                           OR (inIsPromo = FALSE AND inIsTender = FALSE)
-                           )
-                          )
-                   )
-           , tmpMovement_PromoPartner AS (SELECT Movement_PromoPartner.Id                                          --Идентификатор
-                                               , Movement_PromoPartner.StatusId
-                                               , Object_Status.ObjectCode               AS StatusCode
-                                               , Object_Status.ValueData                AS StatusName 
-                                               , Movement_PromoPartner.ParentId                                    --Ссылка на основной документ <Акции> (zc_Movement_Promo)
-                                               , Object_Partner.ValueData               AS PartnerName             --Покупатель для акции
-                                               , ObjectDesc_Partner.ItemName            AS PartnerDescName         --Тип Покупатель для акции
-                                               , Object_Contract.ValueData              AS ContractName            --наименование контракта
-                                               , Object_ContractTag.ValueData           AS ContractTagName         --признак контракта
-                                               
-                                          FROM tmpMovement
-                                               LEFT JOIN Movement AS Movement_PromoPartner ON Movement_PromoPartner.ParentId = tmpMovement.Id
-                                                                                          AND Movement_PromoPartner.DescId = zc_Movement_PromoPartner()
-                                                                                          AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
-                                               LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_PromoPartner.StatusId
-                                               
-                                               LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
-                                                                            ON MovementLinkObject_Partner.MovementId = Movement_PromoPartner.Id
-                                                                           AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
-                                               LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
-                                               LEFT OUTER JOIN ObjectDesc AS ObjectDesc_Partner ON ObjectDesc_Partner.Id = Object_Partner.DescId
-                                       
-                                               LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                                                            ON MovementLinkObject_Contract.MovementId = Movement_PromoPartner.Id
-                                                                           AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-                                               LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
-                                               
-                                               LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractTag
-                                                                    ON ObjectLink_Contract_ContractTag.ObjectId = Object_Contract.Id
-                                                                   AND ObjectLink_Contract_ContractTag.DescId = zc_ObjectLink_Contract_ContractTag()
-                                               LEFT JOIN Object AS Object_ContractTag ON Object_ContractTag.Id = ObjectLink_Contract_ContractTag.ChildObjectId
-                                          )*/
-                                          
+                           
         SELECT
             Movement_Promo.Id                 --ИД документа акции
           , MI_PromoGoods.Id                        AS MovementItemId
           , Movement_Promo.InvNumber          --№ документа акции
           , Movement_Promo.UnitName           --Склад
+          , Movement_Promo.PersonalTradeName  --Ответственный представитель коммерческого отдела
+          , Movement_Promo.PersonalName       --Ответственный представитель маркетингового отдела
           , Movement_Promo.StartSale          --Дата начала отгрузки по акционной цене
           , Movement_Promo.EndSale            --Дата окончания отгрузки по акционной цене
           , Movement_Promo.StartPromo         --Дата начала акции
@@ -159,6 +122,33 @@ BEGIN
           , MI_PromoGoods.GoodsCode
           , MI_PromoGoods.Measure
           , MI_PromoGoods.GoodsKindName
+
+          , (SELECT STRING_AGG (DISTINCT tmpGoodsKind.GoodsKindName,'; ')
+             FROM Movement AS Movement_PromoPartner
+                INNER JOIN MovementItem AS MI_PromoPartner
+                                        ON MI_PromoPartner.MovementId = Movement_PromoPartner.ID
+                                       AND MI_PromoPartner.DescId     = zc_MI_Master()
+                                       AND MI_PromoPartner.IsErased   = FALSE
+                                       
+                LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_Partner
+                                     ON ObjectLink_GoodsListSale_Partner.ChildObjectId = MI_PromoPartner.ObjectId
+                                    AND ObjectLink_GoodsListSale_Partner.DescId = zc_ObjectLink_GoodsListSale_Partner()
+                                     
+                INNER JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods
+                                     ON ObjectLink_GoodsListSale_Goods.ObjectId = ObjectLink_GoodsListSale_Partner.ObjectId
+                                    AND ObjectLink_GoodsListSale_Goods.DescId = zc_ObjectLink_GoodsListSale_Goods()
+                                    AND ObjectLink_GoodsListSale_Goods.ChildObjectId = MI_PromoGoods.GoodsId 
+                INNER JOIN ObjectString AS ObjectString_GoodsKind
+                                        ON ObjectString_GoodsKind.ObjectId = ObjectLink_GoodsListSale_Partner.ObjectId
+                                       AND ObjectString_GoodsKind.DescId = zc_ObjectString_GoodsListSale_GoodsKind()
+                                       
+                LEFT JOIN tmpGoodsKind ON tmpGoodsKind.WordList = ObjectString_GoodsKind.ValueData
+
+             WHERE Movement_PromoPartner.ParentId = Movement_Promo.Id
+               AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
+               AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
+            )::TVarChar AS GoodsKindName_List
+            
           , MI_PromoGoods.TradeMark
           , Movement_Promo.isPromo                 AS isPromo
           , Movement_Promo.Checked                 AS Checked
@@ -172,6 +162,14 @@ BEGIN
           , MIFloat_Plan5.ValueData                AS AmountPlan5
           , MIFloat_Plan6.ValueData                AS AmountPlan6
           , MIFloat_Plan7.ValueData                AS AmountPlan7 
+          
+          , (MIFloat_Plan1.ValueData  * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)  ::TFloat AS AmountPlan1_Wh
+          , (MIFloat_Plan2.ValueData  * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)  ::TFloat AS AmountPlan2_Wh
+          , (MIFloat_Plan3.ValueData  * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)  ::TFloat AS AmountPlan3_Wh
+          , (MIFloat_Plan4.ValueData  * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)  ::TFloat AS AmountPlan4_Wh
+          , (MIFloat_Plan5.ValueData  * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)  ::TFloat AS AmountPlan5_Wh
+          , (MIFloat_Plan6.ValueData  * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)  ::TFloat AS AmountPlan6_Wh
+          , (MIFloat_Plan7.ValueData  * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)  ::TFloat AS AmountPlan7_Wh
            
         FROM Movement_Promo_View AS Movement_Promo
             LEFT OUTER JOIN MovementItem_PromoGoods_View AS MI_PromoGoods

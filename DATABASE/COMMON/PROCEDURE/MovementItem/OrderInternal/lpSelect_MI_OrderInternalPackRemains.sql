@@ -456,6 +456,7 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
                                 , GoodsName_basis  TVarChar
                                 , GoodsKindId      Integer
                                 , GoodsKindName    TVarChar
+                                , MeasureId        Integer
                                 , MeasureName      TVarChar
                                 , MeasureName_basis   TVarChar
                                 , GoodsGroupNameFull  TVarChar
@@ -516,10 +517,11 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
                                 , GoodsId_basis
                                 , GoodsCode_basis
                                 , GoodsName_basis
-                                , GoodsKindId
+                                , GoodsKindId    
                                 , GoodsKindName
-                                , MeasureName
-                                , MeasureName_basis
+                                , MeasureId  
+                                , MeasureName    
+                                , MeasureName_basis 
                                 , GoodsGroupNameFull
                                 , isCheck_basis
                                 , Amount
@@ -708,6 +710,7 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
 
            , Object_GoodsKind.Id                 AS GoodsKindId
            , Object_GoodsKind.ValueData          AS GoodsKindName
+           , Object_Measure.Id                   AS MeasureId
            , Object_Measure.ValueData            AS MeasureName
            , Object_Measure_basis.ValueData      AS MeasureName_basis
 
@@ -905,6 +908,7 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
                                         , GoodsName_basis            TVarChar
                                         , GoodsKindId                Integer
                                         , GoodsKindName              TVarChar
+                                        , MeasureId                  Integer
                                         , MeasureName                TVarChar
                                         , MeasureName_basis          TVarChar
                                         , GoodsGroupNameFull         TVarChar
@@ -950,15 +954,15 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
                                         , ReceiptName_basis          TVarChar
                                         , isErased                   Boolean) ON COMMIT DROP;
 
-
-          INSERT INTO _Result_Child (Id, ContainerId
-                                        , KeyId
-                                        , GoodsId
-                                        , GoodsCode
-                                        , GoodsName
-                                        , GoodsKindId
-                                        , GoodsKindName
-                                        , MeasureName
+          INSERT INTO _Result_Child (Id, ContainerId        
+                                        , KeyId     
+                                        , GoodsId   
+                                        , GoodsCode 
+                                        , GoodsName 
+                                        , GoodsKindId    
+                                        , GoodsKindName  
+                                        , MeasureId
+                                        , MeasureName    
                                         , GoodsGroupNameFull
 
                                         , AmountPack
@@ -1033,6 +1037,7 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
 
            , Object_GoodsKind.Id                 AS GoodsKindId
            , Object_GoodsKind.ValueData          AS GoodsKindName
+           , Object_Measure.Id                   AS MeasureId
            , Object_Measure.ValueData            AS MeasureName
 
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
@@ -1171,6 +1176,7 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
                                         , GoodsKindName              TVarChar
                                         , GoodsKindId_complete       Integer
                                         , GoodsKindName_complete     TVarChar
+                                        , MeasureId                  Integer
                                         , MeasureName                TVarChar
                                         , MeasureName_complete       TVarChar
                                         , MeasureName_basis          TVarChar
@@ -1249,6 +1255,7 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
                                     , GoodsKindName
                                     , GoodsKindId_complete
                                     , GoodsKindName_complete
+                                    , MeasureId
                                     , MeasureName
                                     , MeasureName_complete
                                     , MeasureName_basis
@@ -1337,6 +1344,7 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
            , Object_GoodsKind_complete.Id        AS GoodsKindId_complete
            , Object_GoodsKind_complete.ValueData AS GoodsKindName_complete
 
+           , Object_Measure.Id                   AS MeasureId
            , Object_Measure.ValueData            AS MeasureName
            , Object_Measure_complete.ValueData   AS MeasureName_complete
            , Object_Measure_basis.ValueData      AS MeasureName_basis
