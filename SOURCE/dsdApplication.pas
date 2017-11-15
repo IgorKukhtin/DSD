@@ -68,7 +68,7 @@ procedure TdsdApplication.OnException(Sender: TObject; E: Exception);
     end;
     Result := E.Message;
   end;
-var TextMessage, EMessage: String;
+var EMessage: String;
     isMessage: boolean;
 begin
   if E is ESortException then
