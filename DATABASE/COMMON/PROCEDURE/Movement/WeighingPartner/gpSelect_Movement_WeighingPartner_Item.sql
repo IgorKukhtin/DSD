@@ -64,29 +64,23 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
-    -- таблица -
-    CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
-
-    IF inGoodsGroupId <> 0
-    THEN
-        INSERT INTO _tmpGoods (GoodsId)
-           SELECT lfObject_Goods_byGoodsGroup.GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup;
-    ELSE IF inGoodsId <> 0
-         THEN
-             INSERT INTO _tmpGoods (GoodsId)
-              SELECT inGoodsId;
-         ELSE
-             INSERT INTO _tmpGoods (GoodsId)
-              SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods() AND (inStartDate + INTERVAL '3 DAY') >= inEndDate
-            ;
-         END IF;
-    END IF;
-
-
      -- Результат
      RETURN QUERY 
-
-       WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
+       WITH _tmpGoods AS -- (GoodsId Integer) ON COMMIT DROP;
+             (SELECT lfSelect.GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect
+              WHERE inGoodsGroupId <> 0 AND COALESCE (inGoodsId, 0) = 0
+             UNION
+              SELECT inGoodsId WHERE inGoodsId > 0
+             UNION
+                 SELECT Object.Id FROM Object
+                 WHERE Object.DescId = zc_Object_Goods() AND (inStartDate + INTERVAL '3 DAY') >= inEndDate
+                   AND COALESCE (inGoodsGroupId, 0) = 0 AND COALESCE (inGoodsId, 0) = 0
+                UNION
+                 SELECT Object.Id FROM Object
+                 WHERE Object.DescId = zc_Object_Goods() AND inIsErased = TRUE
+                   AND COALESCE (inGoodsGroupId, 0) = 0 AND COALESCE (inGoodsId, 0) = 0
+             )
+          , tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
                          UNION
                           SELECT zc_Enum_Status_UnComplete() AS StatusId
                          UNION
@@ -410,7 +404,11 @@ BEGIN
 
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                    AND MovementItem.DescId     = zc_MI_Master()
-                                   -- AND MovementItem.isErased   = FALSE
+                                   AND (MovementItem.isErased   = inIsErased
+                                    OR inGoodsGroupId <> 0
+                                    OR inGoodsId <> 0
+                                    OR (inStartDate + INTERVAL '3 DAY') >= inEndDate
+                                      )
 
             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = _tmpGoods.GoodsId

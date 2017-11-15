@@ -357,7 +357,8 @@ BEGIN
 
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                                     ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                                   AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                                                   AND MILinkObject_Unit.DescId         = zc_MILinkObject_Unit()
+                                                   AND MILinkObject_Unit.ObjectId       <> vbUnitId_From
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                    AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -546,7 +547,7 @@ BEGIN
      THEN
          -- на разницу корректируем самую большую сумму (теоретически может получиться Значение < 0, но эту ошибку не обрабатываем)
          UPDATE _tmpItem SET OperSumm_Partner_ChangePercent = _tmpItem.OperSumm_Partner_ChangePercent - (vbOperSumm_Partner_ChangePercent_byItem - vbOperSumm_Partner_ChangePercent)
-         WHERE _tmpItem.MovementItemId IN (SELECT _tmpItem.MovementItemId FROM _tmpItem WHERE _tmpItem.OperCount <> _tmpItem.OperCount_Partner ORDER BY _tmpItem.OperSumm_Partner_ChangePercent DESC LIMIT 1);
+         WHERE _tmpItem.MovementItemId IN (SELECT _tmpItem.MovementItemId FROM _tmpItem WHERE _tmpItem.OperCount_ChangePercent <> _tmpItem.OperCount_Partner ORDER BY _tmpItem.OperSumm_Partner_ChangePercent DESC LIMIT 1);
 
          --
          IF COALESCE (vbOperSumm_Partner_ChangePercent, 0) <> COALESCE ((SELECT SUM (_tmpItem.OperSumm_Partner_ChangePercent) FROM _tmpItem), 0)
@@ -568,7 +569,7 @@ BEGIN
      THEN
          -- на разницу корректируем самую большую сумму (теоретически может получиться Значение < 0, но эту ошибку не обрабатываем)
          UPDATE _tmpItem SET OperSumm_PartnerVirt_ChangePercent = _tmpItem.OperSumm_PartnerVirt_ChangePercent - (vbOperSumm_PartnerVirt_ChangePercent_byItem - vbOperSumm_PartnerVirt_ChangePercent)
-         WHERE _tmpItem.MovementItemId IN (SELECT _tmpItem.MovementItemId FROM _tmpItem WHERE _tmpItem.OperCount <> _tmpItem.OperCount_Partner ORDER BY _tmpItem.OperSumm_PartnerVirt_ChangePercent DESC LIMIT 1);
+         WHERE _tmpItem.MovementItemId IN (SELECT _tmpItem.MovementItemId FROM _tmpItem WHERE _tmpItem.OperCount_ChangePercent <> _tmpItem.OperCount_Partner ORDER BY _tmpItem.OperSumm_PartnerVirt_ChangePercent DESC LIMIT 1);
 
          --
          IF COALESCE (vbOperSumm_PartnerVirt_ChangePercent, 0) <> COALESCE ((SELECT SUM (_tmpItem.OperSumm_PartnerVirt_ChangePercent) FROM _tmpItem), 0)
@@ -2164,6 +2165,7 @@ END IF;
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummFrom(),      _tmpItem.MovementItemId, _tmpItem.OperSumm_PartnerVirt_ChangePercent)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummPriceList(), _tmpItem.MovementItemId, _tmpItem.OperSumm_PriceList)
      FROM _tmpItem;
+
 
 
      -- 6.1. ФИНИШ - Обязательно сохраняем Проводки

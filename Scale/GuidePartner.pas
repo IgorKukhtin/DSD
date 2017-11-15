@@ -130,9 +130,11 @@ begin
                     + ' and ObjectDescId='+IntToStr(zc_Object_Partner)
      else if (ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_Loss)
           then CDS.Filter:='ObjectDescId='+IntToStr(zc_Object_ArticleLoss)
-          else if (ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_SendOnPrice)
-               then CDS.Filter:='ObjectDescId='+IntToStr(zc_Object_Unit)
-          else CDS.Filter:='1=0';
+          else if (ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
+               then CDS.Filter:='ObjectDescId='+IntToStr(zc_Object_Member)
+               else if (ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_SendOnPrice)
+                    then CDS.Filter:='ObjectDescId='+IntToStr(zc_Object_Unit)
+               else CDS.Filter:='1=0';
 
 
      if ParamsMovement_local.ParamByName('calcPartnerCode').AsInteger<>0

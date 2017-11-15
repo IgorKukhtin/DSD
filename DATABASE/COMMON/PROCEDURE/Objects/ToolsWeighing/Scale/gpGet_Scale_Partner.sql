@@ -305,6 +305,65 @@ BEGIN
             LEFT JOIN Object_ProfitLossDirection_View AS View_ProfitLossDirection ON View_ProfitLossDirection.ProfitLossDirectionId = ObjectLink_ArticleLoss_ProfitLossDirection.ChildObjectId
       ;
    ELSE
+   IF inMovementDescId IN (zc_Movement_Send())
+   THEN
+       -- Результат для ArticleLoss
+       RETURN QUERY
+       WITH tmpMember AS (SELECT Object_Member.DescId         AS ObjectDescId
+                               , Object_Member.Id             AS PartnerId
+                               , Object_Member.ObjectCode     AS PartnerCode
+                               , Object_Member.ValueData      AS PartnerName
+                               , Object_Unit.ObjectCode       AS UnitCode
+                               , Object_Unit.ValueData        AS UnitName
+                          FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                               INNER JOIN Object AS Object_Member ON Object_Member.Id = lfSelect.MemberId
+                               LEFT  JOIN Object AS Object_Unit   ON Object_Unit.Id   = lfSelect.UnitId
+                          WHERE lfSelect.UnitId NOT IN (954062) -- Отдел Х
+                            AND Object_Member.ObjectCode = inPartnerCode
+                            AND Object_Member.DescId     = zc_Object_Member()
+                            AND Object_Member.isErased   = FALSE
+                            AND inPartnerCode > 0
+                            AND inInfoMoneyId = -1 * zc_Object_Member()
+                         )
+       SELECT tmpMember.ObjectDescId
+            , tmpMember.PartnerId
+            , tmpMember.PartnerCode
+            , tmpMember.PartnerName
+            , NULL :: Integer AS PaidKindId
+            , '' :: TVarChar  AS PaidKindName
+
+            , Object_PriceList.Id                  AS PriceListId
+            , Object_PriceList.ObjectCode          AS PriceListCode
+            , Object_PriceList.ValueData           AS PriceListName
+
+            , NULL :: Integer AS ContractId
+            , tmpMember.UnitCode             AS ContractCode
+            , tmpMember.UnitCode :: TVarChar AS ContractNumber
+            , tmpMember.UnitName             AS ContractTagName
+
+            , NULL :: Integer AS GoodsPropertyId
+            , NULL :: Integer AS GoodsPropertyCode
+            , '' :: TVarChar  AS GoodsPropertyName
+
+            , NULL :: TFloat AS ChangePercent
+            , NULL :: TFloat AS ChangePercentAmount
+
+            , FALSE       :: Boolean AS isEdiOrdspr
+            , FALSE       :: Boolean AS isEdiInvoice
+            , FALSE       :: Boolean AS isEdiDesadv
+
+            , TRUE        :: Boolean AS isMovement,  2 :: TFloat AS CountMovement
+            , FALSE       :: Boolean AS isAccount,   0 :: TFloat AS CountAccount
+            , FALSE       :: Boolean AS isTransport, 0 :: TFloat AS CountTransport
+            , FALSE       :: Boolean AS isQuality,   0 :: TFloat AS CountQuality
+            , FALSE       :: Boolean AS isPack   ,   0 :: TFloat AS CountPack
+            , FALSE       :: Boolean AS isSpec   ,   0 :: TFloat AS CountSpec
+            , FALSE       :: Boolean AS isTax    ,   0 :: TFloat AS CountTax
+
+       FROM tmpMember
+            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
+      ;
+   ELSE
    IF inMovementDescId IN (zc_Movement_SendOnPrice())
    THEN
        -- Результат для Unit
@@ -444,6 +503,7 @@ BEGIN
                                 AND ObjectLink_Unit_AccountDirection.DescId = zc_ObjectLink_Unit_AccountDirection()
             LEFT JOIN Object_AccountDirection_View AS View_AccountDirection ON View_AccountDirection.AccountDirectionId = ObjectLink_Unit_AccountDirection.ChildObjectId
       ;
+   END IF;
    END IF;
    END IF;
    END IF;

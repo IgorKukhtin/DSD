@@ -21,12 +21,16 @@ BEGIN
            , Object_ToolsWeighing_View.isErased
        FROM Object_ToolsWeighing_View
        WHERE isLeaf = FALSE
-       UNION SELECT
+
+      UNION
+       SELECT
              0 AS Id,
              0 AS Code,
              CAST('бяе' AS TVarChar) AS Name,
              0 AS ParentId,
-             false AS isErased;
+             FALSE AS isErased
+       ORDER BY 4, 3
+      ;
 
 END;
 $BODY$

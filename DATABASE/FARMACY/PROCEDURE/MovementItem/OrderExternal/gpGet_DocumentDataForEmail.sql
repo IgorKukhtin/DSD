@@ -43,7 +43,7 @@ BEGIN
                                                                AND MLO_To.DescId     = zc_MovementLinkObject_To()
                                    LEFT JOIN ObjectLink AS ObjectLink_Unit_Area
                                                         ON ObjectLink_Unit_Area.ObjectId = MLO_To.ObjectId
-                                                       AND ObjectLink_Unit_Area.DescId   = zc_ObjectLink_Unit_Juridical()
+                                                       AND ObjectLink_Unit_Area.DescId   = zc_ObjectLink_Unit_Area()
                                    LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                                         ON ObjectLink_Unit_Juridical.ObjectId = MLO_To.ObjectId
                                                        AND ObjectLink_Unit_Juridical.DescId   = zc_ObjectLink_Unit_Juridical()

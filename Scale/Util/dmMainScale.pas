@@ -1237,6 +1237,10 @@ begin
          Execute;
          zc_Object_ArticleLoss:=DataSet.FieldByName('Value').asInteger;
 
+         Params.ParamByName('inSqlText').Value:='SELECT zc_Object_Member() :: TVarChar';
+         Execute;
+         zc_Object_Member:=DataSet.FieldByName('Value').asInteger;
+
          Params.ParamByName('inSqlText').Value:='SELECT zc_Object_Unit() :: TVarChar';
          Execute;
          zc_Object_Unit:=DataSet.FieldByName('Value').asInteger;

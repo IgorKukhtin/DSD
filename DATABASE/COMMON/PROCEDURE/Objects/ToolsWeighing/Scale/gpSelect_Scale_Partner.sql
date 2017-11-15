@@ -68,8 +68,9 @@ BEGIN
                           FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
                                INNER JOIN Object AS Object_Member ON Object_Member.Id = lfSelect.MemberId
                                LEFT  JOIN Object AS Object_Unit   ON Object_Unit.Id   = lfSelect.UnitId
-                          WHERE (inBranchCode= 301 /*OR (inBranchCode= 1 AND inIsGoodsComplete = TRUE)*/)
+                          WHERE (inBranchCode= 301 OR (inBranchCode= 1 AND inIsGoodsComplete = TRUE))
                             AND lfSelect.UnitId NOT IN (954062) -- Отдел Х
+                            AND Object_Member.isErased = FALSE
                          )
           , tmpInfoMoney AS (-- 1.1.
                              SELECT View_InfoMoney_find.InfoMoneyId
@@ -378,8 +379,8 @@ BEGIN
             , FALSE       :: Boolean AS isSpec   ,   0 :: TFloat AS CountSpec
             , FALSE       :: Boolean AS isTax    ,   0 :: TFloat AS CountTax
 
-            , zc_Object_ArticleLoss() AS ObjectDescId
-            , zc_Movement_Loss()      AS MovementDescId
+            , CASE WHEN (inBranchCode= 1 AND inIsGoodsComplete = TRUE) THEN tmpMember.DescId   ELSE zc_Object_ArticleLoss() END :: Integer AS ObjectDescId
+            , CASE WHEN (inBranchCode= 1 AND inIsGoodsComplete = TRUE) THEN zc_Movement_Send() ELSE zc_Movement_Loss()      END :: Integer AS MovementDescId
             , ObjectDesc.ItemName
 
        FROM tmpMember

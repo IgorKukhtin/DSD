@@ -46,31 +46,26 @@ BEGIN
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Movement_WeighingProduction());
      vbUserId:= lpGetUserBySession (inSession);
 
-    -- таблица -
-    CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
-
-    IF inGoodsGroupId <> 0
-    THEN
-        INSERT INTO _tmpGoods (GoodsId)
-           SELECT lfObject_Goods_byGoodsGroup.GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup;
-    ELSE IF inGoodsId <> 0
-         THEN
-             INSERT INTO _tmpGoods (GoodsId)
-              SELECT inGoodsId;
-         ELSE
-             INSERT INTO _tmpGoods (GoodsId)
-              SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods() AND (inStartDate + INTERVAL '3 DAY') >= inEndDate
-            ;
-         END IF;
-    END IF;
 
      -- Результат
      RETURN QUERY 
+
+       WITH _tmpGoods AS -- (GoodsId Integer) ON COMMIT DROP;
+             (SELECT lfSelect.GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect
+              WHERE inGoodsGroupId <> 0 AND COALESCE (inGoodsId, 0) = 0
+             UNION
+              SELECT inGoodsId WHERE inGoodsId > 0
+             UNION
+                 SELECT Object.Id FROM Object
+                 WHERE Object.DescId = zc_Object_Goods() AND (inStartDate + INTERVAL '3 DAY') >= inEndDate
+                   AND COALESCE (inGoodsGroupId, 0) = 0 AND COALESCE (inGoodsId, 0) = 0
+             )
+
      /*WITH tmpUserAdmin AS (SELECT ObjectLink_UserRole_View.UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND ObjectLink_UserRole_View.UserId = vbUserId)
         , tmpRoleAccessKey AS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = vbUserId AND NOT EXISTS (SELECT tmpUserAdmin.UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
                          UNION SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT tmpUserAdmin.UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
                               )*/
-       WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
+         , tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
                          UNION
                           SELECT zc_Enum_Status_UnComplete() AS StatusId
                          UNION

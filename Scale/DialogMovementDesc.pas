@@ -241,6 +241,16 @@ begin
                Result:=false;
                exit;
      end;
+     // проверка для перемещения
+     if   (CDS.FieldByName('MovementDescId').asInteger=zc_Movement_Send)
+       and(ParamsMovement_local.ParamByName('calcPartnerId').AsInteger=0)
+       and(CDS.FieldByName('ToId').asInteger=0)
+     then begin
+               ShowMessage('Ошибка.Значение <Код Получателя> не найдено.');
+               ActiveControl:=EditPartnerCode;
+               Result:=false;
+               exit;
+     end;
      // проверка для формы оплаты
      if ((CDS.FieldByName('MovementDescId').asInteger=zc_Movement_Income)
        or(CDS.FieldByName('MovementDescId').asInteger=zc_Movement_ReturnOut)
@@ -498,16 +508,22 @@ begin
                     ParamsMovement_local.ParamByName('InfoMoneyName').asString := CDS.FieldByName('InfoMoneyName').asString;
 
                     ChoiceNumber:=CDS.FieldByName('Number').asInteger;
-                    // завершение
+                    // завершение ТОЛЬКО для НЕКОТОРЫХ
                     if   (CDS.FieldByName('MovementDescId').asInteger<>zc_Movement_Income)
                       and(CDS.FieldByName('MovementDescId').asInteger<>zc_Movement_ReturnOut)
                       and(CDS.FieldByName('MovementDescId').asInteger<>zc_Movement_Sale)
                       and(CDS.FieldByName('MovementDescId').asInteger<>zc_Movement_ReturnIn)
                       and(CDS.FieldByName('MovementDescId').asInteger<>zc_Movement_Loss)
                       and(CDS.FieldByName('MovementDescId').asInteger<>zc_Movement_SendOnPrice)
+                      and(CDS.FieldByName('MovementDescId').asInteger<>zc_Movement_Send)
                     then begin ActiveControl:=DBGrid;bbOkClick(Self);{DBGridCellClick(DBGrid.Columns[0]);}end;
-                    //
+                    // завершение ТОЛЬКО для SendOnPrice
                     if (CDS.FieldByName('MovementDescId').asInteger=zc_Movement_SendOnPrice)
+                    and(CDS.FieldByName('FromId').asInteger<>0)
+                    and(CDS.FieldByName('ToId').asInteger<>0)
+                    then begin ActiveControl:=DBGrid;bbOkClick(Self);{DBGridCellClick(DBGrid.Columns[0]);}end;
+                    // завершение ТОЛЬКО для Send
+                    if (CDS.FieldByName('MovementDescId').asInteger=zc_Movement_Send)
                     and(CDS.FieldByName('FromId').asInteger<>0)
                     and(CDS.FieldByName('ToId').asInteger<>0)
                     then begin ActiveControl:=DBGrid;bbOkClick(Self);{DBGridCellClick(DBGrid.Columns[0]);}end;
@@ -621,6 +637,7 @@ begin
      if   (ParamsMovement_local.ParamByName('ContractId').AsInteger=0)
        and(ParamsMovement_local.ParamByName('MovementDescId').AsInteger<>zc_Movement_Loss)
        and(ParamsMovement_local.ParamByName('MovementDescId').AsInteger<>zc_Movement_SendOnPrice)
+       and(ParamsMovement_local.ParamByName('MovementDescId').AsInteger<>zc_Movement_Send)
      then begin
                ParamsMovement_local.ParamByName('calcPartnerId').AsInteger:=0;
                ShowMessage('Ошибка.У контрагента не определено значение <Договор>.');
@@ -629,6 +646,7 @@ begin
      end;
      if   (ParamsMovement_local.ParamByName('PriceListId').AsInteger=0)
        and(ParamsMovement_local.ParamByName('MovementDescId').AsInteger<>zc_Movement_Loss)
+       and(ParamsMovement_local.ParamByName('MovementDescId').AsInteger<>zc_Movement_Send)
        //and(ParamsMovement_local.ParamByName('MovementDescId').AsInteger<>zc_Movement_SendOnPrice)
      then begin
                ParamsMovement_local.ParamByName('calcPartnerId').AsInteger:=0;
@@ -639,6 +657,7 @@ begin
      if   (ParamsMovement_local.ParamByName('PaidKindId').AsInteger=0)
        and(ParamsMovement_local.ParamByName('MovementDescId').AsInteger<>zc_Movement_Loss)
        and(ParamsMovement_local.ParamByName('MovementDescId').AsInteger<>zc_Movement_SendOnPrice)
+       and(ParamsMovement_local.ParamByName('MovementDescId').AsInteger<>zc_Movement_Send)
      then begin
                ParamsMovement_local.ParamByName('calcPartnerId').AsInteger:=0;
                ShowMessage('Ошибка.У контрагента не определено значение <Форма оплаты>.');

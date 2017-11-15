@@ -22,6 +22,12 @@ BEGIN
 
    vbStatusId := (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId);
 
+   -- определили признак
+   outisDeferred:=  inisDeferred;
+   -- сохранили признак
+   PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Deferred(), inMovementId, outisDeferred);
+
+
    IF inisDeferred = TRUE
    THEN
        -- собственно проводки
@@ -33,16 +39,12 @@ BEGIN
                                     , vbUserId);
    END IF;
 
-   -- определили признак
-   outisDeferred:=  inisDeferred;
-
-   PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Deferred(), inMovementId, outisDeferred);
    
    -- возвращаем статус документа
-   UPDATE Movement SET StatusId = vbStatusId WHERE Id = inMovementId;
+   -- UPDATE Movement SET StatusId = vbStatusId WHERE Id = inMovementId;
    
    -- сохранили протокол
-   PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, false);
+   PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
 
 END;
 $BODY$

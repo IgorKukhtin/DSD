@@ -354,7 +354,8 @@ END IF;
 
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                                     ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                                   AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                                                   AND MILinkObject_Unit.DescId         = zc_MILinkObject_Unit()
+                                                   AND MILinkObject_Unit.ObjectId       <> vbUnitId_From
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                    AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
