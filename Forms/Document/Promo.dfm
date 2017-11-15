@@ -3,9 +3,8 @@ inherited PromoForm: TPromoForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 599
   ClientWidth = 1204
-  ExplicitLeft = -410
   ExplicitWidth = 1220
-  ExplicitHeight = 634
+  ExplicitHeight = 637
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -4106,8 +4105,8 @@ inherited PromoForm: TPromoForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 476
-    Top = 64
+    Left = 460
+    Top = 80
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
