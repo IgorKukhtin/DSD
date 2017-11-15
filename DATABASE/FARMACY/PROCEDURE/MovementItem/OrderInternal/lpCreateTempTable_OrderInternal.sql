@@ -102,7 +102,7 @@ BEGIN
                                                                AND ObjectLink_Goods_Area.DescId   = zc_ObjectLink_Goods_Area()
                                            LEFT JOIN ObjectLink AS ObjectLink_Goods_Object
                                                              ON ObjectLink_Goods_Object.ObjectId = ObjectLink_LinkGoods_Goods.ChildObjectId
-                                                             AND ObjectLink_Goods_Object.DescId   = zc_ObjectLink_Goods_Area()
+                                                             AND ObjectLink_Goods_Object.DescId   = zc_ObjectLink_Goods_Object()
                                            LEFT JOIN JuridicalArea ON JuridicalArea.JuridicalId = ObjectLink_Goods_Object.ChildObjectId
 
                                       WHERE MovementItem.MovementId = inMovementId
