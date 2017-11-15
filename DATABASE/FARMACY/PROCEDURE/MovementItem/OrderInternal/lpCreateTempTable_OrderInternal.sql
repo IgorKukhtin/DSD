@@ -89,7 +89,7 @@ BEGIN
 
                                          --  LEFT JOIN Object_LinkGoods_View AS PriceList_GoodsLink -- связь товара в прайсе с главным товаром
                                          --                                  ON PriceList_GoodsLink.GoodsMainId = Object_LinkGoods_View.GoodsMainId
-
+                                           -- товары сети по главному GoodsMainId
                                            LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain 
                                                                   ON ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()  
                                                                  AND ObjectLink_LinkGoods_GoodsMain.ChildObjectId = ObjectLink_Main.ChildObjectId --Object_LinkGoods_View.GoodsMainId
