@@ -28,6 +28,10 @@ RETURNS TABLE(
     , InvNumber           Integer   --№ документа акции
     , UnitName            TVarChar  --Склад
     , PersonalTradeName   TVarChar  --Ответственный представитель коммерческого отдела
+    , UnitCode_PersonalTrade    Integer
+    , UnitName_PersonalTrade    TVarChar
+    , BranchCode_PersonalTrade  Integer
+    , BranchName_PersonalTrade  TVarChar
     , PersonalName        TVarChar  --Ответственный представитель маркетингового отдела	
     , DateStartSale       TDateTime --Дата отгрузки по акционным ценам
     , DeteFinalSale       TDateTime --Дата отгрузки по акционным ценам
@@ -98,6 +102,12 @@ BEGIN
           , Movement_Promo.InvNumber          --№ документа акции
           , Movement_Promo.UnitName           --Склад
           , Movement_Promo.PersonalTradeName  --Ответственный представитель коммерческого отдела
+          
+          , Object_Unit.ObjectCode              AS UnitCode_PersonalTrade
+          , Object_Unit.ValueData               AS UnitName_PersonalTrade
+          , Object_Branch.ObjectCode            AS BranchCode_PersonalTrade
+          , Object_Branch.ValueData             AS BranchName_PersonalTrade
+          
           , Movement_Promo.PersonalName       --Ответственный представитель маркетингового отдела
           , Movement_Promo.StartSale          --Дата начала отгрузки по акционной цене
           , Movement_Promo.EndSale            --Дата окончания отгрузки по акционной цене
@@ -146,20 +156,6 @@ BEGIN
                 ))::TBlob AS RetailName
             , RetailName AS PartnerName
  
-/*          , (SELECT STRING_AGG (DISTINCT Object_Partner.ValueData,'; ')
-             FROM
-                Movement AS Movement_PromoPartner
-                INNER JOIN MovementItem AS MI_PromoPartner
-                                        ON MI_PromoPartner.MovementId = Movement_PromoPartner.Id
-                                       AND MI_PromoPartner.DescId     = zc_MI_Master()
-                                       AND MI_PromoPartner.IsErased   = FALSE
-                INNER JOIN Object AS Object_Partner ON Object_Partner.Id = MI_PromoPartner.ObjectId
-                
-             WHERE Movement_PromoPartner.ParentId = Movement_Promo.Id
-               AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
-               AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
-            )::TBlob AS PartnerName*/
-            
           , MI_PromoGoods.GoodsName
           , MI_PromoGoods.GoodsCode
           , MI_PromoGoods.Measure
@@ -238,7 +234,18 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_Plan7
                                         ON MIFloat_Plan7.MovementItemId = MI_PromoGoods.Id 
                                        AND MIFloat_Plan7.DescId = zc_MIFloat_Plan7()                                             
-                                                        
+                                            
+
+            LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                 ON ObjectLink_Personal_Unit.ObjectId = Movement_Promo.PersonalTradeId
+                                AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
+       
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                 ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
+                                AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
+                        
         WHERE ( Movement_Promo.StartSale BETWEEN inStartDate AND inEndDate
                 OR
                 inStartDate BETWEEN Movement_Promo.StartSale AND Movement_Promo.EndSale
