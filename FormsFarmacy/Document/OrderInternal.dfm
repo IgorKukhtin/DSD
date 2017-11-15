@@ -2,9 +2,8 @@ inherited OrderInternalForm: TOrderInternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 529
   ClientWidth = 1229
-  ExplicitLeft = -439
   ExplicitWidth = 1245
-  ExplicitHeight = 564
+  ExplicitHeight = 567
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -916,9 +915,10 @@ inherited OrderInternalForm: TOrderInternalForm
       RefreshOnTabSetChanges = True
     end
     inherited actUpdateMainDS: TdsdUpdateDataSet
+      StoredProc = spInsertUpdateMovement
       StoredProcList = <
         item
-          StoredProc = spInsertUpdateMIMaster
+          StoredProc = spInsertUpdateMovement
         end
         item
           StoredProc = spGetTotalSumm

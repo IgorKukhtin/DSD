@@ -80,7 +80,7 @@ BEGIN
     CREATE TEMP TABLE tmpRemains (GoodsId Integer, UnitId Integer, RemainsStart TFloat, RemainsStart_save TFloat, MinExpirationDate TDateTime, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpMCS (GoodsId Integer, UnitId Integer, MCSValue TFloat, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpMIMaster (GoodsId Integer, Amount TFloat, Summa TFloat, InvNumber TVarChar, MovementId Integer, MIMaster_Id Integer, PRIMARY KEY (MovementId, MIMaster_Id, GoodsId)) ON COMMIT DROP;
-    CREATE TEMP TABLE tmpMIChild (UnitId Integer, GoodsId Integer, Amount TFloat, Summa TFloat, MIChild_Id Integer, PRIMARY KEY (MIChild_Id, UnitId,GoodsId)) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpMIChild (UnitId Integer, GoodsMainId Integer, GoodsId Integer, Amount TFloat, Summa TFloat, MIChild_Id Integer, PRIMARY KEY (MIChild_Id, UnitId,GoodsId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpUnit_list (UnitId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE tmpSend (GoodsId Integer, UnitId Integer, Amount TFloat) ON COMMIT DROP;      
     CREATE TEMP TABLE tmpPrice (PriceId Integer, UnitId Integer, GoodsId Integer, MCSValue TFloat) ON COMMIT DROP;
@@ -129,8 +129,9 @@ BEGIN
            AND MovementItem.isErased = FALSE;
 
       -- Ищем cтроки чайлда (ключ - ид документа, товар)
-      INSERT INTO tmpMIChild (UnitId, GoodsId, Amount, Summa, MIChild_Id)
+      INSERT INTO tmpMIChild (UnitId, GoodsMainId,  GoodsId, Amount, Summa, MIChild_Id)
       SELECT  MovementItem.ObjectId             AS UnitId
+            , ObjectLink_Main.ChildObjectId     AS GoodsMainId
             , MI_Master.ObjectId                AS GoodsId
             , MovementItem.Amount               AS Amount
             , (MovementItem.Amount * COALESCE(MIFloat_Price.ValueData,0)) :: TFloat AS Summa
@@ -140,6 +141,13 @@ BEGIN
            LEFT JOIN MovementItemFloat AS MIFloat_Price
                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
+           -- получаем GoodsMainId
+           LEFT JOIN  ObjectLink AS ObjectLink_Child 
+                                 ON ObjectLink_Child.ChildObjectId = MI_Master.ObjectId
+                                AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+           LEFT JOIN  ObjectLink AS ObjectLink_Main 
+                                 ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
       WHERE MovementItem.MovementId = vbMovementId 
         AND MovementItem.DescId = zc_MI_Child()
         AND MovementItem.isErased = FALSE;
@@ -634,7 +642,7 @@ BEGIN
           LEFT JOIN tmpDataTo ON tmpDataTo.GoodsId = tmpData.GoodsId AND tmpDataTo.UnitId = tmpData.UnitId
           LEFT JOIN tmpData AS tmpDataFrom ON tmpDataFrom.GoodsId = tmpData.GoodsId AND tmpDataFrom.UnitId = inUnitId
 
-          LEFT JOIN tmpMIChild ON tmpMIChild.GoodsId = tmpData.GoodsId
+          LEFT JOIN tmpMIChild ON tmpMIChild.GoodsMainId = tmpData.GoodsMainId
                               AND tmpMIChild.UnitId = tmpData.UnitId
      WHERE tmpData.UnitId <> inUnitId
        AND tmpDataTo.RemainsMCS_result > 0
@@ -718,7 +726,7 @@ BEGIN
           LEFT JOIN tmpData AS tmpDataFrom ON tmpDataFrom.GoodsId = tmpData.GoodsId
                                           AND tmpDataFrom.UnitId = inUnitId
 
-          LEFT JOIN tmpMIChild ON tmpMIChild.GoodsId = tmpData.GoodsId
+          LEFT JOIN tmpMIChild ON tmpMIChild.GoodsMainId = tmpData.GoodsMainId
                               AND tmpMIChild.UnitId  = tmpData.UnitId
  
      GROUP BY Object_Unit.Id, Object_Unit.ValueDAta 

@@ -29,6 +29,8 @@ type
     EndPromo: TcxGridDBColumn;
     actOpenReportForm: TdsdOpenForm;
     bbOpenReportForm: TdxBarButton;
+    actOpenReportMinPriceForm: TdsdOpenForm;
+    bbReportMinPriceForm: TdxBarButton;
   private
     { Private declarations }
   public

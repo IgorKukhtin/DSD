@@ -4,7 +4,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
   ClientWidth = 885
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
   ExplicitWidth = 901
-  ExplicitHeight = 469
+  ExplicitHeight = 472
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -194,6 +194,30 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 79
+          end
+          object UnitName_PersonalTrade: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1050#1086#1084'. '#1086#1090#1076#1077#1083')'
+            DataBinding.FieldName = 'UnitName_PersonalTrade'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 123
+          end
+          object BranchCode_PersonalTrade: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1092#1080#1083'. ('#1050#1086#1084'. '#1086#1090#1076#1077#1083')'
+            DataBinding.FieldName = 'BranchCode_PersonalTrade'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object BranchName_PersonalTrade: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083' ('#1050#1086#1084'. '#1086#1090#1076#1077#1083')'
+            DataBinding.FieldName = 'BranchName_PersonalTrade'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 77
           end
           object PersonalName: TcxGridDBColumn
             Caption = #1052#1072#1088#1082#1077#1090'. '#1086#1090#1076#1077#1083
@@ -488,6 +512,9 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
     object tsPlan: TcxTabSheet
       Caption = '&2. '#1042#1074#1086#1076' '#1087#1083#1072#1085
       ImageIndex = 4
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
