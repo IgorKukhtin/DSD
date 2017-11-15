@@ -16,12 +16,16 @@ $BODY$
   DECLARE vbAreaId_find Integer;
 BEGIN
 
-     SELECT Object_Unit_View.JuridicalId, MovementLinkObject.ObjectId, COALESCE (ObjectLink_Unit_Area.ChildObjectId, zc_Area_Basis())
+     SELECT ObjectLink_Unit_Juridical.ChildObjectId, MovementLinkObject.ObjectId, COALESCE (ObjectLink_Unit_Area.ChildObjectId, zc_Area_Basis())
             INTO vbMainJuridicalId, vbUnitId, vbAreaId_find
          FROM MovementLinkObject
-              INNER JOIN Object_Unit_View ON Object_Unit_View.Id = MovementLinkObject.ObjectId
+              --INNER JOIN Object_Unit_View ON Object_Unit_View.Id = MovementLinkObject.ObjectId
+              INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                             ON ObjectLink_Unit_Juridical.ObjectId = MovementLinkObject.ObjectId
+                            AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+             
               LEFT JOIN ObjectLink AS ObjectLink_Unit_Area
-                                   ON ObjectLink_Unit_Area.ObjectId = Object_Unit_View.Id
+                                   ON ObjectLink_Unit_Area.ObjectId = MovementLinkObject.ObjectId
                                   AND ObjectLink_Unit_Area.DescId   = zc_ObjectLink_Unit_Area()
      WHERE MovementLinkObject.MovementId = inMovementId 
        AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit();
@@ -71,16 +75,40 @@ BEGIN
                                                                AND ObjectBoolean_JuridicalArea_GoodsCode.ValueData = TRUE
                                   WHERE ObjectLink_JuridicalArea_Juridical.DescId        = zc_ObjectLink_JuridicalArea_Juridical()
                                  ) 
-              , MovementItemOrder AS (SELECT MovementItem.*, Object_LinkGoods_View.GoodsMainId, PriceList_GoodsLink.GoodsId
+
+              , MovementItemOrder AS (SELECT MovementItem.*, ObjectLink_Main.ChildObjectId AS GoodsMainId, ObjectLink_LinkGoods_Goods.ChildObjectId AS GoodsId
                                       FROM MovementItem    
-                                           INNER JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = MovementItem.ObjectId -- Связь товара сети с общим
-                                           LEFT JOIN Object_LinkGoods_View AS PriceList_GoodsLink -- связь товара в прайсе с главным товаром
-                                                                           ON PriceList_GoodsLink.GoodsMainId = Object_LinkGoods_View.GoodsMainId
-                                           LEFT JOIN JuridicalArea ON JuridicalArea.JuridicalId = PriceList_GoodsLink.ObjectId
+                                       --  INNER JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = MovementItem.ObjectId -- Связь товара сети с общим
+                                       -- получаем GoodsMainId
+                                           INNER JOIN  ObjectLink AS ObjectLink_Child 
+                                                                 ON ObjectLink_Child.ChildObjectId = MovementItem.ObjectId
+                                                                AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                           LEFT JOIN  ObjectLink AS ObjectLink_Main 
+                                                                 ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+
+                                         --  LEFT JOIN Object_LinkGoods_View AS PriceList_GoodsLink -- связь товара в прайсе с главным товаром
+                                         --                                  ON PriceList_GoodsLink.GoodsMainId = Object_LinkGoods_View.GoodsMainId
+
+                                           LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain 
+                                                                  ON ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()  
+                                                                 AND ObjectLink_LinkGoods_GoodsMain.ChildObjectId = ObjectLink_Main.ChildObjectId --Object_LinkGoods_View.GoodsMainId
+                                      
+                                           LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                                                           ON ObjectLink_LinkGoods_Goods.ObjectId = ObjectLink_LinkGoods_GoodsMain.ObjectId
+                                                          AND ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                           LEFT JOIN ObjectLink AS ObjectLink_Goods_Area
+                                                                ON ObjectLink_Goods_Area.ObjectId = ObjectLink_LinkGoods_Goods.ChildObjectId
+                                                               AND ObjectLink_Goods_Area.DescId   = zc_ObjectLink_Goods_Area()
+                                           LEFT JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                             ON ObjectLink_Goods_Object.ObjectId = ObjectLink_LinkGoods_Goods.ChildObjectId
+                                                             AND ObjectLink_Goods_Object.DescId   = zc_ObjectLink_Goods_Area()
+                                           LEFT JOIN JuridicalArea ON JuridicalArea.JuridicalId = ObjectLink_Goods_Object.ChildObjectId
+
                                       WHERE MovementItem.MovementId = inMovementId
                                         AND MovementItem.DescId     = zc_MI_Master()
                                         AND ((inGoodsId = 0) OR (inGoodsId = MovementItem.ObjectId))
-                                        AND (PriceList_GoodsLink.AreaId = vbAreaId_find OR JuridicalArea.JuridicalId IS NULL)
+                                        AND (ObjectLink_Goods_Area.ChildObjectId = vbAreaId_find OR JuridicalArea.JuridicalId IS NULL)
                                   )
                 -- Маркетинговый контракт
               , tmpOperDate AS (SELECT date_trunc ('day', Movement.OperDate) AS OperDate FROM Movement WHERE Movement.Id = inMovementId)

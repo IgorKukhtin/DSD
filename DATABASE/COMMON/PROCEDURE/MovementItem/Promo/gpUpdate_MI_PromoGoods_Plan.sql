@@ -23,12 +23,35 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_PromoGoods_Plan(
 RETURNS RECORD
 AS
 $BODY$
-   DECLARE vbUserId      Integer;
-   DECLARE vbMeasureId   Integer;
-   DECLARE vbGoodsWeight TFloat;
+   DECLARE vbUserId          Integer;
+   DECLARE vbMeasureId       Integer;
+   DECLARE vbGoodsWeight     TFloat;
+   DECLARE vbUserId_PersonalTrade Integer;
 BEGIN
+
     -- проверка прав пользователя на вызов процедуры
-    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Promo());
+    vbUserId := inSession;
+    
+    -- находим пользователя PersonalTrade
+    vbUserId_PersonalTrade := (SELECT ObjectLink_User_Member.ObjectId
+                               FROM MovementItem
+                                   LEFT JOIN MovementLinkObject AS MLO_PersonalTrade
+                                          ON MLO_PersonalTrade.MovementId = MovementItem.MovementId
+                                         AND MLO_PersonalTrade.DescId = zc_MovementLinkObject_PersonalTrade()
+                                   LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                       ON ObjectLink_Personal_Member.ObjectId = MLO_PersonalTrade.ObjectId
+                                                      AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+                                   LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                                        ON ObjectLink_User_Member.ChildObjectId = ObjectLink_Personal_Member.ChildObjectId
+                                                       AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                               WHERE MovementItem.Id = inId);
+                               
+    -- изменение данных только для PersonalTradeName + или если разрешены права zc_Enum_Process_Update_MI_Promo_Plan                      
+    IF COALESCE (vbUserId_PersonalTrade, 0) <> vbUserId
+    THEN                
+        -- проверка прав пользователя на вызов процедуры
+        vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_MI_Promo_Plan());
+    END IF;
 
     -- сохраняем 
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Plan1(), inId, inAmountPlan1);
@@ -73,3 +96,6 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.    Воробкало А.А.
  10.11.17         *
 */
+-- test 
+-- select * from gpUpdate_MI_PromoGoods_Plan(inId := 64152049 , inAmountPlan1 := 2 , inAmountPlan2 := 0 , inAmountPlan3 := 0 , inAmountPlan4 := 0 , inAmountPlan5 := 0 , inAmountPlan6 := 0 , inAmountPlan7 := 0 ,  inSession := '887408');
+--select * from gpUpdate_MI_PromoGoods_Plan(inId := 64803248 , inAmountPlan1 := 0 , inAmountPlan2 := 0 , inAmountPlan3 := 5 , inAmountPlan4 := 0 , inAmountPlan5 := 0 , inAmountPlan6 := 0 , inAmountPlan7 := 0 ,  inSession := '893419');
