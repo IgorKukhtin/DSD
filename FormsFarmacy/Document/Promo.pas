@@ -105,6 +105,8 @@ type
     macInsertPromoPartner: TMultiAction;
     actRefreshPromoPartner: TdsdDataSetRefresh;
     bbInsertPromoPartner: TdxBarButton;
+    actOpenReportMinPriceForm: TdsdOpenForm;
+    bbReportMinPriceForm: TdxBarButton;
   private
     { Private declarations }
   public
