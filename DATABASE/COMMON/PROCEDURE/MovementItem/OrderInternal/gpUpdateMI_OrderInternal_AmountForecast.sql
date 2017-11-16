@@ -27,11 +27,16 @@ BEGIN
     vbIsBasis:= EXISTS (SELECT MovementId FROM MovementLinkObject WHERE DescId = zc_MovementLinkObject_From() AND MovementId = inMovementId AND ObjectId IN (SELECT tmp.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS tmp)); -- ЦЕХ колбаса+дел-сы
  
 
-             -- сохранили свойство <Дата проноз с>
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateStart(), inMovementId, gpGet.StartDate)
-             -- сохранили свойство <Дата проноз по>
-          ,  lpInsertUpdate_MovementDate (zc_MovementDate_OperDateEnd(), inMovementId, gpGet.EndDate)
-     FROM gpGet_Object_GoodsReportSaleInf (inSession) AS gpGet
+    
+    -- !!!НАШЛИ!!!
+    SELECT gpGet.StartDate, gpGet.EndDate
+           INTO inStartDate, inEndDate
+    FROM gpGet_Object_GoodsReportSaleInf (inSession) AS gpGet;
+    
+    -- сохранили свойство <Дата проноз с>
+    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateStart(), inMovementId, inStartDate);
+    -- сохранили свойство <Дата проноз по>
+    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateEnd(), inMovementId, inEndDate);
 
 
      -- таблица -

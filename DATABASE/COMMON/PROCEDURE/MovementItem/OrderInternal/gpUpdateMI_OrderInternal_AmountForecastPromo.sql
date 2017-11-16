@@ -20,6 +20,17 @@ BEGIN
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderInternal());
 
 
+    -- !!!НАШЛИ!!!
+    SELECT gpGet.StartDate, gpGet.EndDate
+           INTO inStartDate, inEndDate
+    FROM gpGet_Object_GoodsReportSaleInf (inSession) AS gpGet;
+    
+    -- сохранили свойство <Дата проноз с>
+    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateStart(), inMovementId, inStartDate);
+    -- сохранили свойство <Дата проноз по>
+    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateEnd(), inMovementId, inEndDate);
+
+
      -- таблица -
      CREATE TEMP TABLE tmpAll (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, AmountForecastOrder TFloat, AmountForecastOrderPromo TFloat, AmountForecast TFloat, AmountForecastPromo TFloat) ON COMMIT DROP;
                                  WITH -- хардкодим - Склады База + Реализации

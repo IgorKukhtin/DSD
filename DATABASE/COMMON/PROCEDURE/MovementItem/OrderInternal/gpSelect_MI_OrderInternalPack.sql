@@ -28,7 +28,7 @@ BEGIN
      -- определяется
      SELECT Movement.OperDate
           , MovementLinkObject_To.ObjectId
-          , 35 -- 1 + EXTRACT (DAY FROM (MovementDate_OperDateEnd.ValueData - MovementDate_OperDateStart.ValueData))
+          , 1 + EXTRACT (DAY FROM (MovementDate_OperDateEnd.ValueData - MovementDate_OperDateStart.ValueData))
           , EXTRACT (MONTH FROM (Movement.OperDate + INTERVAL '1 DAY'))
             INTO vbOperDate, vbToId, vbDayCount, vbMonth
      FROM Movement

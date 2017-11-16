@@ -36,7 +36,7 @@ BEGIN
     ELSE
         -- определяется
         SELECT Movement.OperDate
-             , 35 -- 1 + EXTRACT (DAY FROM (MovementDate_OperDateEnd.ValueData - MovementDate_OperDateStart.ValueData))
+             , 1 + EXTRACT (DAY FROM (MovementDate_OperDateEnd.ValueData - MovementDate_OperDateStart.ValueData))
                INTO vbOperDate, vbDayCount
         FROM Movement
              LEFT JOIN MovementDate AS MovementDate_OperDateStart

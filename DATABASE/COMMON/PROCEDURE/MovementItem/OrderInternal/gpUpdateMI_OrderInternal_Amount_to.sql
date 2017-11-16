@@ -28,6 +28,18 @@ BEGIN
 
     ELSEIF inAmount > 0
     THEN
+
+        -- проверка
+        IF COALESCE (inGoodsId, 0) = 0
+        THEN
+            RAISE EXCEPTION 'Ошибка.Не определено значение <Товар>.';
+        END IF;
+        -- проверка + временно захардкодил
+        IF NOT EXISTS (SELECT 1 FROM MovementItemLinkObject AS MILO WHERE MILO.DescId = zc_MILinkObject_GoodsKind() AND MovementItemId = inMovementId AND ObjectId IN (SELECT tmp.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS tmp)) -- ЦЕХ колбаса+дел-сы
+        THEN
+            RAISE EXCEPTION 'Ошибка.Не определено значение <Вид товара>.';
+        END IF;
+
         -- сохранили
         UPDATE MovementItem SET Amount = inAmount WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master() AND MovementItem.Id = inId;
 
