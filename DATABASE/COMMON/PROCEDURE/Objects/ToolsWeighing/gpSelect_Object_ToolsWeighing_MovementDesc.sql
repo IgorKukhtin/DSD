@@ -305,7 +305,7 @@ BEGIN
       UNION
        -- это группы
        SELECT 0                                   AS Number
-            ,(-1 * tmp.MovementDescId) :: Integer AS MovementDescId
+            ,(CASE WHEN tmp.isReWork = TRUE THEN -100 * tmp.MovementDescId ELSE -1 * tmp.MovementDescId END) :: Integer AS MovementDescId
             , 0                                   AS FromId
             , 0                                   AS FromCode
             , '' :: TVarChar                      AS FromName

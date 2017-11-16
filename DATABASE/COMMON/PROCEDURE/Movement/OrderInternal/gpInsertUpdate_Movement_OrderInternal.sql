@@ -39,9 +39,9 @@ BEGIN
          outOperDatePartner:= inOperDate + INTERVAL '1 DAY';
      END IF;
      -- 1. эти параметры всегда -56 день
-     ioOperDateStart:= inOperDate - INTERVAL '56 DAY';
+     -- ioOperDateStart:= inOperDate - INTERVAL '56 DAY';
      -- 1. эти параметры всегда -1 день
-     ioOperDateEnd:= inOperDate - INTERVAL '1 DAY';
+     -- ioOperDateEnd:= inOperDate - INTERVAL '1 DAY';
      -- 0.
      outDayCount:= 1 + EXTRACT (DAY FROM (ioOperDateEnd - ioOperDateStart));
 
