@@ -279,9 +279,14 @@ end;
 function TStorage.PrepareStr: AnsiString;
 begin
   if isArchive then
-     result := ZDecompressStr(Str)
-  else
-     result := Str
+  begin
+    Logger.AddToLog(' TStorage.PrepareStr ... Result := ZDecompressStr(Str)');
+    Result := ZDecompressStr(Str);
+  end else
+  begin
+    Logger.AddToLog(' TStorage.PrepareStr ... Result := Str');
+    Result := Str;
+  end;
 end;
 
 procedure TStorage.ProcessErrorCode(pData: String; ProcedureParam: String);
@@ -491,6 +496,7 @@ begin
       DString := FReceiveStream.DataString;
 
       Logger.AddToLog(' TStorage.ExecuteProc( ... Length(FReceiveStream.DataString) = ' + IntToStr(Length(DString)) + ' ...');
+      Logger.AddToLog(DString);
 
       ResultType := trim(Copy(DString, 1, ResultTypeLenght));
       isArchive := trim(lowercase(Copy(DString, ResultTypeLenght + 1, IsArchiveLenght))) = 't';
