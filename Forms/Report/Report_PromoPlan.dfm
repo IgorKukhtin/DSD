@@ -12,7 +12,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
     Width = 885
     Height = 351
     TabOrder = 3
-    ExplicitTop = 99
+    ExplicitTop = 83
     ExplicitWidth = 885
     ExplicitHeight = 351
     ClientRectBottom = 351
@@ -93,6 +93,41 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
               Format = '0,###'
               Kind = skSum
               Column = AmountPlan2_Wh
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountSale1
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountSale7
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountSale6
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountSale5
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountSale4
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountSale3
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountSale2
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -162,6 +197,41 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
               Format = '0,###'
               Kind = skSum
               Column = AmountPlan2_Wh
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountSale1
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountSale7
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountSale6
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountSale5
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountSale4
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountSale3
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountSale2
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -464,6 +534,83 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             Options.Editing = False
             Width = 60
           end
+          object AmountSale1: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090' '#1087#1088#1086#1076#1072#1078#1080'  '#1079#1072' 1 ('#1074#1077#1089')'
+            DataBinding.FieldName = 'AmountSale1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object AmountSale2: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090' '#1087#1088#1086#1076#1072#1078#1080'  '#1079#1072' 2 ('#1074#1077#1089')'
+            DataBinding.FieldName = 'AmountSale2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object AmountSale3: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090' '#1087#1088#1086#1076#1072#1078#1080'  '#1079#1072' 3 ('#1074#1077#1089')'
+            DataBinding.FieldName = 'AmountSale3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object AmountSale4: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090' '#1087#1088#1086#1076#1072#1078#1080'  '#1079#1072' 4 ('#1074#1077#1089')'
+            DataBinding.FieldName = 'AmountSale4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object AmountSale5: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090' '#1087#1088#1086#1076#1072#1078#1080'  '#1079#1072' 5 ('#1074#1077#1089')'
+            DataBinding.FieldName = 'AmountSale5'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object AmountSale6: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090' '#1087#1088#1086#1076#1072#1078#1080'  '#1079#1072' 6 ('#1074#1077#1089')'
+            DataBinding.FieldName = 'AmountSale6'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object AmountSale7: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090' '#1087#1088#1086#1076#1072#1078#1080'  '#1079#1072' 7 ('#1074#1077#1089')'
+            DataBinding.FieldName = 'AmountSale7'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
           object GoodsWeight: TcxGridDBColumn
             Caption = #1042#1077#1089
             DataBinding.FieldName = 'GoodsWeight'
@@ -588,6 +735,41 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
               Format = '0,###'
               Kind = skSum
               Column = plAmountPlan7_Wh
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = plAmountSale1
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = plAmountSale2
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = plAmountSale3
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = plAmountSale4
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = plAmountSale5
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = plAmountSale6
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = plAmountSale7
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -657,6 +839,41 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
               Format = '0,###'
               Kind = skSum
               Column = plAmountPlan7_Wh
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = plAmountSale1
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = plAmountSale2
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = plAmountSale3
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = plAmountSale4
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = plAmountSale5
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = plAmountSale6
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = plAmountSale7
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -668,7 +885,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
           OptionsData.Inserting = False
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
-          OptionsView.HeaderHeight = 40
+          OptionsView.HeaderHeight = 50
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object plInvNumber: TcxGridDBColumn
@@ -942,6 +1159,83 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
+          end
+          object plAmountSale1: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090' '#1087#1088#1086#1076#1072#1078#1080'  '#1079#1072' 1 ('#1074#1077#1089')'
+            DataBinding.FieldName = 'AmountSale1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object plAmountSale2: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090' '#1087#1088#1086#1076#1072#1078#1080'  '#1079#1072' 2 ('#1074#1077#1089')'
+            DataBinding.FieldName = 'AmountSale2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object plAmountSale3: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090' '#1087#1088#1086#1076#1072#1078#1080'  '#1079#1072' 3 ('#1074#1077#1089')'
+            DataBinding.FieldName = 'AmountSale3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object plAmountSale4: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090' '#1087#1088#1086#1076#1072#1078#1080'  '#1079#1072' 4 ('#1074#1077#1089')'
+            DataBinding.FieldName = 'AmountSale4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object plAmountSale5: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090' '#1087#1088#1086#1076#1072#1078#1080'  '#1079#1072' 5 ('#1074#1077#1089')'
+            DataBinding.FieldName = 'AmountSale5'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object plAmountSale6: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090' '#1087#1088#1086#1076#1072#1078#1080'  '#1079#1072' 6 ('#1074#1077#1089')'
+            DataBinding.FieldName = 'AmountSale6'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object plAmountSale7: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090' '#1087#1088#1086#1076#1072#1078#1080'  '#1079#1072' 7 ('#1074#1077#1089')'
+            DataBinding.FieldName = 'AmountSale7'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
           end
           object plGoodsWeight: TcxGridDBColumn
             Caption = #1042#1077#1089
