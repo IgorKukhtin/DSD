@@ -3,7 +3,7 @@
   ClientHeight = 639
   ClientWidth = 1020
   ExplicitWidth = 1036
-  ExplicitHeight = 674
+  ExplicitHeight = 677
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1508,9 +1508,6 @@
     object tsTotal: TcxTabSheet
       Caption = #1048#1090#1086#1075#1086' '#1087#1086' '#1091#1087#1072#1082#1086#1074#1082#1077
       ImageIndex = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridChildTotal: TcxGrid
         Left = 0
         Top = 0
@@ -2525,6 +2522,7 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object chtId: TcxGridDBColumn
@@ -2719,7 +2717,24 @@
       ImageIndex = 6
       ShortCut = 16472
     end
-    object actPrintRemains: TdsdPrintAction [9]
+    object actUpdateChildTotalDS: TdsdUpdateDataSet [9]
+      Category = 'DSDLib'
+      TabSheet = tsTotal
+      MoveParams = <>
+      Enabled = False
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMIMasterChildTotal
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMIMasterChildTotal
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end>
+      Caption = 'actUpdateMainDS'
+      DataSource = ChildTotalDS
+    end
+    object actPrintRemains: TdsdPrintAction [10]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintRemains
@@ -2823,7 +2838,7 @@
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [15]
+    object actGoodsKindChoice: TOpenChoiceForm [16]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2983,23 +2998,6 @@
       Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' <'#1042#1089#1077'> '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' <'#1042#1089#1077'> '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 50
-    end
-    object actUpdateChildTotalDS: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      TabSheet = tsTotal
-      MoveParams = <>
-      Enabled = False
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdateMIMasterChildTotal
-      StoredProcList = <
-        item
-          StoredProc = spUpdateMIMasterChildTotal
-        end
-        item
-          StoredProc = spGetTotalSumm
-        end>
-      Caption = 'actUpdateMainDS'
-      DataSource = ChildTotalDS
     end
     object mactUpdateAmount_to: TMultiAction
       Category = 'DSDLib'
