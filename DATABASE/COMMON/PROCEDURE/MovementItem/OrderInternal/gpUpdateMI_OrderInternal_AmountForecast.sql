@@ -27,6 +27,13 @@ BEGIN
     vbIsBasis:= EXISTS (SELECT MovementId FROM MovementLinkObject WHERE DescId = zc_MovementLinkObject_From() AND MovementId = inMovementId AND ObjectId IN (SELECT tmp.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS tmp)); -- ЦЕХ колбаса+дел-сы
  
 
+             -- сохранили свойство <Дата проноз с>
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateStart(), inMovementId, gpGet.StartDate)
+             -- сохранили свойство <Дата проноз по>
+          ,  lpInsertUpdate_MovementDate (zc_MovementDate_OperDateEnd(), inMovementId, gpGet.EndDate)
+     FROM gpGet_Object_GoodsReportSaleInf (inSession) AS gpGet
+
+
      -- таблица -
      CREATE TEMP TABLE tmpAll (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, AmountForecastOrder TFloat, AmountForecast TFloat) ON COMMIT DROP;
     
@@ -70,7 +77,7 @@ BEGIN
                                                  + COALESCE (ObjectFloat_Order5.ValueData, 0)
                                                  + COALESCE (ObjectFloat_Order6.ValueData, 0)
                                                  + COALESCE (ObjectFloat_Order7.ValueData, 0)
-/*
+
                                                  + COALESCE (ObjectFloat_OrderPromo1.ValueData, 0)
                                                  + COALESCE (ObjectFloat_OrderPromo2.ValueData, 0)
                                                  + COALESCE (ObjectFloat_OrderPromo3.ValueData, 0)
@@ -78,7 +85,7 @@ BEGIN
                                                  + COALESCE (ObjectFloat_OrderPromo5.ValueData, 0)
                                                  + COALESCE (ObjectFloat_OrderPromo6.ValueData, 0)
                                                  + COALESCE (ObjectFloat_OrderPromo7.ValueData, 0)
-*/
+
                                                  + COALESCE (ObjectFloat_OrderBranch1.ValueData, 0)
                                                  + COALESCE (ObjectFloat_OrderBranch2.ValueData, 0)
                                                  + COALESCE (ObjectFloat_OrderBranch3.ValueData, 0)
@@ -95,7 +102,7 @@ BEGIN
                                                  + COALESCE (ObjectFloat_Amount5.ValueData, 0)
                                                  + COALESCE (ObjectFloat_Amount6.ValueData, 0)
                                                  + COALESCE (ObjectFloat_Amount7.ValueData, 0)
-/*
+
                                                  + COALESCE (ObjectFloat_Promo1.ValueData, 0)
                                                  + COALESCE (ObjectFloat_Promo2.ValueData, 0)
                                                  + COALESCE (ObjectFloat_Promo3.ValueData, 0)
@@ -103,7 +110,7 @@ BEGIN
                                                  + COALESCE (ObjectFloat_Promo5.ValueData, 0)
                                                  + COALESCE (ObjectFloat_Promo6.ValueData, 0)
                                                  + COALESCE (ObjectFloat_Promo7.ValueData, 0)
-*/
+
                                                  + COALESCE (ObjectFloat_Branch1.ValueData, 0)
                                                  + COALESCE (ObjectFloat_Branch2.ValueData, 0)
                                                  + COALESCE (ObjectFloat_Branch3.ValueData, 0)

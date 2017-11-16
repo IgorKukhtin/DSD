@@ -1,7 +1,7 @@
 -- Function: gpUpdateMI_OrderInternal_Amount_toPACK()
 
 DROP FUNCTION IF EXISTS gpUpdateMI_OrderInternal_Amount_toPACK (Integer, Integer, Boolean, TVarChar);
--- DROP FUNCTION IF EXISTS gpUpdateMI_OrderInternal_Amount_toPACK (Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdateMI_OrderInternal_Amount_toPACK (Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdateMI_OrderInternal_Amount_toPACK (Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdateMI_OrderInternal_Amount_toPACK(
@@ -36,7 +36,7 @@ BEGIN
     ELSE
         -- определяется
         SELECT Movement.OperDate
-             , 1 + EXTRACT (DAY FROM (MovementDate_OperDateEnd.ValueData - MovementDate_OperDateStart.ValueData))
+             , 35 -- 1 + EXTRACT (DAY FROM (MovementDate_OperDateEnd.ValueData - MovementDate_OperDateStart.ValueData))
                INTO vbOperDate, vbDayCount
         FROM Movement
              LEFT JOIN MovementDate AS MovementDate_OperDateStart
@@ -120,9 +120,9 @@ BEGIN
 
                   -- <Нач остаток> МИНУС <то что в Мастере (факт Расход на упаковку)> МИНУС <неотгруж. заявка (итого)> МИНУС <сегодня заявка (итого)>
                 , (CASE WHEN MIFloat_AmountRemains.ValueData > 0 THEN MIFloat_AmountRemains.ValueData ELSE 0 END
-                - COALESCE (tmpMI_master.Amount, 0)
-                - COALESCE (MIFloat_AmountPartnerPrior.ValueData, 0) - COALESCE (MIFloat_AmountPartnerPriorPromo.ValueData, 0)
-                - COALESCE (MIFloat_AmountPartner.ValueData, 0)      - COALESCE (MIFloat_AmountPartnerPromo.ValueData, 0)
+                 - CASE WHEN MIFloat_AmountRemains.ValueData > 0 AND MIFloat_AmountRemains.ValueData >= tmpMI_master.Amount THEN tmpMI_master.Amount ELSE 0 END
+                 - COALESCE (MIFloat_AmountPartnerPrior.ValueData, 0) - COALESCE (MIFloat_AmountPartnerPriorPromo.ValueData, 0)
+                 - COALESCE (MIFloat_AmountPartner.ValueData, 0)      - COALESCE (MIFloat_AmountPartnerPromo.ValueData, 0)
                   ) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
                   AS RemainsStart
 
@@ -245,7 +245,7 @@ BEGIN
                                             AND 0 < vbNumber * _tmpMI_Child.CountForecast - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult)
                                             -- !!!отбросили НАРЕЗКУ!!!
                                             AND (vbNumber <= 3
-                                              OR COALESCE (_tmpMI_master.GoodsKindId, 0) <> 8333 -- НАР
+                                              OR COALESCE (_tmpMI_Child.GoodsKindId, 0) <> 8333 -- НАР
                                                 )
                                          )
                             -- ИТОГО по Child для ПРОПОРЦИИ
@@ -335,7 +335,7 @@ BEGIN
                                             AND 0 < vbNumber * _tmpMI_Child.CountForecast - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult)
                                             -- !!!отбросили НАРЕЗКУ!!!
                                             AND (vbNumber <= 3
-                                              OR COALESCE (_tmpMI_master.GoodsKindId, 0) <> 8333 -- НАР
+                                              OR COALESCE (_tmpMI_Child.GoodsKindId, 0) <> 8333 -- НАР
                                                 )
                                          )
                             -- ИТОГО по Child для ПРОПОРЦИИ

@@ -32,6 +32,7 @@ BEGIN
      IF COALESCE (inMovementId, 0) = 0
      THEN
      RETURN QUERY
+         WITH tmpGoodsReportSaleInf AS (SELECT gpGet.StartDate, gpGet.EndDate FROM gpGet_Object_GoodsReportSaleInf (inSession) AS gpGet)
          SELECT
                0 AS Id
              , CAST (NEXTVAL ('movement_orderinternal_seq') AS TVarChar) AS InvNumber
@@ -40,17 +41,21 @@ BEGIN
              , Object_Status.Name                               AS StatusName
              
              , (CASE WHEN inIsPack = TRUE THEN inOperDate ELSE inOperDate + INTERVAL '1 DAY' END) :: TDateTime     AS OperDatePartner
-             , (inOperDate - INTERVAL '56 DAY') ::TDateTime     AS OperDateStart
-             , (inOperDate - INTERVAL '1 DAY') ::TDateTime      AS OperDateEnd  
+             -- , (inOperDate - INTERVAL '56 DAY') ::TDateTime     AS OperDateStart
+             -- , (inOperDate - INTERVAL '1 DAY') ::TDateTime      AS OperDateEnd  
+             , tmpGoodsReportSaleInf.StartDate                   AS OperDateStart
+             , tmpGoodsReportSaleInf.EndDate                     AS OperDateEnd  
                           
              , Object_From.Id                                     AS FromId
              , Object_From.ValueData                              AS FromName
              , Object_To.Id                                       AS ToId
              , Object_To.ValueData                                AS ToName
-             , (1 + EXTRACT (DAY FROM ((inOperDate - INTERVAL '1 DAY') - (inOperDate - INTERVAL '56 DAY')))) :: TFloat AS DayCount
+             -- , (1 + EXTRACT (DAY FROM ((inOperDate - INTERVAL '1 DAY') - (inOperDate - INTERVAL '56 DAY')))) :: TFloat AS DayCount
+             , (1 + EXTRACT (DAY FROM (tmpGoodsReportSaleInf.EndDate - tmpGoodsReportSaleInf.EndDate))) :: TFloat AS DayCount
              , CAST ('' as TVarChar) 		                  AS Comment
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
+               LEFT JOIN tmpGoodsReportSaleInf ON 1=1
                LEFT JOIN Object AS Object_From ON Object_From.Id = CASE WHEN inFromId <> 0 
                                                                              THEN inFromId 
                                                                         ELSE 8457 -- Склады База + Реализации
@@ -67,6 +72,7 @@ BEGIN
      ELSE
 
      RETURN QUERY
+       WITH tmpGoodsReportSaleInf AS (SELECT gpGet.StartDate, gpGet.EndDate FROM gpGet_Object_GoodsReportSaleInf (inSession) AS gpGet)
        SELECT
              Movement.Id                                        AS Id
            , Movement.InvNumber                                 AS InvNumber
@@ -75,21 +81,23 @@ BEGIN
            , Object_Status.ValueData                            AS StatusName
 
            , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
-           , COALESCE (MovementDate_OperDateStart.ValueData, Movement.OperDate - (INTERVAL '56 DAY')) :: TDateTime      AS OperDateStart
-           , COALESCE (MovementDate_OperDateEnd.ValueData, Movement.OperDate - (INTERVAL '1 DAY')) :: TDateTime        AS OperDateEnd                      
+           , COALESCE (MovementDate_OperDateStart.ValueData, tmpGoodsReportSaleInf.StartDate) :: TDateTime      AS OperDateStart
+           , COALESCE (MovementDate_OperDateEnd.ValueData, tmpGoodsReportSaleInf.EndDate) :: TDateTime        AS OperDateEnd                      
            
            , Object_From.Id                                     AS FromId
            , Object_From.ValueData                              AS FromName
            , Object_To.Id                                       AS ToId
            , Object_To.ValueData                                AS ToName
 
-           , (1 + EXTRACT (DAY FROM (COALESCE (MovementDate_OperDateEnd.ValueData, Movement.OperDate - (INTERVAL '1 DAY')) :: TDateTime
-                                   - COALESCE (MovementDate_OperDateStart.ValueData, Movement.OperDate - (INTERVAL '56 DAY')) :: TDateTime)
+           , (1 + EXTRACT (DAY FROM (COALESCE (MovementDate_OperDateEnd.ValueData, tmpGoodsReportSaleInf.EndDate) :: TDateTime
+                                   - COALESCE (MovementDate_OperDateStart.ValueData, tmpGoodsReportSaleInf.StartDate) :: TDateTime)
                           )) :: TFloat AS DayCount
            , MovementString_Comment.ValueData       AS Comment
             
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+            LEFT JOIN tmpGoodsReportSaleInf ON 1=1
+
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -137,4 +145,4 @@ ALTER FUNCTION gpGet_Movement_OrderInternal (Integer, TDateTime, Boolean, Intege
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_OrderInternal (inMovementId:= 1, inOperDate:= NULL, inIsPack:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Movement_OrderInternal (inMovementId:= 1, inOperDate:= NULL, inIsPack:= FALSE, inFromId:= 0, inToId:= 0 ,inSession:= zfCalc_UserAdmin())

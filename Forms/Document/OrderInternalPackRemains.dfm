@@ -4467,6 +4467,12 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inNumber'
+        Value = 0
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsClear'
         Value = False
         DataType = ftBoolean
@@ -4507,6 +4513,12 @@
       item
         Name = 'inId'
         Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNumber'
+        Value = '100'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
