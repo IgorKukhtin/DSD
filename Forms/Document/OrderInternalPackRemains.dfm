@@ -3,7 +3,7 @@
   ClientHeight = 639
   ClientWidth = 1020
   ExplicitWidth = 1036
-  ExplicitHeight = 674
+  ExplicitHeight = 677
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1152,7 +1152,6 @@
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 70
           end
           object chAmountPackSecond: TcxGridDBColumn
@@ -1163,7 +1162,6 @@
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 70
           end
           object chAmountPackTotal: TcxGridDBColumn
@@ -1472,6 +1470,7 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object chId: TcxGridDBColumn
@@ -1508,9 +1507,6 @@
     object tsTotal: TcxTabSheet
       Caption = #1048#1090#1086#1075#1086' '#1087#1086' '#1091#1087#1072#1082#1086#1074#1082#1077
       ImageIndex = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridChildTotal: TcxGrid
         Left = 0
         Top = 0
@@ -2103,7 +2099,6 @@
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 70
           end
           object chtAmountPackSecond: TcxGridDBColumn
@@ -2114,7 +2109,6 @@
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 70
           end
           object chtAmountPackTotal: TcxGridDBColumn
@@ -2525,6 +2519,7 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object chtId: TcxGridDBColumn
@@ -2719,7 +2714,46 @@
       ImageIndex = 6
       ShortCut = 16472
     end
-    object actPrintRemains: TdsdPrintAction [9]
+    object actUpdateChildDS: TdsdUpdateDataSet [9]
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMI_AmountPack
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMI_AmountPack
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = 'actUpdateChildDS'
+      DataSource = ChildDS
+    end
+    object actUpdateChildTotalDS: TdsdUpdateDataSet [10]
+      Category = 'DSDLib'
+      TabSheet = tsTotal
+      MoveParams = <>
+      Enabled = False
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMI_Amounts
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMI_Amounts
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = 'actUpdateChildTotalDS'
+      DataSource = ChildTotalDS
+    end
+    object actPrintRemains: TdsdPrintAction [11]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintRemains
@@ -2823,7 +2857,7 @@
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [15]
+    object actGoodsKindChoice: TOpenChoiceForm [17]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2983,23 +3017,6 @@
       Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' <'#1042#1089#1077'> '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' <'#1042#1089#1077'> '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 50
-    end
-    object actUpdateChildTotalDS: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      TabSheet = tsTotal
-      MoveParams = <>
-      Enabled = False
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdateMIMasterChildTotal
-      StoredProcList = <
-        item
-          StoredProc = spUpdateMIMasterChildTotal
-        end
-        item
-          StoredProc = spGetTotalSumm
-        end>
-      Caption = 'actUpdateMainDS'
-      DataSource = ChildTotalDS
     end
     object mactUpdateAmount_to: TMultiAction
       Category = 'DSDLib'
@@ -3907,8 +3924,8 @@
     Top = 392
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
-    Left = 328
-    Top = 272
+    Left = 320
+    Top = 224
   end
   inherited spGetTotalSumm: TdsdStoredProc
     Left = 412
@@ -4247,8 +4264,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 240
-    Top = 408
+    Left = 312
+    Top = 400
   end
   object spUpdateAmount_to: TdsdStoredProc
     StoredProcName = 'gpUpdateMI_OrderInternal_Amount_to'
@@ -4566,5 +4583,109 @@
     PackSize = 1
     Left = 887
     Top = 488
+  end
+  object spUpdateMI_Amounts: TdsdStoredProc
+    StoredProcName = 'gpUpdateMI_OrderInternal_Amounts'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ChildTotalCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = ChildTotalCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountSecond'
+        Value = Null
+        Component = ChildTotalCDS
+        ComponentItem = 'AmountSecond'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountPack'
+        Value = Null
+        Component = ChildTotalCDS
+        ComponentItem = 'AmountPack'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountPackSecond'
+        Value = '0'
+        Component = ChildTotalCDS
+        ComponentItem = 'AmountPackSecond'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 88
+    Top = 496
+  end
+  object spUpdateMI_AmountPack: TdsdStoredProc
+    StoredProcName = 'gpUpdateMI_OrderInternal_AmountPack'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountPack'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'AmountPack'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountPackSecond'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'AmountPackSecond'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 184
+    Top = 512
   end
 end

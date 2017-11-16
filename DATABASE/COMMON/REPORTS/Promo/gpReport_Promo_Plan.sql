@@ -13,6 +13,15 @@ DROP FUNCTION IF EXISTS gpSelect_Report_Promo_Plan(
     Integer,   --подразделение 
     TVarChar   --сессия пользователя
 );
+DROP FUNCTION IF EXISTS gpSelect_Report_Promo_Plan(
+    TDateTime, --дата начала периода
+    TDateTime, --дата окончания периода
+    Boolean,   --показать только Акции
+    Boolean,   --показать только Тендеры
+    Integer,   --подразделение 
+    Integer,   --подразделение для продаж
+    TVarChar   --сессия пользователя
+);
 
 CREATE OR REPLACE FUNCTION gpSelect_Report_Promo_Plan(
     IN inStartDate      TDateTime, --дата начала периода
@@ -20,6 +29,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Report_Promo_Plan(
     IN inIsPromo        Boolean,   --показать только Акции
     IN inIsTender       Boolean,   --показать только Тендеры
     IN inUnitId         Integer,   --подразделение 
+    IN inUnitId_Sale    Integer,   --подразделение для продаж
     IN inSession        TVarChar   --сессия пользователя
 )
 RETURNS TABLE(
@@ -58,23 +68,37 @@ RETURNS TABLE(
     , AmountPlan6         TFloat -- Кол-во план отгрузки за сб.
     , AmountPlan7         TFloat -- Кол-во план отгрузки за вс.
 
-    , AmountPlan1_Wh      TFloat -- 
-    , AmountPlan2_Wh      TFloat -- 
-    , AmountPlan3_Wh      TFloat -- 
-    , AmountPlan4_Wh      TFloat -- 
-    , AmountPlan5_Wh      TFloat -- 
-    , AmountPlan6_Wh      TFloat -- 
-    , AmountPlan7_Wh      TFloat -- 
+    , AmountPlan1_Wh      TFloat --
+    , AmountPlan2_Wh      TFloat --
+    , AmountPlan3_Wh      TFloat --
+    , AmountPlan4_Wh      TFloat --
+    , AmountPlan5_Wh      TFloat --
+    , AmountPlan6_Wh      TFloat --
+    , AmountPlan7_Wh      TFloat --
+     
+    , isPlan1             Boolean
+    , isPlan2             Boolean
+    , isPlan3             Boolean
+    , isPlan4             Boolean
+    , isPlan5             Boolean
+    , isPlan6             Boolean
+    , isPlan7             Boolean
     )
 AS
 $BODY$
     DECLARE vbUserId Integer;
     DECLARE vbShowAll Boolean;
+    DECLARE vbDayStart integer;
+    DECLARE vbDayEnd integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
      vbUserId:= lpGetUserBySession (inSession);
 
+
+     vbDayStart := CASE EXTRACT (DOW FROM inStartDate) WHEN 0 THEN 7 ELSE EXTRACT (DOW FROM inStartDate) END  ::integer;
+     vbDayEnd   := CASE EXTRACT (DOW FROM inEndDate)   WHEN 0 THEN 7 ELSE EXTRACT (DOW FROM inEndDate) END  ::integer;
+     
     -- таблицы для получения Вид товара (справочно) из GoodsListSale
     CREATE TEMP TABLE _tmpWord_Split_from (WordList TVarChar) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpWord_Split_to (Ord Integer, Word TVarChar, WordList TVarChar) ON COMMIT DROP;
@@ -95,7 +119,92 @@ BEGIN
                                 LEFT JOIN Object ON Object.Id = _tmpWord_Split_to.Word :: Integer
                            GROUP BY _tmpWord_Split_to.WordList, Object.ValueData
                            )
-                           
+        , tmpMovement_Promo AS (SELECT *
+                               FROM Movement_Promo_View AS Movement_Promo
+                               WHERE ( Movement_Promo.StartSale BETWEEN inStartDate AND inEndDate
+                                       OR
+                                       inStartDate BETWEEN Movement_Promo.StartSale AND Movement_Promo.EndSale
+                                      )
+                                  AND (Movement_Promo.UnitId = inUnitId OR inUnitId = 0)
+                                  AND Movement_Promo.StatusId = zc_Enum_Status_Complete()
+                                  AND (  (Movement_Promo.isPromo = TRUE AND inIsPromo = TRUE)
+                                      OR (COALESCE (Movement_Promo.isPromo, FALSE) = FALSE AND inIsTender = TRUE)
+                                      OR (inIsPromo = FALSE AND inIsTender = FALSE)
+                                      )
+                               )
+                               
+        , tmpMI_Promo AS (SELECT MI_PromoGoods.*
+       
+                               , CASE WHEN vbDayStart  = 1 THEN MIFloat_Plan1.ValueData ELSE 0 END                   AS AmountPlan1
+                               , CASE WHEN vbDayStart <= 2 AND vbDayEnd >= 2 THEN MIFloat_Plan2.ValueData ELSE 0 END AS AmountPlan2
+                               , CASE WHEN vbDayStart <= 3 AND vbDayEnd >= 3 THEN MIFloat_Plan3.ValueData ELSE 0 END AS AmountPlan3
+                               , CASE WHEN vbDayStart <= 4 AND vbDayEnd >= 4 THEN MIFloat_Plan4.ValueData ELSE 0 END AS AmountPlan4
+                               , CASE WHEN vbDayStart <= 5 AND vbDayEnd >= 5 THEN MIFloat_Plan5.ValueData ELSE 0 END AS AmountPlan5
+                               , CASE WHEN vbDayStart <= 6 AND vbDayEnd >= 6 THEN MIFloat_Plan6.ValueData ELSE 0 END AS AmountPlan6
+                               , CASE WHEN vbDayStart <= 7 AND vbDayEnd  = 7 THEN MIFloat_Plan7.ValueData ELSE 0 END AS AmountPlan7
+                               
+                               , (CASE WHEN vbDayStart  = 1 THEN MIFloat_Plan1.ValueData ELSE 0 END  * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)                   AS AmountPlan1_Wh
+                               , (CASE WHEN vbDayStart <= 2 AND vbDayEnd >= 2 THEN MIFloat_Plan2.ValueData ELSE 0 END * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)  AS AmountPlan2_Wh
+                               , (CASE WHEN vbDayStart <= 3 AND vbDayEnd >= 3 THEN MIFloat_Plan3.ValueData ELSE 0 END * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)  AS AmountPlan3_Wh
+                               , (CASE WHEN vbDayStart <= 4 AND vbDayEnd >= 4 THEN MIFloat_Plan4.ValueData ELSE 0 END * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)  AS AmountPlan4_Wh
+                               , (CASE WHEN vbDayStart <= 5 AND vbDayEnd >= 5 THEN MIFloat_Plan5.ValueData ELSE 0 END * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)  AS AmountPlan5_Wh
+                               , (CASE WHEN vbDayStart <= 6 AND vbDayEnd >= 6 THEN MIFloat_Plan6.ValueData ELSE 0 END * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)  AS AmountPlan6_Wh
+                               , (CASE WHEN vbDayStart <= 7 AND vbDayEnd  = 7 THEN MIFloat_Plan7.ValueData ELSE 0 END * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)  AS AmountPlan7_Wh
+                                
+                               , CASE WHEN vbDayStart  = 1                   THEN TRUE ELSE FALSE END AS isPlan1
+                               , CASE WHEN vbDayStart <= 2 AND vbDayEnd >= 2 THEN TRUE ELSE FALSE END AS isPlan2
+                               , CASE WHEN vbDayStart <= 3 AND vbDayEnd >= 3 THEN TRUE ELSE FALSE END AS isPlan3
+                               , CASE WHEN vbDayStart <= 4 AND vbDayEnd >= 4 THEN TRUE ELSE FALSE END AS isPlan4
+                               , CASE WHEN vbDayStart <= 5 AND vbDayEnd >= 5 THEN TRUE ELSE FALSE END AS isPlan5
+                               , CASE WHEN vbDayStart <= 6 AND vbDayEnd >= 6 THEN TRUE ELSE FALSE END AS isPlan6
+                               , CASE WHEN vbDayStart <= 7 AND vbDayEnd  = 7 THEN TRUE ELSE FALSE END AS isPlan7
+
+                          FROM tmpMovement_Promo AS Movement_Promo
+                               LEFT OUTER JOIN MovementItem_PromoGoods_View AS MI_PromoGoods
+                                                                            ON MI_PromoGoods.MovementId = Movement_Promo.Id
+                                                                           AND MI_PromoGoods.IsErASed = FALSE
+                               LEFT JOIN MovementItemFloat AS MIFloat_Plan1
+                                                           ON MIFloat_Plan1.MovementItemId = MI_PromoGoods.Id
+                                                          AND MIFloat_Plan1.DescId = zc_MIFloat_Plan1()
+                               LEFT JOIN MovementItemFloat AS MIFloat_Plan2
+                                                           ON MIFloat_Plan2.MovementItemId = MI_PromoGoods.Id
+                                                          AND MIFloat_Plan2.DescId = zc_MIFloat_Plan2()
+                               LEFT JOIN MovementItemFloat AS MIFloat_Plan3
+                                                           ON MIFloat_Plan3.MovementItemId = MI_PromoGoods.Id
+                                                          AND MIFloat_Plan3.DescId = zc_MIFloat_Plan3()
+                               LEFT JOIN MovementItemFloat AS MIFloat_Plan4
+                                                           ON MIFloat_Plan4.MovementItemId = MI_PromoGoods.Id
+                                                          AND MIFloat_Plan4.DescId = zc_MIFloat_Plan4()
+                               LEFT JOIN MovementItemFloat AS MIFloat_Plan5
+                                                           ON MIFloat_Plan5.MovementItemId = MI_PromoGoods.Id
+                                                          AND MIFloat_Plan5.DescId = zc_MIFloat_Plan5()
+                               LEFT JOIN MovementItemFloat AS MIFloat_Plan6
+                                                           ON MIFloat_Plan6.MovementItemId = MI_PromoGoods.Id
+                                                          AND MIFloat_Plan6.DescId = zc_MIFloat_Plan6()
+                               LEFT JOIN MovementItemFloat AS MIFloat_Plan7
+                                                           ON MIFloat_Plan7.MovementItemId = MI_PromoGoods.Id
+                                                          AND MIFloat_Plan7.DescId = zc_MIFloat_Plan7()
+                    
+                         )
+                                                                 
+   /*     , tmpMovementSale AS (SELECT 
+                              FROM tmpMovement_Promo
+                                   LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                                               ON MIFloat_PromoMovement.ValueData ::Integer = tmpMovement_Promo.Id
+                                                              AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+                                                              
+                                   LEFT JOIN MovementItem AS MI_Sale ON MI_Sale.Id = MIFloat_PromoMovement.MovementItem
+                                   
+                                   INNER JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MI_Sale.MovementId 
+                                                                       AND Movement_Sale.DescId = zc_Movement_Sale()
+                                                                       
+                                   INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                 ON MovementLinkObject_From.MovementId = Movement_Sale.Id
+                                                                AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                                AND (MovementLinkObject_From.ObjectId = inUnitId_Sale OR inUnitId_Sale = 0)
+                              )*/
+
+        --
         SELECT
             Movement_Promo.Id                 --ИД документа акции
           , MI_PromoGoods.Id                        AS MovementItemId
@@ -116,12 +225,7 @@ BEGIN
           , Movement_Promo.MonthPromo         --месяц акции
 
           , COALESCE ((SELECT STRING_AGG (DISTINCT COALESCE (MovementString_Retail.ValueData, Object_Retail.ValueData),'; ')
-                       FROM
-                          Movement AS Movement_PromoPartner
-                          /*INNER JOIN MovementLinkObject AS MLO_Partner
-                                                        ON MLO_Partner.MovementId = Movement_PromoPartner.ID
-                                                       AND MLO_Partner.DescId     = zc_MovementLinkObject_Partner()
-                          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = MLO_Partner.ObjectId*/
+                       FROM Movement AS Movement_PromoPartner
                           INNER JOIN MovementItem AS MI_PromoPartner
                                                   ON MI_PromoPartner.MovementId = Movement_PromoPartner.ID
                                                  AND MI_PromoPartner.DescId     = zc_MI_Master()
@@ -193,70 +297,45 @@ BEGIN
 
           , CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN MI_PromoGoods.GoodsWeight ELSE NULL END :: TFloat AS GoodsWeight
           
-          , MIFloat_Plan1.ValueData                AS AmountPlan1
-          , MIFloat_Plan2.ValueData                AS AmountPlan2
-          , MIFloat_Plan3.ValueData                AS AmountPlan3
-          , MIFloat_Plan4.ValueData                AS AmountPlan4
-          , MIFloat_Plan5.ValueData                AS AmountPlan5
-          , MIFloat_Plan6.ValueData                AS AmountPlan6
-          , MIFloat_Plan7.ValueData                AS AmountPlan7 
+                   
+          , MI_PromoGoods.AmountPlan1     ::TFloat
+          , MI_PromoGoods.AmountPlan2     ::TFloat
+          , MI_PromoGoods.AmountPlan3     ::TFloat
+          , MI_PromoGoods.AmountPlan4     ::TFloat
+          , MI_PromoGoods.AmountPlan5     ::TFloat
+          , MI_PromoGoods.AmountPlan6     ::TFloat
+          , MI_PromoGoods.AmountPlan7     ::TFloat
           
-          , (MIFloat_Plan1.ValueData  * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)  ::TFloat AS AmountPlan1_Wh
-          , (MIFloat_Plan2.ValueData  * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)  ::TFloat AS AmountPlan2_Wh
-          , (MIFloat_Plan3.ValueData  * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)  ::TFloat AS AmountPlan3_Wh
-          , (MIFloat_Plan4.ValueData  * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)  ::TFloat AS AmountPlan4_Wh
-          , (MIFloat_Plan5.ValueData  * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)  ::TFloat AS AmountPlan5_Wh
-          , (MIFloat_Plan6.ValueData  * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)  ::TFloat AS AmountPlan6_Wh
-          , (MIFloat_Plan7.ValueData  * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)  ::TFloat AS AmountPlan7_Wh
+          , MI_PromoGoods.AmountPlan1_Wh  ::TFloat
+          , MI_PromoGoods.AmountPlan2_Wh  ::TFloat
+          , MI_PromoGoods.AmountPlan3_Wh  ::TFloat
+          , MI_PromoGoods.AmountPlan4_Wh  ::TFloat
+          , MI_PromoGoods.AmountPlan5_Wh  ::TFloat
+          , MI_PromoGoods.AmountPlan6_Wh  ::TFloat
+          , MI_PromoGoods.AmountPlan7_Wh  ::TFloat
            
-        FROM Movement_Promo_View AS Movement_Promo
-            LEFT OUTER JOIN MovementItem_PromoGoods_View AS MI_PromoGoods
-                                                         ON MI_PromoGoods.MovementId = Movement_Promo.Id
-                                                        AND MI_PromoGoods.IsErASed = FALSE
-            LEFT JOIN MovementItemFloat AS MIFloat_Plan1
-                                        ON MIFloat_Plan1.MovementItemId = MI_PromoGoods.Id 
-                                       AND MIFloat_Plan1.DescId = zc_MIFloat_Plan1()
-            LEFT JOIN MovementItemFloat AS MIFloat_Plan2
-                                        ON MIFloat_Plan2.MovementItemId = MI_PromoGoods.Id 
-                                       AND MIFloat_Plan2.DescId = zc_MIFloat_Plan2()
-            LEFT JOIN MovementItemFloat AS MIFloat_Plan3
-                                        ON MIFloat_Plan3.MovementItemId = MI_PromoGoods.Id 
-                                       AND MIFloat_Plan3.DescId = zc_MIFloat_Plan3()
-            LEFT JOIN MovementItemFloat AS MIFloat_Plan4
-                                        ON MIFloat_Plan4.MovementItemId = MI_PromoGoods.Id 
-                                       AND MIFloat_Plan4.DescId = zc_MIFloat_Plan4()
-            LEFT JOIN MovementItemFloat AS MIFloat_Plan5
-                                        ON MIFloat_Plan5.MovementItemId = MI_PromoGoods.Id 
-                                       AND MIFloat_Plan5.DescId = zc_MIFloat_Plan5()
-            LEFT JOIN MovementItemFloat AS MIFloat_Plan6
-                                        ON MIFloat_Plan6.MovementItemId = MI_PromoGoods.Id 
-                                       AND MIFloat_Plan6.DescId = zc_MIFloat_Plan6()
-            LEFT JOIN MovementItemFloat AS MIFloat_Plan7
-                                        ON MIFloat_Plan7.MovementItemId = MI_PromoGoods.Id 
-                                       AND MIFloat_Plan7.DescId = zc_MIFloat_Plan7()                                             
-                                            
+          , MI_PromoGoods.isPlan1         ::Boolean
+          , MI_PromoGoods.isPlan2         ::Boolean
+          , MI_PromoGoods.isPlan3         ::Boolean
+          , MI_PromoGoods.isPlan4         ::Boolean
+          , MI_PromoGoods.isPlan5         ::Boolean
+          , MI_PromoGoods.isPlan6         ::Boolean
+          , MI_PromoGoods.isPlan7         ::Boolean
+          
+        FROM tmpMovement_Promo AS Movement_Promo
+            LEFT OUTER JOIN tmpMI_Promo AS MI_PromoGoods ON MI_PromoGoods.MovementId = Movement_Promo.Id
 
             LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
                                  ON ObjectLink_Personal_Unit.ObjectId = Movement_Promo.PersonalTradeId
                                 AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
-       
+
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
                                  ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
                                 AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
             LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
-                        
-        WHERE ( Movement_Promo.StartSale BETWEEN inStartDate AND inEndDate
-                OR
-                inStartDate BETWEEN Movement_Promo.StartSale AND Movement_Promo.EndSale
-               )
-           AND (Movement_Promo.UnitId = inUnitId OR inUnitId = 0)
-           AND Movement_Promo.StatusId = zc_Enum_Status_Complete()
-           AND (  (Movement_Promo.isPromo = TRUE AND inIsPromo = TRUE) 
-               OR (COALESCE (Movement_Promo.isPromo, FALSE) = FALSE AND inIsTender = TRUE)
-               OR (inIsPromo = FALSE AND inIsTender = FALSE)
-               )
-               ;
+            ;
+            
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -268,4 +347,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Report_Promo_Plan (inStartDate:= '01.09.2017', inEndDate:= '01.09.2017', inIsPromo:= True, inIsTender:= False, inUnitId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Report_Promo_Plan (inStartDate:= '01.09.2017', inEndDate:= '01.09.2017', inIsPromo:= True, inIsTender:= False, inUnitId:= 0, inUnitId_Sale:= 0, inSession:= zfCalc_UserAdmin());

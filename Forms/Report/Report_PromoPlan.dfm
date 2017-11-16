@@ -12,7 +12,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
     Width = 885
     Height = 351
     TabOrder = 3
-    ExplicitTop = 83
+    ExplicitTop = 99
     ExplicitWidth = 885
     ExplicitHeight = 351
     ClientRectBottom = 351
@@ -512,9 +512,6 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
     object tsPlan: TcxTabSheet
       Caption = '&2. '#1042#1074#1086#1076' '#1087#1083#1072#1085
       ImageIndex = 4
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
@@ -1037,7 +1034,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 286
+      Width = 285
     end
     object cbPromo: TcxCheckBox
       Left = 211
@@ -1054,6 +1051,23 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
       TabOrder = 7
       Width = 165
     end
+  end
+  object cxLabel3: TcxLabel [2]
+    Left = 592
+    Top = 6
+    Caption = #1057#1082#1083#1072#1076':'
+  end
+  object edUnitSale: TcxButtonEdit [3]
+    Left = 633
+    Top = 5
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 196
   end
   inherited ActionList: TActionList
     Left = 119
@@ -1120,7 +1134,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
         item
           Name = 'UnitId'
           Value = Null
-          Component = UnitGuides
+          Component = GuidesUnit
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1128,7 +1142,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
         item
           Name = 'UnitName'
           Value = Null
-          Component = UnitGuides
+          Component = GuidesUnit
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1247,7 +1261,15 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
       item
         Name = 'inUnitId'
         Value = Null
-        Component = UnitGuides
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId_Sale'
+        Value = Null
+        Component = GuidesUnitSale
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1340,12 +1362,12 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
         Component = PeriodChoice
       end
       item
-        Component = UnitGuides
+        Component = GuidesUnit
       end>
     Left = 208
     Top = 224
   end
-  object UnitGuides: TdsdGuides
+  object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
@@ -1357,7 +1379,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
       item
         Name = 'Key'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1366,17 +1388,16 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 604
-    Top = 8
+    Left = 420
   end
   object spUpdate_Plan: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MI_PromoGoods_Plan'
+    StoredProcName = 'gpUpdate_MI_PromoGoods_Plan_byReport'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1389,65 +1410,128 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmountPlan1'
+        Name = 'ioAmountPlan1'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountPlan1'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmountPlan2'
+        Name = 'ioAmountPlan2'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountPlan2'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmountPlan3'
+        Name = 'ioAmountPlan3'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountPlan3'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmountPlan4'
+        Name = 'ioAmountPlan4'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountPlan4'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmountPlan5'
+        Name = 'ioAmountPlan5'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountPlan5'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmountPlan6'
+        Name = 'ioAmountPlan6'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountPlan6'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmountPlan7'
+        Name = 'ioAmountPlan7'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountPlan7'
         DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPlan1'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isPlan1'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPlan2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isPlan2'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPlan3'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isPlan3'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPlan4'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isPlan4'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPlan5'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isPlan5'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPlan6'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isPlan6'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPlan7'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isPlan7'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1501,8 +1585,8 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 456
-    Top = 184
+    Left = 432
+    Top = 248
   end
   object dsdDBViewAddOn1: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1524,5 +1608,34 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
     SummaryItemList = <>
     Left = 712
     Top = 240
+  end
+  object GuidesUnitSale: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnitSale
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnitSale
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnitSale
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 700
   end
 end
