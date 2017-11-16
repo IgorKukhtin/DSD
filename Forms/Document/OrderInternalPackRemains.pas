@@ -68,7 +68,6 @@ type
     Remains: TcxGridDBColumn;
     AmountPartner: TcxGridDBColumn;
     AmountForecast: TcxGridDBColumn;
-    AmountForecastOrder: TcxGridDBColumn;
     bbMultiAmountRemain: TdxBarButton;
     actUpdateAmountPartner: TdsdExecStoredProc;
     MultiAmountPartner: TMultiAction;
@@ -189,6 +188,8 @@ type
     spUpdateMI_Amounts: TdsdStoredProc;
     spUpdateMI_AmountPack: TdsdStoredProc;
     actUpdateChildDS: TdsdUpdateDataSet;
+    AmountForecastOrder: TcxGridDBColumn;
+    AmountForecastOrderPromo_noERR: TcxGridDBColumn;
   private
     { Private declarations }
   public

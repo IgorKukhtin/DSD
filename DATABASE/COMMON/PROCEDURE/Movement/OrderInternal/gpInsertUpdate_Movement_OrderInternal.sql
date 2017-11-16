@@ -1,8 +1,5 @@
 -- Function: gpInsertUpdate_Movement_OrderInternal()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderInternal(Integer, TVarChar, TDateTime, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderInternal(Integer, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderInternal(Integer, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderInternal(Integer, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderInternal(
