@@ -76,6 +76,14 @@ RETURNS TABLE(
     , AmountPlan6_Wh      TFloat --
     , AmountPlan7_Wh      TFloat --
      
+    , AmountSale1         TFloat
+    , AmountSale2         TFloat
+    , AmountSale3         TFloat
+    , AmountSale4         TFloat
+    , AmountSale5         TFloat
+    , AmountSale6         TFloat
+    , AmountSale7         TFloat
+          
     , isPlan1             Boolean
     , isPlan2             Boolean
     , isPlan3             Boolean
@@ -187,23 +195,57 @@ BEGIN
                     
                          )
                                                                  
-   /*     , tmpMovementSale AS (SELECT 
-                              FROM tmpMovement_Promo
-                                   LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
-                                                               ON MIFloat_PromoMovement.ValueData ::Integer = tmpMovement_Promo.Id
-                                                              AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
-                                                              
-                                   LEFT JOIN MovementItem AS MI_Sale ON MI_Sale.Id = MIFloat_PromoMovement.MovementItem
-                                   
-                                   INNER JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MI_Sale.MovementId 
-                                                                       AND Movement_Sale.DescId = zc_Movement_Sale()
-                                                                       
-                                   INNER JOIN MovementLinkObject AS MovementLinkObject_From
-                                                                 ON MovementLinkObject_From.MovementId = Movement_Sale.Id
-                                                                AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                                AND (MovementLinkObject_From.ObjectId = inUnitId_Sale OR inUnitId_Sale = 0)
-                              )*/
+        , tmpMovement_Sale_All AS (SELECT tmpMovement_Promo.Id                                                      AS MovementId_Promo
+                                        , Movement_Sale.OperDate                                                    AS OperDate
+                                        , MI_Sale.ObjectId                                                          AS GoodsId
+                                        , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)                             AS GoodsKindId
+                                        , SUM (COALESCE (MI_Sale.Amount, 0))                                        AS Amount
+                                        , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0))                        AS AmountPartner 
+                                   FROM tmpMovement_Promo
+                                        LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                                                    ON MIFloat_PromoMovement.ValueData ::Integer = tmpMovement_Promo.Id
+                                                                   AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+                                                                   
+                                        LEFT JOIN MovementItem AS MI_Sale ON MI_Sale.Id = MIFloat_PromoMovement.MovementItemId
+                                        INNER JOIN tmpMI_Promo ON tmpMI_Promo.GoodsId = MI_Sale.ObjectId
+                                        
+                                        INNER JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MI_Sale.MovementId 
+                                                                            AND Movement_Sale.DescId = zc_Movement_Sale()
+                                                                            AND Movement_Sale.OperDate BETWEEN inStartDate AND inEndDate
+                                                                            
+                                        INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                      ON MovementLinkObject_From.MovementId = Movement_Sale.Id
+                                                                     AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                                     AND (MovementLinkObject_From.ObjectId = inUnitId_Sale OR inUnitId_Sale = 0)
+     
+                                        LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                         ON MILinkObject_GoodsKind.MovementItemId = MI_Sale.Id
+                                                                        AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                        LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                                    ON MIFloat_AmountPartner.MovementItemId = MI_Sale.Id
+                                                                   AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                                   GROUP BY tmpMovement_Promo.Id
+                                          , Movement_Sale.OperDate
+                                          , MI_Sale.ObjectId
+                                          , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                   )
 
+        , tmpMovement_Sale AS (SELECT tmpSale.MovementId_Promo
+                                    , tmpSale.GoodsId    
+                                    , STRING_AGG (Object_GoodsKind.ValueData, '; ')  AS GoodsKindName
+                                    , SUM (CASE WHEN EXTRACT (DOW FROM tmpSale.OperDate) = 1 THEN tmpSale.Amount ELSE 0 END) AS AmountSale1
+                                    , SUM (CASE WHEN EXTRACT (DOW FROM tmpSale.OperDate) = 2 THEN tmpSale.Amount ELSE 0 END) AS AmountSale2
+                                    , SUM (CASE WHEN EXTRACT (DOW FROM tmpSale.OperDate) = 3 THEN tmpSale.Amount ELSE 0 END) AS AmountSale3
+                                    , SUM (CASE WHEN EXTRACT (DOW FROM tmpSale.OperDate) = 4 THEN tmpSale.Amount ELSE 0 END) AS AmountSale4
+                                    , SUM (CASE WHEN EXTRACT (DOW FROM tmpSale.OperDate) = 5 THEN tmpSale.Amount ELSE 0 END) AS AmountSale5
+                                    , SUM (CASE WHEN EXTRACT (DOW FROM tmpSale.OperDate) = 6 THEN tmpSale.Amount ELSE 0 END) AS AmountSale6
+                                    , SUM (CASE WHEN EXTRACT (DOW FROM tmpSale.OperDate) = 0 THEN tmpSale.Amount ELSE 0 END) AS AmountSale7
+                               FROM tmpMovement_Sale_All AS tmpSale
+                                    LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpSale.GoodsKindId
+                               GROUP BY tmpSale.MovementId_Promo
+                                      , tmpSale.GoodsId
+                               )
+                               
         --
         SELECT
             Movement_Promo.Id                 --ИД документа акции
@@ -296,8 +338,7 @@ BEGIN
           , Movement_Promo.Checked                 AS Checked
 
           , CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN MI_PromoGoods.GoodsWeight ELSE NULL END :: TFloat AS GoodsWeight
-          
-                   
+
           , MI_PromoGoods.AmountPlan1     ::TFloat
           , MI_PromoGoods.AmountPlan2     ::TFloat
           , MI_PromoGoods.AmountPlan3     ::TFloat
@@ -313,7 +354,15 @@ BEGIN
           , MI_PromoGoods.AmountPlan5_Wh  ::TFloat
           , MI_PromoGoods.AmountPlan6_Wh  ::TFloat
           , MI_PromoGoods.AmountPlan7_Wh  ::TFloat
-           
+
+          , (tmpMovement_Sale.AmountSale1 * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END) ::TFloat  AS AmountSale1
+          , (tmpMovement_Sale.AmountSale2 * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END) ::TFloat  AS AmountSale2
+          , (tmpMovement_Sale.AmountSale3 * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END) ::TFloat  AS AmountSale3
+          , (tmpMovement_Sale.AmountSale4 * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END) ::TFloat  AS AmountSale4
+          , (tmpMovement_Sale.AmountSale5 * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END) ::TFloat  AS AmountSale5
+          , (tmpMovement_Sale.AmountSale6 * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END) ::TFloat  AS AmountSale6
+          , (tmpMovement_Sale.AmountSale7 * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END) ::TFloat  AS AmountSale7
+
           , MI_PromoGoods.isPlan1         ::Boolean
           , MI_PromoGoods.isPlan2         ::Boolean
           , MI_PromoGoods.isPlan3         ::Boolean
@@ -321,9 +370,8 @@ BEGIN
           , MI_PromoGoods.isPlan5         ::Boolean
           , MI_PromoGoods.isPlan6         ::Boolean
           , MI_PromoGoods.isPlan7         ::Boolean
-          
+
         FROM tmpMovement_Promo AS Movement_Promo
-            LEFT OUTER JOIN tmpMI_Promo AS MI_PromoGoods ON MI_PromoGoods.MovementId = Movement_Promo.Id
 
             LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
                                  ON ObjectLink_Personal_Unit.ObjectId = Movement_Promo.PersonalTradeId
@@ -334,6 +382,10 @@ BEGIN
                                  ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
                                 AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
             LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
+            
+            LEFT JOIN tmpMI_Promo AS MI_PromoGoods ON MI_PromoGoods.MovementId = Movement_Promo.Id
+            LEFT JOIN tmpMovement_Sale ON tmpMovement_Sale.MovementId_Promo = Movement_Promo.Id
+                                      AND tmpMovement_Sale.GoodsId = MI_PromoGoods.GoodsId
             ;
             
 END;
