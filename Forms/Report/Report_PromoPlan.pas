@@ -30,7 +30,7 @@ type
   TReport_PromoPlanForm = class(TAncestorReportForm)
     cxLabel17: TcxLabel;
     edUnit: TcxButtonEdit;
-    UnitGuides: TdsdGuides;
+    GuidesUnit: TdsdGuides;
     DateStartSale: TcxGridDBColumn;
     DeteFinalSale: TcxGridDBColumn;
     DateStartPromo: TcxGridDBColumn;
@@ -59,6 +59,9 @@ type
     plPersonalTradeName: TcxGridDBColumn;
     plPersonalName: TcxGridDBColumn;
     plChecked: TcxGridDBColumn;
+    cxLabel3: TcxLabel;
+    edUnitSale: TcxButtonEdit;
+    GuidesUnitSale: TdsdGuides;
   private
     { Private declarations }
   public
