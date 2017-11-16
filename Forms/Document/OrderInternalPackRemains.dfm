@@ -1152,7 +1152,6 @@
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 70
           end
           object chAmountPackSecond: TcxGridDBColumn
@@ -1163,7 +1162,6 @@
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 70
           end
           object chAmountPackTotal: TcxGridDBColumn
@@ -1472,6 +1470,7 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object chId: TcxGridDBColumn
@@ -2100,7 +2099,6 @@
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 70
           end
           object chtAmountPackSecond: TcxGridDBColumn
@@ -2111,7 +2109,6 @@
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 70
           end
           object chtAmountPackTotal: TcxGridDBColumn
@@ -2717,24 +2714,46 @@
       ImageIndex = 6
       ShortCut = 16472
     end
-    object actUpdateChildTotalDS: TdsdUpdateDataSet [9]
+    object actUpdateChildDS: TdsdUpdateDataSet [9]
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMI_AmountPack
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMI_AmountPack
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = 'actUpdateChildDS'
+      DataSource = ChildDS
+    end
+    object actUpdateChildTotalDS: TdsdUpdateDataSet [10]
       Category = 'DSDLib'
       TabSheet = tsTotal
       MoveParams = <>
       Enabled = False
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdateMIMasterChildTotal
+      StoredProc = spUpdateMI_Amounts
       StoredProcList = <
         item
-          StoredProc = spUpdateMIMasterChildTotal
+          StoredProc = spUpdateMI_Amounts
         end
         item
           StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelect
         end>
-      Caption = 'actUpdateMainDS'
+      Caption = 'actUpdateChildTotalDS'
       DataSource = ChildTotalDS
     end
-    object actPrintRemains: TdsdPrintAction [10]
+    object actPrintRemains: TdsdPrintAction [11]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintRemains
@@ -2838,7 +2857,7 @@
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [16]
+    object actGoodsKindChoice: TOpenChoiceForm [17]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3905,8 +3924,8 @@
     Top = 392
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
-    Left = 328
-    Top = 272
+    Left = 320
+    Top = 224
   end
   inherited spGetTotalSumm: TdsdStoredProc
     Left = 412
@@ -4245,8 +4264,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 240
-    Top = 408
+    Left = 312
+    Top = 400
   end
   object spUpdateAmount_to: TdsdStoredProc
     StoredProcName = 'gpUpdateMI_OrderInternal_Amount_to'
@@ -4552,5 +4571,109 @@
     PackSize = 1
     Left = 887
     Top = 488
+  end
+  object spUpdateMI_Amounts: TdsdStoredProc
+    StoredProcName = 'gpUpdateMI_OrderInternal_Amounts'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ChildTotalCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = ChildTotalCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountSecond'
+        Value = Null
+        Component = ChildTotalCDS
+        ComponentItem = 'AmountSecond'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountPack'
+        Value = Null
+        Component = ChildTotalCDS
+        ComponentItem = 'AmountPack'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountPackSecond'
+        Value = '0'
+        Component = ChildTotalCDS
+        ComponentItem = 'AmountPackSecond'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 88
+    Top = 496
+  end
+  object spUpdateMI_AmountPack: TdsdStoredProc
+    StoredProcName = 'gpUpdateMI_OrderInternal_AmountPack'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountPack'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'AmountPack'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountPackSecond'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'AmountPackSecond'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 184
+    Top = 512
   end
 end

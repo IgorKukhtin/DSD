@@ -186,6 +186,9 @@ type
     actPrintRemains: TdsdPrintAction;
     Amount_result_pack: TcxGridDBColumn;
     AmountPartnerNextPromo: TcxGridDBColumn;
+    spUpdateMI_Amounts: TdsdStoredProc;
+    spUpdateMI_AmountPack: TdsdStoredProc;
+    actUpdateChildDS: TdsdUpdateDataSet;
   private
     { Private declarations }
   public
