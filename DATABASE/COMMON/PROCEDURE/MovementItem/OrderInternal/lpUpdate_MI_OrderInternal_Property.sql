@@ -507,6 +507,13 @@ BEGIN
          -- !!!Добавили еще!!!
          vbGoodsId_add    := (SELECT MILO.ObjectId FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = ioId AND MILO.DescId = zc_MILinkObject_Goods());
          vbGoodsKindId_add:= (SELECT MILO.ObjectId FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = ioId AND MILO.DescId = zc_MILinkObject_GoodsKindComplete());
+/*
+if ioId = 95103717 --  vbGoodsId_add = and vbGoodsKindId_add
+then 
+ RAISE EXCEPTION '<%>  %  <%>  %', vbGoodsId_add, vbGoodsKindId_add,  inGoodsId,  inGoodsKindId;
+-- select * from object where Id =  559324
+end if;
+*/
 
          -- !!!Добавили еще!!!
          IF vbGoodsId_add > 0 AND vbGoodsKindId_add > 0 

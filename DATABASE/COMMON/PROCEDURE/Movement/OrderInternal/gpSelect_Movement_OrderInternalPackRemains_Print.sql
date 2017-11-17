@@ -230,6 +230,9 @@ BEGIN
               OR COALESCE (_Result_Child.AmountPackTotal, 0)   <> 0 -- План для упаковки (ИТОГО, факт)
               OR COALESCE (_Result_Child.Income_PACK_from, 0)  <> 0 -- ФАКТ - Перемещение с Цеха Упаковки
               OR COALESCE (_Result_Child.Amount_result_pack, 0) < 0 -- Результат ПОСЛЕ УПАКОВКИ
+              OR COALESCE (tmpChild_total.AmountPack, 0)       <> 0 -- ИТОГО по Child - План для упаковки (с остатка, факт)
+              OR COALESCE (tmpChild_total.AmountPackSecond, 0) <> 0 -- ИТОГО по Child - План для упаковки (с прихода с пр-ва, факт)
+
           ;
 
 END;

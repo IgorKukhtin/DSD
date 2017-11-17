@@ -334,6 +334,8 @@ begin
                     if (CDS.FieldByName('MovementDescId').asInteger <> zc_Movement_Sale)
                     then ParamByName('ChangePercentAmount').asFloat:= 0;
                     if (CDS.FieldByName('MovementDescId').asInteger = zc_Movement_ReturnOut)
+                     or(CDS.FieldByName('MovementDescId').asInteger = zc_Movement_Loss)
+                     or(CDS.FieldByName('MovementDescId').asInteger = zc_Movement_Send)
                     then begin
                               ParamByName('OrderExternalId').AsInteger        := 0;
                               ParamByName('OrderExternal_DescId').AsInteger   := 0;
