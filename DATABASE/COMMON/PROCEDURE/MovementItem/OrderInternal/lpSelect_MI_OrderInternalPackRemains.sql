@@ -36,6 +36,9 @@ BEGIN
                                     , Amount TFloat, AmountSecond TFloat
                                     , AmountPack TFloat, AmountPackSecond TFloat
                                     , AmountPack_calc TFloat, AmountPackSecond_calc TFloat
+                                    , AmountNext TFloat, AmountNextSecond TFloat
+                                    , AmountPackNext TFloat, AmountPackNextSecond TFloat
+                                    , AmountPackNext_calc TFloat, AmountPackNextSecond_calc TFloat
                                     , AmountRemainsTOTAL TFloat, Remains_CEH TFloat, Remains_CEH_Next TFloat, Remains_CEH_err TFloat, Remains TFloat, Remains_pack TFloat, Remains_err TFloat
                                     , AmountPartnerPrior TFloat, AmountPartnerPriorPromo TFloat, AmountPartner TFloat, AmountPartnerPromo TFloat, AmountPartnerNextPromo TFloat
                                     , AmountForecast TFloat, AmountForecastPromo TFloat, AmountForecastOrder TFloat, AmountForecastOrderPromo TFloat
@@ -68,6 +71,13 @@ BEGIN
                             , COALESCE (MIFloat_AmountPack_calc.ValueData, 0)       AS AmountPack_calc
                             , COALESCE (MIFloat_AmountPackSecond_calc.ValueData, 0) AS AmountPackSecond_calc
 
+                            , COALESCE (MIFloat_AmountNext.ValueData, 0)            AS AmountNext
+                            , COALESCE (MIFloat_AmountNextSecond.ValueData, 0)      AS AmountNextSecond
+                            , COALESCE (MIFloat_AmountPackNext.ValueData, 0)        AS AmountPackNext
+                            , COALESCE (MIFloat_AmountPackNextSecond.ValueData, 0)  AS AmountPackNextSecond
+                            , COALESCE (MIFloat_AmountPackNext_calc.ValueData, 0)       AS AmountPackNext_calc
+                            , COALESCE (MIFloat_AmountPackNextSecond_calc.ValueData, 0) AS AmountPackNextSecond_calc
+                            
                               -- Ост. ИТОГО
                             , CASE WHEN ABS (COALESCE(MIFloat_AmountRemains.ValueData, 0)) < 1
                                    THEN COALESCE (MIFloat_AmountRemains.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
@@ -178,6 +188,25 @@ BEGIN
                                                         ON MIFloat_AmountPackSecond_calc.MovementItemId = MovementItem.Id
                                                        AND MIFloat_AmountPackSecond_calc.DescId = zc_MIFloat_AmountPackSecond_calc()
 
+                            LEFT JOIN MovementItemFloat AS MIFloat_AmountNext
+                                                        ON MIFloat_AmountNext.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_AmountNext.DescId = zc_MIFloat_AmountNext()
+                            LEFT JOIN MovementItemFloat AS MIFloat_AmountNextSecond
+                                                        ON MIFloat_AmountNextSecond.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_AmountNextSecond.DescId = zc_MIFloat_AmountNextSecond()
+                            LEFT JOIN MovementItemFloat AS MIFloat_AmountPackNext
+                                                        ON MIFloat_AmountPackNext.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_AmountPackNext.DescId = zc_MIFloat_AmountPackNext()
+                            LEFT JOIN MovementItemFloat AS MIFloat_AmountPackNextSecond
+                                                        ON MIFloat_AmountPackNextSecond.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_AmountPackNextSecond.DescId = zc_MIFloat_AmountPackNextSecond()
+                            LEFT JOIN MovementItemFloat AS MIFloat_AmountPackNext_calc
+                                                        ON MIFloat_AmountPackNext_calc.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_AmountPackNext_calc.DescId = zc_MIFloat_AmountPackNext_calc()
+                            LEFT JOIN MovementItemFloat AS MIFloat_AmountPackNextSecond_calc
+                                                        ON MIFloat_AmountPackNextSecond_calc.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_AmountPackNextSecond_calc.DescId = zc_MIFloat_AmountPackNextSecond_calc()
+                                                       
                             LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
                                                         ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
                                                        AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
@@ -343,6 +372,9 @@ BEGIN
                               , Amount, AmountSecond
                               , AmountPack, AmountPackSecond
                               , AmountPack_calc, AmountPackSecond_calc
+                              , AmountNext, AmountNextSecond
+                              , AmountPackNext, AmountPackNextSecond
+                              , AmountPackNext_calc, AmountPackNextSecond_calc
                               , AmountRemainsTOTAL, Remains_CEH, Remains_CEH_Next, Remains_CEH_err, Remains, Remains_pack, Remains_err
                               , AmountPartnerPrior, AmountPartnerPriorPromo, AmountPartner, AmountPartnerPromo, AmountPartnerNextPromo
                               , AmountForecast, AmountForecastPromo, AmountForecastOrder, AmountForecastOrderPromo
@@ -359,6 +391,9 @@ BEGIN
              , tmpMI.Amount, tmpMI.AmountSecond
              , tmpMI.AmountPack, tmpMI.AmountPackSecond
              , tmpMI.AmountPack_calc, tmpMI.AmountPackSecond_calc
+             , tmpMI.AmountNext, tmpMI.AmountNextSecond
+             , tmpMI.AmountPackNext, tmpMI.AmountPackNextSecond
+             , tmpMI.AmountPackNext_calc, tmpMI.AmountPackNextSecond_calc
              , tmpMI.AmountRemainsTOTAL, tmpMI.Remains_CEH, tmpMI.Remains_CEH_Next, tmpMI.Remains_CEH_err, tmpMI.Remains, tmpMI.Remains_pack, tmpMI.Remains_err
              , tmpMI.AmountPartnerPrior, tmpMI.AmountPartnerPriorPromo, tmpMI.AmountPartner, tmpMI.AmountPartnerPromo, tmpMI.AmountPartnerNextPromo
              , tmpMI.AmountForecast, tmpMI.AmountForecastPromo, tmpMI.AmountForecastOrder, tmpMI.AmountForecastOrderPromo
@@ -383,6 +418,9 @@ BEGIN
              , 0 AS Amount, 0 AS AmountSecond
              , 0 AS AmountPack, 0 AS AmountPackSecond
              , 0 AS AmountPack_calc, 0 AS AmountPackSecond_calc
+             , 0 AS AmountNext, 0 AS AmountNextSecond
+             , 0 AS AmountPackNext, 0 AS AmountPackNextSecond
+             , 0 AS AmountPackNext_calc, 0 AS AmountPackNextSecond_calc
              , 0 AS AmountRemainsTOTAL, 0 AS Remains_CEH, 0 AS Remains_CEH_Next, 0 AS Remains_CEH_err, 0 AS Remains, 0 AS Remains_pack, 0 AS Remains_err
              , 0 AS AmountPartnerPrior, 0 AS AmountPartnerPriorPromo, 0 AS AmountPartner, 0 AS AmountPartnerPromo, 0 AS AmountPartnerNextPromo
              , 0 AS AmountForecast, 0 AS AmountForecastPromo, 0 AS AmountForecastOrder, 0 AS AmountForecastOrderPromo
@@ -413,6 +451,9 @@ BEGIN
              , 0 AS Amount, 0 AS AmountSecond
              , 0 AS AmountPack, 0 AS AmountPackSecond
              , 0 AS AmountPack_calc, 0 AS AmountPackSecond_calc
+             , 0 AS AmountNext, 0 AS AmountNextSecond
+             , 0 AS AmountPackNext, 0 AS AmountPackNextSecond
+             , 0 AS AmountPackNext_calc, 0 AS AmountPackNextSecond_calc
              , 0 AS AmountRemainsTOTAL, 0 AS Remains_CEH, 0 AS Remains_CEH_Next, 0 AS Remains_CEH_err, 0 AS Remains, 0 AS Remains_pack, 0 AS Remains_err
              , 0 AS AmountPartnerPrior, 0 AS AmountPartnerPriorPromo, 0 AS AmountPartner, 0 AS AmountPartnerPromo, 0 AS AmountPartnerNextPromo
              , 0 AS AmountForecast, 0 AS AmountForecastPromo, 0 AS AmountForecastOrder, 0 AS AmountForecastOrderPromo
@@ -465,6 +506,11 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
                                 , Amount                    TFloat-- ***Ост. на УПАК
                                 , AmountSecond              TFloat-- ***План ПР-ВО на УПАК
                                 , AmountTotal               TFloat-- ***План ПР-ВО на УПАК
+
+                                , AmountNext                TFloat-- ***План2Ост. на УПАК
+                                , AmountNextSecond          TFloat-- ***План2 ПР-ВО на УПАК
+                                , AmountNextTotal           TFloat-- *** итого План2 ПР-ВО на УПАК
+                                , AmountAllTotal            TFloat-- *** итого План+План2 ПР-ВО на УПАК
 
                                 , Amount_result             TFloat
                                 , Amount_result_two         TFloat
@@ -527,6 +573,12 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
                                 , Amount
                                 , AmountSecond
                                 , AmountTotal
+
+                                , AmountNext
+                                , AmountNextSecond
+                                , AmountNextTotal
+                                , AmountAllTotal
+                                
                                 , Amount_result
                                 , Amount_result_two
                                 , Amount_result_pack
@@ -534,6 +586,7 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
                                 , Income_CEH
                                 , Income_PACK_to
                                 , Income_PACK_from
+                                
                                 , Remains
                                 , Remains_pack
                                 , Remains_CEH
@@ -627,6 +680,9 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
                            , SUM (_tmpMI_master.AmountPack)               AS AmountPack
                            , SUM (_tmpMI_master.AmountPackSecond)         AS AmountPackSecond
 
+                           , SUM (_tmpMI_master.AmountPackNext)           AS AmountPackNext
+                           , SUM (_tmpMI_master.AmountPackNextSecond)     AS AmountPackNextSecond
+
                            , SUM (_tmpMI_master.Remains_pack)             AS Remains_pack
                            , SUM (_tmpMI_master.Income_PACK_to)           AS Income_PACK_to
                            , SUM (_tmpMI_master.Income_PACK_from)         AS Income_PACK_from
@@ -664,6 +720,7 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
                            , tmpMI_all.ReceiptId_basis
                            , tmpMI_all.GoodsId_basis
                            , tmpMI_all.Amount, tmpMI_all.AmountSecond
+                           , tmpMI_all.AmountNext, tmpMI_all.AmountNextSecond
                            , tmpMI_all.AmountRemainsTOTAL, tmpMI_all.Remains_CEH, tmpMI_all.Remains_CEH_Next, tmpMI_all.Remains, tmpMI_all.Remains_pack
                            , tmpMI_all.AmountPartnerPrior, tmpMI_all.AmountPartnerPriorPromo, tmpMI_all.AmountPartner, tmpMI_all.AmountPartnerPromo, tmpMI_all.AmountPartnerNextPromo
                            , tmpMI_all.AmountForecast, tmpMI_all.AmountForecastPromo, tmpMI_all.AmountForecastOrder, tmpMI_all.AmountForecastOrderPromo
@@ -683,6 +740,7 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
                            , _tmpMI_master.GoodsId_basis
                            -- , _tmpMI_master.GoodsId AS GoodsId_basis
                            , _tmpMI_master.Amount, _tmpMI_master.AmountSecond
+                           , _tmpMI_master.AmountNext, _tmpMI_master.AmountNextSecond
                            , _tmpMI_master.AmountRemainsTOTAL, _tmpMI_master.Remains_CEH, _tmpMI_master.Remains_CEH_Next, _tmpMI_master.Remains, _tmpMI_master.Remains_pack
                            , _tmpMI_master.AmountPartnerPrior, _tmpMI_master.AmountPartnerPriorPromo, _tmpMI_master.AmountPartner, _tmpMI_master.AmountPartnerPromo, _tmpMI_master.AmountPartnerNextPromo
                            , _tmpMI_master.AmountForecast, _tmpMI_master.AmountForecastPromo, _tmpMI_master.AmountForecastOrder, _tmpMI_master.AmountForecastOrderPromo
@@ -721,6 +779,11 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
            , tmpMI.Amount                        :: TFloat AS Amount        -- ***Ост. на УПАК
            , tmpMI.AmountSecond                  :: TFloat AS AmountSecond  -- ***План ПР-ВО на УПАК
            , (tmpMI.Amount + tmpMI.AmountSecond) :: TFloat AS AmountTotal   -- ***План ПР-ВО на УПАК
+
+           , tmpMI.AmountNext                            :: TFloat AS AmountNext        -- ***Ост. на УПАК
+           , tmpMI.AmountNextSecond                      :: TFloat AS AmountNextSecond  -- ***План2 ПР-ВО на УПАК
+           , (tmpMI.AmountNext + tmpMI.AmountNextSecond) :: TFloat AS AmountNextTotal   -- ***План2 ПР-ВО на УПАК
+           , (tmpMI.Amount + tmpMI.AmountSecond + tmpMI.AmountNext + tmpMI.AmountNextSecond) :: TFloat AS AmountAllTotal   -- ***Итого План+План2 ПР-ВО на УПАК
 
              -- Amount_result
            , (CAST (tmpMI.Remains + COALESCE (tmpChild.Remains_pack, 0) + CASE WHEN tmpMI.ContainerId > 0 THEN tmpMI.Remains_CEH ELSE COALESCE (tmpCEH.Remains_CEH, 0) END
@@ -916,11 +979,19 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
                                         , AmountPack                 TFloat
                                         , AmountPackSecond           TFloat
                                         , AmountPackTotal            TFloat
-
+                                        
                                         , AmountPack_calc            TFloat
                                         , AmountSecondPack_calc      TFloat
                                         , AmountPackTotal_calc       TFloat
 
+                                        , AmountPackNext             TFloat
+                                        , AmountPackNextSecond       TFloat
+                                        , AmountPackNextTotal        TFloat
+
+                                        , AmountPackNext_calc        TFloat
+                                        , AmountPackNextSecond_calc  TFloat
+                                        , AmountPackNextTotal_calc   TFloat
+                                        
                                         , Amount_result_two          TFloat
                                         , Amount_result_pack         TFloat
 
@@ -972,6 +1043,14 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
                                         , AmountPack_calc
                                         , AmountSecondPack_calc
                                         , AmountPackTotal_calc
+
+                                        , AmountPackNext
+                                        , AmountPackNextSecond
+                                        , AmountPackNextTotal
+
+                                        , AmountPackNext_calc
+                                        , AmountPackNextSecond_calc
+                                        , AmountPackNextTotal_calc
 
                                         , Amount_result_two
                                         , Amount_result_pack
@@ -1049,6 +1128,14 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
            , tmpMI.AmountPack_calc                                 :: TFloat AS AmountPack_calc         -- ***План для упаковки (с остатка, расчет)
            , tmpMI.AmountPackSecond_calc                           :: TFloat AS AmountSecondPack_calc   -- ***План для упаковки (с прихода с пр-ва, расчет)
            , (tmpMI.AmountPack_calc + tmpMI.AmountPackSecond_calc) :: TFloat AS AmountPackTotal_calc    -- ***План для упаковки(ИТОГО, расчет)
+
+           , tmpMI.AmountPackNext                                :: TFloat AS AmountPackNext
+           , tmpMI.AmountPackNextSecond                          :: TFloat AS AmountPackNextSecond
+           , (tmpMI.AmountPackNext + tmpMI.AmountPackNextSecond) :: TFloat AS AmountPackNextTotal
+
+           , tmpMI.AmountPackNext_calc                                     :: TFloat AS AmountPackNext_calc
+           , tmpMI.AmountPackNextSecond_calc                               :: TFloat AS AmountPackNextSecond_calc
+           , (tmpMI.AmountPackNext_calc + tmpMI.AmountPackNextSecond_calc) :: TFloat AS AmountPackNextTotal_calc
 
            -- Amount_result
            -- , CAST (tmpMI.Remains + tmpMI.Remains_pack + tmpMI.Remains_CEH                      - tmpMI.AmountPartnerPrior - tmpMI.AmountPartnerPriorPromo - tmpMI.AmountPartner - tmpMI.AmountPartnerPromo AS NUMERIC (16, 1)) :: TFloat AS Amount_result
@@ -1195,6 +1282,18 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
                                         , AmountSecondPack_calc      TFloat
                                         , AmountPackTotal_calc       TFloat
 
+                                        , AmountNext                 TFloat
+                                        , AmountNextSecond           TFloat
+                                        , AmountNextTotal            TFloat
+
+                                        , AmountPackNext             TFloat
+                                        , AmountPackNextSecond       TFloat
+                                        , AmountPackNextTotal        TFloat
+
+                                        , AmountPackNext_calc        TFloat
+                                        , AmountPackNextSecond_calc  TFloat
+                                        , AmountPackNextTotal_calc   TFloat
+                                        
                                         , Amount_result              TFloat
                                         , Amount_result_two          TFloat
                                         , Amount_result_pack         TFloat
@@ -1274,6 +1373,18 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
                                     , AmountSecondPack_calc
                                     , AmountPackTotal_calc
 
+                                    , AmountNext
+                                    , AmountNextSecond
+                                    , AmountNextTotal
+
+                                    , AmountPackNext
+                                    , AmountPackNextSecond
+                                    , AmountPackNextTotal
+
+                                    , AmountPackNext_calc
+                                    , AmountPackNextSecond_calc
+                                    , AmountPackNextTotal_calc
+                                        
                                     , Amount_result
                                     , Amount_result_two
                                     , Amount_result_pack
@@ -1370,6 +1481,18 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
            , tmpMI.AmountPackSecond_calc                           :: TFloat AS AmountSecondPack_calc   -- ***План для упаковки (с прихода с пр-ва, расчет)
            , (tmpMI.AmountPack_calc + tmpMI.AmountPackSecond_calc) :: TFloat AS AmountPackTotal_calc    -- ***План для упаковки(ИТОГО, расчет)
 
+           , tmpMI.AmountNext                                              :: TFloat AS AmountNext
+           , tmpMI.AmountNextSecond                                        :: TFloat AS AmountNextSecond
+           , (tmpMI.AmountNext + tmpMI.AmountNextSecond)                   :: TFloat AS AmountNextTotal
+
+           , tmpMI.AmountPackNext                                          :: TFloat AS AmountPackNext
+           , tmpMI.AmountPackNextSecond                                    :: TFloat AS AmountPackNextSecond
+           , (tmpMI.AmountPackNext + tmpMI.AmountPackNextSecond)           :: TFloat AS AmountPackNextTotal
+
+           , tmpMI.AmountPackNext_calc                                     :: TFloat AS AmountPackNext_calc
+           , tmpMI.AmountPackNextSecond_calc                               :: TFloat AS AmountPackNextSecond_calc
+           , (tmpMI.AmountPackNext_calc + tmpMI.AmountPackNextSecond_calc) :: TFloat AS AmountPackNextTotal_calc
+           
              -- Amount_result
            , CAST (tmpMI.Remains + tmpMI.Remains_pack + tmpMI.Remains_CEH                         - tmpMI.AmountPartnerPrior - tmpMI.AmountPartnerPriorPromo - tmpMI.AmountPartner - tmpMI.AmountPartnerPromo AS NUMERIC (16, 1)) :: TFloat AS Amount_result
              -- Amount_result_two
@@ -1520,7 +1643,13 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 17.11.17         *
  13.11.17         *
+ 29.10.17         *
+ 19.06.15                                        * all
+ 31.03.15         * add GoodsGroupNameFull
+ 02.03.14         * add AmountRemains, AmountPartner, AmountForecast, AmountForecastOrder
+ 06.06.14                                                       *
 */
 
 -- тест

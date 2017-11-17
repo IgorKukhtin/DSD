@@ -207,7 +207,7 @@ BEGIN
                                                                    
                                         INNER JOIN MovementItem AS MI_Sale ON MI_Sale.Id = MIFloat_PromoMovement.MovementItemId
                                                                           AND MI_Sale.IsErased = FALSE
-                                        INNER JOIN tmpMI_Promo ON tmpMI_Promo.GoodsId = MI_Sale.ObjectId
+                                        INNER JOIN (SELECT DISTINCT tmpMI_Promo.GoodsId  FROM tmpMI_Promo) AS tmpMI_Promo ON tmpMI_Promo.GoodsId = MI_Sale.ObjectId
                                         
                                         INNER JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MI_Sale.MovementId 
                                                                             AND Movement_Sale.DescId = zc_Movement_Sale()
