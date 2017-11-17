@@ -209,6 +209,7 @@ type
     bbUpdateAmountNext_to: TdxBarButton;
     bbUpdateAmountNextSecond_to: TdxBarButton;
     bbUpdateAmountNextSecondCEH_to: TdxBarButton;
+    actPrintRemains2: TdsdPrintAction;
   private
     { Private declarations }
   public

@@ -34,6 +34,16 @@ RETURNS TABLE (Id                   Integer
              , AmountTotal          TFloat
              , AmountTotal_Sh       TFloat
 
+               -- План2 выдачи с Ост. на УПАК
+             , AmountNext               TFloat
+             , AmountNext_Sh            TFloat
+               -- План2 выдачи с Цеха на УПАК
+             , AmountNextSecond         TFloat
+             , AmountNextSecond_Sh      TFloat
+               -- План2 выдачи ИТОГО на УПАК
+             , AmountNextTotal          TFloat
+             , AmountNextTotal_Sh       TFloat
+
                -- ПРИОРИТЕТ
              , Num                  Integer
 
@@ -59,6 +69,20 @@ RETURNS TABLE (Id                   Integer
              , AmountPackTotal_total      TFloat
              , AmountPackTotal_total_sh   TFloat
 
+               -- ИТОГО по Child - План2 для упаковки (с остатка, факт)
+             , AmountPackNext_total           TFloat
+             , AmountPackNext_total_sh        TFloat
+               -- ИТОГО по Child - План2 для упаковки (с прихода с пр-ва, факт)
+             , AmountPackNextSecond_total     TFloat
+             , AmountPackNextSecond_total_sh  TFloat
+               -- ИТОГО по Child - План2 для упаковки (ИТОГО, факт)
+             , AmountPackNextTotal_total      TFloat
+             , AmountPackNextTotal_total_sh   TFloat
+
+               -- ИТОГО по Child - План+План2 для упаковки (ИТОГО, факт)
+             , AmountPackAllTotal_total      TFloat
+             , AmountPackAllTotal_total_sh   TFloat
+             
              , Weight_Child               TFloat
 
                -- План для упаковки (с остатка, факт)
@@ -71,6 +95,19 @@ RETURNS TABLE (Id                   Integer
              , AmountPackTotal_Child      TFloat
              , AmountPackTotal_Child_Sh   TFloat
              
+               -- План2 для упаковки (с остатка, факт)
+             , AmountPackNext_Child           TFloat
+             , AmountPackNext_Child_Sh        TFloat
+               -- План2 для упаковки (с прихода с пр-ва, факт)
+             , AmountPackNextSecond_Child     TFloat
+             , AmountPackNextSecond_Child_Sh  TFloat
+               -- План2 для упаковки (ИТОГО, факт)
+             , AmountPackNextTotal_Child      TFloat
+             , AmountPackNextTotal_Child_Sh   TFloat
+               -- План+План2 для упаковки (ИТОГО, факт)
+             , AmountPackAllTotal_Child      TFloat
+             , AmountPackAllTotal_Child_Sh   TFloat
+                
                -- Результат ПОСЛЕ УПАКОВКИ
              , Amount_result_pack_Child     TFloat
                -- Ост. в днях (по пр. !!!ИЛИ!!! по зв.) - ПОСЛЕ УПАКОВКИ
@@ -130,6 +167,12 @@ BEGIN
                                         , SUM (_Result_Child.AmountPackTotal)  AS AmountPackTotal
                                         , SUM (CASE WHEN ObjectFloat_Weight.ValueData > 0 AND _Result_Child.MeasureId = zc_Measure_Sh() THEN _Result_Child.AmountPack       / ObjectFloat_Weight.ValueData ELSE 0 END :: Integer) AS AmountPack_sh
                                         , SUM (CASE WHEN ObjectFloat_Weight.ValueData > 0 AND _Result_Child.MeasureId = zc_Measure_Sh() THEN _Result_Child.AmountPackSecond / ObjectFloat_Weight.ValueData ELSE 0 END :: Integer) AS AmountPackSecond_sh
+
+                                        , SUM (_Result_Child.AmountPackNext)       AS AmountPackNext
+                                        , SUM (_Result_Child.AmountPackNextSecond) AS AmountPackNextSecond
+                                        , SUM (_Result_Child.AmountPackNextTotal)  AS AmountPackNextTotal
+                                        , SUM (CASE WHEN ObjectFloat_Weight.ValueData > 0 AND _Result_Child.MeasureId = zc_Measure_Sh() THEN _Result_Child.AmountPackNext       / ObjectFloat_Weight.ValueData ELSE 0 END :: Integer) AS AmountPackNext_sh
+                                        , SUM (CASE WHEN ObjectFloat_Weight.ValueData > 0 AND _Result_Child.MeasureId = zc_Measure_Sh() THEN _Result_Child.AmountPackNextSecond / ObjectFloat_Weight.ValueData ELSE 0 END :: Integer) AS AmountPackNextSecond_sh
                                    FROM _Result_Child
                                         LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                                               ON ObjectFloat_Weight.ObjectId = _Result_Child.GoodsId
@@ -141,6 +184,8 @@ BEGIN
                                    WHERE _Result_Child.AmountPack       <> 0
                                       OR _Result_Child.AmountPackSecond <> 0
                                       OR _Result_Child.Income_PACK_from <> 0
+                                      OR _Result_Child.AmountPackNext       <> 0
+                                      OR _Result_Child.AmountPackNextSecond <> 0
                                    GROUP BY _Result_Child.KeyId
                                   )
            SELECT _Result_Master.Id
@@ -161,6 +206,16 @@ BEGIN
                   -- План выдачи ИТОГО на УПАК
                 , _Result_Master.AmountTotal
                 , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND _Result_Master.MeasureId = zc_Measure_Sh() THEN (_Result_Master.Amount       / ObjectFloat_Weight.ValueData) :: Integer + (_Result_Master.AmountSecond / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountTotal_Sh
+
+                  -- План2 выдачи с Ост. на УПАК
+                , _Result_Master.AmountNext
+                , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND _Result_Master.MeasureId = zc_Measure_Sh() THEN (_Result_Master.AmountNext   / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountNext_Sh
+                  -- План2 выдачи с Цеха на УПАК
+                , _Result_Master.AmountNextSecond
+                , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND _Result_Master.MeasureId = zc_Measure_Sh() THEN (_Result_Master.AmountNextSecond / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountNextSecond_Sh
+                  -- План2 выдачи ИТОГО на УПАК
+                , _Result_Master.AmountNextTotal
+                , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND _Result_Master.MeasureId = zc_Measure_Sh() THEN (_Result_Master.AmountNext       / ObjectFloat_Weight.ValueData) :: Integer + (_Result_Master.AmountNextSecond / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountNextTotal_Sh
 
                   -- ПРИОРИТЕТ
                 , _Result_Master.Num
@@ -185,8 +240,22 @@ BEGIN
                 , COALESCE (tmpChild_total.AmountPackSecond_sh, 0)  :: TFloat AS AmountPackSecond_total_sh
                   -- ИТОГО по Child - План для упаковки (ИТОГО, факт)
                 , COALESCE (tmpChild_total.AmountPackTotal, 0)      :: TFloat AS AmountPackTotal_total
-                , (COALESCE (tmpChild_total.AmountPackSecond_sh, 0) + COALESCE (tmpChild_total.AmountPackSecond_sh, 0))   :: TFloat AS AmountPackTotal_total_sh
+                , (COALESCE (tmpChild_total.AmountPack_sh, 0) + COALESCE (tmpChild_total.AmountPackSecond_sh, 0))   :: TFloat AS AmountPackTotal_total_sh
 
+                  -- ИТОГО по Child - План2 для упаковки (с остатка, факт)
+                , COALESCE (tmpChild_total.AmountPackNext, 0)           :: TFloat AS AmountPackNext_total
+                , COALESCE (tmpChild_total.AmountPackNext_sh, 0)        :: TFloat AS AmountPackNext_total_sh
+                  -- ИТОГО по Child - План2 для упаковки (с прихода с пр-ва, факт)
+                , COALESCE (tmpChild_total.AmountPackNextSecond, 0)     :: TFloat AS AmountPackNextSecond_total
+                , COALESCE (tmpChild_total.AmountPackNextSecond_sh, 0)  :: TFloat AS AmountPackNextSecond_total_sh
+                  -- ИТОГО по Child - План2 для упаковки (ИТОГО, факт)
+                , COALESCE (tmpChild_total.AmountPackNextTotal, 0)      :: TFloat AS AmountPackNextTotal_total
+                , (COALESCE (tmpChild_total.AmountPackNext_sh, 0) + COALESCE (tmpChild_total.AmountPackNextSecond_sh, 0))   :: TFloat AS AmountPackNextTotal_total_sh
+                  -- ИТОГО по Child - План+План2 для упаковки (ИТОГО, факт)
+                , (COALESCE (tmpChild_total.AmountPackTotal, 0)+COALESCE (tmpChild_total.AmountPackNextTotal, 0))      :: TFloat AS AmountPackAllTotal_total
+                , (COALESCE (tmpChild_total.AmountPack_sh, 0) + COALESCE (tmpChild_total.AmountPackSecond_sh, 0)+ COALESCE (tmpChild_total.AmountPackNext_sh, 0) + COALESCE (tmpChild_total.AmountPackNextSecond_sh, 0))   :: TFloat AS AmountPackAllTotal_total_sh
+                
+                                
                 , COALESCE (ObjectFloat_Weight_Child.ValueData, 0) :: TFloat  AS Weight_Child
 
                   -- План для упаковки (с остатка, факт)
@@ -199,6 +268,20 @@ BEGIN
                 , _Result_Child.AmountPackTotal   AS AmountPackTotal_Child
                 , CASE WHEN ObjectFloat_Weight_Child.ValueData > 0 AND _Result_Child.MeasureId = zc_Measure_Sh() THEN (_Result_Child.AmountPack       / ObjectFloat_Weight_Child.ValueData) :: Integer + (_Result_Child.AmountPackSecond / ObjectFloat_Weight_Child.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountPackTotal_Child_Sh
                 
+                -- План2 для упаковки (с остатка, факт)
+                , _Result_Child.AmountPackNext        AS AmountPackNext_Child
+                , CASE WHEN ObjectFloat_Weight_Child.ValueData > 0 AND _Result_Child.MeasureId = zc_Measure_Sh() THEN (_Result_Child.AmountPackNext       / ObjectFloat_Weight_Child.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountPackNext_Child_Sh
+                  -- План2 для упаковки (с прихода с пр-ва, факт)
+                , _Result_Child.AmountPackNextSecond  AS AmountPackNextSecond_Child
+                , CASE WHEN ObjectFloat_Weight_Child.ValueData > 0 AND _Result_Child.MeasureId = zc_Measure_Sh() THEN (_Result_Child.AmountPackNextSecond / ObjectFloat_Weight_Child.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountPackNextSecond_Child_Sh
+                  -- План2 для упаковки (ИТОГО, факт)
+                , _Result_Child.AmountPackNextTotal   AS AmountPackNextTotal_Child
+                , CASE WHEN ObjectFloat_Weight_Child.ValueData > 0 AND _Result_Child.MeasureId = zc_Measure_Sh() THEN (_Result_Child.AmountPackNext       / ObjectFloat_Weight_Child.ValueData) :: Integer + (_Result_Child.AmountPackNextSecond / ObjectFloat_Weight_Child.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountPackNextTotal_Child_Sh
+
+                  -- План+План2 для упаковки (ИТОГО, факт)
+                , (_Result_Child.AmountPackTotal+_Result_Child.AmountPackNextTotal)  :: TFloat  AS AmountPackAllTotal_Child
+                , CASE WHEN ObjectFloat_Weight_Child.ValueData > 0 AND _Result_Child.MeasureId = zc_Measure_Sh() THEN ((_Result_Child.AmountPack / ObjectFloat_Weight_Child.ValueData) :: Integer + (_Result_Child.AmountPackSecond / ObjectFloat_Weight_Child.ValueData) :: Integer + _Result_Child.AmountPackNext / ObjectFloat_Weight_Child.ValueData) :: Integer + (_Result_Child.AmountPackNextSecond / ObjectFloat_Weight_Child.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountPackAllTotal_Child_Sh
+               
                   -- Результат ПОСЛЕ УПАКОВКИ
                 , _Result_Child.Amount_result_pack    AS Amount_result_pack_Child
                   -- Ост. в днях (по пр. !!!ИЛИ!!! по зв.) - ПОСЛЕ УПАКОВКИ
@@ -230,6 +313,8 @@ BEGIN
               OR COALESCE (_Result_Child.AmountPackTotal, 0)   <> 0 -- План для упаковки (ИТОГО, факт)
               OR COALESCE (_Result_Child.Income_PACK_from, 0)  <> 0 -- ФАКТ - Перемещение с Цеха Упаковки
               OR COALESCE (_Result_Child.Amount_result_pack, 0) < 0 -- Результат ПОСЛЕ УПАКОВКИ
+              OR COALESCE (_Result_Master.AmountNextTotal, 0)      <> 0 -- План2 выдачи ИТОГО на УПАК (факт)
+              OR COALESCE (_Result_Child.AmountPackNextTotal, 0)   <> 0 -- План2 для упаковки (ИТОГО, факт)
           ;
 
 END;
@@ -239,6 +324,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.11.17         *
  14.11.17                                        *
 */
 
