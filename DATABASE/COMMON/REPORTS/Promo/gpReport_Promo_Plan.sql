@@ -170,7 +170,7 @@ BEGIN
                           FROM tmpMovement_Promo AS Movement_Promo
                                LEFT OUTER JOIN MovementItem_PromoGoods_View AS MI_PromoGoods
                                                                             ON MI_PromoGoods.MovementId = Movement_Promo.Id
-                                                                           AND MI_PromoGoods.IsErASed = FALSE
+                                                                           AND MI_PromoGoods.IsErased = FALSE
                                LEFT JOIN MovementItemFloat AS MIFloat_Plan1
                                                            ON MIFloat_Plan1.MovementItemId = MI_PromoGoods.Id
                                                           AND MIFloat_Plan1.DescId = zc_MIFloat_Plan1()
@@ -200,17 +200,18 @@ BEGIN
                                         , MI_Sale.ObjectId                                                          AS GoodsId
                                         , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)                             AS GoodsKindId
                                         , SUM (COALESCE (MI_Sale.Amount, 0))                                        AS Amount
-                                        , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0))                        AS AmountPartner 
                                    FROM tmpMovement_Promo
-                                        LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
-                                                                    ON MIFloat_PromoMovement.ValueData ::Integer = tmpMovement_Promo.Id
-                                                                   AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+                                        INNER JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                                                     ON MIFloat_PromoMovement.ValueData ::Integer = tmpMovement_Promo.Id
+                                                                    AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
                                                                    
-                                        LEFT JOIN MovementItem AS MI_Sale ON MI_Sale.Id = MIFloat_PromoMovement.MovementItemId
-                                        INNER JOIN tmpMI_Promo ON tmpMI_Promo.GoodsId = MI_Sale.ObjectId
+                                        INNER JOIN MovementItem AS MI_Sale ON MI_Sale.Id = MIFloat_PromoMovement.MovementItemId
+                                                                          AND MI_Sale.IsErased = FALSE
+                                        INNER JOIN (SELECT DISTINCT tmpMI_Promo.GoodsId  FROM tmpMI_Promo) AS tmpMI_Promo ON tmpMI_Promo.GoodsId = MI_Sale.ObjectId
                                         
                                         INNER JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MI_Sale.MovementId 
                                                                             AND Movement_Sale.DescId = zc_Movement_Sale()
+                                                                            AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
                                                                             AND Movement_Sale.OperDate BETWEEN inStartDate AND inEndDate
                                                                             
                                         INNER JOIN MovementLinkObject AS MovementLinkObject_From
@@ -221,9 +222,7 @@ BEGIN
                                         LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                          ON MILinkObject_GoodsKind.MovementItemId = MI_Sale.Id
                                                                         AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                                        LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                                                    ON MIFloat_AmountPartner.MovementItemId = MI_Sale.Id
-                                                                   AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+
                                    GROUP BY tmpMovement_Promo.Id
                                           , Movement_Sale.OperDate
                                           , MI_Sale.ObjectId

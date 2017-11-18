@@ -1,13 +1,16 @@
 -- Function: gpUpdateMI_OrderInternal_AmountPack()
 
 DROP FUNCTION IF EXISTS gpUpdateMI_OrderInternal_AmountPack (Integer, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdateMI_OrderInternal_AmountPack (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdateMI_OrderInternal_AmountPack(
-    IN inId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inAmountPack          TFloat    , -- Количество
-    IN inAmountPackSecond    TFloat    , -- Количество дозаказ
-    IN inSession             TVarChar    -- сессия пользователя
+    IN inId                      Integer   , -- Ключ объекта <Элемент документа>
+    IN inMovementId              Integer   , -- Ключ объекта <Документ>
+    IN inAmountPack              TFloat    , -- Количество
+    IN inAmountPackSecond        TFloat    , -- Количество дозаказ
+    IN inAmountPackNext          TFloat    , -- Количество
+    IN inAmountPackNextSecond    TFloat    , -- Количество дозаказ
+    IN inSession                 TVarChar    -- сессия пользователя
 )
 RETURNS VOID
 AS
@@ -28,6 +31,11 @@ BEGIN
      -- сохранили свойство <Количество дозаказ>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackSecond(), inId, inAmountPackSecond);
      
+     -- сохранили свойство <Количество заказ на УПАК план2>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPack(), inId, inAmountPack);
+     -- сохранили свойство <Количество дозаказ план2>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackSecond(), inId, inAmountPackSecond);
+     
      
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
@@ -43,8 +51,9 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 17.11.17         *
  16.11.17         *
 */
 
 -- тест
--- SELECT * FROM gpUpdateMI_OrderInternal_Amounts (inId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
+-- 

@@ -48,6 +48,11 @@ BEGIN
             , _Result_Master.AmountSecond
             , _Result_Master.AmountTotal
 
+            , _Result_Master.AmountNext
+            , _Result_Master.AmountNextSecond
+            , _Result_Master.AmountNextTotal
+            , _Result_Master.AmountAllTotal
+
             , _Result_Master.Amount_result
             , _Result_Master.Amount_result_two
             , _Result_Master.Amount_result_pack
@@ -111,6 +116,14 @@ BEGIN
             , _Result_Child.AmountPack_calc
             , _Result_Child.AmountSecondPack_calc
             , _Result_Child.AmountPackTotal_calc
+
+            , _Result_Child.AmountPackNext
+            , _Result_Child.AmountPackNextSecond
+            , _Result_Child.AmountPackNextTotal
+
+            , _Result_Child.AmountPackNext_calc
+            , _Result_Child.AmountPackNextSecond_calc
+            , _Result_Child.AmountPackNextTotal_calc
 
             , _Result_Child.Amount_result_two
             , _Result_Child.Amount_result_pack
@@ -181,6 +194,18 @@ BEGIN
             , _Result_ChildTotal.AmountSecondPack_calc
             , _Result_ChildTotal.AmountPackTotal_calc
 
+            , _Result_ChildTotal.AmountNext
+            , _Result_ChildTotal.AmountNextSecond
+            , _Result_ChildTotal.AmountNextTotal
+
+            , _Result_ChildTotal.AmountPackNext
+            , _Result_ChildTotal.AmountPackNextSecond
+            , _Result_ChildTotal.AmountPackNextTotal
+
+            , _Result_ChildTotal.AmountPackNext_calc
+            , _Result_ChildTotal.AmountPackNextSecond_calc
+            , _Result_ChildTotal.AmountPackNextTotal_calc
+
             , _Result_ChildTotal.Amount_result
             , _Result_ChildTotal.Amount_result_two
             , _Result_ChildTotal.Amount_result_pack
@@ -240,6 +265,7 @@ ALTER FUNCTION gpSelect_MI_OrderInternalPackRemains (Integer, Boolean, Boolean, 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 17.11.17         *
  13.11.17         *
  29.10.17         *
  19.06.15                                        * all

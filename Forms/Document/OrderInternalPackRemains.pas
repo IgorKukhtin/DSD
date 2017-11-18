@@ -190,6 +190,26 @@ type
     actUpdateChildDS: TdsdUpdateDataSet;
     AmountForecastOrder: TcxGridDBColumn;
     AmountForecastOrderPromo_noERR: TcxGridDBColumn;
+    spUpdateMI_master: TdsdStoredProc;
+    mactUpdateAmountNext_to: TMultiAction;
+    mactUpdateAmountNextSecond_to: TMultiAction;
+    mactUpdateAmountNextSecondCEH_to: TMultiAction;
+    actUpdateAmountNextAll_to: TdsdExecStoredProc;
+    mactUpdateAmountNextGrid_to: TMultiAction;
+    actUpdateAmountNext_to: TdsdExecStoredProc;
+    actUpdateAmountNextSecondAll_to: TdsdExecStoredProc;
+    actUpdateAmountNextSecond_to: TdsdExecStoredProc;
+    mactUpdateAmountNextSecondGrid_to: TMultiAction;
+    mactUpdateAmountNextSecondCEHGrid_to: TMultiAction;
+    actUpdateAmountNextSecondCEH_to: TdsdExecStoredProc;
+    spUpdateAmountNext_to: TdsdStoredProc;
+    spUpdateAmountNextSecond_to: TdsdStoredProc;
+    spUpdateAmountNextSecondCEH_to: TdsdStoredProc;
+    spUpdateAmountNextAll_to: TdsdStoredProc;
+    bbUpdateAmountNext_to: TdxBarButton;
+    bbUpdateAmountNextSecond_to: TdxBarButton;
+    bbUpdateAmountNextSecondCEH_to: TdxBarButton;
+    actPrintRemains2: TdsdPrintAction;
   private
     { Private declarations }
   public
