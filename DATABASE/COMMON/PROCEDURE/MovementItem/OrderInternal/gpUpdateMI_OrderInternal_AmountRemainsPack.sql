@@ -22,6 +22,8 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Дата докумаента <%> не сохранена.<%>', inOperDate, (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
     END IF;
 
+    -- !!!пересчет Рецептур, временно захардкодил!!!
+    PERFORM lpUpdate_Object_Receipt_Parent (0, 0, 0);
 
     -- таблица
     CREATE TEMP TABLE tmpContainer (ContainerId Integer, GoodsId Integer, GoodsKindId Integer, Amount_start TFloat) ON COMMIT DROP;

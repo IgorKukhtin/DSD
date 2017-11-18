@@ -1,12 +1,16 @@
 -- Function: gpUpdateMI_OrderInternal_Amount_to()
 
 DROP FUNCTION IF EXISTS gpUpdateMI_OrderInternal_Amount_to (Integer, Integer, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdateMI_OrderInternal_Amount_to (Integer, Integer, TFloat, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdateMI_OrderInternal_Amount_to (Integer, Integer, TFloat, TFloat, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdateMI_OrderInternal_Amount_to(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inAmount              TFloat    , -- 
-    IN inIsClear             Boolean   , -- 
+    IN inAmount              TFloat    , --
+    IN inAmountTwo           TFloat    , --
+    IN inIsClear             Boolean   , --
+    IN inNumber              Integer   , --
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -20,8 +24,35 @@ BEGIN
 
     IF inIsClear = TRUE
     THEN
-        -- обнулили
-        UPDATE MovementItem SET Amount = 0 WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master();
+        IF inNumber = 1
+        THEN
+            -- обнулили - Amount
+            UPDATE MovementItem SET Amount = 0 WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master();
+
+        ELSEIF inNumber = 2
+        THEN
+            -- обнулили - AmountSecond
+            PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSecond(),  MovementItem.Id, 0)
+            FROM MovementItem
+            WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master();
+
+        ELSEIF inNumber = 3
+        THEN
+            -- обнулили - AmountNext
+            PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountNext(),  MovementItem.Id, 0)
+            FROM MovementItem
+            WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master();
+
+        ELSEIF inNumber = 4
+        THEN
+            -- обнулили - AmountNextSecond
+            PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountNextSecond(),  MovementItem.Id, 0)
+            FROM MovementItem
+            WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master();
+
+        ELSE
+            RAISE EXCEPTION 'Ошибка.Не определено параметр <inNumber> = %.', inNumber;
+        END IF;
 
         -- пересчитали Итоговые суммы по накладной
         PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
@@ -40,8 +71,37 @@ BEGIN
             RAISE EXCEPTION 'Ошибка.Не определено значение <Вид товара>.';
         END IF;
 
-        -- сохранили
-        UPDATE MovementItem SET Amount = inAmount WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master() AND MovementItem.Id = inId;
+
+        IF inNumber = 1
+        THEN
+            -- сохранили - Amount
+            UPDATE MovementItem SET Amount = inAmount WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master() AND MovementItem.Id = inId;
+
+        ELSEIF inNumber = 2
+        THEN
+            -- сохранили - AmountSecond
+            PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSecond(), inId, inAmount);
+
+        ELSEIF inNumber = 3
+        THEN
+            IF inAmount > COALESCE (inAmountTwo, 0)
+            THEN
+                -- сохранили - AmountNext
+                PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountNext(), inId, inAmount - COALESCE (inAmountTwo, 0));
+            END IF;
+
+        ELSEIF inNumber = 4
+        THEN
+            IF inAmount > COALESCE (inAmountTwo, 0)
+            THEN
+                -- сохранили - AmountNextSecond
+                PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountNextSecond(), inId, inAmount - COALESCE (inAmountTwo, 0));
+            END IF;
+
+        ELSE
+            RAISE EXCEPTION 'Ошибка.Не определено параметр <inNumber> = %.', inNumber;
+        END IF;
+
 
         -- пересчитали Итоговые суммы по накладной
         PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);

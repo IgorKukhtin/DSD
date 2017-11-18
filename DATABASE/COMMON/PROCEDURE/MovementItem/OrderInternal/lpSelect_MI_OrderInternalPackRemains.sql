@@ -516,6 +516,7 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
                                 , Amount_result_two         TFloat
                                 , Amount_result_pack        TFloat
 
+                                  -- ПРИОРИТЕТ
                                 , Num                       Integer
 
                                 , Income_CEH                TFloat
@@ -992,6 +993,9 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
                                         , AmountPackNextSecond_calc  TFloat
                                         , AmountPackNextTotal_calc   TFloat
                                         
+                                        , AmountPackAllTotal         TFloat
+                                        , AmountPackAllTotal_calc    TFloat
+
                                         , Amount_result_two          TFloat
                                         , Amount_result_pack         TFloat
 
@@ -1051,6 +1055,9 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
                                         , AmountPackNext_calc
                                         , AmountPackNextSecond_calc
                                         , AmountPackNextTotal_calc
+
+                                        , AmountPackAllTotal
+                                        , AmountPackAllTotal_calc
 
                                         , Amount_result_two
                                         , Amount_result_pack
@@ -1136,6 +1143,10 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
            , tmpMI.AmountPackNext_calc                                     :: TFloat AS AmountPackNext_calc
            , tmpMI.AmountPackNextSecond_calc                               :: TFloat AS AmountPackNextSecond_calc
            , (tmpMI.AmountPackNext_calc + tmpMI.AmountPackNextSecond_calc) :: TFloat AS AmountPackNextTotal_calc
+           
+             -- *** итого План1 + План2 ПР-ВО на УПАК
+           , (tmpMI.AmountPack + tmpMI.AmountPackSecond + tmpMI.AmountPackNext + tmpMI.AmountPackNextSecond)                     :: TFloat AS AmountPackAllTotal
+           , (tmpMI.AmountPack_calc + tmpMI.AmountPackSecond_calc + tmpMI.AmountPackNext_calc + tmpMI.AmountPackNextSecond_calc) :: TFloat AS AmountPackAllTotal_calc
 
            -- Amount_result
            -- , CAST (tmpMI.Remains + tmpMI.Remains_pack + tmpMI.Remains_CEH                      - tmpMI.AmountPartnerPrior - tmpMI.AmountPartnerPriorPromo - tmpMI.AmountPartner - tmpMI.AmountPartnerPromo AS NUMERIC (16, 1)) :: TFloat AS Amount_result
@@ -1469,35 +1480,35 @@ CREATE TEMP TABLE _Result_Master (Id         Integer
                   ELSE FALSE
              END :: Boolean AS isCheck_basis
 
-           , tmpMI.Amount                        :: TFloat AS Amount        -- ***План выдачи с Ост. на УПАК
-           , tmpMI.AmountSecond                  :: TFloat AS AmountSecond  -- ***План выдачи с Цеха на УПАК
-           , (tmpMI.Amount + tmpMI.AmountSecond) :: TFloat AS AmountTotal   -- ***План выдачи ИТОГО на УПАК
+           , tmpMI.Amount                        :: TFloat AS Amount        -- ***План1 выдали с Ост. на УПАК
+           , tmpMI.AmountSecond                  :: TFloat AS AmountSecond  -- ***План1 выдали с Цеха на УПАК
+           , (tmpMI.Amount + tmpMI.AmountSecond) :: TFloat AS AmountTotal   -- ***План1 ИТОГО выдали на УПАК
 
-           , tmpMI.AmountPack                            :: TFloat AS AmountPack         -- ***План для упаковки (с остатка, факт)
-           , tmpMI.AmountPackSecond                      :: TFloat AS AmountPackSecond   -- ***План для упаковки (с прихода с пр-ва, факт)
-           , (tmpMI.AmountPack + tmpMI.AmountPackSecond) :: TFloat AS AmountPackTotal    -- ***План для упаковки (ИТОГО, факт)
+           , tmpMI.AmountPack                            :: TFloat AS AmountPack         -- ***План1 заказ факт (с Ост.) - Приход с УПАК
+           , tmpMI.AmountPackSecond                      :: TFloat AS AmountPackSecond   -- ***План1 заказ факт (с Цеха) - Приход с УПАК
+           , (tmpMI.AmountPack + tmpMI.AmountPackSecond) :: TFloat AS AmountPackTotal    -- ***План1 ИТОГО заказ факт - Приход с УПАК
 
-           , tmpMI.AmountPack_calc                                 :: TFloat AS AmountPack_calc         -- ***План для упаковки (с остатка, расчет)
-           , tmpMI.AmountPackSecond_calc                           :: TFloat AS AmountSecondPack_calc   -- ***План для упаковки (с прихода с пр-ва, расчет)
-           , (tmpMI.AmountPack_calc + tmpMI.AmountPackSecond_calc) :: TFloat AS AmountPackTotal_calc    -- ***План для упаковки(ИТОГО, расчет)
+           , tmpMI.AmountPack_calc                                 :: TFloat AS AmountPack_calc         -- ***План1 заказ расч. (с Ост.) - Приход с УПАК
+           , tmpMI.AmountPackSecond_calc                           :: TFloat AS AmountSecondPack_calc   -- ***План1 заказ расч. (с Цеха) - Приход с УПАК
+           , (tmpMI.AmountPack_calc + tmpMI.AmountPackSecond_calc) :: TFloat AS AmountPackTotal_calc    -- ***План1 ИТОГО заказ расч. - Приход с УПАК
 
-           , tmpMI.AmountNext                                              :: TFloat AS AmountNext
-           , tmpMI.AmountNextSecond                                        :: TFloat AS AmountNextSecond
-           , (tmpMI.AmountNext + tmpMI.AmountNextSecond)                   :: TFloat AS AmountNextTotal
+           , tmpMI.AmountNext                                              :: TFloat AS AmountNext        -- ***План2 выдали с Ост. на УПАК
+           , tmpMI.AmountNextSecond                                        :: TFloat AS AmountNextSecond  -- ***План2 выдали с Цеха на УПАК
+           , (tmpMI.AmountNext + tmpMI.AmountNextSecond)                   :: TFloat AS AmountNextTotal   -- ***План2 ИТОГО выдали на УПАК
 
-           , tmpMI.AmountPackNext                                          :: TFloat AS AmountPackNext
-           , tmpMI.AmountPackNextSecond                                    :: TFloat AS AmountPackNextSecond
-           , (tmpMI.AmountPackNext + tmpMI.AmountPackNextSecond)           :: TFloat AS AmountPackNextTotal
+           , tmpMI.AmountPackNext                                          :: TFloat AS AmountPackNext       -- ***План2 заказ факт (с Ост.) - Приход с УПАК
+           , tmpMI.AmountPackNextSecond                                    :: TFloat AS AmountPackNextSecond -- ***План2 заказ факт (с Цеха) - Приход с УПАК
+           , (tmpMI.AmountPackNext + tmpMI.AmountPackNextSecond)           :: TFloat AS AmountPackNextTotal  -- ***План2 ИТОГО заказ факт - Приход с УПАК
 
-           , tmpMI.AmountPackNext_calc                                     :: TFloat AS AmountPackNext_calc
-           , tmpMI.AmountPackNextSecond_calc                               :: TFloat AS AmountPackNextSecond_calc
-           , (tmpMI.AmountPackNext_calc + tmpMI.AmountPackNextSecond_calc) :: TFloat AS AmountPackNextTotal_calc
+           , tmpMI.AmountPackNext_calc                                     :: TFloat AS AmountPackNext_calc       -- ***План2 заказ расч. (с Ост.) - Приход с УПАК
+           , tmpMI.AmountPackNextSecond_calc                               :: TFloat AS AmountPackNextSecond_calc -- ***План2 заказ расч. (с Цеха) - Приход с УПАК 
+           , (tmpMI.AmountPackNext_calc + tmpMI.AmountPackNextSecond_calc) :: TFloat AS AmountPackNextTotal_calc  -- ***План2 ИТОГО заказ расч. - Приход с УПАК
            
-             -- Amount_result
+             -- РЕЗУЛЬТАТ c пр-вом
            , CAST (tmpMI.Remains + tmpMI.Remains_pack + tmpMI.Remains_CEH                         - tmpMI.AmountPartnerPrior - tmpMI.AmountPartnerPriorPromo - tmpMI.AmountPartner - tmpMI.AmountPartnerPromo AS NUMERIC (16, 1)) :: TFloat AS Amount_result
-             -- Amount_result_two
+             -- РЕЗУЛЬТАТ без пр-ва
            , CAST (tmpMI.Remains + tmpMI.Remains_pack + 0                                         - tmpMI.AmountPartnerPrior - tmpMI.AmountPartnerPriorPromo - tmpMI.AmountPartner - tmpMI.AmountPartnerPromo AS NUMERIC (16, 1)) :: TFloat AS Amount_result_two
-             -- Amount_result_pack
+             -- РЕЗУЛЬТАТ ***УПАК
            , CAST (tmpMI.Remains + tmpMI.Remains_pack + tmpMI.AmountPack + tmpMI.AmountPackSecond - tmpMI.AmountPartnerPrior - tmpMI.AmountPartnerPriorPromo - tmpMI.AmountPartner - tmpMI.AmountPartnerPromo AS NUMERIC (16, 1)) :: TFloat AS Amount_result_pack
 
              -- Приход пр-во (ФАКТ)
