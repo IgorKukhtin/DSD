@@ -1447,6 +1447,7 @@
           end
           object chAmountPackAllTotal_calc: TcxGridDBColumn
             Caption = '*'#1048#1058#1054#1043#1054' '#1089' '#1059#1055#1040#1050' '#1088#1072#1089#1095'. ('#1055'1+'#1055'2)'
+            DataBinding.FieldName = 'AmountPackAllTotal_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
