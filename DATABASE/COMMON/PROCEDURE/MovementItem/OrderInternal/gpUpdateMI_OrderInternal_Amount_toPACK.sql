@@ -60,7 +60,7 @@ BEGIN
         -- Данные - master
         CREATE TEMP TABLE _tmpMI_master (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, Amount TFloat, AmountSecond TFloat, AmountNext TFloat, AmountNextSecond TFloat) ON COMMIT DROP;
         -- Данные - master
-        INSERT INTO _tmpMI_master (MovementItemId, GoodsId, GoodsKindId, Amount, AmountSecond)
+        INSERT INTO _tmpMI_master (MovementItemId, GoodsId, GoodsKindId, Amount, AmountSecond, AmountNext, AmountNextSecond)
            SELECT MovementItem.Id                                    AS MovementItemId
                 , MovementItem.ObjectId                              AS GoodsId
                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)      AS GoodsKindId
@@ -101,7 +101,7 @@ BEGIN
              AND MovementItem.isErased   = FALSE
              AND COALESCE (MILinkObject_GoodsComplete.ObjectId, 0) = 0 -- т.е. НЕ упакованный
              AND COALESCE (MIFloat_ContainerId.ValueData, 0)       = 0 -- отбросили остатки на ПР-ВЕ
-             AND (MovementItem.Amount > 0 OR MIFloat_AmountSecond.ValueData > 0)
+             AND (MovementItem.Amount > 0 OR MIFloat_AmountSecond.ValueData > 0 OR MIFloat_AmountNext.ValueData > 0 OR MIFloat_AmountNextSecond.ValueData > 0)
           ;
 
 
@@ -122,7 +122,7 @@ BEGIN
                                 , AmountNextSecondResult
                                  )
             WITH -- то что в Мастере (факт Расход на упаковку)
-                 tmpMI_master AS (SELECT _tmpMI_master.GoodsId, _tmpMI_master.GoodsKindId, SUM (_tmpMI_master.Amount) AS Amount
+                 tmpMI_master AS (SELECT _tmpMI_master.GoodsId, _tmpMI_master.GoodsKindId, SUM (_tmpMI_master.Amount) AS Amount, SUM (_tmpMI_master.AmountNext) AS AmountNext
                                   FROM _tmpMI_master
                                   GROUP BY _tmpMI_master.GoodsId, _tmpMI_master.GoodsKindId
                                  )
@@ -133,8 +133,10 @@ BEGIN
                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)  AS GoodsKindId
 
                   -- <Нач остаток> МИНУС <то что в Мастере (факт Расход на упаковку)> МИНУС <неотгруж. заявка (итого)> МИНУС <сегодня заявка (итого)>
-                , (CASE WHEN MIFloat_AmountRemains.ValueData > 0 THEN MIFloat_AmountRemains.ValueData ELSE 0 END
-                 - CASE WHEN MIFloat_AmountRemains.ValueData > 0 AND MIFloat_AmountRemains.ValueData >= tmpMI_master.Amount THEN tmpMI_master.Amount ELSE 0 END
+                , (CASE WHEN COALESCE (MIFloat_AmountRemains.ValueData, 0) - COALESCE (tmpMI_master.Amount, 0) - COALESCE (tmpMI_master.AmountNext, 0) > 0
+                             THEN COALESCE (MIFloat_AmountRemains.ValueData, 0) - COALESCE (tmpMI_master.Amount, 0) - COALESCE (tmpMI_master.AmountNext, 0)
+                        ELSE 0
+                   END
                  - COALESCE (MIFloat_AmountPartnerPrior.ValueData, 0) - COALESCE (MIFloat_AmountPartnerPriorPromo.ValueData, 0)
                  - CASE WHEN inIsPackNext       = TRUE
                           OR inIsPackNextSecond = TRUE
@@ -409,7 +411,7 @@ BEGIN
 
 
          -- ТРЕТИЙ
-         IF inIsPackSecond = TRUE
+         IF inIsPackNext = TRUE
          THEN
              vbNumber:= 0;
              WHILE vbNumber < inNumber
@@ -418,7 +420,7 @@ BEGIN
                  FROM (WITH -- сумма - сколько уже распределили
                             tmpMI_summ AS (SELECT _tmpMI_Child.GoodsId_complete         AS GoodsId_master
                                                 , _tmpMI_Child.GoodsKindId_complete     AS GoodsKindId_master
-                                                , SUM (_tmpMI_Child.AmountNextResult) AS AmountResult
+                                                , SUM (_tmpMI_Child.AmountNextResult)   AS AmountResult
                                            FROM _tmpMI_Child
                                            WHERE _tmpMI_Child.AmountResult <> 0 OR _tmpMI_Child.AmountSecondResult <> 0 OR _tmpMI_Child.AmountNextResult <> 0 OR _tmpMI_Child.AmountNextSecondResult <> 0
                                            GROUP BY _tmpMI_Child.GoodsId_complete
@@ -429,7 +431,7 @@ BEGIN
                                                , _tmpMI_master.GoodsId     AS GoodsId_master
                                                , _tmpMI_master.GoodsKindId AS GoodsKindId_master
                                                  -- сколько осталось для распределения
-                                               , _tmpMI_master.AmountSecond - COALESCE (tmpMI_summ.AmountResult, 0) AS Amount_master
+                                               , _tmpMI_master.AmountNext - COALESCE (tmpMI_summ.AmountResult, 0) AS Amount_master
                                                  -- сколько надо на vbNumber ДНЕЙ
                                                , vbNumber * _tmpMI_Child.CountForecast - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult + _tmpMI_Child.AmountNextResult + _tmpMI_Child.AmountNextSecondResult)
                                                   AS Amount_result
@@ -440,7 +442,7 @@ BEGIN
                                                                     AND tmpMI_summ.GoodsKindId_master = _tmpMI_master.GoodsKindId
 
                                           WHERE -- если есть что распределять
-                                                _tmpMI_master.AmountSecond - COALESCE (tmpMI_summ.AmountResult, 0) > 0 -- если есть что распределять
+                                                _tmpMI_master.AmountNext - COALESCE (tmpMI_summ.AmountResult, 0) > 0 -- если есть что распределять
                                                 -- если на vbNumber ДНЕЙ ЕСТЬ ПОТРЕБНОСТЬ
                                             AND 0 < vbNumber * _tmpMI_Child.CountForecast - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult + _tmpMI_Child.AmountNextResult + _tmpMI_Child.AmountNextSecondResult)
                                             -- !!!отбросили НАРЕЗКУ!!!
@@ -499,7 +501,7 @@ BEGIN
 
 
          -- ЧЕТВЕРТЫЙ
-         IF inIsPackSecond = TRUE
+         IF inIsPackNextSecond = TRUE
          THEN
              vbNumber:= 0;
              WHILE vbNumber < inNumber
@@ -519,7 +521,7 @@ BEGIN
                                                , _tmpMI_master.GoodsId     AS GoodsId_master
                                                , _tmpMI_master.GoodsKindId AS GoodsKindId_master
                                                  -- сколько осталось для распределения
-                                               , _tmpMI_master.AmountSecond - COALESCE (tmpMI_summ.AmountResult, 0) AS Amount_master
+                                               , _tmpMI_master.AmountNextSecond - COALESCE (tmpMI_summ.AmountResult, 0) AS Amount_master
                                                  -- сколько надо на vbNumber ДНЕЙ
                                                , vbNumber * _tmpMI_Child.CountForecast - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult + _tmpMI_Child.AmountNextResult + _tmpMI_Child.AmountNextSecondResult)
                                                   AS Amount_result
@@ -530,7 +532,7 @@ BEGIN
                                                                     AND tmpMI_summ.GoodsKindId_master = _tmpMI_master.GoodsKindId
 
                                           WHERE -- если есть что распределять
-                                                _tmpMI_master.AmountSecond - COALESCE (tmpMI_summ.AmountResult, 0) > 0 -- если есть что распределять
+                                                _tmpMI_master.AmountNextSecond - COALESCE (tmpMI_summ.AmountResult, 0) > 0 -- если есть что распределять
                                                 -- если на vbNumber ДНЕЙ ЕСТЬ ПОТРЕБНОСТЬ
                                             AND 0 < vbNumber * _tmpMI_Child.CountForecast - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult + _tmpMI_Child.AmountNextResult + _tmpMI_Child.AmountNextSecondResult)
                                             -- !!!отбросили НАРЕЗКУ!!!
@@ -582,7 +584,7 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNextSecond(),      _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountNextSecondResult)
                    , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNextSecond_calc(), _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountNextSecondResult)
              FROM _tmpMI_Child
-             WHERE _tmpMI_Child.AmountSecondResult <> 0
+             WHERE _tmpMI_Child.AmountNextSecondResult <> 0
             ;
 
          END IF;

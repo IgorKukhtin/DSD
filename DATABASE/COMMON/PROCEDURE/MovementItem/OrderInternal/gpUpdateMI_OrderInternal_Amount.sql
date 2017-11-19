@@ -1,23 +1,20 @@
 -- Function: gpUpdateMI_OrderInternal_Amount()
 
-DROP FUNCTION IF EXISTS gpUpdateMI_OrderInternal_AmountSecond_to (Integer, Integer, TFloat, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdateMI_OrderInternal_AmountNextSecond_to (Integer, Integer, TFloat, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdateMI_OrderInternal_AmountNext_to (Integer, Integer, TFloat, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdateMI_OrderInternal_AmountPack_master (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdateMI_OrderInternal_Amounts (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdateMI_OrderInternal_Amount (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdateMI_OrderInternal_Amounts(
+CREATE OR REPLACE FUNCTION gpUpdateMI_OrderInternal_Amount(
     IN inId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inAmount              TFloat    , -- Количество
     IN inAmountSecond        TFloat    , -- Количество дозаказ
     IN inAmountNext          TFloat    , -- Количество
     IN inAmountNextSecond    TFloat    , -- Количество дозаказ
-
+   OUT outAmountAllTotal     TFloat    , -- 
+   OUT outAmountTotal        TFloat    , -- 
+   OUT outAmountNextTotal    TFloat    , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS VOID
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -45,17 +42,20 @@ BEGIN
      -- сохранили свойство <Количество дозаказ>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountNextSecond(), inId, inAmountNextSecond);
      
-     
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
      -- сохранили протокол !!!после изменений!!!
      PERFORM lpInsert_MovementItemProtocol (inId, vbUserId, FALSE);
 
+     -- расчитали Итоговые суммы
+     outAmountTotal    := inAmount + inAmountSecond;
+     outAmountNextTotal:= inAmountNext + inAmountNextSecond;
+     outAmountAllTotal := outAmountTotal + outAmountNextTotal;
+
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

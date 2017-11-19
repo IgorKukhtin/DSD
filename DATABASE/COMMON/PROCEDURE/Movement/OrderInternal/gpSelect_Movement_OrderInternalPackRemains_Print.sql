@@ -28,13 +28,13 @@ RETURNS TABLE (Id                   Integer
                -- ПРИОРИТЕТ
              , Num                  Integer
 
-               -- План выдачи с Ост. на УПАК
+               -- План1 выдачи с Ост. на УПАК
              , Amount               TFloat
              , Amount_Sh            TFloat
-               -- План выдачи с Цеха на УПАК
+               -- План1 выдачи с Цеха на УПАК
              , AmountSecond         TFloat
              , AmountSecond_Sh      TFloat
-               -- План выдачи ИТОГО на УПАК
+               -- План1 выдачи ИТОГО на УПАК
              , AmountTotal          TFloat
              , AmountTotal_Sh       TFloat
 
@@ -47,6 +47,11 @@ RETURNS TABLE (Id                   Integer
                -- План2 выдачи ИТОГО на УПАК
              , AmountNextTotal          TFloat
              , AmountNextTotal_Sh       TFloat
+
+               -- План1 + План2 выдачи ИТОГО на УПАК
+             , AmountAllTotal       TFloat
+             , AmountAllTotal_Sh    TFloat
+             
 
                -- Приход пр-во (ФАКТ)
              , Income_CEH           TFloat
@@ -202,13 +207,13 @@ BEGIN
                   -- ПРИОРИТЕТ
                 , _Result_Master.Num
 
-                  -- План выдачи с Ост. на УПАК
+                  -- План1 выдачи с Ост. на УПАК
                 , _Result_Master.Amount
                 , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND _Result_Master.MeasureId = zc_Measure_Sh() THEN (_Result_Master.Amount       / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END :: TFloat AS Amount_Sh
-                  -- План выдачи с Цеха на УПАК
+                  -- План1 выдачи с Цеха на УПАК
                 , _Result_Master.AmountSecond
                 , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND _Result_Master.MeasureId = zc_Measure_Sh() THEN (_Result_Master.AmountSecond / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountSecond_Sh
-                  -- План выдачи ИТОГО на УПАК
+                  -- План1 выдачи ИТОГО на УПАК
                 , _Result_Master.AmountTotal
                 , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND _Result_Master.MeasureId = zc_Measure_Sh() THEN (_Result_Master.Amount       / ObjectFloat_Weight.ValueData) :: Integer + (_Result_Master.AmountSecond / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountTotal_Sh
 
@@ -221,6 +226,12 @@ BEGIN
                   -- План2 выдачи ИТОГО на УПАК
                 , _Result_Master.AmountNextTotal
                 , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND _Result_Master.MeasureId = zc_Measure_Sh() THEN (_Result_Master.AmountNext       / ObjectFloat_Weight.ValueData) :: Integer + (_Result_Master.AmountNextSecond / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountNextTotal_Sh
+
+                  -- План1 + План2 выдачи ИТОГО на УПАК
+                , (_Result_Master.AmountTotal + _Result_Master.AmountNextTotal) :: TFloat AS AmountAllTotal
+                , (CASE WHEN ObjectFloat_Weight.ValueData > 0 AND _Result_Master.MeasureId = zc_Measure_Sh() THEN (_Result_Master.Amount       / ObjectFloat_Weight.ValueData) :: Integer + (_Result_Master.AmountSecond / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END
+                 + CASE WHEN ObjectFloat_Weight.ValueData > 0 AND _Result_Master.MeasureId = zc_Measure_Sh() THEN (_Result_Master.AmountNext       / ObjectFloat_Weight.ValueData) :: Integer + (_Result_Master.AmountNextSecond / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END
+                  ) :: TFloat AS AmountAllTotal_Sh
 
                   -- Приход пр-во (ФАКТ)
                 , _Result_Master.Income_CEH
@@ -255,7 +266,7 @@ BEGIN
                 , (COALESCE (tmpChild_total.AmountPackNext_sh, 0) + COALESCE (tmpChild_total.AmountPackNextSecond_sh, 0))   :: TFloat AS AmountPackNextTotal_total_sh
                   -- ИТОГО по Child - План+План2 для упаковки (ИТОГО, факт)
                 , (COALESCE (tmpChild_total.AmountPackTotal, 0)+COALESCE (tmpChild_total.AmountPackNextTotal, 0))      :: TFloat AS AmountPackAllTotal_total
-                , (COALESCE (tmpChild_total.AmountPack_sh, 0) + COALESCE (tmpChild_total.AmountPackSecond_sh, 0)+ COALESCE (tmpChild_total.AmountPackNext_sh, 0) + COALESCE (tmpChild_total.AmountPackNextSecond_sh, 0))   :: TFloat AS AmountPackAllTotal_total_sh
+                , (COALESCE (tmpChild_total.AmountPack_sh, 0) + COALESCE (tmpChild_total.AmountPackSecond_sh, 0) + COALESCE (tmpChild_total.AmountPackNext_sh, 0) + COALESCE (tmpChild_total.AmountPackNextSecond_sh, 0))   :: TFloat AS AmountPackAllTotal_total_sh
                 
                                 
                 , COALESCE (ObjectFloat_Weight_Child.ValueData, 0) :: TFloat  AS Weight_Child
@@ -298,9 +309,11 @@ BEGIN
               LEFT JOIN tmpChild_total ON tmpChild_total.KeyId = _Result_Master.KeyId
               LEFT JOIN (SELECT *
                          FROM _Result_Child
-                         WHERE _Result_Child.AmountPack       <> 0
-                            OR _Result_Child.AmountPackSecond <> 0
-                            OR _Result_Child.Income_PACK_from <> 0
+                         WHERE _Result_Child.AmountPack           <> 0
+                            OR _Result_Child.AmountPackSecond     <> 0
+                            OR _Result_Child.AmountPackNext       <> 0
+                            OR _Result_Child.AmountPackNextSecond <> 0
+                            OR _Result_Child.Income_PACK_from     <> 0
                         ) AS _Result_Child ON _Result_Child.KeyId = _Result_Master.KeyId
 
               LEFT JOIN ObjectFloat AS ObjectFloat_Weight
@@ -310,15 +323,22 @@ BEGIN
               LEFT JOIN ObjectFloat AS ObjectFloat_Weight_Child
                                     ON ObjectFloat_Weight_Child.ObjectId = _Result_Child.GoodsId
                                    AND ObjectFloat_Weight_Child.DescId = zc_ObjectFloat_Goods_Weight()
-           WHERE COALESCE (_Result_Master.AmountTotal, 0)      <> 0 -- План выдачи ИТОГО на УПАК (факт)
+           WHERE COALESCE (_Result_Master.AmountTotal, 0)      <> 0 -- План1 выдачи ИТОГО на УПАК (факт)
+              OR COALESCE (_Result_Master.AmountNextTotal, 0)  <> 0 -- План2 выдачи ИТОГО на УПАК (факт)
+
               OR COALESCE (_Result_Master.Income_PACK_to, 0)   <> 0 -- ИТОГО по Child - ФАКТ - Перемещение на Цех Упаковки
-              OR COALESCE (_Result_Child.AmountPackTotal, 0)   <> 0 -- План для упаковки (ИТОГО, факт)
               OR COALESCE (_Result_Child.Income_PACK_from, 0)  <> 0 -- ФАКТ - Перемещение с Цеха Упаковки
-              OR COALESCE (_Result_Child.Amount_result_pack, 0) < 0 -- Результат ПОСЛЕ УПАКОВКИ
-              OR COALESCE (_Result_Master.AmountNextTotal, 0)      <> 0 -- План2 выдачи ИТОГО на УПАК (факт)
+
+              OR COALESCE (_Result_Child.AmountPackTotal, 0)       <> 0 -- План1 для упаковки (ИТОГО, факт)
               OR COALESCE (_Result_Child.AmountPackNextTotal, 0)   <> 0 -- План2 для упаковки (ИТОГО, факт)
-              OR COALESCE (tmpChild_total.AmountPack, 0)       <> 0 -- ИТОГО по Child - План для упаковки (с остатка, факт)
-              OR COALESCE (tmpChild_total.AmountPackSecond, 0) <> 0 -- ИТОГО по Child - План для упаковки (с прихода с пр-ва, факт)
+
+              OR COALESCE (_Result_Child.Amount_result_pack, 0) < 0 -- Результат ПОСЛЕ УПАКОВКИ
+
+              OR COALESCE (tmpChild_total.AmountPack, 0)       <> 0 -- ИТОГО по Child - План1 для упаковки (с остатка, факт)
+              OR COALESCE (tmpChild_total.AmountPackSecond, 0) <> 0 -- ИТОГО по Child - План1 для упаковки (с прихода с пр-ва, факт)
+
+              OR COALESCE (tmpChild_total.AmountPackNext, 0)       <> 0 -- ИТОГО по Child - План2 для упаковки (с остатка, факт)
+              OR COALESCE (tmpChild_total.AmountPackNextSecond, 0) <> 0 -- ИТОГО по Child - План2 для упаковки (с прихода с пр-ва, факт)
           ;
 
 END;

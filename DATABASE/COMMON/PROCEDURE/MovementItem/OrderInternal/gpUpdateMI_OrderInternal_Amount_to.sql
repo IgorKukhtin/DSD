@@ -61,12 +61,12 @@ BEGIN
     THEN
 
         -- проверка
-        IF COALESCE (inGoodsId, 0) = 0
+        IF NOT EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.DescId = zc_MI_Master() AND MI.Id = inId AND MI.ObjectId > 0)
         THEN
             RAISE EXCEPTION 'Ошибка.Не определено значение <Товар>.';
         END IF;
-        -- проверка + временно захардкодил
-        IF NOT EXISTS (SELECT 1 FROM MovementItemLinkObject AS MILO WHERE MILO.DescId = zc_MILinkObject_GoodsKind() AND MovementItemId = inMovementId AND ObjectId IN (SELECT tmp.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS tmp)) -- ЦЕХ колбаса+дел-сы
+        -- проверка
+        IF NOT EXISTS (SELECT 1 FROM MovementItemLinkObject AS MILO WHERE MILO.DescId = zc_MILinkObject_GoodsKind() AND MILO.MovementItemId = inId AND MILO.ObjectId > 0)
         THEN
             RAISE EXCEPTION 'Ошибка.Не определено значение <Вид товара>.';
         END IF;

@@ -3719,7 +3719,7 @@
       InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1083#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'2 '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. - '#1053#1045' '#1091#1087#1072#1082#1086#1074#1072#1085#1085#1099#1081'>'
       Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'2 '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. - '#1053#1045' '#1091#1087#1072#1082#1086#1074#1072#1085#1085#1099#1081'>'
       Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'2 '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. - '#1053#1045' '#1091#1087#1072#1082#1086#1074#1072#1085#1085#1099#1081'>'
-      ImageIndex = 71
+      ImageIndex = 70
     end
     object mactUpdateAmountNextGrid_to: TMultiAction
       Category = 'DSNext'
@@ -3806,7 +3806,7 @@
           Action = actUpdateAmountNextSecondAll_to
         end
         item
-          Action = mactUpdateAmountSecondGrid_to
+          Action = mactUpdateAmountNextSecondGrid_to
         end
         item
           Action = actRefreshPrice
@@ -3817,7 +3817,7 @@
       InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1083#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'2 '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' ('#1057#1045#1043#1054#1044#1053#1071')>'
       Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'2 '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' ('#1057#1045#1043#1054#1044#1053#1071')>'
       Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'2 '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' ('#1057#1045#1043#1054#1044#1053#1071')>'
-      ImageIndex = 73
+      ImageIndex = 71
     end
     object mactUpdateAmountNextSecondGrid_to: TMultiAction
       Category = 'DSNext'
@@ -3850,12 +3850,12 @@
       Category = 'DSNext'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdateAmountNextSecond_to
+      StoredProc = spUpdateAmountNextSecondAll_to
       StoredProcList = <
         item
-          StoredProc = spUpdateAmountNextSecond_to
+          StoredProc = spUpdateAmountNextSecondAll_to
         end>
-      Caption = 'actUpdateAmountSecondAll_to'
+      Caption = 'actUpdateAmountNextSecondAll_to'
       Hint = 'actUpdateAmountNextSecondAll_to'
     end
     object mactUpdateAmountNextSecondCEH_to: TMultiAction
@@ -3878,7 +3878,7 @@
       InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1083#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'2 '#1080#1079' <'#1055#1088#1080#1093#1086#1076' '#1087#1088'-'#1074#1086' ('#1060#1040#1050#1058')>'
       Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'2 '#1080#1079' <'#1055#1088#1080#1093#1086#1076' '#1087#1088'-'#1074#1086' ('#1060#1040#1050#1058')>'
       Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'2 '#1080#1079' <'#1055#1088#1080#1093#1086#1076' '#1087#1088'-'#1074#1086' ('#1060#1040#1050#1058')>'
-      ImageIndex = 73
+      ImageIndex = 71
     end
     object mactUpdateAmountNextSecondCEHGrid_to: TMultiAction
       Category = 'DSNext'
@@ -3984,10 +3984,10 @@
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdateAmountSecond_to
+      StoredProc = spUpdateAmountSecondAll_to
       StoredProcList = <
         item
-          StoredProc = spUpdateAmountSecond_to
+          StoredProc = spUpdateAmountSecondAll_to
         end>
       Caption = 'actUpdateAmountSecondAll_to'
       Hint = 'actUpdateAmountSecondAll_to'
@@ -4012,7 +4012,7 @@
       InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1083#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'1 '#1080#1079' <'#1055#1088#1080#1093#1086#1076' '#1087#1088'-'#1074#1086' ('#1060#1040#1050#1058')>'
       Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'1 '#1080#1079' <'#1055#1088#1080#1093#1086#1076' '#1087#1088'-'#1074#1086' ('#1060#1040#1050#1058')>'
       Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'1 '#1080#1079' <'#1055#1088#1080#1093#1086#1076' '#1087#1088'-'#1074#1086' ('#1060#1040#1050#1058')>'
-      ImageIndex = 70
+      ImageIndex = 69
     end
     object mactUpdateAmountSecondCEHGrid_to: TMultiAction
       Category = 'DSDLib'
@@ -4038,8 +4038,8 @@
         item
           StoredProc = spUpdateAmountSecondCEH_to
         end>
-      Caption = 'actUpdateAmountSecond_to'
-      Hint = 'actUpdateAmountSecond_to'
+      Caption = 'actUpdateAmountSecondCEH_to'
+      Hint = 'actUpdateAmountSecondCEH_to'
     end
     object actUpdateAmount_toPACK: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -4349,7 +4349,6 @@
     object bbtUpdateAmountSecondCEH_to: TdxBarButton
       Action = mactUpdateAmountSecondCEH_to
       Category = 0
-      ImageIndex = 69
     end
     object bbUpdateAmount_toPACK: TdxBarButton
       Action = actUpdateAmount_toPACK
@@ -4366,17 +4365,14 @@
     object bbUpdateAmountNext_to: TdxBarButton
       Action = mactUpdateAmountNext_to
       Category = 0
-      ImageIndex = 70
     end
     object bbUpdateAmountNextSecond_to: TdxBarButton
       Action = mactUpdateAmountNextSecond_to
       Category = 0
-      ImageIndex = 71
     end
     object bbUpdateAmountNextSecondCEH_to: TdxBarButton
       Action = mactUpdateAmountNextSecondCEH_to
       Category = 0
-      ImageIndex = 71
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -4743,7 +4739,7 @@
     Top = 344
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpUpdateMI_OrderInternal_AmountPack_master'
+    StoredProcName = 'gpUpdateMI_OrderInternal_Amount'
     Params = <
       item
         Name = 'inId'
@@ -4795,6 +4791,14 @@
         ComponentItem = 'AmountNextSecond'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountAllTotal'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountAllTotal'
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
@@ -5233,7 +5237,7 @@
     Top = 120
   end
   object spUpdateAmountSecondAll_to: TdsdStoredProc
-    StoredProcName = 'gpUpdateMI_OrderInternal_AmountSecond_to'
+    StoredProcName = 'gpUpdateMI_OrderInternal_Amount_to'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -5581,6 +5585,7 @@
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -5601,7 +5606,7 @@
     Top = 192
   end
   object spUpdateAmountNextSecond_to: TdsdStoredProc
-    StoredProcName = 'gpUpdateMI_OrderInternal_AmountNextSecond_to'
+    StoredProcName = 'gpUpdateMI_OrderInternal_Amount_to'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -5713,7 +5718,7 @@
     Top = 224
   end
   object spUpdateAmountNextAll_to: TdsdStoredProc
-    StoredProcName = 'gpUpdateMI_OrderInternal_AmountNext_to'
+    StoredProcName = 'gpUpdateMI_OrderInternal_Amount_to'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -5763,7 +5768,7 @@
     Top = 23
   end
   object spUpdateAmountNextSecondAll_to: TdsdStoredProc
-    StoredProcName = 'gpUpdateMI_OrderInternal_AmountNext_to'
+    StoredProcName = 'gpUpdateMI_OrderInternal_Amount_to'
     DataSets = <>
     OutputType = otResult
     Params = <
