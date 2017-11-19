@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderInternalPackRemains_Print(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id                   Integer
+             , KeyId                TVarChar
              , GoodsId              Integer
              , GoodsCode            Integer
              , GoodsName            TVarChar
@@ -23,6 +24,9 @@ RETURNS TABLE (Id                   Integer
              , GoodsGroupNameFull   TVarChar
 
              , Weight               TFloat
+
+               -- ПРИОРИТЕТ
+             , Num                  Integer
 
                -- План выдачи с Ост. на УПАК
              , Amount               TFloat
@@ -43,9 +47,6 @@ RETURNS TABLE (Id                   Integer
                -- План2 выдачи ИТОГО на УПАК
              , AmountNextTotal          TFloat
              , AmountNextTotal_Sh       TFloat
-
-               -- ПРИОРИТЕТ
-             , Num                  Integer
 
                -- Приход пр-во (ФАКТ)
              , Income_CEH           TFloat
@@ -189,6 +190,7 @@ BEGIN
                                    GROUP BY _Result_Child.KeyId
                                   )
            SELECT _Result_Master.Id
+                , _Result_Master.KeyId
                 , _Result_Master.GoodsId, _Result_Master.GoodsCode, _Result_Master.GoodsName
                 , _Result_Master.GoodsId_basis, _Result_Master.GoodsCode_basis, _Result_Master.GoodsName_basis
                 , _Result_Master.GoodsKindId, _Result_Master.GoodsKindName
@@ -196,6 +198,9 @@ BEGIN
                 , _Result_Master.GoodsGroupNameFull
 
                 , COALESCE (ObjectFloat_Weight.ValueData, 0) :: TFloat AS Weight
+
+                  -- ПРИОРИТЕТ
+                , _Result_Master.Num
 
                   -- План выдачи с Ост. на УПАК
                 , _Result_Master.Amount
@@ -216,9 +221,6 @@ BEGIN
                   -- План2 выдачи ИТОГО на УПАК
                 , _Result_Master.AmountNextTotal
                 , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND _Result_Master.MeasureId = zc_Measure_Sh() THEN (_Result_Master.AmountNext       / ObjectFloat_Weight.ValueData) :: Integer + (_Result_Master.AmountNextSecond / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountNextTotal_Sh
-
-                  -- ПРИОРИТЕТ
-                , _Result_Master.Num
 
                   -- Приход пр-во (ФАКТ)
                 , _Result_Master.Income_CEH
@@ -315,6 +317,8 @@ BEGIN
               OR COALESCE (_Result_Child.Amount_result_pack, 0) < 0 -- Результат ПОСЛЕ УПАКОВКИ
               OR COALESCE (_Result_Master.AmountNextTotal, 0)      <> 0 -- План2 выдачи ИТОГО на УПАК (факт)
               OR COALESCE (_Result_Child.AmountPackNextTotal, 0)   <> 0 -- План2 для упаковки (ИТОГО, факт)
+              OR COALESCE (tmpChild_total.AmountPack, 0)       <> 0 -- ИТОГО по Child - План для упаковки (с остатка, факт)
+              OR COALESCE (tmpChild_total.AmountPackSecond, 0) <> 0 -- ИТОГО по Child - План для упаковки (с прихода с пр-ва, факт)
           ;
 
 END;
