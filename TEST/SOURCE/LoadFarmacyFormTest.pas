@@ -60,6 +60,7 @@ type
     procedure LoadLossFormTest;
     procedure LoadMakerFormTest;
     procedure LoadMargineCategory;
+    procedure LoadMarginCategoryMovement;
     procedure LoadMarginReport;
     procedure LoadMeasureFormTest;
     procedure LoadMemberFormTest;
@@ -436,6 +437,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategory_TotalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMarginCategory_TotalForm');
 
+end;
+
+procedure TLoadFormTest.LoadMarginCategoryMovement;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategory_MovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMarginCategory_MovementForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategoryJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMarginCategoryJournalForm');
 end;
 
 procedure TLoadFormTest.LoadMarginReport;

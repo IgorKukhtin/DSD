@@ -1,13 +1,13 @@
 -- Function: gpSelect_Movement_Promo()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_MarginCategory (TDateTime, TDateTime, Boolean, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_MarginCategory (TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_MarginCategory(
     IN inStartDate         TDateTime , --
     IN inEndDate           TDateTime , --
     IN inIsErased          Boolean ,
     IN inPeriodForOperDate Boolean ,
-    IN inJuridicalBasisId  Integer ,
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id               Integer     --Идентификатор
@@ -36,6 +36,9 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
+    -- проверка прав пользователя на вызов процедуры
+    vbUserId:= lpGetUserBySession (inSession);
+    
     RETURN QUERY
         WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                      UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
