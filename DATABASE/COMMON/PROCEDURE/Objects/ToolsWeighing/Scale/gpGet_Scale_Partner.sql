@@ -323,7 +323,7 @@ BEGIN
                             AND Object_Member.DescId     = zc_Object_Member()
                             AND Object_Member.isErased   = FALSE
                             AND inPartnerCode > 0
-                            AND inInfoMoneyId = -1 * zc_Object_Member()
+                            -- AND inInfoMoneyId = -1 * zc_Object_Member()
                          )
        SELECT tmpMember.ObjectDescId
             , tmpMember.PartnerId
@@ -336,7 +336,7 @@ BEGIN
             , Object_PriceList.ObjectCode          AS PriceListCode
             , Object_PriceList.ValueData           AS PriceListName
 
-            , NULL :: Integer AS ContractId
+            , (-1 * zc_Object_Member()) :: Integer AS ContractId
             , tmpMember.UnitCode             AS ContractCode
             , tmpMember.UnitCode :: TVarChar AS ContractNumber
             , tmpMember.UnitName             AS ContractTagName

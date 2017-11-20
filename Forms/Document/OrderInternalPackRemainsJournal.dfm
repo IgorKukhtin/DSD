@@ -6,7 +6,7 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1089
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -405,8 +405,8 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
         item
           StoredProc = spSelectPrintRemains
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1047#1072#1103#1074#1082#1080' ('#1086#1089#1090#1072#1090#1082#1080')'
-      Hint = #1055#1077#1095#1072#1090#1100
+      Caption = #1055#1077#1095#1072#1090#1100' '#1047#1072#1103#1074#1082#1072' ('#1048#1090#1086#1075#1086')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1047#1072#1103#1074#1082#1072' ('#1048#1090#1086#1075#1086')'
       ImageIndex = 16
       DataSets = <
         item

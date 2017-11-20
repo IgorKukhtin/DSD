@@ -1,3 +1,4 @@
+     -- Результат - master
 -- Function: gpSelect_MI_OrderInternalPackRemains()
 
 DROP FUNCTION IF EXISTS gpSelect_MI_OrderInternalPackRemains (Integer, Boolean, Boolean, TVarChar);
@@ -125,6 +126,9 @@ BEGIN
             , _Result_Child.AmountPackNextSecond_calc
             , _Result_Child.AmountPackNextTotal_calc
 
+            , _Result_Child.AmountPackAllTotal
+            , _Result_Child.AmountPackAllTotal_calc
+
             , _Result_Child.Amount_result_two
             , _Result_Child.Amount_result_pack
 
@@ -182,32 +186,44 @@ BEGIN
             , _Result_ChildTotal.GoodsGroupNameFull
             , _Result_ChildTotal.isCheck_basis
 
+              -- План1 + План2 ИТОГО выдали на УПАК
+            , (_Result_ChildTotal.AmountTotal + _Result_ChildTotal.AmountNextTotal)                   :: TFloat AS AmountAllTotal
+              -- План1 + План2 ИТОГО заказ факт - Приход с УПАК
+            , (_Result_ChildTotal.AmountPackTotal + _Result_ChildTotal.AmountPackNextTotal)           :: TFloat AS AmountPackAllTotal
+              -- План1 + План2 ИТОГО заказ расч. - Приход с УПАК
+            , (_Result_ChildTotal.AmountPackTotal_calc + _Result_ChildTotal.AmountPackNextTotal_calc) :: TFloat AS AmountPackAllTotal_calc
+
+              -- ***План1 выдали на УПАК ...
             , _Result_ChildTotal.Amount
             , _Result_ChildTotal.AmountSecond
             , _Result_ChildTotal.AmountTotal
-
+              -- ***План1 заказ факт - Приход с УПАК
             , _Result_ChildTotal.AmountPack
             , _Result_ChildTotal.AmountPackSecond
             , _Result_ChildTotal.AmountPackTotal
-
+              -- ***План1 заказ расч. - Приход с УПАК
             , _Result_ChildTotal.AmountPack_calc
             , _Result_ChildTotal.AmountSecondPack_calc
             , _Result_ChildTotal.AmountPackTotal_calc
 
+              -- ***План2 выдали на УПАК ...
             , _Result_ChildTotal.AmountNext
             , _Result_ChildTotal.AmountNextSecond
             , _Result_ChildTotal.AmountNextTotal
-
+              -- ***План2 заказ факт - Приход с УПАК
             , _Result_ChildTotal.AmountPackNext
             , _Result_ChildTotal.AmountPackNextSecond
             , _Result_ChildTotal.AmountPackNextTotal
-
+              -- ***План2 заказ расч. - Приход с УПАК
             , _Result_ChildTotal.AmountPackNext_calc
             , _Result_ChildTotal.AmountPackNextSecond_calc
             , _Result_ChildTotal.AmountPackNextTotal_calc
 
+             -- РЕЗУЛЬТАТ c пр-вом
             , _Result_ChildTotal.Amount_result
+             -- РЕЗУЛЬТАТ без пр-ва
             , _Result_ChildTotal.Amount_result_two
+              -- РЕЗУЛЬТАТ ***УПАК
             , _Result_ChildTotal.Amount_result_pack
 
             , _Result_ChildTotal.Income_CEH
@@ -276,4 +292,4 @@ ALTER FUNCTION gpSelect_MI_OrderInternalPackRemains (Integer, Boolean, Boolean, 
 
 -- тест
 -- SELECT * FROM gpSelect_MI_OrderInternalPackRemains (inMovementId:= 1828419, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
--- SELECT * FROM gpSelect_MI_OrderInternalPackRemains (inMovementId:= 1828419, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2') ; FETCH ALL "<unnamed portal 1>";
+-- SELECT * FROM gpSelect_MI_OrderInternalPackRemains (inMovementId:= 1828419, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2'); -- FETCH ALL "<unnamed portal 1>";

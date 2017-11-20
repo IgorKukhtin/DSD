@@ -50,7 +50,6 @@ type
     bbTax: TdxBarButton;
     bbPrintTax_Client: TdxBarButton;
     bbPrintRemains: TdxBarButton;
-    PrintItemsSverkaCDS: TClientDataSet;
     AmountSecond: TcxGridDBColumn;
     spUpdateAmountRemains: TdsdStoredProc;
     spUpdateAmountPartner: TdsdStoredProc;
@@ -185,12 +184,10 @@ type
     actPrintRemains: TdsdPrintAction;
     Amount_result_pack: TcxGridDBColumn;
     AmountPartnerNextPromo: TcxGridDBColumn;
-    spUpdateMI_Amounts: TdsdStoredProc;
-    spUpdateMI_AmountPack: TdsdStoredProc;
+    spInsertUpdateMIChild: TdsdStoredProc;
     actUpdateChildDS: TdsdUpdateDataSet;
     AmountForecastOrder: TcxGridDBColumn;
     AmountForecastOrderPromo_noERR: TcxGridDBColumn;
-    spUpdateMI_master: TdsdStoredProc;
     mactUpdateAmountNext_to: TMultiAction;
     mactUpdateAmountNextSecond_to: TMultiAction;
     mactUpdateAmountNextSecondCEH_to: TMultiAction;
@@ -210,6 +207,9 @@ type
     bbUpdateAmountNextSecond_to: TdxBarButton;
     bbUpdateAmountNextSecondCEH_to: TdxBarButton;
     actPrintRemains2: TdsdPrintAction;
+    chAmountPackAllTotal: TcxGridDBColumn;
+    chAmountPackAllTotal_calc: TcxGridDBColumn;
+    spUpdateAmountNextSecondAll_to: TdsdStoredProc;
   private
     { Private declarations }
   public

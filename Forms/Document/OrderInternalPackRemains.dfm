@@ -3,7 +3,7 @@
   ClientHeight = 639
   ClientWidth = 1020
   ExplicitWidth = 1036
-  ExplicitHeight = 677
+  ExplicitHeight = 674
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -16,6 +16,7 @@
     ClientRectBottom = 513
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
+      Caption = #1056#1072#1089#1093#1086#1076' '#1053#1040' '#1091#1087#1072#1082' / '#1055#1056#1048#1061#1054#1044' '#1089' '#1091#1087#1072#1082
       ExplicitWidth = 1020
       ExplicitHeight = 489
       inherited cxGrid: TcxGrid
@@ -159,6 +160,26 @@
               Format = ',0.####'
               Kind = skSum
               Column = AmountForecastOrderPromo_noERR
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountAllTotal
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountNext
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountNextSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountNextTotal
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -295,6 +316,26 @@
               Format = ',0.####'
               Kind = skSum
               Column = AmountForecastOrderPromo_noERR
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountAllTotal
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountNext
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountNextSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountNextTotal
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -335,6 +376,7 @@
           object UnitName: TcxGridDBColumn [3]
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')'
             DataBinding.FieldName = 'UnitName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -345,6 +387,7 @@
             DataBinding.FieldName = 'isCheck_basis'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1079#1085#1099#1081' '#1058#1086#1074#1072#1088' '#1074' '#1079#1072#1082#1083#1072#1076#1082#1077' '#1055#1060'/'#1043#1055' '#1080' '#1055#1088#1080#1093#1086#1076#1077' '#1085#1072' '#1041#1040#1047#1059
             Options.Editing = False
             Width = 45
           end
@@ -360,6 +403,7 @@
           object GoodsName_basis: TcxGridDBColumn [6]
             Caption = #1058#1086#1074#1072#1088' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')'
             DataBinding.FieldName = 'GoodsName_basis'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -375,23 +419,25 @@
             Width = 70
           end
           object GoodsCode: TcxGridDBColumn [8]
-            Caption = #1050#1086#1076' ('#1085#1072' '#1091#1087#1072#1082'.)'
+            Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072' '#1088#1072#1089#1093#1086#1076' '#1053#1040' '#1091#1087#1072#1082#1086#1074#1082#1091
             Options.Editing = False
             Width = 55
           end
           object GoodsName: TcxGridDBColumn [9]
-            Caption = #1058#1086#1074#1072#1088' ('#1085#1072' '#1091#1087#1072#1082'.)'
+            Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1088#1072#1089#1093#1086#1076' '#1053#1040' '#1091#1087#1072#1082#1086#1074#1082#1091
             Options.Editing = False
             Width = 150
           end
           object GoodsKindName: TcxGridDBColumn [10]
-            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1085#1072' '#1091#1087#1072#1082'.)'
+            Caption = #1042#1080#1076
             DataBinding.FieldName = 'GoodsKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -403,14 +449,16 @@
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1088#1072#1089#1093#1086#1076' '#1053#1040' '#1091#1087#1072#1082#1086#1074#1082#1091
             Options.Editing = False
             Width = 80
           end
           object MeasureName: TcxGridDBColumn [11]
-            Caption = #1045#1076'. '#1080#1079#1084'. ('#1085#1072' '#1091#1087#1072#1082'.)'
+            Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1088#1072#1089#1093#1086#1076' '#1053#1040' '#1091#1087#1072#1082#1086#1074#1082#1091
             Options.Editing = False
             Width = 55
           end
@@ -420,6 +468,7 @@
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -431,6 +480,7 @@
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -442,6 +492,7 @@
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -453,6 +504,7 @@
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -469,41 +521,87 @@
             Options.Editing = False
             Width = 70
           end
-          object Amount: TcxGridDBColumn [17]
-            Caption = '***'#1089' '#1054#1089#1090'. '#1085#1072' '#1059#1055#1040#1050
+          object AmountAllTotal: TcxGridDBColumn [17]
+            Caption = '***'#1048#1058#1054#1043#1054' '#1085#1072' '#1059#1055#1040#1050' ('#1055'1+'#1055'2)'
+            DataBinding.FieldName = 'AmountAllTotal'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085'1 + '#1055#1083#1072#1085'2 '#1048#1058#1054#1043#1054' '#1074#1099#1076#1072#1083#1080' '#1085#1072' '#1059#1055#1040#1050
+            Options.Editing = False
+            Width = 70
+          end
+          object Amount: TcxGridDBColumn [18]
+            Caption = '***'#1055'1 '#1089' '#1054#1089#1090'. '#1085#1072' '#1059#1055#1040#1050
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1083#1072#1085' '#1074#1099#1076#1072#1095#1080' '#1089' '#1054#1089#1090'. '#1085#1072' '#1059#1055#1040#1050
+            HeaderHint = #1055#1083#1072#1085'1 '#1074#1099#1076#1072#1083#1080' '#1089' '#1054#1089#1090'. '#1085#1072' '#1059#1055#1040#1050
             Width = 70
           end
-          object AmountSecond: TcxGridDBColumn [18]
-            Caption = '***'#1089' '#1062#1077#1093#1072' '#1085#1072' '#1059#1055#1040#1050
+          object AmountSecond: TcxGridDBColumn [19]
+            Caption = '***'#1055'1 '#1089' '#1062#1077#1093#1072' '#1085#1072' '#1059#1055#1040#1050
             DataBinding.FieldName = 'AmountSecond'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1083#1072#1085' '#1074#1099#1076#1072#1095#1080' '#1089' '#1062#1077#1093#1072' '#1085#1072' '#1059#1055#1040#1050
+            HeaderHint = #1055#1083#1072#1085'1 '#1074#1099#1076#1072#1083#1080' '#1089' '#1062#1077#1093#1072' '#1085#1072' '#1059#1055#1040#1050
             Width = 70
           end
-          object AmountTotal: TcxGridDBColumn [19]
-            Caption = '***'#1048#1058#1054#1043#1054' '#1085#1072' '#1059#1055#1040#1050
+          object AmountTotal: TcxGridDBColumn [20]
+            Caption = '***'#1055'1 '#1048#1058#1054#1043#1054' '#1085#1072' '#1059#1055#1040#1050
             DataBinding.FieldName = 'AmountTotal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1083#1072#1085' '#1074#1099#1076#1072#1095#1080' '#1048#1058#1054#1043#1054' '#1085#1072' '#1059#1055#1040#1050
+            HeaderHint = #1055#1083#1072#1085'1 '#1048#1058#1054#1043#1054' '#1074#1099#1076#1072#1083#1080' '#1085#1072' '#1059#1055#1040#1050
             Options.Editing = False
             Width = 70
           end
-          object AmountPartnerPriorTotal: TcxGridDBColumn [20]
+          object AmountNext: TcxGridDBColumn [21]
+            Caption = '***'#1055'2 '#1089' '#1054#1089#1090'. '#1085#1072' '#1059#1055#1040#1050
+            DataBinding.FieldName = 'AmountNext'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085'2 '#1074#1099#1076#1072#1083#1080' '#1089' '#1054#1089#1090'. '#1085#1072' '#1059#1055#1040#1050
+            Width = 70
+          end
+          object AmountNextSecond: TcxGridDBColumn [22]
+            Caption = '***'#1055'2 '#1089' '#1062#1077#1093#1072' '#1085#1072' '#1059#1055#1040#1050
+            DataBinding.FieldName = 'AmountNextSecond'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085'2 '#1074#1099#1076#1072#1083#1080' '#1089' '#1062#1077#1093#1072' '#1085#1072' '#1059#1055#1040#1050
+            Width = 70
+          end
+          object AmountNextTotal: TcxGridDBColumn [23]
+            Caption = '***'#1055'2 '#1048#1058#1054#1043#1054' '#1085#1072' '#1059#1055#1040#1050
+            DataBinding.FieldName = 'AmountNextTotal'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085'2 '#1048#1058#1054#1043#1054' '#1074#1099#1076#1072#1083#1080' '#1085#1072' '#1059#1055#1040#1050
+            Options.Editing = False
+            Width = 70
+          end
+          object AmountPartnerPriorTotal: TcxGridDBColumn [24]
             Caption = #1085#1077#1086#1090#1075#1088#1091#1078'. '#1079#1072#1103#1074#1082#1072' ('#1080#1090#1086#1075#1086')'
             DataBinding.FieldName = 'AmountPartnerPriorTotal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -511,52 +609,6 @@
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object AmountNext: TcxGridDBColumn [21]
-            Caption = '2**'#1089' '#1054#1089#1090'. '#1085#1072' '#1059#1055#1040#1050
-            DataBinding.FieldName = 'AmountNext'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1083#1072#1085'2 '#1074#1099#1076#1072#1095#1080' '#1089' '#1054#1089#1090'. '#1085#1072' '#1059#1055#1040#1050
-            Width = 70
-          end
-          object AmountNextSecond: TcxGridDBColumn [22]
-            Caption = '2**'#1089' '#1062#1077#1093#1072' '#1085#1072' '#1059#1055#1040#1050
-            DataBinding.FieldName = 'AmountNextSecond'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1083#1072#1085'2 '#1074#1099#1076#1072#1095#1080' '#1089' '#1062#1077#1093#1072' '#1085#1072' '#1059#1055#1040#1050
-            Width = 70
-          end
-          object AmountNextTotal: TcxGridDBColumn [23]
-            Caption = '2**'#1048#1058#1054#1043#1054' '#1085#1072' '#1059#1055#1040#1050
-            DataBinding.FieldName = 'AmountNextTotal'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1083#1072#1085'2 '#1074#1099#1076#1072#1095#1080' '#1048#1058#1054#1043#1054' '#1085#1072' '#1059#1055#1040#1050
-            Options.Editing = False
-            Width = 70
-          end
-          object AmountAllTotal: TcxGridDBColumn [24]
-            Caption = '***'#1048#1058#1054#1043#1054' '#1085#1072' '#1059#1055#1040#1050' ('#1055#1083#1072#1085' + '#1055#1083#1072#1085'2)'
-            DataBinding.FieldName = 'AmountAllTotal'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1083#1072#1085' '#1074#1099#1076#1072#1095#1080' '#1048#1058#1054#1043#1054' '#1085#1072' '#1059#1055#1040#1050
             Options.Editing = False
             Width = 70
           end
@@ -595,215 +647,7 @@
             Options.Editing = False
             Width = 70
           end
-          object Remains: TcxGridDBColumn [28]
-            Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1053#1045' '#1091#1087#1072#1082'.'
-            DataBinding.FieldName = 'Remains'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1089#1090'. '#1085#1072#1095'. - '#1053#1045' '#1091#1087#1072#1082#1086#1074#1072#1085#1085#1099#1081
-            Options.Editing = False
-            Width = 70
-          end
-          object Remains_pack: TcxGridDBColumn [29]
-            Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1091#1087#1072#1082'.'
-            DataBinding.FieldName = 'Remains_pack'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1089#1090'. '#1085#1072#1095'. '#1091#1087#1072#1082#1086#1074#1072#1085#1085#1099#1081
-            Options.Editing = False
-            Width = 70
-          end
-          object Remains_CEH: TcxGridDBColumn [30]
-            Caption = ' '#1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' ('#1057#1045#1043#1054#1044#1053#1071')'
-            DataBinding.FieldName = 'Remains_CEH'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' ('#1057#1045#1043#1054#1044#1053#1071')'
-            Options.Editing = False
-            Width = 75
-          end
-          object Remains_CEH_Next: TcxGridDBColumn [31]
-            Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' ('#1055#1054#1047#1046#1045')'
-            DataBinding.FieldName = 'Remains_CEH_Next'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object Income_CEH: TcxGridDBColumn [32]
-            Caption = #1055#1088#1080#1093#1086#1076' '#1087#1088'-'#1074#1086' ('#1060#1040#1050#1058')'
-            DataBinding.FieldName = 'Income_CEH'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object CountForecastOrder: TcxGridDBColumn [33]
-            Caption = #1055#1088#1086#1075#1085' 1'#1076' ('#1087#1086' '#1079#1074'.) '#1073#1077#1079' '#1050
-            DataBinding.FieldName = 'CountForecastOrder'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object CountForecast: TcxGridDBColumn [34]
-            Caption = #1055#1088#1086#1075#1085' 1'#1076' ('#1087#1086' '#1087#1088'.) '#1073#1077#1079' '#1050
-            DataBinding.FieldName = 'CountForecast'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object AmountForecastOrder: TcxGridDBColumn [35]
-            Caption = #1055#1088#1086#1075#1085#1086#1079' '#1087#1086' '#1079#1072#1103#1074'. ('#1073#1077#1079' '#1040#1082#1094'.)'
-            DataBinding.FieldName = 'AmountForecastOrder'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object AmountForecastOrderPromo_noERR: TcxGridDBColumn [36]
-            Caption = #1055#1088#1086#1075#1085#1086#1079' '#1087#1086' '#1079#1072#1103#1074'. ('#1040#1082#1094#1080#1080')'
-            DataBinding.FieldName = 'AmountForecastOrderPromo'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object AmountForecastOrderPromo: TcxGridDBColumn [37]
-            Caption = #1055#1088#1086#1075#1085#1086#1079' '#1087#1086' '#1079#1072#1103#1074'. ('#1040#1082#1094#1080#1080'*)'
-            DataBinding.FieldName = 'AmountForecastOrderPromo'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object AmountForecast: TcxGridDBColumn [38]
-            Caption = #1055#1088#1086#1075#1085#1086#1079' '#1087#1086' '#1087#1088#1086#1076'. ('#1073#1077#1079' '#1040#1082#1094'.)'
-            DataBinding.FieldName = 'AmountForecast'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object AmountForecastPromo: TcxGridDBColumn [39]
-            Caption = #1055#1088#1086#1075#1085#1086#1079' '#1087#1086' '#1087#1088#1086#1076'. ('#1040#1082#1094#1080#1080')'
-            DataBinding.FieldName = 'AmountForecastPromo'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object DayCountForecastOrder: TcxGridDBColumn [40]
-            Caption = #1054#1089#1090'. '#1074' '#1076#1085#1103#1093' ('#1087#1086' '#1079#1074'.) '
-            DataBinding.FieldName = 'DayCountForecastOrder'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object DayCountForecast: TcxGridDBColumn [41]
-            Caption = #1054#1089#1090'. '#1074' '#1076#1085#1103#1093' ('#1087#1086' '#1087#1088'.) '
-            DataBinding.FieldName = 'DayCountForecast'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object ReceiptCode_basis: TcxGridDBColumn [42]
-            Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'. ('#1087#1088'.)'
-            DataBinding.FieldName = 'ReceiptCode_basis'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object ReceiptName_basis: TcxGridDBColumn [43]
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')'
-            DataBinding.FieldName = 'ReceiptName_basis'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 90
-          end
-          object ReceiptCode: TcxGridDBColumn [44]
-            Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'. '#1043#1055
-            DataBinding.FieldName = 'ReceiptCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object ReceiptName: TcxGridDBColumn [45]
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099' '#1043#1055
-            DataBinding.FieldName = 'ReceiptName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object Id: TcxGridDBColumn [46]
-            DataBinding.FieldName = 'Id'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object AmountPartner: TcxGridDBColumn [47]
+          object AmountPartner: TcxGridDBColumn [28]
             Caption = #1089#1077#1075#1086#1076#1085#1103' '#1079#1072#1103#1074#1082#1072' ('#1073#1077#1079' '#1040#1082#1094'.)'
             DataBinding.FieldName = 'AmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -815,7 +659,7 @@
             Options.Editing = False
             Width = 70
           end
-          object AmountPartnerPromo: TcxGridDBColumn [48]
+          object AmountPartnerPromo: TcxGridDBColumn [29]
             Caption = #1089#1077#1075#1086#1076#1085#1103' '#1079#1072#1103#1074#1082#1072' ('#1040#1082#1094#1080#1080')'
             DataBinding.FieldName = 'AmountPartnerPromo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -827,7 +671,7 @@
             Options.Editing = False
             Width = 70
           end
-          object AmountPartnerNextPromo: TcxGridDBColumn [49]
+          object AmountPartnerNextPromo: TcxGridDBColumn [30]
             Caption = #1074' '#1090'.'#1095'. '#1079#1072#1074#1090#1088#1072' '#1079#1072#1103#1074#1082#1072' ('#1040#1082#1094#1080#1080')'
             DataBinding.FieldName = 'AmountPartnerNextPromo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -839,6 +683,214 @@
             HeaderHint = #1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086
             Options.Editing = False
             Width = 70
+          end
+          object Remains: TcxGridDBColumn [31]
+            Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1053#1045' '#1091#1087#1072#1082'.'
+            DataBinding.FieldName = 'Remains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1090'. '#1085#1072#1095'. - '#1053#1045' '#1091#1087#1072#1082#1086#1074#1072#1085#1085#1099#1081
+            Options.Editing = False
+            Width = 70
+          end
+          object Remains_pack: TcxGridDBColumn [32]
+            Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1091#1087#1072#1082'.'
+            DataBinding.FieldName = 'Remains_pack'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1090'. '#1085#1072#1095'. '#1091#1087#1072#1082#1086#1074#1072#1085#1085#1099#1081
+            Options.Editing = False
+            Width = 70
+          end
+          object Remains_CEH: TcxGridDBColumn [33]
+            Caption = ' '#1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' ('#1057#1045#1043#1054#1044#1053#1071')'
+            DataBinding.FieldName = 'Remains_CEH'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' ('#1057#1045#1043#1054#1044#1053#1071')'
+            Options.Editing = False
+            Width = 75
+          end
+          object Remains_CEH_Next: TcxGridDBColumn [34]
+            Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' ('#1055#1054#1047#1046#1045')'
+            DataBinding.FieldName = 'Remains_CEH_Next'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Income_CEH: TcxGridDBColumn [35]
+            Caption = #1055#1088#1080#1093#1086#1076' '#1087#1088'-'#1074#1086' ('#1060#1040#1050#1058')'
+            DataBinding.FieldName = 'Income_CEH'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object CountForecastOrder: TcxGridDBColumn [36]
+            Caption = #1055#1088#1086#1075#1085' 1'#1076' ('#1087#1086' '#1079#1074'.) '#1073#1077#1079' '#1050
+            DataBinding.FieldName = 'CountForecastOrder'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object CountForecast: TcxGridDBColumn [37]
+            Caption = #1055#1088#1086#1075#1085' 1'#1076' ('#1087#1086' '#1087#1088'.) '#1073#1077#1079' '#1050
+            DataBinding.FieldName = 'CountForecast'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object AmountForecastOrder: TcxGridDBColumn [38]
+            Caption = #1055#1088#1086#1075#1085#1086#1079' '#1087#1086' '#1079#1072#1103#1074'. ('#1073#1077#1079' '#1040#1082#1094'.)'
+            DataBinding.FieldName = 'AmountForecastOrder'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object AmountForecastOrderPromo_noERR: TcxGridDBColumn [39]
+            Caption = #1055#1088#1086#1075#1085#1086#1079' '#1087#1086' '#1079#1072#1103#1074'. ('#1040#1082#1094#1080#1080')'
+            DataBinding.FieldName = 'AmountForecastOrderPromo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object AmountForecastOrderPromo: TcxGridDBColumn [40]
+            Caption = #1055#1088#1086#1075#1085#1086#1079' '#1087#1086' '#1079#1072#1103#1074'. ('#1040#1082#1094#1080#1080'*)'
+            DataBinding.FieldName = 'AmountForecastOrderPromo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object AmountForecast: TcxGridDBColumn [41]
+            Caption = #1055#1088#1086#1075#1085#1086#1079' '#1087#1086' '#1087#1088#1086#1076'. ('#1073#1077#1079' '#1040#1082#1094'.)'
+            DataBinding.FieldName = 'AmountForecast'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object AmountForecastPromo: TcxGridDBColumn [42]
+            Caption = #1055#1088#1086#1075#1085#1086#1079' '#1087#1086' '#1087#1088#1086#1076'. ('#1040#1082#1094#1080#1080')'
+            DataBinding.FieldName = 'AmountForecastPromo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object DayCountForecastOrder: TcxGridDBColumn [43]
+            Caption = #1054#1089#1090'. '#1074' '#1076#1085#1103#1093' ('#1087#1086' '#1079#1074'.) '
+            DataBinding.FieldName = 'DayCountForecastOrder'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object DayCountForecast: TcxGridDBColumn [44]
+            Caption = #1054#1089#1090'. '#1074' '#1076#1085#1103#1093' ('#1087#1086' '#1087#1088'.) '
+            DataBinding.FieldName = 'DayCountForecast'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object ReceiptCode_basis: TcxGridDBColumn [45]
+            Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'. ('#1087#1088'.)'
+            DataBinding.FieldName = 'ReceiptCode_basis'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object ReceiptName_basis: TcxGridDBColumn [46]
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')'
+            DataBinding.FieldName = 'ReceiptName_basis'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
+          object ReceiptCode: TcxGridDBColumn [47]
+            Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'. '#1043#1055
+            DataBinding.FieldName = 'ReceiptCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object ReceiptName: TcxGridDBColumn [48]
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099' '#1043#1055
+            DataBinding.FieldName = 'ReceiptName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object Id: TcxGridDBColumn [49]
+            DataBinding.FieldName = 'Id'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
           inherited colIsErased: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
@@ -982,6 +1034,46 @@
               Format = ',0.####'
               Kind = skSum
               Column = chAmountPartnerNextPromo
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmountPackAllTotal
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmountPackAllTotal_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmountPackNext
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmountPackNextSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmountPackNextTotal
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmountPackNext_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmountPackNextSecond_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmountPackNextTotal_calc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -1108,6 +1200,46 @@
               Format = ',0.####'
               Kind = skSum
               Column = chAmountPartnerNextPromo
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmountPackAllTotal
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmountPackAllTotal_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmountPackNext
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmountPackNextSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmountPackNextTotal
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmountPackNext_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmountPackNextSecond_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmountPackNextTotal_calc
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1135,11 +1267,12 @@
             Properties.DisplayFormat = '0.;-0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072' '#1055#1056#1048#1061#1054#1044' '#1089' '#1091#1087#1072#1082#1086#1074#1082#1080
             Options.Editing = False
             Width = 55
           end
           object сhGoodsName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+            Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -1150,14 +1283,16 @@
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1056#1048#1061#1054#1044' '#1089' '#1091#1087#1072#1082#1086#1074#1082#1080
             Options.Editing = False
             Width = 200
           end
           object сhGoodsKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+            Caption = #1042#1080#1076
             DataBinding.FieldName = 'GoodsKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1056#1048#1061#1054#1044' '#1089' '#1091#1087#1072#1082#1086#1074#1082#1080
             Options.Editing = False
             Width = 100
           end
@@ -1166,6 +1301,7 @@
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1056#1048#1061#1054#1044' '#1089' '#1091#1087#1072#1082#1086#1074#1082#1080
             Options.Editing = False
             Width = 45
           end
@@ -1175,6 +1311,7 @@
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1197,6 +1334,7 @@
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1213,136 +1351,188 @@
             Options.Editing = False
             Width = 70
           end
+          object chDayCountForecast_calc: TcxGridDBColumn
+            Caption = #1054#1089#1090'. '#1074' '#1076#1085#1103#1093' ***'#1059#1055#1040#1050
+            DataBinding.FieldName = 'DayCountForecast_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object chAmountPackAllTotal: TcxGridDBColumn
+            Caption = '***'#1048#1058#1054#1043#1054' '#1089' '#1059#1055#1040#1050' '#1092#1072#1082#1090' ('#1055'1+'#1055'2)'
+            DataBinding.FieldName = 'AmountPackAllTotal'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085'1 + '#1055#1083#1072#1085'2 '#1048#1058#1054#1043#1054' '#1079#1072#1082#1072#1079' '#1092#1072#1082#1090' - '#1055#1088#1080#1093#1086#1076' '#1089' '#1059#1055#1040#1050
+            Options.Editing = False
+            Width = 70
+          end
           object chAmountPack: TcxGridDBColumn
-            Caption = '***'#1079#1072#1082#1072#1079' '#1085#1072' '#1059#1055#1040#1050' ('#1089' '#1054#1089#1090'. '#1092#1072#1082#1090')'
+            Caption = '***'#1055'1 '#1089' '#1059#1055#1040#1050' '#1092#1072#1082#1090' ('#1089' '#1054#1089#1090'.)'
             DataBinding.FieldName = 'AmountPack'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085'1 '#1079#1072#1082#1072#1079' '#1092#1072#1082#1090' ('#1089' '#1054#1089#1090'.) - '#1055#1088#1080#1093#1086#1076' '#1089' '#1059#1055#1040#1050
             Width = 70
           end
           object chAmountPackSecond: TcxGridDBColumn
-            Caption = '***'#1079#1072#1082#1072#1079' '#1085#1072' '#1059#1055#1040#1050' ('#1089' '#1062#1077#1093#1072' '#1092#1072#1082#1090')'
+            Caption = '***'#1055'1 '#1089' '#1059#1055#1040#1050' '#1092#1072#1082#1090' ('#1089' '#1062#1077#1093#1072')'
             DataBinding.FieldName = 'AmountPackSecond'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085'1 '#1079#1072#1082#1072#1079' '#1092#1072#1082#1090' ('#1089' '#1062#1077#1093#1072') - '#1055#1088#1080#1093#1086#1076' '#1089' '#1059#1055#1040#1050
             Width = 70
           end
           object chAmountPackTotal: TcxGridDBColumn
-            Caption = '***'#1079#1072#1082#1072#1079' '#1085#1072' '#1059#1055#1040#1050' ('#1048#1058#1054#1043#1054' '#1092#1072#1082#1090')'
+            Caption = '***'#1055'1 '#1089' '#1059#1055#1040#1050' '#1092#1072#1082#1090' ('#1048#1058#1054#1043#1054')'
             DataBinding.FieldName = 'AmountPackTotal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object chAmountPack_calc: TcxGridDBColumn
-            Caption = '*'#1079#1072#1082#1072#1079' '#1085#1072' '#1059#1055#1040#1050' ('#1089' '#1054#1089#1090'. '#1088#1072#1089#1095'.)'
-            DataBinding.FieldName = 'AmountPack_calc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object chAmountSecondPack_calc: TcxGridDBColumn
-            Caption = '*'#1079#1072#1082#1072#1079' '#1085#1072' '#1059#1055#1040#1050' ('#1089' '#1062#1077#1093#1072' '#1088#1072#1089#1095'.)'
-            DataBinding.FieldName = 'AmountSecondPack_calc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object chAmountPackTotal_calc: TcxGridDBColumn
-            Caption = '*'#1079#1072#1082#1072#1079' '#1085#1072' '#1059#1055#1040#1050' ('#1048#1058#1054#1043#1054' '#1088#1072#1089#1095'.)'
-            DataBinding.FieldName = 'AmountPackTotal_calc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085'1 '#1048#1058#1054#1043#1054' '#1079#1072#1082#1072#1079' '#1092#1072#1082#1090' - '#1055#1088#1080#1093#1086#1076' '#1089' '#1059#1055#1040#1050
             Options.Editing = False
             Width = 70
           end
           object chAmountPackNext: TcxGridDBColumn
-            Caption = '2**'#1079#1072#1082#1072#1079' '#1085#1072' '#1059#1055#1040#1050' ('#1089' '#1054#1089#1090'. '#1092#1072#1082#1090')'
+            Caption = '***'#1055'2 '#1089' '#1059#1055#1040#1050' '#1092#1072#1082#1090' ('#1089' '#1054#1089#1090'.)'
             DataBinding.FieldName = 'AmountPackNext'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1083#1072#1085'2'
+            HeaderHint = #1055#1083#1072#1085'2 '#1079#1072#1082#1072#1079' '#1092#1072#1082#1090' ('#1089' '#1054#1089#1090'.) - '#1055#1088#1080#1093#1086#1076' '#1089' '#1059#1055#1040#1050
             Width = 70
           end
           object chAmountPackNextSecond: TcxGridDBColumn
-            Caption = '2**'#1079#1072#1082#1072#1079' '#1085#1072' '#1059#1055#1040#1050' ('#1089' '#1062#1077#1093#1072' '#1092#1072#1082#1090')'
+            Caption = '***'#1055'2 '#1089' '#1059#1055#1040#1050' '#1092#1072#1082#1090' ('#1089' '#1062#1077#1093#1072')'
             DataBinding.FieldName = 'AmountPackNextSecond'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1083#1072#1085'2'
+            HeaderHint = #1055#1083#1072#1085'2 '#1079#1072#1082#1072#1079' '#1092#1072#1082#1090' ('#1089' '#1062#1077#1093#1072') - '#1055#1088#1080#1093#1086#1076' '#1089' '#1059#1055#1040#1050
             Width = 70
           end
           object chAmountPackNextTotal: TcxGridDBColumn
-            Caption = '2**'#1079#1072#1082#1072#1079' '#1085#1072' '#1059#1055#1040#1050' ('#1048#1058#1054#1043#1054' '#1092#1072#1082#1090')'
+            Caption = '***'#1055'2 '#1089' '#1059#1055#1040#1050' '#1092#1072#1082#1090' ('#1048#1058#1054#1043#1054')'
             DataBinding.FieldName = 'AmountPackNextTotal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1048#1090#1086#1075#1086' '#1055#1083#1072#1085'2'
+            HeaderHint = #1055#1083#1072#1085'2 '#1048#1058#1054#1043#1054' '#1079#1072#1082#1072#1079' '#1092#1072#1082#1090' - '#1055#1088#1080#1093#1086#1076' '#1089' '#1059#1055#1040#1050
             Options.Editing = False
             Width = 70
           end
-          object chAmountPackNext_calc: TcxGridDBColumn
-            Caption = #1055#1083#1072#1085'2 '#1079#1072#1082#1072#1079' '#1085#1072' '#1059#1055#1040#1050' ('#1089' '#1054#1089#1090'. '#1088#1072#1089#1095'.)'
-            DataBinding.FieldName = 'AmountPackNext_calc'
+          object chAmountPackAllTotal_calc: TcxGridDBColumn
+            Caption = '*'#1048#1058#1054#1043#1054' '#1089' '#1059#1055#1040#1050' '#1088#1072#1089#1095'. ('#1055'1+'#1055'2)'
+            DataBinding.FieldName = 'AmountPackAllTotal_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1083#1072#1085'2'
+            HeaderHint = #1055#1083#1072#1085'1 + '#1055#1083#1072#1085'2 '#1048#1058#1054#1043#1054' '#1079#1072#1082#1072#1079' '#1088#1072#1089#1095'. - '#1055#1088#1080#1093#1086#1076' '#1089' '#1059#1055#1040#1050
             Options.Editing = False
             Width = 70
           end
-          object chAmountPackNextSecond_calc: TcxGridDBColumn
-            Caption = #1055#1083#1072#1085'2 '#1079#1072#1082#1072#1079' '#1085#1072' '#1059#1055#1040#1050' ('#1089' '#1062#1077#1093#1072' '#1088#1072#1089#1095'.)'
-            DataBinding.FieldName = 'AmountPackNextSecond_calc'
+          object chAmountPackTotal_calc: TcxGridDBColumn
+            Caption = '*'#1055'1 '#1089' '#1059#1055#1040#1050' '#1088#1072#1089#1095'. ('#1048#1058#1054#1043#1054')'
+            DataBinding.FieldName = 'AmountPackTotal_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085'1 '#1048#1058#1054#1043#1054' '#1079#1072#1082#1072#1079' '#1088#1072#1089#1095'. - '#1055#1088#1080#1093#1086#1076' '#1089' '#1059#1055#1040#1050
+            Options.Editing = False
+            Width = 70
+          end
+          object chAmountPack_calc: TcxGridDBColumn
+            Caption = '*'#1055'1 '#1089' '#1059#1055#1040#1050' '#1088#1072#1089#1095'. ('#1089' '#1054#1089#1090'.)'
+            DataBinding.FieldName = 'AmountPack_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085'1 '#1079#1072#1082#1072#1079' '#1088#1072#1089#1095'. ('#1089' '#1054#1089#1090'.) - '#1055#1088#1080#1093#1086#1076' '#1089' '#1059#1055#1040#1050
+            Options.Editing = False
+            Width = 70
+          end
+          object chAmountSecondPack_calc: TcxGridDBColumn
+            Caption = '*'#1055'1 '#1089' '#1059#1055#1040#1050' '#1088#1072#1089#1095'. ('#1089' '#1062#1077#1093#1072')'
+            DataBinding.FieldName = 'AmountSecondPack_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085'1 '#1079#1072#1082#1072#1079' '#1088#1072#1089#1095'. ('#1089' '#1062#1077#1093#1072') - '#1055#1088#1080#1093#1086#1076' '#1089' '#1059#1055#1040#1050
             Options.Editing = False
             Width = 70
           end
           object chAmountPackNextTotal_calc: TcxGridDBColumn
-            Caption = #1055#1083#1072#1085'2 '#1079#1072#1082#1072#1079' '#1085#1072' '#1059#1055#1040#1050' ('#1048#1058#1054#1043#1054' '#1088#1072#1089#1095'.)'
+            Caption = '*'#1055'2 '#1089' '#1059#1055#1040#1050' '#1088#1072#1089#1095'. ('#1048#1058#1054#1043#1054')'
             DataBinding.FieldName = 'AmountPackNextTotal_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1083#1072#1085'2'
+            HeaderHint = #1055#1083#1072#1085'2 '#1048#1058#1054#1043#1054' '#1079#1072#1082#1072#1079' '#1088#1072#1089#1095'. - '#1055#1088#1080#1093#1086#1076' '#1089' '#1059#1055#1040#1050
+            Options.Editing = False
+            Width = 70
+          end
+          object chAmountPackNext_calc: TcxGridDBColumn
+            Caption = '*'#1055'2 '#1089' '#1059#1055#1040#1050' '#1088#1072#1089#1095'. ('#1089' '#1054#1089#1090'.)'
+            DataBinding.FieldName = 'AmountPackNext_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085'2 '#1079#1072#1082#1072#1079' '#1088#1072#1089#1095'. ('#1089' '#1054#1089#1090'.) - '#1055#1088#1080#1093#1086#1076' '#1089' '#1059#1055#1040#1050
+            Options.Editing = False
+            Width = 70
+          end
+          object chAmountPackNextSecond_calc: TcxGridDBColumn
+            Caption = '*'#1055'2 '#1089' '#1059#1055#1040#1050' '#1088#1072#1089#1095'. ('#1089' '#1062#1077#1093#1072')'
+            DataBinding.FieldName = 'AmountPackNextSecond_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085'2 '#1079#1072#1082#1072#1079' '#1088#1072#1089#1095'. ('#1089' '#1062#1077#1093#1072') - '#1055#1088#1080#1093#1086#1076' '#1089' '#1059#1055#1040#1050
             Options.Editing = False
             Width = 70
           end
@@ -1548,17 +1738,6 @@
             Options.Editing = False
             Width = 55
           end
-          object chDayCountForecast_calc: TcxGridDBColumn
-            Caption = '***'#1054#1089#1090'. '#1074' '#1076#1085#1103#1093' ('#1059#1055#1040#1050') '
-            DataBinding.FieldName = 'DayCountForecast_calc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
           object chReceiptCode_basis: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'. ('#1087#1088'.)'
             DataBinding.FieldName = 'ReceiptCode_basis'
@@ -1643,7 +1822,7 @@
       end
     end
     object tsTotal: TcxTabSheet
-      Caption = #1048#1090#1086#1075#1086' '#1087#1086' '#1091#1087#1072#1082#1086#1074#1082#1077
+      Caption = #1042#1089#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 0
       object cxGridChildTotal: TcxGrid
         Left = 0
@@ -1800,7 +1979,6 @@
             item
               Format = ',0.####'
               Kind = skSum
-              Column = chtAmountPackTotal_calc
             end
             item
               Format = ',0.####'
@@ -1826,6 +2004,71 @@
               Format = ',0.####'
               Kind = skSum
               Column = chtAmountPartnerNextPromo
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chtAmountAllTotal
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chtAmountNextTotal
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chtAmountNext
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chtAmountNextSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chtAmountPackAllTotal
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chtAmountPackNextTotal
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chtAmountPackNext
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chtAmountPackNextSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chtAmountPackAllTotal_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chtAmountPackTotal_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chtAmountPackNextTotal_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chtAmountPackNext_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chtAmountPackNextSecond_calc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -1971,7 +2214,6 @@
             item
               Format = ',0.####'
               Kind = skSum
-              Column = chtAmountPackTotal_calc
             end
             item
               Format = ',0.####'
@@ -1997,6 +2239,71 @@
               Format = ',0.####'
               Kind = skSum
               Column = chtAmountPartnerNextPromo
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chtAmountAllTotal
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chtAmountNextTotal
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chtAmountNext
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chtAmountNextSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chtAmountPackAllTotal
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chtAmountPackNextTotal
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chtAmountPackNext
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chtAmountPackNextSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chtAmountPackAllTotal_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chtAmountPackTotal_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chtAmountPackNextTotal_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chtAmountPackNext_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chtAmountPackNextSecond_calc
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -2035,6 +2342,7 @@
           object chtUnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')'
             DataBinding.FieldName = 'UnitName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -2060,6 +2368,7 @@
           object chtGoodsName_basis: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')'
             DataBinding.FieldName = 'GoodsName_basis'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -2168,6 +2477,7 @@
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -2179,6 +2489,7 @@
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -2195,114 +2506,270 @@
             Options.Editing = False
             Width = 70
           end
-          object chtAmount: TcxGridDBColumn
-            Caption = '***'#1089' '#1054#1089#1090'. '#1085#1072' '#1059#1055#1040#1050
-            DataBinding.FieldName = 'Amount'
+          object chtDayCountForecast_calc: TcxGridDBColumn
+            Caption = #1054#1089#1090'. '#1074' '#1076#1085#1103#1093' ***'#1059#1055#1040#1050
+            DataBinding.FieldName = 'DayCountForecast_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1083#1072#1085' '#1074#1099#1076#1072#1095#1080' '#1089' '#1054#1089#1090'. '#1085#1072' '#1059#1055#1040#1050
+            Options.Editing = False
             Width = 70
           end
-          object chtAmountSecond: TcxGridDBColumn
-            Caption = '***'#1089' '#1062#1077#1093#1072' '#1085#1072' '#1059#1055#1040#1050
-            DataBinding.FieldName = 'AmountSecond'
+          object chtAmountAllTotal: TcxGridDBColumn
+            Caption = '***'#1048#1058#1054#1043#1054' '#1085#1072' '#1059#1055#1040#1050' ('#1055'1+'#1055'2)'
+            DataBinding.FieldName = 'AmountAllTotal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1083#1072#1085' '#1074#1099#1076#1072#1095#1080' '#1089' '#1062#1077#1093#1072' '#1085#1072' '#1059#1055#1040#1050
+            HeaderHint = #1055#1083#1072#1085'1 + '#1055#1083#1072#1085'2 '#1048#1058#1054#1043#1054' '#1074#1099#1076#1072#1083#1080' '#1085#1072' '#1059#1055#1040#1050
+            Options.Editing = False
             Width = 70
           end
           object chtAmountTotal: TcxGridDBColumn
-            Caption = '***'#1048#1058#1054#1043#1054' '#1085#1072' '#1059#1055#1040#1050
+            Caption = '***'#1055'1 '#1048#1058#1054#1043#1054' '#1085#1072' '#1059#1055#1040#1050
             DataBinding.FieldName = 'AmountTotal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1083#1072#1085' '#1074#1099#1076#1072#1095#1080' '#1048#1058#1054#1043#1054' '#1085#1072' '#1059#1055#1040#1050
+            HeaderHint = #1055#1083#1072#1085'1 '#1048#1058#1054#1043#1054' '#1074#1099#1076#1072#1083#1080' '#1085#1072' '#1059#1055#1040#1050
             Options.Editing = False
             Width = 70
           end
-          object chtAmountPack: TcxGridDBColumn
-            Caption = '***'#1079#1072#1082#1072#1079' '#1085#1072' '#1059#1055#1040#1050' ('#1089' '#1054#1089#1090'. '#1092#1072#1082#1090')'
-            DataBinding.FieldName = 'AmountPack'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object chtAmountPackSecond: TcxGridDBColumn
-            Caption = '***'#1079#1072#1082#1072#1079' '#1085#1072' '#1059#1055#1040#1050' ('#1089' '#1062#1077#1093#1072' '#1092#1072#1082#1090')'
-            DataBinding.FieldName = 'AmountPackSecond'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object chtAmountPackTotal: TcxGridDBColumn
-            Caption = '***'#1079#1072#1082#1072#1079' '#1085#1072' '#1059#1055#1040#1050' ('#1048#1058#1054#1043#1054' '#1092#1072#1082#1090')'
-            DataBinding.FieldName = 'AmountPackTotal'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object chtAmountPartnerNextPromo: TcxGridDBColumn
-            Caption = #1074' '#1090'.'#1095'. '#1079#1072#1074#1090#1088#1072' '#1079#1072#1103#1074#1082#1072' ('#1040#1082#1094#1080#1080')'
-            DataBinding.FieldName = 'AmountPartnerNextPromo'
+          object chtAmount: TcxGridDBColumn
+            Caption = '***'#1055'1 '#1089' '#1054#1089#1090'. '#1085#1072' '#1059#1055#1040#1050
+            DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086
-            Options.Editing = False
+            HeaderHint = #1055#1083#1072#1085'1 '#1074#1099#1076#1072#1083#1080' '#1089' '#1054#1089#1090'. '#1085#1072' '#1059#1055#1040#1050
             Width = 70
           end
-          object chtAmountPack_calc: TcxGridDBColumn
-            Caption = '*'#1079#1072#1082#1072#1079' '#1085#1072' '#1059#1055#1040#1050' ('#1089' '#1054#1089#1090'. '#1088#1072#1089#1095'.)'
-            DataBinding.FieldName = 'AmountPack_calc'
+          object chtAmountSecond: TcxGridDBColumn
+            Caption = '***'#1055'1 '#1089' '#1062#1077#1093#1072' '#1085#1072' '#1059#1055#1040#1050
+            DataBinding.FieldName = 'AmountSecond'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085'1 '#1074#1099#1076#1072#1083#1080' '#1089' '#1062#1077#1093#1072' '#1085#1072' '#1059#1055#1040#1050
+            Width = 70
+          end
+          object chtAmountNextTotal: TcxGridDBColumn
+            Caption = '***'#1055'2 '#1048#1058#1054#1043#1054' '#1085#1072' '#1059#1055#1040#1050
+            DataBinding.FieldName = 'AmountNextTotal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085'2 '#1048#1058#1054#1043#1054' '#1074#1099#1076#1072#1083#1080' '#1085#1072' '#1059#1055#1040#1050
             Options.Editing = False
             Width = 70
           end
-          object chtAmountSecondPack_calc: TcxGridDBColumn
-            Caption = '*'#1079#1072#1082#1072#1079' '#1085#1072' '#1059#1055#1040#1050' ('#1089' '#1062#1077#1093#1072' '#1088#1072#1089#1095'.)'
-            DataBinding.FieldName = 'AmountSecondPack_calc'
+          object chtAmountNext: TcxGridDBColumn
+            Caption = '***'#1055'2 '#1089' '#1054#1089#1090'. '#1085#1072' '#1059#1055#1040#1050
+            DataBinding.FieldName = 'AmountNext'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085'2 '#1074#1099#1076#1072#1083#1080' '#1089' '#1054#1089#1090'. '#1085#1072' '#1059#1055#1040#1050
+            Width = 70
+          end
+          object chtAmountNextSecond: TcxGridDBColumn
+            Caption = '***'#1055'2 '#1089' '#1062#1077#1093#1072' '#1085#1072' '#1059#1055#1040#1050
+            DataBinding.FieldName = 'AmountNextSecond'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085'2 '#1074#1099#1076#1072#1083#1080' '#1089' '#1062#1077#1093#1072' '#1085#1072' '#1059#1055#1040#1050
+            Width = 70
+          end
+          object chtAmountPackAllTotal: TcxGridDBColumn
+            Caption = '***'#1048#1058#1054#1043#1054' '#1089' '#1059#1055#1040#1050' '#1092#1072#1082#1090' ('#1055'1+'#1055'2)'
+            DataBinding.FieldName = 'AmountPackAllTotal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085'1 + '#1055#1083#1072#1085'2 '#1048#1058#1054#1043#1054' '#1079#1072#1082#1072#1079' '#1092#1072#1082#1090' - '#1055#1088#1080#1093#1086#1076' '#1089' '#1059#1055#1040#1050
+            Options.Editing = False
+            Width = 70
+          end
+          object chtAmountPackTotal: TcxGridDBColumn
+            Caption = '***'#1055'1 '#1089' '#1059#1055#1040#1050' '#1092#1072#1082#1090' ('#1048#1058#1054#1043#1054')'
+            DataBinding.FieldName = 'AmountPackTotal'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085'1 '#1048#1058#1054#1043#1054' '#1079#1072#1082#1072#1079' '#1092#1072#1082#1090' - '#1055#1088#1080#1093#1086#1076' '#1089' '#1059#1055#1040#1050
+            Options.Editing = False
+            Width = 70
+          end
+          object chtAmountPack: TcxGridDBColumn
+            Caption = '***'#1055'1 '#1089' '#1059#1055#1040#1050' '#1092#1072#1082#1090' ('#1089' '#1054#1089#1090'.)'
+            DataBinding.FieldName = 'AmountPack'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085'1 '#1079#1072#1082#1072#1079' '#1092#1072#1082#1090' ('#1089' '#1054#1089#1090'.) - '#1055#1088#1080#1093#1086#1076' '#1089' '#1059#1055#1040#1050
+            Width = 70
+          end
+          object chtAmountPackSecond: TcxGridDBColumn
+            Caption = '***'#1055'1 '#1089' '#1059#1055#1040#1050' '#1092#1072#1082#1090' ('#1089' '#1062#1077#1093#1072')'
+            DataBinding.FieldName = 'AmountPackSecond'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085'1 '#1079#1072#1082#1072#1079' '#1092#1072#1082#1090' ('#1089' '#1062#1077#1093#1072') - '#1055#1088#1080#1093#1086#1076' '#1089' '#1059#1055#1040#1050
+            Width = 70
+          end
+          object chtAmountPackNextTotal: TcxGridDBColumn
+            Caption = '***'#1055'2 '#1089' '#1059#1055#1040#1050' '#1092#1072#1082#1090' ('#1048#1058#1054#1043#1054')'
+            DataBinding.FieldName = 'AmountPackNextTotal'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085'2 '#1048#1058#1054#1043#1054' '#1079#1072#1082#1072#1079' '#1092#1072#1082#1090' - '#1055#1088#1080#1093#1086#1076' '#1089' '#1059#1055#1040#1050
+            Options.Editing = False
+            Width = 70
+          end
+          object chtAmountPackNext: TcxGridDBColumn
+            Caption = '***'#1055'2 '#1089' '#1059#1055#1040#1050' '#1092#1072#1082#1090' ('#1089' '#1054#1089#1090'.)'
+            DataBinding.FieldName = 'AmountPackNext'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085'2 '#1079#1072#1082#1072#1079' '#1092#1072#1082#1090' ('#1089' '#1054#1089#1090'.) - '#1055#1088#1080#1093#1086#1076' '#1089' '#1059#1055#1040#1050
+            Width = 70
+          end
+          object chtAmountPackNextSecond: TcxGridDBColumn
+            Caption = '***'#1055'2 '#1089' '#1059#1055#1040#1050' '#1092#1072#1082#1090' ('#1089' '#1062#1077#1093#1072')'
+            DataBinding.FieldName = 'AmountPackNextSecond'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085'2 '#1079#1072#1082#1072#1079' '#1092#1072#1082#1090' ('#1089' '#1062#1077#1093#1072') - '#1055#1088#1080#1093#1086#1076' '#1089' '#1059#1055#1040#1050
+            Width = 70
+          end
+          object chtAmountPackAllTotal_calc: TcxGridDBColumn
+            Caption = '*'#1048#1058#1054#1043#1054' '#1089' '#1059#1055#1040#1050' '#1088#1072#1089#1095'. ('#1055'1+'#1055'2)'
+            DataBinding.FieldName = 'AmountPackAllTotal_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085'1 + '#1055#1083#1072#1085'2 '#1048#1058#1054#1043#1054' '#1079#1072#1082#1072#1079' '#1088#1072#1089#1095'. - '#1055#1088#1080#1093#1086#1076' '#1089' '#1059#1055#1040#1050
             Options.Editing = False
             Width = 70
           end
           object chtAmountPackTotal_calc: TcxGridDBColumn
-            Caption = '*'#1079#1072#1082#1072#1079' '#1085#1072' '#1059#1055#1040#1050' ('#1048#1058#1054#1043#1054' '#1088#1072#1089#1095'.)'
+            Caption = '*'#1055'1 '#1089' '#1059#1055#1040#1050' '#1088#1072#1089#1095'. ('#1048#1058#1054#1043#1054')'
             DataBinding.FieldName = 'AmountPackTotal_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085'1 '#1048#1058#1054#1043#1054' '#1079#1072#1082#1072#1079' '#1088#1072#1089#1095'. - '#1055#1088#1080#1093#1086#1076' '#1089' '#1059#1055#1040#1050
+            Options.Editing = False
+            Width = 70
+          end
+          object chtAmountPack_calc: TcxGridDBColumn
+            Caption = '*'#1055'1 '#1089' '#1059#1055#1040#1050' '#1088#1072#1089#1095'. ('#1089' '#1054#1089#1090'.)'
+            DataBinding.FieldName = 'AmountPack_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085'1 '#1079#1072#1082#1072#1079' '#1088#1072#1089#1095'. ('#1089' '#1054#1089#1090'.) - '#1055#1088#1080#1093#1086#1076' '#1089' '#1059#1055#1040#1050
+            Options.Editing = False
+            Width = 70
+          end
+          object chtAmountSecondPack_calc: TcxGridDBColumn
+            Caption = '*'#1055'1 '#1089' '#1059#1055#1040#1050' '#1088#1072#1089#1095'. ('#1089' '#1062#1077#1093#1072')'
+            DataBinding.FieldName = 'AmountSecondPack_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085'1 '#1079#1072#1082#1072#1079' '#1088#1072#1089#1095'. ('#1089' '#1062#1077#1093#1072') - '#1055#1088#1080#1093#1086#1076' '#1089' '#1059#1055#1040#1050
+            Options.Editing = False
+            Width = 70
+          end
+          object chtAmountPackNextTotal_calc: TcxGridDBColumn
+            Caption = '*'#1055'2 '#1089' '#1059#1055#1040#1050' '#1088#1072#1089#1095'. ('#1048#1058#1054#1043#1054')'
+            DataBinding.FieldName = 'AmountPackNextTotal_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085'2 '#1048#1058#1054#1043#1054' '#1079#1072#1082#1072#1079' '#1088#1072#1089#1095'. - '#1055#1088#1080#1093#1086#1076' '#1089' '#1059#1055#1040#1050
+            Options.Editing = False
+            Width = 70
+          end
+          object chtAmountPackNext_calc: TcxGridDBColumn
+            Caption = '*'#1055'2 '#1089' '#1059#1055#1040#1050' '#1088#1072#1089#1095'. ('#1089' '#1054#1089#1090'.)'
+            DataBinding.FieldName = 'AmountPackNext_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085'2 '#1079#1072#1082#1072#1079' '#1088#1072#1089#1095'. ('#1089' '#1054#1089#1090'.) - '#1055#1088#1080#1093#1086#1076' '#1089' '#1059#1055#1040#1050
+            Options.Editing = False
+            Width = 70
+          end
+          object chtAmountPackNextSecond_calc: TcxGridDBColumn
+            Caption = '*'#1055'2 '#1089' '#1059#1055#1040#1050' '#1088#1072#1089#1095'. ('#1089' '#1062#1077#1093#1072')'
+            DataBinding.FieldName = 'AmountPackNextSecond_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085'2 '#1079#1072#1082#1072#1079' '#1088#1072#1089#1095'. ('#1089' '#1062#1077#1093#1072') - '#1055#1088#1080#1093#1086#1076' '#1089' '#1059#1055#1040#1050
             Options.Editing = False
             Width = 70
           end
@@ -2373,6 +2840,19 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object chtAmountPartnerNextPromo: TcxGridDBColumn
+            Caption = #1074' '#1090'.'#1095'. '#1079#1072#1074#1090#1088#1072' '#1079#1072#1103#1074#1082#1072' ('#1040#1082#1094#1080#1080')'
+            DataBinding.FieldName = 'AmountPartnerNextPromo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086
             Options.Editing = False
             Width = 70
           end
@@ -2552,17 +3032,6 @@
             Options.Editing = False
             Width = 55
           end
-          object chtDayCountForecast_calc: TcxGridDBColumn
-            Caption = '***'#1054#1089#1090'. '#1074' '#1076#1085#1103#1093' ('#1059#1055#1040#1050') '
-            DataBinding.FieldName = 'DayCountForecast_calc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
           object chtReceiptCode_basis: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'. ('#1087#1088'.)'
             DataBinding.FieldName = 'ReceiptCode_basis'
@@ -2688,8 +3157,6 @@
     Width = 1020
     Height = 100
     TabOrder = 3
-    ExplicitLeft = 8
-    ExplicitTop = -16
     ExplicitWidth = 1020
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
@@ -2807,8 +3274,8 @@
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 583
-      Top = 63
+      Left = 582
+      Top = 68
       TabOrder = 17
       Width = 385
     end
@@ -2830,16 +3297,16 @@
     Caption = #1044#1072#1090#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 115
-    Top = 232
+    Left = 155
+    Top = 240
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 32
-    Top = 232
+    Left = 24
+    Top = 256
   end
   inherited ActionList: TActionList
-    Left = 55
-    Top = 303
+    Left = 23
+    Top = 287
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
@@ -2854,31 +3321,27 @@
       ImageIndex = 6
       ShortCut = 16472
     end
+    inherited actMISetErased: TdsdUpdateErased
+      TabSheet = tsMain
+    end
+    inherited actMISetUnErased: TdsdUpdateErased
+      TabSheet = tsMain
+    end
     inherited actUpdateMainDS: TdsdUpdateDataSet
-      StoredProc = spUpdateMI_master
-      StoredProcList = <
-        item
-          StoredProc = spUpdateMI_master
-        end
-        item
-          StoredProc = spGetTotalSumm
-        end>
+      TabSheet = tsMain
     end
     object actUpdateChildDS: TdsdUpdateDataSet [9]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdateMI_AmountPack
+      StoredProc = spInsertUpdateMIChild
       StoredProcList = <
         item
-          StoredProc = spUpdateMI_AmountPack
+          StoredProc = spInsertUpdateMIChild
         end
         item
           StoredProc = spGetTotalSumm
-        end
-        item
-          StoredProc = spSelect
         end>
       Caption = 'actUpdateChildDS'
       DataSource = ChildDS
@@ -2889,17 +3352,7 @@
       MoveParams = <>
       Enabled = False
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdateMI_Amounts
-      StoredProcList = <
-        item
-          StoredProc = spUpdateMI_Amounts
-        end
-        item
-          StoredProc = spGetTotalSumm
-        end
-        item
-          StoredProc = spSelect
-        end>
+      StoredProcList = <>
       Caption = 'actUpdateChildTotalDS'
       DataSource = ChildTotalDS
     end
@@ -2911,14 +3364,16 @@
         item
           StoredProc = spSelectPrintRemains
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' 2 '#1047#1072#1103#1074#1082#1080' ('#1086#1089#1090#1072#1090#1082#1080') '
-      Hint = #1055#1077#1095#1072#1090#1100
+      Caption = #1055#1077#1095#1072#1090#1100' '#1047#1072#1103#1074#1082#1072' ('#1044#1077#1090#1072#1083#1100#1085#1086')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1047#1072#1103#1074#1082#1072' ('#1044#1077#1090#1072#1083#1100#1085#1086')'
       ImageIndex = 16
       DataSets = <
         item
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsName_Child;GoodsKindName_Child'
+          IndexFieldNames = 
+            'GoodsGroupNameFull;GoodsName;GoodsKindName;KeyId;GoodsName_Child' +
+            ';GoodsKindName_Child'
         end>
       Params = <
         item
@@ -2977,14 +3432,16 @@
         item
           StoredProc = spSelectPrintRemains
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1047#1072#1103#1074#1082#1080' ('#1086#1089#1090#1072#1090#1082#1080')'
-      Hint = #1055#1077#1095#1072#1090#1100
+      Caption = #1055#1077#1095#1072#1090#1100' '#1047#1072#1103#1074#1082#1072' ('#1048#1090#1086#1075#1086')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1047#1072#1103#1074#1082#1072' ('#1048#1090#1086#1075#1086')'
       ImageIndex = 16
       DataSets = <
         item
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsName_Child;GoodsKindName_Child'
+          IndexFieldNames = 
+            'GoodsGroupNameFull;GoodsName;GoodsKindName;KeyId;GoodsName_Child' +
+            ';GoodsKindName_Child'
         end>
       Params = <
         item
@@ -3105,6 +3562,9 @@
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    inherited MovementItemProtocolOpenForm: TdsdOpenForm
+      TabSheet = tsMain
     end
     object actRefreshPrice: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -3254,11 +3714,13 @@
         item
           Action = actRefreshPrice
         end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. - '#1053#1045' '#1091#1087#1072#1082#1086#1074#1072#1085#1085#1099#1081'> ?'
-      InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1083#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. - '#1053#1045' '#1091#1087#1072#1082#1086#1074#1072#1085#1085#1099#1081'>'
-      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. - '#1053#1045' '#1091#1087#1072#1082#1086#1074#1072#1085#1085#1099#1081'>'
-      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. - '#1053#1045' '#1091#1087#1072#1082#1086#1074#1072#1085#1085#1099#1081'>'
-      ImageIndex = 71
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'2 '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. - '#1053#1045' '#1091#1087#1072#1082#1086#1074 +
+        #1072#1085#1085#1099#1081'> ?'
+      InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1083#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'2 '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. - '#1053#1045' '#1091#1087#1072#1082#1086#1074#1072#1085#1085#1099#1081'>'
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'2 '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. - '#1053#1045' '#1091#1087#1072#1082#1086#1074#1072#1085#1085#1099#1081'>'
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'2 '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. - '#1053#1045' '#1091#1087#1072#1082#1086#1074#1072#1085#1085#1099#1081'>'
+      ImageIndex = 70
     end
     object mactUpdateAmountNextGrid_to: TMultiAction
       Category = 'DSNext'
@@ -3301,10 +3763,12 @@
         item
           Action = actRefreshPrice
         end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. - '#1053#1045' '#1091#1087#1072#1082#1086#1074#1072#1085#1085#1099#1081'> ?'
-      InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1083#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. - '#1053#1045' '#1091#1087#1072#1082#1086#1074#1072#1085#1085#1099#1081'>'
-      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. - '#1053#1045' '#1091#1087#1072#1082#1086#1074#1072#1085#1085#1099#1081'>'
-      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. - '#1053#1045' '#1091#1087#1072#1082#1086#1074#1072#1085#1085#1099#1081'>'
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'1 '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. - '#1053#1045' '#1091#1087#1072#1082#1086#1074 +
+        #1072#1085#1085#1099#1081'> ?'
+      InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1083#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'1 '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. - '#1053#1045' '#1091#1087#1072#1082#1086#1074#1072#1085#1085#1099#1081'>'
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'1 '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. - '#1053#1045' '#1091#1087#1072#1082#1086#1074#1072#1085#1085#1099#1081'>'
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'1 '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. - '#1053#1045' '#1091#1087#1072#1082#1086#1074#1072#1085#1085#1099#1081'>'
       ImageIndex = 68
     end
     object mactUpdateAmountGrid_to: TMultiAction
@@ -3343,16 +3807,18 @@
           Action = actUpdateAmountNextSecondAll_to
         end
         item
-          Action = mactUpdateAmountSecondGrid_to
+          Action = mactUpdateAmountNextSecondGrid_to
         end
         item
           Action = actRefreshPrice
         end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' ('#1057#1045#1043#1054#1044#1053#1071')> ?'
-      InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1083#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' ('#1057#1045#1043#1054#1044#1053#1071')>'
-      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' ('#1057#1045#1043#1054#1044#1053#1071')>'
-      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' ('#1057#1045#1043#1054#1044#1053#1071')>'
-      ImageIndex = 73
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'2 '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' ('#1057#1045#1043#1054 +
+        #1044#1053#1071')> ?'
+      InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1083#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'2 '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' ('#1057#1045#1043#1054#1044#1053#1071')>'
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'2 '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' ('#1057#1045#1043#1054#1044#1053#1071')>'
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'2 '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' ('#1057#1045#1043#1054#1044#1053#1071')>'
+      ImageIndex = 71
     end
     object mactUpdateAmountNextSecondGrid_to: TMultiAction
       Category = 'DSNext'
@@ -3385,12 +3851,12 @@
       Category = 'DSNext'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdateAmountNextSecond_to
+      StoredProc = spUpdateAmountNextSecondAll_to
       StoredProcList = <
         item
-          StoredProc = spUpdateAmountNextSecond_to
+          StoredProc = spUpdateAmountNextSecondAll_to
         end>
-      Caption = 'actUpdateAmountSecondAll_to'
+      Caption = 'actUpdateAmountNextSecondAll_to'
       Hint = 'actUpdateAmountNextSecondAll_to'
     end
     object mactUpdateAmountNextSecondCEH_to: TMultiAction
@@ -3407,11 +3873,13 @@
         item
           Action = actRefreshPrice
         end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' <'#1055#1088#1080#1093#1086#1076' '#1087#1088'-'#1074#1086' ('#1060#1040#1050#1058')> ?'
-      InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1083#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' <'#1055#1088#1080#1093#1086#1076' '#1087#1088'-'#1074#1086' ('#1060#1040#1050#1058')>'
-      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' <'#1055#1088#1080#1093#1086#1076' '#1087#1088'-'#1074#1086' ('#1060#1040#1050#1058')>'
-      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' <'#1055#1088#1080#1093#1086#1076' '#1087#1088'-'#1074#1086' ('#1060#1040#1050#1058')>'
-      ImageIndex = 73
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'2 '#1080#1079' <'#1055#1088#1080#1093#1086#1076' '#1087#1088'-'#1074#1086' ('#1060#1040#1050#1058')> ' +
+        '?'
+      InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1083#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'2 '#1080#1079' <'#1055#1088#1080#1093#1086#1076' '#1087#1088'-'#1074#1086' ('#1060#1040#1050#1058')>'
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'2 '#1080#1079' <'#1055#1088#1080#1093#1086#1076' '#1087#1088'-'#1074#1086' ('#1060#1040#1050#1058')>'
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'2 '#1080#1079' <'#1055#1088#1080#1093#1086#1076' '#1087#1088'-'#1074#1086' ('#1060#1040#1050#1058')>'
+      ImageIndex = 71
     end
     object mactUpdateAmountNextSecondCEHGrid_to: TMultiAction
       Category = 'DSNext'
@@ -3478,10 +3946,12 @@
         item
           Action = actRefreshPrice
         end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' ('#1057#1045#1043#1054#1044#1053#1071')> ?'
-      InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1083#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' ('#1057#1045#1043#1054#1044#1053#1071')>'
-      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' ('#1057#1045#1043#1054#1044#1053#1071')>'
-      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' ('#1057#1045#1043#1054#1044#1053#1071')>'
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'1 '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' ('#1057#1045#1043#1054 +
+        #1044#1053#1071')> ?'
+      InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1083#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'1 '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' ('#1057#1045#1043#1054#1044#1053#1071')>'
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'1 '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' ('#1057#1045#1043#1054#1044#1053#1071')>'
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'1 '#1080#1079' <'#1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' ('#1057#1045#1043#1054#1044#1053#1071')>'
       ImageIndex = 69
     end
     object mactUpdateAmountSecondGrid_to: TMultiAction
@@ -3515,10 +3985,10 @@
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdateAmountSecond_to
+      StoredProc = spUpdateAmountSecondAll_to
       StoredProcList = <
         item
-          StoredProc = spUpdateAmountSecond_to
+          StoredProc = spUpdateAmountSecondAll_to
         end>
       Caption = 'actUpdateAmountSecondAll_to'
       Hint = 'actUpdateAmountSecondAll_to'
@@ -3537,11 +4007,13 @@
         item
           Action = actRefreshPrice
         end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' <'#1055#1088#1080#1093#1086#1076' '#1087#1088'-'#1074#1086' ('#1060#1040#1050#1058')> ?'
-      InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1083#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' <'#1055#1088#1080#1093#1086#1076' '#1087#1088'-'#1074#1086' ('#1060#1040#1050#1058')>'
-      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' <'#1055#1088#1080#1093#1086#1076' '#1087#1088'-'#1074#1086' ('#1060#1040#1050#1058')>'
-      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' <'#1055#1088#1080#1093#1086#1076' '#1087#1088'-'#1074#1086' ('#1060#1040#1050#1058')>'
-      ImageIndex = 70
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'1 '#1080#1079' <'#1055#1088#1080#1093#1086#1076' '#1087#1088'-'#1074#1086' ('#1060#1040#1050#1058')> ' +
+        '?'
+      InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1083#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'1 '#1080#1079' <'#1055#1088#1080#1093#1086#1076' '#1087#1088'-'#1074#1086' ('#1060#1040#1050#1058')>'
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'1 '#1080#1079' <'#1055#1088#1080#1093#1086#1076' '#1087#1088'-'#1074#1086' ('#1060#1040#1050#1058')>'
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1074' '#1055#1083#1072#1085'1 '#1080#1079' <'#1055#1088#1080#1093#1086#1076' '#1087#1088'-'#1074#1086' ('#1060#1040#1050#1058')>'
+      ImageIndex = 69
     end
     object mactUpdateAmountSecondCEHGrid_to: TMultiAction
       Category = 'DSDLib'
@@ -3567,8 +4039,8 @@
         item
           StoredProc = spUpdateAmountSecondCEH_to
         end>
-      Caption = 'actUpdateAmountSecond_to'
-      Hint = 'actUpdateAmountSecond_to'
+      Caption = 'actUpdateAmountSecondCEH_to'
+      Hint = 'actUpdateAmountSecondCEH_to'
     end
     object actUpdateAmount_toPACK: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -3602,12 +4074,12 @@
     end
   end
   inherited MasterDS: TDataSource
-    Left = 16
-    Top = 392
+    Left = 32
+    Top = 336
   end
   inherited MasterCDS: TClientDataSet
-    Left = 72
-    Top = 392
+    Left = 80
+    Top = 352
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_OrderInternalPackRemains'
@@ -3651,7 +4123,7 @@
     Top = 296
   end
   inherited BarManager: TdxBarManager
-    Left = 72
+    Left = 56
     Top = 255
     DockControlHeights = (
       0
@@ -3914,12 +4386,12 @@
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 5
       end>
-    Left = 846
-    Top = 353
+    Left = 342
+    Top = 305
   end
   inherited PopupMenu: TPopupMenu
-    Left = 736
-    Top = 464
+    Left = 88
+    Top = 256
     object N2: TMenuItem
       Action = actMISetErased
     end
@@ -4220,8 +4692,8 @@
       item
         Guides = GuidesTo
       end>
-    Left = 184
-    Top = 232
+    Left = 192
+    Top = 216
   end
   inherited HeaderSaver: THeaderSaver
     ControlList = <
@@ -4249,13 +4721,13 @@
       item
         Control = ceComment
       end>
-    Left = 224
-    Top = 241
+    Left = 240
+    Top = 257
   end
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''
-    Left = 912
-    Top = 320
+    Left = 328
+    Top = 280
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderInternal_SetErased'
@@ -4264,14 +4736,14 @@
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderInternal_SetUnErased'
-    Left = 734
-    Top = 368
+    Left = 542
+    Top = 344
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_OrderInternal'
+    StoredProcName = 'gpUpdateMI_OrderInternal_Amount'
     Params = <
       item
-        Name = 'ioId'
+        Name = 'inId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
@@ -4287,74 +4759,71 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCuterCount'
-        Value = '0'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioAmount'
+        Name = 'inAmount'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCuterCountSecond'
-        Value = '0'
-        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioAmountSecond'
+        Name = 'inAmountSecond'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountSecond'
         DataType = ftFloat
-        ParamType = ptInputOutput
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsKindId'
+        Name = 'inAmountNext'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'AmountNext'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountNextSecond'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'GoodsKindId'
+        ComponentItem = 'AmountNextSecond'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inReceiptId_basis'
-        Value = '0'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsPack'
+        Name = 'outAmountAllTotal'
         Value = Null
-        Component = FormParams
-        ComponentItem = 'isPack'
-        DataType = ftBoolean
-        ParamType = ptInput
+        Component = MasterCDS
+        ComponentItem = 'AmountAllTotal'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountTotal'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'AmountTotal'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountNextTotal'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'AmountNextTotal'
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 168
-    Top = 392
+    Left = 184
+    Top = 472
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
-    Left = 320
-    Top = 224
+    Left = 64
+    Top = 544
   end
   inherited spGetTotalSumm: TdsdStoredProc
     Left = 412
@@ -4367,7 +4836,7 @@
     ComponentList = <
       item
       end>
-    Left = 512
+    Left = 472
     Top = 328
   end
   object PrintHeaderCDS: TClientDataSet
@@ -4381,12 +4850,6 @@
     Params = <>
     Left = 508
     Top = 246
-  end
-  object PrintItemsSverkaCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 644
-    Top = 334
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_OrderInternal_Print'
@@ -4409,8 +4872,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 375
-    Top = 456
+    Left = 407
+    Top = 128
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -4492,8 +4955,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 738
-    Top = 256
+    Left = 658
+    Top = 264
   end
   object spUpdateAmountPartner: TdsdStoredProc
     StoredProcName = 'gpUpdateMI_OrderInternal_AmountPartnerPromo'
@@ -4517,8 +4980,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 736
-    Top = 296
+    Left = 656
+    Top = 248
   end
   object spUpdateAmountForecast: TdsdStoredProc
     StoredProcName = 'gpUpdateMI_OrderInternal_AmountForecastPromo'
@@ -4550,8 +5013,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 864
-    Top = 288
+    Left = 656
+    Top = 232
   end
   object ChildCDS: TClientDataSet
     Aggregates = <>
@@ -4560,8 +5023,8 @@
     MasterSource = MasterDS
     PacketRecords = 0
     Params = <>
-    Left = 152
-    Top = 569
+    Left = 192
+    Top = 545
   end
   object ChildDS: TDataSource
     DataSet = ChildCDS
@@ -4579,20 +5042,20 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 358
-    Top = 569
+    Left = 334
+    Top = 537
   end
   object ChildTotalCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 504
-    Top = 585
+    Left = 440
+    Top = 545
   end
   object ChildTotalDS: TDataSource
     DataSet = ChildTotalCDS
-    Left = 596
-    Top = 586
+    Left = 516
+    Top = 546
   end
   object ChildTotalDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -4605,96 +5068,16 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 654
-    Top = 553
+    Left = 342
+    Top = 489
   end
   object spUpdateMIMasterChildTotal: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_OrderInternal'
     DataSets = <>
     OutputType = otResult
-    Params = <
-      item
-        Name = 'ioId'
-        Value = Null
-        Component = ChildTotalCDS
-        ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsId'
-        Value = Null
-        Component = ChildTotalCDS
-        ComponentItem = 'GoodsId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCuterCount'
-        Value = 0
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioAmount'
-        Value = Null
-        Component = ChildTotalCDS
-        ComponentItem = 'Amount'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCuterCountSecond'
-        Value = '0'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioAmountSecond'
-        Value = Null
-        Component = ChildTotalCDS
-        ComponentItem = 'AmountSecond'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsKindId'
-        Value = Null
-        Component = ChildTotalCDS
-        ComponentItem = 'GoodsKindId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inReceiptId_basis'
-        Value = '0'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsPack'
-        Value = True
-        Component = FormParams
-        ComponentItem = 'isPack'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
+    Params = <>
     PackSize = 1
-    Left = 312
-    Top = 400
+    Left = 120
+    Top = 424
   end
   object spUpdateAmount_to: TdsdStoredProc
     StoredProcName = 'gpUpdateMI_OrderInternal_Amount_to'
@@ -4727,15 +5110,28 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAmountTwo'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsClear'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNumber'
+        Value = '1'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 586
-    Top = 280
+    Left = 882
+    Top = 104
   end
   object spUpdateAmountAll_to: TdsdStoredProc
     StoredProcName = 'gpUpdateMI_OrderInternal_Amount_to'
@@ -4764,18 +5160,31 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAmountTwo'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsClear'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNumber'
+        Value = '1'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 554
-    Top = 208
+    Left = 890
+    Top = 65529
   end
   object spUpdateAmountSecond_to: TdsdStoredProc
-    StoredProcName = 'gpUpdateMI_OrderInternal_AmountSecond_to'
+    StoredProcName = 'gpUpdateMI_OrderInternal_Amount_to'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -4805,18 +5214,31 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAmountTwo'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsClear'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNumber'
+        Value = '2'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 602
-    Top = 272
+    Left = 882
+    Top = 120
   end
   object spUpdateAmountSecondAll_to: TdsdStoredProc
-    StoredProcName = 'gpUpdateMI_OrderInternal_AmountSecond_to'
+    StoredProcName = 'gpUpdateMI_OrderInternal_Amount_to'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -4842,18 +5264,31 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAmountTwo'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsClear'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNumber'
+        Value = '2'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 674
-    Top = 224
+    Left = 890
+    Top = 7
   end
   object spUpdateAmountSecondCEH_to: TdsdStoredProc
-    StoredProcName = 'gpUpdateMI_OrderInternal_AmountSecond_to'
+    StoredProcName = 'gpUpdateMI_OrderInternal_Amount_to'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -4883,15 +5318,28 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAmountTwo'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsClear'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNumber'
+        Value = '2'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 690
-    Top = 312
+    Left = 888
+    Top = 137
   end
   object spUpdateAmountSecond_toPACK: TdsdStoredProc
     StoredProcName = 'gpUpdateMI_OrderInternal_Amount_toPACK'
@@ -4934,14 +5382,28 @@
       end
       item
         Name = 'inIsPackSecond'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsPackNext'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsPackNextSecond'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 522
-    Top = 384
+    Left = 658
+    Top = 297
   end
   object spUpdateAmount_toPACK: TdsdStoredProc
     StoredProcName = 'gpUpdateMI_OrderInternal_Amount_toPACK'
@@ -4984,14 +5446,28 @@
       end
       item
         Name = 'inIsPackSecond'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsPackNext'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsPackNextSecond'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 298
-    Top = 368
+    Left = 658
+    Top = 281
   end
   object spSelectPrintRemains: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_OrderInternalPackRemains_Print'
@@ -5010,71 +5486,10 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 887
-    Top = 488
+    Left = 343
+    Top = 152
   end
-  object spUpdateMI_Amounts: TdsdStoredProc
-    StoredProcName = 'gpUpdateMI_OrderInternal_Amounts'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = ChildTotalCDS
-        ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmount'
-        Value = Null
-        Component = ChildTotalCDS
-        ComponentItem = 'Amount'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountSecond'
-        Value = Null
-        Component = ChildTotalCDS
-        ComponentItem = 'AmountSecond'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountPack'
-        Value = Null
-        Component = ChildTotalCDS
-        ComponentItem = 'AmountPack'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountPackSecond'
-        Value = '0'
-        Component = ChildTotalCDS
-        ComponentItem = 'AmountPackSecond'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 88
-    Top = 496
-  end
-  object spUpdateMI_AmountPack: TdsdStoredProc
+  object spInsertUpdateMIChild: TdsdStoredProc
     StoredProcName = 'gpUpdateMI_OrderInternal_AmountPack'
     DataSets = <>
     OutputType = otResult
@@ -5105,12 +5520,12 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmountPackSecond'
+        Name = 'inAmountSecond'
         Value = Null
         Component = ChildCDS
-        ComponentItem = 'AmountPackSecond'
+        ComponentItem = 'AmountSecond'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -5124,7 +5539,7 @@
       end
       item
         Name = 'inAmountPackNextSecond'
-        Value = Null
+        Value = '0'
         Component = ChildCDS
         ComponentItem = 'AmountPackNextSecond'
         DataType = ftFloat
@@ -5132,26 +5547,26 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 216
-    Top = 504
+    Left = 88
+    Top = 496
   end
-  object spUpdateMI_master: TdsdStoredProc
-    StoredProcName = 'gpUpdateMI_OrderInternal_AmountPack_master'
+  object spUpdateAmountNext_to: TdsdStoredProc
+    StoredProcName = 'gpUpdateMI_OrderInternal_Amount_to'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inMovementId'
         Value = Null
         Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5160,84 +5575,16 @@
         Name = 'inAmount'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Amount'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountSecond'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountSecond'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountNext'
-        Value = '0'
-        Component = MasterCDS
-        ComponentItem = 'AmountNext'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountNextSecond'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountNextSecond'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outAmountTotal'
-        Value = '0'
-        Component = MasterCDS
-        ComponentItem = 'AmountTotal'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outAmountNextTotal'
-        Value = '0'
-        Component = MasterCDS
-        ComponentItem = 'AmountNextTotal'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 200
-    Top = 440
-  end
-  object spUpdateAmountNext_to: TdsdStoredProc
-    StoredProcName = 'gpUpdateMI_OrderInternal_AmountNext_to'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountNext'
-        Value = Null
-        Component = MasterCDS
         ComponentItem = 'Remains'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountTwo'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5248,13 +5595,19 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNumber'
+        Value = '3'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 362
-    Top = 512
+    Left = 890
+    Top = 192
   end
   object spUpdateAmountNextSecond_to: TdsdStoredProc
-    StoredProcName = 'gpUpdateMI_OrderInternal_AmountNextSecond_to'
+    StoredProcName = 'gpUpdateMI_OrderInternal_Amount_to'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -5284,18 +5637,33 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAmountTwo'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountSecond'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsClear'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNumber'
+        Value = '4'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 458
-    Top = 496
+    Left = 890
+    Top = 206
   end
   object spUpdateAmountNextSecondCEH_to: TdsdStoredProc
-    StoredProcName = 'gpUpdateMI_OrderInternal_AmountNextSecond_to'
+    StoredProcName = 'gpUpdateMI_OrderInternal_Amount_to'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -5325,18 +5693,33 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAmountTwo'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountSecond'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsClear'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNumber'
+        Value = '4'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 570
-    Top = 496
+    Left = 890
+    Top = 224
   end
   object spUpdateAmountNextAll_to: TdsdStoredProc
-    StoredProcName = 'gpUpdateMI_OrderInternal_AmountNext_to'
+    StoredProcName = 'gpUpdateMI_OrderInternal_Amount_to'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -5362,14 +5745,77 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAmountTwo'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsClear'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNumber'
+        Value = '3'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 698
-    Top = 512
+    Left = 898
+    Top = 23
+  end
+  object spUpdateAmountNextSecondAll_to: TdsdStoredProc
+    StoredProcName = 'gpUpdateMI_OrderInternal_Amount_to'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountTwo'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsClear'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNumber'
+        Value = '4'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 906
+    Top = 40
   end
 end

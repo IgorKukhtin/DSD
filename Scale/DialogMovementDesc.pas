@@ -318,7 +318,9 @@ begin
           if  (CDS.FieldByName('MovementDescId').asInteger = zc_Movement_Sale)
             or(CDS.FieldByName('MovementDescId').asInteger = zc_Movement_ReturnOut)
             or(CDS.FieldByName('MovementDescId').asInteger = zc_Movement_Loss)
-            or(CDS.FieldByName('MovementDescId').asInteger = zc_Movement_Send)
+            or((CDS.FieldByName('MovementDescId').asInteger = zc_Movement_Send)
+            and(CDS.FieldByName('ToId').asInteger           = 0)
+              )
           then begin
                     ParamByName('FromId').AsInteger       := CDS.FieldByName('FromId').asInteger;
                     ParamByName('FromCode').asString      := CDS.FieldByName('FromCode').asString;
