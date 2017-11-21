@@ -244,7 +244,7 @@ begin
      // проверка для перемещения
      if   (CDS.FieldByName('MovementDescId').asInteger=zc_Movement_Send)
        and(ParamsMovement_local.ParamByName('calcPartnerId').AsInteger=0)
-       and(CDS.FieldByName('ToId').asInteger=0)
+       and((CDS.FieldByName('FromId').asInteger=0) or (CDS.FieldByName('ToId').asInteger=0))
      then begin
                ShowMessage('Ошибка.Значение <Код Получателя> не найдено.');
                ActiveControl:=EditPartnerCode;
@@ -319,15 +319,39 @@ begin
             or(CDS.FieldByName('MovementDescId').asInteger = zc_Movement_ReturnOut)
             or(CDS.FieldByName('MovementDescId').asInteger = zc_Movement_Loss)
             or((CDS.FieldByName('MovementDescId').asInteger = zc_Movement_Send)
-            and(CDS.FieldByName('ToId').asInteger           = 0)
+            and((CDS.FieldByName('FromId').asInteger        = 0)
+              or(CDS.FieldByName('ToId').asInteger          = 0))
               )
           then begin
-                    ParamByName('FromId').AsInteger       := CDS.FieldByName('FromId').asInteger;
-                    ParamByName('FromCode').asString      := CDS.FieldByName('FromCode').asString;
-                    ParamByName('FromName').asString      := CDS.FieldByName('FromName').asString;
-                    ParamByName('ToId').AsInteger         := ParamByName('calcPartnerId').asInteger;
-                    ParamByName('ToCode').AsInteger       := ParamByName('calcPartnerCode').asInteger;
-                    ParamByName('ToName').asString        := ParamByName('calcPartnerName').asString;
+                    if (CDS.FieldByName('MovementDescId').asInteger = zc_Movement_Send)
+                    and(CDS.FieldByName('FromId').asInteger         = 0)
+                    then begin
+                            ParamByName('FromId').AsInteger       := ParamByName('calcPartnerId').asInteger;
+                            ParamByName('FromCode').AsInteger     := ParamByName('calcPartnerCode').asInteger;
+                            ParamByName('FromName').asString      := ParamByName('calcPartnerName').asString;
+                            ParamByName('ToId').AsInteger         := CDS.FieldByName('FromId').asInteger;
+                            ParamByName('ToCode').asString        := CDS.FieldByName('FromCode').asString;
+                            ParamByName('ToName').asString        := CDS.FieldByName('FromName').asString;
+                    end
+                    else
+                        if (CDS.FieldByName('MovementDescId').asInteger = zc_Movement_Send)
+                        and(CDS.FieldByName('ToId').asInteger           = 0)
+                        then begin
+                                ParamByName('FromId').AsInteger       := CDS.FieldByName('FromId').asInteger;
+                                ParamByName('FromCode').asString      := CDS.FieldByName('FromCode').asString;
+                                ParamByName('FromName').asString      := CDS.FieldByName('FromName').asString;
+                                ParamByName('ToId').AsInteger         := ParamByName('calcPartnerId').asInteger;
+                                ParamByName('ToCode').AsInteger       := ParamByName('calcPartnerCode').asInteger;
+                                ParamByName('ToName').asString        := ParamByName('calcPartnerName').asString;
+                        end
+                        else begin
+                                ParamByName('FromId').AsInteger       := CDS.FieldByName('FromId').asInteger;
+                                ParamByName('FromCode').asString      := CDS.FieldByName('FromCode').asString;
+                                ParamByName('FromName').asString      := CDS.FieldByName('FromName').asString;
+                                ParamByName('ToId').AsInteger         := ParamByName('calcPartnerId').asInteger;
+                                ParamByName('ToCode').AsInteger       := ParamByName('calcPartnerCode').asInteger;
+                                ParamByName('ToName').asString        := ParamByName('calcPartnerName').asString;
+                        end;
                     ParamByName('PaidKindId').AsInteger   := CDS.FieldByName('PaidKindId').asInteger;
                     ParamByName('PaidKindName').asString  := CDS.FieldByName('PaidKindName').asString;
                     ParamByName('InfoMoneyId').AsInteger  := CDS.FieldByName('InfoMoneyId').asInteger;

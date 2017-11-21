@@ -210,6 +210,8 @@ type
     chAmountPackAllTotal: TcxGridDBColumn;
     chAmountPackAllTotal_calc: TcxGridDBColumn;
     spUpdateAmountNextSecondAll_to: TdsdStoredProc;
+    DayCountForecast_calc: TcxGridDBColumn;
+    AmountPartnerNext: TcxGridDBColumn;
   private
     { Private declarations }
   public

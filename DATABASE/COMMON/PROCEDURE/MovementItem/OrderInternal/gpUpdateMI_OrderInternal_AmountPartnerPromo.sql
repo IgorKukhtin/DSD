@@ -18,9 +18,9 @@ BEGIN
 
 
       -- таблица -
-     CREATE TEMP TABLE tmpAll (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, AmountPartner TFloat, AmountPartnerPromo TFloat, AmountPartnerNextPromo TFloat, AmountPartnerPrior TFloat, AmountPartnerPriorPromo TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE tmpAll (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, AmountPartner TFloat, AmountPartnerNext TFloat, AmountPartnerPromo TFloat, AmountPartnerNextPromo TFloat, AmountPartnerPrior TFloat, AmountPartnerPriorPromo TFloat) ON COMMIT DROP;
      --
-     INSERT INTO tmpAll (MovementItemId, GoodsId, GoodsKindId, AmountPartner, AmountPartnerPromo, AmountPartnerNextPromo, AmountPartnerPrior, AmountPartnerPriorPromo)
+     INSERT INTO tmpAll (MovementItemId, GoodsId, GoodsKindId, AmountPartner, AmountPartnerNext, AmountPartnerPromo, AmountPartnerNextPromo, AmountPartnerPrior, AmountPartnerPriorPromo)
                                  WITH -- хардкодим - Склады База + Реализации
                                       tmpUnit AS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8457) AS lfSelect_Object_Unit_byGroup)
                                       -- хардкодим - товары ГП
@@ -36,15 +36,24 @@ BEGIN
                                                   )
                     , tmpOrder_all AS (SELECT MovementItem.ObjectId                                                    AS GoodsId
                                             , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis())         AS GoodsKindId
+                                              -- заказ покупателя БЕЗ акций, сегодня + завтра
                                             , SUM (CASE WHEN Movement.OperDate >= inOperDate AND COALESCE (MIFloat_PromoMovementId.ValueData, 0) = 0 THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountPartner
+                                              -- заказ покупателя ТОЛЬКО Акции, сегодня + завтра
                                             , SUM (CASE WHEN Movement.OperDate >= inOperDate AND COALESCE (MIFloat_PromoMovementId.ValueData, 0) > 0 THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountPartnerPromo
+
+                                              -- "информативно" заказ покупателя БЕЗ акций, завтра
+                                            , SUM (CASE WHEN Movement.OperDate >= inOperDate AND MovementDate_OperDatePartner.ValueData > inOperDate AND COALESCE (MIFloat_PromoMovementId.ValueData, 0) = 0 THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountPartnerNext
+                                              -- "информативно" заказ покупателя ТОЛЬКО Акции, завтра
                                             , SUM (CASE WHEN Movement.OperDate >= inOperDate AND MovementDate_OperDatePartner.ValueData > inOperDate AND COALESCE (MIFloat_PromoMovementId.ValueData, 0) > 0 THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountPartnerNextPromo
+                                            
+                                              -- заказ покупателя БЕЗ акций, неотгруж - вчера
                                             , SUM (CASE WHEN Movement.OperDate < inOperDate
                                                          AND MovementDate_OperDatePartner.ValueData >= inOperDate
                                                          AND COALESCE (MIFloat_PromoMovementId.ValueData, 0) = 0
                                                              THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)
                                                         ELSE 0
                                                    END) AS AmountPartnerPrior
+                                              -- заказ покупателя ТОЛЬКО Акции, неотгруж - вчера
                                             , SUM (CASE WHEN Movement.OperDate < inOperDate
                                                          AND MovementDate_OperDatePartner.ValueData >= inOperDate
                                                          AND COALESCE (MIFloat_PromoMovementId.ValueData, 0) > 0
@@ -54,10 +63,10 @@ BEGIN
                                        FROM Movement
                                             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                                                    ON MovementDate_OperDatePartner.MovementId = Movement.Id
-                                                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                                                                  AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
                                             INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                           ON MovementLinkObject_To.MovementId = Movement.Id
-                                                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                                         AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
                                             INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_To.ObjectId
 
                                             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
@@ -88,6 +97,7 @@ BEGIN
                         , tmpOrder AS (SELECT tmpOrder_all.GoodsId
                                             , tmpOrder_all.GoodsKindId
                                             , tmpOrder_all.AmountPartner
+                                            , tmpOrder_all.AmountPartnerNext
                                             , tmpOrder_all.AmountPartnerPromo
                                             , tmpOrder_all.AmountPartnerNextPromo
                                             , tmpOrder_all.AmountPartnerPrior
@@ -99,10 +109,14 @@ BEGIN
                                       , MovementItem.ObjectId                         AS GoodsId
                                       , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                                       , MovementItem.Amount
+                                      , COALESCE (MIFloat_ContainerId.ValueData, 0)   AS ContainerId
                                  FROM MovementItem 
                                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                        ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                       AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                      LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
+                                                                  ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
+                                                                 AND MIFloat_ContainerId.DescId         = zc_MIFloat_ContainerId()
                                  WHERE MovementItem.MovementId = inMovementId
                                    AND MovementItem.DescId     = zc_MI_Master()
                                    AND MovementItem.isErased   = FALSE
@@ -111,11 +125,12 @@ BEGIN
        SELECT tmp.MovementItemId
              , COALESCE (tmp.GoodsId,tmpOrder.GoodsId)          AS GoodsId
              , COALESCE (tmp.GoodsKindId, tmpOrder.GoodsKindId) AS GoodsKindId
-             , COALESCE (tmpOrder.AmountPartner, 0)             AS AmountPartner
-             , COALESCE (tmpOrder.AmountPartnerPromo, 0)        AS AmountPartnerPromo
-             , COALESCE (tmpOrder.AmountPartnerNextPromo, 0)    AS AmountPartnerNextPromo
-             , COALESCE (tmpOrder.AmountPartnerPrior, 0)        AS AmountPartnerPrior
-             , COALESCE (tmpOrder.AmountPartnerPriorPromo, 0)   AS AmountPartnerPriorPromo
+             , CASE WHEN tmp.ContainerId > 0 THEN 0 ELSE COALESCE (tmpOrder.AmountPartner, 0)             END AS AmountPartner
+             , CASE WHEN tmp.ContainerId > 0 THEN 0 ELSE COALESCE (tmpOrder.AmountPartnerNext, 0)         END AS AmountPartnerNext
+             , CASE WHEN tmp.ContainerId > 0 THEN 0 ELSE COALESCE (tmpOrder.AmountPartnerPromo, 0)        END AS AmountPartnerPromo
+             , CASE WHEN tmp.ContainerId > 0 THEN 0 ELSE COALESCE (tmpOrder.AmountPartnerNextPromo, 0)    END AS AmountPartnerNextPromo
+             , CASE WHEN tmp.ContainerId > 0 THEN 0 ELSE COALESCE (tmpOrder.AmountPartnerPrior, 0)        END AS AmountPartnerPrior
+             , CASE WHEN tmp.ContainerId > 0 THEN 0 ELSE COALESCE (tmpOrder.AmountPartnerPriorPromo, 0)   END AS AmountPartnerPriorPromo
        FROM tmpOrder
             FULL JOIN tmpMI AS tmp ON tmp.GoodsId     = tmpOrder.GoodsId
                                  AND tmp.GoodsKindId = tmpOrder.GoodsKindId
@@ -137,8 +152,11 @@ BEGIN
                                                  , inAmount_ParamAdd    := tmpAll.AmountPartnerPriorPromo -- * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
                                                  , inDescId_ParamAdd    := zc_MIFloat_AmountPartnerPriorPromo()
 
-                                                 , inAmount_ParamNext   := tmpAll.AmountPartnerNextPromo -- * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
-                                                 , inDescId_ParamNext   := zc_MIFloat_AmountPartnerNextPromo()
+
+                                                 , inAmount_ParamNext        := tmpAll.AmountPartnerNext -- * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                 , inDescId_ParamNext        := zc_MIFloat_AmountPartnerNext()
+                                                 , inAmount_ParamNextPromo   := tmpAll.AmountPartnerNextPromo -- * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                 , inDescId_ParamNextPromo   := zc_MIFloat_AmountPartnerNextPromo()
 
                                                  , inIsPack             := NULL
                                                  , inUserId             := vbUserId

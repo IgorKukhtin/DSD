@@ -3,24 +3,27 @@
 DROP FUNCTION IF EXISTS lpUpdate_MI_OrderInternal_Property (Integer, Integer, Integer, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, Boolean, Integer);
 DROP FUNCTION IF EXISTS lpUpdate_MI_OrderInternal_Property (Integer, Integer, Integer, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, Boolean, Integer);
 DROP FUNCTION IF EXISTS lpUpdate_MI_OrderInternal_Property (Integer, Integer, Integer, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpUpdate_MI_OrderInternal_Property (Integer, Integer, Integer, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpUpdate_MI_OrderInternal_Property(
-    IN ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inGoodsId             Integer   , -- Товары
-    IN inGoodsKindId         Integer   , -- Виды товаров
-    IN inAmount_Param        TFloat    , --
-    IN inDescId_Param        Integer   ,
-    IN inAmount_ParamOrder   TFloat    , --
-    IN inDescId_ParamOrder   Integer   ,
-    IN inAmount_ParamSecond  TFloat    , --
-    IN inDescId_ParamSecond  Integer   ,
-    IN inAmount_ParamAdd     TFloat    DEFAULT 0 , --
-    IN inDescId_ParamAdd     Integer   DEFAULT 0 ,
-    IN inAmount_ParamNext    TFloat    DEFAULT 0 , --
-    IN inDescId_ParamNext    Integer   DEFAULT 0 ,
-    IN inIsPack              Boolean   DEFAULT NULL , --
-    IN inUserId              Integer   DEFAULT 0   -- пользователь
+    IN ioId                       Integer   , -- Ключ объекта <Элемент документа>
+    IN inMovementId               Integer   , -- Ключ объекта <Документ>
+    IN inGoodsId                  Integer   , -- Товары
+    IN inGoodsKindId              Integer   , -- Виды товаров
+    IN inAmount_Param             TFloat    , --
+    IN inDescId_Param             Integer   ,
+    IN inAmount_ParamOrder        TFloat    , --
+    IN inDescId_ParamOrder        Integer   ,
+    IN inAmount_ParamSecond       TFloat    , --
+    IN inDescId_ParamSecond       Integer   ,
+    IN inAmount_ParamAdd          TFloat    DEFAULT 0 , --
+    IN inDescId_ParamAdd          Integer   DEFAULT 0 ,
+    IN inAmount_ParamNext         TFloat    DEFAULT 0 , --
+    IN inDescId_ParamNext         Integer   DEFAULT 0 ,
+    IN inAmount_ParamNextPromo    TFloat    DEFAULT 0 , --
+    IN inDescId_ParamNextPromo    Integer   DEFAULT 0 ,
+    IN inIsPack                   Boolean   DEFAULT NULL , --
+    IN inUserId                   Integer   DEFAULT 0   -- пользователь
 )
 RETURNS VOID
 AS
@@ -57,7 +60,7 @@ BEGIN
                                                          AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
                          LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
                                                      ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
-                                                    AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+                                                    AND MIFloat_ContainerId.DescId         = zc_MIFloat_ContainerId()
                     WHERE MovementItem.MovementId = inMovementId
                       AND MovementItem.ObjectId   = inGoodsId
                       AND MovementItem.DescId     = zc_MI_Master()
@@ -573,6 +576,11 @@ end if;
      IF inDescId_ParamNext <> 0
      THEN
          PERFORM lpInsertUpdate_MovementItemFloat (inDescId_ParamNext, ioId, inAmount_ParamNext);
+     END IF;
+     -- сохранили свойство
+     IF inDescId_ParamNextPromo <> 0
+     THEN
+         PERFORM lpInsertUpdate_MovementItemFloat (inDescId_ParamNextPromo, ioId, inAmount_ParamNextPromo);
      END IF;
     
 

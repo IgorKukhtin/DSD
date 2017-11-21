@@ -91,6 +91,8 @@ type
     bb: TdxBarButton;
     spSelectPrintGoods: TdsdStoredProc;
     spSelectPrintJuridicalGoods: TdsdStoredProc;
+    AmountPartner_out: TcxGridDBColumn;
+    AmountPartner_in: TcxGridDBColumn;
   private
     { Private declarations }
   public

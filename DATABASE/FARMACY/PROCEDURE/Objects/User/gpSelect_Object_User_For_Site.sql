@@ -122,6 +122,7 @@ BEGIN
              LEFT JOIN tmpCashSession ON tmpCashSession.UserId = tmpUser.UserId
              LEFT JOIN tmpProtocol    ON tmpProtocol.UserId    = tmpUser.UserId
         WHERE tmpUser.UnitId > 0
+          AND tmpUser.isSite = TRUE
        ;
   
 END;

@@ -353,10 +353,14 @@ BEGIN
                                       (SELECT MovementItem.Id                               AS MovementItemId 
                                             , MovementItem.ObjectId                         AS GoodsId
                                             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                                            , COALESCE (MIFloat_ContainerId.ValueData, 0)   AS ContainerId
                                        FROM MovementItem 
                                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                            LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
+                                                                        ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
+                                                                       AND MIFloat_ContainerId.DescId         = zc_MIFloat_ContainerId()
                                        WHERE MovementItem.MovementId = inMovementId
                                          AND MovementItem.DescId     = zc_MI_Master()
                                          AND MovementItem.isErased   = FALSE
@@ -365,10 +369,10 @@ BEGIN
                                  SELECT tmpMI.MovementItemId
                                        , COALESCE (tmpMI.GoodsId,tmpAll.GoodsId)          AS GoodsId
                                        , COALESCE (tmpMI.GoodsKindId, tmpAll.GoodsKindId) AS GoodsKindId
-                                       , COALESCE (tmpAll.AmountOrder, 0)                 AS AmountForecastOrder
-                                       , COALESCE (tmpAll.AmountOrderPromo, 0)            AS AmountForecastOrderPromo
-                                       , COALESCE (tmpAll.AmountSale, 0)                  AS AmountForecast
-                                       , COALESCE (tmpAll.AmountSalePromo, 0)             AS AmountForecastPromo
+                                       , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.AmountOrder, 0)      END AS AmountForecastOrder
+                                       , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.AmountOrderPromo, 0) END AS AmountForecastOrderPromo
+                                       , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.AmountSale, 0)       END AS AmountForecast
+                                       , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.AmountSalePromo, 0)  END AS AmountForecastPromo
                                  FROM (SELECT tmpMIAll.GoodsId
                                             , tmpMIAll.GoodsKindId
                                             , SUM (tmpMIAll.AmountOrder)      AS AmountOrder

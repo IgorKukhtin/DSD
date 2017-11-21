@@ -248,8 +248,12 @@ BEGIN
             )
       ;
     END IF;
-
-
+/*
+if (inUserId = 3) and inGoodsCode = '664809'
+then
+RAISE EXCEPTION '<%>', vbGoodsId;
+end if;
+*/
     -- !!!замена параметра!!!
     IF inExpirationDate IS NULL OR inExpirationDate = CURRENT_DATE
     THEN
