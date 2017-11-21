@@ -2607,6 +2607,12 @@ inherited MainForm: TMainForm
       object miReportMovementCheckGrowthAndFalling: TMenuItem
         Action = actReportMovementCheckGrowthAndFalling
       end
+      object N155: TMenuItem
+        Caption = '-'
+      end
+      object N154: TMenuItem
+        Action = actMarginCategory_Movement
+      end
     end
     object N131: TMenuItem [7]
       Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075
@@ -2748,12 +2754,6 @@ inherited MainForm: TMainForm
         object N127: TMenuItem
           Action = actMarginCategory_Cross
           Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1086#1082' ('#1054#1073#1097#1080#1081')'
-        end
-        object N155: TMenuItem
-          Caption = '-'
-        end
-        object N154: TMenuItem
-          Action = actMarginCategory_Movement
         end
       end
       object miUser: TMenuItem [2]

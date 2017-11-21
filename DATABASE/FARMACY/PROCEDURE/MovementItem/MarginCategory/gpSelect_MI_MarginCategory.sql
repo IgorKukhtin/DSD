@@ -23,12 +23,25 @@ BEGIN
     
     OPEN Cursor1 FOR
     WITH 
+    --строки мастера
     tmpMI_Master AS (SELECT MovementItem.*
                      FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                           JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                            AND MovementItem.DescId     = zc_MI_Master()
                                            AND MovementItem.isErased   = tmpIsErased.isErased
                     )
+  -- остатки
+  , tmpRemains AS (SELECT tmpMI_Master.ObjectId AS GoodsId
+                        , SUM (COALESCE (Container.Amount, 0)) AS Amount_Remains
+                   FROM tmpMI_Master
+                        LEFT JOIN Container ON Container.DescId = zc_Container_Count()
+                                           AND Container.ObjectId = tmpMI_Master.ObjectId
+                                           AND Container.WhereObjectId = vbUnitId
+                                           AND Container.Amount <> 0
+                   GROUP BY tmpMI_Master.ObjectId
+                   HAVING SUM (COALESCE (Container.Amount, 0)) <> 0
+                  )
+  -- данные из прайса
   , tmpPrice AS (SELECT ObjectLink_Price_Unit.ObjectId          AS Id
                       , MCS_Value.ValueData                     AS MCSValue
                       , Price_Goods.ChildObjectId               AS GoodsId
@@ -56,40 +69,44 @@ BEGIN
                  WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                    AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
               )
+  -- товары СП, дальше связь по главному товару
   , tmpOB_SP AS (SELECT *
                  FROM ObjectBoolean AS ObjectBoolean_Goods_SP 
                  WHERE ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
                    AND COALESCE (ObjectBoolean_Goods_SP.ValueData, False) = TRUE
                 )
+    
+       -- результат
+       SELECT MovementItem.Id		   ::Integer   AS Id
+            , Object_Goods.Id              ::Integer   AS GoodsId
+            , Object_Goods.GoodsCodeInt    ::Integer   AS GoodsCode
+            , Object_Goods.GoodsName       ::TVarChar  AS GoodsName
+            , Object_Goods.GoodsGroupName  ::TVarChar  AS GoodsGroupName
  
-       SELECT
-              MovementItem.Id			AS Id
-            , Object_Goods.Id                   AS GoodsId
-            , Object_Goods.GoodsCodeInt         AS GoodsCode
-            , Object_Goods.GoodsName            AS GoodsName
-            , Object_Goods.GoodsGroupName
- 
-            , Object_Goods.isClose
-            , Object_Goods.isTOP
-            , Object_Goods.isFirst
-            , Object_Goods.isSecond
-            
-            , tmpPrice.MCSValue    
-            , tmpPrice.MCSIsClose  
-            , tmpPrice.MCSNotRecalc
-     
+            , COALESCE (Object_Goods.isClose, False)     ::Boolean
+            , COALESCE (Object_Goods.isTOP, False)       ::Boolean
+            , COALESCE (Object_Goods.isFirst, False)     ::Boolean
+            , COALESCE (Object_Goods.isSecond, False)    ::Boolean
 
-            , MovementItem.Amount               AS Amount
-            , MIFloat_Amount.ValueData          AS AmountAnalys
-            , MIFloat_AmountMin.ValueData       AS AmountMin
-            , MIFloat_AmountMax.ValueData       AS AmountMax
-            , MIFloat_NumberMin.ValueData       AS NumberMin
-            , MIFloat_NumberMax.ValueData       AS NumberMax
-            
-            , MIString_Comment.ValueData        AS Comment
-            
+            , COALESCE (tmpPrice.MCSValue, 0)            ::TFloat
+            , COALESCE (tmpPrice.MCSIsClose, False)      ::Boolean
+            , COALESCE (tmpPrice.MCSNotRecalc, False)    ::Boolean
             , COALESCE (ObjectBoolean_Goods_SP.ValueData, False)  :: Boolean  AS isSP
-            , MovementItem.isErased             AS isErased
+   
+            , MovementItem.Amount                       ::TFloat       AS Amount
+            , COALESCE (MIFloat_Amount.ValueData, 0)    ::TFloat       AS AmountAnalys
+            , COALESCE (MIFloat_AmountMin.ValueData, 0) ::TFloat       AS AmountMin
+            , COALESCE (MIFloat_AmountMax.ValueData, 0) ::TFloat       AS AmountMax
+            , COALESCE (MIFloat_NumberMin.ValueData, 0) ::TFloat       AS NumberMin
+            , COALESCE (MIFloat_NumberMax.ValueData, 0) ::TFloat       AS NumberMax
+            , COALESCE (tmpRemains.Amount_Remains, 0)   ::TFloat       AS Remains
+            
+            , CASE WHEN COALESCE (MIFloat_AmountMin.ValueData, 0) <> 0 THEN (MIFloat_Amount.ValueData - MIFloat_AmountMin.ValueData) *100 / MIFloat_AmountMin.ValueData ELSE 0 END        ::TFloat AS PersentMin
+            , CASE WHEN COALESCE (MIFloat_AmountMax.ValueData, 0) <> 0 THEN (-1) * (MIFloat_Amount.ValueData - MIFloat_AmountMax.ValueData) *100 / MIFloat_AmountMax.ValueData ELSE 0 END ::TFloat AS PersentMax
+
+            , COALESCE (MIString_Comment.ValueData, '') ::TVarChar     AS Comment
+            
+            , MovementItem.isErased                        :: Boolean  AS isErased
             
        FROM tmpMI_Master AS MovementItem
             LEFT JOIN Object_Goods_View AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
@@ -114,7 +131,9 @@ BEGIN
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
+                                        
             LEFT JOIN tmpPrice ON tmpPrice.GoodsId = MovementItem.ObjectId
+            LEFT JOIN tmpRemains ON tmpRemains.GoodsId = MovementItem.ObjectId
             
             -- получаем GoodsMainId
             LEFT JOIN ObjectLink AS ObjectLink_Child 
@@ -131,8 +150,7 @@ BEGIN
 
     OPEN Cursor2 FOR
 
-       SELECT
-              MovementItem.Id	                AS Id
+       SELECT MovementItem.Id	                AS Id
             , MovementItem.ParentId	        AS ParentId
             , Object_MarginCategory.Id          AS MarginCategoryId
             , Object_MarginCategory.ValueData   AS MarginCategoryName
@@ -141,7 +159,6 @@ BEGIN
             , MIString_Comment.ValueData        AS Comment
            
             , MovementItem.isErased             AS isErased
-
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                              AND MovementItem.DescId     = zc_MI_Child()
@@ -168,4 +185,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_MI_MarginCategory (inMovementId:= 1, inisErased:= FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_MI_MarginCategory (inMovementId:= 3959786, inisErased:= FALSE, inSession:= '2'); FETCH ALL "<unnamed portal 1>";

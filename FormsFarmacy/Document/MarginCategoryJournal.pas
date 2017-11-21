@@ -35,6 +35,7 @@ type
     UpdateName: TcxGridDBColumn;
     Insertdate: TcxGridDBColumn;
     UpdateDate: TcxGridDBColumn;
+    DayCount: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -29,7 +29,8 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , UpdateName       TVarChar    --
              , UpdateDate       TDateTime   --
              , Amount           TFloat      -- мин кол-во продаж за анализируемый период
-             , ChangePercent    TFloat      -- % отклонения продаж
+             , ChangePercent    TFloat      -- % отклонения продаж.
+             , DayCount         TFloat      -- дней в периоде анализа
               )
 
 AS
@@ -88,6 +89,7 @@ BEGIN
              
              , MovementFloat_Amount.ValueData              AS Amount
              , MovementFloat_ChangePercent.ValueData       AS ChangePercent
+             , MovementFloat_DayCount.ValueData            AS DayCount
 
         FROM tmpMovement AS Movement_MarginCategory 
              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_MarginCategory.StatusId
@@ -134,6 +136,10 @@ BEGIN
              LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                      ON MovementFloat_ChangePercent.MovementId = Movement_MarginCategory.Id
                                     AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+
+             LEFT JOIN MovementFloat AS MovementFloat_DayCount
+                                     ON MovementFloat_DayCount.MovementId = Movement_MarginCategory.Id
+                                    AND MovementFloat_DayCount.DescId = zc_MovementFloat_DayCount()
          ;
 
 END;

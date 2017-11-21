@@ -1,6 +1,6 @@
 -- Function:  gpReport_SAMP_Load()
 
-DROP FUNCTION IF EXISTS gpReport_SAMP_Load (Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_SAMP_Load (Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION  gpReport_SAMP_Load(
     IN inMovementId       Integer  ,  --

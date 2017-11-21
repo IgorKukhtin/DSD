@@ -16,17 +16,17 @@ inherited MarginCategoryJournalForm: TMarginCategoryJournalForm
     Width = 979
     Height = 434
     TabOrder = 3
-    ExplicitWidth = 769
+    ExplicitWidth = 979
     ExplicitHeight = 434
     ClientRectBottom = 434
     ClientRectRight = 979
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 769
+      ExplicitWidth = 979
       ExplicitHeight = 434
       inherited cxGrid: TcxGrid
         Width = 979
         Height = 434
-        ExplicitWidth = 769
+        ExplicitWidth = 979
         ExplicitHeight = 434
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
@@ -107,6 +107,15 @@ inherited MarginCategoryJournalForm: TMarginCategoryJournalForm
             HeaderHint = ' '#9#1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1082#1086#1085#1090#1088#1072#1082#1090#1072
             Width = 82
           end
+          object DayCount: TcxGridDBColumn
+            Caption = #1044#1085'. '#1072#1085#1072#1083#1080#1079#1072
+            DataBinding.FieldName = 'DayCount'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'. '#1076#1085'. '#1074' '#1087#1077#1088#1080#1086#1076#1077' '#1076#1083#1103' '#1072#1085#1072#1083#1080#1079#1072
+            Options.Editing = False
+            Width = 60
+          end
           object ChangePercent: TcxGridDBColumn
             Caption = '% '#1086#1090#1082#1083'.'
             DataBinding.FieldName = 'ChangePercent'
@@ -166,7 +175,7 @@ inherited MarginCategoryJournalForm: TMarginCategoryJournalForm
   end
   inherited Panel: TPanel
     Width = 979
-    ExplicitWidth = 769
+    ExplicitWidth = 979
     inherited deStart: TcxDateEdit
       EditValue = 43040d
     end
@@ -194,6 +203,28 @@ inherited MarginCategoryJournalForm: TMarginCategoryJournalForm
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TMarginCategory_MovementForm'
       FormNameParam.Value = 'TMarginCategory_MovementForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
