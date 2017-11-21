@@ -200,6 +200,8 @@ BEGIN
                                       OR _Result_Child.AmountPackNextSecond <> 0
                                    GROUP BY _Result_Child.KeyId
                                   )
+            , tmpMinus AS (SELECT DISTINCT _Result_Child.KeyId FROM _Result_Child WHERE _Result_Child.Amount_result_pack < 0)
+           -- Результат
            SELECT _Result_Master.Id
                 , _Result_Master.KeyId
                 , _Result_Master.GoodsId, _Result_Master.GoodsCode, _Result_Master.GoodsName
@@ -325,12 +327,15 @@ BEGIN
               LEFT JOIN tmpChild_total ON tmpChild_total.KeyId = _Result_Master.KeyId
               LEFT JOIN (SELECT *
                          FROM _Result_Child
-                         WHERE _Result_Child.AmountPack           <> 0
+                         WHERE _Result_Child.Remains_pack         <> 0
+                            OR _Result_Child.AmountPack           <> 0
                             OR _Result_Child.AmountPackSecond     <> 0
                             OR _Result_Child.AmountPackNext       <> 0
                             OR _Result_Child.AmountPackNextSecond <> 0
                             OR _Result_Child.Income_PACK_from     <> 0
+                            OR _Result_Child.Amount_result_pack   < 0
                         ) AS _Result_Child ON _Result_Child.KeyId = _Result_Master.KeyId
+              LEFT JOIN tmpMinus ON tmpMinus.KeyId = _Result_Master.KeyId
 
               LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                     ON ObjectFloat_Weight.ObjectId = _Result_Master.GoodsId
@@ -357,8 +362,10 @@ BEGIN
                 OR COALESCE (tmpChild_total.AmountPackNextSecond, 0) <> 0 -- ИТОГО по Child - План2 для упаковки (с прихода с пр-ва, факт)
                   )
               AND inIsMinus = FALSE)
+
                  -- Или ТОЛЬКО чего не хватило
-              OR (_Result_Child.Amount_result_pack < 0
+              OR (-- _Result_Child.Amount_result_pack < 0
+                  tmpMinus.KeyId IS NOT NULL
               AND inIsMinus = TRUE)
           ;
 
