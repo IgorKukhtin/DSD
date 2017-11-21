@@ -587,7 +587,8 @@ BEGIN
 	--Номер РН
 	|| ';' || Movement.InvNumber
 	-- Адрес доставки (в ObjectString_RoomNumber.ValueData хранится номер магазина)
-	|| ';' || 'DP:V'||ObjectString_RoomNumber.ValueData||' - НЕКТАР №'||ObjectString_RoomNumber.ValueData||' '||COALESCE(Object_PartnerAdress.ValueData, '')
+	--|| ';' || 'DP:V'||ObjectString_RoomNumber.ValueData||' - НЕКТАР №'||ObjectString_RoomNumber.ValueData||' '||COALESCE(Object_PartnerAdress.ValueData, '')
+	|| ';' || 'DP:V' || COALESCE (ObjectString_ShortName.ValueData, '')
 	-- Версия формата
 	|| ';' || '14'
 	-- Вид документа : RN – расходная накладная or VN – возвратная накладная or SP - спецификация
@@ -632,6 +633,11 @@ BEGIN
              LEFT JOIN ObjectString AS ObjectString_RoomNumber
                                     ON ObjectString_RoomNumber.ObjectId = vbPartnerId
                                    AND ObjectString_RoomNumber.DescId = zc_ObjectString_Partner_RoomNumber()                             
+
+             LEFT JOIN ObjectString AS ObjectString_ShortName
+                                    ON ObjectString_ShortName.ObjectId = vbPartnerId
+                                   AND ObjectString_ShortName.DescId = zc_ObjectString_Partner_ShortName()
+
         WHERE Movement.Id = inMovementId
        ;
 
@@ -843,3 +849,5 @@ $BODY$
 -- SELECT * FROM gpSelect_Movement_Email_Send (inMovementId:= 3376510, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Mida35273055()
 -- SELECT * FROM gpSelect_Movement_Email_Send (inMovementId:= 3252496, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Vez37171990()
 -- SELECT * FROM gpSelect_Movement_Email_Send (inMovementId:= 4953855, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Brusn34604386()
+-- SELECT * FROM gpSelect_Movement_Email_Send (inMovementId:= 6887493 , inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Dakort39135074()
+

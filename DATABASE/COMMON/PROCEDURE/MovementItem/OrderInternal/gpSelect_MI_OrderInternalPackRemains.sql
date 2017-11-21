@@ -67,21 +67,36 @@ BEGIN
             , _Result_Master.Remains_pack
             , _Result_Master.Remains_CEH
             , _Result_Master.Remains_CEH_Next
+
+              -- неотгуж. заявка
             , _Result_Master.AmountPartnerPrior
             , _Result_Master.AmountPartnerPriorPromo
             , _Result_Master.AmountPartnerPriorTotal
+              -- сегодня заявка
             , _Result_Master.AmountPartner
+            , _Result_Master.AmountPartnerNext
             , _Result_Master.AmountPartnerPromo
             , _Result_Master.AmountPartnerNextPromo
             , _Result_Master.AmountPartnerTotal
+            -- Прогноз по прод.
             , _Result_Master.AmountForecast
             , _Result_Master.AmountForecastPromo
+             -- Прогноз по заяв.
             , _Result_Master.AmountForecastOrder
             , _Result_Master.AmountForecastOrderPromo
+
+             -- "средняя" за 1 день - продажа покупателям БЕЗ акций - Норм 1д (по пр.) без К
             , _Result_Master.CountForecast
+             -- "средняя" за 1 день - заказы покупателей БЕЗ акций - Норм 1д (по зв.) без К
             , _Result_Master.CountForecastOrder
+
+              -- Ост. в днях (по пр.) - без К
             , _Result_Master.DayCountForecast
+              -- Ост. в днях (по зв.) - без К
             , _Result_Master.DayCountForecastOrder
+              -- Ост. в днях (по пр. !!!ИЛИ!!! по зв.) - ПОСЛЕ УПАКОВКИ
+            , _Result_Master.DayCountForecast_calc
+
             , _Result_Master.ReceiptId
             , _Result_Master.ReceiptCode
             , _Result_Master.ReceiptName
@@ -137,22 +152,35 @@ BEGIN
 
             , _Result_Child.Remains
             , _Result_Child.Remains_pack
+
+              -- неотгуж. заявка
             , _Result_Child.AmountPartnerPrior
             , _Result_Child.AmountPartnerPriorPromo
             , _Result_Child.AmountPartnerPriorTotal
+              -- сегодня заявка
             , _Result_Child.AmountPartner
+            , _Result_Child.AmountPartnerNext
             , _Result_Child.AmountPartnerPromo
             , _Result_Child.AmountPartnerNextPromo
             , _Result_Child.AmountPartnerTotal
+              -- Прогноз по прод.
             , _Result_Child.AmountForecast
             , _Result_Child.AmountForecastPromo
+              -- Прогноз по заяв.
             , _Result_Child.AmountForecastOrder
             , _Result_Child.AmountForecastOrderPromo
+
+              -- "средняя" за 1 день - продажа покупателям БЕЗ акций - Норм 1д (по пр.) без К
             , _Result_Child.CountForecast
+              -- "средняя" за 1 день - заказы покупателей БЕЗ акций - Норм 1д (по зв.) без К
             , _Result_Child.CountForecastOrder
+              -- Ост. в днях (по пр.) - без К
             , _Result_Child.DayCountForecast
+              -- Ост. в днях (по зв.) - без К
             , _Result_Child.DayCountForecastOrder
+              -- Ост. в днях (по пр. !!!ИЛИ!!! по зв.) - ПОСЛЕ УПАКОВКИ
             , _Result_Child.DayCountForecast_calc
+
             , _Result_Child.ReceiptId
             , _Result_Child.ReceiptCode
             , _Result_Child.ReceiptName
@@ -219,9 +247,9 @@ BEGIN
             , _Result_ChildTotal.AmountPackNextSecond_calc
             , _Result_ChildTotal.AmountPackNextTotal_calc
 
-             -- РЕЗУЛЬТАТ c пр-вом
+              -- РЕЗУЛЬТАТ c пр-вом
             , _Result_ChildTotal.Amount_result
-             -- РЕЗУЛЬТАТ без пр-ва
+              -- РЕЗУЛЬТАТ без пр-ва
             , _Result_ChildTotal.Amount_result_two
               -- РЕЗУЛЬТАТ ***УПАК
             , _Result_ChildTotal.Amount_result_pack
@@ -236,22 +264,36 @@ BEGIN
             , _Result_ChildTotal.Remains
             , _Result_ChildTotal.Remains_pack
             , _Result_ChildTotal.Remains_err
+
+              -- неотгуж. заявка
             , _Result_ChildTotal.AmountPartnerPrior
             , _Result_ChildTotal.AmountPartnerPriorPromo
             , _Result_ChildTotal.AmountPartnerPriorTotal
+              -- сегодня заявка
             , _Result_ChildTotal.AmountPartner
+            , _Result_ChildTotal.AmountPartnerNext
             , _Result_ChildTotal.AmountPartnerPromo
             , _Result_ChildTotal.AmountPartnerNextPromo
             , _Result_ChildTotal.AmountPartnerTotal
+              -- Прогноз по прод.
             , _Result_ChildTotal.AmountForecast
             , _Result_ChildTotal.AmountForecastPromo
+              -- Прогноз по заяв.
             , _Result_ChildTotal.AmountForecastOrder
             , _Result_ChildTotal.AmountForecastOrderPromo
+
+              -- "средняя" за 1 день - продажа покупателям БЕЗ акций - Норм 1д (по пр.) без К
             , _Result_ChildTotal.CountForecast
+              -- "средняя" за 1 день - заказы покупателей БЕЗ акций - Норм 1д (по зв.) без К
             , _Result_ChildTotal.CountForecastOrder
+
+              -- Ост. в днях (по пр.) - без К
             , _Result_ChildTotal.DayCountForecast
+              -- Ост. в днях (по зв.) - без К
             , _Result_ChildTotal.DayCountForecastOrder
+              -- Ост. в днях (по пр. !!!ИЛИ!!! по зв.) - ПОСЛЕ УПАКОВКИ
             , _Result_ChildTotal.DayCountForecast_calc
+
             , _Result_ChildTotal.ReceiptId
             , _Result_ChildTotal.ReceiptCode
             , _Result_ChildTotal.ReceiptName

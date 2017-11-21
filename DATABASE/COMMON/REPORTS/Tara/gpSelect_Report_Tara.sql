@@ -3,52 +3,54 @@
 DROP FUNCTION IF EXISTS gpSelect_Report_Tara (TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Report_Tara(
-    IN inStartDate      TDateTime, --дата начала периода
-    IN inEndDate        TDateTime, --дата окончания периода
-    IN inWithSupplier   Boolean,   --По всем поставщикам
-    IN inWithBayer      Boolean,   --По всем покупателям
-    IN inWithPlace      Boolean,   --По всем складам
-    IN inWithBranch     Boolean,   --По всем филиалам
-    IN inWithMember     Boolean,   --По всем МОЛ
-    IN inWhereObjectId  Integer,   --По одному(группе) из объектов
-    IN inGoodsOrGroupId Integer,   --Группа товара / товар
-    IN inAccountGroupId Integer,   --Группа счетов
-    IN inSession        TVarChar   --сессия пользователя
+    IN inStartDate      TDateTime, -- дата начала периода
+    IN inEndDate        TDateTime, -- дата окончания периода
+    IN inWithSupplier   Boolean,   -- По всем поставщикам
+    IN inWithBayer      Boolean,   -- По всем покупателям
+    IN inWithPlace      Boolean,   -- По всем складам
+    IN inWithBranch     Boolean,   -- По всем филиалам
+    IN inWithMember     Boolean,   -- По всем МОЛ
+    IN inWhereObjectId  Integer,   -- По одному(группе) из объектов
+    IN inGoodsOrGroupId Integer,   -- Группа товара / товар
+    IN inAccountGroupId Integer,   -- Группа счетов
+    IN inSession        TVarChar   -- сессия пользователя
 )
 RETURNS TABLE(
-     GoodsId           Integer   --ИД товара
-    ,GoodsCode         Integer   --Код Товара
-    ,GoodsName         TVarChar  --Товар
-    ,GoodsGroupId      Integer   --ИД группы товара
-    ,GoodsGroupCode    Integer   --Код Группы товара
-    ,GoodsGroupName    TVarChar  --Наименование группы товара
-    ,ObjectId          Integer   --ИД объекта анализа
-    ,ObjectCode        Integer   --Код объекта анализа
-    ,ObjectName        TVarChar  --Наименование объекта анализа
-    ,ObjectDescId      Integer   --ИД типа объекта
-    ,ObjectDescName    TVarChar  --Наименование типа объекта
-    ,ObjectType        TVarChar  --Тип объекта анализа
-    ,BranchName        TVarChar  --Филиал (для складов)
-    ,JuridicalId       Integer   --ИД Юрлица (для партнеров)
-    ,JuridicalName     TVarChar  --Юрлицо (для партнеров)
-    ,RetailName        TVarChar  --Торговая сеть (для партнеров)
-    ,AccountGroupId    Integer   --ИД группы счетов
-    ,AccountGroupCode  Integer   --Код группы счетов
-    ,AccountGroupName  TVarChar  --Наименование группы счетов
-    ,PaidKindName      TVarChar
-    
-    ,RemainsInActive   TFloat    --Остаток на начало актив
-    ,RemainsInPassive  TFloat    --Остаток на начало пассив
-    ,RemainsIn         TFloat    --Остаток на начало
-    ,AmountIn          TFloat    --Приход
-    ,AmountInBay       TFloat    --Покупка
-    ,AmountOut         TFloat    --Расход
-    ,AmountOutSale     TFloat    --Продажа
-    ,AmountInventory   TFloat    --Инвентаризация
-    ,AmountLoss        TFloat    --Списание
-    ,RemainsOutActive  TFloat    --Остаток на конец актив
-    ,RemainsOutPassive TFloat    --Остаток на конец пассив
-    ,RemainsOut        TFloat    --Остаток на конец
+      GoodsId               Integer   -- ИД товара
+    , GoodsCode             Integer   -- Код Товара
+    , GoodsName             TVarChar  -- Товар
+    , GoodsGroupId          Integer   -- ИД группы товара
+    , GoodsGroupCode        Integer   -- Код Группы товара
+    , GoodsGroupName        TVarChar  -- Наименование группы товара
+    , ObjectId              Integer   -- ИД объекта анализа
+    , ObjectCode            Integer   -- Код объекта анализа
+    , ObjectName            TVarChar  -- Наименование объекта анализа
+    , ObjectDescId          Integer   -- ИД типа объекта
+    , ObjectDescName        TVarChar  -- Наименование типа объекта
+    , ObjectType            TVarChar  -- Тип объекта анализа
+    , BranchName            TVarChar  -- Филиал (для складов)
+    , JuridicalId           Integer   -- ИД Юрлица (для партнеров)
+    , JuridicalName         TVarChar  -- Юрлицо (для партнеров)
+    , RetailName            TVarChar  -- Торговая сеть (для партнеров)
+    , AccountGroupId        Integer   -- ИД группы счетов
+    , AccountGroupCode      Integer   -- Код группы счетов
+    , AccountGroupName      TVarChar  -- Наименование группы счетов
+    , PaidKindName          TVarChar
+                           
+    , RemainsInActive       TFloat    -- Остаток на начало актив
+    , RemainsInPassive      TFloat    -- Остаток на начало пассив
+    , RemainsIn             TFloat    -- Остаток на начало
+    , AmountIn              TFloat    -- Приход
+    , AmountInBay           TFloat    -- Покупка
+    , AmountOut             TFloat    -- Расход
+    , AmountOutSale         TFloat    -- Продажа
+    , AmountInventory       TFloat    -- Инвентаризация
+    , AmountLoss            TFloat    -- Списание
+    , RemainsOutActive      TFloat    -- Остаток на конец актив
+    , RemainsOutPassive     TFloat    -- Остаток на конец пассив
+    , RemainsOut            TFloat    -- Остаток на конец
+    , AmountPartner_out     TFloat    --
+    , AmountPartner_in      TFloat    --
     )
 AS
 $BODY$
@@ -181,7 +183,7 @@ BEGIN
                WHERE Container.DescId = zc_Container_Count();
         END IF;
 
-        IF inWithPlace 
+        IF inWithPlace = TRUE
         THEN
             INSERT INTO _tmpWhereOject (Id, ContainerDescId, CLODescId, ObjectType)
             SELECT Object_Unit.Id, zc_Container_Count(), zc_ContainerLinkObject_Unit(), 'Склад'
@@ -199,7 +201,8 @@ BEGIN
                     COALESCE(ObjectLink_Unit_Branch.ChildObjectId,0) = zc_Branch_Basis()
                 );
         END IF;
-        IF inWithBranch
+
+        IF inWithBranch = TRUE
         THEN
             INSERT INTO _tmpWhereOject (Id, ContainerDescId, CLODescId, ObjectType)
             SELECT Object_Unit.Id, zc_Container_Count(), zc_ContainerLinkObject_Unit(), 'Филиал'
@@ -215,7 +218,8 @@ BEGIN
                 AND
                 COALESCE(ObjectLink_Unit_Branch.ChildObjectId,0) <> zc_Branch_Basis();
         END IF;
-        IF inWithMember
+
+        IF inWithMember = TRUE
         THEN
             INSERT INTO _tmpWhereOject (Id, ContainerDescId, CLODescId, ObjectType)
             SELECT Object_Member.Id, zc_Container_Count(), zc_ContainerLinkObject_Member(), 'МОЛ'
@@ -284,6 +288,38 @@ BEGIN
                                   OR COALESCE (ObjectLink_Account_AccountGroup.ChildObjectId, zc_Enum_AccountGroup_20000()) = inAccountGroupId
                                     )
                              )
+           , tmpVirt AS (SELECT MovementItem.ObjectId                 AS GoodsId
+                              , MovementLinkObject_From.ObjectId      AS FromId
+                              , MovementLinkObject_To.ObjectId        AS ToId
+                              , SUM (MIFloat_AmountPartner.ValueData) AS AmountPartner
+                         FROM Movement
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                             ON MovementLinkObject_From.MovementId = Movement.Id
+                                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                            ON MovementLinkObject_To.MovementId = Movement.Id
+                                                           AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                               LEFT JOIN _tmpWhereOject AS _tmpWhereOject_from ON _tmpWhereOject_from.Id = MovementLinkObject_From.ObjectId
+                               LEFT JOIN _tmpWhereOject AS _tmpWhereOject_to   ON _tmpWhereOject_to.Id   = MovementLinkObject_To.ObjectId
+
+                               INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                      AND MovementItem.DescId     = zc_MI_Master()
+                                                      AND MovementItem.Amount     = 0
+                                                      AND MovementItem.isErased   = FALSE
+                               LEFT JOIN _tmpOject ON _tmpOject.Id = MovementItem.ObjectId
+
+                               INNER JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                            ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_AmountPartner.DescId         = zc_MIFloat_AmountPartner()
+                                                           AND MIFloat_AmountPartner.ValueData      > 0
+                         WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+                           AND Movement.StatusId = zc_Enum_Status_Complete()
+                           AND Movement.DescId   = zc_Movement_SendOnPrice()
+                           AND (_tmpWhereOject_from.Id > 0 OR _tmpWhereOject_to.Id > 0)
+                         GROUP BY MovementItem.ObjectId
+                                , MovementLinkObject_From.ObjectId
+                                , MovementLinkObject_To.ObjectId
+                        )
            , DDD
         AS(
             SELECT
@@ -431,8 +467,19 @@ BEGIN
            ,CASE WHEN (DDD.Amount-DDD.MIC_Amount_End)<0
                  THEN -(DDD.Amount-DDD.MIC_Amount_End)
             END::TFloat                                        AS RemainsOutPassive--Остаток на конец пассив
-           ,(DDD.Amount-DDD.MIC_Amount_End)::TFloat   AS RemainsOut       --Остаток на конец
+           , (DDD.Amount-DDD.MIC_Amount_End) :: TFloat         AS RemainsOut       --Остаток на конец
+           , tmpVirt_from.AmountPartner :: TFloat              AS AmountPartner_out
+           , tmpVirt_to.AmountPartner   :: TFloat              AS AmountPartner_in
         FROM DDD
+            LEFT JOIN (SELECT tmpVirt.GoodsId, tmpVirt.FromId, SUM (tmpVirt.AmountPartner) AS AmountPartner FROM tmpVirt GROUP BY tmpVirt.GoodsId, tmpVirt.FromId
+                      ) AS tmpVirt_from ON tmpVirt_from.FromId  = DDD.WhereObjectId
+                                       AND tmpVirt_from.GoodsId = DDD.GoodsId
+                                       AND DDD.AccountGroupId   = zc_Enum_AccountGroup_20000()
+            LEFT JOIN (SELECT tmpVirt.GoodsId, tmpVirt.ToId, SUM (tmpVirt.AmountPartner) AS AmountPartner FROM tmpVirt GROUP BY tmpVirt.GoodsId, tmpVirt.ToId
+                      ) AS tmpVirt_to ON tmpVirt_to.ToId    = DDD.WhereObjectId
+                                     AND tmpVirt_to.GoodsId = DDD.GoodsId
+                                     AND DDD.AccountGroupId   = zc_Enum_AccountGroup_20000()
+
             LEFT OUTER JOIN Object AS Object_Goods ON Object_Goods.Id = DDD.GoodsId
             LEFT OUTER JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                        ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
@@ -476,4 +523,4 @@ ALTER FUNCTION gpSelect_Report_Tara (TDateTime,TDateTime,Boolean,Boolean,Boolean
 */
 
 -- тест
--- SELECT * FROM gpSelect_Report_Tara (inStartDate := '20150101'::TDateTime, inEndDate:='20150131'::TDateTime, inWithSupplier:=FALSE, inWithBayer:=FALSE, inWithPlace:=FALSE, inWithBranch:=FALSE, inWithMember:=TRUE, inWhereObjectId:=0, inGoodsOrGroupId:=1865, inAccountGroupId:= 0, inSession:='5'::TVarChar);
+-- SELECT * FROM gpSelect_Report_Tara (inStartDate := '20170101'::TDateTime, inEndDate:='20170131'::TDateTime, inWithSupplier:=FALSE, inWithBayer:=FALSE, inWithPlace:=FALSE, inWithBranch:=FALSE, inWithMember:=TRUE, inWhereObjectId:=0, inGoodsOrGroupId:=1865, inAccountGroupId:= 0, inSession:='5'::TVarChar);

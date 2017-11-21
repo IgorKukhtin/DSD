@@ -3,8 +3,10 @@ inherited Report_TaraForm: TReport_TaraForm
   ClientHeight = 490
   ClientWidth = 975
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -202
+  ExplicitTop = -68
   ExplicitWidth = 991
-  ExplicitHeight = 528
+  ExplicitHeight = 525
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -86,6 +88,16 @@ inherited Report_TaraForm: TReport_TaraForm
               Format = ',0.###'
               Kind = skSum
               Column = AmountLoss
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = AmountPartner_out
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = AmountPartner_in
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -147,6 +159,16 @@ inherited Report_TaraForm: TReport_TaraForm
               Format = ',0.###'
               Kind = skSum
               Column = AmountLoss
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = AmountPartner_out
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = AmountPartner_in
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -392,6 +414,24 @@ inherited Report_TaraForm: TReport_TaraForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
+          end
+          object AmountPartner_out: TcxGridDBColumn
+            Caption = #1056#1072#1089#1093#1086#1076' '#1074#1080#1088#1090' ('#1089' '#1060#1080#1083#1080#1072#1083#1072')'
+            DataBinding.FieldName = 'AmountPartner_out'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
+          object AmountPartner_in: TcxGridDBColumn
+            Caption = #1055#1088#1080#1093#1086#1076' '#1074#1080#1088#1090' ('#1089' '#1060#1080#1083#1080#1072#1083#1072')'
+            DataBinding.FieldName = 'AmountPartner_in'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
           end
         end
       end
