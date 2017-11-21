@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_MarginCategory()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_MarginCategory (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TVarChar, TFloat, TFloat, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_MarginCategory (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TVarChar, TFloat, TFloat, TFloat, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_MarginCategory(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
@@ -13,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_MarginCategory(
     IN inComment               TVarChar   , -- Примечание
     IN inAmount                TFloat     , --
     IN inChangePercent         TFloat     , --
+    IN inDayCount              TFloat     , --
     IN inUnitId                Integer    , -- Подразделение
     IN inSession               TVarChar     -- сессия пользователя
 )
@@ -45,7 +47,14 @@ BEGIN
     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateStart(), ioId, inOperDateStart);
     -- Дата окончания
     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateEnd(), ioId, inOperDateEnd);
-    
+ 
+    -- 
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Amount(), ioId, inAmount);
+    -- 
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
+    -- 
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DayCount(), ioId, inDayCount);
+       
     -- 
     IF vbIsInsert = TRUE
     THEN
@@ -53,7 +62,7 @@ BEGIN
        PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), ioId, CURRENT_TIMESTAMP);
        -- сохранили свойство <Пользователь (создание)>
        PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, vbUserId);
-    ELSE 
+    ELSE
        -- сохранили свойство <Дата корректировки>
        PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Update(), ioId, CURRENT_TIMESTAMP);
        -- сохранили свойство <Пользователь (создание)>

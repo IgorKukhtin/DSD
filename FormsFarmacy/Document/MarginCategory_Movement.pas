@@ -69,7 +69,7 @@ type
     PartnerChoiceForm: TOpenChoiceForm;
     actInsertPromoPartner: TdsdExecStoredProc;
     macInsertPromoPartner: TMultiAction;
-    bbInsertPromoPartner: TdxBarButton;
+    bbLoad_SAMP: TdxBarButton;
     cxLabel4: TcxLabel;
     edOperDateStart: TcxDateEdit;
     edOperDateEnd: TcxDateEdit;
@@ -85,6 +85,11 @@ type
     cxLabel13: TcxLabel;
     edUpdateDate: TcxDateEdit;
     clAmount: TcxGridDBColumn;
+    spLoad_SAMP: TdsdStoredProc;
+    actLoad_SAMP: TdsdExecStoredProc;
+    macLoad_SAMP: TMultiAction;
+    cxLabel14: TcxLabel;
+    edDayCount: TcxCurrencyEdit;
   private
     { Private declarations }
   public

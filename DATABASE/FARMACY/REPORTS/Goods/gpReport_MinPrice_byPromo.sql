@@ -13,8 +13,10 @@ RETURNS TABLE ( GoodsCode     Integer      --Код товара
               , GoodsName     TVarChar     --Наименование товара
               , MakerName     TVarChar     --Производитель
               , NDSKindName   TVarChar     --вид ндс
+              , JuridicalName TVarChar     --
               , DateMinPrice  TDateTime
               , DateMaxPrice  TDateTime
+              , OperDate      TDateTime
               , MinPrice      TFloat
               , MaxPrice      TFloat
               , MidPrice      TFloat
@@ -77,7 +79,7 @@ BEGIN
 
       -- выбираем прайсы с маркет. товарами
     , tmpDataAll AS (SELECT Movement.OperDate                 AS OperDate
-                          , MI_Master.ObjectId                AS GoodsId
+                          , MI_Master.ObjectId                AS GoodsId   -- это GoodsMainId
                           , COALESCE(MIFloat_Price.ValueData,0)::TFloat  AS Price  
                           
                      FROM Movement 
@@ -101,7 +103,7 @@ BEGIN
                        AND Movement.OperDate >= inStartDate AND Movement.OperDate < inEndDate 
                      )
  
-     , tmpDataToday AS (SELECT MI_Master.ObjectId                                  AS GoodsId
+/*     , tmpDataToday AS (SELECT MI_Master.ObjectId                                  AS GoodsId
                              , MAX (COALESCE(MIFloat_Price.ValueData,0)) ::TFloat  AS Price  
                              
                         FROM Movement 
@@ -125,6 +127,24 @@ BEGIN
                           AND Movement.OperDate >= CURRENT_DATE AND Movement.OperDate < CURRENT_DATE + INTERVAL '1 DAY'
                         GROUP BY MI_Master.ObjectId
                         )
+*/
+    , tmpDataToday AS (SELECT tmp.*
+                       FROM (SELECT tmpGoodsPromo.GoodsMainId     AS GoodsMainId
+                                  , LoadPriceListItem.Price       AS Price
+                                  , LoadPriceList.Operdate        AS OperDate
+                                  , LoadPriceList.JuridicalId     AS JuridicalId
+                                  , ROW_NUMBER() OVER (PARTITION BY LoadPriceListItem.goodsId ORDER BY LoadPriceList.Operdate desc, LoadPriceListItem.Price ) AS ord
+                             FROM LoadPriceListItem 
+                                  INNER JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
+                                                          --AND LoadPriceList.Operdate <= CURRENT_DATE
+                                  INNER JOIN tmpJuridical ON tmpJuridical.JuridicalId = LoadPriceList.JuridicalId
+                                  
+                                  --INNER JOIN tmpGoods ON tmpGoods.GoodsCode = LoadPriceListItem.GoodsCode
+                                  INNER JOIN tmpGoodsPromo ON tmpGoodsPromo.GoodsMainId = LoadPriceListItem.GoodsId                          
+                             ) AS tmp
+                        WHERE tmp.Ord = 1
+                       )
+    
                      
     , tmpData AS (SELECT tmp.GoodsId
                        , tmp.MinPrice
@@ -156,8 +176,10 @@ BEGIN
                          , tmpDataToday.Price           ::TFloat    AS TodayPrice
                          , CASE WHEN COALESCE(tmpDataToday.Price, 0) <> 0 THEN 100 - (tmpData.MinPrice * 100 / tmpDataToday.Price) ELSE 0 END  ::TFloat AS Persent
                          , (COALESCE(tmpDataToday.Price, 0) + (COALESCE(tmpDataToday.Price, 0)/100 * inPersent))                               ::TFloat AS PricePersent
+                         , tmpDataToday.OperDate                    AS OperDate
+                         , tmpDataToday.JuridicalId                 AS JuridicalId
                     FROM tmpData
-                         LEFT JOIN tmpDataToday ON tmpDataToday.GoodsId = tmpData.GoodsId   
+                         INNER JOIN tmpDataToday ON tmpDataToday.GoodsMainId = tmpData.GoodsId   
                      )
  
       -- результат
@@ -165,14 +187,17 @@ BEGIN
             , Object_Goods.ValueData                   AS GoodsName
             , ObjectString_Goods_Maker.ValueData       AS MakerName
             , Object_NDSKind.ValueData                 AS NDSKindName
+            , Object_Juridical.ValueData               AS JuridicalName  -- поставщик цены сегодня
             
             , tmpData.DateMinPrice         ::TDateTime AS DateMinPrice
             , tmpData.DateMaxPrice         ::TDateTime AS DateMaxPrice
+            , tmpData.OperDate             ::TDateTime AS OperDate       --дата прайса цены сегодня 
             , tmpData.MinPrice             ::TFloat    AS MinPrice    
             , tmpData.MaxPrice             ::TFloat    AS MaxPrice    
             , tmpData.MidPrice             ::TFloat    AS MidPrice    
             , tmpData.TodayPrice           ::TFloat    AS TodayPrice
             , tmpData.Persent              ::TFloat    AS Persent
+           
             
       FROM tmpResult AS tmpData
        
@@ -186,6 +211,9 @@ BEGIN
                              ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
                             AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
         LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
+
+        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpData.JuridicalId
+
       WHERE tmpData.PricePersent <= tmpData.MinPrice OR inPersent = 0
       ORDER BY 2                                   
     ;
