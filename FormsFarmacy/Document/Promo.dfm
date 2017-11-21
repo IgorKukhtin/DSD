@@ -191,6 +191,7 @@ inherited PromoForm: TPromoForm
     end
     inherited edOperDate: TcxDateEdit
       Left = 108
+      EditValue = 43060d
       ExplicitLeft = 108
     end
     inherited cxLabel2: TcxLabel
@@ -621,6 +622,39 @@ inherited PromoForm: TPromoForm
       ReportName = #1055#1088#1086#1076#1072#1078#1072
       ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072
     end
+    object actOpenReportMinPrice_All: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1052#1080#1085'. '#1094#1077#1085#1072' '#1076#1080#1089#1090#1088'. ('#1074#1089#1077' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1080')>'
+      Hint = #1054#1090#1095#1077#1090' <'#1052#1080#1085'. '#1094#1077#1085#1072' '#1076#1080#1089#1090#1088'. ('#1074#1089#1077' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1080')>'
+      ImageIndex = 24
+      FormName = 'TReport_MinPrice_byPromoForm'
+      FormNameParam.Value = 'TReport_MinPrice_byPromoForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inMovementId'
+          Value = '0'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInvNumber'
+          Value = ''
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object PartnerChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -939,6 +973,14 @@ inherited PromoForm: TPromoForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenReportMinPrice_All'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -1003,6 +1045,10 @@ inherited PromoForm: TPromoForm
     end
     object bbReportMinPriceForm: TdxBarButton
       Action = actOpenReportMinPriceForm
+      Category = 0
+    end
+    object bbOpenReportMinPrice_All: TdxBarButton
+      Action = actOpenReportMinPrice_All
       Category = 0
     end
   end

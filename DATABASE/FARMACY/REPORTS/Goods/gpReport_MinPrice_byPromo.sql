@@ -30,25 +30,32 @@ $BODY$
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId:= lpGetUserBySession (inSession);
-/*
-    IF DATE_TRUNC('Month', inStartDate) <> DATE_TRUNC('Month', inEndDate) 
-    THEN
-         RAISE EXCEPTION 'Ошибка. Даты периода должны быть в пределе одного месяца.';
-    END IF;
-*/
+
      inEndDate := inEndDate + INTERVAL '1 DAY';
+
+     
+     CREATE TEMP TABLE _tmpPromo (MovementId Integer) ON COMMIT DROP; 
+     INSERT INTO _tmpPromo (MovementId)
+            SELECT Movement.Id
+            FROM Movement
+            WHERE Movement.DescId = zc_Movement_Promo()
+              AND Movement.StatusId = zc_Enum_Status_Complete()
+              AND (Movement.Id = inMovementId OR inMovementId = 0);
      
      --если заполнены поставщики в документе, то отчет строим по ним
      CREATE TEMP TABLE tmpJuridical (JuridicalId Integer) ON COMMIT DROP; 
      INSERT INTO tmpJuridical (JuridicalId)
-            SELECT MovementLinkObject_Juridical.ObjectId    AS JuridicalId
-            FROM Movement 
+            SELECT DISTINCT MovementLinkObject_Juridical.ObjectId    AS JuridicalId
+            FROM _tmpPromo 
+                 INNER JOIN Movement AS Movement_PromoPartner 
+                                     ON Movement_PromoPartner.ParentId = _tmpPromo.MovementId
+                                    AND Movement_PromoPartner.DescId = zc_Movement_PromoPartner()
+                                    AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
+
                  JOIN MovementLinkObject AS MovementLinkObject_Juridical
-                                         ON MovementLinkObject_Juridical.MovementId = Movement.Id
+                                         ON MovementLinkObject_Juridical.MovementId = Movement_PromoPartner.Id
                                         AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
-            WHERE Movement.ParentId = inMovementId
-              AND Movement.DescId = zc_Movement_PromoPartner()
-              AND Movement.StatusId <> zc_Enum_Status_Erased();
+            ;
               
      -- если поставщики не выбраны, заполняем таблицу всеми поставщиками
      IF NOT EXISTS (SELECT JuridicalId FROM tmpJuridical) 
@@ -62,21 +69,24 @@ BEGIN
     RETURN QUERY
     WITH 
     -- товары тек.документа маркетинга
-      tmpGoodsPromo AS (SELECT DISTINCT MI_Goods.ObjectId    AS GoodsId
-                             , ObjectLink_Main.ChildObjectId AS GoodsMainId
-                        FROM MovementItem AS MI_Goods
+      tmpGoodsPromoMI AS (SELECT DISTINCT MI_Goods.ObjectId    AS GoodsId
+                          FROM _tmpPromo
+                             INNER JOIN MovementItem AS MI_Goods 
+                                                     ON MI_Goods.MovementId = _tmpPromo.MovementId
+                                                    AND MI_Goods.DescId = zc_MI_Master()
+                                                    AND MI_Goods.isErased = FALSE
+                          )
+    , tmpGoodsPromo AS (SELECT DISTINCT tmpGoodsPromoMI.GoodsId  AS GoodsId
+                             , ObjectLink_Main.ChildObjectId     AS GoodsMainId
+                        FROM tmpGoodsPromoMI
                              -- получаем GoodsMainId
                              LEFT JOIN  ObjectLink AS ObjectLink_Child 
-                                                   ON ObjectLink_Child.ChildObjectId = MI_Goods.ObjectId
+                                                   ON ObjectLink_Child.ChildObjectId = tmpGoodsPromoMI.GoodsId
                                                   AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
                              LEFT JOIN  ObjectLink AS ObjectLink_Main 
                                                    ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
                                                   AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
-                        WHERE MI_Goods.MovementId = inMovementId
-                          AND MI_Goods.DescId = zc_MI_Master()
-                          AND MI_Goods.isErased = FALSE
-                         )
-
+                          )
       -- выбираем прайсы с маркет. товарами
     , tmpDataAll AS (SELECT Movement.OperDate                 AS OperDate
                           , MI_Master.ObjectId                AS GoodsId   -- это GoodsMainId
@@ -103,31 +113,6 @@ BEGIN
                        AND Movement.OperDate >= inStartDate AND Movement.OperDate < inEndDate 
                      )
  
-/*     , tmpDataToday AS (SELECT MI_Master.ObjectId                                  AS GoodsId
-                             , MAX (COALESCE(MIFloat_Price.ValueData,0)) ::TFloat  AS Price  
-                             
-                        FROM Movement 
-                             LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
-                                                          ON MovementLinkObject_Juridical.MovementId = Movement.Id
-                                                         AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
-                             INNER JOIN tmpJuridical ON tmpJuridical.JuridicalId = MovementLinkObject_Juridical.ObjectId
-                                                     
-                             INNER JOIN MovementItem AS MI_Master 
-                                                     ON MI_Master.MovementId = Movement.Id
-                                                    AND MI_Master.DescId = zc_MI_Master()
-                                                    AND MI_Master.IsErased = FALSE
-                             
-                             INNER JOIN tmpGoodsPromo ON tmpGoodsPromo.GoodsMainId = MI_Master.ObjectId  -- главный товар
-                             
-                             LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                         ON MIFloat_Price.MovementItemId = MI_Master.Id
-                                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
-     
-                        WHERE Movement.DescId = zc_Movement_PriceList()
-                          AND Movement.OperDate >= CURRENT_DATE AND Movement.OperDate < CURRENT_DATE + INTERVAL '1 DAY'
-                        GROUP BY MI_Master.ObjectId
-                        )
-*/
     , tmpDataToday AS (SELECT tmp.*
                        FROM (SELECT tmpGoodsPromo.GoodsMainId     AS GoodsMainId
                                   , LoadPriceListItem.Price       AS Price
