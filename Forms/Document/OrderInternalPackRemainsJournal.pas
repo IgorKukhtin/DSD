@@ -35,7 +35,7 @@ type
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
-    bbPrint: TdxBarButton;
+    bbPrintRemains: TdxBarButton;
     TotalCountKg: TcxGridDBColumn;
     TotalCountSh: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
@@ -47,6 +47,10 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     spSelectPrintRemains: TdsdStoredProc;
     actPrintRemains: TdsdPrintAction;
+    actPrintDetail: TdsdPrintAction;
+    actPrintDiff: TdsdPrintAction;
+    bbPrintDetail: TdxBarButton;
+    bbPrintDiff: TdxBarButton;
   private
     { Private declarations }
   public
