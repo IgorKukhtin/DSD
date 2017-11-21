@@ -211,6 +211,7 @@ begin
      ParamAdd(Params,'isSendOnPriceIn',ftBoolean);
      ParamAdd(Params,'isPartionGoodsDate',ftBoolean);
      ParamAdd(Params,'isStorageLine',ftBoolean);
+     ParamAdd(Params,'isLockStartWeighing',ftBoolean);
 
      ParamAdd(Params,'OrderExternalId',ftInteger);
      ParamAdd(Params,'OrderExternal_DescId',ftInteger);

@@ -8,24 +8,25 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ToolsWeighing_MovementDesc(
     IN inBranchCode  Integer   , --
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Number             Integer
-             , MovementDescId     Integer
-             , FromId             Integer, FromCode         Integer, FromName         TVarChar
-             , ToId               Integer, ToCode           Integer, ToName           TVarChar
-             , PaidKindId         Integer, PaidKindName     TVarChar
-             , InfoMoneyId        Integer, InfoMoneyCode    Integer, InfoMoneyName    TVarChar
-             , PriceListId        Integer, PriceListCode    Integer, PriceListName    TVarChar
-             , GoodsId_ReWork     Integer, GoodsCode_ReWork Integer, GoodsName_ReWork TVarChar
-             , DocumentKindId     Integer, DocumentKindName TVarChar
+RETURNS TABLE (Number              Integer
+             , MovementDescId      Integer
+             , FromId              Integer, FromCode         Integer, FromName         TVarChar
+             , ToId                Integer, ToCode           Integer, ToName           TVarChar
+             , PaidKindId          Integer, PaidKindName     TVarChar
+             , InfoMoneyId         Integer, InfoMoneyCode    Integer, InfoMoneyName    TVarChar
+             , PriceListId         Integer, PriceListCode    Integer, PriceListName    TVarChar
+             , GoodsId_ReWork      Integer, GoodsCode_ReWork Integer, GoodsName_ReWork TVarChar
+             , DocumentKindId      Integer, DocumentKindName TVarChar
              , GoodsKindWeighingGroupId Integer
-             , ColorGridValue     Integer
+             , ColorGridValue      Integer
              , MovementDescName        TVarChar
              , MovementDescName_master TVarChar
-             , OrderById          Integer
-             , isSendOnPriceIn    Boolean
-             , isPartionGoodsDate Boolean
-             , isStorageLine      Boolean
-             , isTransport_link   Boolean
+             , OrderById           Integer
+             , isSendOnPriceIn     Boolean
+             , isPartionGoodsDate  Boolean
+             , isStorageLine       Boolean
+             , isTransport_link    Boolean
+             , isLockStartWeighing Boolean
                )
 AS
 $BODY$
@@ -67,10 +68,11 @@ BEGIN
                                        , isPartionGoodsDate       Boolean
                                        , isStorageLine            Boolean
                                        , isTransport_link         Boolean
+                                       , isLockStartWeighing      Boolean
                                        , ItemName                 TVarChar
                                         ) ON COMMIT DROP;
     -- формирование
-    INSERT INTO _tmpToolsWeighing (Number, MovementDescId, FromId, ToId, PaidKindId, InfoMoneyId, GoodsId_ReWork, DocumentKindId, GoodsKindWeighingGroupId, ColorGridValue, OrderById, isSendOnPriceIn, isPartionGoodsDate, isStorageLine, isTransport_link, ItemName)
+    INSERT INTO _tmpToolsWeighing (Number, MovementDescId, FromId, ToId, PaidKindId, InfoMoneyId, GoodsId_ReWork, DocumentKindId, GoodsKindWeighingGroupId, ColorGridValue, OrderById, isSendOnPriceIn, isPartionGoodsDate, isStorageLine, isTransport_link, isLockStartWeighing, ItemName)
        SELECT tmp.Number
             , CASE WHEN TRIM (tmp.MovementDescId)           <> '' THEN TRIM (tmp.MovementDescId)           ELSE '0' END :: Integer AS MovementDescId
             , CASE WHEN TRIM (tmp.FromId)                   <> '' THEN TRIM (tmp.FromId)                   ELSE '0' END :: Integer AS FromId
@@ -116,9 +118,11 @@ BEGIN
                    ELSE FALSE -- для филиала - расход с него
               END AS isSendOnPriceIn
 
-            , CASE WHEN tmp.isPartionGoodsDate = 'TRUE' THEN TRUE ELSE FALSE END AS isPartionGoodsDate
-            , CASE WHEN tmp.isStorageLine      = 'TRUE' THEN TRUE ELSE FALSE END AS isStorageLine
-            , CASE WHEN tmp.isTransport_link   = 'TRUE' THEN TRUE ELSE FALSE END AS isTransport_link
+            , CASE WHEN tmp.isPartionGoodsDate  = 'TRUE' THEN TRUE ELSE FALSE END AS isPartionGoodsDate
+            , CASE WHEN tmp.isStorageLine       = 'TRUE' THEN TRUE ELSE FALSE END AS isStorageLine
+            , CASE WHEN tmp.isTransport_link    = 'TRUE' THEN TRUE ELSE FALSE END AS isTransport_link
+            , CASE WHEN tmp.isLockStartWeighing = 'TRUE' THEN TRUE ELSE FALSE END AS isLockStartWeighing
+            
 
             , CASE WHEN tmp.MovementDescId IN (zc_Movement_ProductionUnion() :: TVarChar) AND inBranchCode = 201 -- если Обвалка
                         THEN 'после Шприцевания' -- 'Упаковка'
@@ -136,13 +140,15 @@ BEGIN
                   , gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'ColorGrid' ,               '0',      inSession) AS ColorGridValue
                   , gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'GoodsId_ReWork' ,          '0',      inSession) AS GoodsId_ReWork
                   , gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'GoodsKindWeighingGroupId', '345238', inSession) AS GoodsKindWeighingGroupId -- Продажа
-                  , CASE WHEN inIsCeh = TRUE THEN '0' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END     || tmp.Number, 'PaidKindId',         '0',                                   inSession)          END AS PaidKindId
-                  , CASE WHEN inIsCeh = TRUE THEN '0' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END     || tmp.Number, 'InfoMoneyId',        zc_Enum_InfoMoney_30101() :: TVarChar, inSession)          END AS InfoMoneyId -- Доходы + Продукция + Готовая продукция
-                  , CASE WHEN inIsCeh = TRUE THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END              || tmp.Number, 'DocumentKindId',     '0',                                   inSession) ELSE '0' END AS DocumentKindId
-                  , CASE WHEN inIsCeh = TRUE THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END              || tmp.Number, 'isProductionIn',     'TRUE',                                inSession) ELSE ''  END AS isProductionIn
-                  , CASE WHEN inIsCeh = TRUE THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END              || tmp.Number, 'isPartionGoodsDate', 'FALSE',                               inSession) ELSE ''  END AS isPartionGoodsDate
-                  , CASE WHEN inIsCeh = TRUE THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END              || tmp.Number, 'isStorageLine',      'FALSE',                               inSession) ELSE ''  END AS isStorageLine
-                  , CASE WHEN inIsCeh = TRUE THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isTransport_link',   'FALSE',                               inSession)          END AS isTransport_link
+                  , CASE WHEN inIsCeh = TRUE THEN '0' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END     || tmp.Number, 'PaidKindId',         '0',                                                         inSession)          END AS PaidKindId
+                  , CASE WHEN inIsCeh = TRUE THEN '0' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END     || tmp.Number, 'InfoMoneyId',        zc_Enum_InfoMoney_30101() :: TVarChar,                       inSession)          END AS InfoMoneyId -- Доходы + Продукция + Готовая продукция
+                  , CASE WHEN inIsCeh = TRUE THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END              || tmp.Number, 'DocumentKindId',     '0',                                                         inSession) ELSE '0' END AS DocumentKindId
+                  , CASE WHEN inIsCeh = TRUE THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END              || tmp.Number, 'isProductionIn',     'TRUE',                                                      inSession) ELSE ''  END AS isProductionIn
+                  , CASE WHEN inIsCeh = TRUE THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END              || tmp.Number, 'isLockStartWeighing', CASE WHEN inBranchCode >= 201 THEN 'FALSE' ELSE 'TRUE' END, inSession) ELSE ''  END AS isLockStartWeighing
+                  , CASE WHEN inIsCeh = TRUE THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END              || tmp.Number, 'isPartionGoodsDate', 'FALSE',                                                     inSession) ELSE ''  END AS isPartionGoodsDate
+                  , CASE WHEN inIsCeh = TRUE THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END              || tmp.Number, 'isStorageLine',      'FALSE',                                                     inSession) ELSE ''  END AS isStorageLine
+                  , CASE WHEN inIsCeh = TRUE THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isTransport_link',   'FALSE',                                                     inSession)          END AS isTransport_link
+                  
              FROM (SELECT GENERATE_SERIES (1, vbCount) AS Number) AS tmp
             ) AS tmp
             LEFT JOIN Object AS Object_From ON Object_From.Id = CASE WHEN TRIM (tmp.FromId) <> '' THEN TRIM (tmp.FromId) ELSE '0' END :: Integer
@@ -290,6 +296,7 @@ BEGIN
            , _tmpToolsWeighing.isPartionGoodsDate
            , _tmpToolsWeighing.isStorageLine
            , _tmpToolsWeighing.isTransport_link
+           , _tmpToolsWeighing.isLockStartWeighing
 
        FROM _tmpToolsWeighing
             LEFT JOIN Object AS Object_PriceList              ON Object_PriceList.Id              = zc_PriceList_Basis() AND _tmpToolsWeighing.MovementDescId = zc_Movement_SendOnPrice()
@@ -349,6 +356,7 @@ BEGIN
             , FALSE AS isPartionGoodsDate
             , FALSE AS isStorageLine
             , FALSE AS isTransport_link
+            , FALSE AS isLockStartWeighing
        FROM (SELECT DISTINCT
                     _tmpToolsWeighing.MovementDescId
                   , _tmpToolsWeighing.OrderById

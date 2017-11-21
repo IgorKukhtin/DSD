@@ -755,6 +755,8 @@ begin
                then begin Result:=false;exit;end;
           end;
      //
+     gbStartWeighing.ItemIndex:=0;
+     //
      Result:=DialogMovementDescForm.Execute(BarCode);
      if Result then
      begin
@@ -1480,11 +1482,19 @@ end;
 //---------------------------------------------------------------------------------------------
 procedure TMainCehForm.gbStartWeighingClick(Sender: TObject);
 begin
-     if gbStartWeighing.ItemIndex = 1 then
-     begin
-          EditWeightTare_enter.Text:='';
-          SetParams_OperCount;
-     end;
+     if ParamsMovement.ParamByName('isLockStartWeighing').AsBoolean = TRUE
+     then begin
+               if gbStartWeighing.ItemIndex <> 0
+               then begin ShowMessage ('Ошибка.Нет прав для изменения Режима взвешивания.');
+                         gbStartWeighing.ItemIndex:= 0;
+               end;
+     end
+     else
+         if gbStartWeighing.ItemIndex = 1 then
+         begin
+              EditWeightTare_enter.Text:='';
+              SetParams_OperCount;
+         end;
 end;
 {------------------------------------------------------------------------}
 procedure TMainCehForm.EditGoodsKindCodePropertiesChange(Sender: TObject);
