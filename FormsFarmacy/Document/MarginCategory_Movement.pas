@@ -90,6 +90,8 @@ type
     macLoad_SAMP: TMultiAction;
     cxLabel14: TcxLabel;
     edDayCount: TcxCurrencyEdit;
+    PersentMin: TcxGridDBColumn;
+    PersentMax: TcxGridDBColumn;
   private
     { Private declarations }
   public

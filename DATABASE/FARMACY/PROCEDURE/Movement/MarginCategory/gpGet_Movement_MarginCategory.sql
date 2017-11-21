@@ -27,6 +27,7 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , UpdateDate       TDateTime   --
              , Amount           TFloat      -- мин кол-во продаж за анализируемый период
              , ChangePercent    TFloat      -- % отклонения продаж
+             , DayCount         TFloat      -- дней в периоде анализа
              )
 AS
 $BODY$
@@ -60,6 +61,7 @@ BEGIN
                               
           , NULL::TFloat                                AS Amount
           , NULL::TFloat                                AS ChangePercent
+          , NULL::TFloat                                AS DayCount
 
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
             LEFT OUTER JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId;
@@ -87,6 +89,7 @@ BEGIN
               
               , MovementFloat_Amount.ValueData              AS Amount
               , MovementFloat_ChangePercent.ValueData       AS ChangePercent
+              , MovementFloat_DayCount.ValueData            AS DayCount
 
         FROM Movement AS Movement_MarginCategory 
              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_MarginCategory.StatusId
@@ -140,6 +143,10 @@ BEGIN
              LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                      ON MovementFloat_ChangePercent.MovementId = Movement_MarginCategory.Id
                                     AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+
+             LEFT JOIN MovementFloat AS MovementFloat_DayCount
+                                     ON MovementFloat_DayCount.MovementId = Movement_MarginCategory.Id
+                                    AND MovementFloat_DayCount.DescId = zc_MovementFloat_DayCount()
                                     
         WHERE Movement_MarginCategory.Id =  inMovementId
           AND Movement_MarginCategory.DescId = zc_Movement_MarginCategory();
