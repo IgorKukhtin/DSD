@@ -36,6 +36,8 @@ type
     edPersent: TcxCurrencyEdit;
     DateMinPrice: TcxGridDBColumn;
     DateMaxPrice: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
   private
     { Private declarations }
   public

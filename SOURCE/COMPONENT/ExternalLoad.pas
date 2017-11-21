@@ -2,7 +2,8 @@ unit ExternalLoad;
 
 interface
 
-uses dsdAction, dsdDb, Classes, DB, ExternalData, ADODB;
+uses
+  dsdAction, dsdDb, Classes, DB, ExternalData, ADODB, Winapi.ActiveX, System.Win.COMObj, Vcl.Forms;
 
 type
 
@@ -404,6 +405,42 @@ begin
   FDataSet.First
 end;
 
+procedure CheckExcelFloat(AFileName: string);
+const
+  ExcelAppName = 'Excel.Application';
+var
+  CLSID: TCLSID;
+  Excel, Sheet: Variant;
+  Row, Col: Integer;
+  X: Int64;
+begin
+  if CLSIDFromProgID(PChar(ExcelAppName), CLSID) = S_OK then
+  begin
+    Excel := CreateOLEObject(ExcelAppName);
+
+    try
+      Excel.Visible := False;
+      Excel.Application.EnableEvents := False;
+      Excel.DisplayAlerts := False;
+      Excel.WorkBooks.Open(AFileName);
+      Sheet := Excel.WorkBooks[1].WorkSheets[1];
+
+      for Row := 1 to Sheet.UsedRange.Rows.Count do
+        for Col := 1 to Sheet.UsedRange.Columns.Count do
+          if Sheet.Cells[Row, Col].NumberFormat = 'General' then
+            if TryStrToInt64(Sheet.Cells[Row, Col], X) then
+              Sheet.Cells[Row, Col].NumberFormat := 0;
+
+      Excel.WorkBooks[1].Save;
+    finally
+      if not VarIsEmpty(Excel) then
+        Excel.Quit;
+
+      Excel := Unassigned;
+    end;
+  end;
+end;
+
 procedure TFileExternalLoad.Open(FileName: string);
 var strConn :  widestring;
     List: TStringList;
@@ -463,6 +500,12 @@ begin
            end;
          end;
      }
+
+      if Copy(FileName, 1, 3) = '..\' then
+        CheckExcelFloat(AnsiReplaceText(UpperCase(ExtractFilePath(Application.ExeName)), '\BIN\', Copy(FileName, 3, Length(FileName))))
+      else
+        CheckExcelFloat(FileName);
+
       strConn:='Provider=Microsoft.Jet.OLEDB.4.0;Mode=Read;' +
                'Data Source=' + FileName + ';' +
                'Extended Properties="Excel 8.0' + FExtendedProperties + ';IMEX=1;"';
@@ -663,12 +706,7 @@ begin
                         if VarIsNULL(Field.Value) then
                           StoredProc.Params.Items[i].Value := ''
                         else
-                        begin
-                          if Pos('E+', UpperCase(Field.AsString)) > 0 then
-                            StoredProc.Params.Items[i].Value := IntToStr(Trunc(gfStrToFloat(Field.Value)))
-                          else
-                            StoredProc.Params.Items[i].Value := Trim(AdaptStr(Field.Value));
-                        end;
+                          StoredProc.Params.Items[i].Value := Trim(AdaptStr(Field.Value));
                     end;
                  end;
           end;

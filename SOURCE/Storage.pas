@@ -202,6 +202,7 @@ begin
   FReportList.Clear;
   try
     DataSet := TClientDataSet.Create(nil);
+    Stream := nil;
     try
       Stream := TStringStream.Create(TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [ASession])));
       DataSet.LoadFromStream(Stream);
@@ -213,7 +214,8 @@ begin
           DataSet.Next;
         end;
     finally
-      Stream.Free;
+      if Assigned(Stream) then
+        Stream.Free;
       DataSet.Free;
     end;
   except
@@ -277,9 +279,14 @@ end;
 function TStorage.PrepareStr: AnsiString;
 begin
   if isArchive then
-     result := ZDecompressStr(Str)
-  else
-     result := Str
+  begin
+    Logger.AddToLog(' TStorage.PrepareStr ... Result := ZDecompressStr(Str)');
+    Result := ZDecompressStr(Str);
+  end else
+  begin
+    Logger.AddToLog(' TStorage.PrepareStr ... Result := Str');
+    Result := Str;
+  end;
 end;
 
 procedure TStorage.ProcessErrorCode(pData: String; ProcedureParam: String);
@@ -364,13 +371,14 @@ function TStorage.ExecuteProc(pData: String; pExecOnServer: boolean = false;
     else
        result := '';
   end;
+label
+  Restart;
 var
-  ResultType: String;
-  AttemptCount: integer;
+  ResultType: string;
+  AttemptCount, DataErrorCount: Integer;
   ok: Boolean;
   CType: TConnectionType;
-  CString: string;
-  LastError: integer;
+  CString, DString: string;
   function LastAttempt: Boolean;
   Begin
     Result := (AttemptCount >= AMaxAtempt) AND (FConnectionList.CurrentConnection[CType] = nil);
@@ -386,6 +394,9 @@ begin
 
   FCriticalSection.Enter;
   try
+    DataErrorCount := 0;
+    Restart:
+
     if (gc_User.Local = true)  and  (AMaxAtempt = 10) then
      AMaxAtempt := 2;   // для локольного режима один проход
     if gc_isDebugMode then
@@ -484,27 +495,43 @@ begin
 
     // Определяем тип возвращаемого результата
     if Ok then
-    Begin
+    begin
       Logger.AddToLog(' TStorage.ExecuteProc( ... if Ok then ...');
 
-      ResultType := trim(Copy(FReceiveStream.DataString, 1, ResultTypeLenght));
-      isArchive := trim(lowercase(Copy(FReceiveStream.DataString, ResultTypeLenght + 1, IsArchiveLenght))) = 't';
-      Str := Copy(FReceiveStream.DataString, ResultTypeLenght + IsArchiveLenght + 1, maxint);
-      if ResultType = gcMultiDataSet then begin
-         Result := ProcessMultiDataSet;
-         exit;
+      DString := FReceiveStream.DataString;
+
+      Logger.AddToLog(' TStorage.ExecuteProc( ... Length(FReceiveStream.DataString) = ' + IntToStr(Length(DString)) + ' ...');
+      Logger.AddToLog(DString);
+
+      ResultType := trim(Copy(DString, 1, ResultTypeLenght));
+      isArchive := trim(lowercase(Copy(DString, ResultTypeLenght + 1, IsArchiveLenght))) = 't';
+      Str := Copy(DString, ResultTypeLenght + IsArchiveLenght + 1, MaxInt);
+
+      Logger.AddToLog(' TStorage.ExecuteProc( ... if ResultType = gc' + ResultType + ' then ...');
+
+      if ResultType = gcMultiDataSet then
+        Result := ProcessMultiDataSet
+      else if ResultType = gcError then
+        ProcessErrorCode(PrepareStr, ConvertXMLParamToStrings(pData))
+      else if (ResultType = gcResult) or (ResultType = gcDataSet) then
+      begin
+        try
+          Result := PrepareStr;
+        except
+          Inc(DataErrorCount);
+          Logger.AddToLog(' TStorage.ExecuteProc( ... DataErrorCount = ' + IntToStr(DataErrorCount) + ' ...');
+
+          if DataErrorCount > 3 then
+            raise;
+        end;
+
+        if (DataErrorCount >= 1) and (DataErrorCount <= 3) then
+          goto Restart;
       end;
-      if ResultType = gcError then
-         ProcessErrorCode(PrepareStr, ConvertXMLParamToStrings(pData));
-      if ResultType = gcResult then
-         Result := PrepareStr;
-      if ResultType = gcDataSet then
-         Result := PrepareStr;
 
       Logger.AddToLog(Result);
-    End
-    else
-        Logger.AddToLog(' TStorage.ExecuteProc( ... else ...');
+    end else
+      Logger.AddToLog(' TStorage.ExecuteProc( ... else ...');
   finally
     Logger.AddToLog(' TStorage.ExecuteProc( ... finally ...');
     // Выход из критической секции

@@ -4,6 +4,7 @@ inherited Report_MinPrice_byPromoForm: TReport_MinPrice_byPromoForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 936
+  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -11,17 +12,17 @@ inherited Report_MinPrice_byPromoForm: TReport_MinPrice_byPromoForm
     Width = 920
     Height = 231
     ExplicitTop = 77
-    ExplicitWidth = 927
+    ExplicitWidth = 920
     ExplicitHeight = 231
     ClientRectBottom = 231
     ClientRectRight = 920
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 927
+      ExplicitWidth = 920
       ExplicitHeight = 231
       inherited cxGrid: TcxGrid
         Width = 920
         Height = 231
-        ExplicitWidth = 927
+        ExplicitWidth = 920
         ExplicitHeight = 231
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -156,6 +157,20 @@ inherited Report_MinPrice_byPromoForm: TReport_MinPrice_byPromoForm
             HeaderHint = #1060#1072#1082#1090' % '#1086#1090#1082#1083'. '#1084#1080#1085'. '#1094#1077#1085#1099' '#1080' '#1062#1045#1053#1067' '#1057#1045#1043#1054#1044#1053#1071
             Width = 70
           end
+          object OperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1094#1077#1085#1072' '#1089#1077#1075#1086#1076#1085#1075#1103
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
+          object JuridicalName: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090'. ('#1094#1077#1085#1072' '#1089#1077#1075#1086#1076#1085#1103')'
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
         end
       end
     end
@@ -163,7 +178,7 @@ inherited Report_MinPrice_byPromoForm: TReport_MinPrice_byPromoForm
   inherited Panel: TPanel
     Width = 920
     Height = 51
-    ExplicitWidth = 927
+    ExplicitWidth = 920
     ExplicitHeight = 51
     inherited deStart: TcxDateEdit
       Left = 10
@@ -400,7 +415,7 @@ inherited Report_MinPrice_byPromoForm: TReport_MinPrice_byPromoForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 64
+    Left = 56
     Top = 112
   end
   inherited BarManager: TdxBarManager

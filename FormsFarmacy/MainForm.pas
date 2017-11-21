@@ -394,6 +394,9 @@ type
     ID1: TMenuItem;
     actPersonalList: TdsdOpenForm;
     actExportSalesForSuppClick: TAction;
+    actMarginCategory_Movement: TdsdOpenForm;
+    N154: TMenuItem;
+    N155: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
