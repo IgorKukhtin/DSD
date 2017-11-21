@@ -36,6 +36,7 @@ type
     GoodsGuides: TdsdGuides;
     actContractOpenForm: TdsdOpenForm;
     bb: TdxBarButton;
+    AreaName: TcxGridDBColumn;
   private
     { Private declarations }
   public

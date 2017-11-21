@@ -510,8 +510,10 @@ begin
       Logger.AddToLog(' TStorage.ExecuteProc( ... if ResultType = gc' + ResultType + ' then ...');
 
       if ResultType = gcMultiDataSet then
-        Result := ProcessMultiDataSet
-      else if ResultType = gcError then
+      begin
+        Result := ProcessMultiDataSet;
+        Exit;
+      end else if ResultType = gcError then
         ProcessErrorCode(PrepareStr, ConvertXMLParamToStrings(pData))
       else if (ResultType = gcResult) or (ResultType = gcDataSet) then
       begin

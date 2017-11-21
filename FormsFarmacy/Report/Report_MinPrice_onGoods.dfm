@@ -3,9 +3,8 @@ inherited Report_MinPrice_onGoodsForm: TReport_MinPrice_onGoodsForm
   ClientHeight = 556
   ClientWidth = 841
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -173
   ExplicitWidth = 857
-  ExplicitHeight = 595
+  ExplicitHeight = 594
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -116,6 +115,14 @@ inherited Report_MinPrice_onGoodsForm: TReport_MinPrice_onGoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 144
+          end
+          object AreaName: TcxGridDBColumn
+            Caption = #1056#1077#1075#1080#1086#1085
+            DataBinding.FieldName = 'AreaName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072

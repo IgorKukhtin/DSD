@@ -107,6 +107,8 @@ type
     bbInsertPromoPartner: TdxBarButton;
     actOpenReportMinPriceForm: TdsdOpenForm;
     bbReportMinPriceForm: TdxBarButton;
+    actOpenReportMinPrice_All: TdsdOpenForm;
+    bbOpenReportMinPrice_All: TdxBarButton;
   private
     { Private declarations }
   public
