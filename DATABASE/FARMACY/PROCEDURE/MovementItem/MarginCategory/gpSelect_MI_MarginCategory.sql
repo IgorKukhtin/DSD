@@ -25,7 +25,7 @@ BEGIN
     WITH 
     --строки мастера
     tmpMI_Master AS (SELECT MovementItem.*
-                     FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+                     FROM (SELECT FALSE AS isErased ) AS tmpIsErased
                           JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                            AND MovementItem.DescId     = zc_MI_Master()
                                            AND MovementItem.isErased   = tmpIsErased.isErased
@@ -83,14 +83,14 @@ BEGIN
             , Object_Goods.GoodsName       ::TVarChar  AS GoodsName
             , Object_Goods.GoodsGroupName  ::TVarChar  AS GoodsGroupName
  
-            , COALESCE (Object_Goods.isClose, False)     ::Boolean
-            , COALESCE (Object_Goods.isTOP, False)       ::Boolean
-            , COALESCE (Object_Goods.isFirst, False)     ::Boolean
-            , COALESCE (Object_Goods.isSecond, False)    ::Boolean
+            , COALESCE (Object_Goods.isClose, False)     ::Boolean AS isClose
+            , COALESCE (Object_Goods.isTOP, False)       ::Boolean AS isTOP
+            , COALESCE (Object_Goods.isFirst, False)     ::Boolean AS isFirst
+            , COALESCE (Object_Goods.isSecond, False)    ::Boolean AS isSecond
 
-            , COALESCE (tmpPrice.MCSValue, 0)            ::TFloat
-            , COALESCE (tmpPrice.MCSIsClose, False)      ::Boolean
-            , COALESCE (tmpPrice.MCSNotRecalc, False)    ::Boolean
+            , COALESCE (tmpPrice.MCSValue, 0)            ::TFloat  AS MCSValue
+            , COALESCE (tmpPrice.MCSIsClose, False)      ::Boolean AS MCSIsClose
+            , COALESCE (tmpPrice.MCSNotRecalc, False)    ::Boolean AS MCSNotRecalc
             , COALESCE (ObjectBoolean_Goods_SP.ValueData, False)  :: Boolean  AS isSP
    
             , MovementItem.Amount                       ::TFloat       AS Amount
@@ -185,4 +185,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_MI_MarginCategory (inMovementId:= 3959786, inisErased:= FALSE, inSession:= '2'); FETCH ALL "<unnamed portal 1>";
+-- SELECT * FROM gpSelect_MI_MarginCategory (inMovementId:= 3959786 , inisErased:= FALSE, inSession:= '3'); FETCH ALL "<unnamed portal 29>";
