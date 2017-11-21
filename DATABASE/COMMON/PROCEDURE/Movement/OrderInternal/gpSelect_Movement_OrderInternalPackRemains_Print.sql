@@ -1,10 +1,12 @@
 -- Function: gpSelect_Movement_OrderInternalPackRemains_Print()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_OrderInternalPackRemains_Print (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_OrderInternalPackRemains_Print (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderInternalPackRemains_Print(
-    IN inMovementId        Integer  , -- ключ Документа
-    IN inSession       TVarChar    -- сессия пользователя
+    IN inMovementId    Integer  , -- ключ Документа
+    IN inIsMinus       Boolean  , -- 
+    IN inSession       TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id                   Integer
              , KeyId                TVarChar
@@ -123,6 +125,10 @@ RETURNS TABLE (Id                   Integer
              , Income_PACK_to_Child       TFloat
                -- ФАКТ - Перемещение с Цеха Упаковки
              , Income_PACK_from_Child     TFloat
+
+               -- Разница - ФАКТ и ПЛАН
+             , DiffPlus_PACK_from_Child   TFloat
+             , DiffMinus_PACK_from_Child  TFloat
               )
 AS
 $BODY$
@@ -305,6 +311,16 @@ BEGIN
                   -- ФАКТ - Перемещение с Цеха Упаковки
                 , _Result_Child.Income_PACK_from  AS Income_PACK_from_Child
 
+                , CASE WHEN _Result_Child.Income_PACK_from > _Result_Child.AmountPackTotal + _Result_Child.AmountPackNextTotal
+                            THEN _Result_Child.Income_PACK_from - (_Result_Child.AmountPackTotal + _Result_Child.AmountPackNextTotal)
+                       ELSE 0
+                  END :: TFloat AS DiffPlus_PACK_from_Child
+
+                , CASE WHEN _Result_Child.Income_PACK_from < _Result_Child.AmountPackTotal + _Result_Child.AmountPackNextTotal
+                            THEN (_Result_Child.AmountPackTotal + _Result_Child.AmountPackNextTotal) - _Result_Child.Income_PACK_from
+                       ELSE 0
+                  END :: TFloat AS DiffMinus_PACK_from_Child
+
            FROM _Result_Master
               LEFT JOIN tmpChild_total ON tmpChild_total.KeyId = _Result_Master.KeyId
               LEFT JOIN (SELECT *
@@ -323,22 +339,27 @@ BEGIN
               LEFT JOIN ObjectFloat AS ObjectFloat_Weight_Child
                                     ON ObjectFloat_Weight_Child.ObjectId = _Result_Child.GoodsId
                                    AND ObjectFloat_Weight_Child.DescId = zc_ObjectFloat_Goods_Weight()
-           WHERE COALESCE (_Result_Master.AmountTotal, 0)      <> 0 -- План1 выдачи ИТОГО на УПАК (факт)
-              OR COALESCE (_Result_Master.AmountNextTotal, 0)  <> 0 -- План2 выдачи ИТОГО на УПАК (факт)
-
-              OR COALESCE (_Result_Master.Income_PACK_to, 0)   <> 0 -- ИТОГО по Child - ФАКТ - Перемещение на Цех Упаковки
-              OR COALESCE (_Result_Child.Income_PACK_from, 0)  <> 0 -- ФАКТ - Перемещение с Цеха Упаковки
-
-              OR COALESCE (_Result_Child.AmountPackTotal, 0)       <> 0 -- План1 для упаковки (ИТОГО, факт)
-              OR COALESCE (_Result_Child.AmountPackNextTotal, 0)   <> 0 -- План2 для упаковки (ИТОГО, факт)
-
-              OR COALESCE (_Result_Child.Amount_result_pack, 0) < 0 -- Результат ПОСЛЕ УПАКОВКИ
-
-              OR COALESCE (tmpChild_total.AmountPack, 0)       <> 0 -- ИТОГО по Child - План1 для упаковки (с остатка, факт)
-              OR COALESCE (tmpChild_total.AmountPackSecond, 0) <> 0 -- ИТОГО по Child - План1 для упаковки (с прихода с пр-ва, факт)
-
-              OR COALESCE (tmpChild_total.AmountPackNext, 0)       <> 0 -- ИТОГО по Child - План2 для упаковки (с остатка, факт)
-              OR COALESCE (tmpChild_total.AmountPackNextSecond, 0) <> 0 -- ИТОГО по Child - План2 для упаковки (с прихода с пр-ва, факт)
+           WHERE ((COALESCE (_Result_Master.AmountTotal, 0)      <> 0 -- План1 выдачи ИТОГО на УПАК (факт)
+                OR COALESCE (_Result_Master.AmountNextTotal, 0)  <> 0 -- План2 выдачи ИТОГО на УПАК (факт)
+  
+                OR COALESCE (_Result_Master.Income_PACK_to, 0)   <> 0 -- ИТОГО по Child - ФАКТ - Перемещение на Цех Упаковки
+                OR COALESCE (_Result_Child.Income_PACK_from, 0)  <> 0 -- ФАКТ - Перемещение с Цеха Упаковки
+  
+                OR COALESCE (_Result_Child.AmountPackTotal, 0)       <> 0 -- План1 для упаковки (ИТОГО, факт)
+                OR COALESCE (_Result_Child.AmountPackNextTotal, 0)   <> 0 -- План2 для упаковки (ИТОГО, факт)
+  
+                OR COALESCE (_Result_Child.Amount_result_pack, 0) < 0 -- Результат ПОСЛЕ УПАКОВКИ
+  
+                OR COALESCE (tmpChild_total.AmountPack, 0)       <> 0 -- ИТОГО по Child - План1 для упаковки (с остатка, факт)
+                OR COALESCE (tmpChild_total.AmountPackSecond, 0) <> 0 -- ИТОГО по Child - План1 для упаковки (с прихода с пр-ва, факт)
+  
+                OR COALESCE (tmpChild_total.AmountPackNext, 0)       <> 0 -- ИТОГО по Child - План2 для упаковки (с остатка, факт)
+                OR COALESCE (tmpChild_total.AmountPackNextSecond, 0) <> 0 -- ИТОГО по Child - План2 для упаковки (с прихода с пр-ва, факт)
+                  )
+              AND inIsMinus = FALSE)
+                 -- Или ТОЛЬКО чего не хватило
+              OR (_Result_Child.Amount_result_pack < 0
+              AND inIsMinus = TRUE)
           ;
 
 END;
@@ -353,4 +374,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderInternalPackRemains_Print (inMovementId := 7463854, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_OrderInternalPackRemains_Print (inMovementId:= 7463854, inIsMinus:= FALSE, inSession:= zfCalc_UserAdmin())

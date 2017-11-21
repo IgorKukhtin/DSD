@@ -92,10 +92,12 @@ BEGIN
                                        )
                         , tmpOrder AS (SELECT tmpOrder_all.GoodsId
                                             , CASE WHEN tmpGoods.isGoodsKind = TRUE THEN tmpOrder_all.GoodsKindId ELSE 0 END AS GoodsKindId
-                                            , tmpOrder_all.AmountPartner
-                                            , tmpOrder_all.AmountPartnerPrior
+                                            , SUM (tmpOrder_all.AmountPartner)      AS AmountPartner
+                                            , SUM (tmpOrder_all.AmountPartnerPrior) AS AmountPartnerPrior
                                        FROM tmpOrder_all
                                             INNER JOIN tmpGoods ON tmpGoods.GoodsId = tmpOrder_all.GoodsId
+                                       GROUP BY tmpOrder_all.GoodsId
+                                              , CASE WHEN tmpGoods.isGoodsKind = TRUE THEN tmpOrder_all.GoodsKindId ELSE 0 END
                                        )
                      , tmpMI AS (SELECT MovementItem.Id                               AS MovementItemId
                                       , MovementItem.ObjectId                         AS GoodsId

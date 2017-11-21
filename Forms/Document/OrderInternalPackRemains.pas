@@ -48,7 +48,6 @@ type
     bbPrintTax: TdxBarButton;
     PrintItemsCDS: TClientDataSet;
     bbTax: TdxBarButton;
-    bbPrintTax_Client: TdxBarButton;
     bbPrintRemains: TdxBarButton;
     AmountSecond: TcxGridDBColumn;
     spUpdateAmountRemains: TdsdStoredProc;
@@ -206,12 +205,15 @@ type
     bbUpdateAmountNext_to: TdxBarButton;
     bbUpdateAmountNextSecond_to: TdxBarButton;
     bbUpdateAmountNextSecondCEH_to: TdxBarButton;
-    actPrintRemains2: TdsdPrintAction;
+    actPrintDetail: TdsdPrintAction;
     chAmountPackAllTotal: TcxGridDBColumn;
     chAmountPackAllTotal_calc: TcxGridDBColumn;
     spUpdateAmountNextSecondAll_to: TdsdStoredProc;
     DayCountForecast_calc: TcxGridDBColumn;
     AmountPartnerNext: TcxGridDBColumn;
+    cbPrintMinus: TcxCheckBox;
+    actPrintDiff: TdsdPrintAction;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public
