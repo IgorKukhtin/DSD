@@ -37,6 +37,7 @@ BEGIN
                                  , Movement.Id                             AS MovementId
                                  , MovementLinkObject_Juridical.ObjectId   AS JuridicalId
                                  , MovementLinkObject_Contract.ObjectId    AS ContractId
+                                 , MovementLinkObject_Area.ObjectId        AS AreaId
                             FROM Movement
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                         ON MovementLinkObject_Contract.MovementId = Movement.Id
@@ -46,6 +47,11 @@ BEGIN
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                         ON MovementLinkObject_Juridical.MovementId = Movement.Id
                                        AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical() 
+
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Area
+                                        ON MovementLinkObject_Area.MovementId = Movement.Id
+                                       AND MovementLinkObject_Area.DescId = zc_MovementLinkObject_Area()
+            
                             WHERE Movement.DescId = zc_Movement_PriceList()
                               AND Movement.OperDate >= inStartDate AND Movement.OperDate < inEndDate+ interval '1 day'
                               AND Movement.StatusId <> zc_Enum_Status_Erased() 
@@ -55,12 +61,14 @@ BEGIN
    , MI_PriceList AS ( SELECT tmp.OperDate
                             , tmp.JuridicalId
                             , tmp.ContractId
+                            , tmp.AreaId
                             , tmp.Price  
                             , tmp.MidPrice
                             , tmp.OrdCount AS CountPriceList
                        FROM (SELECT Movement_PriceList.OperDate
                                   , Movement_PriceList.JuridicalId
                                   , Movement_PriceList.ContractId
+                                  , Movement_PriceList.AreaId
                                   , MovementItem.Amount              AS Price
                                   , ROW_NUMBER() OVER (PARTITION BY Movement_PriceList.OperDate ORDER BY Movement_PriceList.OperDate, MovementItem.Amount) AS Ord
                                   , COUNT(Movement_PriceList.MovementId) OVER (PARTITION BY Movement_PriceList.OperDate) AS OrdCount
@@ -76,13 +84,15 @@ BEGIN
     SELECT MI_PriceList.OperDate
          , Object_Juridical.ValueData  AS JuridicalName
          , Object_Contract.ValueData   AS ContractName
+         , Object_Area.ValueData       AS AreaName
          , MI_PriceList.Price          :: TFloat
          , MI_PriceList.MidPrice       :: TFloat
          , MI_PriceList.CountPriceList :: TFloat AS isTop
          , CASE WHEN MI_PriceList.CountPriceList > 1 THEN FALSE ELSE TRUE END ::Boolean AS isOne
     FROM MI_PriceList
-         LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MI_PriceList.ContractId
+         LEFT JOIN Object AS Object_Contract  ON Object_Contract.Id  = MI_PriceList.ContractId
          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MI_PriceList.JuridicalId
+         LEFT JOIN Object AS Object_Area      ON Object_Area.Id      = MI_PriceList.AreaId
     ;
 
 END;
@@ -92,6 +102,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 21.11.17         * add AreaName
  11.01.17         * 
 */
 
