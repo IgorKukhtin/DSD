@@ -1790,13 +1790,14 @@ procedure TLoadFormTest.LoadReportTaraFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TaraForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TaraForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TaraMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_TaraMovementForm');
   exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TaraDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TaraDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerAndUnitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerAndUnitForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TaraMovementForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_TaraMovementForm');
 end;
 
 procedure TLoadFormTest.LoadReportTransportFormTest;

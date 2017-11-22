@@ -36,7 +36,7 @@ RETURNS TABLE(
     , AccountGroupCode      Integer   -- Код группы счетов
     , AccountGroupName      TVarChar  -- Наименование группы счетов
     , PaidKindName          TVarChar
-                           
+
     , RemainsInActive       TFloat    -- Остаток на начало актив
     , RemainsInPassive      TFloat    -- Остаток на начало пассив
     , RemainsIn             TFloat    -- Остаток на начало
@@ -66,14 +66,14 @@ BEGIN
     CREATE TEMP TABLE _tmpWhereOject (Id Integer, ContainerDescId Integer, CLODescId Integer, ObjectType TVarChar) ON COMMIT DROP;
     -- Создать таблицу, в которую будут залиты все товары для анализа
     CREATE TEMP TABLE _tmpOject (Id Integer) ON COMMIT DROP;
-    
+
     --Определить объекты анализа
     --Если объект определен конкретно
-    IF COALESCE (inWhereObjectId,0) <> 0 
+    IF COALESCE (inWhereObjectId,0) <> 0
     THEN
         -- Определили Деск объекта анализа
         SELECT Object.DescId INTO vbDescId FROM Object WHERE Object.Id = inWhereObjectId;
-        
+
         IF vbDescId = zc_Object_Member()
         THEN
             INSERT INTO _tmpWhereOject (Id, ContainerDescId, CLODescId, ObjectType)
@@ -125,10 +125,10 @@ BEGIN
                           Object AS Object_Unit
                           INNER JOIN ObjectLink AS ObjectLink_Unit_Branch
                                                 ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
-                                               AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch() 
-                      WHERE 
+                                               AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                      WHERE
                           Object_Unit.Id = inWhereObjectId
-                          AND 
+                          AND
                           COALESCE (ObjectLink_Unit_Branch.ChildObjectId,0) <> 0
                           AND
                           COALESCE (ObjectLink_Unit_Branch.ChildObjectId,0) <> zc_Branch_Basis())
@@ -158,8 +158,8 @@ BEGIN
                   AND ObjectLink_Unit_Branch.ChildObjectId = inWhereObjectId;
             END IF;
         END IF;
-        
-        
+
+
     ELSE
         IF inWithSupplier = TRUE
         THEN
@@ -191,10 +191,10 @@ BEGIN
                 Object AS Object_Unit
                 LEFT OUTER JOIN ObjectLink AS ObjectLink_Unit_Branch
                                            ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
-                                          AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch() 
-            WHERE 
+                                          AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+            WHERE
                 Object_Unit.DescId = zc_Object_Unit()
-                AND 
+                AND
                 (
                     COALESCE(ObjectLink_Unit_Branch.ChildObjectId,0) = 0
                     OR
@@ -210,10 +210,10 @@ BEGIN
                 Object AS Object_Unit
                 INNER JOIN ObjectLink AS ObjectLink_Unit_Branch
                                       ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
-                                     AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch() 
-            WHERE 
+                                     AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+            WHERE
                 Object_Unit.DescId = zc_Object_Unit()
-                AND 
+                AND
                 COALESCE(ObjectLink_Unit_Branch.ChildObjectId,0) > 0
                 AND
                 COALESCE(ObjectLink_Unit_Branch.ChildObjectId,0) <> zc_Branch_Basis();
@@ -225,18 +225,18 @@ BEGIN
             SELECT Object_Member.Id, zc_Container_Count(), zc_ContainerLinkObject_Member(), 'МОЛ'
             FROM
                 Object AS Object_Member
-                INNER JOIN (SELECT DISTINCT CLO.ObjectId 
+                INNER JOIN (SELECT DISTINCT CLO.ObjectId
                             FROM Container
                                 INNER JOIN ContainerLinkObject AS CLO
                                                                ON CLO.ContainerId = Container.Id
                                                               AND CLO.DescId = zc_ContainerLinkObject_Member()
                             WHERE Container.DescId = zc_Container_Count()) AS CLO_Member
                                                                            ON CLO_Member.ObjectId = Object_Member.Id
-            WHERE 
+            WHERE
                 Object_Member.DescId = zc_Object_Member();
         END IF;
     END IF;
-    
+
     -- Заполняется список товаров
     IF COALESCE (inGoodsOrGroupId, 0) <> 0
     THEN
@@ -253,7 +253,7 @@ BEGIN
         END IF;
 
     END IF;
-    
+
     -- Результат
     RETURN QUERY
         WITH tmpContainer AS (SELECT Container.Id
@@ -349,9 +349,9 @@ BEGIN
                        , tmpContainer.BranchId
                        , tmpContainer.PaidKindId
                        , tmpContainer.AccountGroupId
-                       , SUM (MIContainer.Amount) AS MIC_Amount_Start--Все движение после начала 
-                       , SUM (CASE WHEN MIContainer.OperDate > inEndDate 
-                                  THEN MIContainer.Amount 
+                       , SUM (MIContainer.Amount) AS MIC_Amount_Start--Все движение после начала
+                       , SUM (CASE WHEN MIContainer.OperDate > inEndDate
+                                  THEN MIContainer.Amount
                              ELSE 0 END)                                          AS MIC_Amount_End --Все движение после окончания
 
                        , SUM (CASE WHEN MIContainer.OperDate <= inEndDate
@@ -361,13 +361,13 @@ BEGIN
                                   AND NOT (MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnIn())
                                           AND
                                           COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_TareReturning())
-                                 THEN MIContainer.Amount 
+                                 THEN MIContainer.Amount
                             ELSE 0 END)                                          AS MIC_Amount_IN -- Возвратная: Поставщик, Покупатель за период
                        , SUM (CASE WHEN MIContainer.OperDate <= inEndDate
                                   AND MIContainer.IsActive = TRUE
                                   AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnIn())
                                   AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_TareReturning()
-                                 THEN MIContainer.Amount 
+                                 THEN MIContainer.Amount
                             ELSE 0 END)                                          AS MIC_Amount_INBay -- С ценой: Поставщик, Покупатель за период
 
                        , SUM (CASE WHEN MIContainer.OperDate <= inEndDate
@@ -377,22 +377,22 @@ BEGIN
                                   AND NOT (MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut())
                                           AND
                                           COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_TareReturning())
-                                 THEN MIContainer.Amount 
+                                 THEN MIContainer.Amount
                             ELSE 0 END)                                          AS MIC_Amount_OUT -- Возвратная: Поставщик, Покупатель за период
                        , SUM (CASE WHEN MIContainer.OperDate <= inEndDate
                                   AND MIContainer.IsActive = FALSE
                                   AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut())
                                   AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_TareReturning()
-                                 THEN MIContainer.Amount 
+                                 THEN MIContainer.Amount
                             ELSE 0 END)                                          AS MIC_Amount_OUTSale -- С ценой: Поставщик, Покупатель за период
 
                        ,SUM (CASE WHEN MIContainer.OperDate <= inEndDate
                                   AND MIContainer.MovementDescId = zc_Movement_Inventory()
-                                 THEN MIContainer.Amount 
+                                 THEN MIContainer.Amount
                             ELSE 0 END)                                          AS MIC_Amount_Inventory -- Инвентаризация за период
                        , SUM (CASE WHEN MIContainer.OperDate <= inEndDate
                                   AND MIContainer.MovementDescId = zc_Movement_Loss()
-                                 THEN MIContainer.Amount 
+                                 THEN MIContainer.Amount
                             ELSE 0 END)                                          AS MIC_Amount_Loss -- Списание за период
                     FROM tmpContainer
                         LEFT OUTER JOIN MovementItemContainer AS MIContainer
@@ -410,7 +410,7 @@ BEGIN
                 ) AS DD
             GROUP BY
                 DD.Id
-               ,DD.GoodsId 
+               ,DD.GoodsId
                ,DD.WhereObjectId
                ,DD.ObjectType
                ,DD.AccountGroupId
@@ -483,7 +483,7 @@ BEGIN
             LEFT OUTER JOIN Object AS Object_Goods ON Object_Goods.Id = DDD.GoodsId
             LEFT OUTER JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                        ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
-                                      AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup() 
+                                      AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
             LEFT OUTER JOIN Object AS Object_GoodsGroup
                                    ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
             LEFT OUTER JOIN Object AS Object_UnitOrPartner

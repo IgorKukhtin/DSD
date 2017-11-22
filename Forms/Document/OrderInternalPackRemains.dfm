@@ -685,7 +685,20 @@
             Options.Editing = False
             Width = 55
           end
-          object AmountAllTotal: TcxGridDBColumn [18]
+          object DayCountForecast_new: TcxGridDBColumn [18]
+            Caption = #1054#1089#1090'. '#1074' '#1076#1085#1103#1093' ***'#1057#1058#1040#1058
+            DataBinding.FieldName = 'DayCountForecast_new'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1057#1058#1040#1058#1048#1057#1058#1048#1050#1048' '#1087#1086' '#1076#1085#1103#1084' '#1085#1077#1076#1077#1083#1080
+            Options.Editing = False
+            Width = 55
+          end
+          object AmountAllTotal: TcxGridDBColumn [19]
             Caption = '***'#1048#1058#1054#1043#1054' '#1085#1072' '#1059#1055#1040#1050' ('#1055'1+'#1055'2)'
             DataBinding.FieldName = 'AmountAllTotal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -697,7 +710,7 @@
             Options.Editing = False
             Width = 70
           end
-          object Amount: TcxGridDBColumn [19]
+          object Amount: TcxGridDBColumn [20]
             Caption = '***'#1055'1 '#1089' '#1054#1089#1090'. '#1085#1072' '#1059#1055#1040#1050
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -708,7 +721,7 @@
             HeaderHint = #1055#1083#1072#1085'1 '#1074#1099#1076#1072#1083#1080' '#1089' '#1054#1089#1090'. '#1085#1072' '#1059#1055#1040#1050
             Width = 70
           end
-          object AmountSecond: TcxGridDBColumn [20]
+          object AmountSecond: TcxGridDBColumn [21]
             Caption = '***'#1055'1 '#1089' '#1062#1077#1093#1072' '#1085#1072' '#1059#1055#1040#1050
             DataBinding.FieldName = 'AmountSecond'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -719,7 +732,7 @@
             HeaderHint = #1055#1083#1072#1085'1 '#1074#1099#1076#1072#1083#1080' '#1089' '#1062#1077#1093#1072' '#1085#1072' '#1059#1055#1040#1050
             Width = 70
           end
-          object AmountTotal: TcxGridDBColumn [21]
+          object AmountTotal: TcxGridDBColumn [22]
             Caption = '***'#1055'1 '#1048#1058#1054#1043#1054' '#1085#1072' '#1059#1055#1040#1050
             DataBinding.FieldName = 'AmountTotal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -731,7 +744,7 @@
             Options.Editing = False
             Width = 70
           end
-          object AmountNext: TcxGridDBColumn [22]
+          object AmountNext: TcxGridDBColumn [23]
             Caption = '***'#1055'2 '#1089' '#1054#1089#1090'. '#1085#1072' '#1059#1055#1040#1050
             DataBinding.FieldName = 'AmountNext'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -742,7 +755,7 @@
             HeaderHint = #1055#1083#1072#1085'2 '#1074#1099#1076#1072#1083#1080' '#1089' '#1054#1089#1090'. '#1085#1072' '#1059#1055#1040#1050
             Width = 70
           end
-          object AmountNextSecond: TcxGridDBColumn [23]
+          object AmountNextSecond: TcxGridDBColumn [24]
             Caption = '***'#1055'2 '#1089' '#1062#1077#1093#1072' '#1085#1072' '#1059#1055#1040#1050
             DataBinding.FieldName = 'AmountNextSecond'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -753,7 +766,7 @@
             HeaderHint = #1055#1083#1072#1085'2 '#1074#1099#1076#1072#1083#1080' '#1089' '#1062#1077#1093#1072' '#1085#1072' '#1059#1055#1040#1050
             Width = 70
           end
-          object AmountNextTotal: TcxGridDBColumn [24]
+          object AmountNextTotal: TcxGridDBColumn [25]
             Caption = '***'#1055'2 '#1048#1058#1054#1043#1054' '#1085#1072' '#1059#1055#1040#1050
             DataBinding.FieldName = 'AmountNextTotal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -765,7 +778,7 @@
             Options.Editing = False
             Width = 70
           end
-          object AmountPartnerPriorTotal: TcxGridDBColumn [25]
+          object AmountPartnerPriorTotal: TcxGridDBColumn [26]
             Caption = #1085#1077#1086#1090#1075#1088#1091#1078'. '#1079#1072#1103#1074#1082#1072' ('#1080#1090#1086#1075#1086')'
             DataBinding.FieldName = 'AmountPartnerPriorTotal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -776,7 +789,7 @@
             Options.Editing = False
             Width = 70
           end
-          object AmountPartnerPrior: TcxGridDBColumn [26]
+          object AmountPartnerPrior: TcxGridDBColumn [27]
             Caption = #1085#1077#1086#1090#1075#1088#1091#1078'. '#1079#1072#1103#1074#1082#1072' ('#1073#1077#1079' '#1040#1082#1094'.)'
             DataBinding.FieldName = 'AmountPartnerPrior'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -788,7 +801,7 @@
             Options.Editing = False
             Width = 70
           end
-          object AmountPartnerPriorPromo: TcxGridDBColumn [27]
+          object AmountPartnerPriorPromo: TcxGridDBColumn [28]
             Caption = #1085#1077#1086#1090#1075#1088#1091#1078'. '#1079#1072#1103#1074#1082#1072' ('#1040#1082#1094#1080#1080')'
             DataBinding.FieldName = 'AmountPartnerPriorPromo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -800,7 +813,7 @@
             Options.Editing = False
             Width = 70
           end
-          object AmountPartnerTotal: TcxGridDBColumn [28]
+          object AmountPartnerTotal: TcxGridDBColumn [29]
             Caption = #1089#1077#1075#1086#1076#1085#1103' '#1079#1072#1103#1074#1082#1072' ('#1080#1090#1086#1075#1086')'
             DataBinding.FieldName = 'AmountPartnerTotal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -811,7 +824,7 @@
             Options.Editing = False
             Width = 70
           end
-          object AmountPartner: TcxGridDBColumn [29]
+          object AmountPartner: TcxGridDBColumn [30]
             Caption = #1089#1077#1075#1086#1076#1085#1103' '#1079#1072#1103#1074#1082#1072' ('#1073#1077#1079' '#1040#1082#1094'.)'
             DataBinding.FieldName = 'AmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -823,7 +836,7 @@
             Options.Editing = False
             Width = 70
           end
-          object AmountPartnerNext: TcxGridDBColumn [30]
+          object AmountPartnerNext: TcxGridDBColumn [31]
             Caption = #1074' '#1090'.'#1095'. '#1079#1072#1074#1090#1088#1072' '#1079#1072#1103#1074#1082#1072' ('#1073#1077#1079' '#1040#1082#1094'.)'
             DataBinding.FieldName = 'AmountPartnerNext'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -836,7 +849,7 @@
             Options.Editing = False
             Width = 70
           end
-          object AmountPartnerPromo: TcxGridDBColumn [31]
+          object AmountPartnerPromo: TcxGridDBColumn [32]
             Caption = #1089#1077#1075#1086#1076#1085#1103' '#1079#1072#1103#1074#1082#1072' ('#1040#1082#1094#1080#1080')'
             DataBinding.FieldName = 'AmountPartnerPromo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -848,7 +861,7 @@
             Options.Editing = False
             Width = 70
           end
-          object AmountPartnerNextPromo: TcxGridDBColumn [32]
+          object AmountPartnerNextPromo: TcxGridDBColumn [33]
             Caption = #1074' '#1090'.'#1095'. '#1079#1072#1074#1090#1088#1072' '#1079#1072#1103#1074#1082#1072' ('#1040#1082#1094#1080#1080')'
             DataBinding.FieldName = 'AmountPartnerNextPromo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -861,7 +874,7 @@
             Options.Editing = False
             Width = 70
           end
-          object Remains: TcxGridDBColumn [33]
+          object Remains: TcxGridDBColumn [34]
             Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1053#1045' '#1091#1087#1072#1082'.'
             DataBinding.FieldName = 'Remains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -873,7 +886,7 @@
             Options.Editing = False
             Width = 70
           end
-          object Remains_pack: TcxGridDBColumn [34]
+          object Remains_pack: TcxGridDBColumn [35]
             Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1091#1087#1072#1082'.'
             DataBinding.FieldName = 'Remains_pack'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -885,7 +898,7 @@
             Options.Editing = False
             Width = 70
           end
-          object Remains_CEH: TcxGridDBColumn [35]
+          object Remains_CEH: TcxGridDBColumn [36]
             Caption = ' '#1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' ('#1057#1045#1043#1054#1044#1053#1071')'
             DataBinding.FieldName = 'Remains_CEH'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -897,7 +910,7 @@
             Options.Editing = False
             Width = 75
           end
-          object Remains_CEH_Next: TcxGridDBColumn [36]
+          object Remains_CEH_Next: TcxGridDBColumn [37]
             Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1087#1088'-'#1074#1086' ('#1055#1054#1047#1046#1045')'
             DataBinding.FieldName = 'Remains_CEH_Next'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -908,7 +921,7 @@
             Options.Editing = False
             Width = 70
           end
-          object Income_CEH: TcxGridDBColumn [37]
+          object Income_CEH: TcxGridDBColumn [38]
             Caption = #1055#1088#1080#1093#1086#1076' '#1087#1088'-'#1074#1086' ('#1060#1040#1050#1058')'
             DataBinding.FieldName = 'Income_CEH'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -919,7 +932,7 @@
             Options.Editing = False
             Width = 70
           end
-          object CountForecastOrder: TcxGridDBColumn [38]
+          object CountForecastOrder: TcxGridDBColumn [39]
             Caption = #1055#1088#1086#1075#1085' 1'#1076' ('#1087#1086' '#1079#1074'.) '#1073#1077#1079' '#1050
             DataBinding.FieldName = 'CountForecastOrder'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -931,7 +944,7 @@
             Options.Editing = False
             Width = 60
           end
-          object CountForecast: TcxGridDBColumn [39]
+          object CountForecast: TcxGridDBColumn [40]
             Caption = #1055#1088#1086#1075#1085' 1'#1076' ('#1087#1086' '#1087#1088'.) '#1073#1077#1079' '#1050
             DataBinding.FieldName = 'CountForecast'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -943,7 +956,7 @@
             Options.Editing = False
             Width = 60
           end
-          object Plan1: TcxGridDBColumn [40]
+          object Plan1: TcxGridDBColumn [41]
             Caption = #1057#1058#1040#1058'. '#1079#1072' 1'
             DataBinding.FieldName = 'Plan1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -955,7 +968,7 @@
             Options.Editing = False
             Width = 50
           end
-          object Plan2: TcxGridDBColumn [41]
+          object Plan2: TcxGridDBColumn [42]
             Caption = #1057#1058#1040#1058'. '#1079#1072' 2'
             DataBinding.FieldName = 'Plan2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -967,7 +980,7 @@
             Options.Editing = False
             Width = 50
           end
-          object Plan3: TcxGridDBColumn [42]
+          object Plan3: TcxGridDBColumn [43]
             Caption = #1057#1058#1040#1058'. '#1079#1072' 3'
             DataBinding.FieldName = 'Plan3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -979,7 +992,7 @@
             Options.Editing = False
             Width = 50
           end
-          object Plan4: TcxGridDBColumn [43]
+          object Plan4: TcxGridDBColumn [44]
             Caption = #1057#1058#1040#1058'. '#1079#1072' 4'
             DataBinding.FieldName = 'Plan4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -991,7 +1004,7 @@
             Options.Editing = False
             Width = 50
           end
-          object Plan5: TcxGridDBColumn [44]
+          object Plan5: TcxGridDBColumn [45]
             Caption = #1057#1058#1040#1058'. '#1079#1072' 5'
             DataBinding.FieldName = 'Plan5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1003,7 +1016,7 @@
             Options.Editing = False
             Width = 50
           end
-          object Plan6: TcxGridDBColumn [45]
+          object Plan6: TcxGridDBColumn [46]
             Caption = #1057#1058#1040#1058'. '#1079#1072' 6'
             DataBinding.FieldName = 'Plan6'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1015,7 +1028,7 @@
             Options.Editing = False
             Width = 50
           end
-          object Plan7: TcxGridDBColumn [46]
+          object Plan7: TcxGridDBColumn [47]
             Caption = #1057#1058#1040#1058'. '#1079#1072' 7'
             DataBinding.FieldName = 'Plan7'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1027,7 +1040,7 @@
             Options.Editing = False
             Width = 50
           end
-          object Promo1: TcxGridDBColumn [47]
+          object Promo1: TcxGridDBColumn [48]
             Caption = #1040#1050#1062'. '#1079#1072' 1'
             DataBinding.FieldName = 'Promo1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1039,7 +1052,7 @@
             Options.Editing = False
             Width = 50
           end
-          object Promo2: TcxGridDBColumn [48]
+          object Promo2: TcxGridDBColumn [49]
             Caption = #1040#1050#1062'. '#1079#1072' 2'
             DataBinding.FieldName = 'Promo2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1051,7 +1064,7 @@
             Options.Editing = False
             Width = 50
           end
-          object Promo3: TcxGridDBColumn [49]
+          object Promo3: TcxGridDBColumn [50]
             Caption = #1040#1050#1062'. '#1079#1072' 3'
             DataBinding.FieldName = 'Promo3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1063,7 +1076,7 @@
             Options.Editing = False
             Width = 50
           end
-          object Promo4: TcxGridDBColumn [50]
+          object Promo4: TcxGridDBColumn [51]
             Caption = #1040#1050#1062'. '#1079#1072' 4'
             DataBinding.FieldName = 'Promo4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1075,7 +1088,7 @@
             Options.Editing = False
             Width = 50
           end
-          object Promo5: TcxGridDBColumn [51]
+          object Promo5: TcxGridDBColumn [52]
             Caption = #1040#1050#1062'. '#1079#1072' 5'
             DataBinding.FieldName = 'Promo5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1087,7 +1100,7 @@
             Options.Editing = False
             Width = 50
           end
-          object Promo6: TcxGridDBColumn [52]
+          object Promo6: TcxGridDBColumn [53]
             Caption = #1040#1050#1062'. '#1079#1072' 6'
             DataBinding.FieldName = 'Promo6'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1099,7 +1112,7 @@
             Options.Editing = False
             Width = 50
           end
-          object Promo7: TcxGridDBColumn [53]
+          object Promo7: TcxGridDBColumn [54]
             Caption = #1040#1050#1062'. '#1079#1072' 7'
             DataBinding.FieldName = 'Promo7'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1111,7 +1124,7 @@
             Options.Editing = False
             Width = 50
           end
-          object AmountForecastOrder: TcxGridDBColumn [54]
+          object AmountForecastOrder: TcxGridDBColumn [55]
             Caption = #1055#1088#1086#1075#1085#1086#1079' '#1087#1086' '#1079#1072#1103#1074'. ('#1073#1077#1079' '#1040#1082#1094'.)'
             DataBinding.FieldName = 'AmountForecastOrder'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1123,7 +1136,7 @@
             Options.Editing = False
             Width = 70
           end
-          object AmountForecastOrderPromo_noERR: TcxGridDBColumn [55]
+          object AmountForecastOrderPromo_noERR: TcxGridDBColumn [56]
             Caption = #1055#1088#1086#1075#1085#1086#1079' '#1087#1086' '#1079#1072#1103#1074'. ('#1040#1082#1094#1080#1080')'
             DataBinding.FieldName = 'AmountForecastOrderPromo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1135,7 +1148,7 @@
             Options.Editing = False
             Width = 70
           end
-          object AmountForecastOrderPromo: TcxGridDBColumn [56]
+          object AmountForecastOrderPromo: TcxGridDBColumn [57]
             Caption = #1055#1088#1086#1075#1085#1086#1079' '#1087#1086' '#1079#1072#1103#1074'. ('#1040#1082#1094#1080#1080'*)'
             DataBinding.FieldName = 'AmountForecastOrderPromo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1147,7 +1160,7 @@
             Options.Editing = False
             Width = 70
           end
-          object AmountForecast: TcxGridDBColumn [57]
+          object AmountForecast: TcxGridDBColumn [58]
             Caption = #1055#1088#1086#1075#1085#1086#1079' '#1087#1086' '#1087#1088#1086#1076'. ('#1073#1077#1079' '#1040#1082#1094'.)'
             DataBinding.FieldName = 'AmountForecast'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1159,7 +1172,7 @@
             Options.Editing = False
             Width = 70
           end
-          object AmountForecastPromo: TcxGridDBColumn [58]
+          object AmountForecastPromo: TcxGridDBColumn [59]
             Caption = #1055#1088#1086#1075#1085#1086#1079' '#1087#1086' '#1087#1088#1086#1076'. ('#1040#1082#1094#1080#1080')'
             DataBinding.FieldName = 'AmountForecastPromo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1171,7 +1184,7 @@
             Options.Editing = False
             Width = 70
           end
-          object DayCountForecastOrder: TcxGridDBColumn [59]
+          object DayCountForecastOrder: TcxGridDBColumn [60]
             Caption = #1054#1089#1090'. '#1074' '#1076#1085#1103#1093' ('#1087#1086' '#1079#1074'.) '
             DataBinding.FieldName = 'DayCountForecastOrder'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1182,7 +1195,7 @@
             Options.Editing = False
             Width = 55
           end
-          object DayCountForecast: TcxGridDBColumn [60]
+          object DayCountForecast: TcxGridDBColumn [61]
             Caption = #1054#1089#1090'. '#1074' '#1076#1085#1103#1093' ('#1087#1086' '#1087#1088'.) '
             DataBinding.FieldName = 'DayCountForecast'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1194,7 +1207,7 @@
             Options.Editing = False
             Width = 55
           end
-          object ReceiptCode_basis: TcxGridDBColumn [61]
+          object ReceiptCode_basis: TcxGridDBColumn [62]
             Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'. ('#1087#1088'.)'
             DataBinding.FieldName = 'ReceiptCode_basis'
             Visible = False
@@ -1203,7 +1216,7 @@
             Options.Editing = False
             Width = 70
           end
-          object ReceiptName_basis: TcxGridDBColumn [62]
+          object ReceiptName_basis: TcxGridDBColumn [63]
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')'
             DataBinding.FieldName = 'ReceiptName_basis'
             HeaderAlignmentHorz = taCenter
@@ -1211,7 +1224,7 @@
             Options.Editing = False
             Width = 90
           end
-          object ReceiptCode: TcxGridDBColumn [63]
+          object ReceiptCode: TcxGridDBColumn [64]
             Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'. '#1043#1055
             DataBinding.FieldName = 'ReceiptCode'
             Visible = False
@@ -1220,7 +1233,7 @@
             Options.Editing = False
             Width = 55
           end
-          object ReceiptName: TcxGridDBColumn [64]
+          object ReceiptName: TcxGridDBColumn [65]
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099' '#1043#1055
             DataBinding.FieldName = 'ReceiptName'
             Visible = False
@@ -1229,7 +1242,7 @@
             Options.Editing = False
             Width = 80
           end
-          object Id: TcxGridDBColumn [65]
+          object Id: TcxGridDBColumn [66]
             DataBinding.FieldName = 'Id'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -1857,6 +1870,19 @@
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object chDayCountForecast_new: TcxGridDBColumn
+            Caption = #1054#1089#1090'. '#1074' '#1076#1085#1103#1093' ***'#1057#1058#1040#1058
+            DataBinding.FieldName = 'DayCountForecast_new'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1057#1058#1040#1058#1048#1057#1058#1048#1050#1048' '#1087#1086' '#1076#1085#1103#1084' '#1085#1077#1076#1077#1083#1080
+            Options.Editing = False
+            Width = 55
           end
           object chAmountPackAllTotal: TcxGridDBColumn
             Caption = '***'#1048#1058#1054#1043#1054' '#1089' '#1059#1055#1040#1050' '#1092#1072#1082#1090' ('#1055'1+'#1055'2)'
@@ -3342,6 +3368,18 @@
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object chtDayCountForecast_new: TcxGridDBColumn
+            Caption = #1054#1089#1090'. '#1074' '#1076#1085#1103#1093' ***'#1057#1058#1040#1058
+            DataBinding.FieldName = 'DayCountForecast_new'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1057#1058#1040#1058#1048#1057#1058#1048#1050#1048' '#1087#1086' '#1076#1085#1103#1084' '#1085#1077#1076#1077#1083#1080
+            Options.Editing = False
+            Width = 55
           end
           object chtAmountAllTotal: TcxGridDBColumn
             Caption = '***'#1048#1058#1054#1043#1054' '#1085#1072' '#1059#1055#1040#1050' ('#1055'1+'#1055'2)'
@@ -6630,10 +6668,10 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmountSecond'
+        Name = 'inAmountPackSecond'
         Value = Null
         Component = ChildCDS
-        ComponentItem = 'AmountSecond'
+        ComponentItem = 'AmountPackSecond'
         DataType = ftFloat
         ParamType = ptInputOutput
         MultiSelectSeparator = ','

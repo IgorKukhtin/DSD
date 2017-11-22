@@ -3,9 +3,8 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
   ClientHeight = 540
   ClientWidth = 925
   AddOnFormData.Params = FormParams
-  ExplicitTop = -86
   ExplicitWidth = 941
-  ExplicitHeight = 579
+  ExplicitHeight = 575
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -27,6 +26,27 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
         ExplicitWidth = 925
         ExplicitHeight = 465
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = AmountIn
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = AmountOut
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = AmountPartner_out
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = AmountPartner_in
+            end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####;-,0.####; ;'
@@ -37,6 +57,16 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
               Column = AmountOut
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = AmountPartner_out
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = AmountPartner_in
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -148,7 +178,29 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 49
+            Width = 50
+          end
+          object AmountPartner_out: TcxGridDBColumn
+            Caption = #1056#1072#1089#1093#1086#1076' '#1074#1080#1088#1090' ('#1089' '#1060#1080#1083#1080#1072#1083#1072')'
+            DataBinding.FieldName = 'AmountPartner_out'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object AmountPartner_in: TcxGridDBColumn
+            Caption = #1055#1088#1080#1093#1086#1076' '#1074#1080#1088#1090' ('#1089' '#1060#1080#1083#1080#1072#1083#1072')'
+            DataBinding.FieldName = 'AmountPartner_in'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -185,11 +237,13 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
     ExplicitHeight = 49
     inherited deStart: TcxDateEdit
       Left = 118
+      EditValue = 42736d
       ExplicitLeft = 118
     end
     inherited deEnd: TcxDateEdit
       Left = 118
       Top = 26
+      EditValue = 42736d
       ExplicitLeft = 118
       ExplicitTop = 26
     end
@@ -410,7 +464,7 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarButton1'
         end
         item
           Visible = True
@@ -418,7 +472,11 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object dxBarButton1: TdxBarButton

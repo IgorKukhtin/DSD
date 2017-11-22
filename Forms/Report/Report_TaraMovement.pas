@@ -59,6 +59,8 @@ type
     AccountGroupGuides: TdsdGuides;
     AccountGroupCode: TcxGridDBColumn;
     AccountGroupName: TcxGridDBColumn;
+    AmountPartner_out: TcxGridDBColumn;
+    AmountPartner_in: TcxGridDBColumn;
   private
     { Private declarations }
   public

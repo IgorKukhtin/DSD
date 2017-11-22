@@ -216,6 +216,7 @@ type
     dxBarButton1: TdxBarButton;
     Plan1: TcxGridDBColumn;
     Promo1: TcxGridDBColumn;
+    DayCountForecast_new: TcxGridDBColumn;
   private
     { Private declarations }
   public

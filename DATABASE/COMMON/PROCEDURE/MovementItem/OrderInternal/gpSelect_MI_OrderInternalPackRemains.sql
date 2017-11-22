@@ -113,6 +113,18 @@ BEGIN
             , _Result_Master.DayCountForecastOrder
               -- Îñò. â äíÿõ (ïî ïð. !!!ÈËÈ!!! ïî çâ.) - ÏÎÑËÅ ÓÏÀÊÎÂÊÈ
             , _Result_Master.DayCountForecast_calc
+              -- Îñò. â äíÿõ (ïî ïð. !!!ÈËÈ!!! ïî çâ.) - ÏÎÑËÅ ÓÏÀÊÎÂÊÈ
+            , zfCalc_StatDayCount_Week (inAmount           := COALESCE (_Result_Master.Amount_result_pack, 0)
+                                      , inAmountPartnerNext:= COALESCE (_Result_Master.AmountPartnerNext, 0) + COALESCE (_Result_Master.AmountPartnerNextPromo, 0)
+                                      , inCountForecast    := CASE WHEN _Result_Master.CountForecast > 0 THEN COALESCE (_Result_Master.CountForecast, 0) ELSE COALESCE (_Result_Master.CountForecastOrder, 0) END
+                                      , inPlan1            := COALESCE (_Result_Master.Plan1, 0) + COALESCE (_Result_Master.Promo1, 0)
+                                      , inPlan2            := COALESCE (_Result_Master.Plan2, 0) + COALESCE (_Result_Master.Promo2, 0)
+                                      , inPlan3            := COALESCE (_Result_Master.Plan3, 0) + COALESCE (_Result_Master.Promo3, 0)
+                                      , inPlan4            := COALESCE (_Result_Master.Plan4, 0) + COALESCE (_Result_Master.Promo4, 0)
+                                      , inPlan5            := COALESCE (_Result_Master.Plan5, 0) + COALESCE (_Result_Master.Promo5, 0)
+                                      , inPlan6            := COALESCE (_Result_Master.Plan6, 0) + COALESCE (_Result_Master.Promo6, 0)
+                                      , inPlan7            := COALESCE (_Result_Master.Plan7, 0) + COALESCE (_Result_Master.Promo7, 0)
+                                       ) AS DayCountForecast_new
 
             , _Result_Master.ReceiptId
             , _Result_Master.ReceiptCode
@@ -215,6 +227,18 @@ BEGIN
             , _Result_Child.DayCountForecastOrder
               -- Îñò. â äíÿõ (ïî ïð. !!!ÈËÈ!!! ïî çâ.) - ÏÎÑËÅ ÓÏÀÊÎÂÊÈ
             , _Result_Child.DayCountForecast_calc
+              -- Îñò. â äíÿõ (ïî ïð. !!!ÈËÈ!!! ïî çâ.) - ÏÎÑËÅ ÓÏÀÊÎÂÊÈ
+            , zfCalc_StatDayCount_Week (inAmount           := COALESCE (_Result_Child.Amount_result_pack, 0)
+                                      , inAmountPartnerNext:= COALESCE (_Result_Child.AmountPartnerNext, 0) + COALESCE (_Result_Child.AmountPartnerNextPromo, 0)
+                                      , inCountForecast    := CASE WHEN _Result_Child.CountForecast > 0 THEN COALESCE (_Result_Child.CountForecast, 0) ELSE COALESCE (_Result_Child.CountForecastOrder, 0) END
+                                      , inPlan1            := COALESCE (_Result_Child.Plan1, 0) + COALESCE (_Result_Child.Promo1, 0)
+                                      , inPlan2            := COALESCE (_Result_Child.Plan2, 0) + COALESCE (_Result_Child.Promo2, 0)
+                                      , inPlan3            := COALESCE (_Result_Child.Plan3, 0) + COALESCE (_Result_Child.Promo3, 0)
+                                      , inPlan4            := COALESCE (_Result_Child.Plan4, 0) + COALESCE (_Result_Child.Promo4, 0)
+                                      , inPlan5            := COALESCE (_Result_Child.Plan5, 0) + COALESCE (_Result_Child.Promo5, 0)
+                                      , inPlan6            := COALESCE (_Result_Child.Plan6, 0) + COALESCE (_Result_Child.Promo6, 0)
+                                      , inPlan7            := COALESCE (_Result_Child.Plan7, 0) + COALESCE (_Result_Child.Promo7, 0)
+                                       ) AS DayCountForecast_new
 
             , _Result_Child.ReceiptId
             , _Result_Child.ReceiptCode
@@ -345,6 +369,18 @@ BEGIN
             , _Result_ChildTotal.DayCountForecastOrder
               -- Îñò. â äíÿõ (ïî ïð. !!!ÈËÈ!!! ïî çâ.) - ÏÎÑËÅ ÓÏÀÊÎÂÊÈ
             , _Result_ChildTotal.DayCountForecast_calc
+              -- Îñò. â äíÿõ (ïî ïð. !!!ÈËÈ!!! ïî çâ.) - ÏÎÑËÅ ÓÏÀÊÎÂÊÈ
+            , zfCalc_StatDayCount_Week (inAmount           := COALESCE (_Result_ChildTotal.Amount_result_pack, 0)
+                                      , inAmountPartnerNext:= COALESCE (_Result_ChildTotal.AmountPartnerNext, 0) + COALESCE (_Result_ChildTotal.AmountPartnerNextPromo, 0)
+                                      , inCountForecast    := CASE WHEN _Result_ChildTotal.CountForecast > 0 THEN COALESCE (_Result_ChildTotal.CountForecast, 0) ELSE COALESCE (_Result_ChildTotal.CountForecastOrder, 0) END
+                                      , inPlan1            := COALESCE (_Result_ChildTotal.Plan1, 0) + COALESCE (_Result_ChildTotal.Promo1, 0)
+                                      , inPlan2            := COALESCE (_Result_ChildTotal.Plan2, 0) + COALESCE (_Result_ChildTotal.Promo2, 0)
+                                      , inPlan3            := COALESCE (_Result_ChildTotal.Plan3, 0) + COALESCE (_Result_ChildTotal.Promo3, 0)
+                                      , inPlan4            := COALESCE (_Result_ChildTotal.Plan4, 0) + COALESCE (_Result_ChildTotal.Promo4, 0)
+                                      , inPlan5            := COALESCE (_Result_ChildTotal.Plan5, 0) + COALESCE (_Result_ChildTotal.Promo5, 0)
+                                      , inPlan6            := COALESCE (_Result_ChildTotal.Plan6, 0) + COALESCE (_Result_ChildTotal.Promo6, 0)
+                                      , inPlan7            := COALESCE (_Result_ChildTotal.Plan7, 0) + COALESCE (_Result_ChildTotal.Promo7, 0)
+                                       ) AS DayCountForecast_new
 
             , _Result_ChildTotal.ReceiptId
             , _Result_ChildTotal.ReceiptCode

@@ -177,7 +177,7 @@ BEGIN
                               -- "средняя" за 1 день - заказы покупателей БЕЗ акций
                             , CASE WHEN vbDayCount <> 0 THEN COALESCE (MIFloat_AmountForecastOrder.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbDayCount ELSE 0 END AS CountForecastOrder
 
-                              -- "средняя" за 1 день - продажа ИЛИ заявака
+                              -- "средняя" за 1 день - продажа ИЛИ заявка
                             , CASE WHEN vbWeekCount <> 0 THEN COALESCE (MIFloat_Plan1.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeekCount ELSE 0 END AS Plan1
                             , CASE WHEN vbWeekCount <> 0 THEN COALESCE (MIFloat_Plan2.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeekCount ELSE 0 END AS Plan2
                             , CASE WHEN vbWeekCount <> 0 THEN COALESCE (MIFloat_Plan3.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeekCount ELSE 0 END AS Plan3
@@ -1011,9 +1011,9 @@ BEGIN
            , CASE WHEN ABS (tmpChild.AmountForecastOrderPromo) < 1 THEN tmpChild.AmountForecastOrderPromo ELSE CAST (COALESCE (tmpChild.AmountForecastOrderPromo, 0) AS NUMERIC (16, 1)) END :: TFloat AS AmountForecastOrderPromo
 
              -- Норм 1д (по пр.) без К
-           , tmpChild.CountForecast
+           , COALESCE (tmpChild.CountForecast, 0)      :: TFloat AS CountForecastOrder
              -- Норм 1д (по зв.) без К
-           , tmpChild.CountForecastOrder
+           , COALESCE (tmpChild.CountForecastOrder, 0) :: TFloat AS CountForecastOrder
 
              -- "средняя" за 1 день - продажа ИЛИ заявака
            , tmpChild.Plan1, tmpChild.Plan2, tmpChild.Plan3, tmpChild.Plan4, tmpChild.Plan5, tmpChild.Plan6, tmpChild.Plan7
