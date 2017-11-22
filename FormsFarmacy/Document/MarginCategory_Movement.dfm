@@ -293,6 +293,7 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
           object Value: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080
             DataBinding.FieldName = 'Value'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 72
@@ -303,7 +304,7 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = JuridicalChoiceForm
+                Action = MarginCategoryChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -617,8 +618,8 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
         item
           StoredProc = spGetTotalSumm
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1070#1088'.'#1083#1080#1094#1086'>'
-      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1070#1088'.'#1083#1080#1094#1086'>'
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1050#1072#1090#1077#1075#1086#1088#1080#1102' '#1085#1072#1094#1077#1085#1082#1080'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1050#1072#1090#1077#1075#1086#1088#1080#1102' '#1085#1072#1094#1077#1085#1082#1080'>'
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -659,10 +660,10 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
       View = cxGridDBTableView1
-      Action = JuridicalChoiceForm
+      Action = MarginCategoryChoiceForm
       Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1070#1088'. '#1083#1080#1094#1086'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1070#1088'. '#1083#1080#1094#1086'>'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1072#1090#1077#1075#1086#1088#1080#1102' '#1085#1072#1094#1077#1085#1082#1080'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1072#1090#1077#1075#1086#1088#1080#1102' '#1085#1072#1094#1077#1085#1082#1080'>'
       ShortCut = 45
       ImageIndex = 0
     end
@@ -746,13 +747,13 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
         end>
       isShowModal = False
     end
-    object JuridicalChoiceForm: TOpenChoiceForm
+    object MarginCategoryChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'JuridicalChoiceForm'
-      FormName = 'TJuridicalForm'
-      FormNameParam.Value = 'TJuridicalForm'
+      Caption = 'MarginCategoryChoiceForm'
+      FormName = 'TMarginCategoryForm'
+      FormNameParam.Value = 'TMarginCategoryForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -760,14 +761,14 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
           Name = 'key'
           Value = Null
           Component = DetailDCS
-          ComponentItem = 'JuridicalId'
+          ComponentItem = 'MarginCategoryId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = DetailDCS
-          ComponentItem = 'JuridicalName'
+          ComponentItem = 'MarginCategoryName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -972,6 +973,12 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited bbErased: TdxBarButton
+      Visible = ivNever
+    end
+    inherited bbUnErased: TdxBarButton
+      Visible = ivNever
     end
     inherited bbMovementItemProtocol: TdxBarButton
       UnclickAfterDoing = False
@@ -1567,14 +1574,18 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
   object DetailDCS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
+    IndexFieldNames = 'ParentId'
+    MasterFields = 'Id'
+    MasterSource = MasterDS
+    PacketRecords = 0
     Params = <>
-    Left = 320
+    Left = 328
     Top = 496
   end
   object DetailDS: TDataSource
     DataSet = DetailDCS
-    Left = 392
-    Top = 496
+    Left = 400
+    Top = 488
   end
   object dsdDBViewAddOn1: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1596,11 +1607,11 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
         DataSummaryItemIndex = -1
       end>
     SearchAsFilter = False
-    Left = 622
-    Top = 489
+    Left = 646
+    Top = 481
   end
   object spInsertUpdateMIChild: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_MarginCategoryChild'
+    StoredProcName = 'gpInsertUpdate_MI_MarginCategory_Child'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1621,10 +1632,27 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inJuridicalId'
+        Name = 'inParentId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMarginCategoryId'
         Value = Null
         Component = DetailDCS
-        ComponentItem = 'JuridicalId'
+        ComponentItem = 'MarginCategoryId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1638,8 +1666,6 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    NeedResetData = True
-    ParamKeyField = 'inMovementId'
     Left = 512
     Top = 488
   end

@@ -19,9 +19,7 @@ AS
 $BODY$
    DECLARE vbUserId  Integer;
    DECLARE vbPeriodCount  Integer;
-   DECLARE vbDate2   TDateTime;
-   DECLARE vbDate3   TDateTime;
-   DECLARE vbDate4   TDateTime;
+   DECLARE vbMarginCategoryId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
@@ -154,7 +152,19 @@ BEGIN
    FROM _tmpData   
        LEFT JOIN _tmpMI ON _tmpMI.GoodsId = _tmpData.GoodsId
 ;
+/*
+   -- ищем текущую категорию наценки
+   vbMarginCategoryId := COALESCE(SELECT ObjectLink_Unit_MarginCategory.ChildObjectId
+                                  FROM ObjectLink AS ObjectLink_Unit_MarginCategory
+                                  WHERE ObjectLink_Unit_MarginCategory.ObjectId = inUnitId
+                                    AND ObjectLink_Unit_MarginCategory.DescId = zc_ObjectLink_Unit_MarginCategory()
+                                  , 0);
+    
+    
+*/
 
+        
+        
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

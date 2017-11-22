@@ -4,7 +4,7 @@ inherited MarginReportItemForm: TMarginReportItemForm
   ClientWidth = 885
   AddOnFormData.Params = FormParams
   ExplicitWidth = 901
-  ExplicitHeight = 398
+  ExplicitHeight = 397
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -412,7 +412,7 @@ inherited MarginReportItemForm: TMarginReportItemForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 536
+    Left = 568
     Top = 120
   end
   object RefreshDispatcher: TRefreshDispatcher

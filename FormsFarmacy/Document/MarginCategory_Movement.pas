@@ -52,7 +52,7 @@ type
     bbMISetErasedChild: TdxBarButton;
     bbMISetUnErasedChild: TdxBarButton;
     actUpdateChildDS: TdsdUpdateDataSet;
-    JuridicalChoiceForm: TOpenChoiceForm;
+    MarginCategoryChoiceForm: TOpenChoiceForm;
     actDoLoad: TExecuteImportSettingsAction;
     actInsertUpdate_MovementItem_Promo_Set_Zero: TdsdExecStoredProc;
     actGetImportSettingId: TdsdExecStoredProc;
