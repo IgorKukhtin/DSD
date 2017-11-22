@@ -754,7 +754,7 @@ AS  (SELECT
                        -- !!!Захардкодил!!!
                        THEN 0.5 * MI_SheetWorkTime.Amount
                   ELSE MI_SheetWorkTime.Amount
-             END AS Amount
+             END :: TFloat AS Amount
            -- , SUM (MI_SheetWorkTime.Amount) OVER (PARTITION BY MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId) AS SUM_MemberHours
            -- , SUM (MI_SheetWorkTime.Amount) OVER (PARTITION BY Movement.OperDate, MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId) AS AmountInDay
            -- , COUNT(*) OVER (PARTITION BY Movement.OperDate, MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId) AS Count_MemberInDay

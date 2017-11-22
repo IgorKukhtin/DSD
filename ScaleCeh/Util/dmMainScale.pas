@@ -12,6 +12,7 @@ type
     function gpGet_Scale_OrderExternal(var execParams:TParams;inBarCode:String): Boolean;
     function gpUpdate_Scale_Partner_print(PartnerId : Integer; isMovement,isAccount,isTransport,isQuality,isPack,isSpec,isTax : Boolean; CountMovement,CountAccount,CountTransport,CountQuality,CountPack,CountSpec,CountTax : Integer): Boolean;
     function gpGet_Scale_PartnerParams(var execParams:TParams): Boolean;
+    function gpGet_Scale_PSW_delete (inPSW: String): String;
   end;
 
   // !!!Scale + ScaleCeh!!!
@@ -49,6 +50,11 @@ begin
    with MainCehForm do
      if ParamsMovement.ParamByName('DocumentKindId').AsInteger = zc_Enum_DocumentKind_CuterWeight
      then cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Visible := TRUE;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpGet_Scale_PSW_delete (inPSW: String): String;
+begin
+      Result:='';
 end;
 {------------------------------------------------------------------------}
 function TDMMainScaleForm.gpGet_Scale_Partner(var execParams:TParams;inPartnerCode:Integer): Boolean;

@@ -26,6 +26,7 @@ type
     function gpUpdate_Scale_MIString(execParams:TParams): Boolean;
     function gpUpdate_Scale_MIDate(execParams:TParams): Boolean;
     function gpUpdate_Scale_MILinkObject(execParams:TParams): Boolean;
+
     // Scale + ScaleCeh
     function gpGet_Scale_Movement_checkId(var execParamsMovement:TParams): Boolean;
     function lpGet_BranchName(inBranchCode:Integer): String;

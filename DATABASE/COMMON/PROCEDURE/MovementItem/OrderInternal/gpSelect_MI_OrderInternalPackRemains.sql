@@ -86,9 +86,26 @@ BEGIN
             , _Result_Master.AmountForecastOrderPromo
 
              -- "средняя" за 1 день - продажа покупателям БЕЗ акций - Норм 1д (по пр.) без К
-            , _Result_Master.CountForecast
+            , CAST (_Result_Master.CountForecast AS NUMERIC (16, 1)) :: TFloat AS CountForecast
              -- "средняя" за 1 день - заказы покупателей БЕЗ акций - Норм 1д (по зв.) без К
-            , _Result_Master.CountForecastOrder
+            , CAST (_Result_Master.CountForecastOrder AS NUMERIC (16, 1)) :: TFloat AS CountForecastOrder
+
+              -- "средняя" за 1 день - продажа ИЛИ заявака
+            , CAST (_Result_Master.Plan1 AS NUMERIC (16, 1)) :: TFloat AS Plan1
+            , CAST (_Result_Master.Plan2 AS NUMERIC (16, 1)) :: TFloat AS Plan2
+            , CAST (_Result_Master.Plan3 AS NUMERIC (16, 1)) :: TFloat AS Plan3
+            , CAST (_Result_Master.Plan4 AS NUMERIC (16, 1)) :: TFloat AS Plan4
+            , CAST (_Result_Master.Plan5 AS NUMERIC (16, 1)) :: TFloat AS Plan5
+            , CAST (_Result_Master.Plan6 AS NUMERIC (16, 1)) :: TFloat AS Plan6
+            , CAST (_Result_Master.Plan7 AS NUMERIC (16, 1)) :: TFloat AS Plan7
+              -- "средняя" за 1 день - акции - прогноз
+            , CAST (_Result_Master.Promo1 AS NUMERIC (16, 1)) :: TFloat AS Promo1
+            , CAST (_Result_Master.Promo2 AS NUMERIC (16, 1)) :: TFloat AS Promo2
+            , CAST (_Result_Master.Promo3 AS NUMERIC (16, 1)) :: TFloat AS Promo3
+            , CAST (_Result_Master.Promo4 AS NUMERIC (16, 1)) :: TFloat AS Promo4
+            , CAST (_Result_Master.Promo5 AS NUMERIC (16, 1)) :: TFloat AS Promo5
+            , CAST (_Result_Master.Promo6 AS NUMERIC (16, 1)) :: TFloat AS Promo6
+            , CAST (_Result_Master.Promo7 AS NUMERIC (16, 1)) :: TFloat AS Promo7
 
               -- Ост. в днях (по пр.) - без К
             , _Result_Master.DayCountForecast
@@ -171,9 +188,27 @@ BEGIN
             , _Result_Child.AmountForecastOrderPromo
 
               -- "средняя" за 1 день - продажа покупателям БЕЗ акций - Норм 1д (по пр.) без К
-            , _Result_Child.CountForecast
+            , CAST (_Result_Child.CountForecast AS NUMERIC (16, 1)) :: TFloat AS CountForecast
               -- "средняя" за 1 день - заказы покупателей БЕЗ акций - Норм 1д (по зв.) без К
-            , _Result_Child.CountForecastOrder
+            , CAST (_Result_Child.CountForecastOrder AS NUMERIC (16, 1)) :: TFloat AS CountForecastOrder
+
+              -- "средняя" за 1 день - продажа ИЛИ заявака
+            , CAST (_Result_Child.Plan1 AS NUMERIC (16, 1)) :: TFloat AS Plan1
+            , CAST (_Result_Child.Plan2 AS NUMERIC (16, 1)) :: TFloat AS Plan2
+            , CAST (_Result_Child.Plan3 AS NUMERIC (16, 1)) :: TFloat AS Plan3
+            , CAST (_Result_Child.Plan4 AS NUMERIC (16, 1)) :: TFloat AS Plan4
+            , CAST (_Result_Child.Plan5 AS NUMERIC (16, 1)) :: TFloat AS Plan5
+            , CAST (_Result_Child.Plan6 AS NUMERIC (16, 1)) :: TFloat AS Plan6
+            , CAST (_Result_Child.Plan7 AS NUMERIC (16, 1)) :: TFloat AS Plan7
+              -- "средняя" за 1 день - акции - прогноз
+            , CAST (_Result_Child.Promo1 AS NUMERIC (16, 1)) :: TFloat AS Promo1
+            , CAST (_Result_Child.Promo2 AS NUMERIC (16, 1)) :: TFloat AS Promo2
+            , CAST (_Result_Child.Promo3 AS NUMERIC (16, 1)) :: TFloat AS Promo3
+            , CAST (_Result_Child.Promo4 AS NUMERIC (16, 1)) :: TFloat AS Promo4
+            , CAST (_Result_Child.Promo5 AS NUMERIC (16, 1)) :: TFloat AS Promo5
+            , CAST (_Result_Child.Promo6 AS NUMERIC (16, 1)) :: TFloat AS Promo6
+            , CAST (_Result_Child.Promo7 AS NUMERIC (16, 1)) :: TFloat AS Promo7
+
               -- Ост. в днях (по пр.) - без К
             , _Result_Child.DayCountForecast
               -- Ост. в днях (по зв.) - без К
@@ -257,7 +292,7 @@ BEGIN
             , _Result_ChildTotal.Income_CEH
             , _Result_ChildTotal.Income_PACK_to
             , _Result_ChildTotal.Income_PACK_from
-            
+
             , _Result_ChildTotal.Remains_CEH
             , _Result_ChildTotal.Remains_CEH_Next
             , _Result_ChildTotal.Remains_CEH_err
@@ -283,9 +318,26 @@ BEGIN
             , _Result_ChildTotal.AmountForecastOrderPromo
 
               -- "средняя" за 1 день - продажа покупателям БЕЗ акций - Норм 1д (по пр.) без К
-            , _Result_ChildTotal.CountForecast
+            , CAST (_Result_ChildTotal.CountForecast AS NUMERIC (16, 1)) :: TFloat AS CountForecast
               -- "средняя" за 1 день - заказы покупателей БЕЗ акций - Норм 1д (по зв.) без К
-            , _Result_ChildTotal.CountForecastOrder
+            , CAST (_Result_ChildTotal.CountForecastOrder AS NUMERIC (16, 1)) :: TFloat AS CountForecastOrder
+
+              -- "средняя" за 1 день - продажа ИЛИ заявака
+            , CAST (_Result_ChildTotal.Plan1 AS NUMERIC (16, 1)) :: TFloat AS Plan1
+            , CAST (_Result_ChildTotal.Plan2 AS NUMERIC (16, 1)) :: TFloat AS Plan2
+            , CAST (_Result_ChildTotal.Plan3 AS NUMERIC (16, 1)) :: TFloat AS Plan3
+            , CAST (_Result_ChildTotal.Plan4 AS NUMERIC (16, 1)) :: TFloat AS Plan4
+            , CAST (_Result_ChildTotal.Plan5 AS NUMERIC (16, 1)) :: TFloat AS Plan5
+            , CAST (_Result_ChildTotal.Plan6 AS NUMERIC (16, 1)) :: TFloat AS Plan6
+            , CAST (_Result_ChildTotal.Plan7 AS NUMERIC (16, 1)) :: TFloat AS Plan7
+              -- "средняя" за 1 день - акции - прогноз
+            , CAST (_Result_ChildTotal.Promo1 AS NUMERIC (16, 1)) :: TFloat AS Promo1
+            , CAST (_Result_ChildTotal.Promo2 AS NUMERIC (16, 1)) :: TFloat AS Promo2
+            , CAST (_Result_ChildTotal.Promo3 AS NUMERIC (16, 1)) :: TFloat AS Promo3
+            , CAST (_Result_ChildTotal.Promo4 AS NUMERIC (16, 1)) :: TFloat AS Promo4
+            , CAST (_Result_ChildTotal.Promo5 AS NUMERIC (16, 1)) :: TFloat AS Promo5
+            , CAST (_Result_ChildTotal.Promo6 AS NUMERIC (16, 1)) :: TFloat AS Promo6
+            , CAST (_Result_ChildTotal.Promo7 AS NUMERIC (16, 1)) :: TFloat AS Promo7
 
               -- Ост. в днях (по пр.) - без К
             , _Result_ChildTotal.DayCountForecast
