@@ -21,29 +21,47 @@ BEGIN
     WHERE MLO_Unit.MovementId = inMovementId
       AND MLO_Unit.DescId = zc_MovementLinkObject_Unit();
     
+    -- вытягиваем строки чайлд, там категория наценки и %, чтоб по ним определить для мастера % наценки
+    CREATE TEMP TABLE _tmpMI_Child (Id Integer, MarginCategoryItemId Integer, MarginCategoryName TVarChar, Amount TFloat, MinPrice TFloat, isErased Boolean, ORD Integer) ON COMMIT DROP;
+    INSERT INTO _tmpMI_Child (Id, MarginCategoryItemId, MarginCategoryName, Amount, MinPrice, isErased, ORD)
+           SELECT MovementItem.Id	            AS Id
+                , MovementItem.ObjectId             AS MarginCategoryItemId
+                , Object_MarginCategory.ValueData   AS MarginCategoryName
+                , MovementItem.Amount               AS Amount
+                , ObjectFloat_MinPrice.ValueData    AS MinPrice
+                , MovementItem.isErased             AS isErased
+                , ROW_NUMBER() OVER (ORDER BY ObjectFloat_MinPrice.ValueData) as ORD
+           FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+                JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                 AND MovementItem.DescId     = zc_MI_Child()
+                                 AND MovementItem.isErased   = tmpIsErased.isErased
+    
+                LEFT JOIN ObjectFloat AS ObjectFloat_MinPrice
+                                      ON ObjectFloat_MinPrice.ObjectId = MovementItem.ObjectId
+                                     AND ObjectFloat_MinPrice.DescId = zc_ObjectFloat_MarginCategoryItem_MinPrice()
+    
+                LEFT JOIN ObjectLink AS ObjectLink_MarginCategoryItem_MarginCategory
+                                     ON ObjectLink_MarginCategoryItem_MarginCategory.ObjectId = MovementItem.ObjectId
+                                    AND ObjectLink_MarginCategoryItem_MarginCategory.DescId = zc_ObjectLink_MarginCategoryItem_MarginCategory()
+                LEFT JOIN Object AS Object_MarginCategory ON Object_MarginCategory.Id = ObjectLink_MarginCategoryItem_MarginCategory.ChildObjectId;
+                 
+             
+    
+    
     OPEN Cursor1 FOR
     WITH 
     --строки мастера
     tmpMI_Master AS (SELECT MovementItem.*
-                     FROM (SELECT FALSE AS isErased ) AS tmpIsErased
+                     FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                           JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                            AND MovementItem.DescId     = zc_MI_Master()
                                            AND MovementItem.isErased   = tmpIsErased.isErased
                     )
-  -- остатки
-  , tmpRemains AS (SELECT tmpMI_Master.ObjectId AS GoodsId
-                        , SUM (COALESCE (Container.Amount, 0)) AS Amount_Remains
-                   FROM tmpMI_Master
-                        LEFT JOIN Container ON Container.DescId = zc_Container_Count()
-                                           AND Container.ObjectId = tmpMI_Master.ObjectId
-                                           AND Container.WhereObjectId = vbUnitId
-                                           AND Container.Amount <> 0
-                   GROUP BY tmpMI_Master.ObjectId
-                   HAVING SUM (COALESCE (Container.Amount, 0)) <> 0
-                  )
+
   -- данные из прайса
   , tmpPrice AS (SELECT ObjectLink_Price_Unit.ObjectId          AS Id
                       , MCS_Value.ValueData                     AS MCSValue
+                      , COALESCE(Price_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup
                       , Price_Goods.ChildObjectId               AS GoodsId
                       , COALESCE(MCS_isClose.ValueData,False)   AS MCSIsClose
                       , COALESCE(MCS_NotRecalc.ValueData,False) AS MCSNotRecalc
@@ -66,6 +84,9 @@ BEGIN
                       LEFT JOIN ObjectBoolean AS Price_Top
                                               ON Price_Top.ObjectId = ObjectLink_Price_Unit.ObjectId
                                              AND Price_Top.DescId = zc_ObjectBoolean_Price_Top()
+                      LEFT JOIN ObjectFloat AS Price_PercentMarkup
+                                            ON Price_PercentMarkup.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                           AND Price_PercentMarkup.DescId = zc_ObjectFloat_Price_PercentMarkup()
                  WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                    AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
               )
@@ -76,6 +97,14 @@ BEGIN
                    AND COALESCE (ObjectBoolean_Goods_SP.ValueData, False) = TRUE
                 )
     
+  , MarginCondition AS (SELECT D1.MarginCategoryItemId
+                             , D1.Amount AS MarginPercent
+                             , D1.MinPrice
+                             , COALESCE(D2.MinPrice, 1000000) AS MaxPrice 
+                        FROM _tmpMI_Child AS D1
+                            LEFT OUTER JOIN _tmpMI_Child AS D2 ON D1.ORD = D2.ORD-1
+                        WHERE D1.IsErased = FALSE
+                       )
        -- результат
        SELECT MovementItem.Id		   ::Integer   AS Id
             , Object_Goods.Id              ::Integer   AS GoodsId
@@ -83,23 +112,25 @@ BEGIN
             , Object_Goods.GoodsName       ::TVarChar  AS GoodsName
             , Object_Goods.GoodsGroupName  ::TVarChar  AS GoodsGroupName
  
-            , COALESCE (Object_Goods.isClose, False)     ::Boolean AS isClose
-            , COALESCE (Object_Goods.isTOP, False)       ::Boolean AS isTOP
-            , COALESCE (Object_Goods.isFirst, False)     ::Boolean AS isFirst
-            , COALESCE (Object_Goods.isSecond, False)    ::Boolean AS isSecond
+            , COALESCE (Object_Goods.isClose, False)      ::Boolean AS isClose
+            , COALESCE (Object_Goods.isTOP, False)        ::Boolean AS isTOP
+            , COALESCE (Object_Goods.isFirst, False)      ::Boolean AS isFirst
+            , COALESCE (Object_Goods.isSecond, False)     ::Boolean AS isSecond
 
-            , COALESCE (tmpPrice.MCSValue, 0)            ::TFloat  AS MCSValue
-            , COALESCE (tmpPrice.MCSIsClose, False)      ::Boolean AS MCSIsClose
-            , COALESCE (tmpPrice.MCSNotRecalc, False)    ::Boolean AS MCSNotRecalc
+            , COALESCE (tmpPrice.MCSValue, 0)             ::TFloat  AS MCSValue
+            , COALESCE (MarginCondition.MarginPercent, 0) ::TFloat  AS MarginPercent
+            , COALESCE (tmpPrice.MCSIsClose, False)       ::Boolean AS MCSIsClose
+            , COALESCE (tmpPrice.MCSNotRecalc, False)     ::Boolean AS MCSNotRecalc
             , COALESCE (ObjectBoolean_Goods_SP.ValueData, False)  :: Boolean  AS isSP
    
-            , MovementItem.Amount                       ::TFloat       AS Amount
-            , COALESCE (MIFloat_Amount.ValueData, 0)    ::TFloat       AS AmountAnalys
-            , COALESCE (MIFloat_AmountMin.ValueData, 0) ::TFloat       AS AmountMin
-            , COALESCE (MIFloat_AmountMax.ValueData, 0) ::TFloat       AS AmountMax
-            , COALESCE (MIFloat_NumberMin.ValueData, 0) ::TFloat       AS NumberMin
-            , COALESCE (MIFloat_NumberMax.ValueData, 0) ::TFloat       AS NumberMax
-            , COALESCE (tmpRemains.Amount_Remains, 0)   ::TFloat       AS Remains
+            , MovementItem.Amount                         ::TFloat       AS Amount
+            , COALESCE (MIFloat_Amount.ValueData, 0)      ::TFloat       AS AmountAnalys
+            , COALESCE (MIFloat_AmountMin.ValueData, 0)   ::TFloat       AS AmountMin
+            , COALESCE (MIFloat_AmountMax.ValueData, 0)   ::TFloat       AS AmountMax
+            , COALESCE (MIFloat_NumberMin.ValueData, 0)   ::TFloat       AS NumberMin
+            , COALESCE (MIFloat_NumberMax.ValueData, 0)   ::TFloat       AS NumberMax
+            , COALESCE (MIFloat_Remains.ValueData, 0)     ::TFloat       AS Remains
+            , COALESCE (MIFloat_Price.ValueData, 0)       ::TFloat       AS Price
             
             , CASE WHEN COALESCE (MIFloat_AmountMin.ValueData, 0) <> 0 THEN (MIFloat_Amount.ValueData - MIFloat_AmountMin.ValueData) *100 / MIFloat_AmountMin.ValueData ELSE 0 END        ::TFloat AS PersentMin
             , CASE WHEN COALESCE (MIFloat_AmountMax.ValueData, 0) <> 0 THEN (-1) * (MIFloat_Amount.ValueData - MIFloat_AmountMax.ValueData) *100 / MIFloat_AmountMax.ValueData ELSE 0 END ::TFloat AS PersentMax
@@ -128,12 +159,20 @@ BEGIN
                                         ON MIFloat_NumberMax.MovementItemId = MovementItem.Id
                                        AND MIFloat_NumberMax.DescId = zc_MIFloat_NumberMax()
 
+            LEFT JOIN MovementItemFloat AS MIFloat_Remains
+                                        ON MIFloat_Remains.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
+            LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
                                         
             LEFT JOIN tmpPrice ON tmpPrice.GoodsId = MovementItem.ObjectId
-            LEFT JOIN tmpRemains ON tmpRemains.GoodsId = MovementItem.ObjectId
+            
+            LEFT JOIN MarginCondition ON COALESCE (MIFloat_Price.ValueData, 0) >= MarginCondition.MinPrice AND COALESCE (MIFloat_Price.ValueData, 0) < MarginCondition.MaxPrice
             
             -- получаем GoodsMainId
             LEFT JOIN ObjectLink AS ObjectLink_Child 
@@ -151,19 +190,17 @@ BEGIN
     OPEN Cursor2 FOR
 
        SELECT MovementItem.Id	                AS Id
-            , MovementItem.ParentId	        AS ParentId
-            , Object_MarginCategory.Id          AS MarginCategoryId
-            , Object_MarginCategory.ValueData   AS MarginCategoryName
+            , MovementItem.MarginCategoryItemId AS MarginCategoryItemId
+            , MovementItem.MarginCategoryName   AS MarginCategoryName
             
             , MovementItem.Amount               AS Amount
+            , MovementItem.MinPrice             AS MinPrice
+            , MIFloat_Amount.ValueData          AS AmountDiff
             , MIString_Comment.ValueData        AS Comment
            
             , MovementItem.isErased             AS isErased
-       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-            JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                             AND MovementItem.DescId     = zc_MI_Child()
-                             AND MovementItem.isErased   = tmpIsErased.isErased
-             LEFT JOIN Object AS Object_MarginCategory ON Object_MarginCategory.Id = MovementItem.ObjectId
+       FROM _tmpMI_Child AS MovementItem
+
              LEFT JOIN MovementItemFloat AS MIFloat_Amount
                                          ON MIFloat_Amount.MovementItemId = MovementItem.Id
                                         AND MIFloat_Amount.DescId = zc_MIFloat_Amount()
@@ -171,7 +208,9 @@ BEGIN
              LEFT JOIN MovementItemString AS MIString_Comment
                                           ON MIString_Comment.MovementItemId = MovementItem.Id
                                          AND MIString_Comment.DescId = zc_MIString_Comment()
-            ;
+
+             ;
+
     RETURN NEXT Cursor2;
 
 END;

@@ -38,9 +38,9 @@ type
     DetailDS: TDataSource;
     cxSplitter1: TcxSplitter;
     dsdDBViewAddOn1: TdsdDBViewAddOn;
-    Value: TcxGridDBColumn;
+    clAmount: TcxGridDBColumn;
     IsErased: TcxGridDBColumn;
-    spInsertUpdateMIChild: TdsdStoredProc;
+    spUpdateMIChild: TdsdStoredProc;
     edStartSale: TcxDateEdit;
     cxLabel3: TcxLabel;
     edEndSale: TcxDateEdit;
@@ -84,7 +84,7 @@ type
     edInsertdate: TcxDateEdit;
     cxLabel13: TcxLabel;
     edUpdateDate: TcxDateEdit;
-    clAmount: TcxGridDBColumn;
+    clAmountDiff: TcxGridDBColumn;
     spLoad_SAMP: TdsdStoredProc;
     actLoad_SAMP: TdsdExecStoredProc;
     macLoad_SAMP: TMultiAction;
@@ -92,6 +92,13 @@ type
     edDayCount: TcxCurrencyEdit;
     PersentMin: TcxGridDBColumn;
     PersentMax: TcxGridDBColumn;
+    MinPrice: TcxGridDBColumn;
+    cxLabel16: TcxLabel;
+    edPriceMin: TcxCurrencyEdit;
+    cxLabel17: TcxLabel;
+    edPriceMax: TcxCurrencyEdit;
+    MarginPercent: TcxGridDBColumn;
+    cPrice: TcxGridDBColumn;
   private
     { Private declarations }
   public

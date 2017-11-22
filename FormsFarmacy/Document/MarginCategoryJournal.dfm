@@ -134,6 +134,20 @@ inherited MarginCategoryJournalForm: TMarginCategoryJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object PriceMax: TcxGridDBColumn
+            Caption = #1052#1072#1082#1089' '#1088#1086#1079#1085'. '#1094#1077#1085#1072
+            DataBinding.FieldName = 'PriceMax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object PriceMin: TcxGridDBColumn
+            Caption = #1052#1080#1085' '#1088#1086#1079#1085'. '#1094#1077#1085#1072
+            DataBinding.FieldName = 'PriceMin'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
           object Comment: TcxGridDBColumn
             Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
             DataBinding.FieldName = 'Comment'

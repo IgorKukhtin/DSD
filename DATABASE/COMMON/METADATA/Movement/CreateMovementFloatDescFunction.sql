@@ -345,9 +345,20 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_SP() RETURNS Integer AS $BODY$BEGIN 
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_SP', 'Код соц проекта' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SP');
 
+CREATE OR REPLACE FUNCTION zc_MovementFloat_PriceMin() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_PriceMin'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_PriceMin', 'Мин. розн.цена' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_PriceMin');
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_PriceMax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_PriceMax'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_PriceMax', 'Макс. розн.цена' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_PriceMax');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 22.11.17         * zc_MovementFloat_PriceMin
+                    zc_MovementFloat_PriceMax
  20.06.17         * zc_MovementFloat_TotalSummCardSecondCash
  20.02.17         *
  20.06.16         *

@@ -1,6 +1,6 @@
 -- Function:  gpReport_SAMP_Load()
-
 DROP FUNCTION IF EXISTS gpReport_SAMP_Load (Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_SAMP_Load (Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION  gpReport_SAMP_Load(
     IN inMovementId       Integer  ,  --
@@ -12,6 +12,8 @@ CREATE OR REPLACE FUNCTION  gpReport_SAMP_Load(
     IN inAmount           TFloat,     -- мин кол-во продаж за анализируемый период
     IN inChangePercent    TFloat,     -- % отклонения продаж
     IN inDayCount         TFloat,     --
+    IN inPriceMin         TFloat,     --
+    IN inPriceMax         TFloat,     --
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS Void
@@ -42,8 +44,10 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Кол-во дней периода не кратно периоду для анализа.';
     END IF; 
      
-    -- Результат
-
+ 
+ 
+ 
+   -- Результат
    -- Определяем периоды для анализа
    CREATE TEMP TABLE _tmpDateList  (OperDate TDateTime, NumPeriod Integer)  ON COMMIT DROP;
    INSERT INTO _tmpDateList (OperDate, NumPeriod)
@@ -66,25 +70,48 @@ BEGIN
                  ANd MovementItem.DescId = zc_MI_Master()
                ;
                
-    CREATE TEMP TABLE _tmpData (GoodsId Integer,TotalAmount TFloat, Amount TFloat, AmountMin TFloat, NumMin TFloat, AmountMax TFloat, NumMax TFloat) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpData (GoodsId Integer,TotalAmount TFloat, Amount TFloat, AmountMin TFloat, NumMin TFloat, AmountMax TFloat, NumMax TFloat, Remains TFloat, Price TFloat) ON COMMIT DROP;
     WITH
-    -- продажи за период по подразделению, просчет продаж с интервалом в N дней
-    tmpData_Container AS (SELECT MIContainer.ObjectId_analyzer               AS GoodsId
+    --получаем список товаров с розничной ценой в пределах от inPriceMin до inPriceMax
+    tmpPriceGoods AS (SELECT Price_Goods.ChildObjectId               AS GoodsId
+                           , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
+                           
+                      FROM ObjectLink AS ObjectLink_Price_Unit
+                           INNER JOIN ObjectLink AS Price_Goods
+                                                 ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+
+                           INNER JOIN ObjectFloat AS Price_Value
+                                                  ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                 AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+                                                 AND (Price_Value.ValueData >= inPriceMin AND (Price_Value.ValueData <= inPriceMax OR inPriceMax = 0))
+                                                 
+                      WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                        AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
+                      )
+                     
+  -- продажи за период по подразделению, просчет продаж с интервалом в N дней
+  , tmpData_Container AS (SELECT MIContainer.ObjectId_analyzer               AS GoodsId
                                , SUM (COALESCE (-1 * MIContainer.Amount, 0)) AS Amount
+                               , tmpPriceGoods.Price                         AS Price
                                , _tmpDateList.NumPeriod                      AS NumPeriod
                           FROM MovementItemContainer AS MIContainer
+                               INNER JOIN tmpPriceGoods ON tmpPriceGoods.GoodsId = MIContainer.ObjectId_analyzer
+                               
                                LEFT JOIN _tmpDateList ON _tmpDateList.OperDate = DATE_TRUNC ('DAY', MIContainer.OperDate)
+                               
                           WHERE MIContainer.DescId = zc_MIContainer_Count()
                             AND MIContainer.MovementDescId = zc_Movement_Check()
                             AND MIContainer.WhereObjectId_analyzer = inUnitId
                             AND MIContainer.OperDate >= inStartSale AND MIContainer.OperDate < inEndSale + INTERVAL '1 DAY'
                           GROUP BY MIContainer.ObjectId_analyzer
-                                 , _tmpDateList.NumPeriod
+                                 , _tmpDateList.NumPeriod, tmpPriceGoods.Price
                           HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0 
                              AND SUM (COALESCE (-1 * MIContainer.Amount, 0)) >= inAmount 
                           )
   --Выбираем период с мин и макс продажами
   , tmpMin_Max AS (SELECT tmp.GoodsId
+                        , tmp.Price
                         , SUM (CASE WHEN tmp.OrdMax = 1 THEN tmp.Amount ELSE 0 END)     AS AmountMax
                         , SUM (CASE WHEN tmp.OrdMax = 1 THEN tmp.NumPeriod ELSE 0 END)  AS NumMax
                         , SUM (CASE WHEN tmp.OrdMin = 1 THEN tmp.Amount ELSE 0 END)     AS AmountMin
@@ -97,11 +124,21 @@ BEGIN
                          WHERE tmpData_Container.NumPeriod <> 4
                          ) AS tmp
                    WHERE tmp.OrdMax = 1 OR tmp.OrdMin = 1
-                   GROUP BY tmp.GoodsId
+                   GROUP BY tmp.GoodsId, tmp.Price
                    )
-
+  -- остатки
+  , tmpRemains AS (SELECT tmpPriceGoods.GoodsId                AS GoodsId
+                        , SUM (COALESCE (Container.Amount, 0)) AS Amount_Remains
+                   FROM tmpPriceGoods
+                        LEFT JOIN Container ON Container.DescId = zc_Container_Count()
+                                           AND Container.ObjectId = tmpPriceGoods.GoodsId
+                                           AND Container.WhereObjectId = inUnitId
+                                           AND Container.Amount <> 0
+                   GROUP BY tmpPriceGoods.GoodsId
+                   HAVING SUM (COALESCE (Container.Amount, 0)) <> 0
+                  )
    -- Анализируем позиции, у которых продажи упали или выросли на NNN%, за последние N дней анализируемого периода попадают в отчет.                      
-   INSERT INTO _tmpData (GoodsId, TotalAmount, Amount, AmountMin, NumMin, AmountMax, NumMax)
+   INSERT INTO _tmpData (GoodsId, TotalAmount, Amount, AmountMin, NumMin, AmountMax, NumMax, Remains, Price)
                SELECT tmpData.GoodsId
                     , tmpData.TotalAmount AS TotalAmount
                     , tmpData.Amount      AS Amount
@@ -109,6 +146,9 @@ BEGIN
                     , CASE WHEN tmpData.Amount_WithOutPerSent >= tmpMin_Max.AmountMin THEN tmpMin_Max.NumMin ELSE 0 END    AS NumMin      -- продажа выросла3
                     , CASE WHEN tmpData.Amount_WithPerSent <= tmpMin_Max.AmountMax    THEN tmpMin_Max.AmountMax ELSE 0 END AS AmountMax   -- продажа упала
                     , CASE WHEN tmpData.Amount_WithPerSent <= tmpMin_Max.AmountMax    THEN tmpMin_Max.NumMax ELSE 0 END    AS NumMax      -- продажа упала
+                    
+                    , COALESCE (tmpRemains.Amount_Remains, 0)  :: Tfloat AS Remains
+                    , tmpData.Price                            :: Tfloat AS Price
                  FROM (SELECT tmpData_Container.*
                             , CASE WHEN tmpData_Container.NumPeriod = 4 THEN (tmpData_Container.Amount + tmpData_Container.Amount * 20/100) ELSE 0 END AS Amount_WithPerSent
                             , CASE WHEN tmpData_Container.NumPeriod = 4 THEN (tmpData_Container.Amount - tmpData_Container.Amount * 20/100) ELSE 0 END AS Amount_WithOutPerSent
@@ -117,7 +157,7 @@ BEGIN
 
                        ) AS tmpData
                        LEFT JOIN tmpMin_Max ON tmpMin_Max.GoodsId = tmpData.GoodsId
-                                                                                                 
+                       LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpData.GoodsId                                                                              
                  WHERE tmpData.NumPeriod = 4 
                    ;
 
@@ -126,7 +166,7 @@ BEGIN
    -- уберем пометки удаления со всех (чтоб потом не мучаться если нужно восстановить)
    UPDATE MovementItem 
       SET isErased = FALSE
-   WHERE MovementItem.MovementId = inMovementId;
+   WHERE MovementItem.MovementId = inMovementId;-- и мастера и чайлда
    
    WITH 
    tmpMI_Del AS (SELECT COALESCE (_tmpMI.Id, 0) AS Id
@@ -145,25 +185,83 @@ BEGIN
                                                   , inAmountAnalys := COALESCE (_tmpData.Amount, 0)     ::TFloat
                                                   , inAmountMin    := COALESCE (_tmpData.AmountMin, 0)  ::TFloat
                                                   , inAmountMax    := COALESCE (_tmpData.AmountMax, 0)  ::TFloat
-                                                  , inNumberMin    := COALESCE (_tmpData.NumMin, 0)  ::TFloat
-                                                  , inNumberMax    := COALESCE (_tmpData.NumMax, 0)  ::TFloat
+                                                  , inNumberMin    := COALESCE (_tmpData.NumMin, 0)     ::TFloat
+                                                  , inNumberMax    := COALESCE (_tmpData.NumMax, 0)     ::TFloat
+                                                  , inRemains      := COALESCE (_tmpData.Remains, 0)    ::TFloat
+                                                  , inPrice        := COALESCE (_tmpData.Price, 0)      ::TFloat
                                                   , inUserId       := vbUserId
                                                   )
    FROM _tmpData   
-       LEFT JOIN _tmpMI ON _tmpMI.GoodsId = _tmpData.GoodsId
-;
-/*
-   -- ищем текущую категорию наценки
-   vbMarginCategoryId := COALESCE(SELECT ObjectLink_Unit_MarginCategory.ChildObjectId
-                                  FROM ObjectLink AS ObjectLink_Unit_MarginCategory
-                                  WHERE ObjectLink_Unit_MarginCategory.ObjectId = inUnitId
-                                    AND ObjectLink_Unit_MarginCategory.DescId = zc_ObjectLink_Unit_MarginCategory()
-                                  , 0);
-    
-    
-*/
+       LEFT JOIN _tmpMI ON _tmpMI.GoodsId = _tmpData.GoodsId;
 
-        
+
+
+   -- сохраняем чайлд 
+   
+   CREATE TEMP TABLE _tmpMI_Child (Id Integer, MarginCategoryItemId Integer) ON COMMIT DROP;
+   -- уже сохраненные данные  
+   INSERT INTO _tmpMI_Child (Id, MarginCategoryItemId)
+               SELECT MovementItem.Id 
+                    , MovementItem.ObjectId
+               FROM MovementItem
+               WHERE MovementItem.MovementId = inMovementId
+                 ANd MovementItem.DescId = zc_MI_Child()
+               ;
+   -- находим категорию наценки
+   vbMarginCategoryId := (SELECT DISTINCT ObjectLink_MarginCategoryLink_MarginCategory.ChildObjectId
+                          FROM ObjectLink AS ObjectLink_MarginCategoryLink_Unit
+                               LEFT JOIN  ObjectLink AS ObjectLink_MarginCategoryLink_MarginCategory 
+                                                     ON ObjectLink_MarginCategoryLink_MarginCategory.ObjectId = ObjectLink_MarginCategoryLink_Unit.ObjectId
+                                                    AND ObjectLink_MarginCategoryLink_MarginCategory.DescId = zc_ObjectLink_MarginCategoryLink_MarginCategory()
+                          
+                               LEFT JOIN Object AS Object_MarginCategory
+                                                ON Object_MarginCategory.Id = ObjectLink_MarginCategoryLink_MarginCategory.ChildObjectId
+                                               AND Object_MarginCategory.isErased = FALSE
+                          
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Percent 	
+                                                     ON ObjectFloat_Percent.ObjectId = Object_MarginCategory.Id
+                                                    AND ObjectFloat_Percent.DescId = zc_ObjectFloat_MarginCategory_Percent()
+                          WHERE ObjectLink_MarginCategoryLink_Unit.DescId = zc_ObjectLink_MarginCategoryLink_Unit()
+                           AND  ObjectLink_MarginCategoryLink_Unit.ChildObjectId = inUnitId --183293 --подразделение
+                          AND COALESCE (ObjectFloat_Percent.ValueData, 0) = 0
+                          );
+   
+   CREATE TEMP TABLE _tmpMarginCategoryItem (Id Integer, MarginPercent TFloat) ON COMMIT DROP;
+   INSERT INTO _tmpMarginCategoryItem (Id, MarginPercent)
+               SELECT Object_MarginCategoryItem.Id
+                    , Object_MarginCategoryItem.MarginPercent
+               FROM Object_MarginCategoryItem_View AS Object_MarginCategoryItem
+                    INNER JOIN Object AS MarginCategoryItem 
+                                      ON MarginCategoryItem.Id = Object_MarginCategoryItem.Id
+                                     AND MarginCategoryItem.isErased = FALSE
+               WHERE Object_MarginCategoryItem.MarginCategoryId = vbMarginCategoryId;
+      
+   --метим на удаление строки, которых нет в выборке        
+   WITH 
+   tmpMI_Del AS (SELECT COALESCE (_tmpMI_Child.Id, 0) AS Id
+                 FROM _tmpMarginCategoryItem
+                     FULL JOIN _tmpMI_Child ON _tmpMI_Child.MarginCategoryItemId = _tmpMarginCategoryItem.Id
+                 WHERE _tmpMarginCategoryItem.Id IS NULL
+                 )
+   UPDATE MovementItem 
+         SET isErased = TRUE 
+   WHERE MovementItem.Id IN (SELECT tmpMI_Del.Id FROM tmpMI_Del);
+   
+   PERFORM lpInsertUpdate_MI_MarginCategory_Child (ioId                   := COALESCE (_tmpMI_Child.Id, 0)           ::integer
+                                                 , inMovementId           := inMovementId                            ::integer
+                                                 , inMarginCategoryItemId := _tmpMarginCategoryItem.Id               ::integer
+                                                 , inAmount               := _tmpMarginCategoryItem.MarginPercent    ::TFloat
+                                                 , inUserId               := vbUserId
+                                                 )
+   FROM _tmpMarginCategoryItem   
+        LEFT JOIN _tmpMI_Child ON _tmpMI_Child.MarginCategoryItemId = _tmpMarginCategoryItem.Id;
+    
+   
+   -- сохранили протокол
+   -- сохранили свойство <Дата корректировки>
+   PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Update(), inMovementId, CURRENT_TIMESTAMP);
+   -- сохранили свойство <Пользователь (создание)>
+   PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Update(), inMovementId, vbUserId);    
         
 END;
 $BODY$

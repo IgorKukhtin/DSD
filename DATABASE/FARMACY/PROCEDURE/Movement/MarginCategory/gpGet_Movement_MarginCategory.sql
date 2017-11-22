@@ -28,6 +28,8 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , Amount           TFloat      -- мин кол-во продаж за анализируемый период
              , ChangePercent    TFloat      -- % отклонения продаж
              , DayCount         TFloat      -- дней в периоде анализа
+             , PriceMin         TFloat      --
+             , PriceMax         TFloat      --
              )
 AS
 $BODY$
@@ -62,6 +64,9 @@ BEGIN
           , NULL::TFloat                                AS Amount
           , NULL::TFloat                                AS ChangePercent
           , NULL::TFloat                                AS DayCount
+          
+          , NULL::TFloat                                AS PriceMin
+          , NULL::TFloat                                AS PriceMax
 
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
             LEFT OUTER JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId;
@@ -90,6 +95,9 @@ BEGIN
               , MovementFloat_Amount.ValueData              AS Amount
               , MovementFloat_ChangePercent.ValueData       AS ChangePercent
               , MovementFloat_DayCount.ValueData            AS DayCount
+              
+              , MovementFloat_PriceMin.ValueData            AS PriceMin
+              , MovementFloat_PriceMax.ValueData            AS PriceMax
 
         FROM Movement AS Movement_MarginCategory 
              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_MarginCategory.StatusId
@@ -147,7 +155,15 @@ BEGIN
              LEFT JOIN MovementFloat AS MovementFloat_DayCount
                                      ON MovementFloat_DayCount.MovementId = Movement_MarginCategory.Id
                                     AND MovementFloat_DayCount.DescId = zc_MovementFloat_DayCount()
+
+             LEFT JOIN MovementFloat AS MovementFloat_PriceMin
+                                     ON MovementFloat_PriceMin.MovementId = Movement_MarginCategory.Id
+                                    AND MovementFloat_PriceMin.DescId = zc_MovementFloat_PriceMin()
                                     
+             LEFT JOIN MovementFloat AS MovementFloat_PriceMax
+                                     ON MovementFloat_PriceMax.MovementId = Movement_MarginCategory.Id
+                                    AND MovementFloat_PriceMax.DescId = zc_MovementFloat_PriceMax()
+                                                                        
         WHERE Movement_MarginCategory.Id =  inMovementId
           AND Movement_MarginCategory.DescId = zc_Movement_MarginCategory();
     END IF;

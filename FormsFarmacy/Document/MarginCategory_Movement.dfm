@@ -1,29 +1,29 @@
 inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
   Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1082#1080' ('#1057#1040#1059#1062')'
   ClientHeight = 564
-  ClientWidth = 1084
+  ClientWidth = 1121
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 1100
+  ExplicitWidth = 1137
   ExplicitHeight = 602
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 123
-    Width = 1084
+    Width = 1121
     Height = 433
     ExplicitTop = 123
-    ExplicitWidth = 1084
+    ExplicitWidth = 1121
     ExplicitHeight = 433
     ClientRectBottom = 433
-    ClientRectRight = 1084
+    ClientRectRight = 1121
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1084
+      ExplicitWidth = 1121
       ExplicitHeight = 409
       inherited cxGrid: TcxGrid
-        Width = 1084
-        Height = 300
-        ExplicitWidth = 1084
-        ExplicitHeight = 300
+        Width = 1121
+        Height = 280
+        ExplicitWidth = 1121
+        ExplicitHeight = 280
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -35,6 +35,11 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
               Format = ',0.###'
               Kind = skSum
               Column = AmountAnalys
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = Remains
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -55,6 +60,11 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
               Format = #1057#1090#1088#1086#1082' ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = Remains
             end>
           OptionsBehavior.IncSearch = True
           Styles.Content = nil
@@ -82,6 +92,14 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
             Options.Editing = False
             Width = 222
           end
+          object MarginPercent: TcxGridDBColumn
+            Caption = '% '#1085#1072#1094#1077#1085#1082#1080
+            DataBinding.FieldName = 'MarginPercent'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080
+            Options.Editing = False
+          end
           object Remains: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'Remains'
@@ -89,9 +107,18 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1058#1077#1082#1091#1097#1080#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1080
+            HeaderHint = #1058#1077#1082#1091#1097#1080#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1087#1086#1076#1088#1072#1079#1076'. '#1085#1072' '#1084#1086#1084#1077#1085#1090' '#1092#1086#1088#1084'.'#1086#1090#1095#1077#1090#1072
             Options.Editing = False
             Width = 41
+          end
+          object cPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1088#1086#1079#1085'.'
+            DataBinding.FieldName = 'Price'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1062#1077#1085#1072' '#1088#1086#1079#1085'. '#1085#1072' '#1084#1086#1084#1077#1085#1090' '#1092#1086#1088#1084'. '#1086#1090#1095#1077#1090#1072
+            Options.Editing = False
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1086#1076#1072#1078' '#1079#1072' '#1087#1077#1088#1080#1086#1076
@@ -123,6 +150,7 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1086#1090#1082#1083'. '#1087#1088#1086#1076'. '#1079#1072' '#1072#1085#1072#1083#1080#1079' '#1086#1090' '#1084#1080#1085'.'
             Options.Editing = False
             Width = 51
           end
@@ -155,6 +183,7 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1086#1090#1082#1083'. '#1087#1088#1086#1076'. '#1079#1072' '#1072#1085#1072#1083#1080#1079' '#1086#1090' '#1084#1072#1082#1089'.'
             Options.Editing = False
             Width = 52
           end
@@ -261,9 +290,9 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 308
-        Width = 1084
-        Height = 101
+        Top = 288
+        Width = 1121
+        Height = 121
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
@@ -281,7 +310,6 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsCustomize.DataRowSizing = True
-          OptionsData.Appending = True
           OptionsData.CancelOnExit = False
           OptionsData.DeletingConfirmation = False
           OptionsView.ColumnAutoWidth = True
@@ -290,14 +318,6 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object Value: TcxGridDBColumn
-            Caption = '% '#1085#1072#1094#1077#1085#1082#1080
-            DataBinding.FieldName = 'Value'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 72
-          end
           object MarginCategoryName: TcxGridDBColumn
             Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1085#1072#1094#1077#1085#1082#1080
             DataBinding.FieldName = 'MarginCategoryName'
@@ -312,19 +332,37 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 226
+            Width = 206
+          end
+          object MinPrice: TcxGridDBColumn
+            Caption = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1072#1103' '#1094#1077#1085#1072
+            DataBinding.FieldName = 'MinPrice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 156
           end
           object clAmount: TcxGridDBColumn
-            Caption = '%  '#1080#1079#1084'. '#1085#1072#1094'-'#1082#1080
+            Caption = '% '#1085#1072#1094#1077#1085#1082#1080
             DataBinding.FieldName = 'Amount'
-            Width = 132
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 141
+          end
+          object clAmountDiff: TcxGridDBColumn
+            Caption = '%  '#1080#1079#1084'. '#1085#1072#1094'-'#1082#1080
+            DataBinding.FieldName = 'AmountDiff'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 175
           end
           object clComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 411
+            Width = 392
           end
           object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -342,8 +380,8 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 300
-        Width = 1084
+        Top = 280
+        Width = 1121
         Height = 8
         Touch.ParentTabletOptions = False
         Touch.TabletOptions = [toPressAndHold]
@@ -353,10 +391,10 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1084
+    Width = 1121
     Height = 97
     TabOrder = 3
-    ExplicitWidth = 1084
+    ExplicitWidth = 1121
     ExplicitHeight = 97
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -403,27 +441,27 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
           Kind = bkEllipsis
         end>
       TabOrder = 7
-      Width = 374
+      Width = 270
     end
     object cxLabel7: TcxLabel
-      Left = 551
+      Left = 447
       Top = 6
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object edComment: TcxTextEdit
-      Left = 551
+      Left = 447
       Top = 23
       Properties.ReadOnly = False
       TabOrder = 9
-      Width = 201
+      Width = 182
     end
     object cxLabel10: TcxLabel
-      Left = 758
+      Left = 633
       Top = 5
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076'.'
     end
     object edInsertName: TcxButtonEdit
-      Left = 758
+      Left = 633
       Top = 23
       Properties.Buttons = <
         item
@@ -433,11 +471,11 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
         end>
       Properties.ReadOnly = True
       TabOrder = 11
-      Width = 179
+      Width = 118
     end
     object edUpdateName: TcxButtonEdit
-      Left = 758
-      Top = 62
+      Left = 878
+      Top = 23
       Properties.Buttons = <
         item
           Default = True
@@ -446,11 +484,11 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
         end>
       Properties.ReadOnly = True
       TabOrder = 12
-      Width = 179
+      Width = 118
     end
     object cxLabel11: TcxLabel
-      Left = 758
-      Top = 44
+      Left = 878
+      Top = 5
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1082#1086#1088#1088'.'
     end
   end
@@ -507,7 +545,7 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
   object cxSplitter2: TcxSplitter [10]
     Left = 0
     Top = 556
-    Width = 1084
+    Width = 1121
     Height = 8
     Touch.ParentTabletOptions = False
     Touch.TabletOptions = [toPressAndHold]
@@ -538,12 +576,12 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
     Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085'. '#1085#1072#1094'-'#1082#1080
   end
   object cxLabel12: TcxLabel [15]
-    Left = 944
+    Left = 756
     Top = 6
     Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076'.'
   end
   object edInsertdate: TcxDateEdit [16]
-    Left = 944
+    Left = 756
     Top = 23
     EditValue = 42485d
     Properties.Kind = ckDateTime
@@ -552,13 +590,13 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
     Width = 120
   end
   object cxLabel13: TcxLabel [17]
-    Left = 944
-    Top = 45
+    Left = 999
+    Top = 6
     Caption = #1044#1072#1090#1072' '#1082#1086#1088#1088'.'
   end
   object edUpdateDate: TcxDateEdit [18]
-    Left = 944
-    Top = 62
+    Left = 999
+    Top = 23
     EditValue = 42485d
     Properties.Kind = ckDateTime
     Properties.ReadOnly = True
@@ -577,6 +615,32 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
     Properties.ReadOnly = False
     TabOrder = 24
     Width = 66
+  end
+  object cxLabel16: TcxLabel [21]
+    Left = 756
+    Top = 44
+    Caption = #1084#1080#1085' '#1088#1086#1079#1085'. '#1094#1077#1085#1072
+  end
+  object edPriceMin: TcxCurrencyEdit [22]
+    Left = 756
+    Top = 62
+    Properties.DisplayFormat = ',0.00'
+    Properties.ReadOnly = False
+    TabOrder = 26
+    Width = 79
+  end
+  object cxLabel17: TcxLabel [23]
+    Left = 838
+    Top = 44
+    Caption = #1084#1072#1082#1089' '#1088#1086#1079#1085'. '#1094#1077#1085#1072
+  end
+  object edPriceMax: TcxCurrencyEdit [24]
+    Left = 838
+    Top = 62
+    Properties.DisplayFormat = ',0.00'
+    Properties.ReadOnly = False
+    TabOrder = 28
+    Width = 82
   end
   inherited ActionList: TActionList
     Left = 199
@@ -679,10 +743,10 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdateMIChild
+      StoredProc = spUpdateMIChild
       StoredProcList = <
         item
-          StoredProc = spInsertUpdateMIChild
+          StoredProc = spUpdateMIChild
         end
         item
           StoredProc = spGetTotalSumm
@@ -986,10 +1050,12 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
     object bbMISetErasedChild: TdxBarButton
       Action = actMISetErasedChild
       Category = 0
+      Visible = ivNever
     end
     object bbMISetUnErasedChild: TdxBarButton
       Action = actMISetUnErasedChild
       Category = 0
+      Visible = ivNever
     end
     object bbactStartLoad: TdxBarButton
       Action = actStartLoad
@@ -998,6 +1064,7 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
     object bbInsertRecordChild: TdxBarButton
       Action = InsertRecordChild
       Category = 0
+      Visible = ivNever
     end
     object bbLoad_SAMP: TdxBarButton
       Action = macLoad_SAMP
@@ -1224,6 +1291,28 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UpdateDate'
+        Value = 'NULL'
+        Component = edUpdateDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Insertdate'
+        Value = 'NULL'
+        Component = edInsertdate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        MultiSelectSeparator = ','
       end>
     Left = 304
     Top = 288
@@ -1320,6 +1409,22 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPriceMin'
+        Value = Null
+        Component = edPriceMin
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceMax'
+        Value = Null
+        Component = edPriceMax
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inUnitId'
         Value = Null
         Component = GuidesUnit
@@ -1391,6 +1496,12 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
       end
       item
         Control = edDayCount
+      end
+      item
+        Control = edPriceMax
+      end
+      item
+        Control = edPriceMin
       end>
     Left = 256
   end
@@ -1407,56 +1518,23 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
     Top = 248
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_MarginCategory'
+    StoredProcName = 'gpUpdate_MI_MarginCategory_Master'
     Params = <
       item
-        Name = 'ioId'
+        Name = 'inId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsId'
+        Name = 'inComment'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'GoodsId'
+        ComponentItem = 'Comment'
+        DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmount'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Amount'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Price'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outSumm'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Summ'
-        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     NeedResetData = True
@@ -1574,10 +1652,6 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
   object DetailDCS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
-    IndexFieldNames = 'ParentId'
-    MasterFields = 'Id'
-    MasterSource = MasterDS
-    PacketRecords = 0
     Params = <>
     Left = 328
     Top = 496
@@ -1610,48 +1684,24 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
     Left = 646
     Top = 481
   end
-  object spInsertUpdateMIChild: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MI_MarginCategory_Child'
+  object spUpdateMIChild: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_MarginCategory_Child'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId'
+        Name = 'inId'
         Value = Null
         Component = DetailDCS
-        ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inParentId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMarginCategoryId'
+        Name = 'inAmountDiff'
         Value = Null
         Component = DetailDCS
-        ComponentItem = 'MarginCategoryId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmount'
-        Value = Null
-        Component = DetailDCS
-        ComponentItem = 'Amount'
+        ComponentItem = 'AmountDiff'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1783,7 +1833,7 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
         Value = 81178
         MultiSelectSeparator = ','
       end>
-    Left = 818
+    Left = 666
     Top = 6
   end
   object GuidesUpdate: TdsdGuides
@@ -1881,10 +1931,26 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceMin'
+        Value = Null
+        Component = edPriceMin
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceMax'
+        Value = Null
+        Component = edPriceMax
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     NeedResetData = True
-    Left = 432
-    Top = 352
+    Left = 424
+    Top = 328
   end
 end
