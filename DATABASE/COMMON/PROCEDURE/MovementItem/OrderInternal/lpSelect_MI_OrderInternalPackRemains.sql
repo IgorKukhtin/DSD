@@ -11,13 +11,15 @@ CREATE OR REPLACE FUNCTION lpSelect_MI_OrderInternalPackRemains(
 RETURNS VOID
 AS
 $BODY$
-   DECLARE vbOperDate TDateTime;
-   DECLARE vbDayCount Integer;
+   DECLARE vbOperDate  TDateTime;
+   DECLARE vbDayCount  Integer;
+   DECLARE vbWeekCount Integer;
 BEGIN
      -- определяется
      SELECT Movement.OperDate
-          , 1 + EXTRACT (DAY FROM (MovementDate_OperDateEnd.ValueData - MovementDate_OperDateStart.ValueData))
-            INTO vbOperDate, vbDayCount
+          , 1 + EXTRACT (DAY FROM (MovementDate_OperDateEnd.ValueData - MovementDate_OperDateStart.ValueData)) AS DayCount
+          , (1 + EXTRACT (DAY FROM (MovementDate_OperDateEnd.ValueData - MovementDate_OperDateStart.ValueData))) / 7 AS vbWeekCount
+            INTO vbOperDate, vbDayCount, vbWeekCount
      FROM Movement
           LEFT JOIN MovementDate AS MovementDate_OperDateStart
                                  ON MovementDate_OperDateStart.MovementId =  Movement.Id
@@ -43,6 +45,8 @@ BEGIN
                                     , AmountPartnerPrior TFloat, AmountPartnerPriorPromo TFloat, AmountPartner TFloat, AmountPartnerNext TFloat, AmountPartnerPromo TFloat, AmountPartnerNextPromo TFloat
                                     , AmountForecast TFloat, AmountForecastPromo TFloat, AmountForecastOrder TFloat, AmountForecastOrderPromo TFloat
                                     , CountForecast TFloat, CountForecastOrder TFloat
+                                    , Plan1 TFloat, Plan2 TFloat, Plan3 TFloat, Plan4 TFloat, Plan5 TFloat, Plan6 TFloat, Plan7 TFloat
+                                    , Promo1 TFloat, Promo2 TFloat, Promo3 TFloat, Promo4 TFloat, Promo5 TFloat, Promo6 TFloat, Promo7 TFloat
                                     , Income_CEH TFloat, Income_PACK_to TFloat, Income_PACK_from TFloat
                                     , TermProduction TFloat, PartionGoods_start TDateTime, PartionDate_pf TDateTime, GoodsKindId_pf Integer, GoodsKindCompleteId_pf Integer, UnitId_pf Integer
                                     , isErased Boolean
@@ -173,6 +177,23 @@ BEGIN
                               -- "средняя" за 1 день - заказы покупателей БЕЗ акций
                             , CASE WHEN vbDayCount <> 0 THEN COALESCE (MIFloat_AmountForecastOrder.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbDayCount ELSE 0 END AS CountForecastOrder
 
+                              -- "средняя" за 1 день - продажа ИЛИ заявака
+                            , CASE WHEN vbWeekCount <> 0 THEN COALESCE (MIFloat_Plan1.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeekCount ELSE 0 END AS Plan1
+                            , CASE WHEN vbWeekCount <> 0 THEN COALESCE (MIFloat_Plan2.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeekCount ELSE 0 END AS Plan2
+                            , CASE WHEN vbWeekCount <> 0 THEN COALESCE (MIFloat_Plan3.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeekCount ELSE 0 END AS Plan3
+                            , CASE WHEN vbWeekCount <> 0 THEN COALESCE (MIFloat_Plan4.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeekCount ELSE 0 END AS Plan4
+                            , CASE WHEN vbWeekCount <> 0 THEN COALESCE (MIFloat_Plan5.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeekCount ELSE 0 END AS Plan5
+                            , CASE WHEN vbWeekCount <> 0 THEN COALESCE (MIFloat_Plan6.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeekCount ELSE 0 END AS Plan6
+                            , CASE WHEN vbWeekCount <> 0 THEN COALESCE (MIFloat_Plan7.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeekCount ELSE 0 END AS Plan7
+                              -- "средняя" за 1 день - акции - прогноз
+                            , CASE WHEN vbWeekCount <> 0 THEN COALESCE (MIFloat_Promo1.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeekCount ELSE 0 END AS Promo1
+                            , CASE WHEN vbWeekCount <> 0 THEN COALESCE (MIFloat_Promo2.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeekCount ELSE 0 END AS Promo2
+                            , CASE WHEN vbWeekCount <> 0 THEN COALESCE (MIFloat_Promo3.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeekCount ELSE 0 END AS Promo3
+                            , CASE WHEN vbWeekCount <> 0 THEN COALESCE (MIFloat_Promo4.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeekCount ELSE 0 END AS Promo4
+                            , CASE WHEN vbWeekCount <> 0 THEN COALESCE (MIFloat_Promo5.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeekCount ELSE 0 END AS Promo5
+                            , CASE WHEN vbWeekCount <> 0 THEN COALESCE (MIFloat_Promo6.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeekCount ELSE 0 END AS Promo6
+                            , CASE WHEN vbWeekCount <> 0 THEN COALESCE (MIFloat_Promo7.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeekCount ELSE 0 END AS Promo7
+
                             , COALESCE (MIFloat_TermProduction.ValueData, 0)  AS TermProduction
                             , vbOperDate - (COALESCE (MIFloat_TermProduction.ValueData, 0) :: INteger :: TVarChar || ' DAY') :: INTERVAL AS PartionGoods_start
                             , ObjectDate_Value.ValueData                      AS PartionDate_pf
@@ -221,6 +242,49 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_AmountPackNextSecond_calc
                                                         ON MIFloat_AmountPackNextSecond_calc.MovementItemId = MovementItem.Id
                                                        AND MIFloat_AmountPackNextSecond_calc.DescId = zc_MIFloat_AmountPackNextSecond_calc()
+
+                            LEFT JOIN MovementItemFloat AS MIFloat_Plan1
+                                                        ON MIFloat_Plan1.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_Plan1.DescId         = zc_MIFloat_Plan1()
+                            LEFT JOIN MovementItemFloat AS MIFloat_Plan2
+                                                        ON MIFloat_Plan2.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_Plan2.DescId         = zc_MIFloat_Plan2()
+                            LEFT JOIN MovementItemFloat AS MIFloat_Plan3
+                                                        ON MIFloat_Plan3.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_Plan3.DescId         = zc_MIFloat_Plan3()
+                            LEFT JOIN MovementItemFloat AS MIFloat_Plan4
+                                                        ON MIFloat_Plan4.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_Plan4.DescId         = zc_MIFloat_Plan4()
+                            LEFT JOIN MovementItemFloat AS MIFloat_Plan5
+                                                        ON MIFloat_Plan5.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_Plan5.DescId         = zc_MIFloat_Plan5()
+                            LEFT JOIN MovementItemFloat AS MIFloat_Plan6
+                                                        ON MIFloat_Plan6.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_Plan6.DescId         = zc_MIFloat_Plan6()
+                            LEFT JOIN MovementItemFloat AS MIFloat_Plan7
+                                                        ON MIFloat_Plan7.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_Plan7.DescId         = zc_MIFloat_Plan7()
+                            LEFT JOIN MovementItemFloat AS MIFloat_Promo1
+                                                        ON MIFloat_Promo1.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_Promo1.DescId         = zc_MIFloat_Promo1()
+                            LEFT JOIN MovementItemFloat AS MIFloat_Promo2
+                                                        ON MIFloat_Promo2.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_Promo2.DescId         = zc_MIFloat_Promo2()
+                            LEFT JOIN MovementItemFloat AS MIFloat_Promo3
+                                                        ON MIFloat_Promo3.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_Promo3.DescId         = zc_MIFloat_Promo3()
+                            LEFT JOIN MovementItemFloat AS MIFloat_Promo4
+                                                        ON MIFloat_Promo4.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_Promo4.DescId         = zc_MIFloat_Promo4()
+                            LEFT JOIN MovementItemFloat AS MIFloat_Promo5
+                                                        ON MIFloat_Promo5.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_Promo5.DescId         = zc_MIFloat_Promo5()
+                            LEFT JOIN MovementItemFloat AS MIFloat_Promo6
+                                                        ON MIFloat_Promo6.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_Promo6.DescId         = zc_MIFloat_Promo6()
+                            LEFT JOIN MovementItemFloat AS MIFloat_Promo7
+                                                        ON MIFloat_Promo7.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_Promo7.DescId         = zc_MIFloat_Promo7()
 
                             LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
                                                         ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
@@ -397,6 +461,8 @@ BEGIN
                               , AmountPartnerPrior, AmountPartnerPriorPromo, AmountPartner, AmountPartnerNext, AmountPartnerPromo, AmountPartnerNextPromo
                               , AmountForecast, AmountForecastPromo, AmountForecastOrder, AmountForecastOrderPromo
                               , CountForecast, CountForecastOrder
+                              , Plan1, Plan2, Plan3, Plan4, Plan5, Plan6, Plan7
+                              , Promo1, Promo2, Promo3, Promo4, Promo5, Promo6, Promo7
                               , Income_CEH, Income_PACK_to, Income_PACK_from
                               , TermProduction, PartionGoods_start, PartionDate_pf, GoodsKindId_pf, GoodsKindCompleteId_pf, UnitId_pf
                               , isErased
@@ -416,6 +482,8 @@ BEGIN
              , tmpMI.AmountPartnerPrior, tmpMI.AmountPartnerPriorPromo, tmpMI.AmountPartner, tmpMI.AmountPartnerNext, tmpMI.AmountPartnerPromo, tmpMI.AmountPartnerNextPromo
              , tmpMI.AmountForecast, tmpMI.AmountForecastPromo, tmpMI.AmountForecastOrder, tmpMI.AmountForecastOrderPromo
              , tmpMI.CountForecast, tmpMI.CountForecastOrder
+             , tmpMI.Plan1, tmpMI.Plan2, tmpMI.Plan3, tmpMI.Plan4, tmpMI.Plan5, tmpMI.Plan6, tmpMI.Plan7
+             , tmpMI.Promo1, tmpMI.Promo2, tmpMI.Promo3, tmpMI.Promo4, tmpMI.Promo5, tmpMI.Promo6, tmpMI.Promo7
              , 0 AS Income_CEH
              , 0 AS Income_PACK_to
              , 0 AS Income_PACK_from
@@ -443,6 +511,8 @@ BEGIN
              , 0 AS AmountPartnerPrior, 0 AS AmountPartnerPriorPromo, 0 AS AmountPartner, 0 AS AmountPartnerNext, 0 AS AmountPartnerPromo, 0 AS AmountPartnerNextPromo
              , 0 AS AmountForecast, 0 AS AmountForecastPromo, 0 AS AmountForecastOrder, 0 AS AmountForecastOrderPromo
              , 0 AS CountForecast, 0 AS CountForecastOrder
+             , 0 AS Plan1, 0 AS Plan2, 0 AS Plan3, 0 AS Plan4, 0 AS Plan5, 0 AS Plan6, 0 AS Plan7
+             , 0 AS Promo1, 0 AS Promo2, 0 AS Promo3, 0 AS Promo4, 0 AS Promo5, 0 AS Promo6, 0 AS Promo7
              , tmpIncome.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS Income_CEH
              , 0 AS Income_PACK_to
              , 0 AS Income_PACK_from
@@ -476,6 +546,8 @@ BEGIN
              , 0 AS AmountPartnerPrior, 0 AS AmountPartnerPriorPromo, 0 AS AmountPartner, 0 AS AmountPartnerNext, 0 AS AmountPartnerPromo, 0 AS AmountPartnerNextPromo
              , 0 AS AmountForecast, 0 AS AmountForecastPromo, 0 AS AmountForecastOrder, 0 AS AmountForecastOrderPromo
              , 0 AS CountForecast, 0 AS CountForecastOrder
+             , 0 AS Plan1, 0 AS Plan2, 0 AS Plan3, 0 AS Plan4, 0 AS Plan5, 0 AS Plan6, 0 AS Plan7
+             , 0 AS Promo1, 0 AS Promo2, 0 AS Promo3, 0 AS Promo4, 0 AS Promo5, 0 AS Promo6, 0 AS Promo7
              , 0 AS Income_CEH
              , tmpPACK.Amount_to   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS Income_PACK_to
              , tmpPACK.Amount_from * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS Income_PACK_from
@@ -565,6 +637,9 @@ BEGIN
                                      , CountForecast             TFloat
                                      , CountForecastOrder        TFloat
 
+                                     , Plan1 TFloat, Plan2 TFloat, Plan3 TFloat, Plan4 TFloat, Plan5 TFloat, Plan6 TFloat, Plan7 TFloat
+                                     , Promo1 TFloat, Promo2 TFloat, Promo3 TFloat, Promo4 TFloat, Promo5 TFloat, Promo6 TFloat, Promo7 TFloat
+
                                      , DayCountForecast          TFloat
                                      , DayCountForecastOrder     TFloat
                                      , DayCountForecast_calc     TFloat
@@ -637,6 +712,9 @@ BEGIN
 
                                 , CountForecast
                                 , CountForecastOrder
+
+                                , Plan1, Plan2, Plan3, Plan4, Plan5, Plan6, Plan7
+                                , Promo1, Promo2, Promo3, Promo4, Promo5, Promo6, Promo7
 
                                 , DayCountForecast
                                 , DayCountForecastOrder
@@ -738,6 +816,22 @@ BEGIN
 
                            , SUM (_tmpMI_All.CountForecast)      AS CountForecast
                            , SUM (_tmpMI_All.CountForecastOrder) AS CountForecastOrder
+
+                           , SUM (_tmpMI_All.Plan1)      AS Plan1
+                           , SUM (_tmpMI_All.Plan2)      AS Plan2
+                           , SUM (_tmpMI_All.Plan3)      AS Plan3
+                           , SUM (_tmpMI_All.Plan4)      AS Plan4
+                           , SUM (_tmpMI_All.Plan5)      AS Plan5
+                           , SUM (_tmpMI_All.Plan6)      AS Plan6
+                           , SUM (_tmpMI_All.Plan7)      AS Plan7
+
+                           , SUM (_tmpMI_All.Promo1)     AS Promo1
+                           , SUM (_tmpMI_All.Promo2)     AS Promo2
+                           , SUM (_tmpMI_All.Promo3)     AS Promo3
+                           , SUM (_tmpMI_All.Promo4)     AS Promo4
+                           , SUM (_tmpMI_All.Promo5)     AS Promo5
+                           , SUM (_tmpMI_All.Promo6)     AS Promo6
+                           , SUM (_tmpMI_All.Promo7)     AS Promo7
 
                       FROM _tmpMI_All
                       -- WHERE _tmpMI_All.Remains_pack <> 0
@@ -917,9 +1011,14 @@ BEGIN
            , CASE WHEN ABS (tmpChild.AmountForecastOrderPromo) < 1 THEN tmpChild.AmountForecastOrderPromo ELSE CAST (COALESCE (tmpChild.AmountForecastOrderPromo, 0) AS NUMERIC (16, 1)) END :: TFloat AS AmountForecastOrderPromo
 
              -- Норм 1д (по пр.) без К
-           , CAST (tmpChild.CountForecast AS NUMERIC (16, 1))      :: TFloat AS CountForecast
+           , tmpChild.CountForecast
              -- Норм 1д (по зв.) без К
-           , CAST (tmpChild.CountForecastOrder AS NUMERIC (16, 1)) :: TFloat AS CountForecastOrder
+           , tmpChild.CountForecastOrder
+
+             -- "средняя" за 1 день - продажа ИЛИ заявака
+           , tmpChild.Plan1, tmpChild.Plan2, tmpChild.Plan3, tmpChild.Plan4, tmpChild.Plan5, tmpChild.Plan6, tmpChild.Plan7
+             -- "средняя" за 1 день - акции - прогноз
+           , tmpChild.Promo1, tmpChild.Promo2, tmpChild.Promo3, tmpChild.Promo4, tmpChild.Promo5, tmpChild.Promo6, tmpChild.Promo7
 
               -- Ост. в днях (по зв.) - без К
            , CAST (CASE WHEN tmpChild.CountForecast > 0
@@ -1077,11 +1176,17 @@ BEGIN
                                         , AmountForecastPromo        TFloat
                                         , AmountForecastOrder        TFloat
                                         , AmountForecastOrderPromo   TFloat
+
                                         , CountForecast              TFloat
                                         , CountForecastOrder         TFloat
+
+                                        , Plan1 TFloat, Plan2 TFloat, Plan3 TFloat, Plan4 TFloat, Plan5 TFloat, Plan6 TFloat, Plan7 TFloat
+                                        , Promo1 TFloat, Promo2 TFloat, Promo3 TFloat, Promo4 TFloat, Promo5 TFloat, Promo6 TFloat, Promo7 TFloat
+
                                         , DayCountForecast           TFloat  --
                                         , DayCountForecastOrder      TFloat
                                         , DayCountForecast_calc      TFloat
+
                                         , ReceiptId                  Integer
                                         , ReceiptCode                TVarChar
                                         , ReceiptName                TVarChar
@@ -1141,11 +1246,17 @@ BEGIN
                                         , AmountForecastPromo
                                         , AmountForecastOrder
                                         , AmountForecastOrderPromo
+
                                         , CountForecast
                                         , CountForecastOrder
+
+                                        , Plan1, Plan2, Plan3, Plan4, Plan5, Plan6, Plan7
+                                        , Promo1, Promo2, Promo3, Promo4, Promo5, Promo6, Promo7
+
                                         , DayCountForecast
                                         , DayCountForecastOrder
                                         , DayCountForecast_calc
+
                                         , ReceiptId
                                         , ReceiptCode
                                         , ReceiptName
@@ -1251,9 +1362,14 @@ BEGIN
            , CASE WHEN ABS (tmpMI.AmountForecastOrderPromo) < 1 THEN tmpMI.AmountForecastOrderPromo ELSE CAST (tmpMI.AmountForecastOrderPromo AS NUMERIC (16, 1)) END :: TFloat AS AmountForecastOrderPromo
 
              -- Норм 1д (по пр.) без К
-           , CAST (tmpMI.CountForecast AS NUMERIC (16, 1))      :: TFloat AS CountForecast
+           , tmpMI.CountForecast
              -- Норм 1д (по зв.) без К
-           , CAST (tmpMI.CountForecastOrder AS NUMERIC (16, 1)) :: TFloat AS CountForecastOrder
+           , tmpMI.CountForecastOrder
+
+             -- "средняя" за 1 день - продажа ИЛИ заявака
+           , tmpMI.Plan1, tmpMI.Plan2, tmpMI.Plan3, tmpMI.Plan4, tmpMI.Plan5, tmpMI.Plan6, tmpMI.Plan7
+             -- "средняя" за 1 день - акции - прогноз
+           , tmpMI.Promo1, tmpMI.Promo2, tmpMI.Promo3, tmpMI.Promo4, tmpMI.Promo5, tmpMI.Promo6, tmpMI.Promo7
 
               -- Ост. в днях (по зв.) - без К
            , CAST (CASE WHEN tmpMI.CountForecast > 0
@@ -1387,23 +1503,32 @@ BEGIN
                                          , Remains                    TFloat
                                          , Remains_pack               TFloat
                                          , Remains_err                TFloat
+
                                          , AmountPartnerPrior         TFloat
                                          , AmountPartnerPriorPromo    TFloat
                                          , AmountPartnerPriorTotal    TFloat
+
                                          , AmountPartner              TFloat
                                          , AmountPartnerNext          TFloat
                                          , AmountPartnerPromo         TFloat
                                          , AmountPartnerNextPromo     TFloat
                                          , AmountPartnerTotal         TFloat
+
                                          , AmountForecast             TFloat
                                          , AmountForecastPromo        TFloat
                                          , AmountForecastOrder        TFloat
                                          , AmountForecastOrderPromo   TFloat
+
                                          , CountForecast              TFloat
                                          , CountForecastOrder         TFloat
+
+                                         , Plan1 TFloat, Plan2 TFloat, Plan3 TFloat, Plan4 TFloat, Plan5 TFloat, Plan6 TFloat, Plan7 TFloat
+                                         , Promo1 TFloat, Promo2 TFloat, Promo3 TFloat, Promo4 TFloat, Promo5 TFloat, Promo6 TFloat, Promo7 TFloat
+
                                          , DayCountForecast           TFloat
                                          , DayCountForecastOrder      TFloat
                                          , DayCountForecast_calc      TFloat
+
                                          , ReceiptId                  Integer
                                          , ReceiptCode                TVarChar
                                          , ReceiptName                TVarChar
@@ -1485,20 +1610,28 @@ BEGIN
                                     , AmountPartnerPrior
                                     , AmountPartnerPriorPromo
                                     , AmountPartnerPriorTotal
+
                                     , AmountPartner
                                     , AmountPartnerNext
                                     , AmountPartnerPromo
                                     , AmountPartnerNextPromo
                                     , AmountPartnerTotal
+
                                     , AmountForecast
                                     , AmountForecastPromo
                                     , AmountForecastOrder
                                     , AmountForecastOrderPromo
+
                                     , CountForecast
                                     , CountForecastOrder
+
+                                    , Plan1, Plan2, Plan3, Plan4, Plan5, Plan6, Plan7
+                                    , Promo1, Promo2, Promo3, Promo4, Promo5, Promo6, Promo7
+
                                     , DayCountForecast
                                     , DayCountForecastOrder
                                     , DayCountForecast_calc
+
                                     , ReceiptId
                                     , ReceiptCode
                                     , ReceiptName
@@ -1624,9 +1757,14 @@ BEGIN
            , CASE WHEN ABS (tmpMI.AmountForecastOrderPromo) < 1 THEN tmpMI.AmountForecastOrderPromo ELSE CAST (tmpMI.AmountForecastOrderPromo AS NUMERIC (16, 1)) END :: TFloat AS AmountForecastOrderPromo
 
              -- "средняя" за 1 день - продажа покупателям БЕЗ акций - Норм 1д (по пр.) без К
-           , CAST (tmpMI.CountForecast AS NUMERIC (16, 1))      :: TFloat AS CountForecast
+           , tmpMI.CountForecast
              -- "средняя" за 1 день - заказы покупателей БЕЗ акций - Норм 1д (по зв.) без К
-           , CAST (tmpMI.CountForecastOrder AS NUMERIC (16, 1)) :: TFloat AS CountForecastOrder
+           , tmpMI.CountForecastOrder
+
+             -- "средняя" за 1 день - продажа ИЛИ заявака
+           , tmpMI.Plan1, tmpMI.Plan2, tmpMI.Plan3, tmpMI.Plan4, tmpMI.Plan5, tmpMI.Plan6, tmpMI.Plan7
+             -- "средняя" за 1 день - акции - прогноз
+           , tmpMI.Promo1, tmpMI.Promo2, tmpMI.Promo3, tmpMI.Promo4, tmpMI.Promo5, tmpMI.Promo6, tmpMI.Promo7
 
              -- Ост. в днях (по пр.) - без К
            , CAST (CASE WHEN tmpMI.CountForecast > 0

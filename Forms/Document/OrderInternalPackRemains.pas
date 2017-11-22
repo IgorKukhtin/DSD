@@ -214,6 +214,8 @@ type
     cbPrintMinus: TcxCheckBox;
     actPrintDiff: TdsdPrintAction;
     dxBarButton1: TdxBarButton;
+    Plan1: TcxGridDBColumn;
+    Promo1: TcxGridDBColumn;
   private
     { Private declarations }
   public
