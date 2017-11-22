@@ -36,6 +36,8 @@ type
     Insertdate: TcxGridDBColumn;
     UpdateDate: TcxGridDBColumn;
     DayCount: TcxGridDBColumn;
+    PriceMax: TcxGridDBColumn;
+    PriceMin: TcxGridDBColumn;
   private
     { Private declarations }
   public

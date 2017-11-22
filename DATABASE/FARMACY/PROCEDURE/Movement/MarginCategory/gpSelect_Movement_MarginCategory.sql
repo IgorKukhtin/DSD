@@ -31,6 +31,8 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , Amount           TFloat      -- мин кол-во продаж за анализируемый период
              , ChangePercent    TFloat      -- % отклонения продаж.
              , DayCount         TFloat      -- дней в периоде анализа
+             , PriceMin         TFloat      --
+             , PriceMax         TFloat      --
               )
 
 AS
@@ -59,8 +61,8 @@ BEGIN
                                                         AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
                              
                              WHERE Movement_MarginCategory.DescId = zc_Movement_MarginCategory()
-                               AND ( (inPeriodForOperDate = TRUE AND Movement_MarginCategory.OperDate BETWEEN inStartDate AND inEndDate)
-                                  OR (inPeriodForOperDate = FALSE AND (MovementDate_StartSale.ValueData BETWEEN inStartDate AND inEndDate
+                               AND ( (inPeriodForOperDate = FALSE AND Movement_MarginCategory.OperDate BETWEEN inStartDate AND inEndDate)
+                                  OR (inPeriodForOperDate = TRUE AND (MovementDate_StartSale.ValueData BETWEEN inStartDate AND inEndDate
                                                                        OR inStartDate BETWEEN MovementDate_StartSale.ValueData AND MovementDate_EndSale.ValueData
                                                                       )
                                      )
@@ -90,6 +92,9 @@ BEGIN
              , MovementFloat_Amount.ValueData              AS Amount
              , MovementFloat_ChangePercent.ValueData       AS ChangePercent
              , MovementFloat_DayCount.ValueData            AS DayCount
+
+             , MovementFloat_PriceMin.ValueData            AS PriceMin
+             , MovementFloat_PriceMax.ValueData            AS PriceMax
 
         FROM tmpMovement AS Movement_MarginCategory 
              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_MarginCategory.StatusId
@@ -140,6 +145,14 @@ BEGIN
              LEFT JOIN MovementFloat AS MovementFloat_DayCount
                                      ON MovementFloat_DayCount.MovementId = Movement_MarginCategory.Id
                                     AND MovementFloat_DayCount.DescId = zc_MovementFloat_DayCount()
+
+             LEFT JOIN MovementFloat AS MovementFloat_PriceMin
+                                     ON MovementFloat_PriceMin.MovementId = Movement_MarginCategory.Id
+                                    AND MovementFloat_PriceMin.DescId = zc_MovementFloat_PriceMin()
+                                    
+             LEFT JOIN MovementFloat AS MovementFloat_PriceMax
+                                     ON MovementFloat_PriceMax.MovementId = Movement_MarginCategory.Id
+                                    AND MovementFloat_PriceMax.DescId = zc_MovementFloat_PriceMax()
          ;
 
 END;

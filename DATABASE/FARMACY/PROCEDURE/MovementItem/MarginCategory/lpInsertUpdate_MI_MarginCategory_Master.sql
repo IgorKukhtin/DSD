@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_MarginCategory_Master (Integer, Integer, Integer, TFloat, TFloat, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_MarginCategory_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_MarginCategory_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_MarginCategory_Master(
  INOUT ioId                  Integer   , --  люч объекта <Ёлемент документа>
@@ -13,6 +14,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_MarginCategory_Master(
     IN inAmountMax	     TFloat    , -- 
     IN inNumberMin	     TFloat    , -- 
     IN inNumberMax	     TFloat    , -- 
+    IN inRemains             TFloat    , 
+    IN inPrice               TFloat    , 
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
@@ -43,7 +46,10 @@ BEGIN
    PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_NumberMin(), ioId, inNumberMin);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_NumberMax(), ioId, inNumberMax);
-   
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_Remains(), ioId, inRemains);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_Price(), ioId, inPrice);  
 
    -- сохранили протокол
    PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);

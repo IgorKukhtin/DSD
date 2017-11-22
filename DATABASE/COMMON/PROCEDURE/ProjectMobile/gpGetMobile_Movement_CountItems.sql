@@ -39,7 +39,7 @@ BEGIN
                 RAISE EXCEPTION 'Тип документа % (%) данной функцией не поддерживается', vbDescCode, vbDescName;
            END IF;
 
-           outItemsCount:= (SELECT COUNT (Id) FROM MovementItem WHERE MovementId = vbId AND DescId = zc_MI_Master() AND Amount <> 0);
+           outItemsCount:= (SELECT COUNT (Id) FROM MovementItem WHERE MovementId = vbId AND DescId = zc_MI_Master() AND Amount <> 0 AND isErased = FALSE);
       ELSE
            outItemsCount:= 0;
       END IF;

@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_MarginCategory (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TVarChar, TFloat, TFloat, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_MarginCategory (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TVarChar, TFloat, TFloat, TFloat, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_MarginCategory (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_MarginCategory(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
@@ -15,6 +16,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_MarginCategory(
     IN inAmount                TFloat     , --
     IN inChangePercent         TFloat     , --
     IN inDayCount              TFloat     , --
+    IN inPriceMin              TFloat,     --
+    IN inPriceMax              TFloat,     --
     IN inUnitId                Integer    , -- Подразделение
     IN inSession               TVarChar     -- сессия пользователя
 )
@@ -54,7 +57,11 @@ BEGIN
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
     -- 
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DayCount(), ioId, inDayCount);
-       
+    -- 
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_PriceMin(), ioId, inPriceMin);
+    -- 
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_PriceMax(), ioId, inPriceMax);
+           
     -- 
     IF vbIsInsert = TRUE
     THEN

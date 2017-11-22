@@ -13,6 +13,7 @@ RETURNS TABLE (
     OperDate           TDateTime,
     JuridicalName      TVarChar,  -- поставщик
     ContractName       TVarChar,  -- договор
+    AreaName           TVarChar,  -- регион
     Price              TFloat,    -- мин цена
     MidPrice           TFloat,    -- средняя цена
     CountPriceList     TFloat,    --количество прайс-листов
