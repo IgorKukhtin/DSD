@@ -92,6 +92,14 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
             Options.Editing = False
             Width = 222
           end
+          object isSAMP: TcxGridDBColumn
+            Caption = #1057#1040#1059#1062
+            DataBinding.FieldName = 'isSAMP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1076#1083#1103' '#1057#1040#1059#1062' ('#1076#1072'/'#1085#1077#1090')'
+            Width = 50
+          end
           object MarginPercent: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080
             DataBinding.FieldName = 'MarginPercent'

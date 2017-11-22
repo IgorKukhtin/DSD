@@ -99,6 +99,7 @@ type
     edPriceMax: TcxCurrencyEdit;
     MarginPercent: TcxGridDBColumn;
     cPrice: TcxGridDBColumn;
+    isSAMP: TcxGridDBColumn;
   private
     { Private declarations }
   public

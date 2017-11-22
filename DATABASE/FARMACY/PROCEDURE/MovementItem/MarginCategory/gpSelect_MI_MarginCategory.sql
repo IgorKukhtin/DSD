@@ -139,6 +139,8 @@ BEGIN
             
             , MovementItem.isErased                        :: Boolean  AS isErased
             
+            , FALSE                                        :: Boolean  AS isSAMP
+            
        FROM tmpMI_Master AS MovementItem
             LEFT JOIN Object_Goods_View AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
