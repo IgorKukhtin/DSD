@@ -537,13 +537,13 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MinPrice_byPromoDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MinPrice_byPromoDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MinPrice_byPromoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MinPrice_byPromoForm');
  // exit;
-
+  {
   // Остатки товара (ID товара другой сети)
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemains_AnotherRetailForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemains_AnotherRetailForm');

@@ -37,8 +37,10 @@ BEGIN
 
      
      CREATE TEMP TABLE _tmpPromo (MovementId Integer, OperDatePromo TDateTime, invNumberPromo TVarChar) ON COMMIT DROP; 
-     INSERT INTO _tmpPromo (MovementId, OperDatePromo, invNumberPromo)
+     INSERT INTO _tmpPromo (MovementId, OperDatePromo, InvNumberPromo)
             SELECT Movement.Id
+                 , Movement.OperDate
+                 , Movement.invNumber
             FROM Movement
             WHERE Movement.DescId = zc_Movement_Promo()
               AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -72,6 +74,8 @@ BEGIN
     WITH 
     -- товары тек.документа маркетинга
       tmpGoodsPromoMI AS (SELECT DISTINCT MI_Goods.ObjectId    AS GoodsId
+                               , _tmpPromo.OperDatePromo
+                               , _tmpPromo.InvNumberPromo
                           FROM _tmpPromo
                              INNER JOIN MovementItem AS MI_Goods 
                                                      ON MI_Goods.MovementId = _tmpPromo.MovementId
@@ -80,6 +84,8 @@ BEGIN
                           )
     , tmpGoodsPromo AS (SELECT DISTINCT tmpGoodsPromoMI.GoodsId  AS GoodsId
                              , ObjectLink_Main.ChildObjectId     AS GoodsMainId
+                             , tmpGoodsPromoMI.OperDatePromo
+                             , tmpGoodsPromoMI.InvNumberPromo 
                         FROM tmpGoodsPromoMI
                              -- получаем GoodsMainId
                              LEFT JOIN  ObjectLink AS ObjectLink_Child 
@@ -93,7 +99,8 @@ BEGIN
     , tmpDataAll AS (SELECT Movement.OperDate                 AS OperDate
                           , MI_Master.ObjectId                AS GoodsId   -- это GoodsMainId
                           , COALESCE(MIFloat_Price.ValueData,0)::TFloat  AS Price  
-                          
+                          , tmpGoodsPromo.OperDatePromo
+                          , tmpGoodsPromo.InvNumberPromo
                      FROM Movement 
                           LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                                        ON MovementLinkObject_Juridical.MovementId = Movement.Id
@@ -139,6 +146,8 @@ BEGIN
                        , tmp.MidPrice
                        , MAX (CASE WHEN tmp.Ord_Min = 1 THEN tmp.OperDate ELSE zc_DateStart() END) AS DateMinPrice
                        , MAX (CASE WHEN tmp.Ord_Max = 1 THEN tmp.OperDate ELSE zc_DateStart() END) AS DateMaxPrice
+                       , tmp.OperDatePromo
+                       , tmp.InvNumberPromo
                   FROM (              
                        SELECT *
                             , MIN (tmpDataAll.Price)  OVER (PARTITION BY tmpDataAll.GoodsId ORDER BY tmpDataAll.GoodsId)                   AS MinPrice
@@ -152,6 +161,8 @@ BEGIN
                        WHERE tmp.Ord_Min = 1 OR tmp.Ord_Max = 1
                        GROUP BY tmp.GoodsId
                               , tmp.minPrice, tmp.MaxPrice, tmp.MidPrice
+                              , tmp.OperDatePromo
+                              , tmp.InvNumberPromo
                   )
                   
     , tmpResult AS (SELECT tmpData.GoodsId
@@ -165,6 +176,8 @@ BEGIN
                          , (COALESCE(tmpDataToday.Price, 0) + (COALESCE(tmpDataToday.Price, 0)/100 * inPersent))                               ::TFloat AS PricePersent
                          , tmpDataToday.OperDate                    AS OperDate
                          , tmpDataToday.JuridicalId                 AS JuridicalId
+                         , tmpData.OperDatePromo
+                         , tmpData.InvNumberPromo
                     FROM tmpData
                          INNER JOIN tmpDataToday ON tmpDataToday.GoodsMainId = tmpData.GoodsId   
                      )
@@ -185,13 +198,16 @@ BEGIN
             , tmpData.TodayPrice           ::TFloat    AS TodayPrice
             , tmpData.Persent              ::TFloat    AS Persent
            
-            
+            , tmpData.OperDatePromo
+            , tmpData.InvNumberPromo
       FROM tmpResult AS tmpData
        
         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
         
+        LEFT JOIN (SELECT DISTINCT tmpGoodsPromo.GoodsId, tmpGoodsPromo.GoodsMainId FROM tmpGoodsPromo ) AS tmpGoodsPromo ON tmpGoodsPromo.GoodsMainId = tmpData.GoodsId
+        
         LEFT JOIN ObjectString AS ObjectString_Goods_Maker
-                               ON ObjectString_Goods_Maker.ObjectId = tmpData.GoodsId
+                               ON ObjectString_Goods_Maker.ObjectId = tmpGoodsPromo.GoodsId
                               AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker() 
                               
         LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
