@@ -38,6 +38,8 @@ type
     DateMaxPrice: TcxGridDBColumn;
     OperDate: TcxGridDBColumn;
     JuridicalName: TcxGridDBColumn;
+    OperdatePromo: TcxGridDBColumn;
+    InvNumberPromo: TcxGridDBColumn;
   private
     { Private declarations }
   public
