@@ -5,6 +5,8 @@ object MainForm: TMainForm
   ClientHeight = 441
   ClientWidth = 624
   Color = clBtnFace
+  Constraints.MinHeight = 400
+  Constraints.MinWidth = 600
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -12,32 +14,13 @@ object MainForm: TMainForm
   Font.Style = []
   OldCreateOrder = False
   Position = poScreenCenter
+  OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
-  object UsageMemo: TMemo
-    Left = 0
-    Top = 0
-    Width = 624
-    Height = 77
-    Align = alTop
-    Color = clBlack
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clCream
-    Font.Height = -15
-    Font.Name = 'Courier New'
-    Font.Style = []
-    Lines.Strings = (
-      #1055#1088#1080#1084#1077#1088' '#1079#1072#1087#1091#1089#1082#1072':'
-      'C:\EDIOrdersLoader.exe -interval 5'
-      ' - '#1075#1076#1077' "5" - '#1101#1090#1086' '#1080#1085#1090#1077#1088#1074#1072#1083' '#1074' '#1084#1080#1085#1091#1090#1072#1093)
-    ParentFont = False
-    ReadOnly = True
-    TabOrder = 0
-  end
   object OptionsMemo: TMemo
     Left = 0
-    Top = 77
+    Top = 31
     Width = 624
     Height = 56
     Align = alTop
@@ -52,12 +35,13 @@ object MainForm: TMainForm
     ParentFont = False
     ReadOnly = True
     TabOrder = 1
+    ExplicitTop = 108
   end
   object LogMemo: TMemo
     Left = 0
-    Top = 133
+    Top = 87
     Width = 624
-    Height = 308
+    Height = 354
     Align = alClient
     Color = clBlack
     Font.Charset = DEFAULT_CHARSET
@@ -72,6 +56,66 @@ object MainForm: TMainForm
     ScrollBars = ssVertical
     TabOrder = 2
     WordWrap = False
+    ExplicitTop = 164
+    ExplicitHeight = 277
+  end
+  object Panel: TPanel
+    Left = 0
+    Top = 0
+    Width = 624
+    Height = 31
+    Align = alTop
+    BevelOuter = bvNone
+    TabOrder = 0
+    DesignSize = (
+      624
+      31)
+    object deStart: TcxDateEdit
+      Left = 107
+      Top = 5
+      EditValue = 42125d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 2
+      Width = 85
+    end
+    object deEnd: TcxDateEdit
+      Left = 310
+      Top = 5
+      EditValue = 42125d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 3
+      Width = 85
+    end
+    object cxLabel1: TcxLabel
+      Left = 10
+      Top = 6
+      Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
+    end
+    object cxLabel2: TcxLabel
+      Left = 200
+      Top = 6
+      Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
+    end
+    object StartButton: TcxButton
+      Left = 463
+      Top = 3
+      Width = 75
+      Height = 25
+      Action = actStartEDI
+      Anchors = [akTop, akRight]
+      TabOrder = 0
+    end
+    object StopButton: TcxButton
+      Left = 544
+      Top = 3
+      Width = 75
+      Height = 25
+      Action = actStopEDI
+      Anchors = [akTop, akRight]
+      TabOrder = 1
+    end
   end
   object TrayIcon: TTrayIcon
     Hint = #1047#1072#1075#1088#1091#1079#1095#1080#1082' EDI '#1079#1072#1082#1072#1079#1086#1074
@@ -10266,14 +10310,16 @@ object MainForm: TMainForm
       E924B2CCE50A00000000000000000000000000000000F0070000E00300008001
       0000800000000000000000000000000000000000000000000000000000008000
       000080000000C0000000C0010000E0030000F80F0000}
+    Visible = True
     OnClick = TrayIconClick
     Left = 360
-    Top = 16
+    Top = 44
   end
   object Timer: TTimer
     Enabled = False
+    OnTimer = TimerTimer
     Left = 412
-    Top = 16
+    Top = 44
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -10364,5 +10410,128 @@ object MainForm: TMainForm
         end>
       Caption = 'actSetDefaults'
     end
+    object actStartEDI: TAction
+      Caption = #1047#1072#1087#1091#1089#1082
+      OnExecute = actStartEDIExecute
+      OnUpdate = actStartEDIUpdate
+    end
+    object actStopEDI: TAction
+      Caption = #1054#1089#1090#1072#1085#1086#1074#1082#1072
+      OnExecute = actStopEDIExecute
+      OnUpdate = actStopEDIUpdate
+    end
+    object EDIActionOrdersLoad: TEDIAction
+      Category = 'EDI Load'
+      MoveParams = <>
+      StartDateParam.Value = 42125d
+      StartDateParam.Component = deStart
+      StartDateParam.DataType = ftDateTime
+      StartDateParam.MultiSelectSeparator = ','
+      EndDateParam.Value = 42125d
+      EndDateParam.Component = deEnd
+      EndDateParam.DataType = ftDateTime
+      EndDateParam.MultiSelectSeparator = ','
+      EDI = EDI
+      EDIDocType = ediOrder
+      spHeader = spHeaderOrder
+      spList = spListOrder
+      Directory = '/inbox'
+    end
+  end
+  object spHeaderOrder: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_EDIOrder'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inOrderInvNumber'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOrderOperDate'
+        Value = 'NULL'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGLN'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGLNPlace'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsPropertyId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 184
+    Top = 252
+  end
+  object spListOrder: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_EDIOrder'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsPropertyId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGLNCode'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountOrder'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceOrder'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 184
+    Top = 300
   end
 end
