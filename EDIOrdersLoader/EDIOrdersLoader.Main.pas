@@ -5,7 +5,9 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, dsdDB, EDI, Vcl.ActnList,
-  dsdAction;
+  dsdAction, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit,
+  Vcl.ComCtrls, dxCore, cxDateUtils, dxSkinsCore, dxSkinsDefaultPainters, Vcl.Menus, cxButtons,
+  cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, System.IniFiles;
 
 type
   TMainForm = class(TForm)
@@ -19,14 +21,39 @@ type
     EDI: TEDI;
     ActionList: TActionList;
     actSetDefaults: TdsdExecStoredProc;
+    spHeaderOrder: TdsdStoredProc;
+    spListOrder: TdsdStoredProc;
+    Panel: TPanel;
+    deStart: TcxDateEdit;
+    deEnd: TcxDateEdit;
+    cxLabel1: TcxLabel;
+    cxLabel2: TcxLabel;
+    StartButton: TcxButton;
+    StopButton: TcxButton;
+    actStartEDI: TAction;
+    actStopEDI: TAction;
+    EDIActionOrdersLoad: TEDIAction;
     procedure TrayIconClick(Sender: TObject);
     procedure AppMinimize(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure actStartEDIExecute(Sender: TObject);
+    procedure actStartEDIUpdate(Sender: TObject);
+    procedure actStopEDIExecute(Sender: TObject);
+    procedure actStopEDIUpdate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure TimerTimer(Sender: TObject);
   private
     { Private declarations }
+    FIntervalVal: Integer;
+    FProccessing: Boolean;
     procedure AddToLog(S: string);
+    procedure StartEDI;
+    procedure StopEDI;
+    procedure ProccessEDI;
   public
     { Public declarations }
+    property IntervalVal: Integer read FIntervalVal;
+    property Proccessing: Boolean read FProccessing write FProccessing;
   end;
 
 var
@@ -36,48 +63,137 @@ implementation
 
 {$R *.dfm}
 
-procedure TMainForm.AddToLog(S: string);
+procedure TMainForm.actStartEDIExecute(Sender: TObject);
 begin
-  LogMemo.Lines.Add(FormatDateTime('yyyy-mm-dd hh:mm:ss', Now) + ' ' + S);
+  StartEDI;
+end;
+
+procedure TMainForm.actStartEDIUpdate(Sender: TObject);
+begin
+  actStartEDI.Enabled := not Timer.Enabled;
+end;
+
+procedure TMainForm.actStopEDIExecute(Sender: TObject);
+begin
+  StopEDI;
+end;
+
+procedure TMainForm.actStopEDIUpdate(Sender: TObject);
+begin
+  actStopEDI.Enabled := Timer.Enabled;
+end;
+
+procedure TMainForm.AddToLog(S: string);
+var
+  LogStr: string;
+  LogFileName: string;
+  LogFile: TextFile;
+begin
+  LogStr := FormatDateTime('yyyy-mm-dd hh:mm:ss', Now) + ' ' + S;
+  LogMemo.Lines.Add(LogStr);
+  LogFileName := ChangeFileExt(Application.ExeName, '') + '_' + FormatDateTime('yyyymmdd', Date) + '.log';
+
+  AssignFile(LogFile, LogFileName);
+
+  if FileExists(LogFileName) then
+    Append(LogFile)
+  else
+    Rewrite(LogFile);
+
+  Writeln(LogFile, LogStr);
+  CloseFile(LogFile);
 end;
 
 procedure TMainForm.AppMinimize(Sender: TObject);
 begin
-  TrayIcon.Visible := True;
   ShowWindow(Handle, SW_HIDE);
+end;
+
+procedure TMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  StopEDI;
 end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
 var
   IntervalStr: string;
-  IntervalVal: Integer;
 begin
   Application.OnMinimize := AppMinimize;
   Timer.Enabled := False;
+  Proccessing := False;
 
   if FindCmdLineSwitch('interval', IntervalStr) then
-    IntervalVal := StrToIntDef(IntervalStr, 0)
+    FIntervalVal := StrToIntDef(IntervalStr, 0)
   else
-    IntervalVal := 0;
+    FIntervalVal := 0;
 
   if IntervalVal > 0 then
-  begin
     Timer.Interval := IntervalVal * 60 * 1000;
-    Timer.Enabled := True;
-  end;
 
+  deStart.EditValue := Date - 1;
+  deEnd.EditValue := Date - 1;
+  deStart.Enabled := False;
+  deEnd.Enabled := False;
   OptionsMemo.Lines.Text := 'Текущий интервал: ' + IntToStr(IntervalVal) + ' мин.';
   LogMemo.Clear;
+end;
+
+procedure TMainForm.ProccessEDI;
+begin
+  if Proccessing then
+    Exit;
+
+  Proccessing := True;
+
+  try
+    actSetDefaults.Execute;
+    AddToLog('Считали начальные установки по EDI');
+    AddToLog('Загрузка и обработка EDI начата ...');
+    deStart.EditValue := Date - 1;
+    deEnd.EditValue := Date - 1;
+    AddToLog(' - начальная дата: ' + deStart.EditText);
+    AddToLog(' - конечная  дата: ' + deEnd.EditText);
+    EDIActionOrdersLoad.Execute;
+    AddToLog('Загрузка и обработка EDI закончена');
+  except
+    on E: Exception do
+      AddToLog(E.Message);
+  end;
+
+  Proccessing := False;
+end;
+
+procedure TMainForm.StartEDI;
+begin
   AddToLog('Запуск');
-  actSetDefaults.Execute;
-  AddToLog('Считали начальные установки по EDI');
+
+  if IntervalVal > 0 then
+    Timer.Enabled := True
+  else
+    AddToLog('Запуск отменен, т.к. не задан интервал');
+end;
+
+procedure TMainForm.StopEDI;
+begin
+  if Timer.Enabled then
+  begin
+    while Proccessing do
+      Application.ProcessMessages;
+
+    Timer.Enabled := False;
+    AddToLog('Остановка');
+  end;
+end;
+
+procedure TMainForm.TimerTimer(Sender: TObject);
+begin
+  ProccessEDI;
 end;
 
 procedure TMainForm.TrayIconClick(Sender: TObject);
 begin
-  Application.Restore;
-  Application.BringToFront;
-  TrayIcon.Visible := False;
+  ShowWindow(Handle, SW_RESTORE);
+  SetForegroundWindow(Handle);
 end;
 
 end.
