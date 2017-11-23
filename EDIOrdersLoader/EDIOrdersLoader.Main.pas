@@ -13,7 +13,6 @@ type
   TMainForm = class(TForm)
     TrayIcon: TTrayIcon;
     Timer: TTimer;
-    UsageMemo: TMemo;
     OptionsMemo: TMemo;
     LogMemo: TMemo;
     FormParams: TdsdFormParams;

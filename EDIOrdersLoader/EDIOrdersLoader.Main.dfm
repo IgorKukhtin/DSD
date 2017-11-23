@@ -5,6 +5,8 @@ object MainForm: TMainForm
   ClientHeight = 441
   ClientWidth = 624
   Color = clBtnFace
+  Constraints.MinHeight = 400
+  Constraints.MinWidth = 600
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -16,29 +18,9 @@ object MainForm: TMainForm
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
-  object UsageMemo: TMemo
-    Left = 0
-    Top = 31
-    Width = 624
-    Height = 77
-    Align = alTop
-    Color = clBlack
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clCream
-    Font.Height = -15
-    Font.Name = 'Courier New'
-    Font.Style = []
-    Lines.Strings = (
-      #1055#1088#1080#1084#1077#1088' '#1079#1072#1087#1091#1089#1082#1072':'
-      'C:\EDIOrdersLoader.exe -interval 5'
-      ' - '#1075#1076#1077' "5" - '#1101#1090#1086' '#1080#1085#1090#1077#1088#1074#1072#1083' '#1074' '#1084#1080#1085#1091#1090#1072#1093)
-    ParentFont = False
-    ReadOnly = True
-    TabOrder = 0
-  end
   object OptionsMemo: TMemo
     Left = 0
-    Top = 108
+    Top = 31
     Width = 624
     Height = 56
     Align = alTop
@@ -53,12 +35,13 @@ object MainForm: TMainForm
     ParentFont = False
     ReadOnly = True
     TabOrder = 1
+    ExplicitTop = 108
   end
   object LogMemo: TMemo
     Left = 0
-    Top = 164
+    Top = 87
     Width = 624
-    Height = 277
+    Height = 354
     Align = alClient
     Color = clBlack
     Font.Charset = DEFAULT_CHARSET
@@ -73,6 +56,8 @@ object MainForm: TMainForm
     ScrollBars = ssVertical
     TabOrder = 2
     WordWrap = False
+    ExplicitTop = 164
+    ExplicitHeight = 277
   end
   object Panel: TPanel
     Left = 0
@@ -81,14 +66,17 @@ object MainForm: TMainForm
     Height = 31
     Align = alTop
     BevelOuter = bvNone
-    TabOrder = 3
+    TabOrder = 0
+    DesignSize = (
+      624
+      31)
     object deStart: TcxDateEdit
       Left = 107
       Top = 5
       EditValue = 42125d
       Properties.SaveTime = False
       Properties.ShowTime = False
-      TabOrder = 0
+      TabOrder = 2
       Width = 85
     end
     object deEnd: TcxDateEdit
@@ -97,7 +85,7 @@ object MainForm: TMainForm
       EditValue = 42125d
       Properties.SaveTime = False
       Properties.ShowTime = False
-      TabOrder = 1
+      TabOrder = 3
       Width = 85
     end
     object cxLabel1: TcxLabel
@@ -116,7 +104,8 @@ object MainForm: TMainForm
       Width = 75
       Height = 25
       Action = actStartEDI
-      TabOrder = 4
+      Anchors = [akTop, akRight]
+      TabOrder = 0
     end
     object StopButton: TcxButton
       Left = 544
@@ -124,7 +113,8 @@ object MainForm: TMainForm
       Width = 75
       Height = 25
       Action = actStopEDI
-      TabOrder = 5
+      Anchors = [akTop, akRight]
+      TabOrder = 1
     end
   end
   object TrayIcon: TTrayIcon
