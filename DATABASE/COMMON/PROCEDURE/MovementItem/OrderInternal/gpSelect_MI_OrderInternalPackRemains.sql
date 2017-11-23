@@ -175,6 +175,7 @@ BEGIN
 
             , _Result_Child.Amount_result_two
             , _Result_Child.Amount_result_pack
+            , _Result_Child.Amount_result_pack_pack
 
             , _Result_Child.Income_PACK_to
             , _Result_Child.Income_PACK_from
@@ -239,6 +240,18 @@ BEGIN
                                       , inPlan6            := COALESCE (_Result_Child.Plan6, 0) + COALESCE (_Result_Child.Promo6, 0)
                                       , inPlan7            := COALESCE (_Result_Child.Plan7, 0) + COALESCE (_Result_Child.Promo7, 0)
                                        ) AS DayCountForecast_new
+              -- Îñò. â äíÿõ (ïî ïð. !!!ÈËÈ!!! ïî çâ.) - ÏÎÑËÅ ÓÏÀÊÎÂÊÈ
+            , zfCalc_StatDayCount_Week (inAmount           := COALESCE (_Result_Child.Amount_result_pack_pack, 0)
+                                      , inAmountPartnerNext:= COALESCE (_Result_Child.AmountPartnerNext, 0) + COALESCE (_Result_Child.AmountPartnerNextPromo, 0)
+                                      , inCountForecast    := CASE WHEN _Result_Child.CountForecast > 0 THEN COALESCE (_Result_Child.CountForecast, 0) ELSE COALESCE (_Result_Child.CountForecastOrder, 0) END
+                                      , inPlan1            := COALESCE (_Result_Child.Plan1, 0) + COALESCE (_Result_Child.Promo1, 0)
+                                      , inPlan2            := COALESCE (_Result_Child.Plan2, 0) + COALESCE (_Result_Child.Promo2, 0)
+                                      , inPlan3            := COALESCE (_Result_Child.Plan3, 0) + COALESCE (_Result_Child.Promo3, 0)
+                                      , inPlan4            := COALESCE (_Result_Child.Plan4, 0) + COALESCE (_Result_Child.Promo4, 0)
+                                      , inPlan5            := COALESCE (_Result_Child.Plan5, 0) + COALESCE (_Result_Child.Promo5, 0)
+                                      , inPlan6            := COALESCE (_Result_Child.Plan6, 0) + COALESCE (_Result_Child.Promo6, 0)
+                                      , inPlan7            := COALESCE (_Result_Child.Plan7, 0) + COALESCE (_Result_Child.Promo7, 0)
+                                       ) AS DayCountForecast_new_new
 
             , _Result_Child.ReceiptId
             , _Result_Child.ReceiptCode

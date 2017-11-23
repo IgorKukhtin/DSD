@@ -17,8 +17,8 @@ $BODY$
 BEGIN
      -- определяется
      SELECT Movement.OperDate
-          , 1 + EXTRACT (DAY FROM (MovementDate_OperDateEnd.ValueData - MovementDate_OperDateStart.ValueData)) AS DayCount
-          , (1 + EXTRACT (DAY FROM (MovementDate_OperDateEnd.ValueData - MovementDate_OperDateStart.ValueData))) / 7 AS vbWeekCount
+          , 1 + EXTRACT (DAY FROM (MovementDate_OperDateEnd.ValueData - MovementDate_OperDateStart.ValueData))       AS DayCount
+          , (1 + EXTRACT (DAY FROM (MovementDate_OperDateEnd.ValueData - MovementDate_OperDateStart.ValueData))) / 7 AS WeekCount
             INTO vbOperDate, vbDayCount, vbWeekCount
      FROM Movement
           LEFT JOIN MovementDate AS MovementDate_OperDateStart
@@ -1157,6 +1157,7 @@ BEGIN
 
                                         , Amount_result_two          TFloat
                                         , Amount_result_pack         TFloat
+                                        , Amount_result_pack_pack    TFloat
 
                                         , Income_PACK_to             TFloat
                                         , Income_PACK_from           TFloat
@@ -1227,6 +1228,7 @@ BEGIN
 
                                         , Amount_result_two
                                         , Amount_result_pack
+                                        , Amount_result_pack_pack
 
                                         , Income_PACK_to
                                         , Income_PACK_from
@@ -1333,6 +1335,11 @@ BEGIN
                  - COALESCE (tmpMI_master.Amount, 0) - COALESCE (tmpMI_master.AmountNext, 0)
                  + tmpMI.AmountPack + tmpMI.AmountPackSecond + tmpMI.AmountPackNext + tmpMI.AmountPackNextSecond
                    AS NUMERIC (16, 1)) :: TFloat AS Amount_result_pack
+             -- Amount_result_pack_pack
+           , CAST (tmpMI.Remains + tmpMI.Remains_pack + 0                    - tmpMI.AmountPartnerPrior - tmpMI.AmountPartnerPriorPromo - tmpMI.AmountPartner - tmpMI.AmountPartnerPromo
+                 - COALESCE (tmpMI_master.Amount, 0) - COALESCE (tmpMI_master.AmountNext, 0)
+                 + tmpMI.AmountPack_calc + tmpMI.AmountPackSecond_calc + tmpMI.AmountPackNext_calc + tmpMI.AmountPackNextSecond_calc
+                   AS NUMERIC (16, 1)) :: TFloat AS Amount_result_pack_pack
 
              -- ФАКТ - Перемещение на Цех Упаковки
            , tmpPACK.Income_PACK_to   :: TFloat AS Income_PACK_to

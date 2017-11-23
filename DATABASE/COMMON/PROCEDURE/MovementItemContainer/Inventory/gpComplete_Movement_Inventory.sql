@@ -155,6 +155,13 @@ BEGIN
      IF vbStatusId = zc_Enum_Status_Complete() THEN RETURN; END IF;
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+     -- проверка
+     IF COALESCE (vbUnitId, 0) = 0 AND COALESCE (vbCarId, 0) = 0 AND COALESCE (vbMemberId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не определено значение <От Кого>.';
+     END IF;
+
+
      -- !!!Если это последняя инвент в текущем месяце, тогда "зависшие" коп. надо списать!!!
      vbIsLastOnMonth:= NOT EXISTS (SELECT 1
                                    FROM Movement
