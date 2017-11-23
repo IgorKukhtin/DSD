@@ -31,7 +31,7 @@ type
     cxLabel3: TcxLabel;
     ceUnit: TcxButtonEdit;
     rdUnit: TRefreshDispatcher;
-    UnitGuides: TdsdGuides;
+    GuidesUnit: TdsdGuides;
     dxBarButton1: TdxBarButton;
     GoodsId: TcxGridDBColumn;
     GoodsCode: TcxGridDBColumn;
@@ -69,6 +69,8 @@ type
     actSend: TdsdExecStoredProc;
     macSend: TMultiAction;
     bbmacSend: TdxBarButton;
+    cbList: TcxCheckBox;
+    actRefreshList: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

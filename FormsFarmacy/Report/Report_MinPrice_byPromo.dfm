@@ -49,6 +49,22 @@ inherited Report_MinPrice_byPromoForm: TReport_MinPrice_byPromoForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object OperdatePromo: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'OperdatePromo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082'. '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+            Width = 40
+          end
+          object InvNumberPromo: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'InvNumberPromo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1076#1086#1082'. '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+            Width = 60
+          end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
@@ -373,12 +389,12 @@ inherited Report_MinPrice_byPromoForm: TReport_MinPrice_byPromoForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 40
-    Top = 88
+    Left = 48
+    Top = 160
   end
   inherited MasterCDS: TClientDataSet
-    Left = 8
-    Top = 88
+    Left = 0
+    Top = 152
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpReport_MinPrice_byPromo'
@@ -415,8 +431,8 @@ inherited Report_MinPrice_byPromoForm: TReport_MinPrice_byPromoForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 56
-    Top = 112
+    Left = 72
+    Top = 120
   end
   inherited BarManager: TdxBarManager
     Left = 112

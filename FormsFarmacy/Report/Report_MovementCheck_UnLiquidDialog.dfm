@@ -4,7 +4,7 @@ object Report_MovementCheck_UnLiquidDialogForm: TReport_MovementCheck_UnLiquidDi
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1087#1086' '#1053#1077#1083#1080#1082#1074#1080#1076#1085#1086#1084#1091' '#1090#1086#1074#1072#1088#1091'>'
   ClientHeight = 170
-  ClientWidth = 342
+  ClientWidth = 349
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -62,7 +62,7 @@ object Report_MovementCheck_UnLiquidDialogForm: TReport_MovementCheck_UnLiquidDi
       end>
     Properties.ReadOnly = True
     TabOrder = 4
-    Width = 305
+    Width = 331
   end
   object cxLabel3: TcxLabel
     Left = 10
@@ -78,6 +78,14 @@ object Report_MovementCheck_UnLiquidDialogForm: TReport_MovementCheck_UnLiquidDi
     Left = 121
     Top = 7
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
+  end
+  object cbList: TcxCheckBox
+    Left = 217
+    Top = 27
+    Hint = #1058#1054#1051#1068#1050#1054' '#1055#1054' '#1057#1055#1048#1057#1050#1059
+    Caption = #1058#1054#1051#1068#1050#1054' '#1055#1054' '#1057#1055#1048#1057#1050#1059
+    TabOrder = 8
+    Width = 129
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -136,6 +144,14 @@ object Report_MovementCheck_UnLiquidDialogForm: TReport_MovementCheck_UnLiquidDi
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isList'
+        Value = Null
+        Component = cbList
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 22
     Top = 103
@@ -144,11 +160,11 @@ object Report_MovementCheck_UnLiquidDialogForm: TReport_MovementCheck_UnLiquidDi
     KeyField = 'Id'
     LookupControl = edUnit
     Key = '0'
-    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnitTreeForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

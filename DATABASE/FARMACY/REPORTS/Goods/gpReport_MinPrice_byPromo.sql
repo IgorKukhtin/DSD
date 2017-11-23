@@ -9,19 +9,21 @@ CREATE OR REPLACE FUNCTION gpReport_MinPrice_byPromo(
     IN inPersent       TFloat,     -- процент отклонения
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE ( GoodsCode     Integer      --Код товара
-              , GoodsName     TVarChar     --Наименование товара
-              , MakerName     TVarChar     --Производитель
-              , NDSKindName   TVarChar     --вид ндс
-              , JuridicalName TVarChar     --
-              , DateMinPrice  TDateTime
-              , DateMaxPrice  TDateTime
-              , OperDate      TDateTime
-              , MinPrice      TFloat
-              , MaxPrice      TFloat
-              , MidPrice      TFloat
-              , TodayPrice    TFloat     -- цена из прайса сегодня
-              , Persent       TFloat     -- факт % отклонения миним цены из периода и ЦЕНЫ СЕГОДНЯ
+RETURNS TABLE ( GoodsCode       Integer      --Код товара
+              , GoodsName       TVarChar     --Наименование товара
+              , MakerName       TVarChar     --Производитель
+              , NDSKindName     TVarChar     --вид ндс
+              , JuridicalName   TVarChar     --
+              , DateMinPrice    TDateTime
+              , DateMaxPrice    TDateTime
+              , OperDate        TDateTime
+              , MinPrice        TFloat
+              , MaxPrice        TFloat
+              , MidPrice        TFloat
+              , TodayPrice      TFloat     -- цена из прайса сегодня
+              , Persent         TFloat     -- факт % отклонения миним цены из периода и ЦЕНЫ СЕГОДНЯ
+              , OperDatePromo   TDateTime
+              , invNumberPromo  TVarChar
               )
 
 AS
@@ -34,8 +36,8 @@ BEGIN
      inEndDate := inEndDate + INTERVAL '1 DAY';
 
      
-     CREATE TEMP TABLE _tmpPromo (MovementId Integer) ON COMMIT DROP; 
-     INSERT INTO _tmpPromo (MovementId)
+     CREATE TEMP TABLE _tmpPromo (MovementId Integer, OperDatePromo TDateTime, invNumberPromo TVarChar) ON COMMIT DROP; 
+     INSERT INTO _tmpPromo (MovementId, OperDatePromo, invNumberPromo)
             SELECT Movement.Id
             FROM Movement
             WHERE Movement.DescId = zc_Movement_Promo()
