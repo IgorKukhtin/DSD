@@ -42,6 +42,7 @@ type
     procedure actStopEDIUpdate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure TimerTimer(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
     FIntervalVal: Integer;
@@ -141,6 +142,11 @@ begin
   LogMemo.Clear;
 end;
 
+procedure TMainForm.FormShow(Sender: TObject);
+begin
+      if not Timer.Enabled then MainForm.StartEDI;
+end;
+
 procedure TMainForm.ProccessEDI;
 begin
   if Proccessing then
@@ -150,18 +156,24 @@ begin
 
   try
     actSetDefaults.Execute;
-    AddToLog('Считали начальные установки по EDI');
-    AddToLog('Загрузка и обработка EDI начата ...');
+
+    OptionsMemo.Lines.Clear;
+    OptionsMemo.Lines.Add('Текущий интервал: ' + IntToStr(IntervalVal) + ' мин.');
+    OptionsMemo.Lines.Add('Host: ' +  FormParams.ParamByName('Host').AsString);
+    OptionsMemo.Lines.Add('UserName: ' +  FormParams.ParamByName('UserName').AsString);
+    OptionsMemo.Lines.Add('Password: ' +  FormParams.ParamByName('Password').AsString);
+
+    AddToLog('Загрузили Default по EDI');
+    AddToLog('Загрузка и обработка EDI началась ...');
 
     if cbPrevDay.Checked = TRUE
     then deStart.EditValue := Date - 1
     else deStart.EditValue := Date;
     deEnd.EditValue := Date;
 
-    AddToLog(' - начальная дата: ' + deStart.EditText);
-    AddToLog(' - конечная  дата: ' + deEnd.EditText);
+    AddToLog(' - Период с : ' + deStart.EditText + ' по ' + deEnd.EditText);
     EDIActionOrdersLoad.Execute;
-    AddToLog('Загрузка и обработка EDI закончена');
+    AddToLog('Загрузка и обработка EDI завершилась');
   except
     on E: Exception do
       AddToLog(E.Message);
@@ -177,7 +189,7 @@ begin
   if IntervalVal > 0 then
     Timer.Enabled := True
   else
-    AddToLog('Запуск отменен, т.к. не задан интервал');
+    AddToLog('Запуск отменен, т.к. не определен интервал');
 end;
 
 procedure TMainForm.StopEDI;

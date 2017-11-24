@@ -5,7 +5,7 @@ inherited MainForm: TMainForm
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 260
+  ExplicitHeight = 257
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -4869,6 +4869,18 @@ inherited MainForm: TMainForm
         end>
       isShowModal = False
     end
+    object actEDILoad: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = 'EDI + '#1047#1072#1075#1088#1091#1079#1082#1072
+      Hint = 'EDI'
+      FormName = 'TEDIJournalLoadForm'
+      FormNameParam.Value = 'TEDIJournalLoadForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
     object actSaveDocumentTo1C: TdsdOpenForm
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
@@ -7274,16 +7286,19 @@ inherited MainForm: TMainForm
       object miEDI: TMenuItem [10]
         Action = actEDI
       end
-      object miToolsWeighingTree: TMenuItem [11]
+      object EDI1: TMenuItem [11]
+        Action = actEDILoad
+      end
+      object miToolsWeighingTree: TMenuItem [12]
         Action = actToolsWeighingTree
       end
-      object N129: TMenuItem [12]
+      object N129: TMenuItem [13]
         Action = actSignInternal
       end
-      object N31: TMenuItem [13]
+      object N31: TMenuItem [14]
         Caption = '-'
       end
-      object miEmail: TMenuItem [14]
+      object miEmail: TMenuItem [15]
         Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1087#1086#1095#1090#1099
         object N104: TMenuItem
           Action = actEmailSettings
@@ -7301,7 +7316,7 @@ inherited MainForm: TMainForm
           Action = actExportKind
         end
       end
-      object N90: TMenuItem [15]
+      object N90: TMenuItem [16]
         Action = actForms
       end
       inherited N116: TMenuItem
@@ -7318,7 +7333,7 @@ inherited MainForm: TMainForm
           Action = actReport_UserProtocol
         end
       end
-      object N91: TMenuItem [19]
+      object N91: TMenuItem [20]
         Action = mactHelp
       end
     end

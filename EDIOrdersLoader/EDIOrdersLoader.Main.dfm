@@ -16,13 +16,14 @@ object MainForm: TMainForm
   Position = poScreenCenter
   OnClose = FormClose
   OnCreate = FormCreate
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object OptionsMemo: TMemo
     Left = 0
     Top = 31
     Width = 722
-    Height = 56
+    Height = 95
     Align = alTop
     Color = clBlack
     Font.Charset = DEFAULT_CHARSET
@@ -35,13 +36,12 @@ object MainForm: TMainForm
     ParentFont = False
     ReadOnly = True
     TabOrder = 1
-    ExplicitWidth = 624
   end
   object LogMemo: TMemo
     Left = 0
-    Top = 87
+    Top = 126
     Width = 722
-    Height = 354
+    Height = 315
     Align = alClient
     Color = clBlack
     Font.Charset = DEFAULT_CHARSET
@@ -56,7 +56,8 @@ object MainForm: TMainForm
     ScrollBars = ssVertical
     TabOrder = 2
     WordWrap = False
-    ExplicitWidth = 624
+    ExplicitTop = 87
+    ExplicitHeight = 354
   end
   object Panel: TPanel
     Left = 0
@@ -66,7 +67,6 @@ object MainForm: TMainForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 624
     DesignSize = (
       722
       31)
@@ -106,7 +106,6 @@ object MainForm: TMainForm
       Action = actStartEDI
       Anchors = [akTop, akRight]
       TabOrder = 0
-      ExplicitLeft = 463
     end
     object StopButton: TcxButton
       Left = 642
@@ -116,7 +115,6 @@ object MainForm: TMainForm
       Action = actStopEDI
       Anchors = [akTop, akRight]
       TabOrder = 1
-      ExplicitLeft = 544
     end
     object cbPrevDay: TCheckBox
       Left = 424
