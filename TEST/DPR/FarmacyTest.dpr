@@ -545,10 +545,10 @@ uses
   OrderInternal in '..\..\FormsFarmacy\Document\OrderInternal.pas' {OrderInternalForm: TParentForm},
   ContactPersonEdit in '..\..\FormsFarmacy\Guides\ContactPersonEdit.pas' {ContactPersonEditForm: TParentForm},
   ContactPerson in '..\..\FormsFarmacy\Guides\ContactPerson.pas' {ContactPersonForm: TParentForm},
-  Report_MinPrice_byPromo in '..\..\FormsFarmacy\Report\Report_MinPrice_byPromo.pas' {Report_MinPrice_byPromoForm: TParentForm},
   Report_MinPrice_byPromoDialog in '..\..\FormsFarmacy\Report\Report_MinPrice_byPromoDialog.pas' {Report_MinPrice_byPromoDialogForm: TParentForm},
   MarginCategoryJournal in '..\..\FormsFarmacy\Document\MarginCategoryJournal.pas' {MarginCategoryJournalForm: TParentForm},
-  MarginCategory_Movement in '..\..\FormsFarmacy\Document\MarginCategory_Movement.pas' {MarginCategory_MovementForm: TParentForm};
+  MarginCategory_Movement in '..\..\FormsFarmacy\Document\MarginCategory_Movement.pas' {MarginCategory_MovementForm: TParentForm},
+  Report_MinPrice_byPromo in '..\..\FormsFarmacy\Report\Report_MinPrice_byPromo.pas' {Report_MinPrice_byPromoForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

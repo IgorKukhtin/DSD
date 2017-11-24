@@ -1805,10 +1805,6 @@
 				<Form>ContactPersonForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MinPrice_byPromo.pas">
-				<Form>Report_MinPrice_byPromoForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MinPrice_byPromoDialog.pas">
 				<Form>Report_MinPrice_byPromoDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1819,6 +1815,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\MarginCategory_Movement.pas">
 				<Form>MarginCategory_MovementForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MinPrice_byPromo.pas">
+				<Form>Report_MinPrice_byPromoForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
