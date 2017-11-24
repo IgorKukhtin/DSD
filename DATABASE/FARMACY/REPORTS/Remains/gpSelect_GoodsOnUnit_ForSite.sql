@@ -29,6 +29,8 @@ RETURNS TABLE (Id                Integer
              , RemainsAll        TFloat    -- Остаток (без учета резерва)
              , AmountDeferred    TFloat    -- резерв
 
+             , AreaId            Integer    -- 
+             , AreaName          TVarChar   -- 
              , JuridicalId       Integer    -- Поставщик (по которому найдена миним цена)
              , JuridicalName     TVarChar   -- Поставщик (по которому найдена миним цена)
              , ContractId        Integer    -- Договор (по которому найдена миним цена)
@@ -45,7 +47,7 @@ RETURNS TABLE (Id                Integer
              , MarginPercent_site      TFloat  -- % наценка - доставка (информативная)
              , MarginCategoryName      TVarChar -- наценка название (информативная)
              , MarginCategoryName_site TVarChar -- наценка название - доставка (информативная)
-
+             
              , NDS         TFloat
              , NDSKindName TVarChar
               )
@@ -270,6 +272,7 @@ BEGIN
                                             Partner_GoodsName  TVarChar,
                                             MakerName          TVarChar,
                                             ContractId         Integer,
+                                            AreaId             Integer,
                                             JuridicalId        Integer,
                                             JuridicalName      TVarChar,
                                             Price              TFloat, 
@@ -290,6 +293,7 @@ BEGIN
                                             Partner_GoodsName  ,
                                             MakerName          ,
                                             ContractId         ,
+                                            AreaId             ,
                                             JuridicalId        ,
                                             JuridicalName      ,
                                             Price              ,
@@ -305,6 +309,7 @@ BEGIN
                                             tmp.Partner_GoodsName  ,
                                             tmp.MakerName          ,
                                             tmp.ContractId         ,
+                                            tmp.AreaId             ,
                                             tmp.JuridicalId        ,
                                             tmp.JuridicalName      ,
                                             tmp.Price              ,
@@ -474,6 +479,8 @@ BEGIN
              , tmpList2.Amount /*ContainerCount.Amount*/                                         :: TFloat AS RemainsAll
              , tmpMI_Deferred.Amount                                                            :: TFloat AS AmountDeferred
 
+             , MinPrice_List.AreaId
+             , Object_Area.ValueData AS AreaName
              , MinPrice_List.JuridicalId
              , MinPrice_List.JuridicalName
              , MinPrice_List.ContractId
@@ -508,9 +515,10 @@ BEGIN
                                          AND tmpList2.UnitId  = tmpList.UnitId
              LEFT JOIN _tmpMinPrice_List AS MinPrice_List  ON MinPrice_List.GoodsId  = tmpList.GoodsId
 
-             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpList.UnitId AND Object_Unit.DescId = zc_Object_Unit()
-             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpList.GoodsId
+             LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id     = tmpList.UnitId AND Object_Unit.DescId = zc_Object_Unit()
+             LEFT JOIN Object AS Object_Goods    ON Object_Goods.Id    = tmpList.GoodsId
              LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MinPrice_List.ContractId
+             LEFT JOIN Object AS Object_Area     ON Object_Area.Id     = MinPrice_List.AreaId
 
                             
              LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
@@ -575,6 +583,6 @@ ALTER FUNCTION gpSelect_GoodsOnUnit_ForSite (TVarChar, TVarChar, TVarChar) OWNER
 */
 
 -- тест
--- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId_list:= '1781716', inGoodsId_list:= '8136', inSession:= zfCalc_UserSite()) ORDER BY 1;
+-- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId_list:= '1781716', inGoodsId_list:= '47761', inSession:= zfCalc_UserSite()) ORDER BY 1;
 -- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId_list:= '377613,183292', inGoodsId_list:= '331,951,16876,40618', inSession:= zfCalc_UserSite()) ORDER BY 1;
 -- SELECT p.id, p.id_site, p.name, p.name_site, p.article, p.article, p.unitid, p.juridicalid, p.juridicalname, p.contractid, p.contractname, p.expirationdate, p.manufacturer, p.remains, p.price_unit, p.price_mino, p.price_mino, p.price_min, p.price_mind FROM gpselect_goodsonunit_forsite('183292,183288,377605,375627,394426,472116,494882,1529734,1781716,377606,377595,183290,183289,183294,377613,377574,377594,377610,183293,375626,183291', '508,517,520,526,523,511,544,538,553,559,562,565,571,547,1642,1654,1714,1867,1933,2059,2095,2230,2257,2275,2323,2341,2344,2320,2509,2515', zfCalc_UserSite()) AS p ORDER BY p.price_unit

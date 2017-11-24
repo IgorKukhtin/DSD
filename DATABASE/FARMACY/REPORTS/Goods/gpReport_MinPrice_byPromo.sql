@@ -42,6 +42,7 @@ BEGIN
                  , Movement.OperDate
                  , Movement.invNumber
             FROM Movement
+            
             WHERE Movement.DescId = zc_Movement_Promo()
               AND Movement.StatusId = zc_Enum_Status_Complete()
               AND (Movement.Id = inMovementId OR inMovementId = 0);

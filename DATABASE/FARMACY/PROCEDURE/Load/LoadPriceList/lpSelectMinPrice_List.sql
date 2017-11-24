@@ -18,14 +18,14 @@ RETURNS TABLE (
     Partner_GoodsName  TVarChar,
     MakerName          TVarChar,
     ContractId         Integer,
+    AreaId             Integer,
     JuridicalId        Integer,
     JuridicalName      TVarChar,
     Price              TFloat, 
     SuperFinalPrice    TFloat,
     isTop              Boolean,
     isOneJuridical     Boolean
-)
-
+   )
 AS
 $BODY$
   -- DECLARE vbMainJuridicalId Integer;
@@ -176,6 +176,7 @@ BEGIN
              , Movement.Id                                        AS MovementId
              , MovementLinkObject_Juridical.ObjectId              AS JuridicalId
              , COALESCE (MovementLinkObject_Contract.ObjectId, 0) AS ContractId
+             , COALESCE (MovementLinkObject_Area.ObjectId, 0)     AS AreaId
              , COALESCE (JuridicalSettings_list.PriceLimit, 0)    AS PriceLimit
              , COALESCE (JuridicalSettings_list.Bonus, 0)         AS Bonus
         FROM (SELECT DISTINCT ObjectId FROM GoodsList) AS tmp
@@ -188,6 +189,9 @@ BEGIN
              LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                           ON MovementLinkObject_Contract.MovementId = Movement.Id
                                          AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_Area
+                                          ON MovementLinkObject_Area.MovementId = Movement.Id
+                                         AND MovementLinkObject_Area.DescId = zc_MovementLinkObject_Area()
              INNER JOIN JuridicalSettings_list ON JuridicalSettings_list.JuridicalId = MovementLinkObject_Juridical.ObjectId
                                               AND JuridicalSettings_list.ContractId = MovementLinkObject_Contract.ObjectId
         WHERE Movement.DescId = zc_Movement_PriceList()
@@ -210,6 +214,7 @@ BEGIN
        (SELECT Movement_PriceList.MovementId
              , Movement_PriceList.JuridicalId
              , Movement_PriceList.ContractId
+             , Movement_PriceList.AreaId
              , Movement_PriceList.PriceLimit
              , Movement_PriceList.Bonus
              , MovementItem.Id     AS MovementItemId
@@ -240,6 +245,7 @@ BEGIN
       , ddd.Partner_GoodsName
       , ddd.MakerName
       , ddd.ContractId
+      , ddd.AreaId
       , ddd.JuridicalId
       , ddd.JuridicalName 
       , ddd.Deferment
@@ -299,6 +305,7 @@ BEGIN
           , Object_Goods_jur_mi.ValueData      AS Partner_GoodsName
           , ObjectString_Goods_Maker.ValueData AS MakerName
           , MI_PriceList.ContractId            AS ContractId
+          , MI_PriceList.AreaId                AS AreaId
           , Juridical.Id                       AS JuridicalId
           , Juridical.ValueData                AS JuridicalName
           , COALESCE (ObjectFloat_Deferment.ValueData, 0) :: Integer AS Deferment
@@ -365,6 +372,7 @@ BEGIN
         MinPriceList.Partner_GoodsName,
         MinPriceList.MakerName,
         MinPriceList.ContractId,
+        MinPriceList.AreaId,
         MinPriceList.JuridicalId,
         MinPriceList.JuridicalName,
         MinPriceList.Price,

@@ -1,4 +1,4 @@
-unit EDIJournal;
+unit EDIJournalLoad;
 
 interface
 
@@ -16,7 +16,7 @@ uses
   dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCurrencyEdit, cxButtonEdit;
 
 type
-  TEDIJournalForm = class(TAncestorDBGridForm)
+  TEDIJournalLoadForm = class(TAncestorDBGridForm)
     clOperDate: TcxGridDBColumn;
     clInvNumber: TcxGridDBColumn;
     clInvNumberPartner: TcxGridDBColumn;
@@ -206,6 +206,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TEDIJournalForm);
+  RegisterClass(TEDIJournalLoadForm);
 
 end.

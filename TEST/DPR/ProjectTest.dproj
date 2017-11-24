@@ -1188,8 +1188,8 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Movement\All\EDIMovementTest.pas"/>
-			<DCCReference Include="..\..\Forms\EDI\EDIJournal.pas">
-				<Form>EDIJournalForm</Form>
+			<DCCReference Include="..\..\Forms\EDI\EDIJournalLoad.pas">
+				<Form>EDIJournalLoadForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\DevAddOn\cxGridAddOn.pas"/>
@@ -3287,6 +3287,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_PromoPlan.pas">
 				<Form>Report_PromoPlanForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\EDI\EDIJournal.pas">
+				<Form>EDIJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

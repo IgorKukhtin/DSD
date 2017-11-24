@@ -1507,6 +1507,11 @@
               Format = ',0.####'
               Kind = skSum
               Column = chPromo7
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmount_result_pack_pack
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -1748,6 +1753,11 @@
               Format = ',0.####'
               Kind = skSum
               Column = chPromo7
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmount_result_pack_pack
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1859,13 +1869,23 @@
             Options.Editing = False
             Width = 70
           end
+          object chAmount_result_pack_pack: TcxGridDBColumn
+            Caption = #1056#1045#1047#1059#1051#1068#1058#1040#1058' ***'#1057#1058#1040#1058'2'
+            DataBinding.FieldName = 'Amount_result_pack_pack'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object chDayCountForecast_calc: TcxGridDBColumn
             Caption = #1054#1089#1090'. '#1074' '#1076#1085#1103#1093' ***'#1059#1055#1040#1050
             DataBinding.FieldName = 'DayCountForecast_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1877,10 +1897,20 @@
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1057#1058#1040#1058#1048#1057#1058#1048#1050#1048' '#1087#1086' '#1076#1085#1103#1084' '#1085#1077#1076#1077#1083#1080
+            Options.Editing = False
+            Width = 55
+          end
+          object chDayCountForecast_new_new: TcxGridDBColumn
+            Caption = #1054#1089#1090'. '#1074' '#1076#1085#1103#1093' ***'#1057#1058#1040#1058'2'
+            DataBinding.FieldName = 'DayCountForecast_new_new'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
           end
@@ -3238,7 +3268,6 @@
           object chtGoodsCode_complete: TcxGridDBColumn
             Caption = #1050#1086#1076' ('#1085#1072' '#1091#1087#1072#1082'.)'
             DataBinding.FieldName = 'GoodsCode_complete'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -4363,7 +4392,16 @@
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
-    object actGridTotalToExcel: TdsdGridToExcel [2]
+    object actGridChildToExcel: TdsdGridToExcel [2]
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Grid = cxGridChild
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+    end
+    object actGridTotalToExcel: TdsdGridToExcel [3]
       Category = 'DSDLib'
       TabSheet = tsTotal
       MoveParams = <>
@@ -4383,7 +4421,7 @@
     inherited actUpdateMainDS: TdsdUpdateDataSet
       TabSheet = tsMain
     end
-    object actUpdateChildDS: TdsdUpdateDataSet [9]
+    object actUpdateChildDS: TdsdUpdateDataSet [10]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -4399,7 +4437,7 @@
       Caption = 'actUpdateChildDS'
       DataSource = ChildDS
     end
-    object actUpdateChildTotalDS: TdsdUpdateDataSet [10]
+    object actUpdateChildTotalDS: TdsdUpdateDataSet [11]
       Category = 'DSDLib'
       TabSheet = tsTotal
       MoveParams = <>
@@ -4409,7 +4447,7 @@
       Caption = 'actUpdateChildTotalDS'
       DataSource = ChildTotalDS
     end
-    object actPrintDiff: TdsdPrintAction [11]
+    object actPrintDiff: TdsdPrintAction [12]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintRemains
@@ -4483,7 +4521,7 @@
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
-    object actPrintDetail: TdsdPrintAction [12]
+    object actPrintDetail: TdsdPrintAction [13]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintRemains
@@ -4557,7 +4595,7 @@
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
-    object actPrintRemains: TdsdPrintAction [13]
+    object actPrintRemains: TdsdPrintAction [14]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintRemains
@@ -4675,7 +4713,7 @@
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [19]
+    object actGoodsKindChoice: TOpenChoiceForm [20]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -5338,11 +5376,11 @@
         end
         item
           Visible = True
-          ItemName = 'bbPrintTax'
+          ItemName = 'bbPrintDetail'
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
+          ItemName = 'bbPrintDiff'
         end
         item
           Visible = True
@@ -5430,6 +5468,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbGridChildToExcel'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridTotalToExcel'
         end
         item
@@ -5444,12 +5486,12 @@
       Action = actPrintRemains
       Category = 0
     end
-    object bbPrintTax: TdxBarButton [6]
+    object bbPrintDetail: TdxBarButton [6]
       Action = actPrintDetail
       Category = 0
       ImageIndex = 21
     end
-    object dxBarButton1: TdxBarButton [7]
+    object bbPrintDiff: TdxBarButton [7]
       Action = actPrintDiff
       Category = 0
     end
@@ -5513,6 +5555,10 @@
     end
     object bbUpdateAmountNextSecondCEH_to: TdxBarButton
       Action = mactUpdateAmountNextSecondCEH_to
+      Category = 0
+    end
+    object bbGridChildToExcel: TdxBarButton
+      Action = actGridChildToExcel
       Category = 0
     end
   end
@@ -6540,6 +6586,13 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsByDay'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 658
@@ -6601,6 +6654,13 @@
       item
         Name = 'inIsPackNextSecond'
         Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsByDay'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -3,7 +3,7 @@ object MainForm: TMainForm
   Top = 0
   Caption = #1047#1072#1075#1088#1091#1079#1095#1080#1082' EDI '#1079#1072#1082#1072#1079#1086#1074
   ClientHeight = 441
-  ClientWidth = 624
+  ClientWidth = 722
   Color = clBtnFace
   Constraints.MinHeight = 400
   Constraints.MinWidth = 600
@@ -16,13 +16,14 @@ object MainForm: TMainForm
   Position = poScreenCenter
   OnClose = FormClose
   OnCreate = FormCreate
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object OptionsMemo: TMemo
     Left = 0
     Top = 31
-    Width = 624
-    Height = 56
+    Width = 722
+    Height = 95
     Align = alTop
     Color = clBlack
     Font.Charset = DEFAULT_CHARSET
@@ -35,13 +36,12 @@ object MainForm: TMainForm
     ParentFont = False
     ReadOnly = True
     TabOrder = 1
-    ExplicitTop = 108
   end
   object LogMemo: TMemo
     Left = 0
-    Top = 87
-    Width = 624
-    Height = 354
+    Top = 126
+    Width = 722
+    Height = 315
     Align = alClient
     Color = clBlack
     Font.Charset = DEFAULT_CHARSET
@@ -56,19 +56,19 @@ object MainForm: TMainForm
     ScrollBars = ssVertical
     TabOrder = 2
     WordWrap = False
-    ExplicitTop = 164
-    ExplicitHeight = 277
+    ExplicitTop = 87
+    ExplicitHeight = 354
   end
   object Panel: TPanel
     Left = 0
     Top = 0
-    Width = 624
+    Width = 722
     Height = 31
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
     DesignSize = (
-      624
+      722
       31)
     object deStart: TcxDateEdit
       Left = 107
@@ -99,7 +99,7 @@ object MainForm: TMainForm
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
     object StartButton: TcxButton
-      Left = 463
+      Left = 561
       Top = 3
       Width = 75
       Height = 25
@@ -108,13 +108,21 @@ object MainForm: TMainForm
       TabOrder = 0
     end
     object StopButton: TcxButton
-      Left = 544
+      Left = 642
       Top = 3
       Width = 75
       Height = 25
       Action = actStopEDI
       Anchors = [akTop, akRight]
       TabOrder = 1
+    end
+    object cbPrevDay: TCheckBox
+      Left = 424
+      Top = 8
+      Width = 97
+      Height = 17
+      Caption = #1079#1072' '#1074#1095#1077#1088#1072
+      TabOrder = 6
     end
   end
   object TrayIcon: TTrayIcon

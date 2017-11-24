@@ -12,7 +12,7 @@ uses
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'qsxqsxw1', gc_User);
+  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Авто-Загрузка EDI', 'Загрузка123EDI', gc_User);
   Application.CreateForm(TMainForm, MainForm);
   Application.Run;
 end.

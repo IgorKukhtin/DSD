@@ -1,5 +1,5 @@
-inherited EDIJournalForm: TEDIJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <EXITE>'
+inherited EDIJournalLoadForm: TEDIJournalLoadForm
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <EXITE> + '#1047#1040#1043#1056#1059#1047#1050#1040
   ClientHeight = 453
   ClientWidth = 1362
   AddOnFormData.OnLoadAction = actSetDefaults
@@ -1958,7 +1958,7 @@ inherited EDIJournalForm: TEDIJournalForm
       Category = 0
     end
     object bbNOLoadOrder: TdxBarButton
-      Action = maEDIOrdersNOLoad
+      Action = maEDIOrdersLoad
       Category = 0
     end
     object bbUpdate_EDIComdoc_Params: TdxBarButton

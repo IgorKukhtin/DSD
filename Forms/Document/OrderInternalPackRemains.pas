@@ -45,7 +45,7 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     actRefreshPrice: TdsdDataSetRefresh;
     PrintHeaderCDS: TClientDataSet;
-    bbPrintTax: TdxBarButton;
+    bbPrintDetail: TdxBarButton;
     PrintItemsCDS: TClientDataSet;
     bbTax: TdxBarButton;
     bbPrintRemains: TdxBarButton;
@@ -213,10 +213,14 @@ type
     AmountPartnerNext: TcxGridDBColumn;
     cbPrintMinus: TcxCheckBox;
     actPrintDiff: TdsdPrintAction;
-    dxBarButton1: TdxBarButton;
+    bbPrintDiff: TdxBarButton;
     Plan1: TcxGridDBColumn;
     Promo1: TcxGridDBColumn;
     DayCountForecast_new: TcxGridDBColumn;
+    chDayCountForecast_new_new: TcxGridDBColumn;
+    actGridChildToExcel: TdsdGridToExcel;
+    bbGridChildToExcel: TdxBarButton;
+    chAmount_result_pack_pack: TcxGridDBColumn;
   private
     { Private declarations }
   public

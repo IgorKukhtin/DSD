@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpUpdateMI_OrderInternal_Amount_toPACK (Integer, Integer
 DROP FUNCTION IF EXISTS gpUpdateMI_OrderInternal_Amount_toPACK (Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdateMI_OrderInternal_Amount_toPACK (Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdateMI_OrderInternal_Amount_toPACK (Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdateMI_OrderInternal_Amount_toPACK (Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdateMI_OrderInternal_Amount_toPACK(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
@@ -14,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpUpdateMI_OrderInternal_Amount_toPACK(
     IN inIsPackSecond        Boolean   , --
     IN inIsPackNext          Boolean   , --
     IN inIsPackNextSecond    Boolean   , --
+    IN inIsByDay             Boolean   , --
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -21,15 +23,30 @@ AS
 $BODY$
    DECLARE vbUserId  Integer;
 
-   DECLARE vbOperDate TDateTime;
-   DECLARE vbDayCount Integer;
+   DECLARE vbOperDate  TDateTime;
+   DECLARE vbDayCount  Integer;
+   DECLARE vbWeekCount Integer;
 
    DECLARE vbNumber   TFloat;
+   DECLARE vbdaycount_GoodsKind_8333 Integer;
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
-     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_MI_OrderInternal_toPACK());
-     vbUserId:= lpGetUserBySession (inSession);
+    -- проверка прав пользователя на вызов процедуры
+    -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_MI_OrderInternal_toPACK());
+    vbUserId:= lpGetUserBySession (inSession);
 
+    -- на сколько дней делаем вид НАРЕЗКА
+    vbdaycount_GoodsKind_8333:= 5;
+    
+    
+    -- !!!Временно 2 РАЗА - 2 Алгоритма - что б сравнить!!!
+    IF inIsByDay = TRUE
+      THEN
+          PERFORM gpUpdateMI_OrderInternal_Amount_toPACK (inMovementId:= inMovementId, inId:= inId, inNumber:= inNumber, inIsClear:= inIsClear
+                                                        , inIsPack:= inIsPack, inIsPackSecond:= inIsPackSecond, inIsPackNext:= inIsPackNext, inIsPackNextSecond:= inIsPackNextSecond, inIsByDay:= FALSE, inSession:= inSession);
+          -- RETURN;
+      END IF;
+    -- !!!Временно 2 РАЗА - 2 Алгоритма - что б сравнить!!!
+    
 
     IF inIsClear = TRUE
     THEN
@@ -39,8 +56,9 @@ BEGIN
     ELSE
         -- определяется
         SELECT Movement.OperDate
-             , 1 + EXTRACT (DAY FROM (MovementDate_OperDateEnd.ValueData - MovementDate_OperDateStart.ValueData))
-               INTO vbOperDate, vbDayCount
+             , 1 + EXTRACT (DAY FROM (MovementDate_OperDateEnd.ValueData - MovementDate_OperDateStart.ValueData))       AS DayCount
+             , (1 + EXTRACT (DAY FROM (MovementDate_OperDateEnd.ValueData - MovementDate_OperDateStart.ValueData))) / 7 AS WeekCount
+               INTO vbOperDate, vbDayCount, vbWeekCount
         FROM Movement
              LEFT JOIN MovementDate AS MovementDate_OperDateStart
                                     ON MovementDate_OperDateStart.MovementId =  Movement.Id
@@ -51,14 +69,22 @@ BEGIN
         WHERE Movement.Id = inMovementId;
 
         -- Проверка
-        IF COALESCE (vbDayCount, 0) <= 0
-        THEN
+        IF COALESCE (vbDayCount, 0) <= 1 THEN
             RAISE EXCEPTION 'vbDayCount <%>', vbDayCount;
+        END IF;
+        -- Проверка
+        IF COALESCE (vbWeekCount, 0) <= 1 THEN
+            RAISE EXCEPTION 'vbWeekCount <%>', vbWeekCount;
         END IF;
 
 
         -- Данные - master
-        CREATE TEMP TABLE _tmpMI_master (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, Amount TFloat, AmountSecond TFloat, AmountNext TFloat, AmountNextSecond TFloat) ON COMMIT DROP;
+        IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpMI_master'))
+        THEN
+            DELETE FROM _tmpMI_master;
+        ELSE
+            CREATE TEMP TABLE _tmpMI_master (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, Amount TFloat, AmountSecond TFloat, AmountNext TFloat, AmountNextSecond TFloat) ON COMMIT DROP;
+        END IF;
         -- Данные - master
         INSERT INTO _tmpMI_master (MovementItemId, GoodsId, GoodsKindId, Amount, AmountSecond, AmountNext, AmountNextSecond)
            SELECT MovementItem.Id                                    AS MovementItemId
@@ -106,16 +132,25 @@ BEGIN
 
 
         -- Данные - Child
-        CREATE TEMP TABLE _tmpMI_Child (MovementItemId Integer, GoodsId_complete Integer, GoodsKindId_complete Integer, GoodsId Integer, GoodsKindId Integer
-                                      , RemainsStart TFloat
-                                      , CountForecast TFloat
-                                      , AmountResult TFloat, AmountSecondResult TFloat
-                                      , AmountNextResult TFloat, AmountNextSecondResult TFloat
-                                       ) ON COMMIT DROP;
+        IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpMI_Child'))
+        THEN
+            DELETE FROM _tmpMI_Child;
+        ELSE
+            CREATE TEMP TABLE _tmpMI_Child (MovementItemId Integer, GoodsId_complete Integer, GoodsKindId_complete Integer, GoodsId Integer, GoodsKindId Integer
+                                          , RemainsStart TFloat
+                                          , AmountPartnerNext TFloat, AmountPartnerNextPromo TFloat
+                                          , CountForecast TFloat
+                                          , Plan1 TFloat, Plan2 TFloat, Plan3 TFloat, Plan4 TFloat, Plan5 TFloat, Plan6 TFloat, Plan7 TFloat
+                                          , AmountResult TFloat, AmountSecondResult TFloat
+                                          , AmountNextResult TFloat, AmountNextSecondResult TFloat
+                                           ) ON COMMIT DROP;
+        END IF;
         -- Данные - Child
         INSERT INTO _tmpMI_Child (MovementItemId, GoodsId_complete, GoodsKindId_complete, GoodsId, GoodsKindId
                                 , RemainsStart
+                                , AmountPartnerNext, AmountPartnerNextPromo
                                 , CountForecast
+                                , Plan1, Plan2, Plan3, Plan4, Plan5, Plan6, Plan7
                                 , AmountResult
                                 , AmountSecondResult
                                 , AmountNextResult
@@ -132,19 +167,39 @@ BEGIN
                 , MovementItem.ObjectId                          AS GoodsId
                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)  AS GoodsKindId
 
-                  -- <Нач остаток> МИНУС <то что в Мастере (факт Расход на упаковку)> МИНУС <неотгруж. заявка (итого)> МИНУС <сегодня заявка (итого)>
+                  -- <Нач остаток> МИНУС <то что в Мастере (факт Расход на упаковку)>
                 , (CASE WHEN COALESCE (MIFloat_AmountRemains.ValueData, 0) - COALESCE (tmpMI_master.Amount, 0) - COALESCE (tmpMI_master.AmountNext, 0) > 0
                              THEN COALESCE (MIFloat_AmountRemains.ValueData, 0) - COALESCE (tmpMI_master.Amount, 0) - COALESCE (tmpMI_master.AmountNext, 0)
                         ELSE 0
                    END
+
+                   -- МИНУС <неотгруж. заявка (итого)>
                  - COALESCE (MIFloat_AmountPartnerPrior.ValueData, 0) - COALESCE (MIFloat_AmountPartnerPriorPromo.ValueData, 0)
+
+                    -- МИНУС <сегодня заявка (итого)> - !!!НО только если строится ЗАКАЗ2 !!!
                  - CASE WHEN inIsPackNext       = TRUE
                           OR inIsPackNextSecond = TRUE
-                             THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) - COALESCE (MIFloat_AmountPartnerPromo.ValueData, 0)
+                          -- OR 1=1
+                             THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) + COALESCE (MIFloat_AmountPartnerPromo.ValueData, 0)
                         ELSE 0
                    END
+                   -- ВЕРНУЛИ заказ покупателя ВЕСЬ, завтра - !!!НО только если ПЛАНИРУЕМ по ДНЯМ + ЗАКАЗ2!!!
+                 + CASE WHEN inIsByDay = TRUE
+                         AND (inIsPackNext       = TRUE
+                           OR inIsPackNextSecond = TRUE
+                           -- OR 1=1
+                             )
+                             THEN COALESCE (MIFloat_AmountPartnerNext.ValueData, 0) + COALESCE (MIFloat_AmountPartnerNextPromo.ValueData, 0)
+                        ELSE 0
+                   END
+                 
                   ) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
                   AS RemainsStart
+                  
+                  -- "информативно" заказ покупателя БЕЗ акций, завтра
+                , COALESCE (MIFloat_AmountPartnerNext.ValueData, 0)      AS AmountPartnerNext
+                  -- "информативно" заказ покупателя ТОЛЬКО Акции, завтра
+                , COALESCE (MIFloat_AmountPartnerNextPromo.ValueData, 0) AS AmountPartnerNextPromo
 
                   -- <Прогн 1д>
                 , CASE WHEN COALESCE (MIFloat_AmountForecast.ValueData, 0) > 0
@@ -153,7 +208,19 @@ BEGIN
                   END * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
                   AS CountForecast
 
-                  -- Вот он, РЕЗУЛЬТАТ
+                  -- "средняя" но для 1 дня - используется "информативно", если оно окажется БОЛЬШЕ
+                , CASE WHEN COALESCE (MIFloat_AmountPartnerNext.ValueData, 0) + COALESCE (MIFloat_AmountPartnerNextPromo.ValueData, 0) > COALESCE (MIFloat_Plan1.ValueData, 0) + COALESCE (MIFloat_Promo1.ValueData, 0)
+                            THEN COALESCE (MIFloat_AmountPartnerNext.ValueData, 0) + COALESCE (MIFloat_AmountPartnerNextPromo.ValueData, 0)
+                  -- "средняя" за 1 день - продажа ИЛИ заявка
+                       WHEN vbWeekCount <> 0 THEN (COALESCE (MIFloat_Plan1.ValueData, 0) + COALESCE (MIFloat_Promo1.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeekCount ELSE 0 END AS Plan1
+                , CASE WHEN vbWeekCount <> 0 THEN (COALESCE (MIFloat_Plan2.ValueData, 0) + COALESCE (MIFloat_Promo1.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeekCount ELSE 0 END AS Plan2
+                , CASE WHEN vbWeekCount <> 0 THEN (COALESCE (MIFloat_Plan3.ValueData, 0) + COALESCE (MIFloat_Promo1.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeekCount ELSE 0 END AS Plan3
+                , CASE WHEN vbWeekCount <> 0 THEN (COALESCE (MIFloat_Plan4.ValueData, 0) + COALESCE (MIFloat_Promo1.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeekCount ELSE 0 END AS Plan4
+                , CASE WHEN vbWeekCount <> 0 THEN (COALESCE (MIFloat_Plan5.ValueData, 0) + COALESCE (MIFloat_Promo1.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeekCount ELSE 0 END AS Plan5
+                , CASE WHEN vbWeekCount <> 0 THEN (COALESCE (MIFloat_Plan6.ValueData, 0) + COALESCE (MIFloat_Promo1.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeekCount ELSE 0 END AS Plan6
+                , CASE WHEN vbWeekCount <> 0 THEN (COALESCE (MIFloat_Plan7.ValueData, 0) + COALESCE (MIFloat_Promo1.ValueData, 0)) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END / vbWeekCount ELSE 0 END AS Plan7
+
+                  -- Вот он, БУДЕТ РЕЗУЛЬТАТ
                 , CASE WHEN inIsPack       = TRUE THEN 0 ELSE COALESCE (MIFloat_AmountPack.ValueData, 0)       END AS AmountResult
                 , CASE WHEN inIsPackSecond = TRUE THEN 0 ELSE COALESCE (MIFloat_AmountPackSecond.ValueData, 0) END AS AmountSecondResult
                 , CASE WHEN inIsPack       = TRUE THEN 0 ELSE 0 /*COALESCE (MIFloat_AmountPack.ValueData, 0)*/       END AS AmountNextResult
@@ -183,14 +250,26 @@ BEGIN
 
                 LEFT JOIN MovementItemFloat AS MIFloat_AmountPack
                                             ON MIFloat_AmountPack.MovementItemId = MovementItem.Id
-                                           AND MIFloat_AmountPack.DescId         = zc_MIFloat_AmountPack()
+                                           AND MIFloat_AmountPack.DescId         = CASE WHEN inIsByDay = TRUE THEN zc_MIFloat_AmountPack() ELSE zc_MIFloat_AmountPack_calc() END
+                                           -- AND MIFloat_AmountPack.DescId         = CASE WHEN inIsByDay = TRUE THEN zc_MIFloat_AmountPack_calc() ELSE zc_MIFloat_AmountPack() END
+                                           -- AND MIFloat_AmountPack.DescId         = zc_MIFloat_AmountPack()
+                                           -- AND MIFloat_AmountPack.DescId         = zc_MIFloat_AmountPack_calc()
                 LEFT JOIN MovementItemFloat AS MIFloat_AmountPackSecond
                                             ON MIFloat_AmountPackSecond.MovementItemId = MovementItem.Id
-                                           AND MIFloat_AmountPackSecond.DescId         = zc_MIFloat_AmountPackSecond()
+                                           AND MIFloat_AmountPackSecond.DescId         = CASE WHEN inIsByDay = TRUE THEN zc_MIFloat_AmountPackSecond() ELSE zc_MIFloat_AmountPackSecond_calc() END
+                                           -- AND MIFloat_AmountPackSecond.DescId         = CASE WHEN inIsByDay = TRUE THEN zc_MIFloat_AmountPackSecond_calc() ELSE zc_MIFloat_AmountPackSecond() END
+                                           -- AND MIFloat_AmountPackSecond.DescId         = zc_MIFloat_AmountPackSecond()
+                                           -- AND MIFloat_AmountPackSecond.DescId         = zc_MIFloat_AmountPackSecond_calc()
 
                 LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                             ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                            AND MIFloat_AmountPartner.DescId         = zc_MIFloat_AmountPartner()
+                LEFT JOIN MovementItemFloat AS MIFloat_AmountPartnerNext
+                                            ON MIFloat_AmountPartnerNext.MovementItemId = MovementItem.Id
+                                           AND MIFloat_AmountPartnerNext.DescId         = zc_MIFloat_AmountPartnerNext()
+                LEFT JOIN MovementItemFloat AS MIFloat_AmountPartnerNextPromo
+                                            ON MIFloat_AmountPartnerNextPromo.MovementItemId = MovementItem.Id
+                                           AND MIFloat_AmountPartnerNextPromo.DescId         = zc_MIFloat_AmountPartnerNextPromo()
                 LEFT JOIN MovementItemFloat AS MIFloat_AmountPartnerPrior
                                             ON MIFloat_AmountPartnerPrior.MovementItemId = MovementItem.Id
                                            AND MIFloat_AmountPartnerPrior.DescId         = zc_MIFloat_AmountPartnerPrior()
@@ -213,6 +292,49 @@ BEGIN
                 LEFT JOIN MovementItemFloat AS MIFloat_AmountForecastOrderPromo
                                             ON MIFloat_AmountForecastOrderPromo.MovementItemId = MovementItem.Id
                                            AND MIFloat_AmountForecastOrderPromo.DescId         = zc_MIFloat_AmountForecastOrderPromo()
+
+                LEFT JOIN MovementItemFloat AS MIFloat_Plan1
+                                            ON MIFloat_Plan1.MovementItemId = MovementItem.Id
+                                           AND MIFloat_Plan1.DescId         = zc_MIFloat_Plan1()
+                LEFT JOIN MovementItemFloat AS MIFloat_Plan2
+                                            ON MIFloat_Plan2.MovementItemId = MovementItem.Id
+                                           AND MIFloat_Plan2.DescId         = zc_MIFloat_Plan2()
+                LEFT JOIN MovementItemFloat AS MIFloat_Plan3
+                                            ON MIFloat_Plan3.MovementItemId = MovementItem.Id
+                                           AND MIFloat_Plan3.DescId         = zc_MIFloat_Plan3()
+                LEFT JOIN MovementItemFloat AS MIFloat_Plan4
+                                            ON MIFloat_Plan4.MovementItemId = MovementItem.Id
+                                           AND MIFloat_Plan4.DescId         = zc_MIFloat_Plan4()
+                LEFT JOIN MovementItemFloat AS MIFloat_Plan5
+                                            ON MIFloat_Plan5.MovementItemId = MovementItem.Id
+                                           AND MIFloat_Plan5.DescId         = zc_MIFloat_Plan5()
+                LEFT JOIN MovementItemFloat AS MIFloat_Plan6
+                                            ON MIFloat_Plan6.MovementItemId = MovementItem.Id
+                                           AND MIFloat_Plan6.DescId         = zc_MIFloat_Plan6()
+                LEFT JOIN MovementItemFloat AS MIFloat_Plan7
+                                            ON MIFloat_Plan7.MovementItemId = MovementItem.Id
+                                           AND MIFloat_Plan7.DescId         = zc_MIFloat_Plan7()
+                LEFT JOIN MovementItemFloat AS MIFloat_Promo1
+                                            ON MIFloat_Promo1.MovementItemId = MovementItem.Id
+                                           AND MIFloat_Promo1.DescId         = zc_MIFloat_Promo1()
+                LEFT JOIN MovementItemFloat AS MIFloat_Promo2
+                                            ON MIFloat_Promo2.MovementItemId = MovementItem.Id
+                                           AND MIFloat_Promo2.DescId         = zc_MIFloat_Promo2()
+                LEFT JOIN MovementItemFloat AS MIFloat_Promo3
+                                            ON MIFloat_Promo3.MovementItemId = MovementItem.Id
+                                           AND MIFloat_Promo3.DescId         = zc_MIFloat_Promo3()
+                LEFT JOIN MovementItemFloat AS MIFloat_Promo4
+                                            ON MIFloat_Promo4.MovementItemId = MovementItem.Id
+                                           AND MIFloat_Promo4.DescId         = zc_MIFloat_Promo4()
+                LEFT JOIN MovementItemFloat AS MIFloat_Promo5
+                                            ON MIFloat_Promo5.MovementItemId = MovementItem.Id
+                                           AND MIFloat_Promo5.DescId         = zc_MIFloat_Promo5()
+                LEFT JOIN MovementItemFloat AS MIFloat_Promo6
+                                            ON MIFloat_Promo6.MovementItemId = MovementItem.Id
+                                           AND MIFloat_Promo6.DescId         = zc_MIFloat_Promo6()
+                LEFT JOIN MovementItemFloat AS MIFloat_Promo7
+                                            ON MIFloat_Promo7.MovementItemId = MovementItem.Id
+                                           AND MIFloat_Promo7.DescId         = zc_MIFloat_Promo7()
 
                 LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                       ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
@@ -252,9 +374,27 @@ BEGIN
                                                , _tmpMI_master.GoodsKindId AS GoodsKindId_master
                                                  -- сколько осталось для распределения
                                                , _tmpMI_master.Amount - COALESCE (tmpMI_summ.AmountResult, 0) AS Amount_master
+
                                                  -- сколько надо на vbNumber ДНЕЙ
-                                               , vbNumber * _tmpMI_Child.CountForecast - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult + _tmpMI_Child.AmountNextResult + _tmpMI_Child.AmountNextSecondResult)
-                                                  AS Amount_result
+                                               , CASE WHEN inIsByDay = FALSE OR vbNumber > 12 THEN vbNumber * _tmpMI_Child.CountForecast
+                                                      WHEN vbNumber > 0  AND vbNumber <= 1  THEN vbNumber * _tmpMI_Child.Plan1
+                                                      WHEN vbNumber > 1  AND vbNumber <= 2  THEN _tmpMI_Child.Plan1 + (vbNumber - 1) * _tmpMI_Child.Plan2
+                                                      WHEN vbNumber > 2  AND vbNumber <= 3  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + (vbNumber - 2) * _tmpMI_Child.Plan3
+                                                      WHEN vbNumber > 3  AND vbNumber <= 4  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + (vbNumber - 3) * _tmpMI_Child.Plan4
+                                                      WHEN vbNumber > 4  AND vbNumber <= 5  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + (vbNumber - 4) * _tmpMI_Child.Plan5
+                                                      WHEN vbNumber > 5  AND vbNumber <= 6  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + (vbNumber - 5) * _tmpMI_Child.Plan6
+                                                      WHEN vbNumber > 6  AND vbNumber <= 7  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + (vbNumber - 6) * _tmpMI_Child.Plan7
+                                                      WHEN vbNumber > 7  AND vbNumber <= 8  THEN 1 * _tmpMI_Child.Plan1 + (vbNumber - 7) * _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                      WHEN vbNumber > 8  AND vbNumber <= 9  THEN 2 * _tmpMI_Child.Plan1 + (vbNumber - 8) * _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                      WHEN vbNumber > 9  AND vbNumber <= 10 THEN 2 * _tmpMI_Child.Plan1 + 2 * _tmpMI_Child.Plan2 + (vbNumber - 9) * _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                      WHEN vbNumber > 10 AND vbNumber <= 11 THEN 2 * _tmpMI_Child.Plan1 + 2 * _tmpMI_Child.Plan2 + 2 * _tmpMI_Child.Plan3 + (vbNumber - 10) * _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                      WHEN vbNumber > 11 AND vbNumber <= 12 THEN 2 * _tmpMI_Child.Plan1 + 2 * _tmpMI_Child.Plan2 + 2 * _tmpMI_Child.Plan3 + 2 * _tmpMI_Child.Plan4 + (vbNumber - 11) * _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                      ELSE 0
+                                                 END
+                                                 -- МИНУС остаток + сколько уже распределили
+                                               - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult + _tmpMI_Child.AmountNextResult + _tmpMI_Child.AmountNextSecondResult)
+                                                 AS Amount_result
+
                                           FROM _tmpMI_master
                                                INNER JOIN _tmpMI_Child ON _tmpMI_Child.GoodsId_complete     = _tmpMI_master.GoodsId
                                                                       AND _tmpMI_Child.GoodsKindId_complete = _tmpMI_master.GoodsKindId
@@ -264,9 +404,26 @@ BEGIN
                                           WHERE -- если есть что распределять
                                                 _tmpMI_master.Amount - COALESCE (tmpMI_summ.AmountResult, 0) > 0
                                                 -- если на vbNumber ДНЕЙ ЕСТЬ ПОТРЕБНОСТЬ
-                                            AND 0 < vbNumber * _tmpMI_Child.CountForecast - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult + _tmpMI_Child.AmountNextResult + _tmpMI_Child.AmountNextSecondResult)
+                                            AND 0 < CASE WHEN inIsByDay = FALSE OR vbNumber > 12 THEN vbNumber * _tmpMI_Child.CountForecast
+                                                         WHEN vbNumber > 0  AND vbNumber <= 1  THEN vbNumber * _tmpMI_Child.Plan1
+                                                         WHEN vbNumber > 1  AND vbNumber <= 2  THEN _tmpMI_Child.Plan1 + (vbNumber - 1) * _tmpMI_Child.Plan2
+                                                         WHEN vbNumber > 2  AND vbNumber <= 3  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + (vbNumber - 2) * _tmpMI_Child.Plan3
+                                                         WHEN vbNumber > 3  AND vbNumber <= 4  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + (vbNumber - 3) * _tmpMI_Child.Plan4
+                                                         WHEN vbNumber > 4  AND vbNumber <= 5  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + (vbNumber - 4) * _tmpMI_Child.Plan5
+                                                         WHEN vbNumber > 5  AND vbNumber <= 6  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + (vbNumber - 5) * _tmpMI_Child.Plan6
+                                                         WHEN vbNumber > 6  AND vbNumber <= 7  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + (vbNumber - 6) * _tmpMI_Child.Plan7
+                                                         WHEN vbNumber > 7  AND vbNumber <= 8  THEN 1 * _tmpMI_Child.Plan1 + (vbNumber - 7) * _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                         WHEN vbNumber > 8  AND vbNumber <= 9  THEN 2 * _tmpMI_Child.Plan1 + (vbNumber - 8) * _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                         WHEN vbNumber > 9  AND vbNumber <= 10 THEN 2 * _tmpMI_Child.Plan1 + 2 * _tmpMI_Child.Plan2 + (vbNumber - 9) * _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                         WHEN vbNumber > 10 AND vbNumber <= 11 THEN 2 * _tmpMI_Child.Plan1 + 2 * _tmpMI_Child.Plan2 + 2 * _tmpMI_Child.Plan3 + (vbNumber - 10) * _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                         WHEN vbNumber > 11 AND vbNumber <= 12 THEN 2 * _tmpMI_Child.Plan1 + 2 * _tmpMI_Child.Plan2 + 2 * _tmpMI_Child.Plan3 + 2 * _tmpMI_Child.Plan4 + (vbNumber - 11) * _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                         ELSE 0
+                                                    END
+                                                    -- МИНУС остаток + сколько уже распределили
+                                                  - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult + _tmpMI_Child.AmountNextResult + _tmpMI_Child.AmountNextSecondResult)
+
                                             -- !!!отбросили НАРЕЗКУ!!!
-                                            AND (vbNumber <= 3
+                                            AND (vbNumber <= vbdaycount_GoodsKind_8333
                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) <> 8333 -- НАР
                                                 )
                                          )
@@ -302,20 +459,33 @@ BEGIN
              END LOOP;
 
 
-             -- ОБНУЛИЛИ
-             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPack(),            MovementItem.Id, 0)
-                   , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPack_calc(),       MovementItem.Id, 0)
-             FROM MovementItem
-             WHERE MovementItem.MovementId = inMovementId
-               AND MovementItem.DescId     = zc_MI_Master()
-            ;
+             IF inIsByDay = TRUE -- AND 1=0
+             THEN
+                 -- ОБНУЛИЛИ
+                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPack(),      MovementItem.Id, 0)
+                 FROM MovementItem
+                 WHERE MovementItem.MovementId = inMovementId
+                   AND MovementItem.DescId     = zc_MI_Master()
+                ;
+                 -- СОХРАНИЛИ
+                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPack(),      _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountResult)
+                 FROM _tmpMI_Child
+                 WHERE _tmpMI_Child.AmountResult <> 0
+                ;
+             ELSE
+                 -- ОБНУЛИЛИ
+                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPack_calc(), MovementItem.Id, 0)
+                 FROM MovementItem
+                 WHERE MovementItem.MovementId = inMovementId
+                   AND MovementItem.DescId     = zc_MI_Master()
+                ;
+                 -- СОХРАНИЛИ
+                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPack_calc(), _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountResult)
+                 FROM _tmpMI_Child
+                 WHERE _tmpMI_Child.AmountResult <> 0
+                ;
+             END IF;
 
-             -- СОХРАНИЛИ
-             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPack(),            _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountResult)
-                   , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPack_calc(),       _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountResult)
-             FROM _tmpMI_Child
-             WHERE _tmpMI_Child.AmountResult <> 0
-            ;
 
          END IF;
 
@@ -324,7 +494,7 @@ BEGIN
          IF inIsPackSecond = TRUE
          THEN
              vbNumber:= 0;
-             WHILE vbNumber < inNumber
+             WHILE vbNumber <= inNumber
              LOOP
                  UPDATE _tmpMI_Child SET AmountSecondResult = _tmpMI_Child.AmountSecondResult + tmpResult.Amount_result
                  FROM (WITH -- сумма - сколько уже распределили
@@ -342,9 +512,27 @@ BEGIN
                                                , _tmpMI_master.GoodsKindId AS GoodsKindId_master
                                                  -- сколько осталось для распределения
                                                , _tmpMI_master.AmountSecond - COALESCE (tmpMI_summ.AmountResult, 0) AS Amount_master
+
                                                  -- сколько надо на vbNumber ДНЕЙ
-                                               , vbNumber * _tmpMI_Child.CountForecast - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult + _tmpMI_Child.AmountNextResult + _tmpMI_Child.AmountNextSecondResult)
-                                                  AS Amount_result
+                                               , CASE WHEN inIsByDay = FALSE OR vbNumber > 12 THEN vbNumber * _tmpMI_Child.CountForecast
+                                                      WHEN vbNumber > 0  AND vbNumber <= 1  THEN vbNumber * _tmpMI_Child.Plan1
+                                                      WHEN vbNumber > 1  AND vbNumber <= 2  THEN _tmpMI_Child.Plan1 + (vbNumber - 1) * _tmpMI_Child.Plan2
+                                                      WHEN vbNumber > 2  AND vbNumber <= 3  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + (vbNumber - 2) * _tmpMI_Child.Plan3
+                                                      WHEN vbNumber > 3  AND vbNumber <= 4  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + (vbNumber - 3) * _tmpMI_Child.Plan4
+                                                      WHEN vbNumber > 4  AND vbNumber <= 5  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + (vbNumber - 4) * _tmpMI_Child.Plan5
+                                                      WHEN vbNumber > 5  AND vbNumber <= 6  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + (vbNumber - 5) * _tmpMI_Child.Plan6
+                                                      WHEN vbNumber > 6  AND vbNumber <= 7  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + (vbNumber - 6) * _tmpMI_Child.Plan7
+                                                      WHEN vbNumber > 7  AND vbNumber <= 8  THEN 1 * _tmpMI_Child.Plan1 + (vbNumber - 7) * _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                      WHEN vbNumber > 8  AND vbNumber <= 9  THEN 2 * _tmpMI_Child.Plan1 + (vbNumber - 8) * _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                      WHEN vbNumber > 9  AND vbNumber <= 10 THEN 2 * _tmpMI_Child.Plan1 + 2 * _tmpMI_Child.Plan2 + (vbNumber - 9) * _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                      WHEN vbNumber > 10 AND vbNumber <= 11 THEN 2 * _tmpMI_Child.Plan1 + 2 * _tmpMI_Child.Plan2 + 2 * _tmpMI_Child.Plan3 + (vbNumber - 10) * _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                      WHEN vbNumber > 11 AND vbNumber <= 12 THEN 2 * _tmpMI_Child.Plan1 + 2 * _tmpMI_Child.Plan2 + 2 * _tmpMI_Child.Plan3 + 2 * _tmpMI_Child.Plan4 + (vbNumber - 11) * _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                      ELSE 0
+                                                 END
+                                                 -- МИНУС остаток + сколько уже распределили
+                                               - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult + _tmpMI_Child.AmountNextResult + _tmpMI_Child.AmountNextSecondResult)
+                                                 AS Amount_result
+
                                           FROM _tmpMI_master
                                                INNER JOIN _tmpMI_Child ON _tmpMI_Child.GoodsId_complete     = _tmpMI_master.GoodsId
                                                                       AND _tmpMI_Child.GoodsKindId_complete = _tmpMI_master.GoodsKindId
@@ -354,9 +542,26 @@ BEGIN
                                           WHERE -- если есть что распределять
                                                 _tmpMI_master.AmountSecond - COALESCE (tmpMI_summ.AmountResult, 0) > 0 -- если есть что распределять
                                                 -- если на vbNumber ДНЕЙ ЕСТЬ ПОТРЕБНОСТЬ
-                                            AND 0 < vbNumber * _tmpMI_Child.CountForecast - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult + _tmpMI_Child.AmountNextResult + _tmpMI_Child.AmountNextSecondResult)
+                                            AND 0 < CASE WHEN inIsByDay = FALSE OR vbNumber > 12 THEN vbNumber * _tmpMI_Child.CountForecast
+                                                         WHEN vbNumber > 0  AND vbNumber <= 1  THEN vbNumber * _tmpMI_Child.Plan1
+                                                         WHEN vbNumber > 1  AND vbNumber <= 2  THEN _tmpMI_Child.Plan1 + (vbNumber - 1) * _tmpMI_Child.Plan2
+                                                         WHEN vbNumber > 2  AND vbNumber <= 3  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + (vbNumber - 2) * _tmpMI_Child.Plan3
+                                                         WHEN vbNumber > 3  AND vbNumber <= 4  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + (vbNumber - 3) * _tmpMI_Child.Plan4
+                                                         WHEN vbNumber > 4  AND vbNumber <= 5  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + (vbNumber - 4) * _tmpMI_Child.Plan5
+                                                         WHEN vbNumber > 5  AND vbNumber <= 6  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + (vbNumber - 5) * _tmpMI_Child.Plan6
+                                                         WHEN vbNumber > 6  AND vbNumber <= 7  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + (vbNumber - 6) * _tmpMI_Child.Plan7
+                                                         WHEN vbNumber > 7  AND vbNumber <= 8  THEN 1 * _tmpMI_Child.Plan1 + (vbNumber - 7) * _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                         WHEN vbNumber > 8  AND vbNumber <= 9  THEN 2 * _tmpMI_Child.Plan1 + (vbNumber - 8) * _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                         WHEN vbNumber > 9  AND vbNumber <= 10 THEN 2 * _tmpMI_Child.Plan1 + 2 * _tmpMI_Child.Plan2 + (vbNumber - 9) * _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                         WHEN vbNumber > 10 AND vbNumber <= 11 THEN 2 * _tmpMI_Child.Plan1 + 2 * _tmpMI_Child.Plan2 + 2 * _tmpMI_Child.Plan3 + (vbNumber - 10) * _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                         WHEN vbNumber > 11 AND vbNumber <= 12 THEN 2 * _tmpMI_Child.Plan1 + 2 * _tmpMI_Child.Plan2 + 2 * _tmpMI_Child.Plan3 + 2 * _tmpMI_Child.Plan4 + (vbNumber - 11) * _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                         ELSE 0
+                                                    END
+                                                    -- МИНУС остаток + сколько уже распределили
+                                                  - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult + _tmpMI_Child.AmountNextResult + _tmpMI_Child.AmountNextSecondResult)
+
                                             -- !!!отбросили НАРЕЗКУ!!!
-                                            AND (vbNumber <= 3
+                                            AND (vbNumber <= vbdaycount_GoodsKind_8333
                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) <> 8333 -- НАР
                                                 )
                                          )
@@ -392,20 +597,32 @@ BEGIN
              END LOOP;
 
 
-             -- ОБНУЛИЛИ
-             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackSecond(),      MovementItem.Id, 0)
-                   , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackSecond_calc(), MovementItem.Id, 0)
-             FROM MovementItem
-             WHERE MovementItem.MovementId = inMovementId
-               AND MovementItem.DescId     = zc_MI_Master()
-            ;
-
-             -- СОХРАНИЛИ
-             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackSecond(),      _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountSecondResult)
-                   , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackSecond_calc(), _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountSecondResult)
-             FROM _tmpMI_Child
-             WHERE _tmpMI_Child.AmountSecondResult <> 0
-            ;
+             IF inIsByDay = TRUE -- AND 1=0
+             THEN
+                 -- ОБНУЛИЛИ
+                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackSecond(),      MovementItem.Id, 0)
+                 FROM MovementItem
+                 WHERE MovementItem.MovementId = inMovementId
+                   AND MovementItem.DescId     = zc_MI_Master()
+                ;
+                 -- СОХРАНИЛИ
+                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackSecond(),      _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountSecondResult)
+                 FROM _tmpMI_Child
+                 WHERE _tmpMI_Child.AmountSecondResult <> 0
+                ;
+             ELSE
+                 -- ОБНУЛИЛИ
+                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackSecond_calc(), MovementItem.Id, 0)
+                 FROM MovementItem
+                 WHERE MovementItem.MovementId = inMovementId
+                   AND MovementItem.DescId     = zc_MI_Master()
+                ;
+                 -- СОХРАНИЛИ
+                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackSecond_calc(), _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountSecondResult)
+                 FROM _tmpMI_Child
+                 WHERE _tmpMI_Child.AmountSecondResult <> 0
+                ;
+             END IF;
 
          END IF;
 
@@ -414,7 +631,7 @@ BEGIN
          IF inIsPackNext = TRUE
          THEN
              vbNumber:= 0;
-             WHILE vbNumber < inNumber
+             WHILE vbNumber <= inNumber
              LOOP
                  UPDATE _tmpMI_Child SET AmountNextResult = _tmpMI_Child.AmountNextResult + tmpResult.Amount_result
                  FROM (WITH -- сумма - сколько уже распределили
@@ -432,9 +649,27 @@ BEGIN
                                                , _tmpMI_master.GoodsKindId AS GoodsKindId_master
                                                  -- сколько осталось для распределения
                                                , _tmpMI_master.AmountNext - COALESCE (tmpMI_summ.AmountResult, 0) AS Amount_master
+
                                                  -- сколько надо на vbNumber ДНЕЙ
-                                               , vbNumber * _tmpMI_Child.CountForecast - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult + _tmpMI_Child.AmountNextResult + _tmpMI_Child.AmountNextSecondResult)
-                                                  AS Amount_result
+                                               , CASE WHEN inIsByDay = FALSE OR vbNumber > 12 THEN vbNumber * _tmpMI_Child.CountForecast
+                                                      WHEN vbNumber > 0  AND vbNumber <= 1  THEN vbNumber * _tmpMI_Child.Plan1
+                                                      WHEN vbNumber > 1  AND vbNumber <= 2  THEN _tmpMI_Child.Plan1 + (vbNumber - 1) * _tmpMI_Child.Plan2
+                                                      WHEN vbNumber > 2  AND vbNumber <= 3  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + (vbNumber - 2) * _tmpMI_Child.Plan3
+                                                      WHEN vbNumber > 3  AND vbNumber <= 4  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + (vbNumber - 3) * _tmpMI_Child.Plan4
+                                                      WHEN vbNumber > 4  AND vbNumber <= 5  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + (vbNumber - 4) * _tmpMI_Child.Plan5
+                                                      WHEN vbNumber > 5  AND vbNumber <= 6  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + (vbNumber - 5) * _tmpMI_Child.Plan6
+                                                      WHEN vbNumber > 6  AND vbNumber <= 7  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + (vbNumber - 6) * _tmpMI_Child.Plan7
+                                                      WHEN vbNumber > 7  AND vbNumber <= 8  THEN 1 * _tmpMI_Child.Plan1 + (vbNumber - 7) * _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                      WHEN vbNumber > 8  AND vbNumber <= 9  THEN 2 * _tmpMI_Child.Plan1 + (vbNumber - 8) * _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                      WHEN vbNumber > 9  AND vbNumber <= 10 THEN 2 * _tmpMI_Child.Plan1 + 2 * _tmpMI_Child.Plan2 + (vbNumber - 9) * _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                      WHEN vbNumber > 10 AND vbNumber <= 11 THEN 2 * _tmpMI_Child.Plan1 + 2 * _tmpMI_Child.Plan2 + 2 * _tmpMI_Child.Plan3 + (vbNumber - 10) * _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                      WHEN vbNumber > 11 AND vbNumber <= 12 THEN 2 * _tmpMI_Child.Plan1 + 2 * _tmpMI_Child.Plan2 + 2 * _tmpMI_Child.Plan3 + 2 * _tmpMI_Child.Plan4 + (vbNumber - 11) * _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                      ELSE 0
+                                                 END
+                                                 -- МИНУС остаток + сколько уже распределили
+                                               - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult + _tmpMI_Child.AmountNextResult + _tmpMI_Child.AmountNextSecondResult)
+                                                 AS Amount_result
+
                                           FROM _tmpMI_master
                                                INNER JOIN _tmpMI_Child ON _tmpMI_Child.GoodsId_complete     = _tmpMI_master.GoodsId
                                                                       AND _tmpMI_Child.GoodsKindId_complete = _tmpMI_master.GoodsKindId
@@ -444,9 +679,26 @@ BEGIN
                                           WHERE -- если есть что распределять
                                                 _tmpMI_master.AmountNext - COALESCE (tmpMI_summ.AmountResult, 0) > 0 -- если есть что распределять
                                                 -- если на vbNumber ДНЕЙ ЕСТЬ ПОТРЕБНОСТЬ
-                                            AND 0 < vbNumber * _tmpMI_Child.CountForecast - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult + _tmpMI_Child.AmountNextResult + _tmpMI_Child.AmountNextSecondResult)
+                                            AND 0 < CASE WHEN inIsByDay = FALSE OR vbNumber > 12 THEN vbNumber * _tmpMI_Child.CountForecast
+                                                         WHEN vbNumber > 0  AND vbNumber <= 1  THEN vbNumber * _tmpMI_Child.Plan1
+                                                         WHEN vbNumber > 1  AND vbNumber <= 2  THEN _tmpMI_Child.Plan1 + (vbNumber - 1) * _tmpMI_Child.Plan2
+                                                         WHEN vbNumber > 2  AND vbNumber <= 3  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + (vbNumber - 2) * _tmpMI_Child.Plan3
+                                                         WHEN vbNumber > 3  AND vbNumber <= 4  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + (vbNumber - 3) * _tmpMI_Child.Plan4
+                                                         WHEN vbNumber > 4  AND vbNumber <= 5  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + (vbNumber - 4) * _tmpMI_Child.Plan5
+                                                         WHEN vbNumber > 5  AND vbNumber <= 6  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + (vbNumber - 5) * _tmpMI_Child.Plan6
+                                                         WHEN vbNumber > 6  AND vbNumber <= 7  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + (vbNumber - 6) * _tmpMI_Child.Plan7
+                                                         WHEN vbNumber > 7  AND vbNumber <= 8  THEN 1 * _tmpMI_Child.Plan1 + (vbNumber - 7) * _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                         WHEN vbNumber > 8  AND vbNumber <= 9  THEN 2 * _tmpMI_Child.Plan1 + (vbNumber - 8) * _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                         WHEN vbNumber > 9  AND vbNumber <= 10 THEN 2 * _tmpMI_Child.Plan1 + 2 * _tmpMI_Child.Plan2 + (vbNumber - 9) * _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                         WHEN vbNumber > 10 AND vbNumber <= 11 THEN 2 * _tmpMI_Child.Plan1 + 2 * _tmpMI_Child.Plan2 + 2 * _tmpMI_Child.Plan3 + (vbNumber - 10) * _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                         WHEN vbNumber > 11 AND vbNumber <= 12 THEN 2 * _tmpMI_Child.Plan1 + 2 * _tmpMI_Child.Plan2 + 2 * _tmpMI_Child.Plan3 + 2 * _tmpMI_Child.Plan4 + (vbNumber - 11) * _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                         ELSE 0
+                                                    END
+                                                    -- МИНУС остаток + сколько уже распределили
+                                                  - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult + _tmpMI_Child.AmountNextResult + _tmpMI_Child.AmountNextSecondResult)
+
                                             -- !!!отбросили НАРЕЗКУ!!!
-                                            AND (vbNumber <= 3
+                                            AND (vbNumber <= vbdaycount_GoodsKind_8333
                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) <> 8333 -- НАР
                                                 )
                                          )
@@ -482,20 +734,32 @@ BEGIN
              END LOOP;
 
 
-             -- ОБНУЛИЛИ
-             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNext(),      MovementItem.Id, 0)
-                   , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNext_calc(), MovementItem.Id, 0)
-             FROM MovementItem
-             WHERE MovementItem.MovementId = inMovementId
-               AND MovementItem.DescId     = zc_MI_Master()
-            ;
-
-             -- СОХРАНИЛИ
-             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNext(),      _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountNextResult)
-                   , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNext_calc(), _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountNextResult)
-             FROM _tmpMI_Child
-             WHERE _tmpMI_Child.AmountNextResult <> 0
-            ;
+             IF inIsByDay = TRUE -- AND 1=0
+             THEN
+                 -- ОБНУЛИЛИ
+                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNext(),      MovementItem.Id, 0)
+                 FROM MovementItem
+                 WHERE MovementItem.MovementId = inMovementId
+                   AND MovementItem.DescId     = zc_MI_Master()
+                ;
+                 -- СОХРАНИЛИ
+                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNext(),      _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountNextResult)
+                 FROM _tmpMI_Child
+                 WHERE _tmpMI_Child.AmountNextResult <> 0
+                ;
+             ELSE
+                 -- ОБНУЛИЛИ
+                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNext_calc(), MovementItem.Id, 0)
+                 FROM MovementItem
+                 WHERE MovementItem.MovementId = inMovementId
+                   AND MovementItem.DescId     = zc_MI_Master()
+                ;
+                 -- СОХРАНИЛИ
+                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNext_calc(), _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountNextResult)
+                 FROM _tmpMI_Child
+                 WHERE _tmpMI_Child.AmountNextResult <> 0
+                ;
+             END IF;
 
          END IF;
 
@@ -504,7 +768,7 @@ BEGIN
          IF inIsPackNextSecond = TRUE
          THEN
              vbNumber:= 0;
-             WHILE vbNumber < inNumber
+             WHILE vbNumber <= inNumber
              LOOP
                  UPDATE _tmpMI_Child SET AmountNextSecondResult = _tmpMI_Child.AmountNextSecondResult + tmpResult.Amount_result
                  FROM (WITH -- сумма - сколько уже распределили
@@ -522,9 +786,27 @@ BEGIN
                                                , _tmpMI_master.GoodsKindId AS GoodsKindId_master
                                                  -- сколько осталось для распределения
                                                , _tmpMI_master.AmountNextSecond - COALESCE (tmpMI_summ.AmountResult, 0) AS Amount_master
+
                                                  -- сколько надо на vbNumber ДНЕЙ
-                                               , vbNumber * _tmpMI_Child.CountForecast - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult + _tmpMI_Child.AmountNextResult + _tmpMI_Child.AmountNextSecondResult)
-                                                  AS Amount_result
+                                               , CASE WHEN inIsByDay = FALSE OR vbNumber > 12 THEN vbNumber * _tmpMI_Child.CountForecast
+                                                      WHEN vbNumber > 0  AND vbNumber <= 1  THEN vbNumber * _tmpMI_Child.Plan1
+                                                      WHEN vbNumber > 1  AND vbNumber <= 2  THEN _tmpMI_Child.Plan1 + (vbNumber - 1) * _tmpMI_Child.Plan2
+                                                      WHEN vbNumber > 2  AND vbNumber <= 3  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + (vbNumber - 2) * _tmpMI_Child.Plan3
+                                                      WHEN vbNumber > 3  AND vbNumber <= 4  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + (vbNumber - 3) * _tmpMI_Child.Plan4
+                                                      WHEN vbNumber > 4  AND vbNumber <= 5  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + (vbNumber - 4) * _tmpMI_Child.Plan5
+                                                      WHEN vbNumber > 5  AND vbNumber <= 6  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + (vbNumber - 5) * _tmpMI_Child.Plan6
+                                                      WHEN vbNumber > 6  AND vbNumber <= 7  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + (vbNumber - 6) * _tmpMI_Child.Plan7
+                                                      WHEN vbNumber > 7  AND vbNumber <= 8  THEN 1 * _tmpMI_Child.Plan1 + (vbNumber - 7) * _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                      WHEN vbNumber > 8  AND vbNumber <= 9  THEN 2 * _tmpMI_Child.Plan1 + (vbNumber - 8) * _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                      WHEN vbNumber > 9  AND vbNumber <= 10 THEN 2 * _tmpMI_Child.Plan1 + 2 * _tmpMI_Child.Plan2 + (vbNumber - 9) * _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                      WHEN vbNumber > 10 AND vbNumber <= 11 THEN 2 * _tmpMI_Child.Plan1 + 2 * _tmpMI_Child.Plan2 + 2 * _tmpMI_Child.Plan3 + (vbNumber - 10) * _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                      WHEN vbNumber > 11 AND vbNumber <= 12 THEN 2 * _tmpMI_Child.Plan1 + 2 * _tmpMI_Child.Plan2 + 2 * _tmpMI_Child.Plan3 + 2 * _tmpMI_Child.Plan4 + (vbNumber - 11) * _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                      ELSE 0
+                                                 END
+                                                 -- МИНУС остаток + сколько уже распределили
+                                               - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult + _tmpMI_Child.AmountNextResult + _tmpMI_Child.AmountNextSecondResult)
+                                                 AS Amount_result
+
                                           FROM _tmpMI_master
                                                INNER JOIN _tmpMI_Child ON _tmpMI_Child.GoodsId_complete     = _tmpMI_master.GoodsId
                                                                       AND _tmpMI_Child.GoodsKindId_complete = _tmpMI_master.GoodsKindId
@@ -534,9 +816,26 @@ BEGIN
                                           WHERE -- если есть что распределять
                                                 _tmpMI_master.AmountNextSecond - COALESCE (tmpMI_summ.AmountResult, 0) > 0 -- если есть что распределять
                                                 -- если на vbNumber ДНЕЙ ЕСТЬ ПОТРЕБНОСТЬ
-                                            AND 0 < vbNumber * _tmpMI_Child.CountForecast - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult + _tmpMI_Child.AmountNextResult + _tmpMI_Child.AmountNextSecondResult)
+                                            AND 0 < CASE WHEN inIsByDay = FALSE OR vbNumber > 12 THEN vbNumber * _tmpMI_Child.CountForecast
+                                                         WHEN vbNumber > 0  AND vbNumber <= 1  THEN vbNumber * _tmpMI_Child.Plan1
+                                                         WHEN vbNumber > 1  AND vbNumber <= 2  THEN _tmpMI_Child.Plan1 + (vbNumber - 1) * _tmpMI_Child.Plan2
+                                                         WHEN vbNumber > 2  AND vbNumber <= 3  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + (vbNumber - 2) * _tmpMI_Child.Plan3
+                                                         WHEN vbNumber > 3  AND vbNumber <= 4  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + (vbNumber - 3) * _tmpMI_Child.Plan4
+                                                         WHEN vbNumber > 4  AND vbNumber <= 5  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + (vbNumber - 4) * _tmpMI_Child.Plan5
+                                                         WHEN vbNumber > 5  AND vbNumber <= 6  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + (vbNumber - 5) * _tmpMI_Child.Plan6
+                                                         WHEN vbNumber > 6  AND vbNumber <= 7  THEN _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + (vbNumber - 6) * _tmpMI_Child.Plan7
+                                                         WHEN vbNumber > 7  AND vbNumber <= 8  THEN 1 * _tmpMI_Child.Plan1 + (vbNumber - 7) * _tmpMI_Child.Plan1 + _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                         WHEN vbNumber > 8  AND vbNumber <= 9  THEN 2 * _tmpMI_Child.Plan1 + (vbNumber - 8) * _tmpMI_Child.Plan2 + _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                         WHEN vbNumber > 9  AND vbNumber <= 10 THEN 2 * _tmpMI_Child.Plan1 + 2 * _tmpMI_Child.Plan2 + (vbNumber - 9) * _tmpMI_Child.Plan3 + _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                         WHEN vbNumber > 10 AND vbNumber <= 11 THEN 2 * _tmpMI_Child.Plan1 + 2 * _tmpMI_Child.Plan2 + 2 * _tmpMI_Child.Plan3 + (vbNumber - 10) * _tmpMI_Child.Plan4 + _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                         WHEN vbNumber > 11 AND vbNumber <= 12 THEN 2 * _tmpMI_Child.Plan1 + 2 * _tmpMI_Child.Plan2 + 2 * _tmpMI_Child.Plan3 + 2 * _tmpMI_Child.Plan4 + (vbNumber - 11) * _tmpMI_Child.Plan5 + _tmpMI_Child.Plan6 + _tmpMI_Child.Plan7
+                                                         ELSE 0
+                                                    END
+                                                    -- МИНУС остаток + сколько уже распределили
+                                                  - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult + _tmpMI_Child.AmountNextResult + _tmpMI_Child.AmountNextSecondResult)
+
                                             -- !!!отбросили НАРЕЗКУ!!!
-                                            AND (vbNumber <= 3
+                                            AND (vbNumber <= vbdaycount_GoodsKind_8333
                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) <> 8333 -- НАР
                                                 )
                                          )
@@ -572,20 +871,32 @@ BEGIN
              END LOOP;
 
 
-             -- ОБНУЛИЛИ
-             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNextSecond(),      MovementItem.Id, 0)
-                   , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNextSecond_calc(), MovementItem.Id, 0)
-             FROM MovementItem
-             WHERE MovementItem.MovementId = inMovementId
-               AND MovementItem.DescId     = zc_MI_Master()
-            ;
-
-             -- СОХРАНИЛИ
-             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNextSecond(),      _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountNextSecondResult)
-                   , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNextSecond_calc(), _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountNextSecondResult)
-             FROM _tmpMI_Child
-             WHERE _tmpMI_Child.AmountNextSecondResult <> 0
-            ;
+             IF inIsByDay = TRUE -- AND 1=0
+             THEN
+                 -- ОБНУЛИЛИ
+                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNextSecond(),      MovementItem.Id, 0)
+                 FROM MovementItem
+                 WHERE MovementItem.MovementId = inMovementId
+                   AND MovementItem.DescId     = zc_MI_Master()
+                ;
+                 -- СОХРАНИЛИ
+                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNextSecond(),      _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountNextSecondResult)
+                 FROM _tmpMI_Child
+                 WHERE _tmpMI_Child.AmountNextSecondResult <> 0
+                ;
+             ELSE
+                 -- ОБНУЛИЛИ
+                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNextSecond_calc(), MovementItem.Id, 0)
+                 FROM MovementItem
+                 WHERE MovementItem.MovementId = inMovementId
+                   AND MovementItem.DescId     = zc_MI_Master()
+                ;
+                 -- СОХРАНИЛИ
+                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNextSecond_calc(), _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountNextSecondResult)
+                 FROM _tmpMI_Child
+                 WHERE _tmpMI_Child.AmountNextSecondResult <> 0
+                ;
+             END IF;
 
          END IF;
 
@@ -603,7 +914,7 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpUpdateMI_OrderInternal_Amount_toPACK (inMovementId:= 7463900, inId:= 0, inNumber:= 100, inIsClear:= FALSE, inIsPack:= TRUE, inIsPackSecond:= TRUE, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpUpdateMI_OrderInternal_Amount_toPACK (inMovementId:= 7463854, inId:= 0, inNumber:= 100, inIsClear:= FALSE, inIsPack:= TRUE, inIsPackSecond:= TRUE, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpUpdateMI_OrderInternal_Amount_toPACK (inMovementId:= 7483996, inId:= 0, inNumber:= 100, inIsClear:= FALSE, inIsPack:= TRUE, inIsPackSecond:= TRUE, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpUpdateMI_OrderInternal_Amount_toPACK (inMovementId:= 7487127, inId:= 0, inNumber:= 100, inIsClear:= FALSE, inIsPack:= TRUE, inIsPackSecond:= TRUE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpUpdateMI_OrderInternal_Amount_toPACK (inMovementId:= 7463900, inId:= 0, inNumber:= 100, inIsClear:= FALSE, inIsPack:= TRUE, inIsPackSecond:= TRUE, inIsByDay:= TRUE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpUpdateMI_OrderInternal_Amount_toPACK (inMovementId:= 7463854, inId:= 0, inNumber:= 100, inIsClear:= FALSE, inIsPack:= TRUE, inIsPackSecond:= TRUE, inIsByDay:= TRUE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpUpdateMI_OrderInternal_Amount_toPACK (inMovementId:= 7483996, inId:= 0, inNumber:= 100, inIsClear:= FALSE, inIsPack:= TRUE, inIsPackSecond:= TRUE, inIsByDay:= TRUE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpUpdateMI_OrderInternal_Amount_toPACK (inMovementId:= 7487127, inId:= 0, inNumber:= 100, inIsClear:= FALSE, inIsPack:= TRUE, inIsPackSecond:= TRUE, inIsByDay:= TRUE, inSession:= zfCalc_UserAdmin());

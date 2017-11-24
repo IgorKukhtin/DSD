@@ -204,7 +204,17 @@ BEGIN
      -- проверка
      IF COALESCE (vbPartnerId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Не найден Контрагент со значением <GLN точки доставки> = <%> в документе EDI № <%> от <%> .', (SELECT MovementString.ValueData FROM MovementString WHERE MovementString.MovementId = inMovementId AND MovementString.DescId = zc_MovementString_GLNPlaceCode()), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId));
+         IF vbIsFindPartnerContract = TRUE
+         THEN
+             RAISE EXCEPTION 'Ошибка.Не найден Контрагент со значением <GLN точки доставки> = <%> в привязке к Договору № = <%>(%) для документа EDI № <%> от <%> .'
+                           , (SELECT MovementString.ValueData FROM MovementString WHERE MovementString.MovementId = inMovementId AND MovementString.DescId = zc_MovementString_GLNPlaceCode())
+                           , (SELECT Object.ValueData FROM Object WHERE Object.Id = vbContractId)
+                           , (SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbContractId)
+                           , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId)
+                           , zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId));
+         ELSE
+             RAISE EXCEPTION 'Ошибка.Не найден Контрагент со значением <GLN точки доставки> = <%> в документе EDI № <%> от <%> .', (SELECT MovementString.ValueData FROM MovementString WHERE MovementString.MovementId = inMovementId AND MovementString.DescId = zc_MovementString_GLNPlaceCode()), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId));
+         END IF;
      END IF;
 
 

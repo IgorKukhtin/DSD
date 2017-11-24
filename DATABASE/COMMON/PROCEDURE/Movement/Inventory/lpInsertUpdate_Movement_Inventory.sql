@@ -1,6 +1,5 @@
 -- Function: lpInsertUpdate_Movement_Inventory()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Boolean, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Inventory(
@@ -24,6 +23,13 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
      END IF;
+
+     -- проверка
+     IF ioId <> 0 AND inOperDate < (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = ioId) - INTERVAL '1 YEAR'
+     THEN
+         RAISE EXCEPTION 'Ошибка.Дата документа должна быть больше <%>.', zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = ioId) - INTERVAL '1 YEAR');
+     END IF;
+
 
      -- определяем ключ доступа
      vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Inventory());

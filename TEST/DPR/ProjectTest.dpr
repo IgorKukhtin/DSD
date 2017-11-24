@@ -408,7 +408,7 @@ uses
   OrderXML in '..\..\SOURCE\EDI\OrderXML.pas',
   MovementItemContainer in '..\..\Forms\System\MovementItemContainer.pas' {MovementItemContainerForm: TParentForm},
   EDIMovementTest in '..\SOURCE\Movement\All\EDIMovementTest.pas',
-  EDIJournal in '..\..\Forms\EDI\EDIJournal.pas' {EDIJournalForm: TParentForm},
+  EDIJournalLoad in '..\..\Forms\EDI\EDIJournalLoad.pas' {EDIJournalLoadForm: TParentForm},
   cxGridAddOn in '..\..\SOURCE\DevAddOn\cxGridAddOn.pas',
   Report_GoodsMI_byMovement in '..\..\Forms\Report\Report_GoodsMI_byMovement.pas' {Report_GoodsMI_byMovementForm: TParentForm},
   SaveTaxDocument in '..\..\Forms\Export\SaveTaxDocument.pas' {SaveTaxDocumentForm: TParentForm},
@@ -984,7 +984,8 @@ uses
   GoodsReportSale in '..\..\Forms\Guides\GoodsReportSale.pas' {GoodsReportSaleForm: TParentForm},
   Report_Wage in '..\..\Forms\Report\Report_Wage.pas' {Report_WageForm: TParentForm},
   Promo in '..\..\Forms\Document\Promo.pas' {PromoForm: TParentForm},
-  Report_PromoPlan in '..\..\Forms\Report\Report_PromoPlan.pas' {Report_PromoPlanForm: TParentForm};
+  Report_PromoPlan in '..\..\Forms\Report\Report_PromoPlan.pas' {Report_PromoPlanForm: TParentForm},
+  EDIJournal in '..\..\Forms\EDI\EDIJournal.pas' {EDIJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
