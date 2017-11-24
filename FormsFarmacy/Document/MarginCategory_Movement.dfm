@@ -92,12 +92,13 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
             Options.Editing = False
             Width = 222
           end
-          object isSAMP: TcxGridDBColumn
+          object isChecked: TcxGridDBColumn
             Caption = #1057#1040#1059#1062
-            DataBinding.FieldName = 'isSAMP'
+            DataBinding.FieldName = 'isChecked'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1076#1083#1103' '#1057#1040#1059#1062' ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
             Width = 50
           end
           object MarginPercent: TcxGridDBColumn
@@ -926,6 +927,54 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
         end>
       Caption = 'MultiAction1'
     end
+    object spUpdateisCheckedNo: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isChecked_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isChecked_No
+        end>
+      Caption = #1057#1040#1059#1062' - '#1053#1077#1090
+      Hint = #1057#1040#1059#1062' - '#1053#1077#1090
+    end
+    object spUpdateisCheckedYes: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isChecked_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isChecked_Yes
+        end>
+      Caption = #1057#1040#1059#1062' - '#1044#1072
+      Hint = #1057#1040#1059#1062' - '#1044#1072
+    end
+    object macUpdateisCheckedNo: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUpdateisCheckedNo
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1057#1040#1059#1062' - '#1053#1045#1058
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1057#1040#1059#1062' - '#1053#1045#1058
+      ImageIndex = 58
+    end
+    object macUpdateisCheckedYes: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUpdateisCheckedYes
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1057#1040#1059#1062' - '#1044#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1057#1040#1059#1062' - '#1044#1072
+      ImageIndex = 52
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_MarginCategory'
@@ -986,11 +1035,7 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
         end
         item
           Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
+          ItemName = 'bbUpdateisCheckedYes'
         end
         item
           Visible = True
@@ -998,15 +1043,7 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertRecordChild'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMISetErasedChild'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMISetUnErasedChild'
+          ItemName = 'bbUpdateisCheckedNo'
         end
         item
           Visible = True
@@ -1079,6 +1116,14 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
       Caption = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1076#1072#1085#1085#1099#1077
       Category = 0
       ImageIndex = 74
+    end
+    object bbUpdateisCheckedYes: TdxBarButton
+      Action = macUpdateisCheckedYes
+      Category = 0
+    end
+    object bbUpdateisCheckedNo: TdxBarButton
+      Action = macUpdateisCheckedNo
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1960,5 +2005,69 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
     NeedResetData = True
     Left = 424
     Top = 328
+  end
+  object spUpdate_isChecked_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_MarginCategory_Checked'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChecked'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisChecked'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isChecked'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 760
+    Top = 427
+  end
+  object spUpdate_isChecked_No: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_MarginCategory_Checked'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChecked'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisChecked'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isChecked'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 760
+    Top = 483
   end
 end
