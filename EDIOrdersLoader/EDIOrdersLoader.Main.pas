@@ -32,6 +32,7 @@ type
     actStartEDI: TAction;
     actStopEDI: TAction;
     EDIActionOrdersLoad: TEDIAction;
+    cbPrevDay: TCheckBox;
     procedure TrayIconClick(Sender: TObject);
     procedure AppMinimize(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -129,8 +130,11 @@ begin
   if IntervalVal > 0 then
     Timer.Interval := IntervalVal * 60 * 1000;
 
-  deStart.EditValue := Date - 1;
-  deEnd.EditValue := Date - 1;
+  if cbPrevDay.Checked = TRUE
+  then deStart.EditValue := Date - 1
+  else deStart.EditValue := Date;
+
+  deEnd.EditValue := Date ;
   deStart.Enabled := False;
   deEnd.Enabled := False;
   OptionsMemo.Lines.Text := '“екущий интервал: ' + IntToStr(IntervalVal) + ' мин.';
@@ -148,8 +152,12 @@ begin
     actSetDefaults.Execute;
     AddToLog('—читали начальные установки по EDI');
     AddToLog('«агрузка и обработка EDI начата ...');
-    deStart.EditValue := Date - 1;
-    deEnd.EditValue := Date - 1;
+
+    if cbPrevDay.Checked = TRUE
+    then deStart.EditValue := Date - 1
+    else deStart.EditValue := Date;
+    deEnd.EditValue := Date;
+
     AddToLog(' - начальна€ дата: ' + deStart.EditText);
     AddToLog(' - конечна€  дата: ' + deEnd.EditText);
     EDIActionOrdersLoad.Execute;

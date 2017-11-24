@@ -56,7 +56,7 @@ type
     EDI: TEDI;
     maEDIOrdersLoad: TMultiAction;
     EDIActionOrdersLoad: TEDIAction;
-    bbLoadOrder: TdxBarButton;
+    bbNOLoadOrder: TdxBarButton;
     clJuridicalName: TcxGridDBColumn;
     clGLNPlaceCode: TcxGridDBColumn;
     clInvNumber_Order: TcxGridDBColumn;
@@ -194,6 +194,7 @@ type
     actGridProtocolToExcel: TdsdGridToExcel;
     bbGridItemToExcel: TdxBarButton;
     bbGridProtocolToExcel: TdxBarButton;
+    maEDIOrdersNOLoad: TMultiAction;
   private
     { Private declarations }
   public
