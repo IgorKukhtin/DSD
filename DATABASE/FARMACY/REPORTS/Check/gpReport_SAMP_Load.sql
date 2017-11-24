@@ -22,6 +22,7 @@ $BODY$
    DECLARE vbUserId  Integer;
    DECLARE vbPeriodCount  Integer;
    DECLARE vbMarginCategoryId Integer;
+   DECLARE vbOperDateStart TDateTime;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
@@ -38,14 +39,13 @@ BEGIN
     END IF;
         
     vbPeriodCount := (ROUND( (date_part('DAY', inEndSale - inStartSale) / inDayCount) ::TFloat, 0)) :: Integer;
+    vbOperDateStart := (inEndSale - ('' ||(vbPeriodCount * inDayCount)-1 || 'DAY ')  :: interval ) TDateTime;
     
-    IF (vbPeriodCount * inDayCount) < date_part('DAY', inEndSale - inStartSale)
+    IF (vbPeriodCount * inDayCount) <> date_part('DAY', inEndSale - inStartSale)+1
     THEN
-        RAISE EXCEPTION 'Ошибка.Кол-во дней периода не кратно периоду для анализа.';
+        RAISE EXCEPTION 'Ошибка.Кол-во дней периода не кратно периоду для анализа.Рекомендуемая нач.дата <%>', vbOperDateStart;
     END IF; 
-     
- 
- 
+
  
    -- Результат
    -- Определяем периоды для анализа
