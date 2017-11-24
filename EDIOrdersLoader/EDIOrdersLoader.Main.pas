@@ -152,6 +152,7 @@ begin
   if Proccessing then
     Exit;
 
+  Timer.Enabled:=False;
   Proccessing := True;
 
   try
@@ -180,6 +181,7 @@ begin
   end;
 
   Proccessing := False;
+  Timer.Enabled:=True;
 end;
 
 procedure TMainForm.StartEDI;
@@ -187,7 +189,8 @@ begin
   AddToLog('Запуск');
 
   if IntervalVal > 0 then
-    Timer.Enabled := True
+    ProccessEDI
+    // Timer.Enabled := True
   else
     AddToLog('Запуск отменен, т.к. не определен интервал');
 end;
