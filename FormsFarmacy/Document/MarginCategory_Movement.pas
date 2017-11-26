@@ -108,6 +108,17 @@ type
     macUpdateisCheckedYes: TMultiAction;
     bbUpdateisCheckedYes: TdxBarButton;
     bbUpdateisCheckedNo: TdxBarButton;
+    isReport: TcxGridDBColumn;
+    gpUpdate_isReport_Yes: TdsdStoredProc;
+    gpUpdate_isReport_No: TdsdStoredProc;
+    spUpdateisReportNo: TdsdExecStoredProc;
+    spUpdateisReportYes: TdsdExecStoredProc;
+    macUpdateisReportNo: TMultiAction;
+    macUpdateisReportYes: TMultiAction;
+    bbUpdateisReportNo: TdxBarButton;
+    bbUpdateisReportYes: TdxBarButton;
+    actOpenReportForm: TdsdOpenForm;
+    bbOpenReport: TdxBarButton;
   private
     { Private declarations }
   public

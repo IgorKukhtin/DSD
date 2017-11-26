@@ -445,6 +445,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMarginCategory_MovementForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategoryJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMarginCategoryJournalForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SAMP_AnalysisDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SAMP_AnalysisDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SAMP_AnalysisForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SAMP_AnalysisForm');
 end;
 
 procedure TLoadFormTest.LoadMarginReport;

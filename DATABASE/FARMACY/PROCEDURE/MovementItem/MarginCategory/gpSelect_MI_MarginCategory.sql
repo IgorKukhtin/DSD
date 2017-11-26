@@ -138,6 +138,7 @@ BEGIN
             , COALESCE (MIString_Comment.ValueData, '') ::TVarChar     AS Comment
             
             , COALESCE (MIBoolean_Checked.ValueData, FALSE) ::Boolean  AS isChecked
+            , COALESCE (MIBoolean_Report.ValueData, FALSE)  ::Boolean  AS isReport
             
             , MovementItem.isErased                        :: Boolean  AS isErased
             
@@ -175,7 +176,11 @@ BEGIN
             LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
                                           ON MIBoolean_Checked.MovementItemId = MovementItem.Id
                                          AND MIBoolean_Checked.DescId = zc_MIBoolean_Checked()
-                                       
+
+            LEFT JOIN MovementItemBoolean AS MIBoolean_Report
+                                          ON MIBoolean_Report.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_Report.DescId = zc_MIBoolean_Report()
+
             LEFT JOIN tmpPrice ON tmpPrice.GoodsId = MovementItem.ObjectId
             
             LEFT JOIN MarginCondition ON COALESCE (MIFloat_Price.ValueData, 0) >= MarginCondition.MinPrice AND COALESCE (MIFloat_Price.ValueData, 0) < MarginCondition.MaxPrice
