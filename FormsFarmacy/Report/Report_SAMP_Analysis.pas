@@ -1,4 +1,4 @@
-unit Report_MinPrice_byPromo;
+unit Report_SAMP_Analysis;
 
 interface
 
@@ -14,32 +14,29 @@ uses
   cxLabel, cxCurrencyEdit, cxButtonEdit, Vcl.DBActns, cxMaskEdit, Vcl.ExtCtrls,
   Vcl.ComCtrls, dxCore, cxDateUtils, ChoicePeriod, cxDropDownEdit, cxCalendar,
   dsdGuides, dxBarBuiltInMenu, cxNavigator, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCalc;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
-  TReport_MinPrice_byPromoForm = class(TAncestorReportForm)
+  TReport_SAMP_AnalysisForm = class(TAncestorReportForm)
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     actRefreshSearch: TdsdExecStoredProc;
-    cxLabel3: TcxLabel;
     gpGetObjectGoods: TdsdStoredProc;
     getMovementForm: TdsdStoredProc;
     FormParams: TdsdFormParams;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    Persent: TcxGridDBColumn;
     cxLabel25: TcxLabel;
     edPromo: TcxButtonEdit;
     cxLabel4: TcxLabel;
     deOperdate: TcxDateEdit;
     GuidesPromo: TdsdGuides;
-    edPersent: TcxCurrencyEdit;
-    DateMinPrice: TcxGridDBColumn;
-    DateMaxPrice: TcxGridDBColumn;
-    OperDate: TcxGridDBColumn;
-    JuridicalName: TcxGridDBColumn;
-    OperdatePromo: TcxGridDBColumn;
-    InvNumberPromo: TcxGridDBColumn;
+    cxLabel3: TcxLabel;
+    edStartSale: TcxDateEdit;
+    cxLabel6: TcxLabel;
+    edEndSale: TcxDateEdit;
+    cxLabel14: TcxLabel;
+    edDayCount: TcxCurrencyEdit;
   private
     { Private declarations }
   public
@@ -51,6 +48,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_MinPrice_byPromoForm);
+  RegisterClass(TReport_SAMP_AnalysisForm);
 
 end.

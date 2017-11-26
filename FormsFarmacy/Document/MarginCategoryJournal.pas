@@ -26,7 +26,6 @@ type
     ExecuteDialog: TExecuteDialog;
     StartSale: TcxGridDBColumn;
     EndSale: TcxGridDBColumn;
-    actOpenReportForm: TdsdOpenForm;
     bbOpenReportForm: TdxBarButton;
     actOpenReportMinPriceForm: TdsdOpenForm;
     bbReportMinPriceForm: TdxBarButton;
@@ -38,6 +37,7 @@ type
     DayCount: TcxGridDBColumn;
     PriceMax: TcxGridDBColumn;
     PriceMin: TcxGridDBColumn;
+    actOpenReportForm: TdsdOpenForm;
   private
     { Private declarations }
   public

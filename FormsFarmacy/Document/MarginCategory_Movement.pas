@@ -99,7 +99,26 @@ type
     edPriceMax: TcxCurrencyEdit;
     MarginPercent: TcxGridDBColumn;
     cPrice: TcxGridDBColumn;
-    isSAMP: TcxGridDBColumn;
+    isChecked: TcxGridDBColumn;
+    spUpdate_isChecked_Yes: TdsdStoredProc;
+    spUpdate_isChecked_No: TdsdStoredProc;
+    spUpdateisCheckedNo: TdsdExecStoredProc;
+    spUpdateisCheckedYes: TdsdExecStoredProc;
+    macUpdateisCheckedNo: TMultiAction;
+    macUpdateisCheckedYes: TMultiAction;
+    bbUpdateisCheckedYes: TdxBarButton;
+    bbUpdateisCheckedNo: TdxBarButton;
+    isReport: TcxGridDBColumn;
+    gpUpdate_isReport_Yes: TdsdStoredProc;
+    gpUpdate_isReport_No: TdsdStoredProc;
+    spUpdateisReportNo: TdsdExecStoredProc;
+    spUpdateisReportYes: TdsdExecStoredProc;
+    macUpdateisReportNo: TMultiAction;
+    macUpdateisReportYes: TMultiAction;
+    bbUpdateisReportNo: TdxBarButton;
+    bbUpdateisReportYes: TdxBarButton;
+    actOpenReportForm: TdsdOpenForm;
+    bbOpenReport: TdxBarButton;
   private
     { Private declarations }
   public

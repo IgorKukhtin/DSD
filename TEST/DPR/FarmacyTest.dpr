@@ -545,10 +545,12 @@ uses
   OrderInternal in '..\..\FormsFarmacy\Document\OrderInternal.pas' {OrderInternalForm: TParentForm},
   ContactPersonEdit in '..\..\FormsFarmacy\Guides\ContactPersonEdit.pas' {ContactPersonEditForm: TParentForm},
   ContactPerson in '..\..\FormsFarmacy\Guides\ContactPerson.pas' {ContactPersonForm: TParentForm},
-  Report_MinPrice_byPromo in '..\..\FormsFarmacy\Report\Report_MinPrice_byPromo.pas' {Report_MinPrice_byPromoForm: TParentForm},
   Report_MinPrice_byPromoDialog in '..\..\FormsFarmacy\Report\Report_MinPrice_byPromoDialog.pas' {Report_MinPrice_byPromoDialogForm: TParentForm},
   MarginCategoryJournal in '..\..\FormsFarmacy\Document\MarginCategoryJournal.pas' {MarginCategoryJournalForm: TParentForm},
-  MarginCategory_Movement in '..\..\FormsFarmacy\Document\MarginCategory_Movement.pas' {MarginCategory_MovementForm: TParentForm};
+  MarginCategory_Movement in '..\..\FormsFarmacy\Document\MarginCategory_Movement.pas' {MarginCategory_MovementForm: TParentForm},
+  Report_MinPrice_byPromo in '..\..\FormsFarmacy\Report\Report_MinPrice_byPromo.pas' {Report_MinPrice_byPromoForm: TParentForm},
+  Report_SAMP_AnalysisDialog in '..\..\FormsFarmacy\Report\Report_SAMP_AnalysisDialog.pas' {Report_SAMP_AnalysisDialogForm: TParentForm},
+  Report_SAMP_Analysis in '..\..\FormsFarmacy\Report\Report_SAMP_Analysis.pas' {Report_SAMP_AnalysisForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

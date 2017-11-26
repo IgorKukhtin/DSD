@@ -315,11 +315,11 @@ inherited MarginCategoryJournalForm: TMarginCategoryJournalForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1094#1077#1085#1072#1084' '#1087#1088#1080#1093#1086#1076#1072'>'
-      Hint = #1054#1090#1095#1077#1090' <'#1055#1086' '#1094#1077#1085#1072#1084' '#1087#1088#1080#1093#1086#1076#1072' '#1090#1086#1074#1072#1088#1086#1074' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072'>'
+      Caption = #1054#1090#1095#1077#1090' <'#1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1087#1088#1086#1076#1072#1078' '#1089' '#1087#1088#1086#1096#1083#1099#1084' '#1087#1077#1088#1080#1086#1076#1086#1084'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1087#1088#1086#1076#1072#1078' '#1089' '#1087#1088#1086#1096#1083#1099#1084' '#1087#1077#1088#1080#1086#1076#1086#1084'>'
       ImageIndex = 25
-      FormName = 'TReport_MovementIncome_byPromoForm'
-      FormNameParam.Value = 'TReport_MovementIncome_byPromoForm'
+      FormName = 'TReport_SAMP_AnalysisForm'
+      FormNameParam.Value = 'TReport_SAMP_AnalysisForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -346,6 +346,33 @@ inherited MarginCategoryJournalForm: TMarginCategoryJournalForm
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartSale'
+          Value = 42485d
+          Component = MasterCDS
+          ComponentItem = 'StartSale'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndSale'
+          Value = 42485d
+          Component = MasterCDS
+          ComponentItem = 'EndSale'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DayCount'
+          Value = 0.000000000000000000
+          Component = MasterCDS
+          ComponentItem = 'DayCount'
+          DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -433,6 +460,14 @@ inherited MarginCategoryJournalForm: TMarginCategoryJournalForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenReportForm'
         end
         item
           Visible = True

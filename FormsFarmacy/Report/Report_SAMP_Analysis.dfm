@@ -1,27 +1,27 @@
-inherited Report_MinPrice_byPromoForm: TReport_MinPrice_byPromoForm
-  Caption = #1054#1090#1095#1077#1090' '#1052#1080#1085#1080#1084#1072#1083#1100#1085#1072#1103' '#1094#1077#1085#1072' '#1076#1080#1089#1090#1088#1080#1073#1100#1102#1090#1077#1088#1072' '#1090#1086#1074#1072#1088#1086#1074' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
-  ClientWidth = 920
+inherited Report_SAMP_AnalysisForm: TReport_SAMP_AnalysisForm
+  Caption = #1054#1090#1095#1077#1090' '#1089#1088#1072#1074#1085#1077#1085#1080#1077' '#1087#1088#1086#1076#1072#1078' '#1089' '#1087#1088#1086#1096#1083#1099#1084' '#1087#1077#1088#1080#1086#1076#1086#1084
+  ClientWidth = 740
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 936
+  ExplicitWidth = 756
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 77
-    Width = 920
+    Width = 740
     Height = 231
     ExplicitTop = 77
-    ExplicitWidth = 920
+    ExplicitWidth = 740
     ExplicitHeight = 231
     ClientRectBottom = 231
-    ClientRectRight = 920
+    ClientRectRight = 740
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 920
+      ExplicitWidth = 740
       ExplicitHeight = 231
       inherited cxGrid: TcxGrid
-        Width = 920
+        Width = 740
         Height = 231
-        ExplicitWidth = 920
+        ExplicitWidth = 740
         ExplicitHeight = 231
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -31,16 +31,72 @@ inherited Report_MinPrice_byPromoForm: TReport_MinPrice_byPromoForm
             item
               Kind = skSum
               Position = spFooter
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = Amount_MI
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = AmountAnalys_MI
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = AmountYear1
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = AmountYear2
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = AmountAnalys1
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = AmountAnalys2
             end>
           DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = Amount_MI
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = AmountAnalys_MI
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = AmountYear1
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = AmountYear2
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = AmountAnalys1
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = AmountAnalys2
             end>
           OptionsData.Editing = False
           Styles.Content = nil
@@ -48,74 +104,6 @@ inherited Report_MinPrice_byPromoForm: TReport_MinPrice_byPromoForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object OperdatePromo: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
-            DataBinding.FieldName = 'OperdatePromo'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082'. '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
-            Width = 40
-          end
-          object InvNumberPromo: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'.'
-            DataBinding.FieldName = 'InvNumberPromo'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #8470' '#1076#1086#1082'. '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
-            Width = 60
-          end
-          object MakerNamePromo: TcxGridDBColumn
-            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100' '#1076#1086#1082'.'
-            DataBinding.FieldName = 'MakerNamePromo'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100' '#1076#1086#1082'.'
-            Options.Editing = False
-            Width = 122
-          end
-          object StartPromo: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '#1082#1086#1085#1090#1088#1072#1082#1090#1072
-            DataBinding.FieldName = 'StartPromo'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 76
-          end
-          object EndPromo: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085'. '#1082#1086#1085#1090#1088#1072#1082#1090#1072
-            DataBinding.FieldName = 'EndPromo'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = ' '#9#1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1082#1086#1085#1090#1088#1072#1082#1090#1072
-            Width = 82
-          end
-          object ChangePercent: TcxGridDBColumn
-            Caption = '% '#1073#1086#1085#1091#1089#1072' '#1086#1090' '#1079#1072#1082#1091#1087#1082#1080
-            DataBinding.FieldName = 'ChangePercent'
-            PropertiesClassName = 'TcxCalcEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 78
-          end
-          object Amount: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1082#1086#1085#1090#1088#1072#1082#1090#1072
-            DataBinding.FieldName = 'Amount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object PersonalName: TcxGridDBColumn
-            Caption = #1054#1090#1074'. '#1084#1072#1088#1082#1077#1090#1086#1083#1086#1075
-            DataBinding.FieldName = 'PersonalName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1087#1088#1077#1076#1089#1090#1072#1074#1080#1090#1077#1083#1100' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1086#1075#1086' '#1086#1090#1076#1077#1083#1072
-            Options.Editing = False
-            Width = 104
-          end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
@@ -139,142 +127,125 @@ inherited Report_MinPrice_byPromoForm: TReport_MinPrice_byPromoForm
             Options.Editing = False
             Width = 224
           end
-          object NDSKindName: TcxGridDBColumn
-            Caption = #1053#1044#1057
-            DataBinding.FieldName = 'NDSKindName'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 68
-          end
-          object MakerName: TcxGridDBColumn
-            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
-            DataBinding.FieldName = 'MakerName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 100
-          end
-          object MinPrice: TcxGridDBColumn
-            Caption = #1052#1080#1085'. '#1094#1077#1085#1072
-            DataBinding.FieldName = 'MinPrice'
+          object Price_MI: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1088#1086#1079#1085'.  ('#1076#1086#1082'.)'
+            DataBinding.FieldName = 'Price_MI'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1088#1086#1079#1085'. '#1085#1072' '#1084#1086#1084#1077#1085#1090' '#1092#1086#1088#1084'. '#1086#1090#1095#1077#1090#1072' ('#1076#1086#1082'.)'
             Options.Editing = False
             Width = 66
           end
-          object DateMinPrice: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1084#1080#1085'. '#1094#1077#1085#1099
-            DataBinding.FieldName = 'DateMinPrice'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            Width = 78
-          end
-          object MaxPrice: TcxGridDBColumn
-            Caption = #1052#1072#1082#1089'. '#1094#1077#1085#1072
-            DataBinding.FieldName = 'MaxPrice'
+          object Amount_MI: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088'. '#1079#1072' '#1087#1077#1088#1080#1086#1076' ('#1076#1086#1082'.)'
+            DataBinding.FieldName = 'Amount_MI'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1088#1086#1076#1072#1078' '#1079#1072' '#1087#1077#1088#1080#1086#1076' ('#1076#1086#1082'.)'
             Options.Editing = False
             Width = 66
           end
-          object DateMaxPrice: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1084#1072#1082#1089'. '#1094#1077#1085#1099
-            DataBinding.FieldName = 'DateMaxPrice'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            Width = 82
-          end
-          object MidPrice: TcxGridDBColumn
-            Caption = #1057#1088#1077#1076#1085#1103#1103' '#1094#1077#1085#1072
-            DataBinding.FieldName = 'MidPrice'
+          object AmountAnalys_MI: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088'. '#1079#1072' '#1072#1085#1072#1083#1080#1079' ('#1076#1086#1082'.)'
+            DataBinding.FieldName = 'AmountAnalys_MI'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1088#1086#1076#1072#1078' '#1079#1072' '#1072#1085#1072#1083#1080#1079' ('#1076#1086#1082'.)'
             Options.Editing = False
             Width = 66
           end
-          object TodayPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1089#1077#1075#1086#1076#1085#1103
-            DataBinding.FieldName = 'TodayPrice'
+          object AmountYear1: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088'. '#1079#1072' '#1087#1077#1088#1080#1086#1076' ('#1087#1077#1088#1080#1086#1076'1)'
+            DataBinding.FieldName = 'AmountYear1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1062#1077#1085#1072' '#1080#1079' '#1055#1088#1072#1081#1089#1072' '#1089#1077#1075#1086#1076#1085#1103
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1088#1086#1076#1072#1078' '#1079#1072' '#1087#1077#1088#1080#1086#1076' ('#1087#1077#1088#1080#1086#1076'1)'
             Options.Editing = False
             Width = 66
           end
-          object Persent: TcxGridDBColumn
-            Caption = #1060#1072#1082#1090' % '#1086#1090#1082#1083'.'
-            DataBinding.FieldName = 'Persent'
+          object AmountYear2: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088'. '#1079#1072' '#1087#1077#1088#1080#1086#1076' ('#1087#1077#1088#1080#1086#1076'2)'
+            DataBinding.FieldName = 'AmountYear2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1060#1072#1082#1090' % '#1086#1090#1082#1083'. '#1084#1080#1085'. '#1094#1077#1085#1099' '#1080' '#1062#1045#1053#1067' '#1057#1045#1043#1054#1044#1053#1071
-            Width = 70
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1088#1086#1076#1072#1078' '#1079#1072' '#1087#1077#1088#1080#1086#1076' ('#1087#1077#1088#1080#1086#1076'2)'
+            Options.Editing = False
+            Width = 66
           end
-          object OperDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' ('#1094#1077#1085#1072' '#1089#1077#1075#1086#1076#1085#1075#1103
-            DataBinding.FieldName = 'OperDate'
+          object AmountAnalys1: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088'. '#1079#1072' '#1072#1085#1072#1083#1080#1079' ('#1087#1077#1088#1080#1086#1076'1)'
+            DataBinding.FieldName = 'AmountAnalys1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 50
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1088#1086#1076#1072#1078' '#1079#1072' '#1072#1085#1072#1083#1080#1079' ('#1087#1077#1088#1080#1086#1076'1)'
+            Options.Editing = False
+            Width = 66
           end
-          object JuridicalName: TcxGridDBColumn
-            Caption = #1055#1086#1089#1090'. ('#1094#1077#1085#1072' '#1089#1077#1075#1086#1076#1085#1103')'
-            DataBinding.FieldName = 'JuridicalName'
+          object AmountAnalys2: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088'. '#1079#1072' '#1072#1085#1072#1083#1080#1079' ('#1087#1077#1088#1080#1086#1076'2)'
+            DataBinding.FieldName = 'AmountAnalys2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1088#1086#1076#1072#1078' '#1079#1072' '#1072#1085#1072#1083#1080#1079' ('#1087#1077#1088#1080#1086#1076'2)'
+            Options.Editing = False
+            Width = 66
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 920
+    Width = 740
     Height = 51
-    ExplicitWidth = 920
+    ExplicitWidth = 740
     ExplicitHeight = 51
     inherited deStart: TcxDateEdit
-      Left = 10
+      Left = 39
       Top = 23
       EditValue = 43009d
+      Properties.DisplayFormat = 'YYYY'
       TabOrder = 1
-      ExplicitLeft = 10
+      ExplicitLeft = 39
       ExplicitTop = 23
-      ExplicitWidth = 91
-      Width = 91
+      ExplicitWidth = 82
+      Width = 82
     end
     inherited deEnd: TcxDateEdit
-      Left = 113
+      Left = 142
       Top = 23
       EditValue = 43009d
+      Properties.DisplayFormat = 'YYYY'
       TabOrder = 0
-      ExplicitLeft = 113
+      ExplicitLeft = 142
       ExplicitTop = 23
-      ExplicitWidth = 110
-      Width = 110
+      ExplicitWidth = 82
+      Width = 82
+    end
+    inherited cxLabel1: TcxLabel
+      Left = 39
+      Caption = #1055#1077#1088#1080#1086#1076' 1 ('#1075#1086#1076'):'
+      ExplicitLeft = 39
+      ExplicitWidth = 84
     end
     inherited cxLabel2: TcxLabel
-      Left = 113
-      ExplicitLeft = 113
-    end
-    object cxLabel3: TcxLabel
-      Left = 244
-      Top = 6
-      Caption = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103':'
+      Left = 142
+      Caption = #1055#1077#1088#1080#1086#1076' 2 ('#1075#1086#1076'):'
+      ExplicitLeft = 142
+      ExplicitWidth = 84
     end
     object cxLabel25: TcxLabel
       Left = 521
@@ -291,7 +262,7 @@ inherited Report_MinPrice_byPromoForm: TReport_MinPrice_byPromoForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 6
+      TabOrder = 5
       Width = 117
     end
     object cxLabel4: TcxLabel
@@ -306,18 +277,47 @@ inherited Report_MinPrice_byPromoForm: TReport_MinPrice_byPromoForm
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
-      TabOrder = 8
+      TabOrder = 7
       Width = 85
     end
-    object edPersent: TcxCurrencyEdit
-      Left = 244
+    object cxLabel3: TcxLabel
+      Left = 267
+      Top = 6
+      Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '#1086#1090#1095'.'
+    end
+    object edStartSale: TcxDateEdit
+      Left = 267
       Top = 23
-      Properties.Alignment.Horz = taRightJustify
-      Properties.Alignment.Vert = taVCenter
-      Properties.DecimalPlaces = 4
-      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      EditValue = 42485d
+      Properties.ReadOnly = True
       TabOrder = 9
-      Width = 82
+      Width = 81
+    end
+    object cxLabel6: TcxLabel
+      Left = 353
+      Top = 6
+      Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085'. '#1086#1090#1095'.'
+    end
+    object edEndSale: TcxDateEdit
+      Left = 353
+      Top = 23
+      EditValue = 42485d
+      Properties.ReadOnly = True
+      TabOrder = 11
+      Width = 86
+    end
+    object cxLabel14: TcxLabel
+      Left = 444
+      Top = 6
+      Caption = #1044#1085'. '#1072#1085#1072#1083#1080#1079#1072
+    end
+    object edDayCount: TcxCurrencyEdit
+      Left = 444
+      Top = 23
+      Properties.DisplayFormat = ',0.00'
+      Properties.ReadOnly = True
+      TabOrder = 13
+      Width = 66
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -405,13 +405,13 @@ inherited Report_MinPrice_byPromoForm: TReport_MinPrice_byPromoForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_MinPrice_byPromoDialogForm'
-      FormNameParam.Value = 'TReport_MinPrice_byPromoDialogForm'
+      FormName = 'TReport_SAMP_AnalysisDialogForm'
+      FormNameParam.Value = 'TReport_SAMP_AnalysisDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'StartDate'
+          Name = 'Year1'
           Value = 42491d
           Component = deStart
           DataType = ftDateTime
@@ -419,18 +419,10 @@ inherited Report_MinPrice_byPromoForm: TReport_MinPrice_byPromoForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'EndDate'
+          Name = 'Year2'
           Value = 42491d
           Component = deEnd
           DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Persent'
-          Value = ''
-          Component = edPersent
-          DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -440,15 +432,15 @@ inherited Report_MinPrice_byPromoForm: TReport_MinPrice_byPromoForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 48
-    Top = 160
+    Left = 40
+    Top = 88
   end
   inherited MasterCDS: TClientDataSet
-    Left = 0
-    Top = 152
+    Left = 8
+    Top = 88
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_MinPrice_byPromo'
+    StoredProcName = 'gpReport_SAMP_Analysis'
     Params = <
       item
         Name = 'inMovementId'
@@ -459,7 +451,7 @@ inherited Report_MinPrice_byPromoForm: TReport_MinPrice_byPromoForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inStartDate'
+        Name = 'inYear1'
         Value = 'NULL'
         Component = deStart
         DataType = ftDateTime
@@ -467,23 +459,15 @@ inherited Report_MinPrice_byPromoForm: TReport_MinPrice_byPromoForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inEndDate'
+        Name = 'inYear2'
         Value = 'NULL'
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPersent'
-        Value = Null
-        Component = edPersent
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
-    Left = 72
-    Top = 120
+    Left = 64
+    Top = 112
   end
   inherited BarManager: TdxBarManager
     Left = 112
@@ -549,7 +533,6 @@ inherited Report_MinPrice_byPromoForm: TReport_MinPrice_byPromoForm
         Component = PeriodChoice
       end
       item
-        Component = edPersent
       end>
     Left = 128
     Top = 144
@@ -602,8 +585,8 @@ inherited Report_MinPrice_byPromoForm: TReport_MinPrice_byPromoForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 296
-    Top = 120
+    Left = 280
+    Top = 160
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -635,6 +618,30 @@ inherited Report_MinPrice_byPromoForm: TReport_MinPrice_byPromoForm
         Value = 'NULL'
         Component = deOperdate
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartSale'
+        Value = 'NULL'
+        Component = edStartSale
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndSale'
+        Value = 'NULL'
+        Component = edEndSale
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DayCount'
+        Value = Null
+        Component = edDayCount
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

@@ -24,6 +24,12 @@ RETURNS TABLE ( GoodsCode       Integer      --Код товара
               , Persent         TFloat     -- факт % отклонения миним цены из периода и ЦЕНЫ СЕГОДНЯ
               , OperDatePromo   TDateTime
               , invNumberPromo  TVarChar
+              , StartPromo      TDateTime
+              , EndPromo        TDateTime
+              , ChangePercent   TFloat
+              , Amount          TFloat
+              , MakerNamePromo  TVarChar
+              , PersonalName    TVarChar
               )
 
 AS
@@ -36,12 +42,45 @@ BEGIN
      inEndDate := inEndDate + INTERVAL '1 DAY';
 
      
-     CREATE TEMP TABLE _tmpPromo (MovementId Integer, OperDatePromo TDateTime, invNumberPromo TVarChar) ON COMMIT DROP; 
-     INSERT INTO _tmpPromo (MovementId, OperDatePromo, InvNumberPromo)
-            SELECT Movement.Id
-                 , Movement.OperDate
+     CREATE TEMP TABLE _tmpPromo (MovementId_Promo Integer, OperDatePromo TDateTime, invNumberPromo TVarChar
+                                , StartPromo TDateTime, EndPromo TDateTime, ChangePercent TFloat, Amount TFloat, MakerNamePromo TVarChar, PersonalName TVarChar) ON COMMIT DROP; 
+                                
+     INSERT INTO _tmpPromo (MovementId_Promo, OperDatePromo, InvNumberPromo, StartPromo, EndPromo, ChangePercent, Amount, MakerNamePromo, PersonalName)
+            SELECT Movement.Id        
+                 , Movement.OperDate  
                  , Movement.invNumber
+                 
+                 , MovementDate_StartPromo.ValueData                              AS StartPromo
+                 , MovementDate_EndPromo.ValueData                                AS EndPromo 
+                 , COALESCE(MovementFloat_ChangePercent.ValueData,0)::TFloat      AS ChangePercent
+                 , COALESCE(MovementFloat_Amount.ValueData,0)::TFloat             AS Amount
+                 , Object_Maker.ValueData                                         AS MakerName
+                 , Object_Personal.ValueData                                      AS PersonalName 
             FROM Movement
+                 LEFT JOIN MovementFloat AS MovementFloat_Amount
+                                         ON MovementFloat_Amount.MovementId =  Movement.Id
+                                        AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
+                 LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                         ON MovementFloat_ChangePercent.MovementId =  Movement.Id
+                                        AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+
+                 LEFT JOIN MovementDate AS MovementDate_StartPromo
+                                        ON MovementDate_StartPromo.MovementId = Movement.Id
+                                       AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
+                 LEFT JOIN MovementDate AS MovementDate_EndPromo
+                                        ON MovementDate_EndPromo.MovementId = Movement.Id
+                                       AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
+         
+                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Maker
+                                              ON MovementLinkObject_Maker.MovementId = Movement.Id
+                                             AND MovementLinkObject_Maker.DescId = zc_MovementLinkObject_Maker()
+                 LEFT JOIN Object AS Object_Maker ON Object_Maker.Id = MovementLinkObject_Maker.ObjectId
+                 
+                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
+                                              ON MovementLinkObject_Personal.MovementId = Movement.Id
+                                             AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
+                 LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = MovementLinkObject_Personal.ObjectId
+        
             WHERE Movement.DescId = zc_Movement_Promo()
               AND Movement.StatusId = zc_Enum_Status_Complete()
               AND (Movement.Id = inMovementId OR inMovementId = 0);
@@ -52,7 +91,7 @@ BEGIN
             SELECT DISTINCT MovementLinkObject_Juridical.ObjectId    AS JuridicalId
             FROM _tmpPromo 
                  INNER JOIN Movement AS Movement_PromoPartner 
-                                     ON Movement_PromoPartner.ParentId = _tmpPromo.MovementId
+                                     ON Movement_PromoPartner.ParentId = _tmpPromo.MovementId_Promo
                                     AND Movement_PromoPartner.DescId = zc_Movement_PromoPartner()
                                     AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
 
@@ -74,18 +113,16 @@ BEGIN
     WITH 
     -- товары тек.документа маркетинга
       tmpGoodsPromoMI AS (SELECT DISTINCT MI_Goods.ObjectId    AS GoodsId
-                               , _tmpPromo.OperDatePromo
-                               , _tmpPromo.InvNumberPromo
+                               , _tmpPromo.MovementId_Promo
                           FROM _tmpPromo
                              INNER JOIN MovementItem AS MI_Goods 
-                                                     ON MI_Goods.MovementId = _tmpPromo.MovementId
+                                                     ON MI_Goods.MovementId = _tmpPromo.MovementId_Promo
                                                     AND MI_Goods.DescId = zc_MI_Master()
                                                     AND MI_Goods.isErased = FALSE
                           )
     , tmpGoodsPromo AS (SELECT DISTINCT tmpGoodsPromoMI.GoodsId  AS GoodsId
                              , ObjectLink_Main.ChildObjectId     AS GoodsMainId
-                             , tmpGoodsPromoMI.OperDatePromo
-                             , tmpGoodsPromoMI.InvNumberPromo 
+                             , tmpGoodsPromoMI.MovementId_Promo
                         FROM tmpGoodsPromoMI
                              -- получаем GoodsMainId
                              LEFT JOIN  ObjectLink AS ObjectLink_Child 
@@ -99,8 +136,7 @@ BEGIN
     , tmpDataAll AS (SELECT Movement.OperDate                 AS OperDate
                           , MI_Master.ObjectId                AS GoodsId   -- это GoodsMainId
                           , COALESCE(MIFloat_Price.ValueData,0)::TFloat  AS Price  
-                          , tmpGoodsPromo.OperDatePromo
-                          , tmpGoodsPromo.InvNumberPromo
+                          , tmpGoodsPromo.MovementId_Promo
                      FROM Movement 
                           LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                                        ON MovementLinkObject_Juridical.MovementId = Movement.Id
@@ -146,9 +182,8 @@ BEGIN
                        , tmp.MidPrice
                        , MAX (CASE WHEN tmp.Ord_Min = 1 THEN tmp.OperDate ELSE zc_DateStart() END) AS DateMinPrice
                        , MAX (CASE WHEN tmp.Ord_Max = 1 THEN tmp.OperDate ELSE zc_DateStart() END) AS DateMaxPrice
-                       , tmp.OperDatePromo
-                       , tmp.InvNumberPromo
-                  FROM (              
+                       , tmp.MovementId_Promo
+                   FROM (              
                        SELECT *
                             , MIN (tmpDataAll.Price)  OVER (PARTITION BY tmpDataAll.GoodsId ORDER BY tmpDataAll.GoodsId)                   AS MinPrice
                             , MAX (tmpDataAll.Price)  OVER (PARTITION BY tmpDataAll.GoodsId ORDER BY tmpDataAll.GoodsId)                   AS MaxPrice
@@ -161,8 +196,7 @@ BEGIN
                        WHERE tmp.Ord_Min = 1 OR tmp.Ord_Max = 1
                        GROUP BY tmp.GoodsId
                               , tmp.minPrice, tmp.MaxPrice, tmp.MidPrice
-                              , tmp.OperDatePromo
-                              , tmp.InvNumberPromo
+                              , tmp.MovementId_Promo
                   )
                   
     , tmpResult AS (SELECT tmpData.GoodsId
@@ -176,8 +210,7 @@ BEGIN
                          , (COALESCE(tmpDataToday.Price, 0) + (COALESCE(tmpDataToday.Price, 0)/100 * inPersent))                               ::TFloat AS PricePersent
                          , tmpDataToday.OperDate                    AS OperDate
                          , tmpDataToday.JuridicalId                 AS JuridicalId
-                         , tmpData.OperDatePromo
-                         , tmpData.InvNumberPromo
+                         , tmpData.MovementId_Promo
                     FROM tmpData
                          INNER JOIN tmpDataToday ON tmpDataToday.GoodsMainId = tmpData.GoodsId   
                      )
@@ -198,8 +231,14 @@ BEGIN
             , tmpData.TodayPrice           ::TFloat    AS TodayPrice
             , tmpData.Persent              ::TFloat    AS Persent
            
-            , tmpData.OperDatePromo
-            , tmpData.InvNumberPromo
+            , _tmpPromo.OperDatePromo
+            , _tmpPromo.InvNumberPromo
+            , _tmpPromo.StartPromo
+            , _tmpPromo.EndPromo
+            , _tmpPromo.ChangePercent
+            , _tmpPromo.Amount
+            , _tmpPromo.MakerNamePromo
+            , _tmpPromo.PersonalName
       FROM tmpResult AS tmpData
        
         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
@@ -216,6 +255,8 @@ BEGIN
         LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
 
         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpData.JuridicalId
+        
+        LEFT JOIN _tmpPromo ON _tmpPromo.MovementId_Promo = tmpData.MovementId_Promo
 
       WHERE tmpData.PricePersent <= tmpData.MinPrice OR inPersent = 0
       ORDER BY 2                                   

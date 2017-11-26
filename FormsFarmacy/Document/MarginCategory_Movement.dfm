@@ -92,13 +92,23 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
             Options.Editing = False
             Width = 222
           end
-          object isSAMP: TcxGridDBColumn
+          object isChecked: TcxGridDBColumn
             Caption = #1057#1040#1059#1062
-            DataBinding.FieldName = 'isSAMP'
+            DataBinding.FieldName = 'isChecked'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1076#1083#1103' '#1057#1040#1059#1062' ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
             Width = 50
+          end
+          object isReport: TcxGridDBColumn
+            Caption = #1076#1083#1103' '#1086#1090#1095#1077#1090#1072
+            DataBinding.FieldName = 'isReport'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1076#1083#1103' '#1086#1090#1095#1077#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 45
           end
           object MarginPercent: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080
@@ -870,6 +880,30 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
         end>
       Caption = 'actInsertUpdate_MovementItem_Promo_Set_Zero'
     end
+    object spUpdateisReportNo: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = gpUpdate_isReport_No
+      StoredProcList = <
+        item
+          StoredProc = gpUpdate_isReport_No
+        end>
+      Caption = #1076#1083#1103' '#1086#1090#1095#1077#1090#1072' - '#1053#1077#1090
+      Hint = #1076#1083#1103' '#1086#1090#1095#1077#1090#1072' - '#1053#1077#1090
+    end
+    object spUpdateisReportYes: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = gpUpdate_isReport_Yes
+      StoredProcList = <
+        item
+          StoredProc = gpUpdate_isReport_Yes
+        end>
+      Caption = #1076#1083#1103' '#1086#1090#1095#1077#1090#1072' - '#1044#1072
+      Hint = #1076#1083#1103' '#1086#1090#1095#1077#1090#1072' - '#1044#1072
+    end
     object actGetImportSettingId: TdsdExecStoredProc
       Category = 'Load'
       MoveParams = <>
@@ -902,6 +936,30 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100
       ImageIndex = 41
     end
+    object macUpdateisReportNo: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUpdateisReportNo
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1044#1083#1103' '#1086#1090#1095#1077#1090#1072' - '#1053#1045#1058
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1044#1083#1103' '#1086#1090#1095#1077#1090#1072' - '#1053#1045#1058
+      ImageIndex = 58
+    end
+    object macUpdateisReportYes: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUpdateisReportYes
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1044#1083#1103' '#1086#1090#1095#1077#1090#1072' - '#1044#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1044#1083#1103' '#1086#1090#1095#1077#1090#1072' - '#1044#1072
+      ImageIndex = 52
+    end
     object actInsertPromoPartner: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -925,6 +983,116 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
           Action = actRefresh
         end>
       Caption = 'MultiAction1'
+    end
+    object spUpdateisCheckedNo: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isChecked_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isChecked_No
+        end>
+      Caption = #1057#1040#1059#1062' - '#1053#1077#1090
+      Hint = #1057#1040#1059#1062' - '#1053#1077#1090
+    end
+    object spUpdateisCheckedYes: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isChecked_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isChecked_Yes
+        end>
+      Caption = #1057#1040#1059#1062' - '#1044#1072
+      Hint = #1057#1040#1059#1062' - '#1044#1072
+    end
+    object macUpdateisCheckedNo: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUpdateisCheckedNo
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1057#1040#1059#1062' - '#1053#1045#1058
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1057#1040#1059#1062' - '#1053#1045#1058
+      ImageIndex = 58
+    end
+    object macUpdateisCheckedYes: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUpdateisCheckedYes
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1057#1040#1059#1062' - '#1044#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1057#1040#1059#1062' - '#1044#1072
+      ImageIndex = 52
+    end
+    object actOpenReportForm: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1087#1088#1086#1076#1072#1078' '#1089' '#1087#1088#1086#1096#1083#1099#1084' '#1087#1077#1088#1080#1086#1076#1086#1084'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1087#1088#1086#1076#1072#1078' '#1089' '#1087#1088#1086#1096#1083#1099#1084' '#1087#1077#1088#1080#1086#1076#1086#1084'>'
+      ImageIndex = 25
+      FormName = 'TReport_SAMP_AnalysisForm'
+      FormNameParam.Value = 'TReport_SAMP_AnalysisForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInvNumber'
+          Value = ''
+          Component = edInvNumber
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartSale'
+          Value = 'NULL'
+          Component = edStartSale
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndSale'
+          Value = 'NULL'
+          Component = edEndSale
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DayCount'
+          Value = Null
+          Component = edDayCount
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   inherited spSelect: TdsdStoredProc
@@ -986,11 +1154,7 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
         end
         item
           Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
+          ItemName = 'bbUpdateisCheckedYes'
         end
         item
           Visible = True
@@ -998,15 +1162,24 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertRecordChild'
+          ItemName = 'bbUpdateisCheckedNo'
         end
         item
           Visible = True
-          ItemName = 'bbMISetErasedChild'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bbUpdateisReportYes'
         end
         item
           Visible = True
-          ItemName = 'bbMISetUnErasedChild'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateisReportNo'
         end
         item
           Visible = True
@@ -1017,13 +1190,20 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
           ItemName = 'bbRefresh'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
           ItemName = 'bbLoad_SAMP'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenReport'
         end
         item
           Visible = True
@@ -1079,6 +1259,28 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
       Caption = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1076#1072#1085#1085#1099#1077
       Category = 0
       ImageIndex = 74
+    end
+    object bbUpdateisCheckedYes: TdxBarButton
+      Action = macUpdateisCheckedYes
+      Category = 0
+    end
+    object bbUpdateisCheckedNo: TdxBarButton
+      Action = macUpdateisCheckedNo
+      Category = 0
+    end
+    object bbUpdateisReportNo: TdxBarButton
+      Action = macUpdateisReportNo
+      Category = 0
+      ImageIndex = 77
+    end
+    object bbUpdateisReportYes: TdxBarButton
+      Action = macUpdateisReportYes
+      Category = 0
+      ImageIndex = 76
+    end
+    object bbOpenReport: TdxBarButton
+      Action = actOpenReportForm
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1960,5 +2162,133 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
     NeedResetData = True
     Left = 424
     Top = 328
+  end
+  object spUpdate_isChecked_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_MarginCategory_Checked'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChecked'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisChecked'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isChecked'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 760
+    Top = 427
+  end
+  object spUpdate_isChecked_No: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_MarginCategory_Checked'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChecked'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisChecked'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isChecked'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 760
+    Top = 483
+  end
+  object gpUpdate_isReport_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_MarginCategory_Report'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisReport'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisReport'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isReport'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 840
+    Top = 403
+  end
+  object gpUpdate_isReport_No: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_MarginCategory_Report'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisReport'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisReport'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isReport'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 840
+    Top = 459
   end
 end
