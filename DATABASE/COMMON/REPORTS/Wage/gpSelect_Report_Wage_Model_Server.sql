@@ -428,6 +428,7 @@ BEGIN
                      Setting.MovementDescId
               FROM Setting_Wage_1 as Setting
               WHERE Setting.MovementDescId IS NOT NULL
+                AND Setting.SelectKindId <> zc_Enum_SelectKind_MI_Master()
              ) AS SettingDesc
              INNER JOIN MovementItemContainer ON MovementItemContainer.MovementDescId = SettingDesc.MovementDescId
                                              AND MovementItemContainer.DescId         = zc_MIContainer_Count()
@@ -689,7 +690,8 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                   ON ObjectLink_Goods_Measure.ObjectId = tmpMovement.GoodsId_from
                                  AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-        WHERE (Setting.FromId IS NULL OR COALESCE (tmpMovement_HeadCount.FromId, tmpMovement.FromId) IN (SELECT UnitTree.UnitId FROM lfSelect_Object_Unit_byGroup (Setting.FromId) AS UnitTree))
+        WHERE Setting.SelectKindId <> zc_Enum_SelectKind_MI_Master()
+          AND (Setting.FromId IS NULL OR COALESCE (tmpMovement_HeadCount.FromId, tmpMovement.FromId) IN (SELECT UnitTree.UnitId FROM lfSelect_Object_Unit_byGroup (Setting.FromId) AS UnitTree))
           AND (Setting.ToId   IS NULL OR COALESCE (tmpMovement_HeadCount.ToId,   tmpMovement.ToId)   IN (SELECT UnitTree.UnitId FROM lfSelect_Object_Unit_byGroup (Setting.ToId)   AS UnitTree))
           AND (Setting.ModelServiceItemChild_FromId IS NULL OR (Setting.ModelServiceItemChild_FromDescId = zc_Object_Goods()
                                                             AND COALESCE (tmpMovement_HeadCount.GoodsId_from, tmpMovement.GoodsId_from) = Setting.ModelServiceItemChild_FromId
@@ -867,7 +869,22 @@ BEGIN
                     , Movement_Sheet.StorageLineId
             ) AS Movement_Sheet
        )
-
+         -- Данные для - Кол-во строк в документе 
+       , tmpMovement_PersonalComplete AS
+       (SELECT gpReport.OperDate
+             , DATE_PART ('ISODOW', gpReport.OperDate)  AS OperDate_num
+             , gpReport.UnitId, gpReport.UnitCode, gpReport.UnitName
+             , gpReport.PersonalId, gpReport.PersonalCode, gpReport.PersonalName
+             , gpReport.PositionId, gpReport.PositionCode, gpReport.PositionName
+             , SUM (COALESCE (gpReport.CountMI, 0) + COALESCE (gpReport.CountMI1, 0)) :: TFloat AS Amount
+        FROM gpReport_PersonalComplete (inStartDate:= inStartDate, inEndDate:= inEndDate, inPersonalId:= 0, inPositionId:= 0, inBranchId:= 0, inIsDay:= TRUE, inIsDetail:= FALSE, inSession:= inSession) AS gpReport
+             INNER JOIN (SELECT DISTINCT Setting_Wage_1.FromId FROM Setting_Wage_1 WHERE Setting_Wage_1.SelectKindId = zc_Enum_SelectKind_MI_Master() AND Setting_Wage_1.FromId > 0) AS tmpFrom ON tmpFrom.FromId = gpReport.UnitId
+        WHERE EXISTS (SELECT 1 FROM Setting_Wage_1 AS Setting WHERE Setting.SelectKindId = zc_Enum_SelectKind_MI_Master())
+        GROUP BY gpReport.OperDate
+               , gpReport.UnitId, gpReport.UnitCode, gpReport.UnitName
+               , gpReport.PersonalId, gpReport.PersonalCode, gpReport.PersonalName
+               , gpReport.PositionId, gpReport.PositionCode, gpReport.PositionName
+       )
     -- Результат
     SELECT
         Setting.StaffListId
@@ -984,6 +1001,75 @@ BEGIN
                                               OR Setting.DocumentKindId = 0)
 
         LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = COALESCE (Movement_SheetGroup.PersonalGroupId, Movement_Sheet.PersonalGroupId)
+
+    WHERE Setting.SelectKindId <> zc_Enum_SelectKind_MI_Master()
+
+   UNION ALL
+    SELECT
+        Setting.StaffListId
+      , 0 :: Integer AS DocumentKindId
+      , Setting.UnitId
+      , Setting.UnitName
+       ,tmpMovement_PersonalComplete.PositionId
+       ,tmpMovement_PersonalComplete.PositionName
+       ,Object_PositionLevel.Id        AS PositionLevelId
+       ,Object_PositionLevel.ValueData AS PositionLevelName
+       ,Setting.Count_Member
+       -- , COALESCE (Movement_SheetGroup.Count_Member, Movement_Sheet.Count_Member) :: Integer AS Count_Member
+       ,Setting.HoursPlan
+       ,Setting.HoursDay
+       , Object_PersonalGroup.Id        AS PersonalGroupId
+       , Object_PersonalGroup.ValueData AS PersonalGroupName
+       ,tmpMovement_PersonalComplete.PersonalId   :: Integer   AS MemberId
+       ,tmpMovement_PersonalComplete.PersonalName :: TVarChar  AS MemberName
+       ,tmpMovement_PersonalComplete.OperDate     :: TDateTime AS SheetWorkTime_Date
+       ,0 :: TFloat AS SUM_MemberHours
+       ,0 :: TFloat AS SheetWorkTime_Amount
+       ,Setting.ServiceModelId
+       ,Setting.ServiceModelCode
+       ,Setting.ServiceModelName
+       ,Setting.Price
+       ,Setting.FromId
+       ,Setting.FromName
+       ,Setting.ToId
+       ,Setting.ToName
+       ,Setting.MovementDescId
+       ,Setting.MovementDescName
+       ,Setting.SelectKindId
+       ,Setting.SelectKindName
+       ,Setting.Ratio
+       ,Setting.ModelServiceItemChild_FromId
+       ,Setting.ModelServiceItemChild_FromDescId
+       ,Setting.ModelServiceItemChild_FromName
+       ,Setting.ModelServiceItemChild_ToId
+       ,Setting.ModelServiceItemChild_ToDescId
+       ,Setting.ModelServiceItemChild_ToName
+
+       ,Setting.StorageLineId_From, Setting.StorageLineName_From
+       ,Setting.StorageLineId_To, Setting.StorageLineName_To
+
+       ,Setting.GoodsKind_FromId, Setting.GoodsKind_FromName, Setting.GoodsKindComplete_FromId, Setting.GoodsKindComplete_FromName
+       ,Setting.GoodsKind_ToId, Setting.GoodsKind_ToName, Setting.GoodsKindComplete_ToId, Setting.GoodsKindComplete_ToName
+
+       , tmpMovement_PersonalComplete.OperDate AS OperDate
+       , 0 :: Integer AS Count_Day
+       , 0 :: Integer AS Count_MemberInDay
+       , (tmpMovement_PersonalComplete.Amount) :: TFloat AS Gross
+       , (tmpMovement_PersonalComplete.Amount) :: TFloat AS GrossOnOneMember
+       , (tmpMovement_PersonalComplete.Amount * Setting.Ratio * Setting.Price) :: TFloat AS Amount
+       , (tmpMovement_PersonalComplete.Amount * Setting.Ratio * Setting.Price) :: TFloat AS AmountOnOneMember
+    FROM Setting_Wage_1 AS Setting
+         INNER JOIN tmpMovement_PersonalComplete ON tmpMovement_PersonalComplete.UnitId = Setting.FromId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
+                             ON ObjectLink_Personal_PersonalGroup.ChildObjectId = tmpMovement_PersonalComplete.PersonalId
+                            AND ObjectLink_Personal_PersonalGroup.DescId        = zc_ObjectLink_Personal_PersonalGroup()
+        LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
+                             ON ObjectLink_Personal_PositionLevel.ChildObjectId = tmpMovement_PersonalComplete.PersonalId
+                            AND ObjectLink_Personal_PositionLevel.DescId        = zc_ObjectLink_Personal_PositionLevel()
+        LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
+        LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = ObjectLink_Personal_PositionLevel.ChildObjectId
+    WHERE Setting.SelectKindId = zc_Enum_SelectKind_MI_Master()
      ;
 
 END;
@@ -998,3 +1084,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Report_Wage_Model_Server (inStartDate:= '02.06.2017', inEndDate:= '02.06.2017', inUnitId:= 8439, inModelServiceId:= 632844, inMemberId:= 0, inPositionId:= 0, inSession:= '5');
+-- SELECT * FROM gpSelect_Report_Wage_Model_Server (inStartDate:= '01.10.2017', inEndDate:= '31.10.2017', inUnitId:= 0, inModelServiceId:= 1342334, inMemberId:= 0, inPositionId:= 0, inSession:= '5');

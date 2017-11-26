@@ -560,6 +560,15 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object OperDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072
+        DataBinding.FieldName = 'OperDate'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 50
+      end
       object BranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
         DataBinding.FieldName = 'BranchName'
@@ -568,13 +577,13 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Options.Editing = False
         Width = 80
       end
-      object OperDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072
-        DataBinding.FieldName = 'OperDate'
+      object UnitName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'UnitName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 50
+        Width = 100
       end
       object PersonalCode: TcxGridDBColumn
         Caption = #1050#1086#1076
@@ -702,7 +711,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
     Width = 945
     Height = 54
     Align = alTop
-    TabOrder = 4
+    TabOrder = 3
     object deStart: TcxDateEdit
       Left = 60
       Top = 5
@@ -1413,6 +1422,13 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Name = 'inIsDay'
         Value = Null
         Component = cbIsDay
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDetail'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

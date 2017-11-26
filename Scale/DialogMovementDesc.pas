@@ -330,9 +330,9 @@ begin
                             ParamByName('FromId').AsInteger       := ParamByName('calcPartnerId').asInteger;
                             ParamByName('FromCode').AsInteger     := ParamByName('calcPartnerCode').asInteger;
                             ParamByName('FromName').asString      := ParamByName('calcPartnerName').asString;
-                            ParamByName('ToId').AsInteger         := CDS.FieldByName('FromId').asInteger;
-                            ParamByName('ToCode').asString        := CDS.FieldByName('FromCode').asString;
-                            ParamByName('ToName').asString        := CDS.FieldByName('FromName').asString;
+                            ParamByName('ToId').AsInteger         := CDS.FieldByName('ToId').asInteger;
+                            ParamByName('ToCode').asString        := CDS.FieldByName('ToCode').asString;
+                            ParamByName('ToName').asString        := CDS.FieldByName('ToName').asString;
                     end
                     else
                         if (CDS.FieldByName('MovementDescId').asInteger = zc_Movement_Send)

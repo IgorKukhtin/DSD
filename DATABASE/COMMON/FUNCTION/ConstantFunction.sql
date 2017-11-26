@@ -39,6 +39,7 @@ CREATE OR REPLACE FUNCTION zc_Mail_Password() RETURNS TVarChar AS $BODY$BEGIN RE
 
 -- Farmacy - Site
 CREATE OR REPLACE FUNCTION zc_Member_Site() RETURNS TVarChar AS $BODY$BEGIN RETURN ('автоматический'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+-- CREATE OR REPLACE FUNCTION zc_Area_Basis() RETURNS Integer AS $BODY$BEGIN RETURN (5803492); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 /*
 -- Значения для эти ф-ций будут сформированы в Load_PostgreSql, или !!!руками значения =0!!!

@@ -1499,6 +1499,9 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalCompleteForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalCompleteForm');
+  exit;
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Remains_byOrderExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Remains_byOrderExternalForm');
@@ -1531,6 +1534,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsCehForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsCehForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsBalance_ServerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsBalance_ServerForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsBalanceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsBalanceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsBalanceDialogForm'));

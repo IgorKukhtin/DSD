@@ -1,7 +1,7 @@
 object MainForm: TMainForm
   Left = 0
   Top = 0
-  Caption = #1047#1072#1075#1088#1091#1079#1095#1080#1082' EDI '#1079#1072#1082#1072#1079#1086#1074
+  Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1079#1072#1082#1072#1079#1086#1074' EDI'
   ClientHeight = 441
   ClientWidth = 722
   Color = clBtnFace
@@ -56,8 +56,6 @@ object MainForm: TMainForm
     ScrollBars = ssVertical
     TabOrder = 2
     WordWrap = False
-    ExplicitTop = 87
-    ExplicitHeight = 354
   end
   object Panel: TPanel
     Left = 0
@@ -10445,6 +10443,17 @@ object MainForm: TMainForm
       spList = spListOrder
       Directory = '/inbox'
     end
+    object actGet_Movement_Edi_stat: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetStatMovementEDI
+      StoredProcList = <
+        item
+          StoredProc = spGetStatMovementEDI
+        end>
+      Caption = 'actGet_Movement_Edi_stat'
+    end
   end
   object spHeaderOrder: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_EDIOrder'
@@ -10541,5 +10550,35 @@ object MainForm: TMainForm
     PackSize = 1
     Left = 184
     Top = 300
+  end
+  object spGetStatMovementEDI: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Edi_stat'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_Movement_Edi_stat'
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 440
+    Top = 180
   end
 end

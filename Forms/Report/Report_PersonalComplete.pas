@@ -82,6 +82,7 @@ type
     BranchGuides: TdsdGuides;
     BranchName: TcxGridDBColumn;
     bbIsDay: TdxBarControlContainerItem;
+    UnitName: TcxGridDBColumn;
   private
   public
   end;

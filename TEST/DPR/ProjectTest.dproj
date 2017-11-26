@@ -2014,8 +2014,8 @@
 				<Form>Report_GoodsMI_InternalDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_GoodsBalance.pas">
-				<Form>Report_GoodsBalanceForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsBalance_Server.pas">
+				<Form>Report_GoodsBalance_ServerForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_MotionGoodsUpak.pas">
@@ -3291,6 +3291,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\EDI\EDIJournal.pas">
 				<Form>EDIJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsBalance.pas">
+				<Form>Report_GoodsBalanceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

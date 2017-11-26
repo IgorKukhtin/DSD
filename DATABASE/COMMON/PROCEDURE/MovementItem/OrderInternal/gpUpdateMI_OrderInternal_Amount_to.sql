@@ -57,7 +57,7 @@ BEGIN
         -- пересчитали Итоговые суммы по накладной
         PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
-    ELSEIF inAmount > 0
+    ELSEIF inAmount > 0 AND ((inAmount > 5 AND inNumber IN (1, 3)) OR inNumber NOT IN (1, 3))
     THEN
 
         -- проверка

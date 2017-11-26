@@ -1,8 +1,8 @@
--- Function: gpReport_GoodsBalance_OLD()
+-- Function: gpReport_GoodsBalance_Server()
 
-DROP FUNCTION IF EXISTS gpReport_GoodsBalance_OLD (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsBalance_Server (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_GoodsBalance_OLD(
+CREATE OR REPLACE FUNCTION gpReport_GoodsBalance_Server(
     IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
     IN inAccountGroupId     Integer,    --
@@ -1315,4 +1315,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * from gpReport_GoodsBalance_OLD (inStartDate:= '01.09.2017', inEndDate:= '01.09.2017', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 , inIsInfoMoney:= TRUE, inIsAllMO:= TRUE, inIsAllAuto:= TRUE, inSession := '5');
+-- SELECT * from gpReport_GoodsBalance_Server (inStartDate:= '01.09.2017', inEndDate:= '01.09.2017', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 , inIsInfoMoney:= TRUE, inIsAllMO:= TRUE, inIsAllAuto:= TRUE, inSession := '5');

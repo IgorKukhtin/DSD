@@ -69,6 +69,9 @@ BEGIN
                                               JOIN MovementLinkObject AS MovementLinkObject_Juridical 
                                                                       ON MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
                                                                      AND MovementLinkObject_Juridical.MovementId = Movement_PriceList.Id 
+                                              LEFT JOIN MovementLinkObject AS MovementLinkObject_Area
+                                                                           ON MovementLinkObject_Area.MovementId = Movement_PriceList.Id
+                                                                          AND MovementLinkObject_Area.DescId     = zc_MovementLinkObject_Area()
                                               JOIN ObjectLink AS ObjectLink_JuridicalSettings_Juridical
                                                               ON ObjectLink_JuridicalSettings_Juridical.DescId = zc_ObjectLink_JuridicalSettings_Juridical()
                                                              AND ObjectLink_JuridicalSettings_Juridical.ChildObjectId = MovementLinkObject_Juridical.ObjectId
@@ -81,6 +84,7 @@ BEGIN
                                                                 AND ObjectBoolean_JuridicalSettings_Site.ObjectId = ObjectLink_JuridicalSettings_Juridical.ObjectId
                                                                 AND ObjectBoolean_JuridicalSettings_Site.ValueData = TRUE
                                          WHERE Movement_PriceList.DescId = zc_Movement_PriceList()
+                                           AND COALESCE(MovementLinkObject_Area.ObjectId, zc_Area_Basis()) = zc_Area_Basis()
                                            AND Movement_PriceList.StatusId <> zc_Enum_Status_Erased()
                                         )
           , tmpMovementPriceList AS (SELECT MovementId FROM tmpMovementPriceListLast WHERE RowNum = 1)

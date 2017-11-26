@@ -1,8 +1,8 @@
--- Function: lpSelectMinPrice_List()
+-- Function: lpSelectMinPrice_List_new()
 
-DROP FUNCTION IF EXISTS lpSelectMinPrice_List (Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpSelectMinPrice_List_new (Integer, Integer, Integer);
 
-CREATE OR REPLACE FUNCTION lpSelectMinPrice_List(
+CREATE OR REPLACE FUNCTION lpSelectMinPrice_List_new(
     IN inUnitId      Integer      , -- Аптека
     IN inObjectId    Integer      , -- Торговая сеть
     IN inUserId      Integer        -- пользователь
@@ -157,26 +157,13 @@ BEGIN
                                      AND ObjectBoolean_Top.ValueData = TRUE
        )
     -- Список Последних цен (поставщика) !!!по документам!!! (т.е. последний документ а не последняя найденная цена)
-  , Movement_PriceList AS
-       /*(-- выбираются с "нужным" договором из JuridicalSettings
-        SELECT tmp.MovementId
-             , tmp.JuridicalId
-             , tmp.ContractId
-             --, COALESCE (JuridicalSettings.PriceLimit, 0) AS PriceLimit
-             --, COALESCE (JuridicalSettings.Bonus, 0)      AS Bonus
-             , tmp.PriceLimit
-             , tmp.Bonus
-        FROM*/
-       (-- выбираются с "макс" датой
-        SELECT *
-        FROM
+  , Movement_PriceList_all AS
        (-- выбираются все !!!из списка "ObjectId"!!!
-        SELECT MAX (Movement.OperDate) OVER (PARTITION BY MovementLinkObject_Juridical.ObjectId, COALESCE (MovementLinkObject_Contract.ObjectId, 0)) AS Max_Date
-             , Movement.OperDate
+        SELECT Movement.OperDate
              , Movement.Id                                        AS MovementId
              , MovementLinkObject_Juridical.ObjectId              AS JuridicalId
              , COALESCE (MovementLinkObject_Contract.ObjectId, 0) AS ContractId
-             , COALESCE (MovementLinkObject_Area.ObjectId, 0)     AS AreaId
+             , COALESCE (MovementLinkObject_Area.ObjectId, zc_Area_Basis()) AS AreaId
              , COALESCE (JuridicalSettings_list.PriceLimit, 0)    AS PriceLimit
              , COALESCE (JuridicalSettings_list.Bonus, 0)         AS Bonus
         FROM (SELECT DISTINCT ObjectId FROM GoodsList) AS tmp
@@ -191,13 +178,39 @@ BEGIN
                                          AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
              LEFT JOIN MovementLinkObject AS MovementLinkObject_Area
                                           ON MovementLinkObject_Area.MovementId = Movement.Id
-                                         AND MovementLinkObject_Area.DescId = zc_MovementLinkObject_Area()
+                                         AND MovementLinkObject_Area.DescId     = zc_MovementLinkObject_Area()
              INNER JOIN JuridicalSettings_list ON JuridicalSettings_list.JuridicalId = MovementLinkObject_Juridical.ObjectId
-                                              AND JuridicalSettings_list.ContractId = MovementLinkObject_Contract.ObjectId
-        WHERE Movement.DescId = zc_Movement_PriceList()
+                                              AND JuridicalSettings_list.ContractId  = MovementLinkObject_Contract.ObjectId
+        WHERE Movement.DescId   = zc_Movement_PriceList()
           AND Movement.StatusId <> zc_Enum_Status_Erased()
+       )
+    -- Список Последних цен (поставщика) !!!по документам!!! (т.е. последний документ а не последняя найденная цена)
+  , Movement_PriceList AS
+       /*(-- выбираются с "нужным" договором из JuridicalSettings
+        SELECT tmp.MovementId
+             , tmp.JuridicalId
+             , tmp.ContractId
+             --, COALESCE (JuridicalSettings.PriceLimit, 0) AS PriceLimit
+             --, COALESCE (JuridicalSettings.Bonus, 0)      AS Bonus
+             , tmp.PriceLimit
+             , tmp.Bonus
+        FROM*/
+       (-- выбираются с "макс" датой
+        SELECT *
+        FROM
+       (-- выбираются все !!!из списка "ObjectId"!!!
+        SELECT --  № п/п
+               ROW_NUMBER() OVER (PARTITION BY Movement_PriceList_all.AreaId, Movement_PriceList_all.JuridicalId, Movement_PriceList_all.ContractId ORDER BY Movement_PriceList_all.OperDate DESC) AS Ord
+             , Movement_PriceList_all.OperDate
+             , Movement_PriceList_all.MovementId
+             , Movement_PriceList_all.JuridicalId
+             , Movement_PriceList_all.ContractId
+             , Movement_PriceList_all.AreaId
+             , Movement_PriceList_all.PriceLimit
+             , Movement_PriceList_all.Bonus
+        FROM Movement_PriceList_all
        ) AS tmp
-        WHERE tmp.Max_Date = tmp.OperDate -- т.е. для договора и юр лица будет 1 документ
+        WHERE tmp.Ord = 1 -- т.е. для договора и юр лица будет 1 документ
        ) /*AS tmp*/
         -- !!!INNER!!!
         /*INNER JOIN JuridicalSettings_list AS JuridicalSettings ON JuridicalSettings.JuridicalId = tmp.JuridicalId
@@ -351,15 +364,15 @@ BEGIN
     -- отсортировали по цене и получили первого
   , MinPriceList AS (SELECT *
                      FROM (SELECT FinalList.*
-                                , ROW_NUMBER() OVER (PARTITION BY FinalList.GoodsId ORDER BY FinalList.SuperFinalPrice, FinalList.PriceListMovementItemId) AS Ord
+                                , ROW_NUMBER() OVER (PARTITION BY FinalList.GoodsId, FinalList.AreaId ORDER BY FinalList.SuperFinalPrice, FinalList.PriceListMovementItemId) AS Ord
                            FROM FinalList
                           ) AS T0
                      WHERE T0.Ord = 1
                     )
     -- сколько поставщиков у товара
-  , tmpCountJuridical AS (SELECT FinalList.GoodsId, COUNT (DISTINCT FinalList.JuridicalId) AS CountJuridical
+  , tmpCountJuridical AS (SELECT FinalList.GoodsId, FinalList.AreaId, COUNT (DISTINCT FinalList.JuridicalId) AS CountJuridical
                           FROM FinalList
-                          GROUP BY FinalList.GoodsId
+                          GROUP BY FinalList.GoodsId, FinalList.AreaId
                          )
     -- Результат
     SELECT
@@ -381,12 +394,13 @@ BEGIN
         CASE WHEN tmpCountJuridical.CountJuridical > 1 THEN FALSE ELSE TRUE END ::Boolean AS isOneJuridical
     FROM MinPriceList
          LEFT JOIN tmpCountJuridical ON tmpCountJuridical.GoodsId = MinPriceList.GoodsId
+                                    AND tmpCountJuridical.AreaId  = MinPriceList.AreaId
     ;
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION lpSelectMinPrice_List (Integer, Integer, Integer) OWNER TO postgres;
+ALTER FUNCTION lpSelectMinPrice_List_new (Integer, Integer, Integer) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -400,8 +414,8 @@ SELECT 1, GoodsId            ,    GoodsCode          ,    GoodsName          ,  
 from lpSelectMinPrice_AllGoods (183292, 4, 3) as a
 where GoodsId = 376
 union all
- select 2, * from lpSelectMinPrice_List (183292, 4, 3) as b where GoodsId = 376
+ select 2, * from lpSelectMinPrice_List_new (183292, 4, 3) as b where GoodsId = 376
 */
 -- тест
--- SELECT * FROM lpSelectMinPrice_AllGoods (183292, 4, 3) as a join lpSelectMinPrice_List (183292, 4, 3)  as b on b.GoodsId = a.GoodsId WHERE a.Price <> b.Price
--- SELECT * FROM lpSelectMinPrice_List (183292, 4, 3) WHERE GoodsCode = 4797
+-- SELECT * FROM lpSelectMinPrice_AllGoods (183292, 4, 3) as a join lpSelectMinPrice_List_new (183292, 4, 3)  as b on b.GoodsId = a.GoodsId WHERE a.Price <> b.Price
+-- SELECT * FROM lpSelectMinPrice_List_new (183292, 4, 3) WHERE GoodsCode = 4797

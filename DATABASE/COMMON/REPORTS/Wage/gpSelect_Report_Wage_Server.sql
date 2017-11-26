@@ -553,3 +553,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Report_Wage_Server (inStartDate:= '01.04.2017', inEndDate:= '02.04.2017', inUnitId:= 8439, inModelServiceId:= 633116, inMemberId:= 0, inPositionId:= 0, inDetailDay:= TRUE, inDetailModelService:= TRUE, inDetailModelServiceItemMaster:= TRUE, inDetailModelServiceItemChild:= TRUE, inSession:= '5');
+-- SELECT * FROM gpSelect_Report_Wage_Server (inStartDate:= '01.10.2017', inEndDate:= '31.10.2017', inUnitId:= 0, inModelServiceId:= 1342334, inMemberId:= 0, inPositionId:= 0, inDetailDay:= TRUE, inDetailModelService:= TRUE, inDetailModelServiceItemMaster:= TRUE, inDetailModelServiceItemChild:= TRUE, inSession:= '5');

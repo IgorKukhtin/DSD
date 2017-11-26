@@ -663,7 +663,7 @@ uses
   RouteGroup in '..\..\Forms\Guides\RouteGroup.pas' {RouteGroupForm: TParentForm},
   RouteGroupEdit in '..\..\Forms\Guides\RouteGroupEdit.pas' {RouteGroupEditForm: TParentForm},
   Report_GoodsMI_InternalDialog in '..\..\Forms\Report\Report_GoodsMI_InternalDialog.pas' {Report_GoodsMI_InternalDialogForm: TParentForm},
-  Report_GoodsBalance in '..\..\Forms\Report\Report_GoodsBalance.pas' {Report_GoodsBalanceForm: TParentForm},
+  Report_GoodsBalance_Server in '..\..\Forms\Report\Report_GoodsBalance_Server.pas' {Report_GoodsBalance_ServerForm: TParentForm},
   Report_MotionGoodsUpak in '..\..\Forms\Report\Report_MotionGoodsUpak.pas' {Report_MotionGoodsUpakForm: TParentForm},
   MedocJournal in '..\..\Forms\Document\MedocJournal.pas' {MedocJournalForm: TParentForm},
   Report_MotionGoodsCeh in '..\..\Forms\Report\Report_MotionGoodsCeh.pas' {Report_MotionGoodsCehForm: TParentForm},
@@ -985,7 +985,8 @@ uses
   Report_Wage in '..\..\Forms\Report\Report_Wage.pas' {Report_WageForm: TParentForm},
   Promo in '..\..\Forms\Document\Promo.pas' {PromoForm: TParentForm},
   Report_PromoPlan in '..\..\Forms\Report\Report_PromoPlan.pas' {Report_PromoPlanForm: TParentForm},
-  EDIJournal in '..\..\Forms\EDI\EDIJournal.pas' {EDIJournalForm: TParentForm};
+  EDIJournal in '..\..\Forms\EDI\EDIJournal.pas' {EDIJournalForm: TParentForm},
+  Report_GoodsBalance in '..\..\Forms\Report\Report_GoodsBalance.pas' {Report_GoodsBalanceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -1,6 +1,8 @@
 -- Function: gpSelect_GoodsOnUnit_ForSite_NeBoley
 
-DROP FUNCTION IF EXISTS gpSelect_GoodsOnUnit_ForSite_NeBoley (TVarChar);
+-- ???СТАРАЯ ВЕРСИЯ???
+
+-- DROP FUNCTION IF EXISTS gpSelect_GoodsOnUnit_ForSite_NeBoley (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_GoodsOnUnit_ForSite_NeBoley (
     IN inSession TVarChar -- сессия пользователя

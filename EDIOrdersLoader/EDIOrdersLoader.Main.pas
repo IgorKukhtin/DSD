@@ -33,6 +33,8 @@ type
     actStopEDI: TAction;
     EDIActionOrdersLoad: TEDIAction;
     cbPrevDay: TCheckBox;
+    spGetStatMovementEDI: TdsdStoredProc;
+    actGet_Movement_Edi_stat: TdsdExecStoredProc;
     procedure TrayIconClick(Sender: TObject);
     procedure AppMinimize(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -51,6 +53,7 @@ type
     procedure StartEDI;
     procedure StopEDI;
     procedure ProccessEDI;
+    function fGet_Movement_Edi_stat : Integer;
   public
     { Public declarations }
     property IntervalVal: Integer read FIntervalVal;
@@ -63,6 +66,7 @@ var
 implementation
 
 {$R *.dfm}
+
 
 procedure TMainForm.actStartEDIExecute(Sender: TObject);
 begin
@@ -90,6 +94,7 @@ var
   LogFileName: string;
   LogFile: TextFile;
 begin
+  Application.ProcessMessages;
   LogStr := FormatDateTime('yyyy-mm-dd hh:mm:ss', Now) + ' ' + S;
   LogMemo.Lines.Add(LogStr);
   LogFileName := ChangeFileExt(Application.ExeName, '') + '_' + FormatDateTime('yyyymmdd', Date) + '.log';
@@ -103,6 +108,7 @@ begin
 
   Writeln(LogFile, LogStr);
   CloseFile(LogFile);
+  Application.ProcessMessages;
 end;
 
 procedure TMainForm.AppMinimize(Sender: TObject);
@@ -144,11 +150,21 @@ end;
 
 procedure TMainForm.FormShow(Sender: TObject);
 begin
+      ActiveControl:= cbPrevDay;
       if not Timer.Enabled then MainForm.StartEDI;
 end;
 
-procedure TMainForm.ProccessEDI;
+function TMainForm.fGet_Movement_Edi_stat : Integer;
 begin
+     actGet_Movement_Edi_stat.Execute;
+     Result:= spGetStatMovementEDI.ParamByName('gpGet_Movement_Edi_stat').Value;
+end;
+
+procedure TMainForm.ProccessEDI;
+var Old_stat : Integer;
+begin
+  ActiveControl:= cbPrevDay;
+
   if Proccessing then
     Exit;
 
@@ -156,7 +172,9 @@ begin
   Proccessing := True;
 
   try
+    AddToLog('.....');
     actSetDefaults.Execute;
+    AddToLog('Обновили Default для EDI');
 
     OptionsMemo.Lines.Clear;
     OptionsMemo.Lines.Add('Текущий интервал: ' + IntToStr(IntervalVal) + ' мин.');
@@ -164,17 +182,21 @@ begin
     OptionsMemo.Lines.Add('UserName: ' +  FormParams.ParamByName('UserName').AsString);
     OptionsMemo.Lines.Add('Password: ' +  FormParams.ParamByName('Password').AsString);
 
-    AddToLog('Загрузили Default по EDI');
-    AddToLog('Загрузка и обработка EDI началась ...');
-
     if cbPrevDay.Checked = TRUE
     then deStart.EditValue := Date - 1
     else deStart.EditValue := Date;
     deEnd.EditValue := Date;
 
-    AddToLog(' - Период с : ' + deStart.EditText + ' по ' + deEnd.EditText);
+    Old_stat:=fGet_Movement_Edi_stat;
+    AddToLog('Загрузка EDI началась ... <'+IntToStr(Old_stat)+'>');
+
+    AddToLog(' - Период с ' + deStart.EditText + ' по ' + deEnd.EditText);
+
     EDIActionOrdersLoad.Execute;
-    AddToLog('Загрузка и обработка EDI завершилась');
+    AddToLog('Загружено <'+IntToStr(fGet_Movement_Edi_stat - Old_stat)+'> Документов');
+
+    AddToLog('Finish');
+
   except
     on E: Exception do
       AddToLog(E.Message);
@@ -186,7 +208,7 @@ end;
 
 procedure TMainForm.StartEDI;
 begin
-  AddToLog('Запуск');
+  AddToLog('Запуск ...');
 
   if IntervalVal > 0 then
     ProccessEDI

@@ -5,11 +5,10 @@ DROP FUNCTION IF EXISTS lfSelect_Object_Member_findPersonal (TVarChar);
 CREATE OR REPLACE FUNCTION lfSelect_Object_Member_findPersonal(
     IN inSession          TVarChar       -- сессия пользователя
 )
-
 RETURNS TABLE (MemberId Integer, PersonalId Integer
-             , UnitId Integer, PositionId Integer
-             , BranchId Integer, isDateOut Boolean
-             , Ord Integer
+             , UnitId   Integer, PositionId Integer
+             , BranchId Integer, isDateOut  Boolean
+             , Ord      Integer
               )
 AS
 $BODY$

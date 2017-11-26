@@ -1,9 +1,9 @@
--- Function: gpSelect_GoodsOnUnit_ForSite()
+-- Function: gpSelect_GoodsOnUnit_ForSite_new()
 
-DROP FUNCTION IF EXISTS gpSelect_GoodsOnUnit_ForSite (Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_GoodsOnUnit_ForSite (TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_GoodsOnUnit_ForSite_new (Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_GoodsOnUnit_ForSite_new (TVarChar, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_GoodsOnUnit_ForSite(
+CREATE OR REPLACE FUNCTION gpSelect_GoodsOnUnit_ForSite_new(
     IN inUnitId_list      TVarChar ,  -- Список Подразделений, через зпт
     IN inGoodsId_list     TVarChar ,  -- Список товаров, через зпт
     IN inSession          TVarChar    -- сессия пользователя
@@ -80,7 +80,7 @@ BEGIN
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpunitminprice_list')
     THEN
         -- таблица
-        CREATE TEMP TABLE _tmpUnitMinPrice_List (UnitId Integer) ON COMMIT DROP;
+        CREATE TEMP TABLE _tmpUnitMinPrice_List (UnitId Integer, AreaId Integer) ON COMMIT DROP;
     ELSE
         DELETE FROM _tmpUnitMinPrice_List;
     END IF;
@@ -89,7 +89,15 @@ BEGIN
     vbIndex := 1;
     WHILE SPLIT_PART (inUnitId_list, ',', vbIndex) <> '' LOOP
         -- добавляем то что нашли
-        INSERT INTO _tmpUnitMinPrice_List (UnitId) SELECT SPLIT_PART (inUnitId_list, ',', vbIndex) :: Integer;
+        INSERT INTO _tmpUnitMinPrice_List (UnitId, AreaId) 
+           SELECT tmp.UnitId
+                , COALESCE (OL_Unit_Area.ChildObjectId, zc_Area_Basis()) AS AreaId
+           FROM (SELECT SPLIT_PART (inUnitId_list, ',', vbIndex) :: Integer AS UnitId
+                ) AS tmp
+                LEFT JOIN ObjectLink AS OL_Unit_Area
+                                     ON OL_Unit_Area.ObjectId = tmp.UnitId
+                                    AND OL_Unit_Area.DescId   = zc_ObjectLink_Unit_Area()
+          ;
         -- теперь следуюющий
         vbIndex := vbIndex + 1;
     END LOOP;
@@ -216,15 +224,16 @@ BEGIN
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpList'))
     THEN
         -- таблица
-        CREATE TEMP TABLE _tmpList (UnitId Integer, GoodsId Integer, GoodsId_retail Integer) ON COMMIT DROP;
+        CREATE TEMP TABLE _tmpList (UnitId Integer, AreaId Integer, GoodsId Integer, GoodsId_retail Integer) ON COMMIT DROP;
     ELSE
         DELETE FROM _tmpList;
     END IF;
     --
-    INSERT INTO _tmpList (UnitId, GoodsId, GoodsId_retail)
+    INSERT INTO _tmpList (UnitId, AreaId, GoodsId, GoodsId_retail)
                 -- SELECT DISTINCT _tmpContainerCount.UnitId, _tmpContainerCount.GoodsId, _tmpContainerCount.GoodsId_retail FROM _tmpContainerCount;
                 SELECT DISTINCT 
                        _tmpUnitMinPrice_List.UnitId
+                     , _tmpUnitMinPrice_List.AreaId
                      , _tmpGoodsMinPrice_List.GoodsId
                      , ObjectLink_Child_R.ChildObjectId AS GoodsId_retail
                 FROM _tmpGoodsMinPrice_List
@@ -248,9 +257,10 @@ BEGIN
                                                          AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
                                                          AND ObjectLink_Goods_Object.ChildObjectId = ObjectLink_Juridical_Retail.ChildObjectId
                 ;
-    INSERT INTO _tmpList (UnitId, GoodsId, GoodsId_retail)
+    INSERT INTO _tmpList (UnitId, AreaId, GoodsId, GoodsId_retail)
                 SELECT DISTINCT 
                        _tmpUnitMinPrice_List.UnitId
+                     , _tmpUnitMinPrice_List.AreaId
                      , _tmpGoodsMinPrice_List.GoodsId
                      , _tmpGoodsMinPrice_List.GoodsId AS GoodsId_retail
                 FROM _tmpGoodsMinPrice_List
@@ -316,7 +326,7 @@ BEGIN
                                             tmp.SuperFinalPrice    ,
                                             tmp.isTop              ,
                                             tmp.isOneJuridical
-                FROM lpSelectMinPrice_List (inUnitId  := 0          -- !!!т.к. не зависит от UnitId, хотя ...!!!
+                FROM lpSelectMinPrice_List_new (inUnitId  := 0          -- !!!т.к. не зависит от UnitId, хотя ...!!!
                                           , inObjectId:= vbObjectId
                                           , inUserId  := vbUserId
                                            ) AS tmp
@@ -492,7 +502,7 @@ BEGIN
              , MinPrice_List.Price AS Price_minNoNds
              , ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2) :: TFloat  AS Price_minO
              , ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100) * (1 + COALESCE (MarginCategory.MarginPercent, 0)      / 100), 2) :: TFloat  AS Price_min
-             , ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100) * (1 + COALESCE (MarginCategory_site.MarginPercent, 0) / 100), 2) :: TFloat  AS Price_minD
+             , ROUND (MinPrice_List_D.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100) * (1 + COALESCE (MarginCategory_site.MarginPercent, 0) / 100), 2) :: TFloat  AS Price_minD
 
              , MarginCategory.MarginPercent         AS MarginPercent
              , MarginCategory_site.MarginPercent    AS MarginPercent_site
@@ -514,6 +524,9 @@ BEGIN
                                           ON tmpList2.GoodsId = tmpList.GoodsId
                                          AND tmpList2.UnitId  = tmpList.UnitId
              LEFT JOIN _tmpMinPrice_List AS MinPrice_List  ON MinPrice_List.GoodsId  = tmpList.GoodsId
+                                                          AND MinPrice_List.AreaId   = tmpList.AreaId
+             LEFT JOIN _tmpMinPrice_List AS MinPrice_List_D  ON MinPrice_List_D.GoodsId  = tmpList.GoodsId
+                                                            AND MinPrice_List_D.AreaId   = zc_Area_Basis()
 
              LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id     = tmpList.UnitId AND Object_Unit.DescId = zc_Object_Unit()
              LEFT JOIN Object AS Object_Goods    ON Object_Goods.Id    = tmpList.GoodsId
@@ -574,7 +587,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_GoodsOnUnit_ForSite (TVarChar, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_GoodsOnUnit_ForSite_new (TVarChar, TVarChar, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -583,6 +596,6 @@ ALTER FUNCTION gpSelect_GoodsOnUnit_ForSite (TVarChar, TVarChar, TVarChar) OWNER
 */
 
 -- тест
--- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId_list:= '1781716', inGoodsId_list:= '47761', inSession:= zfCalc_UserSite()) ORDER BY 1;
--- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId_list:= '377613,183292', inGoodsId_list:= '331,951,16876,40618', inSession:= zfCalc_UserSite()) ORDER BY 1;
--- SELECT p.id, p.id_site, p.name, p.name_site, p.article, p.article, p.unitid, p.juridicalid, p.juridicalname, p.contractid, p.contractname, p.expirationdate, p.manufacturer, p.remains, p.price_unit, p.price_mino, p.price_mino, p.price_min, p.price_mind FROM gpselect_goodsonunit_forsite('183292,183288,377605,375627,394426,472116,494882,1529734,1781716,377606,377595,183290,183289,183294,377613,377574,377594,377610,183293,375626,183291', '508,517,520,526,523,511,544,538,553,559,562,565,571,547,1642,1654,1714,1867,1933,2059,2095,2230,2257,2275,2323,2341,2344,2320,2509,2515', zfCalc_UserSite()) AS p ORDER BY p.price_unit
+-- SELECT * FROM gpSelect_GoodsOnUnit_ForSite_new (inUnitId_list:= '1781716', inGoodsId_list:= '47761', inSession:= zfCalc_UserSite()) ORDER BY 1;
+-- SELECT * FROM gpSelect_GoodsOnUnit_ForSite_new (inUnitId_list:= '377613,183292', inGoodsId_list:= '331,951,16876,40618', inSession:= zfCalc_UserSite()) ORDER BY 1;
+-- SELECT p.id, p.id_site, p.name, p.name_site, p.article, p.article, p.unitid, p.juridicalid, p.juridicalname, p.contractid, p.contractname, p.expirationdate, p.manufacturer, p.remains, p.price_unit, p.price_mino, p.price_mino, p.price_min, p.price_mind FROM gpSelect_GoodsOnUnit_ForSite_new('183292,183288,377605,375627,394426,472116,494882,1529734,1781716,377606,377595,183290,183289,183294,377613,377574,377594,377610,183293,375626,183291', '508,517,520,526,523,511,544,538,553,559,562,565,571,547,1642,1654,1714,1867,1933,2059,2095,2230,2257,2275,2323,2341,2344,2320,2509,2515', zfCalc_UserSite()) AS p ORDER BY p.price_unit
