@@ -2055,7 +2055,7 @@ object GoodsReportSaleForm: TGoodsReportSaleForm
         DisplayText = #1048#1058#1054#1043#1054' '#1088#1072#1089#1093#1086#1076
       end
       object serOrderPromoBranch: TcxGridDBChartSeries
-        DataBinding.FieldName = 'AmountPromoBranch'
+        DataBinding.FieldName = 'OrderPromoBranch'
         DisplayText = #1048#1058#1054#1043#1054' '#1079#1072#1103#1074#1082#1072
       end
       object serBranch: TcxGridDBChartSeries
