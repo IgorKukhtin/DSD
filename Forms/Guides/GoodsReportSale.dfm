@@ -2038,177 +2038,33 @@ object GoodsReportSaleForm: TGoodsReportSaleForm
       DiagramColumn.Active = True
       ToolBox.CustomizeButton = True
       ToolBox.DiagramSelector = True
-      object dgGoods: TcxGridDBChartDataGroup
-        DataBinding.FieldName = 'GoodsName'
-        DisplayText = #1058#1086#1074#1072#1088
+      object dgNumDays: TcxGridDBChartDataGroup
+        DataBinding.FieldName = 'NumDays'
+        DisplayText = #1044#1077#1085#1100
       end
-      object serAnalysisAmount1: TcxGridDBChartSeries
-        DataBinding.FieldName = 'AnalysisAmount1'
-        DisplayText = #1057#1058#1040#1058'. '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 1'
+      object serAnalysisAmount: TcxGridDBChartSeries
+        DataBinding.FieldName = 'AnalysisAmount'
+        DisplayText = #1057#1058#1040#1058'. '#1088#1077#1072#1083#1080#1079'.'
       end
-      object serAnalysisAmount2: TcxGridDBChartSeries
-        DataBinding.FieldName = 'AnalysisAmount2'
-        DisplayText = #1057#1058#1040#1058'. '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 2'
+      object serAnalysisOrder: TcxGridDBChartSeries
+        DataBinding.FieldName = 'AnalysisOrder'
+        DisplayText = #1057#1058#1040#1058'. '#1079#1072#1103#1074#1082#1072
       end
-      object serAnalysisAmount3: TcxGridDBChartSeries
-        DataBinding.FieldName = 'AnalysisAmount3'
-        DisplayText = #1057#1058#1040#1058'. '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 3'
+      object serAmountPromoBranch: TcxGridDBChartSeries
+        DataBinding.FieldName = 'AmountPromoBranch'
+        DisplayText = #1048#1058#1054#1043#1054' '#1088#1072#1089#1093#1086#1076
       end
-      object serAnalysisAmount4: TcxGridDBChartSeries
-        DataBinding.FieldName = 'AnalysisAmount4'
-        DisplayText = #1057#1058#1040#1058'. '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 4'
+      object serOrderPromoBranch: TcxGridDBChartSeries
+        DataBinding.FieldName = 'AmountPromoBranch'
+        DisplayText = #1048#1058#1054#1043#1054' '#1079#1072#1103#1074#1082#1072
       end
-      object serAnalysisAmount5: TcxGridDBChartSeries
-        DataBinding.FieldName = 'AnalysisAmount5'
-        DisplayText = #1057#1058#1040#1058'. '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 5'
+      object serBranch: TcxGridDBChartSeries
+        DataBinding.FieldName = 'AmountBranch'
+        DisplayText = #1088#1072#1089#1093'. '#1085#1072' '#1060#1080#1083'.'
       end
-      object serAnalysisAmount6: TcxGridDBChartSeries
-        DataBinding.FieldName = 'AnalysisAmount6'
-        DisplayText = #1057#1058#1040#1058'. '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 6'
-      end
-      object serAnalysisAmount7: TcxGridDBChartSeries
-        DataBinding.FieldName = 'AnalysisAmount7'
-        DisplayText = #1057#1058#1040#1058'. '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 7'
-      end
-      object serAnalysisOrder1: TcxGridDBChartSeries
-        DataBinding.FieldName = 'AnalysisOrder1'
-        DisplayText = #1057#1058#1040#1058'. '#1079#1072#1103#1074#1082#1072' '#1079#1072' 1'
-      end
-      object serAnalysisOrder2: TcxGridDBChartSeries
-        DataBinding.FieldName = 'AnalysisOrder2'
-        DisplayText = #1057#1058#1040#1058'. '#1079#1072#1103#1074#1082#1072' '#1079#1072' 2'
-      end
-      object serAnalysisOrder3: TcxGridDBChartSeries
-        DataBinding.FieldName = 'AnalysisOrder3'
-        DisplayText = #1057#1058#1040#1058'. '#1079#1072#1103#1074#1082#1072' '#1079#1072' 3'
-      end
-      object serAnalysisOrder4: TcxGridDBChartSeries
-        DataBinding.FieldName = 'AnalysisOrder4'
-        DisplayText = #1057#1058#1040#1058'. '#1079#1072#1103#1074#1082#1072' '#1079#1072' 4'
-      end
-      object serAnalysisOrder5: TcxGridDBChartSeries
-        DataBinding.FieldName = 'AnalysisOrder5'
-        DisplayText = #1057#1058#1040#1058'. '#1079#1072#1103#1074#1082#1072' '#1079#1072' 5'
-      end
-      object serAnalysisOrder6: TcxGridDBChartSeries
-        DataBinding.FieldName = 'AnalysisOrder6'
-        DisplayText = #1057#1058#1040#1058'. '#1079#1072#1103#1074#1082#1072' '#1079#1072' 6'
-      end
-      object serAnalysisOrder7: TcxGridDBChartSeries
-        DataBinding.FieldName = 'AnalysisOrder7'
-        DisplayText = #1057#1058#1040#1058'. '#1079#1072#1103#1074#1082#1072' '#1079#1072' 7'
-      end
-      object serAmountPromoBranch1: TcxGridDBChartSeries
-        DataBinding.FieldName = 'AmountPromoBranch1'
-        DisplayText = #1048#1058#1054#1043#1054' '#1088#1072#1089#1093#1086#1076' '#1079#1072' 1'
-      end
-      object serAmountPromoBranch2: TcxGridDBChartSeries
-        DataBinding.FieldName = 'AmountPromoBranch2'
-        DisplayText = #1048#1058#1054#1043#1054' '#1088#1072#1089#1093#1086#1076' '#1079#1072' 2'
-      end
-      object serAmountPromoBranch3: TcxGridDBChartSeries
-        DataBinding.FieldName = 'AmountPromoBranch3'
-        DisplayText = #1048#1058#1054#1043#1054' '#1088#1072#1089#1093#1086#1076' '#1079#1072' 3'
-      end
-      object serAmountPromoBranch4: TcxGridDBChartSeries
-        DataBinding.FieldName = 'AmountPromoBranch4'
-        DisplayText = #1048#1058#1054#1043#1054' '#1088#1072#1089#1093#1086#1076' '#1079#1072' 4'
-      end
-      object serAmountPromoBranch5: TcxGridDBChartSeries
-        DataBinding.FieldName = 'AmountPromoBranch5'
-        DisplayText = #1048#1058#1054#1043#1054' '#1088#1072#1089#1093#1086#1076' '#1079#1072' 5'
-      end
-      object serAmountPromoBranch6: TcxGridDBChartSeries
-        DataBinding.FieldName = 'AmountPromoBranch6'
-        DisplayText = #1048#1058#1054#1043#1054' '#1088#1072#1089#1093#1086#1076' '#1079#1072' 6'
-      end
-      object serAmountPromoBranch7: TcxGridDBChartSeries
-        DataBinding.FieldName = 'AmountPromoBranch7'
-        DisplayText = #1048#1058#1054#1043#1054' '#1088#1072#1089#1093#1086#1076' '#1079#1072' 7'
-      end
-      object serOrderPromoBranch1: TcxGridDBChartSeries
-        DataBinding.FieldName = 'AmountPromoBranch1'
-        DisplayText = #1048#1058#1054#1043#1054' '#1079#1072#1103#1074#1082#1072' '#1079#1072' 1'
-      end
-      object serOrderPromoBranch2: TcxGridDBChartSeries
-        DataBinding.FieldName = 'AmountPromoBranch2'
-        DisplayText = #1048#1058#1054#1043#1054' '#1079#1072#1103#1074#1082#1072' '#1079#1072' 2'
-      end
-      object serOrderPromoBranch3: TcxGridDBChartSeries
-        DataBinding.FieldName = 'AmountPromoBranch13'
-        DisplayText = #1048#1058#1054#1043#1054' '#1079#1072#1103#1074#1082#1072' '#1079#1072' 3'
-      end
-      object serOrderPromoBranch4: TcxGridDBChartSeries
-        DataBinding.FieldName = 'AmountPromoBranch4'
-        DisplayText = #1048#1058#1054#1043#1054' '#1079#1072#1103#1074#1082#1072' '#1079#1072' 4'
-      end
-      object serOrderPromoBranch5: TcxGridDBChartSeries
-        DataBinding.FieldName = 'AmountPromoBranch5'
-        DisplayText = #1048#1058#1054#1043#1054' '#1079#1072#1103#1074#1082#1072' '#1079#1072' 5'
-      end
-      object serOrderPromoBranch6: TcxGridDBChartSeries
-        DataBinding.FieldName = 'AmountPromoBranch6'
-        DisplayText = #1048#1058#1054#1043#1054' '#1079#1072#1103#1074#1082#1072' '#1079#1072' 6'
-      end
-      object serOrderPromoBranch7: TcxGridDBChartSeries
-        DataBinding.FieldName = 'AmountPromoBranch7'
-        DisplayText = #1048#1058#1054#1043#1054' '#1079#1072#1103#1074#1082#1072' '#1079#1072' 7'
-      end
-      object serBranch1: TcxGridDBChartSeries
-        DataBinding.FieldName = 'Branch1'
-        DisplayText = #1088#1072#1089#1093'. '#1085#1072' '#1060#1080#1083'. '#1079#1072' 1'
-      end
-      object serBranch2: TcxGridDBChartSeries
-        DataBinding.FieldName = 'Branch2'
-        DisplayText = #1088#1072#1089#1093'. '#1085#1072' '#1060#1080#1083'. '#1079#1072' 2'
-      end
-      object serBranch3: TcxGridDBChartSeries
-        DataBinding.FieldName = 'Branch3'
-        DisplayText = #1088#1072#1089#1093'. '#1085#1072' '#1060#1080#1083'. '#1079#1072' 3'
-      end
-      object serBranch4: TcxGridDBChartSeries
-        DataBinding.FieldName = 'Branch4'
-        DisplayText = #1088#1072#1089#1093'. '#1085#1072' '#1060#1080#1083'. '#1079#1072' 4'
-      end
-      object serBranch5: TcxGridDBChartSeries
-        DataBinding.FieldName = 'Branch5'
-        DisplayText = #1088#1072#1089#1093'. '#1085#1072' '#1060#1080#1083'. '#1079#1072' 5'
-      end
-      object serBranch6: TcxGridDBChartSeries
-        DataBinding.FieldName = 'Branch6'
-        DisplayText = #1088#1072#1089#1093'. '#1085#1072' '#1060#1080#1083'. '#1079#1072' 6'
-      end
-      object serBranch7: TcxGridDBChartSeries
-        DataBinding.FieldName = 'Branch7'
-        DisplayText = #1088#1072#1089#1093'. '#1085#1072' '#1060#1080#1083'. '#1079#1072' 7'
-      end
-      object serOrder1: TcxGridDBChartSeries
-        DataBinding.FieldName = 'Order1'
-        DisplayText = #1079#1072#1103#1074#1082#1072' '#1087#1086#1082'. '#1079#1072' 1'
-      end
-      object serOrder2: TcxGridDBChartSeries
-        DataBinding.FieldName = 'Order2'
-        DisplayText = #1079#1072#1103#1074#1082#1072' '#1087#1086#1082'. '#1079#1072' 2'
-      end
-      object serOrder3: TcxGridDBChartSeries
-        DataBinding.FieldName = 'Order3'
-        DisplayText = #1079#1072#1103#1074#1082#1072' '#1087#1086#1082'. '#1079#1072' 3'
-      end
-      object serOrder4: TcxGridDBChartSeries
-        DataBinding.FieldName = 'Order4'
-        DisplayText = #1079#1072#1103#1074#1082#1072' '#1087#1086#1082'. '#1079#1072' 4'
-      end
-      object serOrder5: TcxGridDBChartSeries
-        DataBinding.FieldName = 'Order5'
-        DisplayText = #1079#1072#1103#1074#1082#1072' '#1087#1086#1082'. '#1079#1072' 5'
-      end
-      object serOrder6: TcxGridDBChartSeries
-        DataBinding.FieldName = 'Order6'
-        DisplayText = #1079#1072#1103#1074#1082#1072' '#1087#1086#1082'. '#1079#1072' 6'
-      end
-      object serOrder7: TcxGridDBChartSeries
-        DataBinding.FieldName = 'Order7'
-        DisplayText = #1079#1072#1103#1074#1082#1072' '#1087#1086#1082'. '#1079#1072' 7'
+      object serOrder: TcxGridDBChartSeries
+        DataBinding.FieldName = 'AmountOrder'
+        DisplayText = #1079#1072#1103#1074#1082#1072' '#1087#1086#1082'.'
       end
     end
     object grChartLevel1: TcxGridLevel
@@ -2785,7 +2641,7 @@ object GoodsReportSaleForm: TGoodsReportSaleForm
     Top = 432
   end
   object spSelectChild: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_GoodsReportSale'
+    StoredProcName = 'gpSelect_Object_GoodsReportSale_Graf'
     DataSet = ChildCDS
     DataSets = <
       item

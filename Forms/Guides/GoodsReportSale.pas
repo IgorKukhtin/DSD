@@ -86,7 +86,7 @@ type
     Weight: TcxGridDBColumn;
     grChart: TcxGrid;
     grChartDBChartView1: TcxGridDBChartView;
-    dgGoods: TcxGridDBChartDataGroup;
+    dgNumDays: TcxGridDBChartDataGroup;
     grChartLevel1: TcxGridLevel;
     cxSplitter1: TcxSplitter;
     ChildDS: TDataSource;
