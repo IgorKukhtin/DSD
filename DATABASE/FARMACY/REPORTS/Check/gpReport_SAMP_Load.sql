@@ -7,8 +7,6 @@ CREATE OR REPLACE FUNCTION  gpReport_SAMP_Load(
     IN inUnitId           Integer  ,  -- Подразделение
     IN inStartSale        TDateTime,  -- Дата начала отчета
     IN inEndSale          TDateTime,  -- Дата окончания отчета
---    IN inOperDateStart    TDateTime,  -- Дата начала действия изменений по Категории наценки
---    IN inOperDateEnd      TDateTime,  -- Дата окончания действия изменений по Категории наценки
     IN inAmount           TFloat,     -- мин кол-во продаж за анализируемый период
     IN inChangePercent    TFloat,     -- % отклонения продаж
     IN inDayCount         TFloat,     --
@@ -41,7 +39,9 @@ BEGIN
     vbPeriodCount := (ROUND( (date_part('DAY', inEndSale - inStartSale) / inDayCount) ::TFloat, 0)) :: Integer;
     vbOperDateStart := (inEndSale - ('' ||(vbPeriodCount * inDayCount)-1 || 'DAY ')  :: interval ) TDateTime;
     
-    IF (vbPeriodCount * inDayCount) <> date_part('DAY', inEndSale - inStartSale)+1
+    
+    --IF (vbPeriodCount * inDayCount) <> date_part('DAY', inEndSale - inStartSale)+1
+    IF vbOperDateStart <> inStartSale
     THEN
         RAISE EXCEPTION 'Ошибка.Кол-во дней периода не кратно периоду для анализа.Рекомендуемая нач.дата <%>', vbOperDateStart;
     END IF; 
@@ -91,24 +91,34 @@ BEGIN
                       )
                      
   -- продажи за период по подразделению, просчет продаж с интервалом в N дней
-  , tmpData_Container AS (SELECT MIContainer.ObjectId_analyzer               AS GoodsId
-                               , SUM (COALESCE (-1 * MIContainer.Amount, 0)) AS Amount
-                               , tmpPriceGoods.Price                         AS Price
-                               , _tmpDateList.NumPeriod                      AS NumPeriod
-                          FROM MovementItemContainer AS MIContainer
-                               INNER JOIN tmpPriceGoods ON tmpPriceGoods.GoodsId = MIContainer.ObjectId_analyzer
-                               
-                               LEFT JOIN _tmpDateList ON _tmpDateList.OperDate = DATE_TRUNC ('DAY', MIContainer.OperDate)
-                               
-                          WHERE MIContainer.DescId = zc_MIContainer_Count()
-                            AND MIContainer.MovementDescId = zc_Movement_Check()
-                            AND MIContainer.WhereObjectId_analyzer = inUnitId
-                            AND MIContainer.OperDate >= inStartSale AND MIContainer.OperDate < inEndSale + INTERVAL '1 DAY'
-                          GROUP BY MIContainer.ObjectId_analyzer
-                                 , _tmpDateList.NumPeriod, tmpPriceGoods.Price
-                          HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0 
-                             AND SUM (COALESCE (-1 * MIContainer.Amount, 0)) >= inAmount 
+  , tmpData_Container_ALL AS (SELECT tmp.*
+                                   , SUM (tmp.Amount) OVER (PARTITION BY tmp.GoodsId) AS TotalAmount
+                              FROM (SELECT MIContainer.ObjectId_analyzer               AS GoodsId
+                                         , SUM (COALESCE (-1 * MIContainer.Amount, 0)) AS Amount
+                                         , tmpPriceGoods.Price                         AS Price
+                                         , _tmpDateList.NumPeriod                      AS NumPeriod
+                                    FROM MovementItemContainer AS MIContainer
+                                         INNER JOIN tmpPriceGoods ON tmpPriceGoods.GoodsId = MIContainer.ObjectId_analyzer
+                                         
+                                         LEFT JOIN _tmpDateList ON _tmpDateList.OperDate = DATE_TRUNC ('DAY', MIContainer.OperDate)
+                                         
+                                    WHERE MIContainer.DescId = zc_MIContainer_Count()
+                                      AND MIContainer.MovementDescId = zc_Movement_Check()
+                                      AND MIContainer.WhereObjectId_analyzer = inUnitId
+                                      AND MIContainer.OperDate >= inStartSale AND MIContainer.OperDate < inEndSale + INTERVAL '1 DAY'
+                                    GROUP BY MIContainer.ObjectId_analyzer
+                                           , _tmpDateList.NumPeriod, tmpPriceGoods.Price
+                                    HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
+                                    --   AND SUM (COALESCE (-1 * MIContainer.Amount, 0)) >= inAmount
+                                   ) AS tmp
+                              -- WHERE tmp.Amount >= inAmount
+                              )
+  -- продажи за период по подразделению, ,без продаж меньше inAmount
+  , tmpData_Container AS (SELECT tmpData_Container_ALL.*
+                          FROM tmpData_Container_ALL
+                          WHERE tmpData_Container_ALL.TotalAmount >= inAmount
                           )
+                          
   --Выбираем период с мин и макс продажами
   , tmpMin_Max AS (SELECT tmp.GoodsId
                         , tmp.Price
@@ -152,7 +162,7 @@ BEGIN
                  FROM (SELECT tmpData_Container.*
                             , CASE WHEN tmpData_Container.NumPeriod = 4 THEN (tmpData_Container.Amount + tmpData_Container.Amount * 20/100) ELSE 0 END AS Amount_WithPerSent
                             , CASE WHEN tmpData_Container.NumPeriod = 4 THEN (tmpData_Container.Amount - tmpData_Container.Amount * 20/100) ELSE 0 END AS Amount_WithOutPerSent
-                            , SUM (tmpData_Container.Amount) OVER (PARTITION BY tmpData_Container.GoodsId) AS TotalAmount
+                            --, SUM (tmpData_Container.Amount) OVER (PARTITION BY tmpData_Container.GoodsId) AS TotalAmount
                        FROM tmpData_Container
 
                        ) AS tmpData

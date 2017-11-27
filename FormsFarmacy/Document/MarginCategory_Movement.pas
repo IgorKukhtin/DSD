@@ -119,6 +119,10 @@ type
     bbUpdateisReportYes: TdxBarButton;
     actOpenReportForm: TdsdOpenForm;
     bbOpenReport: TdxBarButton;
+    actOpenReportSimple: TdsdOpenForm;
+    bbOpenReportSimple: TdxBarButton;
+    gpUpdate_isReport: TdsdStoredProc;
+    actUpdateisReport: TdsdExecStoredProc;
   private
     { Private declarations }
   public

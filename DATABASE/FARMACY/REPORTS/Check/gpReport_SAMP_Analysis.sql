@@ -1,8 +1,10 @@
 -- Function:  gpReport_SAMP_Analysis()
 DROP FUNCTION IF EXISTS gpReport_SAMP_Analysis(Integer, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_SAMP_Analysis(Integer, Integer, TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION  gpReport_SAMP_Analysis(
     IN inMovementId       Integer  ,  --
+    IN inGoodsId          Integer  ,  --
     IN inYear1            TDateTime,  -- Год1 для анализа
     IN inYear2            TDateTime,  -- Год2 для анализа
     IN inSession          TVarChar    -- сессия пользователя
@@ -73,20 +75,22 @@ BEGIN
                 , COALESCE (MIFloat_Amount.ValueData, 0) ::TFloat AS AmountAnalys
                 , COALESCE (MIFloat_Price.ValueData, 0)  ::TFloat AS Price
            FROM MovementItem
-                INNER JOIN MovementItemBoolean AS MIBoolean_Report
-                                               ON MIBoolean_Report.MovementItemId = MovementItem.Id
-                                              AND MIBoolean_Report.DescId = zc_MIBoolean_Report()
-                                              AND COALESCE (MIBoolean_Report.ValueData, FALSE) = TRUE
+                LEFT JOIN MovementItemBoolean AS MIBoolean_Report
+                                              ON MIBoolean_Report.MovementItemId = MovementItem.Id
+                                             AND MIBoolean_Report.DescId = zc_MIBoolean_Report()
+                                             AND COALESCE (MIBoolean_Report.ValueData, FALSE) = TRUE
 
                 LEFT JOIN MovementItemFloat AS MIFloat_Amount
-                                        ON MIFloat_Amount.MovementItemId = MovementItem.Id
-                                       AND MIFloat_Amount.DescId = zc_MIFloat_Amount()
+                                            ON MIFloat_Amount.MovementItemId = MovementItem.Id
+                                           AND MIFloat_Amount.DescId = zc_MIFloat_Amount()
                                        
                 LEFT JOIN MovementItemFloat AS MIFloat_Price
                                             ON MIFloat_Price.MovementItemId = MovementItem.Id
                                            AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
            WHERE MovementItem.MovementId = inMovementId
              AND MovementItem.DescId     = zc_MI_Master()
+             AND (MovementItem.ObjectId = inGoodsId OR (inGoodsId = 0 AND COALESCE (MIBoolean_Report.ValueData, FALSE) = TRUE))
              AND MovementItem.isErased   = FALSE;
     
     --даты нач. и окончания периода
@@ -98,6 +102,9 @@ BEGIN
     --даты нач. и окончания периода для анализа    
     vbStartPeriod1:= (vbEndSale1 - ('' ||vbDayCount || 'DAY ')  :: interval ) TDateTime;
     vbStartPeriod2:= (vbEndSale2 - ('' ||vbDayCount || 'DAY ')  :: interval ) TDateTime;
+
+
+    -- RAISE EXCEPTION 'Ошибка.<%> /  <%>', vbStartPeriod1,vbStartPeriod2;
 
     -- Результат
     RETURN QUERY
@@ -163,4 +170,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpReport_SAMP_Analysis(inMovementId := 3959786 , inYear1 := ('01.10.2015')::TDateTime , inYear2 := ('31.10.2016')::TDateTime , inSession := '3');
+-- select * from gpReport_SAMP_Analysis(inMovementId := 3959786 , inGoodsId := 0, inYear1 := ('01.10.2015')::TDateTime , inYear2 := ('31.10.2016')::TDateTime , inSession := '3');

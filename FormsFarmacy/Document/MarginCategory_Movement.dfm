@@ -107,7 +107,6 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1076#1083#1103' '#1086#1090#1095#1077#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
-            Options.Editing = False
             Width = 45
           end
           object MarginPercent: TcxGridDBColumn
@@ -788,6 +787,15 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
           MultiSelectSeparator = ','
         end>
     end
+    inherited actUpdateMainDS: TdsdUpdateDataSet
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIMaster
+        end
+        item
+          StoredProc = gpUpdate_isReport
+        end>
+    end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -870,6 +878,18 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
       Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084#1080' '#1087#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
       Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084#1080' '#1087#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
       ImageIndex = 27
+    end
+    object actUpdateisReport: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = gpUpdate_isReport
+      StoredProcList = <
+        item
+          StoredProc = gpUpdate_isReport
+        end>
+      Caption = #1076#1083#1103' '#1086#1090#1095#1077#1090#1072' - '#1044#1072'/'#1053#1077#1090
+      Hint = #1076#1083#1103' '#1086#1090#1095#1077#1090#1072' - '#1044#1072'/'#1053#1077#1090
     end
     object actInsertUpdate_MovementItem_Promo_Set_Zero: TdsdExecStoredProc
       Category = 'Load'
@@ -984,6 +1004,76 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
         end>
       Caption = 'MultiAction1'
     end
+    object actOpenReportSimple: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1087#1088#1086#1076#1072#1078' '#1090#1077#1082'.'#1090#1086#1074#1072#1088#1072' '#1089' '#1087#1088#1086#1096#1083#1099#1084' '#1087#1077#1088#1080#1086#1076#1086#1084'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1087#1088#1086#1076#1072#1078' '#1090#1077#1082'.'#1090#1086#1074#1072#1088#1072' '#1089' '#1087#1088#1086#1096#1083#1099#1084' '#1087#1077#1088#1080#1086#1076#1086#1084'>'
+      ImageIndex = 24
+      FormName = 'TReport_SAMP_AnalysisForm'
+      FormNameParam.Value = 'TReport_SAMP_AnalysisForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInvNumber'
+          Value = ''
+          Component = edInvNumber
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsId'
+          Value = '0'
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartSale'
+          Value = 42485d
+          Component = edStartSale
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndSale'
+          Value = 42485d
+          Component = edEndSale
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DayCount'
+          Value = 0.000000000000000000
+          Component = edDayCount
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object spUpdateisCheckedNo: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1065,6 +1155,12 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
           Value = 42132d
           Component = edOperDate
           DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsId'
+          Value = '0'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
@@ -1207,6 +1303,10 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenReportSimple'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1280,6 +1380,10 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
     end
     object bbOpenReport: TdxBarButton
       Action = actOpenReportForm
+      Category = 0
+    end
+    object bbOpenReportSimple: TdxBarButton
+      Action = actOpenReportSimple
       Category = 0
     end
   end
@@ -2241,6 +2345,13 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisList'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisReport'
         Value = 'FALSE'
         DataType = ftBoolean
@@ -2273,6 +2384,13 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisList'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisReport'
         Value = 'TRUE'
         DataType = ftBoolean
@@ -2290,5 +2408,46 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
     PackSize = 1
     Left = 840
     Top = 459
+  end
+  object gpUpdate_isReport: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_MarginCategory_Report'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisList'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisReport'
+        Value = 'FALSE'
+        Component = MasterCDS
+        ComponentItem = 'isReport'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisReport'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isReport'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 816
+    Top = 355
   end
 end
