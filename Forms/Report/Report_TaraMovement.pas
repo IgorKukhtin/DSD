@@ -61,6 +61,8 @@ type
     AccountGroupName: TcxGridDBColumn;
     AmountPartner_out: TcxGridDBColumn;
     AmountPartner_in: TcxGridDBColumn;
+    AmountInf_out: TcxGridDBColumn;
+    AmountInf_in: TcxGridDBColumn;
   private
     { Private declarations }
   public

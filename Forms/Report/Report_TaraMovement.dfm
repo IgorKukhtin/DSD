@@ -46,6 +46,16 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
               Column = AmountPartner_in
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = AmountInf_out
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = AmountInf_in
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -67,10 +77,21 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
               Column = AmountPartner_in
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = AmountInf_out
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = AmountInf_in
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
+          OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -160,6 +181,16 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 106
           end
+          object AmountInf_out: TcxGridDBColumn
+            Caption = #1056#1072#1089#1093#1086#1076' '#1074#1080#1088#1090' ('#1074' '#1044#1086#1082'.)'
+            DataBinding.FieldName = 'AmountInf_out'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
           object AmountIn: TcxGridDBColumn
             Caption = #1055#1088#1080#1093#1086#1076' '#1082#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'AmountIn'
@@ -169,6 +200,16 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 56
+          end
+          object AmountInf_in: TcxGridDBColumn
+            Caption = #1055#1088#1080#1093#1086#1076' '#1074#1080#1088#1090' ('#1074' '#1044#1086#1082'.)'
+            DataBinding.FieldName = 'AmountInf_in'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
           end
           object AmountOut: TcxGridDBColumn
             Caption = #1056#1072#1089#1093#1086#1076' '#1082#1086#1083'-'#1074#1086

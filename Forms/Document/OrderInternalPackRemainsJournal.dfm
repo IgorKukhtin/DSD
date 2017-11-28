@@ -371,6 +371,12 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
           Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMinus'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1086#1089#1090#1072#1090#1082#1080')'
       ReportNameParam.Value = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1086#1089#1090#1072#1090#1082#1080')'
@@ -444,6 +450,12 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
         end
         item
           Name = 'isDiff'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMinus'
           Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
@@ -521,6 +533,12 @@ inherited OrderInternalPackRemainsJournalForm: TOrderInternalPackRemainsJournalF
         end
         item
           Name = 'isDiff'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMinus'
           Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','

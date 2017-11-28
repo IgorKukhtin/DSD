@@ -4,6 +4,8 @@ inherited PromoJournalForm: TPromoJournalForm
   ClientWidth = 1084
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -311
+  ExplicitTop = 0
   ExplicitWidth = 1100
   ExplicitHeight = 465
   PixelsPerInch = 96
@@ -81,6 +83,14 @@ inherited PromoJournalForm: TPromoJournalForm
             HeaderHint = #1045#1089#1083#1080' '#1044#1072' - '#1101#1090#1086' '#1040#1082#1094#1080#1103', '#1053#1077#1090' - '#1058#1077#1085#1076#1077#1088#1099
             Options.Editing = False
             Width = 45
+          end
+          object DayCount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081
+            DataBinding.FieldName = 'DayCount'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
           object MonthPromo: TcxGridDBColumn
             Caption = #1052#1077#1089#1103#1094' '#1072#1082#1094#1080#1080

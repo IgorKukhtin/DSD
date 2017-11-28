@@ -33,6 +33,8 @@ RETURNS TABLE(
     , AmountOut         TFloat     --Кол-во расход
     , AmountPartner_out     TFloat    --
     , AmountPartner_in      TFloat    --
+    , AmountInf_out     TFloat    --
+    , AmountInf_in      TFloat    --
     , Price             TFloat     --Цена
     )
 AS
@@ -132,8 +134,46 @@ BEGIN
                          WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                            AND Movement.StatusId = zc_Enum_Status_Complete()
                            AND Movement.DescId   = zc_Movement_SendOnPrice()
-                           AND (MovementLinkObject_From.ObjectId = inWhereObjectId
-                             OR MovementLinkObject_To.ObjectId   = inWhereObjectId
+                           AND ((MovementLinkObject_From.ObjectId = inWhereObjectId AND vbDirectMovement = 2)
+                             OR (MovementLinkObject_To.ObjectId   = inWhereObjectId AND vbDirectMovement = 1)
+                               )
+                         GROUP BY MovementItem.MovementId
+                                , MovementItem.ObjectId
+                                , MovementLinkObject_From.ObjectId
+                                , MovementLinkObject_To.ObjectId
+                        )
+              -- Данные ИНФОРМАТИВНО
+            , tmpInf AS (SELECT MovementItem.MovementId               AS MovementId
+                              , MovementItem.ObjectId                 AS GoodsId
+                              , CASE WHEN MovementLinkObject_From.ObjectId = inWhereObjectId
+                                          THEN MovementLinkObject_To.ObjectId
+                                     ELSE MovementLinkObject_From.ObjectId
+                                END AS ObjectExtId_Analyzer
+                              , SUM (CASE WHEN MovementLinkObject_From.ObjectId = inWhereObjectId THEN MIFloat_AmountPartner.ValueData ELSE 0 END) AS AmountPartner_in
+                              , SUM (CASE WHEN MovementLinkObject_To.ObjectId   = inWhereObjectId THEN MovementItem.Amount             ELSE 0 END) AS AmountPartner_out
+                         FROM Movement
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                             ON MovementLinkObject_From.MovementId = Movement.Id
+                                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                            ON MovementLinkObject_To.MovementId = Movement.Id
+                                                           AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+
+                               INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                      AND MovementItem.DescId     = zc_MI_Master()
+                                                      AND MovementItem.isErased   = FALSE
+                                                      AND MovementItem.ObjectId   = inGoodsId
+                                                      AND MovementItem.Amount     <> 0
+
+                               LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                           ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_AmountPartner.DescId         = zc_MIFloat_AmountPartner()
+                                                          -- AND MIFloat_AmountPartner.ValueData      > 0
+                         WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+                           AND Movement.StatusId = zc_Enum_Status_Complete()
+                           AND Movement.DescId   = zc_Movement_SendOnPrice()
+                           AND ((MovementLinkObject_From.ObjectId = inWhereObjectId AND vbDirectMovement = 2)
+                             OR (MovementLinkObject_To.ObjectId   = inWhereObjectId AND vbDirectMovement = 1)
                                )
                          GROUP BY MovementItem.MovementId
                                 , MovementItem.ObjectId
@@ -167,8 +207,10 @@ BEGIN
             END::TFloat                                       AS AmountOut   --Кол-во расход
            , 0 :: TFloat                                      AS AmountPartner_out
            , 0 :: TFloat                                      AS AmountPartner_in
+           , 0 :: TFloat                                      AS AmountInf_out
+           , 0 :: TFloat                                      AS AmountInf_in
 
-           ,MIFloat_Price.ValueData                           AS Price     --Цена
+           , MIFloat_Price.ValueData                           AS Price     --Цена
         FROM
             _tmpMovementDesc
             INNER JOIN MovementItemContainer ON MovementItemContainer.MovementDescId         = _tmpMovementDesc.DescId
@@ -269,7 +311,9 @@ BEGIN
            , 0 :: TFloat                                      AS AmountOut   --Кол-во расход
            , tmpVirt.AmountPartner_out :: TFloat              AS AmountPartner_out
            , tmpVirt.AmountPartner_in  :: TFloat              AS AmountPartner_in
-           ,MIFloat_Price.ValueData                           AS Price     --Цена
+           , 0 :: TFloat                                      AS AmountInf_out
+           , 0 :: TFloat                                      AS AmountInf_in
+           , MIFloat_Price.ValueData                          AS Price     --Цена
         FROM
             tmpVirt
             INNER JOIN Movement ON Movement.Id         = tmpVirt.MovementId
@@ -296,8 +340,8 @@ BEGIN
                 OR
                 (
                     vbIOMovement = 1 --Только внешние операции
-                    AND
-                    1 = 0
+                    -- AND
+                    -- 1 = 0
                 )
                 OR
                 (
@@ -312,8 +356,86 @@ BEGIN
                 OR
                 (
                     vbDirectMovement = 1 -- Только приходы
-                    AND
-                    1 = 0
+                    -- AND
+                    -- 1 = 0
+                )
+                OR
+                (
+                    vbDirectMovement = 2 --только расходы
+                    -- AND
+                    -- MovementItemContainer.IsActive = FALSE
+                )
+            )
+
+       UNION ALL
+        SELECT
+            Movement.Id                                       AS MovementId    --ИД документа
+           ,Movement.InvNumber                                AS InvNumber   --Номер документа
+           ,Movement.OperDate                                 AS OperDate  --Дата документа
+           ,MovementDesc.Id                                   AS MovementDescId    --ИД типа документа
+           ,MovementDesc.ItemName                             AS MovementDescName   --Тип документа
+           ,ObjectDesc.ItemName                               AS LocationDescName   --Тип объекта анализа
+           ,Object.ObjectCode                                 AS LocationCode    --Код объекта анализа
+           ,Object.ValueData                                  AS LocationName   --Объект анализа
+           ,ObjectByDesc.ItemName                             AS ObjectByDescName   --ИД "от кого / кому"
+           ,ObjectBy.ObjectCode                               AS ObjectByCode    --Код "от кого / кому"
+           ,ObjectBy.ValueData                                AS ObjectByName   --Наименование "от кого / кому"
+           ,Object_PaidKind.ValueData                         AS PaidKindName   --Тип оплаты
+           ,Object_Goods.ObjectCode                           AS GoodsCode    --Код товара
+           ,Object_Goods.ValueData                            AS GoodsName    --Наименование товара
+           ,Object_AccountGroup.ObjectCode                    AS AccountGroupCode --Код группы счетов
+           ,Object_AccountGroup.ValueData                     AS AccountGroupName --Наименование группы счетов
+           , 0 :: TFloat                                      AS AmountIn     --Кол-во приход
+           , 0 :: TFloat                                      AS AmountOut   --Кол-во расход
+           , 0 :: TFloat                                      AS AmountPartner_out
+           , 0 :: TFloat                                      AS AmountPartner_in
+           , tmpInf.AmountPartner_out :: TFloat               AS AmountInf_out
+           , tmpInf.AmountPartner_in  :: TFloat               AS AmountInf_in
+           ,MIFloat_Price.ValueData                           AS Price     --Цена
+        FROM
+            tmpInf
+            INNER JOIN Movement ON Movement.Id         = tmpInf.MovementId
+            LEFT JOIN Object AS Object_Goods
+                              ON Object_Goods.Id = tmpInf.GoodsId
+
+            LEFT JOIN MovementDesc ON Movement.DescId = MovementDesc.Id
+            LEFT JOIN Object ON Object.Id = inWhereObjectId
+            LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object.DescId
+            LEFT OUTER JOIN Object AS ObjectBy
+                                   ON ObjectBy.Id = tmpInf.ObjectExtId_Analyzer -- MovementLinkObject.ObjectId
+            LEFT OUTER JOIN ObjectDesc AS ObjectByDesc
+                                       ON ObjectByDesc.Id = ObjectBy.DescId
+            LEFT OUTER JOIN Object AS Object_PaidKind
+                                   ON Object_PaidKind.Id = NULL
+            LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
+                                              ON MIFloat_Price.MovementItemId = NULL
+                                             AND MIFloat_Price.DescId = zc_MIFloat_Price()
+            LEFT OUTER JOIN Object AS Object_AccountGroup
+                                   ON Object_AccountGroup.Id = zc_Enum_AccountGroup_20000()
+        WHERE
+            (
+                vbIOMovement = 0 --Внутренние и внешние операции
+                OR
+                (
+                    vbIOMovement = 1 --Только внешние операции
+                    -- AND
+                    -- 1 = 0
+                )
+                OR
+                (
+                    vbIOMovement = 2 --Только внутренние операции
+                    -- AND
+                    -- COALESCE (MIFloat_Price.ValueData,0)=0
+                )
+            )
+            AND
+            (
+                vbDirectMovement = 0 --Приход и расход
+                OR
+                (
+                    vbDirectMovement = 1 -- Только приходы
+                    -- AND
+                    -- 1 = 0
                 )
                 OR
                 (
@@ -335,4 +457,4 @@ ALTER FUNCTION gpSelect_Report_TaraMovement (TDateTime,TDateTime,Integer,Integer
  17.12.15                                                          *
 */
 
--- SELECT * FROM gpSelect_Report_TaraMovement (inStartDate := '20150801'::TDateTime,inEndDate:='20150831'::TDateTime,inWhereObjectId:=80604::Integer, inGoodsId:=7946::Integer,inDescSet:='1'::TVarChar,inMLODesc:=2::Integer, inAccountGroupId:= 0, inSession:= '5'::TVarChar);
+-- SELECT * FROM gpSelect_Report_TaraMovement (inStartDate:= '01.11.2017', inEndDate:= '01.11.2017', inWhereObjectId:=80604, inGoodsId:= 7946, inDescSet:= '1', inMLODesc:= 2, inAccountGroupId:= 0, inSession:= '5');

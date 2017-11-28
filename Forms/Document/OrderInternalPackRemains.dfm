@@ -2,8 +2,6 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1086#1089#1090#1072#1090#1082#1080')>'
   ClientHeight = 639
   ClientWidth = 1020
-  ExplicitLeft = -247
-  ExplicitTop = -217
   ExplicitWidth = 1036
   ExplicitHeight = 674
   PixelsPerInch = 96
@@ -2556,6 +2554,9 @@
     object tsTotal: TcxTabSheet
       Caption = #1042#1089#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridChildTotal: TcxGrid
         Left = 0
         Top = 0
@@ -4400,6 +4401,7 @@
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
+      ShortCut = 16472
     end
     object actGridTotalToExcel: TdsdGridToExcel [3]
       Category = 'DSDLib'
@@ -4514,6 +4516,13 @@
           Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMinus'
+          Value = Null
+          Component = cbPrintMinus
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1086#1089#1090#1072#1090#1082#1080')'
       ReportNameParam.Value = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1086#1089#1090#1072#1090#1082#1080')'
@@ -4588,6 +4597,13 @@
           Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMinus'
+          Value = Null
+          Component = cbPrintMinus
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1086#1089#1090#1072#1090#1082#1080')'
       ReportNameParam.Value = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1086#1089#1090#1072#1090#1082#1080')'
@@ -4660,6 +4676,13 @@
         item
           Name = 'isDiff'
           Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMinus'
+          Value = Null
+          Component = cbPrintMinus
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>

@@ -43,6 +43,7 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , PartnerDescName  TVarChar     --тип Партнера
              , ContractName     TVarChar     --№ договора
              , ContractTagName  TVarChar     --признак договора
+             , DayCount         Integer     --
              , isFirst          Boolean      --Первый документ в группе (для автопересчета данных)
              , ChangePercentName TVarChar    -- Скидка по договору
              , isPromo          Boolean     --Акция (да/нет)
@@ -163,6 +164,8 @@ BEGIN
              , Movement_PromoPartner.ContractName    --Название контракта
              , Movement_PromoPartner.ContractTagName --признак договора      
       
+             , (1 + EXTRACT (DAY FROM (Movement_Promo.EndSale - Movement_Promo.StartSale))) :: Integer AS DayCount
+
              , CASE
                   WHEN (ROW_NUMBER() OVER(PARTITION BY Movement_Promo.Id ORDER BY Movement_PromoPartner.Id)) = 1
                       THEN TRUE
