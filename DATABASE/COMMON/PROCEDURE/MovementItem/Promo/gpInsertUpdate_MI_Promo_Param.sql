@@ -49,6 +49,7 @@ BEGIN
                                                    , inAmountPlanMin      := 0 :: TFloat
                                                    , inAmountPlanMax      := 0 :: TFloat
                                                    , inGoodsKindId        := 0 :: Integer
+                                                   , inGoodsKindCompleteId:= 0 :: Integer
                                                    , inComment            := NULL
                                                    , inSession            := CASE WHEN inSession = zfCalc_UserAdmin() THEN '-12345' ELSE inSession END
                                                     )
