@@ -5987,7 +5987,7 @@ inherited MainForm: TMainForm
       object miSend: TMenuItem
         Action = actSend
       end
-      object N189: TMenuItem
+      object miSendMember: TMenuItem
         Action = actSendMember
       end
       object miLoss: TMenuItem

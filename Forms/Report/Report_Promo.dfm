@@ -4,7 +4,7 @@ inherited Report_PromoForm: TReport_PromoForm
   ClientWidth = 833
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
   ExplicitWidth = 849
-  ExplicitHeight = 472
+  ExplicitHeight = 469
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -255,12 +255,12 @@ inherited Report_PromoForm: TReport_PromoForm
             Width = 54
           end
           object GoodsKindCompleteName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080' ('#1087#1088#1080#1084'.)'
+            Caption = #1042#1080#1076' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
             DataBinding.FieldName = 'GoodsKindCompleteName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
-            Width = 64
+            Width = 80
           end
           object GoodsKindName_List: TcxGridDBColumn
             Caption = #1042#1080#1076' ('#1089#1087#1088#1072#1074#1086#1095#1085#1086')'
