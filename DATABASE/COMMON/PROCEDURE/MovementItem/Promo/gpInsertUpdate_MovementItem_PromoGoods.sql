@@ -41,9 +41,10 @@ BEGIN
     -- ѕроверили уникальность товар/вид товара
     IF EXISTS (SELECT 1 
                FROM MovementItem_PromoGoods_View AS MI_PromoGoods
-               WHERE MI_PromoGoods.MovementId                  = inMovementId
-                   AND MI_PromoGoods.GoodsId                   = inGoodsId
-                   AND COALESCE (MI_PromoGoods.GoodsKindId, 0) = COALESCE (inGoodsKindId, 0)
+               WHERE MI_PromoGoods.MovementId                          = inMovementId
+                   AND MI_PromoGoods.GoodsId                           = inGoodsId
+                   AND COALESCE (MI_PromoGoods.GoodsKindId, 0)         = COALESCE (inGoodsKindId, 0)
+                   AND COALESCE (MI_PromoGoods.GoodsKindCompleteId, 0) = COALESCE (inGoodsKindCompleteId, 0)
                    AND MI_PromoGoods.Id                        <> COALESCE(ioId, 0)
                    AND MI_PromoGoods.isErased                  = FALSE
               )

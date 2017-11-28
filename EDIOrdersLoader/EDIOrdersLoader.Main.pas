@@ -49,6 +49,7 @@ type
     { Private declarations }
     FIntervalVal: Integer;
     FProccessing: Boolean;
+    isPrevDay_begin: Boolean;
     procedure AddToLog(S: string);
     procedure StartEDI;
     procedure StopEDI;
@@ -129,6 +130,8 @@ begin
   Timer.Enabled := False;
   Proccessing := False;
 
+  isPrevDay_begin:= False;
+
   if FindCmdLineSwitch('interval', IntervalStr) then
     FIntervalVal := StrToIntDef(IntervalStr, 0)
   else
@@ -162,14 +165,30 @@ end;
 
 procedure TMainForm.ProccessEDI;
 var Old_stat : Integer;
+    Present: TDateTime;
+    Hour, Min, Sec, MSec: Word;
 begin
   ActiveControl:= cbPrevDay;
+
+  Present:=Now;
+  DecodeTime(Present, Hour, Min, Sec, MSec);
 
   if Proccessing then
     Exit;
 
   Timer.Enabled:=False;
   Proccessing := True;
+
+  if (Hour>=0) and (Hour<7) then
+  begin
+       AddToLog('..... Нет Загрузки .....');
+       Proccessing := False;
+       Timer.Enabled:=True;
+       isPrevDay_begin := false;
+       exit;
+  end;
+
+  if isPrevDay_begin = false then cbPrevDay.Checked:= true;
 
   try
     AddToLog('.....');
@@ -196,6 +215,8 @@ begin
     AddToLog('Загружено <'+IntToStr(fGet_Movement_Edi_stat - Old_stat)+'> Документов');
 
     AddToLog('Finish');
+
+    if cbPrevDay.Checked = true then begin cbPrevDay.Checked:= false; isPrevDay_begin:= true; end;
 
   except
     on E: Exception do
