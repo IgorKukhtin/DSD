@@ -1,11 +1,13 @@
 -- Function: gpUpdate_MI_MarginCategory_Report()
 
 DROP FUNCTION IF EXISTS gpUpdate_MI_MarginCategory_Report (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MI_MarginCategory_Report (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_MI_MarginCategory_Report(
-    IN inId                  Integer   , --  люч объекта <Ёлемент документа>
+    IN inId                  Integer  , --  люч объекта <Ёлемент документа>
+    IN inisList              Boolean  , -- 
     IN inisReport            Boolean  , -- 
-   OUT outisReport           Boolean   ,
+   OUT outisReport           Boolean  ,
     IN inSession             TVarChar    -- сесси€ пользовател€
 )
 RETURNS Boolean
@@ -16,9 +18,14 @@ BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- определили признак
-     outisReport:= NOT inisReport;
-
+     IF inisList = TRUE
+     THEN
+         -- определили признак
+         outisReport:= NOT inisReport;
+     ELSE 
+         -- определили признак
+         outisReport:= inisReport;
+     END IF;
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Report(), inId, outisReport);

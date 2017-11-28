@@ -46,6 +46,8 @@ CREATE OR REPLACE VIEW MovementItem_PromoGoods_View AS
       , MIString_Comment.ValueData             AS Comment             -- Примечание
       , MovementItem.isErased                  AS isErased            -- Удален
       , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END::TFloat as GoodsWeight -- Вес
+      , MILinkObject_GoodsKindComplete.ObjectId        AS GoodsKindCompleteId         --ИД обьекта <Вид товара (примечание)>
+      , Object_GoodsKindComplete.ValueData             AS GoodsKindCompleteName       --Наименование обьекта <Вид товара (примечание)>
     FROM MovementItem
         LEFT JOIN MovementItemFloat AS MIFloat_Price
                                     ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -80,27 +82,33 @@ CREATE OR REPLACE VIEW MovementItem_PromoGoods_View AS
         LEFT JOIN MovementItemFloat AS MIFloat_AmountPlanMax
                                     ON MIFloat_AmountPlanMax.MovementItemId = MovementItem.Id
                                    AND MIFloat_AmountPlanMax.DescId = zc_MIFloat_AmountPlanMax()
-        LEFT JOIN Object AS Object_Goods 
-                         ON Object_Goods.Id = MovementItem.ObjectId
+
+        LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+
         LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind 
                                          ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                         AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-        LEFT JOIN Object AS Object_GoodsKind
-                         ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
-                                        
+        LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+
+        LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
+                                         ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                        AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+        LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILinkObject_GoodsKindComplete.ObjectId
+
         LEFT OUTER JOIN MovementItemString AS MIString_Comment
                                            ON MIString_Comment.MovementItemId = MovementItem.ID
                                           AND MIString_Comment.DescId = zc_MIString_Comment()
+
         LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                              ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
-                              AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-        LEFT JOIN Object AS Object_Measure 
-                         ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+                            AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+        LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
         LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
                              ON ObjectLink_Goods_TradeMark.ObjectId = MovementItem.ObjectId
                             AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
-        LEFT JOIN Object AS Object_TradeMark 
-                         ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
+        LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
+
         LEFT OUTER JOIN ObjectFloat AS ObjectFloat_Goods_Weight
                                     ON ObjectFloat_Goods_Weight.ObjectId = MovementItem.ObjectId
                                    AND ObjectFloat_Goods_Weight.DescId = zc_ObjectFloat_Goods_Weight()

@@ -371,11 +371,9 @@ function TStorage.ExecuteProc(pData: String; pExecOnServer: boolean = false;
     else
        result := '';
   end;
-label
-  Restart;
 var
   ResultType: string;
-  AttemptCount, DataErrorCount: Integer;
+  AttemptCount: Integer;
   ok: Boolean;
   CType: TConnectionType;
   CString, DString: string;
@@ -394,9 +392,6 @@ begin
 
   FCriticalSection.Enter;
   try
-    DataErrorCount := 0;
-    Restart:
-
     if (gc_User.Local = true)  and  (AMaxAtempt = 10) then
      AMaxAtempt := 2;   // для локольного режима один проход
     if gc_isDebugMode then
@@ -516,20 +511,7 @@ begin
       end else if ResultType = gcError then
         ProcessErrorCode(PrepareStr, ConvertXMLParamToStrings(pData))
       else if (ResultType = gcResult) or (ResultType = gcDataSet) then
-      begin
-        try
-          Result := PrepareStr;
-        except
-          Inc(DataErrorCount);
-          Logger.AddToLog(' TStorage.ExecuteProc( ... DataErrorCount = ' + IntToStr(DataErrorCount) + ' ...');
-
-          if DataErrorCount > 3 then
-            raise;
-        end;
-
-        if (DataErrorCount >= 1) and (DataErrorCount <= 3) then
-          goto Restart;
-      end;
+        Result := PrepareStr;
 
       Logger.AddToLog(Result);
     end else

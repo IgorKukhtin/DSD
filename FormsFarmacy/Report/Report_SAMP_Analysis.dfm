@@ -451,6 +451,14 @@ inherited Report_SAMP_AnalysisForm: TReport_SAMP_AnalysisForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inGoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inYear1'
         Value = 'NULL'
         Component = deStart
@@ -622,6 +630,12 @@ inherited Report_SAMP_AnalysisForm: TReport_SAMP_AnalysisForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'StartSale'
         Value = 'NULL'
         Component = edStartSale
@@ -645,7 +659,7 @@ inherited Report_SAMP_AnalysisForm: TReport_SAMP_AnalysisForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 232
+    Left = 216
     Top = 176
   end
   object GuidesPromo: TdsdGuides

@@ -6,112 +6,113 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsReportSale(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (UnitId Integer, UnitName TVarChar, GoodsId Integer
-            , GoodsCode Integer, GoodsName TVarChar
-            , GoodsKindId Integer, GoodsKindName TVarChar
-            , MeasureName TVarChar, Weight TFloat
+             , GoodsCode Integer, GoodsName TVarChar
+             , GoodsKindId Integer, GoodsKindName TVarChar
+             , MeasureName TVarChar, Weight TFloat
+ 
+             , GoodsGroupName        TVarChar
+             , GoodsGroupNameFull    TVarChar
+             , TradeMarkName         TVarChar
+             , GoodsTagName          TVarChar
+             , GoodsPlatformName     TVarChar
+             , GoodsGroupAnalystName TVarChar
+             , InfoMoneyCode         Integer
+             , InfoMoneyName         TVarChar
+ 
+             , Amount1 TFloat
+             , Amount2 TFloat
+             , Amount3 TFloat
+             , Amount4 TFloat
+             , Amount5 TFloat
+             , Amount6 TFloat
+             , Amount7 TFloat
+ 
+             , Promo1 TFloat
+             , Promo2 TFloat
+             , Promo3 TFloat
+             , Promo4 TFloat
+             , Promo5 TFloat
+             , Promo6 TFloat
+             , Promo7 TFloat
+ 
+             , Branch1 TFloat
+             , Branch2 TFloat
+             , Branch3 TFloat
+             , Branch4 TFloat
+             , Branch5 TFloat
+             , Branch6 TFloat
+             , Branch7 TFloat
+ 
+             , Order1 TFloat
+             , Order2 TFloat
+             , Order3 TFloat
+             , Order4 TFloat
+             , Order5 TFloat
+             , Order6 TFloat
+             , Order7 TFloat
+ 
+             , OrderPromo1 TFloat
+             , OrderPromo2 TFloat
+             , OrderPromo3 TFloat
+             , OrderPromo4 TFloat
+             , OrderPromo5 TFloat
+             , OrderPromo6 TFloat
+             , OrderPromo7 TFloat
+ 
+             , OrderBranch1 TFloat
+             , OrderBranch2 TFloat
+             , OrderBranch3 TFloat
+             , OrderBranch4 TFloat
+             , OrderBranch5 TFloat
+             , OrderBranch6 TFloat
+             , OrderBranch7 TFloat
+ 
+             , TotalAmount           TFloat
+             , TotalPromo            TFloat
+             , TotalBranch           TFloat
+             , TotalOrder            TFloat
+             , TotalOrderPromo       TFloat
+             , TotalOrderBranch      TFloat
+             , TotalAmountWithPromo  TFloat
+             , TotalOrderWithPromo   TFloat
+ --
+             , AmountPromoBranch1      TFloat
+             , AmountPromoBranch2      TFloat
+             , AmountPromoBranch3      TFloat
+             , AmountPromoBranch4      TFloat
+             , AmountPromoBranch5      TFloat
+             , AmountPromoBranch6      TFloat
+             , AmountPromoBranch7      TFloat
+             , TotalAmountPromoBranch  TFloat
+ 
+             , OrderPromoBranch1       TFloat
+             , OrderPromoBranch2       TFloat
+             , OrderPromoBranch3       TFloat
+             , OrderPromoBranch4       TFloat
+             , OrderPromoBranch5       TFloat
+             , OrderPromoBranch6       TFloat
+             , OrderPromoBranch7       TFloat
+             , TotalOrderPromoBranch   TFloat
+ 
+             , AnalysisAmount1      TFloat
+             , AnalysisAmount2      TFloat
+             , AnalysisAmount3      TFloat
+             , AnalysisAmount4      TFloat
+             , AnalysisAmount5      TFloat
+             , AnalysisAmount6      TFloat
+             , AnalysisAmount7      TFloat
+             , TotalAnalysisAmount  TFloat
+ 
+             , AnalysisOrder1      TFloat
+             , AnalysisOrder2      TFloat
+             , AnalysisOrder3      TFloat
+             , AnalysisOrder4      TFloat
+             , AnalysisOrder5      TFloat
+             , AnalysisOrder6      TFloat
+             , AnalysisOrder7      TFloat
+             , TotalAnalysisOrder  TFloat
 
-            , GoodsGroupName        TVarChar
-            , GoodsGroupNameFull    TVarChar
-            , TradeMarkName         TVarChar
-            , GoodsTagName          TVarChar
-            , GoodsPlatformName     TVarChar
-            , GoodsGroupAnalystName TVarChar
-            , InfoMoneyCode         Integer
-            , InfoMoneyName         TVarChar
-
-            , Amount1 TFloat
-            , Amount2 TFloat
-            , Amount3 TFloat
-            , Amount4 TFloat
-            , Amount5 TFloat
-            , Amount6 TFloat
-            , Amount7 TFloat
-
-            , Promo1 TFloat
-            , Promo2 TFloat
-            , Promo3 TFloat
-            , Promo4 TFloat
-            , Promo5 TFloat
-            , Promo6 TFloat
-            , Promo7 TFloat
-
-            , Branch1 TFloat
-            , Branch2 TFloat
-            , Branch3 TFloat
-            , Branch4 TFloat
-            , Branch5 TFloat
-            , Branch6 TFloat
-            , Branch7 TFloat
-
-            , Order1 TFloat
-            , Order2 TFloat
-            , Order3 TFloat
-            , Order4 TFloat
-            , Order5 TFloat
-            , Order6 TFloat
-            , Order7 TFloat
-
-            , OrderPromo1 TFloat
-            , OrderPromo2 TFloat
-            , OrderPromo3 TFloat
-            , OrderPromo4 TFloat
-            , OrderPromo5 TFloat
-            , OrderPromo6 TFloat
-            , OrderPromo7 TFloat
-
-            , OrderBranch1 TFloat
-            , OrderBranch2 TFloat
-            , OrderBranch3 TFloat
-            , OrderBranch4 TFloat
-            , OrderBranch5 TFloat
-            , OrderBranch6 TFloat
-            , OrderBranch7 TFloat
-
-            , TotalAmount           TFloat
-            , TotalPromo            TFloat
-            , TotalBranch           TFloat
-            , TotalOrder            TFloat
-            , TotalOrderPromo       TFloat
-            , TotalOrderBranch      TFloat
-            , TotalAmountWithPromo  TFloat
-            , TotalOrderWithPromo   TFloat
---
-            , AmountPromoBranch1      TFloat
-            , AmountPromoBranch2      TFloat
-            , AmountPromoBranch3      TFloat
-            , AmountPromoBranch4      TFloat
-            , AmountPromoBranch5      TFloat
-            , AmountPromoBranch6      TFloat
-            , AmountPromoBranch7      TFloat
-            , TotalAmountPromoBranch  TFloat
-
-            , OrderPromoBranch1       TFloat
-            , OrderPromoBranch2       TFloat
-            , OrderPromoBranch3       TFloat
-            , OrderPromoBranch4       TFloat
-            , OrderPromoBranch5       TFloat
-            , OrderPromoBranch6       TFloat
-            , OrderPromoBranch7       TFloat
-            , TotalOrderPromoBranch   TFloat
-
-            , AnalysisAmount1      TFloat
-            , AnalysisAmount2      TFloat
-            , AnalysisAmount3      TFloat
-            , AnalysisAmount4      TFloat
-            , AnalysisAmount5      TFloat
-            , AnalysisAmount6      TFloat
-            , AnalysisAmount7      TFloat
-            , TotalAnalysisAmount  TFloat
-
-            , AnalysisOrder1      TFloat
-            , AnalysisOrder2      TFloat
-            , AnalysisOrder3      TFloat
-            , AnalysisOrder4      TFloat
-            , AnalysisOrder5      TFloat
-            , AnalysisOrder6      TFloat
-            , AnalysisOrder7      TFloat
-            , TotalAnalysisOrder  TFloat
-
+             , Key_UnitGoods       TVarChar
 
              ) AS
 $BODY$
@@ -384,6 +385,8 @@ BEGIN
                )
              * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
               ) :: TFloat AS TotalAnalysisOrder
+              
+            , (Object_Unit.Id||'_'||Object_Goods.Id||'_'||Object_GoodsKind.Id)  :: TVarChar AS Key_UnitGoods
 
        FROM Object AS Object_GoodsReportSale
 

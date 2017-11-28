@@ -3,22 +3,24 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PromoGoods(
- INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inGoodsId             Integer   , -- Товары
-    IN inAmount              TFloat    , -- % скидки на товар
-    IN inPrice               TFloat    , --Цена в прайсе
-    IN inPriceSale           TFloat    , --Цена на полке
-    IN inPriceWithOutVAT     TFloat    , --Цена отгрузки без учета НДС, с учетом скидки, грн
-    IN inPriceWithVAT        TFloat    , --Цена отгрузки с учетом НДС, с учетом скидки, грн
-    IN inAmountReal          TFloat    , --Объем продаж в аналогичный период, кг
-    IN inAmountPlanMin       TFloat    , --Минимум планируемого объема продаж на акционный период (в кг)
-    IN inAmountPlanMax       TFloat    , --Максимум планируемого объема продаж на акционный период (в кг)
-    IN inGoodsKindId         Integer   , --ИД обьекта <Вид товара>
-    IN inComment             TVarChar  , --Комментарий
-    IN inUserId              Integer     -- пользователь
+ INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
+    IN inMovementId            Integer   , -- Ключ объекта <Документ>
+    IN inGoodsId               Integer   , -- Товары
+    IN inAmount                TFloat    , -- % скидки на товар
+    IN inPrice                 TFloat    , --Цена в прайсе
+    IN inPriceSale             TFloat    , --Цена на полке
+    IN inPriceWithOutVAT       TFloat    , --Цена отгрузки без учета НДС, с учетом скидки, грн
+    IN inPriceWithVAT          TFloat    , --Цена отгрузки с учетом НДС, с учетом скидки, грн
+    IN inAmountReal            TFloat    , --Объем продаж в аналогичный период, кг
+    IN inAmountPlanMin         TFloat    , --Минимум планируемого объема продаж на акционный период (в кг)
+    IN inAmountPlanMax         TFloat    , --Максимум планируемого объема продаж на акционный период (в кг)
+    IN inGoodsKindId           Integer   , --ИД обьекта <Вид товара>
+    IN inGoodsKindCompleteId   Integer   , --ИД обьекта <Вид товара (примечание)>
+    IN inComment               TVarChar  , --Комментарий
+    IN inUserId                Integer     -- пользователь
 )
 RETURNS Integer
 AS
@@ -54,6 +56,8 @@ BEGIN
     
     -- сохранили связь с <Вид товара>
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
+    -- сохранили связь с <Вид товара (примечание)>
+    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKindComplete(), ioId, inGoodsKindCompleteId);
 
     -- сохранили <Комментарий>
     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
@@ -69,6 +73,7 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А,
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 28.11.17         * inGoodsKindCompleteId
  13.10.15                                                                       *
  */

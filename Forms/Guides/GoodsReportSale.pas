@@ -23,7 +23,7 @@ uses
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
   DataModul, cxButtonEdit, cxCurrencyEdit, cxContainer, Vcl.ComCtrls, dxCore,
   cxDateUtils, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar,
-  Vcl.ExtCtrls, dsdGuides;
+  Vcl.ExtCtrls, dsdGuides, cxSplitter, cxGridChartView, cxGridDBChartView;
 
 type
   TGoodsReportSaleForm = class(TParentForm)
@@ -84,6 +84,14 @@ type
     macInsertUpdate: TMultiAction;
     MeasureName: TcxGridDBColumn;
     Weight: TcxGridDBColumn;
+    grChart: TcxGrid;
+    grChartDBChartView1: TcxGridDBChartView;
+    dgNumDays: TcxGridDBChartDataGroup;
+    grChartLevel1: TcxGridLevel;
+    cxSplitter1: TcxSplitter;
+    ChildDS: TDataSource;
+    ChildCDS: TClientDataSet;
+    spSelectChild: TdsdStoredProc;
   private
     { Private declarations }
   public

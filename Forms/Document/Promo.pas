@@ -293,6 +293,7 @@ type
     actUpdatePlanDS: TdsdUpdateDataSet;
     dsdDBViewAddOnPlan: TdsdDBViewAddOn;
     plGoodsKindName_List: TcxGridDBColumn;
+    GoodsKindCompleteChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

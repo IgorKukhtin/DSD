@@ -53,6 +53,7 @@ RETURNS TABLE(
     ,AmountIn             TFloat    --Кол-во возврат (факт)
     ,AmountInWeight       TFloat    --Кол-во возврат (факт) Вес
     ,GoodsKindName        TVarChar  --Вид упаковки
+    ,GoodsKindCompleteName  TVarChar  --Вид упаковки ( примечание)
     ,GoodsKindName_List   TVarChar  --Вид товара (справочно)
     ,GoodsWeight          TFloat    --Вес
     ,Discount             TBlob     --Скидка, %
@@ -196,6 +197,7 @@ BEGIN
           , MI_PromoGoods.AmountIn            --Кол-во возврат (факт)
           , MI_PromoGoods.AmountInWeight      --Кол-во возврат (факт) Вес
           , MI_PromoGoods.GoodsKindName       --Наименование обьекта <Вид товара>
+          , MI_PromoGoods.GoodsKindCompleteName -- --Наименование обьекта <Вид товара (примечание)>
           
           , (SELECT STRING_AGG (DISTINCT tmpGoodsKind.GoodsKindName,'; ')
              FROM Movement AS Movement_PromoPartner

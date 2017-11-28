@@ -2,7 +2,7 @@ object GoodsReportSaleForm: TGoodsReportSaleForm
   Left = 0
   Top = 0
   Caption = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1076#1085#1103#1084' '#1085#1077#1076#1077#1083#1080
-  ClientHeight = 425
+  ClientHeight = 530
   ClientWidth = 1042
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,7 +21,7 @@ object GoodsReportSaleForm: TGoodsReportSaleForm
     Left = 0
     Top = 83
     Width = 1042
-    Height = 342
+    Height = 263
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
@@ -2022,8 +2022,63 @@ object GoodsReportSaleForm: TGoodsReportSaleForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 7
+    TabOrder = 3
     Width = 270
+  end
+  object grChart: TcxGrid
+    Left = 0
+    Top = 354
+    Width = 1042
+    Height = 176
+    Align = alBottom
+    TabOrder = 5
+    object grChartDBChartView1: TcxGridDBChartView
+      DataController.DataSource = ChildDS
+      DataController.MasterKeyFieldNames = 'GoodsId'
+      DiagramColumn.Active = True
+      ToolBox.CustomizeButton = True
+      ToolBox.DiagramSelector = True
+      object dgNumDays: TcxGridDBChartDataGroup
+        DataBinding.FieldName = 'NumDays'
+        DisplayText = #1044#1077#1085#1100
+      end
+      object serAnalysisAmount: TcxGridDBChartSeries
+        DataBinding.FieldName = 'AnalysisAmount'
+        DisplayText = #1057#1058#1040#1058'. '#1088#1077#1072#1083#1080#1079'.'
+      end
+      object serAnalysisOrder: TcxGridDBChartSeries
+        DataBinding.FieldName = 'AnalysisOrder'
+        DisplayText = #1057#1058#1040#1058'. '#1079#1072#1103#1074#1082#1072
+      end
+      object serAmountPromoBranch: TcxGridDBChartSeries
+        DataBinding.FieldName = 'AmountPromoBranch'
+        DisplayText = #1048#1058#1054#1043#1054' '#1088#1072#1089#1093#1086#1076
+      end
+      object serOrderPromoBranch: TcxGridDBChartSeries
+        DataBinding.FieldName = 'OrderPromoBranch'
+        DisplayText = #1048#1058#1054#1043#1054' '#1079#1072#1103#1074#1082#1072
+      end
+      object serBranch: TcxGridDBChartSeries
+        DataBinding.FieldName = 'AmountBranch'
+        DisplayText = #1088#1072#1089#1093'. '#1085#1072' '#1060#1080#1083'.'
+      end
+      object serOrder: TcxGridDBChartSeries
+        DataBinding.FieldName = 'AmountOrder'
+        DisplayText = #1079#1072#1103#1074#1082#1072' '#1087#1086#1082'.'
+      end
+    end
+    object grChartLevel1: TcxGridLevel
+      GridView = grChartDBChartView1
+    end
+  end
+  object cxSplitter1: TcxSplitter
+    Left = 0
+    Top = 346
+    Width = 1042
+    Height = 8
+    HotZoneClassName = 'TcxMediaPlayer8Style'
+    AlignSplitter = salBottom
+    Control = grChart
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -2206,6 +2261,9 @@ object GoodsReportSaleForm: TGoodsReportSaleForm
         end
         item
           StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectChild
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -2566,5 +2624,32 @@ object GoodsReportSaleForm: TGoodsReportSaleForm
     PackSize = 1
     Left = 656
     Top = 264
+  end
+  object ChildDS: TDataSource
+    DataSet = ChildCDS
+    Left = 480
+    Top = 440
+  end
+  object ChildCDS: TClientDataSet
+    Aggregates = <>
+    IndexFieldNames = 'Key_UnitGoods'
+    MasterFields = 'Key_UnitGoods'
+    MasterSource = DataSource
+    PacketRecords = 0
+    Params = <>
+    Left = 568
+    Top = 432
+  end
+  object spSelectChild: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_GoodsReportSale_Graf'
+    DataSet = ChildCDS
+    DataSets = <
+      item
+        DataSet = ChildCDS
+      end>
+    Params = <>
+    PackSize = 1
+    Left = 656
+    Top = 440
   end
 end
