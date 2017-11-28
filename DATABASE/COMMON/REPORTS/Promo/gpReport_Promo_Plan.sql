@@ -196,7 +196,7 @@ BEGIN
                     
                          )
                                                                  
-        , tmpMovement_Sale_All AS (SELECT tmpMovement_Promo.Id                                                      AS MovementId_Promo
+        , tmpMov_Sale_All AS (SELECT tmpMovement_Promo.Id                                                      AS MovementId_Promo
                                         , Movement_Sale.OperDate                                                    AS OperDate
                                         , MI_Sale.ObjectId                                                          AS GoodsId
                                         , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)                             AS GoodsKindId
@@ -230,6 +230,13 @@ BEGIN
                                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                                    )
 
+        , tmpMovement_Sale_All AS (SELECT tmpMov_Sale_All.*
+                                   FROM tmpMov_Sale_All
+                                        INNER JOIN (SELECT DISTINCT tmpMI_Promo.GoodsId, tmpMI_Promo.GoodsKindCompleteId
+                                                    FROM tmpMI_Promo) AS tmpMI_Promo ON tmpMI_Promo.GoodsId = tmpMov_Sale_All.GoodsId
+                                                                                    AND COALESCE (tmpMI_Promo.GoodsKindCompleteId, 0) = COALESCE (tmpMov_Sale_All.GoodsKindId, 0)
+                                   )
+                                   
         , tmpMovement_Sale AS (SELECT tmpSale.MovementId_Promo
                                     , tmpSale.GoodsId    
                                     , STRING_AGG (Object_GoodsKind.ValueData, '; ')  AS GoodsKindName
