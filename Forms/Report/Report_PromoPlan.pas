@@ -62,6 +62,10 @@ type
     cxLabel3: TcxLabel;
     edUnitSale: TcxButtonEdit;
     GuidesUnitSale: TdsdGuides;
+    cbUnitSale: TcxCheckBox;
+    Color_EndDate: TcxGridDBColumn;
+    isEndDate: TcxGridDBColumn;
+    isSale: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -12,8 +12,8 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
     Width = 950
     Height = 351
     TabOrder = 3
-    ExplicitTop = 99
-    ExplicitWidth = 885
+    ExplicitTop = 83
+    ExplicitWidth = 950
     ExplicitHeight = 351
     ClientRectBottom = 351
     ClientRectRight = 950
@@ -22,12 +22,12 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
       Caption = '&1. '#1055#1088#1086#1089#1084#1086#1090#1088
       TabVisible = True
       ExplicitTop = 24
-      ExplicitWidth = 885
+      ExplicitWidth = 950
       ExplicitHeight = 327
       inherited cxGrid: TcxGrid
         Width = 950
         Height = 327
-        ExplicitWidth = 885
+        ExplicitWidth = 950
         ExplicitHeight = 327
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -661,13 +661,34 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             Options.Editing = False
             Width = 45
           end
+          object Color_EndDate: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_EndDate'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 60
+          end
+          object isEndDate: TcxGridDBColumn
+            Caption = #1040#1082#1094#1080#1103' '#1079#1072#1082#1072#1085#1095#1080#1074#1072#1077#1090#1089#1103
+            DataBinding.FieldName = 'isEndDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1040#1082#1094#1080#1103' '#1079#1072#1082#1072#1085#1095#1080#1074#1072#1077#1090#1089#1103' '#1074' '#1101#1090#1086#1084' '#1087#1077#1088#1080#1086#1076#1077
+            Width = 60
+          end
+          object isSale: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1079#1078#1077' '#1086#1082#1086#1085'. '#1072#1082#1094#1080#1080
+            DataBinding.FieldName = 'isSale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1060#1072#1082#1090' '#1087#1088#1086#1076#1072#1078#1080' '#1087#1086#1079#1078#1077' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1040#1082#1094#1080#1080
+            Width = 60
+          end
         end
       end
     end
     object tsPlan: TcxTabSheet
       Caption = '&2. '#1042#1074#1086#1076' '#1087#1083#1072#1085
       ImageIndex = 4
-      ExplicitWidth = 885
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
@@ -676,7 +697,6 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitWidth = 885
         object cxGridDBTableViewPlan: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1299,7 +1319,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
   inherited Panel: TPanel
     Width = 950
     Height = 57
-    ExplicitWidth = 885
+    ExplicitWidth = 950
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 114
@@ -1354,6 +1374,13 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
       Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1058#1077#1085#1076#1077#1088#1099
       TabOrder = 7
       Width = 165
+    end
+    object cbUnitSale: TcxCheckBox
+      Left = 835
+      Top = 5
+      Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1089#1082#1083#1072#1076
+      TabOrder = 8
+      Width = 115
     end
   end
   object cxLabel3: TcxLabel [2]
@@ -1563,6 +1590,14 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inIsUnitSale'
+        Value = Null
+        Component = cbUnitSale
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inUnitId'
         Value = Null
         Component = GuidesUnit
@@ -1651,6 +1686,11 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
         Action = actOpenPromo
         ShortCut = 13
       end>
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = Color_EndDate
+        ColorValueList = <>
+      end>
   end
   inherited PopupMenu: TPopupMenu
     Left = 120
@@ -1698,7 +1738,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 420
+    Left = 564
   end
   object spUpdate_Plan: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_PromoGoods_Plan_byReport'
