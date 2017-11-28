@@ -13,6 +13,7 @@ object GoodsReportSaleForm: TGoodsReportSaleForm
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96

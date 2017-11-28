@@ -38,7 +38,7 @@ BEGIN
                                  , Movement.Id                             AS MovementId
                                  , MovementLinkObject_Juridical.ObjectId   AS JuridicalId
                                  , MovementLinkObject_Contract.ObjectId    AS ContractId
-                                 , MovementLinkObject_Area.ObjectId        AS AreaId
+                                 , COALESCE (MovementLinkObject_Area.ObjectId, zc_Area_Basis()) AS AreaId
                             FROM Movement
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                         ON MovementLinkObject_Contract.MovementId = Movement.Id
@@ -71,9 +71,9 @@ BEGIN
                                   , Movement_PriceList.ContractId
                                   , Movement_PriceList.AreaId
                                   , MovementItem.Amount              AS Price
-                                  , ROW_NUMBER() OVER (PARTITION BY Movement_PriceList.OperDate ORDER BY Movement_PriceList.OperDate, MovementItem.Amount) AS Ord
-                                  , COUNT(Movement_PriceList.MovementId) OVER (PARTITION BY Movement_PriceList.OperDate) AS OrdCount
-                                  , AVG(MovementItem.Amount) OVER (PARTITION BY Movement_PriceList.OperDate) AS MidPrice
+                                  , ROW_NUMBER() OVER (PARTITION BY Movement_PriceList.OperDate, Movement_PriceList.AreaId ORDER BY Movement_PriceList.OperDate ASC, Movement_PriceList.AreaId ASC, MovementItem.Amount ASC) AS Ord
+                                  , COUNT(Movement_PriceList.MovementId) OVER (PARTITION BY Movement_PriceList.OperDate, Movement_PriceList.AreaId) AS OrdCount
+                                  , AVG (MovementItem.Amount) OVER (PARTITION BY Movement_PriceList.OperDate, Movement_PriceList.AreaId) AS MidPrice
                              FROM Movement_PriceList
                                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement_PriceList.MovementId
                                          AND (MovementItem.ObjectId = inGoodsId OR inGoodsId = 0)
