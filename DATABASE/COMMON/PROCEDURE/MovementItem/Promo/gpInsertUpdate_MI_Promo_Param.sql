@@ -57,7 +57,7 @@ BEGIN
                                                  ON MI_PromoGoods.MovementId = inMovementId
                                                 AND MI_PromoGoods.GoodsId    = _tmpData.GoodsId
                                                 AND MI_PromoGoods.isErased   = FALSE
-     WHERE MI_PromoGoods.Id IsNull
+     WHERE MI_PromoGoods.Id IS NULL
     ;    
 
      -- Результат - записываем в MovementItem Акция

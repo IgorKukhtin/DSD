@@ -81,6 +81,7 @@ type
     actInsertUpdateMISignNOList: TMultiAction;
     bbSignList: TdxBarButton;
     bbSignNOList: TdxBarButton;
+    DayCount: TcxGridDBColumn;
   private
     { Private declarations }
   public

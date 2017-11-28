@@ -63,7 +63,8 @@ BEGIN
          , CASE WHEN Object_Personal_View.DateOut_user IS NULL THEN CURRENT_DATE ELSE Object_Personal_View.DateOut_user END :: TDateTime AS DateOut
 
          , Object_Personal_View.isDateOut
-         , Object_Personal_View.isMain
+         -- , Object_Personal_View.isMain
+         , FALSE :: Boolean AS isMain
 
     FROM Object_Personal_View
           LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
@@ -127,7 +128,8 @@ BEGIN
            , CURRENT_DATE :: TDateTime AS DateIn
            , CURRENT_DATE :: TDateTime AS DateOut
            , FALSE AS isDateOut
-           , TRUE  AS isMain;
+           -- , TRUE  AS isMain
+           , FALSE  AS isMain;
   END IF;
 
   IF COALESCE (inId, 0) <> 0

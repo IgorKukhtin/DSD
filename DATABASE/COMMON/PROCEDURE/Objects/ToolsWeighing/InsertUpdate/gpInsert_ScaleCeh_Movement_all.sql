@@ -672,7 +672,7 @@ BEGIN
                              END AS GoodsId
 
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsReWork = TRUE
-                                       THEN NULL
+                                       THEN zc_GoodsKind_Basis() -- NULL
 
                                   WHEN vbIsProductionIn = FALSE AND vbMovementDescId = zc_Movement_ProductionUnion()
                                        THEN COALESCE (_tmpScale_receipt.GoodsKindId_to, 0)

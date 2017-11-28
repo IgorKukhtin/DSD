@@ -54,6 +54,10 @@ RETURNS TABLE (Id                   Integer
              , AmountAllTotal       TFloat
              , AmountAllTotal_Sh    TFloat
              
+               -- Ост. начальн. - произв. (СЕГОДНЯ)
+             , Remains_CEH                   TFloat
+               -- Ост. начальн. - произв. (ПОЗЖЕ)
+             , Remains_CEH_Next              TFloat
 
                -- Приход пр-во (ФАКТ)
              , Income_CEH           TFloat
@@ -91,7 +95,7 @@ RETURNS TABLE (Id                   Integer
              , AmountPackAllTotal_total      TFloat
              , AmountPackAllTotal_total_sh   TFloat
              
-             , Weight_Child               TFloat
+             , Weight_Child                  TFloat
 
                -- План для упаковки (с остатка, факт)
              , AmountPack_Child           TFloat
@@ -241,6 +245,11 @@ BEGIN
                  + CASE WHEN ObjectFloat_Weight.ValueData > 0 AND _Result_Master.MeasureId = zc_Measure_Sh() THEN (_Result_Master.AmountNext       / ObjectFloat_Weight.ValueData) :: Integer + (_Result_Master.AmountNextSecond / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END
                   ) :: TFloat AS AmountAllTotal_Sh
 
+                  -- Ост. начальн. - произв. (СЕГОДНЯ)
+                , _Result_Master.Remains_CEH
+                  -- Ост. начальн. - произв. (ПОЗЖЕ)
+                , _Result_Master.Remains_CEH_Next
+                
                   -- Приход пр-во (ФАКТ)
                 , _Result_Master.Income_CEH
                   -- ИТОГО по Child - ФАКТ - Перемещение на Цех Упаковки

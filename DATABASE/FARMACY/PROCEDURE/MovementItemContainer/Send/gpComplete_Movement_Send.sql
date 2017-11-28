@@ -133,8 +133,9 @@ BEGIN
     LIMIT 1
    ;
 
-    IF vbGoodsName <> '' AND outOperDate <> CURRENT_DATE + INTERVAL '1 MONTH'
-       AND vbUserId NOT IN (375661, 2301972) -- Зерин Юрий Геннадиевич
+    IF vbGoodsName <> '' AND (-- outOperDate <> CURRENT_DATE + INTERVAL '1 MONTH' OR
+       vbUserId NOT IN (375661, 2301972) -- Зерин Юрий Геннадиевич
+       )
     THEN
         RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам Кол-во получателя <%> отличается от Факт кол-ва <%>.', vbGoodsName, vbAmount, vbAmountManual;
     END IF;

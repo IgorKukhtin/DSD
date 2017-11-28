@@ -176,18 +176,18 @@ BEGIN
                    -- МИНУС <неотгруж. заявка (итого)>
                  - COALESCE (MIFloat_AmountPartnerPrior.ValueData, 0) - COALESCE (MIFloat_AmountPartnerPriorPromo.ValueData, 0)
 
-                    -- МИНУС <сегодня заявка (итого)> - !!!НО только если строится ЗАКАЗ2 !!!
+                    -- МИНУС <сегодня заявка (итого)> - !!!НО НЕ только если строится ЗАКАЗ2 !!!
                  - CASE WHEN inIsPackNext       = TRUE
                           OR inIsPackNextSecond = TRUE
-                          -- OR 1=1
+                          OR 1=1
                              THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) + COALESCE (MIFloat_AmountPartnerPromo.ValueData, 0)
                         ELSE 0
                    END
-                   -- ВЕРНУЛИ заказ покупателя ВЕСЬ, завтра - !!!НО только если ПЛАНИРУЕМ по ДНЯМ + ЗАКАЗ2!!!
+                   -- ВЕРНУЛИ заказ покупателя ВЕСЬ, завтра - !!!НО НЕ только если ПЛАНИРУЕМ по ДНЯМ + ЗАКАЗ2!!!
                  + CASE WHEN inIsByDay = TRUE
                          AND (inIsPackNext       = TRUE
                            OR inIsPackNextSecond = TRUE
-                           -- OR 1=1
+                           OR 1=1
                              )
                              THEN COALESCE (MIFloat_AmountPartnerNext.ValueData, 0) + COALESCE (MIFloat_AmountPartnerNextPromo.ValueData, 0)
                         ELSE 0
