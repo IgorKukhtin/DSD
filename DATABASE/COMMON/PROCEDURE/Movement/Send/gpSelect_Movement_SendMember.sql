@@ -113,4 +113,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_SendMember (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inJuridicalBasisId:=0, inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_SendMember (inStartDate:= '01.10.2017', inEndDate:= '31.10.2017', inJuridicalBasisId:=0, inIsErased := FALSE, inSession:= '2')

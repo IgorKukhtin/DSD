@@ -925,7 +925,7 @@ type
     actReport_GoodsBalance_Server: TdsdOpenForm;
     miReport_GoodsBalance_Server: TMenuItem;
     actSendMember: TdsdOpenForm;
-    N189: TMenuItem;
+    miSendMember: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
