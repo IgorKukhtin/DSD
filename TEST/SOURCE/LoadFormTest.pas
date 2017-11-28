@@ -150,6 +150,7 @@ type
     procedure LoadSaleFormTest;
     procedure LoadSendFormTest;
     procedure LoadSendDebtFormTest;
+    procedure LoadSendMemberFormTest;
     procedure LoadSendOnPriceFormTest;
     procedure LoadServiceDocumentFormTest;
     procedure LoadServiceFormTest;
@@ -737,6 +738,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSendTicketFuelForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendTicketFuelJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendTicketFuelJournalForm');
+end;
+
+procedure TLoadFormTest.LoadSendMemberFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMemberForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendMemberForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMemberJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendMemberJournalForm');
 end;
 
 procedure TLoadFormTest.LoadOrderInternalFormTest;

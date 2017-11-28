@@ -986,7 +986,9 @@ uses
   Promo in '..\..\Forms\Document\Promo.pas' {PromoForm: TParentForm},
   Report_PromoPlan in '..\..\Forms\Report\Report_PromoPlan.pas' {Report_PromoPlanForm: TParentForm},
   EDIJournal in '..\..\Forms\EDI\EDIJournal.pas' {EDIJournalForm: TParentForm},
-  Report_GoodsBalance in '..\..\Forms\Report\Report_GoodsBalance.pas' {Report_GoodsBalanceForm: TParentForm};
+  Report_GoodsBalance in '..\..\Forms\Report\Report_GoodsBalance.pas' {Report_GoodsBalanceForm: TParentForm},
+  SendMember in '..\..\Forms\Document\SendMember.pas' {SendMemberForm: TParentForm},
+  SendMemberJournal in '..\..\Forms\Document\SendMemberJournal.pas' {SendMemberJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
