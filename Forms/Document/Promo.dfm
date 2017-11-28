@@ -149,7 +149,23 @@ inherited PromoForm: TPromoForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object GoodsKindName_List: TcxGridDBColumn [4]
+          object GoodsKindCompleteName: TcxGridDBColumn [4]
+            Caption = #1042#1080#1076' ('#1087#1088#1080#1084'.)'
+            DataBinding.FieldName = 'GoodsKindCompleteName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = GoodsKindCompleteChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1080#1076' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
+            Width = 80
+          end
+          object GoodsKindName_List: TcxGridDBColumn [5]
             Caption = #1042#1080#1076' ('#1089#1087#1088#1072#1074#1086#1095#1085#1086')'
             DataBinding.FieldName = 'GoodsKindName_List'
             HeaderAlignmentHorz = taCenter
@@ -158,7 +174,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 77
           end
-          object MeasureName: TcxGridDBColumn [5]
+          object MeasureName: TcxGridDBColumn [6]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -166,14 +182,14 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 35
           end
-          object GoodComment: TcxGridDBColumn [6]
+          object GoodComment: TcxGridDBColumn [7]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object Amount: TcxGridDBColumn [7]
+          object Amount: TcxGridDBColumn [8]
             Caption = '% '#1089#1082#1080#1076#1082#1080
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -183,7 +199,7 @@ inherited PromoForm: TPromoForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object PriceSale: TcxGridDBColumn [8]
+          object PriceSale: TcxGridDBColumn [9]
             Caption = #1062#1077#1085#1072' '#1085#1072' '#1087#1086#1083#1082#1077
             DataBinding.FieldName = 'PriceSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -193,7 +209,7 @@ inherited PromoForm: TPromoForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object Price: TcxGridDBColumn [9]
+          object Price: TcxGridDBColumn [10]
             Caption = #1073#1077#1079' '#1053#1044#1057' '#1074' '#1087#1088#1072#1081#1089#1077
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -203,7 +219,7 @@ inherited PromoForm: TPromoForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object PriceWithOutVAT: TcxGridDBColumn [10]
+          object PriceWithOutVAT: TcxGridDBColumn [11]
             Caption = #1073#1077#1079' '#1053#1044#1057' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
             DataBinding.FieldName = 'PriceWithOutVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -215,7 +231,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 70
           end
-          object PriceWithVAT: TcxGridDBColumn [11]
+          object PriceWithVAT: TcxGridDBColumn [12]
             Caption = #1089' '#1053#1044#1057' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
             DataBinding.FieldName = 'PriceWithVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -227,7 +243,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 70
           end
-          object AmountReal: TcxGridDBColumn [12]
+          object AmountReal: TcxGridDBColumn [13]
             Caption = #1055#1088#1086#1076#1072#1085#1086' '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076
             DataBinding.FieldName = 'AmountReal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -239,7 +255,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 80
           end
-          object AmountRealWeight: TcxGridDBColumn [13]
+          object AmountRealWeight: TcxGridDBColumn [14]
             Caption = #1055#1088#1086#1076#1072#1085#1086' '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076' '#1042#1077#1089
             DataBinding.FieldName = 'AmountRealWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -250,7 +266,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 80
           end
-          object AmountRetIn: TcxGridDBColumn [14]
+          object AmountRetIn: TcxGridDBColumn [15]
             Caption = #1042#1086#1079#1074#1088'. '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076
             DataBinding.FieldName = 'AmountRetIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -262,7 +278,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 80
           end
-          object AmountRetInWeight: TcxGridDBColumn [15]
+          object AmountRetInWeight: TcxGridDBColumn [16]
             Caption = #1042#1086#1079#1074#1088'. '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076' '#1042#1077#1089
             DataBinding.FieldName = 'AmountRetInWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -273,7 +289,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 80
           end
-          object AmountPlanMin: TcxGridDBColumn [16]
+          object AmountPlanMin: TcxGridDBColumn [17]
             Caption = #1055#1083#1072#1085' '#1084#1080#1085'.'
             DataBinding.FieldName = 'AmountPlanMin'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -283,7 +299,7 @@ inherited PromoForm: TPromoForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object AmountPlanMinWeight: TcxGridDBColumn [17]
+          object AmountPlanMinWeight: TcxGridDBColumn [18]
             Caption = #1055#1083#1072#1085' '#1084#1080#1085'. '#1042#1077#1089
             DataBinding.FieldName = 'AmountPlanMinWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -294,7 +310,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 70
           end
-          object AmountPlanMax: TcxGridDBColumn [18]
+          object AmountPlanMax: TcxGridDBColumn [19]
             Caption = #1055#1083#1072#1085' '#1084#1072#1082#1089'.'
             DataBinding.FieldName = 'AmountPlanMax'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -304,7 +320,7 @@ inherited PromoForm: TPromoForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object AmountPlanMaxWeight: TcxGridDBColumn [19]
+          object AmountPlanMaxWeight: TcxGridDBColumn [20]
             Caption = #1055#1083#1072#1085' '#1084#1072#1082#1089'. '#1042#1077#1089
             DataBinding.FieldName = 'AmountPlanMaxWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -315,7 +331,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 70
           end
-          object AmountOrder: TcxGridDBColumn [20]
+          object AmountOrder: TcxGridDBColumn [21]
             Caption = #1047#1072#1103#1074#1082#1072' ('#1092#1072#1082#1090')'
             DataBinding.FieldName = 'AmountOrder'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -327,7 +343,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 80
           end
-          object AmountOrderWeight: TcxGridDBColumn [21]
+          object AmountOrderWeight: TcxGridDBColumn [22]
             Caption = #1047#1072#1103#1074#1082#1072' ('#1092#1072#1082#1090') '#1042#1077#1089
             DataBinding.FieldName = 'AmountOrderWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -338,7 +354,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 70
           end
-          object AmountOut: TcxGridDBColumn [22]
+          object AmountOut: TcxGridDBColumn [23]
             Caption = #1055#1088#1086#1076#1072#1085#1086' ('#1092#1072#1082#1090')'
             DataBinding.FieldName = 'AmountOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -350,7 +366,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 80
           end
-          object AmountOutWeight: TcxGridDBColumn [23]
+          object AmountOutWeight: TcxGridDBColumn [24]
             Caption = #1055#1088#1086#1076#1072#1085#1086' ('#1092#1072#1082#1090') '#1042#1077#1089
             DataBinding.FieldName = 'AmountOutWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -361,7 +377,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 70
           end
-          object AmountIn: TcxGridDBColumn [24]
+          object AmountIn: TcxGridDBColumn [25]
             Caption = #1042#1086#1079#1074#1088#1072#1090' ('#1092#1072#1082#1090')'
             DataBinding.FieldName = 'AmountIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -373,7 +389,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 80
           end
-          object AmountInWeight: TcxGridDBColumn [25]
+          object AmountInWeight: TcxGridDBColumn [26]
             Caption = #1042#1086#1079#1074#1088#1072#1090' ('#1092#1072#1082#1090') '#1042#1077#1089
             DataBinding.FieldName = 'AmountInWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -384,7 +400,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 70
           end
-          object clAmountPlan1: TcxGridDBColumn [26]
+          object clAmountPlan1: TcxGridDBColumn [27]
             Caption = #1050#1086#1083'-'#1087#1083#1072#1085' '#1079#1072' 1'
             DataBinding.FieldName = 'AmountPlan1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -397,7 +413,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 55
           end
-          object clAmountPlan2: TcxGridDBColumn [27]
+          object clAmountPlan2: TcxGridDBColumn [28]
             Caption = #1050#1086#1083'-'#1087#1083#1072#1085' '#1079#1072' 2'
             DataBinding.FieldName = 'AmountPlan2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -409,7 +425,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 55
           end
-          object clAmountPlan3: TcxGridDBColumn [28]
+          object clAmountPlan3: TcxGridDBColumn [29]
             Caption = #1050#1086#1083'-'#1087#1083#1072#1085' '#1079#1072' 3'
             DataBinding.FieldName = 'AmountPlan3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -421,7 +437,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 55
           end
-          object clAmountPlan4: TcxGridDBColumn [29]
+          object clAmountPlan4: TcxGridDBColumn [30]
             Caption = #1050#1086#1083'-'#1087#1083#1072#1085' '#1079#1072' 4'
             DataBinding.FieldName = 'AmountPlan4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -433,7 +449,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 55
           end
-          object clAmountPlan5: TcxGridDBColumn [30]
+          object clAmountPlan5: TcxGridDBColumn [31]
             Caption = #1050#1086#1083'-'#1087#1083#1072#1085' '#1079#1072' 5'
             DataBinding.FieldName = 'AmountPlan5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -445,7 +461,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 55
           end
-          object clAmountPlan6: TcxGridDBColumn [31]
+          object clAmountPlan6: TcxGridDBColumn [32]
             Caption = #1050#1086#1083'-'#1087#1083#1072#1085' '#1079#1072' 6'
             DataBinding.FieldName = 'AmountPlan66'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -457,7 +473,7 @@ inherited PromoForm: TPromoForm
             Options.Editing = False
             Width = 55
           end
-          object clAmountPlan7: TcxGridDBColumn [32]
+          object clAmountPlan7: TcxGridDBColumn [33]
             Caption = #1050#1086#1083'-'#1087#1083#1072#1085' '#1079#1072' 7'
             DataBinding.FieldName = 'AmountPlan7'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2362,6 +2378,33 @@ inherited PromoForm: TPromoForm
         end>
       isShowModal = True
     end
+    object GoodsKindCompleteChoiceForm: TOpenChoiceForm
+      Category = 'Goods'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsKindCompleteChoiceForm'
+      FormName = 'TGoodsKindForm'
+      FormNameParam.Value = 'TGoodsKindForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindCompleteId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindCompleteName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object InsertRecordPartner: TInsertRecord
       Category = 'Partner'
       TabSheet = tsMain
@@ -3964,6 +4007,14 @@ inherited PromoForm: TPromoForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindCompleteId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindCompleteId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

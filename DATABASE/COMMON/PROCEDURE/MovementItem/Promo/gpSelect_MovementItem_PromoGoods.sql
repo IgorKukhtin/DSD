@@ -44,11 +44,13 @@ RETURNS TABLE (
       , AmountPlan6         TFloat -- Кол-во план отгрузки за сб.
       , AmountPlan7         TFloat -- Кол-во план отгрузки за вс.
       
-      , GoodsKindId         Integer --ИД обьекта <Вид товара>
-      , GoodsKindName       TVarChar --Наименование обьекта <Вид товара>
-      , GoodsKindName_List  TVarChar --Наименование обьекта <Вид товара (справочно)>
-      , Comment             TVarChar --Комментарий
-      , isErased            Boolean  --удален
+      , GoodsKindId            Integer --ИД обьекта <Вид товара>
+      , GoodsKindName          TVarChar --Наименование обьекта <Вид товара>
+      , GoodsKindCompleteId    Integer --ИД обьекта <Вид товара (примечание)>           
+      , GoodsKindCompleteName  TVarChar --Наименование обьекта <Вид товара(примечание)>
+      , GoodsKindName_List     TVarChar --Наименование обьекта <Вид товара (справочно)>
+      , Comment                TVarChar --Комментарий
+      , isErased               Boolean  --удален
 )
 AS
 $BODY$
@@ -163,12 +165,14 @@ BEGIN
              , MIFloat_Plan6.ValueData                AS AmountPlan6
              , MIFloat_Plan7.ValueData                AS AmountPlan7 
                  
-             , MILinkObject_GoodsKind.ObjectId        AS GoodsKindId         --ИД обьекта <Вид товара>
-             , Object_GoodsKind.ValueData             AS GoodsKindName       --Наименование обьекта <Вид товара>
-             , tmpGoodsKind_list.GoodsKindName_List ::TVarChar               -- Наименование обьекта <Вид товара (справочно)>
+             , MILinkObject_GoodsKind.ObjectId        AS GoodsKindId                 --ИД обьекта <Вид товара>
+             , Object_GoodsKind.ValueData             AS GoodsKindName               --Наименование обьекта <Вид товара>
+             , Object_GoodsKindComplete.Id            AS GoodsKindCompleteId         --ИД Вид товара(Примечание)
+             , Object_GoodsKindComplete.ValueData     AS GoodsKindCompleteName       --Наименование обьекта <Вид товара(Примечание)>
+             , tmpGoodsKind_list.GoodsKindName_List ::TVarChar                       -- Наименование обьекта <Вид товара (справочно)>
              
-             , MIString_Comment.ValueData             AS Comment             -- Примечание
-             , MovementItem.isErased                  AS isErased            -- Удален
+             , MIString_Comment.ValueData             AS Comment                     -- Примечание
+             , MovementItem.isErased                  AS isErased                    -- Удален
              --, CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END::TFloat as GoodsWeight -- Вес
         FROM MovementItem
              LEFT JOIN MovementItemFloat AS MIFloat_Price
@@ -228,12 +232,17 @@ BEGIN
                                         AND MIFloat_Plan7.DescId = zc_MIFloat_Plan7() 
 
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+
              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind 
                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-             LEFT JOIN Object AS Object_GoodsKind
-                              ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
-                                             
+             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
+                                              ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+             LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILinkObject_GoodsKindComplete.ObjectId
+
              LEFT OUTER JOIN MovementItemString AS MIString_Comment
                                                 ON MIString_Comment.MovementItemId = MovementItem.ID
                                                AND MIString_Comment.DescId = zc_MIString_Comment()
@@ -267,6 +276,7 @@ ALTER FUNCTION gpSelect_MovementItem_PromoGoods (Integer, Boolean, TVarChar) OWN
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
+ 28.11.17         * add GoodsKindComplete
  10.11.17         *
  05.11.15                                                          *
 */

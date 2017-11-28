@@ -33,32 +33,33 @@ CREATE OR REPLACE FUNCTION gpSelect_Report_Promo_Plan(
     IN inSession        TVarChar   --сессия пользователя
 )
 RETURNS TABLE(
-      MovementId          Integer   --ИД документа акции
-    , MovementItemId      Integer
-    , InvNumber           Integer   --№ документа акции
-    , UnitName            TVarChar  --Склад
-    , PersonalTradeName   TVarChar  --Ответственный представитель коммерческого отдела
+      MovementId                Integer   --ИД документа акции
+    , MovementItemId            Integer
+    , InvNumber                 Integer   --№ документа акции
+    , UnitName                  TVarChar  --Склад
+    , PersonalTradeName         TVarChar  --Ответственный представитель коммерческого отдела
     , UnitCode_PersonalTrade    Integer
     , UnitName_PersonalTrade    TVarChar
     , BranchCode_PersonalTrade  Integer
     , BranchName_PersonalTrade  TVarChar
-    , PersonalName        TVarChar  --Ответственный представитель маркетингового отдела	
-    , DateStartSale       TDateTime --Дата отгрузки по акционным ценам
-    , DeteFinalSale       TDateTime --Дата отгрузки по акционным ценам
-    , DateStartPromo      TDateTime --Дата проведения акции
-    , DateFinalPromo      TDateTime --Дата проведения акции
-    , MonthPromo          TDateTime --Месяц акции
-    , RetailName          TBlob     --контрагенты
-    , PartnerName         TBlob     --контрагенты
-    , GoodsName           TVarChar  --Позиция
-    , GoodsCode           Integer   --Код позиции
-    , MeasureName         TVarChar  --единица измерения
-    , GoodsKindName       TVarChar  --Вид упаковки
-    , GoodsKindName_List  TVarChar  --Вид товара (справочно)
-    , TradeMarkName       TVarChar  --Торговая марка
-    , isPromo             Boolean   --Акция (да/нет)
-    , Checked             Boolean   --Согласовано (да/нет)
-    , GoodsWeight         TFloat    --Вес
+    , PersonalName              TVarChar  --Ответственный представитель маркетингового отдела	
+    , DateStartSale             TDateTime --Дата отгрузки по акционным ценам
+    , DeteFinalSale             TDateTime --Дата отгрузки по акционным ценам
+    , DateStartPromo            TDateTime --Дата проведения акции
+    , DateFinalPromo            TDateTime --Дата проведения акции
+    , MonthPromo                TDateTime --Месяц акции
+    , RetailName                TBlob     --контрагенты
+    , PartnerName               TBlob     --контрагенты
+    , GoodsName                 TVarChar  --Позиция
+    , GoodsCode                 Integer   --Код позиции
+    , MeasureName               TVarChar  --единица измерения
+    , GoodsKindName             TVarChar  --Вид упаковки
+    , GoodsKindCompleteName     TVarChar  --Вид упаковки ( примечание)
+    , GoodsKindName_List        TVarChar  --Вид товара (справочно)
+    , TradeMarkName             TVarChar  --Торговая марка
+    , isPromo                   Boolean   --Акция (да/нет)
+    , Checked                   Boolean   --Согласовано (да/нет)
+    , GoodsWeight               TFloat    --Вес
     
     , AmountPlan1         TFloat -- Кол-во план отгрузки за пн.
     , AmountPlan2         TFloat -- Кол-во план отгрузки за вт.
@@ -305,6 +306,7 @@ BEGIN
           , MI_PromoGoods.GoodsCode
           , MI_PromoGoods.Measure
           , MI_PromoGoods.GoodsKindName
+          , MI_PromoGoods.GoodsKindCompleteName
 
           , (SELECT STRING_AGG (DISTINCT tmpGoodsKind.GoodsKindName,'; ')
              FROM Movement AS Movement_PromoPartner
