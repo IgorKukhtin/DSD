@@ -62,6 +62,7 @@ type
     cxLabel3: TcxLabel;
     edUnitSale: TcxButtonEdit;
     GuidesUnitSale: TdsdGuides;
+    plGoodsKindCompleteName: TcxGridDBColumn;
   private
     { Private declarations }
   public

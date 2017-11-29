@@ -243,6 +243,8 @@ BEGIN
             LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
                                               ON MIFloat_Price.MovementItemId = MovementItemContainer.MovementItemId
                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                             AND Movement.DescId      <> zc_Movement_SendOnPrice()
+
             LEFT OUTER JOIN ContainerLinkObject AS CLO_Account
                                                 ON CLO_Account.ContainerId = MovementItemContainer.ContainerId
                                                AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
@@ -258,13 +260,13 @@ BEGIN
                 (
                     vbIOMovement = 1 --Только внешние операции
                     AND
-                    COALESCE(MIFloat_Price.ValueData,0)>0
+                    COALESCE (MIFloat_Price.ValueData, 0) > 0
                 )
                 OR
                 (
                     vbIOMovement = 2 --Только внутренние операции
                     AND
-                    COALESCE(MIFloat_Price.ValueData,0)=0
+                    COALESCE (MIFloat_Price.ValueData, 0) = 0
                 )
             )
             AND
@@ -313,7 +315,7 @@ BEGIN
            , tmpVirt.AmountPartner_in  :: TFloat              AS AmountPartner_in
            , 0 :: TFloat                                      AS AmountInf_out
            , 0 :: TFloat                                      AS AmountInf_in
-           , MIFloat_Price.ValueData                          AS Price     --Цена
+           , 0 :: TFloat                                      AS Price     --Цена
         FROM
             tmpVirt
             INNER JOIN Movement ON Movement.Id         = tmpVirt.MovementId
@@ -329,9 +331,6 @@ BEGIN
                                        ON ObjectByDesc.Id = ObjectBy.DescId
             LEFT OUTER JOIN Object AS Object_PaidKind
                                    ON Object_PaidKind.Id = NULL
-            LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
-                                              ON MIFloat_Price.MovementItemId = NULL
-                                             AND MIFloat_Price.DescId = zc_MIFloat_Price()
             LEFT OUTER JOIN Object AS Object_AccountGroup
                                    ON Object_AccountGroup.Id = zc_Enum_AccountGroup_20000()
         WHERE
@@ -391,7 +390,7 @@ BEGIN
            , 0 :: TFloat                                      AS AmountPartner_in
            , tmpInf.AmountPartner_out :: TFloat               AS AmountInf_out
            , tmpInf.AmountPartner_in  :: TFloat               AS AmountInf_in
-           ,MIFloat_Price.ValueData                           AS Price     --Цена
+           , 0 :: TFloat                                      AS Price     --Цена
         FROM
             tmpInf
             INNER JOIN Movement ON Movement.Id         = tmpInf.MovementId
@@ -407,9 +406,6 @@ BEGIN
                                        ON ObjectByDesc.Id = ObjectBy.DescId
             LEFT OUTER JOIN Object AS Object_PaidKind
                                    ON Object_PaidKind.Id = NULL
-            LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
-                                              ON MIFloat_Price.MovementItemId = NULL
-                                             AND MIFloat_Price.DescId = zc_MIFloat_Price()
             LEFT OUTER JOIN Object AS Object_AccountGroup
                                    ON Object_AccountGroup.Id = zc_Enum_AccountGroup_20000()
         WHERE

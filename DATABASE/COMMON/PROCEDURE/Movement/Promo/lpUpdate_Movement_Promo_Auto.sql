@@ -119,23 +119,25 @@ end if;
                         
   , tmpMI_promo_all AS (SELECT MI_PromoGoods.Id AS MovementItemId
                              , MI_PromoGoods.GoodsId
-                             , COALESCE (MI_PromoGoods.GoodsKindId, 0) AS GoodsKindId
+                             -- , COALESCE (MI_PromoGoods.GoodsKindId, 0)         AS GoodsKindId
+                             , COALESCE (MI_PromoGoods.GoodsKindCompleteId, 0) AS GoodsKindId -- GoodsKindCompleteId
                              -- , 0 AS GoodsKindId
                              , MI_PromoGoods.isErased
                         FROM MovementItem_PromoGoods_View AS MI_PromoGoods
                         WHERE MI_PromoGoods.MovementId = inMovementId
                        )
-      , tmpMI_promo AS (SELECT MAX (tmpMI_promo_all.MovementItemId) AS MovementItemId
+      , tmpMI_promo AS (SELECT -- т.е. если установлено "для всех GoodsKindId" - запишем в него, иначе получится дублирование
+                               MAX (COALESCE (tmpMI_promo_all_find.MovementItemId, tmpMI_promo_all.MovementItemId)) AS MovementItemId
                              , tmpMI_promo_all.GoodsId
-                             , tmpMI_promo_all.GoodsKindId
+                             , COALESCE (tmpMI_promo_all_find.GoodsKindId, tmpMI_promo_all.GoodsKindId) AS GoodsKindId
                         FROM tmpMI_promo_all
                              LEFT JOIN tmpMI_promo_all AS tmpMI_promo_all_find ON tmpMI_promo_all_find.GoodsId     = tmpMI_promo_all.GoodsId
                                                                               AND tmpMI_promo_all_find.GoodsKindId = 0
                                                                               AND tmpMI_promo_all_find.isErased    = FALSE
                         WHERE tmpMI_promo_all.isErased = FALSE
-                          AND (tmpMI_promo_all.GoodsKindId = 0 OR tmpMI_promo_all_find.GoodsId IS NULL) -- т.е. если установлено "для всех GoodsKindId" - надо откинуть с GoodsKindId <> 0, иначе получится дублирование
+                          -- AND (tmpMI_promo_all.GoodsKindId = 0 OR tmpMI_promo_all_find.GoodsId IS NULL) -- т.е. если установлено "для всех GoodsKindId" - надо откинуть с GoodsKindId <> 0, иначе получится дублирование
                         GROUP BY tmpMI_promo_all.GoodsId
-                               , tmpMI_promo_all.GoodsKindId
+                               , COALESCE (tmpMI_promo_all_find.GoodsKindId, tmpMI_promo_all.GoodsKindId)
                        )
         , tmpMI_sale AS (SELECT tmpMI_promo.MovementItemId AS MovementItemId_promo
                               , SUM (CASE WHEN COALESCE (MIFloat_PromoMovement.MovementItemId, 0) = 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) AS AmountPartner
@@ -182,23 +184,25 @@ end if;
                      
                 SELECT MIN (tmp.tmpId)
                 FROM (SELECT CASE lpInsertUpdate_MovementItemFloat (inDescId        := zc_MIFloat_AmountReal()
-                                                                  , inMovementItemId:= tmpMI_promo.MovementItemId
+                                                                  , inMovementItemId:= tmpMI_promo_all.MovementItemId
                                                                   , inValueData     := COALESCE (tmpMI_sale.AmountPartner, 0)
                                                                    )
                                    WHEN TRUE THEN 0
                                    ELSE -1 -- т.е. показать ошибку
                              END AS tmpId
-                      FROM tmpMI_promo
-                           LEFT JOIN tmpMI_sale ON tmpMI_sale.MovementItemId_promo = tmpMI_promo.MovementItemId
+                      FROM tmpMI_promo_all
+                           LEFT JOIN tmpMI_promo ON tmpMI_promo.MovementItemId      = tmpMI_promo_all.MovementItemId
+                           LEFT JOIN tmpMI_sale  ON tmpMI_sale.MovementItemId_promo = tmpMI_promo.MovementItemId
                      UNION
                       SELECT CASE lpInsertUpdate_MovementItemFloat (inDescId        := zc_MIFloat_AmountRetIn()
-                                                                  , inMovementItemId:= tmpMI_promo.MovementItemId
+                                                                  , inMovementItemId:= tmpMI_promo_all.MovementItemId
                                                                   , inValueData     := COALESCE (tmpMI_ReturnIn.AmountPartner, 0)
                                                                    )
                                    WHEN TRUE THEN 0
                                    ELSE -1 -- т.е. показать ошибку
                              END AS tmpId
-                      FROM tmpMI_promo
+                      FROM tmpMI_promo_all
+                           LEFT JOIN tmpMI_promo    ON tmpMI_promo.MovementItemId          = tmpMI_promo_all.MovementItemId
                            LEFT JOIN tmpMI_ReturnIn ON tmpMI_ReturnIn.MovementItemId_promo = tmpMI_promo.MovementItemId
                      ) AS tmp
                );     

@@ -1,6 +1,5 @@
 -- Function: gpSelect_Movement_Send()
 
--- DROP FUNCTION IF EXISTS gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_Send (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Send(
@@ -11,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Send(
     IN inSession           TVarChar    -- ñåññèÿ ïîëüçîâàòåëÿ
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , TotalCount TFloat
+             , TotalCount TFloat, TotalCountTare TFloat, TotalCountSh TFloat, TotalCountKg TFloat
              , FromId Integer, FromName TVarChar, ItemName_from TVarChar, ToId Integer, ToName TVarChar, ItemName_to TVarChar
              , DocumentKindId Integer, DocumentKindName TVarChar
              , Comment TVarChar
@@ -41,20 +40,23 @@ BEGIN
                               )
 
        SELECT
-             Movement.Id                        AS Id
-           , Movement.InvNumber                 AS InvNumber
-           , Movement.OperDate                  AS OperDate
-           , Object_Status.ObjectCode           AS StatusCode
-           , Object_Status.ValueData            AS StatusName
-           , MovementFloat_TotalCount.ValueData AS TotalCount
-           , Object_From.Id                     AS FromId
-           , Object_From.ValueData              AS FromName
-           , ObjectDesc_from.ItemName           AS ItemName_from
-           , Object_To.Id                       AS ToId
-           , Object_To.ValueData                AS ToName
-           , ObjectDesc_to.ItemName             AS ItemName_to
-           , Object_DocumentKind.Id             AS DocumentKindId
-           , Object_DocumentKind.ValueData      AS DocumentKindName
+             Movement.Id                                    AS Id
+           , Movement.InvNumber                             AS InvNumber
+           , Movement.OperDate                              AS OperDate
+           , Object_Status.ObjectCode                       AS StatusCode
+           , Object_Status.ValueData                        AS StatusName
+           , MovementFloat_TotalCount.ValueData             AS TotalCount
+           , MovementFloat_TotalCountTare.ValueData         AS TotalCountTare
+           , MovementFloat_TotalCountSh.ValueData           AS TotalCountSh
+           , MovementFloat_TotalCountKg.ValueData           AS TotalCountKg
+           , Object_From.Id                                 AS FromId
+           , Object_From.ValueData                          AS FromName
+           , ObjectDesc_from.ItemName                       AS ItemName_from
+           , Object_To.Id                                   AS ToId
+           , Object_To.ValueData                            AS ToName
+           , ObjectDesc_to.ItemName                         AS ItemName_to
+           , Object_DocumentKind.Id                         AS DocumentKindId
+           , Object_DocumentKind.ValueData                  AS DocumentKindName
 
            , MovementString_Comment.ValueData   AS Comment
 
@@ -73,12 +75,21 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
- 
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountTare
+                                    ON MovementFloat_TotalCountTare.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalCountTare.DescId = zc_MovementFloat_TotalCountTare()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountSh
+                                    ON MovementFloat_TotalCountSh.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalCountSh.DescId = zc_MovementFloat_TotalCountSh()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
+                                    ON MovementFloat_TotalCountKg.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
+
             LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
                                       ON MovementBoolean_isAuto.MovementId = Movement.Id
                                      AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
 
-            LEFT JOIN MovementString AS MovementString_Comment 
+            LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
@@ -103,8 +114,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
---ALTER FUNCTION gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
-
 
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
@@ -115,8 +124,7 @@ $BODY$
  17.06.16         *
  22.05.14                                                        *
  12.07.13         *
-
 */
 
 -- òåñò
--- SELECT * FROM gpSelect_Movement_Send (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inJuridicalBasisId:=0, inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Send (inStartDate:= '30.11.2017', inEndDate:= '30.11.2017', inJuridicalBasisId:=0, inIsErased := FALSE, inSession:= '2')

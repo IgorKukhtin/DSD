@@ -27,6 +27,13 @@ AS
 $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
+    -- Проверили
+    IF inGoodsKindId <> 0
+    THEN
+        RAISE EXCEPTION 'Ошибка. Необходимо заполнить колонку Вид (примечание), а значение вид товара = <%> должно быть пустым.', lfGet_Object_ValueData (inGoodsKindId);
+    END IF;
+
+
     -- определяется признак Создание/Корректировка
     vbIsInsert:= COALESCE (ioId, 0) = 0;
 

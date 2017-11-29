@@ -4,7 +4,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
   ClientWidth = 950
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
   ExplicitWidth = 966
-  ExplicitHeight = 472
+  ExplicitHeight = 469
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -12,8 +12,8 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
     Width = 950
     Height = 351
     TabOrder = 3
-    ExplicitTop = 99
-    ExplicitWidth = 885
+    ExplicitTop = 83
+    ExplicitWidth = 950
     ExplicitHeight = 351
     ClientRectBottom = 351
     ClientRectRight = 950
@@ -22,12 +22,12 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
       Caption = '&1. '#1055#1088#1086#1089#1084#1086#1090#1088
       TabVisible = True
       ExplicitTop = 24
-      ExplicitWidth = 885
+      ExplicitWidth = 950
       ExplicitHeight = 327
       inherited cxGrid: TcxGrid
         Width = 950
         Height = 327
-        ExplicitWidth = 885
+        ExplicitWidth = 950
         ExplicitHeight = 327
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -363,12 +363,12 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             Width = 54
           end
           object GoodsKindCompleteName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080' ('#1087#1088#1080#1084'.)'
+            Caption = #1042#1080#1076' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
             DataBinding.FieldName = 'GoodsKindCompleteName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
-            Width = 64
+            Width = 80
           end
           object GoodsKindName_List: TcxGridDBColumn
             Caption = #1042#1080#1076' ('#1089#1087#1088#1072#1074#1086#1095#1085#1086')'
@@ -667,7 +667,6 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
     object tsPlan: TcxTabSheet
       Caption = '&2. '#1042#1074#1086#1076' '#1087#1083#1072#1085
       ImageIndex = 4
-      ExplicitWidth = 885
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
@@ -676,7 +675,6 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitWidth = 885
         object cxGridDBTableViewPlan: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1005,6 +1003,13 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             Options.Editing = False
             Width = 54
           end
+          object plGoodsKindCompleteName: TcxGridDBColumn
+            Caption = #1042#1080#1076' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
+            DataBinding.FieldName = 'GoodsKindCompleteName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object plGoodsKindName_List: TcxGridDBColumn
             Caption = #1042#1080#1076' ('#1089#1087#1088#1072#1074#1086#1095#1085#1086')'
             DataBinding.FieldName = 'GoodsKindName_List'
@@ -1299,7 +1304,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
   inherited Panel: TPanel
     Width = 950
     Height = 57
-    ExplicitWidth = 885
+    ExplicitWidth = 950
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 114

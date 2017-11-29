@@ -3,6 +3,7 @@ inherited PromoForm: TPromoForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 599
   ClientWidth = 1204
+  ExplicitLeft = -431
   ExplicitWidth = 1220
   ExplicitHeight = 634
   PixelsPerInch = 96
@@ -145,8 +146,10 @@ inherited PromoForm: TPromoForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 80
           end
           object GoodsKindCompleteName: TcxGridDBColumn [4]
