@@ -258,6 +258,14 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             Options.Editing = False
             Width = 54
           end
+          object UnitName_Sale: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1088'.)'
+            DataBinding.FieldName = 'UnitName_Sale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1088#1086#1076#1072#1078#1072')'
+            Width = 123
+          end
           object PersonalTradeName: TcxGridDBColumn
             Caption = #1050#1086#1084'. '#1086#1090#1076#1077#1083
             DataBinding.FieldName = 'PersonalTradeName'
@@ -1397,6 +1405,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
+    Style.Color = clWindow
     TabOrder = 7
     Width = 196
   end

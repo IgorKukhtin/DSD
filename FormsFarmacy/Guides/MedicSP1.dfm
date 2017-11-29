@@ -2,8 +2,8 @@ object MedicSPForm: TMedicSPForm
   Left = 0
   Top = 0
   Caption = #1060#1048#1054' '#1074#1088#1072#1095#1072' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
-  ClientHeight = 344
-  ClientWidth = 618
+  ClientHeight = 318
+  ClientWidth = 680
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -14,21 +14,18 @@ object MedicSPForm: TMedicSPForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 61
-    Width = 618
-    Height = 283
+    Width = 680
+    Height = 257
     Align = alClient
-    PopupMenu = pmGrid
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 26
-    ExplicitWidth = 452
-    ExplicitHeight = 318
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -51,17 +48,23 @@ object MedicSPForm: TMedicSPForm
       object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
-        HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 129
+        Width = 36
       end
       object Name: TcxGridDBColumn
         Caption = #1060#1048#1054' '#1074#1088#1072#1095#1072
         DataBinding.FieldName = 'Name'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 203
+      end
+      object PartnerMedicalName: TcxGridDBColumn
+        Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1077' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077
+        DataBinding.FieldName = 'PartnerMedicalName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 233
+        Width = 416
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -70,15 +73,7 @@ object MedicSPForm: TMedicSPForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 78
-      end
-      object PartnerMedicalName: TcxGridDBColumn
-        Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1077' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077
-        DataBinding.FieldName = 'PartnerMedicalName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 242
+        Width = 39
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -88,12 +83,10 @@ object MedicSPForm: TMedicSPForm
   object Panel: TPanel
     Left = 0
     Top = 0
-    Width = 618
+    Width = 680
     Height = 35
     Align = alTop
     TabOrder = 5
-    ExplicitTop = -6
-    ExplicitWidth = 452
     object cxLabel6: TcxLabel
       Left = 6
       Top = 9
@@ -117,14 +110,14 @@ object MedicSPForm: TMedicSPForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 40
+    Left = 48
     Top = 96
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 24
-    Top = 144
+    Left = 40
+    Top = 152
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -138,8 +131,8 @@ object MedicSPForm: TMedicSPForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 240
-    Top = 88
+    Left = 280
+    Top = 96
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -158,8 +151,8 @@ object MedicSPForm: TMedicSPForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 152
-    Top = 88
+    Left = 160
+    Top = 96
     DockControlHeights = (
       0
       0
@@ -179,6 +172,10 @@ object MedicSPForm: TMedicSPForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsert'
         end
         item
@@ -187,29 +184,28 @@ object MedicSPForm: TMedicSPForm
         end
         item
           Visible = True
-          ItemName = 'bbSetErased'
+          ItemName = 'bbErased'
         end
         item
           Visible = True
-          ItemName = 'bbSetUnErased'
+          ItemName = 'bbUnErased'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbChoice'
+          ItemName = 'bbChoiceGuides'
         end
         item
           Visible = True
@@ -225,7 +221,7 @@ object MedicSPForm: TMedicSPForm
         end
         item
           Visible = True
-          ItemName = 'bbToExcel'
+          ItemName = 'bbProtocol'
         end
         item
           Visible = True
@@ -233,11 +229,7 @@ object MedicSPForm: TMedicSPForm
         end
         item
           Visible = True
-          ItemName = 'bbProtocolOpenForm'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'bbGridToExcel'
         end>
       OneOnRow = True
       Row = 0
@@ -257,15 +249,15 @@ object MedicSPForm: TMedicSPForm
       Action = actUpdate
       Category = 0
     end
-    object bbSetErased: TdxBarButton
+    object bbErased: TdxBarButton
       Action = dsdSetErased
       Category = 0
     end
-    object bbSetUnErased: TdxBarButton
+    object bbUnErased: TdxBarButton
       Action = dsdSetUnErased
       Category = 0
     end
-    object bbToExcel: TdxBarButton
+    object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel
       Category = 0
     end
@@ -275,23 +267,37 @@ object MedicSPForm: TMedicSPForm
       Hint = '     '
       Visible = ivAlways
     end
-    object bbChoice: TdxBarButton
+    object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
-      Category = 0
-    end
-    object bbProtocolOpenForm: TdxBarButton
-      Action = ProtocolOpenForm
       Category = 0
     end
     object bbStartLoad: TdxBarButton
       Action = actStartLoad
       Category = 0
     end
+    object bbProtocol: TdxBarButton
+      Action = ProtocolOpenForm
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 264
-    Top = 136
+    Left = 280
+    Top = 152
+    object actRefresh: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -313,25 +319,10 @@ object MedicSPForm: TMedicSPForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object actRefresh: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
-      ShortCut = 116
-      RefreshOnTabSetChanges = True
-    end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TMedicSPEditForm'
@@ -347,11 +338,42 @@ object MedicSPForm: TMedicSPForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      isShowModal = False
+      isShowModal = True
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
+    end
+    object dsdSetErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = DataSource
+    end
+    object dsdSetUnErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 32776
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = DataSource
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -370,11 +392,26 @@ object MedicSPForm: TMedicSPForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerMedicalId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PartnerMedicalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerMedicalName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PartnerMedicalName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ShortCut = 13
       ImageIndex = 7
       DataSource = DataSource
     end
@@ -386,67 +423,6 @@ object MedicSPForm: TMedicSPForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
-    end
-    object dsdSetUnErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 8
-      ShortCut = 32776
-      ErasedFieldName = 'isErased'
-      isSetErased = False
-      DataSource = DataSource
-    end
-    object ProtocolOpenForm: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
-      ImageIndex = 34
-      FormName = 'TProtocolForm'
-      FormNameParam.Value = 'TProtocolForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Name'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object dsdSetErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 2
-      ShortCut = 46
-      ErasedFieldName = 'isErased'
-      DataSource = DataSource
     end
     object actDoLoad: TExecuteImportSettingsAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
@@ -493,6 +469,36 @@ object MedicSPForm: TMedicSPForm
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1060#1048#1054' '#1074#1088#1072#1095#1072' ('#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090')'
       ImageIndex = 41
     end
+    object ProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_MedicSP'
@@ -511,7 +517,11 @@ object MedicSPForm: TMedicSPForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 144
+    Left = 40
+    Top = 208
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 160
     Top = 152
   end
   object spErasedUnErased: TdsdStoredProc
@@ -528,12 +538,8 @@ object MedicSPForm: TMedicSPForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 296
-    Top = 216
-  end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 176
-    Top = 216
+    Left = 288
+    Top = 208
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -560,56 +566,8 @@ object MedicSPForm: TMedicSPForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 48
+    Left = 128
     Top = 216
-  end
-  object pmGrid: TPopupMenu
-    Images = dmMain.ImageList
-    Left = 368
-    Top = 128
-    object pmAdd: TMenuItem
-      Action = actInsert
-    end
-    object N1: TMenuItem
-      Action = actUpdate
-    end
-    object N2: TMenuItem
-      Action = actRefresh
-    end
-    object N3: TMenuItem
-      Action = dsdSetErased
-    end
-    object N4: TMenuItem
-      Action = dsdSetUnErased
-    end
-  end
-  object PartnerMedicalGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edPartnerMedical
-    FormNameParam.Value = 'TPartnerMedicalForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPartnerMedicalForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = PartnerMedicalGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = PartnerMedicalGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 296
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -630,14 +588,14 @@ object MedicSPForm: TMedicSPForm
       end
       item
         Name = 'MasterPartnerMedicalId'
-        Value = ''
+        Value = Null
         Component = PartnerMedicalGuides
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MasterPartnerMedicalName'
-        Value = ''
+        Value = Null
         Component = PartnerMedicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -675,8 +633,36 @@ object MedicSPForm: TMedicSPForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 424
-    Top = 200
+    Left = 400
+    Top = 104
+  end
+  object PartnerMedicalGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartnerMedical
+    FormNameParam.Value = 'TPartnerMedicalForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPartnerMedicalForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PartnerMedicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PartnerMedicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 296
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -686,7 +672,7 @@ object MedicSPForm: TMedicSPForm
       item
         Component = PartnerMedicalGuides
       end>
-    Left = 440
-    Top = 112
+    Left = 624
+    Top = 120
   end
 end

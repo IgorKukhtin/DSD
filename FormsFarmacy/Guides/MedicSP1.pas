@@ -22,73 +22,64 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  Vcl.Menus, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit, cxButtonEdit,
-  cxLabel, Vcl.ExtCtrls, ExternalLoad;
+  Vcl.Menus, cxContainer, dsdGuides, ExternalLoad, cxTextEdit, cxMaskEdit,
+  cxButtonEdit, cxLabel, Vcl.ExtCtrls;
 
 type
   TMedicSPForm = class(TParentForm)
-    cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
+    cxGridDBTableView: TcxGridDBTableView;
+    cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
-    ActionList: TActionList;
     bbRefresh: TdxBarButton;
-    actRefresh: TdsdDataSetRefresh;
     bbInsert: TdxBarButton;
-    spSelect: TdsdStoredProc;
-    actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
-    bbSetErased: TdxBarButton;
-    bbSetUnErased: TdxBarButton;
-    dsdGridToExcel: TdsdGridToExcel;
-    bbToExcel: TdxBarButton;
+    bbErased: TdxBarButton;
+    bbUnErased: TdxBarButton;
+    bbGridToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
-    spErasedUnErased: TdsdStoredProc;
-    bbChoice: TdxBarButton;
-    cxGridDBTableView: TcxGridDBTableView;
-    Code: TcxGridDBColumn;
-    Name: TcxGridDBColumn;
-    isErased: TcxGridDBColumn;
+    bbChoiceGuides: TdxBarButton;
+    ActionList: TActionList;
+    actRefresh: TdsdDataSetRefresh;
+    actInsert: TdsdInsertUpdateAction;
+    actUpdate: TdsdInsertUpdateAction;
+    dsdSetErased: TdsdUpdateErased;
+    dsdSetUnErased: TdsdUpdateErased;
+    dsdGridToExcel: TdsdGridToExcel;
+    spSelect: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
+    isErased: TcxGridDBColumn;
+    spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    actInsert: TdsdInsertUpdateAction;
-    pmGrid: TPopupMenu;
-    pmAdd: TMenuItem;
-    N1: TMenuItem;
-    N2: TMenuItem;
-    dsdSetUnErased: TdsdUpdateErased;
-    dsdSetErased: TdsdUpdateErased;
-    N3: TMenuItem;
-    N4: TMenuItem;
-    ProtocolOpenForm: TdsdOpenForm;
-    bbProtocolOpenForm: TdxBarButton;
+    PartnerMedicalName: TcxGridDBColumn;
+    bbStartLoad: TdxBarButton;
+    FormParams: TdsdFormParams;
+    spGetImportSettingId: TdsdStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    actGetImportSetting: TdsdExecStoredProc;
+    actStartLoad: TMultiAction;
     Panel: TPanel;
     cxLabel6: TcxLabel;
     edPartnerMedical: TcxButtonEdit;
     PartnerMedicalGuides: TdsdGuides;
-    PartnerMedicalName: TcxGridDBColumn;
-    FormParams: TdsdFormParams;
-    actDoLoad: TExecuteImportSettingsAction;
-    spGetImportSettingId: TdsdStoredProc;
-    actGetImportSetting: TdsdExecStoredProc;
-    actStartLoad: TMultiAction;
-    bbStartLoad: TdxBarButton;
     RefreshDispatcher: TRefreshDispatcher;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocol: TdxBarButton;
   private
     { Private declarations }
   public
     { Public declarations }
   end;
 
+
 implementation
 
 {$R *.dfm}
-
 initialization
   RegisterClass(TMedicSPForm);
-
 end.
