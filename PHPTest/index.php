@@ -153,10 +153,10 @@ else
   if ($OutputType=='otDataSet')
   {
      $res = FillDataSet($result, $DataSetType, $AutoWidht);
-     // логируем
-     _log($res);
      // формируем строку для возврата результата
      $datares = 'DataSet      '.PrepareStr($res);
+     // логируем
+     _log($datares);
      // возвращаем результат
      echo $datares;
   };

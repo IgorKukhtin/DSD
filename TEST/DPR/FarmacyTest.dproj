@@ -1585,16 +1585,8 @@
 				<Form>MedicSPEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\MedicSP.pas">
-				<Form>MedicSPForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\MemberSPEdit.pas">
 				<Form>MemberSPEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\MemberSP.pas">
-				<Form>MemberSPForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_RemainsOverGoods_To.pas">
@@ -1827,6 +1819,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_SAMP_Analysis.pas">
 				<Form>Report_SAMP_AnalysisForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\MemberSP.pas">
+				<Form>MemberSPForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\MedicSP.pas">
+				<Form>MedicSPForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

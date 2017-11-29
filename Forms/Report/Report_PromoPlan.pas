@@ -63,6 +63,10 @@ type
     edUnitSale: TcxButtonEdit;
     GuidesUnitSale: TdsdGuides;
     plGoodsKindCompleteName: TcxGridDBColumn;
+    cbUnitSale: TcxCheckBox;
+    Color_EndDate: TcxGridDBColumn;
+    isEndDate: TcxGridDBColumn;
+    isSale: TcxGridDBColumn;
   private
     { Private declarations }
   public

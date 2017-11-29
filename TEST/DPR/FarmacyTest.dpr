@@ -487,9 +487,7 @@ uses
   Report_SaleSP in '..\..\FormsFarmacy\Report\Report_SaleSP.pas' {Report_SaleSPForm: TParentForm},
   Report_SaleSPDialog in '..\..\FormsFarmacy\Report\Report_SaleSPDialog.pas' {Report_SaleSPDialogForm: TParentForm},
   MedicSPEdit in '..\..\FormsFarmacy\Guides\MedicSPEdit.pas' {MedicSPEditForm: TParentForm},
-  MedicSP in '..\..\FormsFarmacy\Guides\MedicSP.pas' {MedicSPForm: TParentForm},
   MemberSPEdit in '..\..\FormsFarmacy\Guides\MemberSPEdit.pas' {MemberSPEditForm: TParentForm},
-  MemberSP in '..\..\FormsFarmacy\Guides\MemberSP.pas' {MemberSPForm: TParentForm},
   Report_RemainsOverGoods_To in '..\..\FormsFarmacy\Report\Report_RemainsOverGoods_To.pas' {Report_RemainsOverGoods_ToForm: TParentForm},
   InvoiceJournal in '..\..\FormsFarmacy\Document\InvoiceJournal.pas' {InvoiceJournalForm: TParentForm},
   Report_PromoDialog in '..\..\FormsFarmacy\Report\Report_PromoDialog.pas' {Report_PromoDialogForm: TParentForm},
@@ -550,7 +548,9 @@ uses
   MarginCategory_Movement in '..\..\FormsFarmacy\Document\MarginCategory_Movement.pas' {MarginCategory_MovementForm: TParentForm},
   Report_MinPrice_byPromo in '..\..\FormsFarmacy\Report\Report_MinPrice_byPromo.pas' {Report_MinPrice_byPromoForm: TParentForm},
   Report_SAMP_AnalysisDialog in '..\..\FormsFarmacy\Report\Report_SAMP_AnalysisDialog.pas' {Report_SAMP_AnalysisDialogForm: TParentForm},
-  Report_SAMP_Analysis in '..\..\FormsFarmacy\Report\Report_SAMP_Analysis.pas' {Report_SAMP_AnalysisForm: TParentForm};
+  Report_SAMP_Analysis in '..\..\FormsFarmacy\Report\Report_SAMP_Analysis.pas' {Report_SAMP_AnalysisForm: TParentForm},
+  MemberSP in '..\..\FormsFarmacy\Guides\MemberSP.pas' {MemberSPForm: TParentForm},
+  MedicSP in '..\..\FormsFarmacy\Guides\MedicSP.pas' {MedicSPForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

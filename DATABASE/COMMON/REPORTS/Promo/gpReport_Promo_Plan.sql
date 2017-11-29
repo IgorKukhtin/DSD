@@ -22,12 +22,23 @@ DROP FUNCTION IF EXISTS gpSelect_Report_Promo_Plan(
     Integer,   --подразделение для продаж
     TVarChar   --сессия пользователя
 );
+DROP FUNCTION IF EXISTS gpSelect_Report_Promo_Plan(
+    TDateTime, --дата начала периода
+    TDateTime, --дата окончания периода
+    Boolean,   --показать только Акции
+    Boolean,   --показать только Тендеры
+    Boolean,   --показать склады продажи
+    Integer,   --подразделение 
+    Integer,   --подразделение для продаж
+    TVarChar   --сессия пользователя
+);
 
 CREATE OR REPLACE FUNCTION gpSelect_Report_Promo_Plan(
     IN inStartDate      TDateTime, --дата начала периода
     IN inEndDate        TDateTime, --дата окончания периода
     IN inIsPromo        Boolean,   --показать только Акции
     IN inIsTender       Boolean,   --показать только Тендеры
+    IN inIsUnitSale     Boolean,   --показать склады продажи
     IN inUnitId         Integer,   --подразделение 
     IN inUnitId_Sale    Integer,   --подразделение для продаж
     IN inSession        TVarChar   --сессия пользователя
@@ -37,6 +48,8 @@ RETURNS TABLE(
     , MovementItemId            Integer
     , InvNumber                 Integer   --№ документа акции
     , UnitName                  TVarChar  --Склад
+    , UnitCode_Sale             Integer   -- код склад продажи
+    , UnitName_Sale             TVarChar  -- склад продажи    
     , PersonalTradeName         TVarChar  --Ответственный представитель коммерческого отдела
     , UnitCode_PersonalTrade    Integer
     , UnitName_PersonalTrade    TVarChar
@@ -55,6 +68,7 @@ RETURNS TABLE(
     , MeasureName               TVarChar  --единица измерения
     , GoodsKindName             TVarChar  --Вид упаковки
     , GoodsKindCompleteName     TVarChar  --Вид упаковки ( примечание)
+    , GoodsKindName_Sale        TVarChar  -- список вид.уп. док.продаж
     , GoodsKindName_List        TVarChar  --Вид товара (справочно)
     , TradeMarkName             TVarChar  --Торговая марка
     , isPromo                   Boolean   --Акция (да/нет)
@@ -92,6 +106,10 @@ RETURNS TABLE(
     , isPlan5             Boolean
     , isPlan6             Boolean
     , isPlan7             Boolean
+
+    , Color_EndDate       Integer
+    , isEndDate           Boolean
+    , isSale              Boolean
     )
 AS
 $BODY$
@@ -128,49 +146,167 @@ BEGIN
                                 LEFT JOIN Object ON Object.Id = _tmpWord_Split_to.Word :: Integer
                            GROUP BY _tmpWord_Split_to.WordList, Object.ValueData
                            )
-        , tmpMovement_Promo AS (SELECT *
-                               FROM Movement_Promo_View AS Movement_Promo
-                               WHERE ( Movement_Promo.StartSale BETWEEN inStartDate AND inEndDate
-                                       OR
-                                       inStartDate BETWEEN Movement_Promo.StartSale AND Movement_Promo.EndSale
-                                      )
-                                  AND (Movement_Promo.UnitId = inUnitId OR inUnitId = 0)
-                                  AND Movement_Promo.StatusId = zc_Enum_Status_Complete()
-                                  AND (  (Movement_Promo.isPromo = TRUE AND inIsPromo = TRUE)
-                                      OR (COALESCE (Movement_Promo.isPromo, FALSE) = FALSE AND inIsTender = TRUE)
-                                      OR (inIsPromo = FALSE AND inIsTender = FALSE)
+        --продажи акционных товаров
+        , tmpMov_Sale_All AS (SELECT MIFloat_PromoMovement.ValueData ::Integer                                       AS MovementId_Promo
+                                   , Movement_Sale.OperDate                                                          AS OperDate
+                                   , MI_Sale.ObjectId                                                                AS GoodsId
+                                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)                                   AS GoodsKindId
+                                   , SUM (COALESCE (MI_Sale.Amount, 0))                                              AS Amount
+                                   , CASE WHEN inIsUnitSale = TRUE THEN MovementLinkObject_From.ObjectId ELSE 0 END  AS UnitId_Sale
+                                   , MAX (Movement_Sale.OperDate) OVER (PARTITION BY MI_Sale.ObjectId, MIFloat_PromoMovement.ValueData) AS OperDateMax_Sale
+                              FROM Movement AS Movement_Sale
+                                   INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                 ON MovementLinkObject_From.MovementId = Movement_Sale.Id
+                                                                AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                                AND (MovementLinkObject_From.ObjectId = inUnitId_Sale OR inUnitId_Sale = 0)
+                                   
+                                   INNER JOIN MovementItem AS MI_Sale ON MI_Sale.MovementId = Movement_Sale.Id
+                                                                     AND MI_Sale.IsErased = FALSE
+                                  
+                                   INNER JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                                                ON MIFloat_PromoMovement.MovementItemId = MI_Sale.Id
+                                                               AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+  
+                                   LEFT JOIN MovementBoolean AS MovementBoolean_Promo
+                                                             ON MovementBoolean_Promo.MovementId = MIFloat_PromoMovement.ValueData ::Integer
+                                                            AND MovementBoolean_Promo.DescId = zc_MovementBoolean_Promo()
+                                                              
+                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                    ON MILinkObject_GoodsKind.MovementItemId = MI_Sale.Id
+                                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                              WHERE Movement_Sale.DescId = zc_Movement_Sale()
+                                AND Movement_Sale.OperDate BETWEEN inStartDate AND inEndDate
+                                AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
+                                AND (  (COALESCE (MovementBoolean_Promo.ValueData, FALSE) = TRUE AND inIsPromo = TRUE) 
+                                    OR (COALESCE (MovementBoolean_Promo.ValueData, FALSE) = FALSE AND inIsTender = TRUE)
+                                    OR (inIsPromo = FALSE AND inIsTender = FALSE)
+                                       )
+
+                              GROUP BY MIFloat_PromoMovement.ValueData
+                                     , Movement_Sale.OperDate
+                                     , MI_Sale.ObjectId
+                                     , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                     , CASE WHEN inIsUnitSale = TRUE THEN MovementLinkObject_From.ObjectId ELSE 0 END
+                              )
+         -- сворачиваем продажи по дням
+        , tmpMovement_Sale AS (SELECT tmpSale.MovementId_Promo
+                                    , tmpSale.OperDateMax_Sale
+                                    , tmpSale.UnitId_Sale
+                                    , tmpSale.GoodsId    
+                                    , STRING_AGG (Object_GoodsKind.ValueData, '; ')  AS GoodsKindName
+                                   -- , tmpSale.GoodsKindId                         AS GoodsKindId
+                                   -- , COALESCE (Object_GoodsKind.ValueData, '')   AS GoodsKindName
+                                    , SUM (CASE WHEN EXTRACT (DOW FROM tmpSale.OperDate) = 1 THEN tmpSale.Amount ELSE 0 END) AS AmountSale1
+                                    , SUM (CASE WHEN EXTRACT (DOW FROM tmpSale.OperDate) = 2 THEN tmpSale.Amount ELSE 0 END) AS AmountSale2
+                                    , SUM (CASE WHEN EXTRACT (DOW FROM tmpSale.OperDate) = 3 THEN tmpSale.Amount ELSE 0 END) AS AmountSale3
+                                    , SUM (CASE WHEN EXTRACT (DOW FROM tmpSale.OperDate) = 4 THEN tmpSale.Amount ELSE 0 END) AS AmountSale4
+                                    , SUM (CASE WHEN EXTRACT (DOW FROM tmpSale.OperDate) = 5 THEN tmpSale.Amount ELSE 0 END) AS AmountSale5
+                                    , SUM (CASE WHEN EXTRACT (DOW FROM tmpSale.OperDate) = 6 THEN tmpSale.Amount ELSE 0 END) AS AmountSale6
+                                    , SUM (CASE WHEN EXTRACT (DOW FROM tmpSale.OperDate) = 0 THEN tmpSale.Amount ELSE 0 END) AS AmountSale7
+                               FROM tmpMov_Sale_All AS tmpSale
+                                    LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpSale.GoodsKindId
+                               GROUP BY tmpSale.MovementId_Promo
+                                      , tmpSale.GoodsId
+                                      , tmpSale.OperDateMax_Sale
+                                      , tmpSale.UnitId_Sale
+                               )
+
+        -- документы акций
+        , tmpMovement_Promo AS (SELECT Movement_Promo.*
+                                     , MovementDate_StartSale.ValueData            AS StartSale
+                                     , MovementDate_EndSale.ValueData              AS EndSale
+                                     , MovementLinkObject_Unit.ObjectId            AS UnitId
+                                     , COALESCE (MovementBoolean_Promo.ValueData, FALSE)   :: Boolean AS isPromo  -- акция (да/нет)
+                                     , COALESCE (MovementBoolean_Checked.ValueData, FALSE) :: Boolean AS Checked  -- согласовано (да/нет)
+                                     
+                                     , CASE WHEN MovementDate_StartSale.ValueData >= inStartDate THEN EXTRACT (DOW FROM MovementDate_StartSale.ValueData) ELSE 0 END :: Integer AS DayStartSale
+                                     , CASE WHEN MovementDate_EndSale.ValueData   <= inEndDate   THEN EXTRACT (DOW FROM MovementDate_EndSale.ValueData)   ELSE 0 END :: Integer AS DayEndSale
+                                FROM Movement AS Movement_Promo 
+                                     LEFT JOIN MovementDate AS MovementDate_StartSale
+                                                             ON MovementDate_StartSale.MovementId = Movement_Promo.Id
+                                                            AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
+                                     LEFT JOIN MovementDate AS MovementDate_EndSale
+                                                             ON MovementDate_EndSale.MovementId = Movement_Promo.Id
+                                                            AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
+            
+                                     LEFT JOIN MovementBoolean AS MovementBoolean_Checked
+                                                               ON MovementBoolean_Checked.MovementId = Movement_Promo.Id
+                                                              AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
+                             
+                                     LEFT JOIN MovementBoolean AS MovementBoolean_Promo
+                                                               ON MovementBoolean_Promo.MovementId = Movement_Promo.Id
+                                                              AND MovementBoolean_Promo.DescId = zc_MovementBoolean_Promo()
+            
+                                     LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                                  ON MovementLinkObject_Unit.MovementId = Movement_Promo.Id
+                                                                 AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                                 
+                                WHERE Movement_Promo.DescId = zc_Movement_Promo()
+                                 AND ( ( MovementDate_StartSale.ValueData BETWEEN inStartDate AND inEndDate
+                                        OR
+                                        inStartDate BETWEEN MovementDate_StartSale.ValueData AND MovementDate_EndSale.ValueData
+                                       )
+                                   AND (MovementLinkObject_Unit.ObjectId = inUnitId OR inUnitId = 0)
+                                   AND Movement_Promo.StatusId = zc_Enum_Status_Complete()
+                                   AND (  (COALESCE (MovementBoolean_Promo.ValueData, FALSE) = TRUE AND inIsPromo = TRUE) 
+                                       OR (COALESCE (MovementBoolean_Promo.ValueData, FALSE) = FALSE AND inIsTender = TRUE)
+                                       OR (inIsPromo = FALSE AND inIsTender = FALSE)
+                                       )
                                       )
                                )
                                
-        , tmpMI_Promo AS (SELECT MI_PromoGoods.*
-       
-                               , CASE WHEN vbDayStart  = 1 THEN MIFloat_Plan1.ValueData ELSE 0 END                   AS AmountPlan1
-                               , CASE WHEN vbDayStart <= 2 AND vbDayEnd >= 2 THEN MIFloat_Plan2.ValueData ELSE 0 END AS AmountPlan2
-                               , CASE WHEN vbDayStart <= 3 AND vbDayEnd >= 3 THEN MIFloat_Plan3.ValueData ELSE 0 END AS AmountPlan3
-                               , CASE WHEN vbDayStart <= 4 AND vbDayEnd >= 4 THEN MIFloat_Plan4.ValueData ELSE 0 END AS AmountPlan4
-                               , CASE WHEN vbDayStart <= 5 AND vbDayEnd >= 5 THEN MIFloat_Plan5.ValueData ELSE 0 END AS AmountPlan5
-                               , CASE WHEN vbDayStart <= 6 AND vbDayEnd >= 6 THEN MIFloat_Plan6.ValueData ELSE 0 END AS AmountPlan6
-                               , CASE WHEN vbDayStart <= 7 AND vbDayEnd  = 7 THEN MIFloat_Plan7.ValueData ELSE 0 END AS AmountPlan7
-                               
-                               , (CASE WHEN vbDayStart  = 1 THEN MIFloat_Plan1.ValueData ELSE 0 END  * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)                   AS AmountPlan1_Wh
-                               , (CASE WHEN vbDayStart <= 2 AND vbDayEnd >= 2 THEN MIFloat_Plan2.ValueData ELSE 0 END * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)  AS AmountPlan2_Wh
-                               , (CASE WHEN vbDayStart <= 3 AND vbDayEnd >= 3 THEN MIFloat_Plan3.ValueData ELSE 0 END * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)  AS AmountPlan3_Wh
-                               , (CASE WHEN vbDayStart <= 4 AND vbDayEnd >= 4 THEN MIFloat_Plan4.ValueData ELSE 0 END * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)  AS AmountPlan4_Wh
-                               , (CASE WHEN vbDayStart <= 5 AND vbDayEnd >= 5 THEN MIFloat_Plan5.ValueData ELSE 0 END * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)  AS AmountPlan5_Wh
-                               , (CASE WHEN vbDayStart <= 6 AND vbDayEnd >= 6 THEN MIFloat_Plan6.ValueData ELSE 0 END * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)  AS AmountPlan6_Wh
-                               , (CASE WHEN vbDayStart <= 7 AND vbDayEnd  = 7 THEN MIFloat_Plan7.ValueData ELSE 0 END * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)  AS AmountPlan7_Wh
-                                
-                               , CASE WHEN vbDayStart  = 1                   THEN TRUE ELSE FALSE END AS isPlan1
-                               , CASE WHEN vbDayStart <= 2 AND vbDayEnd >= 2 THEN TRUE ELSE FALSE END AS isPlan2
-                               , CASE WHEN vbDayStart <= 3 AND vbDayEnd >= 3 THEN TRUE ELSE FALSE END AS isPlan3
-                               , CASE WHEN vbDayStart <= 4 AND vbDayEnd >= 4 THEN TRUE ELSE FALSE END AS isPlan4
-                               , CASE WHEN vbDayStart <= 5 AND vbDayEnd >= 5 THEN TRUE ELSE FALSE END AS isPlan5
-                               , CASE WHEN vbDayStart <= 6 AND vbDayEnd >= 6 THEN TRUE ELSE FALSE END AS isPlan6
-                               , CASE WHEN vbDayStart <= 7 AND vbDayEnd  = 7 THEN TRUE ELSE FALSE END AS isPlan7
+        -- все док. акции плюс по продажам
+        , tmpMov AS (SELECT tmpMovement_Promo.Id           AS MovementId_Promo
+                          , tmpMovement_Promo.DayStartSale
+                          , tmpMovement_Promo.DayEndSale
+                          , 0                              AS UnitId_Sale
+                          , TRUE                           AS isPromo 
+                     FROM tmpMovement_Promo
+                   UNION 
+                     SELECT tmp.MovementId_Promo                        AS MovementId_Promo
+                          , tmp.DayStartSale
+                          , tmp.DayEndSale
+                          , tmp.UnitId_Sale
+                          , CASE WHEN inIsUnitSale = TRUE THEN FALSE ELSE TRUE END  AS isPromo
 
-                          FROM tmpMovement_Promo AS Movement_Promo
+                     FROM (SELECT tmpMov_Sale_All.*
+                                , tmp.DayStartSale
+                                , tmp.DayEndSale         
+                           FROM tmpMov_Sale_All
+                                LEFT JOIN ( SELECT tmp.MovementId_Promo
+                                                 , CASE WHEN MovementDate_StartSale.ValueData >= inStartDate THEN EXTRACT (DOW FROM MovementDate_StartSale.ValueData) ELSE 0 END :: Integer AS DayStartSale
+                                                 , CASE WHEN MovementDate_EndSale.ValueData   <= inEndDate   THEN EXTRACT (DOW FROM MovementDate_EndSale.ValueData)   ELSE 0 END :: Integer AS DayEndSale     
+                                            FROM (SELECT DISTINCT tmpMov_Sale_All.MovementId_Promo FROM tmpMov_Sale_All) AS tmp
+                                                 LEFT JOIN MovementDate AS MovementDate_StartSale
+                                                        ON MovementDate_StartSale.MovementId = tmp.MovementId_Promo
+                                                       AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
+                                                 LEFT JOIN MovementDate AS MovementDate_EndSale
+                                                        ON MovementDate_EndSale.MovementId = tmp.MovementId_Promo
+                                                       AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
+                                            ) AS tmp ON tmp.MovementId_Promo = tmpMov_Sale_All.MovementId_Promo
+                           ) AS tmp
+                     )
+                       
+        , tmpMI_Promo AS (SELECT MI_PromoGoods.*
+                               , CASE WHEN vbDayStart  = 1                   AND (Movement_Promo.DayStartSale = 0 OR Movement_Promo.DayStartSale = 1)                                                                        THEN MIFloat_Plan1.ValueData ELSE 0 END AS AmountPlan1
+                               , CASE WHEN vbDayStart <= 2 AND vbDayEnd >= 2 AND (Movement_Promo.DayStartSale = 0 OR Movement_Promo.DayStartSale <= 2) AND (Movement_Promo.DayEndSale = 0 OR Movement_Promo.DayEndSale >= 2) THEN MIFloat_Plan2.ValueData ELSE 0 END AS AmountPlan2
+                               , CASE WHEN vbDayStart <= 3 AND vbDayEnd >= 3 AND (Movement_Promo.DayStartSale = 0 OR Movement_Promo.DayStartSale <= 3) AND (Movement_Promo.DayEndSale = 0 OR Movement_Promo.DayEndSale >= 3) THEN MIFloat_Plan3.ValueData ELSE 0 END AS AmountPlan3
+                               , CASE WHEN vbDayStart <= 4 AND vbDayEnd >= 4 AND (Movement_Promo.DayStartSale = 0 OR Movement_Promo.DayStartSale <= 4) AND (Movement_Promo.DayEndSale = 0 OR Movement_Promo.DayEndSale >= 4) THEN MIFloat_Plan4.ValueData ELSE 0 END AS AmountPlan4
+                               , CASE WHEN vbDayStart <= 5 AND vbDayEnd >= 5 AND (Movement_Promo.DayStartSale = 0 OR Movement_Promo.DayStartSale <= 5) AND (Movement_Promo.DayEndSale = 0 OR Movement_Promo.DayEndSale >= 5) THEN MIFloat_Plan5.ValueData ELSE 0 END AS AmountPlan5
+                               , CASE WHEN vbDayStart <= 6 AND vbDayEnd >= 6 AND (Movement_Promo.DayStartSale = 0 OR Movement_Promo.DayStartSale <= 6) AND (Movement_Promo.DayEndSale = 0 OR Movement_Promo.DayEndSale >= 6) THEN MIFloat_Plan6.ValueData ELSE 0 END AS AmountPlan6
+                               , CASE WHEN vbDayStart <= 7 AND vbDayEnd  = 7 AND (Movement_Promo.DayStartSale = 0 OR Movement_Promo.DayStartSale <= 7) AND (Movement_Promo.DayEndSale = 0 OR Movement_Promo.DayEndSale  = 7) THEN MIFloat_Plan7.ValueData ELSE 0 END AS AmountPlan7
+                               
+                               , CASE WHEN vbDayStart  = 1                   AND (Movement_Promo.DayStartSale = 0 OR Movement_Promo.DayStartSale = 1)                                                                        THEN TRUE ELSE FALSE END AS isPlan1
+                               , CASE WHEN vbDayStart <= 2 AND vbDayEnd >= 2 AND (Movement_Promo.DayStartSale = 0 OR Movement_Promo.DayStartSale <= 2) AND (Movement_Promo.DayEndSale = 0 OR Movement_Promo.DayEndSale >= 2) THEN TRUE ELSE FALSE END AS isPlan2
+                               , CASE WHEN vbDayStart <= 3 AND vbDayEnd >= 3 AND (Movement_Promo.DayStartSale = 0 OR Movement_Promo.DayStartSale <= 3) AND (Movement_Promo.DayEndSale = 0 OR Movement_Promo.DayEndSale >= 3) THEN TRUE ELSE FALSE END AS isPlan3
+                               , CASE WHEN vbDayStart <= 4 AND vbDayEnd >= 4 AND (Movement_Promo.DayStartSale = 0 OR Movement_Promo.DayStartSale <= 4) AND (Movement_Promo.DayEndSale = 0 OR Movement_Promo.DayEndSale >= 4) THEN TRUE ELSE FALSE END AS isPlan4
+                               , CASE WHEN vbDayStart <= 5 AND vbDayEnd >= 5 AND (Movement_Promo.DayStartSale = 0 OR Movement_Promo.DayStartSale <= 5) AND (Movement_Promo.DayEndSale = 0 OR Movement_Promo.DayEndSale >= 5) THEN TRUE ELSE FALSE END AS isPlan5
+                               , CASE WHEN vbDayStart <= 6 AND vbDayEnd >= 6 AND (Movement_Promo.DayStartSale = 0 OR Movement_Promo.DayStartSale <= 6) AND (Movement_Promo.DayEndSale = 0 OR Movement_Promo.DayEndSale >= 6) THEN TRUE ELSE FALSE END AS isPlan6
+                               , CASE WHEN vbDayStart <= 7 AND vbDayEnd  = 7 AND (Movement_Promo.DayStartSale = 0 OR Movement_Promo.DayStartSale <= 7) AND (Movement_Promo.DayEndSale = 0 OR Movement_Promo.DayEndSale  = 7) THEN TRUE ELSE FALSE END AS isPlan7
+
+                          FROM (SELECT DISTINCT tmpMov.MovementId_Promo, tmpMov.DayStartSale, tmpMov.DayEndSale FROM tmpMov) AS Movement_Promo
                                LEFT OUTER JOIN MovementItem_PromoGoods_View AS MI_PromoGoods
-                                                                            ON MI_PromoGoods.MovementId = Movement_Promo.Id
+                                                                            ON MI_PromoGoods.MovementId = Movement_Promo.MovementId_Promo
                                                                            AND MI_PromoGoods.IsErased = FALSE
                                LEFT JOIN MovementItemFloat AS MIFloat_Plan1
                                                            ON MIFloat_Plan1.MovementItemId = MI_PromoGoods.Id
@@ -193,72 +329,24 @@ BEGIN
                                LEFT JOIN MovementItemFloat AS MIFloat_Plan7
                                                            ON MIFloat_Plan7.MovementItemId = MI_PromoGoods.Id
                                                           AND MIFloat_Plan7.DescId = zc_MIFloat_Plan7()
-                    
                          )
-                                                                 
-        , tmpMov_Sale_All AS (SELECT tmpMovement_Promo.Id                                                      AS MovementId_Promo
-                                        , Movement_Sale.OperDate                                                    AS OperDate
-                                        , MI_Sale.ObjectId                                                          AS GoodsId
-                                        , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)                             AS GoodsKindId
-                                        , SUM (COALESCE (MI_Sale.Amount, 0))                                        AS Amount
-                                   FROM tmpMovement_Promo
-                                        INNER JOIN MovementItemFloat AS MIFloat_PromoMovement
-                                                                     ON MIFloat_PromoMovement.ValueData ::Integer = tmpMovement_Promo.Id
-                                                                    AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
-                                                                   
-                                        INNER JOIN MovementItem AS MI_Sale ON MI_Sale.Id = MIFloat_PromoMovement.MovementItemId
-                                                                          AND MI_Sale.IsErased = FALSE
-                                        INNER JOIN (SELECT DISTINCT tmpMI_Promo.GoodsId  FROM tmpMI_Promo) AS tmpMI_Promo ON tmpMI_Promo.GoodsId = MI_Sale.ObjectId
-                                        
-                                        INNER JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MI_Sale.MovementId 
-                                                                            AND Movement_Sale.DescId = zc_Movement_Sale()
-                                                                            AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
-                                                                            AND Movement_Sale.OperDate BETWEEN inStartDate AND inEndDate
-                                                                            
-                                        INNER JOIN MovementLinkObject AS MovementLinkObject_From
-                                                                      ON MovementLinkObject_From.MovementId = Movement_Sale.Id
-                                                                     AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                                     AND (MovementLinkObject_From.ObjectId = inUnitId_Sale OR inUnitId_Sale = 0)
-     
-                                        LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                                         ON MILinkObject_GoodsKind.MovementItemId = MI_Sale.Id
-                                                                        AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
 
-                                   GROUP BY tmpMovement_Promo.Id
-                                          , Movement_Sale.OperDate
-                                          , MI_Sale.ObjectId
-                                          , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
-                                   )
+   , tmpPromoDetail AS (SELECT Movement_Promo.*
+                        FROM (SELECT DISTINCT tmpMov.MovementId_Promo FROM tmpMov) AS tmpMov
+                             LEFT JOIN Movement_Promo_View AS Movement_Promo ON Movement_Promo.Id = tmpMov.MovementId_Promo
+                           
+                        )
 
-        , tmpMovement_Sale_All AS (SELECT tmpMov_Sale_All.*
-                                   FROM tmpMov_Sale_All
-                                        INNER JOIN (SELECT DISTINCT tmpMI_Promo.GoodsId, tmpMI_Promo.GoodsKindCompleteId
-                                                    FROM tmpMI_Promo) AS tmpMI_Promo ON tmpMI_Promo.GoodsId = tmpMov_Sale_All.GoodsId
-                                                                                    AND COALESCE (tmpMI_Promo.GoodsKindCompleteId, 0) = COALESCE (tmpMov_Sale_All.GoodsKindId, 0)
-                                   )
-                                   
-        , tmpMovement_Sale AS (SELECT tmpSale.MovementId_Promo
-                                    , tmpSale.GoodsId    
-                                    , STRING_AGG (Object_GoodsKind.ValueData, '; ')  AS GoodsKindName
-                                    , SUM (CASE WHEN EXTRACT (DOW FROM tmpSale.OperDate) = 1 THEN tmpSale.Amount ELSE 0 END) AS AmountSale1
-                                    , SUM (CASE WHEN EXTRACT (DOW FROM tmpSale.OperDate) = 2 THEN tmpSale.Amount ELSE 0 END) AS AmountSale2
-                                    , SUM (CASE WHEN EXTRACT (DOW FROM tmpSale.OperDate) = 3 THEN tmpSale.Amount ELSE 0 END) AS AmountSale3
-                                    , SUM (CASE WHEN EXTRACT (DOW FROM tmpSale.OperDate) = 4 THEN tmpSale.Amount ELSE 0 END) AS AmountSale4
-                                    , SUM (CASE WHEN EXTRACT (DOW FROM tmpSale.OperDate) = 5 THEN tmpSale.Amount ELSE 0 END) AS AmountSale5
-                                    , SUM (CASE WHEN EXTRACT (DOW FROM tmpSale.OperDate) = 6 THEN tmpSale.Amount ELSE 0 END) AS AmountSale6
-                                    , SUM (CASE WHEN EXTRACT (DOW FROM tmpSale.OperDate) = 0 THEN tmpSale.Amount ELSE 0 END) AS AmountSale7
-                               FROM tmpMovement_Sale_All AS tmpSale
-                                    LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpSale.GoodsKindId
-                               GROUP BY tmpSale.MovementId_Promo
-                                      , tmpSale.GoodsId
-                               )
-                               
         --
-        SELECT
+        SELECT 
             Movement_Promo.Id                 --ИД документа акции
-          , MI_PromoGoods.Id                        AS MovementItemId
+          , MI_PromoGoods.Id                    AS MovementItemId
           , Movement_Promo.InvNumber          --№ документа акции
           , Movement_Promo.UnitName           --Склад
+          
+          , Object_UnitSale.ObjectCode          AS UnitCode_Sale   -- код склад продажи
+          , Object_UnitSale.ValueData           AS UnitName_Sale   -- склад продажи
+          
           , Movement_Promo.PersonalTradeName  --Ответственный представитель коммерческого отдела
           
           , Object_Unit.ObjectCode              AS UnitCode_PersonalTrade
@@ -314,6 +402,7 @@ BEGIN
           , MI_PromoGoods.Measure
           , MI_PromoGoods.GoodsKindName
           , MI_PromoGoods.GoodsKindCompleteName
+          , tmpMovement_Sale.GoodsKindName ::TVarChar AS GoodsKindName_Sale
 
           , (SELECT STRING_AGG (DISTINCT tmpGoodsKind.GoodsKindName,'; ')
              FROM Movement AS Movement_PromoPartner
@@ -347,21 +436,22 @@ BEGIN
 
           , CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN MI_PromoGoods.GoodsWeight ELSE NULL END :: TFloat AS GoodsWeight
 
-          , MI_PromoGoods.AmountPlan1     ::TFloat
-          , MI_PromoGoods.AmountPlan2     ::TFloat
-          , MI_PromoGoods.AmountPlan3     ::TFloat
-          , MI_PromoGoods.AmountPlan4     ::TFloat
-          , MI_PromoGoods.AmountPlan5     ::TFloat
-          , MI_PromoGoods.AmountPlan6     ::TFloat
-          , MI_PromoGoods.AmountPlan7     ::TFloat
+          , CASE WHEN tmpMov.isPromo = TRUE THEN MI_PromoGoods.AmountPlan1 ELSE 0 END     ::TFloat  AS AmountPlan1
+          , CASE WHEN tmpMov.isPromo = TRUE THEN MI_PromoGoods.AmountPlan2 ELSE 0 END     ::TFloat  AS AmountPlan2
+          , CASE WHEN tmpMov.isPromo = TRUE THEN MI_PromoGoods.AmountPlan3 ELSE 0 END     ::TFloat  AS AmountPlan3
+          , CASE WHEN tmpMov.isPromo = TRUE THEN MI_PromoGoods.AmountPlan4 ELSE 0 END     ::TFloat  AS AmountPlan4
+          , CASE WHEN tmpMov.isPromo = TRUE THEN MI_PromoGoods.AmountPlan5 ELSE 0 END     ::TFloat  AS AmountPlan5
+          , CASE WHEN tmpMov.isPromo = TRUE THEN MI_PromoGoods.AmountPlan6 ELSE 0 END     ::TFloat  AS AmountPlan6
+          , CASE WHEN tmpMov.isPromo = TRUE THEN MI_PromoGoods.AmountPlan7 ELSE 0 END     ::TFloat  AS AmountPlan7
           
-          , MI_PromoGoods.AmountPlan1_Wh  ::TFloat
-          , MI_PromoGoods.AmountPlan2_Wh  ::TFloat
-          , MI_PromoGoods.AmountPlan3_Wh  ::TFloat
-          , MI_PromoGoods.AmountPlan4_Wh  ::TFloat
-          , MI_PromoGoods.AmountPlan5_Wh  ::TFloat
-          , MI_PromoGoods.AmountPlan6_Wh  ::TFloat
-          , MI_PromoGoods.AmountPlan7_Wh  ::TFloat
+          , ((CASE WHEN tmpMov.isPromo = TRUE THEN 1 ELSE 0 END) * (MI_PromoGoods.AmountPlan1 * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END))    ::TFloat  AS AmountPlan1_Wh
+          , ((CASE WHEN tmpMov.isPromo = TRUE THEN 1 ELSE 0 END) * (MI_PromoGoods.AmountPlan2 * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END))    ::TFloat  AS AmountPlan2_Wh
+          , ((CASE WHEN tmpMov.isPromo = TRUE THEN 1 ELSE 0 END) * (MI_PromoGoods.AmountPlan3 * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END))    ::TFloat  AS AmountPlan3_Wh
+          , ((CASE WHEN tmpMov.isPromo = TRUE THEN 1 ELSE 0 END) * (MI_PromoGoods.AmountPlan4 * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END))    ::TFloat  AS AmountPlan4_Wh
+          , ((CASE WHEN tmpMov.isPromo = TRUE THEN 1 ELSE 0 END) * (MI_PromoGoods.AmountPlan5 * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END))    ::TFloat  AS AmountPlan5_Wh
+          , ((CASE WHEN tmpMov.isPromo = TRUE THEN 1 ELSE 0 END) * (MI_PromoGoods.AmountPlan6 * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END))    ::TFloat  AS AmountPlan6_Wh
+          , ((CASE WHEN tmpMov.isPromo = TRUE THEN 1 ELSE 0 END) * (MI_PromoGoods.AmountPlan7 * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END))    ::TFloat  AS AmountPlan7_Wh
+          
 
           , (tmpMovement_Sale.AmountSale1 * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END) ::TFloat  AS AmountSale1
           , (tmpMovement_Sale.AmountSale2 * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END) ::TFloat  AS AmountSale2
@@ -379,7 +469,15 @@ BEGIN
           , MI_PromoGoods.isPlan6         ::Boolean
           , MI_PromoGoods.isPlan7         ::Boolean
 
-        FROM tmpMovement_Promo AS Movement_Promo
+          --если акция заканчивается в этом периоде, т.е. EndSale <= inEndDate + подсветитить красным - если факт продажи позже чем EndSale
+          , CASE WHEN tmpMovement_Sale.OperDateMax_Sale > Movement_Promo.EndSale THEN zc_Color_Red()                         -- факт продажи позже чем EndSale
+                 WHEN Movement_Promo.EndSale <= inEndDate THEN 16777158                                                      --голубой 16777158   16316574
+                 ELSE zc_Color_White() 
+            END AS Color_EndDate           
+          , CASE WHEN Movement_Promo.EndSale <= inEndDate THEN TRUE ELSE FALSE END                AS isEndDate               -- если акция заканчивается в этом периоде
+          , CASE WHEN tmpMovement_Sale.OperDateMax_Sale > Movement_Promo.EndSale THEN TRUE ELSE FALSE END               AS isSale                                                                                                 --если факт продажи позже чем EndSale
+        FROM tmpMov
+            LEFT JOIN tmpPromoDetail AS Movement_Promo ON Movement_Promo.Id = tmpMov.MovementId_Promo
 
             LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
                                  ON ObjectLink_Personal_Unit.ObjectId = Movement_Promo.PersonalTradeId
@@ -390,11 +488,26 @@ BEGIN
                                  ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
                                 AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
             LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
-            
+
             LEFT JOIN tmpMI_Promo AS MI_PromoGoods ON MI_PromoGoods.MovementId = Movement_Promo.Id
-            LEFT JOIN tmpMovement_Sale ON tmpMovement_Sale.MovementId_Promo = Movement_Promo.Id
-                                      AND tmpMovement_Sale.GoodsId = MI_PromoGoods.GoodsId
-            ;
+
+            LEFT JOIN tmpMovement_Sale ON tmpMovement_Sale.MovementId_Promo = tmpMov.MovementId_Promo
+                                      AND tmpMovement_Sale.GoodsId = MI_PromoGoods.GoodsId 
+                                      AND tmpMov.isPromo = CASE WHEN inIsUnitSale = TRUE THEN FALSE ELSE TRUE END
+                                      AND tmpMovement_Sale.UnitId_Sale = tmpMov.UnitId_Sale
+
+            LEFT JOIN Object AS Object_UnitSale ON Object_UnitSale.Id = tmpMovement_Sale.UnitId_Sale
+where tmpMov.isPromo = TRUE 
+   OR (tmpMov.isPromo = FALSE AND
+       (tmpMovement_Sale.AmountSale1 <> 0
+     OR tmpMovement_Sale.AmountSale2 <> 0
+     OR tmpMovement_Sale.AmountSale3 <> 0
+     OR tmpMovement_Sale.AmountSale4 <> 0
+     OR tmpMovement_Sale.AmountSale5 <> 0
+     OR tmpMovement_Sale.AmountSale6 <> 0
+     OR tmpMovement_Sale.AmountSale7 <> 0) 
+        )
+       ;
             
 END;
 $BODY$
