@@ -33,6 +33,17 @@ DROP FUNCTION IF EXISTS gpSelect_Report_Promo_Plan(
     TVarChar   --сессия пользователя
 );
 
+DROP FUNCTION IF EXISTS gpSelect_Report_Promo_Plan(
+    TDateTime, --дата начала периода
+    TDateTime, --дата окончания периода
+    Boolean,   --показать только Акции
+    Boolean,   --показать только Тендеры
+    Boolean,   --показать склады продажи
+    Integer,   --подразделение 
+    TVarChar   --сессия пользователя
+);
+
+
 CREATE OR REPLACE FUNCTION gpSelect_Report_Promo_Plan(
     IN inStartDate      TDateTime, --дата начала периода
     IN inEndDate        TDateTime, --дата окончания периода
@@ -40,9 +51,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Report_Promo_Plan(
     IN inIsTender       Boolean,   --показать только Тендеры
     IN inIsUnitSale     Boolean,   --показать склады продажи
     IN inUnitId         Integer,   --подразделение 
-    IN inUnitId_Sale    Integer,   --подразделение для продаж
     IN inSession        TVarChar   --сессия пользователя
 )
+
 RETURNS TABLE(
       MovementId                Integer   --ИД документа акции
     , MovementItemId            Integer
@@ -61,6 +72,7 @@ RETURNS TABLE(
     , DateStartPromo            TDateTime --Дата проведения акции
     , DateFinalPromo            TDateTime --Дата проведения акции
     , MonthPromo                TDateTime --Месяц акции
+    , CountDaysPromo            Integer   -- колво дней акции
     , RetailName                TBlob     --контрагенты
     , PartnerName               TBlob     --контрагенты
     , GoodsName                 TVarChar  --Позиция
@@ -106,6 +118,10 @@ RETURNS TABLE(
     , AmountPlanMin_Calc5  TFloat
     , AmountPlanMin_Calc6  TFloat
     , AmountPlanMin_Calc7  TFloat
+
+    , TotalAmountPlan_Wh TFloat
+    , TotalAmountSale    TFloat
+    , TotalAmountPlanMin_Calc TFloat
       
     , isPlan1             Boolean
     , isPlan2             Boolean
@@ -168,7 +184,7 @@ BEGIN
                                    INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                                                  ON MovementLinkObject_From.MovementId = Movement_Sale.Id
                                                                 AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                                AND (MovementLinkObject_From.ObjectId = inUnitId_Sale OR inUnitId_Sale = 0)
+                                                                AND (MovementLinkObject_From.ObjectId = inUnitId OR inUnitId = 0)
                                    
                                    INNER JOIN MovementItem AS MI_Sale ON MI_Sale.MovementId = Movement_Sale.Id
                                                                      AND MI_Sale.IsErased = FALSE
@@ -407,6 +423,7 @@ BEGIN
           , Movement_Promo.StartPromo         --Дата начала акции
           , Movement_Promo.EndPromo           --Дата окончания акции
           , Movement_Promo.MonthPromo         --месяц акции
+          , (ROUND( (date_part('DAY', Movement_Promo.EndSale - Movement_Promo.StartSale) + 1) ::TFloat, 0)) :: Integer  AS CountDaysPromo
 
           , COALESCE ((SELECT STRING_AGG (DISTINCT COALESCE (MovementString_Retail.ValueData, Object_Retail.ValueData),'; ')
                        FROM Movement AS Movement_PromoPartner
@@ -508,28 +525,75 @@ BEGIN
           , (tmpMovement_Sale.AmountSale6 * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END) ::TFloat  AS AmountSale6
           , (tmpMovement_Sale.AmountSale7 * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END) ::TFloat  AS AmountSale7
 
-          , CASE WHEN tmpPeriodPlanMin.NumPeriod1 = 1 THEN MI_PromoGoods.AmountPlanMin_50
-                 WHEN tmpPeriodPlanMin.NumPeriod1 = 2 THEN MI_PromoGoods.AmountPlanMin_30
-                 WHEN tmpPeriodPlanMin.NumPeriod1 = 3 THEN MI_PromoGoods.AmountPlanMin_20 ELSE 0 END ::TFloat  AS AmountPlanMin_Calc1
-          , CASE WHEN tmpPeriodPlanMin.NumPeriod2 = 1 THEN MI_PromoGoods.AmountPlanMin_50
-                 WHEN tmpPeriodPlanMin.NumPeriod2 = 2 THEN MI_PromoGoods.AmountPlanMin_30
-                 WHEN tmpPeriodPlanMin.NumPeriod2 = 3 THEN MI_PromoGoods.AmountPlanMin_20 ELSE 0 END ::TFloat  AS AmountPlanMin_Calc2
-          , CASE WHEN tmpPeriodPlanMin.NumPeriod3 = 1 THEN MI_PromoGoods.AmountPlanMin_50
-                 WHEN tmpPeriodPlanMin.NumPeriod3 = 2 THEN MI_PromoGoods.AmountPlanMin_30
-                 WHEN tmpPeriodPlanMin.NumPeriod3 = 3 THEN MI_PromoGoods.AmountPlanMin_20 ELSE 0 END ::TFloat  AS AmountPlanMin_Calc3
-          , CASE WHEN tmpPeriodPlanMin.NumPeriod4 = 1 THEN MI_PromoGoods.AmountPlanMin_50
-                 WHEN tmpPeriodPlanMin.NumPeriod4 = 2 THEN MI_PromoGoods.AmountPlanMin_30
-                 WHEN tmpPeriodPlanMin.NumPeriod4 = 3 THEN MI_PromoGoods.AmountPlanMin_20 ELSE 0 END ::TFloat  AS AmountPlanMin_Calc4
-          , CASE WHEN tmpPeriodPlanMin.NumPeriod5 = 1 THEN MI_PromoGoods.AmountPlanMin_50
-                 WHEN tmpPeriodPlanMin.NumPeriod5 = 2 THEN MI_PromoGoods.AmountPlanMin_30
-                 WHEN tmpPeriodPlanMin.NumPeriod5 = 3 THEN MI_PromoGoods.AmountPlanMin_20 ELSE 0 END ::TFloat  AS AmountPlanMin_Calc5
-          , CASE WHEN tmpPeriodPlanMin.NumPeriod6 = 1 THEN MI_PromoGoods.AmountPlanMin_50
-                 WHEN tmpPeriodPlanMin.NumPeriod6 = 2 THEN MI_PromoGoods.AmountPlanMin_30
-                 WHEN tmpPeriodPlanMin.NumPeriod6 = 3 THEN MI_PromoGoods.AmountPlanMin_20 ELSE 0 END ::TFloat  AS AmountPlanMin_Calc6
-          , CASE WHEN tmpPeriodPlanMin.NumPeriod7 = 1 THEN MI_PromoGoods.AmountPlanMin_50
-                 WHEN tmpPeriodPlanMin.NumPeriod7 = 2 THEN MI_PromoGoods.AmountPlanMin_30
-                 WHEN tmpPeriodPlanMin.NumPeriod7 = 3 THEN MI_PromoGoods.AmountPlanMin_20 ELSE 0 END ::TFloat  AS AmountPlanMin_Calc7
-                 
+          , (CASE WHEN tmpPeriodPlanMin.NumPeriod1 = 1 THEN MI_PromoGoods.AmountPlanMin_50 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END
+                 WHEN tmpPeriodPlanMin.NumPeriod1 = 2 THEN MI_PromoGoods.AmountPlanMin_30 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END
+                 WHEN tmpPeriodPlanMin.NumPeriod1 = 3 THEN MI_PromoGoods.AmountPlanMin_20 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END ELSE 0 END 
+               * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)                                       ::TFloat  AS AmountPlanMin_Calc1
+          , (CASE WHEN tmpPeriodPlanMin.NumPeriod2 = 1 THEN MI_PromoGoods.AmountPlanMin_50 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END
+                 WHEN tmpPeriodPlanMin.NumPeriod2 = 2 THEN MI_PromoGoods.AmountPlanMin_30 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END
+                 WHEN tmpPeriodPlanMin.NumPeriod2 = 3 THEN MI_PromoGoods.AmountPlanMin_20 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END ELSE 0 END 
+               * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)                                       ::TFloat  AS AmountPlanMin_Calc2
+          , (CASE WHEN tmpPeriodPlanMin.NumPeriod3 = 1 THEN MI_PromoGoods.AmountPlanMin_50 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END
+                 WHEN tmpPeriodPlanMin.NumPeriod3 = 2 THEN MI_PromoGoods.AmountPlanMin_30 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END
+                 WHEN tmpPeriodPlanMin.NumPeriod3 = 3 THEN MI_PromoGoods.AmountPlanMin_20 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END ELSE 0 END 
+               * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)                                       ::TFloat  AS AmountPlanMin_Calc3
+          , (CASE WHEN tmpPeriodPlanMin.NumPeriod4 = 1 THEN MI_PromoGoods.AmountPlanMin_50 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END
+                 WHEN tmpPeriodPlanMin.NumPeriod4 = 2 THEN MI_PromoGoods.AmountPlanMin_30 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END
+                 WHEN tmpPeriodPlanMin.NumPeriod4 = 3 THEN MI_PromoGoods.AmountPlanMin_20 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END ELSE 0 END 
+               * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)                                       ::TFloat  AS AmountPlanMin_Calc4
+          , (CASE WHEN tmpPeriodPlanMin.NumPeriod5 = 1 THEN MI_PromoGoods.AmountPlanMin_50 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END
+                 WHEN tmpPeriodPlanMin.NumPeriod5 = 2 THEN MI_PromoGoods.AmountPlanMin_30 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END
+                 WHEN tmpPeriodPlanMin.NumPeriod5 = 3 THEN MI_PromoGoods.AmountPlanMin_20 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END ELSE 0 END 
+               * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)                                       ::TFloat  AS AmountPlanMin_Calc5
+          , (CASE WHEN tmpPeriodPlanMin.NumPeriod6 = 1 THEN MI_PromoGoods.AmountPlanMin_50 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END
+                 WHEN tmpPeriodPlanMin.NumPeriod6 = 2 THEN MI_PromoGoods.AmountPlanMin_30 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END
+                 WHEN tmpPeriodPlanMin.NumPeriod6 = 3 THEN MI_PromoGoods.AmountPlanMin_20 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END ELSE 0 END 
+               * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)                                      ::TFloat  AS AmountPlanMin_Calc6
+          , (CASE WHEN tmpPeriodPlanMin.NumPeriod7 = 1 THEN MI_PromoGoods.AmountPlanMin_50 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END
+                 WHEN tmpPeriodPlanMin.NumPeriod7 = 2 THEN MI_PromoGoods.AmountPlanMin_30 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END
+                 WHEN tmpPeriodPlanMin.NumPeriod7 = 3 THEN MI_PromoGoods.AmountPlanMin_20 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END ELSE 0 END 
+               * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)                                       ::TFloat  AS AmountPlanMin_Calc7
+
+          , ((CASE WHEN tmpMov.isPromo = TRUE THEN 1 ELSE 0 END) 
+             * ( MI_PromoGoods.AmountPlan1
+               + MI_PromoGoods.AmountPlan2
+               + MI_PromoGoods.AmountPlan3
+               + MI_PromoGoods.AmountPlan4
+               + MI_PromoGoods.AmountPlan5
+               + MI_PromoGoods.AmountPlan6
+               + MI_PromoGoods.AmountPlan7) * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)    ::TFloat  AS TotalAmountPlan_Wh
+
+          , ((tmpMovement_Sale.AmountSale1 
+            + tmpMovement_Sale.AmountSale2 
+            + tmpMovement_Sale.AmountSale3 
+            + tmpMovement_Sale.AmountSale4 
+            + tmpMovement_Sale.AmountSale5 
+            + tmpMovement_Sale.AmountSale6 
+            + tmpMovement_Sale.AmountSale7) * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)    ::TFloat  AS TotalAmountSale
+
+          , ((CASE WHEN tmpPeriodPlanMin.NumPeriod1 = 1 THEN MI_PromoGoods.AmountPlanMin_50 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END
+                   WHEN tmpPeriodPlanMin.NumPeriod1 = 2 THEN MI_PromoGoods.AmountPlanMin_30 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END
+                   WHEN tmpPeriodPlanMin.NumPeriod1 = 3 THEN MI_PromoGoods.AmountPlanMin_20 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END ELSE 0 END 
+            + CASE WHEN tmpPeriodPlanMin.NumPeriod2 = 1 THEN MI_PromoGoods.AmountPlanMin_50 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END
+                   WHEN tmpPeriodPlanMin.NumPeriod2 = 2 THEN MI_PromoGoods.AmountPlanMin_30 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END
+                   WHEN tmpPeriodPlanMin.NumPeriod2 = 3 THEN MI_PromoGoods.AmountPlanMin_20 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END ELSE 0 END 
+            + CASE WHEN tmpPeriodPlanMin.NumPeriod3 = 1 THEN MI_PromoGoods.AmountPlanMin_50 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END
+                   WHEN tmpPeriodPlanMin.NumPeriod3 = 2 THEN MI_PromoGoods.AmountPlanMin_30 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END
+                   WHEN tmpPeriodPlanMin.NumPeriod3 = 3 THEN MI_PromoGoods.AmountPlanMin_20 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END ELSE 0 END 
+            + CASE WHEN tmpPeriodPlanMin.NumPeriod4 = 1 THEN MI_PromoGoods.AmountPlanMin_50 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END
+                   WHEN tmpPeriodPlanMin.NumPeriod4 = 2 THEN MI_PromoGoods.AmountPlanMin_30 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END
+                   WHEN tmpPeriodPlanMin.NumPeriod4 = 3 THEN MI_PromoGoods.AmountPlanMin_20 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END ELSE 0 END 
+            + CASE WHEN tmpPeriodPlanMin.NumPeriod5 = 1 THEN MI_PromoGoods.AmountPlanMin_50 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END
+                   WHEN tmpPeriodPlanMin.NumPeriod5 = 2 THEN MI_PromoGoods.AmountPlanMin_30 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END
+                   WHEN tmpPeriodPlanMin.NumPeriod5 = 3 THEN MI_PromoGoods.AmountPlanMin_20 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END ELSE 0 END 
+            + CASE WHEN tmpPeriodPlanMin.NumPeriod6 = 1 THEN MI_PromoGoods.AmountPlanMin_50 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END
+                   WHEN tmpPeriodPlanMin.NumPeriod6 = 2 THEN MI_PromoGoods.AmountPlanMin_30 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END
+                   WHEN tmpPeriodPlanMin.NumPeriod6 = 3 THEN MI_PromoGoods.AmountPlanMin_20 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END ELSE 0 END 
+            + CASE WHEN tmpPeriodPlanMin.NumPeriod7 = 1 THEN MI_PromoGoods.AmountPlanMin_50 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END
+                   WHEN tmpPeriodPlanMin.NumPeriod7 = 2 THEN MI_PromoGoods.AmountPlanMin_30 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END
+                   WHEN tmpPeriodPlanMin.NumPeriod7 = 3 THEN MI_PromoGoods.AmountPlanMin_20 / CASE WHEN Movement_Promo.CountDays <> 0 THEN Movement_Promo.CountDays ELSE 1 END ELSE 0 END) 
+               * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END)                                 ::TFloat  AS TotalAmountPlanMin_Calc
+
           , MI_PromoGoods.isPlan1         ::Boolean
           , MI_PromoGoods.isPlan2         ::Boolean
           , MI_PromoGoods.isPlan3         ::Boolean
