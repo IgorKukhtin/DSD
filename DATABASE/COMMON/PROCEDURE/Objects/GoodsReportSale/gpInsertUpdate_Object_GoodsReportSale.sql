@@ -355,6 +355,22 @@ BEGIN
                                                    , inOrderBranch6 := tmpAll.OrderBranch6 :: TFloat
                                                    , inOrderBranch7 := tmpAll.OrderBranch7 :: TFloat
                                                    
+                                                   , inPromoPlan1       :=  0    :: TFloat
+                                                   , inPromoPlan2       :=  0    :: TFloat    
+                                                   , inPromoPlan3       :=  0    :: TFloat    
+                                                   , inPromoPlan4       :=  0    :: TFloat    
+                                                   , inPromoPlan5       :=  0    :: TFloat    
+                                                   , inPromoPlan6       :=  0    :: TFloat    
+                                                   , inPromoPlan7       :=  0    :: TFloat    
+                                                                                             
+                                                   , inPromoBranchPlan1      :=  0   :: TFloat
+                                                   , inPromoBranchPlan2      :=  0   :: TFloat
+                                                   , inPromoBranchPlan3      :=  0   :: TFloat
+                                                   , inPromoBranchPlan4      :=  0   :: TFloat
+                                                   , inPromoBranchPlan5      :=  0   :: TFloat
+                                                   , inPromoBranchPlan6      :=  0   :: TFloat
+                                                   , inPromoBranchPlan7      :=  0   :: TFloat
+                                                   
                                                    , inUserId       := vbUserId
                                                     )
        FROM (SELECT tmpAll.UnitId

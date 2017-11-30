@@ -443,6 +443,126 @@ object GoodsReportSaleForm: TGoodsReportSaleForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalAnalysisOrder
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PromoPlan1
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PromoPlan2
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PromoPlan3
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PromoPlan4
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PromoPlan5
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PromoPlan6
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PromoPlan7
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PromoBranchPlan1
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PromoBranchPlan2
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PromoBranchPlan3
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PromoBranchPlan4
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PromoBranchPlan5
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PromoBranchPlan6
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PromoBranchPlan7
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AnalysisPromoPlan1
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AnalysisPromoPlan2
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AnalysisPromoPlan3
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AnalysisPromoPlan4
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AnalysisPromoPlan5
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AnalysisPromoPlan6
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AnalysisPromoPlan7
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalPromoPlan
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalPromoBranchPlan
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalAnalysisPromoPlan
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -859,6 +979,126 @@ object GoodsReportSaleForm: TGoodsReportSaleForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalAnalysisOrder
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PromoPlan1
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PromoPlan2
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PromoPlan3
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PromoPlan4
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PromoPlan5
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PromoPlan6
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PromoPlan7
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PromoBranchPlan1
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PromoBranchPlan2
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PromoBranchPlan3
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PromoBranchPlan4
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PromoBranchPlan5
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PromoBranchPlan6
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PromoBranchPlan7
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AnalysisPromoPlan1
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AnalysisPromoPlan2
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AnalysisPromoPlan3
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AnalysisPromoPlan4
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AnalysisPromoPlan5
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AnalysisPromoPlan6
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AnalysisPromoPlan7
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalPromoPlan
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalPromoBranchPlan
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalAnalysisPromoPlan
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -1106,6 +1346,42 @@ object GoodsReportSaleForm: TGoodsReportSaleForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1090#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 95
+      end
+      object TotalPromoPlan: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1055#1083#1072#1085' '#1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080
+        DataBinding.FieldName = 'TotalPromoPlan'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1055#1083#1072#1085' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1090#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 95
+      end
+      object TotalPromoBranchPlan: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1055#1083#1072#1085' '#1088#1072#1089#1093'. '#1085#1072' '#1060#1080#1083'.'
+        DataBinding.FieldName = 'TotalPromoBranchPlan'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086' '#1055#1083#1072#1085' '#1056#1072#1089#1093#1086#1076' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1085#1072' '#1060#1080#1083#1080#1072#1083' '#1090#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 95
+      end
+      object TotalAnalysisPromoPlan: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1087#1083#1072#1085' '#1088#1072#1089#1093#1086#1076' '#1040#1082#1094#1080#1080
+        DataBinding.FieldName = 'TotalAnalysisPromoPlan'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = 
+          #1048#1090#1086#1075#1086' '#1076#1083#1103' '#1057#1058#1040#1058#1048#1057#1058#1048#1050#1048' '#1050#1086#1083'-'#1074#1086' '#1055#1083#1072#1085' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' + '#1087#1083#1072#1085' '#1056#1072#1089 +
+          #1093#1086#1076' '#1085#1072' '#1060#1080#1083#1080#1072#1083' '#1090#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
         Options.Editing = False
         Width = 95
       end
@@ -1885,9 +2161,9 @@ object GoodsReportSaleForm: TGoodsReportSaleForm
         Options.Editing = False
         Width = 60
       end
-      object OrderBranch5: TcxGridDBColumn
-        Caption = #1079#1072#1103#1074#1082#1072' '#1089' '#1060#1080#1083'. '#1079#1072' 5'
-        DataBinding.FieldName = 'OrderBranch5'
+      object OrderBranch6: TcxGridDBColumn
+        Caption = #1079#1072#1103#1074#1082#1072' '#1089' '#1060#1080#1083'. '#1079#1072' 6'
+        DataBinding.FieldName = 'OrderBranch6'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
@@ -1897,9 +2173,9 @@ object GoodsReportSaleForm: TGoodsReportSaleForm
         Options.Editing = False
         Width = 60
       end
-      object OrderBranch6: TcxGridDBColumn
-        Caption = #1079#1072#1103#1074#1082#1072' '#1089' '#1060#1080#1083'. '#1079#1072' 6'
-        DataBinding.FieldName = 'OrderBranch6'
+      object OrderBranch5: TcxGridDBColumn
+        Caption = #1079#1072#1103#1074#1082#1072' '#1089' '#1060#1080#1083'. '#1079#1072' 5'
+        DataBinding.FieldName = 'OrderBranch5'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
@@ -1918,6 +2194,258 @@ object GoodsReportSaleForm: TGoodsReportSaleForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1083'-'#1074#1086' '#1047#1072#1103#1074#1082#1072' '#1089' '#1060#1080#1083#1080#1072#1083#1072
+        Options.Editing = False
+        Width = 60
+      end
+      object PromoPlan1: TcxGridDBColumn
+        Caption = #1055#1083#1072#1085' '#1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080' '#1079#1072' 1'
+        DataBinding.FieldName = 'PromoPlan1'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1055#1083#1072#1085' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object PromoPlan2: TcxGridDBColumn
+        Caption = #1055#1083#1072#1085' '#1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080' '#1079#1072' 2'
+        DataBinding.FieldName = 'PromoPlan2'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1055#1083#1072#1085' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object PromoPlan3: TcxGridDBColumn
+        Caption = #1055#1083#1072#1085' '#1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080' '#1079#1072' 3'
+        DataBinding.FieldName = 'PromoPlan3'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1055#1083#1072#1085' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object PromoPlan4: TcxGridDBColumn
+        Caption = #1055#1083#1072#1085' '#1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080' '#1079#1072' 4'
+        DataBinding.FieldName = 'PromoPlan4'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1055#1083#1072#1085' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object PromoPlan5: TcxGridDBColumn
+        Caption = #1055#1083#1072#1085' '#1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080' '#1079#1072' 5'
+        DataBinding.FieldName = 'PromoPlan5'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1055#1083#1072#1085' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object PromoPlan6: TcxGridDBColumn
+        Caption = #1055#1083#1072#1085' '#1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080' '#1079#1072' 6'
+        DataBinding.FieldName = 'PromoPlan6'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1055#1083#1072#1085' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object PromoPlan7: TcxGridDBColumn
+        Caption = #1055#1083#1072#1085' '#1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080' '#1079#1072' 7'
+        DataBinding.FieldName = 'PromoPlan7'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1055#1083#1072#1085' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object PromoBranchPlan1: TcxGridDBColumn
+        Caption = #1055#1083#1072#1085' '#1088#1072#1089#1093'. '#1085#1072' '#1060#1080#1083'. '#1079#1072' 1'
+        DataBinding.FieldName = 'PromoBranchPlan1'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1055#1083#1072#1085' '#1056#1072#1089#1093#1086#1076' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1085#1072' '#1060#1080#1083#1080#1072#1083' '#1090#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object PromoBranchPlan2: TcxGridDBColumn
+        Caption = #1055#1083#1072#1085' '#1088#1072#1089#1093'. '#1085#1072' '#1060#1080#1083'. '#1079#1072' 2'
+        DataBinding.FieldName = 'PromoBranchPlan2'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1055#1083#1072#1085' '#1056#1072#1089#1093#1086#1076' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1085#1072' '#1060#1080#1083#1080#1072#1083' '#1090#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object PromoBranchPlan3: TcxGridDBColumn
+        Caption = #1055#1083#1072#1085' '#1088#1072#1089#1093'. '#1085#1072' '#1060#1080#1083'. '#1079#1072' 3'
+        DataBinding.FieldName = 'PromoBranchPlan3'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1055#1083#1072#1085' '#1056#1072#1089#1093#1086#1076' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1085#1072' '#1060#1080#1083#1080#1072#1083' '#1090#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object PromoBranchPlan4: TcxGridDBColumn
+        Caption = #1055#1083#1072#1085' '#1088#1072#1089#1093'. '#1085#1072' '#1060#1080#1083'. '#1079#1072' 4'
+        DataBinding.FieldName = 'PromoBranchPlan4'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1055#1083#1072#1085' '#1056#1072#1089#1093#1086#1076' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1085#1072' '#1060#1080#1083#1080#1072#1083' '#1090#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object PromoBranchPlan5: TcxGridDBColumn
+        Caption = #1055#1083#1072#1085' '#1088#1072#1089#1093'. '#1085#1072' '#1060#1080#1083'. '#1079#1072' 5'
+        DataBinding.FieldName = 'PromoBranchPlan5'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1055#1083#1072#1085' '#1056#1072#1089#1093#1086#1076' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1085#1072' '#1060#1080#1083#1080#1072#1083' '#1090#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object PromoBranchPlan6: TcxGridDBColumn
+        Caption = #1055#1083#1072#1085' '#1088#1072#1089#1093'. '#1085#1072' '#1060#1080#1083'. '#1079#1072' 6'
+        DataBinding.FieldName = 'PromoBranchPlan6'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1055#1083#1072#1085' '#1056#1072#1089#1093#1086#1076' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1085#1072' '#1060#1080#1083#1080#1072#1083' '#1090#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object PromoBranchPlan7: TcxGridDBColumn
+        Caption = #1055#1083#1072#1085' '#1088#1072#1089#1093'. '#1085#1072' '#1060#1080#1083'. '#1079#1072' 7'
+        DataBinding.FieldName = 'PromoBranchPlan7'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1055#1083#1072#1085' '#1056#1072#1089#1093#1086#1076' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1085#1072' '#1060#1080#1083#1080#1072#1083' '#1090#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object AnalysisPromoPlan1: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1087#1083#1072#1085' '#1088#1072#1089#1093#1086#1076' '#1040#1082#1094#1080#1080' '#1079#1072' 1'
+        DataBinding.FieldName = 'AnalysisPromoPlan1'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1055#1083#1072#1085' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object AnalysisPromoPlan2: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1087#1083#1072#1085' '#1088#1072#1089#1093#1086#1076' '#1040#1082#1094#1080#1080' '#1079#1072' 2'
+        DataBinding.FieldName = 'AnalysisPromoPlan2'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1055#1083#1072#1085' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object AnalysisPromoPlan3: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1087#1083#1072#1085' '#1088#1072#1089#1093#1086#1076' '#1040#1082#1094#1080#1080' '#1079#1072' 3'
+        DataBinding.FieldName = 'AnalysisPromoPlan3'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1055#1083#1072#1085' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object AnalysisPromoPlan4: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1087#1083#1072#1085' '#1088#1072#1089#1093#1086#1076' '#1040#1082#1094#1080#1080' '#1079#1072' 4'
+        DataBinding.FieldName = 'AnalysisPromoPlan4'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1055#1083#1072#1085' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object AnalysisPromoPlan5: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1087#1083#1072#1085' '#1088#1072#1089#1093#1086#1076' '#1040#1082#1094#1080#1080' '#1079#1072' 5'
+        DataBinding.FieldName = 'AnalysisPromoPlan5'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1055#1083#1072#1085' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object AnalysisPromoPlan6: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1087#1083#1072#1085' '#1088#1072#1089#1093#1086#1076' '#1040#1082#1094#1080#1080' '#1079#1072' 6'
+        DataBinding.FieldName = 'AnalysisPromoPlan6'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1055#1083#1072#1085' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+        Options.Editing = False
+        Width = 60
+      end
+      object AnalysisPromoPlan7: TcxGridDBColumn
+        Caption = #1048#1058#1054#1043#1054' '#1087#1083#1072#1085' '#1088#1072#1089#1093#1086#1076' '#1040#1082#1094#1080#1080' '#1079#1072' 7'
+        DataBinding.FieldName = 'AnalysisPromoPlan7'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1055#1083#1072#1085' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1058#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
         Options.Editing = False
         Width = 60
       end
@@ -2066,6 +2594,18 @@ object GoodsReportSaleForm: TGoodsReportSaleForm
       object serOrder: TcxGridDBChartSeries
         DataBinding.FieldName = 'AmountOrder'
         DisplayText = #1079#1072#1103#1074#1082#1072' '#1087#1086#1082'.'
+      end
+      object serTotalPromoPlan: TcxGridDBChartSeries
+        DataBinding.FieldName = 'TotalPromoPlan'
+        DisplayText = #1048#1058#1054#1043#1054' '#1055#1083#1072#1085' '#1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080
+      end
+      object serTotalPromoBranchPlan: TcxGridDBChartSeries
+        DataBinding.FieldName = 'TotalPromoBranchPlan'
+        DisplayText = #1048#1058#1054#1043#1054' '#1055#1083#1072#1085' '#1088#1072#1089#1093'. '#1085#1072' '#1060#1080#1083'.'
+      end
+      object serTotalAnalysisPromoPlan: TcxGridDBChartSeries
+        DataBinding.FieldName = 'TotalAnalysisPromoPlan'
+        DisplayText = #1048#1058#1054#1043#1054' '#1087#1083#1072#1085' '#1088#1072#1089#1093#1086#1076' '#1040#1082#1094#1080#1080
       end
     end
     object grChartLevel1: TcxGridLevel

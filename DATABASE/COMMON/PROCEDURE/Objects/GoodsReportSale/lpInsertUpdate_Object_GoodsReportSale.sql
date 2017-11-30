@@ -9,6 +9,17 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Object_GoodsReportSale (Integer, Integer,
                                                              , TFloat , TFloat , TFloat , TFloat , TFloat , TFloat , TFloat 
                                                              , Integer);
 
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_GoodsReportSale (Integer, Integer, Integer, Integer
+                                                             , TFloat , TFloat , TFloat , TFloat , TFloat , TFloat , TFloat 
+                                                             , TFloat , TFloat , TFloat , TFloat , TFloat , TFloat , TFloat 
+                                                             , TFloat , TFloat , TFloat , TFloat , TFloat , TFloat , TFloat         
+                                                             , TFloat , TFloat , TFloat , TFloat , TFloat , TFloat , TFloat 
+                                                             , TFloat , TFloat , TFloat , TFloat , TFloat , TFloat , TFloat
+                                                             , TFloat , TFloat , TFloat , TFloat , TFloat , TFloat , TFloat 
+                                                             , TFloat , TFloat , TFloat , TFloat , TFloat , TFloat , TFloat
+                                                             , TFloat , TFloat , TFloat , TFloat , TFloat , TFloat , TFloat
+                                                             , Integer);
+
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_GoodsReportSale(
     IN inId           Integer       -- ключ объекта <>         
   , IN inUnitId       Integer                                  
@@ -62,6 +73,22 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_GoodsReportSale(
   , IN inOrderBranch5 TFloat                                   
   , IN inOrderBranch6 TFloat                                   
   , IN inOrderBranch7 TFloat
+  
+  , IN inPromoPlan1       TFloat
+  , IN inPromoPlan2       TFloat    
+  , IN inPromoPlan3       TFloat    
+  , IN inPromoPlan4       TFloat    
+  , IN inPromoPlan5       TFloat    
+  , IN inPromoPlan6       TFloat    
+  , IN inPromoPlan7       TFloat    
+                                
+  , IN inPromoBranchPlan1   TFloat
+  , IN inPromoBranchPlan2   TFloat
+  , IN inPromoBranchPlan3   TFloat
+  , IN inPromoBranchPlan4   TFloat
+  , IN inPromoBranchPlan5   TFloat
+  , IN inPromoBranchPlan6   TFloat
+  , IN inPromoBranchPlan7   TFloat
   
   , IN inUserId       Integer        -- сессия пользователя
 )
@@ -133,6 +160,24 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_GoodsReportSale_OrderBranch5(), inId, inOrderBranch5);
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_GoodsReportSale_OrderBranch6(), inId, inOrderBranch6);
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_GoodsReportSale_OrderBranch7(), inId, inOrderBranch7); 
+   
+   -- сохранили св-во <>
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_GoodsReportSale_PromoPlan1(), inId, inPromoPlan1);
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_GoodsReportSale_PromoPlan2(), inId, inPromoPlan2);
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_GoodsReportSale_PromoPlan3(), inId, inPromoPlan3);
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_GoodsReportSale_PromoPlan4(), inId, inPromoPlan4);
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_GoodsReportSale_PromoPlan5(), inId, inPromoPlan5);
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_GoodsReportSale_PromoPlan6(), inId, inPromoPlan6);
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_GoodsReportSale_PromoPlan7(), inId, inPromoPlan7); 
+   
+   -- сохранили св-во <>
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_GoodsReportSale_PromoBranchPlan1(), inId, inPromoBranchPlan1);
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_GoodsReportSale_PromoBranchPlan2(), inId, inPromoBranchPlan2);
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_GoodsReportSale_PromoBranchPlan3(), inId, inPromoBranchPlan3);
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_GoodsReportSale_PromoBranchPlan4(), inId, inPromoBranchPlan4);
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_GoodsReportSale_PromoBranchPlan5(), inId, inPromoBranchPlan5);
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_GoodsReportSale_PromoBranchPlan6(), inId, inPromoBranchPlan6);
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_GoodsReportSale_PromoBranchPlan7(), inId, inPromoBranchPlan7); 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -141,6 +186,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 30.11.17         *
  02.11.17         *
 */
 
