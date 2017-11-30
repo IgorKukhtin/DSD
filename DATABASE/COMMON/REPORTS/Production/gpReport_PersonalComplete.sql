@@ -17,10 +17,17 @@ RETURNS TABLE (OperDate TDateTime
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              , PositionId Integer, PositionCode Integer, PositionName TVarChar
-             , TotalCount TFloat, TotalCountKg TFloat
-             , CountMI TFloat, CountMovement TFloat
-             , TotalCount1 TFloat, TotalCountKg1 TFloat
-             , CountMI1 TFloat, CountMovement1 TFloat
+
+             , TotalCount     TFloat   -- Количество (компл.)
+             , TotalCountKg   TFloat   -- Вес (компл.)
+             , CountMI        TFloat   -- Кол. строк (компл.)
+             , CountMovement  TFloat   -- Кол. док. (компл.)
+
+             , TotalCount1    TFloat
+             , TotalCountKg1  TFloat
+             , CountMI1       TFloat
+             , CountMovement1 TFloat
+
              , BranchName  TVarChar
              , FromId Integer, ToId  Integer
               )
