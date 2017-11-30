@@ -304,7 +304,9 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SelectKind_InPack(),    inDescId:= zc_Object_SelectKind(), inCode:= 5, inName:= 'Кол-во упаковок приход (расчет)',  inEnumName:= 'zc_Enum_SelectKind_InPack');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SelectKind_InHead(),    inDescId:= zc_Object_SelectKind(), inCode:= 6, inName:= 'Кол-во голов приход',              inEnumName:= 'zc_Enum_SelectKind_InHead');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SelectKind_OutHead(),   inDescId:= zc_Object_SelectKind(), inCode:= 7, inName:= 'Кол-во голов расход',              inEnumName:= 'zc_Enum_SelectKind_OutHead');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SelectKind_MI_Master(), inDescId:= zc_Object_SelectKind(), inCode:= 8, inName:= 'Кол-во строк в документе',         inEnumName:= 'zc_Enum_SelectKind_MI_Master');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SelectKind_MI_Master(),      inDescId:= zc_Object_SelectKind(), inCode:= 8,  inName:= 'Кол-во вес по документам компл. ',  inEnumName:= 'zc_Enum_SelectKind_MI_Master');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SelectKind_MI_MasterCount(), inDescId:= zc_Object_SelectKind(), inCode:= 9,  inName:= 'Кол-во строк по документам компл.', inEnumName:= 'zc_Enum_SelectKind_MI_MasterCount');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SelectKind_MovementCount(),  inDescId:= zc_Object_SelectKind(), inCode:= 10, inName:= 'Кол-во документов компл.',          inEnumName:= 'zc_Enum_SelectKind_MovementCount');
 
      -- !!! Типы сумм для штатного расписания
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListSummKind_MonthDay(),        inDescId:= zc_Object_StaffListSummKind(), inCode:= 1, inName:= 'Фонд за месяц (по дням)'                                  , inEnumName:= 'zc_Enum_StaffListSummKind_MonthDay');

@@ -1,6 +1,5 @@
 -- Function: gpComplete_SelectAll_Sybase_ALL()
 
-DROP FUNCTION IF EXISTS gpComplete_SelectAll_Sybase (TDateTime, TDateTime, Boolean);
 DROP FUNCTION IF EXISTS gpComplete_SelectAll_Sybase (TDateTime, TDateTime, Boolean, Boolean);
 
 CREATE OR REPLACE FUNCTION gpComplete_SelectAll_Sybase(
