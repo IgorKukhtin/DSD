@@ -59,14 +59,12 @@ type
     plPersonalTradeName: TcxGridDBColumn;
     plPersonalName: TcxGridDBColumn;
     plChecked: TcxGridDBColumn;
-    cxLabel3: TcxLabel;
-    edUnitSale: TcxButtonEdit;
-    GuidesUnitSale: TdsdGuides;
     plGoodsKindCompleteName: TcxGridDBColumn;
-    cbUnitSale: TcxCheckBox;
     Color_EndDate: TcxGridDBColumn;
     isEndDate: TcxGridDBColumn;
     isSale: TcxGridDBColumn;
+    CountDaysPromo: TcxGridDBColumn;
+    cbUnitSale: TcxCheckBox;
   private
     { Private declarations }
   public

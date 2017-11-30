@@ -12,6 +12,10 @@ RETURNS TABLE (NUM Integer , GroupNum Integer --
       , GoodsId                 Integer --ИД объекта <товар>
       , GoodsCode               Integer --код объекта  <товар>
       , GoodsName               TVarChar --наименование объекта <товар>
+      
+      , GoodsKindName           TVarChar --Наименование обьекта <Вид товара>
+      , GoodsKindCompleteName   TVarChar --Наименование обьекта <Вид товара(примечание)>
+
       , PriceIn                 TFloat --Себ-ть прод, грн/кг
       , AmountRetIn             TFloat --Кол-во возврат грн/кг
       , ContractCondition       TFloat --бонус сети грн/кг
@@ -54,7 +58,9 @@ BEGIN
                      , MovementItem.ObjectId                  AS GoodsId                --ИД объекта <товар>
                      , Object_Goods.ObjectCode::Integer       AS GoodsCode              --код объекта  <товар>
                      , Object_Goods.ValueData                 AS GoodsName              --наименование объекта <товар>
-               
+                     , Object_GoodsKind.ValueData             AS GoodsKindName          --Наименование обьекта <Вид товара>
+                     , Object_GoodsKindComplete.ValueData     AS GoodsKindCompleteName  --Наименование обьекта <Вид товара(Примечание)>
+                            
                      , MovementItem.Amount                    AS Amount                 --% скидки на товар
                      
                      , MIFloat_PriceIn1.ValueData             AS PriceIn1               --Себ-ть - 1 прод, грн/кг
@@ -106,8 +112,19 @@ BEGIN
                      LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                  ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                 AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                                
+
+                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind 
+                                                      ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                     AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                     LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+        
+                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
+                                                      ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                                     AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+                     LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILinkObject_GoodsKindComplete.ObjectId
+
                      LEFT JOIN tmpMIChild ON 1=1 
+                     
                 WHERE MovementItem.MovementId = inMovementId 
                   AND MovementItem.DescId = zc_MI_Master()
                   AND MovementItem.isErased = FALSE
@@ -118,6 +135,8 @@ BEGIN
                          , tmpData.GoodsId             --ИД объекта <товар>
                          , tmpData.GoodsCode           --код объекта  <товар>
                          , tmpData.GoodsName           --наименование объекта <товар>
+                         , tmpData.GoodsKindName
+                         , tmpData.GoodsKindCompleteName
                    
                          , 0                         AS PriceIn  
                          , tmpData.RetIn_Percent     AS AmountRetIn           
@@ -146,7 +165,9 @@ BEGIN
                          , tmpData.GoodsId                 --ИД объекта <товар>
                          , tmpData.GoodsCode               --код объекта  <товар>
                          , tmpData.GoodsName               --наименование объекта <товар>
-                         
+                         , tmpData.GoodsKindName
+                         , tmpData.GoodsKindCompleteName
+
                          , tmpData.PriceIn1            AS PriceIn  
                          , CAST (COALESCE (CASE WHEN tmpData.AmountPlanMax <> 0 THEN (tmpData.SummaPlanMax * tmpData.RetIn_Percent /100) / tmpData.AmountPlanMax ELSE 0 END, 0) AS NUMERIC (16,2)) AS AmountRetIn           
                          , CAST (COALESCE (CASE WHEN tmpData.AmountPlanMax <> 0 THEN (tmpData.SummaPlanMax * tmpData.ContractCondition /100) / tmpData.AmountPlanMax ELSE 0 END, 0)  AS NUMERIC (16,2)) AS ContractCondition   -- бонус сети
@@ -178,7 +199,9 @@ BEGIN
                          , tmpData.GoodsId             --ИД объекта <товар>
                          , tmpData.GoodsCode           --код объекта  <товар>
                          , tmpData.GoodsName           --наименование объекта <товар>
-                   
+                         , tmpData.GoodsKindName
+                         , tmpData.GoodsKindCompleteName
+
                          , 0                         AS PriceIn  
                          , tmpData.RetIn_Percent     AS AmountRetIn           
                          , tmpData.ContractCondition AS ContractCondition
@@ -205,7 +228,9 @@ BEGIN
                          , tmpData.GoodsId                 --ИД объекта <товар>
                          , tmpData.GoodsCode               --код объекта  <товар>
                          , tmpData.GoodsName               --наименование объекта <товар>
-                         
+                         , tmpData.GoodsKindName
+                         , tmpData.GoodsKindCompleteName
+
                          , tmpData.PriceIn2            AS PriceIn  
                          , CAST (COALESCE (CASE WHEN tmpData.AmountPlanMax <> 0 THEN (tmpData.SummaPlanMax * tmpData.RetIn_Percent /100) / tmpData.AmountPlanMax ELSE 0 END, 0) AS NUMERIC (16,2)) AS AmountRetIn           
                          , CAST (COALESCE (CASE WHEN tmpData.AmountPlanMax <> 0 THEN (tmpData.SummaPlanMax * tmpData.ContractCondition /100) / tmpData.AmountPlanMax ELSE 0 END, 0) AS NUMERIC (16,2)) AS ContractCondition
@@ -237,6 +262,8 @@ BEGIN
                          , 0                --ИД объекта <товар>
                          , 0                          --код объекта  <товар>
                          , ''                         --наименование объекта <товар>
+                         , ''
+                         , ''
                          , 0                AS PriceIn  
                          , 0                AS AmountRetIn           
                          , 0                AS ContractCondition   -- бонус сети
@@ -268,7 +295,9 @@ BEGIN
          , tmpData_All.GoodsId                             
          , tmpData_All.GoodsCode                           
          , tmpData_All.GoodsName               ::TVarChar  
-         
+         , tmpData_All.GoodsKindName           ::TVarChar
+         , tmpData_All.GoodsKindCompleteName   ::TVarChar
+
          , tmpData_All.PriceIn                 :: TFloat
          , tmpData_All.AmountRetIn             :: TFloat       
          , tmpData_All.ContractCondition       :: TFloat  
@@ -277,7 +306,7 @@ BEGIN
          , tmpData_All.Price                   :: TFloat
          , tmpData_All.PriceWithVAT            :: TFloat
          , tmpData_All.PromoCondition          :: TFloat      
-         , tmpData_All.SummaProfit                  :: TFloat
+         , tmpData_All.SummaProfit             :: TFloat
          
          , tmpData_All.Color_PriceIn
          , tmpData_All.Color_RetIn
@@ -300,6 +329,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
+ 30.11.17         *
  03.08.17         *
 */
 --тест
