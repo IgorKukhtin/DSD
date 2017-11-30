@@ -116,7 +116,7 @@ BEGIN
           , tmpSign.strSign
           , tmpSign.strSignNo             
         FROM Movement_Promo_View AS Movement_Promo
-             LEFT JOIN lpSelect_MI_IncomeFuel_Sign (inMovementId:= Movement_Promo.Id ) AS tmpSign ON tmpSign.Id = Movement_Promo.Id   -- эл.подписи  --
+             LEFT JOIN lpSelect_MI_Promo_Sign (inMovementId:= Movement_Promo.Id ) AS tmpSign ON tmpSign.Id = Movement_Promo.Id   -- эл.подписи  --
         WHERE Movement_Promo.Id =  inMovementId;
     END IF;
 
