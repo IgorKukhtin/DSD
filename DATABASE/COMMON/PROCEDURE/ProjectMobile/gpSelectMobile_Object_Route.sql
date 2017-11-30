@@ -26,47 +26,38 @@ BEGIN
       -- Результат
       IF vbPersonalId IS NOT NULL 
       THEN
-           CREATE TEMP TABLE tmpRoute ON COMMIT DROP
-           AS (SELECT ObjectLink_Partner_Route.ChildObjectId AS RouteId
-               FROM ObjectLink AS ObjectLink_Partner_PersonalTrade
-                    JOIN ObjectLink AS ObjectLink_Partner_Route
-                                    ON ObjectLink_Partner_Route.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
-                                   AND ObjectLink_Partner_Route.DescId = zc_ObjectLink_Partner_Route()
-               WHERE ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
-                 AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-                 AND ObjectLink_Partner_Route.ChildObjectId IS NOT NULL
-              );
-
-           IF inSyncDateIn > zc_DateStart()
-           THEN
-                RETURN QUERY
-                  WITH tmpProtocol AS (SELECT ObjectProtocol.ObjectId AS RouteId, MAX(ObjectProtocol.OperDate) AS MaxOperDate
-                                       FROM ObjectProtocol
-                                            JOIN Object AS Object_Route
-                                                        ON Object_Route.Id = ObjectProtocol.ObjectId
-                                                       AND Object_Route.DescId = zc_Object_Route() 
-                                       WHERE ObjectProtocol.OperDate > inSyncDateIn
-                                       GROUP BY ObjectProtocol.ObjectId
-                                      )
-                  SELECT Object_Route.Id
-                       , Object_Route.ObjectCode
-                       , Object_Route.ValueData
-                       , Object_Route.isErased
-                       , EXISTS(SELECT 1 FROM tmpRoute WHERE tmpRoute.RouteId = Object_Route.Id) AS isSync
-                  FROM Object AS Object_Route
-                       JOIN tmpProtocol ON tmpProtocol.RouteId = Object_Route.Id
-                  WHERE Object_Route.DescId = zc_Object_Route();
-           ELSE
-                RETURN QUERY
-                  SELECT Object_Route.Id
-                       , Object_Route.ObjectCode
-                       , Object_Route.ValueData
-                       , Object_Route.isErased
-                       , CAST(true AS Boolean) AS isSync
-                  FROM Object AS Object_Route
-                  WHERE Object_Route.DescId = zc_Object_Route()
-                    AND EXISTS(SELECT 1 FROM tmpRoute WHERE tmpRoute.RouteId = Object_Route.Id);
-           END IF;
+           RETURN QUERY
+             WITH tmpProtocol AS (SELECT ObjectProtocol.ObjectId AS RouteId, MAX(ObjectProtocol.OperDate) AS MaxOperDate
+                                  FROM ObjectProtocol
+                                       JOIN Object AS Object_Route
+                                                   ON Object_Route.Id = ObjectProtocol.ObjectId
+                                                  AND Object_Route.DescId = zc_Object_Route() 
+                                  WHERE inSyncDateIn > zc_DateStart()
+                                    AND ObjectProtocol.OperDate > inSyncDateIn
+                                  GROUP BY ObjectProtocol.ObjectId
+                                 )
+                , tmpRoute AS (SELECT DISTINCT ObjectLink_Partner_Route.ChildObjectId AS RouteId
+                               FROM ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                    JOIN ObjectLink AS ObjectLink_Partner_Route
+                                                    ON ObjectLink_Partner_Route.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
+                                                   AND ObjectLink_Partner_Route.DescId = zc_ObjectLink_Partner_Route()
+                               WHERE ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
+                                 AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                                 AND ObjectLink_Partner_Route.ChildObjectId IS NOT NULL
+                              ) 
+                , tmpFilter AS (SELECT tmpProtocol.RouteId FROM tmpProtocol
+                                UNION
+                                SELECT tmpRoute.RouteId FROM tmpRoute WHERE inSyncDateIn <= zc_DateStart()
+                               )
+             SELECT Object_Route.Id
+                  , Object_Route.ObjectCode
+                  , Object_Route.ValueData
+                  , Object_Route.isErased
+                  , (tmpRoute.RouteId IS NOT NULL) AS isSync
+             FROM Object AS Object_Route
+                  JOIN tmpFilter ON tmpFilter.RouteId = Object_Route.Id
+                  LEFT JOIN tmpRoute ON tmpRoute.RouteId = Object_Route.Id
+             WHERE Object_Route.DescId = zc_Object_Route();
       END IF;
 
 END; 

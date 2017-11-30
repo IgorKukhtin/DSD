@@ -21,6 +21,9 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbPersonalId Integer;
 BEGIN
+      -- !!!ВРЕМЕННО!!!
+      inSyncDateIn:= zc_DateStart();
+
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
       vbUserId:= lpGetUserBySession (inSession);
@@ -30,98 +33,71 @@ BEGIN
       -- Результат
       IF vbPersonalId IS NOT NULL
       THEN
-           CREATE TEMP TABLE tmpPartner ON COMMIT DROP
-           AS (SELECT OP.Id AS PartnerId FROM lfSelectMobile_Object_Partner (inIsErased:= FALSE, inSession:= inSession) AS OP);
-
-           CREATE TEMP TABLE tmpGoods ON COMMIT DROP
-           AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId AS GoodsId
-               FROM Object AS Object_GoodsByGoodsKind
-                    JOIN ObjectBoolean AS ObjectBoolean_GoodsByGoodsKind_Order
-                                       ON ObjectBoolean_GoodsByGoodsKind_Order.ObjectId  = Object_GoodsByGoodsKind.Id
-                                      AND ObjectBoolean_GoodsByGoodsKind_Order.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_Order() 
-                                      AND ObjectBoolean_GoodsByGoodsKind_Order.ValueData = TRUE
-                    JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
-                                    ON ObjectLink_GoodsByGoodsKind_Goods.ObjectId = Object_GoodsByGoodsKind.Id
-                                   AND ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
-                                   AND ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId IS NOT NULL
-               WHERE Object_GoodsByGoodsKind.DescId = zc_Object_GoodsByGoodsKind()
-              UNION
-               SELECT ObjectLink_GoodsListSale_Goods.ChildObjectId AS GoodsId
-               FROM Object AS Object_GoodsListSale
-                    JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods 
-                                    ON ObjectLink_GoodsListSale_Goods.ObjectId = Object_GoodsListSale.Id
-                                   AND ObjectLink_GoodsListSale_Goods.DescId = zc_ObjectLink_GoodsListSale_Goods()
-                                   AND ObjectLink_GoodsListSale_Goods.ChildObjectId IS NOT NULL
-                    JOIN ObjectLink AS ObjectLink_GoodsListSale_Partner
-                                    ON ObjectLink_GoodsListSale_Partner.ObjectId = Object_GoodsListSale.Id
-                                   AND ObjectLink_GoodsListSale_Partner.DescId = zc_ObjectLink_GoodsListSale_Partner()
-                                   AND ObjectLink_GoodsListSale_Partner.ChildObjectId IS NOT NULL
-                    JOIN tmpPartner ON tmpPartner.PartnerId = ObjectLink_GoodsListSale_Partner.ChildObjectId
-               WHERE Object_GoodsListSale.DescId = zc_Object_GoodsListSale()
-              );
-           
-           IF inSyncDateIn > zc_DateStart() AND 1 = 0 -- пока отключим ограничение по времени
-           THEN
-                RETURN QUERY
-                  WITH tmpProtocol AS (SELECT ObjectProtocol.ObjectId AS GoodsId, MAX(ObjectProtocol.OperDate) AS MaxOperDate
-                                       FROM ObjectProtocol
-                                            JOIN Object AS Object_Goods
-                                                        ON Object_Goods.Id = ObjectProtocol.ObjectId
-                                                       AND Object_Goods.DescId = zc_Object_Goods() 
-                                       WHERE ObjectProtocol.OperDate > inSyncDateIn
-                                       GROUP BY ObjectProtocol.ObjectId
-                                      )
-                  SELECT Object_Goods.Id
-                       , Object_Goods.ObjectCode
-                       , Object_Goods.ValueData
-                       , ObjectFloat_Goods_Weight.ValueData            AS Weight
-                       , ObjectLink_Goods_GoodsGroup.ChildObjectId     AS GoodsGroupId
-                       , ObjectLink_Goods_Measure.ChildObjectId        AS MeasureId
-                       , ObjectLink_GoodsGroup_TradeMark.ChildObjectId AS TradeMarkId
-                       , Object_Goods.isErased
-                       , EXISTS(SELECT 1 FROM tmpGoods WHERE tmpGoods.GoodsId = Object_Goods.Id) AS isSync
-                  FROM Object AS Object_Goods
-                       JOIN tmpProtocol ON tmpProtocol.GoodsId = Object_Goods.Id
-                       LEFT JOIN ObjectFloat AS ObjectFloat_Goods_Weight
-                                             ON ObjectFloat_Goods_Weight.ObjectId = Object_Goods.Id
-                                            AND ObjectFloat_Goods_Weight.DescId = zc_ObjectFloat_Goods_Weight() 
-                       LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                            ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
-                                           AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup() 
-                       LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                            ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
-                                           AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure() 
-                       LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_TradeMark
-                                            ON ObjectLink_GoodsGroup_TradeMark.ObjectId = ObjectLink_Goods_GoodsGroup.ChildObjectId
-                                           AND ObjectLink_GoodsGroup_TradeMark.DescId = zc_ObjectLink_GoodsGroup_TradeMark() 
-                  WHERE Object_Goods.DescId = zc_Object_Goods();
-           ELSE
-                RETURN QUERY
-                  SELECT Object_Goods.Id
-                       , Object_Goods.ObjectCode
-                       , Object_Goods.ValueData
-                       , ObjectFloat_Goods_Weight.ValueData            AS Weight
-                       , ObjectLink_Goods_GoodsGroup.ChildObjectId     AS GoodsGroupId
-                       , ObjectLink_Goods_Measure.ChildObjectId        AS MeasureId
-                       , ObjectLink_GoodsGroup_TradeMark.ChildObjectId AS TradeMarkId
-                       , Object_Goods.isErased
-                       , CAST(true AS Boolean) AS isSync
-                  FROM Object AS Object_Goods
-                       JOIN tmpGoods ON tmpGoods.GoodsId = Object_Goods.Id
-                       LEFT JOIN ObjectFloat AS ObjectFloat_Goods_Weight
-                                             ON ObjectFloat_Goods_Weight.ObjectId = Object_Goods.Id
-                                            AND ObjectFloat_Goods_Weight.DescId = zc_ObjectFloat_Goods_Weight() 
-                       LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                            ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
-                                           AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup() 
-                       LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                            ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
-                                           AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure() 
-                       LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_TradeMark
-                                            ON ObjectLink_GoodsGroup_TradeMark.ObjectId = ObjectLink_Goods_GoodsGroup.ChildObjectId
-                                           AND ObjectLink_GoodsGroup_TradeMark.DescId = zc_ObjectLink_GoodsGroup_TradeMark() 
-                  WHERE Object_Goods.DescId = zc_Object_Goods();
-           END IF;
+           RETURN QUERY
+             WITH tmpProtocol AS (SELECT ObjectProtocol.ObjectId AS GoodsId, MAX(ObjectProtocol.OperDate) AS MaxOperDate
+                                  FROM ObjectProtocol
+                                       JOIN Object AS Object_Goods
+                                                   ON Object_Goods.Id = ObjectProtocol.ObjectId
+                                                  AND Object_Goods.DescId = zc_Object_Goods() 
+                                  WHERE inSyncDateIn > zc_DateStart()
+                                    AND ObjectProtocol.OperDate > inSyncDateIn
+                                  GROUP BY ObjectProtocol.ObjectId
+                                 )
+                , tmpPartner AS (SELECT OP.Id AS PartnerId FROM lfSelectMobile_Object_Partner (inIsErased:= FALSE, inSession:= inSession) AS OP)
+                , tmpGoods AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId AS GoodsId
+                               FROM Object AS Object_GoodsByGoodsKind
+                                    JOIN ObjectBoolean AS ObjectBoolean_GoodsByGoodsKind_Order
+                                                       ON ObjectBoolean_GoodsByGoodsKind_Order.ObjectId  = Object_GoodsByGoodsKind.Id
+                                                      AND ObjectBoolean_GoodsByGoodsKind_Order.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_Order() 
+                                                      AND ObjectBoolean_GoodsByGoodsKind_Order.ValueData = TRUE
+                                    JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                                    ON ObjectLink_GoodsByGoodsKind_Goods.ObjectId = Object_GoodsByGoodsKind.Id
+                                                   AND ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                                   AND ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId IS NOT NULL
+                               WHERE Object_GoodsByGoodsKind.DescId = zc_Object_GoodsByGoodsKind()
+                               UNION
+                               SELECT ObjectLink_GoodsListSale_Goods.ChildObjectId AS GoodsId
+                               FROM Object AS Object_GoodsListSale
+                                    JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods 
+                                                    ON ObjectLink_GoodsListSale_Goods.ObjectId = Object_GoodsListSale.Id
+                                                   AND ObjectLink_GoodsListSale_Goods.DescId = zc_ObjectLink_GoodsListSale_Goods()
+                                                   AND ObjectLink_GoodsListSale_Goods.ChildObjectId IS NOT NULL
+                                    JOIN ObjectLink AS ObjectLink_GoodsListSale_Partner
+                                                    ON ObjectLink_GoodsListSale_Partner.ObjectId = Object_GoodsListSale.Id
+                                                   AND ObjectLink_GoodsListSale_Partner.DescId = zc_ObjectLink_GoodsListSale_Partner()
+                                                   AND ObjectLink_GoodsListSale_Partner.ChildObjectId IS NOT NULL
+                                    JOIN tmpPartner ON tmpPartner.PartnerId = ObjectLink_GoodsListSale_Partner.ChildObjectId
+                               WHERE Object_GoodsListSale.DescId = zc_Object_GoodsListSale()
+                              )
+                , tmpFilter AS (SELECT tmpProtocol.GoodsId FROM tmpProtocol
+                                UNION
+                                SELECT tmpGoods.GoodsId FROM tmpGoods WHERE inSyncDateIn <= zc_DateStart()
+                               )
+             SELECT Object_Goods.Id
+                  , Object_Goods.ObjectCode
+                  , Object_Goods.ValueData
+                  , ObjectFloat_Goods_Weight.ValueData            AS Weight
+                  , ObjectLink_Goods_GoodsGroup.ChildObjectId     AS GoodsGroupId
+                  , ObjectLink_Goods_Measure.ChildObjectId        AS MeasureId
+                  , ObjectLink_GoodsGroup_TradeMark.ChildObjectId AS TradeMarkId
+                  , Object_Goods.isErased
+                  , (tmpGoods.GoodsId IS NOT NULL) AS isSync
+             FROM Object AS Object_Goods
+                  JOIN tmpFilter ON tmpFilter.GoodsId = Object_Goods.Id
+                  LEFT JOIN tmpGoods ON tmpGoods.GoodsId = Object_Goods.Id 
+                  LEFT JOIN ObjectFloat AS ObjectFloat_Goods_Weight
+                                        ON ObjectFloat_Goods_Weight.ObjectId = Object_Goods.Id
+                                       AND ObjectFloat_Goods_Weight.DescId = zc_ObjectFloat_Goods_Weight() 
+                  LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                       ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                                      AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup() 
+                  LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                       ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                                      AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure() 
+                  LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_TradeMark
+                                       ON ObjectLink_GoodsGroup_TradeMark.ObjectId = ObjectLink_Goods_GoodsGroup.ChildObjectId
+                                      AND ObjectLink_GoodsGroup_TradeMark.DescId = zc_ObjectLink_GoodsGroup_TradeMark() 
+             WHERE Object_Goods.DescId = zc_Object_Goods();
       END IF;
 
 END; 
