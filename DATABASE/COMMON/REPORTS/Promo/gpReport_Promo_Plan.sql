@@ -98,7 +98,15 @@ RETURNS TABLE(
     , AmountSale5         TFloat
     , AmountSale6         TFloat
     , AmountSale7         TFloat
-          
+       
+    , AmountPlanMin_Calc1  TFloat
+    , AmountPlanMin_Calc2  TFloat
+    , AmountPlanMin_Calc3  TFloat
+    , AmountPlanMin_Calc4  TFloat
+    , AmountPlanMin_Calc5  TFloat
+    , AmountPlanMin_Calc6  TFloat
+    , AmountPlanMin_Calc7  TFloat
+      
     , isPlan1             Boolean
     , isPlan2             Boolean
     , isPlan3             Boolean
@@ -138,6 +146,8 @@ BEGIN
     
     PERFORM zfSelect_Word_Split (inSep:= ',', inUserId:= vbUserId);
     --
+    
+    
     
     -- Результат
     RETURN QUERY
@@ -221,6 +231,8 @@ BEGIN
                                      
                                      , CASE WHEN MovementDate_StartSale.ValueData >= inStartDate THEN EXTRACT (DOW FROM MovementDate_StartSale.ValueData) ELSE 0 END :: Integer AS DayStartSale
                                      , CASE WHEN MovementDate_EndSale.ValueData   <= inEndDate   THEN EXTRACT (DOW FROM MovementDate_EndSale.ValueData)   ELSE 0 END :: Integer AS DayEndSale
+                                     
+                                     , (ROUND( (date_part('DAY', MovementDate_EndSale.ValueData - MovementDate_StartSale.ValueData) / 3) ::TFloat, 0)) :: Integer  AS CountDays -- треть периода акции
                                 FROM Movement AS Movement_Promo 
                                      LEFT JOIN MovementDate AS MovementDate_StartSale
                                                              ON MovementDate_StartSale.MovementId = Movement_Promo.Id
@@ -259,6 +271,7 @@ BEGIN
         , tmpMov AS (SELECT tmpMovement_Promo.Id           AS MovementId_Promo
                           , tmpMovement_Promo.DayStartSale
                           , tmpMovement_Promo.DayEndSale
+                          , tmpMovement_Promo.CountDays
                           , 0                              AS UnitId_Sale
                           , TRUE                           AS isPromo 
                      FROM tmpMovement_Promo
@@ -266,16 +279,19 @@ BEGIN
                      SELECT tmp.MovementId_Promo                        AS MovementId_Promo
                           , tmp.DayStartSale
                           , tmp.DayEndSale
+                          , tmp.CountDays
                           , tmp.UnitId_Sale
                           , CASE WHEN inIsUnitSale = TRUE THEN FALSE ELSE TRUE END  AS isPromo
 
                      FROM (SELECT tmpMov_Sale_All.*
                                 , tmp.DayStartSale
-                                , tmp.DayEndSale         
+                                , tmp.DayEndSale   
+                                , tmp.CountDays      
                            FROM tmpMov_Sale_All
                                 LEFT JOIN ( SELECT tmp.MovementId_Promo
                                                  , CASE WHEN MovementDate_StartSale.ValueData >= inStartDate THEN EXTRACT (DOW FROM MovementDate_StartSale.ValueData) ELSE 0 END :: Integer AS DayStartSale
                                                  , CASE WHEN MovementDate_EndSale.ValueData   <= inEndDate   THEN EXTRACT (DOW FROM MovementDate_EndSale.ValueData)   ELSE 0 END :: Integer AS DayEndSale     
+                                                 , (ROUND( (date_part('DAY', MovementDate_EndSale.ValueData - MovementDate_StartSale.ValueData) / 3) ::TFloat, 0))               :: Integer AS CountDays -- треть периода акции
                                             FROM (SELECT DISTINCT tmpMov_Sale_All.MovementId_Promo FROM tmpMov_Sale_All) AS tmp
                                                  LEFT JOIN MovementDate AS MovementDate_StartSale
                                                         ON MovementDate_StartSale.MovementId = tmp.MovementId_Promo
@@ -304,6 +320,11 @@ BEGIN
                                , CASE WHEN vbDayStart <= 6 AND vbDayEnd >= 6 AND (Movement_Promo.DayStartSale = 0 OR Movement_Promo.DayStartSale <= 6) AND (Movement_Promo.DayEndSale = 0 OR Movement_Promo.DayEndSale >= 6) THEN TRUE ELSE FALSE END AS isPlan6
                                , CASE WHEN vbDayStart <= 7 AND vbDayEnd  = 7 AND (Movement_Promo.DayStartSale = 0 OR Movement_Promo.DayStartSale <= 7) AND (Movement_Promo.DayEndSale = 0 OR Movement_Promo.DayEndSale  = 7) THEN TRUE ELSE FALSE END AS isPlan7
 
+
+                               , CAST (COALESCE (MI_PromoGoods.AmountPlanMin, 0) / 2    AS NUMERIC (16,2))  AS AmountPlanMin_50
+                               , CAST (COALESCE (MI_PromoGoods.AmountPlanMin, 0) * 0.3  AS NUMERIC (16,2))  AS AmountPlanMin_30
+                               , CAST (COALESCE (MI_PromoGoods.AmountPlanMin, 0) * 0.2  AS NUMERIC (16,2))  AS AmountPlanMin_20
+                               
                           FROM (SELECT DISTINCT tmpMov.MovementId_Promo, tmpMov.DayStartSale, tmpMov.DayEndSale FROM tmpMov) AS Movement_Promo
                                LEFT OUTER JOIN MovementItem_PromoGoods_View AS MI_PromoGoods
                                                                             ON MI_PromoGoods.MovementId = Movement_Promo.MovementId_Promo
@@ -330,12 +351,38 @@ BEGIN
                                                            ON MIFloat_Plan7.MovementItemId = MI_PromoGoods.Id
                                                           AND MIFloat_Plan7.DescId = zc_MIFloat_Plan7()
                          )
-
+   -- список дат отчета
+   , tmpOperDate AS (SELECT GENERATE_SERIES (inStartDate,inEndDate, '1 DAY' :: INTERVAL) AS OperDate)
+   
+   -- данные шапки док.акция
    , tmpPromoDetail AS (SELECT Movement_Promo.*
-                        FROM (SELECT DISTINCT tmpMov.MovementId_Promo FROM tmpMov) AS tmpMov
+                             , tmpMov.CountDays
+                             , (Movement_Promo.StartSale + ('' ||tmpMov.CountDays || 'DAY ')  :: interval )   ::TDateTime AS Date1
+                             , (Movement_Promo.StartSale + ('' ||2*tmpMov.CountDays || 'DAY ')  :: interval ) ::TDateTime AS Date2
+                        FROM (SELECT DISTINCT tmpMov.MovementId_Promo, tmpMov.CountDays FROM tmpMov) AS tmpMov
                              LEFT JOIN Movement_Promo_View AS Movement_Promo ON Movement_Promo.Id = tmpMov.MovementId_Promo
-                           
                         )
+   , tmpPeriodPlanMin  AS (SELECT tmp.Id
+                                , SUM (CASE WHEN tmp.Number = 1 THEN NumPeriod ELSE 0 END) AS NumPeriod1
+                                , SUM (CASE WHEN tmp.Number = 2 THEN NumPeriod ELSE 0 END) AS NumPeriod2
+                                , SUM (CASE WHEN tmp.Number = 3 THEN NumPeriod ELSE 0 END) AS NumPeriod3
+                                , SUM (CASE WHEN tmp.Number = 4 THEN NumPeriod ELSE 0 END) AS NumPeriod4
+                                , SUM (CASE WHEN tmp.Number = 5 THEN NumPeriod ELSE 0 END) AS NumPeriod5
+                                , SUM (CASE WHEN tmp.Number = 6 THEN NumPeriod ELSE 0 END) AS NumPeriod6
+                                , SUM (CASE WHEN tmp.Number = 7 THEN NumPeriod ELSE 0 END) AS NumPeriod7
+                           FROM (SELECT tmpPromoDetail.Id
+                                      , tmpWeekDay.Number
+                                      , CASE WHEN tmpOperDate.OperDate >= tmpPromoDetail.StartSale AND tmpOperDate.OperDate < tmpPromoDetail.Date1   THEN 1
+                                             WHEN tmpOperDate.OperDate >= tmpPromoDetail.Date1     AND tmpOperDate.OperDate < tmpPromoDetail.Date2   THEN 2
+                                             WHEN tmpOperDate.OperDate >= tmpPromoDetail.Date2     AND tmpOperDate.OperDate < tmpPromoDetail.EndSale THEN 3
+                                             ELSE 0 END NumPeriod
+                                 FROM tmpOperDate
+                                      LEFT JOIN zfCalc_DayOfWeekName (tmpOperDate.OperDate) AS tmpWeekDay ON 1=1
+                                      LEFT JOIN tmpPromoDetail ON 1 = 1
+                                 ) AS tmp
+                           GROUP BY tmp.Id
+                          )
+
 
         --
         SELECT 
@@ -461,6 +508,28 @@ BEGIN
           , (tmpMovement_Sale.AmountSale6 * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END) ::TFloat  AS AmountSale6
           , (tmpMovement_Sale.AmountSale7 * CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MI_PromoGoods.GoodsWeight, 0) ELSE 1 END) ::TFloat  AS AmountSale7
 
+          , CASE WHEN tmpPeriodPlanMin.NumPeriod1 = 1 THEN MI_PromoGoods.AmountPlanMin_50
+                 WHEN tmpPeriodPlanMin.NumPeriod1 = 2 THEN MI_PromoGoods.AmountPlanMin_30
+                 WHEN tmpPeriodPlanMin.NumPeriod1 = 3 THEN MI_PromoGoods.AmountPlanMin_20 ELSE 0 END ::TFloat  AS AmountPlanMin_Calc1
+          , CASE WHEN tmpPeriodPlanMin.NumPeriod2 = 1 THEN MI_PromoGoods.AmountPlanMin_50
+                 WHEN tmpPeriodPlanMin.NumPeriod2 = 2 THEN MI_PromoGoods.AmountPlanMin_30
+                 WHEN tmpPeriodPlanMin.NumPeriod2 = 3 THEN MI_PromoGoods.AmountPlanMin_20 ELSE 0 END ::TFloat  AS AmountPlanMin_Calc2
+          , CASE WHEN tmpPeriodPlanMin.NumPeriod3 = 1 THEN MI_PromoGoods.AmountPlanMin_50
+                 WHEN tmpPeriodPlanMin.NumPeriod3 = 2 THEN MI_PromoGoods.AmountPlanMin_30
+                 WHEN tmpPeriodPlanMin.NumPeriod3 = 3 THEN MI_PromoGoods.AmountPlanMin_20 ELSE 0 END ::TFloat  AS AmountPlanMin_Calc3
+          , CASE WHEN tmpPeriodPlanMin.NumPeriod4 = 1 THEN MI_PromoGoods.AmountPlanMin_50
+                 WHEN tmpPeriodPlanMin.NumPeriod4 = 2 THEN MI_PromoGoods.AmountPlanMin_30
+                 WHEN tmpPeriodPlanMin.NumPeriod4 = 3 THEN MI_PromoGoods.AmountPlanMin_20 ELSE 0 END ::TFloat  AS AmountPlanMin_Calc4
+          , CASE WHEN tmpPeriodPlanMin.NumPeriod5 = 1 THEN MI_PromoGoods.AmountPlanMin_50
+                 WHEN tmpPeriodPlanMin.NumPeriod5 = 2 THEN MI_PromoGoods.AmountPlanMin_30
+                 WHEN tmpPeriodPlanMin.NumPeriod5 = 3 THEN MI_PromoGoods.AmountPlanMin_20 ELSE 0 END ::TFloat  AS AmountPlanMin_Calc5
+          , CASE WHEN tmpPeriodPlanMin.NumPeriod6 = 1 THEN MI_PromoGoods.AmountPlanMin_50
+                 WHEN tmpPeriodPlanMin.NumPeriod6 = 2 THEN MI_PromoGoods.AmountPlanMin_30
+                 WHEN tmpPeriodPlanMin.NumPeriod6 = 3 THEN MI_PromoGoods.AmountPlanMin_20 ELSE 0 END ::TFloat  AS AmountPlanMin_Calc6
+          , CASE WHEN tmpPeriodPlanMin.NumPeriod7 = 1 THEN MI_PromoGoods.AmountPlanMin_50
+                 WHEN tmpPeriodPlanMin.NumPeriod7 = 2 THEN MI_PromoGoods.AmountPlanMin_30
+                 WHEN tmpPeriodPlanMin.NumPeriod7 = 3 THEN MI_PromoGoods.AmountPlanMin_20 ELSE 0 END ::TFloat  AS AmountPlanMin_Calc7
+                 
           , MI_PromoGoods.isPlan1         ::Boolean
           , MI_PromoGoods.isPlan2         ::Boolean
           , MI_PromoGoods.isPlan3         ::Boolean
@@ -478,7 +547,8 @@ BEGIN
           , CASE WHEN tmpMovement_Sale.OperDateMax_Sale > Movement_Promo.EndSale THEN TRUE ELSE FALSE END               AS isSale                                                                                                 --если факт продажи позже чем EndSale
         FROM tmpMov
             LEFT JOIN tmpPromoDetail AS Movement_Promo ON Movement_Promo.Id = tmpMov.MovementId_Promo
-
+            LEFT JOIN tmpPeriodPlanMin ON tmpPeriodPlanMin.Id = Movement_Promo.Id AND tmpMov.isPromo = TRUE
+            
             LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
                                  ON ObjectLink_Personal_Unit.ObjectId = Movement_Promo.PersonalTradeId
                                 AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()

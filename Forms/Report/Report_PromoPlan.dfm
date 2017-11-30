@@ -4,7 +4,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
   ClientWidth = 950
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
   ExplicitWidth = 966
-  ExplicitHeight = 469
+  ExplicitHeight = 472
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -128,6 +128,41 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
               Format = ',0.##'
               Kind = skSum
               Column = AmountSale2
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountPlanMin_Calc1
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountPlanMin_Calc2
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountPlanMin_Calc3
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountPlanMin_Calc4
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountPlanMin_Calc5
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountPlanMin_Calc6
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountPlanMin_Calc7
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -232,6 +267,41 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
               Format = ',0.##'
               Kind = skSum
               Column = AmountSale2
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountPlanMin_Calc1
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountPlanMin_Calc2
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountPlanMin_Calc3
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountPlanMin_Calc4
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountPlanMin_Calc5
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountPlanMin_Calc6
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountPlanMin_Calc7
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -627,6 +697,83 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             Options.Editing = False
             Width = 68
           end
+          object AmountPlanMin_Calc1: TcxGridDBColumn
+            Caption = #1055#1083#1072#1085' '#1084#1080#1085'.  '#1079#1072' 1 ('#1088#1072#1089#1095'.)'
+            DataBinding.FieldName = 'AmountPlanMin_Calc1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object AmountPlanMin_Calc2: TcxGridDBColumn
+            Caption = #1055#1083#1072#1085' '#1084#1080#1085'.  '#1079#1072' 2 ('#1088#1072#1089#1095'.)'
+            DataBinding.FieldName = 'AmountPlanMin_Calc2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object AmountPlanMin_Calc3: TcxGridDBColumn
+            Caption = #1055#1083#1072#1085' '#1084#1080#1085'.  '#1079#1072' 3 ('#1088#1072#1089#1095'.)'
+            DataBinding.FieldName = 'AmountPlanMin_Calc3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object AmountPlanMin_Calc4: TcxGridDBColumn
+            Caption = #1055#1083#1072#1085' '#1084#1080#1085'.  '#1079#1072' 4 ('#1088#1072#1089#1095'.)'
+            DataBinding.FieldName = 'AmountPlanMin_Calc4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object AmountPlanMin_Calc5: TcxGridDBColumn
+            Caption = #1055#1083#1072#1085' '#1084#1080#1085'.  '#1079#1072' 5 ('#1088#1072#1089#1095'.)'
+            DataBinding.FieldName = 'AmountPlanMin_Calc5'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object AmountPlanMin_Calc6: TcxGridDBColumn
+            Caption = #1055#1083#1072#1085' '#1084#1080#1085'.  '#1079#1072' 6 ('#1088#1072#1089#1095'.)'
+            DataBinding.FieldName = 'AmountPlanMin_Calc6'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object AmountPlanMin_Calc7: TcxGridDBColumn
+            Caption = #1055#1083#1072#1085' '#1084#1080#1085'.  '#1079#1072' 7 ('#1088#1072#1089#1095'.)'
+            DataBinding.FieldName = 'AmountPlanMin_Calc7'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
           object GoodsWeight: TcxGridDBColumn
             Caption = #1042#1077#1089
             DataBinding.FieldName = 'GoodsWeight'
@@ -697,6 +844,9 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
     object tsPlan: TcxTabSheet
       Caption = '&2. '#1042#1074#1086#1076' '#1087#1083#1072#1085
       ImageIndex = 4
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
