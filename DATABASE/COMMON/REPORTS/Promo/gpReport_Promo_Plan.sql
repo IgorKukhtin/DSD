@@ -248,7 +248,7 @@ BEGIN
                                      , CASE WHEN MovementDate_StartSale.ValueData >= inStartDate THEN EXTRACT (DOW FROM MovementDate_StartSale.ValueData) ELSE 0 END :: Integer AS DayStartSale
                                      , CASE WHEN MovementDate_EndSale.ValueData   <= inEndDate   THEN EXTRACT (DOW FROM MovementDate_EndSale.ValueData)   ELSE 0 END :: Integer AS DayEndSale
                                      
-                                     , (ROUND( (date_part('DAY', MovementDate_EndSale.ValueData - MovementDate_StartSale.ValueData) / 3) ::TFloat, 0)) :: Integer  AS CountDays -- треть периода акции
+                                     , (ROUND( ((date_part('DAY', MovementDate_EndSale.ValueData - MovementDate_StartSale.ValueData)+1) / 3) ::TFloat, 0)) :: Integer  AS CountDays -- треть периода акции
                                 FROM Movement AS Movement_Promo 
                                      LEFT JOIN MovementDate AS MovementDate_StartSale
                                                              ON MovementDate_StartSale.MovementId = Movement_Promo.Id
@@ -307,7 +307,7 @@ BEGIN
                                 LEFT JOIN ( SELECT tmp.MovementId_Promo
                                                  , CASE WHEN MovementDate_StartSale.ValueData >= inStartDate THEN EXTRACT (DOW FROM MovementDate_StartSale.ValueData) ELSE 0 END :: Integer AS DayStartSale
                                                  , CASE WHEN MovementDate_EndSale.ValueData   <= inEndDate   THEN EXTRACT (DOW FROM MovementDate_EndSale.ValueData)   ELSE 0 END :: Integer AS DayEndSale     
-                                                 , (ROUND( (date_part('DAY', MovementDate_EndSale.ValueData - MovementDate_StartSale.ValueData) / 3) ::TFloat, 0))               :: Integer AS CountDays -- треть периода акции
+                                                 , (ROUND( ((date_part('DAY', MovementDate_EndSale.ValueData - MovementDate_StartSale.ValueData)+1) / 3) ::TFloat, 0))               :: Integer AS CountDays -- треть периода акции
                                             FROM (SELECT DISTINCT tmpMov_Sale_All.MovementId_Promo FROM tmpMov_Sale_All) AS tmp
                                                  LEFT JOIN MovementDate AS MovementDate_StartSale
                                                         ON MovementDate_StartSale.MovementId = tmp.MovementId_Promo
@@ -423,7 +423,7 @@ BEGIN
           , Movement_Promo.StartPromo         --Дата начала акции
           , Movement_Promo.EndPromo           --Дата окончания акции
           , Movement_Promo.MonthPromo         --месяц акции
-          , (ROUND( (date_part('DAY', Movement_Promo.EndSale - Movement_Promo.StartSale) + 1) ::TFloat, 0)) :: Integer  AS CountDaysPromo
+          , ( date_part('DAY', Movement_Promo.EndSale - Movement_Promo.StartSale) + 1) :: Integer  AS CountDaysPromo
 
           , COALESCE ((SELECT STRING_AGG (DISTINCT COALESCE (MovementString_Retail.ValueData, Object_Retail.ValueData),'; ')
                        FROM Movement AS Movement_PromoPartner
