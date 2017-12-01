@@ -5320,7 +5320,7 @@ inherited PromoForm: TPromoForm
     Top = 478
   end
   object spSelectPlan: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_PromoGoods'
+    StoredProcName = 'gpSelect_MI_PromoGoods_Plan'
     DataSet = PlanCDS
     DataSets = <
       item
