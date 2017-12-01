@@ -319,8 +319,7 @@ BEGIN
          , tmpData_All.Color_SummaProfit
     FROM tmpData_All
     ORDER BY  tmpData_All.Id, tmpData_All.NUM 
-                     
-;
+   ;
       
 END;
 $BODY$
@@ -332,5 +331,6 @@ $BODY$
  30.11.17         *
  03.08.17         *
 */
---тест
+
+-- тест
 -- SELECT * FROM gpSelect_MI_PromoGoods_Calc (5083159 , False, '5');
