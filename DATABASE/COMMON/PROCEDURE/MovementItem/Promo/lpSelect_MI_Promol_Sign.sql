@@ -16,24 +16,12 @@ RETURNS TABLE (Id             Integer
 AS
 $BODY$
   DECLARE vbMovementDescId Integer;
-  DECLARE vbObjectDescId Integer;
-  DECLARE vbObjectId Integer;  
 BEGIN
    
      -- Параметры из документа - для определения <Модель электронной подписи>
-     SELECT Movement.DescId                                AS MovementDescId
-          , COALESCE (Object_To.DescId,0)                  AS ObjectDescId
-          , COALESCE (MovementLinkObject_From.ObjectId,0)  AS ObjectId
-            INTO vbMovementDescId, vbObjectDescId, vbObjectId
+     SELECT Movement.DescId  AS MovementDescId
+            INTO vbMovementDescId
      FROM Movement
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                         ON MovementLinkObject_From.MovementId = Movement.Id
-                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-            
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                         ON MovementLinkObject_To.MovementId = Movement.Id
-                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
      WHERE Movement.Id = inMovementId;
 
      
@@ -41,7 +29,7 @@ BEGIN
      RETURN QUERY 
      
      WITH -- данные из Модели для данного документа
-          tmpObject AS (SELECT * FROM lpSelect_Object_SignInternalItem (vbMovementDescId, vbObjectDescId, 0))
+          tmpObject AS (SELECT * FROM lpSelect_Object_SignInternalItem (vbMovementDescId, 0, 0))
           -- данные из уже сохраненных элементов подписи
         , tmpMI AS (SELECT MovementItem.Id                    AS MovementItemId
                          , MovementItem.ObjectId              AS SignInternalId

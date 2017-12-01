@@ -114,5 +114,6 @@ ALTER FUNCTION gpSelect_MovementItem_PromoGoods (Integer, Boolean, TVarChar) OWN
  10.11.17         *
  05.11.15                                                          *
 */
+
 -- тест
 -- SELECT * FROM gpSelect_MI_PromoGoods_Plan (5083159 , FALSE, zfCalc_UserAdmin());
