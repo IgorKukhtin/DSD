@@ -1,11 +1,12 @@
--- Function: gpSelect_GoodsOnUnit_ForSite_new()
+-- Function: gpSelect_GoodsOnUnit_ForSite()
 
-DROP FUNCTION IF EXISTS gpSelect_GoodsOnUnit_ForSite_new (Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_GoodsOnUnit_ForSite_new (TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_GoodsOnUnit_ForSite (Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_GoodsOnUnit_ForSite (TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_GoodsOnUnit_ForSite (Text, Text, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_GoodsOnUnit_ForSite_new(
-    IN inUnitId_list      TVarChar ,  -- Список Подразделений, через зпт
-    IN inGoodsId_list     TVarChar ,  -- Список товаров, через зпт
+CREATE OR REPLACE FUNCTION gpSelect_GoodsOnUnit_ForSite(
+    IN inUnitId_list      Text     ,  -- Список Подразделений, через зпт
+    IN inGoodsId_list     Text     ,  -- Список товаров, через зпт
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id                Integer
@@ -326,7 +327,7 @@ BEGIN
                                             tmp.SuperFinalPrice    ,
                                             tmp.isTop              ,
                                             tmp.isOneJuridical
-                FROM lpSelectMinPrice_List_new (inUnitId  := 0          -- !!!т.к. не зависит от UnitId, хотя ...!!!
+                FROM lpSelectMinPrice_List (inUnitId  := 0          -- !!!т.к. не зависит от UnitId, хотя ...!!!
                                           , inObjectId:= vbObjectId
                                           , inUserId  := vbUserId
                                            ) AS tmp
@@ -587,7 +588,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_GoodsOnUnit_ForSite_new (TVarChar, TVarChar, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -596,6 +596,6 @@ ALTER FUNCTION gpSelect_GoodsOnUnit_ForSite_new (TVarChar, TVarChar, TVarChar) O
 */
 
 -- тест
--- SELECT * FROM gpSelect_GoodsOnUnit_ForSite_new (inUnitId_list:= '1781716', inGoodsId_list:= '47761', inSession:= zfCalc_UserSite()) ORDER BY 1;
--- SELECT * FROM gpSelect_GoodsOnUnit_ForSite_new (inUnitId_list:= '377613,183292', inGoodsId_list:= '331,951,16876,40618', inSession:= zfCalc_UserSite()) ORDER BY 1;
--- SELECT p.id, p.id_site, p.name, p.name_site, p.article, p.article, p.unitid, p.juridicalid, p.juridicalname, p.contractid, p.contractname, p.expirationdate, p.manufacturer, p.remains, p.price_unit, p.price_mino, p.price_mino, p.price_min, p.price_mind FROM gpSelect_GoodsOnUnit_ForSite_new('183292,183288,377605,375627,394426,472116,494882,1529734,1781716,377606,377595,183290,183289,183294,377613,377574,377594,377610,183293,375626,183291', '508,517,520,526,523,511,544,538,553,559,562,565,571,547,1642,1654,1714,1867,1933,2059,2095,2230,2257,2275,2323,2341,2344,2320,2509,2515', zfCalc_UserSite()) AS p ORDER BY p.price_unit
+-- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId_list:= '1781716', inGoodsId_list:= '47761', inSession:= zfCalc_UserSite()) ORDER BY 1;
+-- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId_list:= '377613,183292', inGoodsId_list:= '331,951,16876,40618', inSession:= zfCalc_UserSite()) ORDER BY 1;
+-- SELECT p.id, p.id_site, p.name, p.name_site, p.article, p.article, p.unitid, p.juridicalid, p.juridicalname, p.contractid, p.contractname, p.expirationdate, p.manufacturer, p.remains, p.price_unit, p.price_mino, p.price_mino, p.price_min, p.price_mind FROM gpSelect_GoodsOnUnit_ForSite('183292,183288,377605,375627,394426,472116,494882,1529734,1781716,377606,377595,183290,183289,183294,377613,377574,377594,377610,183293,375626,183291', '508,517,520,526,523,511,544,538,553,559,562,565,571,547,1642,1654,1714,1867,1933,2059,2095,2230,2257,2275,2323,2341,2344,2320,2509,2515', zfCalc_UserSite()) AS p ORDER BY p.price_unit
