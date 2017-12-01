@@ -711,7 +711,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             DataBinding.FieldName = 'AmountPlanMin_Calc1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -722,7 +722,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             DataBinding.FieldName = 'AmountPlanMin_Calc2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -733,7 +733,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             DataBinding.FieldName = 'AmountPlanMin_Calc3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -744,7 +744,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             DataBinding.FieldName = 'AmountPlanMin_Calc4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -755,7 +755,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             DataBinding.FieldName = 'AmountPlanMin_Calc5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -766,7 +766,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             DataBinding.FieldName = 'AmountPlanMin_Calc6'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -777,7 +777,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             DataBinding.FieldName = 'AmountPlanMin_Calc7'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -850,6 +850,8 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
           object CountDaysPromo: TcxGridDBColumn
             Caption = #1044#1083#1080#1090'-'#1090#1100' '#1072#1082#1094#1080#1080' ('#1076#1085'.)'
             DataBinding.FieldName = 'CountDaysPromo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1082#1086#1083#1100#1082#1086' '#1076#1085#1077#1081' '#1076#1083#1080#1090#1089#1103' '#1072#1082#1094#1080#1103
@@ -1450,7 +1452,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             DataBinding.FieldName = 'AmountPlanMin_Calc1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1461,7 +1463,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             DataBinding.FieldName = 'AmountPlanMin_Calc2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1472,7 +1474,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             DataBinding.FieldName = 'AmountPlanMin_Calc3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1483,7 +1485,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             DataBinding.FieldName = 'AmountPlanMin_Calc4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1494,7 +1496,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             DataBinding.FieldName = 'AmountPlanMin_Calc5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1505,7 +1507,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             DataBinding.FieldName = 'AmountPlanMin_Calc6'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1516,7 +1518,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             DataBinding.FieldName = 'AmountPlanMin_Calc7'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
