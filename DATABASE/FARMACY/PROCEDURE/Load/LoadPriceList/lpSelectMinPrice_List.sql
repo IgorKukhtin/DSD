@@ -1,8 +1,8 @@
--- Function: lpSelectMinPrice_List_new()
+-- Function: lpSelectMinPrice_List()
 
-DROP FUNCTION IF EXISTS lpSelectMinPrice_List_new (Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpSelectMinPrice_List (Integer, Integer, Integer);
 
-CREATE OR REPLACE FUNCTION lpSelectMinPrice_List_new(
+CREATE OR REPLACE FUNCTION lpSelectMinPrice_List(
     IN inUnitId      Integer      , -- Аптека
     IN inObjectId    Integer      , -- Торговая сеть
     IN inUserId      Integer        -- пользователь
@@ -400,7 +400,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION lpSelectMinPrice_List_new (Integer, Integer, Integer) OWNER TO postgres;
+ALTER FUNCTION lpSelectMinPrice_List (Integer, Integer, Integer) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -414,8 +414,8 @@ SELECT 1, GoodsId            ,    GoodsCode          ,    GoodsName          ,  
 from lpSelectMinPrice_AllGoods (183292, 4, 3) as a
 where GoodsId = 376
 union all
- select 2, * from lpSelectMinPrice_List_new (183292, 4, 3) as b where GoodsId = 376
+ select 2, * from lpSelectMinPrice_List (183292, 4, 3) as b where GoodsId = 376
 */
 -- тест
--- SELECT * FROM lpSelectMinPrice_AllGoods (183292, 4, 3) as a join lpSelectMinPrice_List_new (183292, 4, 3)  as b on b.GoodsId = a.GoodsId WHERE a.Price <> b.Price
--- SELECT * FROM lpSelectMinPrice_List_new (183292, 4, 3) WHERE GoodsCode = 4797
+-- SELECT * FROM lpSelectMinPrice_AllGoods (183292, 4, 3) as a join lpSelectMinPrice_List (183292, 4, 3)  as b on b.GoodsId = a.GoodsId WHERE a.Price <> b.Price
+-- SELECT * FROM lpSelectMinPrice_List (183292, 4, 3) WHERE GoodsCode = 4797
