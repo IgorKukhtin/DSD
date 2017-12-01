@@ -446,7 +446,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
-            Width = 80
+            Width = 87
           end
           object GoodsKindName_List: TcxGridDBColumn
             Caption = #1042#1080#1076' ('#1089#1087#1088#1072#1074#1086#1095#1085#1086')'
@@ -456,6 +456,15 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             HeaderHint = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1089#1087#1088#1072#1074#1086#1095#1085#1086')'
             Options.Editing = False
             Width = 77
+          end
+          object GoodsKindName_Sale: TcxGridDBColumn
+            Caption = #1042#1080#1076' ('#1076#1086#1082'. '#1087#1088'.)'
+            DataBinding.FieldName = 'GoodsKindName_Sale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1076#1086#1082'. '#1087#1088#1086#1076#1072#1078#1072')'
+            Options.Editing = False
+            Width = 62
           end
           object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -837,6 +846,13 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1060#1072#1082#1090' '#1087#1088#1086#1076#1072#1078#1080' '#1087#1086#1079#1078#1077' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1040#1082#1094#1080#1080
             Width = 60
+          end
+          object CountDaysPromo: TcxGridDBColumn
+            Caption = #1044#1083#1080#1090'-'#1090#1100' '#1072#1082#1094#1080#1080' ('#1076#1085'.)'
+            DataBinding.FieldName = 'CountDaysPromo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1082#1086#1083#1100#1082#1086' '#1076#1085#1077#1081' '#1076#1083#1080#1090#1089#1103' '#1072#1082#1094#1080#1103
           end
         end
       end
@@ -1637,30 +1653,12 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
       Width = 165
     end
     object cbUnitSale: TcxCheckBox
-      Left = 835
+      Left = 592
       Top = 5
       Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1089#1082#1083#1072#1076
       TabOrder = 8
       Width = 115
     end
-  end
-  object cxLabel3: TcxLabel [2]
-    Left = 592
-    Top = 6
-    Caption = #1057#1082#1083#1072#1076':'
-  end
-  object edUnitSale: TcxButtonEdit [3]
-    Left = 633
-    Top = 5
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    Style.Color = clWindow
-    TabOrder = 7
-    Width = 196
   end
   inherited ActionList: TActionList
     Left = 119
@@ -1868,11 +1866,8 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inUnitId_Sale'
         Value = Null
-        Component = GuidesUnitSale
-        ComponentItem = 'Key'
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 232
@@ -2000,7 +1995,8 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 564
+    Left = 508
+    Top = 8
   end
   object spUpdate_Plan: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_PromoGoods_Plan_byReport'
@@ -2218,34 +2214,5 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
     SummaryItemList = <>
     Left = 712
     Top = 240
-  end
-  object GuidesUnitSale: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edUnitSale
-    FormNameParam.Value = 'TUnit_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesUnitSale
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesUnitSale
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 700
   end
 end

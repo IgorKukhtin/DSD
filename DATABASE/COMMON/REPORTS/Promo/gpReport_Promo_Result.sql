@@ -30,6 +30,9 @@ RETURNS TABLE(
     ,GoodsCode            Integer   --Код позиции
     ,MeasureName          TVarChar  --единица измерения
     ,TradeMarkName        TVarChar  --Торговая марка
+    ,GoodsKindName          TVarChar --Наименование обьекта <Вид товара>
+    ,GoodsKindCompleteName  TVarChar --Наименование обьекта <Вид товара(примечание)>
+    
     ,GoodsWeight          TFloat    --Вес
     ,AmountPlanMin        TFloat    --Планируемый объем продаж в акционный период, шт
     ,AmountPlanMinWeight  TFloat    --Планируемый объем продаж в акционный период, кг
@@ -184,6 +187,9 @@ BEGIN
           , MI_PromoGoods.GoodsCode
           , MI_PromoGoods.Measure
           , MI_PromoGoods.TradeMark
+          , MI_PromoGoods.GoodsKindName
+          , MI_PromoGoods.GoodsKindCompleteName
+          
           , CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN MI_PromoGoods.GoodsWeight ELSE NULL END :: TFloat AS GoodsWeight
           
           , MI_PromoGoods.AmountPlanMin       --Минимум планируемого объема продаж на акционный период (в кг)
@@ -254,6 +260,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
+ 30.11.17         *
  08.08.17         *
 */
 
