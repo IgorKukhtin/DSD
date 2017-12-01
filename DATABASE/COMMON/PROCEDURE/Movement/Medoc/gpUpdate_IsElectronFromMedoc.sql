@@ -248,19 +248,20 @@ return;
    END IF;
 
    -- ”становили регистрацию
-   IF (COALESCE(vbMovementId, 0)) <> 0 AND (COALESCE(inInvNumberRegistered, '') <> '') THEN
-      PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Electron(), vbMovementId, true);
-      PERFORM lpInsertUpdate_MovementString(zc_MovementString_InvNumberRegistered(), vbMovementId, inInvNumberRegistered);
-      PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_DateRegistered(), vbMovementId, inDateRegistered);
+   IF (COALESCE(vbMovementId, 0)) <> 0 AND (COALESCE(inInvNumberRegistered, '') <> '')
+   THEN
+      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Electron(), vbMovementId, TRUE);
+      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberRegistered(), vbMovementId, inInvNumberRegistered);
+      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_DateRegistered(), vbMovementId, inDateRegistered);
 
       -- сохранили протокол
-      PERFORM lpInsert_MovementProtocol (vbMovementId, vbUserId, FALSE);
+      PERFORM lpInsert_MovementProtocol (vbMovementId, zc_Enum_Process_Auto_Medoc() /*vbUserId*/, FALSE);
    END IF;
 
    -- сохранили протокол
-   PERFORM lpInsert_MovementProtocol (vbMedocId, vbUserId, FALSE);
+   PERFORM lpInsert_MovementProtocol (vbMedocId, zc_Enum_Process_Auto_Medoc() /*vbUserId*/, FALSE);
    -- сохранили св€зь
-   PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_User(), vbMedocId, vbUserId);
+   PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_User(), vbMedocId, /*zc_Enum_Process_Auto_Medoc()*/ vbUserId);
    -- сохранили 
    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Update(), vbMedocId, CURRENT_TIMESTAMP);
 

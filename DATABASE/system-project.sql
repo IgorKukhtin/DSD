@@ -77,19 +77,21 @@ insert into MovementItemProtocol_arc
 SELECT * FROM MovementItemProtocol where Id < (select min (Id) from MovementItemProtocol_arc) ORDER BY id DESC LIMIT 400000; -- SELECT Max(Id) FROM MovementItemProtocol
 
 
--- !!!Удаление ВСЕ!!!
--- delete FROM MovementProtocol_arc where UserId IN (zc_Enum_Process_Auto_PrimeCost());
--- delete FROM MovementProtocol     where UserId IN (zc_Enum_Process_Auto_PrimeCost());
---
+-
 -- delete FROM MovementProtocol_arc      where OperDate < '01.10.2017';
 -- delete FROM MovementItemProtocol_arc  where OperDate < '01.10.2017';
--- !!!Удаление ВСЕ!!!
+
+-- !!!Удаление ВСЕ - UserId = Auto!!!
+-- delete FROM MovementProtocol_arc where UserId IN (zc_Enum_Process_Auto_PrimeCost());
+-- delete FROM MovementProtocol     where UserId IN (zc_Enum_Process_Auto_PrimeCost());
 -- delete FROM MovementItemProtocol_arc  where UserId IN (zc_Enum_Process_Auto_PrimeCost(), zc_Enum_Process_Auto_Pack(), zc_Enum_Process_Auto_PartionClose(), zc_Enum_Process_Auto_ReturnIn());
 -- delete FROM MovementItemProtocol      where UserId IN (zc_Enum_Process_Auto_PrimeCost(), zc_Enum_Process_Auto_Pack(), zc_Enum_Process_Auto_PartionClose(), zc_Enum_Process_Auto_ReturnIn());
 
--- delete FROM MovementItemProtocol_arc  where Id in (SELECT MovementItemProtocol.Id FROM MovementItemProtocol_arc AS MovementItemProtocol JOIN MovementItem ON MovementItem.Id = MovementItemId JOIN Movement ON Movement.Id = MovementItem.MovementId AND Movement.DescId = zc_Movement_OrderInternal())
--- delete FROM MovementItemProtocol  where OperDate < CURRENT_DATE - INTERVAL '10 DAY' and Id in (SELECT MovementItemProtocol.Id FROM MovementItemProtocol JOIN MovementItem ON MovementItem.Id = MovementItemId JOIN Movement ON Movement.Id = MovementItem.MovementId AND Movement.DescId = zc_Movement_OrderInternal())
+-- Более 10 ДНЕЙ - zc_Movement_OrderInternal
+-- delete FROM MovementItemProtocol_arc where Id in (SELECT MovementItemProtocol.Id FROM MovementItemProtocol_arc AS MovementItemProtocol JOIN MovementItem ON MovementItem.Id = MovementItemId JOIN Movement ON Movement.Id = MovementItem.MovementId AND Movement.DescId = zc_Movement_OrderInternal())
+-- delete FROM MovementItemProtocol     where OperDate < CURRENT_DATE - INTERVAL '10 DAY' and Id in (SELECT MovementItemProtocol.Id FROM MovementItemProtocol JOIN MovementItem ON MovementItem.Id = MovementItemId JOIN Movement ON Movement.Id = MovementItem.MovementId AND Movement.DescId = zc_Movement_OrderInternal())
 
+-- !!!ALL - zc_Movement_RouteMember() + zc_Movement_Medoc!!!
 -- delete FROM MovementProtocol_arc  where Id in (SELECT MovementProtocol.Id FROM MovementProtocol_arc AS MovementProtocol JOIN Movement ON Movement.Id = MovementId AND Movement.DescId IN (zc_Movement_RouteMember(), zc_Movement_Medoc()));
 -- delete FROM MovementProtocol      where Id in (SELECT MovementProtocol.Id FROM MovementProtocol     AS MovementProtocol JOIN Movement ON Movement.Id = MovementId AND Movement.DescId IN (zc_Movement_RouteMember(), zc_Movement_Medoc()));
 -- delete FROM MovementItemProtocol_arc  where Id in (SELECT MovementItemProtocol.Id FROM MovementItemProtocol_arc AS MovementItemProtocol JOIN MovementItem ON MovementItem.Id = MovementItemId JOIN Movement ON Movement.Id = MovementItem.MovementId AND Movement.DescId IN (zc_Movement_RouteMember(), zc_Movement_Medoc()));
@@ -99,7 +101,15 @@ SELECT * FROM MovementItemProtocol where Id < (select min (Id) from MovementItem
 -- !!!Упаковка АДМИН!!!
 -- delete FROM MovementItemProtocol_arc  where UserId = 5 and Id in (SELECT MovementItemProtocol.Id FROM MovementItemProtocol_arc AS MovementItemProtocol JOIN MovementItem ON MovementItem.Id = MovementItemId JOIN Movement ON Movement.Id = MovementItem.MovementId AND Movement.DescId = zc_Movement_ProductionUnion() JOIN MovementBoolean AS MB ON MB.MovementId = Movement.Id AND MB.DescId = zc_MovementBoolean_isAuto() AND MB.ValueData = TRUE);
 -- delete FROM MovementItemProtocol      where UserId = 5 and Id in (SELECT MovementItemProtocol.Id FROM MovementItemProtocol     AS MovementItemProtocol JOIN MovementItem ON MovementItem.Id = MovementItemId JOIN Movement ON Movement.Id = MovementItem.MovementId AND Movement.DescId = zc_Movement_ProductionUnion() JOIN MovementBoolean AS MB ON MB.MovementId = Movement.Id AND MB.DescId = zc_MovementBoolean_isAuto() AND MB.ValueData = TRUE);
-
+-- !!!Заявка внутренняя АДМИН!!!
+-- delete FROM MovementItemProtocol_arc  where UserId = 5 and Id in (SELECT MovementItemProtocol.Id FROM MovementItemProtocol_arc AS MovementItemProtocol JOIN MovementItem ON MovementItem.Id = MovementItemId JOIN Movement ON Movement.Id = MovementItem.MovementId AND Movement.DescId = zc_Movement_OrderInternal());
+-- delete FROM MovementItemProtocol      where UserId = 5 and Id in (SELECT MovementItemProtocol.Id FROM MovementItemProtocol     AS MovementItemProtocol JOIN MovementItem ON MovementItem.Id = MovementItemId JOIN Movement ON Movement.Id = MovementItem.MovementId AND Movement.DescId = zc_Movement_OrderInternal());
+-- !!!Производство + OrderInternal - zc_MILinkObject_Receipt - АДМИН!!!
+-- delete FROM MovementItemProtocol_arc  where UserId = 5 and Id in (SELECT MovementItemProtocol.Id FROM MovementItemProtocol_arc AS MovementItemProtocol JOIN MovementItem ON MovementItem.Id = MovementItemId JOIN Movement ON Movement.Id = MovementItem.MovementId AND Movement.DescId IN (zc_Movement_OrderInternal(), zc_Movement_ProductionUnion()));
+-- delete FROM MovementItemProtocol      where UserId = 5 and Id in (SELECT MovementItemProtocol.Id FROM MovementItemProtocol     AS MovementItemProtocol JOIN MovementItem ON MovementItem.Id = MovementItemId JOIN Movement ON Movement.Id = MovementItem.MovementId AND Movement.DescId IN (zc_Movement_OrderInternal(), zc_Movement_ProductionUnion()));
+-- !!!MEDOC - Федорец!!!
+-- delete FROM MovementProtocol_arc  where UserId = 14610 and Id in (SELECT MovementProtocol.Id FROM MovementProtocol_arc AS MovementProtocol JOIN Movement ON Movement.Id = MovementId AND Movement.DescId IN (zc_Movement_Tax(), zc_Movement_TaxCorrective(), zc_Movement_Medoc()));
+-- delete FROM MovementProtocol      where UserId = 14610 and Id in (SELECT MovementProtocol.Id FROM MovementProtocol     AS MovementProtocol JOIN Movement ON Movement.Id = MovementId AND Movement.DescId IN (zc_Movement_Tax(), zc_Movement_TaxCorrective(), zc_Movement_Medoc()));
 
 -- insert into MovementProtocol_arc
 -- SELECT * FROM MovementProtocol ORDER BY id DESC LIMIT 1 -- SELECT Max(Id) FROM MovementProtocol

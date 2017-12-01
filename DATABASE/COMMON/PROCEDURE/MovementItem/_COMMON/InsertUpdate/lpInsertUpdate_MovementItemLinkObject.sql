@@ -29,7 +29,7 @@ BEGIN
         -- сохранили протокол - !!!ЛОВИМ ОШИБКУ!!!
         IF inDescId = zc_MILinkObject_Receipt()
         THEN
-            PERFORM lpInsert_MovementItemProtocol (inMovementItemId, zfCalc_UserAdmin() :: Integer, FALSE);
+            PERFORM lpInsert_MovementItemProtocol (inMovementItemId, zc_Enum_Process_Auto_PrimeCost() :: Integer, FALSE);
         END IF;
     END IF;             
 
