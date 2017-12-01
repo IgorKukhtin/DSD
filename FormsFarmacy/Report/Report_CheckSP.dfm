@@ -3,10 +3,8 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
   ClientHeight = 480
   ClientWidth = 1077
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -409
-  ExplicitTop = -26
   ExplicitWidth = 1093
-  ExplicitHeight = 519
+  ExplicitHeight = 518
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -163,6 +161,16 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
           object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1074#1110#1076#1087#1091#1089#1082#1091
             DataBinding.FieldName = 'OperDate'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'DD.MM.YYYY'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object OperDateSP: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1088#1077#1094#1077#1087#1090#1072
+            DataBinding.FieldName = 'OperDateSP'
             PropertiesClassName = 'TcxDateEditProperties'
             Properties.DisplayFormat = 'DD.MM.YYYY'
             HeaderAlignmentHorz = taCenter

@@ -45,37 +45,38 @@ RETURNS TABLE (MovementId     Integer
              , NumLine        Integer
              , CountInvNumberSP  Integer
 
-           , JuridicalFullName  TVarChar
-           , JuridicalAddress   TVarChar
-           , OKPO               TVarChar
-           , MainName           TVarChar
-           , AccounterName      TVarChar
-           , INN                TVarChar
-           , NumberVAT          TVarChar
-           , BankAccount        TVarChar
-           , Phone              TVarChar
-           , BankName           TVarChar
-           , MFO                TVarChar
-
-           , PartnerMedical_FullName         TVarChar
-           , PartnerMedical_JuridicalAddress TVarChar
-           , PartnerMedical_Phone            TVarChar
-           /*, PartnerMedical_OKPO             TVarChar
-           , PartnerMedical_AccounterName    TVarChar
-           , PartnerMedical_INN              TVarChar
-           , PartnerMedical_NumberVAT        TVarChar
-           , PartnerMedical_BankAccount      TVarChar
-           , PartnerMedical_BankName         TVarChar
-           , PartnerMedical_MFO              TVarChar*/
-           , ContractId          Integer
-           , ContractName        TVarChar
-           , Contract_StartDate                 TDateTime
-           , MedicSPName                        TVarChar
-           , InvNumberSP                        TVarChar
-           , OperDate                           TDateTime
-
-           , InvNumber_Invoice      TVarChar
-           , InvNumber_Invoice_Full TVarChar
+             , JuridicalFullName  TVarChar
+             , JuridicalAddress   TVarChar
+             , OKPO               TVarChar
+             , MainName           TVarChar
+             , AccounterName      TVarChar
+             , INN                TVarChar
+             , NumberVAT          TVarChar
+             , BankAccount        TVarChar
+             , Phone              TVarChar
+             , BankName           TVarChar
+             , MFO                TVarChar
+  
+             , PartnerMedical_FullName         TVarChar
+             , PartnerMedical_JuridicalAddress TVarChar
+             , PartnerMedical_Phone            TVarChar
+             /*, PartnerMedical_OKPO             TVarChar
+             , PartnerMedical_AccounterName    TVarChar
+             , PartnerMedical_INN              TVarChar
+             , PartnerMedical_NumberVAT        TVarChar
+             , PartnerMedical_BankAccount      TVarChar
+             , PartnerMedical_BankName         TVarChar
+             , PartnerMedical_MFO              TVarChar*/
+             , ContractId          Integer
+             , ContractName        TVarChar
+             , Contract_StartDate                 TDateTime
+             , MedicSPName                        TVarChar
+             , InvNumberSP                        TVarChar
+             , OperDateSP                         TDateTime
+             , OperDate                           TDateTime
+  
+             , InvNumber_Invoice      TVarChar
+             , InvNumber_Invoice_Full TVarChar
 )
 AS
 $BODY$
@@ -236,7 +237,8 @@ BEGIN
                                      END)                                                 AS Price_calc
                               , MovementString_InvNumberSP.ValueData                      AS InvNumberSP
                               , MovementString_MedicSP.ValueData                          AS MedicSPName
-
+                              , MovementDate_OperDateSP.ValueData                         AS OperDateSP
+                              
                               , Movement_Invoice.InvNumber                 :: TVarChar    AS InvNumber_Invoice 
                               , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice_Full 
                          FROM Movement AS Movement_Check
@@ -256,6 +258,9 @@ BEGIN
                               LEFT JOIN MovementLinkObject AS MovementLinkObject_PartnerMedical
                                                            ON MovementLinkObject_PartnerMedical.MovementId = Movement_Check.Id
                                                           AND MovementLinkObject_PartnerMedical.DescId = zc_MovementLinkObject_PartnerMedical()
+                              LEFT JOIN MovementDate AS MovementDate_OperDateSP
+                                                     ON MovementDate_OperDateSP.MovementId = Movement_Check.Id
+                                                    AND MovementDate_OperDateSP.DescId = zc_MovementDate_OperDateSP()
                               -- счет
                               LEFT JOIN MovementLinkMovement AS MLM_Child
                                      ON MLM_Child.MovementId = Movement_Check.Id
@@ -290,6 +295,7 @@ BEGIN
                                 , tmpGoods.GoodsMainId
                                 , movementlinkobject_partnermedical.objectid
                                 , MovementString_InvNumberSP.ValueData
+                                , MovementDate_OperDateSP.ValueData
                                 , MovementString_MedicSP.ValueData          
                                 , Movement_Check.OperDate, Movement_Check.Id
                                 , COALESCE (MIFloat_PriceSale.ValueData, 0)
@@ -471,6 +477,7 @@ BEGIN
 
              , tmpData.MedicSPName
              , tmpData.InvNumberSP
+             , tmpData.OperDateSP
              , date_trunc('day', tmpData.OperDate)  :: TDateTime as OperDate
 
              , tmpData.InvNumber_Invoice
