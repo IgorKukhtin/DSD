@@ -163,6 +163,26 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
               Format = ',0.##'
               Kind = skSum
               Column = AmountPlanMin_Calc7
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = TotalAmountPlan_Wh
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = TotalAmountSale
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = TotalAmountPlanMin_Calc
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = TotalAmount_Diff
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -302,6 +322,26 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
               Format = ',0.##'
               Kind = skSum
               Column = AmountPlanMin_Calc7
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = TotalAmountPlan_Wh
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = TotalAmountSale
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = TotalAmountPlanMin_Calc
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = TotalAmount_Diff
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -403,6 +443,22 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             HeaderAlignmentVert = vaCenter
             Width = 76
           end
+          object CountDaysPromo: TcxGridDBColumn
+            Caption = #1044#1083#1080#1090'-'#1090#1100' '#1072#1082#1094#1080#1080' ('#1076#1085'.)'
+            DataBinding.FieldName = 'CountDaysPromo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1082#1086#1083#1100#1082#1086' '#1076#1085#1077#1081' '#1076#1083#1080#1090#1089#1103' '#1072#1082#1094#1080#1103
+          end
+          object CountDaysEndPromo: TcxGridDBColumn
+            Caption = #1044#1085'. '#1076#1086' '#1086#1082#1086#1085#1095'. '#1072#1082#1094#1080#1080
+            DataBinding.FieldName = 'CountDaysEndPromo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1085#1077#1081' '#1076#1086' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080
+          end
           object RetailName: TcxGridDBColumn
             Caption = #1057#1077#1090#1100', '#1074' '#1082#1086#1090#1086#1088#1086#1081' '#1087#1088#1086#1093#1086#1076#1080#1090' '#1072#1082#1094#1080#1103
             DataBinding.FieldName = 'RetailName'
@@ -472,6 +528,66 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 42
+          end
+          object TotalAmountPlan_Wh: TcxGridDBColumn
+            Caption = #1048#1058#1054#1043#1054' '#1082#1086#1083'-'#1074#1086' '#1074#1077#1089
+            DataBinding.FieldName = 'TotalAmountPlan_Wh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1079#1072' '#1087#1085'.'
+            Options.Editing = False
+            Width = 55
+          end
+          object TotalAmountSale: TcxGridDBColumn
+            Caption = #1048#1058#1054#1043#1054' '#1060#1072#1082#1090' '#1087#1088#1086#1076#1072#1078#1080
+            DataBinding.FieldName = 'TotalAmountSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1079#1072' '#1087#1085'.'
+            Options.Editing = False
+            Width = 62
+          end
+          object TotalAmountPlanMin_Calc: TcxGridDBColumn
+            Caption = #1048#1058#1054#1043#1054' '#1087#1083#1072#1085' '#1084#1080#1085'.'
+            DataBinding.FieldName = 'TotalAmountPlanMin_Calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1079#1072' '#1087#1085'.'
+            Options.Editing = False
+            Width = 55
+          end
+          object TotalAmount_Diff: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'.'
+            DataBinding.FieldName = 'TotalAmount_Diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1087#1083#1072#1085' '#1086#1090' '#1092#1072#1082#1090#1072
+            Options.Editing = False
+            Width = 55
+          end
+          object Persent_Diff: TcxGridDBColumn
+            Caption = '% '#1086#1090#1082#1083'.'
+            DataBinding.FieldName = 'Persent_Diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1087#1083#1072#1085' '#1086#1090' '#1092#1072#1082#1090#1072
+            Options.Editing = False
+            Width = 55
           end
           object AmountPlan1: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072' 1'
@@ -847,15 +963,6 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             HeaderHint = #1060#1072#1082#1090' '#1087#1088#1086#1076#1072#1078#1080' '#1087#1086#1079#1078#1077' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1040#1082#1094#1080#1080
             Width = 60
           end
-          object CountDaysPromo: TcxGridDBColumn
-            Caption = #1044#1083#1080#1090'-'#1090#1100' '#1072#1082#1094#1080#1080' ('#1076#1085'.)'
-            DataBinding.FieldName = 'CountDaysPromo'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1082#1086#1083#1100#1082#1086' '#1076#1085#1077#1081' '#1076#1083#1080#1090#1089#1103' '#1072#1082#1094#1080#1103
-          end
         end
       end
     end
@@ -1203,7 +1310,7 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             DataBinding.FieldName = 'GoodsKindCompleteName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 85
           end
           object plGoodsKindName_List: TcxGridDBColumn
             Caption = #1042#1080#1076' ('#1089#1087#1088#1072#1074#1086#1095#1085#1086')'

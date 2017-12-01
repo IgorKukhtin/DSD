@@ -65,6 +65,7 @@ type
     isSale: TcxGridDBColumn;
     CountDaysPromo: TcxGridDBColumn;
     cbUnitSale: TcxCheckBox;
+    CountDaysEndPromo: TcxGridDBColumn;
   private
     { Private declarations }
   public
