@@ -183,6 +183,91 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
               Format = ',0.##'
               Kind = skSum
               Column = TotalAmount_Diff
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AnalysisAmount1
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AnalysisAmount2
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AnalysisAmount3
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AnalysisAmount4
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AnalysisAmount5
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AnalysisAmount6
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AnalysisAmount7
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Promo1
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Promo2
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Promo3
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Promo4
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Promo5
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Promo6
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Promo7
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = TotalAnalysisAmount
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = TotalPromo
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = TotalAnalysisAmount_Diff
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -342,6 +427,91 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
               Format = ',0.##'
               Kind = skSum
               Column = TotalAmount_Diff
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AnalysisAmount1
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AnalysisAmount2
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AnalysisAmount3
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AnalysisAmount4
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AnalysisAmount5
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AnalysisAmount6
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AnalysisAmount7
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Promo1
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Promo2
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Promo3
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Promo4
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Promo5
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Promo6
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Promo7
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = TotalAnalysisAmount
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = TotalPromo
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = TotalAnalysisAmount_Diff
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -586,6 +756,56 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1087#1083#1072#1085' '#1086#1090' '#1092#1072#1082#1090#1072
+            Options.Editing = False
+            Width = 55
+          end
+          object TotalAnalysisAmount: TcxGridDBColumn
+            Caption = #1048#1058#1054#1043#1054' '#1057#1058#1040#1058'. '#1088#1077#1072#1083#1080#1079'.'
+            DataBinding.FieldName = 'TotalAnalysisAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = 
+              #1048#1090#1086#1075#1086' '#1076#1083#1103' '#1057#1058#1040#1058#1048#1057#1058#1048#1050#1048' '#1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' + '#1056#1072#1089#1093#1086#1076' '#1085#1072' '#1060#1080#1083 +
+              #1080#1072#1083
+            Options.Editing = False
+            Width = 62
+          end
+          object TotalPromo: TcxGridDBColumn
+            Caption = #1048#1058#1054#1043#1054' '#1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080
+            DataBinding.FieldName = 'TotalPromo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1090#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
+            Options.Editing = False
+            Width = 55
+          end
+          object TotalAnalysisAmount_Diff: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'. ('#1057#1058#1040#1058'.)'
+            DataBinding.FieldName = 'TotalAnalysisAmount_Diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1057#1058#1040#1058'. '#1088#1077#1072#1083#1080#1079'. '#1086#1090' '#1087#1083#1072#1085#1072
+            Options.Editing = False
+            Width = 55
+          end
+          object PersentAnalysis_Diff: TcxGridDBColumn
+            Caption = '% '#1086#1090#1082#1083'. ('#1057#1058#1040#1058'.)'
+            DataBinding.FieldName = 'PersentAnalysis_Diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1057#1058#1040#1058'. '#1088#1077#1072#1083#1080#1079'. '#1086#1090' '#1087#1083#1072#1085
             Options.Editing = False
             Width = 55
           end
@@ -894,6 +1114,160 @@ inherited Report_PromoPlanForm: TReport_PromoPlanForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object AnalysisAmount1: TcxGridDBColumn
+            Caption = #1057#1058#1040#1058'. '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 1 ('#1074#1077#1089')'
+            DataBinding.FieldName = 'AnalysisAmount1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object AnalysisAmount2: TcxGridDBColumn
+            Caption = #1057#1058#1040#1058'. '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 2 ('#1074#1077#1089')'
+            DataBinding.FieldName = 'AnalysisAmount2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object AnalysisAmount3: TcxGridDBColumn
+            Caption = #1057#1058#1040#1058'. '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 3 ('#1074#1077#1089')'
+            DataBinding.FieldName = 'AnalysisAmount3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object AnalysisAmount4: TcxGridDBColumn
+            Caption = #1057#1058#1040#1058'. '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 4 ('#1074#1077#1089')'
+            DataBinding.FieldName = 'AnalysisAmount4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object AnalysisAmount5: TcxGridDBColumn
+            Caption = #1057#1058#1040#1058'. '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 5 ('#1074#1077#1089')'
+            DataBinding.FieldName = 'AnalysisAmount5'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object AnalysisAmount6: TcxGridDBColumn
+            Caption = #1057#1058#1040#1058'. '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 6 ('#1074#1077#1089')'
+            DataBinding.FieldName = 'AnalysisAmount6'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object AnalysisAmount7: TcxGridDBColumn
+            Caption = #1057#1058#1040#1058'. '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 7 ('#1074#1077#1089')'
+            DataBinding.FieldName = 'AnalysisAmount7'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object Promo1: TcxGridDBColumn
+            Caption = #1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080' '#1079#1072' 1 ('#1074#1077#1089')'
+            DataBinding.FieldName = 'Promo1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object Promo2: TcxGridDBColumn
+            Caption = #1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080' '#1079#1072' 2 ('#1074#1077#1089')'
+            DataBinding.FieldName = 'Promo2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object Promo3: TcxGridDBColumn
+            Caption = #1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080' '#1079#1072' 3 ('#1074#1077#1089')'
+            DataBinding.FieldName = 'Promo3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object Promo4: TcxGridDBColumn
+            Caption = #1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080' '#1079#1072' 4 ('#1074#1077#1089')'
+            DataBinding.FieldName = 'Promo4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object Promo5: TcxGridDBColumn
+            Caption = #1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080' '#1079#1072' 5 ('#1074#1077#1089')'
+            DataBinding.FieldName = 'Promo5'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object Promo6: TcxGridDBColumn
+            Caption = #1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080' '#1079#1072' 6 ('#1074#1077#1089')'
+            DataBinding.FieldName = 'Promo6'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object Promo7: TcxGridDBColumn
+            Caption = #1088#1077#1072#1083#1080#1079'. '#1040#1082#1094#1080#1080' '#1079#1072' 7 ('#1074#1077#1089')'
+            DataBinding.FieldName = 'Promo7'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
