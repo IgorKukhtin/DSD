@@ -706,7 +706,7 @@ BEGIN
                    , tmpData.Measure
                    , tmpData.GoodsKindName
                    , tmpData.GoodsKindCompleteName
-                   , tmpData.GoodsKindName
+                   , tmpData.GoodsKindName_Sale
                    , tmpData.GoodsKindName_List
                    , tmpData.TradeMark
                    , tmpData.isPromo
