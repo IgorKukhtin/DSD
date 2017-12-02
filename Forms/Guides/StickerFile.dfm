@@ -84,22 +84,23 @@ object StickerFileForm: TStickerFileForm
         Width = 120
       end
       object TradeMarkName: TcxGridDBColumn
-        Caption = #1058#1086#1088#1075'. '#1084#1072#1088#1082#1072
+        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
         DataBinding.FieldName = 'TradeMarkName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 87
+        Width = 120
       end
       object JuridicalName: TcxGridDBColumn
-        Caption = #1070#1088'. '#1083#1080#1094#1086
+        Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
         DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 117
       end
       object ItemName: TcxGridDBColumn
-        Caption = #1069#1083#1077#1084#1077#1085#1090
+        Caption = #1042#1080#1076' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
         DataBinding.FieldName = 'ItemName'
+        Visible = False
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter

@@ -45,7 +45,7 @@
   object cxLabel5: TcxLabel
     Left = 19
     Top = 46
-    Caption = #1070#1088'. '#1083#1080#1094#1086' /  '#1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100'/ '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+    Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100': '#1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100' / '#1070#1088'. '#1083#1080#1094#1086' / '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
   end
   object edJuridical: TcxButtonEdit
     Left = 19
@@ -79,7 +79,7 @@
   object cxLabel7: TcxLabel
     Left = 178
     Top = 218
-    Caption = #1064#1040#1041#1051#1054#1053
+    Caption = #1064#1040#1041#1051#1054#1053' ('#1080#1085#1076#1080#1074#1080#1076#1091#1072#1083#1100#1085#1099#1081')'
   end
   object edStickerFile: TcxButtonEdit
     Left = 178
@@ -117,13 +117,14 @@
   object Код: TcxLabel
     Left = 19
     Top = 4
-    Caption = #1050#1086#1076
+    Caption = #1050#1086#1076' '#1069#1090#1080#1082#1077#1090#1082#1080
   end
   object ceCode: TcxCurrencyEdit
     Left = 19
     Top = 20
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
+    Properties.ReadOnly = True
     TabOrder = 13
     Width = 153
   end

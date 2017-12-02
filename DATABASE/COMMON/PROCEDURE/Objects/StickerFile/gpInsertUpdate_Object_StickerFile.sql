@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_StickerFile (Integer, Integer, In
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_StickerFile(
    INOUT ioId                       Integer,     -- ид
-      IN incode                     Integer,     -- код 
+      IN incode                     Integer,     -- код
       IN inJuridicalId              Integer,     --
       IN inTradeMarkId              Integer,     --
       IN inLanguageName             TVarChar,    --
@@ -23,15 +23,19 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_StickerFile());
    vbUserId:= lpGetUserBySession (inSession);
-   
+
    -- пытаемся найти код
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
 
    -- Если код не установлен, определяем его как последний+1
-   vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_StickerFile()); 
-   
-   vbName := TRIM (TRIM (inComment)||' '||TRIM (inLanguageName)||' '|| TRIM (COALESCE ((SELECT Object.ValueData FROM Object where Object.Id = inTradeMarkId), ''))||' '||TRIM (COALESCE ((SELECT Object.ValueData FROM Object where Object.Id = inJuridicalId), ''))) ; 
-   
+   vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_StickerFile());
+
+   vbName := TRIM (TRIM (inComment)
+            ||' ' || TRIM (COALESCE ((SELECT Object.ValueData FROM Object where Object.Id = inTradeMarkId), ''))
+            ||' ' || TRIM (COALESCE ((SELECT Object.ValueData FROM Object where Object.Id = inJuridicalId), ''))
+          ||' - ' || TRIM (inLanguageName)
+                  );
+
    -- проверка прав уникальности для свойства <Наименование>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_StickerFile(), vbName);
    -- проверка прав уникальности для свойства <Код >
@@ -39,7 +43,7 @@ BEGIN
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_StickerFile(), vbCode_calc, vbName);
-   
+
    -- сохранили св-во <Примечание>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_StickerFile_Comment(), ioId, inComment);
    -- сохранили свойство <>
@@ -49,7 +53,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_StickerFile_Juridical(), ioId, inJuridicalId);
     -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_StickerFile_TradeMark(), ioId, inTradeMarkId);
-   
+
 
    -- пытаемся найти "Способ изготовления продукта"
    -- если не находим записывае новый элемент в справочник
@@ -58,7 +62,7 @@ BEGIN
    THEN
        -- записываем новый элемент
        vbLanguageId := gpInsertUpdate_Object_Language (ioId     := 0
-                                                     , inCode   := lfGet_ObjectCode(0, zc_Object_Language()) 
+                                                     , inCode   := lfGet_ObjectCode(0, zc_Object_Language())
                                                      , inName   := TRIM(inLanguageName)
                                                      , inComment:= '' ::TVarChar
                                                      , inSession:= inSession
@@ -67,10 +71,10 @@ BEGIN
 
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_StickerFile_Language(), ioId, vbLanguageId);
-    
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
-   
+
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
 
@@ -82,4 +86,4 @@ END;$BODY$
 */
 
 -- тест
--- 
+--

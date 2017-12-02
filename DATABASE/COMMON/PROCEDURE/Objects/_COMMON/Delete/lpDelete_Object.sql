@@ -2,12 +2,15 @@
 
 -- DROP FUNCTION lpDelete_Object(integer, tvarchar);
 
-REATE OR REPLACE FUNCTION lpDelete_Object(
+CREATE OR REPLACE FUNCTION lpDelete_Object(
 IN inId integer, 
 IN Session tvarchar)
   RETURNS void AS
 $BODY$
 BEGIN
+
+  RAISE EXCEPTION 'Серьезный скрипт !!!НЕ ДЛЯ РАБОЧЕЙ БАЗЫ!!!';
+
   -- Серьезный скрипт !!!НЕ ДЛЯ РАБОЧЕЙ БАЗЫ!!!
   DELETE FROM ObjectHistoryFloat WHERE ObjectHistoryFloat.objecthistoryid IN 
         (SELECT ID FROM ObjectHistory WHERE ObjectId = inId);
