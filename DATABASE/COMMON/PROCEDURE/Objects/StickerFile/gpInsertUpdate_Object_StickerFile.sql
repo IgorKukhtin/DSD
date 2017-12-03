@@ -31,13 +31,13 @@ BEGIN
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_StickerFile());
 
    vbName := TRIM (TRIM (inComment)
-            ||' ' || TRIM (COALESCE ((SELECT Object.ValueData FROM Object where Object.Id = inTradeMarkId), ''))
-            ||' ' || TRIM (COALESCE ((SELECT Object.ValueData FROM Object where Object.Id = inJuridicalId), ''))
-          ||' - ' || TRIM (inLanguageName)
+                || COALESCE ((SELECT ' ' || TRIM (Object.ValueData) FROM Object where Object.Id = inJuridicalId), '')
+                || COALESCE ((SELECT ' ' || TRIM (Object.ValueData) FROM Object where Object.Id = inTradeMarkId), '')
+                ||' - ' || TRIM (inLanguageName)
                   );
 
    -- проверка прав уникальности дл€ свойства <Ќаименование>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_StickerFile(), vbName);
+   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_StickerFile(), vbName);
    -- проверка прав уникальности дл€ свойства < од >
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_StickerFile(), vbCode_calc);
 

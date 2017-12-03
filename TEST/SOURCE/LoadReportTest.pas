@@ -25,6 +25,7 @@ type
     procedure LoadReceiptFormTest;
     procedure LoadPromoFormTest;
     procedure LoadWageFormTest;
+    procedure LoadSticker;
   end;
 
 implementation
@@ -87,6 +88,12 @@ begin
   LoadReportFromFile('Ведомость_по_зарплате_1', ReportPath + '\Персонал\Ведомость_по_зарплате_1.fr3');
   LoadReportFromFile('Ведомость_по_зарплате_2', ReportPath + '\Персонал\Ведомость_по_зарплате_2.fr3');
 end;
+
+procedure TLoadReportTest.LoadSticker;
+begin
+  LoadReportFromFile('ШАБЛОН + тм АЛАН - Український.Sticker', ReportPath + '\Этикетки\ШАБЛОН + тм АЛАН - Український.fr3');
+end;
+
 
 procedure TLoadReportTest.LoadAllReportFormTest;
 var

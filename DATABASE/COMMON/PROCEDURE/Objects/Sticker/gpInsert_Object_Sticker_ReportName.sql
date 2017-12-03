@@ -15,18 +15,26 @@ BEGIN
    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Sticker());
    vbUserId:= lpGetUserBySession (inSession);
    
-   inReportName:= TRIM(inReportName);
+   -- 
+   inReportName:= TRIM (inReportName);
    
-   IF NOT EXISTS (SELECT Id FROM Object WHERE DescId = zc_Object_Form() AND TRIM(ValueData) = TRIM(inReportName))   ---'PrintObject_Sticker'
+   -- если такого Шаблона еще нет
+   IF NOT EXISTS (SELECT 1 FROM Object WHERE Object.DescId = zc_Object_Form() AND TRIM (Object.ValueData) = inReportName)
    THEN
        -- сохранили <Объект>
        vbId:= lpInsertUpdate_Object (0, zc_Object_Form(), 0, inReportName);
        
+       -- сохранили <Объект>
        INSERT INTO ObjectBlob (DescId, ObjectId, ValueData )
-              SELECT zc_objectBlob_form_Data(), vbId , ObjectBlob.ValueData
-              FROM Object join ObjectBlob on ObjectId = Object.id
-              where Object.DescId = zc_Object_Form()
-              and Object.ValueData = 'PrintObject_Sticker';
+         SELECT zc_objectBlob_form_Data(), vbId , ObjectBlob.ValueData
+         FROM Object
+               INNER JOIN ObjectBlob ON ObjectId = Object.Id
+         WHERE Object.DescId    = zc_Object_Form()
+           AND Object.ValueData LIKE '%.Sticker%'
+         ORDER BY Object.Id
+         LIMIT 1
+        ;
+
    END IF;
     
 END;

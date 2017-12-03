@@ -76,6 +76,26 @@ BEGIN
                                 AND ObjectLink_StickerFile_Juridical.DescId = zc_ObjectLink_StickerFile_Juridical()
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_StickerFile_Juridical.ChildObjectId
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Juridical.DescId
+      UNION ALL
+       SELECT 
+             0    :: Integer  AS Id
+           , 0    :: Integer  AS Code
+           , '”ƒ¿À»“‹ «Ì‡˜ÂÌËÂ' :: TVarChar AS Name
+
+           , 0    :: Integer  AS LanguageId
+           , ''   :: TVarChar AS LanguageName
+ 
+           , 0    :: Integer  AS TradeMarkId
+           , ''   :: TVarChar AS TradeMarkName
+
+           , 0    :: Integer  AS JuridicalId
+           , ''   :: TVarChar AS JuridicalName
+           , ''   :: TVarChar AS ItemName
+                     
+           , ''   :: TVarChar AS Comment
+
+           , TRUE  :: Boolean AS isDefault
+           , FALSE :: Boolean AS isErased
     ;
 
 END;

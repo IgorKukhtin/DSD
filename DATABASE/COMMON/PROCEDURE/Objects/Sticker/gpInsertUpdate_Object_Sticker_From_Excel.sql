@@ -61,6 +61,7 @@ BEGIN
                  );
      -- Проверка
      IF COALESCE (vbGoodsId, 0) = 0 THEN
+        RETURN;
         RAISE EXCEPTION 'Ошибка.Не найден Товар с Код = <%> .', inCode;
      END IF;
 
