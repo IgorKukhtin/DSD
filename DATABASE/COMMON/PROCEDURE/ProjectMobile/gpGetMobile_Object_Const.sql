@@ -28,7 +28,9 @@ RETURNS TABLE (PaidKindId_First      Integer   -- Форма оплаты - БН
              , UserLogin             TVarChar  -- Логин
              , UserPassword          TVarChar  -- Пароль
              , WebService            TVarChar  -- Веб-сервис через который происходит коннект к основной БД
-             , WebService_two         TVarChar  -- Веб-сервис через который происходит коннект к основной БД
+             , WebService_two        TVarChar  -- Веб-сервис через который происходит коннект к основной БД (2)
+             , WebService_three      TVarChar  -- Веб-сервис через который происходит коннект к основной БД (3)
+             , WebService_four       TVarChar  -- Веб-сервис через который происходит коннект к основной БД (4)
              -- , SyncDateIn         TDateTime -- Дата/время последней синхронизации - когда "успешно" загружалась входящая информация - актуальные справочники, цены, акции, долги, остатки и т.д
              -- , SyncDateOut        TDateTime -- Дата/время последней синхронизации - когда "успешно" выгружалась иходящая информация - заказы, возвраты и т.д
              , MobileVersion         TVarChar  -- Версия мобильного приложения. Пример: "1.0.3.625"
@@ -173,6 +175,16 @@ BEGIN
                    -- ELSE REPLACE (REPLACE (LOWER (Object_ConnectParam.ValueData), '/project/', '/projectmobile/'), '//integer-srv.alan.dp.ua', '//project-vds.vds.colocall.com/projectmobile/index.php') 
               END :: TVarChar AS WebService_two
 
+            , CASE WHEN Object_ConnectParam.ValueData = ''
+                        THEN 'http://integer-srv2-r.alan.dp.ua/projectmobile/index.php' 
+                   ELSE REPLACE (LOWER (Object_ConnectParam.ValueData), '/project/', '/projectmobile/') 
+              END :: TVarChar AS WebService_three
+
+            , CASE WHEN Object_ConnectParam.ValueData = ''
+                        THEN 'http://integer-srv-r.alan.dp.ua/projectmobile/index.php' 
+                   ELSE REPLACE (LOWER (Object_ConnectParam.ValueData), '/project/', '/projectmobile/') 
+              END :: TVarChar AS WebService_four
+
             -- AS LastDateIn
             -- AS LastDateOut
 
@@ -226,6 +238,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.
+ 04.12.17                                                       * WebService_three, WebService_four
  11.05.17                                                       * OperDate_diff
  17.02.17                                        *
 */

@@ -34,8 +34,8 @@ type
     cxLabel6: TcxLabel;
     ObjectDescGuides: TdsdGuides;
     cxLabel7: TcxLabel;
-    ceUnit: TcxButtonEdit;
-    UnitGuides: TdsdGuides;
+    ceObject: TcxButtonEdit;
+    GuidesObject: TdsdGuides;
     cxLabel3: TcxLabel;
     ceComment: TcxTextEdit;
     ceObjectDesc: TcxButtonEdit;

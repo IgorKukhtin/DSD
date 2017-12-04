@@ -3567,9 +3567,9 @@ object frmMain: TfrmMain
             Margins.Top = 3.000000000000000000
             Margins.Bottom = 3.000000000000000000
             Position.X = 121.000000000000000000
-            Position.Y = 4.000000000000000000
+            Position.Y = 3.000000000000000000
             Size.Width = 115.000000000000000000
-            Size.Height = 32.000000000000000000
+            Size.Height = 34.000000000000000000
             Size.PlatformDefault = False
             StyledSettings = [Family, Style, FontColor]
             TabOrder = 1
@@ -3872,9 +3872,9 @@ object frmMain: TfrmMain
             Margins.Top = 3.000000000000000000
             Margins.Bottom = 3.000000000000000000
             Position.X = 121.000000000000000000
-            Position.Y = 4.000000000000000000
+            Position.Y = 3.000000000000000000
             Size.Width = 115.000000000000000000
-            Size.Height = 32.000000000000000000
+            Size.Height = 34.000000000000000000
             Size.PlatformDefault = False
             StyledSettings = [Family, Style, FontColor]
             TabOrder = 1
@@ -3914,9 +3914,9 @@ object frmMain: TfrmMain
             Margins.Top = 3.000000000000000000
             Margins.Bottom = 3.000000000000000000
             Position.X = 95.000000000000000000
-            Position.Y = 4.000000000000000000
+            Position.Y = 3.000000000000000000
             Size.Width = 82.000000000000000000
-            Size.Height = 32.000000000000000000
+            Size.Height = 34.000000000000000000
             Size.PlatformDefault = False
             StyledSettings = [Family, Style, FontColor]
             TabOrder = 1
@@ -6160,7 +6160,7 @@ object frmMain: TfrmMain
               Margins.Right = 5.000000000000000000
               Margins.Bottom = 2.000000000000000000
               Size.Width = 213.000000000000000000
-              Size.Height = 32.000000000000000000
+              Size.Height = 36.000000000000000000
               Size.PlatformDefault = False
               StyledSettings = [Family, Style, FontColor]
               KillFocusByReturn = True
@@ -6519,9 +6519,9 @@ object frmMain: TfrmMain
               Margins.Top = 3.000000000000000000
               Margins.Bottom = 3.000000000000000000
               Position.X = 100.000000000000000000
-              Position.Y = 4.000000000000000000
+              Position.Y = 3.000000000000000000
               Size.Width = 115.000000000000000000
-              Size.Height = 32.000000000000000000
+              Size.Height = 34.000000000000000000
               Size.PlatformDefault = False
               StyledSettings = [Family, Style, FontColor]
               TabOrder = 1
@@ -6865,7 +6865,7 @@ object frmMain: TfrmMain
               Margins.Right = 5.000000000000000000
               Margins.Bottom = 2.000000000000000000
               Size.Width = 248.000000000000000000
-              Size.Height = 32.000000000000000000
+              Size.Height = 33.000000000000000000
               Size.PlatformDefault = False
               StyledSettings = [Family, Style, FontColor]
               KillFocusByReturn = True
@@ -7307,9 +7307,9 @@ object frmMain: TfrmMain
             Margins.Top = 3.000000000000000000
             Margins.Bottom = 3.000000000000000000
             Position.X = 100.000000000000000000
-            Position.Y = 4.000000000000000000
+            Position.Y = 3.000000000000000000
             Size.Width = 115.000000000000000000
-            Size.Height = 32.000000000000000000
+            Size.Height = 34.000000000000000000
             Size.PlatformDefault = False
             StyledSettings = [Family, Style, FontColor]
             TabOrder = 1
@@ -7448,7 +7448,7 @@ object frmMain: TfrmMain
             Margins.Right = 5.000000000000000000
             Margins.Bottom = 2.000000000000000000
             Size.Width = 248.000000000000000000
-            Size.Height = 32.000000000000000000
+            Size.Height = 33.000000000000000000
             Size.PlatformDefault = False
             StyledSettings = [Family, Style, FontColor]
             KillFocusByReturn = True
@@ -8000,7 +8000,7 @@ object frmMain: TfrmMain
             TextSettings.Font.Size = 11.000000000000000000
             Margins.Right = 5.000000000000000000
             Size.Width = 231.000000000000000000
-            Size.Height = 32.000000000000000000
+            Size.Height = 35.000000000000000000
             Size.PlatformDefault = False
             StyledSettings = [Family, Style, FontColor]
             KillFocusByReturn = True
@@ -9147,9 +9147,8 @@ object frmMain: TfrmMain
                 Date = 42823.000000000000000000
                 Align = Left
                 Position.X = 160.000000000000000000
-                Position.Y = 4.000000000000000000
                 Size.Width = 100.000000000000000000
-                Size.Height = 32.000000000000000000
+                Size.Height = 40.000000000000000000
                 Size.PlatformDefault = False
                 StyledSettings = [Family, Style, FontColor]
                 TabOrder = 1
@@ -9185,9 +9184,8 @@ object frmMain: TfrmMain
                 Date = 42823.000000000000000000
                 Align = Left
                 Position.X = 160.000000000000000000
-                Position.Y = 4.000000000000000000
                 Size.Width = 100.000000000000000000
-                Size.Height = 32.000000000000000000
+                Size.Height = 40.000000000000000000
                 Size.PlatformDefault = False
                 StyledSettings = [Family, Style, FontColor]
                 TabOrder = 1
@@ -9272,7 +9270,7 @@ object frmMain: TfrmMain
                 Margins.Top = 5.000000000000000000
                 Margins.Right = 10.000000000000000000
                 Size.Width = 313.000000000000000000
-                Size.Height = 32.000000000000000000
+                Size.Height = 35.000000000000000000
                 Size.PlatformDefault = False
                 TabOrder = 0
               end
@@ -9337,7 +9335,7 @@ object frmMain: TfrmMain
                 Margins.Left = 10.000000000000000000
                 Margins.Top = 5.000000000000000000
                 Size.Width = 273.000000000000000000
-                Size.Height = 32.000000000000000000
+                Size.Height = 35.000000000000000000
                 Size.PlatformDefault = False
                 StyledSettings = [Family, Style, FontColor]
               end
@@ -9355,7 +9353,7 @@ object frmMain: TfrmMain
                 Margins.Top = 5.000000000000000000
                 Margins.Right = 10.000000000000000000
                 Size.Width = 313.000000000000000000
-                Size.Height = 32.000000000000000000
+                Size.Height = 35.000000000000000000
                 Size.PlatformDefault = False
                 TabOrder = 0
               end
@@ -9376,7 +9374,7 @@ object frmMain: TfrmMain
                 Margins.Left = 10.000000000000000000
                 Margins.Top = 5.000000000000000000
                 Size.Width = 273.000000000000000000
-                Size.Height = 32.000000000000000000
+                Size.Height = 35.000000000000000000
                 Size.PlatformDefault = False
                 StyledSettings = [Family, Style, FontColor]
               end
@@ -9810,9 +9808,8 @@ object frmMain: TfrmMain
                 Date = 42823.000000000000000000
                 Align = Left
                 Position.X = 160.000000000000000000
-                Position.Y = 4.000000000000000000
                 Size.Width = 100.000000000000000000
-                Size.Height = 32.000000000000000000
+                Size.Height = 40.000000000000000000
                 Size.PlatformDefault = False
                 StyledSettings = [Family, Style, FontColor]
                 TabOrder = 1
@@ -9848,9 +9845,8 @@ object frmMain: TfrmMain
                 Date = 42823.000000000000000000
                 Align = Left
                 Position.X = 160.000000000000000000
-                Position.Y = 4.000000000000000000
                 Size.Width = 100.000000000000000000
-                Size.Height = 32.000000000000000000
+                Size.Height = 40.000000000000000000
                 Size.PlatformDefault = False
                 StyledSettings = [Family, Style, FontColor]
                 TabOrder = 1
@@ -9897,7 +9893,7 @@ object frmMain: TfrmMain
                 Margins.Top = 5.000000000000000000
                 Margins.Right = 10.000000000000000000
                 Size.Width = 313.000000000000000000
-                Size.Height = 32.000000000000000000
+                Size.Height = 35.000000000000000000
                 Size.PlatformDefault = False
                 TabOrder = 0
               end
@@ -10754,7 +10750,7 @@ object frmMain: TfrmMain
                 Margins.Left = 5.000000000000000000
                 Margins.Right = 5.000000000000000000
                 Size.Width = 323.000000000000000000
-                Size.Height = 32.000000000000000000
+                Size.Height = 35.000000000000000000
                 Size.PlatformDefault = False
                 TabOrder = 1
               end
@@ -10767,7 +10763,7 @@ object frmMain: TfrmMain
                 Margins.Left = 5.000000000000000000
                 Margins.Right = 5.000000000000000000
                 Size.Width = 323.000000000000000000
-                Size.Height = 32.000000000000000000
+                Size.Height = 35.000000000000000000
                 Size.PlatformDefault = False
                 StyledSettings = [Family, Style, FontColor]
                 KillFocusByReturn = True
@@ -11070,7 +11066,7 @@ object frmMain: TfrmMain
                   Margins.Left = 5.000000000000000000
                   Margins.Right = 5.000000000000000000
                   Size.Width = 156.500000000000000000
-                  Size.Height = 32.000000000000000000
+                  Size.Height = 35.000000000000000000
                   Size.PlatformDefault = False
                   StyledSettings = [Family, Style, FontColor]
                   KillFocusByReturn = True
@@ -11086,7 +11082,7 @@ object frmMain: TfrmMain
                   Margins.Left = 5.000000000000000000
                   Margins.Right = 5.000000000000000000
                   Size.Width = 156.500000000000000000
-                  Size.Height = 32.000000000000000000
+                  Size.Height = 35.000000000000000000
                   Size.PlatformDefault = False
                   StyledSettings = [Family, Style, FontColor]
                   KillFocusByReturn = True
@@ -11128,7 +11124,7 @@ object frmMain: TfrmMain
                 Margins.Left = 5.000000000000000000
                 Margins.Right = 5.000000000000000000
                 Size.Width = 323.000000000000000000
-                Size.Height = 32.000000000000000000
+                Size.Height = 35.000000000000000000
                 Size.PlatformDefault = False
                 StyledSettings = [Family, Style, FontColor]
                 KillFocusByReturn = True
@@ -11178,7 +11174,7 @@ object frmMain: TfrmMain
             TextSettings.Font.Size = 10.000000000000000000
             StyledSettings = [Family, Style, FontColor]
             IsSelected = False
-            Size.Width = 66.000000000000000000
+            Size.Width = 51.000000000000000000
             Size.Height = 49.000000000000000000
             Size.PlatformDefault = False
             StyleLookup = ''
@@ -11278,7 +11274,7 @@ object frmMain: TfrmMain
             TextSettings.Font.Size = 10.000000000000000000
             StyledSettings = [Family, Style, FontColor]
             IsSelected = True
-            Size.Width = 66.000000000000000000
+            Size.Width = 46.000000000000000000
             Size.Height = 49.000000000000000000
             Size.PlatformDefault = False
             StyleLookup = ''
@@ -11405,7 +11401,7 @@ object frmMain: TfrmMain
             TextSettings.Font.Size = 10.000000000000000000
             StyledSettings = [Family, Style, FontColor]
             IsSelected = False
-            Size.Width = 66.000000000000000000
+            Size.Width = 51.000000000000000000
             Size.Height = 49.000000000000000000
             Size.PlatformDefault = False
             StyleLookup = ''
@@ -11531,7 +11527,7 @@ object frmMain: TfrmMain
             TextSettings.Font.Size = 10.000000000000000000
             StyledSettings = [Family, Style, FontColor]
             IsSelected = False
-            Size.Width = 66.000000000000000000
+            Size.Width = 46.000000000000000000
             Size.Height = 49.000000000000000000
             Size.PlatformDefault = False
             StyleLookup = ''
@@ -11665,7 +11661,7 @@ object frmMain: TfrmMain
             TextSettings.Font.Size = 10.000000000000000000
             StyledSettings = [Family, Style, FontColor]
             IsSelected = False
-            Size.Width = 69.000000000000000000
+            Size.Width = 34.000000000000000000
             Size.Height = 49.000000000000000000
             Size.PlatformDefault = False
             StyleLookup = ''
@@ -21350,7 +21346,7 @@ object frmMain: TfrmMain
         Margins.Left = 5.000000000000000000
         Margins.Right = 5.000000000000000000
         Size.Width = 290.000000000000000000
-        Size.Height = 32.000000000000000000
+        Size.Height = 35.000000000000000000
         Size.PlatformDefault = False
         StyledSettings = [Family, Style, FontColor]
         KillFocusByReturn = True
@@ -21381,7 +21377,7 @@ object frmMain: TfrmMain
         Position.X = 105.000000000000000000
         Position.Y = 3.000000000000000000
         Size.Width = 85.000000000000000000
-        Size.Height = 32.000000000000000000
+        Size.Height = 26.000000000000000000
         Size.PlatformDefault = False
         StyledSettings = [Family, Style, FontColor]
         TabOrder = 1
@@ -21446,7 +21442,7 @@ object frmMain: TfrmMain
         Margins.Left = 5.000000000000000000
         Margins.Right = 5.000000000000000000
         Size.Width = 205.000000000000000000
-        Size.Height = 32.000000000000000000
+        Size.Height = 35.000000000000000000
         Size.PlatformDefault = False
         StyledSettings = [Family, Style, FontColor]
         KillFocusByReturn = True

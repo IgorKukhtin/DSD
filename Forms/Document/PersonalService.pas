@@ -128,6 +128,22 @@ type
     actUpdateCardSecond: TdsdExecStoredProc;
     spUpdate_CardSecond: TdsdStoredProc;
     bbUpdateCardSecond: TdxBarButton;
+    spSelectMISign: TdsdStoredProc;
+    SignCDS: TClientDataSet;
+    SignDS: TDataSource;
+    cxLabel21: TcxLabel;
+    edstrSign: TcxTextEdit;
+    cxLabel22: TcxLabel;
+    edstrSignNo: TcxTextEdit;
+    actInsertUpdateMISign: TdsdExecStoredProc;
+    spInsertUpdateMISign: TdsdStoredProc;
+    spInsertUpdateMISign_No: TdsdStoredProc;
+    macInsertUpdateMISign: TMultiAction;
+    actInsertUpdateMISignNO: TdsdExecStoredProc;
+    macInsertUpdateMISignNO: TMultiAction;
+    bbMISignNO: TdxBarButton;
+    bbMISign: TdxBarButton;
+    actRefresh_Sign: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

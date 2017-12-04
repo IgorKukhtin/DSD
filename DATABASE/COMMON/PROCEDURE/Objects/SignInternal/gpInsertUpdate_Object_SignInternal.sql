@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_SignInternal(
     IN inMovementDescId   Tfloat    , -- 
     IN inObjectDescId     Tfloat    , -- 
     IN inComment          TVarChar  , -- 
-    IN inUnitId           Integer   , -- ссылка на ѕодразделение
+    IN inObjectId         Integer   , -- ссылка на ѕодразделение
     IN inSession          TVarChar    -- сесси€ пользовател€
 )
 RETURNS Integer AS
@@ -36,7 +36,7 @@ BEGIN
    ioId := lpInsertUpdate_Object (ioId:= ioId, inDescId:= zc_Object_SignInternal(), inObjectCode:= vbCode_calc, inValueData:= inName);
 
    -- сохранили св€зь с <подразделением>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_SignInternal_Object(), ioId, inUnitId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_SignInternal_Object(), ioId, inObjectId);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_SignInternal_MovementDesc(), ioId, inMovementDescId);

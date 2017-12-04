@@ -23,6 +23,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , isAuto Boolean
+             , strSign        TVarChar -- ФИО пользователей. - есть эл. подпись
+             , strSignNo      TVarChar -- ФИО пользователей. - ожидается эл. подпись
               )
 AS
 $BODY$
@@ -66,6 +68,29 @@ BEGIN
                          UNION SELECT zc_Enum_Process_AccessKey_PersonalServiceZaporozhye() FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId and AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceSbit() GROUP BY AccessKeyId_PersonalService
                               )
 
+        , tmpMovement AS (SELECT Movement.id
+                          FROM tmpStatus
+                               INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_PersonalService() AND Movement.StatusId = tmpStatus.StatusId
+                               INNER JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+                          WHERE inIsServiceDate = FALSE
+                         UNION ALL
+                          SELECT MovementDate_ServiceDate.MovementId  AS Id
+                          FROM MovementDate AS MovementDate_ServiceDate
+                               JOIN Movement ON Movement.Id = MovementDate_ServiceDate.MovementId AND Movement.DescId = zc_Movement_PersonalService()
+                               JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
+                               JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+                          WHERE inIsServiceDate = TRUE
+                            AND MovementDate_ServiceDate.ValueData BETWEEN DATE_TRUNC ('MONTH', inStartDate) AND (DATE_TRUNC ('MONTH', inEndDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
+                            AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
+                         )
+                         
+        , tmpSign AS (SELECT tmpMovement.Id
+                           , tmpSign.strSign
+                           , tmpSign.strSignNo
+                      FROM tmpMovement
+                           LEFT JOIN lpSelect_MI_PersonalService_Sign (inMovementId:= tmpMovement.Id ) AS tmpSign ON tmpSign.Id = tmpMovement.Id 
+                      )
+                         
        SELECT
              Movement.Id                                AS Id
            , Movement.InvNumber                         AS InvNumber
@@ -114,21 +139,10 @@ BEGIN
          
            , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
 
-       FROM (SELECT Movement.id
-             FROM tmpStatus
-                  INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_PersonalService() AND Movement.StatusId = tmpStatus.StatusId
-                  INNER JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
-             WHERE inIsServiceDate = FALSE
-            UNION ALL
-             SELECT MovementDate_ServiceDate.MovementId  AS Id
-             FROM MovementDate AS MovementDate_ServiceDate
-                  JOIN Movement ON Movement.Id = MovementDate_ServiceDate.MovementId AND Movement.DescId = zc_Movement_PersonalService()
-                  JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
-                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
-             WHERE inIsServiceDate = TRUE
-               AND MovementDate_ServiceDate.ValueData BETWEEN DATE_TRUNC ('MONTH', inStartDate) AND (DATE_TRUNC ('MONTH', inEndDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
-               AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
-            ) AS tmpMovement
+           , tmpSign.strSign
+           , tmpSign.strSignNo  
+
+       FROM tmpMovement
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -232,6 +246,7 @@ BEGIN
                                       ON MovementBoolean_isAuto.MovementId = Movement.Id
                                      AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
 
+            LEFT JOIN tmpSign ON tmpSign.Id = Movement.Id   -- эл.подписи  --
             ;
 
 END;
@@ -242,6 +257,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 04.12.17         * add Sign
  20.06.17         * add TotalSummCardSecondCash
  24.02.17         *
  20.02.17         * add CardSecond

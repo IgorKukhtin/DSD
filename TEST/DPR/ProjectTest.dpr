@@ -905,7 +905,6 @@ uses
   Report_MovementCheck_Cross in '..\..\FormsFarmacy\Report\Report_MovementCheck_Cross.pas' {Report_MovementCheck_CrossForm: TParentForm},
   OrderExternalJournal in '..\..\Forms\Document\OrderExternalJournal.pas' {OrderExternalJournalForm: TParentForm},
   MemberEdit in '..\..\Forms\Guides\MemberEdit.pas' {MemberEditForm: TParentForm},
-  PersonalService in '..\..\Forms\Document\PersonalService.pas' {PersonalServiceForm: TParentForm},
   MobilePartner_Object in '..\..\Forms\Guides\MobilePartner_Object.pas' {MobilePartner_ObjectForm: TParentForm},
   MobileGoodsByGoodsKind_Object in '..\..\Forms\Guides\MobileGoodsByGoodsKind_Object.pas' {MobileGoodsByGoodsKind_ObjectForm: TParentForm},
   MobileGoodsListSale_Object in '..\..\Forms\Guides\MobileGoodsListSale_Object.pas' {MobileGoodsListSale_ObjectForm: TParentForm},
@@ -988,7 +987,9 @@ uses
   EDIJournal in '..\..\Forms\EDI\EDIJournal.pas' {EDIJournalForm: TParentForm},
   Report_GoodsBalance in '..\..\Forms\Report\Report_GoodsBalance.pas' {Report_GoodsBalanceForm: TParentForm},
   SendMember in '..\..\Forms\Document\SendMember.pas' {SendMemberForm: TParentForm},
-  SendMemberJournal in '..\..\Forms\Document\SendMemberJournal.pas' {SendMemberJournalForm: TParentForm};
+  SendMemberJournal in '..\..\Forms\Document\SendMemberJournal.pas' {SendMemberJournalForm: TParentForm},
+  PersonalServiceList_Unit_Object in '..\..\Forms\Guides\PersonalServiceList_Unit_Object.pas' {PersonalServiceList_Unit_ObjectForm: TParentForm},
+  PersonalService in '..\..\Forms\Document\PersonalService.pas' {PersonalServiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

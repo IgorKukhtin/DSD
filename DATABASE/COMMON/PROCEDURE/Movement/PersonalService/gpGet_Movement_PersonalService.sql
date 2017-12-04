@@ -14,6 +14,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , isAuto Boolean
+             , strSign          TVarChar    -- ФИО пользователей. - есть эл. подпись
+             , strSignNo        TVarChar    -- ФИО пользователей. - ожидается эл. подпись
               )
 AS
 $BODY$
@@ -41,7 +43,9 @@ BEGIN
 
              , 0                     	AS JuridicalId
              , CAST ('' AS TVarChar) 	AS JuridicalName
-             ,  False                   AS isAuto
+             , False                    AS isAuto
+             , NULL::TVarChar           AS strSign
+             , NULL::TVarChar           AS strSignNo
 
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status;
 
@@ -61,7 +65,8 @@ BEGIN
            , Object_Juridical.Id                  AS JuridicalId
            , Object_Juridical.ValueData           AS JuridicalName
            , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
-
+           , tmpSign.strSign
+           , tmpSign.strSignNo
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -87,7 +92,7 @@ BEGIN
                                         AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
 
-
+            LEFT JOIN lpSelect_MI_PersonalService_Sign (inMovementId:= Movement_Promo.Id ) AS tmpSign ON tmpSign.Id = Movement.Id   -- эл.подписи  --
        WHERE Movement.Id =  inMovementId;
 
        END IF;
