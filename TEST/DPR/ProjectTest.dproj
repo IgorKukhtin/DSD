@@ -2975,10 +2975,6 @@
 				<Form>MemberEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\PersonalService.pas">
-				<Form>PersonalServiceForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\MobilePartner_Object.pas">
 				<Form>MobilePartner_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -3307,6 +3303,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\PersonalServiceList_Unit_Object.pas">
 				<Form>PersonalServiceList_Unit_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\PersonalService.pas">
+				<Form>PersonalServiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

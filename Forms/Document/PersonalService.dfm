@@ -2,10 +2,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 673
   ClientWidth = 1307
-  ExplicitLeft = -534
-  ExplicitTop = -251
   ExplicitWidth = 1323
-  ExplicitHeight = 708
+  ExplicitHeight = 711
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1137,6 +1135,99 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Control = cxGrid1
       end
     end
+    object cxTabSheetSign: TcxTabSheet
+      Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
+      ImageIndex = 3
+      object cxGridSign: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 1307
+        Height = 534
+        Align = alClient
+        TabOrder = 0
+        LookAndFeel.NativeStyle = False
+        object cxGridDBTableViewSign: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = SignDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Filter.Active = True
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.IncSearch = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
+          OptionsView.GroupByBox = False
+          OptionsView.HeaderHeight = 40
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object sgOrd: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'Ord'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 56
+          end
+          object sgUserName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
+            DataBinding.FieldName = 'UserName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 200
+          end
+          object sgOperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1076#1077#1081#1089#1090#1074#1080#1103
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 150
+          end
+          object sgIsSign: TcxGridDBColumn
+            Caption = #1055#1086#1076#1087#1080#1089#1072#1085' ('#1044#1072'/'#1053#1077#1090')'
+            DataBinding.FieldName = 'isSign'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1076#1087#1080#1089#1072#1085' ('#1044#1072'/'#1053#1077#1090')'
+            Width = 80
+          end
+          object sclSignInternalName: TcxGridDBColumn
+            Caption = #1052#1086#1076#1077#1083#1100
+            DataBinding.FieldName = 'SignInternalName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 278
+          end
+          object sclisErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085
+            DataBinding.FieldName = 'isErased'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 40
+          end
+        end
+        object cxGridLevel2: TcxGridLevel
+          GridView = cxGridDBTableViewSign
+        end
+      end
+    end
   end
   inherited DataPanel: TPanel
     Width = 1307
@@ -1245,6 +1336,30 @@ inherited PersonalServiceForm: TPersonalServiceForm
       TabOrder = 14
       Width = 187
     end
+    object cxLabel21: TcxLabel
+      Left = 708
+      Top = 45
+      Caption = #1045#1089#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+    end
+    object edstrSign: TcxTextEdit
+      Left = 708
+      Top = 61
+      Properties.ReadOnly = True
+      TabOrder = 16
+      Width = 181
+    end
+    object cxLabel22: TcxLabel
+      Left = 894
+      Top = 45
+      Caption = #1054#1078#1080#1076#1072#1077#1090#1089#1103' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+    end
+    object edstrSignNo: TcxTextEdit
+      Left = 894
+      Top = 61
+      Properties.ReadOnly = True
+      TabOrder = 18
+      Width = 179
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 299
@@ -1255,6 +1370,23 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Top = 224
   end
   inherited ActionList: TActionList
+    object actRefresh_Sign: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spSelectMISign
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
+    end
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
         item
@@ -1265,6 +1397,9 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end
         item
           StoredProc = spSelectChild
+        end
+        item
+          StoredProc = spSelectMISign
         end>
       RefreshOnTabSetChanges = True
     end
@@ -1280,7 +1415,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           StoredProc = spUnErasedMIMaster
         end>
     end
-    object actUpdateIsMain: TdsdExecStoredProc [7]
+    object actUpdateIsMain: TdsdExecStoredProc [8]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1578,6 +1713,66 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' Excel ('#1050#1072#1088#1090#1086#1095#1082#1072' '#1041#1053' '#1080' '#1053#1072#1083#1086#1075#1080')'
       ImageIndex = 41
     end
+    object actInsertUpdateMISign: TdsdExecStoredProc
+      Category = 'Sign'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMISign
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMISign
+        end>
+      Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
+      Hint = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
+      ImageIndex = 76
+    end
+    object macInsertUpdateMISign: TMultiAction
+      Category = 'Sign'
+      TabSheet = cxTabSheetSign
+      MoveParams = <>
+      Enabled = False
+      ActionList = <
+        item
+          Action = actInsertUpdateMISign
+        end
+        item
+          Action = actRefresh_Sign
+        end>
+      Caption = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+      Hint = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+      ImageIndex = 76
+    end
+    object actInsertUpdateMISignNO: TdsdExecStoredProc
+      Category = 'Sign'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMISign_No
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMISign_No
+        end
+        item
+        end>
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
+      ImageIndex = 58
+    end
+    object macInsertUpdateMISignNO: TMultiAction
+      Category = 'Sign'
+      TabSheet = cxTabSheetSign
+      MoveParams = <>
+      Enabled = False
+      ActionList = <
+        item
+          Action = actInsertUpdateMISignNO
+        end
+        item
+          Action = actRefresh_Sign
+        end>
+      Caption = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+      Hint = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+      ImageIndex = 58
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1715,6 +1910,18 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end
         item
           Visible = True
+          ItemName = 'bbMISign'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMISignNO'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -1767,14 +1974,22 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Action = macUpdateCardSecond
       Category = 0
     end
+    object bbMISignNO: TdxBarButton
+      Action = macInsertUpdateMISignNO
+      Category = 0
+    end
+    object bbMISign: TdxBarButton
+      Action = macInsertUpdateMISign
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 830
     Top = 265
   end
   inherited PopupMenu: TPopupMenu
-    Left = 1048
-    Top = 232
+    Left = 928
+    Top = 208
     object N2: TMenuItem
       Action = actMISetErased
     end
@@ -1945,6 +2160,20 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Value = Null
         Component = edIsAuto
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'strSign'
+        Value = Null
+        Component = edstrSign
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'strSignNo'
+        Value = Null
+        Component = edstrSignNo
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -2666,5 +2895,91 @@ inherited PersonalServiceForm: TPersonalServiceForm
     PackSize = 1
     Left = 592
     Top = 352
+  end
+  object spSelectMISign: TdsdStoredProc
+    StoredProcName = 'gpSelect_MI_PersonalService_Sign'
+    DataSet = SignCDS
+    DataSets = <
+      item
+        DataSet = SignCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 920
+    Top = 376
+  end
+  object SignCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 920
+    Top = 464
+  end
+  object SignDS: TDataSource
+    DataSet = SignCDS
+    Left = 980
+    Top = 438
+  end
+  object spInsertUpdateMISign: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_PersonalService_Sign'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSign'
+        Value = 'True'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1016
+    Top = 363
+  end
+  object spInsertUpdateMISign_No: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_PersonalService_Sign'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSign'
+        Value = 'False'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1008
+    Top = 299
   end
 end
