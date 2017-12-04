@@ -133,9 +133,9 @@ begin
   isPrevDay_begin:= False;
 
   if FindCmdLineSwitch('interval', IntervalStr) then
-    FIntervalVal := StrToIntDef(IntervalStr, 0)
+    FIntervalVal := StrToIntDef(IntervalStr, 1)
   else
-    FIntervalVal := 0;
+    FIntervalVal := 1;
 
   if IntervalVal > 0 then
     Timer.Interval := IntervalVal * 60 * 1000;
@@ -167,6 +167,7 @@ procedure TMainForm.ProccessEDI;
 var Old_stat : Integer;
     Present: TDateTime;
     Hour, Min, Sec, MSec: Word;
+    IntervalStr: string;
 begin
   ActiveControl:= cbPrevDay;
 
@@ -224,7 +225,20 @@ begin
   end;
 
   Proccessing := False;
+  //
+  if FindCmdLineSwitch('interval', IntervalStr) then
+    FIntervalVal := StrToIntDef(IntervalStr, 1)
+  else
+    FIntervalVal := 1;
+
+  if Hour > 18 then
+  begin
+    Timer.Interval := (IntervalVal * 3)  * 60 * 1000;
+    AddToLog('Текущий интервал увеличен до : ' + IntToStr(IntervalVal * 3) + ' мин.');
+  end;
+
   Timer.Enabled:=True;
+
 end;
 
 procedure TMainForm.StartEDI;

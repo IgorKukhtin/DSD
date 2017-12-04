@@ -145,10 +145,6 @@
     TabOrder = 2
     object TabSheet1: TTabSheet
       Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080' - '#1044#1086#1082#1091#1084#1077#1085#1090#1099
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GuidePanel: TPanel
         Left = 0
         Top = 0
@@ -203,36 +199,6 @@
           ParentFont = False
           TabOrder = 2
         end
-        object cbCreateId_Postgres: TCheckBox
-          Tag = 1
-          Left = 99
-          Top = 1
-          Width = 114
-          Height = 17
-          Caption = 'add Id_PG'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
-          Font.Style = [fsBold]
-          ParentFont = False
-          TabOrder = 3
-        end
-        object cbNullId_Postgres: TCheckBox
-          Tag = 1
-          Left = 99
-          Top = 17
-          Width = 114
-          Height = 17
-          Caption = 'NULL Id_PG'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
-          Font.Style = [fsBold]
-          ParentFont = False
-          TabOrder = 4
-        end
         object cbComposition: TCheckBox
           Tag = 10
           Left = 15
@@ -247,7 +213,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 5
+          TabOrder = 3
         end
         object cbCountryBrand: TCheckBox
           Tag = 10
@@ -262,7 +228,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 6
+          TabOrder = 4
         end
         object cbBrand: TCheckBox
           Tag = 10
@@ -277,7 +243,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 7
+          TabOrder = 5
         end
         object cbFabrika: TCheckBox
           Tag = 10
@@ -292,7 +258,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 8
+          TabOrder = 6
         end
         object cbLineFabrica: TCheckBox
           Tag = 10
@@ -308,7 +274,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 9
+          TabOrder = 7
         end
         object cbGoodsInfo: TCheckBox
           Tag = 10
@@ -324,7 +290,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 10
+          TabOrder = 8
         end
         object cbGoodsSize: TCheckBox
           Tag = 10
@@ -340,7 +306,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 11
+          TabOrder = 9
         end
         object cbCash: TCheckBox
           Tag = 10
@@ -355,7 +321,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 12
+          TabOrder = 10
         end
         object cbValuta: TCheckBox
           Tag = 10
@@ -370,7 +336,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 13
+          TabOrder = 11
         end
         object cbPeriod: TCheckBox
           Tag = 10
@@ -385,7 +351,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 14
+          TabOrder = 12
         end
         object cbGoodsGroup: TCheckBox
           Tag = 10
@@ -400,7 +366,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 15
+          TabOrder = 13
         end
         object cbDiscount: TCheckBox
           Tag = 10
@@ -415,7 +381,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 16
+          TabOrder = 14
         end
         object cbDiscountTools: TCheckBox
           Tag = 10
@@ -430,7 +396,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 17
+          TabOrder = 15
           WordWrap = True
         end
         object cbPartner: TCheckBox
@@ -446,7 +412,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 18
+          TabOrder = 16
           WordWrap = True
         end
         object cbUnit: TCheckBox
@@ -462,7 +428,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 19
+          TabOrder = 17
           WordWrap = True
         end
         object cbLabel: TCheckBox
@@ -479,7 +445,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 20
+          TabOrder = 18
           WordWrap = True
         end
         object cbGoods: TCheckBox
@@ -496,7 +462,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 21
+          TabOrder = 19
           WordWrap = True
         end
         object cbGoodsItem: TCheckBox
@@ -513,7 +479,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 22
+          TabOrder = 20
           WordWrap = True
         end
         object cbClient: TCheckBox
@@ -529,7 +495,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 23
+          TabOrder = 21
           WordWrap = True
         end
         object cbCity: TCheckBox
@@ -545,7 +511,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 24
+          TabOrder = 22
           WordWrap = True
         end
         object cbJuridical: TCheckBox
@@ -561,7 +527,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 25
+          TabOrder = 23
           WordWrap = True
         end
         object cbPriceList: TCheckBox
@@ -577,7 +543,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 26
+          TabOrder = 24
           WordWrap = True
         end
         object cbMember: TCheckBox
@@ -593,7 +559,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 27
+          TabOrder = 25
           WordWrap = True
         end
         object cbUser: TCheckBox
@@ -609,7 +575,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 28
+          TabOrder = 26
           WordWrap = True
         end
       end
@@ -678,21 +644,6 @@
           ParentFont = False
           TabOrder = 3
         end
-        object cbCreateDocId_Postgres: TCheckBox
-          Tag = 1
-          Left = 113
-          Top = 1
-          Width = 78
-          Height = 17
-          Caption = 'add Id_PG'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
-          Font.Style = [fsBold]
-          ParentFont = False
-          TabOrder = 4
-        end
         object cbReturnOut: TCheckBox
           Tag = 20
           Left = 6
@@ -706,7 +657,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 5
+          TabOrder = 4
         end
         object cbSend: TCheckBox
           Tag = 20
@@ -721,7 +672,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 6
+          TabOrder = 5
         end
         object cbLoss: TCheckBox
           Tag = 20
@@ -736,7 +687,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 7
+          TabOrder = 6
         end
         object cbDiscountPeriodItem: TCheckBox
           Tag = 20
@@ -751,7 +702,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 8
+          TabOrder = 7
           WordWrap = True
         end
         object cbPriceListItem: TCheckBox
@@ -767,7 +718,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 9
+          TabOrder = 8
           WordWrap = True
         end
         object cbInventory: TCheckBox
@@ -783,7 +734,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 10
+          TabOrder = 9
         end
         object cbSale: TCheckBox
           Tag = 20
@@ -798,7 +749,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 11
+          TabOrder = 10
         end
         object cbReturnIn: TCheckBox
           Tag = 20
@@ -813,7 +764,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 12
+          TabOrder = 11
         end
         object cbSale_Child: TCheckBox
           Tag = 20
@@ -828,7 +779,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 13
+          TabOrder = 12
         end
         object cbReturnIn_Child: TCheckBox
           Tag = 20
@@ -843,7 +794,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 14
+          TabOrder = 13
         end
         object cbTest: TCheckBox
           Left = 19
@@ -857,14 +808,14 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = [fsBold]
           ParentFont = False
-          TabOrder = 15
+          TabOrder = 14
         end
         object TestEdit: TEdit
           Left = 19
           Top = 444
           Width = 104
           Height = 21
-          TabOrder = 16
+          TabOrder = 15
         end
         object cbGoodsAccount: TCheckBox
           Tag = 20
@@ -879,7 +830,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 17
+          TabOrder = 16
           WordWrap = True
         end
         object cbCurrency: TCheckBox
@@ -895,7 +846,7 @@
           Font.Name = 'MS Sans Serif'
           Font.Style = []
           ParentFont = False
-          TabOrder = 18
+          TabOrder = 17
         end
       end
       object CompleteDocumentPanel: TPanel
@@ -995,7 +946,7 @@
         object cbCompleteSend: TCheckBox
           Tag = 30
           Left = 15
-          Top = 137
+          Top = 134
           Width = 194
           Height = 17
           Caption = '2. '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
@@ -1025,7 +976,7 @@
         object cbCompleteInventory: TCheckBox
           Tag = 30
           Left = 15
-          Top = 177
+          Top = 174
           Width = 194
           Height = 17
           Caption = '4. '#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
@@ -1041,7 +992,7 @@
         object cbCompleteSale: TCheckBox
           Tag = 30
           Left = 15
-          Top = 222
+          Top = 210
           Width = 200
           Height = 17
           Caption = '5. '#1055#1088#1086#1076'.'#1087#1086#1082'.'
@@ -1057,7 +1008,7 @@
         object cbCompleteReturnIn: TCheckBox
           Tag = 30
           Left = 15
-          Top = 244
+          Top = 232
           Width = 200
           Height = 17
           Caption = '6. '#1042#1086#1079'.'#1086#1090' '#1087#1086#1082'.'
@@ -1089,7 +1040,7 @@
         object cbCompleteAccount: TCheckBox
           Tag = 30
           Left = 15
-          Top = 267
+          Top = 255
           Width = 194
           Height = 17
           Caption = '7. '#1056#1072#1089#1095#1077#1090#1099' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
@@ -1105,7 +1056,7 @@
         object cbCompleteLoss: TCheckBox
           Tag = 30
           Left = 15
-          Top = 157
+          Top = 154
           Width = 106
           Height = 17
           Caption = '3. '#1057#1087#1080#1089#1072#1085#1080#1077
@@ -1120,7 +1071,7 @@
         end
         object cbComplete_List: TCheckBox
           Left = 15
-          Top = 321
+          Top = 351
           Width = 176
           Height = 17
           Caption = '!!! C'#1087#1080#1089#1086#1082' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' !!!'
@@ -1135,7 +1086,7 @@
         end
         object cb100MSec: TCheckBox
           Left = 15
-          Top = 357
+          Top = 374
           Width = 76
           Height = 17
           Caption = '100MSec'
@@ -1146,6 +1097,42 @@
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 15
+        end
+        object btnNullGuideId_Postgres: TButton
+          Left = 24
+          Top = 410
+          Width = 137
+          Height = 25
+          Caption = '1. Guide - NULL Id_PG'
+          TabOrder = 16
+          OnClick = btnNullGuideId_PostgresClick
+        end
+        object btnNullDocId_Postgres: TButton
+          Left = 24
+          Top = 441
+          Width = 137
+          Height = 25
+          Caption = '2. Doc - NULL Id_PG'
+          TabOrder = 17
+          OnClick = btnNullDocId_PostgresClick
+        end
+        object btnAddGuideId_Postgres: TButton
+          Left = 24
+          Top = 282
+          Width = 137
+          Height = 25
+          Caption = '1. Guide - Add Id_PG'
+          TabOrder = 18
+          OnClick = btnAddGuideId_PostgresClick
+        end
+        object btnAddlDocId_Postgres: TButton
+          Left = 24
+          Top = 313
+          Width = 137
+          Height = 25
+          Caption = '2. Doc - Add Id_PG'
+          TabOrder = 19
+          OnClick = btnAddlDocId_PostgresClick
         end
       end
     end

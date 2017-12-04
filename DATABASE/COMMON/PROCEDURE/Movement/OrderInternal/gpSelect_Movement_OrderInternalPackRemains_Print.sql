@@ -71,6 +71,10 @@ RETURNS TABLE (Id                   Integer
              , GoodsKindName_Child        TVarChar
              , MeasureName_Child          TVarChar
 
+                  -- »“Œ√Œ ÔÓ Child - 
+             , Amount_result_pack_total    TFloat
+             , Amount_result_pack_total_sh TFloat
+
                -- »“Œ√Œ ÔÓ Child - œÎ‡Ì ‰Îˇ ÛÔ‡ÍÓ‚ÍË (Ò ÓÒÚ‡ÚÍ‡, Ù‡ÍÚ)
              , AmountPack_total           TFloat
              , AmountPack_total_sh        TFloat
@@ -122,6 +126,8 @@ RETURNS TABLE (Id                   Integer
                 
                -- –ÂÁÛÎ¸Ú‡Ú œŒ—À≈ ”œ¿ Œ¬ »
              , Amount_result_pack_Child     TFloat
+               -- –ÂÁÛÎ¸Ú‡Ú œŒ—À≈ ”œ¿ Œ¬ »
+             , Amount_result_pack_Child_Sh  TFloat
                -- ŒÒÚ. ‚ ‰Ìˇı (ÔÓ Ô. !!!»À»!!! ÔÓ Á‚.) - œŒ—À≈ ”œ¿ Œ¬ »
              , DayCountForecast_calc_Child  TFloat
 
@@ -184,6 +190,9 @@ BEGIN
                                         , SUM (CASE WHEN ObjectFloat_Weight.ValueData > 0 AND _Result_Child.MeasureId = zc_Measure_Sh() THEN _Result_Child.AmountPack       / ObjectFloat_Weight.ValueData ELSE 0 END :: Integer) AS AmountPack_sh
                                         , SUM (CASE WHEN ObjectFloat_Weight.ValueData > 0 AND _Result_Child.MeasureId = zc_Measure_Sh() THEN _Result_Child.AmountPackSecond / ObjectFloat_Weight.ValueData ELSE 0 END :: Integer) AS AmountPackSecond_sh
 
+                                        , SUM (-1 * CASE WHEN _Result_Child.Amount_result_pack < 0 THEN _Result_Child.Amount_result_pack ELSE 0 END) AS Amount_result_pack
+                                        , SUM (-1 * CASE WHEN _Result_Child.Amount_result_pack < 0 AND ObjectFloat_Weight.ValueData > 0 AND _Result_Child.MeasureId = zc_Measure_Sh() THEN _Result_Child.Amount_result_pack  / ObjectFloat_Weight.ValueData ELSE 0 END :: Integer) AS Amount_result_pack_sh
+
                                         , SUM (_Result_Child.AmountPackNext)       AS AmountPackNext
                                         , SUM (_Result_Child.AmountPackNextSecond) AS AmountPackNextSecond
                                         , SUM (_Result_Child.AmountPackNextTotal)  AS AmountPackNextTotal
@@ -202,9 +211,15 @@ BEGIN
                                       OR _Result_Child.Income_PACK_from <> 0
                                       OR _Result_Child.AmountPackNext       <> 0
                                       OR _Result_Child.AmountPackNextSecond <> 0
+                                      OR _Result_Child.Amount_result_pack   <> 0
                                    GROUP BY _Result_Child.KeyId
                                   )
             , tmpMinus AS (SELECT DISTINCT _Result_Child.KeyId FROM _Result_Child WHERE _Result_Child.Amount_result_pack < 0)
+            , tmpFind AS (SELECT DISTINCT _Result_Master.KeyId
+                          FROM _Result_Master
+                               LEFT JOIN _Result_Child ON _Result_Child.KeyId = _Result_Master.KeyId
+                          WHERE _Result_Master.GoodsKindId <> COALESCE (_Result_Child.GoodsKindId, 0)
+                         )
            -- –ÂÁÛÎ¸Ú‡Ú
            SELECT _Result_Master.Id
                 , _Result_Master.KeyId
@@ -262,6 +277,10 @@ BEGIN
                 , _Result_Child.GoodsKindName     AS GoodsKindName_Child
                 , _Result_Child.MeasureName       AS MeasureName_Child
 
+                  -- »“Œ√Œ ÔÓ Child - 
+                , COALESCE (tmpChild_total.Amount_result_pack, 0)           :: TFloat AS Amount_result_pack_total
+                , COALESCE (tmpChild_total.Amount_result_pack_sh, 0)        :: TFloat AS Amount_result_pack_total_sh
+
                   -- »“Œ√Œ ÔÓ Child - œÎ‡Ì ‰Îˇ ÛÔ‡ÍÓ‚ÍË (Ò ÓÒÚ‡ÚÍ‡, Ù‡ÍÚ)
                 , COALESCE (tmpChild_total.AmountPack, 0)           :: TFloat AS AmountPack_total
                 , COALESCE (tmpChild_total.AmountPack_sh, 0)        :: TFloat AS AmountPack_total_sh
@@ -314,6 +333,8 @@ BEGIN
                
                   -- –ÂÁÛÎ¸Ú‡Ú œŒ—À≈ ”œ¿ Œ¬ »
                 , _Result_Child.Amount_result_pack    AS Amount_result_pack_Child
+                  -- –ÂÁÛÎ¸Ú‡Ú œŒ—À≈ ”œ¿ Œ¬ »
+                , CASE WHEN ObjectFloat_Weight_Child.ValueData > 0 AND _Result_Child.MeasureId = zc_Measure_Sh() THEN (_Result_Child.Amount_result_pack / ObjectFloat_Weight_Child.ValueData) :: Integer  ELSE 0 END :: TFloat  AS Amount_result_pack_Child_sh
                   -- ŒÒÚ. ‚ ‰Ìˇı (ÔÓ Ô. !!!»À»!!! ÔÓ Á‚.) - œŒ—À≈ ”œ¿ Œ¬ »
                 , _Result_Child.DayCountForecast_calc AS DayCountForecast_calc_Child
 
@@ -334,6 +355,7 @@ BEGIN
 
            FROM _Result_Master
               LEFT JOIN tmpChild_total ON tmpChild_total.KeyId = _Result_Master.KeyId
+              LEFT JOIN tmpFind        ON tmpFind.KeyId        = _Result_Master.KeyId
               LEFT JOIN (SELECT *
                          FROM _Result_Child
                          WHERE _Result_Child.Remains_pack         <> 0
@@ -375,6 +397,7 @@ BEGIN
                  -- »ÎË “ŒÀ‹ Œ ˜Â„Ó ÌÂ ı‚‡ÚËÎÓ
               OR (-- _Result_Child.Amount_result_pack < 0
                   tmpMinus.KeyId IS NOT NULL
+              AND tmpFind.KeyId  IS NOT NULL
               AND inIsMinus = TRUE)
           ;
 

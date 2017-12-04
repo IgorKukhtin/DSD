@@ -49,8 +49,6 @@ type
     toStoredProc_three: TdsdStoredProc;
     toSqlQuery_two: TZQuery;
     cbCompositionGroup: TCheckBox;
-    cbCreateId_Postgres: TCheckBox;
-    cbNullId_Postgres: TCheckBox;
     cbComposition: TCheckBox;
     cbCountryBrand: TCheckBox;
     cbBrand: TCheckBox;
@@ -114,7 +112,6 @@ type
     Splitter1: TSplitter;
     btnResultGroupCSV: TButton;
     lResultGroupCSV: TLabel;
-    cbCreateDocId_Postgres: TCheckBox;
     cbOnlyOpenMIMaster: TCheckBox;
     сbNotVisibleCursor: TCheckBox;
     cbJuridical: TCheckBox;
@@ -157,6 +154,16 @@ type
     cb100MSec: TCheckBox;
     cbOnlyOpenMIChild: TCheckBox;
     cbCurrency: TCheckBox;
+
+    btnNullGuideId_Postgres: TButton;
+    btnNullDocId_Postgres: TButton;
+    btnAddGuideId_Postgres: TButton;
+    btnAddlDocId_Postgres: TButton;
+
+    procedure btnAddGuideId_PostgresClick(Sender: TObject);
+    procedure btnAddlDocId_PostgresClick(Sender: TObject);
+    procedure btnNullGuideId_PostgresClick(Sender: TObject);
+    procedure btnNullDocId_PostgresClick(Sender: TObject);
 
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
@@ -297,6 +304,7 @@ type
     procedure pLoad_Chado;
     procedure myEnabledCB (cb:TCheckBox);
     procedure myDisabledCB (cb:TCheckBox);
+
   public
   end;
 
@@ -333,6 +341,7 @@ begin
      //
      if fStop then Close;
 end;
+
 procedure TMainForm.btnCreateTableDatClick(Sender: TObject);
 begin
  lCreateTableDat.Caption:= 'FALSE';
@@ -998,6 +1007,7 @@ if cbSop.Checked then
 
 end;
 
+
 procedure TMainForm.btnDropTableDatClick(Sender: TObject);
 begin
  lDropTableDat.Caption:= 'FALSE';
@@ -1567,7 +1577,7 @@ begin
      EndDateEdit.Text:=DateToStr(StrToDate('01.'+IntToStr(Month)+'.'+IntToStr(Year))-1);
      EndDateCompleteEdit.Text:=EndDateEdit.Text;
      //
-     TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Загрузка', 'Админ', gc_User);
+     TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Загрузка Sybase', 'Админ', gc_User);
      if not Assigned (gc_User) then ShowMessage ('not Assigned (gc_User)');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1953,21 +1963,52 @@ fExecSqFromQuery(
  lInsertGoods2.Caption:= 'TRUE';
 
 end;
-
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.btnAddGuideId_PostgresClick(Sender: TObject);
+begin
+     if MessageDlg('Действительно Create СПРАВОЧНИКИ.Sybase.ВСЕМ.Id_Postgres ?',mtConfirmation,[mbYes,mbNo],0)<>mrYes
+     then exit;
+     //
+     btnAddGuideId_Postgres.Enabled:= FALSE;
+     pCreateGuide_Id_Postgres;
+     btnAddGuideId_Postgres.Enabled:= TRUE;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.btnAddlDocId_PostgresClick(Sender: TObject);
+begin
+     if MessageDlg('Действительно Create ДОКУМЕНТЫ.Sybase.ВСЕМ.Id_Postgres ?',mtConfirmation,[mbYes,mbNo],0)<>mrYes
+     then exit;
+     //
+     btnAddlDocId_Postgres.Enabled:= FALSE;
+     pCreateDocument_Id_Postgres;
+     btnAddlDocId_Postgres.Enabled:= TRUE;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.btnNullDocId_PostgresClick(Sender: TObject);
+begin
+     if MessageDlg('Действительно set ДОКУМЕНТЫ.Sybase.ВСЕМ.Id_Postgres = null?',mtConfirmation,[mbYes,mbNo],0)<>mrYes
+     then exit;
+     //
+     btnNullDocId_Postgres.Enabled:= FALSE;
+     pSetNullDocument_Id_Postgres;
+     btnNullDocId_Postgres.Enabled:= TRUE;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.btnNullGuideId_PostgresClick(Sender: TObject);
+begin
+     if MessageDlg('Действительно set СПРАВОЧНИКИ.Sybase.ВСЕМ.Id_Postgres = null?',mtConfirmation,[mbYes,mbNo],0)<>mrYes
+     then exit;
+     //
+     btnNullGuideId_Postgres.Enabled:= FALSE;
+     pSetNullGuide_Id_Postgres;
+     btnNullGuideId_Postgres.Enabled:= TRUE;
+end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.OKGuideButtonClick(Sender: TObject);
 var tmpDate1,tmpDate2:TDateTime;
     Year, Month, Day, Hour, Min, Sec, MSec: Word;
     StrTime:String;
 begin
-     if cbCreateId_Postgres.Checked
-     then begin if MessageDlg('Действительно Create СПРАВОЧНИКИ.Sybase.ВСЕМ.Id_Postgres ?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
-                pCreateGuide_Id_Postgres;
-          end;
-     if cbNullId_Postgres.Checked
-     then begin if MessageDlg('Действительно set СПРАВОЧНИКИ.Sybase.ВСЕМ.Id_Postgres = null?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
-                pSetNullGuide_Id_Postgres;
-          end;
      //
      if MessageDlg('Действительно загрузить выбранные справочники?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
      //
@@ -2054,15 +2095,6 @@ var tmpDate1,tmpDate2:TDateTime;
     StrTime:String;
     myRecordCount1,myRecordCount2:Integer;
 begin
-     if cbCreateDocId_Postgres.Checked
-     then begin if MessageDlg('Действительно Create ДОКУМЕНТЫ.Sybase.ВСЕМ.Id_Postgres ?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
-                pCreateDocument_Id_Postgres;
-          end;
-     if cbNullId_Postgres.Checked
-     then begin if MessageDlg('Действительно set ДОКУМЕНТЫ.Sybase.ВСЕМ.Id_Postgres = null?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
-                pSetNullDocument_Id_Postgres;
-          end;
-     //
      if MessageDlg('Действительно загрузить выбранные документы?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
      //
      fStop:=false;
@@ -2072,10 +2104,6 @@ begin
      OKCompleteDocumentButton.Enabled:=false;
      //
      Gauge.Visible:=true;
-     //
-     if cbNullId_Postgres.Checked  then begin if MessageDlg('Действительно set ДОКУМЕНТЫ.Sybase.ВСЕМ.Id_Postgres = null?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
-                                                 pSetNullDocument_Id_Postgres;
-                                           end;
      //
      tmpDate1:=NOw;
 
@@ -2531,7 +2559,6 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pCreateGuide_Id_Postgres;
 begin
-     if cbCreateId_Postgres.Checked then
      begin
         // 1.1. Ед.изм.
         try fExecSqFromQuery_noErr('alter table dba.Measure add Id_Postgres integer null;'); except end;
@@ -2590,7 +2617,6 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pCreateDocument_Id_Postgres;
 begin
-     if cbCreateDocId_Postgres.Checked then
      begin
       // 1.1. Приход
         try fExecSqFromQuery_noErr('alter table dba.Bill add Id_Postgres integer null;'); except end;
@@ -5899,6 +5925,12 @@ begin
         Add('       when ObjectId = 66 then 29018');   // Savoy-O EUR   - магазин Savoy-O
         //Add('       when ObjectId = 67 then 29018');   // Savoy-O бн    - магазин Savoy-O
         Add('       when ObjectId = 68 then 29018');   // Savoy-O $     - магазин Savoy-O
+
+        Add('       when ObjectId = 69 then 11932');   //  грн   - магазин CHADO-O
+        Add('       when ObjectId = 71 then 11932');   //  EUR   - магазин CHADO-O
+        //Add('       when ObjectId = 72 then 11932');   //  бн    - магазин CHADO-O
+        Add('       when ObjectId = 70 then 11932');   //  $     - магазин CHADO-O
+
         Add('       end   as IDUnitID');
         Add('     , podr.Id_Postgres as UnitID    ');
         Add('from dba.KassaProperty');
@@ -6612,7 +6644,7 @@ begin
         Add('select Unit.Id as ObjectId');
         Add('    , 0 as ObjectCode');
         Add('    , Unit.UnitName as ObjectName');
-        Add('    , if Unit.ParentId<> 200 then  Unit.ParentId else 0 endif as  IDParentId ');
+        Add('    , if Unit.ParentId <> 200 then Unit.ParentId else 0 endif as IDParentId');
         Add('    ,  Parent.Id_Postgres as ParentId ');
         Add('    ,  case when ObjectId = 4647 then 50');     //магазин Vintag 50   -
         Add('            when ObjectId = 7360 then 90');     //магазин Vintag 90   -
@@ -6620,10 +6652,10 @@ begin
 
         Add('            when ObjectId = 969 then -1');      //магазин Sopra       -
         Add('            when ObjectId = 978 then -1');      //магазин Vintag      -
-        Add('            when ObjectId = 11772 then -1');  //магазин Терри-Out   - Склад Terri
-        Add('            when ObjectId = 29018 then -1')  ;  //магазин Savoy-O     -
+        Add('            when ObjectId = 11772 then -1');    //магазин Терри-Out   - Склад Terri
+        Add('            when ObjectId = 29018 then -1');    //магазин Savoy-O     -
         Add('            else 0');
-        Add('       end   as DiscountTax');
+        Add('       end as DiscountTax');
 
         Add('    , zc_erasedDel() as zc_erasedDel');
         Add('    , Unit.Erased as Erased');
@@ -6644,7 +6676,8 @@ begin
         Add('       when ObjectId = 11772 then 979');  //магазин Терри-Out   - Склад Terri
         Add('       when ObjectId = 20484 then 0');    //магазин ESCADA      -
         Add('       when ObjectId = 29018 then 0')  ;  //магазин Savoy-O     -
-        Add('       end   as IDChildId');
+        Add('       else 0');
+        Add('       end as IDChildId');
         Add('     , Child.Id_Postgres as ChildId');
         Add('     , case when ObjectId = 4646 then 0 else ' + IntToStr(BankAccountId) + ' end as BankAccountId');
 
@@ -6847,67 +6880,4 @@ end;
 
 end.
 
-
-{
-alter table dba.GoodsProperty_Detail add Id1_Postgres integer null;
-alter table dba.GoodsProperty_Detail add Id2_Postgres integer null;
-alter table dba.GoodsProperty_Detail add Id3_Postgres integer null;
-alter table dba.GoodsProperty_Detail add Id4_Postgres integer null;
-alter table dba.GoodsProperty_Detail add Id5_Postgres integer null;
-alter table dba.GoodsProperty_Detail add Id6_Postgres integer null;
-alter table dba.GoodsProperty_Detail add Id7_Postgres integer null;
-alter table dba.GoodsProperty_Detail add Id8_Postgres integer null;
-alter table dba.GoodsProperty_Detail add Id9_Postgres integer null;
-alter table dba.GoodsProperty_Detail add Id10_Postgres integer null;
-alter table dba.GoodsProperty_Detail add Id11_Postgres integer null;
-alter table dba.GoodsProperty_Detail add Id12_Postgres integer null;
-alter table dba.GoodsProperty_Detail add Id13_Postgres integer null;
-alter table dba.GoodsProperty_Detail add Id14_Postgres integer null;
-alter table dba.GoodsProperty_Detail add Id15_Postgres integer null;
-alter table dba.GoodsProperty_Detail add Id16_Postgres integer null;
-alter table dba.GoodsProperty_Detail add Id17_Postgres integer null;
-alter table dba.GoodsProperty_Detail add Id18_Postgres integer null;
-alter table dba.GoodsProperty_Detail add Id19_pg integer null;
-alter table dba.GoodsProperty_Detail add Id20_pg integer null;
-alter table dba.GoodsProperty_Detail add Id21_Postgres integer null;
-
-
-alter table dba.GoodsProperty_Kachestvo add Id_pg1 integer null;
-alter table dba.GoodsProperty_Kachestvo add Id_pg2 integer null;
-
-alter table dba.Receipt_byHistory add Id_pg integer null;
-alter table dba.ReceiptItem_byHistory add Id_pg integer null;
-
-
-alter table dba.Goods add Id_Postgres integer null;
-alter table dba.Goods add Id_Postgres_Fuel integer null;
-alter table dba.Goods add Id_Postgres_TicketFuel integer null;
-alter table dba.GoodsProperty add Id_Postgres integer null;
-alter table dba.Measure add Id_Postgres integer null;
-alter table dba.KindPackage add Id_Postgres integer null;
-
-alter table dba.MoneyKind add Id_Postgres integer null;
-alter table dba.ContractKind add Id_Postgres integer null;
-
-alter table dba.Unit add Id1_Postgres integer null;
-alter table dba.Unit add Id2_Postgres integer null;
-alter table dba.Unit add Id3_Postgres integer null;
-alter table dba.Unit add Id_Postgres_Business integer null;
-alter table dba.Unit add Id_Postgres_Business_TWO integer null;
-alter table dba.Unit add Id_Postgres_Business_Chapli integer null;
-alter table dba.Unit add PersonalId_Postgres integer null;
-alter table dba.Unit add pgUnitId integer null;
-alter table dba.Unit add Id_Postgres_RouteSorting integer null;
-
-alter table dba._pgUnit add Id_Postgres_Branch integer null;
-
-alter table dba.PriceList_byHistory add Id_Postgres integer null;
-alter table dba.PriceListItems_byHistory add Id_Postgres integer null;
-
-alter table dba.Bill add Id_Postgres integer null;
-alter table dba.BillItems add Id_Postgres integer null;
-alter table dba.BillItemsReceipt add Id_Postgres integer null;
-ok
-
-}
 

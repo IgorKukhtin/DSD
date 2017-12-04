@@ -279,10 +279,10 @@ BEGIN
        LEFT JOIN PriceSettings    ON ddd.MinPrice BETWEEN PriceSettings.MinPrice    AND PriceSettings.MaxPrice
        LEFT JOIN PriceSettingsTOP ON ddd.MinPrice BETWEEN PriceSettingsTOP.MinPrice AND PriceSettingsTOP.MaxPrice
    )
-    -- отсортировали по цене и получили первого
+    -- отсортировали по цене + Дней отсрочки и получили первого
   , MinPriceList AS (SELECT *
                      FROM (SELECT FinalList.*
-                                , ROW_NUMBER() OVER (PARTITION BY FinalList.GoodsId ORDER BY FinalList.SuperFinalPrice, FinalList.PriceListMovementItemId) AS Ord
+                                , ROW_NUMBER() OVER (PARTITION BY FinalList.GoodsId ORDER BY FinalList.SuperFinalPrice ASC, FinalList.Deferment DESC, FinalList.PriceListMovementItemId ASC) AS Ord
                            FROM FinalList
                           ) AS T0
                      WHERE T0.Ord = 1

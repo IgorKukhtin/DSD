@@ -91,7 +91,10 @@ end;
 
 procedure TLoadReportTest.LoadSticker;
 begin
-  LoadReportFromFile('ШАБЛОН + тм АЛАН - Український.Sticker', ReportPath + '\Этикетки\ШАБЛОН + тм АЛАН - Український.fr3');
+  LoadReportFromFile('ШАБЛОН + тм АЛАН - Український.Sticker',          ReportPath + '\Этикетки\ШАБЛОН + тм АЛАН - Український.fr3');
+  LoadReportFromFile('ШАБЛОН + тм ВАРТО (Варус) - Український.Sticker', ReportPath + '\Этикетки\ШАБЛОН + тм ВАРТО (Варус) - Український.fr3');
+  LoadReportFromFile('ШАБЛОН + тм НАШИ КОВБАСИ - Український.Sticker',  ReportPath + '\Этикетки\ШАБЛОН + тм НАШИ КОВБАСИ - Український.fr3');
+  LoadReportFromFile('ШАБЛОН + тм СПЕЦ ЦЕХ - Український.Sticker',      ReportPath + '\Этикетки\ШАБЛОН + тм СПЕЦ ЦЕХ - Український.fr3');
 end;
 
 
