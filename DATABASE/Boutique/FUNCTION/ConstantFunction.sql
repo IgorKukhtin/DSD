@@ -23,20 +23,21 @@ CREATE OR REPLACE FUNCTION zc_FormClass_Send() RETURNS TVarChar AS $BODY$BEGIN R
 CREATE OR REPLACE FUNCTION zc_FormClass_Loss() RETURNS TVarChar AS $BODY$BEGIN RETURN ('TLossForm'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_FormClass_Sale() RETURNS TVarChar AS $BODY$BEGIN RETURN ('TSaleForm'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
---CREATE OR REPLACE FUNCTION zc_IsLockTable() RETURNS Boolean AS $BODY$BEGIN RETURN (FALSE); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+-- CREATE OR REPLACE FUNCTION zc_IsLockTable() RETURNS Boolean AS $BODY$BEGIN RETURN (FALSE); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
--- Почта - !!! VOLATILE !!! - !!!ФЛП.....!!!
--- CREATE OR REPLACE FUNCTION zc_Mail_Host()     RETURNS TVarChar AS $BODY$BEGIN RETURN (/*'smtp.mail.ru'*/                 SELECT gpSelect.Value FROM gpSelect_Object_EmailSettings (inEmailId:= 0, inIsShowAll:= FALSE, inSession:= '') AS gpSelect WHERE gpSelect.EmailKindId = zc_Enum_EmailKind_OutReport() AND gpSelect.EmailToolsId = zc_Enum_EmailTools_Host() AND COALESCE (gpSelect.JuridicalId, 0) = /*393052*/ 0);     END; $BODY$ LANGUAGE PLPGSQL VOLATILE;
--- CREATE OR REPLACE FUNCTION zc_Mail_Port()     RETURNS Integer  AS $BODY$BEGIN RETURN (/*465*/                            SELECT gpSelect.Value FROM gpSelect_Object_EmailSettings (inEmailId:= 0, inIsShowAll:= FALSE, inSession:= '') AS gpSelect WHERE gpSelect.EmailKindId = zc_Enum_EmailKind_OutReport() AND gpSelect.EmailToolsId = zc_Enum_EmailTools_Port() AND COALESCE (gpSelect.JuridicalId, 0) = /*393052*/ 0);     END; $BODY$ LANGUAGE PLPGSQL VOLATILE;
--- CREATE OR REPLACE FUNCTION zc_Mail_From()     RETURNS TVarChar AS $BODY$BEGIN RETURN (/*'zakaz_family-neboley@mail.ru'*/ SELECT gpSelect.Value FROM gpSelect_Object_EmailSettings (inEmailId:= 0, inIsShowAll:= FALSE, inSession:= '') AS gpSelect WHERE gpSelect.EmailKindId = zc_Enum_EmailKind_OutReport() AND gpSelect.EmailToolsId = zc_Enum_EmailTools_Mail() AND COALESCE (gpSelect.JuridicalId, 0) = /*393052*/ 0);     END; $BODY$ LANGUAGE PLPGSQL VOLATILE;
--- CREATE OR REPLACE FUNCTION zc_Mail_User()     RETURNS TVarChar AS $BODY$BEGIN RETURN (/*'zakaz_family-neboley@mail.ru'*/ SELECT gpSelect.Value FROM gpSelect_Object_EmailSettings (inEmailId:= 0, inIsShowAll:= FALSE, inSession:= '') AS gpSelect WHERE gpSelect.EmailKindId = zc_Enum_EmailKind_OutReport() AND gpSelect.EmailToolsId = zc_Enum_EmailTools_User() AND COALESCE (gpSelect.JuridicalId, 0) = /*393052*/ 0);     END; $BODY$ LANGUAGE PLPGSQL VOLATILE;
--- CREATE OR REPLACE FUNCTION zc_Mail_Password() RETURNS TVarChar AS $BODY$BEGIN RETURN (/*'fgntrfghfdls6'*/                SELECT gpSelect.Value FROM gpSelect_Object_EmailSettings (inEmailId:= 0, inIsShowAll:= FALSE, inSession:= '') AS gpSelect WHERE gpSelect.EmailKindId = zc_Enum_EmailKind_OutReport() AND gpSelect.EmailToolsId = zc_Enum_EmailTools_Password() AND COALESCE (gpSelect.JuridicalId, 0) = /*393052*/ 0); END; $BODY$ LANGUAGE PLPGSQL VOLATILE;
+
+-- CREATE OR REPLACE FUNCTION zfCalc_UserAdmin() RETURNS .....;
+-- CREATE OR REPLACE FUNCTION zc_User_Sybase()   RETURNS .....;
 
 /*
 -- Значения для эти ф-ций будут сформированы в Load_PostgreSqlBoutique, или !!!руками значения =0!!!
 CREATE OR REPLACE FUNCTION zc_PriceList_Basis() RETURNS Integer AS $BODY$BEGIN RETURN (0); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Juridical_Basis() RETURNS Integer AS $BODY$BEGIN RETURN (0); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-CREATE OR REPLACE FUNCTION zc_User_Sybase() RETURNS Integer AS $BODY$BEGIN RETURN (0); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
+CREATE OR REPLACE FUNCTION zc_Currency_Basis() RETURNS Integer AS $BODY$BEGIN RETURN ((select Id from object where ValueData = 'грн' and DescId = zc_object_Currency())); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Currency_GRN() RETURNS Integer AS $BODY$BEGIN RETURN ((select Id from object where ValueData = 'грн' and DescId = zc_object_Currency())); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Currency_EUR() RETURNS Integer AS $BODY$BEGIN RETURN ((select Id from object where ValueData = 'евро' and DescId = zc_object_Currency())); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Currency_USD() RETURNS Integer AS $BODY$BEGIN RETURN ((select Id from object where ValueData = 'долар' and DescId = zc_object_Currency())); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 -- CREATE OR REPLACE FUNCTION zc_Enum_PaidKind_FirstForm()  RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_PaidKind_FirstForm' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 -- CREATE OR REPLACE FUNCTION zc_Enum_PaidKind_SecondForm() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_PaidKind_SecondForm' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -49,13 +50,7 @@ CREATE OR REPLACE FUNCTION zc_Color_GreenL() RETURNS Integer AS $BODY$BEGIN RETU
 CREATE OR REPLACE FUNCTION zc_Color_Yelow() RETURNS Integer AS $BODY$BEGIN RETURN (8978431); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Color_White() RETURNS Integer AS $BODY$BEGIN RETURN (16777215); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Color_Blue() RETURNS Integer AS $BODY$BEGIN RETURN (14614528); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-*/
 
-/*
-CREATE OR REPLACE FUNCTION zc_Currency_Basis() RETURNS Integer AS $BODY$BEGIN RETURN ((select Id from object where ValueData = 'грн' and DescId = zc_object_Currency())); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-CREATE OR REPLACE FUNCTION zc_Currency_GRN() RETURNS Integer AS $BODY$BEGIN RETURN ((select Id from object where ValueData = 'грн' and DescId = zc_object_Currency())); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-CREATE OR REPLACE FUNCTION zc_Currency_EUR() RETURNS Integer AS $BODY$BEGIN RETURN ((select Id from object where ValueData = 'евро' and DescId = zc_object_Currency())); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-CREATE OR REPLACE FUNCTION zc_Currency_USD() RETURNS Integer AS $BODY$BEGIN RETURN ((select Id from object where ValueData = 'долар' and DescId = zc_object_Currency())); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 */
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

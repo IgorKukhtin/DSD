@@ -22,13 +22,13 @@ BEGIN
        RETURN QUERY
        SELECT
               0 :: Integer    AS Id
-           , lfGet_ObjectCode(0, zc_Object_Client())   AS Code
+           , lfGet_ObjectCode (0, zc_Object_Client())   AS Code
            , '' :: TVarChar  AS Name
            , '' :: TVarChar  AS DiscountCard             
            ,  0 :: TFloat     AS DiscountTax              
            ,  0 :: TFloat     AS DiscountTaxTwo                                   
            , '' :: TVarChar  AS Address                  
-           , now() :: TDateTime AS HappyDate                
+           , NOW() :: TDateTime AS HappyDate                
            , '' :: TVarChar  AS PhoneMobile              
            , '' :: TVarChar  AS Phone                    
            , '' :: TVarChar  AS Mail                     

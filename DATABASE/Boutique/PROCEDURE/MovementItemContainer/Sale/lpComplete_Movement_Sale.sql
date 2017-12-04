@@ -1,4 +1,4 @@
-16:42 27.08.2017DROP FUNCTION IF EXISTS lpComplete_Movement_Sale (Integer, Integer);
+DROP FUNCTION IF EXISTS lpComplete_Movement_Sale (Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpComplete_Movement_Sale(
     IN inMovementId        Integer  , -- ключ Документа

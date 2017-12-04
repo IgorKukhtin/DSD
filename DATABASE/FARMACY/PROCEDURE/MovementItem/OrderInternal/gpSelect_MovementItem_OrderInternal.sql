@@ -1192,10 +1192,12 @@ BEGIN
       , tmpMinPrice AS (SELECT *
                         FROM (SELECT *, MIN(Id) OVER (PARTITION BY MovementItemId) AS MinId
                               FROM (SELECT *
-                                         , MIN (SuperFinalPrice) OVER (PARTITION BY MovementItemId) AS MinSuperFinalPrice
+                                         -- , MIN (SuperFinalPrice) OVER (PARTITION BY MovementItemId) AS MinSuperFinalPrice
+                                         , ROW_NUMBER() OVER (PARTITION BY _tmpMI.MovementItemId ORDER BY _tmpMI.SuperFinalPrice ASC, _tmpMI.Deferment DESC) AS Ord
                                     FROM _tmpMI
                                    ) AS DDD
-                              WHERE DDD.SuperFinalPrice = DDD.MinSuperFinalPrice
+                              -- WHERE DDD.SuperFinalPrice = DDD.MinSuperFinalPrice
+                              WHERE DDD.Ord = 1
                              ) AS DDD
                         WHERE Id = MinId
                        )      
