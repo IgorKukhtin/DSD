@@ -85,9 +85,9 @@ object SignInternalEditForm: TSignInternalEditForm
   object cxLabel7: TcxLabel
     Left = 10
     Top = 211
-    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+    Caption = #1069#1083#1077#1084#1077#1085#1090
   end
-  object ceUnit: TcxButtonEdit
+  object ceObject: TcxButtonEdit
     Left = 10
     Top = 234
     Properties.Buttons = <
@@ -209,9 +209,9 @@ object SignInternalEditForm: TSignInternalEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inUnitId'
+        Name = 'inObjectId'
         Value = Null
-        Component = UnitGuides
+        Component = GuidesObject
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -295,16 +295,16 @@ object SignInternalEditForm: TSignInternalEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'UnitId'
+        Name = 'ObjectId'
         Value = Null
-        Component = UnitGuides
+        Component = GuidesObject
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'UnitName'
+        Name = 'ObjectName'
         Value = Null
-        Component = UnitGuides
+        Component = GuidesObject
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -390,19 +390,19 @@ object SignInternalEditForm: TSignInternalEditForm
     Left = 151
     Top = 158
   end
-  object UnitGuides: TdsdGuides
+  object GuidesObject: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceUnit
-    FormNameParam.Value = 'TUnit_ObjectForm'
+    LookupControl = ceObject
+    FormNameParam.Value = 'TPersonalServiceList_Unit_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnit_ObjectForm'
+    FormName = 'TPersonalServiceList_Unit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesObject
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -411,7 +411,7 @@ object SignInternalEditForm: TSignInternalEditForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesObject
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

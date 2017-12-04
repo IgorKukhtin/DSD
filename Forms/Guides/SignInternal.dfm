@@ -60,7 +60,7 @@ object SignInternalForm: TSignInternalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 286
+        Width = 268
       end
       object MovementDescName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
@@ -76,7 +76,7 @@ object SignInternalForm: TSignInternalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 248
+        Width = 233
       end
       object ObjectDescName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -92,20 +92,21 @@ object SignInternalForm: TSignInternalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 166
+        Width = 156
       end
-      object UnitCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
-        DataBinding.FieldName = 'UnitCode'
+      object ObjectCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1101#1083'.'
+        DataBinding.FieldName = 'ObjectCode'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1076' '#1101#1083#1077#1084#1077#1085#1090#1072
         Options.Editing = False
         Width = 91
       end
-      object UnitName: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-        DataBinding.FieldName = 'UnitName'
+      object ObjectName: TcxGridDBColumn
+        Caption = #1069#1083#1077#1084#1077#1085#1090
+        DataBinding.FieldName = 'ObjectName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
@@ -116,7 +117,16 @@ object SignInternalForm: TSignInternalForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 190
+        Width = 178
+      end
+      object DescName: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1101#1083'.'
+        DataBinding.FieldName = 'DescName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1080#1076' '#1101#1083#1077#1084#1077#1085#1090#1072
+        Options.Editing = False
+        Width = 101
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -124,7 +134,7 @@ object SignInternalForm: TSignInternalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 157
+        Width = 202
       end
       object IsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -832,8 +842,8 @@ object SignInternalForm: TSignInternalForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'Unit_ObjectChoiceForm'
-      FormName = 'TUnit_ObjectForm'
-      FormNameParam.Value = 'TUnit_ObjectForm'
+      FormName = 'TPersonalServiceList_Unit_ObjectForm'
+      FormNameParam.Value = 'TPersonalServiceList_Unit_ObjectForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -841,14 +851,22 @@ object SignInternalForm: TSignInternalForm
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'UnitId'
+          ComponentItem = 'ObjectId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'UnitName'
+          ComponentItem = 'ObjectName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DescName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'DescName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

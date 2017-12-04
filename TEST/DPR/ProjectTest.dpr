@@ -988,7 +988,8 @@ uses
   EDIJournal in '..\..\Forms\EDI\EDIJournal.pas' {EDIJournalForm: TParentForm},
   Report_GoodsBalance in '..\..\Forms\Report\Report_GoodsBalance.pas' {Report_GoodsBalanceForm: TParentForm},
   SendMember in '..\..\Forms\Document\SendMember.pas' {SendMemberForm: TParentForm},
-  SendMemberJournal in '..\..\Forms\Document\SendMemberJournal.pas' {SendMemberJournalForm: TParentForm};
+  SendMemberJournal in '..\..\Forms\Document\SendMemberJournal.pas' {SendMemberJournalForm: TParentForm},
+  PersonalServiceList_Unit_Object in '..\..\Forms\Guides\PersonalServiceList_Unit_Object.pas' {PersonalServiceList_Unit_ObjectForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

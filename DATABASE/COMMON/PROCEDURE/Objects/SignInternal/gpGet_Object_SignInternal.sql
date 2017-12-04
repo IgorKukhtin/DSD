@@ -10,7 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MovementDescId Integer, MovementDescName TVarChar
              , ObjectDescId  Integer, ObjectDescName TVarChar
              , Comment TVarChar
-             , UnitId Integer, UnitCode Integer, UnitName TVarChar
+             , ObjectId Integer, ObjectCode Integer, ObjectName TVarChar
              , isErased Boolean
              ) AS
 $BODY$BEGIN
@@ -33,9 +33,9 @@ $BODY$BEGIN
 
            , CAST ('' as TVarChar)   AS Comment
                       
-           , CAST (0 as Integer)   AS UnitId 
-           , CAST (0 as Integer)   AS UnitCode
-           , CAST ('' as TVarChar) AS UnitName
+           , CAST (0 as Integer)   AS ObjectId 
+           , CAST (0 as Integer)   AS ObjectCode
+           , CAST ('' as TVarChar) AS ObjectName
             
            , CAST (NULL AS Boolean) AS isErased
            ;
@@ -54,9 +54,9 @@ $BODY$BEGIN
 
            , ObjectString_Comment.ValueData     AS Comment
                       
-           , Object_Unit.Id         AS UnitId 
-           , Object_Unit.ObjectCode AS UnitCode
-           , Object_Unit.ValueData  AS UnitName
+           , Object_Object.Id         AS ObjectId 
+           , Object_Object.ObjectCode AS ObjectCode
+           , Object_Object.ValueData  AS ObjectName
 
            , Object_SignInternal.isErased   AS isErased
            
@@ -79,7 +79,7 @@ $BODY$BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_SignInternal_Object 
                                  ON ObjectLink_SignInternal_Object.ObjectId = Object_SignInternal.Id
                                 AND ObjectLink_SignInternal_Object.DescId = zc_ObjectLink_SignInternal_Object()
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_SignInternal_Object.ChildObjectId
+            LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_SignInternal_Object.ChildObjectId
          
        WHERE Object_SignInternal.Id = inId;
    END IF;
