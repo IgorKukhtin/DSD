@@ -14,7 +14,7 @@ AS
 $BODY$
 BEGIN
 
--- inIsBefoHistoryCost:= TRUE;
+ inIsBefoHistoryCost:= TRUE;
 
      -- !!!Замена!!!
      -- inIsBefoHistoryCost:= FALSE;

@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Sticker(
     IN inShowAll     Boolean,   
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, StickerName TVarChar, Comment TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar -- , StickerName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, ItemName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, TradeMarkName_Goods TVarChar
              , StickerGroupId Integer, StickerGroupName TVarChar
@@ -30,26 +30,31 @@ BEGIN
      -- Результат
      RETURN QUERY 
        WITH tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inShowAll AS isErased WHERE inShowAll = TRUE)
-     , tmpStickerFile AS (SELECT Object_StickerFile.ValueData                    AS Name
-                               , ObjectLink_StickerFile_TradeMark.ChildObjectId  AS TradeMarkId
-                          FROM Object AS Object_StickerFile
-                               INNER JOIN ObjectLink AS ObjectLink_StickerFile_TradeMark
-                                                     ON ObjectLink_StickerFile_TradeMark.ObjectId = Object_StickerFile.Id
-                                                    AND ObjectLink_StickerFile_TradeMark.DescId = zc_ObjectLink_StickerFile_TradeMark()
-                               
-                               INNER JOIN ObjectBoolean AS ObjectBoolean_Default
-                                                        ON ObjectBoolean_Default.ObjectId = Object_StickerFile.Id
-                                                       AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_StickerFile_Default()
-                                                       AND ObjectBoolean_Default.ValueData = TRUE
-                    
-                          WHERE Object_StickerFile.DescId = zc_Object_StickerFile()
-                            AND Object_StickerFile.isErased = FALSE
-                          )
-
+            -- Шаблоны "по умолчанию" - для конкретной ТМ
+          , tmpStickerFile AS (SELECT Object_StickerFile.ValueData                    AS Name
+                                    , ObjectLink_StickerFile_TradeMark.ChildObjectId  AS TradeMarkId
+                               FROM Object AS Object_StickerFile
+                                    LEFT JOIN ObjectLink AS ObjectLink_StickerFile_Juridical
+                                                         ON ObjectLink_StickerFile_Juridical.ObjectId = Object_StickerFile.Id
+                                                        AND ObjectLink_StickerFile_Juridical.DescId   = zc_ObjectLink_StickerFile_Juridical()
+                                    INNER JOIN ObjectLink AS ObjectLink_StickerFile_TradeMark
+                                                          ON ObjectLink_StickerFile_TradeMark.ObjectId = Object_StickerFile.Id
+                                                         AND ObjectLink_StickerFile_TradeMark.DescId = zc_ObjectLink_StickerFile_TradeMark()
+                                    
+                                    INNER JOIN ObjectBoolean AS ObjectBoolean_Default
+                                                             ON ObjectBoolean_Default.ObjectId  = Object_StickerFile.Id
+                                                            AND ObjectBoolean_Default.DescId    = zc_ObjectBoolean_StickerFile_Default()
+                                                            AND ObjectBoolean_Default.ValueData = TRUE
+                         
+                               WHERE Object_StickerFile.DescId   = zc_Object_StickerFile()
+                                 AND Object_StickerFile.isErased = FALSE
+                                 AND ObjectLink_StickerFile_Juridical.ChildObjectId IS NULL -- !!!обязательно БЕЗ Покупателя!!!
+                              )
+       -- Результат
        SELECT Object_Sticker.Id                 AS Id
             , Object_Sticker.ObjectCode         AS Code
-            , (Object_Juridical.ValueData||' / '||Object_Goods.ValueData||' / '||Object_Sticker.ValueData) ::TVarChar AS StickerName
             , Object_Sticker.ValueData          AS Comment
+            -- , (Object_Juridical.ValueData||' / '||Object_Goods.ValueData||' / '||Object_Sticker.ValueData) ::TVarChar AS StickerName
             
             , Object_Juridical.Id               AS JuridicalId
             , Object_Juridical.ObjectCode       AS JuridicalCode

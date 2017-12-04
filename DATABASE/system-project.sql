@@ -43,16 +43,15 @@ SELECT COUNT(*) FROM ObjectProtocol -- 26 583 053
 -- SELECT COUNT(*) FROM ObjectProtocol_arc -- 0
 SELECT COUNT(*) FROM ObjectProtocol where OperDate >= CURRENT_DATE - INTERVAL '400 DAY' -- 4 739 375
 
-SELECT COUNT(*), MIN (OperDate), min (Id) FROM MovementProtocol -- 54 242 840
-SELECT COUNT(*), MIN (OperDate), max (Id) FROM MovementProtocol_arc -- 0
+SELECT COUNT(*), MIN (OperDate), min (Id) FROM MovementProtocol     -- 931 170;"2017-11-06 00:24:43.112443+02";107921868
+SELECT COUNT(*), MIN (OperDate), max (Id) FROM MovementProtocol_arc -- 926 805;"2017-10-01 00:00:04.614108+03";107921867
 SELECT COUNT(*) FROM MovementProtocol where OperDate >= CURRENT_DATE - INTERVAL '400 DAY' -- 4 780 0980
 -- SELECT COUNT(*), MIN (OperDate), min (Id) FROM MovementProtocol where UserId = zc_Enum_Process_Auto_PrimeCost()
 
-SELECT COUNT(*), MIN (OperDate), min (Id) FROM MovementItemProtocol -- 64 883 175
-SELECT COUNT(*), MIN (OperDate), max (Id) FROM MovementItemProtocol_arc -- 
-SELECT COUNT(*) FROM MovementItemProtocol where OperDate >= CURRENT_DATE - INTERVAL '400 DAY' -- 5 930 4965
+SELECT COUNT(*), MIN (OperDate), min (Id) FROM MovementItemProtocol     -- 1 761 320;"2017-11-06 00:24:43.172571+02";140397387
+SELECT COUNT(*), MIN (OperDate), max (Id) FROM MovementItemProtocol_arc -- 2 300 499;"2017-10-01 00:00:12.521526+03";140397386
+-- SELECT COUNT(*) FROM MovementItemProtocol where OperDate >= CURRENT_DATE - INTERVAL '400 DAY' -- 5 930 4965
 
- 
 SELECT COUNT(*) FROM Container -- 1 460 503
 SELECT COUNT(*) FROM MovementItemContainer  -- 379 637 136 -- SELECT MAX (Id) FROM MovementItemContainer  -- 8 622 279 861
 SELECT COUNT(*) FROM MovementItem  -- 91 517 138 -- !!! - 2 147 483 647
@@ -82,8 +81,8 @@ SELECT * FROM MovementItemProtocol where Id < (select min (Id) from MovementItem
 -- delete FROM MovementItemProtocol_arc  where OperDate < '01.10.2017';
 
 -- !!!Óäàëåíèå ÂÑÅ - UserId = Auto!!!
--- delete FROM MovementProtocol_arc where UserId IN (zc_Enum_Process_Auto_PrimeCost());
--- delete FROM MovementProtocol     where UserId IN (zc_Enum_Process_Auto_PrimeCost());
+-- delete FROM MovementProtocol_arc      where UserId IN (zc_Enum_Process_Auto_PrimeCost());
+-- delete FROM MovementProtocol          where UserId IN (zc_Enum_Process_Auto_PrimeCost());
 -- delete FROM MovementItemProtocol_arc  where UserId IN (zc_Enum_Process_Auto_PrimeCost(), zc_Enum_Process_Auto_Pack(), zc_Enum_Process_Auto_PartionClose(), zc_Enum_Process_Auto_ReturnIn());
 -- delete FROM MovementItemProtocol      where UserId IN (zc_Enum_Process_Auto_PrimeCost(), zc_Enum_Process_Auto_Pack(), zc_Enum_Process_Auto_PartionClose(), zc_Enum_Process_Auto_ReturnIn());
 
@@ -91,11 +90,11 @@ SELECT * FROM MovementItemProtocol where Id < (select min (Id) from MovementItem
 -- delete FROM MovementItemProtocol_arc where Id in (SELECT MovementItemProtocol.Id FROM MovementItemProtocol_arc AS MovementItemProtocol JOIN MovementItem ON MovementItem.Id = MovementItemId JOIN Movement ON Movement.Id = MovementItem.MovementId AND Movement.DescId = zc_Movement_OrderInternal())
 -- delete FROM MovementItemProtocol     where OperDate < CURRENT_DATE - INTERVAL '10 DAY' and Id in (SELECT MovementItemProtocol.Id FROM MovementItemProtocol JOIN MovementItem ON MovementItem.Id = MovementItemId JOIN Movement ON Movement.Id = MovementItem.MovementId AND Movement.DescId = zc_Movement_OrderInternal())
 
--- !!!ALL - zc_Movement_RouteMember() + zc_Movement_Medoc!!!
--- delete FROM MovementProtocol_arc  where Id in (SELECT MovementProtocol.Id FROM MovementProtocol_arc AS MovementProtocol JOIN Movement ON Movement.Id = MovementId AND Movement.DescId IN (zc_Movement_RouteMember(), zc_Movement_Medoc()));
--- delete FROM MovementProtocol      where Id in (SELECT MovementProtocol.Id FROM MovementProtocol     AS MovementProtocol JOIN Movement ON Movement.Id = MovementId AND Movement.DescId IN (zc_Movement_RouteMember(), zc_Movement_Medoc()));
--- delete FROM MovementItemProtocol_arc  where Id in (SELECT MovementItemProtocol.Id FROM MovementItemProtocol_arc AS MovementItemProtocol JOIN MovementItem ON MovementItem.Id = MovementItemId JOIN Movement ON Movement.Id = MovementItem.MovementId AND Movement.DescId IN (zc_Movement_RouteMember(), zc_Movement_Medoc()));
--- delete FROM MovementItemProtocol      where Id in (SELECT MovementItemProtocol.Id FROM MovementItemProtocol     AS MovementItemProtocol JOIN MovementItem ON MovementItem.Id = MovementItemId JOIN Movement ON Movement.Id = MovementItem.MovementId AND Movement.DescId IN (zc_Movement_RouteMember(), zc_Movement_Medoc()));
+-- !!!ALL - zc_Movement_Medoc + zc_Movement_TransportGoods + zc_Movement_RouteMember + zc_Movement_StoreReal!!!
+-- delete FROM MovementProtocol_arc  where Id in (SELECT MovementProtocol.Id FROM MovementProtocol_arc AS MovementProtocol JOIN Movement ON Movement.Id = MovementId AND Movement.DescId IN (zc_Movement_Medoc(), zc_Movement_TransportGoods(), zc_Movement_RouteMember(), zc_Movement_StoreReal(), zc_Movement_Visit (), zc_Movement_Task(), zc_Movement_MobileBills()));
+-- delete FROM MovementProtocol      where Id in (SELECT MovementProtocol.Id FROM MovementProtocol     AS MovementProtocol JOIN Movement ON Movement.Id = MovementId AND Movement.DescId IN (zc_Movement_Medoc(), zc_Movement_TransportGoods(), zc_Movement_RouteMember(), zc_Movement_StoreReal(), zc_Movement_Visit ()));
+-- delete FROM MovementItemProtocol_arc  where Id in (SELECT MovementItemProtocol.Id FROM MovementItemProtocol_arc AS MovementItemProtocol JOIN MovementItem ON MovementItem.Id = MovementItemId JOIN Movement ON Movement.Id = MovementItem.MovementId AND Movement.DescId IN (zc_Movement_Medoc(), zc_Movement_TransportGoods(), zc_Movement_RouteMember(), zc_Movement_StoreReal(), zc_Movement_Visit (), zc_Movement_Task(), zc_Movement_MobileBills()));
+-- delete FROM MovementItemProtocol      where Id in (SELECT MovementItemProtocol.Id FROM MovementItemProtocol     AS MovementItemProtocol JOIN MovementItem ON MovementItem.Id = MovementItemId JOIN Movement ON Movement.Id = MovementItem.MovementId AND Movement.DescId IN (zc_Movement_Medoc(), zc_Movement_TransportGoods(), zc_Movement_RouteMember(), zc_Movement_StoreReal(), zc_Movement_Visit ()));
  
 
 -- !!!Óïàêîâêà ÀÄÌÈÍ!!!

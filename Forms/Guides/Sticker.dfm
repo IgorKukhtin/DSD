@@ -45,7 +45,7 @@ object StickerForm: TStickerForm
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object StickerFileName_inf: TcxGridDBColumn
-        Caption = #1064#1040#1041#1051#1054#1053' ('#1087#1077#1095#1072#1090#1100')'
+        Caption = #1064#1040#1041#1051#1054#1053' ('#1076#1083#1103' '#1042#1057#1045#1061' '#1101#1090#1086#1081' '#1058#1052')'
         DataBinding.FieldName = 'StickerFileName_inf'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -63,7 +63,6 @@ object StickerForm: TStickerForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 120
@@ -362,35 +361,38 @@ object StickerForm: TStickerForm
         OptionsView.Indicator = True
         Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
         object colCode: TcxGridDBColumn
-          Caption = #1050#1086#1076
+          Caption = #1050#1086#1076' '#1101#1083#1077#1084'.'
           DataBinding.FieldName = 'Code'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
           Width = 57
         end
-        object colComment: TcxGridDBColumn
-          Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-          DataBinding.FieldName = 'Comment'
+        object colStickerFileName: TcxGridDBColumn
+          Caption = #1064#1040#1041#1051#1054#1053' ('#1080#1085#1076#1080#1074#1080#1076#1091#1072#1083#1100#1085#1099#1081')'
+          DataBinding.FieldName = 'StickerFileName'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Action = StickerFileChoiceForm1
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 80
+          Width = 120
         end
-        object BarCode: TcxGridDBColumn
-          Caption = #1064#1090#1088#1080#1093#1082#1086#1076
-          DataBinding.FieldName = 'BarCode'
+        object colTradeMarkName_StickerFile: TcxGridDBColumn
+          Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072' ('#1064#1040#1041#1051#1054#1053' '#1080#1085#1076#1080#1074#1080#1076'.)'
+          DataBinding.FieldName = 'TradeMarkName_StickerFile'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 69
-        end
-        object colisFix: TcxGridDBColumn
-          Caption = #1060#1080#1082#1089'. '#1074#1077#1089
-          DataBinding.FieldName = 'isFix'
-          PropertiesClassName = 'TcxCheckBoxProperties'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1099#1081' '#1074#1077#1089
-          Width = 55
+          HeaderHint = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072' ('#1096#1072#1073#1083#1086#1085')'
+          Options.Editing = False
+          Width = 150
         end
         object colGoodsKindName: TcxGridDBColumn
           Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
@@ -405,7 +407,16 @@ object StickerForm: TStickerForm
           Properties.ReadOnly = True
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 70
+          Width = 100
+        end
+        object colisFix: TcxGridDBColumn
+          Caption = #1060#1080#1082#1089'. '#1074#1077#1089
+          DataBinding.FieldName = 'isFix'
+          PropertiesClassName = 'TcxCheckBoxProperties'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1099#1081' '#1074#1077#1089
+          Width = 45
         end
         object colStickerPackName: TcxGridDBColumn
           Caption = #1042#1080#1076' '#1087#1072#1082#1091#1074#1072#1085#1085#1103
@@ -419,31 +430,7 @@ object StickerForm: TStickerForm
             end>
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 70
-        end
-        object colStickerFileName: TcxGridDBColumn
-          Caption = #1064#1040#1041#1051#1054#1053
-          DataBinding.FieldName = 'StickerFileName'
-          PropertiesClassName = 'TcxButtonEditProperties'
-          Properties.Buttons = <
-            item
-              Action = StickerFileChoiceForm1
-              Default = True
-              Kind = bkEllipsis
-            end>
-          Properties.ReadOnly = True
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Width = 70
-        end
-        object colTradeMarkName_StickerFile: TcxGridDBColumn
-          Caption = #1058#1086#1088#1075'. '#1084#1072#1088#1082#1072' ('#1096#1072#1073#1083#1086#1085')'
-          DataBinding.FieldName = 'TradeMarkName_StickerFile'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072' ('#1096#1072#1073#1083#1086#1085')'
-          Options.Editing = False
-          Width = 87
+          Width = 80
         end
         object colStickerSkinName: TcxGridDBColumn
           Caption = #1054#1073#1086#1083#1086#1095#1082#1072
@@ -455,6 +442,13 @@ object StickerForm: TStickerForm
               Default = True
               Kind = bkEllipsis
             end>
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 70
+        end
+        object BarCode: TcxGridDBColumn
+          Caption = #1064#1090#1088#1080#1093#1082#1086#1076
+          DataBinding.FieldName = 'BarCode'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 70
@@ -491,7 +485,7 @@ object StickerForm: TStickerForm
           Properties.DisplayFormat = ',0.##;-,0.##; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 70
+          Width = 40
         end
         object colValue4: TcxGridDBColumn
           Caption = #1058' '#1084#1072#1082#1089
@@ -501,7 +495,7 @@ object StickerForm: TStickerForm
           Properties.DisplayFormat = ',0.##;-,0.##; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 70
+          Width = 40
         end
         object colValue5: TcxGridDBColumn
           Caption = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1076#1110#1073
@@ -521,17 +515,24 @@ object StickerForm: TStickerForm
           Properties.DisplayFormat = ',0.##;-,0.##; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 70
+          Width = 45
         end
         object colValue7: TcxGridDBColumn
-          Caption = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103
+          Caption = '% '#1086#1090#1082'.'
           DataBinding.FieldName = 'Value7'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.##;-,0.##; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 70
+          Width = 35
+        end
+        object colComment: TcxGridDBColumn
+          Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+          DataBinding.FieldName = 'Comment'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 80
         end
         object colisErased: TcxGridDBColumn
           Caption = #1059#1076#1072#1083#1077#1085

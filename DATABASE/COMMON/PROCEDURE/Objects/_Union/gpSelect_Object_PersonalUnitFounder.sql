@@ -112,7 +112,7 @@ BEGIN
         SELECT 
             NULL::Integer           Id
           , NULL::Integer           AS Code
-          , 'ќчистить «начение' :: TVarChar    AS Name
+          , '”ƒјЋ»“№ «начение' :: TVarChar    AS Name
           , NULL::Integer           AS DescId
           , NULL::TVarChar          AS DescName
           , FALSE                   AS isErased
