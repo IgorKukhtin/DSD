@@ -259,7 +259,7 @@ function TStorage.ExecuteProc(pData: String; pExecOnServer: boolean = false;
   end;
 var
   ResultType: String;
-  AttemptCount: integer;
+  AttemptCount, ReadOnlyCount: integer;
   ok: Boolean;
   StartActiveConnection: Integer;
   ResStr : string;
@@ -285,6 +285,7 @@ begin
     FReceiveStream.Clear;
     IdHTTPWork.FExecOnServer := pExecOnServer;
     AttemptCount := 0;
+    ReadOnlyCount := -1;
     ok := False;
     StartActiveConnection := FActiveConnection;
     try
@@ -292,8 +293,13 @@ begin
         for AttemptCount := 1 to AMaxAtempt do
         Begin
           try
-            //idHTTP.Post(FConnection + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream, IndyTextEncoding(1251));
-            idHTTP.Post(FConnection + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream, IndyTextEncoding(encUTF8));
+            if CheckReadOnlyProcs(pData) and (Length(gc_WebServers_r) <> 0) and (ReadOnlyCount < 1) then
+            begin
+              Inc(ReadOnlyCount);
+              idHTTP.Post(gc_WebServers_r[ReadOnlyCount] + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream, IndyTextEncoding(encUTF8));
+            end else
+              idHTTP.Post(FConnection + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream, IndyTextEncoding(encUTF8));
+
             ok := true;
             break;
           except
