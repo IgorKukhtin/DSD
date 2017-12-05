@@ -1328,12 +1328,12 @@ end;
 
 procedure TLoadFormTest.LoadSPObjectFormTest;
 begin
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMedicSPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicSPEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMedicSPEditForm');
-
+    {
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberSPForm');
