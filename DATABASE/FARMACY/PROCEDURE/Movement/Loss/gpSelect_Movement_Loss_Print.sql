@@ -95,8 +95,8 @@ BEGIN
                            END AS Price
                     FROM (SELECT Container.Id 
                                , Container.ObjectId --Товар
-                               , (Container.Amount - COALESCE(SUM(MovementItemContainer.amount),0.0))::TFloat as Amount  --Тек. остаток - Движение после даты переучета
-                               , (Container.Amount * COALESCE(MIFloat_Income_Price.ValueData,0) - COALESCE(SUM(MovementItemContainer.amount * COALESCE(MIFloat_Income_Price.ValueData,0)),0.0))::TFloat as Summ  --Тек. остаток - Движение после даты переучета
+                               , (Container.Amount - SUM (COALESCE (MovementItemContainer.amount, 0)))  ::TFloat as Amount  --Тек. остаток - Движение после даты переучета
+                               , (Container.Amount * COALESCE(MIFloat_Income_Price.ValueData,0) - SUM (COALESCE (MovementItemContainer.amount, 0) * COALESCE(MIFloat_Income_Price.ValueData,0) ))::TFloat as Summ  --Тек. остаток - Движение после даты переучета
                           FROM tmpMI 
                                INNER JOIN Container ON Container.ObjectId = tmpMI.ObjectId
                                                    AND Container.DescID = zc_Container_Count()
@@ -105,8 +105,8 @@ BEGIN
                                                                     AND 
                                                                     (  MovementItemContainer.Operdate >= vbOperDateEnd
                                                                        --date_trunc('day', MovementItemContainer.Operdate) > vbOperDate
-                                                                       OR
-                                                                       MovementItemContainer.MovementId = inMovementId
+                                                                       --OR
+                                                                       --MovementItemContainer.MovementId = inMovementId
                                                                     )
                                LEFT OUTER JOIN containerlinkobject AS CLI_MI 
                                                                    ON CLI_MI.containerid = Container.Id
@@ -119,6 +119,7 @@ BEGIN
                                  , Container.ObjectId
                                  , Container.Amount
                                  , MIFloat_Income_Price.ValueData
+                          HAVING (Container.Amount - SUM (COALESCE (MovementItemContainer.amount, 0))) <> 0
                           ) AS T0
                     GROUP By ObjectId
                     HAVING SUM(T0.Amount) <> 0
