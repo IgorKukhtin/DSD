@@ -9,6 +9,7 @@ IN Session tvarchar)
 $BODY$
 BEGIN
 
+/*
   RAISE EXCEPTION 'Серьезный скрипт !!!НЕ ДЛЯ РАБОЧЕЙ БАЗЫ!!!';
 
   -- Серьезный скрипт !!!НЕ ДЛЯ РАБОЧЕЙ БАЗЫ!!!
@@ -33,6 +34,7 @@ BEGIN
   DELETE FROM MovementItem WHERE ObjectId = inId;
   DELETE FROM Container WHERE ObjectId = inId;
   DELETE FROM ContainerLinkObject WHERE ObjectId = inId;
+*/
   DELETE FROM ObjectLink WHERE ObjectId = inId;
   DELETE FROM ObjectLink WHERE ChildObjectId = inId;
   DELETE FROM ObjectString WHERE ObjectId = inId;

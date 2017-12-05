@@ -339,6 +339,11 @@ BEGIN
           ) AS _tmp;
 
 
+     -- проверка
+     IF COALESCE (vbContractId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.В документе не определен № договора.';
+     END IF;
 
      -- проверка Сотрудник (если заправка <физ-лицо> и НЕ <Учредитель> и НЕ <ОС>)
      IF vbMemberId_To <> 0 AND vbFounderId_To = 0 AND vbMovementDescId <> zc_Movement_IncomeAsset()
@@ -1613,8 +1618,16 @@ BEGIN
                                                                         , inObjectId_4        := 0 -- для Физ.лица (заготовитель) !!!именно здесь последняя аналитика всегда значение = 0!!!
                                                                         );
 
+     -- Проверка
+     IF 1 < (SELECT COUNT(*) FROM (SELECT DISTINCT _tmpItem_SummPartner.ContainerId FROM _tmpItem_SummPartner) AS tmp)
+     THEN
+         RAISE EXCEPTION 'Ошибка в определении Аналитики для vbContainerId_Analyzer <%> <%>'
+                        , (SELECT MIN (tmp.ContainerId) FROM (SELECT DISTINCT _tmpItem_SummPartner.ContainerId FROM _tmpItem_SummPartner) AS tmp)
+                        , (SELECT MAX (tmp.ContainerId) FROM (SELECT DISTINCT _tmpItem_SummPartner.ContainerId FROM _tmpItem_SummPartner) AS tmp)
+         ;
+     END IF;
      -- 3.0.3. !!!Очень важно - определили здесь vbContainerId_Analyzer для ВСЕХ!!!, если он не один - тогда ошибка
-     vbContainerId_Analyzer:= (SELECT ContainerId FROM _tmpItem_SummPartner GROUP BY ContainerId);
+     vbContainerId_Analyzer:= (SELECT DISTINCT _tmpItem_SummPartner.ContainerId FROM _tmpItem_SummPartner);
      -- определили
      vbContainerId_Analyzer_Packer:= (SELECT ContainerId FROM _tmpItem_SummPacker GROUP BY ContainerId);
      -- определили
