@@ -9,7 +9,8 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, dsdAddOn,
   dxBarExtItems, dxBar, cxClasses, dsdDB, Datasnap.DBClient, dsdAction,
   System.Classes, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
-  cxGridCustomView, cxGrid, Vcl.Controls;
+  cxGridCustomView, cxGrid, Vcl.Controls, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.Menus;
 
 type
   TWorkTimeKindForm = class(TAncestorEnumForm)

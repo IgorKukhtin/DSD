@@ -257,7 +257,6 @@ uses
   MoneyPlac_Object in '..\..\Forms\Guides\MoneyPlac_Object.pas' {MoneyPlaceCash_ObjectForm: TParentForm},
   ProfitLossService in '..\..\Forms\Document\ProfitLossService.pas' {ProfitLossServiceForm: TParentForm},
   AncestorGuides in '..\..\Forms\Ancestor\AncestorGuides.pas' {AncestorGuidesForm: TParentForm},
-  WorkTimeKind in '..\..\Forms\Kind\WorkTimeKind.pas' {WorkTimeKindForm: TParentForm},
   MovementDesc in '..\..\Forms\Kind\MovementDesc.pas' {MovementDescForm: TParentForm},
   JuridicalDetailsTest in '..\SOURCE\ObjectHistory\All\JuridicalDetailsTest.pas',
   WorkTimeKind_Object in '..\..\Forms\Kind\WorkTimeKind_Object.pas' {WorkTimeKind_ObjectForm: TParentForm},
@@ -989,7 +988,9 @@ uses
   SendMember in '..\..\Forms\Document\SendMember.pas' {SendMemberForm: TParentForm},
   SendMemberJournal in '..\..\Forms\Document\SendMemberJournal.pas' {SendMemberJournalForm: TParentForm},
   PersonalServiceList_Unit_Object in '..\..\Forms\Guides\PersonalServiceList_Unit_Object.pas' {PersonalServiceList_Unit_ObjectForm: TParentForm},
-  PersonalService in '..\..\Forms\Document\PersonalService.pas' {PersonalServiceForm: TParentForm};
+  PersonalService in '..\..\Forms\Document\PersonalService.pas' {PersonalServiceForm: TParentForm},
+  WorkTimeKind in '..\..\Forms\Guides\WorkTimeKind.pas' {WorkTimeKindForm: TParentForm},
+  WorkTimeKindEdit in '..\..\Forms\Guides\WorkTimeKindEdit.pas' {WorkTimeKindEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -689,10 +689,6 @@
 				<Form>AncestorGuidesForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Kind\WorkTimeKind.pas">
-				<Form>WorkTimeKindForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Kind\MovementDesc.pas">
 				<Form>MovementDescForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -3307,6 +3303,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\PersonalService.pas">
 				<Form>PersonalServiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\WorkTimeKind.pas">
+				<Form>WorkTimeKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\WorkTimeKindEdit.pas">
+				<Form>WorkTimeKindEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

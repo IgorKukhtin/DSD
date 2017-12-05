@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_WorkTimeKind(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ShortName TVarChar
              , Value     TVarChar
+             , Tax       TFloat
              , isErased Boolean) AS
 $BODY$BEGIN
 
@@ -22,7 +23,7 @@ $BODY$BEGIN
       
       , ObjectString_ShortName.ValueData AS ShortName 
       , zfCalc_ViewWorkHour (0, ObjectString_ShortName.ValueData) AS Value
-      
+      , ObjectFloat_Tax.ValueData        AS Tax
       , Object_WorkTimeKind.isErased     AS isErased
       
    FROM OBJECT AS Object_WorkTimeKind
@@ -30,7 +31,11 @@ $BODY$BEGIN
         LEFT JOIN ObjectString AS ObjectString_ShortName
                                ON ObjectString_ShortName.ObjectId = Object_WorkTimeKind.Id
                               AND ObjectString_ShortName.DescId = zc_objectString_WorkTimeKind_ShortName()
-                              
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_Tax
+                              ON ObjectFloat_Tax.ObjectId = Object_WorkTimeKind.Id
+                             AND ObjectFloat_Tax.DescId = zc_ObjectFloat_WorkTimeKind_Tax()
+                               
    WHERE Object_WorkTimeKind.DescId = zc_Object_WorkTimeKind();
   
 END;$BODY$
@@ -42,6 +47,7 @@ ALTER FUNCTION gpSelect_Object_WorkTimeKind (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 05.12.17         *
  01.10.13         *
 
 */
