@@ -234,7 +234,7 @@ begin
   if Hour > 18 then
   begin
     Timer.Interval := (IntervalVal * 3)  * 60 * 1000;
-    AddToLog('Текущий интервал увеличен до : ' + IntToStr(IntervalVal * 3) + ' мин.');
+    AddToLog('Текущий интервал изменен до : ' + IntToStr(IntervalVal * 3) + ' мин.');
   end;
 
   Timer.Enabled:=True;
