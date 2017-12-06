@@ -13,10 +13,10 @@ $BODY$
   DECLARE Cursor2 refcursor;
 
   DECLARE vbUnitId       Integer;
+  DECLARE vbPeriodCount  Integer;
   DECLARE vbDayCount     TFloat;
   DECLARE vbStartSale    TDateTime;
   DECLARE vbEndSale      TDateTime;
-  DECLARE vbPeriodCount  Integer;
 BEGIN
 
     --определяем подразделение
@@ -66,8 +66,6 @@ BEGIN
                                      ON ObjectLink_MarginCategoryItem_MarginCategory.ObjectId = MovementItem.ObjectId
                                     AND ObjectLink_MarginCategoryItem_MarginCategory.DescId = zc_ObjectLink_MarginCategoryItem_MarginCategory()
                 LEFT JOIN Object AS Object_MarginCategory ON Object_MarginCategory.Id = ObjectLink_MarginCategoryItem_MarginCategory.ChildObjectId;
-                 
-             
     
     
     OPEN Cursor1 FOR

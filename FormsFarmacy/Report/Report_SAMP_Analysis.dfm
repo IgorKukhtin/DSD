@@ -4,6 +4,7 @@ inherited Report_SAMP_AnalysisForm: TReport_SAMP_AnalysisForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 756
+  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -149,6 +150,17 @@ inherited Report_SAMP_AnalysisForm: TReport_SAMP_AnalysisForm
             Options.Editing = False
             Width = 66
           end
+          object AmountMid_MI: TcxGridDBColumn
+            Caption = #1057#1088'. '#1082#1086#1083'. '#1087#1088'. '#1074' '#1087#1077#1088#1080#1086#1076' ('#1076#1086#1082'.)'
+            DataBinding.FieldName = 'AmountMid_MI'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1089#1088#1077#1076#1085#1103#1103' '#1087#1088#1086#1076#1072#1078#1072' '#1074' '#1087#1077#1088#1080#1086#1076#1077' ('#1076#1086#1082'.)'
+            Options.Editing = False
+            Width = 55
+          end
           object AmountAnalys_MI: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088'. '#1079#1072' '#1072#1085#1072#1083#1080#1079' ('#1076#1086#1082'.)'
             DataBinding.FieldName = 'AmountAnalys_MI'
@@ -181,6 +193,28 @@ inherited Report_SAMP_AnalysisForm: TReport_SAMP_AnalysisForm
             HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1088#1086#1076#1072#1078' '#1079#1072' '#1087#1077#1088#1080#1086#1076' ('#1087#1077#1088#1080#1086#1076'2)'
             Options.Editing = False
             Width = 66
+          end
+          object AmountMid1: TcxGridDBColumn
+            Caption = #1057#1088'. '#1082#1086#1083'. '#1087#1088'. '#1074' '#1087#1077#1088#1080#1086#1076'  ('#1087#1077#1088#1080#1086#1076'1)'
+            DataBinding.FieldName = 'AmountMid1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1089#1088#1077#1076#1085#1103#1103' '#1087#1088#1086#1076#1072#1078#1072' '#1074' '#1087#1077#1088#1080#1086#1076#1077' ('#1087#1077#1088#1080#1086#1076'1)'
+            Options.Editing = False
+            Width = 67
+          end
+          object AmountMid2: TcxGridDBColumn
+            Caption = #1057#1088'. '#1082#1086#1083'. '#1087#1088'. '#1074' '#1087#1077#1088#1080#1086#1076' ('#1087#1077#1088#1080#1086#1076'2)'
+            DataBinding.FieldName = 'AmountMid2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1089#1088#1077#1076#1085#1103#1103' '#1087#1088#1086#1076#1072#1078#1072' '#1074' '#1087#1077#1088#1080#1086#1076#1077' ('#1087#1077#1088#1080#1086#1076'2)'
+            Options.Editing = False
+            Width = 73
           end
           object AmountAnalys1: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088'. '#1079#1072' '#1072#1085#1072#1083#1080#1079' ('#1087#1077#1088#1080#1086#1076'1)'
@@ -568,8 +602,8 @@ inherited Report_SAMP_AnalysisForm: TReport_SAMP_AnalysisForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 592
-    Top = 120
+    Left = 608
+    Top = 160
   end
   object getMovementForm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Form'
