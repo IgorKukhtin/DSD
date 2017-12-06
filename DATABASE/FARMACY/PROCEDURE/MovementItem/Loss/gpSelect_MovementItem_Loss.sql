@@ -67,18 +67,25 @@ BEGIN
                                                       AND Container.WhereObjectId = vbUnitId
                                                       AND Container.Amount <> 0
                             )
-      , tmpMIFloat AS (SELECT tmpListContainer.Id            AS Containerid
-                            , MIFloat_Income_Price.ValueData
-                       FROM tmpListContainer
-                            LEFT JOIN containerlinkObject AS CLI_MI 
-                                                          ON CLI_MI.containerid = tmpListContainer.Id
-                                                         AND CLI_MI.descid = zc_ContainerLinkObject_PartionMovementItem()
-                                                                      
-                            LEFT JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId 
+      --
+      , tmpCLI_MI AS (SELECT CLI_MI.*
+                      FROM ContainerlinkObject AS CLI_MI 
+                      WHERE CLI_MI.ContainerId  IN (SELECT DISTINCT tmpListContainer.Id FROM tmpListContainer)    
+                        AND CLI_MI.descid = zc_ContainerLinkObject_PartionMovementItem()                                                          
+                      )
+      , tmpPartionMI AS (SELECT tmpCLI_MI.ContainerId
+                              , Object_PartionMovementItem.ObjectCode ::integer
+                         FROM tmpCLI_MI
+                              LEFT JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = tmpCLI_MI.ObjectId 
+                         )
+      , tmpMIFloat AS (SELECT tmpPartionMI.ContainerId
+                            , MIFloat_Income_Price.Valuedata
+                       FROM tmpPartionMI
                             LEFT JOIN MovementitemFloat AS MIFloat_Income_Price
-                                                              ON MIFloat_Income_Price.MovementItemId = Object_PartionMovementItem.ObjectCode
-                                                             AND MIFloat_Income_Price.DescId = zc_MIFloat_Price() 
+                                                        ON MIFloat_Income_Price.MovementItemId = tmpPartionMI.ObjectCode
+                                                       AND MIFloat_Income_Price.DescId = zc_MIFloat_Price() 
                        )
+      --
       , tmpMIContainer AS (SELECT MovementItemContainer.ContainerId
                                  , MovementItemContainer.Amount 
                             FROM MovementItemContainer 
@@ -201,7 +208,7 @@ BEGIN
                                                       AND Container.Amount <> 0
                             )
                             
-      , tmpMIFloat AS (SELECT tmpListContainer.Id            AS Containerid
+/*      , tmpMIFloat AS (SELECT tmpListContainer.Id            AS Containerid
                             , MIFloat_Income_Price.ValueData
                        FROM tmpListContainer
                             LEFT JOIN containerlinkobject AS CLI_MI 
@@ -212,7 +219,26 @@ BEGIN
                             LEFT JOIN MovementitemFloat AS MIFloat_Income_Price
                                                               ON MIFloat_Income_Price.MovementItemId = Object_PartionMovementItem.ObjectCode
                                                              AND MIFloat_Income_Price.DescId = zc_MIFloat_Price() 
+                       )*/
+                       
+      , tmpCLI_MI AS (SELECT CLI_MI.*
+                      FROM ContainerlinkObject AS CLI_MI 
+                      WHERE CLI_MI.ContainerId  IN (SELECT DISTINCT tmpListContainer.Id FROM tmpListContainer)    
+                        AND CLI_MI.descid = zc_ContainerLinkObject_PartionMovementItem()                                                          
+                      )
+      , tmpPartionMI AS (SELECT tmpCLI_MI.ContainerId
+                              , Object_PartionMovementItem.ObjectCode ::integer
+                         FROM tmpCLI_MI
+                              LEFT JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = tmpCLI_MI.ObjectId 
+                         )
+      , tmpMIFloat AS (SELECT tmpPartionMI.ContainerId
+                            , MIFloat_Income_Price.Valuedata
+                       FROM tmpPartionMI
+                            LEFT JOIN MovementitemFloat AS MIFloat_Income_Price
+                                                        ON MIFloat_Income_Price.MovementItemId = tmpPartionMI.ObjectCode
+                                                       AND MIFloat_Income_Price.DescId = zc_MIFloat_Price() 
                        )
+--
                        
       , tmpMIContainer AS (SELECT MovementItemContainer.ContainerId
                                  , MovementItemContainer.Amount 

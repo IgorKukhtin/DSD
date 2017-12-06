@@ -14,9 +14,10 @@ uses
 
 type
   TWorkTimeKind_ObjectForm = class(TAncestorEnumForm)
-    spInsertUpdateObject: TdsdStoredProc;
+    spUpdateObject: TdsdStoredProc;
     FormParams: TdsdFormParams;
     clValue: TcxGridDBColumn;
+    Tax: TcxGridDBColumn;
   private
     { Private declarations }
   public

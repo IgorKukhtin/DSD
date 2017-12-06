@@ -14,25 +14,29 @@ RETURNS TABLE (GoodsId         Integer
              , GoodsName       TVarChar
              , Price_MI        TFloat
              , Amount_MI       TFloat
+             , AmountMid_MI    TFloat
              , AmountAnalys_MI TFloat
              , AmountYear1     TFloat
              , AmountYear2     TFloat
+             , AmountMid1      TFloat
+             , AmountMid2      TFloat
              , AmountAnalys1   TFloat
              , AmountAnalys2   TFloat
              )
        
 AS
 $BODY$
-   DECLARE vbUserId    Integer;
-   DECLARE vbUnitId    Integer;
-   DECLARE vbStartSale TDateTime;
-   DECLARE vbEndSale   TDateTime;
-   DECLARE vbDayCount  TFloat;
+   DECLARE vbUserId       Integer;
+   DECLARE vbUnitId       Integer;
+   DECLARE vbPeriodCount  Integer;
+   DECLARE vbStartSale    TDateTime;
+   DECLARE vbEndSale      TDateTime;
+   DECLARE vbDayCount     TFloat;
    
-   DECLARE vbStartSale1 TDateTime;
-   DECLARE vbEndSale1   TDateTime;
-   DECLARE vbStartSale2 TDateTime;
-   DECLARE vbEndSale2   TDateTime;
+   DECLARE vbStartSale1   TDateTime;
+   DECLARE vbEndSale1     TDateTime;
+   DECLARE vbStartSale2   TDateTime;
+   DECLARE vbEndSale2     TDateTime;
 
    DECLARE vbStartPeriod1 TDateTime;
    DECLARE vbStartPeriod2 TDateTime;
@@ -103,7 +107,10 @@ BEGIN
     vbStartPeriod1:= (vbEndSale1 - ('' ||vbDayCount || 'DAY ')  :: interval ) TDateTime;
     vbStartPeriod2:= (vbEndSale2 - ('' ||vbDayCount || 'DAY ')  :: interval ) TDateTime;
 
-
+    --получаем количество периодов 
+    vbPeriodCount := (ROUND( (date_part('DAY', vbEndSale - vbStartSale) / vbDayCount ) ::TFloat, 0)) :: Integer;
+    
+    
     -- RAISE EXCEPTION 'Ошибка.<%> /  <%>', vbStartPeriod1,vbStartPeriod2;
 
     -- Результат
@@ -147,10 +154,13 @@ BEGIN
        
        , _tmpGoodsList.Price          ::TFloat    AS Price_MI
        , _tmpGoodsList.Amount         ::TFloat    AS Amount_MI
+       , CASE WHEN COALESCE (vbPeriodCount, 0) <> 0 THEN _tmpGoodsList.Amount / vbPeriodCount ELSE _tmpGoodsList.Amount END  ::TFloat  AS AmountMid_MI
        , _tmpGoodsList.AmountAnalys   ::TFloat    AS AmountAnalys_MI
        
        , tmpData.AmountYear1          ::TFloat
        , tmpData.AmountYear2          ::TFloat
+       , CASE WHEN COALESCE (vbPeriodCount, 0) <> 0 THEN tmpData.AmountYear1 / vbPeriodCount ELSE tmpData.AmountYear1 END  ::TFloat  AS AmountMid1
+       , CASE WHEN COALESCE (vbPeriodCount, 0) <> 0 THEN tmpData.AmountYear2 / vbPeriodCount ELSE tmpData.AmountYear2 END  ::TFloat  AS AmountMid2
        , tmpData.AmountAnalys1        ::TFloat
        , tmpData.AmountAnalys2        ::TFloat
   FROM _tmpGoodsList

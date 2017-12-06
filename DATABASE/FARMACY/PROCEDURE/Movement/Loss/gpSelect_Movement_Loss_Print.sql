@@ -87,43 +87,65 @@ BEGIN
                     AND MovementItem.DescId = zc_MI_Master()
                     AND MovementItem.isErased = FALSE
                   )
-      
+                  
+      -- для остатков    
+      , tmpListContainer AS (SELECT Container.*
+                             FROM tmpMI
+                                  INNER JOIN Container ON Container.ObjectId = tmpMI.ObjectId
+                                                      AND Container.DescID = zc_Container_Count()
+                                                      AND Container.WhereObjectId = vbUnitId
+                                                      AND Container.Amount <> 0
+                            )
+                            
+      , tmpCLI_MI AS (SELECT CLI_MI.*
+                      FROM ContainerlinkObject AS CLI_MI 
+                      WHERE CLI_MI.ContainerId  IN (SELECT DISTINCT tmpListContainer.Id FROM tmpListContainer)    
+                        AND CLI_MI.descid = zc_ContainerLinkObject_PartionMovementItem()                                                          
+                      )
+      , tmpPartionMI AS (SELECT tmpCLI_MI.ContainerId
+                              , Object_PartionMovementItem.ObjectCode ::integer
+                         FROM tmpCLI_MI
+                              LEFT JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = tmpCLI_MI.ObjectId 
+                         )
+      , tmpMIFloat AS (SELECT tmpPartionMI.ContainerId
+                            , MIFloat_Income_Price.Valuedata
+                       FROM tmpPartionMI
+                            LEFT JOIN MovementitemFloat AS MIFloat_Income_Price
+                                                        ON MIFloat_Income_Price.MovementItemId = tmpPartionMI.ObjectCode
+                                                       AND MIFloat_Income_Price.DescId = zc_MIFloat_Price() 
+                       )
+--
+      , tmpMIContainer AS (SELECT MovementItemContainer.ContainerId
+                                 , MovementItemContainer.Amount 
+                            FROM MovementItemContainer 
+                            WHERE MovementItemContainer.ContainerId IN (SELECT DISTINCT tmpListContainer.Id FROM tmpListContainer)
+                              AND MovementItemContainer.Operdate >= vbOperDateEnd
+                           )
+                                
       , REMAINS AS ( --остатки на дату документа
                     SELECT T0.ObjectId
+                         , SUM(T0.Amount)  ::TFloat AS Amount
+                         , SUM(T0.Summ)    ::TFloat AS Summ
                          , CASE WHEN SUM(T0.Amount) <> 0
-                                THEN SUM(T0.Summ) / SUM(T0.Amount)
-                           END AS Price
+                               THEN SUM(T0.Summ) / SUM(T0.Amount)
+                           END                      AS Price
                     FROM (SELECT Container.Id 
                                , Container.ObjectId --Товар
-                               , (Container.Amount - SUM (COALESCE (MovementItemContainer.amount, 0)))  ::TFloat as Amount  --Тек. остаток - Движение после даты переучета
-                               , (Container.Amount * COALESCE(MIFloat_Income_Price.ValueData,0) - SUM (COALESCE (MovementItemContainer.amount, 0) * COALESCE(MIFloat_Income_Price.ValueData,0) ))::TFloat as Summ  --Тек. остаток - Движение после даты переучета
-                          FROM tmpMI 
-                               INNER JOIN Container ON Container.ObjectId = tmpMI.ObjectId
-                                                   AND Container.DescID = zc_Container_Count()
-                                                   AND Container.WhereObjectId = vbUnitId
-                               LEFT OUTER JOIN MovementItemContainer ON Container.Id = MovementItemContainer.ContainerId
-                                                                    AND 
-                                                                    (  MovementItemContainer.Operdate >= vbOperDateEnd
-                                                                       --date_trunc('day', MovementItemContainer.Operdate) > vbOperDate
-                                                                       --OR
-                                                                       --MovementItemContainer.MovementId = inMovementId
-                                                                    )
-                               LEFT OUTER JOIN containerlinkobject AS CLI_MI 
-                                                                   ON CLI_MI.containerid = Container.Id
-                                                                  AND CLI_MI.descid = zc_ContainerLinkObject_PartionMovementItem()
-                               LEFT OUTER JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
-                               LEFT OUTER JOIN MovementitemFloat AS MIFloat_Income_Price
-                                                                 ON MIFloat_Income_Price.MovementItemId = Object_PartionMovementItem.ObjectCode
-                                                                AND MIFloat_Income_Price.DescId = zc_MIFloat_Price()
+                               , (Container.Amount - SUM (COALESCE(MovementItemContainer.amount, 0 )) ) ::TFloat AS Amount  --Тек. остаток - Движение после даты переучета
+                               , (Container.Amount * COALESCE(MIFloat_Income_Price.ValueData,0) - SUM (COALESCE(MovementItemContainer.amount, 0 ) * COALESCE(MIFloat_Income_Price.ValueData, 0) ) )::TFloat AS Summ  --Тек. остаток - Движение после даты переучета
+                          FROM tmpListContainer AS Container
+                               LEFT JOIN tmpMIFloat AS MIFloat_Income_Price ON MIFloat_Income_Price.ContainerId = Container.Id
+                               LEFT JOIN tmpMIContainer AS MovementItemContainer ON  MovementItemContainer.ContainerId = Container.Id
                           GROUP BY Container.Id 
                                  , Container.ObjectId
                                  , Container.Amount
                                  , MIFloat_Income_Price.ValueData
-                          HAVING (Container.Amount - SUM (COALESCE (MovementItemContainer.amount, 0))) <> 0
+                          HAVING Container.Amount - COALESCE(SUM(MovementItemContainer.amount),0.0) <> 0
                           ) AS T0
-                    GROUP By ObjectId
+                    GROUP BY ObjectId
                     HAVING SUM(T0.Amount) <> 0
                    )
+                   
       , MIContainer AS (SELECT MovementItemContainer.MovementItemId
                              , CASE WHEN SUM(-MovementItemContainer.Amount) <> 0 
                                     THEN SUM(-MovementItemContainer.Amount * MIFloat_Income_Price.ValueData) / SUM(-MovementItemContainer.Amount)

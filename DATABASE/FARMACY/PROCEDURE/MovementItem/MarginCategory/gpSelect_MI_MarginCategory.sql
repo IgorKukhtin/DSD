@@ -11,31 +11,61 @@ RETURNS SETOF refcursor AS
 $BODY$
   DECLARE Cursor1 refcursor;
   DECLARE Cursor2 refcursor;
-  DECLARE vbUnitId Integer;
+
+  DECLARE vbUnitId       Integer;
+  DECLARE vbPeriodCount  Integer;
+  DECLARE vbDayCount     TFloat;
+  DECLARE vbStartSale    TDateTime;
+  DECLARE vbEndSale      TDateTime;
 BEGIN
 
-    --определяем подразделение и дату документа, ИД строки
-    SELECT MLO_Unit.ObjectId
-       INTO vbUnitId
-    FROM MovementLinkObject AS MLO_Unit
-    WHERE MLO_Unit.MovementId = inMovementId
-      AND MLO_Unit.DescId = zc_MovementLinkObject_Unit();
-    
+    --определяем подразделение
+    SELECT MLO_Unit.ObjectId                 AS UnitId
+         , MovementDate_StartSale.ValueData  AS StartSale
+         , MovementDate_EndSale.ValueData    AS EndSale
+         , MovementFloat_DayCount.ValueData  AS DayCount
+       INTO vbUnitId, vbStartSale, vbEndSale, vbDayCount
+    FROM Movement
+         LEFT JOIN MovementLinkObject AS MLO_Unit
+                                      ON MLO_Unit.MovementId = Movement.Id
+                                     AND MLO_Unit.DescId = zc_MovementLinkObject_Unit()
+         LEFT JOIN MovementDate AS MovementDate_StartSale
+                                ON MovementDate_StartSale.MovementId = Movement.Id
+                               AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
+         LEFT JOIN MovementDate AS MovementDate_EndSale
+                                ON MovementDate_EndSale.MovementId = Movement.Id
+                               AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
+         LEFT JOIN MovementFloat AS MovementFloat_DayCount
+                                 ON MovementFloat_DayCount.MovementId = Movement.Id
+                                AND MovementFloat_DayCount.DescId = zc_MovementFloat_DayCount()
+    WHERE Movement.Id = inMovementId;
+   
+    --получаем количество периодов
+    vbPeriodCount := (ROUND( (date_part('DAY', vbEndSale - vbStartSale) / vbDayCount ) ::TFloat, 0)) :: Integer;
+
     -- вытягиваем строки чайлд, там категория наценки и %, чтоб по ним определить для мастера % наценки
-    CREATE TEMP TABLE _tmpMI_Child (Id Integer, MarginCategoryItemId Integer, MarginCategoryName TVarChar, Amount TFloat, MinPrice TFloat, isErased Boolean, ORD Integer) ON COMMIT DROP;
-    INSERT INTO _tmpMI_Child (Id, MarginCategoryItemId, MarginCategoryName, Amount, MinPrice, isErased, ORD)
+    CREATE TEMP TABLE _tmpMI_Child (Id Integer, MarginCategoryItemId Integer, MarginCategoryName TVarChar, Amount TFloat, MinPrice TFloat, AmountDiff TFloat, PercentNew TFloat, isErased Boolean, ORD Integer) ON COMMIT DROP;
+    
+    INSERT INTO _tmpMI_Child (Id, MarginCategoryItemId, MarginCategoryName, Amount, MinPrice, AmountDiff, PercentNew, isErased, ORD)
+    
            SELECT MovementItem.Id	            AS Id
                 , MovementItem.ObjectId             AS MarginCategoryItemId
                 , Object_MarginCategory.ValueData   AS MarginCategoryName
                 , MovementItem.Amount               AS Amount
                 , ObjectFloat_MinPrice.ValueData    AS MinPrice
+                , MIFloat_Amount.ValueData          AS AmountDiff
+                , MovementItem.Amount + COALESCE (MIFloat_Amount.ValueData, 0)  ::TFloat AS PercentNew
                 , MovementItem.isErased             AS isErased
                 , ROW_NUMBER() OVER (ORDER BY ObjectFloat_MinPrice.ValueData) as ORD
            FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                 JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                  AND MovementItem.DescId     = zc_MI_Child()
                                  AND MovementItem.isErased   = tmpIsErased.isErased
-    
+
+                LEFT JOIN MovementItemFloat AS MIFloat_Amount
+                                            ON MIFloat_Amount.MovementItemId = MovementItem.Id
+                                           AND MIFloat_Amount.DescId = zc_MIFloat_Amount()
+                                        
                 LEFT JOIN ObjectFloat AS ObjectFloat_MinPrice
                                       ON ObjectFloat_MinPrice.ObjectId = MovementItem.ObjectId
                                      AND ObjectFloat_MinPrice.DescId = zc_ObjectFloat_MarginCategoryItem_MinPrice()
@@ -44,8 +74,6 @@ BEGIN
                                      ON ObjectLink_MarginCategoryItem_MarginCategory.ObjectId = MovementItem.ObjectId
                                     AND ObjectLink_MarginCategoryItem_MarginCategory.DescId = zc_ObjectLink_MarginCategoryItem_MarginCategory()
                 LEFT JOIN Object AS Object_MarginCategory ON Object_MarginCategory.Id = ObjectLink_MarginCategoryItem_MarginCategory.ChildObjectId;
-                 
-             
     
     
     OPEN Cursor1 FOR
@@ -99,6 +127,7 @@ BEGIN
     
   , MarginCondition AS (SELECT D1.MarginCategoryItemId
                              , D1.Amount AS MarginPercent
+                             , D1.PercentNew
                              , D1.MinPrice
                              , COALESCE(D2.MinPrice, 1000000) AS MaxPrice 
                         FROM _tmpMI_Child AS D1
@@ -119,12 +148,14 @@ BEGIN
 
             , COALESCE (tmpPrice.MCSValue, 0)             ::TFloat  AS MCSValue
             , COALESCE (MarginCondition.MarginPercent, 0) ::TFloat  AS MarginPercent
+            , COALESCE (MarginCondition.PercentNew, 0)    ::TFloat  AS MarginPercentNew
             , COALESCE (tmpPrice.MCSIsClose, False)       ::Boolean AS MCSIsClose
             , COALESCE (tmpPrice.MCSNotRecalc, False)     ::Boolean AS MCSNotRecalc
             , COALESCE (ObjectBoolean_Goods_SP.ValueData, False)  :: Boolean  AS isSP
    
             , MovementItem.Amount                         ::TFloat       AS Amount
             , COALESCE (MIFloat_Amount.ValueData, 0)      ::TFloat       AS AmountAnalys
+            , CASE WHEN COALESCE (vbPeriodCount, 0) <> 0 THEN MovementItem.Amount / vbPeriodCount ELSE MovementItem.Amount END  ::TFloat  AS AmountMid
             , COALESCE (MIFloat_AmountMin.ValueData, 0)   ::TFloat       AS AmountMin
             , COALESCE (MIFloat_AmountMax.ValueData, 0)   ::TFloat       AS AmountMax
             , COALESCE (MIFloat_NumberMin.ValueData, 0)   ::TFloat       AS NumberMin
@@ -206,20 +237,15 @@ BEGIN
             
             , MovementItem.Amount               AS Amount
             , MovementItem.MinPrice             AS MinPrice
-            , MIFloat_Amount.ValueData          AS AmountDiff
+            , MovementItem.AmountDiff           AS AmountDiff
             , MIString_Comment.ValueData        AS Comment
            
             , MovementItem.isErased             AS isErased
        FROM _tmpMI_Child AS MovementItem
 
-             LEFT JOIN MovementItemFloat AS MIFloat_Amount
-                                         ON MIFloat_Amount.MovementItemId = MovementItem.Id
-                                        AND MIFloat_Amount.DescId = zc_MIFloat_Amount()
-
              LEFT JOIN MovementItemString AS MIString_Comment
                                           ON MIString_Comment.MovementItemId = MovementItem.Id
                                          AND MIString_Comment.DescId = zc_MIString_Comment()
-
              ;
 
     RETURN NEXT Cursor2;

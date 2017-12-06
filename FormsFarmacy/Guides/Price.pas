@@ -101,6 +101,13 @@ type
     bb: TdxBarButton;
     macUpdate_CheckPriceList: TMultiAction;
     macUpdate_CheckPrice: TMultiAction;
+    InvNumber_Full: TcxGridDBColumn;
+    isChecked: TcxGridDBColumn;
+    OperDateStart: TcxGridDBColumn;
+    OperDateEnd: TcxGridDBColumn;
+    AmountDiff: TcxGridDBColumn;
+    MarginPercentNew: TcxGridDBColumn;
+    isError_MarginPercent: TcxGridDBColumn;
   private
     { Private declarations }
   public
