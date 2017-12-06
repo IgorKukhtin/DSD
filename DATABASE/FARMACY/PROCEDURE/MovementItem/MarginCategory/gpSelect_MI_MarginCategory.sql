@@ -11,16 +11,38 @@ RETURNS SETOF refcursor AS
 $BODY$
   DECLARE Cursor1 refcursor;
   DECLARE Cursor2 refcursor;
-  DECLARE vbUnitId Integer;
+
+  DECLARE vbUnitId       Integer;
+  DECLARE vbDayCount     TFloat;
+  DECLARE vbStartSale    TDateTime;
+  DECLARE vbEndSale      TDateTime;
+  DECLARE vbPeriodCount  Integer;
 BEGIN
 
-    --определяем подразделение и дату документа, ИД строки
-    SELECT MLO_Unit.ObjectId
-       INTO vbUnitId
-    FROM MovementLinkObject AS MLO_Unit
-    WHERE MLO_Unit.MovementId = inMovementId
-      AND MLO_Unit.DescId = zc_MovementLinkObject_Unit();
-    
+    --определяем подразделение
+    SELECT MLO_Unit.ObjectId                 AS UnitId
+         , MovementDate_StartSale.ValueData  AS StartSale
+         , MovementDate_EndSale.ValueData    AS EndSale
+         , MovementFloat_DayCount.ValueData  AS DayCount
+       INTO vbUnitId, vbStartSale, vbEndSale, vbDayCount
+    FROM Movement
+         LEFT JOIN MovementLinkObject AS MLO_Unit
+                                      ON MLO_Unit.MovementId = Movement.Id
+                                     AND MLO_Unit.DescId = zc_MovementLinkObject_Unit()
+         LEFT JOIN MovementDate AS MovementDate_StartSale
+                                ON MovementDate_StartSale.MovementId = Movement.Id
+                               AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
+         LEFT JOIN MovementDate AS MovementDate_EndSale
+                                ON MovementDate_EndSale.MovementId = Movement.Id
+                               AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
+         LEFT JOIN MovementFloat AS MovementFloat_DayCount
+                                 ON MovementFloat_DayCount.MovementId = Movement.Id
+                                AND MovementFloat_DayCount.DescId = zc_MovementFloat_DayCount()
+    WHERE Movement.Id = inMovementId;
+   
+    --получаем количество периодов
+    vbPeriodCount := (ROUND( (date_part('DAY', vbEndSale - vbStartSale) / vbDayCount ) ::TFloat, 0)) :: Integer;
+
     -- вытягиваем строки чайлд, там категория наценки и %, чтоб по ним определить для мастера % наценки
     CREATE TEMP TABLE _tmpMI_Child (Id Integer, MarginCategoryItemId Integer, MarginCategoryName TVarChar, Amount TFloat, MinPrice TFloat, isErased Boolean, ORD Integer) ON COMMIT DROP;
     INSERT INTO _tmpMI_Child (Id, MarginCategoryItemId, MarginCategoryName, Amount, MinPrice, isErased, ORD)
@@ -125,6 +147,7 @@ BEGIN
    
             , MovementItem.Amount                         ::TFloat       AS Amount
             , COALESCE (MIFloat_Amount.ValueData, 0)      ::TFloat       AS AmountAnalys
+            , CASE WHEN COALESCE (vbPeriodCount, 0) <> 0 THEN MovementItem.Amount / vbPeriodCount ELSE MovementItem.Amount END  ::TFloat  AS AmountMid
             , COALESCE (MIFloat_AmountMin.ValueData, 0)   ::TFloat       AS AmountMin
             , COALESCE (MIFloat_AmountMax.ValueData, 0)   ::TFloat       AS AmountMax
             , COALESCE (MIFloat_NumberMin.ValueData, 0)   ::TFloat       AS NumberMin
