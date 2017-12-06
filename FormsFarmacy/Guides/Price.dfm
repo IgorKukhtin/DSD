@@ -620,6 +620,64 @@ inherited PriceForm: TPriceForm
             Options.Editing = False
             Width = 65
           end
+          object isChecked: TcxGridDBColumn
+            Caption = #1057#1040#1059#1062
+            DataBinding.FieldName = 'isChecked'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1040#1059#1062' ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 49
+          end
+          object AmountDiff: TcxGridDBColumn
+            Caption = '%  '#1080#1079#1084'. '#1085#1072#1094'-'#1082#1080
+            DataBinding.FieldName = 'AmountDiff'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 63
+          end
+          object MarginPercentNew: TcxGridDBColumn
+            Caption = '% '#1085#1072#1094#1077#1085#1082#1080' ('#1057#1040#1059#1062')'
+            DataBinding.FieldName = 'MarginPercentNew'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object OperDateStart: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '#1085#1072#1094'-'#1082#1080' ('#1057#1040#1059#1062')'
+            DataBinding.FieldName = 'OperDateStart'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object OperDateEnd: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085'. '#1085#1072#1094'-'#1082#1080' ('#1057#1040#1059#1062')'
+            DataBinding.FieldName = 'OperDateEnd'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
+          end
+          object InvNumber_Full: TcxGridDBColumn
+            Caption = #1044#1086#1082'. '#1057#1040#1059#1062
+            DataBinding.FieldName = 'InvNumber_Full'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 82
+          end
+          object isError_MarginPercent: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'.'
+            DataBinding.FieldName = 'isError_MarginPercent'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1053#1072#1094'. '#1072#1087#1090#1077#1082#1080' '#1080' '#1053#1072#1094#1077#1085#1082#1080' ('#1057#1040#1059#1062')'
+            Options.Editing = False
+            Width = 43
+          end
         end
       end
     end

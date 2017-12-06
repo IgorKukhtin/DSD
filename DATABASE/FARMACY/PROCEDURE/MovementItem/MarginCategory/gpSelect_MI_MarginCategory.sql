@@ -44,20 +44,28 @@ BEGIN
     vbPeriodCount := (ROUND( (date_part('DAY', vbEndSale - vbStartSale) / vbDayCount ) ::TFloat, 0)) :: Integer;
 
     -- выт€гиваем строки чайлд, там категори€ наценки и %, чтоб по ним определить дл€ мастера % наценки
-    CREATE TEMP TABLE _tmpMI_Child (Id Integer, MarginCategoryItemId Integer, MarginCategoryName TVarChar, Amount TFloat, MinPrice TFloat, isErased Boolean, ORD Integer) ON COMMIT DROP;
-    INSERT INTO _tmpMI_Child (Id, MarginCategoryItemId, MarginCategoryName, Amount, MinPrice, isErased, ORD)
+    CREATE TEMP TABLE _tmpMI_Child (Id Integer, MarginCategoryItemId Integer, MarginCategoryName TVarChar, Amount TFloat, MinPrice TFloat, AmountDiff TFloat, PercentNew TFloat, isErased Boolean, ORD Integer) ON COMMIT DROP;
+    
+    INSERT INTO _tmpMI_Child (Id, MarginCategoryItemId, MarginCategoryName, Amount, MinPrice, AmountDiff, PercentNew, isErased, ORD)
+    
            SELECT MovementItem.Id	            AS Id
                 , MovementItem.ObjectId             AS MarginCategoryItemId
                 , Object_MarginCategory.ValueData   AS MarginCategoryName
                 , MovementItem.Amount               AS Amount
                 , ObjectFloat_MinPrice.ValueData    AS MinPrice
+                , MIFloat_Amount.ValueData          AS AmountDiff
+                , MovementItem.Amount + COALESCE (MIFloat_Amount.ValueData, 0)  ::TFloat AS PercentNew
                 , MovementItem.isErased             AS isErased
                 , ROW_NUMBER() OVER (ORDER BY ObjectFloat_MinPrice.ValueData) as ORD
            FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                 JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                  AND MovementItem.DescId     = zc_MI_Child()
                                  AND MovementItem.isErased   = tmpIsErased.isErased
-    
+
+                LEFT JOIN MovementItemFloat AS MIFloat_Amount
+                                            ON MIFloat_Amount.MovementItemId = MovementItem.Id
+                                           AND MIFloat_Amount.DescId = zc_MIFloat_Amount()
+                                        
                 LEFT JOIN ObjectFloat AS ObjectFloat_MinPrice
                                       ON ObjectFloat_MinPrice.ObjectId = MovementItem.ObjectId
                                      AND ObjectFloat_MinPrice.DescId = zc_ObjectFloat_MarginCategoryItem_MinPrice()
@@ -119,6 +127,7 @@ BEGIN
     
   , MarginCondition AS (SELECT D1.MarginCategoryItemId
                              , D1.Amount AS MarginPercent
+                             , D1.PercentNew
                              , D1.MinPrice
                              , COALESCE(D2.MinPrice, 1000000) AS MaxPrice 
                         FROM _tmpMI_Child AS D1
@@ -139,6 +148,7 @@ BEGIN
 
             , COALESCE (tmpPrice.MCSValue, 0)             ::TFloat  AS MCSValue
             , COALESCE (MarginCondition.MarginPercent, 0) ::TFloat  AS MarginPercent
+            , COALESCE (MarginCondition.PercentNew, 0)    ::TFloat  AS MarginPercentNew
             , COALESCE (tmpPrice.MCSIsClose, False)       ::Boolean AS MCSIsClose
             , COALESCE (tmpPrice.MCSNotRecalc, False)     ::Boolean AS MCSNotRecalc
             , COALESCE (ObjectBoolean_Goods_SP.ValueData, False)  :: Boolean  AS isSP
@@ -227,20 +237,15 @@ BEGIN
             
             , MovementItem.Amount               AS Amount
             , MovementItem.MinPrice             AS MinPrice
-            , MIFloat_Amount.ValueData          AS AmountDiff
+            , MovementItem.AmountDiff           AS AmountDiff
             , MIString_Comment.ValueData        AS Comment
            
             , MovementItem.isErased             AS isErased
        FROM _tmpMI_Child AS MovementItem
 
-             LEFT JOIN MovementItemFloat AS MIFloat_Amount
-                                         ON MIFloat_Amount.MovementItemId = MovementItem.Id
-                                        AND MIFloat_Amount.DescId = zc_MIFloat_Amount()
-
              LEFT JOIN MovementItemString AS MIString_Comment
                                           ON MIString_Comment.MovementItemId = MovementItem.Id
                                          AND MIString_Comment.DescId = zc_MIString_Comment()
-
              ;
 
     RETURN NEXT Cursor2;

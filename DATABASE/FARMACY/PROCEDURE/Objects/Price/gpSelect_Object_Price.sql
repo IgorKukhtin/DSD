@@ -43,6 +43,14 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , CheckPriceDate TDateTime
              , Color_ExpirationDate Integer
              , isCorrectMCS Boolean, isExcludeMCS Boolean
+             
+             , InvNumber_Full     TVarChar
+             , OperDateStart      TDateTime
+             , OperDateEnd        TDateTime
+             , AmountDiff         TFloat
+             , MarginPercentNew   TFloat
+             , isChecked          Boolean
+             , isError_MarginPercent Boolean
              ) AS
 $BODY$
 DECLARE
@@ -125,6 +133,14 @@ BEGIN
                
                ,NULL::Boolean                    AS isCorrectMCS
                ,NULL::Boolean                    AS isExcludeMCS 
+               
+               ,NULL:: TVarChar                  AS InvNumber_Full     
+               ,NULL:: TDateTime                 AS OperDateStart      
+               ,NULL:: TDateTime                 AS OperDateEnd        
+               ,NULL:: TFloat                    AS AmountDiff         
+               ,NULL:: TFloat                    AS MarginPercentNew   
+               ,NULL:: Boolean                   AS isChecked          
+               ,NULL:: Boolean                   AS isError_MarginPercent
             WHERE 1=0;
     ELSEIF inisShowAll = True
     THEN
@@ -280,7 +296,26 @@ BEGIN
                        WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                          AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
                        )
-
+   -- Выбираем данные из документов "Категории наценки (САУЦ)"
+   , tmpMarginCategory AS (SELECT tmp.MovementId
+                                , '№ ' ||tmp.InvNumber||' от ' ||TO_CHAR(tmp.OperDate, 'DD.MM.YYYY')   AS InvNumber_Full
+                                , tmp.OperDate
+                                , tmp.OperDateStart
+                                , tmp.OperDateEnd
+                                              
+                                , tmp.GoodsId
+                                , tmp.GoodsCode
+                                , tmp.GoodsName
+                     
+                                , tmp.AmountDiff
+                                , tmp.MarginPercent
+                                , tmp.MarginPercentNew
+                                , tmp.Price
+                                , tmp.isChecked
+                           FROM lpSelect_MarginCategory_Goods (inUnitId:= inUnitId , inGoodsId:= 0, inOperDate:= CURRENT_DATE , inSession:= inSession) AS tmp
+                           )
+  
+   
             -- Результат
             SELECT
                  tmpPrice_View.Id                                                   AS Id
@@ -475,6 +510,15 @@ BEGIN
                       ELSE FALSE
                  END                        ::Boolean  AS isExcludeMCS 
 
+               , tmpMarginCategory.InvNumber_Full     :: TVarChar
+               , tmpMarginCategory.OperDateStart      :: TDateTime
+               , tmpMarginCategory.OperDateEnd        :: TDateTime
+                             
+               , tmpMarginCategory.AmountDiff         :: TFloat
+               , tmpMarginCategory.MarginPercentNew   :: TFloat
+               , COALESCE (tmpMarginCategory.isChecked, FALSE)  :: Boolean AS isChecked
+               , CASE WHEN tmpMarginCategory.MarginPercentNew <> tmpPrice_View.PercentMarkup AND tmpPrice_View.isTop = FALSE THEN TRUE ELSE FALSE END AS isError_MarginPercent
+
             FROM Object_Goods_View
                 INNER JOIN ObjectLink ON ObjectLink.ObjectId = Object_Goods_View.Id 
                                      AND ObjectLink.ChildObjectId = vbObjectId
@@ -540,6 +584,8 @@ BEGIN
                                     ON ObjectDate_LastPrice.ObjectId = ObjectLink_Main.ChildObjectId
                                    AND ObjectDate_LastPrice.DescId = zc_ObjectDate_Goods_LastPrice()
         
+               LEFT JOIN tmpMarginCategory ON tmpMarginCategory.GoodsId = Object_Goods_View.Id
+               
             WHERE (inisShowDel = True OR Object_Goods_View.isErased = False)
               AND (Object_Goods_View.Id = inGoodsId OR inGoodsId = 0)
             ORDER BY GoodsGroupName, GoodsName;
@@ -729,7 +775,25 @@ BEGIN
                         FROM tmpPrice_View AS tmpPrice
                              FULL JOIN tmpRemeins ON tmpRemeins.ObjectId = tmpPrice.GoodsId
                         )
-
+      -- Выбираем данные из документов "Категории наценки (САУЦ)"
+      , tmpMarginCategory AS (SELECT tmp.MovementId
+                                   , '№ ' ||tmp.InvNumber||' от ' ||TO_CHAR(tmp.OperDate, 'DD.MM.YYYY')   AS InvNumber_Full
+                                   , tmp.OperDate
+                                   , tmp.OperDateStart
+                                   , tmp.OperDateEnd
+                                                 
+                                   , tmp.GoodsId
+                                   , tmp.GoodsCode
+                                   , tmp.GoodsName
+                        
+                                   , tmp.AmountDiff
+                                   , tmp.MarginPercent
+                                   , tmp.MarginPercentNew
+                                   , tmp.Price
+                                   , tmp.isChecked
+                              FROM lpSelect_MarginCategory_Goods (inUnitId:= inUnitId , inGoodsId:= 0, inOperDate:= CURRENT_DATE , inSession:= inSession) AS tmp
+                              )
+                           
             -- Результат     
             SELECT
                  tmpPrice_All.Id                                                       AS Id
@@ -918,30 +982,38 @@ BEGIN
                       WHEN COALESCE (tmpPrice_All.CheckPrice, NULL) = NULL THEN FALSE
                       ELSE FALSE
                  END                        ::Boolean  AS isExcludeMCS 
-                 
-            FROM tmpPrice_All
-                LEFT OUTER JOIN Object_Goods_View ON Object_Goods_View.id = tmpPrice_All.Goodsid
-             --   LEFT OUTER JOIN tmpRemeins AS Object_Remains ON Object_Remains.ObjectId = tmpPrice_View.GoodsId
 
-                LEFT JOIN ObjectHistory AS ObjectHistory_Price
-                                        ON ObjectHistory_Price.ObjectId = tmpPrice_All.Id 
-                                       AND ObjectHistory_Price.DescId = zc_ObjectHistory_Price()
+               , tmpMarginCategory.InvNumber_Full     :: TVarChar
+               , tmpMarginCategory.OperDateStart      :: TDateTime
+               , tmpMarginCategory.OperDateEnd        :: TDateTime
+                             
+               , tmpMarginCategory.AmountDiff         :: TFloat
+               , tmpMarginCategory.MarginPercentNew   :: TFloat
+               , COALESCE (tmpMarginCategory.isChecked, FALSE)  :: Boolean AS isChecked
+               , CASE WHEN tmpMarginCategory.MarginPercentNew <> tmpPrice_All.PercentMarkup AND tmpPrice_All.isTop = FALSE THEN TRUE ELSE FALSE END AS isError_MarginPercent
+            FROM tmpPrice_All
+               LEFT OUTER JOIN Object_Goods_View ON Object_Goods_View.id = tmpPrice_All.Goodsid
+            --   LEFT OUTER JOIN tmpRemeins AS Object_Remains ON Object_Remains.ObjectId = tmpPrice_View.GoodsId
+
+               LEFT JOIN ObjectHistory AS ObjectHistory_Price
+                                       ON ObjectHistory_Price.ObjectId = tmpPrice_All.Id 
+                                      AND ObjectHistory_Price.DescId = zc_ObjectHistory_Price()
 --                                       AND vbStartDate >= ObjectHistory_Price.StartDate AND vbStartDate < ObjectHistory_Price.EndDate
-                                       AND ObjectHistory_Price.EndDate = zc_DateEnd()
-                -- получаем значения Количество дней для анализа НТЗ из истории значений на дату                    
-                LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_MCSPeriod
-                                             ON ObjectHistoryFloat_MCSPeriod.ObjectHistoryId = ObjectHistory_Price.Id
-                                            AND ObjectHistoryFloat_MCSPeriod.DescId = zc_ObjectHistoryFloat_Price_MCSPeriod()
-                -- получаем значения Страховой запас дней НТЗ из истории значений на дату    
-                LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_MCSDay
-                                             ON ObjectHistoryFloat_MCSDay.ObjectHistoryId = ObjectHistory_Price.Id
-                                            AND ObjectHistoryFloat_MCSDay.DescId = zc_ObjectHistoryFloat_Price_MCSDay() 
-                LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_View.Id
-                -- условия хранения
-                LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
-                                     ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.Id
-                                    AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
-                LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
+                                      AND ObjectHistory_Price.EndDate = zc_DateEnd()
+               -- получаем значения Количество дней для анализа НТЗ из истории значений на дату                    
+               LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_MCSPeriod
+                                            ON ObjectHistoryFloat_MCSPeriod.ObjectHistoryId = ObjectHistory_Price.Id
+                                           AND ObjectHistoryFloat_MCSPeriod.DescId = zc_ObjectHistoryFloat_Price_MCSPeriod()
+               -- получаем значения Страховой запас дней НТЗ из истории значений на дату    
+               LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_MCSDay
+                                            ON ObjectHistoryFloat_MCSDay.ObjectHistoryId = ObjectHistory_Price.Id
+                                           AND ObjectHistoryFloat_MCSDay.DescId = zc_ObjectHistoryFloat_Price_MCSDay() 
+               LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_View.Id
+               -- условия хранения
+               LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
+                                    ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.Id
+                                   AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
+               LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
 
                -- получается GoodsMainId
                LEFT JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = Object_Goods_View.Id
@@ -974,7 +1046,9 @@ BEGIN
                LEFT JOIN ObjectDate AS ObjectDate_LastPrice
                                     ON ObjectDate_LastPrice.ObjectId = ObjectLink_Main.ChildObjectId
                                    AND ObjectDate_LastPrice.DescId = zc_ObjectDate_Goods_LastPrice()
-                                   
+
+               LEFT JOIN tmpMarginCategory ON tmpMarginCategory.GoodsId = Object_Goods_View.Id
+
             WHERE (inisShowDel = True OR Object_Goods_View.isErased = False)
               AND (Object_Goods_View.Id = inGoodsId OR inGoodsId = 0)
             ORDER BY GoodsGroupName, GoodsName;
@@ -987,6 +1061,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А. 
+ 06.12.17         *
  07.09.17         *
  15.08.17         *
  12.06.17         * 

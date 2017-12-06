@@ -22,6 +22,8 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
       inherited cxGrid: TcxGrid
         Width = 1121
         Height = 280
+        ExplicitLeft = 64
+        ExplicitTop = 16
         ExplicitWidth = 1121
         ExplicitHeight = 280
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -98,7 +100,6 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1076#1083#1103' '#1057#1040#1059#1062' ('#1076#1072'/'#1085#1077#1090')'
-            Options.Editing = False
             Width = 50
           end
           object isReport: TcxGridDBColumn
@@ -115,6 +116,14 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080
+            Options.Editing = False
+          end
+          object MarginPercentNew: TcxGridDBColumn
+            Caption = '% '#1085#1072#1094#1077#1085#1082#1080' ('#1085#1086#1074#1099#1081')'
+            DataBinding.FieldName = 'MarginPercentNew'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080' ('#1085#1086#1074#1099#1081')'
             Options.Editing = False
           end
           object Remains: TcxGridDBColumn
@@ -1632,11 +1641,17 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'PriceMax'
         Value = Null
+        Component = edPriceMax
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
+        Name = 'PriceMin'
         Value = Null
+        Component = edPriceMin
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 304
@@ -1854,6 +1869,15 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisChecked'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isChecked'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = MasterCDS
@@ -1935,8 +1959,8 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 360
-    Top = 16
+    Left = 320
+    Top = 8
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_SaleExactly_Print'
