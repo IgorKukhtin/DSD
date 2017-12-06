@@ -591,7 +591,8 @@ end if;
                -- Расчет суммы всех составляющих
          FROM (SELECT _tmpChild.MasterContainerId AS ContainerId
                     , CAST (SUM (_tmpChild.OperCount * _tmpPrice.OperPrice) AS TFloat) AS CalcSumm
-                    , CAST (SUM (CASE WHEN _tmpChild.isExternal = TRUE THEN _tmpChild.OperCount * _tmpPrice.OperPrice_external ELSE 0 END) AS TFloat) AS CalcSumm_external
+                    , CAST (SUM (CASE WHEN _tmpChild.isExternal = TRUE THEN _tmpChild.OperCount * _tmpPrice.OperPrice ELSE 0 END) AS TFloat) AS CalcSumm_external
+                    -- , CAST (SUM (CASE WHEN _tmpChild.isExternal = TRUE THEN _tmpChild.OperCount * _tmpPrice.OperPrice_external ELSE 0 END) AS TFloat) AS CalcSumm_external
                     -- , CAST (SUM (CASE WHEN _tmpChild.DescId = zc_Movement_Send() THEN _tmpChild.OperCount * _tmpPrice.OperPrice ELSE 0 END) AS TFloat) AS CalcSumm_external
                FROM 
                     -- Расчет цены
@@ -606,7 +607,7 @@ end if;
                                      THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount)
                                  ELSE 0
                             END AS OperPrice
-                          , CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
+                          /*, CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
                                       THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) <> 0
                                                      THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external)
                                                 ELSE  0
@@ -615,7 +616,7 @@ end if;
                                     OR ((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) < 0))
                                      THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external)
                                  ELSE 0
-                            END AS OperPrice_external
+                            END AS OperPrice_external*/
                      FROM _tmpMaster
                     ) AS _tmpPrice 
                     JOIN _tmpChild ON _tmpChild.ContainerId = _tmpPrice.ContainerId
@@ -647,7 +648,8 @@ end if;
                -- Расчет суммы всех составляющих
          FROM (SELECT _tmpChild.MasterContainerId AS ContainerId
                     , CAST (SUM (_tmpChild.OperCount * _tmpPrice.OperPrice) AS TFloat) AS CalcSumm
-                    , CAST (SUM (CASE WHEN _tmpChild.isExternal = TRUE THEN _tmpChild.OperCount * CASE WHEN _tmpPrice.OperPrice_external > 12345 THEN 1.2345 ELSE _tmpPrice.OperPrice_external END ELSE 0 END) AS TFloat) AS CalcSumm_external
+                    , CAST (SUM (CASE WHEN _tmpChild.isExternal = TRUE THEN _tmpChild.OperCount * _tmpPrice.OperPrice ELSE 0 END) AS TFloat) AS CalcSumm_external
+                    -- , CAST (SUM (CASE WHEN _tmpChild.isExternal = TRUE THEN _tmpChild.OperCount * CASE WHEN _tmpPrice.OperPrice_external > 12345 THEN 1.2345 ELSE _tmpPrice.OperPrice_external END ELSE 0 END) AS TFloat) AS CalcSumm_external
                     -- , CAST (SUM (CASE WHEN _tmpChild.DescId = zc_Movement_Send() THEN _tmpChild.OperCount * _tmpPrice.OperPrice ELSE 0 END) AS TFloat) AS CalcSumm_external
                FROM 
                     -- Расчет цены
@@ -662,7 +664,7 @@ end if;
                                      THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount)
                                  ELSE 0
                             END AS OperPrice
-                          , CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
+                          /*, CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
                                       THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) <> 0
                                                      THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external)
                                                 ELSE  0
@@ -671,7 +673,7 @@ end if;
                                     OR ((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) < 0))
                                      THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external)
                                  ELSE 0
-                            END AS OperPrice_external
+                            END AS OperPrice_external*/
                      FROM _tmpMaster
                     ) AS _tmpPrice 
                     JOIN _tmpChild ON _tmpChild.ContainerId = _tmpPrice.ContainerId
@@ -941,7 +943,8 @@ end if;
 --                    , _tmpChild.ContainerId AS FromContainerId
                     , 0 AS FromContainerId
                     , CAST (SUM (_tmpChild.OperCount * _tmpPrice.OperPrice) AS TFloat) AS CalcSumm
-                    , CAST (SUM (CASE WHEN _tmpChild.isExternal = TRUE THEN _tmpChild.OperCount * _tmpPrice.OperPrice_external ELSE 0 END) AS TFloat) AS CalcSumm_external
+                    , CAST (SUM (CASE WHEN _tmpChild.isExternal = TRUE THEN _tmpChild.OperCount * _tmpPrice.OperPrice ELSE 0 END) AS TFloat) AS CalcSumm_external
+                    -- , CAST (SUM (CASE WHEN _tmpChild.isExternal = TRUE THEN _tmpChild.OperCount * _tmpPrice.OperPrice_external ELSE 0 END) AS TFloat) AS CalcSumm_external
 
                FROM 
                     -- Расчет цены
@@ -956,7 +959,7 @@ end if;
                                       THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount)
                                  ELSE 0
                             END AS OperPrice
-                          , CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
+                          /*, CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
                                       THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) <> 0
                                                      THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external)
                                                 ELSE  0
@@ -965,7 +968,7 @@ end if;
                                     OR ((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) < 0))
                                       THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external)
                                  ELSE 0
-                            END AS OperPrice_external
+                            END AS OperPrice_external*/
                      FROM _tmpMaster
                     ) AS _tmpPrice 
                     JOIN _tmpChild ON _tmpChild.ContainerId = _tmpPrice.ContainerId

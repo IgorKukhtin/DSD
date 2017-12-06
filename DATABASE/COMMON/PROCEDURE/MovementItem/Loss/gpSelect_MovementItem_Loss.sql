@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, ContainerId Integer, GoodsId Integer, GoodsCode Integ
              , Amount TFloat, AmountRemains TFloat, Count TFloat, HeadCount TFloat
              , PartionGoodsDate TDateTime, PartionGoods TVarChar
              , GoodsKindId Integer, GoodsKindName  TVarChar
+             , GoodsKindId_Complete Integer, GoodsKindName_Complete  TVarChar
              , AssetId Integer, AssetName TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
              , isErased Boolean
@@ -46,6 +47,7 @@ BEGIN
                            , MovementItem.Amount                           AS Amount
                            , MovementItem.ObjectId                         AS GoodsId
                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                           , COALESCE (MILO_GoodsKindComplete.ObjectId, 0) AS GoodsKindId_Complete
 
                            , MIFloat_Count.ValueData            AS Count
                            , MIFloat_HeadCount.ValueData        AS HeadCount
@@ -62,6 +64,9 @@ BEGIN
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                           LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
+                                                            ON MILO_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                                           AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
 
                            LEFT JOIN MovementItemFloat AS MIFloat_Count
                                                        ON MIFloat_Count.MovementItemId = MovementItem.Id
@@ -172,6 +177,8 @@ BEGIN
            , CAST (NULL AS TVarChar)    AS PartionGoods
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
+           , CAST (NULL AS Integer)     AS GoodsKindId_Complete
+           , CAST (NULL AS TVarchar)    AS GoodsKindName_Complete
            , 0 ::Integer                AS AssetId
            , CAST (NULL AS TVarChar)    AS AssetName
            , Object_InfoMoney_View.InfoMoneyCode
@@ -226,6 +233,8 @@ BEGIN
            , tmpMI.PartionGoods
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
+           , Object_GoodsKindComplete.Id           AS GoodsKindId_Complete
+           , Object_GoodsKindComplete.ValueData    AS GoodsKindName_Complete
            , Object_Asset.Id                    AS AssetId
            , Object_Asset.ValueData             AS AssetName
            , Object_InfoMoney_View.InfoMoneyCode
@@ -238,6 +247,7 @@ BEGIN
        FROM tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
+            LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = tmpMI.GoodsKindId_Complete
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                  ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMI.GoodsId
@@ -325,6 +335,8 @@ BEGIN
            , MIString_PartionGoods.ValueData    AS PartionGoods
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
+           , Object_GoodsKindComplete.Id           AS GoodsKindId_Complete
+           , Object_GoodsKindComplete.ValueData    AS GoodsKindName_Complete
            , Object_Asset.Id                    AS AssetId
            , Object_Asset.ValueData             AS AssetName
            , Object_InfoMoney_View.InfoMoneyCode
@@ -359,6 +371,11 @@ BEGIN
                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
+                                             ON MILO_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                            AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+            LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILO_GoodsKindComplete.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                              ON MILinkObject_Asset.MovementItemId = MovementItem.Id

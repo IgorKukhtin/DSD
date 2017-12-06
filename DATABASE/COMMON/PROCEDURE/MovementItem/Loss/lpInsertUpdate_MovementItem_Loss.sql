@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_MovementItem_Loss()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Loss(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Loss(
     IN inPartionGoodsDate    TDateTime , -- Дата партии/Дата перемещения
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
+    IN inGoodsKindCompleteId Integer   , -- Виды товаров  ГП
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
     IN inPartionGoodsId      Integer   , -- Партии товаров (для партии расхода если с МО)
     IN inUserId              Integer     -- пользователь
@@ -43,6 +45,9 @@ BEGIN
 
      -- сохранили связь с <Виды товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
+
+     -- сохранили связь с <Виды товаров ГП>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKindComplete(), ioId, inGoodsKindCompleteId);
 
      -- сохранили связь с <Основные средства (для которых закупается ТМЦ)>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);

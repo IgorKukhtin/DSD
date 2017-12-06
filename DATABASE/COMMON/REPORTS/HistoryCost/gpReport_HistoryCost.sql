@@ -28,7 +28,7 @@ $BODY$BEGIN
 
      RETURN QUERY 
        SELECT
-             ContainerObjectCost.ObjectCostId
+             ContainerObjectCost.ContainerId AS ObjectCostId
            , _tmpSumm.MovementId
            , _tmpSumm.MovementItemId
            , _tmpSumm.ContainerId
@@ -106,79 +106,78 @@ $BODY$BEGIN
            , CAST (HistoryCost.StartSumm + HistoryCost.IncomeSumm + HistoryCost.CalcSumm - HistoryCost.OutSumm AS TFloat) AS EndSumm
            , CAST (tmpOperationSumm.StartSumm + tmpOperationSumm.IncomeSumm - tmpOperationSumm.OutSumm AS TFloat) AS EndSumm_calc
 
-       FROM (SELECT ContainerObjectCost.ObjectCostId FROM ContainerObjectCost WHERE ContainerObjectCost.ObjectCostDescId = zc_ObjectCost_Basis() GROUP BY ContainerObjectCost.ObjectCostId
+       FROM (SELECT Container_summ.Id AS ContainerId FROM Container INNER JOIN Container AS Container_summ ON Container_summ.ParentId = Container.Id AND Container_summ.DescId = zc_Container_Summ() WHERE Container.DescId = zc_Container_Count()
             ) AS ContainerObjectCost
-            LEFT JOIN ObjectCostLink AS ObjectCostLink_Unit
-                                     ON ObjectCostLink_Unit.ObjectCostId = ContainerObjectCost.ObjectCostId
-                                    AND ObjectCostLink_Unit.DescId = zc_ObjectCostLink_Unit()
+            LEFT JOIN ContainerLinkObject AS ObjectCostLink_Unit
+                                          ON ObjectCostLink_Unit.ContainerId = ContainerObjectCost.ContainerId
+                                         AND ObjectCostLink_Unit.DescId = zc_ContainerLinkObject_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectCostLink_Unit.ObjectId
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
                                  ON ObjectLink_Unit_Parent.ObjectId = ObjectCostLink_Unit.ObjectId
                                 AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
             LEFT JOIN Object AS Object_UnitParent ON Object_UnitParent.Id = ObjectLink_Unit_Parent.ChildObjectId
 
-            LEFT JOIN ObjectCostLink AS ObjectCostLink_Goods
-                                     ON ObjectCostLink_Goods.ObjectCostId = ContainerObjectCost.ObjectCostId
-                                    AND ObjectCostLink_Goods.DescId = zc_ObjectCostLink_Goods()
+            LEFT JOIN ContainerLinkObject AS ObjectCostLink_Goods
+                                          ON ObjectCostLink_Goods.ContainerId = ContainerObjectCost.ContainerId
+                                         AND ObjectCostLink_Goods.DescId = zc_ContainerLinkObject_Goods()
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectCostLink_Goods.ObjectId
             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = ObjectCostLink_Goods.ObjectId
                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
-            LEFT JOIN ObjectCostLink AS ObjectCostLink_GoodsKind
-                                     ON ObjectCostLink_GoodsKind.ObjectCostId = ContainerObjectCost.ObjectCostId
-                                    AND ObjectCostLink_GoodsKind.DescId = zc_ObjectCostLink_GoodsKind()
+            LEFT JOIN ContainerLinkObject AS ObjectCostLink_GoodsKind
+                                          ON ObjectCostLink_GoodsKind.ContainerId = ContainerObjectCost.ContainerId
+                                         AND ObjectCostLink_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectCostLink_GoodsKind.ObjectId
 
-            LEFT JOIN ObjectCostLink AS ObjectCostLink_InfoMoney
-                                     ON ObjectCostLink_InfoMoney.ObjectCostId = ContainerObjectCost.ObjectCostId
-                                    AND ObjectCostLink_InfoMoney.DescId = zc_ObjectCostLink_InfoMoney()
+            LEFT JOIN ContainerLinkObject AS ObjectCostLink_InfoMoney
+                                          ON ObjectCostLink_InfoMoney.ContainerId = ContainerObjectCost.ContainerId
+                                         AND ObjectCostLink_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
             LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON lfObject_InfoMoney.InfoMoneyId = ObjectCostLink_InfoMoney.ObjectId
 
-            LEFT JOIN ObjectCostLink AS ObjectCostLink_InfoMoneyDetail
-                                     ON ObjectCostLink_InfoMoneyDetail.ObjectCostId = ContainerObjectCost.ObjectCostId
-                                    AND ObjectCostLink_InfoMoneyDetail.DescId = zc_ObjectCostLink_InfoMoneyDetail()
+            LEFT JOIN ContainerLinkObject AS ObjectCostLink_InfoMoneyDetail
+                                          ON ObjectCostLink_InfoMoneyDetail.ContainerId = ContainerObjectCost.ContainerId
+                                         AND ObjectCostLink_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
             LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney_Detail ON lfObject_InfoMoney_Detail.InfoMoneyId = ObjectCostLink_InfoMoneyDetail.ObjectId
 
-            LEFT JOIN ObjectCostLink AS ObjectCostLink_PartionGoods
-                                     ON ObjectCostLink_PartionGoods.ObjectCostId = ContainerObjectCost.ObjectCostId
-                                    AND ObjectCostLink_PartionGoods.DescId = zc_ObjectCostLink_PartionGoods()
+            LEFT JOIN ContainerLinkObject AS ObjectCostLink_PartionGoods
+                                          ON ObjectCostLink_PartionGoods.ContainerId = ContainerObjectCost.ContainerId
+                                         AND ObjectCostLink_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
             LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = ObjectCostLink_PartionGoods.ObjectId
 
-            LEFT JOIN ObjectCostLink AS ObjectCostLink_Business
-                                     ON ObjectCostLink_Business.ObjectCostId = ContainerObjectCost.ObjectCostId
-                                    AND ObjectCostLink_Business.DescId = zc_ObjectCostLink_Business()
+            LEFT JOIN ContainerLinkObject AS ObjectCostLink_Business
+                                     ON ObjectCostLink_Business.ContainerId = ContainerObjectCost.ContainerId
+                                    AND ObjectCostLink_Business.DescId = zc_ContainerLinkObject_Business()
             LEFT JOIN Object AS Object_Business ON Object_Business.Id = ObjectCostLink_Business.ObjectId
 
-            LEFT JOIN ObjectCostLink AS ObjectCostLink_JuridicalBasis
-                                     ON ObjectCostLink_JuridicalBasis.ObjectCostId = ContainerObjectCost.ObjectCostId
-                                    AND ObjectCostLink_JuridicalBasis.DescId = zc_ObjectCostLink_JuridicalBasis()
+            LEFT JOIN ContainerLinkObject AS ObjectCostLink_JuridicalBasis
+                                     ON ObjectCostLink_JuridicalBasis.ContainerId = ContainerObjectCost.ContainerId
+                                    AND ObjectCostLink_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
             LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = ObjectCostLink_JuridicalBasis.ObjectId
 
-            LEFT JOIN ObjectCostLink AS ObjectCostLink_Branch
-                                     ON ObjectCostLink_Branch.ObjectCostId = ContainerObjectCost.ObjectCostId
-                                    AND ObjectCostLink_Branch.DescId = zc_ObjectCostLink_Branch()
+            LEFT JOIN ContainerLinkObject AS ObjectCostLink_Branch
+                                     ON ObjectCostLink_Branch.ContainerId = ContainerObjectCost.ContainerId
+                                    AND ObjectCostLink_Branch.DescId = zc_ContainerLinkObject_Branch()
             LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectCostLink_Branch.ObjectId
 
-            LEFT JOIN ObjectCostLink AS ObjectCostLink_Personal
-                                     ON ObjectCostLink_Personal.ObjectCostId = ContainerObjectCost.ObjectCostId
-                                    AND ObjectCostLink_Personal.DescId = zc_ObjectCostLink_Personal()
+            LEFT JOIN ContainerLinkObject AS ObjectCostLink_Personal
+                                     ON ObjectCostLink_Personal.ContainerId = ContainerObjectCost.ContainerId
+                                    AND ObjectCostLink_Personal.DescId = zc_ContainerLinkObject_Personal()
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectCostLink_Personal.ObjectId
 
-            LEFT JOIN ObjectCostLink AS ObjectCostLink_Asset
-                                     ON ObjectCostLink_Asset.ObjectCostId = ContainerObjectCost.ObjectCostId
-                                    AND ObjectCostLink_Asset.DescId = zc_ObjectCostLink_AssetTo()
+            LEFT JOIN ContainerLinkObject AS ObjectCostLink_Asset
+                                     ON ObjectCostLink_Asset.ContainerId = ContainerObjectCost.ContainerId
+                                    AND ObjectCostLink_Asset.DescId = zc_ContainerLinkObject_AssetTo()
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = ObjectCostLink_Asset.ObjectId
 
-            LEFT JOIN HistoryCost ON HistoryCost.ObjectCostId = ContainerObjectCost.ObjectCostId
+            LEFT JOIN HistoryCost ON HistoryCost.ContainerId = ContainerObjectCost.ContainerId
                                  AND HistoryCost.StartDate = inStartDate AND HistoryCost.EndDate = inEndDate
             LEFT JOIN
             -- это операции в разрезе документов
-           (SELECT ContainerObjectCost_Summ.ObjectCostId
+           (SELECT MIContainer.ContainerId
                  , Movement.Id AS MovementId
                  , MIContainer.MovementItemId
-                 , MIContainer.ContainerId
                  , Movement.OperDate
                  , Movement.InvNumber
                  , CAST (MovementDesc.Code || '+' || MovementItemDesc.Code AS TVarChar) AS Code
@@ -186,18 +185,15 @@ $BODY$BEGIN
                  , CAST (CASE WHEN MovementItem.Amount <> 0 THEN MIContainer.Amount / MovementItem.Amount ELSE 0 END AS TFloat) AS OperPrice
                  , MIContainer.Amount AS OperSumm
             FROM (SELECT MovementItemContainer.ContainerId, MovementItemContainer.MovementItemId, ABS (SUM (Amount)) AS Amount FROM MovementItemContainer WHERE MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate AND MovementItemContainer.DescId = zc_MIContainer_Summ() GROUP BY MovementItemContainer.ContainerId, MovementItemContainer.MovementItemId) AS MIContainer
-                 JOIN ContainerObjectCost AS ContainerObjectCost_Summ
-                                          ON ContainerObjectCost_Summ.ContainerId = MIContainer.ContainerId
-                                         AND ContainerObjectCost_Summ.ObjectCostDescId = zc_ObjectCost_Basis()
                  JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
                  JOIN Movement ON Movement.Id = MovementItem.MovementId
                  JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
                  JOIN MovementItemDesc ON MovementItemDesc.Id = MovementItem.DescId
             -- WHERE 1=0
-           ) AS _tmpSumm ON _tmpSumm.ObjectCostId = ContainerObjectCost.ObjectCostId
+           ) AS _tmpSumm ON _tmpSumm.ContainerId = ContainerObjectCost.ContainerId
             -- это Количество и Сумма - ост, приход, расход
             LEFT JOIN
-           (SELECT ContainerObjectCost.ObjectCostId AS ObjectCostId
+           (SELECT COALESCE (Container_Summ.Id, tmpContainer.ContainerId) AS ContainerId
                  , CAST (SUM (tmpContainer.StartCount) AS  TFloat) AS StartCount
                  , CAST (SUM (tmpContainer.StartSumm) AS  TFloat) AS StartSumm
                  , CAST (SUM (tmpContainer.IncomeCount) AS  TFloat) AS IncomeCount
@@ -229,10 +225,8 @@ $BODY$BEGIN
                                     ON Container_Summ.ParentId = tmpContainer.ContainerId
                                    AND Container_Summ.DescId = zc_Container_Summ()
                                    AND tmpContainer.DescId = zc_Container_Count()
-                LEFT JOIN ContainerObjectCost ON ContainerObjectCost.ContainerId = COALESCE (Container_Summ.Id, tmpContainer.ContainerId)
-                                             AND ContainerObjectCost.ObjectCostDescId = zc_ObjectCost_Basis()
-            GROUP BY ContainerObjectCost.ObjectCostId
-           ) AS tmpOperationSumm ON tmpOperationSumm.ObjectCostId = ContainerObjectCost.ObjectCostId
+            GROUP BY COALESCE (Container_Summ.Id, tmpContainer.ContainerId)
+           ) AS tmpOperationSumm ON tmpOperationSumm.ContainerId = ContainerObjectCost.ContainerId
 
 --       WHERE HistoryCost.Price <> 0
        WHERE HistoryCost.StartSumm <> 0
@@ -266,4 +260,4 @@ ALTER FUNCTION gpReport_HistoryCost (TDateTime, TDateTime, TVarChar) OWNER TO po
 
 -- тест
 -- SELECT * FROM gpReport_HistoryCost (inStartDate:= '01.01.2013', inEndDate:= '31.01.2013', inSession:= '2') -- WHERE ObjectCostId IN (13928)
--- SELECT * FROM gpReport_HistoryCost (inStartDate:= '01.01.2013', inEndDate:= '31.01.2013', inSession:= '2') -- WHERE (MovementId <> 0 OR  IncomeSumm_calc <> 0 OR OutSumm_calc <> 0) and  GoodsCode = 4033
+-- SELECT * FROM gpReport_HistoryCost (inStartDate:= '01.12.2017', inEndDate:= '01.12.2017', inSession:= '2') -- WHERE (MovementId <> 0 OR  IncomeSumm_calc <> 0 OR OutSumm_calc <> 0) and  GoodsCode = 4033

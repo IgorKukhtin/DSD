@@ -175,7 +175,7 @@ BEGIN
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (MovementItemId
-                         , ContainerId_Goods, GoodsId, GoodsKindId, AssetId, PartionGoods, PartionGoodsDate, PartionGoodsId_Item
+                         , ContainerId_Goods, GoodsId, GoodsKindId, GoodsKindId_complete, AssetId, PartionGoods, PartionGoodsDate, PartionGoodsId_Item
                          , OperCount
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId
@@ -190,6 +190,7 @@ BEGIN
                                         THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                                    ELSE 0
                               END AS GoodsKindId
+                            , COALESCE (MILinkObject_GoodsKindComplete.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId_complete
                             , COALESCE (MILinkObject_Asset.ObjectId, 0)              AS AssetId
                             , COALESCE (MIString_PartionGoods.ValueData, '')         AS PartionGoods
                             , COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) AS PartionGoodsDate
@@ -215,6 +216,9 @@ BEGIN
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
+                                                             ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                                              ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
@@ -283,6 +287,7 @@ BEGIN
             , COALESCE (tmpContainer.ContainerId, 0) AS ContainerId_Goods -- сформируем позже - !!!или подбор партий!!!
             , tmpMI.GoodsId
             , tmpMI.GoodsKindId
+            , tmpMI.GoodsKindId_complete
             , 0 AS AssetId -- tmpMI.AssetId -- !!!временно отключил, т.к. не должно участвовать в партии!!!
             , tmpMI.PartionGoods
             , tmpMI.PartionGoodsDate
@@ -343,7 +348,10 @@ BEGIN
                                                     WHEN vbIsPartionDate_Unit = TRUE
                                                      AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
                                                                                            , zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье
-                                                        THEN lpInsertFind_Object_PartionGoods (_tmpItem.PartionGoodsDate)
+                                                        THEN lpInsertFind_Object_PartionGoods (inOperDate             := _tmpItem.PartionGoodsDate
+                                                                                             , inGoodsKindId_complete := _tmpItem.GoodsKindId_complete
+                                                                                              )
+
                                                     WHEN _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
                                                                                            , zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье
                                                         THEN 0

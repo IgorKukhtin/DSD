@@ -57,6 +57,7 @@ type
     spChecked: TdsdStoredProc;
     actChecked: TdsdExecStoredProc;
     bbChecked: TdxBarButton;
+    actGoodsKindCompleteChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public

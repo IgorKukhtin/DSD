@@ -50,42 +50,42 @@ union select '100501', 'Собственный капитал', 'Прибыль накопленная', 'Прибыль на
 , tmpAccountGroup AS (select distinct Name1, Code1  from tmpAll order by 2)
 , tmpAccountDirection AS (select distinct Name2, Code2 from tmpAll order by 2)
 
-
--- 1 - AccountGroup
-select gpInsertUpdate_Object_AccountGroup ((Select Id from Object WHERE DescId = zc_Object_AccountGroup() and ValueData = Name1)
-                                           , Code1 :: Integer
-                                           , Name1
-                                           , zfCalc_UserAdmin()
-                                            )
-from tmpAccountGroup as tmp
-
-union all
--- 2 - AccountDirection
-select gpInsertUpdate_Object_AccountDirection
-                                            ((Select Id from Object WHERE DescId = zc_Object_AccountDirection() and ObjectCode = Code2)
-                                           , Code2 :: Integer
-                                           , Name2
-                                           , zfCalc_UserAdmin()
-                                            )
-from tmpAccountDirection as tmp
-
-union all
 -- 3 - Account
 select gpInsertUpdate_Object_Account        ((Select Id from Object WHERE DescId = zc_Object_Account() and ObjectCode = Code3)
                                            , Code3 :: Integer
                                            , Name3
-                                           , AccountGroupId
-                                           , AccountDirectionId
-                                           , InfoMoneyDestinationId 
+                                           , (Select Id from Object WHERE DescId = zc_Object_AccountGroup() and ObjectCode = Code1)    --  AccountGroupId
+                                           , (Select Id from Object WHERE DescId = zc_Object_AccountDirection() and ObjectCode = Code2) --  AccountDirectionId
+                                           , (Select Id from Object WHERE DescId = zc_Object_InfoMoneyDestination() and ValueData = Name3) -- InfoMoneyDestinationId
                                            , 0
                                            , zfCalc_UserAdmin()
                                             )
-from (select Name1, Name2, Name3, Code1, Code2, Code3
-           , (Select Id from Object WHERE DescId = zc_Object_AccountGroup() and ObjectCode = Code1) AS AccountGroupId
-           , (Select Id from Object WHERE DescId = zc_Object_AccountDirection() and ObjectCode = Code2) AS AccountDirectionId
-           , (Select Id from Object WHERE DescId = zc_Object_InfoMoneyDestination() and ValueData = Name3) AS InfoMoneyDestinationId
-      from tmpAll
+from (-- 1 - AccountGroup
+      with tmp1 AS (select gpInsertUpdate_Object_AccountGroup ((Select Id from Object WHERE DescId = zc_Object_AccountGroup() and ValueData = Name1)
+                                                              , Code1 :: Integer
+                                                              , Name1
+                                                              , zfCalc_UserAdmin()
+                                                               ) AS Id
+                   from tmpAccountGroup as tmp
+                   
+                   union all
+                   -- 2 - AccountDirection
+                   select gpInsertUpdate_Object_AccountDirection
+                                                               ((Select Id from Object WHERE DescId = zc_Object_AccountDirection() and ObjectCode = Code2)
+                                                              , Code2 :: Integer
+                                                              , Name2
+                                                              , zfCalc_UserAdmin()
+                                                               ) AS Id
+                   from tmpAccountDirection as tmp
+                 )
+          , tmp2 AS (SELECT * FROM tmpAll CROSS JOIN (SELECT MAX (Id) AS MAX_Id FROM tmp1) AS tmp_max)
+      select Name1, Name2, Name3, Code1, Code2, Code3
+           -- , (Select Id from Object WHERE DescId = zc_Object_AccountGroup() and ObjectCode = Code1) AS AccountGroupId
+           -- , (Select Id from Object WHERE DescId = zc_Object_AccountDirection() and ObjectCode = Code2) AS AccountDirectionId
+           -- , (Select Id from Object WHERE DescId = zc_Object_InfoMoneyDestination() and ValueData = Name3) AS InfoMoneyDestinationId
+      from tmp2
+      
       order by Code3
      ) as tmp
-where 1=0
+-- where 1=0
 ;

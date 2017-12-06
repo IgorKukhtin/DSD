@@ -61,41 +61,40 @@ union select '70101', 'Чистая прибыль', 'Чистая прибыль', 'Чистая прибыль'
 , tmpProfitLossDirection AS (select distinct Name2, Code2 from tmpAll order by 2)
 
 
--- 1 - ProfitLossGroup
-select gpInsertUpdate_Object_ProfitLossGroup ((Select Id from Object WHERE DescId = zc_Object_ProfitLossGroup() and ValueData = Name1)
-                                           , Code1 :: Integer
-                                           , Name1
-                                           , zfCalc_UserAdmin()
-                                            )
-from tmpProfitLossGroup as tmp
-
-union all
--- 2 - ProfitLossDirection
-select gpInsertUpdate_Object_ProfitLossDirection
-                                            ((Select Id from Object WHERE DescId = zc_Object_ProfitLossDirection() and ObjectCode = Code2)
-                                           , Code2 :: Integer
-                                           , Name2
-                                           , zfCalc_UserAdmin()
-                                            )
-from tmpProfitLossDirection as tmp
-
-union all
 -- 3 - ProfitLoss
 select gpInsertUpdate_Object_ProfitLoss     ((Select Id from Object WHERE DescId = zc_Object_ProfitLoss() and ObjectCode = Code3)
                                            , Code3 :: Integer
                                            , Name3
-                                           , ProfitLossGroupId
-                                           , ProfitLossDirectionId
-                                           , InfoMoneyDestinationId 
+                                           , (Select Id from Object WHERE DescId = zc_Object_ProfitLossGroup() and ObjectCode = Code1) -- ProfitLossGroupId
+                                           , (Select Id from Object WHERE DescId = zc_Object_ProfitLossDirection() and ObjectCode = Code2) -- ProfitLossDirectionId
+                                           , (Select Id from Object WHERE DescId = zc_Object_InfoMoneyDestination() and ValueData = Name3) -- InfoMoneyDestinationId
                                            , 0
                                            , zfCalc_UserAdmin()
                                             )
-from (select Name1, Name2, Name3, Code1, Code2, Code3
-           , (Select Id from Object WHERE DescId = zc_Object_ProfitLossGroup() and ObjectCode = Code1) AS ProfitLossGroupId
-           , (Select Id from Object WHERE DescId = zc_Object_ProfitLossDirection() and ObjectCode = Code2) AS ProfitLossDirectionId
-           , (Select Id from Object WHERE DescId = zc_Object_InfoMoneyDestination() and ValueData = Name3) AS InfoMoneyDestinationId
-      from tmpAll
+from (-- 1 - ProfitLossGroup
+      with tmp1 AS (select gpInsertUpdate_Object_ProfitLossGroup ((Select Id from Object WHERE DescId = zc_Object_ProfitLossGroup() and ValueData = Name1)
+                                                                    , Code1 :: Integer
+                                                                    , Name1
+                                                                    , zfCalc_UserAdmin()
+                                                                     ) AS Id
+                         from tmpProfitLossGroup as tmp
+                         
+                         union all
+                         -- 2 - ProfitLossDirection
+                         select gpInsertUpdate_Object_ProfitLossDirection
+                                                                     ((Select Id from Object WHERE DescId = zc_Object_ProfitLossDirection() and ObjectCode = Code2)
+                                                                    , Code2 :: Integer
+                                                                    , Name2
+                                                                    , zfCalc_UserAdmin()
+                                                                     ) AS Id
+                         from tmpProfitLossDirection as tmp
+                        )
+          , tmp2 AS (SELECT * FROM tmpAll CROSS JOIN (SELECT MAX (Id) AS MAX_Id FROM tmp1) AS tmp_max)
+          select Name1, Name2, Name3, Code1, Code2, Code3
+           -- , (Select Id from Object WHERE DescId = zc_Object_ProfitLossGroup() and ObjectCode = Code1) AS ProfitLossGroupId
+           -- , (Select Id from Object WHERE DescId = zc_Object_ProfitLossDirection() and ObjectCode = Code2) AS ProfitLossDirectionId
+           -- , (Select Id from Object WHERE DescId = zc_Object_InfoMoneyDestination() and ValueData = Name3) AS InfoMoneyDestinationId
+      from tmp2
       order by Code3
      ) as tmp
-where 1=0
 ;

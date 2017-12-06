@@ -3,7 +3,7 @@ inherited SendForm: TSendForm
   ClientHeight = 602
   ClientWidth = 863
   ExplicitWidth = 879
-  ExplicitHeight = 640
+  ExplicitHeight = 637
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -185,6 +185,7 @@ inherited SendForm: TSendForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80

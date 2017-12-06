@@ -1,10 +1,12 @@
 -- Function: gpSelect_Object_Sticker_Print()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_StickerProperty_Print (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_StickerProperty_Print (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_StickerProperty_Print(
     IN inObjectId          Integer  , -- ключ Этикетки
-    IN inSession           TVarChar    -- сессия пользователя
+    IN inIsLength          Boolean  , --
+    IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
              , StickerId Integer
@@ -140,9 +142,18 @@ BEGIN
             , Object_StickerType.ValueData       AS StickerTypeName
             , Object_StickerTag.ValueData        AS StickerTagName
             , Object_StickerSort.ValueData       AS StickerSortName
-            , Object_StickerNorm.ValueData       AS StickerNormName
+            , CASE WHEN LENGTH (COALESCE (Object_StickerType.ValueData, '') || ' ' || COALESCE (Object_StickerSort.ValueData, '')) > 25
+                        THEN CHR (13) || Object_StickerNorm.ValueData
+                   ELSE Object_StickerNorm.ValueData
+                 -- ELSE LENGTH (COALESCE (Object_StickerType.ValueData, '') || ' ' || COALESCE (Object_StickerSort.ValueData, '')) :: TVarChar
+              END :: TVarChar AS StickerNormName
 
-            , zfCalc_Text_parse (Object_TradeMark_StickerFile.Id, ObjectBlob_Info.ValueData)          AS Info
+            , zfCalc_Text_parse (Object_TradeMark_StickerFile.Id, ObjectBlob_Info.ValueData, inIsLength
+                               , CASE WHEN LENGTH (COALESCE (Object_StickerType.ValueData, '') || ' ' || COALESCE (Object_StickerSort.ValueData, '')) > 25
+                                           THEN FALSE
+                                           ELSE TRUE
+                                      END
+                                ) AS Info
 
        FROM Object AS Object_StickerProperty
              LEFT JOIN Object AS Object_StickerFile ON Object_StickerFile.Id = vbStickerFileId
@@ -272,4 +283,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_StickerProperty_Print (inObjectId:= 1005846 , inSession:= zfCalc_UserAdmin()); FETCH ALL "<unnamed portal 1>";
+-- SELECT * FROM gpSelect_Object_StickerProperty_Print (inObjectId:= 1370933, inIsLength:= TRUE, inSession:= zfCalc_UserAdmin());

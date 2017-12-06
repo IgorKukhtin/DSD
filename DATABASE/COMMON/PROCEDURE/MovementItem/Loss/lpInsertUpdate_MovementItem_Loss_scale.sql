@@ -18,18 +18,19 @@ AS
 $BODY$
 BEGIN
      -- сохранили
-     ioId:= lpInsertUpdate_MovementItem_Loss (ioId                 := ioId
-                                            , inMovementId         := inMovementId
-                                            , inGoodsId            := inGoodsId
-                                            , inAmount             := inAmount
-                                            , inCount              := 0    -- !!!не ошибка, здесь не формируется!!!
-                                            , inHeadCount          := 0    -- !!!не ошибка, здесь не формируется!!!
-                                            , inPartionGoodsDate   := NULL -- !!!не ошибка, здесь не формируется!!!
-                                            , inPartionGoods       := inPartionGoods
-                                            , inGoodsKindId        := inGoodsKindId
-                                            , inAssetId            := NULL -- !!!не ошибка, здесь не формируется!!!
-                                            , inPartionGoodsId     := NULL -- !!!не ошибка, здесь не формируется!!!
-                                            , inUserId             := inUserId
+     ioId:= lpInsertUpdate_MovementItem_Loss (ioId                  := ioId
+                                            , inMovementId          := inMovementId
+                                            , inGoodsId             := inGoodsId
+                                            , inAmount              := inAmount
+                                            , inCount               := 0    -- !!!не ошибка, здесь не формируется!!!
+                                            , inHeadCount           := 0    -- !!!не ошибка, здесь не формируется!!!
+                                            , inPartionGoodsDate    := NULL -- !!!не ошибка, здесь не формируется!!!
+                                            , inPartionGoods        := inPartionGoods
+                                            , inGoodsKindId         := inGoodsKindId
+                                            , inGoodsKindCompleteId := NULL -- !!!не ошибка, здесь не формируется!!!
+                                            , inAssetId             := NULL -- !!!не ошибка, здесь не формируется!!!
+                                            , inPartionGoodsId      := NULL -- !!!не ошибка, здесь не формируется!!!
+                                            , inUserId              := inUserId
                                              );
 
      -- сохранили свойство <Цена>

@@ -369,7 +369,6 @@ type
     miReport_GoodsMI_ProductionSeparate: TMenuItem;
     miReport_GoodsMI_ProductionUnion: TMenuItem;
     miReport_GoodsMI_ProductionUnionMD: TMenuItem;
-    N28: TMenuItem;
     miReport_CheckContractInMovement: TMenuItem;
     miReportsFinance: TMenuItem;
     miReport_JuridicalSold: TMenuItem;
@@ -639,7 +638,7 @@ type
     N79: TMenuItem;
     actPromoKind: TdsdOpenForm;
     actConditionPromo: TdsdOpenForm;
-    N80: TMenuItem;
+    miPromoGuide: TMenuItem;
     N81: TMenuItem;
     N82: TMenuItem;
     actPromoJournal: TdsdOpenForm;
@@ -926,6 +925,8 @@ type
     miReport_GoodsBalance_Server: TMenuItem;
     actSendMember: TdsdOpenForm;
     miSendMember: TMenuItem;
+    N189: TMenuItem;
+    N80: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

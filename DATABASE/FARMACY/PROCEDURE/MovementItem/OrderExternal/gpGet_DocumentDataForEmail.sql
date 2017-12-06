@@ -15,6 +15,7 @@ $BODY$
 
   DECLARE vbUnitId Integer;
   DECLARE vbContractId Integer;
+  DECLARE vbInvNumber TVarChar;
   DECLARE vbMail TVarChar;
   DECLARE vbUserMail TVarChar;
   DECLARE vbSubject TVarChar;
@@ -98,14 +99,15 @@ BEGIN
      AND MovementId = inId;
 
    -- еще
-   SELECT Object_ImportExportLink_View.StringKey
-          INTO vbSubject
-   FROM MovementLinkObject 
+   SELECT Movement.InvNumber, Object_ImportExportLink_View.StringKey
+          INTO vbInvNumber, vbSubject
+   FROM MovementLinkObject
+        LEFT JOIN Movement ON Movement.Id = MovementLinkObject.MovementId
         LEFT JOIN Object_ImportExportLink_View ON Object_ImportExportLink_View.MainId = vbUnitId
                                               AND Object_ImportExportLink_View.LinkTypeId = zc_Enum_ImportExportLinkType_ClientEmailSubject()
                                               AND Object_ImportExportLink_View.ValueId = ObjectId  
    WHERE MovementLinkObject.DescId = zc_MovementLinkObject_Contract()
-     AND MovementId = inId;
+     AND MovementLinkObject.MovementId = inId;
 
 
     -- проверка
@@ -134,7 +136,7 @@ BEGIN
     
     -- еще
     IF COALESCE(vbSubject, '') = '' THEN 
-       vbSubject := ('Заказ '||vbJuridicalName||' от - '||COALESCE(vbZakazName, ''))::TVarChar;
+       vbSubject := ('Заказ '||vbJuridicalName||' от - '|| COALESCE (vbZakazName, ''))::TVarChar;
     END IF;
     
 
@@ -148,7 +150,7 @@ BEGIN
           , tmpEmail_jur AS (SELECT * FROM tmpEmail_all WHERE JuridicalId = vbJuridicalId_unit)
           , tmpEmail AS (SELECT * FROM tmpEmail_jur UNION ALL SELECT * FROM tmpEmail_all WHERE COALESCE (JuridicalId, 0) = 0 AND NOT EXISTS (SELECT 1 FROM tmpEmail_jur))
        SELECT
-         vbSubject AS Subject
+         REPLACE (vbSubject, '#1#', '#' || vbInvNumber || '#') :: TVarChar AS Subject
        , (CASE WHEN (SELECT Comment FROM tmpComment) <> ''
                     THEN 'ПРИМЕЧАНИЕ ВАЖНО : ' || (SELECT Comment FROM tmpComment) || CHR (13) || CHR (13) || CHR (13) || CHR (13) || CHR (13)
                ELSE ''
@@ -183,4 +185,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_DocumentDataForEmail (inId:= 2057341, inSession:= '377790');
+-- SELECT * FROM gpGet_DocumentDataForEmail (inId:= 7495196, inSession:= '377790');

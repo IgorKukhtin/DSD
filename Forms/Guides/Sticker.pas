@@ -136,7 +136,7 @@ type
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     spInsertReportName: TdsdStoredProc;
-    bbPrint_Sticker: TdxBarButton;
+    bbPrint: TdxBarButton;
     macPrint: TMultiAction;
     actPrint: TdsdPrintAction;
     actGetReportName: TdsdExecStoredProc;
@@ -147,6 +147,13 @@ type
     macStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
     BarCode: TcxGridDBColumn;
+    macPrintTwo: TMultiAction;
+    actPrintTwo: TdsdPrintAction;
+    bbPrintTwo: TdxBarButton;
+    spSelectPrintLen: TdsdStoredProc;
+    macPrintTwoLen: TMultiAction;
+    actPrintTwoLen: TdsdPrintAction;
+    bbPrintTwoLen: TdxBarButton;
 
   private
     { Private declarations }
