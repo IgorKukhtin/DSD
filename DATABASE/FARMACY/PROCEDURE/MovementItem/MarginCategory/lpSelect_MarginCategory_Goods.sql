@@ -52,6 +52,7 @@ BEGIN
                                                       AND MovementDate_OperDateEnd.ValueData >= inOperDate
                                                               
                           WHERE Movement_MarginCategory.DescId = zc_Movement_MarginCategory()
+                            AND Movement_MarginCategory.StatusId = zc_Enum_Status_Complete()
                           )
                           
    -- выт€гиваем строки чайлд, там категори€ наценки и %, чтоб по ним определить дл€ мастера % наценки                       
