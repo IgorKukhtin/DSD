@@ -143,7 +143,7 @@ BEGIN
             '10' :: TVarChar AS LineNo,
             ''::TVarChar as GroupName,
             'Объем продаж в аналогичный период'::TVarChar as LineName,
-            (SELECT STRING_AGG(COALESCE(MI_PromoGoods.GoodsKindName ||': ','') || COALESCE(REPLACE( TO_CHAR (MI_PromoGoods.AmountReal, 'FM9999990D09') ||' ','.0 ', ''),'0') || MI_PromoGoods.Measure || '   '||CASE WHEN vbCountGoods > 1 THEN MI_PromoGoods.GoodsName ELSE '' END, chr(13))
+            (SELECT STRING_AGG( COALESCE (COALESCE ('*' || MI_PromoGoods.GoodsKindName, MI_PromoGoods.GoodsKindCompleteName) ||': ','') || COALESCE(REPLACE( TO_CHAR (MI_PromoGoods.AmountReal, 'FM9999990D09') ||' ','.0 ', ''),'0') || MI_PromoGoods.Measure || '   '||CASE WHEN vbCountGoods > 1 THEN MI_PromoGoods.GoodsName ELSE '' END, chr(13))
              FROM MovementItem_PromoGoods_View AS MI_PromoGoods
              WHERE MI_PromoGoods.MovementId = inMovementId
                AND MI_PromoGoods.IsErased = FALSE)::TEXT AS LineValue
@@ -152,7 +152,7 @@ BEGIN
             '11' :: TVarChar AS LineNo,
             ''::TVarChar as GroupName,
             'Планируемый объем продаж на акционный период'::TVarChar as LineName,
-            (SELECT STRING_AGG(COALESCE(MI_PromoGoods.GoodsKindName ||': ','') || COALESCE(REPLACE(TO_CHAR(MI_PromoGoods.AmountPlanMin,'FM9999990D09')||' ','.0 ',''),'0') || ' - '||COALESCE(REPLACE(TO_CHAR(MI_PromoGoods.AmountPlanMax,'FM9999990D09')||' ','.0 ',''),'0') || MI_PromoGoods.Measure || '   '||CASE WHEN vbCountGoods > 1 THEN MI_PromoGoods.GoodsName ELSE '' END, chr(13)) 
+            (SELECT STRING_AGG( COALESCE (COALESCE ('*' || MI_PromoGoods.GoodsKindName, MI_PromoGoods.GoodsKindCompleteName) ||': ','') || COALESCE(REPLACE(TO_CHAR(MI_PromoGoods.AmountPlanMin,'FM9999990D09')||' ','.0 ',''),'0') || ' - '||COALESCE(REPLACE(TO_CHAR(MI_PromoGoods.AmountPlanMax,'FM9999990D09')||' ','.0 ',''),'0') || MI_PromoGoods.Measure || '   '||CASE WHEN vbCountGoods > 1 THEN MI_PromoGoods.GoodsName ELSE '' END, chr(13)) 
              FROM MovementItem_PromoGoods_View AS MI_PromoGoods
              WHERE MI_PromoGoods.MovementId = inMovementId
                AND MI_PromoGoods.IsErased = FALSE)::TEXT AS LineValue

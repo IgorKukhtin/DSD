@@ -721,7 +721,23 @@ object StickerForm: TStickerForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint_Sticker'
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintTwo'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintTwoLen'
         end
         item
           Visible = True
@@ -809,12 +825,20 @@ object StickerForm: TStickerForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1074#1086#1081#1089#1090#1074#1086' '#1101#1090#1080#1082#1077#1090#1082#1080
       Category = 0
     end
-    object bbPrint_Sticker: TdxBarButton
+    object bbPrint: TdxBarButton
       Action = macPrint
       Category = 0
     end
     object bbStartLoad: TdxBarButton
       Action = macStartLoad
+      Category = 0
+    end
+    object bbPrintTwo: TdxBarButton
+      Action = macPrintTwo
+      Category = 0
+    end
+    object bbPrintTwoLen: TdxBarButton
+      Action = macPrintTwoLen
       Category = 0
     end
   end
@@ -1637,8 +1661,8 @@ object StickerForm: TStickerForm
         item
           Action = actPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
+      Caption = #1055#1077#1095#1072#1090#1100' '#1041#1045#1047' '#1060#1080#1088#1084#1077#1085#1085#1086#1075#1086' '#1047#1085#1072#1082#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1041#1045#1047' '#1060#1080#1088#1084#1077#1085#1085#1086#1075#1086' '#1047#1085#1072#1082#1072
       ImageIndex = 3
       ShortCut = 16464
     end
@@ -1663,7 +1687,13 @@ object StickerForm: TStickerForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
-      Params = <>
+      Params = <
+        item
+          Name = 'isJPG'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
       ReportName = 'NULL'
       ReportNameParam.Value = ''
       ReportNameParam.Component = FormParams
@@ -1727,6 +1757,134 @@ object StickerForm: TStickerForm
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1072#1085#1085#1099#1077' '#1069#1090#1080#1082#1077#1090#1082#1080
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1072#1085#1085#1099#1077' '#1069#1090#1080#1082#1077#1090#1082#1080
       ImageIndex = 41
+    end
+    object macPrintTwo: TMultiAction
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actGetReportName
+        end
+        item
+          Action = actInsertReportName
+        end
+        item
+          Action = actPrintTwo
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1089' '#1060#1080#1088#1084#1077#1085#1085#1099#1084' '#1047#1085#1072#1082#1086#1084
+      Hint = #1055#1077#1095#1072#1090#1100' '#1089' '#1060#1080#1088#1084#1077#1085#1085#1099#1084' '#1047#1085#1072#1082#1086#1084
+      ImageIndex = 3
+    end
+    object actPrintTwo: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Value = Null
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end>
+      Params = <
+        item
+          Name = 'isJPG'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameSticker'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
+    object macPrintTwoLen: TMultiAction
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actGetReportName
+        end
+        item
+          Action = actInsertReportName
+        end
+        item
+          Action = actPrintTwoLen
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1089' '#1060#1080#1088#1084#1077#1085#1085#1099#1084' '#1047#1085#1072#1082#1086#1084' + '#1064#1048#1056#1048#1053#1040
+      Hint = #1055#1077#1095#1072#1090#1100' '#1089' '#1060#1080#1088#1084#1077#1085#1085#1099#1084' '#1047#1085#1072#1082#1086#1084' + '#1064#1048#1056#1048#1053#1040
+      ImageIndex = 3
+    end
+    object actPrintTwoLen: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Value = Null
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintLen
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintLen
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end>
+      Params = <
+        item
+          Name = 'isJPG'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameSticker'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
   end
   object spSelect: TdsdStoredProc
@@ -2293,10 +2451,17 @@ object StickerForm: TStickerForm
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsLength'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 623
-    Top = 128
+    Left = 591
+    Top = 88
   end
   object spInsertReportName: TdsdStoredProc
     StoredProcName = 'gpInsert_Object_Sticker_ReportName'
@@ -2347,5 +2512,32 @@ object StickerForm: TStickerForm
     PackSize = 1
     Left = 56
     Top = 400
+  end
+  object spSelectPrintLen: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_StickerProperty_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = CDSProperty
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsLength'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 655
+    Top = 112
   end
 end

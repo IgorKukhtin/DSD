@@ -6136,6 +6136,21 @@ inherited MainForm: TMainForm
       object N188: TMenuItem
         Action = actReport_PromoPlan
       end
+      object N189: TMenuItem
+        Caption = '-'
+      end
+      object miPromoGuide: TMenuItem
+        Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+        object N79: TMenuItem
+          Action = actAdvertising
+        end
+        object N81: TMenuItem
+          Action = actPromoKind
+        end
+        object N82: TMenuItem
+          Action = actConditionPromo
+        end
+      end
     end
     object miFinanceDocuments: TMenuItem [3]
       Caption = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
@@ -6738,15 +6753,6 @@ inherited MainForm: TMainForm
       object N26: TMenuItem
         Caption = '-'
       end
-      object miReport_HistoryCost: TMenuItem
-        Action = actReport_HistoryCost
-      end
-      object N136: TMenuItem
-        Action = actReport_HistoryCostView
-      end
-      object N28: TMenuItem
-        Caption = '-'
-      end
       object miReport_CheckContractInMovement: TMenuItem
         Action = actReport_CheckContractInMovement
       end
@@ -6895,18 +6901,6 @@ inherited MainForm: TMainForm
       end
       object N34: TMenuItem
         Caption = '-'
-      end
-      object N80: TMenuItem
-        Caption = #1040#1082#1094#1080#1080
-        object N79: TMenuItem
-          Action = actAdvertising
-        end
-        object N81: TMenuItem
-          Action = actPromoKind
-        end
-        object N82: TMenuItem
-          Action = actConditionPromo
-        end
       end
       object miPriceList: TMenuItem
         Action = actPriceList
@@ -7361,7 +7355,16 @@ inherited MainForm: TMainForm
           Action = actReport_UserProtocol
         end
       end
-      object N91: TMenuItem [20]
+      object N80: TMenuItem [19]
+        Caption = #1057#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1100
+        object miReport_HistoryCost: TMenuItem
+          Action = actReport_HistoryCost
+        end
+        object N136: TMenuItem
+          Action = actReport_HistoryCostView
+        end
+      end
+      object N91: TMenuItem [21]
         Action = mactHelp
       end
     end

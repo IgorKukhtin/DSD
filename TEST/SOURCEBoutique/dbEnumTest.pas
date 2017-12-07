@@ -20,7 +20,7 @@ type
 
  var
 
-   EnumPath: string = '..\DATABASE\COMMON\METADATA\Enum\';
+   EnumPath: string = '..\DATABASE\Boutique\METADATA\Enum\';
 
 
 implementation
@@ -33,6 +33,15 @@ procedure TdbEnumTest.InsertObjectEnum;
 begin
   ExecFile(EnumPath + 'CreateObjectEnumFunction.sql', ZQuery);
   ExecFile(EnumPath + 'InsertObjectEnum.sql', ZQuery);
+
+  ExecFile(EnumPath + '_InfoMoney.sql', ZQuery);
+  ExecFile(EnumPath + '_InfoMoney.sql', ZQuery);
+  ExecFile(EnumPath + '_Account.sql', ZQuery);
+  ExecFile(EnumPath + '_Account.sql', ZQuery);
+  ExecFile(EnumPath + '_ProfitLoss.sql', ZQuery);
+  ExecFile(EnumPath + '_ProfitLoss.sql', ZQuery);
+
+  ExecFile(EnumPath + 'InsertObjectEnum_01.sql', ZQuery);
 end;
 
 procedure TdbEnumTest.SetUp;

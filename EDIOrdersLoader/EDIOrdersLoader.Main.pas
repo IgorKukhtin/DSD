@@ -235,7 +235,9 @@ begin
   begin
     Timer.Interval := (IntervalVal * 3)  * 60 * 1000;
     AddToLog('Текущий интервал изменен до : ' + IntToStr(IntervalVal * 3) + ' мин.');
-  end;
+  end
+  else
+    Timer.Interval := (IntervalVal * 1)  * 60 * 1000;
 
   Timer.Enabled:=True;
 

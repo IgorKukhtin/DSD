@@ -78,39 +78,38 @@ union select '80502', 'Собственный капитал', 'Прочие', 'Расходы учредителей'
 , tmpInfoMoneyGroup AS (select distinct Name1, Code1  from tmpAll order by 2)
 , tmpInfoMoneyDestination AS (select distinct Name2, Code2 from tmpAll order by 2)
 
--- 1 - InfoMoneyGroup
-select gpInsertUpdate_Object_InfoMoneyGroup ((Select Id from Object WHERE DescId = zc_Object_InfoMoneyGroup() and ValueData = Name1)
-                                           , Code1 :: Integer
-                                           , Name1
-                                           , zfCalc_UserAdmin()
-                                            )
-from tmpInfoMoneyGroup as tmp
-
-union all
--- 2 - InfoMoneyDestination
-select gpInsertUpdate_Object_InfoMoneyDestination
-                                            ((Select Id from Object WHERE DescId = zc_Object_InfoMoneyDestination() and ObjectCode = Code2)
-                                           , Code2 :: Integer
-                                           , Name2
-                                           , zfCalc_UserAdmin()
-                                            )
-from tmpInfoMoneyDestination as tmp
-
-union all
 -- 3 - InfoMoney
 select gpInsertUpdate_Object_InfoMoney      ((Select Id from Object WHERE DescId = zc_Object_InfoMoney() and ObjectCode = Code3)
                                            , Code3 :: Integer
                                            , Name3
-                                           , InfoMoneyGroupId
-                                           , InfoMoneyDestinationId
+                                           , (Select Id from Object WHERE DescId = zc_Object_InfoMoneyGroup() and ObjectCode = Code1) -- InfoMoneyGroupId
+                                           , (Select Id from Object WHERE DescId = zc_Object_InfoMoneyDestination() and ObjectCode = Code2) --  InfoMoneyDestinationId
                                            , FALSE
                                            , zfCalc_UserAdmin()
                                             )
-from (select Name1, Name2, Name3, Code1, Code2, Code3
-           , (Select Id from Object WHERE DescId = zc_Object_InfoMoneyGroup() and ObjectCode = Code1) AS InfoMoneyGroupId
-           , (Select Id from Object WHERE DescId = zc_Object_InfoMoneyDestination() and ObjectCode = Code2) AS InfoMoneyDestinationId
-      from tmpAll
+from (-- 1 - InfoMoneyGroup
+      with tmp1 AS (select gpInsertUpdate_Object_InfoMoneyGroup ((Select Id from Object WHERE DescId = zc_Object_InfoMoneyGroup() and ValueData = Name1)
+                                                               , Code1 :: Integer
+                                                               , Name1
+                                                               , zfCalc_UserAdmin()
+                                                                ) AS Id
+                    from tmpInfoMoneyGroup as tmp
+                    
+                    union all
+                    -- 2 - InfoMoneyDestination
+                    select gpInsertUpdate_Object_InfoMoneyDestination
+                                                                ((Select Id from Object WHERE DescId = zc_Object_InfoMoneyDestination() and ObjectCode = Code2)
+                                                               , Code2 :: Integer
+                                                               , Name2
+                                                               , zfCalc_UserAdmin()
+                                                                ) AS Id
+                    from tmpInfoMoneyDestination as tmp
+                   )
+          , tmp2 AS (SELECT * FROM tmpAll CROSS JOIN (SELECT MAX (Id) AS MAX_Id FROM tmp1) AS tmp_max)
+      select Name1, Name2, Name3, Code1, Code2, Code3
+           -- , (Select Id from Object WHERE DescId = zc_Object_InfoMoneyGroup() and ObjectCode = Code1) AS InfoMoneyGroupId
+           -- , (Select Id from Object WHERE DescId = zc_Object_InfoMoneyDestination() and ObjectCode = Code2) AS InfoMoneyDestinationId
+      from tmp2
       order by Code3
      ) as tmp
-where 1=0
 ;
