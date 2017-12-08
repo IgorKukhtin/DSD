@@ -14,6 +14,13 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := inSession; --vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_MarginCategory());
 
+
+     -- проверка 
+     IF EXISTS (SELECT Movement.Id FROM Movement WHERE Movement.Id = inMovementId AND Movement.StatusId = zc_Enum_Status_Complete())
+     THEN
+          RAISE EXCEPTION 'Ошибка.Документ проведен, удаление запрещено!';
+     END IF;
+     
      -- проверка - если <Master> Проведен, то <Ошибка>
      PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');
 
