@@ -1391,6 +1391,14 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsKindCompleteId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId_Complete'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAssetId'
         Value = 0
         ParamType = ptInput

@@ -27,7 +27,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 42370d
+      EditValue = 42736d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -37,7 +37,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 42370d
+      EditValue = 42736d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -1059,6 +1059,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
       Caption = '     '
       Category = 0
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel

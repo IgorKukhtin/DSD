@@ -103,6 +103,8 @@ type
     FormParams: TdsdFormParams;
     actMovementProtocol: TdsdOpenForm;
     bbProtocol: TdxBarButton;
+    actShowErased: TBooleanStoredProcAction;
+    bbShowErased: TdxBarButton;
   private
   public
   end;

@@ -5,7 +5,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1066
-  ExplicitHeight = 434
+  ExplicitHeight = 431
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -13,18 +13,19 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
     Width = 1050
     Height = 319
     TabOrder = 3
+    ExplicitTop = 77
     ExplicitWidth = 1050
-    ExplicitHeight = 339
+    ExplicitHeight = 319
     ClientRectBottom = 319
     ClientRectRight = 1050
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1050
-      ExplicitHeight = 339
+      ExplicitHeight = 319
       inherited cxGrid: TcxGrid
         Width = 1050
         Height = 319
         ExplicitWidth = 1050
-        ExplicitHeight = 339
+        ExplicitHeight = 319
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -123,7 +124,6 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           OptionsView.HeaderHeight = 50
           Styles.Content = nil
@@ -131,25 +131,43 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object GUID: TcxGridDBColumn [0]
+            DataBinding.FieldName = 'GUID'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 55
           end
           inherited colInvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 55
           end
-          object InvNumberPartner: TcxGridDBColumn [2]
+          object InvNumberPartner: TcxGridDBColumn [3]
             Caption = #8470' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'InvNumberPartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           inherited colOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1079#1072#1103#1074#1082#1080
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 70
           end
           object OperDatePartner: TcxGridDBColumn
@@ -157,6 +175,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object OperDatePartner_sale: TcxGridDBColumn
@@ -164,6 +183,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             DataBinding.FieldName = 'OperDatePartner_sale'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object OperDateMark: TcxGridDBColumn
@@ -172,6 +192,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object FromName: TcxGridDBColumn
@@ -179,6 +200,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 90
           end
           object ToName: TcxGridDBColumn
@@ -186,6 +208,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 75
           end
           object RouteGroupName: TcxGridDBColumn
@@ -201,6 +224,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             DataBinding.FieldName = 'RouteName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object RouteSortingName: TcxGridDBColumn
@@ -208,6 +232,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             DataBinding.FieldName = 'RouteSortingName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 90
           end
           object PaidKindName: TcxGridDBColumn
@@ -215,6 +240,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             DataBinding.FieldName = 'PaidKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
           object ContractCode: TcxGridDBColumn
@@ -223,6 +249,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
           object ContractName: TcxGridDBColumn
@@ -230,6 +257,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             DataBinding.FieldName = 'ContractName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
           object ContractTagName: TcxGridDBColumn
@@ -245,6 +273,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             DataBinding.FieldName = 'PriceListName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object PersonalName: TcxGridDBColumn
@@ -252,6 +281,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             DataBinding.FieldName = 'PersonalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 90
           end
           object TotalCount: TcxGridDBColumn
@@ -262,6 +292,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object TotalCountSecond: TcxGridDBColumn
@@ -272,6 +303,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 65
           end
           object TotalCountSh: TcxGridDBColumn
@@ -282,6 +314,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
           object TotalCountKg: TcxGridDBColumn
@@ -292,6 +325,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
           object TotalSumm: TcxGridDBColumn
@@ -302,6 +336,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object ChangePercent: TcxGridDBColumn
@@ -312,6 +347,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object PriceWithVAT: TcxGridDBColumn
@@ -319,6 +355,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             DataBinding.FieldName = 'PriceWithVAT'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object VATPercent: TcxGridDBColumn
@@ -329,6 +366,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 40
           end
           object TotalSummVAT: TcxGridDBColumn
@@ -340,6 +378,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object TotalSummMVAT: TcxGridDBColumn
@@ -351,6 +390,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object TotalSummPVAT: TcxGridDBColumn
@@ -362,6 +402,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object InfoMoneyCode: TcxGridDBColumn
@@ -370,6 +411,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
           object InfoMoneyGroupName: TcxGridDBColumn
@@ -378,6 +420,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object InfoMoneyDestinationName: TcxGridDBColumn
@@ -386,6 +429,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object InfoMoneyName: TcxGridDBColumn
@@ -394,6 +438,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object isEDI: TcxGridDBColumn
@@ -401,6 +446,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             DataBinding.FieldName = 'isEDI'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 30
           end
           object isPrinted: TcxGridDBColumn
@@ -408,6 +454,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             DataBinding.FieldName = 'isPrinted'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object PartnerName: TcxGridDBColumn
@@ -416,6 +463,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object isPromo: TcxGridDBColumn
@@ -423,6 +471,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             DataBinding.FieldName = 'isPromo'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 48
           end
           object MovementPromo: TcxGridDBColumn
@@ -430,6 +479,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             DataBinding.FieldName = 'MovementPromo'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object Comment: TcxGridDBColumn

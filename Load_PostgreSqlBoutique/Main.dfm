@@ -632,7 +632,7 @@
         object cbIncome: TCheckBox
           Tag = 20
           Left = 6
-          Top = 45
+          Top = 70
           Width = 235
           Height = 17
           Caption = '1.1. '#1055#1088#1080#1093#1086#1076
@@ -647,7 +647,7 @@
         object cbReturnOut: TCheckBox
           Tag = 20
           Left = 6
-          Top = 63
+          Top = 88
           Width = 235
           Height = 17
           Caption = '1.2. '#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
@@ -662,7 +662,7 @@
         object cbSend: TCheckBox
           Tag = 20
           Left = 6
-          Top = 82
+          Top = 107
           Width = 235
           Height = 17
           Caption = '1.3. '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
@@ -677,7 +677,7 @@
         object cbLoss: TCheckBox
           Tag = 20
           Left = 6
-          Top = 101
+          Top = 126
           Width = 235
           Height = 17
           Caption = '1.4. '#1057#1087#1080#1089#1072#1085#1080#1077
@@ -693,9 +693,9 @@
           Tag = 20
           Left = 6
           Top = 321
-          Width = 178
+          Width = 204
           Height = 17
-          Caption = '1.7. '#1048#1089#1090#1086#1088#1080#1103' '#1089#1082#1080#1076#1086#1082
+          Caption = '3. '#1048#1089#1090#1086#1088#1080#1103' '#1089#1082#1080#1076#1086#1082
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -709,9 +709,9 @@
           Tag = 20
           Left = 6
           Top = 305
-          Width = 178
+          Width = 204
           Height = 17
-          Caption = '1.6. '#1048#1089#1090#1086#1088#1080#1103' '#1094#1077#1085#1099
+          Caption = '2. '#1048#1089#1090#1086#1088#1080#1103' '#1094#1077#1085#1099
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -724,7 +724,7 @@
         object cbInventory: TCheckBox
           Tag = 20
           Left = 6
-          Top = 118
+          Top = 143
           Width = 235
           Height = 17
           Caption = '1.5. '#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
@@ -739,7 +739,7 @@
         object cbSale: TCheckBox
           Tag = 20
           Left = 6
-          Top = 143
+          Top = 168
           Width = 235
           Height = 17
           Caption = '1.8. '#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
@@ -754,7 +754,7 @@
         object cbReturnIn: TCheckBox
           Tag = 20
           Left = 6
-          Top = 205
+          Top = 185
           Width = 235
           Height = 17
           Caption = '1.9. '#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
@@ -769,7 +769,7 @@
         object cbSale_Child: TCheckBox
           Tag = 20
           Left = 6
-          Top = 160
+          Top = 214
           Width = 235
           Height = 17
           Caption = '1.10. '#1054#1087#1083#1072#1090#1099' '#1074' '#1087#1088#1086#1076#1072#1078#1072#1093
@@ -784,7 +784,7 @@
         object cbReturnIn_Child: TCheckBox
           Tag = 20
           Left = 6
-          Top = 222
+          Top = 231
           Width = 235
           Height = 17
           Caption = '1.11. '#1054#1087#1083#1072#1090#1099' '#1074' '#1074#1086#1079#1074#1088#1072#1090#1072#1093
@@ -820,7 +820,7 @@
         object cbGoodsAccount: TCheckBox
           Tag = 20
           Left = 6
-          Top = 177
+          Top = 254
           Width = 195
           Height = 19
           Caption = '1.12. '#1056#1072#1089#1095#1077#1090#1099' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
@@ -836,7 +836,7 @@
         object cbCurrency: TCheckBox
           Tag = 20
           Left = 6
-          Top = 366
+          Top = 45
           Width = 235
           Height = 17
           Caption = '1.0. '#1050#1059#1056#1057#1067
@@ -1139,10 +1139,6 @@
     object TabSheet2: TTabSheet
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1080#1079' '#1092#1072#1081#1083#1086#1074
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel1: TPanel
         Left = 0
         Top = 0

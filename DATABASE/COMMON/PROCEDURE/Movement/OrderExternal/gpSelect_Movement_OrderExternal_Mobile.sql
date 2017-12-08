@@ -28,6 +28,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCount TFloat, TotalCountSecond TFloat
              , isEDI Boolean, isPromo Boolean
              , MovementPromo TVarChar
+             , GUID    TVarChar
              , Comment TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
@@ -169,6 +170,7 @@ BEGIN
            , COALESCE (MovementBoolean_Promo.ValueData, FALSE) AS isPromo
            , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndSale.ValueData) AS MovementPromo
 
+           , MovementString_GUID.ValueData          AS GUID
            , MovementString_Comment.ValueData       AS Comment
            , Object_User.ValueData                  AS InsertName
            , MovementDate_Insert.ValueData          AS InsertDate
@@ -239,6 +241,9 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+            LEFT JOIN MovementString AS MovementString_GUID
+                                     ON MovementString_GUID.MovementId =  Movement.Id
+                                    AND MovementString_GUID.DescId = zc_MovementString_GUID()
 
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
@@ -365,5 +370,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderExternal_Mobile (instartdate:= '21.04.2017', inenddate:= '22.04.2017', inIsErased:= FALSE, inJuridicalBasisId:= 9399 , inMemberId:= 974195, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpSelect_Movement_OrderExternal_Mobile( instartdate:= '21.04.2017', inenddate:= '22.04.2017', inIsErased:= FALSE, inJuridicalBasisId:= 9399 , inMemberId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_OrderExternal_Mobile( instartdate:= '21.12.2017', inenddate:= '22.12.2017', inIsMobileDate:= FALSE, inIsErased:= FALSE, inJuridicalBasisId:= 9399 , inMemberId:= 0, inSession:= zfCalc_UserAdmin());

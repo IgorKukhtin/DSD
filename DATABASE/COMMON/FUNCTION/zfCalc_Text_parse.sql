@@ -99,6 +99,7 @@ BEGIN
 
     -- старт
     WHILE vbIndex < LENGTH (inValue) OR (vbLine <= 8 AND inTradeMarkId = 293385 AND inIsLimit = TRUE) -- тм АЛАН -- select * from object where Id = 293385
+                                     OR (vbLine <= 7 AND inTradeMarkId = 293385) -- тм АЛАН -- select * from object where Id = 293385
     LOOP
        --
        vbLen:= CASE vbLine
