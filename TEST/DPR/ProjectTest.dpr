@@ -991,8 +991,8 @@ uses
   PersonalService in '..\..\Forms\Document\PersonalService.pas' {PersonalServiceForm: TParentForm},
   WorkTimeKind in '..\..\Forms\Guides\WorkTimeKind.pas' {WorkTimeKindForm: TParentForm},
   WorkTimeKindEdit in '..\..\Forms\Guides\WorkTimeKindEdit.pas' {WorkTimeKindEditForm: TParentForm},
-  Report_MIProtocol in '..\..\Forms\Report\Report_MIProtocol.pas' {Report_MIProtocolForm: TParentForm},
-  Report_MIProtocolDialog in '..\..\Forms\Report\Report_MIProtocolDialog.pas' {Report_MIProtocolDialogForm: TParentForm};
+  Report_MIProtocolDialog in '..\..\Forms\Report\Report_MIProtocolDialog.pas' {Report_MIProtocolDialogForm: TParentForm},
+  Report_MIProtocol in '..\..\Forms\Report\Report_MIProtocol.pas' {Report_MIProtocolForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

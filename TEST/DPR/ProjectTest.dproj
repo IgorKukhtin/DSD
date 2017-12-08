@@ -3313,12 +3313,12 @@
 				<Form>WorkTimeKindEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_MIProtocol.pas">
-				<Form>Report_MIProtocolForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_MIProtocolDialog.pas">
 				<Form>Report_MIProtocolDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_MIProtocol.pas">
+				<Form>Report_MIProtocolForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

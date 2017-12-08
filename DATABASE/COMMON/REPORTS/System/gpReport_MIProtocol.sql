@@ -19,20 +19,26 @@ RETURNS TABLE (UserId Integer, UserCode Integer, UserName TVarChar
              , BranchId Integer, BranchName TVarChar
    
              , MovementId          Integer
+             , MovementItemId      Integer
              , OperDate_Protocol   TDateTime
              , OperDate_Movement   TDateTime
              , Invnumber_Movement  Integer
              , DescId_Movement     Integer
              , DescName_Movement   TVarChar
+             , StatusCode          Integer
+             , StatusName          TVarChar
              , FromName            TVarChar
              , ToName              TVarChar
 
+             , Text_inf      TVarChar
              , GoodsCode     Integer
              , GoodsName     TVarChar
              , GoodsKindName TVarChar
              , Amount        Tfloat
              , AmountPartner Tfloat
+             , Price         Tfloat
              , isErased      Boolean
+             , isErased_Object  Boolean
               )
 AS
 $BODY$
@@ -67,7 +73,6 @@ BEGIN
                             AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
                    
                 WHERE Object_User.DescId = zc_Object_User()
-                  AND (Object_User.Id = inUserId OR inUserId =0)  
                 )
 
   , tmpGoods AS (SELECT lfSelect.GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect
@@ -88,8 +93,10 @@ BEGIN
   , tmpMI_Protocol AS (SELECT MovementItemProtocol.UserId
                             --, DATE_TRUNC ('DAY', MovementItemProtocol.OperDate) AS OperDate
                             , MovementItemProtocol.OperDate        AS OperDate_Protocol
-                            , MovementItemProtocol.MovementItemId  AS MI_Id
+                            , MovementItemProtocol.MovementItemId  AS MovementItemId
+                            , MovementItem.DescId                  AS DescId_MovementItem
                             , Movement.Id                          AS MovementId
+                            , Movement.StatusId                    AS StatusId_Movement
                             , Movement.OperDate                    AS OperDate_Movement
                             , Movement.Invnumber                   AS Invnumber_Movement
                             , Movement.DescId                      AS DescId_Movement
@@ -100,6 +107,7 @@ BEGIN
                             , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Виды товаров"]            /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS GoodsKindName
                             , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Значение"]                /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS Amount
                             , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Количество у контрагента"]/@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS AmountPartner
+                            , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Цена"]                    /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS Price
                             , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Удален"]                  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS isErased
                        FROM MovementItemProtocol
                             LEFT JOIN MovementItem ON MovementItem.Id = MovementItemProtocol.MovementItemId
@@ -137,9 +145,9 @@ BEGIN
    ------------------------
 
      -- Результат 
-     SELECT tmpUser.UserId
-          , tmpUser.UserCode
-          , tmpUser.UserName
+     SELECT tmpData.UserId
+          , COALESCE (tmpUser.UserCode, Object_User.ObjectCode) ::Integer  AS UserCode
+          , COALESCE (tmpUser.UserName, Object_User.ValueData)  ::TVarChar AS UserName
 
           , Object_Member.ValueData           AS MemberName 
           , Object_Position.ValueData         AS PositionName 
@@ -149,28 +157,50 @@ BEGIN
           , Object_Branch.ValueData           AS BranchName
        
           , tmpData.MovementId
+          , tmpData.MovementItemId
           , tmpData.OperDate_Protocol  ::TDateTime
           , tmpData.OperDate_Movement  ::TDateTime
           , tmpData.Invnumber_Movement ::Integer
           , tmpData.DescId_Movement
           , tmpData.DescName_Movement
+          , Object_Status.ObjectCode          AS StatusCode
+          , Object_Status.ValueData           AS StatusName
+
           , Object_From.ValueData             AS FromName
           , Object_To.ValueData               AS ToName
+          
+          , CASE WHEN (tmpData.DescId_Movement = zc_Movement_ProductionSeparate() AND tmpData.DescId_MovementItem = zc_MI_Master())
+                     OR
+                      (tmpData.DescId_Movement = zc_Movement_ProductionUnion() AND tmpData.DescId_MovementItem = zc_MI_Child())
+                 THEN 'расход'
+                 WHEN (tmpData.DescId_Movement = zc_Movement_ProductionSeparate() AND tmpData.DescId_MovementItem = zc_MI_Child())
+                     OR
+                      (tmpData.DescId_Movement = zc_Movement_ProductionUnion() AND tmpData.DescId_MovementItem = zc_MI_Master())
+                 THEN 'приход'
+                 ELSE ''
+            END                      ::TVarChar         AS Text_inf
+          
           
           , Object_Goods.ObjectCode  ::Integer          AS GoodsCode
           , Object_Goods.ValueData   ::TVarChar         AS GoodsName
           , tmpData.GoodsKindName    ::TVarChar         AS GoodsKindName
+          
           , tmpData.Amount           ::TFloat           AS Amount       
           , (CASE WHEN COALESCE (tmpData.AmountPartner, '') = '' THEN '0'  ELSE tmpData.AmountPartner END) ::TFloat AS AmountPartner
-          , tmpData.isErased         ::Boolean          AS isErased    
+          , (CASE WHEN COALESCE (tmpData.Price, '') = '' THEN '0'  ELSE tmpData.Price END) ::TFloat AS Price
+
+          , CASE WHEN tmpData.isErased ::Boolean = TRUE OR tmpData.StatusId_Movement = zc_Enum_Status_Erased() THEN TRUE ELSE FALSE END  ::Boolean AS isErased  
+          , tmpData.isErased         ::Boolean          AS isErased_Object
           
      FROM tmpMI_Protocol AS tmpData
           INNER JOIN tmpGoods ON tmpGoods.GoodsId = tmpData.GoodsId
 
           LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData.FromId_Movement
           LEFT JOIN Object AS Object_To ON Object_To.Id = tmpData.ToId_Movement
-          
-          LEFT JOIN tmpUser ON tmpUser.UserId =  tmpData.UserId
+          LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpData.StatusId_Movement
+
+          LEFT JOIN tmpUser ON tmpUser.UserId = tmpData.UserId
+          LEFT JOIN Object AS Object_User ON Object_User.Id = tmpData.UserId
 
           LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpUser.MemberId
           LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpUser.PositionId 
@@ -178,6 +208,7 @@ BEGIN
           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpUser.BranchId
           
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
+          
     ;
 
 END;
