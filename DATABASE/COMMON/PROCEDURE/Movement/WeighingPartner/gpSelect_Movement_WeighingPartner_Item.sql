@@ -72,13 +72,13 @@ BEGIN
              UNION
               SELECT inGoodsId WHERE inGoodsId > 0
              UNION
-                 SELECT Object.Id FROM Object
-                 WHERE Object.DescId = zc_Object_Goods() AND (inStartDate + INTERVAL '3 DAY') >= inEndDate
-                   AND COALESCE (inGoodsGroupId, 0) = 0 AND COALESCE (inGoodsId, 0) = 0
-                UNION
-                 SELECT Object.Id FROM Object
-                 WHERE Object.DescId = zc_Object_Goods() AND inIsErased = TRUE
-                   AND COALESCE (inGoodsGroupId, 0) = 0 AND COALESCE (inGoodsId, 0) = 0
+              SELECT Object.Id FROM Object
+              WHERE Object.DescId = zc_Object_Goods() AND (inStartDate + INTERVAL '3 DAY') >= inEndDate
+                AND COALESCE (inGoodsGroupId, 0) = 0 AND COALESCE (inGoodsId, 0) = 0
+             UNION
+              SELECT Object.Id FROM Object
+              WHERE Object.DescId = zc_Object_Goods() AND inIsErased = TRUE
+                AND COALESCE (inGoodsGroupId, 0) = 0 AND COALESCE (inGoodsId, 0) = 0
              )
           , tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
                          UNION
@@ -400,8 +400,8 @@ BEGIN
                                          ON MovementLinkObject_RouteSorting.MovementId = MovementLinkMovement_Order.MovementChildId
                                         AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
             LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = MovementLinkObject_RouteSorting.ObjectId
-            --- строки
 
+            --- строки
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                    AND MovementItem.DescId     = zc_MI_Master()
                                    AND (MovementItem.isErased   = inIsErased

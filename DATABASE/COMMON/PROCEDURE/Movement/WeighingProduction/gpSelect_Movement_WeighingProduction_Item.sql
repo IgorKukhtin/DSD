@@ -56,9 +56,13 @@ BEGIN
              UNION
               SELECT inGoodsId WHERE inGoodsId > 0
              UNION
-                 SELECT Object.Id FROM Object
-                 WHERE Object.DescId = zc_Object_Goods() AND (inStartDate + INTERVAL '3 DAY') >= inEndDate
-                   AND COALESCE (inGoodsGroupId, 0) = 0 AND COALESCE (inGoodsId, 0) = 0
+              SELECT Object.Id FROM Object
+              WHERE Object.DescId = zc_Object_Goods() AND (inStartDate + INTERVAL '3 DAY') >= inEndDate
+                AND COALESCE (inGoodsGroupId, 0) = 0 AND COALESCE (inGoodsId, 0) = 0
+             UNION
+              SELECT Object.Id FROM Object
+              WHERE Object.DescId = zc_Object_Goods() AND inIsErased = TRUE
+                AND COALESCE (inGoodsGroupId, 0) = 0 AND COALESCE (inGoodsId, 0) = 0
              )
 
      /*WITH tmpUserAdmin AS (SELECT ObjectLink_UserRole_View.UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND ObjectLink_UserRole_View.UserId = vbUserId)
@@ -213,10 +217,14 @@ BEGIN
                                         AND MovementLinkObject_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
             LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = MovementLinkObject_DocumentKind.ObjectId
 
-
-            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                             AND MovementItem.DescId     = zc_MI_Master()
-                             -- AND MovementItem.isErased   = FALSE
+            --- строки
+            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                   AND MovementItem.DescId     = zc_MI_Master()
+                                   AND (MovementItem.isErased   = inIsErased
+                                    OR inGoodsGroupId <> 0
+                                    OR inGoodsId <> 0
+                                    OR (inStartDate + INTERVAL '3 DAY') >= inEndDate
+                                      )
             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = _tmpGoods.GoodsId
 

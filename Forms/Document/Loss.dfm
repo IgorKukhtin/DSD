@@ -1233,6 +1233,14 @@ inherited LossForm: TLossForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsKindCompleteId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId_Complete'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAssetId'
         Value = Null
         Component = MasterCDS

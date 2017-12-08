@@ -42,5 +42,5 @@ ALTER FUNCTION lpInsert_LockUnique (TVarChar, Integer) OWNER TO postgres;
 
 -- тест
 -- SELECT * FROM lpInsert_LockUnique (inKeyData:= '123', inUserId:= zfCalc_UserAdmin() :: Integer)
--- SELECT * FROM lpInsert_LockUnique (inKeyData:= '123', inUserId:= zfCalc_UserAdmin() :: Integer)
--- SELECT * FROM LockUnique ORDER BY OperDate DESC
+-- SELECT * FROM LockUnique WHERE KeyData like '%DC899%' ORDER BY OperDate DESC
+-- SELECT * FROM LockUnique WHERE query like '%FETCH ALL%' AND query_start < CURRENT_TIMESTAMP - INTERVAL '45 SEC' ORDER BY OperDate DESC

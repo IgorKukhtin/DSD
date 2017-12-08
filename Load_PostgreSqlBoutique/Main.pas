@@ -6503,6 +6503,8 @@ begin
         Add('order by StartDate');
         Open;
         //
+        cbDiscountPeriodItem.Caption:='3. ('+IntToStr(RecordCount)+') История скидок';
+        //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
         //
@@ -6575,6 +6577,8 @@ begin
         Add('  and PriceListItems.NewPrice <> 0'); //
         Add('order by StartDate');
         Open;
+        //
+        cbPriceListItem.Caption:='2. ('+IntToStr(RecordCount)+') История цены';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;

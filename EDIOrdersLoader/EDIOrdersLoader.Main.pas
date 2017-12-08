@@ -130,7 +130,8 @@ begin
   Timer.Enabled := False;
   Proccessing := False;
 
-  isPrevDay_begin:= False;
+  // При запуске считаем что пред день НЕ надо, т.е. он уже обработан
+  isPrevDay_begin:= True;
 
   if FindCmdLineSwitch('interval', IntervalStr) then
     FIntervalVal := StrToIntDef(IntervalStr, 1)
