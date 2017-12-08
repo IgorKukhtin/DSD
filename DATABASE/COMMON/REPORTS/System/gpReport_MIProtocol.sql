@@ -75,6 +75,16 @@ BEGIN
                 WHERE Object_User.DescId = zc_Object_User()
                 )
 
+  , tmpUnit AS (SELECT lfSelect_Object_Unit_byGroup.UnitId AS UnitId
+                FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect_Object_Unit_byGroup
+                WHERE inUnitId <> 0
+               UNION
+                SELECT Object.Id AS UnitId 
+                FROM Object
+                WHERE Object.DescId = zc_Object_Unit() 
+                  AND COALESCE (inUnitId, 0) = 0
+               )
+
   , tmpGoods AS (SELECT lfSelect.GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect
                  WHERE inGoodsGroupId <> 0 AND COALESCE (inGoodsId, 0) = 0
                UNION
@@ -129,18 +139,20 @@ BEGIN
                                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                            
-
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+
+                            INNER JOIN tmpUnit ON (tmpUnit.UnitId = MovementLinkObject_From.ObjectId 
+                                                  OR 
+                                                   tmpUnit.UnitId = MovementLinkObject_To.ObjectId)
 
                        WHERE  (MovementItemProtocol.UserId = inUserId OR inUserId = 0)
                           AND ( (inIsMovement = FALSE AND MovementItemProtocol.OperDate >= inStartDate AND MovementItemProtocol.OperDate < inEndDate + INTERVAL '1 DAY')
                                OR 
                                 (inIsMovement = TRUE AND Movement.OperDate >= inStartDate AND Movement.OperDate < inEndDate + INTERVAL '1 DAY')
                               )
-                          AND ( (MovementLinkObject_From.ObjectId = inUnitId OR MovementLinkObject_To.ObjectId = inUnitId) OR inUnitId = 0)
-                       
+                          --AND ( (MovementLinkObject_From.ObjectId = inUnitId OR MovementLinkObject_To.ObjectId = inUnitId) OR inUnitId = 0)
                       ) 
    ------------------------
 
