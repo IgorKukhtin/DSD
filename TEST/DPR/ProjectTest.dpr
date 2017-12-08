@@ -990,7 +990,9 @@ uses
   PersonalServiceList_Unit_Object in '..\..\Forms\Guides\PersonalServiceList_Unit_Object.pas' {PersonalServiceList_Unit_ObjectForm: TParentForm},
   PersonalService in '..\..\Forms\Document\PersonalService.pas' {PersonalServiceForm: TParentForm},
   WorkTimeKind in '..\..\Forms\Guides\WorkTimeKind.pas' {WorkTimeKindForm: TParentForm},
-  WorkTimeKindEdit in '..\..\Forms\Guides\WorkTimeKindEdit.pas' {WorkTimeKindEditForm: TParentForm};
+  WorkTimeKindEdit in '..\..\Forms\Guides\WorkTimeKindEdit.pas' {WorkTimeKindEditForm: TParentForm},
+  Report_MIProtocol in '..\..\Forms\Report\Report_MIProtocol.pas' {Report_MIProtocolForm: TParentForm},
+  Report_MIProtocolDialog in '..\..\Forms\Report\Report_MIProtocolDialog.pas' {Report_MIProtocolDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
