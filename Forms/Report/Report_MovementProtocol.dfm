@@ -1,5 +1,5 @@
-inherited Report_MIProtocolForm: TReport_MIProtocolForm
-  Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1080#1079#1084#1077#1085#1077#1085#1080#1081'>'
+inherited Report_MovementProtocolForm: TReport_MovementProtocolForm
+  Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1080#1079#1084#1077#1085#1077#1085#1080#1081' '#1044#1086#1082#1091#1084#1077#1085#1090#1086#1074'>'
   ClientHeight = 552
   ClientWidth = 1029
   ParentFont = True
@@ -53,12 +53,10 @@ inherited Report_MIProtocolForm: TReport_MIProtocolForm
             item
               Format = ',0.###'
               Kind = skSum
-              Column = Amount
             end
             item
               Format = ',0.###'
               Kind = skSum
-              Column = AmountPartner
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -89,12 +87,10 @@ inherited Report_MIProtocolForm: TReport_MIProtocolForm
             item
               Format = ',0.###'
               Kind = skSum
-              Column = Amount
             end
             item
               Format = ',0.###'
               Kind = skSum
-              Column = AmountPartner
             end>
           OptionsData.Deleting = False
           OptionsData.Editing = False
@@ -163,6 +159,13 @@ inherited Report_MIProtocolForm: TReport_MIProtocolForm
             Options.Editing = False
             Width = 133
           end
+          object MovementId: TcxGridDBColumn
+            Caption = #1050#1083#1102#1095' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'MovementId'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object StatusCode: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1091#1089
             DataBinding.FieldName = 'StatusCode'
@@ -172,29 +175,35 @@ inherited Report_MIProtocolForm: TReport_MIProtocolForm
               item
                 Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
                 ImageIndex = 11
-                Value = 1
+                Value = '1'
               end
               item
                 Description = #1055#1088#1086#1074#1077#1076#1077#1085
                 ImageIndex = 12
-                Value = 2
+                Value = '2'
               end
               item
                 Description = #1059#1076#1072#1083#1077#1085
                 ImageIndex = 13
-                Value = 3
+                Value = '3'
               end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
           end
-          object OperDate_Movement: TcxGridDBColumn
+          object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
-            DataBinding.FieldName = 'OperDate_Movement'
+            DataBinding.FieldName = 'OperDate'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 80
+          end
+          object OperDatePartner: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+            DataBinding.FieldName = 'OperDatePartner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 80
           end
           object Invnumber_Movement: TcxGridDBColumn
@@ -203,7 +212,7 @@ inherited Report_MIProtocolForm: TReport_MIProtocolForm
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 71
+            Width = 99
           end
           object DescName_Movement: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1076#1086#1082'.'
@@ -227,21 +236,6 @@ inherited Report_MIProtocolForm: TReport_MIProtocolForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object MovementItemId: TcxGridDBColumn
-            Caption = #1050#1083#1102#1095' '#1089#1090#1088#1086#1082#1080
-            DataBinding.FieldName = 'MovementItemId'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object Text_inf: TcxGridDBColumn
-            Caption = #1055#1088#1080#1093#1086#1076' / '#1088#1072#1089#1093#1086#1076
-            DataBinding.FieldName = 'Text_inf'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1088#1080#1093#1086#1076' / '#1088#1072#1089#1093#1086#1076
-            Width = 60
-          end
           object IsInsert: TcxGridDBColumn
             Caption = #1057#1086#1079#1076#1072#1085#1080#1077
             DataBinding.FieldName = 'IsInsert'
@@ -249,60 +243,6 @@ inherited Report_MIProtocolForm: TReport_MIProtocolForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1086#1079#1076#1072#1085#1080#1077' '#1076#1072'/'#1085#1077#1090
             Width = 63
-          end
-          object GoodsCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'GoodsCode'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 52
-          end
-          object GoodsName: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088
-            DataBinding.FieldName = 'GoodsName'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 102
-          end
-          object GoodsKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'GoodsKindName'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 54
-          end
-          object Amount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'Amount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 74
-          end
-          object AmountPartner: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1082#1086#1085#1090#1088'.'
-            DataBinding.FieldName = 'AmountPartner'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1091' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
-            Width = 80
-          end
-          object Price: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072
-            DataBinding.FieldName = 'Price'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
           end
           object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
@@ -312,15 +252,6 @@ inherited Report_MIProtocolForm: TReport_MIProtocolForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
-            Width = 55
-          end
-          object isErased_Object: TcxGridDBColumn
-            Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
-            DataBinding.FieldName = 'isErased_Object'
-            Visible = False
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 55
           end
         end
@@ -373,23 +304,6 @@ inherited Report_MIProtocolForm: TReport_MIProtocolForm
       TabOrder = 5
       Width = 207
     end
-    object cxLabel6: TcxLabel
-      Left = 735
-      Top = 33
-      Caption = #1058#1086#1074#1072#1088':'
-    end
-    object edGoods: TcxButtonEdit
-      Left = 773
-      Top = 32
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 7
-      Width = 232
-    end
   end
   object cxLabel5: TcxLabel [2]
     Left = 388
@@ -415,23 +329,6 @@ inherited Report_MIProtocolForm: TReport_MIProtocolForm
     Caption = #1087#1077#1088#1080#1086#1076' '#1076#1083#1103' '#1076#1072#1090#1099' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     TabOrder = 8
     Width = 174
-  end
-  object cxLabel3: TcxLabel [5]
-    Left = 684
-    Top = 6
-    Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
-  end
-  object edGoodsGroup: TcxButtonEdit [6]
-    Left = 773
-    Top = 5
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 10
-    Width = 232
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -484,8 +381,8 @@ inherited Report_MIProtocolForm: TReport_MIProtocolForm
       Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_MIProtocolDialogForm'
-      FormNameParam.Value = 'TReport_MIProtocolDialogForm'
+      FormName = 'TReport_MovementProtocolDialogForm'
+      FormNameParam.Value = 'TReport_MovementProtocolDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -544,39 +441,6 @@ inherited Report_MIProtocolForm: TReport_MIProtocolForm
           Value = Null
           Component = cbisMovement
           DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsGroupId'
-          Value = Null
-          Component = GuidesGoodsGroup
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsGroupName'
-          Value = Null
-          Component = GuidesGoodsGroup
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsId'
-          Value = Null
-          Component = GuidesGoods
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsName'
-          Value = Null
-          Component = GuidesGoods
-          ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -698,7 +562,7 @@ inherited Report_MIProtocolForm: TReport_MIProtocolForm
           Name = 'inOperDate'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'OperDate_Movement'
+          ComponentItem = 'OperDate'
           MultiSelectSeparator = ','
         end
         item
@@ -742,7 +606,7 @@ inherited Report_MIProtocolForm: TReport_MIProtocolForm
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_MIProtocol'
+    StoredProcName = 'gpReport_MovementProtocol'
     Params = <
       item
         Name = 'inStartDate'
@@ -777,33 +641,11 @@ inherited Report_MIProtocolForm: TReport_MIProtocolForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsGroupId'
-        Value = Null
-        Component = GuidesGoodsGroup
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsId'
-        Value = Null
-        Component = GuidesGoods
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inisMovement'
         Value = 'True'
         Component = cbisMovement
         DataType = ftBoolean
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 296
@@ -886,7 +728,6 @@ inherited Report_MIProtocolForm: TReport_MIProtocolForm
         Component = PeriodChoice
       end
       item
-        Component = GuidesGoodsGroup
       end
       item
         Component = GuidesUnit
@@ -895,7 +736,6 @@ inherited Report_MIProtocolForm: TReport_MIProtocolForm
         Component = GuidesUser
       end
       item
-        Component = GuidesGoods
       end>
     Left = 464
     Top = 192
@@ -1021,66 +861,6 @@ inherited Report_MIProtocolForm: TReport_MIProtocolForm
       end>
     Left = 182
     Top = 184
-  end
-  object GuidesGoodsGroup: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edGoodsGroup
-    FormNameParam.Value = 'TGoodsGroupForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsGroupForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesGoodsGroup
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesGoodsGroup
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 937
-    Top = 8
-  end
-  object GuidesGoods: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edGoods
-    FormNameParam.Value = 'TGoodsFuel_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsFuel_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesGoods
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesGoods
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 820
-    Top = 23
   end
   object getMovementForm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Form'
