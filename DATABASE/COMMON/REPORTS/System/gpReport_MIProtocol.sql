@@ -37,6 +37,7 @@ RETURNS TABLE (UserId Integer, UserCode Integer, UserName TVarChar
              , Amount        Tfloat
              , AmountPartner Tfloat
              , Price         Tfloat
+             , IsInsert      Boolean
              , isErased      Boolean
              , isErased_Object  Boolean
               )
@@ -119,6 +120,7 @@ BEGIN
                             , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Количество у контрагента"]/@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS AmountPartner
                             , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Цена"]                    /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS Price
                             , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Удален"]                  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS isErased
+                            , MovementItemProtocol.IsInsert        AS IsInsert
                        FROM MovementItemProtocol
                             LEFT JOIN MovementItem ON MovementItem.Id = MovementItemProtocol.MovementItemId
                             LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
@@ -201,6 +203,7 @@ BEGIN
           , (CASE WHEN COALESCE (tmpData.AmountPartner, '') = '' THEN '0'  ELSE tmpData.AmountPartner END) ::TFloat AS AmountPartner
           , (CASE WHEN COALESCE (tmpData.Price, '') = '' THEN '0'  ELSE tmpData.Price END) ::TFloat AS Price
 
+          , tmpData.IsInsert         ::Boolean          AS IsInsert
           , CASE WHEN tmpData.isErased ::Boolean = TRUE OR tmpData.StatusId_Movement = zc_Enum_Status_Erased() THEN TRUE ELSE FALSE END  ::Boolean AS isErased  
           , tmpData.isErased         ::Boolean          AS isErased_Object
           

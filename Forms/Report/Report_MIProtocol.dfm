@@ -241,6 +241,14 @@ inherited Report_MIProtocolForm: TReport_MIProtocolForm
             HeaderHint = #1055#1088#1080#1093#1086#1076' / '#1088#1072#1089#1093#1086#1076
             Width = 60
           end
+          object IsInsert: TcxGridDBColumn
+            Caption = #1057#1086#1079#1076#1072#1085#1080#1077
+            DataBinding.FieldName = 'IsInsert'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1086#1079#1076#1072#1085#1080#1077' '#1076#1072'/'#1085#1077#1090
+            Width = 63
+          end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsCode'

@@ -74,6 +74,7 @@ type
     Price: TcxGridDBColumn;
     MovementItemId: TcxGridDBColumn;
     Text_inf: TcxGridDBColumn;
+    IsInsert: TcxGridDBColumn;
   private
     { Private declarations }
   public
