@@ -79,7 +79,10 @@ var
   obj: JObject;
   tm: JTelephonyManager;
   {$ENDIF}
-  IMEI: String;
+  lIMEI      : String;
+  lModel     : String;
+  lVesion    : String;
+  lVesionSDK : String;
   ConnectOk: boolean;
   ServNum: integer;
 const
@@ -90,22 +93,41 @@ const
       '<inUserLogin    DataType="ftString" Value="%s" />' +
       '<inUserPassword DataType="ftString" Value="%s" />' +
       '<inSerialNumber DataType="ftString" Value="%s" />' +
+      '<inModel        DataType="ftString" Value="%s" />' +
+      '<inVesion       DataType="ftString" Value="%s" />' +
+      '<inVesionSDK    DataType="ftString" Value="%s" />' +
     '</gpCheckLoginMobile>' +
   '</xml>';
 begin
+  lIMEI      := '';
+  lModel     := '';
+  lVesion    := '';
+  lVesionSDK := '';
+
   {$IFDEF ANDROID}
   obj := TAndroidHelper.Context.getSystemService(TJContext.JavaClass.TELEPHONY_SERVICE);
   if obj <> nil then
   begin
     tm := TJTelephonyManager.Wrap( (obj as ILocalObject).GetObjectID );
-    if tm <> nil then
-      IMEI := JStringToString(tm.getDeviceId);
+    if tm <> nil then begin
+      lIMEI      := JStringToString(tm.getDeviceId);
+      lModel     := JStringToString(tm.getLine1Number);
+      lVesion    := JStringToString(tm.getDeviceSoftwareVersion);
+      lVesionSDK := '';
+    end;
   end;
-  if IMEI = '' then
-    IMEI := JStringToString(TJSettings_Secure.JavaClass.getString(TAndroidHelper.Activity.getContentResolver,
-                            TJSettings_Secure.JavaClass.ANDROID_ID));
+  if lIMEI = '' then begin
+    lIMEI      := JStringToString(TJSettings_Secure.JavaClass.getString(TAndroidHelper.Activity.getContentResolver,
+                                  TJSettings_Secure.JavaClass.ANDROID_ID));
+    lModel     := '';
+    lVesion    := '';
+    lVesionSDK := '';
+  end;
   {$ELSE}
-  IMEI := '';
+  lIMEI      := '';
+  lModel     := '';
+  lVesion    := '';
+  lVesionSDK := '';
   {$ENDIF}
 
   ConnectOk := false;
@@ -119,8 +141,7 @@ begin
         pStorage.Connection := gc_WebService;
       end;
 
-      N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pUserName, pPassword, IMEI]), False, 1, ANeedShowException)).DocumentElement;
-
+      N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pUserName, pPassword, lIMEI, lModel, lVesion, lVesionSDK]), False, 1, ANeedShowException)).DocumentElement;
       if Assigned(N) then
       begin
         Result := N.GetAttribute(AnsiLowerCase(gcMessage));

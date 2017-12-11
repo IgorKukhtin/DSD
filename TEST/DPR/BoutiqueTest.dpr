@@ -265,7 +265,8 @@ uses
   GoodsPrint in '..\..\FormsBoutique\Guides\GoodsPrint.pas' {GoodsPrintForm: TParentForm},
   Report_MotionByPartner in '..\..\FormsBoutique\Report\Report_MotionByPartner.pas' {Report_MotionByPartnerForm: TParentForm},
   Report_MotionByPartnerDialog in '..\..\FormsBoutique\Report\Report_MotionByPartnerDialog.pas' {Report_MotionByPartnerDialogForm: TParentForm},
-  IFIN_J1201209 in '..\..\SOURCE\MeDOC\IFIN_J1201209.pas';
+  IFIN_J1201209 in '..\..\SOURCE\MeDOC\IFIN_J1201209.pas',
+  CommonContainerProcedureTest in '..\SOURCEBoutique\Container\CommonContainerProcedureTest.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

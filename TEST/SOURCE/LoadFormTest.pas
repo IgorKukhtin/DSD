@@ -826,7 +826,8 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
-  {
+  // exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDataDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDataDialogForm');
 
@@ -839,7 +840,6 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserSettingsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserSettingsForm');
-  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserForm');
@@ -854,7 +854,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStatusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStatusForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProtocolForm');
   {

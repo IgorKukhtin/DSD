@@ -124,3 +124,11 @@ TRUNCATE TABLE MovementItemProtocol;
 
 -- select * from object where Id =  1162887
 
+-- 
+TRUNCATE TABLE MovementItemContainer;
+TRUNCATE TABLE SoldTable;
+CREATE INDEX idx_MovementProtocol_MovementId ON MovementProtocol (MovementId);
+CREATE INDEX idx_MovementProtocol_UserId ON MovementProtocol (UserId);
+CREATE INDEX idx_MovementProtocol_OperDate ON MovementProtocol (OperDate);
+update Object set ValueData = 'http://project-vds.vds.colocall.com/project_arc/index.php' where Id = zc_Enum_GlobalConst_ConnectParam();
+select * from Object where Id = zc_Enum_GlobalConst_ConnectParam();
