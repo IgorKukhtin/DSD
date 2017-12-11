@@ -221,6 +221,10 @@ type
     actGridChildToExcel: TdsdGridToExcel;
     bbGridChildToExcel: TdxBarButton;
     chAmount_result_pack_pack: TcxGridDBColumn;
+    actProtocolChild: TdsdOpenForm;
+    actProtocolTotal: TdsdOpenForm;
+    bbProtocolChild: TdxBarButton;
+    bbProtocolTotal: TdxBarButton;
   private
     { Private declarations }
   public

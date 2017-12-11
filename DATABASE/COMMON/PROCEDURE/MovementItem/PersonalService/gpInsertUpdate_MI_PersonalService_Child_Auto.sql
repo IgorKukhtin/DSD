@@ -80,48 +80,63 @@ BEGIN
      vbInfoMoneyId_def:= (SELECT Object_InfoMoney_View.InfoMoneyId FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_60101()); -- 60101 Заработная плата + Заработная плата
 
 
-     -- поиск сотрудника (ключ - физ.лицо + сотрудник + подразделение)
-     WITH -- Список всех должностей
-          tmp AS (SELECT ObjectLink_Personal_Member.ChildObjectId   AS MemberId
-                       , Object_Personal.Id                         AS PersonalId
-                       , ObjectLink_Personal_Unit.ChildObjectId     AS UnitId
-                       , ObjectLink_Personal_Position.ChildObjectId AS PositionId
-                  FROM ObjectLink AS ObjectLink_Personal_Member
-                       LEFT JOIN Object AS Object_Personal ON Object_Personal.Id       = ObjectLink_Personal_Member.ObjectId
-                                                          AND Object_Personal.isErased = FALSE
-                       LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
-                                            ON ObjectLink_Personal_Unit.ObjectId = Object_Personal.Id
-                                           AND ObjectLink_Personal_Unit.DescId   = zc_ObjectLink_Personal_Unit()
-                       LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
-                                            ON ObjectLink_Personal_Position.ObjectId = Object_Personal.Id
-                                           AND ObjectLink_Personal_Position.DescId   = zc_ObjectLink_Personal_Position()
+     IF EXISTS (SELECT 1 FROM Object WHERE Object.DescId = zc_Object_Personal() AND Object.Id = inMemberId)
+     THEN
+         SELECT Object_Personal.Id                                      AS PersonalId
+              , COALESCE (ObjectBoolean_Personal_Main.ValueData, FALSE) AS isMain
+                INTO vbPersonalId, vbIsMain
+         FROM Object AS Object_Personal
+              LEFT JOIN ObjectBoolean AS ObjectBoolean_Personal_Main
+                                      ON ObjectBoolean_Personal_Main.ObjectId = Object_Personal.Id
+                                     AND ObjectBoolean_Personal_Main.DescId = zc_ObjectBoolean_Personal_Main()
+         WHERE Object_Personal.DescId = zc_Object_Personal()
+           AND Object_Personal.Id     =  inMemberId;
+     ELSE
+         -- поиск сотрудника (ключ - физ.лицо + сотрудник + подразделение)
+         WITH -- Список всех должностей
+              tmp AS (SELECT ObjectLink_Personal_Member.ChildObjectId   AS MemberId
+                           , Object_Personal.Id                         AS PersonalId
+                           , ObjectLink_Personal_Unit.ChildObjectId     AS UnitId
+                           , ObjectLink_Personal_Position.ChildObjectId AS PositionId
+                      FROM ObjectLink AS ObjectLink_Personal_Member
+                           LEFT JOIN Object AS Object_Personal ON Object_Personal.Id       = ObjectLink_Personal_Member.ObjectId
+                                                              AND Object_Personal.isErased = FALSE
+                           LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                                ON ObjectLink_Personal_Unit.ObjectId = Object_Personal.Id
+                                               AND ObjectLink_Personal_Unit.DescId   = zc_ObjectLink_Personal_Unit()
+                           LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
+                                                ON ObjectLink_Personal_Position.ObjectId = Object_Personal.Id
+                                               AND ObjectLink_Personal_Position.DescId   = zc_ObjectLink_Personal_Position()
+    
+                      WHERE ObjectLink_Personal_Member.ChildObjectId   = inMemberId
+                        AND ObjectLink_Personal_Member.DescId          = zc_ObjectLink_Personal_Member()
+                     )
+         -- выбираем только одного
+         SELECT COALESCE (tmp1.PersonalId, COALESCE (tmp2.PersonalId, tmp3.PersonalId)) AS PersonalId
+              , COALESCE (ObjectBoolean_Personal_Main.ValueData, FALSE)                 AS isMain
+                INTO vbPersonalId, vbIsMain
+         FROM Object AS Object_Member
+              -- первый приоритет - по всем параметрам
+              LEFT JOIN tmp AS tmp1 ON tmp1.MemberId   = Object_Member.Id
+                                   AND tmp1.UnitId     = inUnitId
+                                   AND tmp1.PositionId = inPositionId
+              -- второй приоритет - Подразделение
+              LEFT JOIN tmp AS tmp2 ON tmp2.MemberId   = Object_Member.Id
+                                   AND tmp2.UnitId     = inUnitId
+              -- третий приоритет - Должность
+              LEFT JOIN tmp AS tmp3 ON tmp3.MemberId   = Object_Member.Id
+                                   AND tmp3.PositionId = inPositionId
+              LEFT JOIN ObjectBoolean AS ObjectBoolean_Personal_Main
+                                      ON ObjectBoolean_Personal_Main.ObjectId = COALESCE (tmp1.PersonalId, COALESCE (tmp2.PersonalId, tmp3.PersonalId))
+                                     AND ObjectBoolean_Personal_Main.DescId = zc_ObjectBoolean_Personal_Main()
+         WHERE Object_Member.DescId = zc_Object_Member()
+           AND Object_Member.Id     =  inMemberId
+         ORDER BY CASE WHEN ObjectBoolean_Personal_Main.ValueData = TRUE THEN 0 ELSE 1 END, COALESCE (tmp1.PersonalId, COALESCE (tmp2.PersonalId, tmp3.PersonalId))
+         LIMIT 1
+         ;
+     END IF;
 
-                  WHERE ObjectLink_Personal_Member.ChildObjectId   = inMemberId
-                    AND ObjectLink_Personal_Member.DescId          = zc_ObjectLink_Personal_Member()
-                 )
-     -- выбираем только одного
-     SELECT COALESCE (tmp1.PersonalId, COALESCE (tmp2.PersonalId, tmp3.PersonalId)) AS PersonalId
-          , COALESCE (ObjectBoolean_Personal_Main.ValueData, FALSE)                 AS isMain
-            INTO vbPersonalId, vbIsMain
-     FROM Object AS Object_Member
-          -- первый приоритет - по всем параметрам
-          LEFT JOIN tmp AS tmp1 ON tmp1.MemberId   = Object_Member.Id
-                               AND tmp1.UnitId     = inUnitId
-                               AND tmp1.PositionId = inPositionId
-          -- второй приоритет - Подразделение
-          LEFT JOIN tmp AS tmp2 ON tmp2.MemberId   = Object_Member.Id
-                               AND tmp2.UnitId     = inUnitId
-          -- третий приоритет - Должность
-          LEFT JOIN tmp AS tmp3 ON tmp3.MemberId   = Object_Member.Id
-                               AND tmp3.PositionId = inPositionId
-          LEFT JOIN ObjectBoolean AS ObjectBoolean_Personal_Main
-                                  ON ObjectBoolean_Personal_Main.ObjectId = COALESCE (tmp1.PersonalId, COALESCE (tmp2.PersonalId, tmp3.PersonalId))
-                                 AND ObjectBoolean_Personal_Main.DescId = zc_ObjectBoolean_Personal_Main()
-     WHERE Object_Member.DescId = zc_Object_Member()
-       AND Object_Member.Id =  inMemberId
-     ORDER BY CASE WHEN ObjectBoolean_Personal_Main.ValueData = TRUE THEN 0 ELSE 1 END, COALESCE (tmp1.PersonalId, COALESCE (tmp2.PersonalId, tmp3.PersonalId))
-     LIMIT 1
-     ;
+
      -- проверка
      IF COALESCE (vbPersonalId, 0) = 0
      THEN

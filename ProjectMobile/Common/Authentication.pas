@@ -110,18 +110,26 @@ begin
   begin
     tm := TJTelephonyManager.Wrap( (obj as ILocalObject).GetObjectID );
     if tm <> nil then begin
+      // IMEI телефона - работает
       lIMEI      := JStringToString(tm.getDeviceId);
-      lModel     := JStringToString(tm.getLine1Number);
-      lVesion    := JStringToString(tm.getDeviceSoftwareVersion);
-      lVesionSDK := '';
+      // Модель телефона
+      lModel     := '???'; //
+      // Версия Android
+      lVesion    := '???'; // JStringToString(tm.getDeviceSoftwareVersion);
+      // Версия SDK
+      lVesionSDK := '???';
     end;
   end;
   if lIMEI = '' then begin
+    // IMEI телефона - работает
     lIMEI      := JStringToString(TJSettings_Secure.JavaClass.getString(TAndroidHelper.Activity.getContentResolver,
                                   TJSettings_Secure.JavaClass.ANDROID_ID));
-    lModel     := '';
-    lVesion    := '';
-    lVesionSDK := '';
+    // Модель телефона
+    lModel     := '???';
+    // Версия Android
+    lVesion    := '???';
+    // Версия SDK
+    lVesionSDK := '???';
   end;
   {$ELSE}
   lIMEI      := '';
