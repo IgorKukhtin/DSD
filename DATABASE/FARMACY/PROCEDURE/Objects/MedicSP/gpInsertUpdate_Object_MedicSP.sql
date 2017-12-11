@@ -1,6 +1,5 @@
 -- Function: gpInsertUpdate_Object_MedicSP()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MedicSP (Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MedicSP (Integer, Integer, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MedicSP(
@@ -10,16 +9,15 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MedicSP(
     IN inPartnerMedicalId    Integer   ,    -- Медицинское учреждение
     IN inSession             TVarChar       -- сессия пользователя
 )
-  RETURNS integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;   
- 
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
-   -- vbUserId := PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_MedicSP());
-   vbUserId := inSession;
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_MedicSP());
+
    
    -- пытаемся найти код
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
@@ -28,7 +26,7 @@ BEGIN
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_MedicSP());
    
    -- проверка уникальности <Наименование>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_MedicSP(), inName);
+   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_MedicSP(), inName);
    -- проверка уникальности <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_MedicSP(), vbCode_calc);
 
@@ -42,9 +40,7 @@ BEGIN
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;$BODY$
-
-LANGUAGE plpgsql VOLATILE;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

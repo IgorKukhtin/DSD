@@ -1,11 +1,15 @@
 -- Function: gpCheckLoginMobile (TVarChar, TVarChar, TVarChar, TVarChar)
 
-DROP FUNCTION IF EXISTS gpCheckLoginMobile (TVarChar, TVarChar, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpCheckLoginMobile (TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpCheckLoginMobile (TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpCheckLoginMobile(
     IN inUserLogin    TVarChar, 
     IN inUserPassword TVarChar, 
     IN inSerialNumber TVarChar,  -- Серийный номер мобильного устройства
+    IN inModel        TVarChar,  -- 
+    IN inVesion       TVarChar,  -- 
+    IN inVesionSDK    TVarChar,  -- 
    OUT outMessage     TVarChar,  -- Сообщение об ошибке, если есть
  INOUT ioSession      TVarChar   -- 
 )
@@ -59,8 +63,14 @@ BEGIN
             -- проверим его устр-во
             -- не забыть написать код
 
-            -- зарегистрируем его устр-во - сохранили свойство <Серийный № моб устр-ва >
+            -- зарегистрируем его устр-во - сохранили свойство <Серийный № моб устр-ва>
             PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_User_ProjectMobile(), vbUserId, inSerialNumber);
+            -- сохранили свойство <Модель моб устр-ва>
+            PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_User_MobileModel(), vbUserId, inModel);
+            -- сохранили свойство <Версия Андроид устр-ва>
+            PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_User_MobileVesion(), vbUserId, inVesion);
+            -- сохранили свойство <Версия SDK устр-ва>
+            PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_User_MobileVesionSDK(), vbUserId, inVesionSDK);
 
             IF NOT EXISTS (SELECT 1 FROM ObjectBoolean WHERE ObjectBoolean.DescId = zc_ObjectBoolean_User_ProjectMobile() AND ObjectBoolean.ObjectId = vbUserId)
             THEN
@@ -94,5 +104,5 @@ END;$BODY$
 
 -- тест
 -- SELECT * FROM LoginProtocol order by 1 desc
--- SELECT * FROM gpCheckLoginMobile(inUserLogin:= 'Молдован Е.А.', inUserPassword:= 'mld132578', inSerialNumber:= '', ioSession:= '');
--- SELECT * FROM gpCheckLoginMobile(inUserLogin:= 'Мурзаева Е.В.', inUserPassword:= 'mrv130879', inSerialNumber:= '', ioSession:= '');
+-- SELECT * FROM gpCheckLoginMobile(inUserLogin:= 'Молдован Е.А.', inUserPassword:= 'mld132578', inSerialNumber:= '', inModel:= '', inVesion:= '', inVesionSDK:= '', ioSession:= '');
+-- SELECT * FROM gpCheckLoginMobile(inUserLogin:= 'Мурзаева Е.В.', inUserPassword:= 'mrv130879', inSerialNumber:= '', inModel:= '', inVesion:= '', inVesionSDK:= '', ioSession:= '');

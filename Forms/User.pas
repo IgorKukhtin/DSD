@@ -89,6 +89,9 @@ type
     BillNumberMobile: TcxGridDBColumn;
     clUpdateMobileFrom: TcxGridDBColumn;
     clUpdateMobileTo: TcxGridDBColumn;
+    MobileModel: TcxGridDBColumn;
+    MobileVesion: TcxGridDBColumn;
+    MobileVesionSDK: TcxGridDBColumn;
   private
     { Private declarations }
   public

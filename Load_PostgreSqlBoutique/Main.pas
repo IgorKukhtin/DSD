@@ -159,6 +159,7 @@ type
     btnNullDocId_Postgres: TButton;
     btnAddGuideId_Postgres: TButton;
     btnAddlDocId_Postgres: TButton;
+    cbLast: TCheckBox;
 
     procedure btnAddGuideId_PostgresClick(Sender: TObject);
     procedure btnAddlDocId_PostgresClick(Sender: TObject);
@@ -6492,7 +6493,7 @@ begin
         Add('  DiscountTaxItems.Id as ObjectId');
         Add(', Unit.Id_Postgres as UnitId');
         Add(', BillItemsIncome.GoodsId_Postgres as GoodsID');
-        Add(', DiscountTaxItems.StartDate as OperDate');
+        Add(', DiscountTaxItems.StartDate as StartDate');
         Add(', DiscountTaxItems.PercentTax as Value');
         Add(', DiscountTaxItems.Id_Postgres');
         Add('from DBA.DiscountTaxItems');
@@ -6500,6 +6501,9 @@ begin
         Add('     left outer join BillItemsIncome on BillItemsIncome.ID= DiscountTaxItems.BillItemsIncomeID');
         Add('where BillItemsIncome.GoodsId_Postgres is not null');  // Эта строка только для тестирования в реальной загрузке НЕ удалять
         Add('  and (DiscountTaxItems.PercentTax <> 0 or DiscountTaxItems.StartDate <> zc_DateStart())'); //
+        if cbLast.Checked = TRUE
+        then Add('  and DiscountTaxItems.EndDate = zc_DateEnd()')
+        else Add('  and DiscountTaxItems.EndDate <> zc_DateEnd()');
         Add('order by StartDate');
         Open;
         //
@@ -6517,9 +6521,9 @@ begin
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inUnitId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
+        toStoredProc.Params.AddParam ('inStartDate',ftDateTime,ptInput, '');
         toStoredProc.Params.AddParam ('inValue',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inIsLast',ftBoolean,ptInput, True);
+        toStoredProc.Params.AddParam ('inIsLast',ftBoolean,ptInput, cbLast.Checked);
         //
 
         while not EOF do
@@ -6531,7 +6535,7 @@ begin
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inUnitId').Value:=FieldByName('UnitId').AsString;
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId').AsString;
-             toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsString;
+             toStoredProc.Params.ParamByName('inStartDate').Value:=FieldByName('StartDate').AsString;
              toStoredProc.Params.ParamByName('inValue').Value:=FieldByName('Value').AsString;
              //
 
@@ -6567,14 +6571,17 @@ begin
         Add('  PriceListItems.Id as ObjectId');
         Add(', PriceList.Id_Postgres as PriceListID');
         Add(', BillItemsIncome.GoodsId_Postgres as GoodsId ');
-        Add(', PriceListItems.StartDate as OperDate');
+        Add(', PriceListItems.StartDate as StartDate');
         Add(', PriceListItems.NewPrice as Value');
         Add(', PriceListItems.Id_Postgres');
         Add('from DBA.PriceListItems');
         Add('     left outer join PriceList on PriceList.id = PriceListItems.PriceListID');
         Add('     left outer join BillItemsIncome on BillItemsIncome.GoodsID= PriceListItems.goodsid');
         Add('where BillItemsIncome.GoodsId_Postgres is not null'); // Эта строка только для тестирования в реальной загрузке НЕ удалять
-        Add('  and PriceListItems.NewPrice <> 0'); //
+        Add('  and PriceListItems.NewPrice <> 0');
+        if cbLast.Checked = TRUE
+        then Add('  and PriceListItems.EndDate = zc_DateEnd()')
+        else Add('  and PriceListItems.EndDate <> zc_DateEnd()');
         Add('order by StartDate');
         Open;
         //
@@ -6586,15 +6593,15 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.StoredProcName:='gpInsertUpdate_ObjectHistory_PriceListItemLast';
+        toStoredProc.StoredProcName:='gpInsertUpdate_ObjectHistory_PriceListItem_sybase';
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inPriceListId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
+        toStoredProc.Params.AddParam ('inStartDate',ftDateTime,ptInput, '');
         toStoredProc.Params.AddParam ('inValue',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inIsLast',ftBoolean,ptInput, True);
+        toStoredProc.Params.AddParam ('inIsLast',ftBoolean,ptInput, cbLast.Checked);
         //
 
         while not EOF do
@@ -6606,7 +6613,7 @@ begin
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inPriceListId').Value:=FieldByName('PriceListId').AsInteger;
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId').AsInteger;
-             toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
+             toStoredProc.Params.ParamByName('inStartDate').Value:=FieldByName('StartDate').AsDateTime;
              toStoredProc.Params.ParamByName('inValue').Value:=FieldByName('Value').AsFloat;
              //
 

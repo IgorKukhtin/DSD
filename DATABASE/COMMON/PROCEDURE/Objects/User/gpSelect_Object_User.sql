@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , BranchCode Integer, BranchName TVarChar
              , UnitCode Integer, UnitName TVarChar
              , PositionName TVarChar
-             , ProjectMobile TVarChar
+             , ProjectMobile TVarChar, MobileModel TVarChar, MobileVesion TVarChar, MobileVesionSDK TVarChar
              , BillNumberMobile Integer
              , isProjectMobile Boolean
              , UpdateMobileFrom TDateTime, UpdateMobileTo TDateTime
@@ -62,6 +62,10 @@ END IF;
        , Object_Position.ValueData AS PositionName
 
        , ObjectString_ProjectMobile.ValueData    AS ProjectMobile
+       , ObjectString_MobileModel.ValueData      AS MobileModel
+       , ObjectString_MobileVesion.ValueData     AS MobileVesion
+       , ObjectString_MobileVesionSDK.ValueData  AS MobileVesionSDK
+
        , ObjectFloat_BillNumberMobile.ValueData :: Integer AS BillNumberMobile
        , COALESCE (ObjectBoolean_ProjectMobile.ValueData, FALSE) :: Boolean  AS isProjectMobile
 
@@ -85,7 +89,17 @@ END IF;
 
         LEFT JOIN ObjectString AS ObjectString_ProjectMobile
                                ON ObjectString_ProjectMobile.ObjectId = Object_User.Id
-                              AND ObjectString_ProjectMobile.DescId = zc_ObjectString_User_ProjectMobile()
+                              AND ObjectString_ProjectMobile.DescId   = zc_ObjectString_User_ProjectMobile()
+        LEFT JOIN ObjectString AS ObjectString_MobileModel
+                               ON ObjectString_MobileModel.ObjectId = Object_User.Id
+                              AND ObjectString_MobileModel.DescId   = zc_ObjectString_User_MobileModel()
+        LEFT JOIN ObjectString AS ObjectString_MobileVesion
+                               ON ObjectString_MobileVesion.ObjectId = Object_User.Id
+                              AND ObjectString_MobileVesion.DescId   = zc_ObjectString_User_MobileVesion()
+        LEFT JOIN ObjectString AS ObjectString_MobileVesionSDK
+                               ON ObjectString_MobileVesionSDK.ObjectId = Object_User.Id
+                              AND ObjectString_MobileVesionSDK.DescId   = zc_ObjectString_User_MobileVesionSDK()
+
         LEFT JOIN ObjectBoolean AS ObjectBoolean_ProjectMobile
                                 ON ObjectBoolean_ProjectMobile.ObjectId = Object_User.Id
                                AND ObjectBoolean_ProjectMobile.DescId = zc_ObjectBoolean_User_ProjectMobile()

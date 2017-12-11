@@ -5,7 +5,7 @@ inherited MainForm: TMainForm
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 260
+  ExplicitHeight = 257
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -5993,6 +5993,9 @@ inherited MainForm: TMainForm
       object N72: TMenuItem
         Action = actWeighingProductionItem
       end
+      object N28: TMenuItem
+        Action = actReport_MIProtocol
+      end
       object N8: TMenuItem
         Caption = '-'
       end
@@ -7365,9 +7368,6 @@ inherited MainForm: TMainForm
         end
         object N148: TMenuItem
           Action = actReport_UserProtocol
-        end
-        object N28: TMenuItem
-          Action = actReport_MIProtocol
         end
       end
       object N80: TMenuItem [19]

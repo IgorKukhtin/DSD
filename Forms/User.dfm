@@ -142,6 +142,33 @@ object UserForm: TUserForm
         Options.Editing = False
         Width = 82
       end
+      object MobileModel: TcxGridDBColumn
+        Caption = #1052#1086#1076#1077#1083#1100' '#1084#1086#1073'. '#1091#1089#1090#1088'-'#1074#1072
+        DataBinding.FieldName = 'MobileModel'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object MobileVesion: TcxGridDBColumn
+        Caption = #1042#1077#1088#1089#1080#1103' Android'
+        DataBinding.FieldName = 'MobileVesion'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object MobileVesionSDK: TcxGridDBColumn
+        Caption = #1042#1077#1088#1089#1080#1103' SDK'
+        DataBinding.FieldName = 'MobileVesionSDK'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object clisProjectMobile: TcxGridDBColumn
         Caption = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090
         DataBinding.FieldName = 'isProjectMobile'
@@ -165,11 +192,15 @@ object UserForm: TUserForm
       object clUpdateMobileFrom: TcxGridDBColumn
         Caption = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' '#1089#1080#1085#1093#1088'. '#1089' '#1084#1086#1073'. '#1091#1089#1090'-'#1074#1072
         DataBinding.FieldName = 'UpdateMobileFrom'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Options.Editing = False
       end
       object clUpdateMobileTo: TcxGridDBColumn
         Caption = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' '#1089#1080#1085#1093#1088'. '#1085#1072' '#1084#1086#1073'. '#1091#1089#1090'-'#1074#1072
         DataBinding.FieldName = 'UpdateMobileTo'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Options.Editing = False
       end
       object clErased: TcxGridDBColumn

@@ -692,7 +692,7 @@
         object cbDiscountPeriodItem: TCheckBox
           Tag = 20
           Left = 6
-          Top = 321
+          Top = 329
           Width = 204
           Height = 17
           Caption = '3. '#1048#1089#1090#1086#1088#1080#1103' '#1089#1082#1080#1076#1086#1082
@@ -708,7 +708,7 @@
         object cbPriceListItem: TCheckBox
           Tag = 20
           Left = 6
-          Top = 305
+          Top = 313
           Width = 204
           Height = 17
           Caption = '2. '#1048#1089#1090#1086#1088#1080#1103' '#1094#1077#1085#1099
@@ -847,6 +847,20 @@
           Font.Style = []
           ParentFont = False
           TabOrder = 17
+        end
+        object cbLast: TCheckBox
+          Left = 6
+          Top = 296
+          Width = 142
+          Height = 17
+          Caption = #1058#1086#1083#1100#1082#1086' Last :'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 18
         end
       end
       object CompleteDocumentPanel: TPanel
