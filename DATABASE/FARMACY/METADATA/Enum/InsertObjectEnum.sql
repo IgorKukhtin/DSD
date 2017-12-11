@@ -1316,46 +1316,91 @@ END $$;
 
 -- Загрузка прайсов - добавляем параметр Код УКТ ЗЕД , ручками
 DO $$
+DECLARE vbUserId Integer;
+DECLARE vbImportTypeItemId Integer;
+BEGIN
+    SELECT Id INTO vbUserId FROM Object WHERE DescId = zc_Object_User() AND ValueData = 'Админ';
+
     vbImportTypeItemId := 0;
-    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inCodeUKTZED';
-                  PERFORM gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0),   --3694090
+   -- Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inCodeUKTZED';
+                  PERFORM gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(Object_ImportTypeItems_View.Id,0),   --3694090
                                                                 inParamNumber   := 15, 
                                                                 inName          := 'inCodeUKTZED', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Код УКТ ЗЕД',
                                                                 inImportTypeId  := tmp.Id,  --134886, 
                                                                 inSession       := vbUserId::TVarChar)
-                  FROM gpSelect_Object_ImportType( inSession := '3') AS tmp
+                  FROM gpSelect_Object_ImportType( inSession := vbUserId::TVarChar) AS tmp
+                       LEFT JOIN Object_ImportTypeItems_View ON Object_ImportTypeItems_View.ImportTypeId = tmp.Id
+                                                            AND Object_ImportTypeItems_View.Name = 'inCodeUKTZED'
                   where tmp.Name = 'Загрузка прайсов';
 
 -- 2 контракта
     vbImportTypeItemId := 0;
-    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inCodeUKTZED';
-                  PERFORM gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0),   --3694165
+    --Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inCodeUKTZED';
+                  PERFORM gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(Object_ImportTypeItems_View.Id,0),   --3694165
                                                                 inParamNumber   := 17, 
                                                                 inName          := 'inCodeUKTZED', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Код УКТ ЗЕД',
                                                                 inImportTypeId  := tmp.Id,  --977296, 
                                                                 inSession       := vbUserId::TVarChar)
-                  FROM gpSelect_Object_ImportType( inSession := '3') AS tmp
+                  FROM gpSelect_Object_ImportType( inSession := vbUserId::TVarChar) AS tmp
+                       LEFT JOIN Object_ImportTypeItems_View ON Object_ImportTypeItems_View.ImportTypeId = tmp.Id
+                                                            AND Object_ImportTypeItems_View.Name = 'inCodeUKTZED'
                   where tmp.Name = 'Загрузка прайсов по 2-м контрактам';
 
 
 -- 3 контракта  -- "Загрузка прайсов по 3-м контрактам"
     vbImportTypeItemId := 0;
-    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inCodeUKTZED';
-                  PERFORM gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0),   --3694167
+    --Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inCodeUKTZED';
+                  PERFORM gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(Object_ImportTypeItems_View.Id,0),   --3694167
                                                                 inParamNumber   := 19, 
                                                                 inName          := 'inCodeUKTZED', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Код УКТ ЗЕД',
                                                                 inImportTypeId  := tmp.Id,  --3659859, 
                                                                 inSession       := vbUserId::TVarChar)
-                  FROM gpSelect_Object_ImportType( inSession := '3') AS tmp
+                  FROM gpSelect_Object_ImportType( inSession := vbUserId::TVarChar) AS tmp
+                       LEFT JOIN Object_ImportTypeItems_View ON Object_ImportTypeItems_View.ImportTypeId = tmp.Id
+                                                            AND Object_ImportTypeItems_View.Name = 'inCodeUKTZED'
                   where tmp.Name = 'Загрузка прайсов по 3-м контрактам';
 
 
+
+END $$;
+
+
+
+-- Загрузка приходов ММО - добавляем параметр Код УКТ ЗЕД , ручками
+DO $$
+DECLARE vbUserId Integer;
+BEGIN
+    SELECT Id INTO vbUserId FROM Object WHERE DescId = zc_Object_User() AND ValueData = 'Админ';
+                  PERFORM gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(Object_ImportTypeItems_View.Id,0),   
+                                                                inParamNumber   := 26, 
+                                                                inName          := 'inCodeUKTZED', 
+                                                                inParamType     := 'ftString', 
+                                                                inUserParamName := 'Код УКТ ЗЕД',
+                                                                inImportTypeId  := tmp.Id,  --134886, 
+                                                                inSession       := vbUserId::TVarChar)
+                  FROM gpSelect_Object_ImportType( inSession := vbUserId::TVarChar) AS tmp
+                       LEFT JOIN Object_ImportTypeItems_View ON Object_ImportTypeItems_View.ImportTypeId = tmp.Id
+                                                            AND Object_ImportTypeItems_View.Name = 'inCodeUKTZED'
+                  where tmp.Name = 'Загрузка приходов ММО';
+
+     SELECT gpInsertUpdate_Object_ImportSettingsItems(ioId                := 0,
+                                                      inName              := 'V',
+                                                      inImportSettingsId  := Object_ImportSettings_View.Id, --vbImportSettingId,
+                                                      inImportTypeItemsId := Object_ImportTypeItems_View.Id,
+                                                      inDefaultValue      := NULL::TVarCHar,
+                                                      inSession           := '3'::TVarChar)
+     FROM Object_ImportSettings_View
+          LEFT JOIN Object_ImportTypeItems_View ON Object_ImportTypeItems_View.ImportTypeId = Object_ImportSettings_View.ImportTypeId
+          LEFT JOIN Object_ImportSettingsItems_View ON Object_ImportSettingsItems_View.ImportSettingsId = Object_ImportSettings_View.Id
+                                                   AND Object_ImportSettingsItems_View.ImportTypeItemsId = Object_ImportTypeItems_View.Id
+     WHERE Object_ImportTypeItems_View.Name = 'inCodeUKTZED'
+       AND Object_ImportSettings_View.ImportTypeName = 'Загрузка приходов ММО'
 
 END $$;
 

@@ -62,6 +62,7 @@ type
     spUpdateObject: TdsdStoredProc;
     Value: TcxGridDBColumn;
     actUpdateDataSet: TdsdUpdateDataSet;
+    EnumName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -5,7 +5,7 @@ inherited ImportGroupForm: TImportGroupForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 621
-  ExplicitHeight = 380
+  ExplicitHeight = 383
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -671,8 +671,8 @@ inherited ImportGroupForm: TImportGroupForm
     OutputType = otResult
     Params = <>
     PackSize = 1
-    Left = 512
-    Top = 184
+    Left = 544
+    Top = 208
   end
   object GuidesArea: TdsdGuides
     KeyField = 'Id'

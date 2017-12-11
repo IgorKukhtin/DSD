@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_WorkTimeKind(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ShortName TVarChar
              , Value     TVarChar
+             , EnumName  TVarChar
              , Tax       TFloat
              , isErased Boolean) AS
 $BODY$BEGIN
@@ -23,15 +24,19 @@ $BODY$BEGIN
       
       , ObjectString_ShortName.ValueData AS ShortName 
       , zfCalc_ViewWorkHour (0, ObjectString_ShortName.ValueData) AS Value
+      , ObjectString_Enum.ValueData      AS EnumName
       , ObjectFloat_Tax.ValueData        AS Tax
       , Object_WorkTimeKind.isErased     AS isErased
       
    FROM OBJECT AS Object_WorkTimeKind
-   
+        LEFT JOIN ObjectString AS ObjectString_Enum
+                               ON ObjectString_Enum.ObjectId = Object_WorkTimeKind.Id
+                              AND ObjectString_Enum.DescId = zc_ObjectString_Enum()
+
         LEFT JOIN ObjectString AS ObjectString_ShortName
                                ON ObjectString_ShortName.ObjectId = Object_WorkTimeKind.Id
                               AND ObjectString_ShortName.DescId = zc_objectString_WorkTimeKind_ShortName()
-
+                              
         LEFT JOIN ObjectFloat AS ObjectFloat_Tax
                               ON ObjectFloat_Tax.ObjectId = Object_WorkTimeKind.Id
                              AND ObjectFloat_Tax.DescId = zc_ObjectFloat_WorkTimeKind_Tax()

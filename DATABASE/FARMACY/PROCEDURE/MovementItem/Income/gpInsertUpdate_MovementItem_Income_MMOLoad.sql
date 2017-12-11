@@ -1,7 +1,13 @@
 -- Function: gpInsertUpdate_MovementItem_Income_MMOLoad ()
 
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income_MMOLoad
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income_MMOLoad(TVarChar, TVarChar, TVarChar, TDateTime, TVarChar, TDateTime, Boolean, Integer
+                                                                 , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, TVarChar
+                                                                 , TDateTime, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income_MMOLoad(TVarChar, TVarChar, TVarChar, TDateTime, TVarChar, TDateTime, Boolean, Integer
+                                                                 , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, TVarChar
+                                                                 , TDateTime, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TVarChar, TVarChar);
+                                                                 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income_MMOLoad(
     IN inOKPOFrom            TVarChar  , -- Юридические лица
     IN inOKPOTo              TVarChar  , -- Юридические лица
@@ -32,6 +38,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income_MMOLoad(
     IN inSertificatEnd       TDateTime , -- Дата окончания регистрации
     
     IN inisLastRecord        Boolean   ,
+    IN inCodeUKTZED          TVarChar  , --
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID AS
@@ -95,8 +102,11 @@ BEGIN
                                                   , inSertificatEnd    := inSertificatEnd    -- Дата окончания регистрации
 
                                                   , inisLastRecord   := inisLastRecord  
+                                                  , inCodeUKTZED     := inCodeUKTZED
                                                   , inSession        := CASE WHEN inSession = '1871720' THEN '2592170' ELSE inSession END); -- Авто-загрузка прайс-поставщик => Авто-загрузка ММО
-
+                                                  
+                                                  
+   --
 
 END;
 $BODY$
@@ -105,6 +115,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 11.12.17         * inCodeUKTZED
  01.10.15                                                                      * inSertificatNumber, inSertificatStart, inSertificatEnd
  06.03.15                        *   
  05.01.15                        *   
