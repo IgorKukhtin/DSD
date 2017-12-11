@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_Object_Goods_andArea()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods_andArea(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods_andArea(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, Boolean);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Goods_andArea(
  INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
@@ -14,6 +15,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Goods_andArea(
     IN inMakerId             Integer   ,    -- Производитель
     IN inAreaId              Integer   ,    -- 
     IN inMakerName           TVarChar  ,    -- Производитель
+    IN inCodeUKTZED          TVarChar  ,    -- Code UKTZED
     IN inCheckName           Boolean
 )
 RETURNS Integer
@@ -41,7 +43,9 @@ BEGIN
 
   -- сохранили свойство <связи чьи товары>
   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Area(), ioId, inAreaId);
-
+ 
+  -- сохранили свойство
+  PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_UKTZED(), ioId, inCodeUKTZED);
 
 END;
 $BODY$
@@ -50,6 +54,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.12.17         * add inCodeUKTZED
  25.10.17                                        *
 */
 

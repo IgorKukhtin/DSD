@@ -69,7 +69,8 @@ BEGIN
                              vbUserId , 
                                    0  ,
                        vbAreaId_find  ,
-       LoadPriceListItem.ProducerName ,     
+       LoadPriceListItem.ProducerName , 
+         LoadPriceListItem.CodeUKTZED ,
                                 FALSE )
         FROM LoadPriceListItem
                 LEFT JOIN (SELECT Object_Goods_View.Id, Object_Goods_View.GoodsCode, Object_Goods_View.GoodsName, MakerName 

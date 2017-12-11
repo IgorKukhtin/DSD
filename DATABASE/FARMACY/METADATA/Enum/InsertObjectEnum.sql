@@ -1274,7 +1274,7 @@ BEGIN
                                                       inDefaultValue      := NULL::TVarCHar,
                                                       inSession           := vbUserId::TVarChar);
                                                       
-END $$;
+END $$; 
 
 
 
@@ -1314,7 +1314,50 @@ BEGIN
                                          
 END $$;
 
+-- Загрузка прайсов - добавляем параметр Код УКТ ЗЕД , ручками
+DO $$
+    vbImportTypeItemId := 0;
+    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inCodeUKTZED';
+                  PERFORM gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0),   --3694090
+                                                                inParamNumber   := 15, 
+                                                                inName          := 'inCodeUKTZED', 
+                                                                inParamType     := 'ftString', 
+                                                                inUserParamName := 'Код УКТ ЗЕД',
+                                                                inImportTypeId  := tmp.Id,  --134886, 
+                                                                inSession       := vbUserId::TVarChar)
+                  FROM gpSelect_Object_ImportType( inSession := '3') AS tmp
+                  where tmp.Name = 'Загрузка прайсов';
 
+-- 2 контракта
+    vbImportTypeItemId := 0;
+    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inCodeUKTZED';
+                  PERFORM gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0),   --3694165
+                                                                inParamNumber   := 17, 
+                                                                inName          := 'inCodeUKTZED', 
+                                                                inParamType     := 'ftString', 
+                                                                inUserParamName := 'Код УКТ ЗЕД',
+                                                                inImportTypeId  := tmp.Id,  --977296, 
+                                                                inSession       := vbUserId::TVarChar)
+                  FROM gpSelect_Object_ImportType( inSession := '3') AS tmp
+                  where tmp.Name = 'Загрузка прайсов по 2-м контрактам';
+
+
+-- 3 контракта  -- "Загрузка прайсов по 3-м контрактам"
+    vbImportTypeItemId := 0;
+    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inCodeUKTZED';
+                  PERFORM gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0),   --3694167
+                                                                inParamNumber   := 19, 
+                                                                inName          := 'inCodeUKTZED', 
+                                                                inParamType     := 'ftString', 
+                                                                inUserParamName := 'Код УКТ ЗЕД',
+                                                                inImportTypeId  := tmp.Id,  --3659859, 
+                                                                inSession       := vbUserId::TVarChar)
+                  FROM gpSelect_Object_ImportType( inSession := '3') AS tmp
+                  where tmp.Name = 'Загрузка прайсов по 3-м контрактам';
+
+
+
+END $$;
 
 
 DO $$

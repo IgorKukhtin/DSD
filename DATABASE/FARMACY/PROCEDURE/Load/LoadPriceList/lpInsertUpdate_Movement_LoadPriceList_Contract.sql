@@ -9,6 +9,7 @@ where ParamName = 'inAreaId'
 
 -- DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_LoadPriceList_Contract (Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TVarChar, TVarChar, Boolean, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_LoadPriceList_Contract (Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TVarChar, TVarChar, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_LoadPriceList_Contract (Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TVarChar, TVarChar, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_LoadPriceList_Contract(
     IN inJuridicalId         Integer   , -- Юридические лица
@@ -16,6 +17,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_LoadPriceList_Contract(
     IN inAreaId              Integer   , -- Регион
     IN inCommonCode          Integer   ,
     IN inBarCode             TVarChar  ,
+    IN inCodeUKTZED          TVarChar  ,
     IN inGoodsCode           TVarChar  ,
     IN inGoodsName           TVarChar  ,
     IN inGoodsNDS            TVarChar  ,
@@ -293,11 +295,11 @@ end if;
     IF COALESCE (inPrice, 0) <> 0 THEN
         -- сохранение "элемента"
         IF COALESCE(vbLoadPriceListItemsId, 0) = 0 THEN
-            INSERT INTO LoadPriceListItem (LoadPriceListId, CommonCode, BarCode, GoodsCode, GoodsName, GoodsNDS, GoodsId, Price, PriceOriginal, ExpirationDate, PackCount, ProducerName)
-                                   VALUES (vbLoadPriceListId, inCommonCode, inBarCode, inGoodsCode, inGoodsName, inGoodsNDS, vbGoodsId, inPrice, vbPriceOriginal, inExpirationDate, inPackCount, inProducerName);
+            INSERT INTO LoadPriceListItem (LoadPriceListId, CommonCode, BarCode, CodeUKTZED, GoodsCode, GoodsName, GoodsNDS, GoodsId, Price, PriceOriginal, ExpirationDate, PackCount, ProducerName)
+                                   VALUES (vbLoadPriceListId, inCommonCode, inBarCode, inCodeUKTZED, inGoodsCode, inGoodsName, inGoodsNDS, vbGoodsId, inPrice, vbPriceOriginal, inExpirationDate, inPackCount, inProducerName);
         ELSE
             UPDATE LoadPriceListItem
-             SET GoodsName = inGoodsName, CommonCode = inCommonCode, BarCode = inBarCode, GoodsNDS = inGoodsNDS, GoodsId = vbGoodsId,
+             SET GoodsName = inGoodsName, CommonCode = inCommonCode, BarCode = inBarCode, CodeUKTZED = inCodeUKTZED, GoodsNDS = inGoodsNDS, GoodsId = vbGoodsId,
                  Price = inPrice, PriceOriginal = vbPriceOriginal, ExpirationDate = inExpirationDate, PackCount = inPackCount, ProducerName = inProducerName
             WHERE Id = vbLoadPriceListItemsId;
         END IF;
@@ -311,6 +313,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Ярошенко Р.Ф.   Воробкало А.А.
+ 11.12.17         * add inCodeUKTZED
  28.03.2017                                                       *
  10.12.2016                                      *
 */
