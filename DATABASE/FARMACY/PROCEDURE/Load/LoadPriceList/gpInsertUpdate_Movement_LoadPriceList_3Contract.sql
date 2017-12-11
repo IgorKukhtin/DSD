@@ -2,6 +2,7 @@
 
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LoadPriceList_3Contract (Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, TVarChar, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LoadPriceList_3Contract (Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LoadPriceList_3Contract (Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, TVarChar, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_LoadPriceList_3Contract(
     IN inJuridicalId         Integer   , -- Юридические лица
@@ -22,6 +23,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_LoadPriceList_3Contract(
     IN inPackCount           TVarChar  ,  
     IN inProducerName        TVarChar  , 
     IN inNDSinPrice          Boolean   ,
+    IN inCodeUKTZED          TVarChar  ,
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -88,6 +90,7 @@ BEGIN
                                                           , inAreaId        := inAreaId
                                                           , inCommonCode    := inCommonCode
                                                           , inBarCode       := inBarCode
+                                                          , inCodeUKTZED    := inCodeUKTZED
                                                           , inGoodsCode     := inGoodsCode
                                                           , inGoodsName     := inGoodsName
                                                           , inGoodsNDS      := inGoodsNDS
@@ -107,6 +110,7 @@ BEGIN
                                                           , inAreaId        := inAreaId
                                                           , inCommonCode    := inCommonCode
                                                           , inBarCode       := inBarCode
+                                                          , inCodeUKTZED    := inCodeUKTZED
                                                           , inGoodsCode     := inGoodsCode
                                                           , inGoodsName     := inGoodsName
                                                           , inGoodsNDS      := inGoodsNDS
@@ -125,6 +129,7 @@ BEGIN
                                                           , inAreaId        := inAreaId
                                                           , inCommonCode    := inCommonCode
                                                           , inBarCode       := inBarCode
+                                                          , inCodeUKTZED    := inCodeUKTZED
                                                           , inGoodsCode     := inGoodsCode
                                                           , inGoodsName     := inGoodsName
                                                           , inGoodsNDS      := inGoodsNDS
@@ -144,5 +149,6 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 11.12.17         * inCodeUKTZED
  10.12.2016                                      *
 */

@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_Juridical(
 RETURNS TABLE (Id Integer, CommonCode Integer
              , GoodsMainId Integer, GoodsMainCode Integer, GoodsMainName TVarChar
              , GoodsId Integer, GoodsCodeInt Integer, GoodsCode TVarChar, GoodsName TVarChar
+             , CodeUKTZED TVarChar
              , MakerName TVarChar
              , ConditionsKeepId Integer, ConditionsKeepName TVarChar
              , AreaId Integer, AreaName TVarChar
@@ -38,6 +39,7 @@ BEGIN
          , Object_Goods.ObjectCode                 AS GoodsCodeInt
          , ObjectString.ValueData                  AS GoodsCode
          , Object_Goods.ValueData                  AS GoodsName
+         , ObjectString_Goods_UKTZED.ValueData     AS CodeUKTZED
          , ObjectString_Goods_Maker.ValueData      AS MakerName
 
          , Object_ConditionsKeep.Id                AS ConditionsKeepId
@@ -68,6 +70,10 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Goods_Maker
                                  ON ObjectString_Goods_Maker.ObjectId = ObjectLink_Goods_Object.ObjectId
                                 AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()
+
+          LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
+                                 ON ObjectString_Goods_UKTZED.ObjectId = ObjectLink_Goods_Object.ObjectId
+                                AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
 
           LEFT JOIN ObjectFloat AS ObjectFloat_Goods_MinimumLot
                                 ON ObjectFloat_Goods_MinimumLot.ObjectId = ObjectLink_Goods_Object.ObjectId
@@ -134,6 +140,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.
+ 11.12.17         * Goods_UKTZED
  21.10.17         * add Area
  30.03.17                                                      * isUploadTeva
  07.01.17         * add ConditionsKeep
