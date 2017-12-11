@@ -1006,7 +1006,7 @@
         object cbCompleteSale: TCheckBox
           Tag = 30
           Left = 15
-          Top = 210
+          Top = 209
           Width = 200
           Height = 17
           Caption = '5. '#1055#1088#1086#1076'.'#1087#1086#1082'.'

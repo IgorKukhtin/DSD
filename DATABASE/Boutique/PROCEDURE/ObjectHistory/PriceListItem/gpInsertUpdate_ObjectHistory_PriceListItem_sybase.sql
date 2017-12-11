@@ -1,6 +1,6 @@
--- Function: gpInsertUpdate_ObjectHistory_PriceListItem_sybase (Integer, Integer, Integer, TDateTime, TFloat, Boolean, TVarChar)
+-- Function: gpInsertUpdate_ObjectHistory_PriceListItem_sybase
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListItem_sybase (Integer, Integer, Integer, TDateTime, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListItem_sybase (Integer, Integer, Integer, TDateTime, TDateTime, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_PriceListItem_sybase(
  INOUT ioId                     Integer,    -- ключ объекта <Элемент ИСТОРИИ>
@@ -19,17 +19,19 @@ DECLARE
 BEGIN
    -- !!!меняем значение!!!
    IF inIsLast = TRUE
-   THEN PERFORM gpInsertUpdate_ObjectHistory_PriceListItemLast (ioId          := ioId
-                                                              , inPriceListId := inPriceListToId
-                                                              , inGoodsId     := inGoodsId
-                                                              , inOperDate    := inStartDate
-                                                              , inValue       := inValue
-                                                              , inIsLast      := inIsLast
-                                                              , inUserId      := vbUserId
-                                                               );
+   THEN SELECT tmp.ioId INTO ioId
+        FROM gpInsertUpdate_ObjectHistory_PriceListItemLast (ioId          := ioId
+                                                           , inPriceListId := inPriceListId
+                                                           , inGoodsId     := inGoodsId
+                                                           , inOperDate    := inStartDate
+                                                           , inValue       := inValue
+                                                           , inIsLast      := inIsLast
+                                                           , inSession     := inSession
+                                                            ) AS tmp;
    ELSE
        -- сохранили протокол
-       PERFORM lpInsert_ObjectHistoryProtocol (inObjectId:= vbPriceListItemId, inUserId:= vbUserId, inStartDate:= outStartDate, inEndDate:= outEndDate, inPrice:= inValue, inIsUpdate:= TRUE, inIsErased:= FALSE);
+       RAISE EXCEPTION 'inIsLast <%>', inIsLast;
+   END IF;
 
 
 END;$BODY$

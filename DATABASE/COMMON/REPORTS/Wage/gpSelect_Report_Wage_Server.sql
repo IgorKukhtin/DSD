@@ -514,11 +514,14 @@ BEGIN
                                                 AND COALESCE (Object_Personal.PositionLevelId, 0) = COALESCE (tmpRes.PositionLevelId, 0)
                                                 AND COALESCE (Object_Personal.UnitId, 0)          = COALESCE (tmpRes.UnitId, 0)
                                                 AND Object_Personal.ORD                           = 1
+            LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList_two
+                                 ON ObjectLink_Personal_PersonalServiceList_two.ObjectId = tmpRes.MemberId
+                                AND ObjectLink_Personal_PersonalServiceList_two.DescId   = zc_ObjectLink_Personal_PersonalServiceList()
             LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
                                        ON ObjectLink_Personal_PersonalServiceList.ObjectId = Object_Personal.PersonalId
                                       AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
             LEFT JOIN tmpPersonalServiceList ON tmpPersonalServiceList.MemberId = tmpRes.MemberId
-            LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = COALESCE (ObjectLink_Personal_PersonalServiceList.ChildObjectId, tmpPersonalServiceList.PersonalServiceListId)
+            LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = COALESCE (ObjectLink_Personal_PersonalServiceList_two.ChildObjectId, COALESCE (ObjectLink_Personal_PersonalServiceList.ChildObjectId, tmpPersonalServiceList.PersonalServiceListId))
 
 
             LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = tmpRes.DocumentKindId
