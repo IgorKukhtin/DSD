@@ -752,11 +752,9 @@ AS  (SELECT
            , MIObject_Position.ObjectId                    AS PositionId
            , COALESCE (MIObject_PositionLevel.ObjectId, 0) AS PositionLevelId
            , COALESCE (MIObject_StorageLine.ObjectId, 0)   AS StorageLineId
-           , CASE WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Trainee50()
-                       -- !!!Захардкодил!!!
-                       THEN 0.5 * MI_SheetWorkTime.Amount
-                  ELSE MI_SheetWorkTime.Amount
-             END :: TFloat AS Amount
+           , -- !!!может измениться!!!
+             (CASE WHEN Object_WorkTimeKind.Tax > 0 THEN Object_WorkTimeKind.Tax / 100 ELSE 1 END * MI_SheetWorkTime.Amount) :: TFloat AS Amount
+
            -- , SUM (MI_SheetWorkTime.Amount) OVER (PARTITION BY MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId) AS SUM_MemberHours
            -- , SUM (MI_SheetWorkTime.Amount) OVER (PARTITION BY Movement.OperDate, MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId) AS AmountInDay
            -- , COUNT(*) OVER (PARTITION BY Movement.OperDate, MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId) AS Count_MemberInDay
@@ -774,6 +772,7 @@ AS  (SELECT
                                                ON MIObject_WorkTimeKind.MovementItemId = MI_SheetWorkTime.Id
                                               AND MIObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind()
              INNER JOIN Object_WorkTimeKind_Wages_View AS Object_WorkTimeKind ON Object_WorkTimeKind.Id = MIObject_WorkTimeKind.ObjectId
+
              LEFT JOIN Object AS Object_Member ON Object_Member.Id = MI_SheetWorkTime.ObjectId
 
              LEFT OUTER JOIN MovementItemLinkObject AS MIObject_PersonalGroup

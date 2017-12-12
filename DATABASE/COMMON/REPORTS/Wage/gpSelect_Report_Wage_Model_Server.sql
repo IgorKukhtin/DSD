@@ -750,11 +750,9 @@ BEGIN
            , MIObject_Position.ObjectId                    AS PositionId
            , COALESCE (MIObject_PositionLevel.ObjectId, 0) AS PositionLevelId
            , COALESCE (MIObject_StorageLine.ObjectId, 0)   AS StorageLineId
-           , CASE WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Trainee50()
-                       -- !!!Захардкодил!!!
-                       THEN 0.5 * MI_SheetWorkTime.Amount
-                  ELSE MI_SheetWorkTime.Amount
-             END :: TFloat AS Amount
+           , -- !!!может измениться!!!
+             (CASE WHEN Object_WorkTimeKind.Tax > 0 THEN Object_WorkTimeKind.Tax / 100 ELSE 1 END * MI_SheetWorkTime.Amount) :: TFloat AS Amount
+
            -- , SUM (MI_SheetWorkTime.Amount) OVER (PARTITION BY MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId) AS SUM_MemberHours
            -- , SUM (MI_SheetWorkTime.Amount) OVER (PARTITION BY Movement.OperDate, MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId) AS AmountInDay
            -- , COUNT(*) OVER (PARTITION BY Movement.OperDate, MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId) AS Count_MemberInDay

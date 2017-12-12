@@ -469,6 +469,8 @@ BEGIN
                  FROM MovementItem
                  WHERE MovementItem.MovementId = inMovementId
                    AND MovementItem.DescId     = zc_MI_Master()
+                   AND MovementItem.ObjectId   NOT IN (489150 -- select * from object where Id = 489150 -- 2293 - Õ‡. ¿——Œ–“» 300 „/¯Ú
+                                                      )
                 ;
                  -- —Œ’–¿Õ»À»
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPack(),      _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountResult)
@@ -481,6 +483,8 @@ BEGIN
                  FROM MovementItem
                  WHERE MovementItem.MovementId = inMovementId
                    AND MovementItem.DescId     = zc_MI_Master()
+                   AND MovementItem.ObjectId   NOT IN (489150 -- select * from object where Id = 489150 -- 2293 - Õ‡. ¿——Œ–“» 300 „/¯Ú
+                                                      )
                 ;
                  -- —Œ’–¿Õ»À»
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPack_calc(), _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountResult)
@@ -607,6 +611,8 @@ BEGIN
                  FROM MovementItem
                  WHERE MovementItem.MovementId = inMovementId
                    AND MovementItem.DescId     = zc_MI_Master()
+                   AND MovementItem.ObjectId   NOT IN (489150 -- select * from object where Id = 489150 -- 2293 - Õ‡. ¿——Œ–“» 300 „/¯Ú
+                                                      )
                 ;
                  -- —Œ’–¿Õ»À»
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackSecond(),      _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountSecondResult)
@@ -619,6 +625,8 @@ BEGIN
                  FROM MovementItem
                  WHERE MovementItem.MovementId = inMovementId
                    AND MovementItem.DescId     = zc_MI_Master()
+                   AND MovementItem.ObjectId   NOT IN (489150 -- select * from object where Id = 489150 -- 2293 - Õ‡. ¿——Œ–“» 300 „/¯Ú
+                                                      )
                 ;
                  -- —Œ’–¿Õ»À»
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackSecond_calc(), _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountSecondResult)
@@ -744,6 +752,8 @@ BEGIN
                  FROM MovementItem
                  WHERE MovementItem.MovementId = inMovementId
                    AND MovementItem.DescId     = zc_MI_Master()
+                   AND MovementItem.ObjectId   NOT IN (489150 -- select * from object where Id = 489150 -- 2293 - Õ‡. ¿——Œ–“» 300 „/¯Ú
+                                                      )
                 ;
                  -- —Œ’–¿Õ»À»
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNext(),      _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountNextResult)
@@ -756,6 +766,8 @@ BEGIN
                  FROM MovementItem
                  WHERE MovementItem.MovementId = inMovementId
                    AND MovementItem.DescId     = zc_MI_Master()
+                   AND MovementItem.ObjectId   NOT IN (489150 -- select * from object where Id = 489150 -- 2293 - Õ‡. ¿——Œ–“» 300 „/¯Ú
+                                                      )
                 ;
                  -- —Œ’–¿Õ»À»
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNext_calc(), _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountNextResult)
@@ -881,6 +893,8 @@ BEGIN
                  FROM MovementItem
                  WHERE MovementItem.MovementId = inMovementId
                    AND MovementItem.DescId     = zc_MI_Master()
+                   AND MovementItem.ObjectId   NOT IN (489150 -- select * from object where Id = 489150 -- 2293 - Õ‡. ¿——Œ–“» 300 „/¯Ú
+                                                      )
                 ;
                  -- —Œ’–¿Õ»À»
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNextSecond(),      _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountNextSecondResult)
@@ -893,6 +907,8 @@ BEGIN
                  FROM MovementItem
                  WHERE MovementItem.MovementId = inMovementId
                    AND MovementItem.DescId     = zc_MI_Master()
+                   AND MovementItem.ObjectId   NOT IN (489150 -- select * from object where Id = 489150 -- 2293 - Õ‡. ¿——Œ–“» 300 „/¯Ú
+                                                      )
                 ;
                  -- —Œ’–¿Õ»À»
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNextSecond_calc(), _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountNextSecondResult)

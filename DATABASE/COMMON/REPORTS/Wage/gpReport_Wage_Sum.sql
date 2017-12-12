@@ -153,17 +153,14 @@ BEGIN
                , MIObject_PersonalGroup.ObjectId                AS PersonalGroupId
                , MIObject_Position.ObjectId                     AS PositionId
                , COALESCE (MIObject_PositionLevel.ObjectId, 0)  AS PositionLevelId
-               , CASE WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Trainee50()
-                       -- !!!Захардкодил!!!
-                       THEN 0.5 * MI_SheetWorkTime.Amount
-                  ELSE MI_SheetWorkTime.Amount
-                 END :: TFloat AS SheetWorkTime_Amount
+               , -- !!!может измениться!!!
+                 (CASE WHEN Object_WorkTimeKind.Tax > 0 THEN Object_WorkTimeKind.Tax / 100 ELSE 1 END * MI_SheetWorkTime.Amount) :: TFloat AS SheetWorkTime_Amount
                , 1                                              AS Count_Day
                -- , COUNT(*) OVER (PARTITION BY MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId) AS Count_Member
                -- , SUM (MI_SheetWorkTime.Amount) OVER (PARTITION BY MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId) AS SUM_MemberHours
                , CASE WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_Day() -- Доплата за 1 день на всех
-                           THEN Setting.StaffListSumm_Value / NULLIF ((SUM (MI_SheetWorkTime.Amount * CASE WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Trainee50() THEN 0.5 ELSE 1 END) OVER (PARTITION BY Movement.OperDate, MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId)), 0)
-                              * MI_SheetWorkTime.Amount * CASE WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Trainee50() THEN 0.5 ELSE 1 END
+                           THEN Setting.StaffListSumm_Value / NULLIF ((SUM (MI_SheetWorkTime.Amount * CASE WHEN Object_WorkTimeKind.Tax > 0 THEN Object_WorkTimeKind.Tax / 100 ELSE 1 END) OVER (PARTITION BY Movement.OperDate, MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId)), 0)
+                              * MI_SheetWorkTime.Amount * CASE WHEN Object_WorkTimeKind.Tax > 0 THEN Object_WorkTimeKind.Tax / 100 ELSE 1 END
                       WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_Personal() -- Доплата за 1 день на человека
                            THEN Setting.StaffListSumm_Value
                  END AS SummaAdd
