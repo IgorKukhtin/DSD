@@ -27,6 +27,7 @@ RETURNS TABLE (Id Integer /*IdBarCode TVarChar,*/
              , ExpirationDate TDateTime
              , PartionGoods TVarChar
              , MakerName TVarChar
+             , CodeUKTZED TVarChar
              , FEA TVarChar
              , Measure TVarChar
              , DublePriceColour Integer
@@ -184,6 +185,7 @@ BEGIN
                           , COALESCE (MIFloat_PrintCount.ValueData, 0)   ::TFloat      AS PrintCount
                           , COALESCE (MIBoolean_Print.ValueData, TRUE)   ::Boolean     AS isPrint
 
+                          , MIString_UKTZED.ValueData           AS CodeUKTZED
                           , MIString_FEA.ValueData              AS FEA
                           , MIString_Measure.ValueData          AS Measure
 
@@ -211,57 +213,60 @@ BEGIN
                         LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MILO_Insert.ObjectId  
 
                         LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
-                                        ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
-                                       AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+                                                    ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
+                                                   AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
                         LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
-                                        ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
-                                       AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+                                                    ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
+                                                   AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
 
                         LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPrice
-                                            ON MIFloat_JuridicalPrice.MovementItemId = MovementItem.Id
-                                           AND MIFloat_JuridicalPrice.DescId = zc_MIFloat_JuridicalPrice()
+                                                    ON MIFloat_JuridicalPrice.MovementItemId = MovementItem.Id
+                                                   AND MIFloat_JuridicalPrice.DescId = zc_MIFloat_JuridicalPrice()
                         LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPriceWithVAT
-                                            ON MIFloat_JuridicalPriceWithVAT.MovementItemId = MovementItem.Id
-                                           AND MIFloat_JuridicalPriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
+                                                    ON MIFloat_JuridicalPriceWithVAT.MovementItemId = MovementItem.Id
+                                                   AND MIFloat_JuridicalPriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
 
                         LEFT JOIN MovementItemFloat AS MIFloat_PrintCount
-                                            ON MIFloat_PrintCount.MovementItemId = MovementItem.Id
-                                           AND MIFloat_PrintCount.DescId = zc_MIFloat_PrintCount()
+                                                    ON MIFloat_PrintCount.MovementItemId = MovementItem.Id
+                                                   AND MIFloat_PrintCount.DescId = zc_MIFloat_PrintCount()
 
                         LEFT JOIN MovementItemBoolean AS MIBoolean_Print
-                                              ON MIBoolean_Print.MovementItemId = MovementItem.Id
-                                             AND MIBoolean_Print.DescId = zc_MIBoolean_Print()
+                                                      ON MIBoolean_Print.MovementItemId = MovementItem.Id
+                                                     AND MIBoolean_Print.DescId = zc_MIBoolean_Print()
 
-                        LEFT JOIN MovementItemDate  AS MIDate_ExpirationDate
-                                        ON MIDate_ExpirationDate.MovementItemId = MovementItem.Id
-                                       AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()                                         
+                        LEFT JOIN MovementItemDate AS MIDate_ExpirationDate
+                                                   ON MIDate_ExpirationDate.MovementItemId = MovementItem.Id
+                                                  AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()                                         
                         LEFT JOIN MovementItemString AS MIString_PartionGoods
-                                         ON MIString_PartionGoods.MovementItemId = MovementItem.Id
-                                        AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods() 
+                                                     ON MIString_PartionGoods.MovementItemId = MovementItem.Id
+                                                    AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods() 
                         LEFT JOIN MovementItemString AS MIString_Measure
-                                         ON MIString_Measure.MovementItemId = MovementItem.Id
-                                        AND MIString_Measure.DescId = zc_MIString_Measure()                                         
+                                                     ON MIString_Measure.MovementItemId = MovementItem.Id
+                                                    AND MIString_Measure.DescId = zc_MIString_Measure()                                         
                         LEFT JOIN MovementItemString AS MIString_FEA
-                                         ON MIString_FEA.MovementItemId = MovementItem.Id
-                                        AND MIString_FEA.DescId = zc_MIString_FEA() 
+                                                     ON MIString_FEA.MovementItemId = MovementItem.Id
+                                                    AND MIString_FEA.DescId = zc_MIString_FEA() 
                         LEFT JOIN MovementItemString AS MIString_SertificatNumber
-                                         ON MIString_SertificatNumber.MovementItemId = MovementItem.Id
-                                        AND MIString_SertificatNumber.DescId = zc_MIString_SertificatNumber()                                         
-
-                        LEFT JOIN MovementItemDate  AS MIDate_SertificatStart
-                                        ON MIDate_SertificatStart.MovementItemId = MovementItem.Id
-                                       AND MIDate_SertificatStart.DescId = zc_MIDate_SertificatStart()                                         
-                        LEFT JOIN MovementItemDate  AS MIDate_SertificatEnd
-                                        ON MIDate_SertificatEnd.MovementItemId = MovementItem.Id
-                                       AND MIDate_SertificatEnd.DescId = zc_MIDate_SertificatEnd()   
+                                                     ON MIString_SertificatNumber.MovementItemId = MovementItem.Id
+                                                    AND MIString_SertificatNumber.DescId = zc_MIString_SertificatNumber()                                         
+                        LEFT JOIN MovementItemString AS MIString_UKTZED
+                                                     ON MIString_UKTZED.MovementItemId = MovementItem.Id
+                                                    AND MIString_UKTZED.DescId = zc_MIString_UKTZED() 
+                                                    
+                        LEFT JOIN MovementItemDate AS MIDate_SertificatStart
+                                                   ON MIDate_SertificatStart.MovementItemId = MovementItem.Id
+                                                  AND MIDate_SertificatStart.DescId = zc_MIDate_SertificatStart()                                         
+                        LEFT JOIN MovementItemDate AS MIDate_SertificatEnd
+                                                   ON MIDate_SertificatEnd.MovementItemId = MovementItem.Id
+                                                  AND MIDate_SertificatEnd.DescId = zc_MIDate_SertificatEnd()   
 
                         LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
                                              ON MILinkObject_Goods.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
 
                         LEFT JOIN MovementItemLinkObject AS MILinkObject_ReasonDifferences
-                                             ON MILinkObject_ReasonDifferences.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_ReasonDifferences.DescId = zc_MILinkObject_ReasonDifferences()
+                                                         ON MILinkObject_ReasonDifferences.MovementItemId = MovementItem.Id
+                                                        AND MILinkObject_ReasonDifferences.DescId = zc_MILinkObject_ReasonDifferences()
                       )
 
       , AVGIncome AS      (SELECT MI_Income.ObjectId
@@ -364,6 +369,7 @@ BEGIN
               , NULL::TDateTime            AS ExpirationDate
               , NULL::TVarChar             AS PartionGoods
               , NULL::TVarChar             AS MakerName
+              , NULL::TVarChar             AS CodeUKTZED
               , NULL::TVarChar             AS FEA
               , NULL::TVarChar             AS Measure
               , NULL::Integer              AS DublePriceColour
@@ -439,6 +445,7 @@ BEGIN
               , MovementItem.PartionGoods   :: TVarChar  
 
               , Object_PartnerGoods.MakerName      AS MakerName
+              , MovementItem.CodeUKTZED
               , MovementItem.FEA
               , MovementItem.Measure
 
@@ -581,6 +588,7 @@ BEGIN
 
                      , COALESCE (MIDate_ExpirationDate.ValueData, NULL) :: TDateTime AS ExpirationDate
                      , COALESCE(MIString_PartionGoods.ValueData, '')              :: TVarChar  AS PartionGoods
+                     , MIString_UKTZED.ValueData           AS CodeUKTZED
                      , MIString_FEA.ValueData              AS FEA
                      , MIString_Measure.ValueData          AS Measure
                      , MIString_SertificatNumber.ValueData AS SertificatNumber
@@ -632,7 +640,10 @@ BEGIN
                    LEFT JOIN MovementItemString AS MIString_FEA
                                                 ON MIString_FEA.MovementItemId = MovementItem.Id
                                                AND MIString_FEA.DescId = zc_MIString_FEA() 
-
+                   LEFT JOIN MovementItemString AS MIString_UKTZED
+                                                ON MIString_UKTZED.MovementItemId = MovementItem.Id
+                                               AND MIString_UKTZED.DescId = zc_MIString_UKTZED() 
+                                               
                    LEFT JOIN MovementItemString AS MIString_SertificatNumber
                                                 ON MIString_SertificatNumber.MovementItemId = MovementItem.Id
                                                AND MIString_SertificatNumber.DescId = zc_MIString_SertificatNumber()                                         
@@ -760,6 +771,7 @@ BEGIN
               , MovementItem.ExpirationDate
               , MovementItem.PartionGoods
               , ObjectString_Goods_Maker.ValueData  AS MakerName
+              , MovementItem.CodeUKTZED
               , MovementItem.FEA
               , MovementItem.Measure
               , DublePrice.DublePriceColour
@@ -883,6 +895,7 @@ ALTER FUNCTION gpSelect_MovementItem_Income (Integer, Boolean, Boolean, TVarChar
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.   ¬ÓÓ·Í‡ÎÓ ¿.¿.
+ 11.12.17         * CodeUKTZED
  21.10.17         * add AreaName
  21.04.17         * add PriceOptSP
  06.04.17         *

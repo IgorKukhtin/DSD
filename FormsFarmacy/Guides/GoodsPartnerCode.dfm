@@ -71,6 +71,14 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
             Options.Editing = False
             Width = 64
           end
+          object CodeUKTZED: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1050#1058' '#1047#1045#1044
+            DataBinding.FieldName = 'CodeUKTZED'
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1090#1086#1074#1072#1088#1091' '#1079#1075#1110#1076#1085#1086' '#1079' '#1059#1050#1058' '#1047#1045#1044' '
+            Options.Editing = False
+            Width = 64
+          end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087#1072#1088#1090#1085#1077#1088#1072' ('#1089#1090#1088#1086#1082')'
             DataBinding.FieldName = 'GoodsCode'

@@ -3,7 +3,7 @@ object WorkTimeKindForm: TWorkTimeKindForm
   Top = 0
   Caption = #1058#1080#1087#1099' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080
   ClientHeight = 376
-  ClientWidth = 614
+  ClientWidth = 686
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,11 +19,11 @@ object WorkTimeKindForm: TWorkTimeKindForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 614
+    Width = 686
     Height = 350
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 390
+    ExplicitWidth = 614
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -82,7 +82,7 @@ object WorkTimeKindForm: TWorkTimeKindForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 145
+        Width = 95
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -92,6 +92,14 @@ object WorkTimeKindForm: TWorkTimeKindForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 60
+      end
+      object EnumName: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1092#1091#1085#1082#1094#1080#1080
+        DataBinding.FieldName = 'EnumName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 145
       end
     end
     object cxGridLevel: TcxGridLevel
