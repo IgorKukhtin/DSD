@@ -397,6 +397,8 @@ type
     actMarginCategory_Movement: TdsdOpenForm;
     N154: TMenuItem;
     N155: TMenuItem;
+    actReport_Check_UKTZED: TdsdOpenForm;
+    N156: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
