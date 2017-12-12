@@ -228,9 +228,9 @@ type
     N14: TMenuItem;
     N15: TMenuItem;
     spSelectPrint_Total_To: TdsdStoredProc;
+    bbPrint_Sale_Total_To: TdxBarButton;
     actPrint_Total_To: TdsdPrintAction;
     mactPrint_Sale_Total_To: TMultiAction;
-    bbPrint_Sale_Total_To: TdxBarButton;
   private
     { Private declarations }
   public
