@@ -190,6 +190,10 @@ type
     macPrintPack_Transport: TMultiAction;
     macPrintPackList_Transport: TMultiAction;
     N15: TMenuItem;
+    actPrint_Total_To: TdsdPrintAction;
+    spSelectPrint_Total_To: TdsdStoredProc;
+    mactPrint_Sale_Total_To: TMultiAction;
+    bbPrint_Sale_Total_To: TdxBarButton;
   private
     { Private declarations }
   public

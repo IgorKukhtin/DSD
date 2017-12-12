@@ -2,12 +2,14 @@
 
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_TotalPrint (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_TotalPrint (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale_TotalPrint(
     IN inStartDate         TDateTime , --
     IN inEndDate           TDateTime , --
     IN inContractId        Integer  , -- ключ Документа
+    IN inToId              Integer  , -- Id контрагента
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -44,7 +46,7 @@ $BODY$
     DECLARE vbIsInfoMoney_30201 Boolean;
 
     DECLARE vbKiev Integer;
-
+    DECLARE vbIsLongUKTZED Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
@@ -54,6 +56,13 @@ BEGIN
      vbKiev := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Unit() AND Object.Id = 8411 );    
  
      vbGoodsPropertyId_basis := zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0);
+
+     vbIsLongUKTZED := COALESCE ( (SELECT ObjectBoolean_isLongUKTZED.ValueData 
+                                   FROM ObjectBoolean AS ObjectBoolean_isLongUKTZED
+                                   WHERE ObjectBoolean_isLongUKTZED.DescId = zc_ObjectBoolean_Juridical_isLongUKTZED()
+                                     AND (ObjectBoolean_isLongUKTZED.ObjectId = inToId AND inToId <> 0))
+                                 , FALSE
+                                );
 
     -- таб. документов по Договору    -- параметры из документов
     CREATE TEMP TABLE tmpListDocSale(MovementId Integer, OperDate TDateTime, OperDatePartner TDateTime, PriceWithVAT Boolean, VATPercent TFloat, DiscountPercent TFloat, ExtraChargesPercent TFloat, GoodsPropertyId Integer, PaidKindId Integer, IsDiscountPrice Boolean, IsChangePrice Boolean) ON COMMIT DROP;
@@ -85,6 +94,10 @@ BEGIN
                                               ON MovementLinkObject_Contract.MovementId = Movement.Id
                                              AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                                              AND MovementLinkObject_Contract.ObjectId = inContractId
+                INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                              ON MovementLinkObject_To.MovementId = Movement.Id
+                                             AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                             AND (MovementLinkObject_To.ObjectId = inToId OR inToId = 0)
              WHERE Movement.DescId = zc_Movement_Sale()
                AND Movement.StatusId = zc_Enum_Status_Complete()
             ) AS tmpMovement
@@ -339,7 +352,9 @@ BEGIN
            
            , MovementSale_Comment.ValueData        AS SaleComment 
            , CASE WHEN TRIM (MovementOrder_Comment.ValueData) <> TRIM (COALESCE (MovementSale_Comment.ValueData, '')) THEN MovementOrder_Comment.ValueData ELSE '' END AS OrderComment
-
+           
+           --, CASE WHEN Position(UPPER('обмен') in UPPER(View_Contract.InvNumber)) > 0 THEN True ELSE False END AS isPrintText
+           , False AS isPrintText
        FROM (SELECT Max(tmpListDocSale.MovementId) AS MovementId
                   , MAX(tmpListDocSale.ExtraChargesPercent - tmpListDocSale.DiscountPercent)  AS ChangePercent
                   , Sum(MovementFloat_TotalCount.ValueData)         AS TotalCount
@@ -718,6 +733,7 @@ BEGIN
                   , tmpListDocSale.GoodsPropertyId
                   , tmplistdocsale.ischangeprice
                   , tmpListDocSale.vatpercent
+                  , ObjectLink_GoodsGroup.ChildObjectId    AS GoodsGroupId
              FROM tmpListDocSale
                   LEFT JOIN MovementItem ON MovementItem.MovementId = tmpListDocSale.MovementId
                                         AND MovementItem.DescId     = zc_MI_Master()
@@ -741,6 +757,11 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                               ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
                                              AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+                                             
+                  LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
+                                       ON ObjectLink_GoodsGroup.ObjectId = MovementItem.ObjectId
+                                      AND ObjectLink_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+                                      
              GROUP BY MovementItem.ObjectId
                     , MILinkObject_GoodsKind.ObjectId
                     , MIFloat_Price.ValueData
@@ -752,7 +773,12 @@ BEGIN
                     , tmpListDocSale.GoodsPropertyId
                     , tmplistdocsale.ischangeprice
                     , tmpListDocSale.vatpercent
+                    , ObjectLink_GoodsGroup.ChildObjectId
             )
+            
+      , tmpGoods AS (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI)
+      , tmpUKTZED AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED (tmp.GoodsGroupId) AS CodeUKTZED 
+                      FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
 
       SELECT COALESCE (Object_GoodsByGoodsKind_View.Id, Object_Goods.Id) AS Id
            , Object_Goods.ObjectCode         AS GoodsCode
@@ -809,6 +835,24 @@ BEGIN
 
            , CAST ((tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat) AS Amount_Weight
 
+           , CASE WHEN inEndDate < '01.01.2017'
+                       THEN ''
+                  
+                  WHEN ObjectString_Goods_UKTZED.ValueData <> ''
+                       THEN CASE WHEN vbIsLongUKTZED = TRUE THEN ObjectString_Goods_UKTZED.ValueData ELSE SUBSTRING (ObjectString_Goods_UKTZED.ValueData FROM 1 FOR 4) END
+
+                  WHEN tmpUKTZED.CodeUKTZED <> ''
+                       THEN CASE WHEN vbIsLongUKTZED = TRUE THEN tmpUKTZED.CodeUKTZED ELSE SUBSTRING (tmpUKTZED.CodeUKTZED FROM 1 FOR 4) END
+
+                  WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101())
+                       THEN '1601'
+                  WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_21001(), zc_Enum_InfoMoney_30102())
+                       THEN '1602'
+                  WHEN ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30103()
+                       THEN '1905'
+                  ELSE '0'
+              END :: TVarChar AS GoodsCodeUKTZED
+              
        FROM (SELECT tmpMI.GoodsId
                   , tmpMI.GoodsKindId
                   , tmpMI.Price
@@ -816,7 +860,7 @@ BEGIN
                   , SUM (tmpMI.Amount)        AS Amount
                   , SUM (tmpMI.AmountPartner) AS AmountPartner
                   , tmpMI.GoodsPropertyId
-
+                  , tmpMI.GoodsGroupId
           -- сумма по ценам док-та
            , SUM(CASE WHEN tmpMI.CountForPrice <> 0
                        THEN CAST (tmpMI.AmountPartner * (tmpMI.Price / tmpMI.CountForPrice) AS NUMERIC (16, 2))
@@ -882,6 +926,7 @@ BEGIN
                     , tmpMI.GoodsPropertyId
                     , tmpMI.PriceWithVAT 
                     , tmpmi.vatpercent
+                    , tmpmi.goodsgroupid
              -- расчет цены без НДС, до 4 знаков
            , CASE WHEN tmpMI.PriceWithVAT = TRUE
                   THEN CAST (tmpMI.Price - tmpMI.Price * (tmpMI.VATPercent / (tmpMI.VATPercent + 100)) AS NUMERIC (16, 4))
@@ -917,6 +962,7 @@ BEGIN
              END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
 
             ) AS tmpMI
+            LEFT JOIN tmpUKTZED ON tmpUKTZED.GoodsGroupId = tmpMI.GoodsGroupId
             
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
@@ -945,6 +991,13 @@ BEGIN
 
             LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
                                                   AND Object_GoodsByGoodsKind_View.GoodsKindId = Object_GoodsKind.Id
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
+                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+            LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
+                                   ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
 
        WHERE tmpMI.AmountPartner <> 0 
        ORDER BY CASE WHEN tmpMI.GoodsPropertyId IN (83954 -- Метро
@@ -1023,10 +1076,11 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 12.12.17         * add inToId
  05.10.16         * parce
  28.09.16         *
 */
 
 -- тест
---SELECT * FROM gpSelect_Movement_Sale_TotalPrint (inStartDate:= '30.08.2016', inEndDate:= '30.08.2016', inContractId:= 148465, inSession:= zfCalc_UserAdmin()); 
+--SELECT * FROM gpSelect_Movement_Sale_TotalPrint (inStartDate:= '30.08.2016', inEndDate:= '30.08.2016', inContractId:= 148465, inToId:= 0 , inSession:= zfCalc_UserAdmin()); 
 --FETCH ALL "<unnamed portal 43>";
