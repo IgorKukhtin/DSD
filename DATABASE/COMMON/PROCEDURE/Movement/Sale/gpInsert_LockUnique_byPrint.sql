@@ -1,8 +1,8 @@
--- Function: gpInsert_LockUnique_bySalePrint()
+-- Function: gpInsert_LockUnique_byPrint()
 
-DROP FUNCTION IF EXISTS gpInsert_LockUnique_bySalePrint (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_LockUnique_byPrint (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsert_LockUnique_bySalePrint(
+CREATE OR REPLACE FUNCTION gpInsert_LockUnique_byPrint(
     IN inMovementId      Integer,    -- Id документа
     IN inSession         TVarChar    -- сессия пользователя
 )
@@ -30,4 +30,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpInsert_LockUnique_bySalePrint (inMovementId:= 56464, inSession:= '2')
+-- SELECT * FROM gpInsert_LockUnique_byPrint (inMovementId:= 56464, inSession:= '2')

@@ -12,6 +12,7 @@ RETURNS Boolean AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbStatusId Integer;
+   DECLARE vbisDeferred Boolean;
 BEGIN
 
    IF COALESCE(inMovementId, 0) = 0 THEN
@@ -21,24 +22,29 @@ BEGIN
    vbUserId := lpGetUserBySession (inSession);
 
    vbStatusId := (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId);
-
-   -- определили признак
-   outisDeferred:=  inisDeferred;
-   -- сохранили признак
-   PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Deferred(), inMovementId, outisDeferred);
-
-
-   IF inisDeferred = TRUE
+   vbisDeferred := (SELECT MovementBoolean.ValueData FROM MovementBoolean WHERE MovementBoolean.MovementId = inMovementId AND MovementBoolean.DescId = zc_MovementBoolean_Deferred());
+   
+   -- свойство не мен€ем у проведенных документов
+   IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete()
    THEN
-       -- собственно проводки
-       PERFORM lpComplete_Movement_Send(inMovementId  -- ключ ƒокумента
-                                      , vbUserId);    -- ѕользователь  
-   ELSE
-       -- убираем проводки
-       PERFORM lpUnComplete_Movement (inMovementId
-                                    , vbUserId);
+       -- определили признак
+       outisDeferred:=  inisDeferred;
+       -- сохранили признак
+       PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Deferred(), inMovementId, outisDeferred);
+    
+       IF inisDeferred = TRUE
+       THEN
+           -- собственно проводки
+           PERFORM lpComplete_Movement_Send(inMovementId  -- ключ ƒокумента
+                                          , vbUserId);    -- ѕользователь  
+       ELSE
+           -- убираем проводки
+           PERFORM lpUnComplete_Movement (inMovementId
+                                        , vbUserId);
+       END IF;
    END IF;
-
+   
+   outisDeferred := COALESCE (outisDeferred, COALESCE (vbisDeferred, FALSE));
    
    -- возвращаем статус документа
    -- UPDATE Movement SET StatusId = vbStatusId WHERE Id = inMovementId;
