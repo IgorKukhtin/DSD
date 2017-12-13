@@ -687,7 +687,7 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
     Top = 24
   end
   object spGet_Movement_Form: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Form'
+    StoredProcName = 'gpGet_Movement_Form_two'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -696,6 +696,13 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Movement_Send'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

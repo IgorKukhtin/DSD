@@ -45,6 +45,7 @@ BEGIN
    -- определяется уровень доступа
    IF vbUserId <> 9457 -- Климентьев К.И.
       AND vbUserId <> 447966 -- Черниловский С.Ф.
+      AND vbUserId <> 280162 -- Панасенко А.Н.
    THEN
        vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId);
    END IF;

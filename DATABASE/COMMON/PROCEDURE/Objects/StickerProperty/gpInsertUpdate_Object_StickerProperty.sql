@@ -1,6 +1,5 @@
 -- Function: gpInsertUpdate_Object_StickerProperty()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_StickerProperty(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar, Boolean, TFloat, TFloat,TFloat,TFloat,TFloat,TFloat,TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_StickerProperty(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, Boolean, TFloat, TFloat,TFloat,TFloat,TFloat,TFloat,TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_StickerProperty(
@@ -9,13 +8,13 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_StickerProperty(
     IN inComment             TVarChar  , -- Примечание
     IN inStickerId           Integer   , -- ссылка юр.лицо, ТОрг.сеть, Контрагент
     IN inGoodsKindId         Integer   , -- Товар
-    IN inStickerFileId       Integer   , -- 
-    IN inStickerSkinName     TVarChar  , -- 
-    IN inStickerPackName     TVarChar  , -- 
+    IN inStickerFileId       Integer   , --
+    IN inStickerSkinName     TVarChar  , --
+    IN inStickerPackName     TVarChar  , --
     IN inBarCode             TVarChar  , --
-    IN inFix                 Boolean   , -- 
-    IN inValue1              TFloat    , -- 
-    IN inValue2              TFloat    , -- 
+    IN inFix                 Boolean   , --
+    IN inValue1              TFloat    , --
+    IN inValue2              TFloat    , --
     IN inValue3              TFloat    , --
     IN inValue4              TFloat    , --
     IN inValue5              TFloat    , --
@@ -26,26 +25,26 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_StickerProperty(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId            Integer;
-   DECLARE vbCode              Integer;   
+   DECLARE vbCode              Integer;
    DECLARE vbStickerSkinId     Integer;
    DECLARE vbStickerPackId     Integer;
    DECLARE vbIsUpdate          Boolean;
-   
+
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_StickerProperty());
-   
+
    -- !!! Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
-   vbCode:=lfGet_ObjectCode (inCode, zc_Object_StickerProperty());
-   
+   vbCode:= lfGet_ObjectCode (inCode, zc_Object_StickerProperty());
+
    -- проверка уникальности <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_StickerProperty(), vbCode);
 
 --       RAISE EXCEPTION 'Ошибка.Значение <Группа товаров> должно быть установлено.';
-  
+
    -- определили <Признак>
    vbIsUpdate:= COALESCE (ioId, 0) > 0;
-   
+
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_StickerProperty(), vbCode, COALESCE (inComment, ''));
 
@@ -55,13 +54,13 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_StickerProperty_GoodsKind(), ioId, inGoodsKindId);
    -- сохранили вязь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_StickerProperty_StickerFile(), ioId, inStickerFileId);
-   
+
    -- сохранили св-во <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_StickerProperty_BarCode(), ioId, inBarCode);
-   
+
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_StickerProperty_Fix(), ioId, inFix);
-   
+
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerProperty_Value1(), ioId, inValue1);
    -- сохранили свойство <>
@@ -76,31 +75,40 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerProperty_Value6(), ioId, inValue6);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerProperty_Value7(), ioId, inValue7);
-     
-   -- пытаемся найти "Оболочка"
-   -- если не находим записывае новый элемент в справочник
-   vbStickerSkinId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_StickerSkin() AND UPPER (TRIM(Object.ValueData)) LIKE UPPER (TRIM(inStickerSkinName)));
-   IF COALESCE (vbStickerSkinId, 0) = 0 AND COALESCE (inStickerSkinName, '')<> ''
+
+
+   -- проверка "Оболочка"
+   IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.DescId = zc_Object_StickerSkin() AND UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (inStickerSkinName)) AND TRIM (inStickerSkinName) <> '')
    THEN
-       -- записываем новый элемент
+         RAISE EXCEPTION 'Ошибка.Не УНИКАЛЬНО значение Оболочка <%>', inStickerSkinName;
+   END IF;
+   -- поиск
+   vbStickerSkinId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_StickerSkin() AND UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (inStickerSkinName)) AND TRIM (inStickerSkinName) <> '');
+   IF COALESCE (vbStickerSkinId, 0) = 0 AND COALESCE (inStickerSkinName, '') <> ''
+   THEN
+       -- если не нашли - сохранили новый элемент в справочник
        vbStickerSkinId := gpInsertUpdate_Object_StickerSkin (ioId     := 0
-                                                           , inCode   := lfGet_ObjectCode(0, zc_Object_StickerSkin()) 
-                                                           , inName   := TRIM(inStickerSkinName)
-                                                           , inComment:= '' ::TVarChar
+                                                           , inCode   := lfGet_ObjectCode (0, zc_Object_StickerSkin())
+                                                           , inName   := TRIM (inStickerSkinName)
+                                                           , inComment:= ''
                                                            , inSession:= inSession
                                                             );
-   END IF; 
+   END IF;
 
-   -- пытаемся найти "вид пакування"
-   -- если не находим записывае новый элемент в справочник
-   vbStickerPackId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_StickerPack() AND UPPER (TRIM(Object.ValueData)) LIKE UPPER (TRIM(inStickerPackName)));
-   IF COALESCE (vbStickerPackId, 0) = 0 AND COALESCE (inStickerPackName, '')<> ''
+   -- проверка "вид пакування"
+   IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.DescId = zc_Object_StickerPack() AND UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (inStickerPackName)) AND TRIM (inStickerPackName) <> '')
    THEN
-       -- записываем новый элемент
+         RAISE EXCEPTION 'Ошибка.Не УНИКАЛЬНО значение вид пакування <%>', inStickerPackName;
+   END IF;
+   -- поиск
+   vbStickerPackId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_StickerPack() AND UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (inStickerPackName)) AND TRIM (inStickerPackName) <> '');
+   IF COALESCE (vbStickerPackId, 0) = 0 AND COALESCE (inStickerPackName, '') <> ''
+   THEN
+       -- если не нашли - сохранили новый элемент в справочник
        vbStickerPackId := gpInsertUpdate_Object_StickerPack (ioId     := 0
-                                                           , inCode   := lfGet_ObjectCode(0, zc_Object_StickerPack()) 
-                                                           , inName   := TRIM(inStickerPackName)
-                                                           , inComment:= '' ::TVarChar
+                                                           , inCode   := lfGet_ObjectCode (0, zc_Object_StickerPack())
+                                                           , inName   := TRIM (inStickerPackName)
+                                                           , inComment:= ''
                                                            , inSession:= inSession
                                                             );
    END IF;
@@ -109,14 +117,14 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_StickerProperty_StickerSkin(), ioId, vbStickerSkinId);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_StickerProperty_StickerPack(), ioId, vbStickerPackId);
-  
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
- 
+
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
@@ -124,4 +132,4 @@ $BODY$
 */
 
 -- тест
--- 
+--

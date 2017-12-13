@@ -25,7 +25,7 @@ BEGIN
 
 
      -- поиск сотрудник
-     IF EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin(), 14473)) -- Персонал ввод справочников
+     IF EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin(), 14473, 447972)) -- Персонал ввод справочников + Просмотр СБ
      THEN vbMemberId:= 0;
      ELSE
          vbMemberId:= (SELECT ObjectLink_User_Member.ChildObjectId

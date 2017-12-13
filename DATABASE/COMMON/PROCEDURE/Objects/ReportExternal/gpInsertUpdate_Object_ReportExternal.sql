@@ -56,6 +56,7 @@ $BODY$
 */
 
 -- тест
+-- SELECT * FROM Object WHERE DescId = zc_Object_ReportExternal() ORDER BY Id DESC;
 -- SELECT *, gpInsertUpdate_Object_ReportExternal (ioId:= Id, inName:= '', inSession:= zfCalc_UserAdmin()) FROM Object WHERE DescId = zc_Object_ReportExternal() ORDER BY Id;
 --
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_Account',                      inSession:= zfCalc_UserAdmin()); -- +
@@ -105,4 +106,3 @@ $BODY$
 
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpSelect_Scale_Partner',inSession:= zfCalc_UserAdmin()); -- +
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_HistoryCost',  inSession:= zfCalc_UserAdmin()); -- +
-

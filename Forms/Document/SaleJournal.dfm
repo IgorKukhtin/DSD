@@ -5,6 +5,7 @@ inherited SaleJournalForm: TSaleJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -469
   ExplicitWidth = 1258
   ExplicitHeight = 676
   PixelsPerInch = 96
@@ -1321,8 +1322,8 @@ inherited SaleJournalForm: TSaleJournalForm
         item
           StoredProc = spSelectPrint_Pack
         end>
-      Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' ('#1092#1086#1079#1079#1080')'
-      Hint = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' ('#1092#1086#1079#1079#1080')'
+      Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' ('#1060#1086#1079#1079#1080' + '#1040#1096#1072#1085' + '#1076#1088#1091#1075#1080#1077'...)'
+      Hint = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' ('#1060#1086#1079#1079#1080' + '#1040#1096#1072#1085' + '#1076#1088#1091#1075#1080#1077'...)'
       ImageIndex = 23
       DataSets = <
         item
