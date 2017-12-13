@@ -3,7 +3,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
   ClientHeight = 623
   ClientWidth = 875
   ExplicitWidth = 891
-  ExplicitHeight = 658
+  ExplicitHeight = 661
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -379,6 +379,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_PersonalService'
       ReportNameParam.Name = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
@@ -419,6 +420,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inParentId'
@@ -426,11 +428,13 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = GuidesPersonalServiceJournal
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementItemId'
         Value = 0
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -439,6 +443,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         ComponentItem = 'ShowAll'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -446,6 +451,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 136
     Top = 256
@@ -523,6 +529,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
       item
         Param.Value = Null
         Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = -1
       end>
     Left = 830
@@ -544,12 +551,14 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
@@ -557,6 +566,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CashId_top'
@@ -564,6 +574,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = GuidesBankAccount
         ComponentItem = 'Key'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CashName_top'
@@ -572,6 +583,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 280
     Top = 512
@@ -593,19 +605,22 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCashId'
@@ -613,12 +628,14 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = FormParams
         ComponentItem = 'CashId_top'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusCode'
@@ -626,6 +643,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = StatusGuides
         ComponentItem = 'Key'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
@@ -633,12 +651,14 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ParentId'
         Value = 'NULL'
         Component = GuidesPersonalServiceJournal
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ParentName'
@@ -646,24 +666,28 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = GuidesPersonalServiceJournal
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ServiceDate'
         Value = 41640d
         Component = edServiceDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Comment'
         Value = ''
         Component = edComment
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CashId'
         Value = ''
         Component = GuidesBankAccount
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CashName'
@@ -671,12 +695,14 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = GuidesBankAccount
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalServiceListId'
         Value = Null
         Component = GuidesPersonalServiceList
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalServiceListName'
@@ -684,6 +710,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = GuidesPersonalServiceList
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 224
     Top = 264
@@ -696,6 +723,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -703,6 +731,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -710,6 +739,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inParentId'
@@ -717,6 +747,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = GuidesPersonalServiceJournal
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCashId'
@@ -724,6 +755,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = GuidesBankAccount
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -731,6 +763,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = edComment
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 162
     Top = 312
@@ -796,6 +829,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -803,6 +837,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId_Parent'
@@ -810,6 +845,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = GuidesPersonalServiceJournal
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalId'
@@ -817,6 +853,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = MasterCDS
         ComponentItem = 'PersonalId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
@@ -825,6 +862,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outSummRemains'
@@ -832,6 +870,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = MasterCDS
         ComponentItem = 'SummRemains'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -840,6 +879,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyId'
@@ -847,6 +887,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = MasterCDS
         ComponentItem = 'InfoMoneyId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -854,6 +895,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = MasterCDS
         ComponentItem = 'UnitId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPositionId'
@@ -861,6 +903,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = MasterCDS
         ComponentItem = 'PositionId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 368
@@ -877,6 +920,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
     IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefreshMaster
     ComponentList = <
       item
@@ -915,6 +959,14 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisShowAll'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 319
@@ -926,6 +978,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
     isShowModal = True
     FormNameParam.Value = 'TPersonalServiceJournalChoiceForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPersonalServiceJournalChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -934,6 +987,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Value = 'NULL'
         Component = GuidesPersonalServiceJournal
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -941,6 +995,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = GuidesPersonalServiceJournal
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalServiceListId'
@@ -948,6 +1003,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = GuidesPersonalServiceList
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalServiceListName'
@@ -956,6 +1012,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ServiceDate'
@@ -963,14 +1020,17 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = edServiceDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TopPersonalServiceListId'
         Value = 0
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TopPersonalServiceListName'
         Value = ''
+        MultiSelectSeparator = ','
       end>
     Left = 336
     Top = 65533
@@ -981,6 +1041,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
     Key = '0'
     FormNameParam.Value = 'TPersonalServiceJournalChoiceForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPersonalServiceJournalChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -989,6 +1050,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Value = 'NULL'
         Component = GuidesPersonalServiceJournal
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -996,6 +1058,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = GuidesPersonalServiceJournal
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalServiceListId'
@@ -1003,6 +1066,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = GuidesPersonalServiceList
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalServiceListName'
@@ -1010,6 +1074,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = GuidesPersonalServiceList
         ComponentItem = 'TextValue'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ServiceDate'
@@ -1017,15 +1082,18 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = edServiceDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TopPersonalServiceListId'
         Value = 0
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TopPersonalServiceListName'
         Value = ''
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 448
     Top = 64
@@ -1035,6 +1103,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
     LookupControl = edBankAccount
     FormNameParam.Value = 'TBankAccount_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBankAccount_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1043,6 +1112,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Value = ''
         Component = GuidesBankAccount
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'NameAll'
@@ -1050,6 +1120,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = GuidesBankAccount
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 528
     Top = 65533
@@ -1064,6 +1135,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId_Parent'
@@ -1071,6 +1143,7 @@ inherited BankAccount_PersonalForm: TBankAccount_PersonalForm
         Component = GuidesPersonalServiceJournal
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 290

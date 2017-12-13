@@ -1,9 +1,11 @@
 -- Function: gpSelect_Movement_PersonalService_Print()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_Print (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_Print (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService_Print(
-    IN inMovementId        Integer  , -- ключ Документа
+    IN inMovementId    Integer  , -- ключ Документа
+    IN inisShowAll     Boolean  ,
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -176,7 +178,7 @@ BEGIN
                                     ON MovementFloat_TotalSummPhone.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummPhone.DescId = zc_MovementFloat_TotalSummPhone()
 
-       WHERE Movement.Id =  inMovementId
+       WHERE Movement.Id = inMovementId
          AND Movement.StatusId = zc_Enum_Status_Complete()
       ;
     RETURN NEXT Cursor1;
@@ -366,7 +368,7 @@ BEGIN
 
                       FROM tmpMI_all As tmpMI_all_find
                            LEFT JOIN tmpMI_all ON tmpMI_all.MemberId = tmpMI_all_find.MemberId
-                      WHERE tmpMI_all_find.Ord = 1
+                      WHERE tmpMI_all_find.Ord = 1 AND inisShowAll = FALSE
                       GROUP BY tmpMI_all_find.PersonalId
                              , tmpMI_all_find.UnitId
                              , tmpMI_all_find.PositionId
@@ -374,6 +376,44 @@ BEGIN
                              , tmpMI_all_find.PersonalServiceListId
                              , tmpMI_all_find.isMain
                              , tmpMI_all_find.Comment
+                    UNION 
+                      SELECT tmpMI_all.PersonalId
+                           , tmpMI_all.UnitId
+                           , tmpMI_all.PositionId
+
+                           , tmpMI_all.MemberId
+                           , tmpMI_all.PersonalServiceListId
+                           , tmpMI_all.isMain
+                           , tmpMI_all.Comment
+
+                           , SUM (tmpMI_all.Amount)           AS Amount
+
+                           , SUM (tmpMI_all.SummToPay)        AS SummToPay
+                           , SUM (tmpMI_all.SummNalog)        AS SummNalog
+                           , SUM (tmpMI_all.SummCard)         AS SummCard
+                           , SUM (tmpMI_all.SummCardSecond)   AS SummCardSecond
+                           , SUM (tmpMI_all.SummCardSecondCash)   AS SummCardSecondCash
+                           , SUM (tmpMI_all.SummService)      AS SummService
+                           , SUM (tmpMI_all.SummAdd)          AS SummAdd
+                           , SUM (tmpMI_all.SummHoliday)      AS SummHoliday
+
+                           , SUM (tmpMI_all.SummMinus)        AS SummMinus
+                           , SUM (tmpMI_all.SummChild)        AS SummChild
+                           , SUM (tmpMI_all.SummMinusExt)     AS SummMinusExt
+
+                           , SUM (tmpMI_all.SummTransportAdd) AS SummTransportAdd
+                           , SUM (tmpMI_all.SummTransport)    AS SummTransport
+                           , SUM (tmpMI_all.SummPhone)        AS SummPhone
+
+                      FROM tmpMI_all
+                      WHERE inisShowAll = TRUE
+                      GROUP BY tmpMI_all.PersonalId
+                             , tmpMI_all.UnitId
+                             , tmpMI_all.PositionId
+                             , tmpMI_all.MemberId
+                             , tmpMI_all.PersonalServiceListId
+                             , tmpMI_all.isMain
+                             , tmpMI_all.Comment
                      )
           , tmpUserAll AS (SELECT DISTINCT UserId FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin()) AND UserId = vbUserId) -- Документы-меню (управленцы) AND <> Рудик Н.В.
           , tmpPersonal AS (SELECT View_Personal.isMain
@@ -513,7 +553,7 @@ BEGIN
             , tmpMIContainer.SummNalog  :: TFloat AS SummNalog
 --            , tmpAll.SummCardRecalc   :: TFloat AS SummCardRecalc
             , tmpAll.SummMinus          :: TFloat AS SummMinus
---            , tmpAll.SummAdd          :: TFloat AS SummAdd
+            , tmpAll.SummAdd          :: TFloat AS SummAdd
 --            , tmpAll.SummSocialIn     :: TFloat AS SummSocialIn
 --            , tmpAll.SummSocialAdd    :: TFloat AS SummSocialAdd
             , tmpAll.SummChild          :: TFloat AS SummChild
@@ -555,6 +595,7 @@ BEGIN
           OR 0 <> tmpAll.SummTransport
           OR 0 <> tmpAll.SummPhone
           OR 0 <> tmpAll.SummCardSecond
+          OR 0 <> tmpAll.SummAdd
        ORDER BY Object_Personal.ValueData
       ;
 
@@ -563,7 +604,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_PersonalService_Print (Integer,TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Movement_PersonalService_Print (Integer,TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

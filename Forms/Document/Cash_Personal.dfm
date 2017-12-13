@@ -2,9 +2,8 @@ inherited Cash_PersonalForm: TCash_PersonalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1072#1089#1089#1072', '#1074#1099#1087#1083#1072#1090#1072' '#1087#1086' '#1074#1077#1076#1086#1084#1086#1089#1090#1080'>'
   ClientHeight = 507
   ClientWidth = 982
-  ExplicitTop = -85
   ExplicitWidth = 998
-  ExplicitHeight = 542
+  ExplicitHeight = 545
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1672,6 +1671,13 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Value = Null
         Component = GuidesPersonalServiceJournal
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisShowAll'
+        Value = 'FALSE'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
