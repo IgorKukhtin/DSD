@@ -554,7 +554,10 @@ uses
   Report_Check_UKTZED in '..\..\FormsFarmacy\Report\Report_Check_UKTZED.pas' {Report_Check_UKTZEDForm: TParentForm},
   Report_Check_UKTZEDDialog in '..\..\FormsFarmacy\Report\Report_Check_UKTZEDDialog.pas' {Report_Check_UKTZEDDialogForm: TParentForm},
   PromoCodeEdit in '..\..\FormsFarmacy\Guides\PromoCodeEdit.pas' {PromoCodeEditForm: TParentForm},
-  PromoCode in '..\..\FormsFarmacy\Guides\PromoCode.pas' {PromoCodeForm: TParentForm};
+  PromoCode in '..\..\FormsFarmacy\Guides\PromoCode.pas' {PromoCodeForm: TParentForm},
+  PromoCodeMovement in '..\..\FormsFarmacy\Document\PromoCodeMovement.pas' {PromoCodeMovementForm: TParentForm},
+  PromoCodeJournal in '..\..\FormsFarmacy\Document\PromoCodeJournal.pas' {PromoCodeJournalForm: TParentForm},
+  Juridical_Unit_Object in '..\..\FormsFarmacy\Guides\Juridical_Unit_Object.pas' {Juridical_Unit_ObjectForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

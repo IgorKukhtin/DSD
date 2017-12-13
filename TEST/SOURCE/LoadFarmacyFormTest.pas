@@ -106,6 +106,7 @@ type
     procedure LoadSPKindFormTest;
     procedure LoadSheetWorkTimeFormTest;
     procedure LoadUnitFormTest;
+    procedure LoadUnionFormTest;
     procedure FormTest;
   end;
 
@@ -885,6 +886,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TUnitForFarmacyCashForm');
 end;
 
+procedure TLoadFormTest.LoadUnionFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_Unit_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJuridical_Unit_ObjectForm');
+end;
+
 procedure TLoadFormTest.LoadEnumFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TNDSKindForm'));
@@ -965,6 +972,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPromoCodeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoCodeEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoCodeEditForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoCodeMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromoCodeMovementForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoCodeJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromoCodeJournalForm')
+
 end;
 procedure TLoadFormTest.LoadPromoUnitFormTest;
 begin
