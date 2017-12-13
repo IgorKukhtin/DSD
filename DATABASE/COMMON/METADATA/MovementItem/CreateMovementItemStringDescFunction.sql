@@ -55,9 +55,24 @@ CREATE OR REPLACE FUNCTION zc_MIString_UKTZED() RETURNS Integer AS $BODY$BEGIN R
 INSERT INTO MovementItemStringDesc (Code, ItemName)
   SELECT 'zc_MIString_UKTZED', 'Код товару згідно з УКТ ЗЕД' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_UKTZED');
   
+CREATE OR REPLACE FUNCTION zc_MIString_Bayer() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_Bayer'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemStringDesc (Code, ItemName)
+  SELECT 'zc_MIString_Bayer', 'ФИО клиента' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_Bayer');
+
+CREATE OR REPLACE FUNCTION zc_MIString_BayerEmail() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_BayerEmail'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemStringDesc (Code, ItemName)
+  SELECT 'zc_MIString_BayerEmail', 'е-майл клиента' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_BayerEmail');
+
+CREATE OR REPLACE FUNCTION zc_MIString_BayerPhone() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_BayerPhone'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemStringDesc (Code, ItemName)
+  SELECT 'zc_MIString_BayerPhone', 'телефон клиента' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_BayerPhone');
+  
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.
+ 13.12.17         * zc_MIString_Bayer
+                    zc_MIString_BayerEmail
+                    zc_MIString_BayerPhone
  11.12.17         * zc_MIString_UKTZED
  24.03.17         * zc_MIString_Description
  28.02.17                                                                        * zc_MIString_GUID

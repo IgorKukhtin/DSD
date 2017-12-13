@@ -25,8 +25,6 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       inherited cxGrid: TcxGrid
         Width = 1177
         Height = 476
-        ExplicitLeft = -312
-        ExplicitTop = 24
         ExplicitWidth = 1177
         ExplicitHeight = 476
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -846,7 +844,73 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_Tax_ReportName: TdsdExecStoredProc [1]
+    object actPrint_Total: TdsdPrintAction [1]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint_Total
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Total
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsSverkaCDS
+          UserName = 'frxDBDSverka'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameSale'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
+    object mactPrint_Sale_Total_To: TMultiAction [2]
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actSPPrintSaleProcName
+        end
+        item
+          Action = actPrint_Total_To
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1076#1083#1103' '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1076#1083#1103' '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+      ImageIndex = 3
+    end
+    object actPrint_Tax_ReportName: TdsdExecStoredProc [3]
       Category = 'Print_Tax'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -857,7 +921,47 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
         end>
       Caption = 'actPrint_Tax_ReportName'
     end
-    object actPrint_ExpSpec: TdsdPrintAction [2]
+    object actPrint_Total_To: TdsdPrintAction [4]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint_Total_To
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Total_To
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsSverkaCDS
+          UserName = 'frxDBDSverka'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameSale'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint_ExpSpec: TdsdPrintAction [5]
       Category = 'Print_Export'
       MoveParams = <
         item
@@ -906,7 +1010,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
-    object actPrintSaleOrder: TdsdPrintAction [3]
+    object actPrintSaleOrder: TdsdPrintAction [6]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -953,7 +1057,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
-    object mactPrint_Tax_Us: TMultiAction [4]
+    object mactPrint_Tax_Us: TMultiAction [7]
       Category = 'Print_Tax'
       MoveParams = <
         item
@@ -979,7 +1083,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
       ImageIndex = 16
     end
-    object mactPrint_Account: TMultiAction [5]
+    object mactPrint_Account: TMultiAction [8]
       Category = 'Print_Account'
       MoveParams = <
         item
@@ -1005,7 +1109,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
       ImageIndex = 21
     end
-    object actInvoice: TEDIAction [6]
+    object actInvoice: TEDIAction [9]
       Category = 'EDI'
       MoveParams = <>
       StartDateParam.Value = Null
@@ -1017,7 +1121,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
-    object actPrintTax_Us: TdsdPrintAction [7]
+    object actPrintTax_Us: TdsdPrintAction [10]
       Category = 'Print_Tax'
       MoveParams = <>
       StoredProc = spSelectTax_Us
@@ -1057,47 +1161,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_Total: TdsdPrintAction [8]
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelectPrint_Total
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint_Total
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end
-        item
-          DataSet = PrintItemsSverkaCDS
-          UserName = 'frxDBDSverka'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'NULL'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = Null
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameSale'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-    end
-    object actPrint_Account_ReportName: TdsdExecStoredProc [10]
+    object actPrint_Account_ReportName: TdsdExecStoredProc [12]
       Category = 'Print_Account'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1140,7 +1204,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    object actChecked: TdsdExecStoredProc [14]
+    object actChecked: TdsdExecStoredProc [16]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1153,7 +1217,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 58
     end
-    object actElectron: TdsdExecStoredProc [15]
+    object actElectron: TdsdExecStoredProc [17]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1201,7 +1265,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    object mactPrint_Sale_Total: TMultiAction [20]
+    object mactPrint_Sale_Total: TMultiAction [22]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -1223,11 +1287,11 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
         item
           Action = actPrint_Total
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103
+      Caption = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1076#1083#1103' '#1070#1088'.'#1083#1080#1094#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1076#1083#1103' '#1070#1088'.'#1083#1080#1094#1072
       ImageIndex = 3
     end
-    object actMovementCheck: TdsdOpenForm [25]
+    object actMovementCheck: TdsdOpenForm [27]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1096#1080#1073#1082#1080
@@ -1248,7 +1312,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
         end>
       isShowModal = False
     end
-    object actOpenReportForm: TdsdOpenForm [34]
+    object actOpenReportForm: TdsdOpenForm [36]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -2741,6 +2805,10 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Sale_Total_To'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2939,6 +3007,11 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
     object bbPrint_Sale_Total: TdxBarButton
       Action = mactPrint_Sale_Total
       Category = 0
+    end
+    object bbPrint_Sale_Total_To: TdxBarButton
+      Action = mactPrint_Sale_Total_To
+      Category = 0
+      ImageIndex = 19
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -3940,6 +4013,12 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
         ComponentItem = 'ContractId'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 375
@@ -3997,5 +4076,56 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
     PackSize = 1
     Left = 824
     Top = 48
+  end
+  object spSelectPrint_Total_To: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_TotalPrint'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintItemsSverkaCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 42370d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 42370d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ContractId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ToId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 447
+    Top = 144
   end
 end

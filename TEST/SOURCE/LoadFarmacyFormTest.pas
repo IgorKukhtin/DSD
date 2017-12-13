@@ -85,6 +85,7 @@ type
     procedure LoadProfitLossGroupFormTest;
     procedure LoadProfitLossDirectionFormTest;
     procedure LoadPromoFormTest;
+    procedure LoadPromoCodeFormTest;
     procedure LoadPromoUnitFormTest;
     procedure LoadProvinceCityFormTest;
     procedure LoadReasonDifferencesFormTest;
@@ -542,6 +543,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_UKTZEDDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Check_UKTZEDDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_UKTZEDForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Check_UKTZEDForm');
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MinPrice_byPromoDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MinPrice_byPromoDialogForm');
@@ -953,6 +959,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPromoForm');
 end;
 
+ procedure TLoadFormTest.LoadPromoCodeFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoCodeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromoCodeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoCodeEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromoCodeEditForm');
+end;
 procedure TLoadFormTest.LoadPromoUnitFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoUnitJournalForm'));

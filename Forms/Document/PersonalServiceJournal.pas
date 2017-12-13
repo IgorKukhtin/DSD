@@ -78,6 +78,9 @@ type
     spGet_Export_FileName: TdsdStoredProc;
     TotalSummNalog: TcxGridDBColumn;
     TotalSummNalogRecalc: TcxGridDBColumn;
+    spSelectPrint_All: TdsdStoredProc;
+    actPrint_All: TdsdPrintAction;
+    bbPrint_All: TdxBarButton;
   private
     { Private declarations }
   public

@@ -694,11 +694,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_JuridicalArea_Email() RETURNS Integer
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_JuridicalArea_Email', zc_Object_JuridicalArea(), 'На какой адрес ПОСТАВЩИКА мы отправляем инфу по заказам для этого региона' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_JuridicalArea_Email');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_PromoCode_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_PromoCode_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_PromoCode_Comment', zc_Object_PromoCode(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_PromoCode_Comment');
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 13.12.17         * zc_ObjectString_PromoCode_Comment
  23.10.17         * zc_ObjectString_Sticker.....
  26.09.17         * zc_ObjectString_JuridicalArea_Email
  25.09.17         * zc_ObjectString_Area_Email

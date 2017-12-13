@@ -550,7 +550,11 @@ uses
   Report_SAMP_AnalysisDialog in '..\..\FormsFarmacy\Report\Report_SAMP_AnalysisDialog.pas' {Report_SAMP_AnalysisDialogForm: TParentForm},
   Report_SAMP_Analysis in '..\..\FormsFarmacy\Report\Report_SAMP_Analysis.pas' {Report_SAMP_AnalysisForm: TParentForm},
   MemberSP in '..\..\FormsFarmacy\Guides\MemberSP.pas' {MemberSPForm: TParentForm},
-  MedicSP in '..\..\FormsFarmacy\Guides\MedicSP.pas' {MedicSPForm: TParentForm};
+  MedicSP in '..\..\FormsFarmacy\Guides\MedicSP.pas' {MedicSPForm: TParentForm},
+  Report_Check_UKTZED in '..\..\FormsFarmacy\Report\Report_Check_UKTZED.pas' {Report_Check_UKTZEDForm: TParentForm},
+  Report_Check_UKTZEDDialog in '..\..\FormsFarmacy\Report\Report_Check_UKTZEDDialog.pas' {Report_Check_UKTZEDDialogForm: TParentForm},
+  PromoCodeEdit in '..\..\FormsFarmacy\Guides\PromoCodeEdit.pas' {PromoCodeEditForm: TParentForm},
+  PromoCode in '..\..\FormsFarmacy\Guides\PromoCode.pas' {PromoCodeForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

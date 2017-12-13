@@ -1434,6 +1434,41 @@ inherited PersonalServiceForm: TPersonalServiceForm
           StoredProc = spInsertUpdateMIMaster
         end>
     end
+    object actPrint_All: TdsdPrintAction [10]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint_All
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_All
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1042#1089#1077' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1042#1089#1077' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
+      ImageIndex = 3
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_PersonalService'
+      ReportNameParam.Name = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
+      ReportNameParam.Value = 'PrintMovement_PersonalService'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -1886,6 +1921,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_All'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbLoadExcel'
         end
         item
@@ -1981,6 +2024,12 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object bbMISign: TdxBarButton
       Action = macInsertUpdateMISign
       Category = 0
+    end
+    object bbPrint_All: TdxBarButton
+      Action = actPrint_All
+      Caption = #1055#1077#1095#1072#1090#1100' '#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099' ('#1042#1089#1077' '#1076#1086#1083#1078#1085#1086#1089#1090#1080')'
+      Category = 0
+      ImageIndex = 19
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -2598,8 +2647,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 508
-    Top = 246
+    Left = 548
+    Top = 262
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_PersonalService_Print'
@@ -2618,6 +2667,13 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisShowAll'
+        Value = 'FALSE'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -2981,5 +3037,36 @@ inherited PersonalServiceForm: TPersonalServiceForm
     PackSize = 1
     Left = 1008
     Top = 299
+  end
+  object spSelectPrint_All: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_PersonalService_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisShowAll'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 359
+    Top = 232
   end
 end

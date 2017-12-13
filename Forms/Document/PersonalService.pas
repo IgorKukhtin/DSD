@@ -144,6 +144,9 @@ type
     bbMISignNO: TdxBarButton;
     bbMISign: TdxBarButton;
     actRefresh_Sign: TdsdDataSetRefresh;
+    spSelectPrint_All: TdsdStoredProc;
+    actPrint_All: TdsdPrintAction;
+    bbPrint_All: TdxBarButton;
   private
     { Private declarations }
   public

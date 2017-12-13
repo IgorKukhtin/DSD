@@ -4,9 +4,8 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
   ClientWidth = 913
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitTop = -37
   ExplicitWidth = 929
-  ExplicitHeight = 573
+  ExplicitHeight = 572
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -750,6 +749,13 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisShowAll'
+        Value = 'FALSE'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
