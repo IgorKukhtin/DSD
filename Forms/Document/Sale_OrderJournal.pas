@@ -231,6 +231,15 @@ type
     bbPrint_Sale_Total_To: TdxBarButton;
     actPrint_Total_To: TdsdPrintAction;
     mactPrint_Sale_Total_To: TMultiAction;
+    spDelete_LockUnique: TdsdStoredProc;
+    spInsert_LockUnique: TdsdStoredProc;
+    spSelectPrint_Total_List: TdsdStoredProc;
+    actDelete_LockUnique: TdsdExecStoredProc;
+    actInsert_LockUnique: TdsdExecStoredProc;
+    actPrint_Total_List: TdsdPrintAction;
+    macInsert_LockUnique: TMultiAction;
+    mactPrint_Sale_Total_List: TMultiAction;
+    bbPrint_Sale_Total_List: TdxBarButton;
   private
     { Private declarations }
   public

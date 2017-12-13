@@ -845,7 +845,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint_Total: TdsdPrintAction [1]
-      Category = 'DSDLib'
+      Category = 'Print_Total'
       MoveParams = <>
       StoredProc = spSelectPrint_Total
       StoredProcList = <
@@ -885,7 +885,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       ReportNameParam.MultiSelectSeparator = ','
     end
     object mactPrint_Sale_Total_To: TMultiAction [2]
-      Category = 'DSDLib'
+      Category = 'Print_Total'
       MoveParams = <
         item
           FromParam.Name = 'id'
@@ -922,7 +922,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       Caption = 'actPrint_Tax_ReportName'
     end
     object actPrint_Total_To: TdsdPrintAction [4]
-      Category = 'DSDLib'
+      Category = 'Print_Total'
       MoveParams = <>
       StoredProc = spSelectPrint_Total_To
       StoredProcList = <
@@ -1266,7 +1266,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
         end>
     end
     object mactPrint_Sale_Total: TMultiAction [22]
-      Category = 'DSDLib'
+      Category = 'Print_Total'
       MoveParams = <
         item
           FromParam.Name = 'id'
@@ -2649,6 +2649,125 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       Hint = #1055#1072#1082#1077#1090#1085#1072#1103' '#1087#1077#1095#1072#1090#1100' <'#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1072#1103'>'
       ImageIndex = 20
     end
+    object actDelete_LockUnique: TdsdExecStoredProc
+      Category = 'Print_Total'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spDelete_LockUnique
+      StoredProcList = <
+        item
+          StoredProc = spDelete_LockUnique
+        end>
+      Caption = 'actDelete_LockUnique'
+    end
+    object actInsert_LockUnique: TdsdExecStoredProc
+      Category = 'Print_Total'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_LockUnique
+      StoredProcList = <
+        item
+          StoredProc = spInsert_LockUnique
+        end>
+      Caption = 'spInsert_LockUnique'
+    end
+    object macInsert_LockUnique: TMultiAction
+      Category = 'Print_Total'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actInsert_LockUnique
+        end>
+      View = cxGridDBTableView
+      Caption = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1089#1087#1080#1089#1082#1091
+      Hint = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1089#1087#1080#1089#1082#1091
+      ImageIndex = 3
+    end
+    object actPrint_Total_List: TdsdPrintAction
+      Category = 'Print_Total'
+      MoveParams = <>
+      StoredProc = spSelectPrint_Total_List
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Total_List
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1089#1087#1080#1089#1082#1091
+      Hint = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1089#1087#1080#1089#1082#1091
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsSverkaCDS
+          UserName = 'frxDBDSverka'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameSale'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
+    object mactPrint_Sale_Total_List: TMultiAction
+      Category = 'Print_Total'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actSPPrintSaleProcName
+        end
+        item
+          Action = actDelete_LockUnique
+        end
+        item
+          Action = macInsert_LockUnique
+        end
+        item
+          Action = actPrint_Total_List
+        end>
+      QuestionBeforeExecute = #1053#1072#1087#1077#1095#1072#1090#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1091#1102' '#1085#1072#1082#1083#1072#1076#1085#1091#1102' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?'
+      Caption = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1089#1087#1080#1089#1082#1091
+      Hint = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1089#1087#1080#1089#1082#1091
+      ImageIndex = 3
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -2806,6 +2925,10 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
         item
           Visible = True
           ItemName = 'bbPrint_Sale_Total_To'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Sale_Total_List'
         end
         item
           Visible = True
@@ -3013,6 +3136,11 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       Category = 0
       ImageIndex = 19
     end
+    object bbPrint_Sale_Total_List: TdxBarButton
+      Action = mactPrint_Sale_Total_List
+      Category = 0
+      ImageIndex = 15
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 320
@@ -3052,8 +3180,8 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       item
         Component = JuridicalBasisGuides
       end>
-    Left = 496
-    Top = 152
+    Left = 536
+    Top = 168
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_Sale'
@@ -4019,6 +4147,13 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
         Value = '0'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsList'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 375
@@ -4123,9 +4258,120 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
         ComponentItem = 'ToId'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsList'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 447
     Top = 144
+  end
+  object spDelete_LockUnique: TdsdStoredProc
+    StoredProcName = 'gpDelete_LockUnique_byPrint'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintItemsSverkaCDS
+      end>
+    OutputType = otResult
+    Params = <>
+    PackSize = 1
+    Left = 999
+    Top = 248
+  end
+  object spInsert_LockUnique: TdsdStoredProc
+    StoredProcName = 'gpInsert_LockUnique_byPrint'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintItemsSverkaCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1007
+    Top = 288
+  end
+  object spSelectPrint_Total_List: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_TotalPrint'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintItemsSverkaCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 42614d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 42614d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ContractId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ToId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisList'
+        Value = 'True'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1007
+    Top = 352
   end
 end

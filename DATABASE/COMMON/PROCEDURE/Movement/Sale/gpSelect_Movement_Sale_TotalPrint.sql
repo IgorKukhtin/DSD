@@ -85,23 +85,17 @@ BEGIN
                        SELECT Movement.Id 
                             , Movement.OperDate
                             , MovementDate_OperDatePartner.ValueData AS OperDatePartner
-                       FROM Movement
-                          INNER JOIN MovementDate AS MovementDate_OperDatePartner
-                                                  ON MovementDate_OperDatePartner.MovementId = Movement.Id
-                                                 AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-                                                 AND MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
-                          INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                                        ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                                       AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-                                                       AND MovementLinkObject_Contract.ObjectId = inContractId
-                          INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                                        ON MovementLinkObject_To.MovementId = Movement.Id
-                                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                       AND (MovementLinkObject_To.ObjectId = inToId OR inToId = 0)
-                       WHERE Movement.DescId = zc_Movement_Sale()
-                         AND Movement.StatusId = zc_Enum_Status_Complete()
-                         AND inIsList = TRUE
-            
+                       FROM (SELECT DISTINCT LockUnique.KeyData ::Integer AS Id
+                             FROM LockUnique 
+                             WHERE LockUnique.UserId = vbUserId --AND LockUnique.OperDate = CURRENT_DATE
+                             ) AS tmp
+                          LEFT JOIN Movement ON Movement.Id = tmp.Id
+                                            AND Movement.DescId = zc_Movement_Sale()
+                                            AND Movement.StatusId = zc_Enum_Status_Complete()
+                          LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                                 ON MovementDate_OperDatePartner.MovementId = Movement.Id
+                                                AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                       WHERE inIsList = TRUE
                       )
                       
        SELECT tmpMovement.Id AS MovementId
@@ -1056,10 +1050,11 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 13.12.17         *
  05.10.16         * parce
  28.09.16         *
 */
 
 -- ÚÂÒÚ
---SELECT * FROM gpSelect_Movement_Sale_TotalPrint (inStartDate:= '30.08.2016', inEndDate:= '30.08.2016', inContractId:= 148465, inSession:= zfCalc_UserAdmin()); 
+--SELECT * FROM gpSelect_Movement_Sale_TotalPrint (inStartDate:= '30.08.2016', inEndDate:= '30.08.2016', inContractId:= 148465, inToId:= 0 , inIsList:= FALSE, inSession:= zfCalc_UserAdmin()); 
 --FETCH ALL "<unnamed portal 43>";

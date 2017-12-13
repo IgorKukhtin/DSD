@@ -15,8 +15,8 @@ BEGIN
       vbUserId:= lpGetUserBySession (inSession);
 
       -- сохраняем Ид документов  табл. LockUnique
-      PERFORM lpInsert_LockUnique (inKeyData := inMovementId :: TVarChar
-                                 , inUserId  := vbUserId);
+      INSERT INTO LockUnique (KeyData, UserId, OperDate)
+             VALUES (inMovementId :: TVarChar, vbUserId, CURRENT_DATE);   --CURRENT_TIMESTAMP
 
 END;
 $BODY$
