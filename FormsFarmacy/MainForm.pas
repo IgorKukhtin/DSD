@@ -399,6 +399,10 @@ type
     N155: TMenuItem;
     actReport_Check_UKTZED: TdsdOpenForm;
     N156: TMenuItem;
+    actPromoCode: TdsdOpenForm;
+    N157: TMenuItem;
+    N158: TMenuItem;
+    N159: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
