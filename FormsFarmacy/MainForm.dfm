@@ -620,7 +620,7 @@ inherited MainForm: TMainForm
     object actPromoCodeMovement: TdsdOpenForm [44]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
-      Caption = #1055#1088#1086#1084#1086'-'#1082#1086#1076#1099
+      Caption = #1046#1091#1088#1085#1072#1083' <'#1055#1088#1086#1084#1086'-'#1082#1086#1076#1099'>'
       FormName = 'TPromoCodeJournalForm'
       FormNameParam.Value = 'TPromoCodeJournalForm'
       FormNameParam.DataType = ftString

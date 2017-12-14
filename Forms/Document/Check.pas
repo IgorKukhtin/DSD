@@ -76,6 +76,8 @@ type
     bb: TdxBarButton;
     cxLabel18: TcxLabel;
     edSPKind: TcxTextEdit;
+    cxLabel19: TcxLabel;
+    edInvNumber_PromoCode_Full: TcxTextEdit;
   private
     { Private declarations }
   public

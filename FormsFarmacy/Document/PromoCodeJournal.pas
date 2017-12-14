@@ -17,7 +17,7 @@ uses
 
 type
   TPromoCodeJournalForm = class(TAncestorJournalForm)
-    spGet_Movement_Promo: TdsdStoredProc;
+    spGet_Movement_PromoCode: TdsdStoredProc;
     PromoCodeName: TcxGridDBColumn;
     isElectron: TcxGridDBColumn;
     isOne: TcxGridDBColumn;

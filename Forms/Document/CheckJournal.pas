@@ -70,6 +70,8 @@ type
     clMedicSP: TcxGridDBColumn;
     edIsSP: TcxCheckBox;
     edIsVip: TcxCheckBox;
+    InvNumber_PromoCode_Full: TcxGridDBColumn;
+    GUID_PromoCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

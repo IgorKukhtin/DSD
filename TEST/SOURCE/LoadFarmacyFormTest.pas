@@ -976,8 +976,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoCodeMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoCodeMovementForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoCodeJournalForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TPromoCodeJournalForm')
-
+  TdsdFormStorageFactory.GetStorage.Load('TPromoCodeJournalForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoCodeSignDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromoCodeSignDialogForm')
 end;
 procedure TLoadFormTest.LoadPromoUnitFormTest;
 begin
