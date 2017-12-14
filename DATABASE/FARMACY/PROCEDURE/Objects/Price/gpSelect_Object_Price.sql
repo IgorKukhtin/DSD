@@ -18,7 +18,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Price(
 )
 RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , MCSPeriod TFloat, MCSDay TFloat, StartDate TDateTime
-             , GoodsId Integer, GoodsCode Integer,/* IdBarCode TVarChar,*/ GoodsName TVarChar
+             , GoodsId Integer, GoodsCode Integer
+             , BarCode TVarChar
+             ,/* IdBarCode TVarChar,*/ GoodsName TVarChar
              , IntenalSPName TVarChar
              , GoodsGroupName TVarChar, NDSKindName TVarChar
              , ConditionsKeepName TVarChar
@@ -85,7 +87,7 @@ BEGIN
                ,NULL::TDateTime                  AS StartDate
                ,NULL::Integer                    AS GoodsId
                ,NULL::Integer                    AS GoodsCode
---               ,NULL::TVarChar                   AS IdBarCode
+               ,NULL::TVarChar                   AS BarCode
                ,NULL::TVarChar                   AS GoodsName
                ,NULL::TVarChar                   AS IntenalSPName
                ,NULL::TVarChar                   AS GoodsGroupName
@@ -314,7 +316,24 @@ BEGIN
                                 , tmp.isChecked
                            FROM lpSelect_MarginCategory_Goods (inUnitId:= inUnitId , inGoodsId:= 0, inOperDate:= CURRENT_DATE , inSession:= inSession) AS tmp
                            )
-  
+                           
+   -- Штрих-коды производителя
+   , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId AS GoodsMainId
+                              , Object_Goods_BarCode.ValueData        AS BarCode
+                         FROM ObjectLink AS ObjectLink_Main_BarCode
+                              JOIN ObjectLink AS ObjectLink_Child_BarCode
+                                              ON ObjectLink_Child_BarCode.ObjectId = ObjectLink_Main_BarCode.ObjectId
+                                             AND ObjectLink_Child_BarCode.DescId = zc_ObjectLink_LinkGoods_Goods()
+                              JOIN ObjectLink AS ObjectLink_Goods_Object_BarCode
+                                              ON ObjectLink_Goods_Object_BarCode.ObjectId = ObjectLink_Child_BarCode.ChildObjectId
+                                             AND ObjectLink_Goods_Object_BarCode.DescId = zc_ObjectLink_Goods_Object()
+                                             AND ObjectLink_Goods_Object_BarCode.ChildObjectId = zc_Enum_GlobalConst_BarCode()
+                              LEFT JOIN Object AS Object_Goods_BarCode ON Object_Goods_BarCode.Id = ObjectLink_Goods_Object_BarCode.ObjectId
+                         WHERE ObjectLink_Main_BarCode.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                           AND ObjectLink_Main_BarCode.ChildObjectId > 0
+                           AND TRIM (Object_Goods_BarCode.ValueData) <> ''
+                        )
+                       
    
             -- Результат
             SELECT
@@ -328,6 +347,7 @@ BEGIN
                , Object_Goods_View.id                            AS GoodsId
                , Object_Goods_View.GoodsCodeInt                  AS GoodsCode
 --               , zfFormat_BarCode(zc_BarCodePref_Object(), tmpPrice_View.Id) ::TVarChar  AS IdBarCode
+               , COALESCE (tmpGoodsBarCode.BarCode, '')  :: TVarChar AS BarCode
                , Object_Goods_View.GoodsName                     AS GoodsName
                , Object_IntenalSP.ValueData                      AS IntenalSPName
                , Object_Goods_View.GoodsGroupName                AS GoodsGroupName
@@ -586,6 +606,8 @@ BEGIN
         
                LEFT JOIN tmpMarginCategory ON tmpMarginCategory.GoodsId = Object_Goods_View.Id
                
+               LEFT JOIN tmpGoodsBarCode ON tmpGoodsBarCode.GoodsMainId = ObjectLink_Main.ChildObjectId
+               
             WHERE (inisShowDel = True OR Object_Goods_View.isErased = False)
               AND (Object_Goods_View.Id = inGoodsId OR inGoodsId = 0)
             ORDER BY GoodsGroupName, GoodsName;
@@ -793,7 +815,24 @@ BEGIN
                                    , tmp.isChecked
                               FROM lpSelect_MarginCategory_Goods (inUnitId:= inUnitId , inGoodsId:= 0, inOperDate:= CURRENT_DATE , inSession:= inSession) AS tmp
                               )
-                           
+
+      -- Штрих-коды производителя
+      , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId AS GoodsMainId
+                                 , Object_Goods_BarCode.ValueData        AS BarCode
+                            FROM ObjectLink AS ObjectLink_Main_BarCode
+                                 JOIN ObjectLink AS ObjectLink_Child_BarCode
+                                                 ON ObjectLink_Child_BarCode.ObjectId = ObjectLink_Main_BarCode.ObjectId
+                                                AND ObjectLink_Child_BarCode.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                 JOIN ObjectLink AS ObjectLink_Goods_Object_BarCode
+                                                 ON ObjectLink_Goods_Object_BarCode.ObjectId = ObjectLink_Child_BarCode.ChildObjectId
+                                                AND ObjectLink_Goods_Object_BarCode.DescId = zc_ObjectLink_Goods_Object()
+                                                AND ObjectLink_Goods_Object_BarCode.ChildObjectId = zc_Enum_GlobalConst_BarCode()
+                                 LEFT JOIN Object AS Object_Goods_BarCode ON Object_Goods_BarCode.Id = ObjectLink_Goods_Object_BarCode.ObjectId
+                            WHERE ObjectLink_Main_BarCode.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                              AND ObjectLink_Main_BarCode.ChildObjectId > 0
+                              AND TRIM (Object_Goods_BarCode.ValueData) <> ''
+                           )
+                        
             -- Результат     
             SELECT
                  tmpPrice_All.Id                                                       AS Id
@@ -806,6 +845,7 @@ BEGIN
                , Object_Goods_View.id                      AS GoodsId
                , Object_Goods_View.GoodsCodeInt            AS GoodsCode
 --               , zfFormat_BarCode(zc_BarCodePref_Object(), tmpPrice_All.Id) ::TVarChar AS IdBarCode
+               , COALESCE (tmpGoodsBarCode.BarCode, '')  :: TVarChar AS BarCode
                , Object_Goods_View.GoodsName               AS GoodsName
                , Object_IntenalSP.ValueData                AS IntenalSPName
                , Object_Goods_View.GoodsGroupName          AS GoodsGroupName
@@ -1049,6 +1089,7 @@ BEGIN
 
                LEFT JOIN tmpMarginCategory ON tmpMarginCategory.GoodsId = Object_Goods_View.Id
 
+               LEFT JOIN tmpGoodsBarCode ON tmpGoodsBarCode.GoodsMainId = ObjectLink_Main.ChildObjectId
             WHERE (inisShowDel = True OR Object_Goods_View.isErased = False)
               AND (Object_Goods_View.Id = inGoodsId OR inGoodsId = 0)
             ORDER BY GoodsGroupName, GoodsName;

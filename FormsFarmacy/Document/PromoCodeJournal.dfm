@@ -7,7 +7,7 @@ inherited PromoCodeJournalForm: TPromoCodeJournalForm
   AddOnFormData.AddOnFormRefresh.DataSet = MasterCDS
   AddOnFormData.AddOnFormRefresh.KeyField = 'Id'
   AddOnFormData.AddOnFormRefresh.KeyParam = 'inMovementId'
-  AddOnFormData.AddOnFormRefresh.GetStoredProc = spGet_Movement_Promo
+  AddOnFormData.AddOnFormRefresh.GetStoredProc = spGet_Movement_PromoCode
   ExplicitWidth = 785
   ExplicitHeight = 529
   PixelsPerInch = 96
@@ -358,15 +358,15 @@ inherited PromoCodeJournalForm: TPromoCodeJournalForm
     Top = 8
   end
   inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_Promo'
+    StoredProcName = 'gpComplete_Movement_PromoCode'
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_Promo'
+    StoredProcName = 'gpUnComplete_Movement_PromoCode'
     Left = 384
     Top = 264
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_Promo'
+    StoredProcName = 'gpSetErased_Movement_PromoCode'
     Left = 384
     Top = 216
   end
@@ -375,11 +375,11 @@ inherited PromoCodeJournalForm: TPromoCodeJournalForm
     Top = 400
   end
   inherited spMovementReComplete: TdsdStoredProc
-    StoredProcName = 'gpReComplete_Movement_Promo'
+    StoredProcName = 'gpReComplete_Movement_PromoCode'
     Left = 384
     Top = 120
   end
-  object spGet_Movement_Promo: TdsdStoredProc
+  object spGet_Movement_PromoCode: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_PromoCode'
     DataSets = <>
     OutputType = otResult

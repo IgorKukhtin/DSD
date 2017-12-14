@@ -21,6 +21,7 @@ RETURNS TABLE (
   JuridicalName  TVarChar,
   GoodsId        Integer, 
   GoodsCode      Integer, 
+  BarCode        TVarChar,
   GoodsName      TVarChar,
   GoodsGroupName TVarChar, 
   NDSKindName    TVarChar,
@@ -225,6 +226,22 @@ BEGIN
                                                          AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
                                                          AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId*/
                          )
+      -- Штрих-коды производителя
+      , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId AS GoodsMainId
+                                 , Object_Goods_BarCode.ValueData        AS BarCode
+                            FROM ObjectLink AS ObjectLink_Main_BarCode
+                                 JOIN ObjectLink AS ObjectLink_Child_BarCode
+                                                 ON ObjectLink_Child_BarCode.ObjectId = ObjectLink_Main_BarCode.ObjectId
+                                                AND ObjectLink_Child_BarCode.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                 JOIN ObjectLink AS ObjectLink_Goods_Object_BarCode
+                                                 ON ObjectLink_Goods_Object_BarCode.ObjectId = ObjectLink_Child_BarCode.ChildObjectId
+                                                AND ObjectLink_Goods_Object_BarCode.DescId = zc_ObjectLink_Goods_Object()
+                                                AND ObjectLink_Goods_Object_BarCode.ChildObjectId = zc_Enum_GlobalConst_BarCode()
+                                 LEFT JOIN Object AS Object_Goods_BarCode ON Object_Goods_BarCode.Id = ObjectLink_Goods_Object_BarCode.ObjectId
+                            WHERE ObjectLink_Main_BarCode.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                              AND ObjectLink_Main_BarCode.ChildObjectId > 0
+                              AND TRIM (Object_Goods_BarCode.ValueData) <> ''
+                           )
 
         -- результат
         SELECT
@@ -233,6 +250,7 @@ BEGIN
 
            , Object_Goods.Id                                                   AS GoodsId
            , Object_Goods.ObjectCode                                           AS GoodsCode
+           , COALESCE (tmpGoodsBarCode.BarCode, '')        :: TVarChar         AS BarCode
            , Object_Goods.ValueData                                            AS GoodsName
            , Object_GoodsGroup.ValueData                                       AS GoodsGroupName
            , Object_NDSKind_Income.ValueData                                   AS NDSKindName
@@ -323,7 +341,9 @@ BEGIN
              LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
                                       ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
                                      AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
-                                                                                       
+
+             LEFT JOIN tmpGoodsBarCode ON tmpGoodsBarCode.GoodsMainId = ObjectLink_Main.ChildObjectId
+
         ORDER BY Object_GoodsGroup.ValueData
                , Object_Goods.ValueData
 ;

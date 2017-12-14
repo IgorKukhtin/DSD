@@ -295,6 +295,22 @@ inherited CheckJournalForm: TCheckJournalForm
             Options.Editing = False
             Width = 78
           end
+          object InvNumber_PromoCode_Full: TcxGridDBColumn
+            Caption = #1055#1088#1086#1084#1086' '#1082#1086#1076' ('#1076#1086#1082'.)'
+            DataBinding.FieldName = 'InvNumber_PromoCode_Full'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object GUID_PromoCode: TcxGridDBColumn
+            Caption = 'GUID ('#1055#1088#1086#1084#1086' '#1082#1086#1076')'
+            DataBinding.FieldName = 'GUID_PromoCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
     end

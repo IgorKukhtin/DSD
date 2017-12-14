@@ -31,6 +31,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , Ambulance TVarChar
              , SPKindName TVarChar
              , InvNumber_Invoice_Full TVarChar
+             , StatusCode_PromoCode Integer
+             , InvNumber_PromoCode_Full TVarChar
+             , GUID_PromoCode TVarChar
               )
 AS
 $BODY$
@@ -102,7 +105,11 @@ BEGIN
            , MovementString_MedicSP.ValueData                   AS MedicSPName
            , MovementString_Ambulance.ValueData                 AS Ambulance
            , Object_SPKind.ValueData                            AS SPKindName
-           , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice_Full 
+           , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar )     :: TVarChar  AS InvNumber_Invoice_Full 
+           
+           , Object_Status_PromoCode.ObjectCode                 AS StatusCode_PromoCode
+           , ('№ ' || Movement_PromoCode.InvNumber || ' от ' || Movement_PromoCode.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_PromoCode_Full
+           , MIString_GUID.ValueData                 ::TVarChar AS GUID_PromoCode
 
         FROM (SELECT Movement.*
                    , MovementLinkObject_Unit.ObjectId                    AS UnitId
@@ -244,6 +251,20 @@ BEGIN
                                             ON MLM_Child.MovementId = Movement_Check.Id
                                            AND MLM_Child.descId = zc_MovementLinkMovement_Child()
              LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MLM_Child.MovementChildId
+
+            -- инфа из документа промо код
+            LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
+                                    ON MovementFloat_MovementItemId.MovementId = Movement_Check.Id
+                                   AND MovementFloat_MovementItemId.DescId     = zc_MovementFloat_MovementItemId()
+            LEFT JOIN MovementItem AS MI_PromoCode 
+                                   ON MI_PromoCode.Id       = MovementFloat_MovementItemId.ValueData :: Integer
+                                  AND MI_PromoCode.isErased = FALSE
+            LEFT JOIN Movement AS Movement_PromoCode ON Movement_PromoCode.Id = MI_PromoCode.MovementId
+            LEFT JOIN Object AS Object_Status_PromoCode ON Object_Status_PromoCode.Id = Movement_PromoCode.StatusId
+
+            LEFT JOIN MovementItemString AS MIString_GUID
+                                         ON MIString_GUID.MovementItemId = MI_PromoCode.Id
+                                        AND MIString_GUID.DescId = zc_MIString_GUID()
       ;
 
 END;
@@ -254,6 +275,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 14.12.17         * add PromoCode
  11.09.17         *
  04.08.17         * без вьюхи
  18.04.17         * add Movement_Invoice

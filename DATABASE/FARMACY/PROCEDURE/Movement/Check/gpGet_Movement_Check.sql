@@ -24,6 +24,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , MedicSPName TVarChar
              , Ambulance TVarChar
              , SPKindId   Integer, SPKindName TVarChar
+             
+             , InvNumber_PromoCode_Full TVarChar
+             , GUID_PromoCode TVarChar
 )
 AS
 $BODY$
@@ -66,12 +69,28 @@ BEGIN
            , Movement_Check.SPKindId
            , Movement_Check.SPKindName 
 
+           , ('№ ' || Movement_PromoCode.InvNumber || ' от ' || Movement_PromoCode.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_PromoCode_Full
+           , MIString_GUID.ValueData                 ::TVarChar AS GUID_PromoCode
+           
         FROM Movement_Check_View AS Movement_Check
              LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
                                   ON ObjectLink_DiscountExternal.ObjectId = Movement_Check.DiscountCardId
                                  AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountCard_Object()
              LEFT JOIN Object AS Object_DiscountExternal ON Object_DiscountExternal.Id = ObjectLink_DiscountExternal.ChildObjectId
 
+             -- инфа из документа промо код
+             LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
+                                     ON MovementFloat_MovementItemId.MovementId = Movement_Check.Id
+                                    AND MovementFloat_MovementItemId.DescId     = zc_MovementFloat_MovementItemId()
+             LEFT JOIN MovementItem AS MI_PromoCode 
+                                    ON MI_PromoCode.Id       = MovementFloat_MovementItemId.ValueData :: Integer
+                                   AND MI_PromoCode.isErased = FALSE
+             LEFT JOIN Movement AS Movement_PromoCode ON Movement_PromoCode.Id = MI_PromoCode.MovementId
+  
+             LEFT JOIN MovementItemString AS MIString_GUID
+                                          ON MIString_GUID.MovementItemId = MI_PromoCode.Id
+                                         AND MIString_GUID.DescId = zc_MIString_GUID()
+                                         
        WHERE Movement_Check.Id = inMovementId;
 
 END;
@@ -82,6 +101,7 @@ ALTER FUNCTION gpGet_Movement_Check (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.12.17         * add PromoCode
  26.04.17         * add PartnerMedicalId
  07.04.17         *
  21.07.16         *

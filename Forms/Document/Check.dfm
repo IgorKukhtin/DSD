@@ -1,19 +1,24 @@
 inherited CheckForm: TCheckForm
   Caption = #1050#1072#1089#1089#1086#1074#1099#1081' '#1095#1077#1082
-  ClientHeight = 406
-  ExplicitHeight = 444
+  ClientHeight = 523
+  ClientWidth = 817
+  ExplicitWidth = 833
+  ExplicitHeight = 561
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 183
-    Height = 223
+    Top = 181
+    Width = 817
+    Height = 342
     ExplicitTop = 183
     ExplicitHeight = 223
-    ClientRectBottom = 223
+    ClientRectBottom = 342
+    ClientRectRight = 817
     inherited tsMain: TcxTabSheet
       ExplicitHeight = 199
       inherited cxGrid: TcxGrid
-        Height = 199
+        Width = 817
+        Height = 318
         ExplicitHeight = 199
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -222,8 +227,9 @@ inherited CheckForm: TCheckForm
     end
   end
   inherited DataPanel: TPanel
-    Height = 157
-    ExplicitHeight = 157
+    Width = 817
+    Height = 155
+    ExplicitHeight = 155
     inherited edInvNumber: TcxTextEdit
       Left = 7
       Top = 14
@@ -343,7 +349,7 @@ inherited CheckForm: TCheckForm
       Width = 93
     end
     object chbNotMCS: TcxCheckBox
-      Left = 477
+      Left = 467
       Top = 52
       Caption = #1053#1077' '#1076#1083#1103' '#1053#1058#1047
       Properties.ReadOnly = True
@@ -351,16 +357,16 @@ inherited CheckForm: TCheckForm
       Width = 82
     end
     object cxLabel7: TcxLabel
-      Left = 586
+      Left = 549
       Top = 36
       Caption = #8470' '#1082#1072#1088#1090#1099
     end
     object edDiscountCard: TcxTextEdit
-      Left = 586
+      Left = 549
       Top = 52
       Properties.ReadOnly = True
       TabOrder = 20
-      Width = 215
+      Width = 147
     end
   end
   object edInvNumberOrder: TcxTextEdit [2]
@@ -487,6 +493,20 @@ inherited CheckForm: TCheckForm
     Properties.ReadOnly = True
     TabOrder = 25
     Width = 117
+  end
+  object cxLabel19: TcxLabel [22]
+    Left = 699
+    Top = 36
+    Hint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1054#1090#1087#1088#1072#1074#1083#1077#1085' '#1082#1083#1080#1077#1085#1090#1091')'
+    Caption = #1055#1088#1086#1084#1086' '#1082#1086#1076' ('#1076#1086#1082'.)'
+  end
+  object edInvNumber_PromoCode_Full: TcxTextEdit [23]
+    Left = 699
+    Top = 52
+    Hint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1054#1090#1087#1088#1072#1074#1083#1077#1085' '#1082#1083#1080#1077#1085#1090#1091')'
+    Properties.ReadOnly = True
+    TabOrder = 27
+    Width = 102
   end
   inherited ActionList: TActionList
     inherited actMISetErased: TdsdUpdateErased
@@ -1263,6 +1283,13 @@ inherited CheckForm: TCheckForm
         Name = 'SPKindName'
         Value = Null
         Component = edSPKind
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_PromoCode_Full'
+        Value = Null
+        Component = edInvNumber_PromoCode_Full
         DataType = ftString
         MultiSelectSeparator = ','
       end>

@@ -557,7 +557,8 @@ uses
   PromoCode in '..\..\FormsFarmacy\Guides\PromoCode.pas' {PromoCodeForm: TParentForm},
   PromoCodeMovement in '..\..\FormsFarmacy\Document\PromoCodeMovement.pas' {PromoCodeMovementForm: TParentForm},
   PromoCodeJournal in '..\..\FormsFarmacy\Document\PromoCodeJournal.pas' {PromoCodeJournalForm: TParentForm},
-  Juridical_Unit_Object in '..\..\FormsFarmacy\Guides\Juridical_Unit_Object.pas' {Juridical_Unit_ObjectForm: TParentForm};
+  Juridical_Unit_Object in '..\..\FormsFarmacy\Guides\Juridical_Unit_Object.pas' {Juridical_Unit_ObjectForm: TParentForm},
+  PromoCodeSignDialog in '..\..\FormsFarmacy\Document\PromoCodeSignDialog.pas' {PromoCodeSignDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

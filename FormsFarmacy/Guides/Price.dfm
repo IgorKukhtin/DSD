@@ -162,6 +162,15 @@ inherited PriceForm: TPriceForm
             Options.Editing = False
             Width = 62
           end
+          object BarCode: TcxGridDBColumn
+            Caption = #1064'/'#1050' '#1087#1088#1086#1080#1079#1074'.'
+            DataBinding.FieldName = 'BarCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1064'/'#1050' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1103
+            Options.Editing = False
+            Width = 70
+          end
           object GoodsName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsName'
@@ -1100,7 +1109,8 @@ inherited PriceForm: TPriceForm
     end
   end
   inherited MasterDS: TDataSource
-    Top = 144
+    Left = 32
+    Top = 208
   end
   inherited MasterCDS: TClientDataSet
     Left = 8
@@ -1141,8 +1151,8 @@ inherited PriceForm: TPriceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 88
-    Top = 144
+    Left = 72
+    Top = 184
   end
   inherited BarManager: TdxBarManager
     Left = 184
