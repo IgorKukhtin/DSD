@@ -403,6 +403,9 @@ type
     N157: TMenuItem;
     N158: TMenuItem;
     N159: TMenuItem;
+    actPromoCodeMovement: TdsdOpenForm;
+    N160: TMenuItem;
+    N161: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

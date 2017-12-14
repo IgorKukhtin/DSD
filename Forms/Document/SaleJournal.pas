@@ -224,7 +224,7 @@ type
     actPrintPack_Transport: TdsdPrintAction;
     macPrintPack_Transport: TMultiAction;
     macPrintPackList_Transport: TMultiAction;
-    bb: TdxBarButton;
+    bbPackList_Transport: TdxBarButton;
     N14: TMenuItem;
     N15: TMenuItem;
     spSelectPrint_Total_To: TdsdStoredProc;
@@ -236,6 +236,10 @@ type
     spSelectPrint_Total_List: TdsdStoredProc;
     actPrint_Total_List: TdsdPrintAction;
     actInsert_LockUnique: TdsdExecStoredProc;
+    bbPrint_Sale_Total_List: TdxBarButton;
+    macInsert_LockUnique: TMultiAction;
+    spDelete_LockUnique: TdsdStoredProc;
+    actDelete_LockUnique: TdsdExecStoredProc;
   private
     { Private declarations }
   public

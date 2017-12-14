@@ -342,12 +342,18 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_Area() RETURNS Integer AS $BODY
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_Area', 'Регион' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Area');
 
+
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_PromoCode() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PromoCode'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_PromoCode', 'Регион' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PromoCode');
+
 /*-------------------------------------------------------------------------------
 
                   РАСПОЛАГАЙТЕ ДЕСКИ ПО АЛФАВИТУ  !!!!!!!!!!!!!!!!!!!
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 13.12.17         * zc_MovementLinkObject_PromoCode
  11.10.17         * zc_MovementLinkObject_Area
  18.09.17         * zc_MovementLinkObject_GoodsGroup
  08.06.17         * zc_MovementLinkObject_MemberIncomeCheck
