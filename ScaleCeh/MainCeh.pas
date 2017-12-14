@@ -224,6 +224,8 @@ type
     PanelStorageLine: TPanel;
     LabelStorageLine: TLabel;
     EditStorageLine: TcxButtonEdit;
+    miFont: TMenuItem;
+    miLine16: TMenuItem;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -289,6 +291,7 @@ type
     procedure bbChangeStorageLineClick(Sender: TObject);
     procedure EditStorageLinePropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
+    procedure miFontClick(Sender: TObject);
   private
     oldGoodsId, oldGoodsCode : Integer;
     fEnterKey13:Boolean;
@@ -325,7 +328,7 @@ implementation
 uses UnilWin,DMMainScaleCeh, DMMainScale, UtilConst, DialogMovementDesc, UtilPrint
     ,GuideMovementCeh, DialogNumberValue, DialogStringValue, DialogDateValue, DialogPrint, DialogMessage
     ,GuideWorkProgress
-    ,IdIPWatch;
+    ,IdIPWatch, LookAndFillSettings;
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
@@ -489,6 +492,11 @@ begin
         PanelGoodsWeight.Caption:= FormatFloat(fmtWeight, ParamByName('OperCount').AsFloat);
         Panel_Weight.Caption:= FormatFloat(fmtWeight, calcOperCount);
      end;
+end;
+{------------------------------------------------------------------------------}
+procedure TMainCehForm.miFontClick(Sender: TObject);
+begin
+  TLookAndFillSettingsForm.Create(nil).Show;
 end;
 {------------------------------------------------------------------------------}
 procedure TMainCehForm.myActiveControl;
@@ -1804,6 +1812,8 @@ begin
      if Key = VK_F2 then GetParams_MovementDesc('');
      if Key = VK_F4 then Save_MI;
      if Key = VK_F5 then Save_Movement_all;
+     // ּוםÿועסÿ רנטפע
+     if (Key = VK_F10) and (Shift = [ssCtrl]) then miFontClick(Self);
      //
      if ShortCut(Key, Shift) = 24659 then
      begin

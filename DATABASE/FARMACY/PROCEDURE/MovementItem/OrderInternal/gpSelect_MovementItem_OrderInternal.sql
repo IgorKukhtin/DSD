@@ -972,27 +972,32 @@ BEGIN
                        )
  
         -- Маркетинговый контракт
-      , GoodsPromo AS (SELECT tmp.JuridicalId
-                            , ObjectLink_Child_retail.ChildObjectId AS GoodsId        -- здесь товар "сети"
+      , GoodsPromo AS (WITH tmpPromo AS (SELECT * FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= vbOperDate) AS tmp) -- CURRENT_DATE
+                          , tmpList AS (SELECT ObjectLink_Child.ChildObjectId        AS GoodsId
+                                             , ObjectLink_Child_retail.ChildObjectId AS GoodsId_retail -- здесь товар "сети"
+                                        FROM ObjectLink AS ObjectLink_Child
+                                              INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                                       AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                                              INNER JOIN ObjectLink AS ObjectLink_Main_retail ON ObjectLink_Main_retail.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                                             AND ObjectLink_Main_retail.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                              INNER JOIN ObjectLink AS ObjectLink_Child_retail ON ObjectLink_Child_retail.ObjectId = ObjectLink_Main_retail.ObjectId
+                                                                                              AND ObjectLink_Child_retail.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                                              INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                                    ON ObjectLink_Goods_Object.ObjectId      = ObjectLink_Child_retail.ChildObjectId
+                                                                   AND ObjectLink_Goods_Object.DescId        = zc_ObjectLink_Goods_Object()
+                                                                   AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
+                                        WHERE ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                          -- AND vbObjectId <> 3
+                                       )
+                       SELECT tmp.JuridicalId
+                            , COALESCE (tmpList.GoodsId_retail, tmp.GoodsId) AS GoodsId -- здесь товар "сети"
                             , tmp.MovementId
                             , tmp.ChangePercent
                             , MovementPromo.OperDate                AS OperDatePromo
                             , MovementPromo.InvNumber               AS InvNumberPromo -- ***
-                       FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= vbOperDate) AS tmp   --CURRENT_DATE
-                                        INNER JOIN ObjectLink AS ObjectLink_Child
-                                                              ON ObjectLink_Child.ChildObjectId = tmp.GoodsId
-                                                             AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
-                                        INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                                                                 AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
-                                        INNER JOIN ObjectLink AS ObjectLink_Main_retail ON ObjectLink_Main_retail.ChildObjectId = ObjectLink_Main.ChildObjectId
-                                                                                       AND ObjectLink_Main_retail.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
-                                        INNER JOIN ObjectLink AS ObjectLink_Child_retail ON ObjectLink_Child_retail.ObjectId = ObjectLink_Main_retail.ObjectId
-                                                                                        AND ObjectLink_Child_retail.DescId   = zc_ObjectLink_LinkGoods_Goods()
-                                        INNER JOIN ObjectLink AS ObjectLink_Goods_Object
-                                                              ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_retail.ChildObjectId
-                                                             AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-                                                             AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
-                                        LEFT JOIN Movement AS MovementPromo ON MovementPromo.Id = tmp.MovementId
+                       FROM tmpPromo AS tmp   --CURRENT_DATE
+                            INNER JOIN tmpList ON tmpList.GoodsId = tmp.GoodsId
+                            LEFT JOIN Movement AS MovementPromo ON MovementPromo.Id = tmp.MovementId
                       )
         -- Список цены + ТОП
       , GoodsPrice AS (SELECT Price_Goods.ChildObjectId           AS GoodsId

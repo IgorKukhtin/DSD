@@ -186,8 +186,8 @@ BEGIN
 
     OPEN Cursor2 FOR
        WITH tmpMIContainer_all AS (SELECT MIContainer.MovementItemId
-                                        , CLO_Unit.ObjectId     AS UnitId
-                                        , CLO_Position.ObjectId AS PositionId
+                                        , CLO_Unit.ObjectId                        AS UnitId
+                                        , CLO_Position.ObjectId                    AS PositionId
                                         , ObjectLink_Personal_Member.ChildObjectId AS MemberId
                                         , (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_PersonalService_Nalog() THEN MIContainer.Amount ELSE 0 END) AS SummNalog
                                         -- , ROW_NUMBER() OVER (PARTITION BY MIContainer.MovementItemId ORDER BY ABS (MIContainer.Amount) DESC) AS Ord
@@ -195,13 +195,13 @@ BEGIN
                                    FROM MovementItemContainer AS MIContainer
                                         LEFT JOIN ContainerLinkObject AS CLO_Unit
                                                                       ON CLO_Unit.ContainerId = MIContainer.ContainerId
-                                                                     AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                                                     AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
                                         LEFT JOIN ContainerLinkObject AS CLO_Position
                                                                       ON CLO_Position.ContainerId = MIContainer.ContainerId
-                                                                     AND CLO_Position.DescId = zc_ContainerLinkObject_Position()
+                                                                     AND CLO_Position.DescId      = zc_ContainerLinkObject_Position()
                                         LEFT JOIN ContainerLinkObject AS CLO_Personal
                                                                       ON CLO_Personal.ContainerId = MIContainer.ContainerId
-                                                                     AND CLO_Personal.DescId = zc_ContainerLinkObject_Personal()
+                                                                     AND CLO_Personal.DescId      = zc_ContainerLinkObject_Personal()
                                         LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
                                                              ON ObjectLink_Personal_Member.ObjectId = CLO_Personal.ObjectId
                                                             AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
@@ -213,10 +213,12 @@ BEGIN
                                     , tmpMIContainer_all.PositionId
                                     ,*/ tmpMIContainer_all.MemberId
                                     , SUM (tmpMIContainer_all.SummNalog) :: TFloat AS SummNalog
+                                    , CASE WHEN inisShowAll = TRUE THEN tmpMIContainer_all.PositionId ELSE 0 END AS PositionId
                                FROM tmpMIContainer_all
                                GROUP BY /*tmpMIContainer_all.UnitId
                                       , tmpMIContainer_all.PositionId
                                       ,*/ tmpMIContainer_all.MemberId
+                                      , CASE WHEN inisShowAll = TRUE THEN tmpMIContainer_all.PositionId ELSE 0 END
                               )
       , tmpMI_all AS (SELECT MovementItem.Id                            AS MovementItemId
                            , MovementItem.Amount
@@ -376,7 +378,7 @@ BEGIN
                              , tmpMI_all_find.PersonalServiceListId
                              , tmpMI_all_find.isMain
                              , tmpMI_all_find.Comment
-                    UNION 
+                    UNION ALL
                       SELECT tmpMI_all.PersonalId
                            , tmpMI_all.UnitId
                            , tmpMI_all.PositionId
@@ -489,6 +491,7 @@ BEGIN
        , tmpContainer_pay AS (SELECT DISTINCT
                                      CLO_ServiceDate.ContainerId
                                    , tmpAll.MemberId
+                                   , CLO_Position.ObjectId AS PositionId
                               FROM tmpAll
                                    INNER JOIN ObjectLink AS ObjectLink_Personal_Member
                                                          ON ObjectLink_Personal_Member.ChildObjectId = tmpAll.MemberId
@@ -504,15 +507,20 @@ BEGIN
                                                                   ON CLO_PersonalServiceList.ObjectId = vbPersonalServiceListId
                                                                  AND CLO_PersonalServiceList.DescId = zc_ContainerLinkObject_PersonalServiceList()
                                                                  AND CLO_PersonalServiceList.ContainerId = CLO_ServiceDate.ContainerId
+                                   LEFT JOIN ContainerLinkObject AS CLO_Position
+                                                                 ON CLO_Position.ContainerId = CLO_ServiceDate.ContainerId
+                                                                AND CLO_Position.DescId     = zc_ContainerLinkObject_Position()
                              )
      , tmpMIContainer_pay AS (SELECT SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Cash_PersonalAvance() THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
                                    , tmpContainer_pay.MemberId
+                                   , CASE WHEN inisShowAll = TRUE THEN tmpContainer_pay.PositionId ELSE 0 END AS PositionId
                               FROM tmpContainer_pay
                                    INNER JOIN MovementItemContainer AS MIContainer
-                                                                    ON MIContainer.ContainerId = tmpContainer_pay.ContainerId
-                                                                   AND MIContainer.DescId = zc_MIContainer_Summ()
+                                                                    ON MIContainer.ContainerId    = tmpContainer_pay.ContainerId
+                                                                   AND MIContainer.DescId         = zc_MIContainer_Summ()
                                                                    AND MIContainer.MovementDescId = zc_Movement_Cash()
                               GROUP BY tmpContainer_pay.MemberId
+                                     , CASE WHEN inisShowAll = TRUE THEN tmpContainer_pay.PositionId ELSE 0 END
                              )
        -- Результат
        SELECT 0 :: Integer                            AS Id
@@ -544,7 +552,7 @@ BEGIN
              - COALESCE (tmpMIContainer_pay.Amount_avance, 0)
               ) :: TFloat AS AmountCash
             , (tmpAll.SummService /*+ COALESCE (tmpMIContainer.SummNalog, 0)*/
-             + tmpAll.SummAdd
+             -- + tmpAll.SummAdd
              + tmpAll.SummHoliday
               ) :: TFloat AS SummService
             , tmpAll.SummCard           :: TFloat AS SummCard
@@ -568,11 +576,20 @@ BEGIN
             , tmpAll.Comment
 
        FROM tmpAll
-            LEFT JOIN tmpMIContainer ON tmpMIContainer.MemberId = tmpAll.MemberId
+            LEFT JOIN tmpMIContainer ON tmpMIContainer.MemberId    = tmpAll.MemberId
+                                    AND (tmpMIContainer.PositionId = tmpAll.PositionId
+                                      OR inisShowAll = FALSE
+                                        )
             LEFT JOIN tmpMIContainer_all ON tmpMIContainer_all.MemberId = tmpAll.MemberId
-                                        AND tmpMIContainer_all.Ord      = 1 -- !!!только 1-ый!!!
-            LEFT JOIN tmpMIContainer_pay ON tmpMIContainer_pay.MemberId = tmpAll.MemberId
-
+                                        AND ((tmpMIContainer_all.Ord      = 1 -- !!!только 1-ый!!!
+                                              AND inisShowAll = FALSE)
+                                          OR (tmpMIContainer_all.PositionId = tmpAll.PositionId
+                                              AND inisShowAll = TRUE)
+                                            )
+            LEFT JOIN tmpMIContainer_pay ON tmpMIContainer_pay.MemberId    = tmpAll.MemberId
+                                        AND (tmpMIContainer_pay.PositionId  = tmpAll.PositionId
+                                          OR inisShowAll = FALSE
+                                            )
 
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmpAll.PersonalId
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpAll.UnitId
@@ -617,5 +634,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_PersonalService_Print (inMovementId := 1001606, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpSelect_Movement_PersonalService_Print (inMovementId := 377284, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_PersonalService_Print (inMovementId := 1001606, inisShowAll:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_PersonalService_Print (inMovementId := 377284, inisShowAll:= FALSE, inSession:= zfCalc_UserAdmin());

@@ -221,6 +221,8 @@ type
     PanelErasedCount: TPanel;
     Ord: TcxGridDBColumn;
     bbGuideGoodsView: TSpeedButton;
+    miFont: TMenuItem;
+    miLine16: TMenuItem;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -253,6 +255,7 @@ type
     procedure TimerProtocol_isProcessTimer(Sender: TObject);
     procedure bbUpdatePartnerClick(Sender: TObject);
     procedure bbGuideGoodsViewClick(Sender: TObject);
+    procedure miFontClick(Sender: TObject);
   private
     Scale_BI: TCasBI;
     Scale_DB: TCasDB;
@@ -286,7 +289,7 @@ implementation
 {$R *.dfm}
 uses UnilWin,DMMainScale, UtilConst, DialogMovementDesc, GuideGoods,GuideGoodsPartner,GuideGoodsMovement,GuideMovement,GuideMovementTransport, GuidePartner
     ,UtilPrint,DialogNumberValue,DialogStringValue,DialogPersonalComplete,DialogPrint,GuidePersonal
-    ,IdIPWatch;
+    ,IdIPWatch, LookAndFillSettings;
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
@@ -319,6 +322,11 @@ begin
           then ActiveControl:=EditBarCode
           else ActiveControl:=cxDBGrid;
 end;
+procedure TMainForm.miFontClick(Sender: TObject);
+begin
+  TLookAndFillSettingsForm.Create(nil).Show;
+end;
+
 //------------------------------------------------------------------------------------------------
 function TMainForm.Save_Movement_all:Boolean;
 var execParams:TParams;
@@ -1456,6 +1464,9 @@ begin
      if (Key = VK_SPACE) and (Shift = []) then begin Key:= 0; GetParams_Goods (FALSE, '', TRUE); end;//isRetail=FALSE
      if (Key = VK_SPACE) and (Shift = [ssCtrl]) and (GetArrayList_Value_byName(Default_Array,'isCheckDelete') = AnsiUpperCase('TRUE'))
      then begin Key:= 0; GetParams_Goods (FALSE, '', FALSE); end;//isRetail=FALSE
+     //
+     // ּוםÿועסÿ רנטפע
+     if (Key = VK_F10) and (Shift = [ssCtrl]) then miFontClick(Self);
      //
      if ShortCut(Key, Shift) = 24659 then
      begin
