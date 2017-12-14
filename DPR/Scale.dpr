@@ -84,7 +84,8 @@ uses
   LocalWorkUnit in '..\SOURCE\LocalWorkUnit.pas',
   GuideGoodsPartner in '..\Scale\GuideGoodsPartner.pas' {GuideGoodsPartnerForm},
   IFIN_J1201009 in '..\SOURCE\MeDOC\IFIN_J1201009.pas',
-  IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas';
+  IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas',
+  LookAndFillSettings in '..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm};
 
 {$R *.res}
 

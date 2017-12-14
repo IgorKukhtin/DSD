@@ -129,9 +129,9 @@ BEGIN
              , tmp.InfoMoneyId
 
                -- Курс - из истории
-             , tmpCurrency.Amount   AS CurrencyValue
+             , COALESCE (tmpCurrency.Amount, 0)   AS CurrencyValue
                -- Номинал курса - из истории
-             , tmpCurrency.ParValue AS ParValue
+             , COALESCE (tmpCurrency.ParValue, 0) AS ParValue
 
         FROM (SELECT MovementItem.Id                  AS MovementItemId
                    , MovementItem.ObjectId            AS GoodsId
@@ -203,7 +203,8 @@ BEGIN
                 AND Movement.DescId   = zc_Movement_Sale()
                 AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
              ) AS tmp
-             LEFT JOIN tmpCurrency ON tmpCurrency.CurrencyFromId = tmp.CurrencyId OR tmpCurrency.CurrencyToId = tmp.CurrencyId
+             LEFT JOIN tmpCurrency ON (tmpCurrency.CurrencyFromId = tmp.CurrencyId OR tmpCurrency.CurrencyToId = tmp.CurrencyId)
+                                  AND tmp.CurrencyId <> zc_Currency_Basis()
             ;
 
      -- проверка что оплачено НЕ больше чем надо
@@ -423,6 +424,7 @@ BEGIN
                    JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                     AND MovementItem.DescId     = zc_MI_Child()
                                     AND MovementItem.isErased   = FALSE
+                                    AND MovementItem.Amount     <> 0
                    LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
                                                     ON MILinkObject_Currency.MovementItemId = MovementItem.Id

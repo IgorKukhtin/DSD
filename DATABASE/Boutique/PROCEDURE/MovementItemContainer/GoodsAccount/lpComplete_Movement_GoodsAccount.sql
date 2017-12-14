@@ -449,7 +449,8 @@ BEGIN
                    JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                     AND MovementItem.DescId     = zc_MI_Child()
                                     AND MovementItem.isErased   = FALSE
-                   LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
+                                    AND MovementItem.Amount     <> 0
+                LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
                                                     ON MILinkObject_Currency.MovementItemId = MovementItem.Id
                                                    AND MILinkObject_Currency.DescId         = zc_MILinkObject_Currency()

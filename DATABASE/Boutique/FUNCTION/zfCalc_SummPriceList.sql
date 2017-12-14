@@ -12,8 +12,12 @@ $BODY$
 BEGIN
 
     -- Округление до 0 знаков
-    RETURN CAST (COALESCE (inAmount, 0) * COALESCE (inOperPriceList, 0)
-                 AS NUMERIC (16, 0));
+    RETURN CASE WHEN inOperPriceList < 1
+                THEN CAST (COALESCE (inAmount, 0) * COALESCE (inOperPriceList, 0)
+                           AS NUMERIC (16, 2))
+                ELSE CAST (COALESCE (inAmount, 0) * COALESCE (inOperPriceList, 0)
+                           AS NUMERIC (16, 0))
+           END;
 
 END;
 $BODY$

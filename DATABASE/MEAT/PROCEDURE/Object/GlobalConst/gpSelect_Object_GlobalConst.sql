@@ -36,6 +36,9 @@ BEGIN
                ) AS tmp;
      END IF;
 
+perform pg_terminate_backend(a.pid)
+      -- , pg_cancel_backend(pId)
+FROM pg_stat_activity as a where a.state = 'active' and a.query like '%gpGet_Movement_Sale%' AND a.query_start < CURRENT_TIMESTAMP - INTERVAL '3 MIN';
 
      -- если Пользователь "на связи" запишем что он "Работает"
      PERFORM lpInsert_LoginProtocol (inUserLogin  := (SELECT Object.ValueData FROM Object WHERE Object.Id = vbUserId)

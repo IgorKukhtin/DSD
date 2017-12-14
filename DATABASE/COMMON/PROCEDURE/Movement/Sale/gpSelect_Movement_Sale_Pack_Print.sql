@@ -17,10 +17,21 @@ $BODY$
     DECLARE vbGoodsPropertyId Integer;
 
     DECLARE Cursor1 refcursor;
+    DECLARE vbOperDatePartner TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale_Pack_Print());
      vbUserId:= lpGetUserBySession (inSession);
+
+     -- Дата
+     vbOperDatePartner:= (SELECT COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AS OperDatePartner
+                          FROM Movement
+                               LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                                      ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+                                                     AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
+                          WHERE Movement.Id = inMovementId
+                         );
+
 
 
      -- определяется параметр
@@ -98,6 +109,8 @@ BEGIN
                                 , MAX (COALESCE (MIFloat_LevelNumber.ValueData, 0)) AS LevelNumber
                                 , SUM (COALESCE (MIFloat_BoxCount.ValueData, 0))    AS BoxCount
                                 , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountPartner
+                                , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) AS AmountPartnerWeight
+                                , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) AS AmountPartnerSh
                            FROM tmpMovement
                                 INNER JOIN MovementItem ON MovementItem.MovementId =  tmpMovement.Id
                                                        AND MovementItem.DescId     = zc_MI_Master()
@@ -115,8 +128,45 @@ BEGIN
                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
+                                LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                      ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
+                                                     AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
+                                LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                     ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                                    AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+
                            GROUP BY MovementItem.MovementId, MovementItem.ObjectId, MILinkObject_GoodsKind.ObjectId
                           )
+       -- StickerProperty -  кількість діб 
+     , tmpStickerProperty AS (SELECT ObjectLink_Sticker_Goods.ChildObjectId              AS GoodsId
+                                   , ObjectLink_StickerProperty_GoodsKind.ChildObjectId  AS GoodsKindId
+                                   , COALESCE (ObjectFloat_Value5.ValueData, 0)          AS Value5
+                                     --  № п/п
+                                   , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Sticker_Goods.ChildObjectId, ObjectLink_StickerProperty_GoodsKind.ChildObjectId ORDER BY COALESCE (ObjectFloat_Value5.ValueData, 0) DESC) AS Ord
+                              FROM Object AS Object_StickerProperty
+                                    LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_Sticker
+                                                         ON ObjectLink_StickerProperty_Sticker.ObjectId = Object_StickerProperty.Id
+                                                        AND ObjectLink_StickerProperty_Sticker.DescId   = zc_ObjectLink_StickerProperty_Sticker()
+                                    LEFT JOIN ObjectLink AS ObjectLink_Sticker_Goods
+                                                         ON ObjectLink_Sticker_Goods.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
+                                                        AND ObjectLink_Sticker_Goods.DescId   = zc_ObjectLink_StickerProperty_GoodsKind()
+                                    LEFT JOIN ObjectLink AS ObjectLink_Sticker_Juridical
+                                                         ON ObjectLink_Sticker_Juridical.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
+                                                        AND ObjectLink_Sticker_Juridical.DescId   = zc_ObjectLink_StickerProperty_GoodsKind()
+
+                                    LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_GoodsKind
+                                                         ON ObjectLink_StickerProperty_GoodsKind.ObjectId = Object_StickerProperty.Id
+                                                        AND ObjectLink_StickerProperty_GoodsKind.DescId = zc_ObjectLink_StickerProperty_GoodsKind()
+
+                                    LEFT JOIN ObjectFloat AS ObjectFloat_Value5
+                                                          ON ObjectFloat_Value5.ObjectId = Object_StickerProperty.Id
+                                                         AND ObjectFloat_Value5.DescId = zc_ObjectFloat_StickerProperty_Value5()
+
+                              WHERE Object_StickerProperty.DescId   = zc_Object_StickerProperty()
+                                AND Object_StickerProperty.isErased = FALSE
+                                AND ObjectLink_Sticker_Juridical.ChildObjectId IS NULL -- !!!обязательно БЕЗ Покупателя!!!
+                             )
       -- Результат
       SELECT tmpMovementItem.MovementId	                                            AS MovementId
            , CAST (ROW_NUMBER() OVER (PARTITION BY MovementFloat_WeighingNumber.ValueData ORDER BY MovementFloat_WeighingNumber.ValueData, ObjectString_Goods_GoodsGroupFull.ValueData, Object_Goods.ValueData, Object_GoodsKind.ValueData) AS Integer) AS NumOrder
@@ -152,9 +202,56 @@ BEGIN
            , tmpMovementItem.LevelNumber                                            AS LevelNumber
            , tmpMovementItem.BoxCount                                               AS BoxCount
 
-           , tmpMovementItem.AmountPartner                                          AS AmountPartner
-           , (tmpMovementItem.AmountPartner * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat AS AmountPartnerWeight
-           , (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMovementItem.AmountPartner ELSE 0 END) :: TFloat AS AmountPartnerSh
+           , tmpMovementItem.AmountPartner                                :: TFloat AS AmountPartner
+           , tmpMovementItem.AmountPartnerWeight                          :: TFloat AS AmountPartnerWeight
+           , tmpMovementItem.AmountPartnerSh                              :: TFloat AS AmountPartnerSh
+
+
+              -- Штрих-код GS1-128
+           ,  -- 01 - EAN код товару на палеті - 14
+             ('01' || '0' || COALESCE (tmpObject_GoodsPropertyValue.BarCode, COALESCE (tmpObject_GoodsPropertyValueGroup.BarCode, ''))
+              -- 37 - Кількість коробів - 8
+           || '37' || REPEAT ('0', 8 - LENGTH ((tmpMovementItem.BoxCount :: Integer) :: TVarChar)) || (tmpMovementItem.BoxCount :: Integer) :: TVarChar
+              -- 3103 - Вага з Х знаків після коми - 6
+           || '3103' || REPEAT ('0', 3 - LENGTH (FLOOR (tmpMovementItem.AmountPartnerWeight) :: TVarChar))
+                            || FLOOR (tmpMovementItem.AmountPartnerWeight) :: TVarChar
+                     || REPEAT ('0', 3 - LENGTH ((FLOOR (tmpMovementItem.AmountPartnerWeight * 1000) - FLOOR (tmpMovementItem.AmountPartnerWeight) * 1000) :: TVarChar))
+                            || (FLOOR (tmpMovementItem.AmountPartnerWeight * 1000) - FLOOR (tmpMovementItem.AmountPartnerWeight) * 1000) :: TVarChar
+              -- 15 - Дата закінчення терміну придатності - 6 - РРММДД
+           || '15' || (EXTRACT (YEAR  FROM vbOperDatePartner + ((COALESCE (tmpStickerProperty.Value5, 0) :: Integer) :: TVarChar || ' DAY' ):: INTERVAL) - 2000) :: TVarChar
+                   || CASE WHEN EXTRACT (MONTH FROM vbOperDatePartner + ((COALESCE (tmpStickerProperty.Value5, 0) :: Integer) :: TVarChar || ' DAY' ):: INTERVAL) < 10
+                                THEN '0'
+                           ELSE ''
+                      END || EXTRACT (MONTH FROM vbOperDatePartner + ((COALESCE (tmpStickerProperty.Value5, 0) :: Integer) :: TVarChar || ' DAY' ):: INTERVAL)  :: TVarChar
+                   || CASE WHEN EXTRACT (DAY   FROM vbOperDatePartner + ((COALESCE (tmpStickerProperty.Value5, 0) :: Integer) :: TVarChar || ' DAY' ):: INTERVAL) < 10
+                                THEN '0'
+                           ELSE ''
+                      END || EXTRACT (DAY   FROM vbOperDatePartner + ((COALESCE (tmpStickerProperty.Value5, 0) :: Integer) :: TVarChar || ' DAY' ):: INTERVAL)  :: TVarChar
+             ) :: TVarChar AS BarCode_128
+
+              -- Штрих-код GS1-128
+           ,  -- 01 - EAN код товару на палеті - 14
+             ('(01)' || '0' || COALESCE (tmpObject_GoodsPropertyValue.BarCode, COALESCE (tmpObject_GoodsPropertyValueGroup.BarCode, ''))
+              -- 37 - Кількість коробів - 8
+           || '(37)' || REPEAT ('0', 8 - LENGTH ((tmpMovementItem.BoxCount :: Integer) :: TVarChar)) || (tmpMovementItem.BoxCount :: Integer) :: TVarChar
+              -- 3103 - Вага з Х знаків після коми - 6
+           || '(3103)' || REPEAT ('0', 3 - LENGTH (FLOOR (tmpMovementItem.AmountPartnerWeight) :: TVarChar))
+                            || FLOOR (tmpMovementItem.AmountPartnerWeight) :: TVarChar
+                     || REPEAT ('0', 3 - LENGTH ((FLOOR (tmpMovementItem.AmountPartnerWeight * 1000) - FLOOR (tmpMovementItem.AmountPartnerWeight) * 1000) :: TVarChar))
+                            || (FLOOR (tmpMovementItem.AmountPartnerWeight * 1000) - FLOOR (tmpMovementItem.AmountPartnerWeight) * 1000) :: TVarChar
+              -- 15 - Дата закінчення терміну придатності - 6 - РРММДД
+           || '(15)' || (EXTRACT (YEAR  FROM vbOperDatePartner + ((COALESCE (tmpStickerProperty.Value5, 0) :: Integer) :: TVarChar || ' DAY' ):: INTERVAL) - 2000) :: TVarChar
+                   || CASE WHEN EXTRACT (MONTH FROM vbOperDatePartner + ((COALESCE (tmpStickerProperty.Value5, 0) :: Integer) :: TVarChar || ' DAY' ):: INTERVAL) < 10
+                                THEN '0'
+                           ELSE ''
+                      END || EXTRACT (MONTH FROM vbOperDatePartner + ((COALESCE (tmpStickerProperty.Value5, 0) :: Integer) :: TVarChar || ' DAY' ):: INTERVAL)  :: TVarChar
+                   || CASE WHEN EXTRACT (DAY   FROM vbOperDatePartner + ((COALESCE (tmpStickerProperty.Value5, 0) :: Integer) :: TVarChar || ' DAY' ):: INTERVAL) < 10
+                                THEN '0'
+                           ELSE ''
+                      END || EXTRACT (DAY   FROM vbOperDatePartner + ((COALESCE (tmpStickerProperty.Value5, 0) :: Integer) :: TVarChar || ' DAY' ):: INTERVAL)  :: TVarChar
+             ) :: TVarChar AS BarCode_128_str
+             
+           , tmpStickerProperty.Value5 :: Integer AS Value5_termin
 
            , CASE WHEN MovementLinkObject_Contract.ObjectId > 0
                        AND Object_InfoMoney_View.InfoMoneyDestinationId NOT IN (zc_Enum_InfoMoneyDestination_20500() -- Общефирменные + Оборотная тара
@@ -172,6 +269,10 @@ BEGIN
        FROM tmpMovement
             INNER JOIN tmpMovementItem ON tmpMovementItem.MovementId = tmpMovement.Id AND tmpMovementItem.AmountPartner <> 0
 
+            LEFT JOIN tmpStickerProperty ON tmpStickerProperty.GoodsId     = tmpMovementItem.GoodsId
+                                        AND tmpStickerProperty.GoodsKindId = tmpMovementItem.GoodsKindId
+                                        AND tmpStickerProperty.Ord         = 1
+            
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                  ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMovementItem.GoodsId
                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
@@ -193,10 +294,6 @@ BEGIN
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMovementItem.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMovementItem.GoodsKindId
-
-            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                  ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
-                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id

@@ -2362,6 +2362,13 @@ object MainCehForm: TMainCehForm
     object miScaleRun_BI_R: TMenuItem
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1056#1077#1083#1100#1089#1086#1074#1099#1077' '#1042#1077#1089#1099' (BI)'
     end
+    object miLine16: TMenuItem
+      Caption = '-'
+    end
+    object miFont: TMenuItem
+      Caption = #1064#1088#1080#1092#1090
+      OnClick = miFontClick
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Goods'
