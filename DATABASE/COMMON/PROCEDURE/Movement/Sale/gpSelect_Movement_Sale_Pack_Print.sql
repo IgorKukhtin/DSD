@@ -150,7 +150,7 @@ BEGIN
                                                         AND ObjectLink_StickerProperty_Sticker.DescId   = zc_ObjectLink_StickerProperty_Sticker()
                                     LEFT JOIN ObjectLink AS ObjectLink_Sticker_Goods
                                                          ON ObjectLink_Sticker_Goods.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
-                                                        AND ObjectLink_Sticker_Goods.DescId   = zc_ObjectLink_StickerProperty_GoodsKind()
+                                                        AND ObjectLink_Sticker_Goods.DescId   = zc_ObjectLink_Sticker_Goods()
                                     LEFT JOIN ObjectLink AS ObjectLink_Sticker_Juridical
                                                          ON ObjectLink_Sticker_Juridical.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
                                                         AND ObjectLink_Sticker_Juridical.DescId   = zc_ObjectLink_StickerProperty_GoodsKind()

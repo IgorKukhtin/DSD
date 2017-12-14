@@ -61,6 +61,7 @@ BEGIN
     vbOperDateEnd := vbOperDate + INTERVAL '1 DAY';
     vbDate180 := CURRENT_DATE + INTERVAL '180 DAY';
      
+
     -- таблица Регион поставщика
     CREATE TEMP TABLE tmpJuridicalArea (UnitId Integer, JuridicalId Integer, AreaId Integer, AreaName TVarChar, isDefault Boolean) ON COMMIT DROP;
       INSERT INTO tmpJuridicalArea (UnitId, JuridicalId, AreaId, AreaName, isDefault)
@@ -71,6 +72,8 @@ BEGIN
                        , tmp.AreaName_Juridical       AS AreaName
                        , tmp.isDefault_JuridicalArea  AS isDefault
                   FROM lpSelect_Object_JuridicalArea_byUnit (vbUnitId, 0) AS tmp;
+
+
   
     -- !!!Только для таких документов!!!
     IF vbisDocument = TRUE AND vbStatusId = zc_Enum_Status_Complete() AND inSession <> '3'
@@ -794,7 +797,9 @@ BEGIN
 
    PERFORM lpCreateTempTable_OrderInternal(inMovementId, vbObjectId, 0, vbUserId);
    --RAISE EXCEPTION 'Ошибка.';
-    OPEN Cursor1 FOR
+
+     -- OPEN Cursor1 FOR
+     CREATE TEMP TABLE _tmpRes1 ON COMMIT DROP AS
      WITH
      --Данные Справочника График заказа/доставки
         tmpDateList AS (SELECT ''||tmpDayOfWeek.DayOfWeekName|| '-' || DATE_PART ('day', tmp.OperDate :: Date) ||'' AS OperDate
@@ -1628,10 +1633,12 @@ BEGIN
             LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Goods_Area.ChildObjectId        
            ;
 
-     RETURN NEXT Cursor1;
+     -- OPEN Cursor1 FOR SELECT * FROM _tmpRes1;
+     -- RETURN NEXT Cursor1;
 
      -- Результат 2
-     OPEN Cursor2 FOR
+     -- OPEN Cursor2 FOR
+     CREATE TEMP TABLE _tmpRes2 ON COMMIT DROP AS
      WITH  
        -- Маркетинговый контракт
        GoodsPromo AS (SELECT tmp.JuridicalId
@@ -1658,7 +1665,7 @@ BEGIN
                      )
 
 
-        SELECT *
+        SELECT _tmpMI.*
               , CASE WHEN PartionGoodsDate < vbDate180 THEN zc_Color_Blue() --456
                      ELSE 0
                 END                                                          AS PartionGoodsDateColor      
@@ -1672,10 +1679,10 @@ BEGIN
    
               , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar     AS ConditionsKeepName
 
-              , tmpJuridicalArea.AreaId                                      AS AreaId
-              , COALESCE (tmpJuridicalArea.AreaName, '')      :: TVarChar    AS AreaName
+              -- , tmpJuridicalArea.AreaId                                      AS AreaId
+              -- , COALESCE (tmpJuridicalArea.AreaName, '')      :: TVarChar    AS AreaName
+              -- , COALESCE (tmpJuridicalArea.isDefault, FALSE)  :: Boolean     AS isDefault
               , Object_Area.ValueData                         :: TVarChar    AS AreaName_Goods
-              , COALESCE (tmpJuridicalArea.isDefault, FALSE)  :: Boolean     AS isDefault
               
         FROM _tmpMI
              LEFT JOIN ObjectFloat AS ObjectFloat_Goods_MinimumLot
@@ -1701,6 +1708,12 @@ BEGIN
                                  AND ObjectLink_Goods_Area.DescId = zc_ObjectLink_Goods_Area()
              LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Goods_Area.ChildObjectId
 ;
+
+
+   OPEN Cursor1 FOR SELECT * FROM _tmpRes1;
+   RETURN NEXT Cursor1;
+   
+   OPEN Cursor2 FOR SELECT * FROM _tmpRes2;
    RETURN NEXT Cursor2;
 
   END IF;
