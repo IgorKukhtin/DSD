@@ -16,6 +16,7 @@ $BODY$
   DECLARE vbAreaId_find Integer;
 BEGIN
 
+     -- ПАРАМЕТРЫ
      SELECT ObjectLink_Unit_Juridical.ChildObjectId, MovementLinkObject.ObjectId, COALESCE (ObjectLink_Unit_Area.ChildObjectId, zc_Area_Basis())
             INTO vbMainJuridicalId, vbUnitId, vbAreaId_find
          FROM MovementLinkObject
@@ -30,6 +31,23 @@ BEGIN
      WHERE MovementLinkObject.MovementId = inMovementId 
        AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit();
 
+
+     -- таблица Регион поставщика
+     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpJuridicalArea'))
+     THEN
+         CREATE TEMP TABLE tmpJuridicalArea (UnitId Integer, JuridicalId Integer, AreaId Integer, AreaName TVarChar, isDefault Boolean) ON COMMIT DROP;
+         INSERT INTO tmpJuridicalArea (UnitId, JuridicalId, AreaId, AreaName, isDefault)
+            SELECT DISTINCT 
+                   tmp.UnitId                   AS UnitId            
+                 , tmp.JuridicalId              AS JuridicalId
+                 , tmp.AreaId_Juridical         AS AreaId
+                 , tmp.AreaName_Juridical       AS AreaName
+                 , tmp.isDefault_JuridicalArea  AS isDefault
+            FROM lpSelect_Object_JuridicalArea_byUnit (vbUnitId, 0) AS tmp;
+     END IF;
+
+
+     -- ДАННЫЕ
      CREATE TEMP TABLE _tmpMI (Id integer
              , MovementItemId Integer
              , PriceListMovementItemId Integer
@@ -46,6 +64,7 @@ BEGIN
              , ContractName TVarChar
              , AreaId Integer
              , AreaName TVarChar
+             , isDefault Boolean
              , Deferment Integer
              , Bonus TFloat
              , Percent TFloat
@@ -137,13 +156,7 @@ BEGIN
                                                             AND ObjectBoolean_Top.DescId = zc_ObjectBoolean_Price_Top()
                                                             AND ObjectBoolean_Top.ValueData = TRUE
                               )
-              , tmpJuridicalArea AS (SELECT DISTINCT 
-                                            tmp.JuridicalId              AS JuridicalId
-                                          , tmp.AreaId_Juridical         AS AreaId
-                                          , tmp.AreaName_Juridical       AS AreaName
-                                     FROM lpSelect_Object_JuridicalArea_byUnit (vbUnitId, 0) AS tmp
-                                     )
-                                                     
+       -- Результат
        SELECT row_number() OVER ()
             , ddd.Id AS MovementItemId 
             , ddd.PriceListMovementItemId
@@ -160,6 +173,7 @@ BEGIN
             , ddd.ContractName
             , ddd.AreaId
             , ddd.AreaName
+            , ddd.isDefault
             , ddd.Deferment
             , ddd.Bonus 
 /* * /
@@ -226,6 +240,7 @@ BEGIN
             
                   , tmpJuridicalArea.AreaId
                   , tmpJuridicalArea.AreaName
+                  , COALESCE (tmpJuridicalArea.isDefault, FALSE)  :: Boolean AS isDefault
                   
                FROM MovementItemOrder 
                     LEFT OUTER JOIN MovementItemLastPriceList_View ON MovementItemLastPriceList_View.GoodsId = MovementItemOrder.GoodsId
