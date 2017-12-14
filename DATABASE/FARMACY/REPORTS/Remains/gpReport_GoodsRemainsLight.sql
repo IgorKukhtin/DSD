@@ -16,7 +16,9 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsRemainsLight(
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (ContainerId Integer
-             , Id Integer, GoodsCode Integer, GoodsName TVarChar, GoodsGroupName TVarChar
+             , Id Integer, GoodsCode Integer
+             , BarCode TVarChar
+             , GoodsName TVarChar, GoodsGroupName TVarChar
              , NDSKindName TVarChar, isSP Boolean
              , ConditionsKeepName TVarChar
              , Amount TFloat, Price TFloat, PriceWithVAT TFloat, PriceWithOutVAT TFloat
@@ -175,11 +177,28 @@ BEGIN
                                 , CASE WHEN inIsPartion = TRUE THEN tmpData_all.ContainerId ELSE 0 END
                          HAVING SUM (tmpData_all.Amount) <> 0
                         )
-
+  -- Штрих-коды производителя
+  , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId AS GoodsMainId
+                             , Object_Goods_BarCode.ValueData        AS BarCode
+                        FROM ObjectLink AS ObjectLink_Main_BarCode
+                             JOIN ObjectLink AS ObjectLink_Child_BarCode
+                                             ON ObjectLink_Child_BarCode.ObjectId = ObjectLink_Main_BarCode.ObjectId
+                                            AND ObjectLink_Child_BarCode.DescId = zc_ObjectLink_LinkGoods_Goods()
+                             JOIN ObjectLink AS ObjectLink_Goods_Object_BarCode
+                                             ON ObjectLink_Goods_Object_BarCode.ObjectId = ObjectLink_Child_BarCode.ChildObjectId
+                                            AND ObjectLink_Goods_Object_BarCode.DescId = zc_ObjectLink_Goods_Object()
+                                            AND ObjectLink_Goods_Object_BarCode.ChildObjectId = zc_Enum_GlobalConst_BarCode()
+                             LEFT JOIN Object AS Object_Goods_BarCode ON Object_Goods_BarCode.Id = ObjectLink_Goods_Object_BarCode.ObjectId
+                        WHERE ObjectLink_Main_BarCode.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                          AND ObjectLink_Main_BarCode.ChildObjectId > 0
+                          AND TRIM (Object_Goods_BarCode.ValueData) <> ''
+                       )
+                           
   , tmpGoods AS (SELECT tmp.GoodsId
                       , ObjectLink_Goods_GoodsGroup.ChildObjectId                     AS GoodsGroupId
                       , ObjectLink_Goods_ConditionsKeep.ChildObjectId                 AS ConditionsKeepId
                       , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
+                      , COALESCE (tmpGoodsBarCode.BarCode, '')            :: TVarChar AS BarCode
                  FROM (SELECT DISTINCT tmpData.GoodsId
                        FROM tmpData) AS tmp
 
@@ -199,6 +218,8 @@ BEGIN
                       LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SP 
                              ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
                             AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
+                      
+                      LEFT JOIN tmpGoodsBarCode ON tmpGoodsBarCode.GoodsMainId = ObjectLink_Main.ChildObjectId
                  )
         -- Маркетинговый контракт
       , GoodsPromo AS (SELECT DISTINCT ObjectLink_Child_retail.ChildObjectId AS GoodsId  -- здесь товар "сети"
@@ -219,10 +240,12 @@ BEGIN
                                                          AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId*/
                        )
 
+
         -- Результат
         SELECT tmpData.ContainerId                           :: Integer   AS ContainerId
              , Object_Goods.Id                                            AS Id
              , Object_Goods.ObjectCode                       :: Integer   AS GoodsCode
+             , COALESCE (tmpGoods.BarCode, '')               :: TVarChar  AS BarCode
              , Object_Goods.ValueData                                     AS GoodsName
              , Object_GoodsGroup.ValueData                                AS GoodsGroupName
              , Object_NDSKind_Income.ValueData                            AS NDSKindName

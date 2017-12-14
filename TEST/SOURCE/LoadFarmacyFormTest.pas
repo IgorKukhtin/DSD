@@ -544,7 +544,7 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_UKTZEDDialogForm'));
+  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_UKTZEDDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_UKTZEDDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_UKTZEDForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_UKTZEDForm');
@@ -555,7 +555,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MinPrice_byPromoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MinPrice_byPromoForm');
  // exit;
-  {
+
   // Остатки товара (ID товара другой сети)
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemains_AnotherRetailForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemains_AnotherRetailForm');
@@ -640,12 +640,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_Payment_PlanForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Payment_PlanDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Payment_PlanDialogForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_UnLiquidForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_UnLiquidForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_UnLiquidDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_UnLiquidDialogForm');
-  {exit;
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportOrderGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportOrderGoodsForm');
@@ -693,13 +693,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TRReport_GoodsRemainsLightForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsLightDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRReport_GoodsRemainsLightDialogForm');
-  exit;
+  //exit;
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckLightForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckLightForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementChecLightDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementChecLightDialogForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckDialogForm'));
