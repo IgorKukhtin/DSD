@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoCodeSign(
     IN inBayerName           TVarChar  , -- 
     IN inBayerPhone          TVarChar  , -- 
     IN inBayerEmail          TVarChar  , -- 
-    IN inGUID                TVarChar  , -- 
+ INOUT ioGUID                TVarChar  , -- 
     IN inComment             TVarChar  , -- примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -26,8 +26,22 @@ BEGIN
     -- сохранили <Элемент документа>
     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Sign(), 0, inMovementId, 0, NULL);
 
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GUID(), ioId, inGUID);
+     IF COALESCE (ioGUID, '') <> ''
+     THEN
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GUID(), ioId, ioGUID);
+     ELSE
+         -- генерируем новый GUID код
+         ioGUID := (SELECT zfCalc_GUID());
+         -- проверяем на уникальность GUID
+         /*WHILE EXISTS (SELECT MovementItemString.ValueData FROM MovementItemString WHERE MovementItemString.DescId = zc_MIString_GUID() AND MovementItemString.ValueData = ioGUID) LOOP
+              ioGUID := (SELECT zfCalc_GUID());
+         END LOOP;
+         */
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GUID(), ioId, ioGUID);
+     END IF;
+     
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Bayer(), ioId, inBayerName);
      -- сохранили свойство <>
@@ -63,4 +77,4 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.    Воробкало А.А.
  13.12.17         *
 */
---select * from gpInsertUpdate_MovementItem_PromoCodeSign(ioId := 0 , inMovementId := 3959814 , inBayerName := '' , inBayerPhone := '45666' , inBayerEmail := 'mmk,' , inGUID := '' , inComment := 'dgsdg' ,  inSession := '3');
+--select * from gpInsertUpdate_MovementItem_PromoCodeSign(ioId := 67502267 , inMovementId := 3959814 , inBayerName := 'kbjjbjb' , inBayerPhone := '' , inBayerEmail := '' , ioGUID := '' , inComment := '' ,  inSession := '3');

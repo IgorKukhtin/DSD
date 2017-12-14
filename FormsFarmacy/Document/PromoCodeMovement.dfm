@@ -1532,6 +1532,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         Component = MasterCDS
         ComponentItem = 'Summ'
         DataType = ftFloat
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     NeedResetData = True
@@ -1965,12 +1966,12 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGUID'
+        Name = 'ioGUID'
         Value = Null
         Component = SignDCS
         ComponentItem = 'GUID'
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
