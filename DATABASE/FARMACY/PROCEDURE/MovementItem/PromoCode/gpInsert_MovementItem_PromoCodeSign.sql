@@ -20,25 +20,29 @@ BEGIN
   
     vbIndex := 0;
   
-    vbGUID := ((SELECT MAX (MovementItemString.ValueData ::integer ) FROM MovementItemString WHERE MovementItemString.DescId = zc_MIString_GUID()) + 1);
+    -- строим строчку для кросса
+    WHILE (vbIndex < inCount_GUID) LOOP
+      vbIndex := vbIndex + 1;
       
-     -- строим строчку для кросса
-     WHILE (vbIndex < inCount_GUID) LOOP
-       vbIndex := vbIndex + 1;
-       
-       -- сохранили <Элемент документа>
-       vbId := lpInsertUpdate_MovementItem (0, zc_MI_Sign(), 0, inMovementId, 0, NULL);
-   
-       vbGUID := (vbGUID ::Integer + 1);
-       -- сохранили свойство <>
-       PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GUID(), vbId, vbGUID);
-   
-       -- сохранили связь с <>
-       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Insert(), vbId, vbUserId);
-       -- сохранили свойство <>
-       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), vbId, CURRENT_TIMESTAMP);
+      -- сохранили <Элемент документа>
+      vbId := lpInsertUpdate_MovementItem (0, zc_MI_Sign(), 0, inMovementId, 0, NULL);
 
-     END LOOP;
+      -- генерируем новый GUID код
+      vbGUID := (SELECT zfCalc_GUID());
+      -- проверяем на уникальность GUID
+      /*WHILE EXISTS (SELECT MovementItemString.ValueData FROM MovementItemString WHERE MovementItemString.DescId = zc_MIString_GUID() AND MovementItemString.ValueData = vbGUID) LOOP
+           vbGUID := (SELECT zfCalc_GUID());
+      END LOOP;
+      */
+      -- сохранили свойство <>
+      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GUID(), vbId, vbGUID);
+  
+      -- сохранили связь с <>
+      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Insert(), vbId, vbUserId);
+      -- сохранили свойство <>
+      PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), vbId, CURRENT_TIMESTAMP);
+
+    END LOOP;
      
               
    -- сохранили протокол
