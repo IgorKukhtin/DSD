@@ -32,13 +32,10 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
             item
               Format = ',0.00'
               Kind = skSum
-            end
-            item
-              Format = ',0.000'
-              Kind = skSum
-              Column = Amount
             end>
           OptionsBehavior.IncSearch = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
           OptionsView.ColumnAutoWidth = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -65,14 +62,13 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
             Options.Editing = False
             Width = 340
           end
-          object Amount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'Amount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 3
-            Properties.DisplayFormat = ',0.000'
+          object IsChecked: TcxGridDBColumn
+            Caption = #1054#1090#1084#1077#1095#1077#1085
+            DataBinding.FieldName = 'IsChecked'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1084#1077#1095#1077#1085' '#1076#1072'/'#1085#1077#1090
+            Width = 60
           end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -115,9 +111,11 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object GUID: TcxGridDBColumn
+            Caption = #1055#1088#1086#1084#1086' '#1082#1086#1076
             DataBinding.FieldName = 'GUID'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1086#1084#1086' '#1082#1086#1076
             Width = 70
           end
           object clBayerName: TcxGridDBColumn
@@ -126,6 +124,14 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 251
+          end
+          object sgIsChecked: TcxGridDBColumn
+            Caption = #1054#1090#1084#1077#1095#1077#1085
+            DataBinding.FieldName = 'IsChecked'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1084#1077#1095#1077#1085' '#1076#1072'/'#1085#1077#1090
+            Width = 60
           end
           object clComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -254,6 +260,14 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object chIsChecked: TcxGridDBColumn
+            Caption = #1054#1090#1084#1077#1095#1077#1085
+            DataBinding.FieldName = 'IsChecked'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1084#1077#1095#1077#1085' '#1076#1072'/'#1085#1077#1090
+            Width = 60
           end
           object chComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -476,9 +490,61 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
     Width = 120
   end
   inherited ActionList: TActionList
-    Left = 199
-    Top = 303
-    object actRefreshPromoCodeSign: TdsdDataSetRefresh [0]
+    Left = 207
+    Top = 319
+    object spUpdateSignIsCheckedNo: TdsdExecStoredProc [0]
+      Category = 'Checked'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdatePromoCodeSign_Checked_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdatePromoCodeSign_Checked_No
+        end>
+      Caption = #1054#1090#1084#1077#1090#1080#1090#1100' '#1053#1077#1090
+      Hint = #1054#1090#1084#1077#1090#1080#1090#1100' '#1053#1077#1090
+    end
+    object actRefreshPromoCodeChild: TdsdDataSetRefresh [1]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect_MovementItem_PromoCodeChild
+      StoredProcList = <
+        item
+          StoredProc = spSelect_MovementItem_PromoCodeChild
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object spUpdateSignIsCheckedYes: TdsdExecStoredProc [2]
+      Category = 'Checked'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdatePromoCodeSign_Checked_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdatePromoCodeSign_Checked_Yes
+        end>
+      Caption = #1054#1090#1084#1077#1090#1080#1090#1100' '#1044#1072
+      Hint = #1054#1090#1084#1077#1090#1080#1090#1100' '#1044#1072
+    end
+    object actRefreshPromoCodeGoods: TdsdDataSetRefresh [3]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actRefreshPromoCodeSign: TdsdDataSetRefresh [4]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPromoCodeSign
@@ -509,7 +575,59 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         item
         end>
     end
-    object actSetErasedPromoCodeSign: TdsdUpdateErased [3]
+    object macUpdateSignIsCheckedYes_S: TMultiAction [6]
+      Category = 'Checked'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUpdateSignIsCheckedYes
+        end>
+      View = cxGridDBTableView2
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
+      ImageIndex = 76
+    end
+    object macUpdateSignIsCheckedNo_S: TMultiAction [7]
+      Category = 'Checked'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUpdateSignIsCheckedNo
+        end>
+      View = cxGridDBTableView2
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
+      ImageIndex = 77
+    end
+    object macUpdateSignIsCheckedYes: TMultiAction [8]
+      Category = 'Checked'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdateSignIsCheckedYes_S
+        end
+        item
+          Action = actRefreshPromoCodeSign
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
+      ImageIndex = 76
+    end
+    object macUpdateSignIsCheckedNo: TMultiAction [9]
+      Category = 'Checked'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdateSignIsCheckedNo_S
+        end
+        item
+          Action = actRefreshPromoCodeSign
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
+      ImageIndex = 77
+    end
+    object actSetErasedPromoCodeSign: TdsdUpdateErased [11]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spErasedMISign
@@ -525,7 +643,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
       DataSource = SignDS
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
     end
-    object actMISetErasedChild: TdsdUpdateErased [4]
+    object actMISetErasedChild: TdsdUpdateErased [12]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spErasedMIChild
@@ -544,7 +662,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
       DataSource = DetailDS
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
     end
-    object actSetUnErasedPromoCodeSign: TdsdUpdateErased [6]
+    object actSetUnErasedPromoCodeSign: TdsdUpdateErased [14]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spUpErasedMISign
@@ -560,7 +678,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
       isSetErased = False
       DataSource = SignDS
     end
-    object actMISetUnErasedChild: TdsdUpdateErased [7]
+    object actMISetUnErasedChild: TdsdUpdateErased [15]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spUnErasedMIChild
@@ -588,7 +706,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
           StoredProc = spSelectPromoCodeSign
         end>
     end
-    object InsertRecordSign: TInsertRecord [11]
+    object InsertRecordSign: TInsertRecord [19]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -600,7 +718,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1083#1080#1077#1085#1090#1072'>'
       ImageIndex = 0
     end
-    object InsertRecordChild: TInsertRecord [12]
+    object InsertRecordChild: TInsertRecord [20]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -623,7 +741,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
           StoredProc = spSelect_MovementItem_PromoCodeChild
         end>
     end
-    object dsdUpdateSignDS: TdsdUpdateDataSet [14]
+    object dsdUpdateSignDS: TdsdUpdateDataSet [22]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -635,7 +753,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
       Caption = 'actUpdateSignDS'
       DataSource = SignDS
     end
-    object actUpdateChildDS: TdsdUpdateDataSet [15]
+    object actUpdateChildDS: TdsdUpdateDataSet [23]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -650,7 +768,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
       Caption = 'actUpdateChildDS'
       DataSource = DetailDS
     end
-    object actDoLoad: TExecuteImportSettingsAction [16]
+    object actDoLoad: TExecuteImportSettingsAction [24]
       Category = 'Load'
       MoveParams = <>
       ImportSettingsId.Value = '0'
@@ -664,6 +782,14 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
           Component = FormParams
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
+        end>
+    end
+    inherited actUpdateMainDS: TdsdUpdateDataSet
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIMaster
+        end
+        item
         end>
     end
     inherited actPrint: TdsdPrintAction
@@ -714,33 +840,6 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
           Value = 'NULL'
           DataType = ftDateTime
           ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object PartnerChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'JuridicalChoiceForm'
-      FormName = 'TJuridicalForm'
-      FormNameParam.Value = 'TJuridicalForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'key'
-          Value = Null
-          Component = SignDCS
-          ComponentItem = 'JuridicalId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = SignDCS
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -955,6 +1054,158 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
       isShowModal = True
       OpenBeforeShow = True
     end
+    object spUpdateGoodsIsCheckedNo: TdsdExecStoredProc
+      Category = 'Checked'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMIGoods_isChecked_No
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIGoods_isChecked_No
+        end>
+      Caption = #1054#1090#1084#1077#1090#1080#1090#1100' '#1053#1077#1090
+      Hint = #1054#1090#1084#1077#1090#1080#1090#1100' '#1053#1077#1090
+    end
+    object spUpdateGoodsIsCheckedYes: TdsdExecStoredProc
+      Category = 'Checked'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMIGoods_isChecked_Yes
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIGoods_isChecked_Yes
+        end>
+      Caption = #1054#1090#1084#1077#1090#1080#1090#1100' '#1044#1072
+      Hint = #1054#1090#1084#1077#1090#1080#1090#1100' '#1044#1072
+    end
+    object macUpdateGoodsIsCheckedYes: TMultiAction
+      Category = 'Checked'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdateGoodsIsCheckedYes_S
+        end
+        item
+          Action = actRefreshPromoCodeGoods
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
+      ImageIndex = 76
+    end
+    object macUpdateGoodsIsCheckedYes_S: TMultiAction
+      Category = 'Checked'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUpdateGoodsIsCheckedYes
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
+      ImageIndex = 76
+    end
+    object macUpdateGoodsIsCheckedNo: TMultiAction
+      Category = 'Checked'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdateGoodsIsCheckedNo_S
+        end
+        item
+          Action = actRefreshPromoCodeGoods
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
+      ImageIndex = 77
+    end
+    object macUpdateGoodsIsCheckedNo_S: TMultiAction
+      Category = 'Checked'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUpdateGoodsIsCheckedNo
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
+      ImageIndex = 77
+    end
+    object spUpdateChildIsCheckedNo: TdsdExecStoredProc
+      Category = 'Checked'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMIChild_Cheked_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMIChild_Cheked_No
+        end>
+      Caption = #1054#1090#1084#1077#1090#1080#1090#1100' '#1053#1077#1090
+      Hint = #1054#1090#1084#1077#1090#1080#1090#1100' '#1053#1077#1090
+    end
+    object spUpdateChildIsCheckedYes: TdsdExecStoredProc
+      Category = 'Checked'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMIChild_Cheked_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMIChild_Cheked_Yes
+        end>
+      Caption = #1054#1090#1084#1077#1090#1080#1090#1100' '#1044#1072
+      Hint = #1054#1090#1084#1077#1090#1080#1090#1100' '#1044#1072
+    end
+    object macUpdateChildIsCheckedYes_S: TMultiAction
+      Category = 'Checked'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUpdateChildIsCheckedYes
+        end>
+      View = cxGridDBTableView1
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
+      ImageIndex = 76
+    end
+    object macUpdateChildIsCheckedNo_S: TMultiAction
+      Category = 'Checked'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUpdateChildIsCheckedNo
+        end>
+      View = cxGridDBTableView1
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
+      ImageIndex = 77
+    end
+    object macUpdateChildIsCheckedYes: TMultiAction
+      Category = 'Checked'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdateChildIsCheckedYes_S
+        end
+        item
+          Action = actRefreshPromoCodeChild
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
+      ImageIndex = 76
+    end
+    object macUpdateChildIsCheckedNo: TMultiAction
+      Category = 'Checked'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdateChildIsCheckedNo_S
+        end
+        item
+          Action = actRefreshPromoCodeChild
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
+      ImageIndex = 77
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_PromoCode'
@@ -994,6 +1245,14 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         end
         item
           Visible = True
+          ItemName = 'bbSignIsCheckedYes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSignIsCheckedNo'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1010,6 +1269,14 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         end
         item
           Visible = True
+          ItemName = 'bbGoodsIsCheckedYes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGoodsIsCheckedNo'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1023,6 +1290,14 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         item
           Visible = True
           ItemName = 'bbMISetUnErasedChild'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChildIsCheckedYes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChildIsCheckedNo'
         end
         item
           Visible = True
@@ -1114,6 +1389,30 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
     end
     object bbOpenReportMinPrice_All: TdxBarButton
       Action = actOpenReportMinPrice_All
+      Category = 0
+    end
+    object bbGoodsIsCheckedYes: TdxBarButton
+      Action = macUpdateGoodsIsCheckedYes
+      Category = 0
+    end
+    object bbGoodsIsCheckedNo: TdxBarButton
+      Action = macUpdateGoodsIsCheckedNo
+      Category = 0
+    end
+    object bbChildIsCheckedNo: TdxBarButton
+      Action = macUpdateChildIsCheckedNo
+      Category = 0
+    end
+    object bbChildIsCheckedYes: TdxBarButton
+      Action = macUpdateChildIsCheckedYes
+      Category = 0
+    end
+    object bbSignIsCheckedNo: TdxBarButton
+      Action = macUpdateSignIsCheckedNo
+      Category = 0
+    end
+    object bbSignIsCheckedYes: TdxBarButton
+      Action = macUpdateSignIsCheckedYes
       Category = 0
     end
   end
@@ -1470,8 +1769,8 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
     Top = 177
   end
   inherited RefreshAddOn: TRefreshAddOn
-    Left = 112
-    Top = 312
+    Left = 120
+    Top = 336
   end
   inherited spErasedMIMaster: TdsdStoredProc
     Left = 550
@@ -1509,11 +1808,11 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmount'
+        Name = 'inIsChecked'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Amount'
-        DataType = ftFloat
+        ComponentItem = 'IsChecked'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1524,15 +1823,6 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'fff'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Summ'
-        DataType = ftFloat
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     NeedResetData = True
@@ -1632,8 +1922,8 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 367
-    Top = 216
+    Left = 495
+    Top = 288
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
@@ -1684,8 +1974,8 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 216
-    Top = 392
+    Left = 544
+    Top = 408
   end
   object dsdDBViewAddOn1: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1740,6 +2030,15 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inIsChecked'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'IsChecked'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = DetailDCS
@@ -1751,8 +2050,8 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
     PackSize = 1
     NeedResetData = True
     ParamKeyField = 'inMovementId'
-    Left = 600
-    Top = 400
+    Left = 536
+    Top = 352
   end
   object spErasedMIChild: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem'
@@ -1776,8 +2075,8 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 566
-    Top = 352
+    Left = 766
+    Top = 384
   end
   object spUnErasedMIChild: TdsdStoredProc
     StoredProcName = 'gpSetUnErased_MovementItem'
@@ -1801,8 +2100,8 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 686
-    Top = 368
+    Left = 734
+    Top = 384
   end
   object spInsertUpdate_MovementItem_Promo_Set_Zero: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_Promo_Set_Zero'
@@ -1851,8 +2150,8 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 784
-    Top = 160
+    Left = 816
+    Top = 168
   end
   object SignDCS: TClientDataSet
     Aggregates = <>
@@ -1982,12 +2281,21 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsChecked'
+        Value = Null
+        Component = SignDCS
+        ComponentItem = 'IsChecked'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     NeedResetData = True
     ParamKeyField = 'inMovementId'
-    Left = 408
-    Top = 504
+    Left = 384
+    Top = 512
   end
   object spUpErasedMISign: TdsdStoredProc
     StoredProcName = 'gpSetUnErased_MovementItem'
@@ -2011,7 +2319,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 652
+    Left = 676
     Top = 504
   end
   object GuidesInsert: TdsdGuides
@@ -2106,8 +2414,8 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 544
-    Top = 496
+    Left = 680
+    Top = 480
   end
   object spInsertPromoCodeSign: TdsdStoredProc
     StoredProcName = 'gpInsert_MovementItem_PromoCodeSign'
@@ -2135,5 +2443,257 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
     ParamKeyField = 'inMovementId'
     Left = 320
     Top = 496
+  end
+  object spInsertUpdateMIGoods_isChecked_Yes: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_PromoCode_Checked'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsChecked'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 360
+    Top = 360
+  end
+  object spInsertUpdateMIGoods_isChecked_No: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_PromoCode_Checked'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsChecked'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 392
+    Top = 360
+  end
+  object spUpdateMIChild_Cheked_Yes: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_PromoCodeChild'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsChecked'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 616
+    Top = 352
+  end
+  object spUpdateMIChild_Cheked_No: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_PromoCodeChild'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsChecked'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 576
+    Top = 352
+  end
+  object spUpdatePromoCodeSign_Checked_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_PromoCodeSign_Checked'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = SignDCS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsChecked'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 448
+    Top = 488
+  end
+  object spUpdatePromoCodeSign_Checked_No: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_PromoCodeSign_Checked'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = SignDCS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsChecked'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 528
+    Top = 504
   end
 end

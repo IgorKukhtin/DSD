@@ -16,6 +16,7 @@ RETURNS TABLE (Id         Integer
              , Comment    TVarChar
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
+             , IsChecked  boolean
              , isErased   Boolean
               )
 AS
@@ -34,13 +35,15 @@ BEGIN
                 , MIString_BayerPhone.ValueData ::TVarChar AS BayerPhone
                 , MIString_BayerEmail.ValueData ::TVarChar AS BayerEmail
                 , MIString_Comment.ValueData    ::TVarChar AS Comment
-
+                
                 , Object_Insert.ValueData                  AS InsertName
                 , Object_Update.ValueData                  AS UpdateName
                 , MIDate_Insert.ValueData                  AS InsertDate
                 , MIDate_Update.ValueData                  AS UpdateDate
-            
+
+                , CASE WHEN MI_Sign.Amount = 1 THEN TRUE ELSE FALSE END AS IsChecked
                 , MI_Sign.IsErased
+
            FROM MovementItem AS MI_Sign
                LEFT JOIN MovementItemString AS MIString_GUID
                                             ON MIString_GUID.MovementItemId = MI_Sign.Id

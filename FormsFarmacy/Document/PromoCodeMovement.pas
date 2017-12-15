@@ -22,7 +22,7 @@ type
     GuidesPromoCode: TdsdGuides;
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
-    Amount: TcxGridDBColumn;
+    IsChecked: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
     spSelectPrint: TdsdStoredProc;
     PrintItemsCDS: TClientDataSet;
@@ -77,7 +77,6 @@ type
     dsdDBViewAddOn2: TdsdDBViewAddOn;
     spSelectPromoCodeSign: TdsdStoredProc;
     clComment: TcxGridDBColumn;
-    PartnerChoiceForm: TOpenChoiceForm;
     InsertRecordSign: TInsertRecord;
     bbInsertRecordPartner: TdxBarButton;
     spInsertUpdatePromoCodeSign: TdsdStoredProc;
@@ -117,6 +116,38 @@ type
     GUID: TcxGridDBColumn;
     spInsertPromoCodeSign: TdsdStoredProc;
     ExecuteDialogPromoCodeSign: TExecuteDialog;
+    spInsertUpdateMIGoods_isChecked_Yes: TdsdStoredProc;
+    spInsertUpdateMIGoods_isChecked_No: TdsdStoredProc;
+    spUpdateGoodsIsCheckedNo: TdsdExecStoredProc;
+    macUpdateGoodsIsCheckedNo: TMultiAction;
+    spUpdateGoodsIsCheckedYes: TdsdExecStoredProc;
+    macUpdateGoodsIsCheckedYes: TMultiAction;
+    bbGoodsIsCheckedYes: TdxBarButton;
+    bbGoodsIsCheckedNo: TdxBarButton;
+    actRefreshPromoCodeGoods: TdsdDataSetRefresh;
+    macUpdateGoodsIsCheckedYes_S: TMultiAction;
+    macUpdateGoodsIsCheckedNo_S: TMultiAction;
+    spUpdateMIChild_Cheked_Yes: TdsdStoredProc;
+    spUpdateMIChild_Cheked_No: TdsdStoredProc;
+    spUpdatePromoCodeSign_Checked_Yes: TdsdStoredProc;
+    spUpdatePromoCodeSign_Checked_No: TdsdStoredProc;
+    spUpdateSignIsCheckedNo: TdsdExecStoredProc;
+    spUpdateSignIsCheckedYes: TdsdExecStoredProc;
+    macUpdateSignIsCheckedYes_S: TMultiAction;
+    macUpdateSignIsCheckedNo_S: TMultiAction;
+    macUpdateSignIsCheckedYes: TMultiAction;
+    macUpdateSignIsCheckedNo: TMultiAction;
+    actRefreshPromoCodeChild: TdsdDataSetRefresh;
+    spUpdateChildIsCheckedNo: TdsdExecStoredProc;
+    spUpdateChildIsCheckedYes: TdsdExecStoredProc;
+    macUpdateChildIsCheckedYes_S: TMultiAction;
+    macUpdateChildIsCheckedNo_S: TMultiAction;
+    macUpdateChildIsCheckedYes: TMultiAction;
+    macUpdateChildIsCheckedNo: TMultiAction;
+    bbChildIsCheckedNo: TdxBarButton;
+    bbChildIsCheckedYes: TdxBarButton;
+    bbSignIsCheckedNo: TdxBarButton;
+    bbSignIsCheckedYes: TdxBarButton;
   private
     { Private declarations }
   public
