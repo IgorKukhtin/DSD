@@ -1,20 +1,11 @@
-unit SaleJournal;
+unit Sale_TransportJournal;
 
 interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorJournal, cxGraphics, cxControls,
-  cxLookAndFeels, cxLookAndFeelPainters, cxPCdxBarPopupMenu, cxStyles,
-  cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData,
-  cxImageComboBox, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils,
-  dxSkinsdxBarPainter, dsdAddOn, ChoicePeriod, Vcl.Menus, dxBarExtItems, dxBar,
-  cxClasses, dsdDB, Datasnap.DBClient, dsdAction, Vcl.ActnList,
-  cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
-  cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
-  cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, cxCheckBox, cxCurrencyEdit,
-  cxButtonEdit, dsdGuides, frxClass, frxDBSet, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, EDI, dxSkinBlack, dxSkinBlue,
+  cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore, dxSkinBlack, dxSkinBlue,
   dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
   dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
   dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
@@ -24,10 +15,19 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue, dxSkinscxPCPainter, cxPCdxBarPopupMenu, cxStyles,
+  cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData,
+  cxImageComboBox, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils,
+  dxSkinsdxBarPainter, dsdAddOn, ChoicePeriod, Vcl.Menus, dxBarExtItems, dxBar,
+  cxClasses, dsdDB, Datasnap.DBClient, dsdAction, Vcl.ActnList,
+  cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
+  cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
+  cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, cxCheckBox, cxCurrencyEdit,
+  cxButtonEdit, dsdGuides, frxClass, frxDBSet, EDI, dsdInternetAction;
 
 type
-  TSaleJournalForm = class(TAncestorJournalForm)
+  TSale_TransportJournalForm = class(TAncestorJournalForm)
     OperDatePartner: TcxGridDBColumn;
     FromName: TcxGridDBColumn;
     ToName: TcxGridDBColumn;
@@ -90,50 +90,53 @@ type
     IsError: TcxGridDBColumn;
     actMovementCheck: TdsdOpenForm;
     bbMovementCheck: TdxBarButton;
-    IsEDI: TcxGridDBColumn;
     spChecked: TdsdStoredProc;
-    bbspChecked: TdxBarButton;
+    bbactChecked: TdxBarButton;
     actChecked: TdsdExecStoredProc;
+    IsEDI: TcxGridDBColumn;
+    RouteName: TcxGridDBColumn;
     CurrencyDocumentName: TcxGridDBColumn;
     CurrencyPartnerName: TcxGridDBColumn;
-    RouteName: TcxGridDBColumn;
     actPrint_ExpInvoice: TdsdPrintAction;
     actPrint_ExpPack: TdsdPrintAction;
     bbPrint_Invoice: TdxBarButton;
     bbPrint_Pack: TdxBarButton;
-    spSelectPrint_ExpPack: TdsdStoredProc;
-    spSelectPrint_Pack: TdsdStoredProc;
-    spSelectPrint_Spec: TdsdStoredProc;
-    actPrint_Spec: TdsdPrintAction;
-    actPrint_Pack: TdsdPrintAction;
-    bbPrint_Pack21: TdxBarButton;
-    bbPrint_Pack22: TdxBarButton;
-    spSelectPrint_ExpInvoice: TdsdStoredProc;
     TotalSummCurrency: TcxGridDBColumn;
     CurrencyValue: TcxGridDBColumn;
     ParValue: TcxGridDBColumn;
     CurrencyPartnerValue: TcxGridDBColumn;
     ParPartnerValue: TcxGridDBColumn;
-    bbPrint_Spec: TdxBarButton;
+    spSelectPrint_ExpInvoice: TdsdStoredProc;
     actPrint_ExpSpec: TdsdPrintAction;
+    bbPrint_Spec: TdxBarButton;
+    spSelectPrint_ExpPack: TdsdStoredProc;
+    spSelectPrint_Spec: TdsdStoredProc;
+    spSelectPrint_Pack: TdsdStoredProc;
+    actPrint_Pack: TdsdPrintAction;
+    actPrint_Spec: TdsdPrintAction;
+    bbPrint_Pack21: TdxBarButton;
+    bbPrint_Pack22: TdxBarButton;
     IsMedoc: TcxGridDBColumn;
-    actPrint_TTN: TdsdPrintAction;
     spSelectPrint_TTN: TdsdStoredProc;
-    bbTTN: TdxBarButton;
+    actPrint_TTN: TdsdPrintAction;
+    bbPrint_TTN: TdxBarButton;
     EdiOrdspr: TcxGridDBColumn;
     EdiInvoice: TcxGridDBColumn;
     EdiDesadv: TcxGridDBColumn;
-    actPrint_QualityDoc: TdsdPrintAction;
     spSelectPrint_Quality: TdsdStoredProc;
+    actPrint_QualityDoc: TdsdPrintAction;
     bbPrint_Quality: TdxBarButton;
+    PersonalName: TcxGridDBColumn;
+    mactPrint_TTN: TMultiAction;
+    actDialog_TTN: TdsdOpenForm;
+    actGet_TTN: TdsdExecStoredProc;
+    spGet_TTN: TdsdStoredProc;
     InvNumber_TransportGoods: TcxGridDBColumn;
     OperDate_TransportGoods: TcxGridDBColumn;
-    actDialog_TTN: TdsdOpenForm;
-    spGet_TTN: TdsdStoredProc;
-    actGet_TTN: TdsdExecStoredProc;
-    mactPrint_TTN: TMultiAction;
     PaymentDate: TcxGridDBColumn;
     InsertDate: TcxGridDBColumn;
+    actDialog_QualityDoc: TdsdOpenForm;
+    mactPrint_QualityDoc: TMultiAction;
     EDI: TEDI;
     spUpdateEdiOrdspr: TdsdStoredProc;
     spUpdateEdiInvoice: TdsdStoredProc;
@@ -157,9 +160,6 @@ type
     miOrdSpr: TMenuItem;
     miDesadv: TMenuItem;
     actExecPrint_EDI: TdsdExecStoredProc;
-    isEdiOrdspr_partner: TcxGridDBColumn;
-    isEdiInvoice_partner: TcxGridDBColumn;
-    isEdiDesadv_partner: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
     mactInvoice_Simple: TMultiAction;
     mactInvoice_All: TMultiAction;
@@ -168,29 +168,14 @@ type
     mactDesadv_Simple: TMultiAction;
     mactDesadv_All: TMultiAction;
     spSelectPrint_SaleOrder: TdsdStoredProc;
-    actPrintSaleOrder: TdsdPrintAction;
     MovementId_Order: TcxGridDBColumn;
+    actPrintSaleOrder: TdsdPrintAction;
     bbPrintSaleOrder: TdxBarButton;
     spSelectSale_EDI: TdsdStoredProc;
-    cxLabel3: TcxLabel;
-    edTo: TcxButtonEdit;
-    mactUpdateMovementDesc: TMultiAction;
-    actUpdateMovementDesc: TdsdExecStoredProc;
-    spUpdateMovementDesc: TdsdStoredProc;
-    GuidesTo: TdsdGuides;
-    dxBarButton1: TdxBarButton;
-    PersonalName: TcxGridDBColumn;
     RouteGroupName: TcxGridDBColumn;
-    InvNumber_Transport: TcxGridDBColumn;
-    OperDate_Transport: TcxGridDBColumn;
-    CarName: TcxGridDBColumn;
-    CarModelName: TcxGridDBColumn;
-    PersonalDriverName: TcxGridDBColumn;
     spSelectPrintReturnInDay: TdsdStoredProc;
     actPrintReturnInDay: TdsdPrintAction;
     bbPrintReturnInDay: TdxBarButton;
-    actDialog_QualityDoc: TdsdOpenForm;
-    mactPrint_QualityDoc: TMultiAction;
     isPromo: TcxGridDBColumn;
     MovementPromo: TcxGridDBColumn;
     spSavePrintState: TdsdStoredProc;
@@ -199,19 +184,36 @@ type
     actElectron: TdsdExecStoredProc;
     bbElectron: TdxBarButton;
     spGetReportNameTransport: TdsdStoredProc;
-    actPrint_Transport_ReportName: TdsdExecStoredProc;
     actPrint_Transport: TdsdPrintAction;
+    actPrint_Transport_ReportName: TdsdExecStoredProc;
     mactPrint_Transport: TMultiAction;
     bbPrint_Transport: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
+    ExportCDS: TClientDataSet;
+    ExportDS: TDataSource;
+    spSelect_Export: TdsdStoredProc;
+    ExportXmlGrid: TcxGrid;
+    ExportXmlGridDBTableView: TcxGridDBTableView;
+    RowData: TcxGridDBColumn;
+    ExportXmlGridLevel: TcxGridLevel;
+    spGet_Export_FileName: TdsdStoredProc;
+    actGet_Export_FileName: TdsdExecStoredProc;
+    actSelect_Export: TdsdExecStoredProc;
+    actExport_Grid: TExportGrid;
+    actExport: TMultiAction;
+    dxBarButton1: TdxBarButton;
+    spGet_Export_Email: TdsdStoredProc;
+    actGet_Export_Email: TdsdExecStoredProc;
+    actSMTPFile: TdsdSMTPFileAction;
+    ExportEmailCDS: TClientDataSet;
+    ExportEmailDS: TDataSource;
     actShowMessage: TShowMessageAction;
     actOpenReportForm: TdsdOpenForm;
-    bbOpenReportForm: TdxBarButton;
-    ReestrKindName: TcxGridDBColumn;
-    actPrint_Total: TdsdPrintAction;
-    mactPrint_Sale_Total: TMultiAction;
-    bbPrint_Sale_Total: TdxBarButton;
+    bbactOpenReport: TdxBarButton;
     spSelectPrint_Total: TdsdStoredProc;
+    mactPrint_Sale_Total: TMultiAction;
+    actPrint_Total: TdsdPrintAction;
+    bbPrint_Sale_Total: TdxBarButton;
     cxLabel27: TcxLabel;
     edJuridicalBasis: TcxButtonEdit;
     JuridicalBasisGuides: TdsdGuides;
@@ -220,38 +222,36 @@ type
     actPrintPack: TdsdPrintAction;
     macPrintPack: TMultiAction;
     macPrintPacklist: TMultiAction;
-    bbPrintPacklist: TdxBarButton;
     actPrintPack_Transport: TdsdPrintAction;
     macPrintPack_Transport: TMultiAction;
     macPrintPackList_Transport: TMultiAction;
-    bbPackList_Transport: TdxBarButton;
     N14: TMenuItem;
     N15: TMenuItem;
     spSelectPrint_Total_To: TdsdStoredProc;
     bbPrint_Sale_Total_To: TdxBarButton;
     actPrint_Total_To: TdsdPrintAction;
     mactPrint_Sale_Total_To: TMultiAction;
-    spInsert_LockUnique: TdsdStoredProc;
-    mactPrint_Sale_Total_List: TMultiAction;
-    spSelectPrint_Total_List: TdsdStoredProc;
-    actPrint_Total_List: TdsdPrintAction;
-    actInsert_LockUnique: TdsdExecStoredProc;
-    bbPrint_Sale_Total_List: TdxBarButton;
-    macInsert_LockUnique: TMultiAction;
     spDelete_LockUnique: TdsdStoredProc;
+    spInsert_LockUnique: TdsdStoredProc;
+    spSelectPrint_Total_List: TdsdStoredProc;
     actDelete_LockUnique: TdsdExecStoredProc;
-    actPrint_Account_List: TdsdPrintAction;
-    mactPrint_Account_List: TMultiAction;
-    bbPrint_Account_List: TdxBarButton;
+    actInsert_LockUnique: TdsdExecStoredProc;
+    actPrint_Total_List: TdsdPrintAction;
+    macInsert_LockUnique: TMultiAction;
+    mactPrint_Sale_Total_List: TMultiAction;
+    bbPrint_Sale_Total_List: TdxBarButton;
   private
     { Private declarations }
   public
     { Public declarations }
   end;
 
+var
+  Sale_TransportJournalForm: TSale_TransportJournalForm;
+
 implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TSaleJournalForm);
+  RegisterClass(TSale_TransportJournalForm);
 end.

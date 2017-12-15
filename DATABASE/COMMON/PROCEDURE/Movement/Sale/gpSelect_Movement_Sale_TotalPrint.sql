@@ -261,6 +261,7 @@ BEGIN
              ) :: TVarChar            AS PartnerAddressAll_To
            , OH_JuridicalDetails_To.JuridicalId         AS JuridicalId_To
            , COALESCE (Object_ArticleLoss.ValueData, OH_JuridicalDetails_To.FullName) AS JuridicalName_To
+           , COALESCE (OH_JuridicalDetails_Invoice.FullName, COALESCE (Object_ArticleLoss.ValueData, OH_JuridicalDetails_To.FullName)) AS JuridicalName_Invoice
            , OH_JuridicalDetails_To.JuridicalAddress    AS JuridicalAddress_To
            , OH_JuridicalDetails_To.OKPO                AS OKPO_To
            , OH_JuridicalDetails_To.INN                 AS INN_To
@@ -555,6 +556,14 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_JuridicalFrom_GLNCode
                                    ON ObjectString_JuridicalFrom_GLNCode.ObjectId = OH_JuridicalDetails_From.JuridicalId
                                   AND ObjectString_JuridicalFrom_GLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
+                                  
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalInvoice
+                                 ON ObjectLink_Contract_JuridicalInvoice.ObjectId = View_Contract.ContractId
+                                AND ObjectLink_Contract_JuridicalInvoice.DescId = zc_ObjectLink_Contract_JuridicalInvoice()
+            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_Invoice
+                                                                ON OH_JuridicalDetails_Invoice.JuridicalId = ObjectLink_Contract_JuridicalInvoice.ChildObjectId
+                                                               AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_Invoice.StartDate
+                                                               AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_Invoice.EndDate
 
 -- bank account
             LEFT JOIN ObjectLink AS ObjectLink_Contract_BankAccount
