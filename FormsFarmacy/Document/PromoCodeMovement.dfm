@@ -104,7 +104,6 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
           OptionsData.Appending = True
           OptionsData.CancelOnExit = False
           OptionsData.DeletingConfirmation = False
-          OptionsView.ColumnAutoWidth = True
           OptionsView.GroupByBox = False
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
           OptionsView.HeaderAutoHeight = True
@@ -116,14 +115,14 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1088#1086#1084#1086' '#1082#1086#1076
-            Width = 70
+            Width = 48
           end
           object clBayerName: TcxGridDBColumn
             Caption = #1060#1048#1054' '#1082#1083#1080#1077#1085#1090#1072
             DataBinding.FieldName = 'BayerName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 251
+            Width = 174
           end
           object sgIsChecked: TcxGridDBColumn
             Caption = #1054#1090#1084#1077#1095#1077#1085
@@ -131,14 +130,14 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1090#1084#1077#1095#1077#1085' '#1076#1072'/'#1085#1077#1090
-            Width = 60
+            Width = 41
           end
           object clComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 240
+            Width = 166
           end
           object clIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -155,7 +154,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
-            Width = 91
+            Width = 62
           end
           object BayerEmail: TcxGridDBColumn
             Caption = 'E-mail'
@@ -163,7 +162,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
-            Width = 71
+            Width = 49
           end
           object InsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076'.'
@@ -171,7 +170,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 79
+            Width = 55
           end
           object Insertdate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076'.'
@@ -179,7 +178,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 79
+            Width = 54
           end
           object UpdateName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1082#1086#1088#1088'.'
@@ -187,7 +186,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 81
+            Width = 56
           end
           object UpdateDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1082#1086#1088#1088'.'
@@ -195,7 +194,57 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 56
+          end
+          object Count_Check: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1095#1077#1082#1086#1074
+            DataBinding.FieldName = 'Count_Check'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1095#1077#1082#1086#1074
+            Options.Editing = False
+            Width = 51
+          end
+          object Invnumber_Check: TcxGridDBColumn
+            Caption = #8470' '#1095#1077#1082#1072
+            DataBinding.FieldName = 'Invnumber_Check'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
+          end
+          object OperDate_Check: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1095#1077#1082#1072
+            DataBinding.FieldName = 'OperDate_Check'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 62
+          end
+          object UnitName_Check: TcxGridDBColumn
+            Caption = #1040#1087#1090#1077#1082#1072' ('#1095#1077#1082')'
+            DataBinding.FieldName = 'UnitName_Check'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 135
+          end
+          object JuridicalName_Check: TcxGridDBColumn
+            Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1072#1087#1090#1077#1082#1072')'
+            DataBinding.FieldName = 'JuridicalName_Check'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 130
+          end
+          object RetailName_Check: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+            DataBinding.FieldName = 'RetailName_Check'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100' ('#1072#1087#1090#1077#1082#1072')'
+            Options.Editing = False
+            Width = 94
           end
         end
         object cxGridLevel2: TcxGridLevel
@@ -2150,8 +2199,8 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 816
-    Top = 168
+    Left = 736
+    Top = 216
   end
   object SignDCS: TClientDataSet
     Aggregates = <>

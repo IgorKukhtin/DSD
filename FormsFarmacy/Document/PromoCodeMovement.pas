@@ -148,6 +148,12 @@ type
     bbChildIsCheckedYes: TdxBarButton;
     bbSignIsCheckedNo: TdxBarButton;
     bbSignIsCheckedYes: TdxBarButton;
+    Count_Check: TcxGridDBColumn;
+    Invnumber_Check: TcxGridDBColumn;
+    OperDate_Check: TcxGridDBColumn;
+    UnitName_Check: TcxGridDBColumn;
+    JuridicalName_Check: TcxGridDBColumn;
+    RetailName_Check: TcxGridDBColumn;
   private
     { Private declarations }
   public
