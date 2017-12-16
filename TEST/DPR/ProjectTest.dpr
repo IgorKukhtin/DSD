@@ -994,7 +994,8 @@ uses
   Report_MIProtocolDialog in '..\..\Forms\Report\Report_MIProtocolDialog.pas' {Report_MIProtocolDialogForm: TParentForm},
   Report_MIProtocol in '..\..\Forms\Report\Report_MIProtocol.pas' {Report_MIProtocolForm: TParentForm},
   Report_MovementProtocol in '..\..\Forms\Report\Report_MovementProtocol.pas' {Report_MovementProtocolForm: TParentForm},
-  Report_MovementProtocolDialog in '..\..\Forms\Report\Report_MovementProtocolDialog.pas' {Report_MovementProtocolDialogForm: TParentForm};
+  Report_MovementProtocolDialog in '..\..\Forms\Report\Report_MovementProtocolDialog.pas' {Report_MovementProtocolDialogForm: TParentForm},
+  Sale_TransportJournal in '..\..\Forms\Document\Sale_TransportJournal.pas' {Sale_TransportJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
