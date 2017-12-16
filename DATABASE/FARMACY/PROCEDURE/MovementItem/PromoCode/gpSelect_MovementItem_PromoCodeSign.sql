@@ -55,11 +55,11 @@ BEGIN
                   )
        -- для скорости сначала вібираем все zc_MovementFloat_MovementItemId      
       , tmpMovementFloat AS (SELECT MovementFloat_MovementItemId.MovementId
-                            , MovementFloat_MovementItemId.ValueData :: Integer As MovementItemId
-                       FROM MovementFloat AS MovementFloat_MovementItemId
-                       WHERE MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
-                         AND vbIsOne = TRUE
-                      )
+                                  , MovementFloat_MovementItemId.ValueData :: Integer As MovementItemId
+                             FROM MovementFloat AS MovementFloat_MovementItemId
+                             WHERE MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
+                               AND vbIsOne = TRUE
+                            )
       -- Документ чек, по идее должен быть 1 , но чтоб не задвоилось берем макс и считаем сколько чеков
       , tmpCheck_Mov AS (SELECT tmpMI.Id
                               , MAX (MovementFloat_MovementItemId.MovementId)   AS MovementId_Check

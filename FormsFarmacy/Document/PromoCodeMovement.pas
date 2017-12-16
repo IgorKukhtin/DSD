@@ -92,7 +92,7 @@ type
     bbInsertPromoCodeSign: TdxBarButton;
     actOpenReportMinPriceForm: TdsdOpenForm;
     bbReportMinPriceForm: TdxBarButton;
-    actOpenReportMinPrice_All: TdsdOpenForm;
+    actOpenReporCheck: TdsdOpenForm;
     bbOpenReportMinPrice_All: TdxBarButton;
     cbisElectron: TcxCheckBox;
     cbisOne: TcxCheckBox;

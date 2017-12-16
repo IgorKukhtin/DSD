@@ -859,27 +859,30 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
       ReportName = #1055#1088#1086#1076#1072#1078#1072
       ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072
     end
-    object actOpenReportMinPrice_All: TdsdOpenForm
+    object actOpenReporCheck: TdsdOpenForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' <'#1052#1080#1085'. '#1094#1077#1085#1072' '#1076#1080#1089#1090#1088'. ('#1074#1089#1077' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1080')>'
-      Hint = #1054#1090#1095#1077#1090' <'#1052#1080#1085'. '#1094#1077#1085#1072' '#1076#1080#1089#1090#1088'. ('#1074#1089#1077' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1080')>'
+      Caption = #1054#1090#1095#1077#1090' <'#1063#1077#1082#1080' '#1087#1086' '#1087#1088#1086#1084#1086' '#1082#1086#1076#1091'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1063#1077#1082#1080' '#1087#1086' '#1087#1088#1086#1084#1086' '#1082#1086#1076#1091'>'
       ImageIndex = 24
-      FormName = 'TReport_MinPrice_byPromoForm'
-      FormNameParam.Value = 'TReport_MinPrice_byPromoForm'
+      FormName = 'TReport_Check_byPromoCodeForm'
+      FormNameParam.Value = 'TReport_Check_byPromoCodeForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'inMovementId'
+          Name = 'inMovementItemId'
           Value = '0'
+          Component = SignDCS
+          ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'inInvNumber'
           Value = ''
+          Component = edInvNumber
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -887,7 +890,17 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         item
           Name = 'inOperDate'
           Value = 'NULL'
+          Component = edOperDate
           DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGUID'
+          Value = Null
+          Component = SignDCS
+          ComponentItem = 'GUID'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -1370,6 +1383,14 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenReportMinPrice_All'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -1437,7 +1458,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
       Category = 0
     end
     object bbOpenReportMinPrice_All: TdxBarButton
-      Action = actOpenReportMinPrice_All
+      Action = actOpenReporCheck
       Category = 0
     end
     object bbGoodsIsCheckedYes: TdxBarButton
