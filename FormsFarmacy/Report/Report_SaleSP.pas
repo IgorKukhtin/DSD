@@ -69,6 +69,7 @@ type
     actSaveMovement: TdsdExecStoredProc;
     macPrintInvoice: TMultiAction;
     InvNumber_Invoice_Full: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
   private
     { Private declarations }
   public
