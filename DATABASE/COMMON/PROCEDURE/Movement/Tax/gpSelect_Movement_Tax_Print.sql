@@ -297,18 +297,22 @@ BEGIN
            , CASE WHEN (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) > 10000
                   THEN 'X' ELSE '' END                  AS ERPN
 
+             -- Не підлягає наданню отримувачу (покупцю)
            , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
                     OR vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
                   THEN 'X' ELSE '' END                  AS NotNDSPayer
+
            , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
                     OR vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
                   THEN TRUE ELSE FALSE END :: Boolean   AS isNotNDSPayer
 
+             -- 1 - (зазначається відповідний тип причини)
            , CASE WHEN vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
                        THEN '0'
                   WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
                        THEN '0'
              END AS NotNDSPayerC1
+             -- 2 - (зазначається відповідний тип причини)
            , CASE WHEN vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
                        THEN '7'
                   WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
@@ -320,7 +324,9 @@ BEGIN
            , COALESCE(MovementLinkMovement_Sale.MovementChildId, 0) AS EDIId
 
            , COALESCE(MovementFloat_Amount.ValueData, 0) AS SendDeclarAmount
-           , CASE WHEN vbDocumentTaxKindId <> zc_Enum_DocumentTaxKind_Tax() THEN 'X' ELSE '' END AS TaxKind -- для сводной НН
+
+           , CASE WHEN vbDocumentTaxKindId NOT IN (zc_Enum_DocumentTaxKind_Tax(), zc_Enum_DocumentTaxKind_Prepay()) THEN 'X' ELSE '' END AS TaxKind -- для сводной НН
+
            , vbOperDate_begin AS OperDate_begin -- поле для Медка
 
 

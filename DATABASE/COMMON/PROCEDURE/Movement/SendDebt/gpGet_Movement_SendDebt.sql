@@ -93,6 +93,11 @@ BEGIN
        ;
      ELSE
      RETURN QUERY 
+       WITH tmpMI AS (SELECT * FROM MovementItem WHERE MovementItem.MovementId = inMovementId)
+          , tmpMILO AS (SELECT * FROM MovementItemLinkObject WHERE MovementItemLinkObject.MovementItemId IN (SELECT tmpMI.Id FROM tmpMI))
+          , tmpMIString AS (SELECT * FROM MovementItemString WHERE MovementItemString.MovementItemId IN (SELECT tmpMI.Id FROM tmpMI))
+          , tmpInfoMoney AS (SELECT * FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyId IN (SELECT tmpMILO.ObjectId FROM tmpMILO))
+          , tmpContract AS (SELECT * FROM Object_Contract_InvNumber_View WHERE Object_Contract_InvNumber_View.ContractId IN (SELECT tmpMILO.ObjectId FROM tmpMILO))
        SELECT
               Movement.Id
             , MI_Master.Id AS MI_MasterId
@@ -143,8 +148,8 @@ BEGIN
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
                        
-            LEFT JOIN MovementItem AS MI_Master ON MI_Master.MovementId = Movement.Id
-                                               AND MI_Master.DescId     = zc_MI_Master()
+            LEFT JOIN tmpMI AS MI_Master ON MI_Master.MovementId = Movement.Id
+                                        AND MI_Master.DescId     = zc_MI_Master()
 
             LEFT JOIN ObjectLink AS ObjectLink_PartnerFrom_Juridical
                                  ON ObjectLink_PartnerFrom_Juridical.ObjectId = MI_Master.ObjectId
@@ -152,33 +157,33 @@ BEGIN
             LEFT JOIN Object AS Object_Partner_From ON Object_Partner_From.Id = ObjectLink_PartnerFrom_Juridical.ObjectId
             LEFT JOIN Object AS Object_Juridical_From ON Object_Juridical_From.Id = COALESCE (ObjectLink_PartnerFrom_Juridical.ChildObjectId, MI_Master.ObjectId)
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney_From
-                                             ON MILinkObject_InfoMoney_From.MovementItemId = MI_Master.Id
-                                            AND MILinkObject_InfoMoney_From.DescId = zc_MILinkObject_InfoMoney()
-            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_From ON View_InfoMoney_From.InfoMoneyId = MILinkObject_InfoMoney_From.ObjectId
+            LEFT JOIN tmpMILO AS MILinkObject_InfoMoney_From
+                              ON MILinkObject_InfoMoney_From.MovementItemId = MI_Master.Id
+                             AND MILinkObject_InfoMoney_From.DescId = zc_MILinkObject_InfoMoney()
+            LEFT JOIN tmpInfoMoney AS View_InfoMoney_From ON View_InfoMoney_From.InfoMoneyId = MILinkObject_InfoMoney_From.ObjectId
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract_From
+            LEFT JOIN tmpMILO AS MILinkObject_Contract_From
                                              ON MILinkObject_Contract_From.MovementItemId = MI_Master.Id
                                             AND MILinkObject_Contract_From.DescId = zc_MILinkObject_Contract()
-            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber_From ON View_Contract_InvNumber_From.ContractId = MILinkObject_Contract_From.ObjectId
+            LEFT JOIN tmpContract AS View_Contract_InvNumber_From ON View_Contract_InvNumber_From.ContractId = MILinkObject_Contract_From.ObjectId
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind_From
+            LEFT JOIN tmpMILO AS MILinkObject_PaidKind_From
                                              ON MILinkObject_PaidKind_From.MovementItemId = MI_Master.Id
                                             AND MILinkObject_PaidKind_From.DescId = zc_MILinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind_From ON Object_PaidKind_From.Id = MILinkObject_PaidKind_From.ObjectId
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch_From
+            LEFT JOIN tmpMILO AS MILinkObject_Branch_From
                                              ON MILinkObject_Branch_From.MovementItemId = MI_Master.Id
                                             AND MILinkObject_Branch_From.DescId = zc_MILinkObject_Branch()
             LEFT JOIN Object AS Object_Branch_From ON Object_Branch_From.Id = MILinkObject_Branch_From.ObjectId
 
 
-            LEFT JOIN MovementItemString AS MIString_Comment
+            LEFT JOIN tmpMIString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MI_Master.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
 
             
-            LEFT JOIN MovementItem AS MI_Child ON MI_Child.MovementId = Movement.Id
+            LEFT JOIN tmpMI AS MI_Child ON MI_Child.MovementId = Movement.Id
                                          AND MI_Child.DescId     = zc_MI_Child()
                                          
             LEFT JOIN ObjectLink AS ObjectLink_PartnerTo_Juridical
@@ -187,28 +192,28 @@ BEGIN
             LEFT JOIN Object AS Object_Partner_To ON Object_Partner_To.Id = ObjectLink_PartnerTo_Juridical.ObjectId
             LEFT JOIN Object AS Object_Juridical_To ON Object_Juridical_To.Id = COALESCE (ObjectLink_PartnerTo_Juridical.ChildObjectId, MI_Child.ObjectId)
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney_To
+            LEFT JOIN tmpMILO AS MILinkObject_InfoMoney_To
                                              ON MILinkObject_InfoMoney_To.MovementItemId = MI_Child.Id
                                             AND MILinkObject_InfoMoney_To.DescId = zc_MILinkObject_InfoMoney()
-            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_To ON View_InfoMoney_To.InfoMoneyId = MILinkObject_InfoMoney_To.ObjectId
+            LEFT JOIN tmpInfoMoney AS View_InfoMoney_To ON View_InfoMoney_To.InfoMoneyId = MILinkObject_InfoMoney_To.ObjectId
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract_To
+            LEFT JOIN tmpMILO AS MILinkObject_Contract_To
                                              ON MILinkObject_Contract_To.MovementItemId = MI_Child.Id
                                             AND MILinkObject_Contract_To.DescId = zc_MILinkObject_Contract()
-            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber_To ON View_Contract_InvNumber_To.ContractId = MILinkObject_Contract_To.ObjectId
+            LEFT JOIN tmpContract AS View_Contract_InvNumber_To ON View_Contract_InvNumber_To.ContractId = MILinkObject_Contract_To.ObjectId
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind_To
+            LEFT JOIN tmpMILO AS MILinkObject_PaidKind_To
                                              ON MILinkObject_PaidKind_To.MovementItemId = MI_Child.Id
                                             AND MILinkObject_PaidKind_To.DescId = zc_MILinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind_To ON Object_PaidKind_To.Id = MILinkObject_PaidKind_To.ObjectId
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch_To
+            LEFT JOIN tmpMILO AS MILinkObject_Branch_To
                                              ON MILinkObject_Branch_To.MovementItemId = MI_Child.Id
                                             AND MILinkObject_Branch_To.DescId = zc_MILinkObject_Branch()
             LEFT JOIN Object AS Object_Branch_To ON Object_Branch_To.Id = MILinkObject_Branch_To.ObjectId
 
                                     
-       WHERE Movement.Id =  inMovementId
+       WHERE Movement.Id     =  inMovementId
          AND Movement.DescId = zc_Movement_SendDebt();
 
      END IF;
@@ -219,7 +224,6 @@ $BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpGet_Movement_SendDebt (Integer, TDateTime, TVarChar) OWNER TO postgres;
 
-
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
@@ -227,4 +231,4 @@ ALTER FUNCTION gpGet_Movement_SendDebt (Integer, TDateTime, TVarChar) OWNER TO p
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpGet_Movement_SendDebt (inMovementId:= 0, inOperDate:= NULL, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Movement_SendDebt (inMovementId:= 1, inOperDate:= NULL, inSession:= zfCalc_UserAdmin())
