@@ -180,6 +180,9 @@ type
     actPrint_Total_List: TdsdPrintAction;
     mactPrint_Sale_Total_List: TMultiAction;
     bbPrint_Sale_Total_List: TdxBarButton;
+    actPrint_Account_List: TdsdPrintAction;
+    mactPrint_Account_List: TMultiAction;
+    bbPrint_Account_List: TdxBarButton;
   private
     { Private declarations }
   public

@@ -1,11 +1,13 @@
 -- Function: gpInsertUpdate_MovementItem_PromoCode()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoCodeChild (Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoCodeChild (Integer, Integer, Integer, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoCodeChild(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inJuridicalId         Integer   , -- Товары
+    IN inIsChecked           Boolean   , -- отмечен
     IN inComment             TVarChar  , -- примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -21,7 +23,7 @@ BEGIN
     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
     -- сохранили <Элемент документа>
-    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inJuridicalId, inMovementId, 0, NULL);
+    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inJuridicalId, inMovementId, (CASE WHEN inIsChecked = TRUE THEN 1 ELSE 0 END) ::TFloat, NULL);
     
      -- сохранили свойство <Примечание>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);

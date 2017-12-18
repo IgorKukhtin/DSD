@@ -25,7 +25,7 @@ BEGIN
       vbIndex := vbIndex + 1;
       
       -- сохранили <Элемент документа>
-      vbId := lpInsertUpdate_MovementItem (0, zc_MI_Sign(), 0, inMovementId, 0, NULL);
+      vbId := lpInsertUpdate_MovementItem (0, zc_MI_Sign(), 0, inMovementId, 1, NULL);
 
       -- генерируем новый GUID код
       vbGUID := (SELECT zfCalc_GUID());

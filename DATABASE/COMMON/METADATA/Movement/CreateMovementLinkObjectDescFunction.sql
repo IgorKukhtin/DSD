@@ -345,7 +345,7 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
 
 CREATE OR REPLACE FUNCTION zc_MovementLinkObject_PromoCode() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PromoCode'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
-  SELECT 'zc_MovementLinkObject_PromoCode', 'Регион' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PromoCode');
+  SELECT 'zc_MovementLinkObject_PromoCode', 'Промо код' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PromoCode');
 
 /*-------------------------------------------------------------------------------
 

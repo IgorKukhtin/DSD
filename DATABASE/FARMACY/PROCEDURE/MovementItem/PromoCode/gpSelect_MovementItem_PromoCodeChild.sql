@@ -11,7 +11,9 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PromoCodeChild(
 RETURNS TABLE (Id Integer
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , DescName TVarChar
-             , Comment TVarChar, IsErased Boolean
+             , Comment TVarChar
+             , IsChecked Boolean
+             , IsErased Boolean
               )
 AS
 $BODY$
@@ -23,23 +25,24 @@ BEGIN
     vbUserId:= lpGetUserBySession (inSession);
 
         RETURN QUERY
-           SELECT MI_Promo.Id
+           SELECT MI_PromoCode.Id
                 , Object_Juridical.Id                   AS JuridicalId
                 , Object_Juridical.ObjectCode           AS JuridicalCode
                 , Object_Juridical.ValueData            AS JuridicalName
                 , ObjectDesc.ItemName                   AS DescName
                 , MIString_Comment.ValueData ::TVarChar AS Comment
-                , MI_Promo.IsErased
-           FROM MovementItem AS MI_Promo
+                , CASE WHEN MI_PromoCode.Amount = 1 THEN TRUE ELSE FALSE END AS IsChecked
+                , MI_PromoCode.IsErased
+           FROM MovementItem AS MI_PromoCode
                LEFT JOIN MovementItemString AS MIString_Comment
-                                            ON MIString_Comment.MovementItemId = MI_Promo.Id
+                                            ON MIString_Comment.MovementItemId = MI_PromoCode.Id
                                            AND MIString_Comment.DescId = zc_MIString_Comment()
           
-               LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MI_Promo.ObjectId
+               LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MI_PromoCode.ObjectId
                LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Juridical.DescId
-           WHERE MI_Promo.MovementId = inMovementId
-             AND MI_Promo.DescId = zc_MI_Child()
-             AND (MI_Promo.isErased = FALSE or inIsErased = TRUE);
+           WHERE MI_PromoCode.MovementId = inMovementId
+             AND MI_PromoCode.DescId = zc_MI_Child()
+             AND (MI_PromoCode.isErased = FALSE or inIsErased = TRUE);
   
   
 END;
@@ -53,4 +56,4 @@ $BODY$
  13.12.17         *
 */
 
---select * from gpSelect_MovementItem_PromoCodeChild(inMovementId := 0 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+--select * from gpSelect_MovementItem_PromoCodeChild(inMovementId := 0 , inIsErased := 'False' ,  inSession := '3'::TVarChar);

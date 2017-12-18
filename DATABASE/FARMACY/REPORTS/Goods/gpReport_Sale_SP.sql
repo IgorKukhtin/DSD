@@ -29,6 +29,7 @@ RETURNS TABLE (MovementId     Integer
              , OperDateSP     TDateTime
              , OperDate       TDateTime
 
+             , GoodsCode      Integer
              , GoodsName      TVarChar
              , MeasureName    TVarChar
 
@@ -487,6 +488,7 @@ BEGIN
              , Object_GroupMemberSP.ValueData      AS GroupMemberSPName
              , tmpData.OperDateSP        :: TDateTime
              , tmpData.OperDate          :: TDateTime
+             , Object_Goods.ObjectCode             AS GoodsCode
              , Object_Goods.ValueData              AS GoodsName
              , Object_Measure.ValueData            AS MeasureName
              , tmpData.ChangePercent     :: TFloat 

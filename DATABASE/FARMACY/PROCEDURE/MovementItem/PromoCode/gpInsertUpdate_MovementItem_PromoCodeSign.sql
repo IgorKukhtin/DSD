@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_PromoCode()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoCodeSign (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoCodeSign (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoCodeSign(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoCodeSign(
     IN inBayerEmail          TVarChar  , -- 
  INOUT ioGUID                TVarChar  , -- 
     IN inComment             TVarChar  , -- примечание
+    IN inIsChecked           Boolean   , -- отмечен
     IN inSession             TVarChar    -- сессия пользователя
 )
 AS
@@ -24,7 +26,7 @@ BEGIN
     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
     -- сохранили <Элемент документа>
-    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Sign(), 0, inMovementId, 0, NULL);
+    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Sign(), 0, inMovementId, (CASE WHEN inIsChecked = TRUE THEN 1 ELSE 0 END) ::TFloat, NULL);
 
      IF COALESCE (ioGUID, '') <> ''
      THEN
@@ -77,4 +79,4 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.    Воробкало А.А.
  13.12.17         *
 */
---select * from gpInsertUpdate_MovementItem_PromoCodeSign(ioId := 67502267 , inMovementId := 3959814 , inBayerName := 'kbjjbjb' , inBayerPhone := '' , inBayerEmail := '' , ioGUID := '' , inComment := '' ,  inSession := '3');
+--select * from gpInsertUpdate_MovementItem_PromoCodeSign(ioId := 67502267 , inMovementId := 3959814 , inBayerName := 'kbjjbjb' , inBayerPhone := '' , inBayerEmail := '' , ioGUID := '' , inComment := '' , inIsChecked:= TRUE, inSession := '3');

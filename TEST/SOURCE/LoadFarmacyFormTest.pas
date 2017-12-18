@@ -968,6 +968,10 @@ end;
 
  procedure TLoadFormTest.LoadPromoCodeFormTest;
 begin
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_byPromoCodeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Check_byPromoCodeForm');
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoCodeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoCodeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoCodeEditForm'));
@@ -1356,26 +1360,26 @@ end;
 
 procedure TLoadFormTest.LoadSPObjectFormTest;
 begin
-
+ {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMedicSPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicSPEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMedicSPEditForm');
-    {
+
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberSPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberSPEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberSPEditForm');
     exit;
-
+   }
   // отчет реестр по постановлению 1303
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleSPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleSPDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleSPDialogForm');
   exit;
-
+ {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGroupMemberSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGroupMemberSPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGroupMemberSPEditForm'));

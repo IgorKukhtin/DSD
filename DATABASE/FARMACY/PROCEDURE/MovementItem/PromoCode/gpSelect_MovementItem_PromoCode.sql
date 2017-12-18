@@ -12,8 +12,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PromoCode(
 )
 RETURNS TABLE (Id Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , Amount TFloat
              , Comment TVarChar
+             , IsChecked Boolean
              , isErased Boolean
               )
 AS
@@ -60,8 +60,8 @@ BEGIN
                  , Object_Goods.Id                       AS GoodsId
                  , Object_Goods.ObjectCode               AS GoodsCode
                  , Object_Goods.ValueData                AS GoodsName
-                 , MI_PromoCode.Amount                   AS Amount
                  , COALESCE (MI_PromoCode.Comment, '') :: TVarChar AS Comment
+                 , CASE WHEN MI_PromoCode.Amount = 1 THEN TRUE ELSE FALSE END AS IsChecked
                  , COALESCE(MI_PromoCode.IsErased,FALSE) AS isErased
             FROM tmpGoods
                 FULL OUTER JOIN MI_PromoCode ON MI_PromoCode.GoodsId = tmpGoods.Id
@@ -76,8 +76,8 @@ BEGIN
                 , MI_PromoCode.ObjectId     AS GoodsId
                 , Object_Goods.ObjectCode   AS GoodsCode
                 , Object_Goods.ValueData    AS GoodsName
-                , MI_PromoCode.Amount       ::TFloat 
                 , MIString_Comment.ValueData ::TVarChar AS Comment
+                , CASE WHEN MI_PromoCode.Amount = 1 THEN TRUE ELSE FALSE END AS IsChecked
                 , MI_PromoCode.IsErased
            FROM MovementItem AS MI_PromoCode
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MI_PromoCode.ObjectId  
@@ -100,4 +100,4 @@ $BODY$
  13.12.17         *
 */
 
---select * from gpSelect_MovementItem_PromoCode(inMovementId := 0 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+--select * from gpSelect_MovementItem_PromoCode(inMovementId := 0 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3'::TVarChar);
