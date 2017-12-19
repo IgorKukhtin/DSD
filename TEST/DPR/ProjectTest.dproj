@@ -3209,10 +3209,6 @@
 				<Form>StickerTypeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\StickerFile.pas">
-				<Form>StickerFileForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\StickerFileEdit.pas">
 				<Form>StickerFileEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -3331,6 +3327,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\Sale_TransportJournal.pas">
 				<Form>Sale_TransportJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\StickerFile.pas">
+				<Form>StickerFileForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

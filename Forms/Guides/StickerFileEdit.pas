@@ -51,6 +51,27 @@ type
     GuidesLanguage: TdsdGuides;
     cxLabel6: TcxLabel;
     cbisDefault: TcxCheckBox;
+    cxLabel16: TcxLabel;
+    cxLabel7: TcxLabel;
+    ceWidth1: TcxCurrencyEdit;
+    cxLabel11: TcxLabel;
+    ceWidth6: TcxCurrencyEdit;
+    ceWidth7: TcxCurrencyEdit;
+    cxLabel12: TcxLabel;
+    cxLabel4: TcxLabel;
+    cxLabel8: TcxLabel;
+    ceWidth3: TcxCurrencyEdit;
+    ceWidth4: TcxCurrencyEdit;
+    ceWidth2: TcxCurrencyEdit;
+    cxLabel10: TcxLabel;
+    cxLabel9: TcxLabel;
+    ceWidth5: TcxCurrencyEdit;
+    cxLabel15: TcxLabel;
+    ceWidth8: TcxCurrencyEdit;
+    ceWidth9: TcxCurrencyEdit;
+    cxLabel14: TcxLabel;
+    ceWidth10: TcxCurrencyEdit;
+    cxLabel13: TcxLabel;
   private
     { Private declarations }
   public

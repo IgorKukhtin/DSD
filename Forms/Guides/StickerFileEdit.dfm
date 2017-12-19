@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1064#1040#1041#1051#1054#1053'>'
-  ClientHeight = 322
+  ClientHeight = 461
   ClientWidth = 377
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,8 +29,8 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 79
-    Top = 289
+    Left = 72
+    Top = 418
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,8 +39,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 229
-    Top = 289
+    Left = 222
+    Top = 418
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -68,10 +68,10 @@
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit
-    Left = 42
+    Left = 40
     Top = 250
     TabOrder = 7
-    Width = 294
+    Width = 296
   end
   object cxLabel3: TcxLabel
     Left = 42
@@ -129,6 +129,161 @@
     Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
     TabOrder = 14
     Width = 97
+  end
+  object cxLabel16: TcxLabel
+    Left = 42
+    Top = 285
+    Caption = #1064#1080#1088#1080#1085#1072' '#1089#1090#1088#1086#1082#1080
+  end
+  object cxLabel7: TcxLabel
+    Left = 59
+    Top = 307
+    Caption = '1-'#1086#1081
+  end
+  object ceWidth1: TcxCurrencyEdit
+    Left = 59
+    Top = 326
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    TabOrder = 17
+    Width = 45
+  end
+  object cxLabel11: TcxLabel
+    Left = 59
+    Top = 355
+    Caption = '6-'#1086#1081
+  end
+  object ceWidth6: TcxCurrencyEdit
+    Left = 59
+    Top = 374
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    TabOrder = 19
+    Width = 45
+  end
+  object ceWidth7: TcxCurrencyEdit
+    Left = 111
+    Top = 374
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    TabOrder = 20
+    Width = 45
+  end
+  object cxLabel12: TcxLabel
+    Left = 111
+    Top = 355
+    Caption = '7-'#1086#1081
+  end
+  object cxLabel4: TcxLabel
+    Left = 111
+    Top = 307
+    Caption = '2-'#1086#1081
+  end
+  object cxLabel8: TcxLabel
+    Left = 164
+    Top = 307
+    Caption = '3-'#1086#1081
+  end
+  object ceWidth3: TcxCurrencyEdit
+    Left = 164
+    Top = 326
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    TabOrder = 24
+    Width = 45
+  end
+  object ceWidth4: TcxCurrencyEdit
+    Left = 217
+    Top = 326
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    TabOrder = 25
+    Width = 45
+  end
+  object ceWidth2: TcxCurrencyEdit
+    Left = 111
+    Top = 326
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    TabOrder = 26
+    Width = 45
+  end
+  object cxLabel10: TcxLabel
+    Left = 269
+    Top = 307
+    Caption = '5-'#1086#1081
+  end
+  object cxLabel9: TcxLabel
+    Left = 217
+    Top = 307
+    Caption = '4-'#1086#1081
+  end
+  object ceWidth5: TcxCurrencyEdit
+    Left = 269
+    Top = 326
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    TabOrder = 29
+    Width = 45
+  end
+  object cxLabel15: TcxLabel
+    Left = 269
+    Top = 355
+    Caption = '10-'#1086#1081
+  end
+  object ceWidth8: TcxCurrencyEdit
+    Left = 269
+    Top = 374
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    TabOrder = 31
+    Width = 45
+  end
+  object ceWidth9: TcxCurrencyEdit
+    Left = 217
+    Top = 374
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    TabOrder = 32
+    Width = 45
+  end
+  object cxLabel14: TcxLabel
+    Left = 217
+    Top = 355
+    Caption = '9-'#1086#1081
+  end
+  object ceWidth10: TcxCurrencyEdit
+    Left = 164
+    Top = 374
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    TabOrder = 34
+    Width = 45
+  end
+  object cxLabel13: TcxLabel
+    Left = 164
+    Top = 355
+    Caption = '8-'#1086#1081
   end
   object ActionList: TActionList
     Left = 280
@@ -212,6 +367,86 @@
         Value = ''
         Component = ceComment
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWidth1'
+        Value = Null
+        Component = ceWidth1
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWidth2'
+        Value = Null
+        Component = ceWidth2
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWidth3'
+        Value = Null
+        Component = ceWidth3
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWidth4'
+        Value = Null
+        Component = ceWidth4
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWidth5'
+        Value = Null
+        Component = ceWidth5
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWidth6'
+        Value = Null
+        Component = ceWidth6
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWidth7'
+        Value = Null
+        Component = ceWidth7
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWidth8'
+        Value = Null
+        Component = ceWidth8
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWidth9'
+        Value = Null
+        Component = ceWidth9
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWidth10'
+        Value = Null
+        Component = ceWidth10
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -320,6 +555,76 @@
         Value = Null
         Component = cbisDefault
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Width1'
+        Value = Null
+        Component = ceWidth1
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Width2'
+        Value = Null
+        Component = ceWidth2
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Width3'
+        Value = Null
+        Component = ceWidth3
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Width4'
+        Value = Null
+        Component = ceWidth4
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Width5'
+        Value = Null
+        Component = ceWidth5
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Width6'
+        Value = Null
+        Component = ceWidth6
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Width7'
+        Value = Null
+        Component = ceWidth7
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Width8'
+        Value = Null
+        Component = ceWidth8
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Width9'
+        Value = Null
+        Component = ceWidth9
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Width10'
+        Value = Null
+        Component = ceWidth10
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1
