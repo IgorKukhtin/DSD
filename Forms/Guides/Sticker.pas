@@ -114,8 +114,8 @@ type
     colisErased: TcxGridDBColumn;
     cxGridLeveProperty: TcxGridLevel;
     cxLeftSplitter: TcxSplitter;
-    actShowAll: TBooleanStoredProcAction;
-    bbShowAll: TdxBarButton;
+    actShowErased: TBooleanStoredProcAction;
+    bbShowErased: TdxBarButton;
     colGoodsKindName: TcxGridDBColumn;
     colStickerPackName: TcxGridDBColumn;
     colStickerFileName: TcxGridDBColumn;
@@ -154,6 +154,26 @@ type
     macPrintTwoLen: TMultiAction;
     actPrintTwoLen: TdsdPrintAction;
     bbPrintTwoLen: TdxBarButton;
+    Panel1: TPanel;
+    deDateStart: TcxDateEdit;
+    deDateUpack: TcxDateEdit;
+    cxLabel1: TcxLabel;
+    cxLabel2: TcxLabel;
+    edPartion: TcxLabel;
+    edIsDataProduction: TcxCheckBox;
+    edIsTara: TcxCheckBox;
+    edIsGoodsName: TcxCheckBox;
+    edIsDataTara: TcxCheckBox;
+    edIsDataPartion: TcxCheckBox;
+    ceNumUpack: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
+    deDateProduction: TcxDateEdit;
+    cxLabel5: TcxLabel;
+    ceNumTech: TcxCurrencyEdit;
+    cxLabel3: TcxLabel;
+    deDateTara: TcxDateEdit;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
 
   private
     { Private declarations }

@@ -2,8 +2,8 @@ object StickerForm: TStickerForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1069#1090#1080#1082#1077#1090#1082#1072'>'
-  ClientHeight = 536
-  ClientWidth = 904
+  ClientHeight = 583
+  ClientWidth = 934
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,8 +19,8 @@ object StickerForm: TStickerForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
-    Width = 904
+    Top = 81
+    Width = 934
     Height = 303
     Align = alTop
     TabOrder = 0
@@ -310,32 +310,32 @@ object StickerForm: TStickerForm
   end
   object cxTopSplitter: TcxSplitter
     Left = 0
-    Top = 329
-    Width = 904
+    Top = 384
+    Width = 934
     Height = 5
     AlignSplitter = salTop
     Control = cxGrid
   end
   object cxRightSplitter: TcxSplitter
-    Left = 900
-    Top = 334
+    Left = 930
+    Top = 389
     Width = 4
-    Height = 202
+    Height = 194
     AlignSplitter = salRight
   end
   object Panel: TPanel
     Left = 0
-    Top = 334
-    Width = 900
-    Height = 202
+    Top = 389
+    Width = 930
+    Height = 194
     Align = alClient
     BevelOuter = bvNone
-    TabOrder = 7
+    TabOrder = 3
     object cxGridProperty: TcxGrid
       Left = 5
       Top = 0
-      Width = 895
-      Height = 202
+      Width = 925
+      Height = 194
       Align = alClient
       TabOrder = 0
       LookAndFeel.Kind = lfStandard
@@ -552,9 +552,149 @@ object StickerForm: TStickerForm
       Left = 0
       Top = 0
       Width = 5
-      Height = 202
+      Height = 194
       Control = cxGridProperty
     end
+  end
+  object Panel1: TPanel
+    Left = 0
+    Top = 0
+    Width = 934
+    Height = 55
+    Align = alTop
+    TabOrder = 5
+    object deDateStart: TcxDateEdit
+      Left = 75
+      Top = 28
+      EditValue = 42370d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 0
+      Width = 83
+    end
+    object deDateUpack: TcxDateEdit
+      Left = 336
+      Top = 28
+      EditValue = 42370d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 1
+      Width = 80
+    end
+    object cxLabel1: TcxLabel
+      Left = 11
+      Top = 29
+      Caption = #1053#1072#1095'. '#1076#1072#1090#1072':'
+    end
+    object cxLabel2: TcxLabel
+      Left = 282
+      Top = 29
+      Hint = #1044#1072#1090#1072' '#1091#1087#1072#1082#1086#1074#1082#1080
+      Caption = #1044#1072#1090#1072' '#1091#1087'.:'
+    end
+    object edPartion: TcxLabel
+      Left = 755
+      Top = 8
+      Caption = #8470' '#1087#1072#1088#1090#1080#1080'  '#1091#1087#1072#1082#1086#1074#1082#1080':'
+    end
+    object edIsDataProduction: TcxCheckBox
+      Left = 5
+      Top = 5
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1055#1077#1095#1072#1090#1072#1090#1100' '#1076#1072#1090#1091' '#1087#1088#1086#1080#1079#1074'-'#1074#1072
+      TabOrder = 5
+      Width = 155
+    end
+    object edIsTara: TcxCheckBox
+      Left = 171
+      Top = 5
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1055#1077#1095#1072#1090#1072#1090#1100' '#1076#1083#1103' '#1058#1040#1056#1067
+      TabOrder = 6
+      Width = 125
+    end
+    object edIsGoodsName: TcxCheckBox
+      Left = 305
+      Top = 5
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
+      State = cbsChecked
+      TabOrder = 7
+      Width = 111
+    end
+    object edIsDataTara: TcxCheckBox
+      Left = 440
+      Top = 5
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1044#1072#1090#1072' '#1076#1083#1103' '#1090#1072#1088#1099
+      TabOrder = 8
+      Width = 103
+    end
+    object edIsDataPartion: TcxCheckBox
+      Left = 581
+      Top = 5
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1055#1040#1056#1058#1048#1070' '#1076#1083#1103' '#1090#1072#1088#1099
+      TabOrder = 9
+      Width = 118
+    end
+    object ceNumUpack: TcxCurrencyEdit
+      Left = 872
+      Top = 5
+      EditValue = 1.000000000000000000
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0'
+      TabOrder = 10
+      Width = 33
+    end
+    object cxLabel4: TcxLabel
+      Left = 576
+      Top = 29
+      Hint = #1044#1072#1090#1072' '#1091#1087#1072#1082#1086#1074#1082#1080
+      Caption = #1044#1072#1090#1072' '#1087#1088#1086#1080#1079#1074'-'#1074#1072':'
+    end
+    object deDateProduction: TcxDateEdit
+      Left = 666
+      Top = 28
+      EditValue = 42370d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 12
+      Width = 80
+    end
+    object cxLabel5: TcxLabel
+      Left = 755
+      Top = 29
+      Caption = #8470' '#1089#1084#1077#1085#1099' '#1090#1077#1093#1085#1086#1083#1086#1075#1086#1074':'
+    end
+    object ceNumTech: TcxCurrencyEdit
+      Left = 872
+      Top = 28
+      EditValue = 1.000000000000000000
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0'
+      TabOrder = 14
+      Width = 33
+    end
+  end
+  object cxLabel3: TcxLabel
+    Left = 425
+    Top = 29
+    Hint = #1044#1072#1090#1072' '#1091#1087#1072#1082#1086#1074#1082#1080
+    Caption = #1044#1072#1090#1072' '#1090#1072#1088#1099':'
+  end
+  object deDateTara: TcxDateEdit
+    Left = 489
+    Top = 28
+    EditValue = 42370d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 10
+    Width = 80
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -693,6 +833,10 @@ object StickerForm: TStickerForm
         end
         item
           Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic1'
         end
         item
@@ -804,8 +948,8 @@ object StickerForm: TStickerForm
       Action = ProtocolOpenFormProperty
       Category = 0
     end
-    object bbShowAll: TdxBarButton
-      Action = actShowAll
+    object bbShowErased: TdxBarButton
+      Action = actShowErased
       Category = 0
     end
     object bbInsertMask: TdxBarButton
@@ -841,6 +985,10 @@ object StickerForm: TStickerForm
       Action = macPrintTwoLen
       Category = 0
     end
+    object bbShowAll: TdxBarButton
+      Action = actShowAll
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -863,7 +1011,7 @@ object StickerForm: TStickerForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actShowAll: TBooleanStoredProcAction
+    object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -876,14 +1024,14 @@ object StickerForm: TStickerForm
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndex = 63
+      ImageIndex = 64
       Value = False
       HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndexTrue = 62
-      ImageIndexFalse = 63
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
     end
     object actInsertReportName: TdsdExecStoredProc
       Category = 'Print'
@@ -1886,6 +2034,25 @@ object StickerForm: TStickerForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1090#1086#1074#1072#1088#1086#1074
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1090#1086#1074#1072#1088#1086#1074
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082'  '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Sticker'
@@ -1896,8 +2063,16 @@ object StickerForm: TStickerForm
       end>
     Params = <
       item
-        Name = 'inShowAll'
+        Name = 'inShowErased'
         Value = 'False'
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inShowAll'
+        Value = Null
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
@@ -2154,7 +2329,7 @@ object StickerForm: TStickerForm
       item
         Name = 'inShowAll'
         Value = Null
-        Component = actShowAll
+        Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2458,10 +2633,98 @@ object StickerForm: TStickerForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDataProduction'
+        Value = Null
+        Component = edIsDataProduction
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsTara'
+        Value = Null
+        Component = edIsTara
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsGoodsName'
+        Value = Null
+        Component = edIsGoodsName
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDataTara'
+        Value = Null
+        Component = edIsDataTara
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDataPartion'
+        Value = Null
+        Component = edIsDataPartion
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateStart'
+        Value = 'NULL'
+        Component = deDateStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateUpack'
+        Value = 'NULL'
+        Component = deDateUpack
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateTara'
+        Value = 'NULL'
+        Component = deDateTara
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateProduction'
+        Value = 'NULL'
+        Component = deDateProduction
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNumUpack'
+        Value = Null
+        Component = ceNumUpack
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNumTech'
+        Value = Null
+        Component = ceNumTech
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 591
-    Top = 88
+    Left = 575
+    Top = 96
   end
   object spInsertReportName: TdsdStoredProc
     StoredProcName = 'gpInsert_Object_Sticker_ReportName'
@@ -2533,6 +2796,94 @@ object StickerForm: TStickerForm
         Name = 'inIsLength'
         Value = True
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDataProduction'
+        Value = Null
+        Component = edIsDataProduction
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsTara'
+        Value = Null
+        Component = edIsTara
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsGoodsName'
+        Value = Null
+        Component = edIsGoodsName
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDataTara'
+        Value = Null
+        Component = edIsDataTara
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDataPartion'
+        Value = Null
+        Component = edIsDataPartion
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateStart'
+        Value = 'NULL'
+        Component = deDateStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateUpack'
+        Value = 'NULL'
+        Component = deDateUpack
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateTara'
+        Value = 'NULL'
+        Component = deDateTara
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateProduction'
+        Value = 'NULL'
+        Component = deDateProduction
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNumUpack'
+        Value = Null
+        Component = ceNumUpack
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNumTech'
+        Value = Null
+        Component = ceNumTech
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

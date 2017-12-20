@@ -2,10 +2,22 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Object_StickerProperty_Print (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_StickerProperty_Print (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_StickerProperty_Print(Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_StickerProperty_Print(
     IN inObjectId          Integer  , -- ключ Этикетки
     IN inIsLength          Boolean  , --
+    IN inIsDataProduction  Boolean  , -- печатать дату произв-ва на этикетке
+    IN inIsTara            Boolean  , -- печатать для ТАРЫ
+    IN inIsGoodsName       Boolean  , -- печатать название тов.
+    IN inIsDataTara        Boolean  , -- печатать дату для тары
+    IN inIsDataPartion     Boolean  , -- печатать ПАРТИЮ для тары
+    IN inDateStart         TDateTime, -- нач. дата
+    IN inDateUpack         TDateTime, -- дата упаковки
+    IN inDateTara          TDateTime, -- дата для тары 
+    IN inDateProduction    TDateTime, -- дата произв-ва
+    IN inNumUpack          TFloat   , -- № партии  упаковки, по умолчанию = 1
+    IN inNumTech           TFloat   , -- № смены технологов, по умолчанию = 1
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
@@ -24,6 +36,18 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
              , StickerSortName TVarChar
              , StickerNormName TVarChar
              , Info Text
+             , IsDataProduction  Boolean
+             , IsTara            Boolean
+             , IsGoodsName       Boolean
+             , IsDataTara        Boolean
+             , IsDataPartion     Boolean
+             , DateStart         TDateTime
+             , DateEnd           TDateTime
+             , DateUpack         TDateTime
+             , DateTara          TDateTime
+             , DateProduction    TDateTime
+             , NumUpack          TFloat
+             , NumTech           TFloat
               )
 AS
 $BODY$
@@ -34,6 +58,11 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
+     --проверка 
+     IF (inIsDataProduction = TRUE AND inIsTara = TRUE) OR (inIsTara = TRUE AND inIsDataTara = TRUE AND inIsDataPartion = TRUE)
+        THEN
+         RAISE EXCEPTION 'Ошибка.Переданы некорректные параметры печати.';
+     END IF;
 
      -- поиск ШАБЛОНА
      vbStickerFileId:= (WITH -- Шаблоны "по умолчанию" - для конкретной ТМ
@@ -155,6 +184,19 @@ BEGIN
                                       END
                                 ) AS Info
 
+            , inIsDataProduction  :: Boolean   AS IsDataProduction
+            , inIsTara            :: Boolean   AS IsTara          
+            , inIsGoodsName       :: Boolean   AS IsGoodsName     
+            , inIsDataTara        :: Boolean   AS IsDataTara      
+            , inIsDataPartion     :: Boolean   AS IsDataPartion   
+            , CASE WHEN inIsDataProduction = TRUE THEN inDateStart ELSE NULL END        :: TDateTime AS DateStart       
+            ,  CASE WHEN inIsDataProduction = TRUE THEN (inDateStart + ((ObjectFloat_Value5.ValueData - 1) ||' day') :: INTERVAL) ELSE NULL END :: TDateTime AS DateEnd
+            , inDateUpack         :: TDateTime AS DateUpack
+            , inDateTara          :: TDateTime AS DateTara
+            , inDateProduction    :: TDateTime AS DateProduction
+            , inNumUpack          :: TFloat    AS NumUpack
+            , inNumTech           :: TFloat    AS NumTech
+            
        FROM Object AS Object_StickerProperty
              LEFT JOIN Object AS Object_StickerFile ON Object_StickerFile.Id = vbStickerFileId
 
@@ -279,8 +321,10 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 19.12.17         *
  26.10.17         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_StickerProperty_Print (inObjectId:= 1370933, inIsLength:= TRUE, inSession:= zfCalc_UserAdmin());
+--
+--select * from gpSelect_Object_StickerProperty_Print(inObjectId := 1006470 , inIsLength := 'False' , inIsDataProduction := 'False' , inIsTara := 'False' , inIsGoodsName := 'False' , inIsDataTara := 'False' , inIsDataPartion := 'False' , inDateStart := ('01.01.2016')::TDateTime , inDateUpack := ('01.01.2016')::TDateTime , inDateTara := ('01.01.2016')::TDateTime , inDateProduction := ('01.01.2016')::TDateTime , inNumUpack := 1 , inNumTech := 1 ,  inSession := zfCalc_UserAdmin());
