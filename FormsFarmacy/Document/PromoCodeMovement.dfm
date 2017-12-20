@@ -46,6 +46,14 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
+          object IsChecked: TcxGridDBColumn
+            Caption = #1054#1090#1084#1077#1095#1077#1085
+            DataBinding.FieldName = 'IsChecked'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1084#1077#1095#1077#1085' '#1076#1072'/'#1085#1077#1090
+            Width = 60
+          end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
@@ -61,14 +69,6 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 340
-          end
-          object IsChecked: TcxGridDBColumn
-            Caption = #1054#1090#1084#1077#1095#1077#1085
-            DataBinding.FieldName = 'IsChecked'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1084#1077#1095#1077#1085' '#1076#1072'/'#1085#1077#1090
-            Width = 60
           end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -109,6 +109,14 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object sgIsChecked: TcxGridDBColumn
+            Caption = #1054#1090#1084#1077#1095#1077#1085
+            DataBinding.FieldName = 'IsChecked'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1084#1077#1095#1077#1085' '#1076#1072'/'#1085#1077#1090
+            Width = 41
+          end
           object GUID: TcxGridDBColumn
             Caption = #1055#1088#1086#1084#1086' '#1082#1086#1076
             DataBinding.FieldName = 'GUID'
@@ -123,14 +131,6 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 174
-          end
-          object sgIsChecked: TcxGridDBColumn
-            Caption = #1054#1090#1084#1077#1095#1077#1085
-            DataBinding.FieldName = 'IsChecked'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1084#1077#1095#1077#1085' '#1076#1072'/'#1085#1077#1090
-            Width = 41
           end
           object clComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -282,14 +282,22 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object JuridicalCode: TcxGridDBColumn
-            Caption = #1050#1086#1076
-            DataBinding.FieldName = 'JuridicalCode'
-            Width = 30
+          object chIsChecked: TcxGridDBColumn
+            Caption = #1054#1090#1084#1077#1095#1077#1085
+            DataBinding.FieldName = 'IsChecked'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1084#1077#1095#1077#1085' '#1076#1072'/'#1085#1077#1090
+            Width = 59
           end
-          object JuridicalName: TcxGridDBColumn
+          object ObjectCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'ObjectlCode'
+            Width = 42
+          end
+          object ObjectName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' / '#1070#1088'. '#1083#1080#1094#1086
-            DataBinding.FieldName = 'JuridicalName'
+            DataBinding.FieldName = 'ObjectName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -300,7 +308,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 296
+            Width = 260
           end
           object DescName: TcxGridDBColumn
             Caption = #1069#1083#1077#1084#1077#1085#1090
@@ -308,22 +316,29 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 71
           end
-          object chIsChecked: TcxGridDBColumn
-            Caption = #1054#1090#1084#1077#1095#1077#1085
-            DataBinding.FieldName = 'IsChecked'
+          object JuridicalName: TcxGridDBColumn
+            Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1072#1087#1090#1077#1082#1072')'
+            DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1084#1077#1095#1077#1085' '#1076#1072'/'#1085#1077#1090
-            Width = 60
+            Width = 176
+          end
+          object RetailName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+            DataBinding.FieldName = 'RetailName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 155
           end
           object chComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 199
+            Width = 176
           end
           object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -331,7 +346,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 70
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -1289,6 +1304,10 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
           ItemName = 'bbShowErased'
         end
         item
+          Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
@@ -1316,10 +1335,6 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbShowAll'
         end
         item
           Visible = True
@@ -2036,6 +2051,14 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsErased'
         Value = Null
         Component = actShowErased
@@ -2095,7 +2118,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         Name = 'inJuridicalId'
         Value = Null
         Component = DetailDCS
-        ComponentItem = 'JuridicalId'
+        ComponentItem = 'ObjectId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2621,7 +2644,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         Name = 'inJuridicalId'
         Value = Null
         Component = DetailDCS
-        ComponentItem = 'JuridicalId'
+        ComponentItem = 'ObjectId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2672,7 +2695,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         Name = 'inJuridicalId'
         Value = Null
         Component = DetailDCS
-        ComponentItem = 'JuridicalId'
+        ComponentItem = 'ObjectId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

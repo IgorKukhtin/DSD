@@ -965,7 +965,6 @@ uses
   StickerNormEdit in '..\..\Forms\Guides\StickerNormEdit.pas' {StickerNormEditForm: TParentForm},
   StickerNorm in '..\..\Forms\Guides\StickerNorm.pas' {StickerNormForm: TParentForm},
   StickerType in '..\..\Forms\Guides\StickerType.pas' {StickerTypeForm: TParentForm},
-  StickerFile in '..\..\Forms\Guides\StickerFile.pas' {StickerFileForm: TParentForm},
   StickerFileEdit in '..\..\Forms\Guides\StickerFileEdit.pas' {StickerFileEditForm: TParentForm},
   StickerPropertyEdit in '..\..\Forms\Guides\StickerPropertyEdit.pas' {StickerPropertyEditForm: TParentForm},
   StickerPackEdit in '..\..\Forms\Guides\StickerPackEdit.pas' {StickerPackEditForm: TParentForm},
@@ -995,7 +994,8 @@ uses
   Report_MIProtocol in '..\..\Forms\Report\Report_MIProtocol.pas' {Report_MIProtocolForm: TParentForm},
   Report_MovementProtocol in '..\..\Forms\Report\Report_MovementProtocol.pas' {Report_MovementProtocolForm: TParentForm},
   Report_MovementProtocolDialog in '..\..\Forms\Report\Report_MovementProtocolDialog.pas' {Report_MovementProtocolDialogForm: TParentForm},
-  Sale_TransportJournal in '..\..\Forms\Document\Sale_TransportJournal.pas' {Sale_TransportJournalForm: TParentForm};
+  Sale_TransportJournal in '..\..\Forms\Document\Sale_TransportJournal.pas' {Sale_TransportJournalForm: TParentForm},
+  StickerFile in '..\..\Forms\Guides\StickerFile.pas' {StickerFileForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

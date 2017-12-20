@@ -88,6 +88,13 @@ object AssetForm: TAssetForm
         HeaderAlignmentVert = vaCenter
         Width = 66
       end
+      object FullName: TcxGridDBColumn
+        Caption = #1055#1086#1083#1085#1086#1077' '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+        DataBinding.FieldName = 'FullName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 111
+      end
       object AssetGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1099' '#1086#1089#1085#1086#1074#1085#1099#1093' '#1089#1088#1077#1076#1089#1090#1074
         DataBinding.FieldName = 'AssetGroupName'

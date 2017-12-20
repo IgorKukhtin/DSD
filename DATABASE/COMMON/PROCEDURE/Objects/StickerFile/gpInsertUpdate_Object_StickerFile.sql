@@ -2,6 +2,8 @@
 
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_StickerFile (Integer, Integer, TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_StickerFile (Integer, Integer, Integer, Integer, TVarChar, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_StickerFile (Integer, Integer, Integer, Integer, TVarChar, TVarChar
+                                                          , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_StickerFile(
    INOUT ioId                       Integer,     -- ид
@@ -10,6 +12,16 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_StickerFile(
       IN inTradeMarkId              Integer,     --
       IN inLanguageName             TVarChar,    --
       IN inComment                  TVarChar,    -- Примечание
+      IN inWidth1                   TFloat, 
+      IN inWidth2                   TFloat,
+      IN inWidth3                   TFloat,
+      IN inWidth4                   TFloat,
+      IN inWidth5                   TFloat,
+      IN inWidth6                   TFloat,
+      IN inWidth7                   TFloat,
+      IN inWidth8                   TFloat,
+      IN inWidth9                   TFloat,
+      IN inWidth10                  TFloat,
       IN inisDefault                Boolean ,    --
       IN inSession                  TVarChar     -- Пользователь
       )
@@ -54,6 +66,27 @@ BEGIN
     -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_StickerFile_TradeMark(), ioId, inTradeMarkId);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerFile_Width1(), ioId, inWidth1);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerFile_Width2(), ioId, inWidth2);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerFile_Width3(), ioId, inWidth3);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerFile_Width4(), ioId, inWidth4);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerFile_Width5(), ioId, inWidth5);
+      -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerFile_Width6(), ioId, inWidth6);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerFile_Width7(), ioId, inWidth7);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerFile_Width8(), ioId, inWidth8);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerFile_Width9(), ioId, inWidth9);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerFile_Width10(), ioId, inWidth10);
+   
 
    -- пытаемся найти "Способ изготовления продукта"
    -- если не находим записывае новый элемент в справочник
@@ -82,6 +115,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.12.17         *
  23.10.17         *
 */
 

@@ -304,7 +304,7 @@ inherited CheckJournalForm: TCheckJournalForm
             Width = 80
           end
           object GUID_PromoCode: TcxGridDBColumn
-            Caption = 'GUID ('#1055#1088#1086#1084#1086' '#1082#1086#1076')'
+            Caption = #1055#1088#1086#1084#1086' '#1082#1086#1076
             DataBinding.FieldName = 'GUID_PromoCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

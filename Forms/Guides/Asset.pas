@@ -64,6 +64,7 @@ type
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     Comment: TcxGridDBColumn;
+    FullName: TcxGridDBColumn;
   private
     { Private declarations }
   public

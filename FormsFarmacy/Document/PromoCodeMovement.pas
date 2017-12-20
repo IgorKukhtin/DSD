@@ -39,7 +39,6 @@ type
     spSelect_MovementItem_PromoCodeChild: TdsdStoredProc;
     cxSplitter1: TcxSplitter;
     dsdDBViewAddOn1: TdsdDBViewAddOn;
-    JuridicalCode: TcxGridDBColumn;
     IsErased: TcxGridDBColumn;
     spInsertUpdateMIChild: TdsdStoredProc;
     edStartPromo: TcxDateEdit;
