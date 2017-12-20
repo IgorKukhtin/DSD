@@ -181,7 +181,8 @@ begin
   Timer.Enabled:=False;
   Proccessing := True;
 
-  if (Hour>=0) and (Hour<7) then
+  if ((Hour>=0) and (Hour<7)) or (Hour>=23)
+  then
   begin
        AddToLog('..... Нет Загрузки .....');
        Proccessing := False;

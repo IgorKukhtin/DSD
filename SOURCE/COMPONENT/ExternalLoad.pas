@@ -413,6 +413,7 @@ var
   Excel, Sheet: Variant;
   Row, Col: Integer;
   X: Int64;
+  aaa:Integer;
 begin
   if CLSIDFromProgID(PChar(ExcelAppName), CLSID) = S_OK then
   begin
@@ -427,9 +428,26 @@ begin
 
       for Row := 1 to Sheet.UsedRange.Rows.Count do
         for Col := 1 to Sheet.UsedRange.Columns.Count do
-          if Sheet.Cells[Row, Col].NumberFormat = 'General' then
-            if TryStrToInt64(Sheet.Cells[Row, Col], X) then
-              Sheet.Cells[Row, Col].NumberFormat := 0;
+
+          if (AnsiUpperCase(Sheet.Cells[Row, Col].NumberFormat) = AnsiUpperCase('General')) then
+            if TryStrToInt64(Sheet.Cells[Row, Col], X)
+            then // ÏÐÅÎÁÐÀÇÓÅÌ - Òîëüêî åñëè òàì Øòðèõ-êîä
+                 if X > 12345678901 then
+                 begin
+                    Sheet.Cells[Row, Col].NumberFormat := 0;
+                    //Sheet.Cells[Row, Col].Value := X;
+                 end
+                 else
+            else
+          else
+              if (AnsiUpperCase(Sheet.Cells[Row, Col].NumberFormat) = AnsiUpperCase('Îñíîâíîé')) then
+                if TryStrToInt64(Sheet.Cells[Row, Col], X)
+                then // ÏÐÅÎÁÐÀÇÓÅÌ - Òîëüêî åñëè òàì Øòðèõ-êîä
+                     if X > 12345678901 then
+                     begin
+                       Sheet.Cells[Row, Col].NumberFormat := 0;
+                       //Sheet.Cells[Row, Col].Value := X;
+                     end;
 
       Excel.WorkBooks[1].Save;
     finally
@@ -717,7 +735,7 @@ end;
 
 { TExecuteImportSettings }
 
-class procedure TExecuteImportSettings.Execute(ImportSettings: TImportSettings; ExternalParams: TdsdParams = nil);
+ class procedure TExecuteImportSettings.Execute(ImportSettings: TImportSettings; ExternalParams: TdsdParams = nil);
 var iFilesCount: Integer;
     saFound: TStrings;
     i: integer;
