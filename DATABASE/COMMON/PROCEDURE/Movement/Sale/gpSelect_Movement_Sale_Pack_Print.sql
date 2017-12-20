@@ -72,6 +72,7 @@ BEGIN
                                              , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
                                              , Object_GoodsPropertyValue.ValueData  AS Name
                                              , ObjectString_BarCode.ValueData       AS BarCode
+                                             , ObjectString_BarCodeGLN.ValueData    AS BarCodeGLN
                                              , ObjectString_Article.ValueData       AS Article
                                         FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
                                              ) AS tmpGoodsProperty
@@ -83,6 +84,9 @@ BEGIN
                                              LEFT JOIN ObjectString AS ObjectString_BarCode
                                                                     ON ObjectString_BarCode.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                                                    AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
+                                             LEFT JOIN ObjectString AS ObjectString_BarCodeGLN
+                                                                    ON ObjectString_BarCodeGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                   AND ObjectString_BarCodeGLN.DescId = zc_ObjectString_GoodsPropertyValue_BarCodeGLN()
                                              LEFT JOIN ObjectString AS ObjectString_Article
                                                                     ON ObjectString_Article.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                                                    AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_Article()
@@ -98,6 +102,7 @@ BEGIN
                                                   , tmpObject_GoodsPropertyValue.Name
                                                   , tmpObject_GoodsPropertyValue.Article
                                                   , tmpObject_GoodsPropertyValue.BarCode
+                                                  , tmpObject_GoodsPropertyValue.BarCodeGLN
                                              FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE Article <> '' GROUP BY GoodsId
                                                   ) AS tmpGoodsProperty_find
                                                   LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
@@ -209,7 +214,10 @@ BEGIN
 
               -- Штрих-код GS1-128
            ,  -- 01 - EAN код товару на палеті - 14
-             ('01' || '0' || COALESCE (tmpObject_GoodsPropertyValue.BarCode, COALESCE (tmpObject_GoodsPropertyValueGroup.BarCode, ''))
+             ('01' || '0' || CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
+                                  THEN COALESCE (tmpObject_GoodsPropertyValue.BarCodeGLN, COALESCE (tmpObject_GoodsPropertyValueGroup.BarCodeGLN, ''))
+                                  ELSE COALESCE (tmpObject_GoodsPropertyValue.BarCode,    COALESCE (tmpObject_GoodsPropertyValueGroup.BarCode, ''))
+                             END
               -- 37 - Кількість коробів - 8
            || '37' || REPEAT ('0', 8 - LENGTH ((tmpMovementItem.BoxCount :: Integer) :: TVarChar)) || (tmpMovementItem.BoxCount :: Integer) :: TVarChar
               -- 3103 - Вага з Х знаків після коми - 6
@@ -231,7 +239,10 @@ BEGIN
 
               -- Штрих-код GS1-128
            ,  -- 01 - EAN код товару на палеті - 14
-             ('(01)' || '0' || COALESCE (tmpObject_GoodsPropertyValue.BarCode, COALESCE (tmpObject_GoodsPropertyValueGroup.BarCode, ''))
+             ('(01)' || '0' || CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
+                                    THEN COALESCE (tmpObject_GoodsPropertyValue.BarCodeGLN, COALESCE (tmpObject_GoodsPropertyValueGroup.BarCodeGLN, ''))
+                                    ELSE COALESCE (tmpObject_GoodsPropertyValue.BarCode,    COALESCE (tmpObject_GoodsPropertyValueGroup.BarCode, ''))
+                               END
               -- 37 - Кількість коробів - 8
            || '(37)' || REPEAT ('0', 8 - LENGTH ((tmpMovementItem.BoxCount :: Integer) :: TVarChar)) || (tmpMovementItem.BoxCount :: Integer) :: TVarChar
               -- 3103 - Вага з Х знаків після коми - 6

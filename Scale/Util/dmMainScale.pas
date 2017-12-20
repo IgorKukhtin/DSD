@@ -17,6 +17,8 @@ type
     function gpGet_ToolsWeighing_Value(inLevel1,inLevel2,inLevel3,inItemName,inDefaultValue:String):String;
     function gpGet_Scale_User:String;
     function gpGet_Scale_OperDate(var execParams:TParams):TDateTime;
+    // Scale
+    function gpSelect_Scale_StickerPack: TArrayList;
     // Scale + ScaleCeh
     function gpSelect_Scale_GoodsKindWeighing: TArrayList;
     function gpGet_Scale_Goods(var execParams:TParams;inBarCode:String): Boolean;
@@ -669,6 +671,34 @@ begin
     end;
 end;
 {------------------------------------------------------------------------}
+function TDMMainScaleForm.gpSelect_Scale_StickerPack: TArrayList;
+var i: integer;
+begin
+    with spSelect do
+    begin
+       StoredProcName:='gpSelect_Scale_StickerPack';
+       OutputType:=otDataSet;
+       Params.Clear;
+       //try
+         Execute;
+         DataSet.First;
+         SetLength(Result, DataSet.RecordCount);
+         for i:= 0 to DataSet.RecordCount-1 do
+         begin
+          Result[i].Number := DataSet.FieldByName('GroupId').asInteger;
+          Result[i].Id     := DataSet.FieldByName('StickerPackId').asInteger;
+          Result[i].Code   := DataSet.FieldByName('StickerPackCode').asInteger;
+          Result[i].Name   := DataSet.FieldByName('StickerPackName').asString;
+          Result[i].Value  := '';
+          DataSet.Next;
+         end;
+       {except
+         SetLength(Result, 0);
+         ShowMessage('Ошибка получения - gpSelect_Scale_GoodsKindWeighing');
+       end;}
+    end;
+end;
+{------------------------------------------------------------------------}
 function TDMMainScaleForm.gpGet_Scale_Goods(var execParams:TParams;inBarCode:String): Boolean;
 begin
     if (trim (inBarCode) = '') or (trim (inBarCode) = '0') then
@@ -1120,11 +1150,15 @@ begin
        StoredProcName:='gpExecSql_Value';
        OutputType:=otDataSet;
        Params.Clear;
-       Params.AddParam('inSqlText', ftString, ptInput, 'SELECT Object.ValueData FROM Object WHERE Object.Id = COALESCE((SELECT Object_Branch.Id FROM Object AS Object_Branch WHERE Object_Branch.ObjectCode = '+ IntToStr(inBranchCode) + ' AND Object_Branch.DescId = zc_Object_Branch()), zc_Branch_Basis())' );
+       if inBranchCode > 1000
+       then Params.AddParam('inSqlText', ftString, ptInput, 'SELECT Object.ValueData FROM Object WHERE Object.Id = COALESCE((SELECT Object_Branch.Id FROM Object AS Object_Branch WHERE Object_Branch.ObjectCode = '+ IntToStr(inBranchCode - 1000) + ' AND Object_Branch.DescId = zc_Object_Branch()), 0)' )
+       else Params.AddParam('inSqlText', ftString, ptInput, 'SELECT Object.ValueData FROM Object WHERE Object.Id = COALESCE((SELECT Object_Branch.Id FROM Object AS Object_Branch WHERE Object_Branch.ObjectCode = '+ IntToStr(inBranchCode) + ' AND Object_Branch.DescId = zc_Object_Branch()), zc_Branch_Basis())' );
        Execute;
-       if inBranchCode > 100
-       then Result:='('+IntToStr(inBranchCode)+')'+DataSet.FieldByName('Value').asString
-       else Result:='('+IntToStr(inBranchCode)+')'+DataSet.FieldByName('Value').asString;
+       if inBranchCode > 1000
+       then Result:='('+IntToStr(inBranchCode-1000)+')'+DataSet.FieldByName('Value').asString
+       else if inBranchCode > 100
+            then Result:='('+IntToStr(inBranchCode)+')'+DataSet.FieldByName('Value').asString
+            else Result:='('+IntToStr(inBranchCode)+')'+DataSet.FieldByName('Value').asString;
     end;
 end;
 {------------------------------------------------------------------------}
@@ -1265,7 +1299,7 @@ var
 begin
   Result:=false;
 
-  //!!!захардкодили т.к. это программа Scale!!!
+  //!!!захардкодили т.к. это программа Scale а в программе ScaleCeh он захардкожен как TRUE!!!
   SettingMain.isCeh:=FALSE;//AnsiUpperCase(ExtractFileName(ParamStr(0))) <> AnsiUpperCase('Scale.exe');
 
   //а теперь ини-файл
@@ -1286,7 +1320,13 @@ begin
   //
   SettingMain.BranchCode:=Ini.ReadInteger('Main','BranchCode',1);
   if SettingMain.BranchCode=1 then Ini.WriteInteger('Main','BranchCode',1);
-
+  //
+  //!!!определили ПОСЛЕ BranchCode!!! - Печать этикеток ли
+  if SettingMain.BranchCode > 1000
+  then SettingMain.isSticker:= TRUE
+  else SettingMain.isSticker:= FALSE;
+  //
+  //
   SettingMain.DefaultCOMPort:=Ini.ReadInteger('Main','DefaultCOMPort',1);
   if SettingMain.DefaultCOMPort=1 then Ini.WriteInteger('Main','DefaultCOMPort',1);
 

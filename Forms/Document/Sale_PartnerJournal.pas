@@ -183,6 +183,8 @@ type
     actPrint_Account_List: TdsdPrintAction;
     mactPrint_Account_List: TMultiAction;
     bbPrint_Account_List: TdxBarButton;
+    PersonalName: TcxGridDBColumn;
+    RouteGroupName: TcxGridDBColumn;
   private
     { Private declarations }
   public

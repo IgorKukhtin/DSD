@@ -210,6 +210,8 @@ type
     macInsert_LockUnique: TMultiAction;
     mactPrint_Sale_Total_List: TMultiAction;
     bbPrint_Sale_Total_List: TdxBarButton;
+    InvNumber_reestr: TcxGridDBColumn;
+    OperDate_reestr: TcxGridDBColumn;
   private
     { Private declarations }
   public
