@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_LoadPriceListItem(
     IN inLoadPriceListId Integer ,   --
     IN inSession         TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, CommonCode Integer, BarCode TVarChar, 
+RETURNS TABLE (Id Integer, CommonCode Integer, BarCode TVarChar, CodeUKTZED TVarChar,
                GoodsCode TVarChar, GoodsName TVarChar, GoodsNDS TVarChar, 
                GoodsId Integer, Code Integer, Name TVarChar, LoadPriceListId Integer, 
                Price TFloat, Remains TFloat, ProducerName TVarChar, ExpirationDate TDateTime)
@@ -24,6 +24,7 @@ BEGIN
          LoadPriceListItem.Id, 
          LoadPriceListItem.CommonCode, 
          LoadPriceListItem.BarCode, 
+         LoadPriceListItem.CodeUKTZED,
          LoadPriceListItem.GoodsCode, 
          LoadPriceListItem.GoodsName, 
          LoadPriceListItem.GoodsNDS, 
@@ -36,7 +37,7 @@ BEGIN
          LoadPriceListItem.ProducerName, 
          LoadPriceListItem.ExpirationDate 
        FROM LoadPriceListItem 
-  LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = LoadPriceListItem.GoodsId
+            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = LoadPriceListItem.GoodsId
       WHERE LoadPriceListItem.LoadPriceListId = inLoadPriceListId;
 
 END;
@@ -48,6 +49,7 @@ ALTER FUNCTION gpSelect_Movement_LoadPriceListItem (Integer, TVarChar) OWNER TO 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.12.17         * LoadPriceListItem.CodeUKTZED
  17.10.14                        *                                 
  01.07.14                        *                                 
 
