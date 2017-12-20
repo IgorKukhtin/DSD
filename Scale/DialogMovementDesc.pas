@@ -77,6 +77,67 @@ uses dmMainScale,GuidePartner;
 {------------------------------------------------------------------------}
 function TDialogMovementDescForm.Execute(BarCode: String): Boolean; //Проверка корректного ввода в Edit
 begin
+     // Для Sticker + сразу ВЫХОД
+     if (SettingMain.isSticker = TRUE) and (BarCode = '') then
+     begin
+           CDS.Locate('Number',GetArrayList_Value_byName(Default_Array,'MovementNumber'),[]);
+
+           ParamsMovement.ParamByName('OrderExternalId').AsInteger        := 0;
+           ParamsMovement.ParamByName('OrderExternal_DescId').AsInteger   := 0;
+           ParamsMovement.ParamByName('OrderExternal_BarCode').asString   := '';
+           ParamsMovement.ParamByName('OrderExternal_InvNumber').asString := '';
+           ParamsMovement.ParamByName('OrderExternalName_master').asString:= '';
+
+           //
+           ParamsMovement.ParamByName('ColorGridValue').AsInteger          := CDS.FieldByName('ColorGridValue').asInteger;
+           ParamsMovement.ParamByName('MovementDescNumber').AsInteger      := CDS.FieldByName('Number').asInteger;
+           ParamsMovement.ParamByName('MovementDescId').AsInteger          := CDS.FieldByName('MovementDescId').asInteger;
+           ParamsMovement.ParamByName('MovementDescName_master').asString  := CDS.FieldByName('MovementDescName_master').asString;
+           ParamsMovement.ParamByName('GoodsKindWeighingGroupId').asInteger:= CDS.FieldByName('GoodsKindWeighingGroupId').asInteger;
+           ParamsMovement.ParamByName('DocumentKindId').asInteger          := CDS.FieldByName('DocumentKindId').asInteger;
+           ParamsMovement.ParamByName('DocumentKindName').asString         := CDS.FieldByName('DocumentKindName').asString;
+           ParamsMovement.ParamByName('isSendOnPriceIn').asBoolean         := CDS.FieldByName('isSendOnPriceIn').asBoolean;
+           ParamsMovement.ParamByName('isPartionGoodsDate').asBoolean      := CDS.FieldByName('isPartionGoodsDate').asBoolean;
+           ParamsMovement.ParamByName('isStorageLine').asBoolean           := CDS.FieldByName('isStorageLine').asBoolean;
+           ParamsMovement.ParamByName('isTransport_link').asBoolean        := CDS.FieldByName('isTransport_link').asBoolean;
+           ParamsMovement.ParamByName('isLockStartWeighing').asBoolean     := CDS.FieldByName('isLockStartWeighing').asBoolean;
+
+           ParamsMovement.ParamByName('FromId').AsInteger           := CDS.FieldByName('FromId').asInteger;
+           ParamsMovement.ParamByName('FromCode').asString          := CDS.FieldByName('FromCode').asString;
+           ParamsMovement.ParamByName('FromName').asString          := CDS.FieldByName('FromName').asString;
+           ParamsMovement.ParamByName('ToId').AsInteger             := CDS.FieldByName('ToId').asInteger;
+           ParamsMovement.ParamByName('ToCode').AsInteger           := CDS.FieldByName('ToCode').asInteger;
+           ParamsMovement.ParamByName('ToName').asString            := CDS.FieldByName('ToName').asString;
+           ParamsMovement.ParamByName('PriceListId').AsInteger      := CDS.FieldByName('PriceListId').asInteger;
+           ParamsMovement.ParamByName('PriceListCode').AsInteger    := CDS.FieldByName('PriceListCode').asInteger;
+           ParamsMovement.ParamByName('PriceListName').asString     := CDS.FieldByName('PriceListName').asString;
+           ParamsMovement.ParamByName('calcPartnerId').asInteger    := 0;
+           ParamsMovement.ParamByName('calcPartnerCode').asInteger  := 0;
+           ParamsMovement.ParamByName('calcPartnerName').asString   := '';
+           ParamsMovement.ParamByName('ChangePercent').asFloat      := 0;
+           ParamsMovement.ParamByName('ChangePercentAmount').asFloat:= 0;
+           ParamsMovement.ParamByName('isEdiOrdspr').asBoolean      := FALSE;
+           ParamsMovement.ParamByName('isEdiInvoice').asBoolean     := FALSE;
+           ParamsMovement.ParamByName('isEdiDesadv').asBoolean      := FALSE;
+           ParamsMovement.ParamByName('ContractId').AsInteger       := 0;
+           ParamsMovement.ParamByName('ContractCode').AsInteger     := 0;
+           ParamsMovement.ParamByName('ContractNumber').asString    := '';
+           ParamsMovement.ParamByName('ContractTagName').asString   := '';
+           ParamsMovement.ParamByName('PaidKindId').AsInteger       := 0;
+           ParamsMovement.ParamByName('PaidKindName').asString      := '';
+
+           ParamsMovement.ParamByName('InfoMoneyId').AsInteger      := CDS.FieldByName('InfoMoneyId').asInteger;
+           ParamsMovement.ParamByName('InfoMoneyCode').AsInteger    := CDS.FieldByName('InfoMoneyCode').asInteger;
+           ParamsMovement.ParamByName('InfoMoneyName').asString     := CDS.FieldByName('InfoMoneyName').asString;
+           ParamsMovement.ParamByName('GoodsPropertyId').AsInteger  := 0;
+           ParamsMovement.ParamByName('GoodsPropertyCode').AsInteger:= 0;
+           ParamsMovement.ParamByName('GoodsPropertyName').asString := '';
+
+           Result:= true;
+           exit;
+     end;
+     //
+     //
      isUpdateUnit:= BarCode = 'isUpdateUnit';
      //
      CopyValuesParamsFrom(ParamsMovement,ParamsMovement_local);
@@ -259,6 +320,7 @@ begin
         )
        and(ParamsMovement_local.ParamByName('PaidKindId').AsInteger<>CDS.FieldByName('PaidKindId').asInteger)
        and(ParamsMovement_local.ParamByName('PaidKindId').AsInteger>0)
+       and((CDS.FieldByName('PaidKindId').asInteger > 0) or (SettingMain.isSticker = FALSE))
      then begin
                ShowMessage('Ошибка.Выберите значение <Форма оплаты> = <'+ParamsMovement_local.ParamByName('PaidKindName').asString+'>.');
                if(Length(trim(EditBarCode.Text))=1)or(Length(trim(EditBarCode.Text))=2)
@@ -688,6 +750,7 @@ begin
        and(ParamsMovement_local.ParamByName('MovementDescId').AsInteger<>zc_Movement_Loss)
        and(ParamsMovement_local.ParamByName('MovementDescId').AsInteger<>zc_Movement_SendOnPrice)
        and(ParamsMovement_local.ParamByName('MovementDescId').AsInteger<>zc_Movement_Send)
+       and((CDS.FieldByName('PaidKindId').asInteger > 0) or (SettingMain.isSticker = FALSE))
      then begin
                ParamsMovement_local.ParamByName('calcPartnerId').AsInteger:=0;
                ShowMessage('Ошибка.У контрагента не определено значение <Форма оплаты>.');

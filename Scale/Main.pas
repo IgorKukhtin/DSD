@@ -287,7 +287,9 @@ var
 
 implementation
 {$R *.dfm}
-uses UnilWin,DMMainScale, UtilConst, DialogMovementDesc, GuideGoods,GuideGoodsPartner,GuideGoodsMovement,GuideMovement,GuideMovementTransport, GuidePartner
+uses UnilWin,DMMainScale, UtilConst, DialogMovementDesc
+    ,GuideGoods,GuideGoodsPartner,GuideGoodsSticker
+    ,GuideGoodsMovement,GuideMovement,GuideMovementTransport, GuidePartner
     ,UtilPrint,DialogNumberValue,DialogStringValue,DialogPersonalComplete,DialogPrint,GuidePersonal
     ,IdIPWatch, LookAndFillSettings;
 //------------------------------------------------------------------------------------------------
@@ -720,6 +722,19 @@ begin
      // доопределили параметр
      ParamsMI.ParamByName('PartionGoods').AsString:=trim(EditPartionGoods.Text);
      //
+     //GuideGoodsMovementForm
+     if SettingMain.isSticker = TRUE
+     then
+         // ƒиалог дл€ параметров товара - Sticker
+         if GuideGoodsStickerForm.Execute (ParamsMovement, isModeSave) = TRUE
+         then begin
+                    Result:=true;
+                    RefreshDataSet;
+                    WriteParamsMovement;
+              end
+         else
+     else
+     //GuideGoodsMovementForm
      if ParamsMovement.ParamByName('OrderExternalId').AsInteger<>0
      then
          // ƒиалог дл€ параметров товара из списка за€вки + в нем сохранение MovementItem
@@ -1189,7 +1204,9 @@ begin
   TimerProtocol_isProcess.Enabled:= TRUE;
 
   SettingMain.BranchName:=DMMainScaleForm.lpGet_BranchName(SettingMain.BranchCode);
-  Caption:='Ёкспедици€ ('+GetFileVersionString(ParamStr(0))+') - <'+SettingMain.BranchName+'>' + ' : <'+DMMainScaleForm.gpGet_Scale_User+'>';
+  if SettingMain.isSticker = TRUE
+  then Caption:='ѕечать этикеток (' + GetFileVersionString(ParamStr(0))+') - <'+SettingMain.BranchName+'>' + ' : <'+DMMainScaleForm.gpGet_Scale_User+'>'
+  else Caption:='Ёкспедици€ ('      + GetFileVersionString(ParamStr(0))+') - <'+SettingMain.BranchName+'>' + ' : <'+DMMainScaleForm.gpGet_Scale_User+'>';
   //global Initialize
   gpInitialize_Const;
   //global Initialize Array
@@ -1202,6 +1219,7 @@ begin
   TareWeight_Array:=    DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'TareWeight');
   ChangePercentAmount_Array:= DMMainScaleForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'ChangePercentAmount');
   GoodsKind_Array:=     DMMainScaleForm.gpSelect_Scale_GoodsKindWeighing;
+  if SettingMain.isSticker = TRUE then StickerPack_Array:=   DMMainScaleForm.gpSelect_Scale_StickerPack;
   //global Initialize
   Create_ParamsMI(ParamsMI);
   //global Initialize

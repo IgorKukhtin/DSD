@@ -33,7 +33,7 @@ uses
   AncestorDialogScale in '..\Scale\Ancestor\AncestorDialogScale.pas' {AncestorDialogScaleForm},
   UtilScale in '..\Scale\Util\UtilScale.pas',
   dmMainScale in '..\Scale\Util\dmMainScale.pas' {DMMainScaleForm: TDataModule},
-  GuideGoods in '..\Scale\GuideGoods.pas' {GuideGoodsForm},
+  GuideGoodsSticker in '..\Scale\GuideGoodsSticker.pas' {GuideGoodsStickerForm},
   VKDBFDataSet in '..\SOURCE\DBF\VKDBFDataSet.pas',
   VKDBFPrx in '..\SOURCE\DBF\VKDBFPrx.pas',
   VKDBFUtil in '..\SOURCE\DBF\VKDBFUtil.pas',
@@ -85,7 +85,8 @@ uses
   GuideGoodsPartner in '..\Scale\GuideGoodsPartner.pas' {GuideGoodsPartnerForm},
   IFIN_J1201009 in '..\SOURCE\MeDOC\IFIN_J1201009.pas',
   IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas',
-  LookAndFillSettings in '..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm};
+  LookAndFillSettings in '..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm},
+  GuideGoods in '..\Scale\GuideGoods.pas' {GuideGoodsForm};
 
 {$R *.res}
 
@@ -107,14 +108,21 @@ begin
          if gpCheck_BranchCode = FALSE then exit;
          //
          Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
-  // !!!важно первым!!!
-  Application.CreateForm(TMainForm, MainForm);
+         Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
+         //
+         // !!!важно первым!!!
+         Application.CreateForm(TMainForm, MainForm);
+         //
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
-         Application.CreateForm(TGuideGoodsForm, GuideGoodsForm);
-         Application.CreateForm(TGuideGoodsMovementForm, GuideGoodsMovementForm);
-         Application.CreateForm(TGuideGoodsPartnerForm, GuideGoodsPartnerForm);
-         Application.CreateForm(TGuidePartnerForm, GuidePartnerForm);
+         if SettingMain.isSticker = TRUE
+         then
+             Application.CreateForm(TGuideGoodsStickerForm, GuideGoodsStickerForm)
+         else begin
+             Application.CreateForm(TGuideGoodsForm, GuideGoodsForm);
+             Application.CreateForm(TGuideGoodsMovementForm, GuideGoodsMovementForm);
+             Application.CreateForm(TGuideGoodsPartnerForm, GuideGoodsPartnerForm);
+             Application.CreateForm(TGuidePartnerForm, GuidePartnerForm);
+         end;
          Application.CreateForm(TUtilPrintForm, UtilPrintForm);
          Application.CreateForm(TGuideMovementForm, GuideMovementForm);
          Application.CreateForm(TGuideMovementTransportForm, GuideMovementTransportForm);
@@ -141,13 +149,20 @@ begin
          //
          Application.CreateForm(TdmMain, dmMain);
          Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
-  // !!!важно первым!!!
-  Application.CreateForm(TMainForm, MainForm);
+         //
+         // !!!важно первым!!!
+         Application.CreateForm(TMainForm, MainForm);
+         //
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
-         Application.CreateForm(TGuideGoodsForm, GuideGoodsForm);
-         Application.CreateForm(TGuideGoodsMovementForm, GuideGoodsMovementForm);
-         Application.CreateForm(TGuideGoodsPartnerForm, GuideGoodsPartnerForm);
-         Application.CreateForm(TGuidePartnerForm, GuidePartnerForm);
+         if SettingMain.isSticker = TRUE
+         then
+             Application.CreateForm(TGuideGoodsStickerForm, GuideGoodsStickerForm)
+         else begin
+             Application.CreateForm(TGuideGoodsForm, GuideGoodsForm);
+             Application.CreateForm(TGuideGoodsMovementForm, GuideGoodsMovementForm);
+             Application.CreateForm(TGuideGoodsPartnerForm, GuideGoodsPartnerForm);
+             Application.CreateForm(TGuidePartnerForm, GuidePartnerForm);
+         end;
          Application.CreateForm(TUtilPrintForm, UtilPrintForm);
          Application.CreateForm(TGuideMovementForm, GuideMovementForm);
          Application.CreateForm(TGuideMovementTransportForm, GuideMovementTransportForm);

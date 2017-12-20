@@ -1623,12 +1623,12 @@ begin
         exit;
       end;
       //
-      if  (Self.FormParams.ParamByName('InvNumberSP').Value <> '')
+      {if  (Self.FormParams.ParamByName('InvNumberSP').Value <> '')
        and(CheckCDS.RecordCount >= 1)
       then begin
         ShowMessage('Ошибка.В чеке для Соц.проекта уже есть <'+IntToStr(CheckCDS.RecordCount)+'> Товар.Запрещено больше чем <1>.');
         exit;
-      end;
+      end;}
   end;
   //
   // потому что криво, надо правильно определить ТОВАР + цена БЕЗ скидки

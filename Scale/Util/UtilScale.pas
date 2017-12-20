@@ -7,6 +7,7 @@ uses
 
 const
     fmtWeight:String = ',0.#### кг.';
+    lStickerPackGroupId:Integer = 1;
 type
 
   TDBObject = record
@@ -36,6 +37,7 @@ type
   TArrayListScale = array of TListItemScale;
 
   TSettingMain = record
+    isSticker:Boolean;          // Scale
     isCeh:Boolean;          // ScaleCeh or Scale
     isGoodsComplete:Boolean;// ScaleCeh or Scale - склад ГП/производство/упаковка or обвалка
     WeightSkewer1:Double;   // only ScaleCeh
@@ -100,6 +102,7 @@ var
   Default_Array       :TArrayList;
   Service_Array       :TArrayList;
 
+  StickerPack_Array   :TArrayList;
   GoodsKind_Array     :TArrayList;
   TareCount_Array     :TArrayList;
   TareWeight_Array    :TArrayList;
@@ -743,7 +746,9 @@ end;
 function gpCheck_BranchCode: Boolean;
 begin
     Result:=((SettingMain.isCeh = FALSE) and ((SettingMain.BranchCode = 201) or (SettingMain.BranchCode = 301) or (SettingMain.BranchCode < 100)))
-          or((SettingMain.isCeh = TRUE) and ((SettingMain.BranchCode = 1) or (SettingMain.BranchCode > 100)));
+          or((SettingMain.isCeh = TRUE) and ((SettingMain.BranchCode = 1) or ((SettingMain.BranchCode > 100) and (SettingMain.BranchCode < 1000))))
+          or((SettingMain.isSticker = TRUE) and (SettingMain.BranchCode > 1000))
+          ;
     //
     if not Result
     then ShowMessage('Ошибка.Запуск программы для филиала <'+IntToStr(SettingMain.BranchCode)+'> не предусмотрен.');

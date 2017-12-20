@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
 
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
              , VATPercent TFloat, ChangePercent TFloat
-             , TotalCount TFloat, TotalCountPartner TFloat
+             , TotalCount TFloat, TotalCountPartner TFloat, TotalCountTare TFloat, TotalCountSh TFloat, TotalCountKg TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat
              , TotalSummPVAT TFloat, TotalSummChange TFloat, TotalSumm TFloat
 
@@ -30,14 +30,14 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , PartnerName_order TVarChar
 
              , MovementId_Transport Integer, InvNumber_Transport TVarChar
-             , OperDate_Transport TDateTime, InvNumber_Transport_Full TVarChar
+             , OperDate_Transport TDateTime
              , CarName TVarChar, CarModelName TVarChar, PersonalDriverName TVarChar
              , InsertDate TDateTime
              , isPrinted Boolean
              , Comment TVarChar
              , ReestrKindId Integer, ReestrKindName TVarChar
-             , InvNumber_Transport_reestr TVarChar
-             , OperDate_Transport_reestr TDateTime
+             , InvNumber_reestr TVarChar
+             , OperDate_reestr TDateTime
               )
 AS
 $BODY$
@@ -101,6 +101,9 @@ BEGIN
            , MovementFloat_ChangePercent.ValueData          AS ChangePercent
            , MovementFloat_TotalCount.ValueData             AS TotalCount
            , MovementFloat_TotalCountPartner.ValueData      AS TotalCountPartner
+           , MovementFloat_TotalCountTare.ValueData         AS TotalCountTare
+           , MovementFloat_TotalCountSh.ValueData           AS TotalCountSh
+           , MovementFloat_TotalCountKg.ValueData           AS TotalCountKg
 
            , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
            , MovementFloat_TotalSummMVAT.ValueData          AS TotalSummMVAT
@@ -127,10 +130,9 @@ BEGIN
            , Object_Retail_order.ValueData                  AS RetailName_order
            , Object_Partner_order.ValueData                 AS PartnerName_order
 
-           , Movement_Transport.Id                     AS MovementId_Transport
-           , Movement_Transport.InvNumber              AS InvNumber_Transport
-           , Movement_Transport.OperDate               AS OperDate_Transport
-           , ('№ ' || Movement_Transport.InvNumber || ' от ' || Movement_Transport.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Transport_Full
+           , Movement_Transport_Reestr.Id                     AS MovementId_Transport
+           , Movement_Transport_Reestr.InvNumber              AS InvNumber_Transport
+           , Movement_Transport_Reestr.OperDate               AS OperDate_Transport
            , Object_Car.ValueData                      AS CarName
            , Object_CarModel.ValueData                 AS CarModelName
            , Object_PersonalDriver.ValueData           AS PersonalDriverName
@@ -142,8 +144,9 @@ BEGIN
            , Object_ReestrKind.Id             	       AS ReestrKindId
            , Object_ReestrKind.ValueData       	       AS ReestrKindName
 
-           , Movement_Transport_Reestr.InvNumber       AS InvNumber_Transport_Reestr
-           , Movement_Transport_Reestr.OperDate        AS OperDate_Transport_Reestr
+           , Movement_Reestr.InvNumber       AS InvNumber_Reestr
+           , Movement_Reestr.OperDate        AS OperDate_Reestr
+           
 
        FROM (SELECT Movement.Id
                   , tmpRoleAccessKey.AccessKeyId
@@ -202,6 +205,15 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountPartner
                                     ON MovementFloat_TotalCountPartner.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCountPartner.DescId = zc_MovementFloat_TotalCountPartner()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountTare
+                                    ON MovementFloat_TotalCountTare.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalCountTare.DescId = zc_MovementFloat_TotalCountTare()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountSh
+                                    ON MovementFloat_TotalCountSh.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalCountSh.DescId = zc_MovementFloat_TotalCountSh()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
+                                    ON MovementFloat_TotalCountKg.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
                                     ON MovementFloat_TotalSummMVAT.MovementId =  Movement.Id
@@ -249,11 +261,6 @@ BEGIN
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
             LEFT JOIN tmpContract_InvNumber ON tmpContract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
             
-            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
-                                           ON MovementLinkMovement_Transport.MovementId = Movement.Id
-                                          AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
-            LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = MovementLinkMovement_Transport.MovementChildId
-
             LEFT JOIN MovementLinkObject AS MovementLinkObject_ReestrKind
                                          ON MovementLinkObject_ReestrKind.MovementId = Movement.Id
                                         AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
@@ -308,7 +315,7 @@ BEGIN
                                           AND MILO_Car.DescId         = zc_MILinkObject_Car()
 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
-                                       ON MovementLinkObject_Car.MovementId = COALESCE (Movement_Transport.Id, Movement_Transport_Reestr.Id)
+                                       ON MovementLinkObject_Car.MovementId = Movement_Transport_Reestr.Id
                                        --ON MovementLinkObject_Car.MovementId = Movement_Transport.Id
                                       AND MovementLinkObject_Car.DescId     = zc_MovementLinkObject_Car()
           -- LEFT JOIN Object AS Object_Car ON Object_Car.Id = COALESCE (MovementLinkObject_Car.ObjectId, MILO_Car.ObjectId)
@@ -319,7 +326,7 @@ BEGIN
           LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
-                                       ON MovementLinkObject_PersonalDriver.MovementId = COALESCE (Movement_Transport.Id, Movement_Transport_Reestr.Id)
+                                       ON MovementLinkObject_PersonalDriver.MovementId = Movement_Transport_Reestr.Id
                                       -- ON MovementLinkObject_PersonalDriver.MovementId = Movement_Transport.Id
                                       AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
            LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = COALESCE (MovementLinkObject_PersonalDriver.ObjectId, MI_TransportService.ObjectId)
@@ -339,4 +346,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale_Transport (instartdate := ('01.09.2016')::TDateTime , inenddate := ('30.09.2016')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inSession := '5'::tvarchar);
+-- SELECT * FROM gpSelect_Movement_Sale_Transport (instartdate := ('01.09.2016')::TDateTime , inenddate := ('01.09.2016')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inSession := '5'::tvarchar);

@@ -60,7 +60,9 @@ BEGIN
      IF COALESCE (inMovementId, 0) = 0
      THEN inMovementId:= lpInsertUpdate_Movement_TransportGoods (ioId              := inMovementId
                                                                , inInvNumber       := NEXTVAL ('Movement_TransportGoods_seq') :: TVarChar
-                                                               , inOperDate        := inOperDate
+                                                               , inOperDate        := COALESCE ((SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId_Sale AND MD.DescId = zc_MovementDate_OperDatePartner())
+                                                                                    , COALESCE ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId_Sale)
+                                                                                    , inOperDate))
                                                                , inMovementId_Sale := inMovementId_Sale
                                                                , inInvNumberMark   := NULL
                                                                , inCarId           := CASE WHEN COALESCE (tmpBranch.CarId,0) <> 0 THEN tmpBranch.CarId

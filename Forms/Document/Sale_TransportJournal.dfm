@@ -5,8 +5,10 @@ inherited Sale_TransportJournalForm: TSale_TransportJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -404
+  ExplicitTop = -113
   ExplicitWidth = 1193
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -80,6 +82,21 @@ inherited Sale_TransportJournalForm: TSale_TransportJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummChange
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalCountTare
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalCountSh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalCountKg
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -137,6 +154,21 @@ inherited Sale_TransportJournalForm: TSale_TransportJournalForm
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = ToName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalCountTare
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalCountSh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalCountKg
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -201,6 +233,7 @@ inherited Sale_TransportJournalForm: TSale_TransportJournalForm
             DataBinding.FieldName = 'InvNumber_Transport'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1056#1077#1077#1089#1090#1088#1072
             Options.Editing = False
             Width = 61
           end
@@ -210,6 +243,7 @@ inherited Sale_TransportJournalForm: TSale_TransportJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1056#1077#1077#1089#1090#1088#1072
             Options.Editing = False
             Width = 70
           end
@@ -218,6 +252,7 @@ inherited Sale_TransportJournalForm: TSale_TransportJournalForm
             DataBinding.FieldName = 'CarModelName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1056#1077#1077#1089#1090#1088#1072
             Options.Editing = False
             Width = 89
           end
@@ -226,6 +261,7 @@ inherited Sale_TransportJournalForm: TSale_TransportJournalForm
             DataBinding.FieldName = 'CarName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1056#1077#1077#1089#1090#1088#1072
             Options.Editing = False
             Width = 80
           end
@@ -234,6 +270,7 @@ inherited Sale_TransportJournalForm: TSale_TransportJournalForm
             DataBinding.FieldName = 'PersonalDriverName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1056#1077#1077#1089#1090#1088#1072
             Options.Editing = False
             Width = 70
           end
@@ -278,6 +315,38 @@ inherited Sale_TransportJournalForm: TSale_TransportJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object TotalCountTare: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1090#1072#1088#1099' ('#1091' '#1087#1086#1082#1091#1087'.)'
+            DataBinding.FieldName = 'TotalCountTare'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object TotalCountSh: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090'. ('#1091' '#1087#1086#1082#1091#1087'.)'
+            DataBinding.FieldName = 'TotalCountSh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object TotalCountKg: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1077#1089' ('#1091' '#1087#1086#1082#1091#1087'.)'
+            DataBinding.FieldName = 'TotalCountKg'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object TotalSummChange: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' (-)'#1089#1082'.(+)'#1085#1072#1094
@@ -390,7 +459,7 @@ inherited Sale_TransportJournalForm: TSale_TransportJournalForm
             Width = 60
           end
           object PersonalName: TcxGridDBColumn
-            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
+            Caption = #1069#1082#1089#1087#1077#1076#1080#1090#1086#1088' ('#1079#1072#1103#1074#1082#1072')'
             DataBinding.FieldName = 'PersonalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -410,6 +479,20 @@ inherited Sale_TransportJournalForm: TSale_TransportJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object InvNumber_reestr: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1088#1077#1077#1089#1090#1088
+            DataBinding.FieldName = 'InvNumber_reestr'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object OperDate_reestr: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1088#1077#1077#1089#1090#1088
+            DataBinding.FieldName = 'OperDate_reestr'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076#1072#1085#1080#1077' '#1101#1082#1089#1087'.)'
@@ -2777,31 +2860,7 @@ inherited Sale_TransportJournalForm: TSale_TransportJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbMovementCheck'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbactChecked'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbElectron'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbactOpenReport'
         end
         item
           Visible = True
@@ -2857,22 +2916,6 @@ inherited Sale_TransportJournalForm: TSale_TransportJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint_Invoice'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Spec'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Pack'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbPrint_Pack21'
         end
         item
@@ -2909,14 +2952,6 @@ inherited Sale_TransportJournalForm: TSale_TransportJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrintReturnInDay'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -2926,30 +2961,6 @@ inherited Sale_TransportJournalForm: TSale_TransportJournalForm
         item
           Visible = True
           ItemName = 'dxBarButton1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInvoice'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOrdSpr'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbDesadv'
         end
         item
           Visible = True
