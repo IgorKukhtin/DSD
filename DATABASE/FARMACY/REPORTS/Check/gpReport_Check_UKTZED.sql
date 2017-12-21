@@ -136,7 +136,7 @@ BEGIN
   -- находим CodeUKTZED из партии прихода, если значение пустое берем из свойства товара
   , tmpData AS (SELECT tmpData_all.MovementId_Check            AS MovementId_Check
                      , tmpData_all.isSp_Check
-                     , COALESCE (MIString_UKTZED.ValueData, tmpGoods_UKTZED.CodeUKTZED)  AS CodeUKTZED
+                     , COALESCE (MIString_FEA.ValueData, tmpGoods_UKTZED.CodeUKTZED)  AS CodeUKTZED
 
                      , tmpData_all.UnitId
                      , tmpData_all.GoodsId
@@ -144,16 +144,16 @@ BEGIN
                      , tmpData_all.Amount    AS Amount
                      , tmpData_all.SummaSale AS SummaSale
                 FROM tmpData_all
-                     LEFT JOIN MovementItemString AS MIString_UKTZED
-                                                  ON MIString_UKTZED.MovementItemId = tmpData_all.MovementItemId
-                                                 AND MIString_UKTZED.DescId = zc_MIString_UKTZED()
-                                                 AND MIString_UKTZED.ValueData <> ''
+                     LEFT JOIN MovementItemString AS MIString_FEA
+                                                  ON MIString_FEA.MovementItemId = tmpData_all.MovementItemId
+                                                 AND MIString_FEA.DescId = zc_MIString_FEA()
+                                                 AND MIString_FEA.ValueData <> ''
                      -- Поставшик, для элемента прихода от поставщика (или NULL)
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_From_Income
                                                   ON MovementLinkObject_From_Income.MovementId = tmpData_all.MovementId
                                                  AND MovementLinkObject_From_Income.DescId     = zc_MovementLinkObject_From()
                                 
-                     -- если MIString_UKTZED пустое берем из свойства товара
+                     -- если MIString_FEA пустое берем из свойства товара
                      LEFT JOIN tmpGoods_UKTZED ON tmpGoods_UKTZED.GoodsId     = tmpData_all.GoodsId
                                               AND tmpGoods_UKTZED.JuridicalId = MovementLinkObject_From_Income.ObjectId
 --and 1=0

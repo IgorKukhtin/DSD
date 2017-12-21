@@ -56,4 +56,4 @@ ALTER FUNCTION gpSelect_Movement_LoadPriceListItem (Integer, TVarChar) OWNER TO 
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_PriceList (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inSession:= '2')
+--  select * from gpSelect_Movement_LoadPriceListItem(inLoadPriceListId := 14774 ,  inSession := '3');

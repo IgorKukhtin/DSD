@@ -1,11 +1,9 @@
 -- Function: gpInsertUpdate_MovementItem_Income_Load ()
 
-/*DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income_Load (Integer, TVarChar, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TVarChar, TDateTime
-                                                               , Boolean, TFloat, TVarChar, TVarChar, TVarChar,TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TVarChar);*/
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income_Load (Integer, Integer, TVarChar, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TVarChar, TDateTime
-                                                               , Boolean, TFloat, TVarChar, TVarChar, TVarChar,TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income_Load (Integer, Integer, TVarChar, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TVarChar, TDateTime
                                                                , Boolean, TFloat, TVarChar, TVarChar, TVarChar,TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income_Load (Integer, Integer, TVarChar, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TVarChar, TDateTime
+                                                               , Boolean, TFloat, TVarChar, TVarChar, TVarChar,TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TVarChar);
                                                                
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income_Load(
     IN inJuridicalId_from    Integer   , -- Юридические лица - Поставщик
@@ -31,9 +29,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income_Load(
     IN inSertificatNumber    TVarChar  , -- Номер регистрации
     IN inSertificatStart     TDateTime , -- Дата начала регистрации
     IN inSertificatEnd       TDateTime , -- Дата окончания регистрации
-    
     IN inisLastRecord        Boolean   ,
-    IN inCodeUKTZED          TVarChar  , 
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID AS
@@ -429,12 +425,6 @@ BEGIN
         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_SertificatEnd(), vbMovementItemId, inSertificatEnd);
      END IF;
      
-     -- Если есть Код товару згідно з УКТ ЗЕД 
-     IF inCodeUKTZED <> '' THEN 
-        -- сохранили свойство <Код товару згідно з УКТ ЗЕД  >
-        PERFORM lpInsertUpdate_MovementItemString (zc_MIString_UKTZED(), vbMovementItemId, inCodeUKTZED);
-     END IF;
-
      IF inisLastRecord THEN
         -- пересчитали Итоговые суммы
         PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
@@ -457,6 +447,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 21.12.17         * del inCodeUKTZED
  11.12.17         * inCodeUKTZED
  15.02.17         * уходим от вьюх
  01.10.15                                                                      * inSertificatNumber, inSertificatStart, inSertificatEnd
