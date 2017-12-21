@@ -1610,13 +1610,13 @@ BEGIN
                                                                 inParamNumber   := 20, 
                                                                 inName          := 'inValue5_pr', 
                                                                 inParamType     := 'ftFloat', 
-                                                                inUserParamName := 'кДж', 
+                                                                inUserParamName := 'Кол-во суток', 
                                                                 inImportTypeId  := vbImportTypeId, 
                                                                 inSession       := vbUserId::TVarChar);
     vbImportSettingsItem := 0;
     Select id INTO vbImportSettingsItem FROM Object_ImportSettingsItems_View WHERE ImportSettingsId = vbImportSettingId AND ImportTypeItemsId = vbImportTypeItemId;
     PERFORM gpInsertUpdate_Object_ImportSettingsItems(ioId                := vbImportSettingsItem,
-                                                      inName              := 'Q',
+                                                      inName              := 'Y',
                                                       inImportSettingsId  := vbImportSettingId,
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarCHar,
@@ -1627,13 +1627,13 @@ BEGIN
                                                                 inParamNumber   := 21, 
                                                                 inName          := 'inValue6_pr', 
                                                                 inParamType     := 'ftFloat', 
-                                                                inUserParamName := 'Кол-во суток', 
+                                                                inUserParamName := 'Вес', 
                                                                 inImportTypeId  := vbImportTypeId, 
                                                                 inSession       := vbUserId::TVarChar);
     vbImportSettingsItem := 0;
     Select id INTO vbImportSettingsItem FROM Object_ImportSettingsItems_View WHERE ImportSettingsId = vbImportSettingId AND ImportTypeItemsId = vbImportTypeItemId;
     PERFORM gpInsertUpdate_Object_ImportSettingsItems(ioId                := vbImportSettingsItem,
-                                                      inName              := 'Y',
+                                                      inName              := 'H',
                                                       inImportSettingsId  := vbImportSettingId,
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarCHar,
