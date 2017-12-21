@@ -538,7 +538,10 @@ BEGIN
            , CASE WHEN TRIM (MovementOrder_Comment.ValueData) <> TRIM (COALESCE (MovementSale_Comment.ValueData, '')) THEN MovementOrder_Comment.ValueData ELSE '' END AS OrderComment
            , CASE WHEN Movement.DescId = zc_Movement_Loss() THEN TRUE ELSE FALSE END isMovementLoss
 
-           , CASE WHEN Position(UPPER('ξαμεν') in UPPER(View_Contract.InvNumber)) > 0 THEN True ELSE False END AS isPrintText
+           , CASE WHEN Position(UPPER('ξαμεν') in UPPER(View_Contract.InvNumber)) > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPrintText
+           
+           , CASE WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm() THEN TRUE ELSE FALSE END :: Boolean AS isFirstForm
+
        FROM Movement
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
                                            ON MovementLinkMovement_Sale.MovementId = Movement.Id
