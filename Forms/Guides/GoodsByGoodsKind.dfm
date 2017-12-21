@@ -238,7 +238,56 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             DataBinding.FieldName = 'MeasureSubName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1045#1076'. '#1080#1079#1084'. '#1090#1086#1074#1072#1088#1072'. ('#1087#1077#1088#1077#1089#1086#1088#1090'.-'#1088#1072#1089#1093#1086#1076')'
+            HeaderHint = #1045#1076'. '#1080#1079#1084'. '#1090#1086#1074#1072#1088#1072' ('#1087#1077#1088#1077#1089#1086#1088#1090'.-'#1088#1072#1089#1093#1086#1076')'
+            Options.Editing = False
+            Width = 62
+          end
+          object GoodsPackCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' ('#1090#1086#1074'. '#1091#1087'.)'
+            DataBinding.FieldName = 'GoodsPackCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072' ('#1076#1083#1103' '#1091#1087#1072#1082#1086#1074#1082#1080')'
+            Options.Editing = False
+            Width = 61
+          end
+          object GoodsPackName: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088' ('#1076#1083#1103' '#1091#1087#1072#1082#1086#1074#1082#1080')'
+            DataBinding.FieldName = 'GoodsPackName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = GoodsPackOpenChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 155
+          end
+          object GoodsKindPackName: TcxGridDBColumn
+            Caption = #1042#1080#1076' ('#1090#1086#1074'. '#1091#1087'.)'
+            DataBinding.FieldName = 'GoodsKindPackName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = GoodsKindPackChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1076#1083#1103' '#1091#1087#1072#1082#1086#1074#1082#1080')'
+            Width = 70
+          end
+          object MeasurePackName: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.  ('#1090#1086#1074'. '#1091#1087'.)'
+            DataBinding.FieldName = 'MeasurePackName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1045#1076'. '#1080#1079#1084'. '#1090#1086#1074#1072#1088#1072' ('#1076#1083#1103' '#1091#1087#1072#1082#1086#1074#1082#1080')'
             Options.Editing = False
             Width = 62
           end
@@ -374,6 +423,49 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS
     end
+    object GoodsPackOpenChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'Goods_ObjectForm'
+      FormName = 'TGoods_ObjectForm'
+      FormNameParam.Value = 'TGoods_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsPackId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsPackName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsPackCode'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MeasureName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MeasurePackName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object GoodsSubOpenChoice: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -447,6 +539,33 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Code'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object GoodsKindPackChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'Goods_ObjectForm'
+      FormName = 'TGoodsKindForm'
+      FormNameParam.Value = 'TGoodsKindForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindPackId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindPackName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -700,6 +819,22 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindSubId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsPackId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsPackId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindPackId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindPackId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
