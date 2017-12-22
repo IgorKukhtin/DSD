@@ -38,7 +38,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income_MMOLoad(
     IN inSertificatEnd       TDateTime , -- Дата окончания регистрации
     
     IN inisLastRecord        Boolean   ,
-    IN inCodeUKTZED          TVarChar  , --
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID AS
@@ -102,7 +101,6 @@ BEGIN
                                                   , inSertificatEnd    := inSertificatEnd    -- Дата окончания регистрации
 
                                                   , inisLastRecord   := inisLastRecord  
-                                                  , inCodeUKTZED     := inCodeUKTZED
                                                   , inSession        := CASE WHEN inSession = '1871720' THEN '2592170' ELSE inSession END); -- Авто-загрузка прайс-поставщик => Авто-загрузка ММО
                                                   
                                                   
@@ -115,6 +113,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 21.12.17         * del inCodeUKTZED
  11.12.17         * inCodeUKTZED
  01.10.15                                                                      * inSertificatNumber, inSertificatStart, inSertificatEnd
  06.03.15                        *   

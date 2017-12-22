@@ -27,7 +27,6 @@ RETURNS TABLE (Id Integer /*IdBarCode TVarChar,*/
              , ExpirationDate TDateTime
              , PartionGoods TVarChar
              , MakerName TVarChar
-             , CodeUKTZED TVarChar
              , FEA TVarChar
              , Measure TVarChar
              , DublePriceColour Integer
@@ -185,7 +184,6 @@ BEGIN
                           , COALESCE (MIFloat_PrintCount.ValueData, 0)   ::TFloat      AS PrintCount
                           , COALESCE (MIBoolean_Print.ValueData, TRUE)   ::Boolean     AS isPrint
 
-                          , MIString_UKTZED.ValueData           AS CodeUKTZED
                           , MIString_FEA.ValueData              AS FEA
                           , MIString_Measure.ValueData          AS Measure
 
@@ -249,9 +247,6 @@ BEGIN
                         LEFT JOIN MovementItemString AS MIString_SertificatNumber
                                                      ON MIString_SertificatNumber.MovementItemId = MovementItem.Id
                                                     AND MIString_SertificatNumber.DescId = zc_MIString_SertificatNumber()                                         
-                        LEFT JOIN MovementItemString AS MIString_UKTZED
-                                                     ON MIString_UKTZED.MovementItemId = MovementItem.Id
-                                                    AND MIString_UKTZED.DescId = zc_MIString_UKTZED() 
                                                     
                         LEFT JOIN MovementItemDate AS MIDate_SertificatStart
                                                    ON MIDate_SertificatStart.MovementItemId = MovementItem.Id
@@ -274,32 +269,32 @@ BEGIN
                                             THEN  MIFloat_Price.ValueData
                                           ELSE (MIFloat_Price.ValueData * (1 + ObjectFloat_NDSKind_NDS.ValueData/100))::TFloat
                                      END)::TFloat AS AVGIncomePrice
-                            FROM Movement AS Movement_Income
-                                JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                                     ON MovementBoolean_PriceWithVAT.MovementId =  Movement_Income.Id
-                                                    AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
-                                JOIN MovementLinkObject AS MovementLinkObject_NDSKind
-                                                        ON MovementLinkObject_NDSKind.MovementId = Movement_Income.Id
-                                                       AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
-                                JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
-                                                 ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
-                                                AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
-                             
-                                JOIN MovementItem AS MI_Income
-                                                  ON MI_Income.MovementId = Movement_Income.Id
-                                                 AND MI_Income.DescId = zc_MI_Master()
-                                                 AND MI_Income.isErased = FALSE
-                                                 AND MI_Income.Amount > 0
-                                JOIN MovementItemFloat AS MIFloat_Price
-                                                       ON MIFloat_Price.MovementItemId = MI_Income.Id
-                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                            WHERE Movement_Income.DescId = zc_Movement_Income()
-                              AND Movement_Income.StatusId = zc_Enum_Status_Complete()
-                              AND Movement_Income.Id <> inMovementId
-                              AND Movement_Income.OperDate >= vbAVGDateStart
-                              AND Movement_Income.OperDate <= vbAVGDateEnd
-                            GROUP BY MI_Income.ObjectId
-                           )   
+                           FROM Movement AS Movement_Income
+                               JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                                    ON MovementBoolean_PriceWithVAT.MovementId =  Movement_Income.Id
+                                                   AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+                               JOIN MovementLinkObject AS MovementLinkObject_NDSKind
+                                                       ON MovementLinkObject_NDSKind.MovementId = Movement_Income.Id
+                                                      AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
+                               JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                                ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
+                                               AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+                            
+                               JOIN MovementItem AS MI_Income
+                                                 ON MI_Income.MovementId = Movement_Income.Id
+                                                AND MI_Income.DescId = zc_MI_Master()
+                                                AND MI_Income.isErased = FALSE
+                                                AND MI_Income.Amount > 0
+                               JOIN MovementItemFloat AS MIFloat_Price
+                                                      ON MIFloat_Price.MovementItemId = MI_Income.Id
+                                                     AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                           WHERE Movement_Income.DescId = zc_Movement_Income()
+                             AND Movement_Income.StatusId = zc_Enum_Status_Complete()
+                             AND Movement_Income.Id <> inMovementId
+                             AND Movement_Income.OperDate >= vbAVGDateStart
+                             AND Movement_Income.OperDate <= vbAVGDateEnd
+                           GROUP BY MI_Income.ObjectId
+                          )   
                            
     , DublePrice AS        (SELECT tmpMI.GoodsId
                                  , zc_Color_Yelow() AS DublePriceColour --zc_Color_Goods_Additional() AS DublePriceColour
@@ -369,7 +364,6 @@ BEGIN
               , NULL::TDateTime            AS ExpirationDate
               , NULL::TVarChar             AS PartionGoods
               , NULL::TVarChar             AS MakerName
-              , NULL::TVarChar             AS CodeUKTZED
               , NULL::TVarChar             AS FEA
               , NULL::TVarChar             AS Measure
               , NULL::Integer              AS DublePriceColour
@@ -391,9 +385,9 @@ BEGIN
               , FALSE                      AS isSummDiff
 
               , COALESCE (tmpPrice.isTop,FALSE) ::Boolean  AS isTop 
-              , tmpGoods.isSP                      AS isSP
+              , tmpGoods.isSP                              AS isSP
               , tmpGoods.PriceOptSP             ::TFloat
-              , tmpPrice.PercentMarkup  ::TFloat   AS PercentMarkup
+              , tmpPrice.PercentMarkup          ::TFloat   AS PercentMarkup
               , CASE WHEN COALESCE(tmpPrice.Fix,False) = TRUE THEN COALESCE(tmpPrice.Price,0) ELSE 0 END  ::TFloat AS Fix_Price
 
               , zc_Color_White()  AS Color_calc
@@ -444,8 +438,7 @@ BEGIN
               , MovementItem.ExpirationDate
               , MovementItem.PartionGoods   :: TVarChar  
 
-              , Object_PartnerGoods.MakerName      AS MakerName
-              , MovementItem.CodeUKTZED
+              , Object_PartnerGoods.MakerName  AS MakerName
               , MovementItem.FEA
               , MovementItem.Measure
 
@@ -587,8 +580,7 @@ BEGIN
                      , MIFloat_AmountManual.ValueData      AS AmountManual
 
                      , COALESCE (MIDate_ExpirationDate.ValueData, NULL) :: TDateTime AS ExpirationDate
-                     , COALESCE(MIString_PartionGoods.ValueData, '')              :: TVarChar  AS PartionGoods
-                     , MIString_UKTZED.ValueData           AS CodeUKTZED
+                     , COALESCE(MIString_PartionGoods.ValueData, '')    :: TVarChar  AS PartionGoods
                      , MIString_FEA.ValueData              AS FEA
                      , MIString_Measure.ValueData          AS Measure
                      , MIString_SertificatNumber.ValueData AS SertificatNumber
@@ -640,9 +632,6 @@ BEGIN
                    LEFT JOIN MovementItemString AS MIString_FEA
                                                 ON MIString_FEA.MovementItemId = MovementItem.Id
                                                AND MIString_FEA.DescId = zc_MIString_FEA() 
-                   LEFT JOIN MovementItemString AS MIString_UKTZED
-                                                ON MIString_UKTZED.MovementItemId = MovementItem.Id
-                                               AND MIString_UKTZED.DescId = zc_MIString_UKTZED() 
                                                
                    LEFT JOIN MovementItemString AS MIString_SertificatNumber
                                                 ON MIString_SertificatNumber.MovementItemId = MovementItem.Id
@@ -680,7 +669,8 @@ BEGIN
                             WHERE tmpMI.isErased   = FALSE
                             GROUP BY tmpMI.GoodsId
                             HAVING COUNT(DISTINCT tmpMI.Price) > 1
-                           )  
+                           )
+  
    , AVGIncome AS     (  SELECT MI_Income.ObjectId,
                                 AVG(CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE 
                                             THEN  MIFloat_Price.ValueData
@@ -771,7 +761,6 @@ BEGIN
               , MovementItem.ExpirationDate
               , MovementItem.PartionGoods
               , ObjectString_Goods_Maker.ValueData  AS MakerName
-              , MovementItem.CodeUKTZED
               , MovementItem.FEA
               , MovementItem.Measure
               , DublePrice.DublePriceColour
@@ -895,6 +884,7 @@ ALTER FUNCTION gpSelect_MovementItem_Income (Integer, Boolean, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 21.12.17         * del CodeUKTZED
  11.12.17         * CodeUKTZED
  21.10.17         * add AreaName
  21.04.17         * add PriceOptSP

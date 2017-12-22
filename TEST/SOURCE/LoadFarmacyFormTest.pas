@@ -544,12 +544,12 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_UKTZEDDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_UKTZEDDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_UKTZEDDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_UKTZEDForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_UKTZEDForm');
   exit;
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MinPrice_byPromoDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MinPrice_byPromoDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MinPrice_byPromoForm'));

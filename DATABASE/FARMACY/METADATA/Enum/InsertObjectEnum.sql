@@ -1371,7 +1371,7 @@ BEGIN
 END $$;
 
 
-
+/* не добавляем, т.к уже есть FEA
 -- Загрузка приходов ММО - добавляем параметр Код УКТ ЗЕД , ручками
 DO $$
 DECLARE vbUserId Integer;
@@ -1387,8 +1387,9 @@ BEGIN
                   FROM gpSelect_Object_ImportType( inSession := vbUserId::TVarChar) AS tmp
                        LEFT JOIN Object_ImportTypeItems_View ON Object_ImportTypeItems_View.ImportTypeId = tmp.Id
                                                             AND Object_ImportTypeItems_View.Name = 'inCodeUKTZED'
-                  where tmp.Name = 'Загрузка приходов ММО';
+                  WHERE tmp.Name = 'Загрузка приходов ММО';
 
+  /* -- не нужно утанавливать значение колонки, будут сами
      SELECT gpInsertUpdate_Object_ImportSettingsItems(ioId                := 0,
                                                       inName              := 'V',
                                                       inImportSettingsId  := Object_ImportSettings_View.Id, --vbImportSettingId,
@@ -1401,9 +1402,10 @@ BEGIN
                                                    AND Object_ImportSettingsItems_View.ImportTypeItemsId = Object_ImportTypeItems_View.Id
      WHERE Object_ImportTypeItems_View.Name = 'inCodeUKTZED'
        AND Object_ImportSettings_View.ImportTypeName = 'Загрузка приходов ММО'
+       */
 
 END $$;
-
+*/
 
 DO $$
     DECLARE vbKey TVarChar;

@@ -30,8 +30,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Sticker_From_Excel(
     IN inValue2_pr           TFloat    , -- Влажность макс
     IN inValue3_pr           TFloat    , -- Tемпература мин
     IN inValue4_pr           TFloat    , -- Tемпература макс
-    IN inValue5_pr           TFloat    , -- кДж
-    IN inValue6_pr           TFloat    , -- Кол-во суток
+    IN inValue5_pr           TFloat    , -- Кол-во суток
+    IN inValue6_pr           TFloat    , -- Вес
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Void

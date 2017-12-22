@@ -138,14 +138,6 @@
             Options.Editing = False
             Width = 222
           end
-          object CodeUKTZED: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1059#1050#1058' '#1047#1045#1044
-            DataBinding.FieldName = 'CodeUKTZED'
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1076' '#1090#1086#1074#1072#1088#1091' '#1079#1075#1110#1076#1085#1086' '#1079' '#1059#1050#1058' '#1047#1045#1044' '
-            Options.Editing = False
-            Width = 70
-          end
           object PartnerGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'PartnerGoodsCode'

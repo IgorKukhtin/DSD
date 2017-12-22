@@ -18,7 +18,9 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , WeightPackage TFloat, WeightTotal TFloat, ChangePercentAmount TFloat
              , isOrder Boolean, isScaleCeh Boolean, isNotMobile Boolean
              , GoodsSubId Integer, GoodsSubCode Integer, GoodsSubName TVarChar, MeasureSubName TVarChar
-             , GoodsKindSubId Integer, GoodsKindSubName TVarChar
+             , GoodsKindSubId Integer, GoodsKindSubName TVarChar 
+             , GoodsPackId Integer, GoodsPackCode Integer, GoodsPackName TVarChar, MeasurePackName TVarChar
+             , GoodsKindPackId Integer, GoodsKindPackName TVarChar
              , ReceiptId Integer, ReceiptCode TVarChar, ReceiptName TVarChar
 )
 AS
@@ -64,10 +66,16 @@ BEGIN
            , Object_GoodsSub.ObjectCode       AS GoodsSubCode
            , Object_GoodsSub.ValueData        AS GoodsSubName
            , Object_MeasureSub.ValueData      AS MeasureSubName
-
            , Object_GoodsKindSub.Id           AS GoodsKindSubId
            , Object_GoodsKindSub.ValueData    AS GoodsKindSubName
-
+                    
+           , Object_GoodsPack.Id               AS GoodsPackId
+           , Object_GoodsPack.ObjectCode       AS GoodsPackCode
+           , Object_GoodsPack.ValueData        AS GoodsPackName
+           , Object_MeasurePack.ValueData      AS MeasurePackName
+           , Object_GoodsKindPack.Id           AS GoodsKindPackId
+           , Object_GoodsKindPack.ValueData    AS GoodsKindPackName
+           
            , Object_Receipt.Id                AS ReceiptId
            , ObjectString_Code.ValueData      AS ReceiptCode
            , Object_Receipt.ValueData         AS ReceiptName
@@ -97,48 +105,48 @@ BEGIN
                                    ON ObjectBoolean_NotMobile.ObjectId = Object_GoodsByGoodsKind_View.Id 
                                   AND ObjectBoolean_NotMobile.DescId = zc_ObjectBoolean_GoodsByGoodsKind_NotMobile()
 
-             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                   ON ObjectFloat_Weight.ObjectId = Object_GoodsByGoodsKind_View.GoodsId
-                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+           LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                 ON ObjectFloat_Weight.ObjectId = Object_GoodsByGoodsKind_View.GoodsId
+                                AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_GoodsByGoodsKind_View.GoodsId
-                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_GoodsByGoodsKind_View.GoodsId
+                               AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+           LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupAnalyst
-                                  ON ObjectLink_Goods_GoodsGroupAnalyst.ObjectId = Object_GoodsByGoodsKind_View.GoodsId
-                                 AND ObjectLink_Goods_GoodsGroupAnalyst.DescId = zc_ObjectLink_Goods_GoodsGroupAnalyst()
-             LEFT JOIN Object AS Object_GoodsGroupAnalyst ON Object_GoodsGroupAnalyst.Id = ObjectLink_Goods_GoodsGroupAnalyst.ChildObjectId             
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupAnalyst
+                                ON ObjectLink_Goods_GoodsGroupAnalyst.ObjectId = Object_GoodsByGoodsKind_View.GoodsId
+                               AND ObjectLink_Goods_GoodsGroupAnalyst.DescId = zc_ObjectLink_Goods_GoodsGroupAnalyst()
+           LEFT JOIN Object AS Object_GoodsGroupAnalyst ON Object_GoodsGroupAnalyst.Id = ObjectLink_Goods_GoodsGroupAnalyst.ChildObjectId             
 
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsTag
-                                  ON ObjectLink_Goods_GoodsTag.ObjectId = Object_GoodsByGoodsKind_View.GoodsId
-                                 AND ObjectLink_Goods_GoodsTag.DescId = zc_ObjectLink_Goods_GoodsTag()
-             LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = ObjectLink_Goods_GoodsTag.ChildObjectId
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsTag
+                                ON ObjectLink_Goods_GoodsTag.ObjectId = Object_GoodsByGoodsKind_View.GoodsId
+                               AND ObjectLink_Goods_GoodsTag.DescId = zc_ObjectLink_Goods_GoodsTag()
+           LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = ObjectLink_Goods_GoodsTag.ChildObjectId
 
-             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
-                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_GoodsByGoodsKind_View.GoodsId
-                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+           LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                  ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_GoodsByGoodsKind_View.GoodsId
+                                 AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                  ON ObjectLink_Goods_Measure.ObjectId = Object_GoodsByGoodsKind_View.GoodsId
-                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                ON ObjectLink_Goods_Measure.ObjectId = Object_GoodsByGoodsKind_View.GoodsId
+                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
-                                  ON ObjectLink_Goods_TradeMark.ObjectId = Object_GoodsByGoodsKind_View.GoodsId
-                                 AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
-             LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                ON ObjectLink_Goods_TradeMark.ObjectId = Object_GoodsByGoodsKind_View.GoodsId
+                               AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+           LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
 
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsPlatform
-                                  ON ObjectLink_Goods_GoodsPlatform.ObjectId = Object_GoodsByGoodsKind_View.GoodsId
-                                 AND ObjectLink_Goods_GoodsPlatform.DescId = zc_ObjectLink_Goods_GoodsPlatform()
-             LEFT JOIN Object AS Object_GoodsPlatform ON Object_GoodsPlatform.Id = ObjectLink_Goods_GoodsPlatform.ChildObjectId
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsPlatform
+                                ON ObjectLink_Goods_GoodsPlatform.ObjectId = Object_GoodsByGoodsKind_View.GoodsId
+                               AND ObjectLink_Goods_GoodsPlatform.DescId = zc_ObjectLink_Goods_GoodsPlatform()
+           LEFT JOIN Object AS Object_GoodsPlatform ON Object_GoodsPlatform.Id = ObjectLink_Goods_GoodsPlatform.ChildObjectId
 
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                  ON ObjectLink_Goods_InfoMoney.ObjectId = Object_GoodsByGoodsKind_View.GoodsId
-                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                ON ObjectLink_Goods_InfoMoney.ObjectId = Object_GoodsByGoodsKind_View.GoodsId
+                               AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
            LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsSub
                                 ON ObjectLink_GoodsByGoodsKind_GoodsSub.ObjectId = Object_GoodsByGoodsKind_View.Id
@@ -155,6 +163,21 @@ BEGIN
                                AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub()
            LEFT JOIN Object AS Object_GoodsKindSub ON Object_GoodsKindSub.Id = ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId
 
+           LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsPack
+                                ON ObjectLink_GoodsByGoodsKind_GoodsPack.ObjectId = Object_GoodsByGoodsKind_View.Id
+                               AND ObjectLink_GoodsByGoodsKind_GoodsPack.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsPack()
+           LEFT JOIN Object AS Object_GoodsPack ON Object_GoodsPack.Id = ObjectLink_GoodsByGoodsKind_GoodsPack.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_GoodsPack_Measure
+                                ON ObjectLink_GoodsPack_Measure.ObjectId = Object_GoodsPack.Id
+                               AND ObjectLink_GoodsPack_Measure.DescId = zc_ObjectLink_Goods_Measure()
+           LEFT JOIN Object AS Object_MeasurePack ON Object_MeasurePack.Id = ObjectLink_GoodsPack_Measure.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKindPack
+                                ON ObjectLink_GoodsByGoodsKind_GoodsKindPack.ObjectId = Object_GoodsByGoodsKind_View.Id
+                               AND ObjectLink_GoodsByGoodsKind_GoodsKindPack.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKindPack()
+           LEFT JOIN Object AS Object_GoodsKindPack ON Object_GoodsKindPack.Id = ObjectLink_GoodsByGoodsKind_GoodsKindPack.ChildObjectId
+           
            LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Receipt
                                 ON ObjectLink_GoodsByGoodsKind_Receipt.ObjectId = Object_GoodsByGoodsKind_View.Id
                                AND ObjectLink_GoodsByGoodsKind_Receipt.DescId = zc_ObjectLink_GoodsByGoodsKind_Receipt()
@@ -173,7 +196,8 @@ ALTER FUNCTION gpSelect_Object_GoodsByGoodsKind (TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
-              ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .». 
+              ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».    
+ 21.12.17        * add GoodsSPack, GoodsKindPack
  09.06.17        * add NotMobile
  22.02.17        * add ChangePercentAmount
  08.12.16        * add isScaleCeh

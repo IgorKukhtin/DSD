@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind(
  INOUT ioId                  Integer  , -- ключ объекта <Товар>
@@ -9,6 +10,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind(
     IN inGoodsKindId         Integer  , -- Виды товаров
     IN inGoodsSubId          Integer  , -- Товары
     IN inGoodsKindSubId      Integer  , -- Виды товаров
+    IN inGoodsPackId         Integer  , -- Товары для упаковки
+    IN inGoodsKindPackId     Integer  , -- Виды товаров для упаковки
     IN inReceiptId           Integer  , -- Рецептуры
     IN inWeightPackage       TFloat   , -- вес пакета
     IN inWeightTotal         TFloat   , -- вес в упаковки  
@@ -63,6 +66,12 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsSub(), ioId, inGoodsSubId);
    -- сохранили связь с <Виды товаров  (пересортица - расход)>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub(), ioId, inGoodsKindSubId);
+
+   -- сохранили связь с <Товары  (для упаковки)>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsPack(), ioId, inGoodsPackId);
+   -- сохранили связь с <Виды товаров  (для упаковки)>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsKindPack(), ioId, inGoodsKindPackId);
+
    -- сохранили связь с <Рецептурой>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_Receipt(), ioId, inReceiptId);
 
@@ -88,6 +97,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  
+ 21.12.17         * 
  22.02.17         * ChangePercentAmount
  27.10.16         * Receipt
  26.07.16         *
@@ -97,4 +107,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_GoodsByGoodsKind (inGoodsId:= 1, inGoodsKindId:= 1, inUserId:= 2)
+-- 

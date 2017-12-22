@@ -45,6 +45,8 @@ type
     Id: TcxGridDBColumn;
     ChangePercentAmount: TcxGridDBColumn;
     spUpdate_isParam: TdsdStoredProc;
+    GoodsKindPackChoiceForm: TOpenChoiceForm;
+    GoodsPackOpenChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public

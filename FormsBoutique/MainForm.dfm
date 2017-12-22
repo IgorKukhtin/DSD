@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 723
   KeyPreview = True
   ExplicitWidth = 739
-  ExplicitHeight = 226
+  ExplicitHeight = 227
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -807,13 +807,13 @@ inherited MainForm: TMainForm
       object miSale: TMenuItem
         Action = actSale
       end
-      object N68: TMenuItem
+      object miSaleMovement: TMenuItem
         Action = actSaleMovement
       end
       object miReturnIn: TMenuItem
         Action = actReturnIn
       end
-      object N67: TMenuItem
+      object miReturnInMovement: TMenuItem
         Action = actReturnInMovement
       end
       object miLine11: TMenuItem
@@ -832,10 +832,10 @@ inherited MainForm: TMainForm
       object miGoodsAccount: TMenuItem
         Action = actGoodsAccount
       end
-      object N66: TMenuItem
+      object miGoodsAccountMovement: TMenuItem
         Action = actGoodsAccountMovement
       end
-      object N59: TMenuItem
+      object miGoodsAccount_ReturnIn: TMenuItem
         Action = actGoodsAccount_ReturnIn
       end
       object miLine21: TMenuItem
@@ -847,40 +847,40 @@ inherited MainForm: TMainForm
     end
     object miHistory: TMenuItem [2]
       Caption = #1048#1089#1090#1086#1088#1080#1080
-      object N52: TMenuItem
+      object miPriceListItem: TMenuItem
         Action = actPriceListItem
       end
       object miLine31: TMenuItem
         Caption = '-'
       end
-      object N53: TMenuItem
+      object miDiscountPeriodItem: TMenuItem
         Action = actDiscountPeriodItem
       end
     end
     object miReport: TMenuItem [3]
       Caption = #1054#1090#1095#1077#1090#1099
-      object N60: TMenuItem
+      object miReport_MovementIncome: TMenuItem
         Action = actReport_MovementIncome
       end
-      object N61: TMenuItem
+      object miReport_MovementReturnOut: TMenuItem
         Action = actReport_MovementReturnOut
       end
-      object N62: TMenuItem
+      object miReport_MovementSend: TMenuItem
         Action = actReport_MovementSend
       end
-      object N63: TMenuItem
+      object miReport_MovementLoss: TMenuItem
         Action = actReport_MovementLoss
       end
       object N6: TMenuItem
         Caption = '-'
       end
-      object N47: TMenuItem
+      object miReport_Goods_RemainsCurrent: TMenuItem
         Action = actReport_Goods_RemainsCurrent
       end
-      object N48: TMenuItem
+      object miReport_Goods: TMenuItem
         Action = actReport_Goods
       end
-      object N54: TMenuItem
+      object miReport_SaleReturnIn: TMenuItem
         Action = actReport_SaleReturnIn
       end
     end
@@ -892,13 +892,13 @@ inherited MainForm: TMainForm
       object N58: TMenuItem
         Caption = '-'
       end
-      object N50: TMenuItem
+      object miReport_GoodsMI_Account: TMenuItem
         Action = actReport_GoodsMI_Account
       end
-      object N56: TMenuItem
+      object miReport_PartnerDebt: TMenuItem
         Action = actReport_PartnerDebt
       end
-      object N65: TMenuItem
+      object miReport_MotionByPartner: TMenuItem
         Action = actReport_MotionByPartner
       end
     end
@@ -914,125 +914,125 @@ inherited MainForm: TMainForm
     inherited miGuides: TMenuItem
       object miGoodsAll: TMenuItem
         Caption = #1058#1086#1074#1072#1088#1099
-        object N39: TMenuItem
+        object mioodsTree: TMenuItem
           Action = actGoodsTree
         end
-        object N38: TMenuItem
+        object miGoods: TMenuItem
           Action = actGoods
         end
-        object N11: TMenuItem
+        object miGoodsSize: TMenuItem
           Action = actGoodsSize
         end
-        object N1: TMenuItem
+        object miMeasure: TMenuItem
           Action = actMeasure
         end
-        object N40: TMenuItem
+        object miGoodsItem: TMenuItem
           Action = catGoodsItem
         end
-        object N41: TMenuItem
+        object miPartionGoods: TMenuItem
           Action = actPartionGoods
         end
-        object N64: TMenuItem
+        object miGoodsPrint: TMenuItem
           Action = actGoodsPrint
         end
         object miLine711: TMenuItem
           Caption = '-'
         end
-        object N4: TMenuItem
+        object miCompositionGroup: TMenuItem
           Action = actCompositionGroup
         end
-        object N5: TMenuItem
+        object miComposition: TMenuItem
           Action = actComposition
         end
-        object N10: TMenuItem
+        object miGoodsInfo: TMenuItem
           Action = actGoodsInfo
         end
-        object N17: TMenuItem
+        object miLineFabrica: TMenuItem
           Action = actLineFabrica
         end
-        object N37: TMenuItem
+        object miLabel: TMenuItem
           Action = actLabel
         end
       end
-      object N12: TMenuItem
+      object miGoodsGroup: TMenuItem
         Action = actGoodsGroup
       end
-      object N34: TMenuItem
+      object miUnit: TMenuItem
         Action = actUnit
       end
-      object N33: TMenuItem
+      object miJuridical: TMenuItem
         Action = actJuridical
       end
-      object N32: TMenuItem
+      object miJuridicalGroup: TMenuItem
         Action = actJuridicalGroup
       end
-      object N51: TMenuItem
+      object miPriceList: TMenuItem
         Action = actPriceList
       end
       object miLine71: TMenuItem
         Caption = '-'
       end
-      object c1: TMenuItem
+      object miPartner: TMenuItem
         Action = actPartner
       end
-      object N16: TMenuItem
+      object miPeriod: TMenuItem
         Action = actPeriod
       end
-      object N8: TMenuItem
+      object miBrand: TMenuItem
         Action = actBrand
       end
-      object N7: TMenuItem
+      object miCountryBrand: TMenuItem
         Action = actCountryBrand
       end
-      object N9: TMenuItem
+      object miFabrika: TMenuItem
         Action = actFabrika
       end
       object miLine72: TMenuItem
         Caption = '-'
       end
-      object N36: TMenuItem
+      object miClient: TMenuItem
         Action = actClient
       end
-      object N35: TMenuItem
+      object miCity: TMenuItem
         Action = actCity
       end
-      object N18: TMenuItem
+      object miDiscount: TMenuItem
         Action = actDiscount
       end
-      object N19: TMenuItem
+      object miDiscountTools: TMenuItem
         Action = actDiscountTools
       end
       object miLine73: TMenuItem
         Caption = '-'
       end
-      object N13: TMenuItem
+      object miCash: TMenuItem
         Action = actCash
       end
       object N57: TMenuItem
         Action = actBankAccount
       end
-      object N55: TMenuItem
+      object miBank: TMenuItem
         Action = actBank
       end
-      object N14: TMenuItem
+      object miCurrency: TMenuItem
         Action = actCurrency
       end
       object miLine74: TMenuItem
         Caption = '-'
       end
-      object N43: TMenuItem
+      object miPersonal: TMenuItem
         Action = actPersonal
       end
-      object N42: TMenuItem
+      object miPosition: TMenuItem
         Action = actPosition
       end
-      object N15: TMenuItem
+      object miMember: TMenuItem
         Action = actMember
       end
     end
     inherited miService: TMenuItem
       inherited N221: TMenuItem
-        object N74: TMenuItem [0]
+        object miForms: TMenuItem [0]
           Action = actForms
         end
         inherited miMovementDesc: TMenuItem
@@ -1049,37 +1049,37 @@ inherited MainForm: TMainForm
       end
       object N20: TMenuItem [4]
         Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-        object N21: TMenuItem
+        object miAccountGroup: TMenuItem
           Action = actAccountGroup
         end
-        object N22: TMenuItem
+        object miAccountDirection: TMenuItem
           Action = actAccountDirection
         end
-        object N23: TMenuItem
+        object miAccount: TMenuItem
           Action = actAccount
         end
         object N24: TMenuItem
           Caption = '-'
         end
-        object N25: TMenuItem
+        object miInfoMoneyGroup: TMenuItem
           Action = actInfoMoneyGroup
         end
-        object N26: TMenuItem
+        object miInfoMoneyDestination: TMenuItem
           Action = actInfoMoneyDestination
         end
-        object N27: TMenuItem
+        object miInfoMoney: TMenuItem
           Action = actInfoMoney
         end
         object N28: TMenuItem
           Caption = '-'
         end
-        object N29: TMenuItem
+        object miProfitLossGroup: TMenuItem
           Action = actProfitLossGroup
         end
-        object N30: TMenuItem
+        object miProfitLossDirection: TMenuItem
           Action = actProfitLossDirection
         end
-        object N31: TMenuItem
+        object miProfitLoss: TMenuItem
           Action = actProfitLoss
         end
       end
