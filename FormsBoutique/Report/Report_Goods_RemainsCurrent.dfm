@@ -293,7 +293,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             Width = 55
           end
           object GoodsGroupNameFull: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072' ('#1074#1089#1077')'
+            Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -301,7 +301,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             Width = 100
           end
           object GoodsGroupName: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
+            Caption = #1043#1088#1091#1087#1087#1072' ('#1090#1086#1074'.)'
             DataBinding.FieldName = 'GoodsGroupName'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -485,7 +485,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             Width = 45
           end
           object FabrikaName: TcxGridDBColumn
-            Caption = #1060#1072#1073#1088#1080#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
+            Caption = #1060#1072#1073#1088#1080#1082#1072
             DataBinding.FieldName = 'FabrikaName'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -928,8 +928,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 48
-    Top = 160
+    Left = 64
+    Top = 168
   end
   inherited MasterCDS: TClientDataSet
     Left = 16

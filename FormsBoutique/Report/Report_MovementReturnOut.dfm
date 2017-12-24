@@ -260,7 +260,7 @@ inherited Report_MovementReturnOutForm: TReport_MovementReturnOutForm
             Width = 70
           end
           object clGoodsGroupNameFull: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072' ('#1074#1089#1077')'
+            Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -268,7 +268,7 @@ inherited Report_MovementReturnOutForm: TReport_MovementReturnOutForm
             Width = 100
           end
           object GoodsGroupName: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
+            Caption = #1043#1088#1091#1087#1087#1072' ('#1090#1086#1074'.)'
             DataBinding.FieldName = 'GoodsGroupName'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -432,7 +432,7 @@ inherited Report_MovementReturnOutForm: TReport_MovementReturnOutForm
             Width = 55
           end
           object FabrikaName: TcxGridDBColumn
-            Caption = #1060#1072#1073#1088#1080#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100#9
+            Caption = #1060#1072#1073#1088#1080#1082#1072
             DataBinding.FieldName = 'FabrikaName'
             Visible = False
             HeaderAlignmentHorz = taCenter
