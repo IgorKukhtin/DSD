@@ -2962,6 +2962,8 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pLoadDocumentItem_GoodsAccount(SaveCount:Integer):Integer;
 begin
+     //update MovementItem  set Amount = 1 FROM Movement where Movement.Id = MovementItem.MovementId  and MovementItem .Amount = 0  and MovementItem .DescId = 1  and Movement.DescId   = zc_Movement_GoodsAccount()
+     //
      if (not cbGoodsAccount.Checked)or(not cbGoodsAccount.Enabled) then exit;
      //
      myEnabledCB(cbGoodsAccount);
@@ -2979,7 +2981,7 @@ begin
         Add('    , BillItemsIncome.Id_Postgres as PartionId');
         Add('    , DiscountMovementItem_byBarCode.Id_Postgres as SaleMI_Id');
 
-        Add('    , CEILING (case when PriceToPay > 0 then TotalPay / PriceToPay else DiscountMovementItem_byBarCode.OperCount end) as Amount');
+        Add('    , CEILING (case when PriceToPay > 0 and TotalPay > 0 then TotalPay / PriceToPay else DiscountMovementItem_byBarCode.OperCount end) as Amount');
         Add('    , 0 as SummChangePercent');
         Add('    , sum (DiscountKlientAccountMoney.summa * case when DiscountKlientAccountMoney.KursClient <> 0 then DiscountKlientAccountMoney.KursClient else 1 end) as TotalPay');
         Add('    , DiscountMovementItem_byBarCode.TotalSummToPay / DiscountMovementItem_byBarCode.OperCount  as PriceToPay');

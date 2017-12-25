@@ -10,8 +10,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind(
     IN inGoodsKindId         Integer  , -- Виды товаров
     IN inGoodsSubId          Integer  , -- Товары
     IN inGoodsKindSubId      Integer  , -- Виды товаров
-    IN inGoodsPackId         Integer  , -- Товары для упаковки
-    IN inGoodsKindPackId     Integer  , -- Виды товаров для упаковки
+    IN inGoodsPackId         Integer  , -- Главный Товар в планировании прихода с упаковки
+    IN inGoodsKindPackId     Integer  , -- Главный Вид в планировании прихода с упаковки
     IN inReceiptId           Integer  , -- Рецептуры
     IN inWeightPackage       TFloat   , -- вес пакета
     IN inWeightTotal         TFloat   , -- вес в упаковки  
@@ -52,6 +52,19 @@ BEGIN
                 AND ObjectLink_GoodsByGoodsKind_Goods.ObjectId <> COALESCE (ioId, 0))
    THEN 
        RAISE EXCEPTION 'Ошибка.Значение  <%> + <%> уже есть в справочнике. Дублирование запрещено.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (inGoodsKindId);
+   END IF;   
+
+
+   -- проверка
+   IF COALESCE (inGoodsSubId, 0) <> COALESCE (inGoodsPackId, 0)
+   THEN 
+       RAISE EXCEPTION 'Ошибка.Значение Товар (пересорт. - расход) = <%>  и значение Товар (упак., главный) = <%> должны совпадать.', lfGet_Object_ValueData (inGoodsSubId), lfGet_Object_ValueData (inGoodsPackId);
+   END IF;   
+
+   -- проверка
+   IF COALESCE (inGoodsKindSubId, 0) <> COALESCE (inGoodsKindPackId, 0)
+   THEN 
+       RAISE EXCEPTION 'Ошибка.Значение Вид (пересорт. - расход) = <%>  и Вид (упак., главный) = <%> должны совпадать.', lfGet_Object_ValueData (inGoodsKindSubId), lfGet_Object_ValueData (inGoodsKindPackId);
    END IF;   
 
 

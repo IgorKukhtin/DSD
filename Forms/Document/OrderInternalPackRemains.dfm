@@ -3,6 +3,7 @@
   ClientHeight = 639
   ClientWidth = 1020
   ExplicitLeft = -247
+  ExplicitTop = -217
   ExplicitWidth = 1036
   ExplicitHeight = 674
   PixelsPerInch = 96
@@ -2503,6 +2504,31 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 80
+          end
+          object chGoodsCode_packTo: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1090#1086#1074'. ('#1091#1087#1072#1082'. '#1075#1083#1072#1074#1085'.)'
+            DataBinding.FieldName = 'GoodsCode_packTo'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1043#1083#1072#1074#1085#1086#1075#1086' '#1090#1086#1074#1072#1088#1072' '#1074' '#1087#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1080' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1091#1087#1072#1082#1086#1074#1082#1080
+            Width = 55
+          end
+          object chGoodsName_packTo: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088' ('#1091#1087#1072#1082'., '#1075#1083#1072#1074#1085#1099#1081')'
+            DataBinding.FieldName = 'GoodsName_packTo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1043#1083#1072#1074#1085#1099#1081' '#1058#1086#1074#1072#1088' '#1074' '#1087#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1080' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1091#1087#1072#1082#1086#1074#1082#1080
+            Width = 80
+          end
+          object chGoodsKindName_packTo: TcxGridDBColumn
+            Caption = #1042#1080#1076' ('#1091#1087#1072#1082'., '#1075#1083#1072#1074#1085#1099#1081')'
+            DataBinding.FieldName = 'GoodsKindName_packTo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1043#1083#1072#1074#1085#1099#1081' '#1042#1080#1076' '#1074' '#1087#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1080' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1091#1087#1072#1082#1086#1074#1082#1080
             Width = 80
           end
           object сhContainerId: TcxGridDBColumn

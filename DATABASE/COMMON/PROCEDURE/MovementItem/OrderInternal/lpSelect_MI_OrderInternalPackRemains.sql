@@ -1188,6 +1188,9 @@ BEGIN
                                         , DayCountForecastOrder      TFloat
                                         , DayCountForecast_calc      TFloat
 
+                                        , Amount_master              TFloat
+                                        , AmountNext_master          TFloat
+
                                         , ReceiptId                  Integer
                                         , ReceiptCode                TVarChar
                                         , ReceiptName                TVarChar
@@ -1258,6 +1261,9 @@ BEGIN
                                         , DayCountForecast
                                         , DayCountForecastOrder
                                         , DayCountForecast_calc
+
+                                        , Amount_master
+                                        , AmountNext_master
 
                                         , ReceiptId
                                         , ReceiptCode
@@ -1407,6 +1413,9 @@ BEGIN
                         ELSE 0
                    END
              AS NUMERIC (16, 1)) :: TFloat AS DayCountForecast_calc
+             
+           , COALESCE (tmpMI_master.Amount, 0)         AS Amount_master
+           , COALESCE (tmpMI_master.AmountNext, 0)     AS AmountNext_master
 
            , Object_Receipt.Id                         AS ReceiptId
            , ObjectString_Receipt_Code.ValueData       AS ReceiptCode
@@ -1596,7 +1605,7 @@ BEGIN
 
                                     , AmountPackNext_calc
                                     , AmountPackNextSecond_calc
-                                    , AmountPackNextTotal_calc
+                                    , AmountPackNextTotal_calc	
 
                                     , Amount_result
                                     , Amount_result_two

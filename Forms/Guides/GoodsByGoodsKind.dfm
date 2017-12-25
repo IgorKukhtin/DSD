@@ -2,8 +2,9 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1058#1086#1074#1072#1088' '#1080' '#1042#1080#1076' '#1090#1086#1074#1072#1088#1072'>'
   ClientHeight = 420
   ClientWidth = 1030
+  ExplicitLeft = -257
   ExplicitWidth = 1046
-  ExplicitHeight = 459
+  ExplicitHeight = 455
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -194,7 +195,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Width = 100
           end
           object GoodsSubCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' ('#1090#1086#1074'.'#1087'/'#1088')'
+            Caption = #1050#1086#1076' '#1090#1086#1074'. ('#1087'/'#1088')'
             DataBinding.FieldName = 'GoodsSubCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -203,7 +204,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Width = 61
           end
           object GoodsSubName: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088' ('#1087#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' - '#1088#1072#1089#1093#1086#1076')'
+            Caption = #1058#1086#1074#1072#1088' ('#1087#1077#1088#1077#1089#1086#1088#1090'. - '#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsSubName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -218,7 +219,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Width = 155
           end
           object GoodsKindSubName: TcxGridDBColumn
-            Caption = #1042#1080#1076' ('#1090#1086#1074'. '#1087'/'#1088')'
+            Caption = #1042#1080#1076' ('#1087#1077#1088#1077#1089#1086#1088#1090'. - '#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsKindSubName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -234,25 +235,25 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Width = 70
           end
           object MeasureSubName: TcxGridDBColumn
-            Caption = #1045#1076'. '#1080#1079#1084'.  ('#1090#1086#1074'.'#1087'/'#1088')'
+            Caption = #1045#1076'. '#1080#1079#1084'.  ('#1087#1077#1088#1077#1089#1086#1088#1090'. - '#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'MeasureSubName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1045#1076'. '#1080#1079#1084'. '#1090#1086#1074#1072#1088#1072' ('#1087#1077#1088#1077#1089#1086#1088#1090'.-'#1088#1072#1089#1093#1086#1076')'
+            HeaderHint = #1076#1083#1103' '#1090#1086#1074#1072#1088#1072' ('#1087#1077#1088#1077#1089#1086#1088#1090'.-'#1088#1072#1089#1093#1086#1076')'
             Options.Editing = False
             Width = 62
           end
           object GoodsPackCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' ('#1090#1086#1074'. '#1091#1087'.)'
+            Caption = #1050#1086#1076' '#1090#1086#1074'. ('#1091#1087#1072#1082'. '#1075#1083#1072#1074#1085'.)'
             DataBinding.FieldName = 'GoodsPackCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072' ('#1076#1083#1103' '#1091#1087#1072#1082#1086#1074#1082#1080')'
+            HeaderHint = #1050#1086#1076' '#1043#1083#1072#1074#1085#1086#1075#1086' '#1090#1086#1074#1072#1088#1072' '#1074' '#1087#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1080' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1091#1087#1072#1082#1086#1074#1082#1080
             Options.Editing = False
             Width = 61
           end
           object GoodsPackName: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088' ('#1076#1083#1103' '#1091#1087#1072#1082#1086#1074#1082#1080')'
+            Caption = #1058#1086#1074#1072#1088' ('#1091#1087#1072#1082'., '#1075#1083#1072#1074#1085#1099#1081')'
             DataBinding.FieldName = 'GoodsPackName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -264,10 +265,11 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1043#1083#1072#1074#1085#1099#1081' '#1058#1086#1074#1072#1088' '#1074' '#1087#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1080' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1091#1087#1072#1082#1086#1074#1082#1080
             Width = 155
           end
           object GoodsKindPackName: TcxGridDBColumn
-            Caption = #1042#1080#1076' ('#1090#1086#1074'. '#1091#1087'.)'
+            Caption = #1042#1080#1076' ('#1091#1087#1072#1082'., '#1075#1083#1072#1074#1085#1099#1081')'
             DataBinding.FieldName = 'GoodsKindPackName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -279,15 +281,15 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1076#1083#1103' '#1091#1087#1072#1082#1086#1074#1082#1080')'
+            HeaderHint = #1043#1083#1072#1074#1085#1099#1081' '#1042#1080#1076' '#1074' '#1087#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1080' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1091#1087#1072#1082#1086#1074#1082#1080
             Width = 70
           end
           object MeasurePackName: TcxGridDBColumn
-            Caption = #1045#1076'. '#1080#1079#1084'.  ('#1090#1086#1074'. '#1091#1087'.)'
+            Caption = #1045#1076'. '#1080#1079#1084'.  ('#1091#1087#1072#1082'., '#1075#1083#1072#1074#1085#1099#1081')'
             DataBinding.FieldName = 'MeasurePackName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1045#1076'. '#1080#1079#1084'. '#1090#1086#1074#1072#1088#1072' ('#1076#1083#1103' '#1091#1087#1072#1082#1086#1074#1082#1080')'
+            HeaderHint = #1076#1083#1103' '#1043#1083#1072#1074#1085#1086#1075#1086' '#1058#1086#1074#1072#1088#1072' '#1074' '#1087#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1080' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1091#1087#1072#1082#1086#1074#1082#1080
             Options.Editing = False
             Width = 62
           end

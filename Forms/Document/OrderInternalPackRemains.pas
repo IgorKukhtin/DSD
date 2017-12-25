@@ -225,6 +225,9 @@ type
     actProtocolTotal: TdsdOpenForm;
     bbProtocolChild: TdxBarButton;
     bbProtocolTotal: TdxBarButton;
+    chGoodsCode_packTo: TcxGridDBColumn;
+    chGoodsName_packTo: TcxGridDBColumn;
+    chGoodsKindName_packTo: TcxGridDBColumn;
   private
     { Private declarations }
   public
