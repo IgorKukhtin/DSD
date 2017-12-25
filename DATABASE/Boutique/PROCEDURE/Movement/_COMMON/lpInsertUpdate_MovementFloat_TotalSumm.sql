@@ -40,11 +40,8 @@ BEGIN
      END IF;
 
 
-     -- Эти параметры нужны для расчета конечных сумм по Контрагенту и Заготовителю
-      SELECT Movement.DescId
-   INTO vbMovementDescId
-      FROM Movement
-      WHERE Movement.Id = inMovementId;
+     -- Эти параметры нужны для расчета конечных сумм
+     vbMovementDescId:= (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId);
 
      --
      SELECT SUM(COALESCE(MovementItem.Amount, 0))             AS TotalCount
@@ -59,8 +56,8 @@ BEGIN
           , SUM(zfCalc_SummPriceList (MIFloat_AmountSecond.ValueData, MIFloat_OperPriceList.ValueData)) AS TotalSummSecondPriceList      
           , SUM(zfCalc_SummPriceList (MIFloat_AmountSecondRemains.ValueData, MIFloat_OperPriceList.ValueData)) AS TotalSummSecondRemainsPriceList
           
-          , SUM (COALESCE (MIFloat_TotalChangePercent.ValueData, 0)) ::TFloat  AS TotalSummChange
-          , SUM (COALESCE (MIFloat_TotalPay.ValueData,0))            ::TFloat  AS TotalSummPay
+          , SUM (COALESCE (MIFloat_TotalChangePercent.ValueData, 0) + COALESCE (MIFloat_ChangePercent.ValueData, 0)) :: TFloat AS TotalSummChange
+          , SUM (COALESCE (MIFloat_TotalPay.ValueData,0))                                                            :: TFloat AS TotalSummPay
 
           , SUM (COALESCE (MIFloat_TotalChangePercentPay.ValueData,0)) ::TFloat AS TotalSummChangePay
           , SUM (COALESCE (MIFloat_TotalPayOth.ValueData,0))           ::TFloat AS TotalSummPayOth
@@ -98,6 +95,11 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_AmountSecondRemains
                                         ON MIFloat_AmountSecondRemains.MovementItemId = MovementItem.Id
                                        AND MIFloat_AmountSecondRemains.DescId = zc_MIFloat_AmountSecondRemains()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                        ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                       AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()    
+                                       AND vbMovementDescId                     = zc_Movement_GoodsAccount()    
 
             LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
                                         ON MIFloat_TotalChangePercent.MovementItemId = MovementItem.Id
