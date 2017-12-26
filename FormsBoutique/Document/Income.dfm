@@ -26,7 +26,6 @@ object IncomeForm: TIncomeForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = 5
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -2076,7 +2075,7 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 492
+    Left = 460
     Top = 260
   end
   object GuidesCurrencyDocument: TdsdGuides

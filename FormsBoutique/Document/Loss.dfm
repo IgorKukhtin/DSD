@@ -130,10 +130,6 @@ object LossForm: TLossForm
               Kind = skSum
             end
             item
-              Kind = skSum
-              Column = OperPrice
-            end
-            item
               Format = ',0.####'
               Kind = skSum
             end
@@ -1563,8 +1559,6 @@ object LossForm: TLossForm
     SummaryItemList = <
       item
         Param.Value = Null
-        Param.Component = FormParams
-        Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 6
