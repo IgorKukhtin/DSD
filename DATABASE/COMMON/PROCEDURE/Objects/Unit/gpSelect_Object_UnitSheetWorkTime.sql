@@ -27,7 +27,7 @@ BEGIN
     IF EXISTS (SELECT UserId 
                FROM ObjectLink_UserRole_View 
                WHERE UserId = vbUserId 
-                 AND RoleId IN (zc_Enum_Role_Admin(), 14473
+                 AND RoleId IN (zc_Enum_Role_Admin()
                               , 14473  -- Персонал ввод справочников
                               , 447972 -- Просмотр СБ
                                ))

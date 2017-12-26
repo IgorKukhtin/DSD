@@ -45,6 +45,8 @@ type
     PartionGoods_start: TcxGridDBColumn;
     TermProduction: TcxGridDBColumn;
     Amount_result_two: TcxGridDBColumn;
+    Income_CEH: TcxGridDBColumn;
+    Amount_result_two_two: TcxGridDBColumn;
   private
     { Private declarations }
   public

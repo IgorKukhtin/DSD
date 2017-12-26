@@ -145,10 +145,6 @@
     TabOrder = 2
     object TabSheet1: TTabSheet
       Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080' - '#1044#1086#1082#1091#1084#1077#1085#1090#1099
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GuidePanel: TPanel
         Left = 0
         Top = 0
@@ -1157,10 +1153,6 @@
     object TabSheet2: TTabSheet
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1080#1079' '#1092#1072#1081#1083#1086#1074
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel1: TPanel
         Left = 0
         Top = 0
@@ -1503,8 +1495,8 @@
     UTF8StringsAsWideField = True
     Catalog = 'public'
     DesignConnection = True
-    HostName = 'localhost'
-    Port = 0
+    HostName = '212.115.238.8:5432'
+    Port = 5432
     Database = 'boutique'
     User = 'postgres'
     Password = 'postgres'
