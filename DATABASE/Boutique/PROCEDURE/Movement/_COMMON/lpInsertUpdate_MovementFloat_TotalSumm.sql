@@ -151,6 +151,7 @@ BEGIN
              -- Сохранили свойство <Итого Сумма реализации остатка>
              PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummRemainsPriceList(), inMovementId, vbTotalSummRemainsPriceList + vbTotalSummSecondRemainsPriceList);
       ELSE
+      
              -- Сохранили свойство <Итого количество("главные элементы")>
              PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCount(), inMovementId, vbTotalCount);
              -- Сохранили свойство <Итого Сумма>

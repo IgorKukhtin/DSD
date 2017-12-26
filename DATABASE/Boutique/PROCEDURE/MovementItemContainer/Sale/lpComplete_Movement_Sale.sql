@@ -206,6 +206,19 @@ BEGIN
              LEFT JOIN tmpCurrency ON (tmpCurrency.CurrencyFromId = tmp.CurrencyId OR tmpCurrency.CurrencyToId = tmp.CurrencyId)
                                   AND tmp.CurrencyId <> zc_Currency_Basis()
             ;
+            
+            
+     -- проверка - Установлено Подразделение
+     IF COALESCE (vbUnitId, 0) = 0 
+     THEN
+         RAISE EXCEPTION 'Ошибка. Не установлено значение <Подразделение>.';
+     END IF;
+     -- проверка - Установлен Покупатель
+     IF COALESCE (vbClientId, 0) = 0 
+     THEN
+         RAISE EXCEPTION 'Ошибка. Не установлено значение <Покупатель>.';
+     END IF;
+
 
      -- проверка что оплачено НЕ больше чем надо
      IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.TotalPay > _tmpItem.OperSumm_ToPay)

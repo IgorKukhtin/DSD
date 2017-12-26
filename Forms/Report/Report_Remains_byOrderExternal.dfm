@@ -63,6 +63,16 @@ inherited Report_Remains_byOrderExternalForm: TReport_Remains_byOrderExternalFor
               Format = ',0.####'
               Kind = skSum
               Column = Amount_result_two
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Income_CEH
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_result_two_two
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -109,6 +119,16 @@ inherited Report_Remains_byOrderExternalForm: TReport_Remains_byOrderExternalFor
               Format = ',0.####'
               Kind = skSum
               Column = Amount_result_two
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Income_CEH
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_result_two_two
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -259,6 +279,16 @@ inherited Report_Remains_byOrderExternalForm: TReport_Remains_byOrderExternalFor
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object Amount_result_two_two: TcxGridDBColumn
+            Caption = #1056#1045#1047#1059#1051#1068#1058#1040#1058' C '#1087#1088'-'#1074#1086' ('#1060#1040#1050#1058')'
+            DataBinding.FieldName = 'Amount_result_two_two'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1079#1072#1103#1074#1082#1077
             DataBinding.FieldName = 'Amount'
@@ -268,6 +298,15 @@ inherited Report_Remains_byOrderExternalForm: TReport_Remains_byOrderExternalFor
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object Income_CEH: TcxGridDBColumn
+            Caption = #1055#1088#1080#1093#1086#1076' '#1087#1088'-'#1074#1086' ('#1060#1040#1050#1058')'
+            DataBinding.FieldName = 'Income_CEH'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
           end
           object Amount_Prev: TcxGridDBColumn
             Caption = #1085#1077#1086#1090#1075#1088#1091#1078'. '#1079#1072#1103#1074#1082#1072
@@ -591,8 +630,8 @@ inherited Report_Remains_byOrderExternalForm: TReport_Remains_byOrderExternalFor
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 296
-    Top = 120
+    Left = 280
+    Top = 160
   end
   object FormParams: TdsdFormParams
     Params = <

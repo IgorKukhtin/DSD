@@ -1515,8 +1515,8 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalCompleteForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalCompleteForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Remains_byOrderExternalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Remains_byOrderExternalForm');
   exit;
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Remains_byOrderExternalForm'));

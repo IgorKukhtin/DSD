@@ -12,23 +12,25 @@ RETURNS TABLE (FromCode Integer, FromName TVarChar
              , GoodsCode_pack Integer, GoodsName_pack TVarChar, GoodsKindName_pack  TVarChar
              , MeasureName TVarChar
              , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
-             , PartionGoods       TVarChar
-             , PartionGoods_start TDateTime
-             , TermProduction     Integer
-             , Amount             TFloat
-             , Amount_Prev        TFloat
-             , Amount_Next        TFloat
-             , Remains_SKLAD      TFloat
-             , Remains_CEH        TFloat
-             , Remains_CEH_next   TFloat
-             , Amount_result      TFloat
-             , Amount_result_two  TFloat
-             , ReceiptName TVarChar
-             , ReceiptCode TVarChar
-             , ReceiptName_basis TVarChar
-             , ReceiptCode_basis TVarChar
-             , ReceiptName_pack TVarChar
-             , ReceiptCode_pack TVarChar
+             , PartionGoods          TVarChar
+             , PartionGoods_start    TDateTime
+             , TermProduction        Integer
+             , Amount                TFloat
+             , Amount_Prev           TFloat
+             , Amount_Next           TFloat
+             , Remains_SKLAD         TFloat
+             , Remains_CEH           TFloat
+             , Remains_CEH_next      TFloat
+             , Income_CEH            TFloat
+             , Amount_result         TFloat
+             , Amount_result_two     TFloat
+             , Amount_result_two_two TFloat
+             , ReceiptName           TVarChar
+             , ReceiptCode           TVarChar
+             , ReceiptName_basis     TVarChar
+             , ReceiptCode_basis     TVarChar
+             , ReceiptName_pack      TVarChar
+             , ReceiptCode_pack      TVarChar
               )
 AS
 $BODY$
@@ -83,6 +85,31 @@ BEGIN
                          AND MovementItem.DescId     = zc_MI_Master()
                          AND MovementItem.isErased   = FALSE
                       )
+             -- Приход пр-во (ФАКТ)
+           , tmpIncome AS (SELECT MIContainer.ObjectId_Analyzer                  AS GoodsId
+                                , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId
+                                , SUM (MIContainer.Amount)                       AS Amount
+                           FROM MovementItemContainer AS MIContainer
+                                -- ЦЕХ колбаса+дел-сы
+                                INNER JOIN tmpUnit_CEH   ON tmpUnit_CEH.UnitId   = MIContainer.ObjectExtId_Analyzer
+                                -- Склады База + Реализации
+                                INNER JOIN tmpUnit_SKLAD ON tmpUnit_SKLAD.UnitId = MIContainer.WhereObjectId_Analyzer
+                                -- убрали Тару
+                                INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                      ON ObjectLink_Goods_InfoMoney.ObjectId      = MIContainer.ObjectId_Analyzer
+                                                     AND ObjectLink_Goods_InfoMoney.DescId        = zc_ObjectLink_Goods_InfoMoney()
+                                                     AND ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901() -- Ирна
+                                                                                                    , zc_Enum_InfoMoney_30101() -- Готовая продукция
+                                                                                                    , zc_Enum_InfoMoney_30201() -- Мясное сырье
+                                                                                                     )
+                           WHERE MIContainer.OperDate       = vbOperDate
+                             AND MIContainer.DescId         = zc_MIContainer_Count()
+                             AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                             AND MIContainer.isActive       = TRUE
+                             -- AND 1=0
+                           GROUP BY MIContainer.ObjectId_Analyzer
+                                  , MIContainer.ObjectIntId_Analyzer
+                          )
       -- поиск рецептур - что из чего делается
     , tmpReceipt_START AS (SELECT tmpGoods.GoodsId, tmpGoods.GoodsKindId
                                   -- нашли Рецепт - Цех (т.е. в приходе ПФ_ГП, в расходе СЫРЬЕ)
@@ -641,12 +668,14 @@ BEGIN
             , CAST (tmpData.Remains_SKLAD    * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS NUMERIC (16, 0)) :: TFloat AS Remains_SKLAD
             , CAST (tmpData.Remains_CEH      * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS NUMERIC (16, 0)) :: TFloat AS Remains_CEH
             , CAST (tmpData.Remains_CEH_next * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS NUMERIC (16, 0)) :: TFloat AS Remains_CEH_next
-            
+            , CAST (tmpIncome.Amount         * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS NUMERIC (16, 0)) :: TFloat AS Income_CEH
 
-            , CAST ((tmpData.Remains_SKLAD + tmpData.Remains_CEH - tmpData.Amount - tmpData.Amount_Prev - tmpData.Amount_Next)
+            , CAST ((tmpData.Remains_SKLAD + tmpData.Remains_CEH            - tmpData.Amount - tmpData.Amount_Prev - tmpData.Amount_Next)
                    * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS NUMERIC (16, 0)) :: TFloat AS Amount_result
-            , CAST ((tmpData.Remains_SKLAD + 0                 - tmpData.Amount - tmpData.Amount_Prev - tmpData.Amount_Next)
+            , CAST ((tmpData.Remains_SKLAD + 0                              - tmpData.Amount - tmpData.Amount_Prev - tmpData.Amount_Next)
                    * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS NUMERIC (16, 0)) :: TFloat AS Amount_result_two
+            , CAST ((tmpData.Remains_SKLAD + COALESCE (tmpIncome.Amount, 0) - tmpData.Amount - tmpData.Amount_Prev - tmpData.Amount_Next)
+                   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS NUMERIC (16, 0)) :: TFloat AS Amount_result_two_two
 
             , Object_Receipt.ValueData           AS ReceiptName
             , ObjectString_Code.ValueData        AS ReceiptCode
@@ -681,6 +710,9 @@ BEGIN
             -- здесь уже товары - что из чего делается
             LEFT JOIN tmpGoodsBasis ON tmpGoodsBasis.GoodsId     = tmpData.GoodsId
                                    AND tmpGoodsBasis.GoodsKindId = tmpData.GoodsKindId
+            -- здесь уже товары - что из чего делается
+            LEFT JOIN tmpIncome ON tmpIncome.GoodsId     = tmpData.GoodsId
+                               AND tmpIncome.GoodsKindId = tmpData.GoodsKindId
 
             LEFT JOIN Object AS Object_Goods_basis     ON Object_Goods_basis.Id     = tmpGoodsBasis.GoodsId_Basis
             LEFT JOIN Object AS Object_GoodsKind_basis ON Object_GoodsKind_basis.Id = tmpGoodsBasis.GoodsKindId_Basis
@@ -702,7 +734,6 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Code_pack
                                    ON ObjectString_Code_pack.ObjectId = tmpGoodsBasis.ReceiptId_pack
                                   AND ObjectString_Code_pack.DescId = zc_ObjectString_Receipt_Code()
-
            ;
 
 END;

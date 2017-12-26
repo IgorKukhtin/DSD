@@ -59,6 +59,18 @@ BEGIN
           ) AS _tmp;
 
 
+     -- проверка - Установлено Подразделение
+     IF COALESCE (vbUnitId, 0) = 0 
+     THEN
+         RAISE EXCEPTION 'Ошибка. Не установлено значение <Подразделение>.';
+     END IF;
+     -- проверка - Установлен Покупатель
+     IF COALESCE (vbClientId, 0) = 0 
+     THEN
+         RAISE EXCEPTION 'Ошибка. Не установлено значение <Покупатель>.';
+     END IF;
+
+
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (MovementItemId
                          , ContainerId_Summ, ContainerId_Goods

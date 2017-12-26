@@ -1551,7 +1551,7 @@ begin
      //
      with toZConnection do begin
         Connected:=false;
-        HostName:='localhost';
+        HostName:='192.168.10.103';
         User:='postgres';
         Password:='postgres';
         try Connected:=true; except ShowMessage ('not Connected');end;
@@ -1559,8 +1559,10 @@ begin
         //if ParamCount = 2 then isGlobalLoad:=zc_rvYes else isGlobalLoad:=zc_rvNo;
         isGlobalLoad:=zc_rvNo;
         if Connected
-        then Self.Caption:= Self.Caption + ' : ' + HostName + ' : TRUE'
-        else Self.Caption:= Self.Caption + ' : ' + HostName + ' : FALSE';
+        then if Port <> 0 then Self.Caption:= Self.Caption + ' : ' + HostName + ' : ' + IntToStr(Port) + ' : TRUE'
+                          else Self.Caption:= Self.Caption + ' : ' + HostName + ' : TRUE'
+        else if Port <> 0 then Self.Caption:= Self.Caption + ' : ' + HostName + ' : ' + IntToStr(Port) + ' : FALSE'
+                          else Self.Caption:= Self.Caption + ' : ' + HostName + ' : FALSE';
         //
         Connected:=false;
      end;

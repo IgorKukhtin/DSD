@@ -23,6 +23,21 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
      END IF;
 
+     -- проверка
+     IF inUserId = zc_User_Sybase() THEN
+         -- Установлено Подразделение
+         IF COALESCE (inFromId, 0) = 0 
+         THEN
+             RAISE EXCEPTION 'Ошибка. Не установлено значение <Подразделение>.';
+         END IF;
+         -- Установлен Покупатель
+         IF COALESCE (inToId, 0) = 0 
+         THEN
+             RAISE EXCEPTION 'Ошибка. Не установлено значение <Покупатель>.';
+         END IF;
+     END IF;
+
+
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 

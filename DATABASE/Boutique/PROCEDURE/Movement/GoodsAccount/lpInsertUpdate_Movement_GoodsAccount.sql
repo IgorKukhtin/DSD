@@ -1,6 +1,5 @@
 -- Function: lpInsertUpdate_Movement_GoodsAccount()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_GoodsAccount (Integer, TVarChar, TDateTime, Integer, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_GoodsAccount (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_GoodsAccount(
@@ -23,6 +22,21 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
      END IF;
+
+     -- проверка
+     IF inUserId = zc_User_Sybase() THEN
+         -- Установлен Покупатель
+         IF COALESCE (inFromId, 0) = 0 
+         THEN
+             RAISE EXCEPTION 'Ошибка. Не установлено значение <Покупатель>.';
+         END IF;
+         -- Установлено Подразделение
+         IF COALESCE (inToId, 0) = 0 
+         THEN
+             RAISE EXCEPTION 'Ошибка. Не установлено значение <Подразделение>.';
+         END IF;
+     END IF;
+
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
