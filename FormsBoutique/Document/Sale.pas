@@ -169,6 +169,7 @@ type
     Amount_USD_Exc: TcxGridDBColumn;
     Amount_EUR_Exc: TcxGridDBColumn;
     Amount_GRN_Exc: TcxGridDBColumn;
+    actUpdateDataSource: TdsdUpdateDataSet;
   private
   public
   end;

@@ -1631,6 +1631,24 @@ object SaleForm: TSaleForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object actUpdateDataSource: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMIMaster
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIMaster
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = 'actUpdateDataSource'
+      DataSource = DataSource
+    end
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
@@ -3141,6 +3159,7 @@ object SaleForm: TSaleForm
     View = cxGridDBTableView1
     OnDblClickActionList = <
       item
+        Action = actUpdateDataSource
       end>
     ActionItemList = <
       item
@@ -3152,12 +3171,11 @@ object SaleForm: TSaleForm
     ColumnAddOnList = <>
     ColumnEnterList = <
       item
-      end
-      item
+        Column = BarCode
       end>
     SummaryItemList = <>
-    Left = 944
-    Top = 224
+    Left = 784
+    Top = 208
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>

@@ -1466,6 +1466,24 @@ object ReturnInForm: TReturnInForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object actUpdateDataSource: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMIMaster
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIMaster
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = 'actUpdateDataSource'
+      DataSource = DataSource
+    end
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
@@ -3059,6 +3077,7 @@ object ReturnInForm: TReturnInForm
     View = cxGridDBTableView1
     OnDblClickActionList = <
       item
+        Action = actUpdateDataSource
       end>
     ActionItemList = <
       item
@@ -3070,8 +3089,7 @@ object ReturnInForm: TReturnInForm
     ColumnAddOnList = <>
     ColumnEnterList = <
       item
-      end
-      item
+        Column = BarCode
       end>
     SummaryItemList = <>
     Left = 944
