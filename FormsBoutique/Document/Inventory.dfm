@@ -165,10 +165,6 @@ object InventoryForm: TInventoryForm
               Kind = skSum
             end
             item
-              Kind = skSum
-              Column = Price
-            end
-            item
               Format = ',0.####'
               Kind = skSum
             end

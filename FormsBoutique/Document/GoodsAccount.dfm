@@ -407,6 +407,10 @@ object GoodsAccountForm: TGoodsAccountForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Kind = skSum
+              Column = OperPriceList
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1914,10 +1918,10 @@ object GoodsAccountForm: TGoodsAccountForm
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
         Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 6
+        DataSummaryItemIndex = 18
       end>
-    Left = 347
-    Top = 337
+    Left = 371
+    Top = 329
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 302

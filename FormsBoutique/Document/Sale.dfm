@@ -531,6 +531,10 @@ object SaleForm: TSaleForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_GRN_Exc
+            end
+            item
+              Kind = skSum
+              Column = OperPriceList
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -2540,7 +2544,7 @@ object SaleForm: TSaleForm
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
         Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 6
+        DataSummaryItemIndex = 32
       end>
     Left = 347
     Top = 337

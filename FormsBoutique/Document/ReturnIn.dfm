@@ -402,6 +402,10 @@ object ReturnInForm: TReturnInForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_Return
+            end
+            item
+              Kind = skSum
+              Column = OperPriceList
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1140,8 +1144,8 @@ object ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 256
-    Top = 263
+    Left = 248
+    Top = 287
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -2314,13 +2318,13 @@ object ReturnInForm: TReturnInForm
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
         Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 6
+        DataSummaryItemIndex = 16
       end>
-    Left = 347
-    Top = 337
+    Left = 339
+    Top = 377
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 326
+    Left = 350
     Top = 287
   end
   object spInsertUpdateMovement: TdsdStoredProc
@@ -2880,8 +2884,8 @@ object ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 644
-    Top = 212
+    Left = 620
+    Top = 204
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

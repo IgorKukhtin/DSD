@@ -134,10 +134,6 @@ object SendForm: TSendForm
               Kind = skSum
             end
             item
-              Kind = skSum
-              Column = OperPrice
-            end
-            item
               Format = ',0.####'
               Kind = skSum
             end
