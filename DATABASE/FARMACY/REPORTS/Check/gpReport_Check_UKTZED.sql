@@ -2,10 +2,12 @@
 
 DROP FUNCTION IF EXISTS gpReport_Check_UKTZED (Integer, Integer, TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Check_UKTZED (Integer, Integer, TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Check_UKTZED (Integer, Integer, Integer, TDateTime, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION  gpReport_Check_UKTZED(
     IN inUnitId           Integer  ,  -- Подразделение
     IN inRetailId         Integer  ,  -- ссылка на торг.сеть
+    IN inJuridicalId      Integer  ,  -- юр.лицо
     IN inStartDate        TDateTime,  -- Дата начала
     IN inEndDate          TDateTime,  -- Дата окончания
     IN inisMovement         Boolean  ,  -- по документам
@@ -14,6 +16,7 @@ CREATE OR REPLACE FUNCTION  gpReport_Check_UKTZED(
 RETURNS TABLE (UnitCode          Integer
              , UnitName          TVarChar
              , OurJuridicalName  TVarChar
+             , CashRegisterName  TVarChar
              , InvNumber         TVarChar
              , OperDate          TDateTime
              , GoodsId           Integer
@@ -52,6 +55,7 @@ BEGIN
                                           AND ((ObjectLink_Juridical_Retail.ChildObjectId = inRetailId AND inUnitId = 0)
                                                OR (inRetailId = 0 AND inUnitId = 0))
                 WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                 AND (ObjectLink_Unit_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
              )
              
   , tmpData_Container AS (SELECT MIContainer.MovementId                      AS MovementId_Check
@@ -107,15 +111,22 @@ BEGIN
                           
   , tmpData_SP AS (SELECT tmpData_Container.*
                         , CASE WHEN COALESCE (MovementString_InvNumberSP.ValueData,'') <> '' THEN TRUE ELSE FALSE END AS isSp_Check
+                        , MovementLinkObject_CashRegister.ObjectId AS CashRegisterId
                    FROM tmpData_Container
                         LEFT JOIN MovementString AS MovementString_InvNumberSP
                                                  ON MovementString_InvNumberSP.MovementId = tmpData_Container.MovementId_Check
                                                 AND MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP()
+                        -- касса
+                        LEFT JOIN MovementLinkObject AS MovementLinkObject_CashRegister
+                                                     ON MovementLinkObject_CashRegister.MovementId = tmpData_Container.MovementId_Check
+                                                    AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
+                        
                    )
                    
   , tmpData_all AS (SELECT CASE WHEN inisMovement = TRUE THEN tmpData_Container.MovementId_Check ELSE 0 END AS MovementId_Check
                          , MI_Income.Id                         :: Integer AS MovementItemId
                          , MI_Income.MovementId                 :: Integer AS MovementId
+                         , tmpData_Container.CashRegisterId
                          , tmpData_Container.isSp_Check
                          , tmpData_Container.UnitId
                          , tmpData_Container.GoodsId
@@ -127,6 +138,7 @@ BEGIN
 
                    GROUP BY MI_Income.Id
                           , MI_Income.MovementId
+                          , tmpData_Container.CashRegisterId
                           , tmpData_Container.GoodsId
                           , tmpData_Container.UnitId
                           , tmpData_Container.isSp_Check
@@ -137,7 +149,7 @@ BEGIN
   , tmpData AS (SELECT tmpData_all.MovementId_Check            AS MovementId_Check
                      , tmpData_all.isSp_Check
                      , COALESCE (MIString_FEA.ValueData, tmpGoods_UKTZED.CodeUKTZED)  AS CodeUKTZED
-
+                     , tmpData_all.CashRegisterId
                      , tmpData_all.UnitId
                      , tmpData_all.GoodsId
 
@@ -162,6 +174,7 @@ BEGIN
   
 
   , tmpDataRez AS (SELECT tmpData.MovementId_Check
+                        , tmpData.CashRegisterId
                         , tmpData.UnitId
                         , tmpData.GoodsId
                         , tmpData.CodeUKTZED
@@ -172,6 +185,7 @@ BEGIN
 
                    FROM tmpData
                    GROUP BY tmpData.MovementId_Check
+                          , tmpData.CashRegisterId
                           , tmpData.UnitId
                           , tmpData.GoodsId
                           , tmpData.CodeUKTZED
@@ -183,7 +197,7 @@ BEGIN
              Object_Unit.ObjectCode                       AS UnitCode
            , Object_Unit.ValueData                        AS UnitName
            , Object_OurJuridical.ValueData                AS OurJuridicalName
-
+           , Object_CashRegister.ValueData                AS CashRegisterName
            , Movement_Check.InvNumber                     AS InvNumber
            , Movement_Check.OperDate                      AS OperDate
 
@@ -224,6 +238,8 @@ BEGIN
              LEFT JOIN Object AS Object_OurJuridical ON Object_OurJuridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
 
              LEFT JOIN Movement AS Movement_Check ON Movement_Check.Id = tmpData.MovementId_Check
+             
+             LEFT JOIN Object AS Object_CashRegister ON Object_CashRegister.Id = tmpData.CashRegisterId
 
         ORDER BY Object_Goods.ValueData
 ;

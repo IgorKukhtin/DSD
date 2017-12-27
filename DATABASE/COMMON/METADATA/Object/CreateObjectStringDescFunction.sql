@@ -698,10 +698,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_PromoCode_Comment() RETURNS Integer A
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_PromoCode_Comment', zc_Object_PromoCode(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_PromoCode_Comment');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Fiscal_SerialNumber() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Fiscal_SerialNumber'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Fiscal_SerialNumber', zc_Object_Fiscal(), 'омер заводской' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Fiscal_SerialNumber');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Fiscal_InvNumber() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Fiscal_InvNumber'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Fiscal_InvNumber', zc_Object_Fiscal(), 'номер фискальный' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Fiscal_InvNumber');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 27.12.17         * zc_ObjectString_Fiscal_InvNumber
+                    zc_ObjectString_Fiscal_SerialNumber
  13.12.17         * zc_ObjectString_PromoCode_Comment
  23.10.17         * zc_ObjectString_Sticker.....
  26.09.17         * zc_ObjectString_JuridicalArea_Email

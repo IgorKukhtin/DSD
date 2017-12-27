@@ -3,7 +3,7 @@
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1087#1086' '#1055#1088#1086#1076#1072#1078#1072#1084' '#1076#1083#1103' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1080'>'
-  ClientHeight = 215
+  ClientHeight = 272
   ClientWidth = 333
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 49
-    Top = 177
+    Top = 230
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@
   end
   object cxButton2: TcxButton
     Left = 223
-    Top = 177
+    Top = 230
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -102,6 +102,23 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 10
+    Width = 305
+  end
+  object cxLabel4: TcxLabel
+    Left = 10
+    Top = 166
+    Caption = #1070#1088'.'#1083#1080#1094#1086':'
+  end
+  object edJuridical: TcxButtonEdit
+    Left = 10
+    Top = 188
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 12
     Width = 305
   end
   object PeriodChoice: TPeriodChoice
@@ -186,9 +203,26 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalId'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalName'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 14
-    Top = 163
+    Top = 216
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -283,7 +317,7 @@
       end>
     PackSize = 1
     Left = 127
-    Top = 165
+    Top = 218
   end
   object GuidesRetail: TdsdGuides
     KeyField = 'Id'
@@ -314,5 +348,35 @@
       end>
     Left = 112
     Top = 130
+  end
+  object GuidesJuridical: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridical
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 152
+    Top = 168
   end
 end

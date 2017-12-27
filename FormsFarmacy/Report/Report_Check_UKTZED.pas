@@ -60,6 +60,9 @@ type
     spUpdate_Price_MCSIsClose: TdsdStoredProc;
     CodeUKTZED: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
+    cxLabel4: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    GuidesJuridical: TdsdGuides;
   private
     { Private declarations }
   public
