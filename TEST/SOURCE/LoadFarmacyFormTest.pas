@@ -43,6 +43,7 @@ type
     procedure LoadEnumFormTest;
     procedure LoadEmailFormTest;
     procedure LoadEmailSettingsFormTest;
+    procedure LoadFiscalFormTest;
     procedure LoadGoodsGroupFormTest;
     procedure LoadGoodsFormTest;
     procedure LoadImportSettingsFormTest;
@@ -338,6 +339,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyValue_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCurrencyValue_ObjectForm');
 
+end;
+
+procedure TLoadFormTest.LoadFiscalFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFiscalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TFiscalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFiscalEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TFiscalEditForm');
 end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;

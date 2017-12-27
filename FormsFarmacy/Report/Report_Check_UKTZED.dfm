@@ -1,28 +1,28 @@
 inherited Report_Check_UKTZEDForm: TReport_Check_UKTZEDForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1076#1083#1103' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1080
   ClientHeight = 480
-  ClientWidth = 977
+  ClientWidth = 1062
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 993
+  ExplicitWidth = 1078
   ExplicitHeight = 518
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 58
-    Width = 977
-    Height = 422
+    Top = 83
+    Width = 1062
+    Height = 397
     TabOrder = 3
     ExplicitTop = 58
     ExplicitWidth = 977
     ExplicitHeight = 422
-    ClientRectBottom = 422
-    ClientRectRight = 977
+    ClientRectBottom = 397
+    ClientRectRight = 1062
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 977
       ExplicitHeight = 422
       inherited cxGrid: TcxGrid
-        Width = 977
-        Height = 422
+        Width = 1062
+        Height = 397
         ExplicitWidth = 977
         ExplicitHeight = 422
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -244,6 +244,14 @@ inherited Report_Check_UKTZEDForm: TReport_Check_UKTZEDForm
             Options.Editing = False
             Width = 70
           end
+          object colCashNumber: TcxGridDBColumn
+            Caption = #1050#1072#1089#1089#1072
+            DataBinding.FieldName = 'CashRegisterName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
+          end
           object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
@@ -265,35 +273,39 @@ inherited Report_Check_UKTZEDForm: TReport_Check_UKTZEDForm
     end
   end
   inherited Panel: TPanel
-    Width = 977
-    Height = 32
-    ExplicitWidth = 977
-    ExplicitHeight = 32
+    Width = 1062
+    Height = 57
+    ExplicitWidth = 1062
+    ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 29
       ExplicitLeft = 29
     end
     inherited deEnd: TcxDateEdit
-      Left = 142
-      ExplicitLeft = 142
+      Left = 29
+      Top = 32
+      ExplicitLeft = 29
+      ExplicitTop = 32
     end
     inherited cxLabel1: TcxLabel
       Caption = #1057':'
       ExplicitWidth = 15
     end
     inherited cxLabel2: TcxLabel
-      Left = 120
+      Left = 7
+      Top = 33
       Caption = #1087#1086':'
-      ExplicitLeft = 120
+      ExplicitLeft = 7
+      ExplicitTop = 33
       ExplicitWidth = 20
     end
     object cxLabel3: TcxLabel
-      Left = 234
-      Top = 5
+      Left = 127
+      Top = 6
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object ceUnit: TcxButtonEdit
-      Left = 325
+      Left = 218
       Top = 5
       Properties.Buttons = <
         item
@@ -308,20 +320,20 @@ inherited Report_Check_UKTZEDForm: TReport_Check_UKTZEDForm
       Width = 188
     end
     object cbMovement: TcxCheckBox
-      Left = 791
-      Top = 4
+      Left = 499
+      Top = 29
       Action = actRefreshIsPartion
       TabOrder = 6
       Width = 103
     end
     object cxLabel19: TcxLabel
-      Left = 519
-      Top = 5
+      Left = 415
+      Top = 6
       Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100':'
     end
     object ceRetail: TcxButtonEdit
-      Left = 602
-      Top = 4
+      Left = 498
+      Top = 5
       Properties.Buttons = <
         item
           Default = True
@@ -330,6 +342,23 @@ inherited Report_Check_UKTZEDForm: TReport_Check_UKTZEDForm
       Properties.ReadOnly = True
       TabOrder = 8
       Width = 183
+    end
+    object cxLabel4: TcxLabel
+      Left = 163
+      Top = 33
+      Caption = #1070#1088'.'#1083#1080#1094#1086':'
+    end
+    object edJuridical: TcxButtonEdit
+      Left = 218
+      Top = 32
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 10
+      Width = 188
     end
   end
   inherited ActionList: TActionList
@@ -441,6 +470,23 @@ inherited Report_Check_UKTZEDForm: TReport_Check_UKTZEDForm
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalId'
+          Value = Null
+          Component = GuidesJuridical
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = GuidesJuridical
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -529,6 +575,14 @@ inherited Report_Check_UKTZEDForm: TReport_Check_UKTZEDForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inStartDate'
         Value = 41395d
         Component = deStart
@@ -611,8 +665,8 @@ inherited Report_Check_UKTZEDForm: TReport_Check_UKTZEDForm
     end
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 224
-    Top = 64
+    Left = 72
+    Top = 8
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -620,11 +674,12 @@ inherited Report_Check_UKTZEDForm: TReport_Check_UKTZEDForm
         Component = PeriodChoice
       end
       item
+        Component = GuidesJuridical
       end
       item
         Component = GuidesUnit
       end>
-    Left = 432
+    Left = 456
     Top = 216
   end
   object rdUnit: TRefreshDispatcher
@@ -717,7 +772,8 @@ inherited Report_Check_UKTZEDForm: TReport_Check_UKTZEDForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 680
+    Left = 592
+    Top = 8
   end
   object spUpdate_Price_MCSIsClose: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_Price_MCSIsClose'
@@ -752,5 +808,35 @@ inherited Report_Check_UKTZEDForm: TReport_Check_UKTZEDForm
     PackSize = 1
     Left = 688
     Top = 240
+  end
+  object GuidesJuridical: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridical
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 264
+    Top = 24
   end
 end

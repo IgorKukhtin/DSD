@@ -406,6 +406,9 @@ type
     actPromoCodeMovement: TdsdOpenForm;
     N160: TMenuItem;
     N161: TMenuItem;
+    actFiscal: TdsdOpenForm;
+    miFiscal: TMenuItem;
+    N162: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

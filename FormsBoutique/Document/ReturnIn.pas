@@ -171,6 +171,7 @@ type
     edInsertName: TcxButtonEdit;
     cxLabel19: TcxLabel;
     Amount_Return: TcxGridDBColumn;
+    actUpdateDataSource: TdsdUpdateDataSet;
   private
   public
   end;

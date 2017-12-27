@@ -1790,6 +1790,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_JuridicalArea_Area() RETURNS Integer AS
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_JuridicalArea_Area', '–Â„ËÓÌ', zc_Object_JuridicalArea(), zc_Object_Area() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalArea_Area');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Fiscal_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Fiscal_Unit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Fiscal_Unit', '¿ÔÚÂÍ‡', zc_Object_Fiscal(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Fiscal_Unit');
+
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ¬–≈Ã≈ÕÕ€≈ Œ¡⁄≈ “€ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
