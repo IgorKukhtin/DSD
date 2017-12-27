@@ -862,6 +862,20 @@
           ParentFont = False
           TabOrder = 18
         end
+        object cbErr: TCheckBox
+          Left = 6
+          Top = 384
+          Width = 142
+          Height = 17
+          Caption = #1058#1086#1083#1100#1082#1086' Err  :'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 19
+        end
       end
       object CompleteDocumentPanel: TPanel
         Left = 379

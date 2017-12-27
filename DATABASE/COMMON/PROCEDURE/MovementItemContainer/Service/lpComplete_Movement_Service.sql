@@ -84,8 +84,13 @@ BEGIN
              , COALESCE (MILinkObject_Unit.ObjectId, 0) AS UnitId -- здесь используется (нужен для следующей проводки)
              , 0 AS PositionId -- не используется
 
-               -- Филиал Баланс: всегда по подразделению или "Главный филиал" (нужен для НАЛ долгов)
-             , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis()) AS BranchId_Balance
+               -- Филиал Баланс: 
+             , CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40900() AND Movement.OperDate = '31.12.2014'
+                         THEN -- Финансовая помощь
+                              0
+                    ELSE -- всегда по подразделению или "Главный филиал" (нужен для НАЛ долгов)
+                         COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
+               END AS BranchId_Balance
                -- Филиал ОПиУ: всегда по подразделению или "Главный филиал" (здесь не используется, нужен для следующей проводки)
              , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis()) AS BranchId_ProfitLoss
 

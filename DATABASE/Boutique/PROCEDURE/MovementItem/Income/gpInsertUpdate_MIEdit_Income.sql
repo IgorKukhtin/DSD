@@ -166,19 +166,35 @@ BEGIN
      IF inGoodsName = '' THEN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Товар>.';
      END IF;
-     -- Поиск - !!!без группы!!!
-     vbGoodsId:= (SELECT DISTINCT Object.Id
-                  FROM Object
-                       -- обязательно условие из партии
-                       INNER JOIN Object_PartionGoods ON Object_PartionGoods.GoodsId   = Object.Id
-                                                     AND Object_PartionGoods.PartnerId = vbPartnerId -- Марка + Год + Сезон
-                       /*INNER JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                             ON ObjectLink_Goods_GoodsGroup.ObjectId      = Object.Id
-                                            AND ObjectLink_Goods_GoodsGroup.DescId        = zc_ObjectLink_Goods_GoodsGroup()
-                                            AND ObjectLink_Goods_GoodsGroup.ChildObjectId = inGoodsGroupId*/
-                  WHERE Object.DescId    = zc_Object_Goods()
-                    AND Object.ValueData = inGoodsName
-                 );
+     
+     -- для загрузки из Sybase т.к. там код НЕ = 0 
+     IF vbUserId = zc_User_Sybase()
+     THEN
+         -- Поиск - !!!без группы!!! + inGoodsName + ioGoodsCode
+         vbGoodsId:= (SELECT DISTINCT Object.Id
+                      FROM Object
+                           -- обязательно условие из партии
+                           INNER JOIN Object_PartionGoods ON Object_PartionGoods.GoodsId   = Object.Id
+                                                         AND Object_PartionGoods.PartnerId = vbPartnerId -- Марка + Год + Сезон
+                      WHERE Object.DescId     = zc_Object_Goods()
+                        AND Object.ValueData  = inGoodsName
+                        AND Object.ObjectCode = -1 * ioGoodsCode
+                     );
+     ELSE
+         -- Поиск
+         vbGoodsId:= (SELECT DISTINCT Object.Id
+                      FROM Object
+                           -- обязательно условие из партии
+                           INNER JOIN Object_PartionGoods ON Object_PartionGoods.GoodsId   = Object.Id
+                                                         AND Object_PartionGoods.PartnerId = vbPartnerId -- Марка + Год + Сезон
+                           INNER JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                                 ON ObjectLink_Goods_GoodsGroup.ObjectId      = Object.Id
+                                                AND ObjectLink_Goods_GoodsGroup.DescId        = zc_ObjectLink_Goods_GoodsGroup()
+                                                AND ObjectLink_Goods_GoodsGroup.ChildObjectId = inGoodsGroupId
+                      WHERE Object.DescId    = zc_Object_Goods()
+                        AND Object.ValueData = inGoodsName
+                     );
+     END IF;
 
 
      IF COALESCE (vbGoodsId, 0) = 0

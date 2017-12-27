@@ -26,11 +26,25 @@ BEGIN
    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Goods());
    vbUserId:= lpGetUserBySession (inSession);
 
-   -- Нужен ВСЕГДА - ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
-   IF COALESCE (ioId, 0) = 0 AND ioCode > 0 THEN ioCode:= NEXTVAL ('Object_Goods_seq'); 
+
    -- для загрузки из Sybase т.к. там код НЕ = 0 
-   ELSEIF ioCode < 0
-       THEN ioCode:= -1 * ioCode;
+   IF vbUserId = zc_User_Sybase()
+   THEN
+       -- Проверка
+       IF COALESCE (ioCode, 0) >= 0 THEN RAISE EXCEPTION 'COALESCE (ioCode, 0) >= 0 : <%>', ioCode; END IF;
+
+       -- Определили
+       ioCode:= -1 * ioCode;
+
+   -- Нужен ВСЕГДА - ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
+   ELSEIF COALESCE (ioId, 0) = 0
+   THEN
+       -- Проверка
+       IF COALESCE (ioCode, 0) <= 0 THEN RAISE EXCEPTION 'Ошибка.Ошибочно передано "предварительное" значение кода : <%>', ioCode; END IF;
+
+       -- Определили
+       ioCode:= NEXTVAL ('Object_Goods_seq'); 
+
    END IF; 
 
    -- НЕ Нужен для загрузки из Sybase т.к. там код НЕ = 0 

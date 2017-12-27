@@ -4,9 +4,9 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_ObjectHistory (Integer, Integer, Integer,
 DROP FUNCTION IF EXISTS lpInsertUpdate_ObjectHistory (Integer, Integer, Integer, TDateTime, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_ObjectHistory(
- INOUT ioId         Integer, 
-    IN inDescId     Integer, 
-    IN inObjectId   Integer, 
+ INOUT ioId         Integer,
+    IN inDescId     Integer,
+    IN inObjectId   Integer,
     IN inOperDate   TDateTime,
     IN inUserId     Integer
 )
@@ -24,7 +24,7 @@ BEGIN
    -- !!!Округляем дату!!!
    inOperDate:= DATE_TRUNC ('SECOND', inOperDate);
 
-   IF COALESCE (inObjectId, 0) = 0 
+   IF COALESCE (inObjectId, 0) = 0
    THEN
        RAISE EXCEPTION 'Error. inObjectId = %', inObjectId;
    END IF;
@@ -47,7 +47,7 @@ BEGIN
      -- Ищем любой Id, если он начинается с той же даты
      findId:= (SELECT ObjectHistory.Id
                FROM ObjectHistory
-               WHERE ObjectHistory.DescId = inDescId 
+               WHERE ObjectHistory.DescId = inDescId
                  AND ObjectHistory.ObjectId = inObjectId
                  AND ObjectHistory.StartDate = inOperDate);
      -- если это "другой" элемент
@@ -72,8 +72,8 @@ BEGIN
 
 
    -- поиск предыдущего элемента относительно inOperDate
-   tmpId:= (SELECT Id FROM ObjectHistory 
-            WHERE ObjectHistory.DescId = inDescId 
+   tmpId:= (SELECT Id FROM ObjectHistory
+            WHERE ObjectHistory.DescId = inDescId
               AND ObjectHistory.ObjectId = inObjectId
               AND ObjectHistory.StartDate < inOperDate
             ORDER BY ObjectHistory.StartDate DESC
@@ -117,7 +117,7 @@ BEGIN
   -- расчет EndDate для текущего элемента: или начальная дата следующего элемента относительно inOperDate или максимальная дату
   lEndDate := COALESCE (lEndDate, zc_DateEnd());
 
-  IF COALESCE(ioId, 0) = 0
+  IF COALESCE (ioId, 0) = 0
   THEN
      -- дабавили текущий элемент: <ключ класса объекта> , <код объекта> , <данные> и вернули значение <ключа>
      INSERT INTO ObjectHistory (DescId, ObjectId, StartDate, EndDate)
@@ -125,7 +125,7 @@ BEGIN
   ELSE
      -- изменили текущий элемент по значению <ключа>: <код объекта>, <данные>
      UPDATE ObjectHistory SET StartDate = inOperDate, EndDate = lEndDate, ObjectId = inObjectId  WHERE Id = ioId;
-     IF NOT found THEN
+     IF NOT FOUND THEN
        -- дабавили текущий элемент: <ключ класса объекта>, <код объекта> , <данные> со значением <ключа>
        INSERT INTO ObjectHistory (Id, DescId, ObjectId, StartDate, EndDate)
                     VALUES (ioId, inDescId, inObjectId, inOperDate, lEndDate);
@@ -137,12 +137,12 @@ BEGIN
   IF COALESCE (PriorId, 0) <> 0
   THEN
      -- изменили EndDate у предыдущего элемента относительно ioId
-     UPDATE ObjectHistory SET EndDate = COALESCE((SELECT MIN (StartDate)     
+     UPDATE ObjectHistory SET EndDate = COALESCE((SELECT MIN (StartDate)
                                                   FROM ObjectHistory
-                                                  WHERE ObjectHistory.DescId = inDescId 
+                                                  WHERE ObjectHistory.DescId = inDescId
                                                     AND ObjectHistory.ObjectId = inObjectId
                                                     AND ObjectHistory.StartDate > lStartDate
-                                                 ), zc_DateEnd())  
+                                                 ), zc_DateEnd())
      WHERE Id = PriorId;
      -- сохранили протокол - "изменение EndDate"
      PERFORM lpInsert_ObjectHistoryProtocol (ObjectHistory.ObjectId, inUserId, StartDate, EndDate, ObjectHistoryFloat_Value.ValueData)
@@ -153,7 +153,7 @@ BEGIN
       WHERE ObjectHistory.Id = PriorId;
   END IF;
 
-END;           
+END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
