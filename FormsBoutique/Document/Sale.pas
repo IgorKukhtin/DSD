@@ -170,6 +170,10 @@ type
     Amount_EUR_Exc: TcxGridDBColumn;
     Amount_GRN_Exc: TcxGridDBColumn;
     actUpdateDataSource: TdsdUpdateDataSet;
+    spInsertUpdateMIMaster_BarCode: TdsdStoredProc;
+    clBarCode: TcxGridDBColumn;
+    spGet_Partion_byBarcode: TdsdStoredProc;
+    dsdStoredProc1: TdsdStoredProc;
   private
   public
   end;

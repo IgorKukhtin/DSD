@@ -1,13 +1,14 @@
--- Function: gpGet_MI_Sale_Child_Total()
+-- Function: gpGet_Partion_byBarcode()
 
-DROP FUNCTION IF EXISTS gpGet_Partion_byBarcode (Integer,Integer,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Partion_byBarcode (TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpGet_MI_Sale_Child_Total(
-    IN inBarcode           TVarChar   , --
-    IN inSession           TVarChar   -- сессия пользователя
+CREATE OR REPLACE FUNCTION gpGet_Partion_byBarcode(
+    IN inBarCode           TVarChar   , --
+    IN inSession           TVarChar     -- сессия пользователя
 )
-RETURNS TABLE (AmountRemains TFloat -- Остаток, грн
-             , AmountDiff    TFloat -- Сдача, грн
+RETURNS TABLE (GoodsId    Integer
+             , PartionId  Integer
+             , PriceSale  TFloat
               )
 AS
 $BODY$
@@ -19,16 +20,16 @@ BEGIN
 
      IF COALESCE (inBarcode, '') <> '' 
      THEN
-         vbPartionId := (SELECT zfConvert_StringToNumber (SUBSTR ('2010002606122', 4, 13-4))) :: Integer;
+         vbPartionId := (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4))) :: Integer;
      END IF;
      
      -- Результат
      RETURN QUERY
-       SELECT -- Остаток, грн
-              CASE WHEN tmp.AmountDiff > 0 THEN      tmp.AmountDiff ELSE 0 END :: TFloat AS AmountRemains
-              -- Сдача, грн
-            , CASE WHEN tmp.AmountDiff < 0 THEN -1 * tmp.AmountDiff ELSE 0 END :: TFloat AS AmountDiff
-       FROM tmp;
+       SELECT Object_PartionGoods.GoodsId        AS GoodsId
+            , Object_PartionGoods.MovementItemId AS PartionId
+            , Object_PartionGoods.PriceSale ::TFloat  AS PriceSale
+       FROM Object_PartionGoods
+       WHERE Object_PartionGoods.MovementItemId = vbPartionId;
 
 END;
 $BODY$
@@ -37,8 +38,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
- 22.05.17         *
+ 28.12.17         *
 */
 
 -- тест
--- SELECT * FROM gpGet_MI_Sale_Child_Total (inId:= 92, inMovementId:= 28, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_Partion_byBarcode (inBarCode:= '2010002606122', inSession:= zfCalc_UserAdmin());
