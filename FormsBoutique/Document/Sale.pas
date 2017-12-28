@@ -174,6 +174,7 @@ type
     clBarCode: TcxGridDBColumn;
     spGet_Partion_byBarcode: TdsdStoredProc;
     dsdStoredProc1: TdsdStoredProc;
+    BarCode_str: TcxGridDBColumn;
   private
   public
   end;

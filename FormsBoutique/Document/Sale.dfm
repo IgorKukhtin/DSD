@@ -233,7 +233,6 @@ object SaleForm: TSaleForm
         Height = 207
         Align = alClient
         TabOrder = 0
-        ExplicitTop = 81
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1159,6 +1158,13 @@ object SaleForm: TSaleForm
             HeaderAlignmentVert = vaCenter
             Width = 180
           end
+          object BarCode_str: TcxGridDBColumn
+            Caption = #1064#1090#1088#1080#1093#1082#1086#1076
+            DataBinding.FieldName = 'BarCode_str'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 145
+          end
         end
         object cxGridLevel1: TcxGridLevel
           GridView = cxGridDBTableView1
@@ -1654,9 +1660,11 @@ object SaleForm: TSaleForm
         end
         item
           StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spSelectBarCode
         end>
       Caption = 'actUpdateDataSource'
-      DataSource = DataSource
     end
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -3168,19 +3176,22 @@ object SaleForm: TSaleForm
     View = cxGridDBTableView1
     OnDblClickActionList = <
       item
-        Action = actUpdateDataSource
       end>
     ActionItemList = <
       item
+        Action = actUpdateDataSource
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
-    OnlyEditingCellOnEnter = True
+    OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <
       item
         Column = BarCode
+      end
+      item
+        Column = BarCode_str
       end>
     SummaryItemList = <>
     Left = 784
@@ -3479,14 +3490,16 @@ object SaleForm: TSaleForm
       end
       item
         Name = 'inBarCode'
+        Value = Null
         Component = ClientDataSet
-        ComponentItem = 'BarCode'
+        ComponentItem = 'BarCode_str'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
+        Value = Null
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

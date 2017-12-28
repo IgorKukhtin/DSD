@@ -21,6 +21,13 @@ BEGIN
      IF COALESCE (inBarcode, '') <> '' 
      THEN
          vbPartionId := (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4))) :: Integer;
+     ELSE 
+         RAISE EXCEPTION 'Ошибка.Товар не найден.';
+     END IF;
+     
+     IF COALESCE (vbPartionId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Товар не найден.';
      END IF;
      
      -- Результат

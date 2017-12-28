@@ -63,6 +63,11 @@ type
     cxLabel4: TcxLabel;
     edJuridical: TcxButtonEdit;
     GuidesJuridical: TdsdGuides;
+    Code_Fiscal: TcxGridDBColumn;
+    Name_Fiscal: TcxGridDBColumn;
+    FiscalCheckNumber: TcxGridDBColumn;
+    UnitName_Fiscal: TcxGridDBColumn;
+    SerialNumber_Fiscal: TcxGridDBColumn;
   private
     { Private declarations }
   public
