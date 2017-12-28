@@ -25,13 +25,14 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Товар не найден.';
      END IF;
      
-     IF COALESCE (vbPartionId, 0) = 0
+     IF NOT EXISTS (SELECT Object_PartionGoods.MovementItemId AS PartionId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = vbPartionId)
      THEN
          RAISE EXCEPTION 'Ошибка.Товар не найден.';
      END IF;
      
      -- Результат
      RETURN QUERY
+       
        SELECT Object_PartionGoods.GoodsId        AS GoodsId
             , Object_PartionGoods.MovementItemId AS PartionId
             , Object_PartionGoods.PriceSale ::TFloat  AS PriceSale
