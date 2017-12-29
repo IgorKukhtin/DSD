@@ -1,8 +1,8 @@
--- Function: gpGet_Partion_byBarcode()
+-- Function: gpGet_MISale_Partion_byBarcode()
 
-DROP FUNCTION IF EXISTS gpGet_Partion_byBarcode (TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MISale_Partion_byBarcode (TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpGet_Partion_byBarcode(
+CREATE OR REPLACE FUNCTION gpGet_MISale_Partion_byBarcode(
     IN inBarCode           TVarChar   , --
     IN inSession           TVarChar     -- сессия пользователя
 )
@@ -50,4 +50,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Partion_byBarcode (inBarCode:= '2010002606122', inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_MISale_Partion_byBarcode (inBarCode:= '2010002606122', inSession:= zfCalc_UserAdmin());

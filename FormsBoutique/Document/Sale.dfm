@@ -3525,7 +3525,7 @@ object SaleForm: TSaleForm
     Top = 359
   end
   object spGet_Partion_byBarcode: TdsdStoredProc
-    StoredProcName = 'gpGet_Partion_byBarcode'
+    StoredProcName = 'gpGet_MISale_Partion_byBarcode'
     DataSets = <>
     OutputType = otResult
     Params = <
