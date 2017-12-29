@@ -51,7 +51,11 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
 
-
+     -- при сканировании вызывается лишний раз
+     IF COALESCE (ioId, 0) = 0 AND COALESCE (inBarCode, '') = '' THEN
+        RETURN;
+     END IF;
+     
      -- проверка - документ должен быть сохранен
      IF COALESCE (inMovementId, 0) = 0 THEN
         RAISE EXCEPTION 'Ошибка.Документ не сохранен.';
