@@ -4,8 +4,9 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
   ClientWidth = 1065
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -292
   ExplicitWidth = 1081
-  ExplicitHeight = 463
+  ExplicitHeight = 460
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -57,19 +58,19 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
   inherited PageControl: TcxPageControl [1]
     Top = 59
     Width = 1065
-    Height = 366
+    Height = 325
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 1065
     ExplicitHeight = 366
-    ClientRectBottom = 366
+    ClientRectBottom = 325
     ClientRectRight = 1065
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1065
       ExplicitHeight = 366
       inherited cxGrid: TcxGrid
         Width = 1065
-        Height = 366
+        Height = 325
         ExplicitWidth = 1065
         ExplicitHeight = 366
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -465,6 +466,42 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
           end
         end
       end
+    end
+  end
+  object Panel1: TPanel [2]
+    Left = 0
+    Top = 384
+    Width = 1065
+    Height = 41
+    Align = alBottom
+    Caption = 'Panel1'
+    TabOrder = 6
+    ExplicitLeft = 352
+    ExplicitTop = 208
+    ExplicitWidth = 185
+    object cxDBLabel1: TcxDBLabel
+      Left = 1
+      Top = 1
+      Align = alClient
+      DataBinding.DataField = 'GoodsGroupNameFull'
+      DataBinding.DataSource = MasterDS
+      ParentFont = False
+      Properties.Alignment.Horz = taCenter
+      Properties.Alignment.Vert = taVCenter
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clNavy
+      Style.Font.Height = -12
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+      ExplicitLeft = 352
+      ExplicitTop = 16
+      ExplicitWidth = 121
+      ExplicitHeight = 21
+      Height = 39
+      Width = 1063
+      AnchorX = 533
+      AnchorY = 21
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore

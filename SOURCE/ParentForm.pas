@@ -58,6 +58,7 @@ uses
   cxButtonEdit, cxSplitter, Vcl.Menus, cxPC, frxDBSet, dxBarExtItems,
   cxDBPivotGrid, ChoicePeriod, cxGridDBBandedTableView,
   cxDBEdit, dsdAction, dsdGuides, cxDBVGrid,
+  cxDBLabel,
   Vcl.DBActns, cxMemo, cxGridDBChartView, ShellAPI, CommonData,
   SHDocVw, GMClasses, GMMap, GMMapVCL, GMLinkedComponents,
   GMMarker, GMMarkerVCL, GMGeoCode, GMDirection, GMDirectionVCL, cxImage{, DataModul};
@@ -361,8 +362,10 @@ initialization
   RegisterClass (TdxBarManager);
   RegisterClass (TdxBarStatic);
   RegisterClass (TdxBevel);
-
+  
   RegisterClass (TcxGridDBChartView);
+
+  RegisterClass (TcxDBLabel);
 
   // Компоненты для карты
   RegisterClass (TGMMap);

@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_DiscountPeriodItem_sybas
     IN inStartDate              TDateTime,  -- Дата действия % скидки
     IN inEndDate                TDateTime,  -- Дата действия % скидки
     IN inValue                  TFloat,     -- % скидки
-    IN inIsLast                 Boolean,    -- 
+    IN inIsLast                 Boolean,    --
     IN inSession                TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -20,7 +20,7 @@ DECLARE
 BEGIN
    -- !!!меняем значение!!!
    IF inIsLast = TRUE
-   THEN 
+   THEN
         -- Ищем ioId - за тот же день, т.е. StartDate = inStartDate
         ioId:= (SELECT ObjectHistory.Id FROM ObjectHistory WHERE ObjectHistory.DescId = zc_ObjectHistory_DiscountPeriodItem()
                                                              AND ObjectHistory.ObjectId = vbItemId AND ObjectHistory.StartDate = inStartDate);
@@ -45,12 +45,17 @@ BEGIN
         THEN
             -- Проверка inValue
             IF NOT EXISTS (SELECT ValueData FROM ObjectHistoryFloat WHERE DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value() AND ObjectHistoryId = ioId AND ValueData = inValue)
+               AND EXISTS (SELECT ValueData FROM ObjectHistoryFloat WHERE DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value() AND ObjectHistoryId = ioId AND ValueData > 0)
+               AND inValue > 0
             THEN
-                RAISE EXCEPTION 'NOT EXISTS VALUE on EndDate <%> <%>', inValue, (SELECT ValueData FROM ObjectHistoryFloat WHERE DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value() AND ObjectHistoryId = ioId);
+                RAISE EXCEPTION 'DIFF VALUE on EndDate <%> <%>', inValue, (SELECT ValueData FROM ObjectHistoryFloat WHERE DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value() AND ObjectHistoryId = ioId);
             END IF;
 
+            -- оставляем Value
+            IF inValue = 0 THEN inValue:= COALESCE ((SELECT ValueData FROM ObjectHistoryFloat WHERE DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value() AND ObjectHistoryId = ioId), 0); END IF;
             -- оставляем inStartDate
             inStartDate:= (SELECT (tmp.StartDate) FROM (SELECT StartDate FROM ObjectHistory WHERE Id = ioId /*UNION SELECT inStartDate AS StartDate*/) AS tmp);
+
         ELSE
             -- Ищем ioId - за тот же день, т.е. StartDate = inStartDate
             ioId:= (SELECT ObjectHistory.Id FROM ObjectHistory WHERE ObjectHistory.DescId = zc_ObjectHistory_DiscountPeriodItem() AND ObjectHistory.ObjectId = vbItemId AND ObjectHistory.StartDate = inStartDate);
@@ -59,15 +64,20 @@ BEGIN
             THEN
                 -- Проверка inValue
                 IF NOT EXISTS (SELECT ValueData FROM ObjectHistoryFloat WHERE DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value() AND ObjectHistoryId = ioId AND ValueData = inValue)
+                   AND EXISTS (SELECT ValueData FROM ObjectHistoryFloat WHERE DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value() AND ObjectHistoryId = ioId AND ValueData > 0)
+                   AND inValue > 0
                 THEN
-                    RAISE EXCEPTION 'NOT EXISTS VALUE on StartDate <%> <%>', inValue, (SELECT ValueData FROM ObjectHistoryFloat WHERE DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value() AND ObjectHistoryId = ioId);
+                    RAISE EXCEPTION 'DIFF VALUE on StartDate <%> <%>', inValue, (SELECT ValueData FROM ObjectHistoryFloat WHERE DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value() AND ObjectHistoryId = ioId);
                 END IF;
-    
+
+                -- оставляем Value
+                IF inValue = 0 THEN inValue:= COALESCE ((SELECT ValueData FROM ObjectHistoryFloat WHERE DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value() AND ObjectHistoryId = ioId), 0); END IF;
                 -- оставляем inEndDate
                 inEndDate:= (SELECT (tmp.EndDate) FROM (SELECT EndDate FROM ObjectHistory WHERE Id = ioId /*UNION SELECT inEndDate AS EndDate*/) AS tmp);
-            END IF; 
 
-        END IF; 
+            END IF;
+
+        END IF;
 
 
         IF COALESCE (ioId, 0) = 0
@@ -94,12 +104,12 @@ BEGIN
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-  
+
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 28.04.17         * 
+ 28.04.17         *
 */
 
 -- тест

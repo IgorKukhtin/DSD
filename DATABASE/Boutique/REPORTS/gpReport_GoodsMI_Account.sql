@@ -122,7 +122,7 @@ BEGIN
                                                 AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()                                                  
                 WHERE Movement_Sale.DescId = zc_Movement_Sale()
                   AND Movement_Sale.OperDate BETWEEN inStartDate AND inEndDate
-                  AND Movement_Sale.StatusId = zc_Enum_Status_Complete() 
+                  AND Movement_Sale.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
                 GROUP BY Movement_Sale.Id
                        , Movement_Sale.OperDate
                        , Movement_Sale.Invnumber 

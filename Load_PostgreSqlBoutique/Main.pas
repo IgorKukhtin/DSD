@@ -6431,7 +6431,9 @@ begin
         Add('     , zc_erasedDel() as zc_erasedDel');
         Add('     , Users.Erased as Erased');
         Add('     , Users.MemberId_Postgres as Id_Postgres');
-        Add('from dba.Users  where haschildren = -1');
+        Add('from dba.Users  ');
+        Add('     left outer join dba.Unit on Unit.Id = case when   ');
+        Add('where haschildren = -1');
         Add('order by ObjectId');
         Open;
         //
@@ -6734,7 +6736,7 @@ begin
         if cbLast.Checked = TRUE
         then begin
                    Add('  and DiscountTaxItems.EndDate = zc_DateEnd()');
-                   Add(' order by DiscountTaxItems.StartDate asc, BillItemsIncome.GoodsId_Postgres asc');
+                   Add(' order by DiscountTaxItems.UnitID, DiscountTaxItems.StartDate asc, BillItemsIncome.GoodsId_Postgres asc');
         end
         else begin Add('  and DiscountTaxItems.EndDate <> zc_DateEnd()');
                    Add(' order by DiscountTaxItems.UnitID, DiscountTaxItems.StartDate asc, DiscountTaxItems.EndDate asc');
@@ -6816,13 +6818,13 @@ begin
         Add('     left outer join PriceList on PriceList.id = PriceListItems.PriceListID');
         Add('     left outer join BillItemsIncome on BillItemsIncome.GoodsID= PriceListItems.goodsid');
         Add('where BillItemsIncome.GoodsId_Postgres is not null'); // Эта строка только для тестирования в реальной загрузке НЕ удалять
-        Add('  and PriceListItems.NewPrice <> 0');
+        Add('  and (PriceListItems.NewPrice <> 0 or PriceListItems.StartDate <> zc_DateStart())');
         if cbTest.Checked then Add(' and BillItemsIncome.GoodsId_Postgres = ' + TestEdit.Text);
 
         if cbLast.Checked = TRUE
         then begin
                    Add('  and PriceListItems.EndDate = zc_DateEnd()');
-                   Add(' order by PriceListItems.StartDate asc, BillItemsIncome.GoodsId_Postgres asc');
+                   Add(' order by PriceListItems.PriceListID, PriceListItems.StartDate asc, BillItemsIncome.GoodsId_Postgres asc');
         end
         else begin Add('  and PriceListItems.EndDate <> zc_DateEnd()');
                    Add(' order by PriceListItems.PriceListID, PriceListItems.StartDate asc, PriceListItems.EndDate asc');
