@@ -1470,16 +1470,22 @@ object ReturnInForm: TReturnInForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdateMIMaster
+      StoredProc = spGet_Partion_byBarcode
       StoredProcList = <
         item
-          StoredProc = spInsertUpdateMIMaster
+          StoredProc = spGet_Partion_byBarcode
+        end
+        item
+          StoredProc = spInsertUpdateMIMaster_BarCode
         end
         item
           StoredProc = spGetTotalSumm
         end
         item
           StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spSelectBarCode
         end>
       Caption = 'actUpdateDataSource'
       DataSource = DataSource
@@ -3069,8 +3075,8 @@ object ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 150
-    Top = 343
+    Left = 214
+    Top = 319
   end
   object dsdDBViewAddOn1: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -3081,6 +3087,7 @@ object ReturnInForm: TReturnInForm
       end>
     ActionItemList = <
       item
+        Action = actUpdateDataSource
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
@@ -3092,8 +3099,8 @@ object ReturnInForm: TReturnInForm
         Column = BarCode
       end>
     SummaryItemList = <>
-    Left = 944
-    Top = 224
+    Left = 800
+    Top = 208
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
@@ -3136,5 +3143,220 @@ object ReturnInForm: TReturnInForm
       end>
     Left = 320
     Top = 168
+  end
+  object spGet_Partion_byBarcode: TdsdStoredProc
+    StoredProcName = 'gpGet_MIReturnIn_Partion_byBarcode'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBarCode'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BarCode'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'GoodsId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'PartionId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SaleMI_Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SaleMI_Id'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceSale'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PriceSale'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 56
+    Top = 368
+  end
+  object spInsertUpdateMIMaster_BarCode: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_ReturnIn'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PartionId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementMI_Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SaleMI_Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPay'
+        Value = 'False'
+        Component = cbisPay
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = '1'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outOperPrice'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCountForPrice'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotalSumm'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotalSummBalance'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioOperPriceList'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PriceSale'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotalSummPriceList'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalSummPriceList'
+        DataType = ftFloat
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCurrencyValue'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CurrencyValue'
+        DataType = ftFloat
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outParValue'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ParValue'
+        DataType = ftFloat
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotalChangePercent'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalChangePercent'
+        DataType = ftFloat
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotalPayOth'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalPayOth'
+        DataType = ftFloat
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotalSummToPay'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalSummToPay'
+        DataType = ftFloat
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 158
+    Top = 375
   end
 end

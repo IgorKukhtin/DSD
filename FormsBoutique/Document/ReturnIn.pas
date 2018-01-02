@@ -172,6 +172,8 @@ type
     cxLabel19: TcxLabel;
     Amount_Return: TcxGridDBColumn;
     actUpdateDataSource: TdsdUpdateDataSet;
+    spGet_Partion_byBarcode: TdsdStoredProc;
+    spInsertUpdateMIMaster_BarCode: TdsdStoredProc;
   private
   public
   end;

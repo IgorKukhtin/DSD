@@ -4,7 +4,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
   ClientWidth = 927
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 943
-  ExplicitHeight = 424
+  ExplicitHeight = 423
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1767,8 +1767,8 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 256
-    Top = 163
+    Left = 264
+    Top = 171
   end
   object spSelectBarCode: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_Reestr_BarCode'
@@ -1795,7 +1795,6 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
     View = cxGridDBTableView1
     OnDblClickActionList = <
       item
-        Action = actUpdateDataSet
       end>
     ActionItemList = <
       item

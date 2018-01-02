@@ -12,19 +12,19 @@ inherited Report_Check_UKTZEDForm: TReport_Check_UKTZEDForm
     Width = 1062
     Height = 397
     TabOrder = 3
-    ExplicitTop = 58
-    ExplicitWidth = 977
-    ExplicitHeight = 422
+    ExplicitTop = 83
+    ExplicitWidth = 1062
+    ExplicitHeight = 397
     ClientRectBottom = 397
     ClientRectRight = 1062
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 977
-      ExplicitHeight = 422
+      ExplicitWidth = 1062
+      ExplicitHeight = 397
       inherited cxGrid: TcxGrid
         Width = 1062
         Height = 397
-        ExplicitWidth = 977
-        ExplicitHeight = 422
+        ExplicitWidth = 1062
+        ExplicitHeight = 397
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -263,6 +263,48 @@ inherited Report_Check_UKTZEDForm: TReport_Check_UKTZEDForm
           object OurJuridicalName: TcxGridDBColumn
             Caption = #1053#1072#1096#1077' '#1070#1088'.'#1083#1080#1094#1086
             DataBinding.FieldName = 'OurJuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object Code_Fiscal: TcxGridDBColumn
+            Caption = #1050#1086#1076' ('#1050#1040')'
+            DataBinding.FieldName = 'Code_Fiscal'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1082#1072#1089'. '#1072#1087#1087#1072#1088#1072#1090#1072
+            Options.Editing = False
+            Width = 55
+          end
+          object Name_Fiscal: TcxGridDBColumn
+            Caption = #1050#1072#1089#1089#1086#1074#1099#1081' '#1072#1087#1087#1072#1088#1072#1090
+            DataBinding.FieldName = 'Name_Fiscal'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object FiscalCheckNumber: TcxGridDBColumn
+            Caption = #1060#1080#1089#1082#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' ('#1050#1040')'
+            DataBinding.FieldName = 'FiscalCheckNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
+          end
+          object SerialNumber_Fiscal: TcxGridDBColumn
+            Caption = #1047#1072#1074#1086#1076#1089#1082#1086#1081' '#1085#1086#1084#1077#1088' ('#1050#1040')'
+            DataBinding.FieldName = 'SerialNumber_Fiscal'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object UnitName_Fiscal: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1050#1040')'
+            DataBinding.FieldName = 'UnitName_Fiscal'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

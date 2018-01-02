@@ -17,6 +17,13 @@ RETURNS TABLE (UnitCode          Integer
              , UnitName          TVarChar
              , OurJuridicalName  TVarChar
              , CashRegisterName  TVarChar
+
+             , Code_Fiscal          Integer
+             , Name_Fiscal          TVarChar
+             , FiscalCheckNumber    TVarChar
+             , SerialNumber_Fiscal  TVarChar
+             , UnitName_Fiscal      TVarChar
+             
              , InvNumber         TVarChar
              , OperDate          TDateTime
              , GoodsId           Integer
@@ -108,11 +115,36 @@ BEGIN
                                                     ON ObjectString_Goods_UKTZED.ObjectId = ObjectLink_Goods_Object.ObjectId
                                                    AND ObjectString_Goods_UKTZED.DescId   = zc_ObjectString_Goods_UKTZED()
                  )
-                          
-  , tmpData_SP AS (SELECT tmpData_Container.*
+              
+  , tmpFiscal AS (SELECT Object_Fiscal.ObjectCode    AS Code
+                       , Object_Fiscal.ValueData     AS Name
+                       , ObjectString_SerialNumber.ValueData  AS SerialNumber
+                       , ObjectString_InvNumber.ValueData     AS InvNumber
+                       , Object_Unit.Id              AS UnitId 
+                       , Object_Unit.ValueData       AS UnitName 
+                  FROM Object AS Object_Fiscal
+                      INNER JOIN ObjectString AS ObjectString_InvNumber
+                                              ON ObjectString_InvNumber.ObjectId = Object_Fiscal.Id 
+                                             AND ObjectString_InvNumber.DescId = zc_ObjectString_Fiscal_InvNumber()
+                                             AND COALESCE (ObjectString_InvNumber.ValueData, '') <> ''
+                                            
+                      LEFT JOIN ObjectString AS ObjectString_SerialNumber
+                                             ON ObjectString_SerialNumber.ObjectId = Object_Fiscal.Id 
+                                            AND ObjectString_SerialNumber.DescId = zc_ObjectString_Fiscal_SerialNumber()
+                                                                       
+                      LEFT JOIN ObjectLink AS ObjectLink_Fiscal_Unit
+                                           ON ObjectLink_Fiscal_Unit.ObjectId = Object_Fiscal.Id 
+                                          AND ObjectLink_Fiscal_Unit.DescId = zc_ObjectLink_Fiscal_Unit()
+                      LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Fiscal_Unit.ChildObjectId
+                  WHERE Object_Fiscal.DescId = zc_Object_Fiscal()
+                  ) 
+         
+  , tmpData_Det AS (SELECT tmpData_Container.MovementId_Check
                         , CASE WHEN COALESCE (MovementString_InvNumberSP.ValueData,'') <> '' THEN TRUE ELSE FALSE END AS isSp_Check
-                        , MovementLinkObject_CashRegister.ObjectId AS CashRegisterId
-                   FROM tmpData_Container
+                        , MovementLinkObject_CashRegister.ObjectId                                                    AS CashRegisterId
+                        , COALESCE (MovementString_FiscalCheckNumber.ValueData, '')                        ::TVarChar AS FiscalCheckNumber
+                       
+                   FROM (SELECT DISTINCT tmpData_Container.MovementId_Check FROM tmpData_Container) AS tmpData_Container
                         LEFT JOIN MovementString AS MovementString_InvNumberSP
                                                  ON MovementString_InvNumberSP.MovementId = tmpData_Container.MovementId_Check
                                                 AND MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP()
@@ -120,29 +152,34 @@ BEGIN
                         LEFT JOIN MovementLinkObject AS MovementLinkObject_CashRegister
                                                      ON MovementLinkObject_CashRegister.MovementId = tmpData_Container.MovementId_Check
                                                     AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
-                        
+
+                        LEFT JOIN MovementString AS MovementString_FiscalCheckNumber
+                                                 ON MovementString_FiscalCheckNumber.MovementId = tmpData_Container.MovementId_Check
+                                                AND MovementString_FiscalCheckNumber.DescId = zc_MovementString_FiscalCheckNumber()
                    )
                    
   , tmpData_all AS (SELECT CASE WHEN inisMovement = TRUE THEN tmpData_Container.MovementId_Check ELSE 0 END AS MovementId_Check
                          , MI_Income.Id                         :: Integer AS MovementItemId
                          , MI_Income.MovementId                 :: Integer AS MovementId
-                         , tmpData_Container.CashRegisterId
-                         , tmpData_Container.isSp_Check
+                         , tmpData_Det.CashRegisterId
+                         , tmpData_Det.isSp_Check
+                         , tmpData_Det.FiscalCheckNumber
                          , tmpData_Container.UnitId
                          , tmpData_Container.GoodsId
                          , SUM (COALESCE (tmpData_Container.Amount, 0))    AS Amount
                          , SUM (COALESCE (tmpData_Container.SummaSale, 0)) AS SummaSale
-                    FROM tmpData_SP AS tmpData_Container
+                    FROM tmpData_Container
+                         LEFT JOIN tmpData_Det ON tmpData_Det.MovementId_Check = tmpData_Container.MovementId_Check
                           -- элемент прихода
                          LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = tmpData_Container.MovementItemId_Income
-
                    GROUP BY MI_Income.Id
                           , MI_Income.MovementId
-                          , tmpData_Container.CashRegisterId
                           , tmpData_Container.GoodsId
                           , tmpData_Container.UnitId
-                          , tmpData_Container.isSp_Check
                           , CASE WHEN inisMovement = TRUE THEN tmpData_Container.MovementId_Check ELSE 0 END
+                          , tmpData_Det.CashRegisterId
+                          , tmpData_Det.isSp_Check
+                          , tmpData_Det.FiscalCheckNumber
                          )
                          
   -- находим CodeUKTZED из партии прихода, если значение пустое берем из свойства товара
@@ -150,6 +187,7 @@ BEGIN
                      , tmpData_all.isSp_Check
                      , COALESCE (MIString_FEA.ValueData, tmpGoods_UKTZED.CodeUKTZED)  AS CodeUKTZED
                      , tmpData_all.CashRegisterId
+                     , tmpData_all.FiscalCheckNumber
                      , tmpData_all.UnitId
                      , tmpData_all.GoodsId
 
@@ -172,9 +210,9 @@ BEGIN
                )
 
   
-
   , tmpDataRez AS (SELECT tmpData.MovementId_Check
                         , tmpData.CashRegisterId
+                        , tmpData.FiscalCheckNumber
                         , tmpData.UnitId
                         , tmpData.GoodsId
                         , tmpData.CodeUKTZED
@@ -182,10 +220,10 @@ BEGIN
                         , SUM (tmpData.Amount)     AS Amount
                         , SUM (tmpData.SummaSale)  AS SummaSale
                         , CASE WHEN SUM (tmpData.Amount) <> 0 THEN SUM (tmpData.SummaSale) / SUM (tmpData.Amount) ELSE 0 END :: TFloat AS PriceSale
-
                    FROM tmpData
                    GROUP BY tmpData.MovementId_Check
                           , tmpData.CashRegisterId
+                          , tmpData.FiscalCheckNumber
                           , tmpData.UnitId
                           , tmpData.GoodsId
                           , tmpData.CodeUKTZED
@@ -198,6 +236,13 @@ BEGIN
            , Object_Unit.ValueData                        AS UnitName
            , Object_OurJuridical.ValueData                AS OurJuridicalName
            , Object_CashRegister.ValueData                AS CashRegisterName
+           
+           , tmpFiscal.Code                               AS Code_Fiscal
+           , tmpFiscal.Name                               AS Name_Fiscal
+           , tmpData.FiscalCheckNumber                    AS FiscalCheckNumber
+           , tmpFiscal.SerialNumber                       AS SerialNumber_Fiscal
+           , tmpFiscal.UnitName                           AS UnitName_Fiscal
+
            , Movement_Check.InvNumber                     AS InvNumber
            , Movement_Check.OperDate                      AS OperDate
 
@@ -241,6 +286,8 @@ BEGIN
              
              LEFT JOIN Object AS Object_CashRegister ON Object_CashRegister.Id = tmpData.CashRegisterId
 
+             LEFT JOIN tmpFiscal ON tmpFiscal.InvNumber = tmpData.FiscalCheckNumber
+                                AND tmpFiscal.UnitId    = tmpData.UnitId
         ORDER BY Object_Goods.ValueData
 ;
 END;
