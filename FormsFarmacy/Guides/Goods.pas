@@ -70,11 +70,16 @@ type
     cxLabel3: TcxLabel;
     edContract: TcxButtonEdit;
     GuidesContract: TdsdGuides;
-    dxBarControlContainerItem1: TdxBarControlContainerItem;
-    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    bbLabel3: TdxBarControlContainerItem;
+    bbContract: TdxBarControlContainerItem;
     NDS_PriceList: TcxGridDBColumn;
     isNDS_dif: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
+    spUpdate_Goods_NDS: TdsdStoredProc;
+    macUpdateNDS: TMultiAction;
+    macSimpleUpdateNDS: TMultiAction;
+    actUpdateNDS: TdsdExecStoredProc;
+    bbUpdateNDS: TdxBarButton;
   private
     { Private declarations }
   public

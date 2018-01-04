@@ -79,8 +79,18 @@ inherited GoodsForm: TGoodsForm
             Width = 324
           end
           object NDSKindName: TcxGridDBColumn
-            Caption = #1053#1044#1057
+            Caption = #1042#1080#1076' '#1053#1044#1057
             DataBinding.FieldName = 'NDSKindName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1080#1076' '#1053#1044#1057
+            Options.Editing = False
+            Width = 68
+          end
+          object NDS: TcxGridDBColumn
+            Caption = #1053#1044#1057', %'
+            DataBinding.FieldName = 'NDS'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -481,6 +491,44 @@ inherited GoodsForm: TGoodsForm
       ImageIndex = 73
       DataSource = MasterDS
     end
+    object actUpdateNDS: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Goods_NDS
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Goods_NDS
+        end>
+      Caption = 'actUpdateNDS'
+    end
+    object macSimpleUpdateNDS: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateNDS
+        end>
+      View = cxGridDBTableView
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1053#1044#1057' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1087#1088#1072#1081#1089#1072
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1053#1044#1057' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1087#1088#1072#1081#1089#1072
+    end
+    object macUpdateNDS: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macSimpleUpdateNDS
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1054#1073#1085#1086#1074#1080#1090#1100' '#1053#1044#1057' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1087#1088#1072#1081#1089#1072'? '
+      InfoAfterExecute = #1053#1044#1057' '#1086#1073#1085#1086#1074#1083#1077#1085#1086' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1087#1088#1072#1081#1089#1072
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1053#1044#1057' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1087#1088#1072#1081#1089#1072
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1053#1044#1057' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1087#1088#1072#1081#1089#1072
+      ImageIndex = 76
+    end
     object DataSetPost1: TDataSetPost
       Category = 'Dataset'
       Caption = 'P&ost'
@@ -637,11 +685,19 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Visible = True
-          ItemName = 'dxBarControlContainerItem1'
+          ItemName = 'bbUpdateNDS'
         end
         item
           Visible = True
-          ItemName = 'dxBarControlContainerItem2'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbLabel3'
+        end
+        item
+          Visible = True
+          ItemName = 'bbContract'
         end
         item
           Visible = True
@@ -668,19 +724,23 @@ inherited GoodsForm: TGoodsForm
       Action = actPublishedList
       Category = 0
     end
-    object dxBarControlContainerItem1: TdxBarControlContainerItem
-      Caption = 'New Item'
+    object bbLabel3: TdxBarControlContainerItem
+      Caption = 'Label3'
       Category = 0
-      Hint = 'New Item'
+      Hint = 'Label3'
       Visible = ivAlways
       Control = cxLabel3
     end
-    object dxBarControlContainerItem2: TdxBarControlContainerItem
-      Caption = 'New Item'
+    object bbContract: TdxBarControlContainerItem
+      Caption = 'Contract'
       Category = 0
-      Hint = 'New Item'
+      Hint = 'Contract'
       Visible = ivAlways
       Control = edContract
+    end
+    object bbUpdateNDS: TdxBarButton
+      Action = macUpdateNDS
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1114,7 +1174,7 @@ inherited GoodsForm: TGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 712
+    Left = 648
     Top = 256
   end
   object spUpdate_Goods_Published: TdsdStoredProc
@@ -1224,5 +1284,40 @@ inherited GoodsForm: TGoodsForm
       end>
     Left = 544
     Top = 96
+  end
+  object spUpdate_Goods_NDS: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_NDS'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNDS'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'NDS'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNDS_PriceList'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'NDS_PriceList'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 808
+    Top = 248
   end
 end
