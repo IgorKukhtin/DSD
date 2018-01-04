@@ -53,7 +53,7 @@ type
     cxGridDBTableView: TcxGridDBTableView;
     Code: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
     OperPrice: TcxGridDBColumn;
     TotalSumm: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
@@ -159,6 +159,7 @@ type
     cxLabel3: TcxLabel;
     edTo: TcxButtonEdit;
     GuidesTo: TdsdGuides;
+    ChangePercent: TcxGridDBColumn;
   private
   public
   end;

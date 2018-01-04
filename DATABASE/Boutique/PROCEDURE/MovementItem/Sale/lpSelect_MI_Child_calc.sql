@@ -1,7 +1,5 @@
 -- Function: lpSelect_MI_Child_calc()
 
-DROP FUNCTION IF EXISTS lpSelect_MI_Child_calc (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat);
-DROP FUNCTION IF EXISTS lpSelect_MI_Child_calc (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer);
 DROP FUNCTION IF EXISTS lpSelect_MI_Child_calc (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpSelect_MI_Child_calc(
@@ -91,36 +89,52 @@ BEGIN
                tmpCash AS (SELECT lpSelect.CashId, lpSelect.CurrencyId, lpSelect.isBankAccount FROM lpSelect_Object_Cash (inUnitId, inUserId) AS lpSelect)
       -- распределили - Дополнительная скидка
    , tmp_MI_Master_all AS (SELECT _tmp_MI_Master.MovementItemId
+                                  -- Сумма к выплате
                                 , _tmp_MI_Master.AmountToPay
+                                  -- распределили Доп. Скидку по элементам
                                 , CASE WHEN inAmountDiscount = vbTotalAmountToPay
                                             THEN _tmp_MI_Master.AmountToPay
-                                       ELSE FLOOR (inAmountDiscount * _tmp_MI_Master.AmountToPay / vbTotalAmountToPay) END AS AmountDiscount
+                                       WHEN FLOOR (inAmountDiscount) <> inAmountDiscount AND inAmountDiscount < 21
+                                       -- ОКРУЛИЛИ до 2-х зн.
+                                       THEN ROUND (inAmountDiscount * _tmp_MI_Master.AmountToPay / vbTotalAmountToPay, 2)
+                                       -- отбросили коп.
+                                       ELSE FLOOR (inAmountDiscount * _tmp_MI_Master.AmountToPay / vbTotalAmountToPay)
+                                  END AS AmountDiscount
                                 , ROW_NUMBER() OVER (ORDER BY _tmp_MI_Master.AmountToPay DESC) AS Ord
                            FROM _tmp_MI_Master
                           )
          -- выровняли - Дополнительная скидка - т.е. разницу на коп. при округлении
        , tmp_MI_Master AS (SELECT tmp_MI_Master_all.MovementItemId
+                                  -- Сумма к выплате
                                 , tmp_MI_Master_all.AmountToPay
+                                  -- Доп. Скидка по элементам минус разница на коп. при округлении
                                 , tmp_MI_Master_all.AmountDiscount
                                   - (CASE WHEN tmp_MI_Master_all.Ord = 1
                                                THEN (SELECT SUM (tmp_MI_Master_all.AmountDiscount) AS AmountDiscount FROM tmp_MI_Master_all)
                                                   - inAmountDiscount
                                           ELSE 0
                                      END) AS AmountDiscount
+                                  -- Доп. Скидка по элементам БЕЗ разницы
                                 , tmp_MI_Master_all.AmountDiscount AS AmountDiscount_two
                                 , tmp_MI_Master_all.Ord
                            FROM tmp_MI_Master_all
                           )
             -- 1.1. остаток для оплаты EUR - с накопительной суммой
           , tmp_MI_EUR AS (SELECT tmpMI.MovementItemId
+                                  -- сумма в ГРН с учетом Доп. скидки
                                 , tmpMI.Amount_all
+                                  -- сумма в ГРН с учетом Доп. скидки - для расч. EUR
                                 , tmpMI.Amount_calc
+                                  -- сумма в ГРН с учетом Доп. скидки - НАКОПИТЕЛЬНО начиная с минимальной
                                 , SUM (tmpMI.Amount_calc) OVER (ORDER BY tmpMI.Amount_all ASC, tmpMI.MovementItemId ASC) AS Amount_SUM
                            FROM (SELECT tmpMI.MovementItemId
+                                        -- сумма в ГРН с учетом Доп. скидки
                                       , tmpMI.AmountToPay - tmpMI.AmountDiscount AS Amount_all
+                                        -- сумма в ГРН с учетом Доп. скидки - для расч. EUR
                                       , CASE WHEN inAmountGRN > 0 OR inAmountCard > 0
                                                   -- считаем что дробной части нет, т.е. она дополнится гривной
-                                                  THEN zfCalc_CurrencyFrom (FLOOR (zfCalc_CurrencyTo (tmpMI.AmountToPay - tmpMI.AmountDiscount, inCurrencyValueEUR, inParValueEUR))
+                                                  THEN zfCalc_CurrencyFrom (-- Переводим в Валюту + отбросили коп.
+                                                                            FLOOR (zfCalc_CurrencyTo (tmpMI.AmountToPay - tmpMI.AmountDiscount, inCurrencyValueEUR, inParValueEUR))
                                                                           , inCurrencyValueEUR, inParValueEUR)
                                              -- иначе дробная часть будет в обмене
                                              ELSE tmpMI.AmountToPay - tmpMI.AmountDiscount
@@ -231,17 +245,54 @@ BEGIN
                                 LEFT JOIN tmp_MI_EUR_res  ON tmp_MI_EUR_res.MovementItemId  = tmp_MI_Master.MovementItemId
                                 LEFT JOIN tmp_MI_USD_res  ON tmp_MI_USD_res.MovementItemId  = tmp_MI_Master.MovementItemId
                           )
-          -- 6. получили реальные суммы оплаты в валюте - !!!ОНИ ВСЕГДА ОКРУГЛЕНЫ ВНИЗ ДО ЦЕЛОГО!!! + "хвостики" в ГРН
-        , tmp_Currency AS (SELECT tmp_MI_res.MovementItemId
-
-                                , tmp_MI_res.Amount_EUR_grn - zfCalc_CurrencyFrom (FLOOR (zfCalc_CurrencyTo (tmp_MI_res.Amount_EUR_grn, inCurrencyValueEUR, inParValueEUR))
-                                                                                 , inCurrencyValueEUR, inParValueEUR)      AS Amount_EUR_grn
-                                , FLOOR (zfCalc_CurrencyTo (tmp_MI_res.Amount_EUR_grn, inCurrencyValueEUR, inParValueEUR)) AS Amount_EUR
-
-                                , tmp_MI_res.Amount_USD_grn - zfCalc_CurrencyFrom (FLOOR (zfCalc_CurrencyTo (tmp_MI_res.Amount_USD_grn, inCurrencyValueUSD, inParValueUSD))
-                                                                                 , inCurrencyValueUSD, inParValueUSD)      AS Amount_USD_grn
-                                , FLOOR (zfCalc_CurrencyTo (tmp_MI_res.Amount_USD_grn, inCurrencyValueUSD, inParValueUSD)) AS Amount_USD
+    -- 6.0. получили ...
+  , tmp_Currency_ROUND AS (SELECT tmp_MI_res.Amount_EUR_grn - zfCalc_CurrencyFrom (-- Переводим в Валюту + ОКРУЛИЛИ до 2-х зн.
+                                                                                   ROUND (zfCalc_CurrencyTo (tmp_MI_res.Amount_EUR_grn, inCurrencyValueEUR, inParValueEUR), 2)
+                                                                                 , inCurrencyValueEUR, inParValueEUR) AS Amount_EUR_grn
+                                , tmp_MI_res.Amount_USD_grn - zfCalc_CurrencyFrom (-- Переводим в Валюту + ОКРУЛИЛИ до 2-х зн.
+                                                                                   ROUND (zfCalc_CurrencyTo (tmp_MI_res.Amount_USD_grn, inCurrencyValueUSD, inParValueUSD), 2)
+                                                                                 , inCurrencyValueUSD, inParValueUSD) AS Amount_USD_grn
                            FROM tmp_MI_res
+                          )
+      -- 6.1. получили реальные суммы оплаты в валюте - !!!ОНИ НЕ ВСЕГДА ОКРУГЛЕНЫ ВНИЗ ДО КОП!!! + "хвостики" в ГРН
+    , tmp_Currency_all AS (SELECT tmp_MI_res.MovementItemId
+                                , tmp_MI_res.Amount_EUR_grn - zfCalc_CurrencyFrom (-- Переводим в Валюту + округлили коп. ИЛИ отбросили коп.
+                                                                                   CASE WHEN (SELECT SUM (tmp.Amount_EUR_grn) FROM tmp_Currency_ROUND AS tmp) = 0
+                                                                                        THEN ROUND (zfCalc_CurrencyTo (tmp_MI_res.Amount_EUR_grn, inCurrencyValueEUR, inParValueEUR), 2)
+                                                                                        ELSE FLOOR (100 * zfCalc_CurrencyTo (tmp_MI_res.Amount_EUR_grn, inCurrencyValueEUR, inParValueEUR))
+                                                                                           / 100
+                                                                                   END
+                                                                                 , inCurrencyValueEUR, inParValueEUR) AS Amount_EUR_grn
+
+                                , CASE WHEN (SELECT SUM (tmp.Amount_EUR_grn) FROM tmp_Currency_ROUND AS tmp) = 0
+                                       THEN ROUND (zfCalc_CurrencyTo (tmp_MI_res.Amount_EUR_grn, inCurrencyValueEUR, inParValueEUR), 2)
+                                       ELSE FLOOR (100 * zfCalc_CurrencyTo (tmp_MI_res.Amount_EUR_grn, inCurrencyValueEUR, inParValueEUR))
+                                          / 100
+                                  END AS Amount_EUR
+
+                                , tmp_MI_res.Amount_USD_grn - zfCalc_CurrencyFrom (-- Переводим в Валюту + округлили коп. ИЛИ отбросили коп.
+                                                                                   CASE WHEN (SELECT SUM (tmp.Amount_USD_grn) FROM tmp_Currency_ROUND AS tmp) = 0
+                                                                                        THEN ROUND (zfCalc_CurrencyTo (tmp_MI_res.Amount_USD_grn, inCurrencyValueUSD, inParValueUSD), 2)
+                                                                                        ELSE FLOOR (100 * zfCalc_CurrencyTo (tmp_MI_res.Amount_USD_grn, inCurrencyValueUSD, inParValueUSD))
+                                                                                           / 100
+                                                                                   END
+                                                                                 , inCurrencyValueUSD, inParValueUSD) AS Amount_USD_grn
+
+                                , CASE WHEN (SELECT SUM (tmp.Amount_USD_grn) FROM tmp_Currency_ROUND AS tmp) = 0
+                                       THEN ROUND (zfCalc_CurrencyTo (tmp_MI_res.Amount_USD_grn, inCurrencyValueUSD, inParValueUSD), 2)
+                                       ELSE FLOOR (100 * zfCalc_CurrencyTo (tmp_MI_res.Amount_USD_grn, inCurrencyValueUSD, inParValueUSD))
+                                          / 100
+                                  END AS Amount_USD
+                                
+                           FROM tmp_MI_res
+                          )
+          -- 6.2. получили реальные суммы - ОТБРОСИЛИ "хвостики" в ГРН если по нимИТОГО =0
+        , tmp_Currency AS (SELECT tmp_Currency_all.MovementItemId
+                                , CASE WHEN (SELECT SUM (tmp.Amount_EUR_grn) FROM tmp_Currency_all AS tmp) = 0 THEN 0 ELSE tmp_Currency_all.Amount_EUR_grn END AS Amount_EUR_grn
+                                , tmp_Currency_all.Amount_EUR
+                                , CASE WHEN (SELECT SUM (tmp.Amount_USD_grn) FROM tmp_Currency_all AS tmp) = 0 THEN 0 ELSE tmp_Currency_all.Amount_USD_grn END AS Amount_USD_grn
+                                , tmp_Currency_all.Amount_USD
+                           FROM tmp_Currency_all
                           )
             -- 7. получили ОБМЕНЫ - расход ГРН + приход Валюты
           , tmp_Change AS (-- из "хвостиков" оплаты

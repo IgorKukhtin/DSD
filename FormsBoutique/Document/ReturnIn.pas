@@ -174,6 +174,7 @@ type
     actUpdateDataSource: TdsdUpdateDataSet;
     spGet_Partion_byBarcode: TdsdStoredProc;
     spInsertUpdateMIMaster_BarCode: TdsdStoredProc;
+    ChangePercent: TcxGridDBColumn;
   private
   public
   end;

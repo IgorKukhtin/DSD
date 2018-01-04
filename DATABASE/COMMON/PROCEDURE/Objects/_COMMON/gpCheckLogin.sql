@@ -54,3 +54,4 @@ END;$BODY$
 
 -- тест
 -- SELECT * FROM LoginProtocol order by 1 desc
+-- SELECT * FROM gpCheckLogin ('Руденко В.В.', 'rdn132745', '', '')

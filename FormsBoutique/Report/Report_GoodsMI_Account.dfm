@@ -4,7 +4,6 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
   ClientWidth = 1065
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -292
   ExplicitWidth = 1081
   ExplicitHeight = 460
   PixelsPerInch = 96
@@ -58,21 +57,21 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
   inherited PageControl: TcxPageControl [1]
     Top = 59
     Width = 1065
-    Height = 325
+    Height = 336
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 1065
-    ExplicitHeight = 366
-    ClientRectBottom = 325
+    ExplicitHeight = 325
+    ClientRectBottom = 336
     ClientRectRight = 1065
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1065
-      ExplicitHeight = 366
+      ExplicitHeight = 325
       inherited cxGrid: TcxGrid
         Width = 1065
-        Height = 325
+        Height = 336
         ExplicitWidth = 1065
-        ExplicitHeight = 366
+        ExplicitHeight = 325
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -468,20 +467,17 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
       end
     end
   end
-  object Panel1: TPanel [2]
+  object PanelGoodsGroupNameFull: TPanel [2]
     Left = 0
-    Top = 384
+    Top = 395
     Width = 1065
-    Height = 41
+    Height = 30
     Align = alBottom
-    Caption = 'Panel1'
+    BevelOuter = bvNone
     TabOrder = 6
-    ExplicitLeft = 352
-    ExplicitTop = 208
-    ExplicitWidth = 185
-    object cxDBLabel1: TcxDBLabel
-      Left = 1
-      Top = 1
+    object DBLabelGoodsGroupNameFull: TcxDBLabel
+      Left = 0
+      Top = 0
       Align = alClient
       DataBinding.DataField = 'GoodsGroupNameFull'
       DataBinding.DataSource = MasterDS
@@ -494,14 +490,14 @@ inherited Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm
       Style.Font.Name = 'Tahoma'
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
-      ExplicitLeft = 352
-      ExplicitTop = 16
-      ExplicitWidth = 121
-      ExplicitHeight = 21
-      Height = 39
-      Width = 1063
+      ExplicitLeft = 1
+      ExplicitTop = 1
+      ExplicitWidth = 1063
+      ExplicitHeight = 38
+      Height = 30
+      Width = 1065
       AnchorX = 533
-      AnchorY = 21
+      AnchorY = 15
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
