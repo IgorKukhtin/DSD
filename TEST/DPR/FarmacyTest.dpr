@@ -561,7 +561,9 @@ uses
   PromoCodeSignDialog in '..\..\FormsFarmacy\Document\PromoCodeSignDialog.pas' {PromoCodeSignDialogForm: TParentForm},
   Report_Check_byPromoCode in '..\..\FormsFarmacy\Report\Report_Check_byPromoCode.pas' {Report_Check_byPromoCodeForm: TParentForm},
   FiscalEdit in '..\..\FormsFarmacy\Guides\FiscalEdit.pas' {FiscalEditForm: TParentForm},
-  Fiscal in '..\..\FormsFarmacy\Guides\Fiscal.pas' {FiscalForm: TParentForm};
+  Fiscal in '..\..\FormsFarmacy\Guides\Fiscal.pas' {FiscalForm: TParentForm},
+  Report_GoodsRemainsCurrentDialog in '..\..\FormsFarmacy\Report\Report_GoodsRemainsCurrentDialog.pas' {Report_GoodsRemainsCurrentDialogForm: TParentForm},
+  Report_GoodsRemainsCurrent in '..\..\FormsFarmacy\Report\Report_GoodsRemainsCurrent.pas' {Report_GoodsRemainsCurrentForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

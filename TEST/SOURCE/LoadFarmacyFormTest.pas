@@ -553,6 +553,12 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsCurrentForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRReport_GoodsRemainsCurrentForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsCurrentDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRReport_GoodsRemainsCurrentDialogForm');
+  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_UKTZEDDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_UKTZEDDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_UKTZEDForm'));
