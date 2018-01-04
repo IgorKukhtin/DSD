@@ -169,8 +169,8 @@ end;
 
  function TMedocComAction.LocalExecute: boolean;
 var DocumentList: IZDataset;
-    s, s_err, SEND_DPA: string;
-    ii, i, MovementId, MedocCode, FormCode: integer;
+    s_err, SEND_DPA: string;
+    ii, MovementId, MedocCode, FormCode: integer;
     MedocDocument: IZDocument;
     HeaderDataSet: IZDataset;
     LineDataSet: IZDataset;

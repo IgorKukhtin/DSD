@@ -67,15 +67,15 @@
 			<DCC_UsePackage>cxLibraryRS16;dxPSCoreRS16;cxPivotGridOLAPRS16;dxPScxGridLnkRS16;dxPScxTLLnkRS16;officeXPrt;cxPageControlRS16;vclimg;dxComnRS16;vcldb;dxADOServerModeRS16;cxPageControldxBarPopupMenuRS16;dxPSLnksRS16;dxBarExtItemsRS16;JclDeveloperTools;dxPSdxLCLnkRS16;cxVerticalGridRS16;dxorgcRS16;dxPScxExtCommonRS16;dxNavBarRS16;DBXOdbcDriver;dxPScxSSLnkRS16;vclactnband;dxServerModeRS16;bindcompvcl;Jcl;vclie;ipstudiowinclient;dsnapcon;vclx;dxFlowChartRS16;dxGDIPlusRS16;dxdborRS16;dxPScxPivotGridLnkRS16;dxCoreRS16;cxExportRS16;ZComponent;dxBarRS16;TeeDB;dxDBXServerModeRS16;cxSpreadSheetRS16;cxTreeListdxBarPopupMenuRS16;vclib;dxRibbonRS16;DBXSybaseASEDriver;cxTreeListRS16;vcldsnap;DBXDb2Driver;vcl;DBXMSSQLDriver;webdsnap;EhLib160;adortl;ZDbc;ZPlain;Tee;JclContainers;dxSkinsCoreRS16;dxmdsRS16;dxPScxCommonRS16;cxGridRS16;cxEditorsRS16;TeeUI;cxPivotGridRS16;ipstudiowin;cxSchedulerRS16;ZCore;vcltouch;websnap;VclSmp;dxTabbedMDIRS16;dxPSdxFCLnkRS16;dxThemeRS16;JclVcl;ZParseSql;dxBarDBNavRS16;$(DCC_UsePackage)</DCC_UsePackage>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base_Win32)'!=''">
-			<VerInfo_Build>25</VerInfo_Build>
+			<VerInfo_Build>15</VerInfo_Build>
 			<VerInfo_MinorVer>2</VerInfo_MinorVer>
-			<VerInfo_Release>3</VerInfo_Release>
+			<VerInfo_Release>7</VerInfo_Release>
 			<DCC_UsePackage>dxTileControlRS16;JvGlobus;fsADO16;JvMM;cxLibraryRS16;JvManagedThreads;ipstudiowindataset;JvCrypt;frxBDE16;dxPSCoreRS16;cxPivotGridOLAPRS16;dxPScxGridLnkRS16;dxPScxTLLnkRS16;JvNet;officeXPrt;cxPageControlRS16;JvDotNetCtrls;fsIBX16;vclimg;QR5RunDXE2;fmi;RtmRxCtl160;dxComnRS16;JvXPCtrls;vcldb;dxADOServerModeRS16;CloudService;FmxTeeUI;cxDataRS16;cxBarEditItemRS16;dxDockingRS16;cxPageControldxBarPopupMenuRS16;ipstudiowinwordxp;JvRuntimeDesign;ADDONS_XE2;dxPSLnksRS16;dxBarExtItemsRS16;JclDeveloperTools;dxPSdxLCLnkRS16;DSDComponent;cxVerticalGridRS16;dxorgcRS16;dxPScxExtCommonRS16;vcldbx;dxNavBarRS16;DBXOdbcDriver;JvCmp;dxdbtrRS16;kassa;JvTimeFramework;dxPScxSSLnkRS16;fsBDE16;frxDB16;intrawebdb_120_160;fs16;vclactnband;FMXTee;dxPScxSchedulerLnkRS16;dxServerModeRS16;bindcompvcl;frxcs16;Jcl;vclie;ipstudiowinclient;dclfrxTee16;dsnapcon;JvPascalInterpreter;dcldxSkinsCoreRS16;vclx;T557_R100;dxFlowChartRS16;frxIBX16;dxGDIPlusRS16;JvBDE;dxdborRS16;dxPScxVGridLnkRS16;dxLayoutControlRS16;dxPScxPivotGridLnkRS16;dxCoreRS16;RtmRxBDE160;cxExportRS16;ZComponent;QExport4RT_D16;dxBarRS16;QRDBASE_D2007;TeeDB;dxDBXServerModeRS16;cxSpreadSheetRS16;cxTreeListdxBarPopupMenuRS16;frxTee16;inetdbbde;vclib;Rave100VCL;dxRibbonRS16;DBXSybaseASEDriver;cxTreeListRS16;vcldsnap;DBXDb2Driver;Intraweb_120_160;frxADO16;vclribbon;frxe16;vtable160;vcl;RtmRxDB160;DBXMSSQLDriver;CodeSiteExpressPkg;fsTee16;JvAppFrm;cxSchedulerGridRS16;webdsnap;dxtrmdRS16;EhLibDataDrivers160;EhLib160;JvDocking;adortl;JvWizards;JvHMI;frxDBX16;JvBands;ZDbc;frx16;ZPlain;Tee;JclContainers;dxSkinsCoreRS16;svnui;dxmdsRS16;dxSpellCheckerRS16;dxPScxCommonRS16;cxGridRS16;cxEditorsRS16;TeeUI;cxPivotGridRS16;JvJans;JvPrintPreview;ipstudiowin;QImport3RT_D16;cxSchedulerRS16;ZCore;vcltouch;websnap;DSDDesignComponent;VclSmp;dxTabbedMDIRS16;fsDB16;DataSnapConnectors;dxPSdxFCLnkRS16;dxThemeRS16;JclVcl;ZParseSql;svn;bdertl;dxBarDBNavRS16;$(DCC_UsePackage)</DCC_UsePackage>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
 			<VerInfo_Locale>1033</VerInfo_Locale>
 			<Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.2.3.25;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.2.7.15;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1)'!=''">
 			<DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
@@ -85,11 +85,10 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-			<Debugger_RunParams>/log</Debugger_RunParams>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.2.7.11;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-			<VerInfo_Build>11</VerInfo_Build>
 			<VerInfo_MinorVer>2</VerInfo_MinorVer>
+			<VerInfo_Build>15</VerInfo_Build>
 			<VerInfo_Release>7</VerInfo_Release>
+			<Debugger_RunParams>/log /skipcheckconnect</Debugger_RunParams>
 			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<VerInfo_Locale>1033</VerInfo_Locale>
@@ -111,7 +110,6 @@
 			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.2.4.21;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.2.7.15;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
 			<VerInfo_Build>15</VerInfo_Build>
 			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
@@ -274,7 +272,6 @@
 					<Excluded_Packages>
 						<Excluded_Packages Name="$(BDSBIN)\dcloffice2k160.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
 						<Excluded_Packages Name="$(BDSBIN)\dclofficexp160.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
-						<Excluded_Packages Name="$(BDSBIN)\dclIPIndyImpl160.bpl">IP Abstraction Indy Implementation Design Time</Excluded_Packages>
 					</Excluded_Packages>
 					<Source>
 						<Source Name="MainSource">Farmacy.dpr</Source>

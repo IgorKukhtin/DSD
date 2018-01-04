@@ -258,7 +258,7 @@ var
 begin
 n:=n mod 100;
 n1:=n mod 10;
-n:=n div 10;
+n10:=n div 10;
 if n10=1 then Result:=3
 else //Если дворой разряд не 1
   begin
@@ -285,7 +285,6 @@ n:=n div 10;
 n10:=digit(n mod 10);
 n:=n div 10;
 n100:=digit(n mod 10);
-n:=n div 10;
 
 Result:=handrids[n100]+' ';
 if n10<>1 then
@@ -306,7 +305,6 @@ end;
 function SpellNumber(n:Int64; g:gender; wrd:wordForms):String;
 var
   n1, n2, n3, n4, n5, n6, m:word;
-  s:String;
 
 begin
 if n=0 then
@@ -328,7 +326,6 @@ n:=n div 1000;
 n5:=n mod 1000;
 n:=n div 1000;
 n6:=n mod 1000;
-n:=n div 1000;
 
 Result:=GetThousands(n1, g, wrd);
 if Result='' then Result:=wrd[3];

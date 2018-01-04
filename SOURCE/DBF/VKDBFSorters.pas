@@ -7,6 +7,8 @@
 }
 unit VKDBFSorters;
 
+{$WARNINGS OFF}
+
 interface
 
 uses

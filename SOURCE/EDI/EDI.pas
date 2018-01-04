@@ -535,7 +535,7 @@ begin
     FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
   DECLAR.DECLARBODY.R01G9 := '-' + StringReplace
     (FormatFloat('0.00', HeaderDataSet.FieldByName('totalsummmvat').AsFloat),
-    DecimalSeparator, cMainDecimalSeparator, []);
+    FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
   DECLAR.DECLARBODY.R001G03 := DECLAR.DECLARBODY.R02G9;
 
 
@@ -698,7 +698,7 @@ begin
     begin
       ROWNUM := IntToStr(i);
       NodeValue := '-' + StringReplace(FormatFloat('0.00',
-        HeaderDataSet.FieldByName('AmountSumm').AsFloat), DecimalSeparator,
+        HeaderDataSet.FieldByName('AmountSumm').AsFloat), FormatSettings.DecimalSeparator,
         cMainDecimalSeparator, []);
     end;
     inc(i);
@@ -878,7 +878,7 @@ begin
     FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
   DECLAR.DECLARBODY.R01G9 := '-' + StringReplace
     (FormatFloat('0.00', HeaderDataSet.FieldByName('totalsummmvat').AsFloat),
-    DecimalSeparator, cMainDecimalSeparator, []);
+    FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
   DECLAR.DECLARBODY.R001G03 := DECLAR.DECLARBODY.R02G9;
 
 
@@ -1389,7 +1389,7 @@ begin
     begin
       ROWNUM := IntToStr(i);
       NodeValue := '-' + StringReplace(FormatFloat('0.00',
-        HeaderDataSet.FieldByName('AmountSumm').AsFloat), DecimalSeparator,
+        HeaderDataSet.FieldByName('AmountSumm').AsFloat), FormatSettings.DecimalSeparator,
         cMainDecimalSeparator, []);
     end;
     inc(i);
@@ -1398,7 +1398,7 @@ begin
 
   DECLAR.DECLARBODY.R01G9 := '-' + StringReplace
     (FormatFloat('0.00', HeaderDataSet.FieldByName('totalsummmvat').AsFloat),
-    DecimalSeparator, cMainDecimalSeparator, []);
+    FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
   DECLAR.DECLARBODY.R02G9 := '-' + StringReplace
     (FormatFloat('0.00', HeaderDataSet.FieldByName('totalsummvat').AsFloat),
     FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
@@ -2488,8 +2488,6 @@ begin
 end;
 
 destructor TEDI.Destroy;
-var
-  i: integer;
 begin
   if not VarIsNull(ComSigner) then
      ComSigner.Finalize;
@@ -2581,7 +2579,7 @@ begin
           Finish;
         end;
     finally
-      FIdFTP.Quit;
+      FIdFTP.Disconnect;
       List.Free;
       Stream.Free;
     end;
@@ -3030,7 +3028,7 @@ begin
             Finish;
           end;
       finally
-        FIdFTP.Quit;
+        FIdFTP.Disconnect;
         List.Free;
         Stream.Free;
       end;
@@ -3163,7 +3161,7 @@ begin
           FIdFTP.ChangeDir(Directory);
           FIdFTP.Put(FileName);
         finally
-          FIdFTP.Quit;
+          FIdFTP.Disconnect;
         end;
       Break;
     except
@@ -3190,7 +3188,7 @@ begin
         FIdFTP.ChangeDir(Directory);
         FIdFTP.Put(Stream, FileName);
       end;
-      FIdFTP.Quit;
+      FIdFTP.Disconnect;
       Break;
     except
       on E: Exception do
@@ -3256,7 +3254,7 @@ begin
           Finish;
         end;
     finally
-      FIdFTP.Quit;
+      FIdFTP.Disconnect;
       List.Free;
       Stream.Free;
     end;
@@ -3305,7 +3303,6 @@ var
   List, Receipt: TStrings;
   i: integer;
   Stream: TStringStream;
-  Status: IXMLStatusType;
 begin
   FTPSetConnection;
   // загружаем файлы с FTP
@@ -3377,7 +3374,7 @@ begin
           Finish;
         end;
     finally
-      FIdFTP.Quit;
+      FIdFTP.Disconnect;
       List.Free;
       Receipt.Free;
       Stream.Free;

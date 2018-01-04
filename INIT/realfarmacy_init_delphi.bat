@@ -1,0 +1,1 @@
+copy /Y realfarmacy_init_delphi.php farmacy_init.php

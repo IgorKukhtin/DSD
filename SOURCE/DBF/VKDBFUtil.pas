@@ -10,6 +10,7 @@ unit VKDBFUtil;
 interface
 
 {$I VKDBF.DEF}
+{$WARNINGS OFF}
 
 uses
   {$IFDEF VKDBF_LOGGIN}VKDBFLogger,{$ENDIF}

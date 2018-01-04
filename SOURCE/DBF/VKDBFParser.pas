@@ -8,6 +8,7 @@
 unit VKDBFParser;
 
 {$I VKDBF.DEF}
+{$WARNINGS OFF}
 
 interface
 

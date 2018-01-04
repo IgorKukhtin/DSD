@@ -1511,7 +1511,6 @@ begin
   with HeaderDataSet do begin
      First;
      i := 0;
-     DocumentSumm := 0;
      while not EOF do begin
         if HeaderDataSet.FieldByName('MovementId').AsString = HeaderDataSet.FieldByName('inMovementId').AsString then begin
            //Дата відвантаження
@@ -1687,7 +1686,6 @@ begin
   with HeaderDataSet do begin
      First;
      i := 0;
-     DocumentSumm := 0;
      while not EOF do begin
         if HeaderDataSet.FieldByName('MovementId').AsString = HeaderDataSet.FieldByName('inMovementId').AsString then begin
            //Дата відвантаження
@@ -1993,7 +1991,6 @@ begin
   with HeaderDataSet do begin
      First;
      i := 0;
-     DocumentSumm := 0;
      while not EOF do begin
         if HeaderDataSet.FieldByName('MovementId').AsString = HeaderDataSet.FieldByName('inMovementId').AsString then begin
            //Дата відвантаження

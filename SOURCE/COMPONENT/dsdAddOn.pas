@@ -1305,7 +1305,6 @@ var
   PropertiesStore: TcxPropertiesStore;
   GridView: TcxCustomGridView;
   TreeList: TcxDBTreeList;
-  BarManager: TdxBarManager;
   FormName: string;
   PropertiesStoreComponent: TcxPropertiesStoreComponent;
 begin
@@ -1484,7 +1483,6 @@ begin
 end;
 
 procedure THeaderSaver.OnAfterShow(Sender: TObject);
-var i: integer;
 begin
   if Assigned(FOnAfterShow) then
      FOnAfterShow(Sender);
@@ -2624,11 +2622,10 @@ end;
 
 procedure TdsdWebBrowser.OnTimerNotifyEvent(Sender: TObject);
 var
-  i, j: integer;
+  i: integer;
   GMList: TGeoMarkerList;
   FDataSet: TDataSet;
   GPSNField, GPSEField, AddressField, InsertDateField: string;
-  GPSNValue, GPSEValue: Real;
   InsertDateValue: TDateTime;
 begin
   FTimer.Enabled := False;

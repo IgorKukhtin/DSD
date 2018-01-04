@@ -31,7 +31,7 @@ type
   protected
     procedure First; override;
   public
-    constructor Create(DataSetType: TDataSetType = dtDBF; StartRecord: integer = 1; ExtendedProperties: string = '');
+    constructor Create(DataSetType: TDataSetType = dtDBF; StartRecord: integer = 1; ExtendedProperties: string = ''); reintroduce;
     destructor Destroy; override;
     procedure Open(FileName: string);
     procedure Activate; override;
@@ -413,7 +413,6 @@ var
   Excel, Sheet: Variant;
   Row, Col: Integer;
   X: Int64;
-  aaa:Integer;
 begin
   if CLSIDFromProgID(PChar(ExcelAppName), CLSID) = S_OK then
   begin
@@ -463,7 +462,6 @@ procedure TFileExternalLoad.Open(FileName: string);
 var strConn :  widestring;
     List: TStringList;
     ListName: string;
-    CanRead: integer;
 begin
   case FDataSetType of
     dtMMO: CreateMMODataSet(FileName);

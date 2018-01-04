@@ -89,7 +89,8 @@ begin
   if ShowModal = mrOk then
   begin
     TUpdater.AutomaticUpdateProgram;
-    TUpdater.AutomaticCheckConnect;
+    if not FindCmdLineSwitch('skipcheckconnect') then
+       TUpdater.AutomaticCheckConnect;
     Application.CreateForm(TdmMain, dmMain);
     Application.CreateForm(TMainForm, MainFormInstance);
   end;

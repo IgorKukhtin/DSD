@@ -88,7 +88,6 @@ type
     FActiveControl: TWinControl;
     FTimer: TTimer;
     FEnabledTimer: Boolean;
-    FTimerInterval: Integer;
     FPostDataSetAfterExecute: Boolean;
     procedure SetTabSheet(const Value: TcxTabSheet); virtual;
     procedure SetEnabledTimer(const Value: Boolean);
@@ -709,7 +708,6 @@ type
   TdsdLoadXMLKS = class(TdsdCustomAction)
   private
     FXMLFilename: String;
-    FXMLFilenameDev: Boolean; // признак указано при разработке - не открывать odOpenXML
     FInsertProcedureName: string;
     odOpenXML: TOpenDialog;
     // обработка свойства XMLFilename
@@ -718,12 +716,11 @@ type
     // обработка свойства InsertProcedureName
     //procedure SetInsertProcedureName(Value: String);
     //function GetInsertProcedureName: String;
-  protected
-    // основная функция - Сохранение файла в БД
-    function Execute: Boolean; override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    // основная функция - Сохранение файла в БД
+    function Execute: Boolean; override;
   published
     property XMLFilename: String read FXMLFilename write FXMLFilename;
     property InsertProcedureName: String read FInsertProcedureName write FInsertProcedureName;
@@ -732,7 +729,6 @@ type
   // Выгрузка результата в файл
   TdsdStoredProcExportToFile = class(TdsdCustomAction)
   private
-    FDataSet: TDataSet;
     FdsdStoredProcName: TdsdStoredProc;
     FFilename: string;
     FFileExt: string;// = '.txt';
@@ -741,12 +737,11 @@ type
     //FIncludeFieldNames: Boolean;
     procedure SetdsdStoredProcName(Value: TdsdStoredProc);
     function GetdsdStoredProcName: TdsdStoredProc;
-  protected
-    // основная функция - Сохранение файла
-    function Execute: Boolean; override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    // основная функция - Сохранение файла
+    function Execute: Boolean; override;
   published
     // ДатаСет с данными
 //    property DataSet: TDataSet read FDataSet write FDataSet;
@@ -2677,8 +2672,6 @@ var
   MemTableList: TList;
   ViewToMemTable: TcxViewToMemTable;
   Stream: TStringStream;
-  SortIdx,SI: Integer;
-  OldSort, NewSort: String;
   ExpandedStr: String;
   ExpandedIdx: Integer;
 begin
@@ -3077,8 +3070,7 @@ end;
 function TdsdStoredProcExportToFile.Execute: Boolean;
 var
   F: TextFile;
-  FieldNames, Values: string;
-  i: Integer;
+  FieldNames: string;
 begin
   if not Assigned(dsdStoredProcName) then
   begin

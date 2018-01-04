@@ -33,7 +33,7 @@ type
     procedure IncProgress(IncValue: integer = 1);
     {$ENDIF}
   public
-    constructor Create(AOwner: TForm; ACaption: TCaption; AMinValue, AMaxValue: integer); virtual;
+    constructor Create(AOwner: TForm; ACaption: TCaption; AMinValue, AMaxValue: integer); reintroduce; virtual;
   end;
 
 implementation

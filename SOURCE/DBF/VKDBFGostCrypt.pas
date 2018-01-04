@@ -7,6 +7,8 @@
 }
 unit VKDBFGostCrypt;
 
+{$WARNINGS OFF}
+
 interface
 
 uses

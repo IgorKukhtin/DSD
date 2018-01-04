@@ -8,6 +8,7 @@
 unit VKDBFIndex;
 
 {$I VKDBF.DEF}
+{$WARNINGS OFF}
 
 interface
 

@@ -34,7 +34,7 @@ type
     function AsFloat: double;
     procedure Assign(Source: TPersistent); override;
     constructor Create(Collection: TCollection); overload; override;
-    constructor Create; overload;
+    constructor Create; reintroduce; overload;
   published
     property Name: String read FName write FName;
     property Value: Variant read GetValue write SetValue;
@@ -799,7 +799,7 @@ end;
 function TdsdParam.GetValue: Variant;
 // Если указан Component, то параметры берутся из него
 // иначе из значения Value
-var DateTime: TDateTime;
+var
   i: Integer;
   IDs: String;
   Clmn: TcxGridDBColumn;

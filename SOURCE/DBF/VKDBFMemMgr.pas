@@ -7,6 +7,8 @@
 }
 unit VKDBFMemMgr;
 
+{$WARNINGS OFF}
+
 interface
 
 uses
