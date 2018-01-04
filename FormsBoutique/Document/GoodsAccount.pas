@@ -53,7 +53,7 @@ type
     cxGridDBTableView: TcxGridDBTableView;
     Code: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
     OperPrice: TcxGridDBColumn;
     TotalSumm: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
@@ -146,7 +146,6 @@ type
     actInsertUpdateMIChildTotal: TdsdInsertUpdateAction;
     MacInsertUpdateMIChildTotal: TMultiAction;
     bbInsertUpdateMIChildTotal: TdxBarButton;
-    PartionMI_Id: TcxGridDBColumn;
     SaleMI_Id: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
     OperDate_Sale: TcxGridDBColumn;
@@ -159,6 +158,12 @@ type
     cxLabel3: TcxLabel;
     edTo: TcxButtonEdit;
     GuidesTo: TdsdGuides;
+    ChangePercent: TcxGridDBColumn;
+    Amount_Return: TcxGridDBColumn;
+    TotalReturn: TcxGridDBColumn;
+    TotalPayOth_Sale: TcxGridDBColumn;
+    SummChangePercent_sale: TcxGridDBColumn;
+    TotalChangePercentPay: TcxGridDBColumn;
   private
   public
   end;

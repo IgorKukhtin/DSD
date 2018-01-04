@@ -46,8 +46,8 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     spGet_UserUnit: TdsdStoredProc;
-    Panel1: TPanel;
-    cxDBLabel1: TcxDBLabel;
+    PanelGoodsGroupNameFull: TPanel;
+    DBLabelGoodsGroupNameFull: TcxDBLabel;
   private
     { Private declarations }
   public

@@ -2597,7 +2597,7 @@ begin
         Add('    left outer join DBA.Unit as Unit_To on Unit_To.id = DiscountKlient.ClientId');
         Add('    left outer join DBA.Users on Users.id = DiscountMovement.InsertUserID');
 
-        Add('where DiscountMovement.descId = 1  and DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add('where DiscountMovement.descId = 1  and DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text)));
         Add('  and DiscountMovement.isErased = zc_rvNo()');
         Add('  and DiscountMovement.SaleId_Postgres > 0');
         Add('order by 5, 1');
@@ -2945,10 +2945,12 @@ begin
       // 1.4. Инвентаризация
         try fExecSqFromQuery('update dba.DiscountMovementInventory set Id_Postgres = null where Id_Postgres is not null'); except end;
         try fExecSqFromQuery('update dba.DiscountMovementItemInventory_byBarCode set Id_Postgres = null where Id_Postgres is not null'); except end;
+
       // 1.5. История цены
-        try fExecSqFromQuery('update dba.PriceListItems set Id_Postgres = null where Id_Postgres is not null'); except end;
+      //  try fExecSqFromQuery('update dba.PriceListItems set Id_Postgres = null where Id_Postgres is not null'); except end;
       // 1.6. История скидки
-        try fExecSqFromQuery('update dba.DiscountTaxItems set Id_Postgres = null where Id_Postgres is not null'); except end;
+      //  try fExecSqFromQuery('update dba.DiscountTaxItems set Id_Postgres = null where Id_Postgres is not null'); except end;
+
       // 1.8. Продажа покупателю
         try fExecSqFromQuery('update dba.DiscountMovement set SaleId_Postgres = null where SaleId_Postgres is not null'); except end;
         try fExecSqFromQuery('update dba.DiscountMovementItem_byBarCode set Id_Postgres = null where Id_Postgres is not null'); except end;
