@@ -1147,8 +1147,8 @@ inherited PriceListForm: TPriceListForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 512
-    Top = 32
+    Left = 520
+    Top = 16
   end
   object spUpdate_Price: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_Price'

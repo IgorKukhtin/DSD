@@ -79,12 +79,38 @@ inherited GoodsForm: TGoodsForm
             Width = 324
           end
           object NDSKindName: TcxGridDBColumn
-            Caption = #1053#1044#1057
+            Caption = #1042#1080#1076' '#1053#1044#1057
             DataBinding.FieldName = 'NDSKindName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1080#1076' '#1053#1044#1057
+            Options.Editing = False
+            Width = 68
+          end
+          object NDS: TcxGridDBColumn
+            Caption = #1053#1044#1057', %'
+            DataBinding.FieldName = 'NDS'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 68
+          end
+          object NDS_PriceList: TcxGridDBColumn
+            Caption = #1053#1044#1057' '#1087#1086#1089#1090'.'
+            DataBinding.FieldName = 'NDS_PriceList'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1044#1057' '#1074' '#1087#1088#1072#1081#1089#1077' '#1042#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            Width = 49
+          end
+          object isNDS_dif: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'. '#1087#1086' '#1053#1044#1057
+            DataBinding.FieldName = 'isNDS_dif'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1087#1086' '#1053#1044#1057' '#1074' '#1087#1088#1072#1081#1089#1077' '#1080' '#1090#1086#1074#1072#1088#1077
+            Width = 52
           end
           object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084
@@ -338,6 +364,23 @@ inherited GoodsForm: TGoodsForm
           end
         end
       end
+      object cxLabel3: TcxLabel
+        Left = 343
+        Top = 101
+        Caption = #1044#1086#1075#1086#1074#1086#1088' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      end
+      object edContract: TcxButtonEdit
+        Left = 343
+        Top = 119
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 2
+        Width = 222
+      end
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -448,6 +491,44 @@ inherited GoodsForm: TGoodsForm
       ImageIndex = 73
       DataSource = MasterDS
     end
+    object actUpdateNDS: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Goods_NDS
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Goods_NDS
+        end>
+      Caption = 'actUpdateNDS'
+    end
+    object macSimpleUpdateNDS: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateNDS
+        end>
+      View = cxGridDBTableView
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1053#1044#1057' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1087#1088#1072#1081#1089#1072
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1053#1044#1057' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1087#1088#1072#1081#1089#1072
+    end
+    object macUpdateNDS: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macSimpleUpdateNDS
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1054#1073#1085#1086#1074#1080#1090#1100' '#1053#1044#1057' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1087#1088#1072#1081#1089#1072'? '
+      InfoAfterExecute = #1053#1044#1057' '#1086#1073#1085#1086#1074#1083#1077#1085#1086' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1087#1088#1072#1081#1089#1072
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1053#1044#1057' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1087#1088#1072#1081#1089#1072
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1053#1044#1057' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1087#1088#1072#1081#1089#1072
+      ImageIndex = 76
+    end
     object DataSetPost1: TDataSetPost
       Category = 'Dataset'
       Caption = 'P&ost'
@@ -535,6 +616,15 @@ inherited GoodsForm: TGoodsForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Goods_Retail'
+    Params = <
+      item
+        Name = 'inContractId'
+        Value = Null
+        Component = GuidesContract
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     Left = 144
     Top = 88
   end
@@ -595,6 +685,26 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateNDS'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbLabel3'
+        end
+        item
+          Visible = True
+          ItemName = 'bbContract'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -612,6 +722,24 @@ inherited GoodsForm: TGoodsForm
     end
     object bbPublished: TdxBarButton
       Action = actPublishedList
+      Category = 0
+    end
+    object bbLabel3: TdxBarControlContainerItem
+      Caption = 'Label3'
+      Category = 0
+      Hint = 'Label3'
+      Visible = ivAlways
+      Control = cxLabel3
+    end
+    object bbContract: TdxBarControlContainerItem
+      Caption = 'Contract'
+      Category = 0
+      Hint = 'Contract'
+      Visible = ivAlways
+      Control = edContract
+    end
+    object bbUpdateNDS: TdxBarButton
+      Action = macUpdateNDS
       Category = 0
     end
   end
@@ -1046,7 +1174,7 @@ inherited GoodsForm: TGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 712
+    Left = 648
     Top = 256
   end
   object spUpdate_Goods_Published: TdsdStoredProc
@@ -1116,5 +1244,80 @@ inherited GoodsForm: TGoodsForm
     PackSize = 1
     Left = 560
     Top = 176
+  end
+  object GuidesContract: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edContract
+    FormNameParam.Value = 'TContractForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TContractForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesContract
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesContract
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 424
+    Top = 136
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = GuidesContract
+      end>
+    Left = 544
+    Top = 96
+  end
+  object spUpdate_Goods_NDS: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_NDS'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNDS'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'NDS'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNDS_PriceList'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'NDS_PriceList'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 808
+    Top = 248
   end
 end
