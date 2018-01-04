@@ -1232,6 +1232,10 @@ end;
 
 procedure TLoadFormTest.LoadGoodsAccountFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAccount_TotalErrorForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsAccount_TotalErrorForm');
+  exit;
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAccountForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsAccountForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAccountJournalForm'));

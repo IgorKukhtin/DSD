@@ -106,3 +106,4 @@ END;$BODY$
 -- SELECT * FROM LoginProtocol order by 1 desc
 -- SELECT * FROM gpCheckLoginMobile(inUserLogin:= 'Молдован Е.А.', inUserPassword:= 'mld132578', inSerialNumber:= '', inModel:= '', inVesion:= '', inVesionSDK:= '', ioSession:= '');
 -- SELECT * FROM gpCheckLoginMobile(inUserLogin:= 'Мурзаева Е.В.', inUserPassword:= 'mrv130879', inSerialNumber:= '', inModel:= '', inVesion:= '', inVesionSDK:= '', ioSession:= '');
+-- SELECT * FROM gpCheckLoginMobile(inUserLogin:= 'Руденко В.В.', inUserPassword:= 'rdn132745', inSerialNumber:= '', inModel:= '', inVesion:= '', inVesionSDK:= '', ioSession:= '');

@@ -55,15 +55,17 @@ BEGIN
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_Sale());
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- данные из шапки
+
+     -- Параметры документа
      SELECT Movement.OperDate
           , MovementLinkObject_From.ObjectId
-    INTO vbOperDate, vbUnitId
+            INTO vbOperDate, vbUnitId
      FROM Movement
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
      WHERE Movement.Id = inMovementId;
+
 
      -- Результат такой
      RETURN QUERY
@@ -83,7 +85,7 @@ BEGIN
                            , zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData)                       AS TotalSummPriceList
 
                            , COALESCE (MIFloat_SummChangePercent.ValueData, 0)     AS SummChangePercent     -- Дополнительная скидка в продаже ГРН
-                           , COALESCE (MIFloat_TotalChangePercent.ValueData, 0)    AS TotalChangePercent    -- Итого скидка в продаже ГРН
+                           , COALESCE (MIFloat_TotalChangePercent.ValueData, 0)    AS TotalChangePercent    -- Итого сумма Скидки - для "текущего" документа Продажи: 1)по %скидки + 2)дополнительная
                            , COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0) AS TotalChangePercentPay -- Дополнительная скидка в расчетах ГРН
                            , COALESCE (MIFloat_TotalPay.ValueData, 0)              AS TotalPay              -- Итого оплата в продаже ГРН
                            , COALESCE (MIFloat_TotalPayOth.ValueData, 0)           AS TotalPayOth           -- Итого оплата в расчетах ГРН

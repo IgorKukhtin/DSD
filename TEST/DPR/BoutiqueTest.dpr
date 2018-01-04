@@ -266,7 +266,8 @@ uses
   Report_MotionByPartner in '..\..\FormsBoutique\Report\Report_MotionByPartner.pas' {Report_MotionByPartnerForm: TParentForm},
   Report_MotionByPartnerDialog in '..\..\FormsBoutique\Report\Report_MotionByPartnerDialog.pas' {Report_MotionByPartnerDialogForm: TParentForm},
   IFIN_J1201209 in '..\..\SOURCE\MeDOC\IFIN_J1201209.pas',
-  CommonContainerProcedureTest in '..\SOURCEBoutique\Container\CommonContainerProcedureTest.pas';
+  CommonContainerProcedureTest in '..\SOURCEBoutique\Container\CommonContainerProcedureTest.pas',
+  GoodsAccount_TotalError in '..\..\FormsBoutique\Document\GoodsAccount_TotalError.pas' {GoodsAccount_TotalErrorForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

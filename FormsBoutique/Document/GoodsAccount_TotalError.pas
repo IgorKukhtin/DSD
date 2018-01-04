@@ -1,4 +1,4 @@
-unit Report_GoodsMI_Account;
+unit GoodsAccount_TotalError;
 
 interface
 
@@ -27,14 +27,11 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxDBLabel;
 
 type
-  TReport_GoodsMI_AccountForm = class(TAncestorReportForm)
-    cxLabel3: TcxLabel;
-    edUnit: TcxButtonEdit;
-    GuidesUnit: TdsdGuides;
+  TGoodsAccount_TotalErrorForm = class(TAncestorReportForm)
     dxBarButton1: TdxBarButton;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
-    PartnerName: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     actRefreshSize: TdsdDataSetRefresh;
@@ -46,8 +43,8 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     spGet_UserUnit: TdsdStoredProc;
-    PanelGoodsGroupNameFull: TPanel;
-    DBLabelGoodsGroupNameFull: TcxDBLabel;
+    Panel1: TPanel;
+    cxDBLabel1: TcxDBLabel;
   private
     { Private declarations }
   public
@@ -55,7 +52,7 @@ type
   end;
 
 var
-  Report_GoodsMI_AccountForm: TReport_GoodsMI_AccountForm;
+  GoodsAccount_TotalErrorForm: TGoodsAccount_TotalErrorForm;
 
 implementation
 
@@ -63,5 +60,5 @@ implementation
 
 initialization
 
-  RegisterClass(TReport_GoodsMI_AccountForm)
+  RegisterClass(TGoodsAccount_TotalErrorForm)
 end.

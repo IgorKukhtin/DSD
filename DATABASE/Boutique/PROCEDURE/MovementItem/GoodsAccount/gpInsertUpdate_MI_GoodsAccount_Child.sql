@@ -67,7 +67,7 @@ BEGIN
                                 + COALESCE (MIFloat_TotalPayReturn.ValueData, 0)
                                   AS AmountToPay
 
-                                , -- !!!для возврат оплаты - ПОТОМ ПРИДУМАТЬ!!!
+                                , -- !!!ВРЕМЕННО для возврат оплаты - ПОТОМ ПРИДУМАТЬ!!!
                                   0 AS AmountToPay_RETURN
                            FROM MovementItem
                                 -- получаем сразу партию Продажи
@@ -243,9 +243,10 @@ BEGIN
 
          -- в мастер записать - Итого оплата в Child ГРН
          PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), inParentId
-                                                 , COALESCE ((SELECT SUM (_tmpCash.Amount * CASE WHEN _tmpCash.CurrencyId = zc_Currency_GRN() THEN 1 ELSE _tmpCash.CurrencyValue / _tmpCash.ParValue END)
-                                                              FROM _tmpCash
-                                                             ), 0));
+                                                 , CAST (COALESCE ((SELECT SUM (_tmpCash.Amount * CASE WHEN _tmpCash.CurrencyId = zc_Currency_GRN() THEN 1 ELSE _tmpCash.CurrencyValue / _tmpCash.ParValue END)
+                                                                    FROM _tmpCash
+                                                                   ), 0)
+                                                         AS NUMERIC (16, 2)));
 
      END IF;
 
