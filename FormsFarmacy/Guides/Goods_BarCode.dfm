@@ -4,7 +4,7 @@ inherited Goods_BarCodeForm: TGoods_BarCodeForm
   ClientWidth = 883
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 899
-  ExplicitHeight = 478
+  ExplicitHeight = 481
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -483,6 +483,13 @@ inherited Goods_BarCodeForm: TGoods_BarCodeForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Goods_Retail'
+    Params = <
+      item
+        Name = 'inContractId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     Left = 144
     Top = 88
   end

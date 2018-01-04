@@ -21,7 +21,8 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit,
+  cxButtonEdit, cxLabel;
 
 type
   TGoodsForm = class(TAncestorGuidesForm)
@@ -66,6 +67,14 @@ type
     BarCode: TcxGridDBColumn;
     CountDays: TcxGridDBColumn;
     spUpdate_Goods_LastPriceOld: TdsdStoredProc;
+    cxLabel3: TcxLabel;
+    edContract: TcxButtonEdit;
+    GuidesContract: TdsdGuides;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    NDS_PriceList: TcxGridDBColumn;
+    isNDS_dif: TcxGridDBColumn;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public

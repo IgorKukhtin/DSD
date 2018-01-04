@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_Goods_Retail(Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Goods_Retail(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_Retail(
+    IN inContractId  Integer,       -- договор поставщика
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar, Name TVarChar, isErased Boolean
@@ -25,6 +26,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , UpdateName TVarChar, UpdateDate TDateTime
              , ConditionsKeepName TVarChar
              , MorionCode Integer, BarCode TVarChar, OrdBar Integer
+             , NDS_PriceList TFloat, isNDS_dif Boolean
               ) AS
 $BODY$ 
   DECLARE vbUserId Integer;
@@ -199,7 +201,18 @@ BEGIN
                                  AND ObjectLink_Main_BarCode.ChildObjectId > 0
                                  AND TRIM (Object_Goods_BarCode.ValueData) <> ''
                                --GROUP BY ObjectLink_Main_BarCode.ChildObjectId
-                              )                  
+                              )  
+         -- вытягиваем из LoadPriceListItem.GoodsNDS по входящему Договору поставщика (inContractId)
+         , tmpPricelistItems AS (SELECT DISTINCT
+                                        LoadPriceListItem.GoodsId      AS GoodsMainId
+                                      , CAST (REPLACE (REPLACE ( REPLACE (LoadPriceListItem.GoodsNDS , '%', ''), 'НДС', '') , ',', '.') AS TFloat) AS GoodsNDS
+                                 FROM LoadPriceList
+                                      INNER JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = LoadPriceList.Id
+                                 WHERE (LoadPriceList.ContractId = inContractId AND inContractId <> 0)
+                                   AND COALESCE (LoadPriceListItem.GoodsId, 0) <> 0
+                                 )
+         
+                         
       SELECT Object_Goods_View.Id
            , ObjectLink_Main.ChildObjectId     AS GoodsMainId 
            , Object_Goods_View.GoodsCodeInt
@@ -249,7 +262,10 @@ BEGIN
 
            , tmpGoodsMorion.MorionCode
            , tmpGoodsBarCode.BarCode
-           , tmpGoodsBarCode.Ord     :: Integer AS OrdBar
+           , tmpGoodsBarCode.Ord        :: Integer AS OrdBar
+           
+           , tmpPricelistItems.GoodsNDS :: TFloat  AS NDS_PriceList
+           , CASE WHEN COALESCE (tmpPricelistItems.GoodsNDS, 0) <> 0 AND inContractId <> 0 AND COALESCE (tmpPricelistItems.GoodsNDS, 0) <> Object_Goods_View.NDS THEN TRUE ELSE FALSE END AS isNDS_dif
       FROM Object_Goods_View
            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = Object_Goods_View.ObjectId
            LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_View.Id 
@@ -304,6 +320,9 @@ BEGIN
            LEFT JOIN tmpGoodsMorion ON tmpGoodsMorion.GoodsMainId = ObjectLink_Main.ChildObjectId
            -- определяем штрих-код производителя
            LEFT JOIN tmpGoodsBarCode ON tmpGoodsBarCode.GoodsMainId = ObjectLink_Main.ChildObjectId
+           
+           LEFT JOIN tmpPricelistItems ON tmpPricelistItems.GoodsMainId = ObjectLink_Main.ChildObjectId
+           
       WHERE Object_Goods_View.ObjectId = vbObjectId
 ;
 
@@ -312,12 +331,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Goods_Retail(TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_Goods_Retail(TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.
+ 03.01.18         * add inContractId, NDS_PriceList, isNDS_dif
  22.08.17         *
  16.08.17         * LastPriceOld
  19.05.17                                                       * MorionCode, BarCode
@@ -337,5 +357,5 @@ ALTER FUNCTION gpSelect_Object_Goods_Retail(TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Goods_Retail (zfCalc_UserAdmin())
--- select * from gpSelect_Object_Goods_Retail( inSession := '59591')
+-- SELECT * FROM gpSelect_Object_Goods_Retail (inContractId := 0, zfCalc_UserAdmin())
+-- select * from gpSelect_Object_Goods_Retail (inContractId := 183257, inSession := '59591')
