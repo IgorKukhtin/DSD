@@ -1,5 +1,5 @@
-inherited GoodsAccount_TotalErrorForm: TGoodsAccount_TotalErrorForm
-  Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1057#1091#1084#1084#1099' '#1086#1087#1083#1072#1090#1099' '#1074' '#1056#1072#1089#1095#1077#1090#1072#1093' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
+inherited ReturnIn_TotalErrorForm: TReturnIn_TotalErrorForm
+  Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1057#1091#1084#1084#1099' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' '#1074' '#1042#1086#1079#1074#1088#1072#1090#1072#1093' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
   ClientHeight = 425
   ClientWidth = 1065
   AddOnFormData.RefreshAction = actRefreshStart
@@ -92,6 +92,16 @@ inherited GoodsAccount_TotalErrorForm: TGoodsAccount_TotalErrorForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPayOth
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPayOth_Calc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -108,6 +118,16 @@ inherited GoodsAccount_TotalErrorForm: TGoodsAccount_TotalErrorForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalPay
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPayOth
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalPayOth_Calc
             end
             item
               Format = 'C'#1090#1088#1086#1082': ,0'
@@ -297,7 +317,7 @@ inherited GoodsAccount_TotalErrorForm: TGoodsAccount_TotalErrorForm
             Width = 50
           end
           object TotalPay: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1074' '#1043#1056#1053')'
+            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072'  '#1074#1086#1079#1074#1088#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' ('#1074' '#1043#1056#1053')'
             DataBinding.FieldName = 'TotalPay'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -309,8 +329,32 @@ inherited GoodsAccount_TotalErrorForm: TGoodsAccount_TotalErrorForm
             Width = 104
           end
           object TotalPay_Calc: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099'  ('#1074' '#1043#1056#1053') ('#1088#1072#1089#1095#1077#1090')'
+            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072'  '#1074#1086#1079#1074#1088#1072#1090#1072' '#1086#1087#1083#1072#1090#1099'  ('#1074' '#1043#1056#1053') ('#1088#1072#1089#1095#1077#1090')'
             DataBinding.FieldName = 'TotalPay_Calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 113
+          end
+          object TotalPayOth: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072'  '#1074#1086#1079#1074#1088#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' '#1074' '#1088#1072#1089#1095'. ('#1074' '#1043#1056#1053') '
+            DataBinding.FieldName = 'TotalPayOth'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 104
+          end
+          object TotalPayOth_Calc: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072'  '#1074#1086#1079#1074#1088#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' '#1074' '#1088#1072#1089#1095'. ('#1074' '#1043#1056#1053') ('#1088#1072#1089#1095#1077#1090')'
+            DataBinding.FieldName = 'TotalPayOth_Calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -654,7 +698,7 @@ inherited GoodsAccount_TotalErrorForm: TGoodsAccount_TotalErrorForm
     Top = 160
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_GoodsAccount_TotalError'
+    StoredProcName = 'gpSelect_Movement_ReturnIn_TotalError'
     Params = <
       item
         Name = 'inStartDate'

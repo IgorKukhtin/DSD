@@ -51,7 +51,10 @@ BEGIN
                            , MI_Master.Amount                            AS Amount
                             
                            , MIFloat_TotalPay.ValueData                  AS TotalPay
-                           , CAST (COALESCE (SUM (MI_Child.Amount * CASE WHEN MILinkObject_Currency.ObjectId = zc_Currency_GRN() THEN 1 ELSE MIFloat_CurrencyValue.ValueData / COALESCE(MIFloat_ParValue.ValueData, 1) END), 0) AS NUMERIC (16, 2)) AS TotalPay_Calc
+                           , CAST (COALESCE (SUM (MI_Child.Amount * CASE WHEN MILinkObject_Currency.ObjectId = zc_Currency_GRN() 
+                                                                         THEN 1
+                                                                         ELSE MIFloat_CurrencyValue.ValueData / CASE WHEN COALESCE(MIFloat_ParValue.ValueData, 1) <> 0 THEN COALESCE(MIFloat_ParValue.ValueData, 1) ELSE 1 END
+                                                                    END), 0) AS NUMERIC (16, 2)) AS TotalPay_Calc
                        FROM Movement
                             -- мастер
                             INNER JOIN MovementItem AS MI_Master 
@@ -90,7 +93,10 @@ BEGIN
                            , MI_Master.PartionId
                            , MI_Master.Amount
                            , MIFloat_TotalPay.ValueData
-                       HAVING MIFloat_TotalPay.ValueData <> CAST (COALESCE (SUM (MI_Child.Amount * CASE WHEN MILinkObject_Currency.ObjectId = zc_Currency_GRN() THEN 1 ELSE MIFloat_CurrencyValue.ValueData / COALESCE(MIFloat_ParValue.ValueData, 1) END), 0) AS NUMERIC (16, 2))
+                       HAVING MIFloat_TotalPay.ValueData <> CAST (COALESCE (SUM (MI_Child.Amount * CASE WHEN MILinkObject_Currency.ObjectId = zc_Currency_GRN() 
+                                                                                                        THEN 1 
+                                                                                                        ELSE MIFloat_CurrencyValue.ValueData / CASE WHEN COALESCE(MIFloat_ParValue.ValueData, 1) <> 0 THEN COALESCE(MIFloat_ParValue.ValueData, 1) ELSE 1 END
+                                                                                                   END), 0) AS NUMERIC (16, 2))
                        )
 
        SELECT

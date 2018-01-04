@@ -174,6 +174,8 @@ type
     miTotalError: TMenuItem;
     N4: TMenuItem;
     miGoodsAccount_TotalError: TMenuItem;
+    actReturnIn_TotalError: TdsdOpenForm;
+    miReturnIn_TotalError: TMenuItem;
   private
     { Private declarations }
   public

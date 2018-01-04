@@ -53,6 +53,7 @@ type
     procedure LoadClientFormTest;
     procedure LoadCompositionGroupFormTest;
     procedure LoadCompositionFormTest;
+    procedure LoadControlFormTest;
     procedure LoadCountryBrandFormTest;
     procedure LoadCurrencyMovementFormTest;
     procedure LoadCashFormTest;
@@ -1229,13 +1230,17 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoney_ObjectForm');
 end;
 
-
-procedure TLoadFormTest.LoadGoodsAccountFormTest;
+procedure TLoadFormTest.LoadControlFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAccount_TotalErrorForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsAccount_TotalErrorForm');
-  exit;
-  //
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnIn_TotalErrorForm'));
+  TdsdFormStorageFactory.GetStorage.Load('ReturnIn_TotalErrorForm');
+end;
+
+procedure TLoadFormTest.LoadGoodsAccountFormTest;
+begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAccountForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsAccountForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAccountJournalForm'));
