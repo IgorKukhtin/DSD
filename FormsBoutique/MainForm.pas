@@ -170,6 +170,10 @@ type
     miGoodsAccountMovement: TMenuItem;
     miReturnInMovement: TMenuItem;
     miSaleMovement: TMenuItem;
+    actGoodsAccount_TotalError: TdsdOpenForm;
+    miTotalError: TMenuItem;
+    N4: TMenuItem;
+    miGoodsAccount_TotalError: TMenuItem;
   private
     { Private declarations }
   public
