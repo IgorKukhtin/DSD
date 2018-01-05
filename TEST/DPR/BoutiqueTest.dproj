@@ -930,6 +930,10 @@
 				<Form>ReturnIn_TotalErrorForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Document\Sale_TotalError.pas">
+				<Form>Sale_TotalErrorForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

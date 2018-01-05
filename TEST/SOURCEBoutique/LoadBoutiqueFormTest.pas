@@ -1232,11 +1232,14 @@ end;
 
 procedure TLoadFormTest.LoadControlFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_TotalErrorForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSale_TotalErrorForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAccount_TotalErrorForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsAccount_TotalErrorForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnIn_TotalErrorForm'));
-  TdsdFormStorageFactory.GetStorage.Load('ReturnIn_TotalErrorForm');
+  TdsdFormStorageFactory.GetStorage.Load('TReturnIn_TotalErrorForm');
 end;
 
 procedure TLoadFormTest.LoadGoodsAccountFormTest;

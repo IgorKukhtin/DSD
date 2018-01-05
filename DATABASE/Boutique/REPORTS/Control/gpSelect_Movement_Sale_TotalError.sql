@@ -150,6 +150,7 @@ BEGIN
 
                                        WHERE /*Object_PartionMI.ObjectCode = inMovementItemId
                                          AND */Object_PartionMI.DescId     = zc_Object_PartionMI()
+                                       GROUP BY Object_PartionMI.ObjectCode
                                       ) AS tmpOth ON tmpOth.MI_Id = MI_Master.Id
 
                             -- קאיכה
@@ -269,8 +270,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = tmpData.MovementId
                                         AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
-            INNER JOIN Object AS Object_From ON Object_From.Id     = MovementLinkObject_From.ObjectId
-                                            AND Object_From.DescId = zc_Object_Client()
+            LEFT JOIN Object AS Object_From ON Object_From.Id     = MovementLinkObject_From.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = tmpData.MovementId

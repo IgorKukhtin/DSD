@@ -176,6 +176,8 @@ type
     miGoodsAccount_TotalError: TMenuItem;
     actReturnIn_TotalError: TdsdOpenForm;
     miReturnIn_TotalError: TMenuItem;
+    actSale_TotalError: TdsdOpenForm;
+    miSale_TotalError: TMenuItem;
   private
     { Private declarations }
   public
