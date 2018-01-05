@@ -2,7 +2,7 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
-
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService_item(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -14,6 +14,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService_item(
     IN inSummCardSecondRecalc TFloat    , -- Карта БН (ввод) - 2ф.
     IN inSummCardSecondCash  TFloat    , -- Карта БН (касса) - 2ф.
     IN inSummNalogRecalc     TFloat    , -- Налоги - удержания с ЗП (ввод)
+    IN inSummNalogRetRecalc  TFloat    , -- Налоги - возмещение к ЗП (ввод)
     IN inSummMinus           TFloat    , -- Сумма удержания
     IN inSummAdd             TFloat    , -- Сумма премия
 
@@ -37,29 +38,30 @@ BEGIN
      -- сохранили
      SELECT tmp.ioId
             INTO ioId
-     FROM lpInsertUpdate_MovementItem_PersonalService (ioId                 := ioId
-                                                     , inMovementId         := inMovementId
-                                                     , inPersonalId         := inPersonalId
-                                                     , inIsMain             := inIsMain
-                                                     , inSummService        := inSummService
-                                                     , inSummCardRecalc     := inSummCardRecalc
-                                                     , inSummCardSecondRecalc:= inSummCardSecondRecalc
-                                                     , inSummCardSecondCash := inSummCardSecondCash
-                                                     , inSummNalogRecalc    := inSummNalogRecalc
-                                                     , inSummMinus          := inSummMinus
-                                                     , inSummAdd            := inSummAdd
-                                                     , inSummHoliday        := inSummHoliday
-                                                     , inSummSocialIn       := inSummSocialIn
-                                                     , inSummSocialAdd      := inSummSocialAdd
-                                                     , inSummChildRecalc    := inSummChildRecalc
-                                                     , inSummMinusExtRecalc := inSummMinusExtRecalc
-                                                     , inComment            := inComment
-                                                     , inInfoMoneyId        := inInfoMoneyId
-                                                     , inUnitId             := inUnitId
-                                                     , inPositionId         := inPositionId
-                                                     , inMemberId           := inMemberId
+     FROM lpInsertUpdate_MovementItem_PersonalService (ioId                     := ioId
+                                                     , inMovementId             := inMovementId
+                                                     , inPersonalId             := inPersonalId
+                                                     , inIsMain                 := inIsMain
+                                                     , inSummService            := inSummService
+                                                     , inSummCardRecalc         := inSummCardRecalc
+                                                     , inSummCardSecondRecalc   := inSummCardSecondRecalc
+                                                     , inSummCardSecondCash     := inSummCardSecondCash
+                                                     , inSummNalogRecalc        := inSummNalogRecalc
+                                                     , inSummNalogRetRecalc     := inSummNalogRetRecalc
+                                                     , inSummMinus              := inSummMinus
+                                                     , inSummAdd                := inSummAdd
+                                                     , inSummHoliday            := inSummHoliday
+                                                     , inSummSocialIn           := inSummSocialIn
+                                                     , inSummSocialAdd          := inSummSocialAdd
+                                                     , inSummChildRecalc        := inSummChildRecalc
+                                                     , inSummMinusExtRecalc     := inSummMinusExtRecalc
+                                                     , inComment                := inComment
+                                                     , inInfoMoneyId            := inInfoMoneyId
+                                                     , inUnitId                 := inUnitId
+                                                     , inPositionId             := inPositionId
+                                                     , inMemberId               := inMemberId
                                                      , inPersonalServiceListId  := inPersonalServiceListId
-                                                     , inUserId             := inUserId
+                                                     , inUserId                 := inUserId
                                                       ) AS tmp;
 END;
 $BODY$
@@ -68,10 +70,11 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.01.18         * add inSummNalogRetRecalc
  20.06.17         * add inSummCardSecondCash
  20.04.16         * add inSummHoliday
  22.05.15                                        *
 */
 
 -- тест
--- SELECT * FROM lpInsertUpdate_MovementItem_PersonalService_item (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
+-- 

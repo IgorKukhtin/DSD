@@ -154,6 +154,16 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummCardSecondCash
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummNalogRet
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummNalogRetRecalc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -280,6 +290,16 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummCardSecondCash
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummNalogRet
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummNalogRetRecalc
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -442,6 +462,26 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object TotalSummNalogRet: TcxGridDBColumn
+            Caption = #1053#1072#1083#1086#1075#1080' - '#1074#1086#1079#1084#1077#1097#1077#1085#1080#1077' '#1082' '#1047#1055
+            DataBinding.FieldName = 'TotalSummNalogRet'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+          end
+          object TotalSummNalogRetRecalc: TcxGridDBColumn
+            Caption = #1053#1072#1083#1086#1075#1080' - '#1074#1086#1079#1084#1077#1097#1077#1085#1080#1077' '#1082' '#1047#1055' ('#1074#1074#1086#1076')'
+            DataBinding.FieldName = 'TotalSummNalogRetRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
           end
           object TotalSummChild: TcxGridDBColumn
             Caption = #1040#1083#1080#1084#1077#1085#1090#1099' - '#1091#1076#1077#1088#1078#1072#1085#1080#1077
@@ -1217,6 +1257,8 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   end
   inherited spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement_PersonalService'
+    Left = 376
+    Top = 152
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -1365,8 +1407,8 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 824
-    Top = 48
+    Left = 744
+    Top = 32
   end
   object spGet_Export_FileName: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Export_FileName'

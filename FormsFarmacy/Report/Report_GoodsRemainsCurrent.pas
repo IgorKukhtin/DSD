@@ -35,7 +35,7 @@ type
     GoodsName: TcxGridDBColumn;
     actOpenPartionReport: TdsdOpenForm;
     bbGoodsPartyReport: TdxBarButton;
-    NDSKindName: TcxGridDBColumn;
+    NDS: TcxGridDBColumn;
     actRefreshPartionPrice: TdsdDataSetRefresh;
     actRefreshIsPartion: TdsdDataSetRefresh;
     ExecuteDialog: TExecuteDialog;
@@ -55,7 +55,6 @@ type
     cxLabel5: TcxLabel;
     edContract: TcxButtonEdit;
     GuidesContract: TdsdGuides;
-    NDS: TcxGridDBColumn;
     NDS_Income: TcxGridDBColumn;
     NDS_PriceList: TcxGridDBColumn;
     isNDS_PriceList_dif: TcxGridDBColumn;

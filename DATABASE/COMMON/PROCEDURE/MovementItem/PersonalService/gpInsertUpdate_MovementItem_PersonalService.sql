@@ -1,40 +1,42 @@
 -- Function: gpInsertUpdate_MovementItem_PersonalService()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
- INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inPersonalId          Integer   , -- Сотрудники
-    IN inIsMain              Boolean   , -- Основное место работы
-   OUT outisAuto             Boolean   , -- создан автоматически
-   OUT outAmount             TFloat    , -- ***Сумма (затраты)
-   OUT outAmountToPay        TFloat    , -- ***Сумма к выплате (итог)
-   OUT outAmountCash         TFloat    , -- ***Сумма к выплате из кассы
-   OUT outSummTransport      TFloat    , -- ***Сумма ГСМ (удержание за заправку, хотя может быть и доплатой...)
-   OUT outSummTransportAdd   TFloat    , -- ***Сумма командировочные (доплата)
-   OUT outSummTransportAddLong TFloat  , -- ***Сумма дальнобойные (доплата, тоже командировочные)
-   OUT outSummTransportTaxi  TFloat    , -- ***Сумма на такси (доплата)
-   OUT outSummPhone          TFloat    , -- ***Сумма Моб.связь (удержание)
-    IN inSummService         TFloat    , -- Сумма начислено
-    IN inSummCardRecalc      TFloat    , -- Карта БН (ввод) - 1ф.
-    IN inSummCardSecondRecalc  TFloat  , -- Карта БН (ввод) - 2ф.
-    IN inSummCardSecondCash  TFloat    , -- Карта БН (касса) - 2ф.
-    IN inSummNalogRecalc     TFloat    , -- Налоги - удержания (ввод)
-    IN inSummMinus           TFloat    , -- Сумма удержания
-    IN inSummAdd             TFloat    , -- Сумма премия
-    IN inSummHoliday         TFloat    , -- Сумма отпускные
-    IN inSummSocialIn        TFloat    , -- Сумма соц выплаты (из зарплаты)
-    IN inSummSocialAdd       TFloat    , -- Сумма соц выплаты (доп. зарплате)
-    IN inSummChildRecalc     TFloat    , -- Алименты - удержание (ввод)
-    IN inSummMinusExtRecalc  TFloat    , -- Удержания сторон. юр.л. (ввод)
-    IN inComment             TVarChar  , -- 
-    IN inInfoMoneyId         Integer   , -- Статьи назначения
-    IN inUnitId              Integer   , -- Подразделение
-    IN inPositionId          Integer   , -- Должность
-    IN inMemberId            Integer   , -- юр.лицо
+ INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
+    IN inMovementId            Integer   , -- Ключ объекта <Документ>
+    IN inPersonalId            Integer   , -- Сотрудники
+    IN inIsMain                Boolean   , -- Основное место работы
+   OUT outisAuto               Boolean   , -- создан автоматически
+   OUT outAmount               TFloat    , -- ***Сумма (затраты)
+   OUT outAmountToPay          TFloat    , -- ***Сумма к выплате (итог)
+   OUT outAmountCash           TFloat    , -- ***Сумма к выплате из кассы
+   OUT outSummTransport        TFloat    , -- ***Сумма ГСМ (удержание за заправку, хотя может быть и доплатой...)
+   OUT outSummTransportAdd     TFloat    , -- ***Сумма командировочные (доплата)
+   OUT outSummTransportAddLong TFloat    , -- ***Сумма дальнобойные (доплата, тоже командировочные)
+   OUT outSummTransportTaxi    TFloat    , -- ***Сумма на такси (доплата)
+   OUT outSummPhone            TFloat    , -- ***Сумма Моб.связь (удержание)
+    IN inSummService           TFloat    , -- Сумма начислено
+    IN inSummCardRecalc        TFloat    , -- Карта БН (ввод) - 1ф.
+    IN inSummCardSecondRecalc  TFloat    , -- Карта БН (ввод) - 2ф.
+    IN inSummCardSecondCash    TFloat    , -- Карта БН (касса) - 2ф.
+    IN inSummNalogRecalc       TFloat    , -- Налоги - удержания (ввод)
+    IN inSummNalogRetRecalc    TFloat    , -- Налоги - возмещение к ЗП (ввод)
+    IN inSummMinus             TFloat    , -- Сумма удержания
+    IN inSummAdd               TFloat    , -- Сумма премия
+    IN inSummHoliday           TFloat    , -- Сумма отпускные
+    IN inSummSocialIn          TFloat    , -- Сумма соц выплаты (из зарплаты)
+    IN inSummSocialAdd         TFloat    , -- Сумма соц выплаты (доп. зарплате)
+    IN inSummChildRecalc       TFloat    , -- Алименты - удержание (ввод)
+    IN inSummMinusExtRecalc    TFloat    , -- Удержания сторон. юр.л. (ввод)
+    IN inComment               TVarChar  , -- 
+    IN inInfoMoneyId           Integer   , -- Статьи назначения
+    IN inUnitId                Integer   , -- Подразделение
+    IN inPositionId            Integer   , -- Должность
+    IN inMemberId              Integer   , -- юр.лицо
     IN inPersonalServiceListId Integer   , -- Ведомость начисления
-    IN inSession             TVarChar    -- сессия пользователя
+    IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS RECORD AS
 $BODY$
@@ -48,29 +50,30 @@ BEGIN
           , tmp.outSummTransport, tmp.outSummTransportAdd, tmp.outSummTransportAddLong, tmp.outSummTransportTaxi, tmp.outSummPhone
             INTO ioId, outAmount, outAmountToPay, outAmountCash
                , outSummTransport, outSummTransportAdd, outSummTransportAddLong, outSummTransportTaxi, outSummPhone
-     FROM lpInsertUpdate_MovementItem_PersonalService (ioId                 := ioId
-                                                     , inMovementId         := inMovementId
-                                                     , inPersonalId         := inPersonalId
-                                                     , inIsMain             := inIsMain
-                                                     , inSummService        := inSummService
-                                                     , inSummCardRecalc     := inSummCardRecalc
-                                                     , inSummCardSecondRecalc:= inSummCardSecondRecalc
-                                                     , inSummCardSecondCash := inSummCardSecondCash
-                                                     , inSummNalogRecalc    := inSummNalogRecalc
-                                                     , inSummMinus          := inSummMinus
-                                                     , inSummAdd            := inSummAdd
-                                                     , inSummHoliday        := inSummHoliday
-                                                     , inSummSocialIn       := inSummSocialIn
-                                                     , inSummSocialAdd      := inSummSocialAdd
-                                                     , inSummChildRecalc    := inSummChildRecalc
-                                                     , inSummMinusExtRecalc := inSummMinusExtRecalc
-                                                     , inComment            := inComment
-                                                     , inInfoMoneyId        := inInfoMoneyId
-                                                     , inUnitId             := inUnitId
-                                                     , inPositionId         := inPositionId
-                                                     , inMemberId           := inMemberId
+     FROM lpInsertUpdate_MovementItem_PersonalService (ioId                    := ioId
+                                                     , inMovementId            := inMovementId
+                                                     , inPersonalId            := inPersonalId
+                                                     , inIsMain                := inIsMain
+                                                     , inSummService           := inSummService
+                                                     , inSummCardRecalc        := inSummCardRecalc
+                                                     , inSummCardSecondRecalc  := inSummCardSecondRecalc
+                                                     , inSummCardSecondCash    := inSummCardSecondCash
+                                                     , inSummNalogRecalc       := inSummNalogRecalc
+                                                     , inSummNalogRetRecalc    := inSummNalogRetRecalc
+                                                     , inSummMinus             := inSummMinus
+                                                     , inSummAdd               := inSummAdd
+                                                     , inSummHoliday           := inSummHoliday
+                                                     , inSummSocialIn          := inSummSocialIn
+                                                     , inSummSocialAdd         := inSummSocialAdd
+                                                     , inSummChildRecalc       := inSummChildRecalc
+                                                     , inSummMinusExtRecalc    := inSummMinusExtRecalc
+                                                     , inComment               := inComment
+                                                     , inInfoMoneyId           := inInfoMoneyId
+                                                     , inUnitId                := inUnitId
+                                                     , inPositionId            := inPositionId
+                                                     , inMemberId              := inMemberId
                                                      , inPersonalServiceListId := inPersonalServiceListId
-                                                     , inUserId             := vbUserId
+                                                     , inUserId                := vbUserId
                                                       ) AS tmp;
 
      -- сохранили свойство строки <создан автоматически>
@@ -84,7 +87,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 20.06.17         *  add inSummCardSecondCash
+ 05.01.18         * add inSummNalogRetRecalc
+ 20.06.17         * add inSummCardSecondCash
  24.02.17         *
  20.04.16         * inSummHoliday
  08.05.15         * add PersonalServiceList

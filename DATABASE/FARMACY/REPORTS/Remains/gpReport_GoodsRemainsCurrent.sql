@@ -313,7 +313,7 @@ BEGIN
                                        AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
 
             LEFT JOIN Object AS Object_From_Income ON Object_From_Income.Id = tmpData.JuridicalId_Income
-            LEFT JOIN Object AS Object_NDSKind_Income ON Object_NDSKind_Income.Id = COALESCE (tmpData.NDSKindId_Income, ObjectLink_Goods_NDSKind.ChildObjectId)
+            LEFT JOIN Object AS Object_NDSKind_Income ON Object_NDSKind_Income.Id = ObjectLink_Goods_NDSKind.ChildObjectId --COALESCE (tmpData.NDSKindId_Income, ObjectLink_Goods_NDSKind.ChildObjectId)
             LEFT JOIN Object AS Object_To_Income ON Object_To_Income.Id = tmpData.ToId_Income
             LEFT JOIN Object AS Object_OurJuridical_Income ON Object_OurJuridical_Income.Id = tmpData.OurJuridicalId_Income
 

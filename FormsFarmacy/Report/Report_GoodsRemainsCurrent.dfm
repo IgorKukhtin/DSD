@@ -23,6 +23,8 @@ inherited Report_GoodsRemainsCurrentForm: TReport_GoodsRemainsCurrentForm
       inherited cxGrid: TcxGrid
         Width = 1134
         Height = 273
+        ExplicitLeft = -336
+        ExplicitTop = 32
         ExplicitWidth = 1134
         ExplicitHeight = 273
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -155,13 +157,51 @@ inherited Report_GoodsRemainsCurrentForm: TReport_GoodsRemainsCurrentForm
             Options.Editing = False
             Width = 214
           end
-          object NDSKindName: TcxGridDBColumn
+          object NDS: TcxGridDBColumn
             Caption = #1053#1044#1057
-            DataBinding.FieldName = 'NDSKindName'
+            DataBinding.FieldName = 'NDS'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 42
+          end
+          object NDS_Income: TcxGridDBColumn
+            Caption = #1053#1044#1057' ('#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'NDS_Income'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object NDS_PriceList: TcxGridDBColumn
+            Caption = #1053#1044#1057' ('#1087#1088#1072#1081#1089')'
+            DataBinding.FieldName = 'NDS_PriceList'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object isNDS_PriceList_dif: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'. '#1087#1086' '#1053#1044#1057' '#1074' '#1087#1088#1072#1081#1089#1077
+            DataBinding.FieldName = 'isNDS_PriceList_dif'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1087#1086' '#1053#1044#1057' '#1074' '#1087#1088#1080#1093#1086#1076#1077' '#1080' '#1087#1088#1072#1081#1089#1077
+            Options.Editing = False
+            Width = 70
+          end
+          object isNDS_dif: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'. '#1087#1086' '#1053#1044#1057' '#1074' '#1090#1086#1074#1072#1088#1077
+            DataBinding.FieldName = 'isNDS_dif'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1087#1086' '#1053#1044#1057' '#1074' '#1087#1088#1080#1093#1086#1076#1077' '#1080' '#1090#1086#1074#1072#1088#1077
+            Options.Editing = False
+            Width = 70
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
@@ -393,54 +433,6 @@ inherited Report_GoodsRemainsCurrentForm: TReport_GoodsRemainsCurrentForm
             HeaderGlyphAlignmentHorz = taCenter
             Width = 60
           end
-          object NDS: TcxGridDBColumn
-            Caption = '% '#1053#1044#1057' ('#1090#1086#1074#1072#1088')'
-            DataBinding.FieldName = 'NDS'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object NDS_Income: TcxGridDBColumn
-            Caption = '% '#1053#1044#1057' ('#1087#1088#1080#1093#1086#1076')'
-            DataBinding.FieldName = 'NDS_Income'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object NDS_PriceList: TcxGridDBColumn
-            Caption = '% '#1053#1044#1057' ('#1087#1088#1072#1081#1089')'
-            DataBinding.FieldName = 'NDS_PriceList'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object isNDS_PriceList_dif: TcxGridDBColumn
-            Caption = #1054#1090#1082#1083'. '#1087#1086' '#1053#1044#1057' '#1074' '#1087#1088#1072#1081#1089#1077
-            DataBinding.FieldName = 'isNDS_PriceList_dif'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1087#1086' '#1053#1044#1057' '#1074' '#1087#1088#1080#1093#1086#1076#1077' '#1080' '#1087#1088#1072#1081#1089#1077
-            Options.Editing = False
-            Width = 70
-          end
-          object isNDS_dif: TcxGridDBColumn
-            Caption = #1054#1090#1082#1083'. '#1087#1086' '#1053#1044#1057' '#1074' '#1090#1086#1074#1072#1088#1077
-            DataBinding.FieldName = 'isNDS_dif'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1087#1086' '#1053#1044#1057' '#1074' '#1087#1088#1080#1093#1086#1076#1077' '#1080' '#1090#1086#1074#1072#1088#1077
-            Options.Editing = False
-            Width = 70
-          end
         end
       end
     end
@@ -597,6 +589,24 @@ inherited Report_GoodsRemainsCurrentForm: TReport_GoodsRemainsCurrentForm
           'Left'
           'Tag'
           'Width')
+      end
+      item
+        Component = GuidesContract
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesRetail
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesJuridical
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end>
   end
   inherited ActionList: TActionList

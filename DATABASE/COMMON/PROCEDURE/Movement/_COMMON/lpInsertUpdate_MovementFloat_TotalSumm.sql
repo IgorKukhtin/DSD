@@ -37,6 +37,8 @@ $BODY$
   DECLARE vbTotalSummCardSecondCash   TFloat;
   DECLARE vbTotalSummNalog            TFloat;
   DECLARE vbTotalSummNalogRecalc      TFloat;
+  DECLARE vbTotalSummNalogRet         TFloat;
+  DECLARE vbTotalSummNalogRetRecalc   TFloat;
   DECLARE vbTotalSummMinus            TFloat;
   DECLARE vbTotalSummAdd              TFloat;
   DECLARE vbTotalSummHoliday          TFloat;
@@ -246,7 +248,9 @@ BEGIN
           , OperSumm_TransportAddLong
           , OperSumm_TransportTaxi
           , OperSumm_Phone
-
+          , OperSumm_NalogRet
+          , OperSumm_NalogRetRecalc
+          
             INTO vbOperCount_Master, vbOperCount_Child, vbOperCount_Partner, vbOperCount_Second, vbOperCount_Tare, vbOperCount_Sh, vbOperCount_Kg, vbOperCount_ShFrom, vbOperCount_KgFrom
                , vbOperSumm_MVAT, vbOperSumm_PVAT, vbOperSumm_PVAT_original, vbOperSumm_Partner, vbOperSumm_PartnerFrom, vbOperSumm_Currency
                , vbOperCount_Packer, vbOperSumm_Packer, vbOperSumm_Inventory
@@ -254,6 +258,7 @@ BEGIN
                , vbTotalSummCardRecalc, vbTotalSummCardSecondRecalc, vbTotalSummCardSecondCash, vbTotalSummNalogRecalc, vbTotalSummSocialIn, vbTotalSummSocialAdd
                , vbTotalSummChild, vbTotalSummChildRecalc, vbTotalSummMinusExt, vbTotalSummMinusExtRecalc
                , vbTotalSummTransport, vbTotalSummTransportAdd, vbTotalSummTransportAddLong, vbTotalSummTransportTaxi, vbTotalSummPhone
+               , vbTotalSummNalogRet, vbTotalSummNalogRetRecalc
      FROM
      -- Расчет Итоговых суммы
     (SELECT
@@ -420,6 +425,8 @@ BEGIN
           , OperSumm_TransportAddLong
           , OperSumm_TransportTaxi
           , OperSumm_Phone
+          , OperSumm_NalogRet
+          , OperSumm_NalogRetRecalc
      FROM
            -- получили 1 запись + !!! перевели в валюту если надо!!!
           (SELECT SUM (tmpMI.OperCount_Master)  AS OperCount_Master
@@ -495,6 +502,8 @@ BEGIN
                  , SUM (tmpMI.OperSumm_TransportAddLong) AS OperSumm_TransportAddLong
                  , SUM (tmpMI.OperSumm_TransportTaxi)    AS OperSumm_TransportTaxi
                  , SUM (tmpMI.OperSumm_Phone)            AS OperSumm_Phone
+                 , SUM (tmpMI.OperSumm_NalogRet)         AS OperSumm_NalogRet
+                 , SUM (tmpMI.OperSumm_NalogRetRecalc)   AS OperSumm_NalogRetRecalc
             FROM (SELECT tmpMI.GoodsId
                        , tmpMI.GoodsKindId
                        , CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis()
@@ -600,6 +609,8 @@ BEGIN
                       , tmpMI.OperSumm_TransportAddLong
                       , tmpMI.OperSumm_TransportTaxi
                       , tmpMI.OperSumm_Phone
+                      , tmpMI.OperSumm_NalogRet
+                      , tmpMI.OperSumm_NalogRetRecalc
 
                   FROM (SELECT Movement.DescId AS MovementDescId
                              , CASE WHEN Movement.DescId = zc_Movement_TaxCorrective() THEN MovementItem.Id ELSE 0 END AS MovementItemId
@@ -670,6 +681,10 @@ BEGIN
                              , SUM (COALESCE (MIFloat_SummTransportAddLong.ValueData, 0)) AS OperSumm_TransportAddLong
                              , SUM (COALESCE (MIFloat_SummTransportTaxi.ValueData, 0))    AS OperSumm_TransportTaxi
                              , SUM (COALESCE (MIFloat_SummPhone.ValueData, 0))            AS OperSumm_Phone
+                             
+                             , SUM (COALESCE (MIFloat_SummNalogRet.ValueData, 0))         AS OperSumm_NalogRet
+                             , SUM (COALESCE (MIFloat_SummNalogRetRecalc.ValueData, 0))   AS OperSumm_NalogRetRecalc
+                             
                         FROM Movement
                              INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                     AND MovementItem.isErased = FALSE
@@ -780,6 +795,15 @@ BEGIN
                                                         AND MIFloat_SummMinusExtRecalc.DescId = zc_MIFloat_SummMinusExtRecalc()
                                                         AND Movement.DescId = zc_Movement_PersonalService()
 
+                             LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRet
+                                                         ON MIFloat_SummNalogRet.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_SummNalogRet.DescId = zc_MIFloat_SummNalogRet()
+                                                        AND Movement.DescId = zc_Movement_PersonalService()
+                             LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRetRecalc
+                                                         ON MIFloat_SummNalogRetRecalc.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_SummNalogRetRecalc.DescId = zc_MIFloat_SummNalogRetRecalc()
+                                                        AND Movement.DescId = zc_Movement_PersonalService()
+                                                        
                              LEFT JOIN MovementItemFloat AS MIFloat_SummTransport
                                                          ON MIFloat_SummTransport.MovementItemId = MovementItem.Id
                                                         AND MIFloat_SummTransport.DescId = zc_MIFloat_SummTransport()
@@ -901,6 +925,11 @@ BEGIN
 
          -- Сохранили свойство <Итого Сумма Моб.связь (удержание))>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPhone(), inMovementId, vbTotalSummPhone);
+         
+         -- Сохранили свойство <Налоги - возмещение к ЗП>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummNalogRet(), inMovementId, vbTotalSummNalogRet);
+         -- Сохранили свойство <Налоги - возмещение к ЗП (ввод)>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummNalogRetRecalc(), inMovementId, vbTotalSummNalogRetRecalc);
      ELSE
          -- Сохранили свойство <Итого количество("главные элементы")>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCount(), inMovementId, vbOperCount_Master + vbOperCount_Packer);
@@ -950,6 +979,8 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.01.18         * vbTotalSummNalogRet
+                    vbTotalSummNalogRetRecalc
  20.06.17         * vbTotalSummCardSecondCash
  24.01.17         *
  16.01.15                                        * add !!!убрал, переводится в строчной части!!!

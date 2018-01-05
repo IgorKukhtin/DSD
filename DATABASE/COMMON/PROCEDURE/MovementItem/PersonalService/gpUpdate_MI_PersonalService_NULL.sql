@@ -39,6 +39,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardRecalc(), MovementItem.Id, 0)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardSecondRecalc(), MovementItem.Id, 0)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummNalogRecalc(), MovementItem.Id, 0)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummNalogRetRecalc(), MovementItem.Id, 0)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChildRecalc(), MovementItem.Id, 0)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummMinusExtRecalc(), MovementItem.Id, 0)
      FROM MovementItem
@@ -53,6 +54,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.01.18         *
  24.02.17         *
  20.02.17         * zc_MIFloat_SummCardSecondRecalc
  28.01.17                                        *

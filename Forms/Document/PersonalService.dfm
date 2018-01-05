@@ -163,6 +163,16 @@ inherited PersonalServiceForm: TPersonalServiceForm
               Format = ',0.####'
               Kind = skSum
               Column = SummDiff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummNalogRet
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummNalogRetRecalc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -303,6 +313,16 @@ inherited PersonalServiceForm: TPersonalServiceForm
               Format = ',0.####'
               Kind = skSum
               Column = SummDiff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummNalogRet
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummNalogRetRecalc
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -560,9 +580,9 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object SummNalog: TcxGridDBColumn [26]
-            Caption = #1053#1072#1083#1086#1075#1080' - '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1089' '#1047#1055
-            DataBinding.FieldName = 'SummNalog'
+          object SummNalogRet: TcxGridDBColumn [26]
+            Caption = #1053#1072#1083#1086#1075#1080' - '#1074#1086#1079#1084#1077#1097#1077#1085#1080#1077' '#1082' '#1047#1055
+            DataBinding.FieldName = 'SummNalogRet'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -571,9 +591,9 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 70
           end
-          object SummNalogRecalc: TcxGridDBColumn [27]
-            Caption = #1053#1072#1083#1086#1075#1080' - '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1089' '#1047#1055' ('#1074#1074#1086#1076')'
-            DataBinding.FieldName = 'SummNalogRecalc'
+          object SummNalogRetRecalc: TcxGridDBColumn [27]
+            Caption = #1053#1072#1083#1086#1075#1080' - '#1074#1086#1079#1084#1077#1097#1077#1085#1080#1077' '#1082' '#1047#1055' ('#1074#1074#1086#1076')'
+            DataBinding.FieldName = 'SummNalogRetRecalc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -769,6 +789,27 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 140
+          end
+          object SummNalog: TcxGridDBColumn [46]
+            Caption = #1053#1072#1083#1086#1075#1080' - '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1089' '#1047#1055
+            DataBinding.FieldName = 'SummNalog'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object SummNalogRecalc: TcxGridDBColumn [47]
+            Caption = #1053#1072#1083#1086#1075#1080' - '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1089' '#1047#1055' ('#1074#1074#1086#1076')'
+            DataBinding.FieldName = 'SummNalogRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
         end
       end
@@ -1138,6 +1179,9 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 3
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -2471,6 +2515,15 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'SummNalogRecalc'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummNalogRetRecalc'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummNalogRetRecalc'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
