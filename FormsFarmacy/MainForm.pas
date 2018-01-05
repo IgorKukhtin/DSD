@@ -411,6 +411,8 @@ type
     N162: TMenuItem;
     actReport_GoodsRemainsCurrent: TdsdOpenForm;
     miReport_GoodsRemainsCurrent: TMenuItem;
+    actGoodsRetail: TdsdOpenForm;
+    miGoodsRetail: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

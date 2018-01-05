@@ -2,9 +2,11 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Goods_Retail(Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Goods_Retail(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Goods_Retail(Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_Retail(
     IN inContractId  Integer,       -- договор поставщика
+    IN inRetailId    Integer,       -- торговая сеть
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar, Name TVarChar, isErased Boolean
@@ -40,6 +42,13 @@ BEGIN
 
    -- поиск <Торговой сети>
    vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
+   
+   -- если выбрана торг.сеть то выбираем товары по ней 
+   IF COALESCE (inRetailId, 0) <> 0
+   THEN 
+       vbObjectId := inRetailId;
+   END IF;
+   
 /*
    -- !!!для Админа!!!
    IF (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
@@ -134,6 +143,7 @@ BEGIN
 
         LEFT JOIN tmpLoadPriceList ON tmpLoadPriceList.MainGoodsId = ObjectLink_Main.ChildObjectId
     WHERE Object_Retail.DescId = zc_Object_Retail()
+      
 ;
 
    ELSE
@@ -324,7 +334,7 @@ BEGIN
            LEFT JOIN tmpPricelistItems ON tmpPricelistItems.GoodsMainId = ObjectLink_Main.ChildObjectId
            
       WHERE Object_Goods_View.ObjectId = vbObjectId
-;
+      ;
 
   -- END IF;
   
@@ -337,6 +347,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.
+ 05.01.18         * add inRetailId
  03.01.18         * add inContractId, NDS_PriceList, isNDS_dif
  22.08.17         *
  16.08.17         * LastPriceOld
@@ -357,5 +368,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Goods_Retail (inContractId := 0, zfCalc_UserAdmin())
--- select * from gpSelect_Object_Goods_Retail (inContractId := 183257, inSession := '59591')
+-- SELECT * FROM gpSelect_Object_Goods_Retail (inContractId := 0, inRetailId := 0, zfCalc_UserAdmin())
+-- select * from gpSelect_Object_Goods_Retail (inContractId := 183257, inRetailId := 4, inSession := '59591')

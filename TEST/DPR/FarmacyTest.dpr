@@ -563,7 +563,9 @@ uses
   FiscalEdit in '..\..\FormsFarmacy\Guides\FiscalEdit.pas' {FiscalEditForm: TParentForm},
   Fiscal in '..\..\FormsFarmacy\Guides\Fiscal.pas' {FiscalForm: TParentForm},
   Report_GoodsRemainsCurrentDialog in '..\..\FormsFarmacy\Report\Report_GoodsRemainsCurrentDialog.pas' {Report_GoodsRemainsCurrentDialogForm: TParentForm},
-  Report_GoodsRemainsCurrent in '..\..\FormsFarmacy\Report\Report_GoodsRemainsCurrent.pas' {Report_GoodsRemainsCurrentForm: TParentForm};
+  Report_GoodsRemainsCurrent in '..\..\FormsFarmacy\Report\Report_GoodsRemainsCurrent.pas' {Report_GoodsRemainsCurrentForm: TParentForm},
+  GoodsRetail in '..\..\FormsFarmacy\Guides\GoodsRetail.pas' {GoodsRetailForm: TParentForm},
+  GoodsRetailDialog in '..\..\FormsFarmacy\Guides\GoodsRetailDialog.pas' {GoodsRetailDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -1,25 +1,27 @@
-inherited GoodsForm: TGoodsForm
+inherited GoodsRetailForm: TGoodsRetailForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1089#1077#1090#1080
   ClientHeight = 443
-  ClientWidth = 883
+  ClientWidth = 871
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 899
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitWidth = 887
   ExplicitHeight = 481
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 883
-    Height = 417
+    Top = 61
+    Width = 871
+    Height = 382
     ExplicitWidth = 883
     ExplicitHeight = 417
-    ClientRectBottom = 417
-    ClientRectRight = 883
+    ClientRectBottom = 382
+    ClientRectRight = 871
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 883
       ExplicitHeight = 417
       inherited cxGrid: TcxGrid
-        Width = 883
-        Height = 417
+        Width = 871
+        Height = 382
         ExplicitWidth = 883
         ExplicitHeight = 417
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -364,23 +366,49 @@ inherited GoodsForm: TGoodsForm
           end
         end
       end
-      object cxLabel3: TcxLabel
-        Left = 343
-        Top = 101
-        Caption = #1044#1086#1075#1086#1074#1086#1088' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-      end
-      object edContract: TcxButtonEdit
-        Left = 343
-        Top = 119
-        Properties.Buttons = <
-          item
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        TabOrder = 2
-        Width = 222
-      end
+    end
+  end
+  object Panel: TPanel [1]
+    Left = 0
+    Top = 0
+    Width = 871
+    Height = 35
+    Align = alTop
+    TabOrder = 5
+    ExplicitTop = -14
+    object cxLabel3: TcxLabel
+      Left = 15
+      Top = 9
+      Caption = #1044#1086#1075#1086#1074#1086#1088' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+    end
+    object edContract: TcxButtonEdit
+      Left = 128
+      Top = 8
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 1
+      Width = 194
+    end
+    object cxLabel1: TcxLabel
+      Left = 345
+      Top = 8
+      Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+    end
+    object edRetail: TcxButtonEdit
+      Left = 423
+      Top = 7
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 3
+      Width = 234
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -396,6 +424,18 @@ inherited GoodsForm: TGoodsForm
           'Left'
           'Top'
           'Width')
+      end
+      item
+        Component = GuidesContract
+        Properties.Strings = (
+          #1082#1077#1091
+          'TextValue')
+      end
+      item
+        Component = GuidesRetail
+        Properties.Strings = (
+          #1082#1077#1091
+          'TextValue')
       end>
   end
   inherited ActionList: TActionList
@@ -605,6 +645,53 @@ inherited GoodsForm: TGoodsForm
       Hint = #1057#1076#1077#1083#1072#1090#1100' '#1054#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' = '#1053#1045#1058
       ImageIndex = 58
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      FormName = 'TGoodsRetailDialogForm'
+      FormNameParam.Value = 'TGoodsRetailDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'ContractId'
+          Value = ''
+          Component = GuidesContract
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContractName'
+          Value = ''
+          Component = GuidesContract
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'RetailId'
+          Value = ''
+          Component = GuidesRetail
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'RetailName'
+          Value = ''
+          Component = GuidesRetail
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -627,7 +714,9 @@ inherited GoodsForm: TGoodsForm
       end
       item
         Name = 'inRetailId'
-        Value = '0'
+        Value = Null
+        Component = GuidesRetail
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -699,18 +788,6 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Visible = True
-          ItemName = 'bbLabel3'
-        end
-        item
-          Visible = True
-          ItemName = 'bbContract'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -720,29 +797,11 @@ inherited GoodsForm: TGoodsForm
         item
           Visible = True
           ItemName = 'bbGridToExcel'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end>
     end
     object bbPublished: TdxBarButton
       Action = actPublishedList
       Category = 0
-    end
-    object bbLabel3: TdxBarControlContainerItem
-      Caption = 'Label3'
-      Category = 0
-      Hint = 'Label3'
-      Visible = ivAlways
-      Control = cxLabel3
-    end
-    object bbContract: TdxBarControlContainerItem
-      Caption = 'Contract'
-      Category = 0
-      Hint = 'Contract'
-      Visible = ivAlways
-      Control = edContract
     end
     object bbUpdateNDS: TdxBarButton
       Action = macUpdateNDS
@@ -1278,7 +1337,7 @@ inherited GoodsForm: TGoodsForm
         MultiSelectSeparator = ','
       end>
     Left = 424
-    Top = 136
+    Top = 40
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -1287,6 +1346,9 @@ inherited GoodsForm: TGoodsForm
     ComponentList = <
       item
         Component = GuidesContract
+      end
+      item
+        Component = GuidesRetail
       end>
     Left = 544
     Top = 96
@@ -1325,5 +1387,33 @@ inherited GoodsForm: TGoodsForm
     PackSize = 1
     Left = 808
     Top = 248
+  end
+  object GuidesRetail: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edRetail
+    FormNameParam.Value = 'TRetailForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TRetailForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 504
   end
 end
